@@ -1,0 +1,79 @@
+_ = require('lodash')
+
+exports.render = (element) ->
+  element.choices = _.map element.choices, (e) ->
+    label: e.label,
+    value : e.value
+
+  delete element.points
+  delete element.correctResponse
+  delete element.feedback
+
+  element
+
+feedbackByValue = (q, v) -> _.find q.feedback, (f) -> f.value == v
+
+correctResponseFeedback = (fbArray, q, userGotItRight, answer) ->
+
+  for correctKey in q.correctResponse.value
+    fb = feedbackByValue(q, correctKey)
+
+    if userGotItRight
+      delete fb.notChosenFeedback
+    else
+      if _.indexOf(answer, correctKey) == -1
+        nc = fb.notChosenFeedback
+        delete fb.notChosenFeedback
+        fb.feedback = nc
+      else
+        delete fb.notChosenFeedback
+
+    fb.correct = true
+    fbArray.push(fb)
+
+exports.isCorrect = (answer, correctAnswer) ->
+  diff = _.difference answer, correctAnswer
+  diff2 = _.difference correctAnswer, answer
+  diff.length == 0 and diff2.length == 0
+
+isCorrectChoice = (q, choice) -> _.indexOf(q.correctResponse.value, choice) != -1
+
+userResponseFeedback = (fbArray, q, answer) ->
+
+  for userChoice in answer
+    fb = feedbackByValue(q, userChoice)
+    fb.correct = isCorrectChoice(q, userChoice)
+    delete fb.notChosenFeedback if fb.correct
+    fbArray.push(fb)
+
+buildFeedback = (question, answer, settings, isCorrect) ->
+  out = []
+
+  if isCorrect
+    if settings.showCorrectResponse || settings.showUserResponse
+      correctResponseFeedback(out, question, true, answer)
+  else
+    if settings.showCorrectResponse
+      correctResponseFeedback(out, question, false, answer)
+
+    if settings.showUserResponse
+      userResponseFeedback(out, question, answer)
+  out
+
+###
+Create a response to the answer based on the question, the answer and the respond settings
+###
+exports.respond = (question, answer, settings) ->
+
+  throw "Error - the uids must match" if(question._uid != answer._uid)
+
+  debugger
+
+  answerIsCorrect = @isCorrect(answer, question.correctResponse.value)
+
+  response =
+    correctness: if answerIsCorrect then "correct" else "incorrect"
+
+  response.feedback = buildFeedback(question, answer, settings, answerIsCorrect) if settings.showFeedback
+
+  response

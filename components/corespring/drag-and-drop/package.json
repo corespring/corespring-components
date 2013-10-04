@@ -1,0 +1,17 @@
+{
+  "name" : "drag-and-drop",
+  "organization" : "corespring",
+  "corespring-container-version" : "0.0.1",
+  "version" : "0.0.1",
+  "client" : {
+    "bower" : {
+      "dependencies" : {
+        "jquery" : "latest",
+        "jquery-ui" : "latest"
+      }
+    }
+  },
+  "server" : {
+
+  }
+}

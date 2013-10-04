@@ -1,0 +1,16 @@
+{
+  "author": "CoreSpring",
+  "name": "corespring-components",
+  "description" : "The default set of corespring components",
+  "version": "0.0.2",
+  "dependencies": {
+  },
+  "engines": {
+    "node": ">= 0.10.9"
+  },
+  "devDependencies": {
+    "should" : "*",
+    "lodash": "*",
+    "nconf": "*"
+  }
+}
