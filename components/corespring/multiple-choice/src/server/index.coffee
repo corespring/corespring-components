@@ -60,6 +60,12 @@ buildFeedback = (question, answer, settings, isCorrect) ->
       userResponseFeedback(out, question, answer)
   out
 
+calculateScore = (question, answer) ->
+  maxCorrect = question.correctResponse.value.length
+  wrongAnswers = _.without.apply(null, [question.correctResponse.value].concat(answer))
+  correctCount = Math.max(question.correctResponse.value.length - wrongAnswers.length, 0)
+  correctCount / maxCorrect
+
 ###
 Create a response to the answer based on the question, the answer and the respond settings
 ###
@@ -67,13 +73,11 @@ exports.respond = (question, answer, settings) ->
 
   throw "Error - the uids must match" if(question._uid != answer._uid)
 
-  debugger
-
   answerIsCorrect = @isCorrect(answer, question.correctResponse.value)
 
   response =
     correctness: if answerIsCorrect then "correct" else "incorrect"
-
+    score: calculateScore(question, answer)
   response.feedback = buildFeedback(question, answer, settings, answerIsCorrect) if settings.showFeedback
 
   response

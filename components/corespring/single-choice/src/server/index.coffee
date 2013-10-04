@@ -56,7 +56,9 @@ exports.respond = (question, answer, settings) ->
 
   response =
     correctness: if answerIsCorrect then "correct" else "incorrect"
+    score: if answerIsCorrect then 1 else 0
 
   response.feedback = buildFeedback(question, answer, settings, answerIsCorrect) if settings.showFeedback
+
 
   response

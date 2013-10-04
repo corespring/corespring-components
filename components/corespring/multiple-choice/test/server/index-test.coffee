@@ -44,12 +44,14 @@ describe 'single-choice server logic',  ->
       response = server.respond(_.cloneDeep(component), ["apple"], settings(false, true, true))
       expected =
         correctness: "incorrect"
+        score: 0
       response.should.eql expected
 
     it 'should respond to a correct answer', ->
       response = server.respond(_.cloneDeep(component), ["carrot", "turnip"], settings(true, true, true))
       expected =
         correctness: "correct"
+        score: 1
         feedback: [
           { value: "carrot", feedback: "Yes", correct : true}
           { value: "turnip", feedback: "Yes", correct : true}
@@ -60,6 +62,7 @@ describe 'single-choice server logic',  ->
       response = server.respond(_.cloneDeep(component), ["apple"], settings(true, true, true))
       expected =
         correctness: "incorrect"
+        score: 0
         feedback: [
           { value: "carrot", feedback: "This is a veggie", correct: true}
           { value: "turnip", feedback: "This is a veggie", correct: true}
@@ -71,6 +74,7 @@ describe 'single-choice server logic',  ->
       response = server.respond(_.cloneDeep(component), ["apple"], settings(true, true, false))
       expected =
         correctness: "incorrect"
+        score: 0
         feedback: [
           { value: "apple", feedback: "Huh?", correct: false}
         ]
@@ -80,6 +84,7 @@ describe 'single-choice server logic',  ->
       response = server.respond(_.cloneDeep(component), ["apple", "carrot"], settings(true, true, false))
       expected =
         correctness: "incorrect"
+        score: 0.5
         feedback: [
           { value: "apple", feedback: "Huh?", correct: false}
           { value: "carrot", feedback: "Yes", correct: true}
