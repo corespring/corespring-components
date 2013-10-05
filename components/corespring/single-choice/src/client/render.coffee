@@ -33,14 +33,6 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
     link: link(CorespringContainer)
     template : """
     <div class="view-single-choice">
-      <style>
-        .view-single-choice  .feedback.incorrect {
-          border: solid 1px red;
-        }
-        .view-single-choice  .feedback.correct {
-          border: solid 1px green;
-        }
-      </style>
       <label>{{question.prompt}}</label>
       <div ng-repeat="o in question.choices">
         <label>{{o.label}}</label>
