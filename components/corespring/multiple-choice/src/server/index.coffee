@@ -64,7 +64,8 @@ calculateScore = (question, answer) ->
   maxCorrect = question.correctResponse.value.length
   wrongAnswers = _.without.apply(null, [question.correctResponse.value].concat(answer))
   correctCount = Math.max(question.correctResponse.value.length - wrongAnswers.length, 0)
-  correctCount / maxCorrect
+  rawScore =  correctCount / maxCorrect
+  Math.round( rawScore * 100 ) / 100
 
 ###
 Create a response to the answer based on the question, the answer and the respond settings

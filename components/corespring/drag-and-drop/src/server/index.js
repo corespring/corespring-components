@@ -1,8 +1,12 @@
-module.exports.respond = function(question, answer, settings){
-  return { correctness: "correct", answer : "hello there" };
+exports.respond = function(question, answer, settings){
+  return {
+    correctness: "correct",
+    answer : "corespring-drag-and-drop TODO",
+    score: 1
+  };
 }
 
-module.exports.render = function(model){
+exports.render = function(model){
   delete model.correctResponse;
   delete model.feedback;
   return model;
