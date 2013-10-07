@@ -57,7 +57,7 @@ main = [ 'CorespringContainer', '$sce', (CorespringContainer, $sce) ->
         <label>{{o.label}}</label>
         <input type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>
         <span
-          class="feedback"
+          class="cs-feedback"
           ng-class="{true:'correct', false:'incorrect'}[o.correct]"
           ng-show="o.feedback">{{o.feedback}}</span>
       </div>
