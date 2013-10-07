@@ -38,7 +38,7 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
         <label>{{o.label}}</label>
         <input type="radio" ng-disabled="sessionFinished" ng-value="o.label" ng-model="answer.value"></input>
         <span
-          class="feedback"
+          class="cs-feedback" ng-animate="'animate'"
           ng-class="{true:'correct', false:'incorrect'}[o.correct]"
           ng-show="o.feedback">{{o.feedback}}</span>
       </div>

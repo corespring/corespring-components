@@ -1,11 +1,3 @@
-.view-single-choice .feedback.incorrect {
-  border: solid 1px #AF1700;
-  padding: 3px;
-  border-radius: 3px;
-}
-
-.view-single-choice  .feedback.correct {
-  border: solid 1px #74A50D;
-  padding: 3px;
-  border-radius: 3px;
+.view-single-choice   {
+  background-color: #fcfcfc;
 }
