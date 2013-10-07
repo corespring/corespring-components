@@ -8,11 +8,12 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
         setModel: (model) ->
           scope.model = model.model
           scope.fullModel = model
+          scope.feedback = {}
           _.each model.feedback, (feedback) ->
-            choice = _.find model.model.choices, (choice) ->
-              choice.value == feedback.value
-            choice.feedback = feedback.feedback
-            choice.feedbackType = if (feedback.isDefault) then "standard" else "custom"
+            choice = _.find model.model.choices, (choice) -> choice.value == feedback.value
+            scope.feedback[choice.value] =
+              feedback: feedback.feedback
+              feedbackType:  if (feedback.isDefault) then "standard" else "custom"
 
           _.each model.model.choices, (choice) ->
             choice.isCorrect = _.contains(model.correctResponse.value, choice.value)
@@ -28,8 +29,8 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
             feedback = _.find model.feedback, (fb) ->
               fb.value == choice.value
 
-            feedback.feedback = choice.feedback
-            feedback.isDefault = choice.feedbackType == "standard"
+            feedback.feedback = scope.feedback[choice.value].feedback
+            feedback.isDefault = scope.feedback[choice.value].feedbackType == "standard"
             true
 
           model.correctResponse.value = correctAnswers
@@ -90,9 +91,9 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
           </tr>
         </table>
         <label>Student Feedback: </label>
-        <input type='radio' ng-model='q.feedbackType' value='standard'>Standard</input>
-        <input type='radio' ng-model='q.feedbackType' value='custom'>Custom</input>
-        <label>Feedback: </label><input type="text" ng-model="q.feedback"></input>
+        <input type='radio' ng-model='feedback[q.value].feedbackType' value='standard'>Standard</input>
+        <input type='radio' ng-model='feedback[q.value].feedback' value='custom'>Custom</input>
+        <label>Feedback: </label><input type="text" ng-model="feedback[q.value].feedback"></input>
       </div>
       <a ng-click="addQuestion()">Add</a>
       </div>
