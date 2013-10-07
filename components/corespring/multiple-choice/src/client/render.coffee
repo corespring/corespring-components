@@ -1,6 +1,10 @@
-link = (CorespringContainer) ->
+link = (CorespringContainer, $sce) ->
   (scope, element, attrs) ->
     scope.answer = { choices : {}}
+
+    scope.$watch 'question.prompt', (value) ->
+      console.log "Changed to "+value
+
 
     scope.$watch 'session', (newValue) ->
       return if !newValue?
@@ -8,7 +12,7 @@ link = (CorespringContainer) ->
     , true
 
     scope.containerBridge =
-      setModel : (model) -> scope.question = _.clone(model)
+      setModel : (model) -> scope.question = model
       setAnswer: (answer) ->
         for key in answer
           scope.answer.choices[key] = true
@@ -32,12 +36,12 @@ link = (CorespringContainer) ->
 
     CorespringContainer.register(attrs['id'], scope.containerBridge)
 
-main = [ 'CorespringContainer', (CorespringContainer) ->
+main = [ 'CorespringContainer', '$sce', (CorespringContainer, $sce) ->
   def =
     scope: 'isolate'
     restrict :  'E'
     replace : true
-    link: link(CorespringContainer)
+    link: link(CorespringContainer, $sce)
     template : """
     <div class="view-single-choice">
       <style>
@@ -48,7 +52,7 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
           border: solid 1px green;
         }
       </style>
-      <label>{{question.prompt}}</label>
+      <label ng-bind-html-unsafe="question.prompt"></label>
       <div ng-repeat="o in question.choices">
         <label>{{o.label}}</label>
         <input type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>

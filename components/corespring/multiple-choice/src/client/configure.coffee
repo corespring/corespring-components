@@ -39,8 +39,9 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
       scope.initIsCorrect()
 
     template: """
-       <div>
-      <label>Prompt: </label><input type="text" ng-model="model.prompt"></input><br/>
+      <div>
+      <label>Prompt: </label>
+      <textarea ng-ckeditor ng-model="model.prompt"></textarea><br/>
       <div ng-repeat="q in model.choices">
         <label>Label: </label><input type="text" ng-model="q.label"></input>
         <label> is correct ? </label>
