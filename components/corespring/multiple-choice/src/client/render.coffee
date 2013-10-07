@@ -2,10 +2,6 @@ link = (CorespringContainer, $sce) ->
   (scope, element, attrs) ->
     scope.answer = { choices : {}}
 
-    scope.$watch 'question.prompt', (value) ->
-      console.log "Changed to "+value
-
-
     scope.$watch 'session', (newValue) ->
       return if !newValue?
       scope.sessionFinished = newValue.isFinished

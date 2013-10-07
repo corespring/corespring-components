@@ -54,6 +54,35 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
   def
 ]
 
+
+ckeditor = [ ->
+  def =
+    require: '?ngModel'
+    link: (scope, elm, attr, ngModel) ->
+      console.log("LINKING CKEDITOR");
+      ck = CKEDITOR.replace(elm[0], {
+        toolbar: [
+          [ 'Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo' ],
+          [ 'Bold', 'Italic', 'Underline' ],
+          [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ]
+        ],
+        height: '100px'
+      });
+
+      return if (!ngModel)
+
+      ck.on 'pasteState', ->
+        scope.$apply ->
+          ngModel.$setViewValue(ck.getData());
+
+      ngModel.$render = (value) ->
+        ck.setData ngModel.$viewValue
+]
+
+
 componentDefinition =
   framework: 'angular'
-  directive: main
+  directives : [
+    { directive : main },
+    { name: 'ngCkeditor', directive: ckeditor }
+  ]
