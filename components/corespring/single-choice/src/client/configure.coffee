@@ -6,15 +6,9 @@ componentDefinition =
       restrict: 'E'
       replace: true
       link: (scope, element, attrs) ->
-        console.log "Single Choice Linking"
-
         scope.containerBridge =
           setModel: (model) ->
-            scope.model = model
-
-          getAnswer: ->
-            console.log "returning answer for: Drag and drop"
-            {}
+            scope.model = model.model
 
         CorespringContainer.register attrs["id"], scope.containerBridge
 

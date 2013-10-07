@@ -1,1 +1,13 @@
-/**/
+.view-multiple-choice .correct-label {
+    color: #008000;
+}
+
+.view-multiple-choice td {
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.view-multiple-choice .correct-block {
+    display: inline-block;
+    text-align: center;
+}

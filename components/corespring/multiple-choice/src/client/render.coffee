@@ -8,10 +8,13 @@ link = (CorespringContainer, $sce) ->
     , true
 
     scope.containerBridge =
-      setModel : (model) -> scope.question = model
+      setModel : (model) ->
+        scope.question = model
+
       setAnswer: (answer) ->
         for key in answer
           scope.answer.choices[key] = true
+
       getAnswer: ->
         out = []
         for key, selected of scope.answer.choices
@@ -20,6 +23,7 @@ link = (CorespringContainer, $sce) ->
 
       setSession: (session) ->
         scope.session = session
+
       setResponse: (response) ->
         scope.response = response
         console.log "set response for single-choice", response

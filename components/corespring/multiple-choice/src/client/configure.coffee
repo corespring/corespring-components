@@ -6,13 +6,37 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
     link: (scope, element, attrs) ->
       scope.containerBridge =
         setModel: (model) ->
-          scope.model = model
+          scope.model = model.model
+          scope.fullModel = model
+          _.each model.feedback, (feedback) ->
+            choice = _.find model.model.choices, (choice) ->
+              choice.value == feedback.value
+            choice.feedback = feedback.feedback
+            choice.feedbackType = if (feedback.isDefault) then "standard" else "custom"
 
-        getAnswer: ->
-          console.log "returning answer for: Drag and drop"
-          {}
+          _.each model.model.choices, (choice) ->
+            choice.isCorrect = _.contains(model.correctResponse.value, choice.value)
+            true
 
-      CorespringContainer.register attrs["id"], scope.containerBridge
+          console.log(model)
+
+        getModel:  ->
+          model = _.cloneDeep(scope.fullModel)
+          correctAnswers = []
+          _.each model.model.choices, (choice) ->
+            correctAnswers.push choice.value if (choice.isCorrect)
+            feedback = _.find model.feedback, (fb) ->
+              fb.value == choice.value
+
+            feedback.feedback = choice.feedback
+            feedback.isDefault = choice.feedbackType == "standard"
+            true
+
+          model.correctResponse.value = correctAnswers
+
+          model
+
+      CorespringContainer.registerConfigPanel attrs["id"], scope.containerBridge
 
       scope.removeQuestion = (q) ->
         scope.model.choices = _.filter(scope.model.choices, (cq) -> cq != q)
@@ -39,13 +63,35 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
       scope.initIsCorrect()
 
     template: """
-      <div>
+      <div class="view-multiple-choice">
       <label>Prompt: </label>
       <textarea ng-ckeditor ng-model="model.prompt"></textarea><br/>
       <div ng-repeat="q in model.choices">
-        <label>Label: </label><input type="text" ng-model="q.label"></input>
-        <label> is correct ? </label>
-        <input type="radio" ng-value="q.label" ng-model="$parent.correctQuestion"></input> <a ng-click="removeQuestion(q)">remove</a>
+        <table>
+          <tr>
+            <td>
+              <div class='correct-block'>
+                <span class='correct-label'>Correct</span><br/>
+                <input type='checkbox' ng-model="q.isCorrect"></input>
+              </div>
+            </td>
+            <td>
+              <select>
+                <option>Text</option>
+                <option>Image</option>
+              </select>
+            </td>
+            <td>
+              <textarea ng-model="q.label"></textarea>
+            </td>
+            <td>
+              <a ng-click="removeQuestion(q)">remove</a>
+            </td>
+          </tr>
+        </table>
+        <label>Student Feedback: </label>
+        <input type='radio' ng-model='q.feedbackType' value='standard'>Standard</input>
+        <input type='radio' ng-model='q.feedbackType' value='custom'>Custom</input>
         <label>Feedback: </label><input type="text" ng-model="q.feedback"></input>
       </div>
       <a ng-click="addQuestion()">Add</a>
@@ -59,7 +105,6 @@ ckeditor = [ ->
   def =
     require: '?ngModel'
     link: (scope, elm, attr, ngModel) ->
-      console.log("LINKING CKEDITOR");
       ck = CKEDITOR.replace(elm[0], {
         toolbar: [
           [ 'Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo' ],
