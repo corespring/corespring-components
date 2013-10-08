@@ -25,8 +25,11 @@ link = (CorespringContainer, $sce) ->
 
       getAnswer: ->
         out = []
-        for key, selected of scope.answer.choices
-          out.push(key) if selected
+        if scope.answer.choice
+          out.push(scope.answer.choice)
+        else
+          for key, selected of scope.answer.choices
+            out.push(key) if selected
         out
 
       setSession: (session) ->
