@@ -14,6 +14,7 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
             scope.feedback[choice.value] =
               feedback: feedback.feedback
               feedbackType:  if (feedback.isDefault) then "standard" else "custom"
+            true
 
           _.each model.model.choices, (choice) ->
             choice.isCorrect = _.contains(model.correctResponse.value, choice.value)
@@ -34,6 +35,7 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
             true
 
           model.correctResponse.value = correctAnswers
+          model.model.config.singleChoice = correctAnswers.length == 1
 
           model
 
@@ -46,19 +48,6 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
       scope.addQuestion = -> scope.model.choices.push( {label: "new Question"})
 
       scope.initIsCorrect =  ->
-        if !scope.model
-          return
-        initialCorrectChoice = _.find(scope.model.choices, (c) -> c.isCorrect)
-        scope.correctQuestion = initialCorrectChoice?.label
-
-      scope.setIsCorrect = (correctLabel) ->
-        if !scope.model
-          return
-        _.each scope.model.choices, (c) -> c.isCorrect = c.label == correctLabel
-
-      scope.$watch 'correctQuestion', (newValue, oldValue) ->
-        console.log "Correct Question: #{newValue}"
-        scope.setIsCorrect(newValue)
 
       # init the ui
       scope.initIsCorrect()
@@ -67,7 +56,8 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
       <div class="view-multiple-choice">
       <label>Prompt: </label>
       <textarea ng-ckeditor ng-model="model.prompt"></textarea><br/>
-      <div ng-repeat="q in model.choices">
+      <div class="choice" ng-repeat="q in model.choices">
+        <div class='remove-button' ng-click="removeQuestion(q)">X</div>
         <table>
           <tr>
             <td>
@@ -85,15 +75,14 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
             <td>
               <textarea ng-model="q.label"></textarea>
             </td>
-            <td>
-              <a ng-click="removeQuestion(q)">remove</a>
-            </td>
           </tr>
         </table>
         <label>Student Feedback: </label>
         <input type='radio' ng-model='feedback[q.value].feedbackType' value='standard'>Standard</input>
-        <input type='radio' ng-model='feedback[q.value].feedback' value='custom'>Custom</input>
-        <label>Feedback: </label><input type="text" ng-model="feedback[q.value].feedback"></input>
+        <input type='radio' ng-model='feedback[q.value].feedbackType' value='custom'>Custom</input>
+        <div ng-show='feedback[q.value].feedbackType == "custom"'>
+          <label>Feedback: </label><input type="text" ng-model="feedback[q.value].feedback"></input>
+        </div>
       </div>
       <a ng-click="addQuestion()">Add</a>
       </div>
