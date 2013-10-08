@@ -19,6 +19,8 @@ feedbackByValue = (q, v) -> _.find q.feedback, (f) -> f.value == v
 correctResponseFeedback = (q, answerIsCorrect) ->
   fb = feedbackByValue(q, q.correctResponse.value)
 
+  return null if !fb?
+
   if answerIsCorrect
     delete fb.notChosenFeedback
   else
@@ -30,21 +32,27 @@ correctResponseFeedback = (q, answerIsCorrect) ->
 
 userResponseFeedback = (q,a) ->
   fb = feedbackByValue(q, a.value)
-  fb.correct = false
-  fb
+  if fb?
+    fb.correct = false
+    fb
+  else
+    null
 
 buildFeedback = (question, answer, settings, isCorrect) ->
   out = []
 
   if isCorrect
     if settings.showCorrectResponse || settings.showUserResponse
-      out.push correctResponseFeedback(question, true)
+      crFb = correctResponseFeedback(question, true)
+      out.push(crFb) if crFb?
   else
     if settings.showCorrectResponse
-      out.push correctResponseFeedback(question, false)
+      crFb = correctResponseFeedback(question, false)
+      out.push(crFb) if crFb?
 
     if settings.showUserResponse
-      out.push userResponseFeedback(question, answer)
+      userFb = userResponseFeedback(question, answer)
+      out.push(userFb) if userFb?
   out
 
 ###
