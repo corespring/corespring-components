@@ -50,13 +50,13 @@ buildFeedback = (question, answer, settings, isCorrect) ->
   out = []
 
   if isCorrect
-    if settings.showCorrectResponse || settings.showUserResponse
+    if settings.highlightCorrectResponse || settings.highlightUserResponse
       correctResponseFeedback(out, question, true, answer)
   else
-    if settings.showCorrectResponse
+    if settings.highlightCorrectResponse
       correctResponseFeedback(out, question, false, answer)
 
-    if settings.showUserResponse
+    if settings.highlightUserResponse
       userResponseFeedback(out, question, answer)
   out
 
