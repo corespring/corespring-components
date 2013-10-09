@@ -24,8 +24,8 @@ component =
   ]
 
 settings = (feedback = true, userResponse = true, correctResponse = true) ->
-  showUserResponse: userResponse
-  showCorrectResponse: correctResponse
+  highlightUserResponse: userResponse
+  highlightCorrectResponse: correctResponse
   showFeedback: feedback
 
 
