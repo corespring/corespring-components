@@ -9,15 +9,17 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
           scope.model = model.model
           scope.fullModel = model
           scope.feedback = {}
+          scope.correctMap = {}
           _.each model.feedback, (feedback) ->
             choice = _.find model.model.choices, (choice) -> choice.value == feedback.value
-            scope.feedback[choice.value] =
-              feedback: feedback.feedback
-              feedbackType:  if (feedback.isDefault) then "standard" else "custom"
+            if (choice)
+              scope.feedback[choice.value] =
+                feedback: feedback.feedback
+                feedbackType:  if (feedback.isDefault) then "standard" else "custom"
             true
 
-          _.each model.model.choices, (choice) ->
-            choice.isCorrect = _.contains(model.correctResponse.value, choice.value)
+          _.each model.correctResponse.value, (cr) ->
+            scope.correctMap[cr] = true
             true
 
           console.log(model)
@@ -25,19 +27,32 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
         getModel:  ->
           model = _.cloneDeep(scope.fullModel)
           correctAnswers = []
-          _.each model.model.choices, (choice) ->
-            correctAnswers.push choice.value if (choice.isCorrect)
-            feedback = _.find model.feedback, (fb) ->
-              fb.value == choice.value
-
-            feedback.feedback = scope.feedback[choice.value].feedback
-            feedback.isDefault = scope.feedback[choice.value].feedbackType == "standard"
+          _.each scope.correctMap, (v,k) ->
+            correctAnswers.push(k) if (v)
             true
 
           model.correctResponse.value = correctAnswers
           model.model.config.singleChoice = correctAnswers.length == 1
 
+          _.each model.model.choices, (choice) ->
+            feedback = _.find model.feedback, (fb) ->
+              fb.value == choice.value
+
+            feedback.feedback = scope.feedback[choice.value]?.feedback
+            feedback.isDefault = scope.feedback[choice.value]?.feedbackType == "standard"
+            true
+
           model
+
+      scope.$watch 'correctMap', (value) ->
+        res = []
+        _.each value, (v,k) ->
+          res.push(k) if (v)
+        scope.fullModel.correctResponse.value = res
+        console.log scope.fullModel.correctResponse.value
+        scope.model.config.singleChoice = res.length == 1
+        console.log scope.model
+      , true
 
       CorespringContainer.registerConfigPanel attrs["id"], scope.containerBridge
 
@@ -63,7 +78,7 @@ main = [ 'CorespringContainer', (CorespringContainer) ->
             <td>
               <div class='correct-block'>
                 <span class='correct-label'>Correct</span><br/>
-                <input type='checkbox' ng-model="q.isCorrect"></input>
+                <input type='checkbox' ng-model="correctMap[q.value]"></input>
               </div>
             </td>
             <td>

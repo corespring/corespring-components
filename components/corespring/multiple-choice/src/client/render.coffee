@@ -8,6 +8,10 @@ link = (CorespringContainer, $sce) ->
       scope.sessionFinished = newValue.isFinished
     , true
 
+    scope.$watch 'question.config.singleChoice', (newValue) ->
+      scope.inputType = if (!!newValue) then "radio" else "checkbox"
+
+
     scope.containerBridge =
       setModel: (model) ->
         scope.question = model
@@ -56,27 +60,31 @@ main = [ 'CorespringContainer', '$sce', (CorespringContainer, $sce) ->
     link: link(CorespringContainer, $sce)
     template: """
               <div class="view-single-choice">
-              <style>
-              .view-single-choice  .feedback.incorrect {
-              border: solid 1px red;
-              }
-              .view-single-choice  .feedback.correct {
-              border: solid 1px green;
-              }
-              </style>
-              <label ng-bind-html-unsafe="question.prompt"></label>
-              <div ng-repeat="o in question.choices">
-              <label>{{o.label}}</label>
-              <span ng-switch="inputType">
-              <input ng-switch-when="checkbox" type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>
-              <input ng-switch-when="radio" type="radio" ng-disabled="sessionFinished" name="group" ng-value="o.value" ng-model="answer.choice"></input>
-              </span>
+                <style>
+                  .view-single-choice  .feedback.incorrect {
+                    border: solid 1px red;
+                  }
 
-              <span
-              class="cs-feedback"
-              ng-class="{true:'correct', false:'incorrect'}[o.correct]"
-              ng-show="o.feedback">{{o.feedback}}</span>
-              </div>
+                  .view-single-choice  .feedback.correct {
+                    border: solid 1px green;
+                  }
+                </style>
+                <label ng-bind-html-unsafe="question.prompt"></label>
+
+                <div ng-repeat="o in question.choices">
+                  <label>{{o.label}}</label>
+                            <span ng-switch="inputType">
+                            <input ng-switch-when="checkbox" type="checkbox" ng-disabled="sessionFinished" name="group"
+                                   ng-value="o.label" ng-model="answer.choices[o.value]"></input>
+                            <input ng-switch-when="radio" type="radio" ng-disabled="sessionFinished" name="group" ng-value="o.value"
+                                   ng-model="answer.choice"></input>
+                            </span>
+
+                            <span
+                              class="cs-feedback"
+                              ng-class="{true:'correct', false:'incorrect'}[o.correct]"
+                              ng-show="o.feedback">{{o.feedback}}</span>
+                </div>
               </div>
               """
   def
