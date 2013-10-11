@@ -1,29 +1,5 @@
 var ckeditor, componentDefinition, main;
 
-var factoryFn = function(){
-  return {
-    componentType : "corespring-multiple-choice",
-    correctResponse : { value : ["2"] },
-    feedback : [
-      { value : "1", feedback : "Huh?"},
-      { value : "4", feedback : "4 to the floor" }
-    ],
-    model : {
-      prompt: "Add your question here...",
-      config: {
-        orientation: "vertical",
-        shuffle: true,
-        singleChoice: true
-      },
-      choices: [
-        {label: "1", value: "1"},
-        {label: "2", value: "2"}
-      ]
-    }
-  }
-};
-
-
 main = [
   'CorespringContainer', function(CorespringContainer) {
     var def;
@@ -34,7 +10,7 @@ main = [
       link: function(scope, element, attrs) {
         scope.containerBridge = {
           setModel: function(model) {
-            scope.fullModel = model.empty ? factoryFn() : model;
+            scope.fullModel = model;
             scope.model = scope.fullModel.model;
             scope.feedback = {};
             scope.correctMap = {};
@@ -144,6 +120,5 @@ ckeditor = [
 
 componentDefinition = {
   framework: 'angular',
-  directives: [{directive: main}, {name: 'ngCkeditor', directive: ckeditor } ],
-  factory: factoryFn
+  directives: [{directive: main}, {name: 'ngCkeditor', directive: ckeditor } ]
 };
