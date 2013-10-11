@@ -1,0 +1,20 @@
+{
+  "name": "corespring-components-test-rig",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "1.2.0-rc.2",
+    "angular-resource": "1.2.0-rc.2",
+    "angular-sanitize" : "1.2.0-rc.2",
+    "angular-animate" : "1.2.0-rc.2",
+    "angular-dragdrop" : "latest",
+    "angular-ui": "latest",
+    "angular-ui-sortable" : "latest",
+    "jquery": "latest",
+    "lodash" : "latest",
+    "ckeditor": "https://github.com/eymengunay/ckeditor.git"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.2.0-rc.2",
+    "angular-scenario": "1.2.0-rc.2"
+  }
+}
