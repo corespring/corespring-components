@@ -1,29 +1,5 @@
 var ckeditor, componentDefinition, main;
 
-var factoryFn = function () {
-  return {
-    componentType: "corespring-multiple-choice",
-    correctResponse: { value: ["2"] },
-    feedback: [
-      { value: "1", feedback: "Huh?"},
-      { value: "4", feedback: "4 to the floor" }
-    ],
-    model: {
-      prompt: "Add your question here...",
-      config: {
-        orientation: "vertical",
-        shuffle: true,
-        singleChoice: true
-      },
-      choices: [
-        {label: "1", value: "1"},
-        {label: "2", value: "2"}
-      ]
-    }
-  }
-};
-
-
 main = [
   'CorespringContainer', function (CorespringContainer) {
     var def;
@@ -53,7 +29,7 @@ main = [
             _.each(scope.fullModel.correctResponse.value, function (cr) {
               scope.correctMap[cr] = true;
             });
-            _.each(model.choices, function (c) {
+            _.each(scope.model.choices, function (c) {
               c.labelType = c.labelType || "text";
             });
             return console.log(model);
@@ -98,6 +74,7 @@ main = [
         }, true);
 
         CorespringContainer.registerConfigPanel(attrs["id"], scope.containerBridge);
+
         scope.removeQuestion = function (q) {
           scope.model.choices = _.filter(scope.model.choices, function (cq) {
             return cq !== q;
@@ -144,7 +121,7 @@ main = [
         '  <label>Student Feedback: </label>',
         '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="standard">Standard</input>',
         '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="custom">Custom</input>',
-        '  <div ng-show="feedback[q.value].feedbackType == custom">',
+        '  <div ng-show="feedback[q.value].feedbackType == \'custom\'">',
         '    <label>Feedback: </label><input type="text" ng-model="feedback[q.value].feedback"></input>',
         '  </div>',
         '</div>',
@@ -190,6 +167,5 @@ componentDefinition = {
   directives: [
     {directive: main},
     {name: 'ngCkeditor', directive: ckeditor }
-  ],
-  factory: factoryFn
+  ]
 };
