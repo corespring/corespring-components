@@ -19,24 +19,37 @@ link = function(CorespringContainer, $sce) {
       return scope.inputType = !!newValue ? "radio" : "checkbox";
     });
 
+
+    var rawAnswer = null;
+
+    var updateChoice = function(){
+
+      if(!scope.question || !rawAnswer){
+        return;
+      }
+
+      if( scope.inputType == "radio"){
+        scope.answer.choice = rawAnswer[0];
+      } else {
+        var _i, _len;
+        for (_i = 0, _len = rawAnswer.length; _i < _len; _i++) {
+          var key = rawAnswer[_i];
+          scope.answer.choices[key] = true;
+        }
+      }
+    };
+
     scope.containerBridge = {
 
       setModel: function(model) {
         scope.question = model;
-        return scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
+        scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
+        updateChoice();
       },
 
       setAnswer: function(answer) {
-        var key, _i, _len;
-        console.log("Setting answer to", answer);
-        if (answer.length === 1) {
-          scope.answer.choice = "" + answer[0];
-        } else {
-          for (_i = 0, _len = answer.length; _i < _len; _i++) {
-            key = answer[_i];
-            scope.answer.choices[key] = true;
-          }
-        }
+        rawAnswer = answer;
+        updateChoice();
       },
 
       getAnswer: function() {
