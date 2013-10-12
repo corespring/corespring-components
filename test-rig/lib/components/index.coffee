@@ -42,7 +42,7 @@ exports.init = (folder) ->
     _.each flattened, (p) ->
       reader.fromFolder "./#{p}", (err, def) ->
         loadedComponents.push(def)
-    console.log "--> loaded components", _.map(loadedComponents, (c) -> "#{c.organization}/#{c.name}")
+    #console.log "--> loaded components", _.map(loadedComponents, (c) -> "#{c.organization}/#{c.name}")
 
 exports.loaded = -> loaded
 ###

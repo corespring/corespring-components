@@ -72,7 +72,6 @@ exports.fromFolder = (p, done) ->
   srvr = {} #serverDef(p)
   pk = pkg(p)
 
-
   def = new ComponentDef(org, comp, ico, cl, srvr, pk, p )
 
   done(null, def)

@@ -2,15 +2,15 @@
   "name": "container-client-test-rig",
   "description": "The client side of the corespring container",
   "version": "0.0.1",
-  "dependencies" : {
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
-    "lodash" : "*",
-    "underscore" : "*",
+    "lodash": "*",
+    "underscore": "*",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-jasmine": "~0.5.2",
-    "coffee-script" : "*"
+    "coffee-script": "*",
+    "grunt-contrib-clean": "~0.5.0"
   },
   "engines": {
     "node": ">=0.10.0"

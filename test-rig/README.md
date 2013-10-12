@@ -4,10 +4,16 @@ This rig runs the component tests
 
 ## Usage
 
-    grunt testclient:corespring:multiple-choice:render --componentPath=../components
+    # Test all components
+    grunt testclient --componentPath=../components
 
-    # Note : filtering isn't fully working yet
-    # You have to specify componentPath
+    # Test components for org
+    grunt testclient:corespring --componentPath=../components
+
+    # Test single components for org
+    grunt testclient:corespring:multiple-choice --componentPath=../components
+
+    --keepWrapped=true|false (default false) - keep the generated js files
 
 ## Server side
 
