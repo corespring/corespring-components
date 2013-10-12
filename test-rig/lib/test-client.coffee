@@ -16,6 +16,8 @@ wrapAndWriteJs = (mode) ->
 
 cleanWrapped = (path, log) ->
   ->
+    fs.unlinkSync("./appDeclaration.js")
+
     filepaths = globule.find "#{path}/**/*-wrapped.js"
     _.each filepaths, (p) ->
       log("removing: #{p}")
