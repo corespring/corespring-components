@@ -5,8 +5,7 @@ The default corespring component set.
 
 ## Testing
 
-    npm install
-    ./bin/test-components
+See [test-rig](test-rig)
 
 
 ## Running
