@@ -1,28 +1,32 @@
-describe('multiple-choice render', function(){
+describe('corespring', function(){
 
-  var MockCorespringContainer = function () {
+  describe('multiple-choice render', function(){
 
-    this.register = function(){
-      console.log("Register", arguments);
-    }
-  };
+    var MockCorespringContainer = function () {
 
-  var element = null;
+      this.register = function(){
+        console.log("Register", arguments);
+      }
+    };
 
-  beforeEach(angular.mock.module('test-app'));
+    var element = null;
 
-  beforeEach(function () {
-    module(function ($provide) {
-      $provide.value('CorespringContainer', new MockCorespringContainer());
+    beforeEach(angular.mock.module('test-app'));
+
+    beforeEach(function () {
+      module(function ($provide) {
+        $provide.value('CorespringContainer', new MockCorespringContainer());
+      });
+    });
+
+    beforeEach(inject(function ($compile, $rootScope ) {
+      scope = $rootScope.$new();
+      element = $compile("<corespring-multiple-choice-render id='1'></corespring-multiple-choice-render>")($rootScope);
+    }));
+
+    it('constructs', function(){
+      expect(element).toNotBe(null);
     });
   });
 
-  beforeEach(inject(function ($compile, $rootScope ) {
-    scope = $rootScope.$new();
-    element = $compile("<corespring-multiple-choice-render id='1'></corespring-multiple-choice-render>")($rootScope);
-  }));
-
-  it('constructs', function(){
-    expect(element).toNotBe(null);
   });
-});
