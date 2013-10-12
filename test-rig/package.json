@@ -1,6 +1,6 @@
 {
   "name": "container-client-test-rig",
-  "description": "The client side of the corespring container",
+  "description": "test-rig for corespring-components",
   "version": "0.0.1",
   "dependencies": {},
   "devDependencies": {
