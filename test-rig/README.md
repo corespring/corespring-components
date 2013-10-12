@@ -12,7 +12,7 @@ This rig runs the component tests.
     grunt test
 
     # Test server side
-    grunt testserver --componentPath=../components
+    grunt testserver
 
     # Test clientside
     grunt testclient
