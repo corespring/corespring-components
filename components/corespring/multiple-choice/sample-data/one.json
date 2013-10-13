@@ -1,0 +1,55 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "corespring-multiple-choice",
+        "model": {
+          "choices": [
+            {
+              "label": "1",
+              "value": "1"
+            },
+            {
+              "label": "2",
+              "value": "2"
+            }
+          ],
+          "config": {
+            "orientation": "vertical",
+            "shuffle": true,
+            "singleChoice": true
+          },
+          "prompt": "What is 1 + 1?"
+        }
+      }
+    },
+    "xhtml": "<corespring-multiple-choice id=\"1\"></corespring-multiple-choice>"
+  },
+  "responses": {
+    "1": {
+      "correctness": "incorrect",
+      "feedback": [
+        {
+          "correct": false,
+          "feedback": "No that is incorrect",
+          "value": "1"
+        }
+      ],
+      "score": 0
+    }
+  },
+  "session": {
+    "answers": {
+      "1": ["1"]
+    },
+    "isFinished": true,
+    "remainingAttempts": 0,
+    "settings": {
+      "allowEmptyResponses": true,
+      "highlightCorrectResponse": true,
+      "highlightUserResponse": true,
+      "maxNoOfAttempts": 2,
+      "showFeedback": true
+    }
+  }
+}

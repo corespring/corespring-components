@@ -18,6 +18,11 @@
     top: 5px;
 }
 
+.view-multiple-choice .choice-holder.horizontal{
+    float:left;
+    padding-right: 10px;
+}
+
 .view-multiple-choice .choice {
     background-color: #fff;
     border: 1px solid #888;
