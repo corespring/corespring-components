@@ -36,9 +36,8 @@ main = [
           },
 
           getModel: function () {
-            var correctAnswers, model;
-            model = _.cloneDeep(scope.fullModel);
-            correctAnswers = [];
+            var model = _.cloneDeep(scope.fullModel);
+            var correctAnswers = [];
             _.each(scope.correctMap, function (v, k) {
               if (v) {
                 correctAnswers.push(k);
@@ -83,17 +82,17 @@ main = [
           });
           return null;
         };
+
         scope.addQuestion = function () {
           return scope.model.choices.push({
             label: "new Question"
           });
         };
-        scope.initIsCorrect = function () {
-        };
+
         scope.toChar = function(num) {
           return String.fromCharCode(65 + num);
-        }
-        return scope.initIsCorrect();
+        };
+
       },
       template: [
         '<div class="view-multiple-choice">',

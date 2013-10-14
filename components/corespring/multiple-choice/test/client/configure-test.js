@@ -12,6 +12,52 @@ describe('corespring', function () {
 
     var element = null, scope;
 
+    var testModel = {
+      "componentType": "corespring-multiple-choice",
+      "correctResponse": {
+        "value": [
+          "2"
+        ]
+      },
+      "feedback": [
+        {
+          "feedback": "Huh?",
+          "value": "1"
+        },
+        {
+          "feedback": "4 to the floor",
+          "isDefault": false,
+          "value": "2"
+        },
+        {
+          "isDefault": true,
+          "value": "3"
+        }
+      ],
+      "model": {
+        "choices": [
+          {
+            "label": "1",
+            "value": "1"
+          },
+          {
+            "label": "2",
+            "value": "2"
+          },
+          {
+            "label": "3",
+            "value": "3"
+          }
+        ],
+        "config": {
+          "orientation": "vertical",
+          "shuffle": true,
+          "singleChoice": true
+        },
+        "prompt": "Add your question here..."
+      }
+    };
+
     beforeEach(angular.mock.module('test-app'));
 
     beforeEach(function () {
@@ -37,47 +83,15 @@ describe('corespring', function () {
       });
     });
 
-    it('sets model', function () {
+    it('component builds its internal model', function () {
       inject(function (CorespringContainer) {
-        var testModel = {
-          "componentType": "corespring-multiple-choice",
-          "correctResponse": {
-            "value": [
-              "2"
-            ]
-          },
-          "feedback": [
-            {
-              "feedback": "Huh?",
-              "value": "1"
-            },
-            {
-              "feedback": "4 to the floor",
-              "value": "2"
-            }
-          ],
-          "model": {
-            "choices": [
-              {
-                "label": "1",
-                "value": "1"
-              },
-              {
-                "label": "2",
-                "value": "2"
-              }
-            ],
-            "config": {
-              "orientation": "vertical",
-              "shuffle": true,
-              "singleChoice": true
-            },
-            "prompt": "Add your question here..."
-          }
-        };
         CorespringContainer.elements['1'].setModel(testModel);
-        expect(scope.model.choices.length).toBe(2);
-
+        expect(scope.model.choices.length).toBe(3);
+        expect(scope.feedback['1'].feedbackType).toBe('custom');
+        expect(scope.feedback['1'].feedback).toBe('Huh?');
+        expect(scope.feedback['2'].feedbackType).toBe('custom');
+        expect(scope.feedback['2'].feedback).toBe('4 to the floor');
+        expect(scope.feedback['3'].feedbackType).toBe('standard');
       });
     });
 
