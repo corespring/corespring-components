@@ -10,13 +10,12 @@ main = [
       link: function (scope, element, attrs) {
         scope.containerBridge = {
           setModel: function (model) {
-            scope.fullModel = model.empty ? factoryFn() : model;
+            scope.fullModel = model;
             scope.model = scope.fullModel.model;
             scope.feedback = {};
             scope.correctMap = {};
             _.each(model.feedback, function (feedback) {
-              var choice;
-              choice = _.find(model.model.choices, function (choice) {
+              var choice = _.find(model.model.choices, function (choice) {
                 return choice.value === feedback.value;
               });
               if (choice) {
@@ -51,8 +50,10 @@ main = [
               feedback = _.find(model.feedback, function (fb) {
                 return fb.value === choice.value;
               });
-              feedback.feedback = (_ref = scope.feedback[choice.value]) != null ? _ref.feedback : void 0;
-              feedback.isDefault = ((_ref1 = scope.feedback[choice.value]) != null ? _ref1.feedbackType : void 0) === "standard";
+              if (feedback) {
+                feedback.feedback = (_ref = scope.feedback[choice.value]) != null ? _ref.feedback : void 0;
+                feedback.isDefault = ((_ref1 = scope.feedback[choice.value]) != null ? _ref1.feedbackType : void 0) === "standard";
+              }
             });
 
             return model;
