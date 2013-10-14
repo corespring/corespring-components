@@ -14,6 +14,7 @@ main = [
             scope.model = scope.fullModel.model;
             scope.feedback = {};
             scope.correctMap = {};
+            scope.model.scoringType = scope.model.scoringType || "standard";
             _.each(model.feedback, function (feedback) {
               var choice = _.find(model.model.choices, function (choice) {
                 return choice.value === feedback.value;
@@ -89,6 +90,9 @@ main = [
         };
         scope.initIsCorrect = function () {
         };
+        scope.toChar = function(num) {
+          return String.fromCharCode(65 + num);
+        }
         return scope.initIsCorrect();
       },
       template: [
@@ -105,6 +109,7 @@ main = [
         '          <input type="checkbox" ng-model="correctMap[q.value]"></input>',
         '        </div>',
         '      </td>',
+        '     <td>{{toChar($index)}}</td>',
         '      <td>',
         '        <select ng-model="q.labelType">',
         '          <option value="text">Text</option>',
@@ -130,6 +135,32 @@ main = [
         '  </div>',
         '</div>',
         '<a ng-click="addQuestion()">Add</a>',
+        '<div class="well">',
+        ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
+        ' <table> ',
+        ' <tr> ',
+        ' <td> Layout: ',
+        ' <td> <input type="radio" value="vertical" ng-model="model.config.layout"></input><td>A<br/>B<br/>C<br/>D',
+        ' <td> <input type="radio" value="horizontal" ng-model="model.config.layout"></input><td>A B C D',
+        ' <td> <input type="radio" value="tile" ng-model="model.config.layout"></input><td>A B<br/>C D',
+        ' </table>',
+        '</div>',
+        '<div>',
+        ' <p>Scoring:</p>',
+        ' <p>',
+        '   <input type="radio" ng-model="model.scoringType" value="standard"></input> <label>Standard</label>',
+        '   <input type="radio" ng-model="model.scoringType" value="custom"></input> <label>Custom</label>',
+        ' </p>',
+        ' <table ng-show="model.scoringType==\'custom\'">',
+        '   <tr>',
+        '   <th>Distractor Choice</th>',
+        '   <th>Points If Selected</th>',
+        '   <tr ng-repeat="ch in model.choices">',
+        '     <td>{{toChar($index)}}</td>',
+        '     <td><select><option>-1</option><option>0</option><option>1</option></select></td>',
+        '   </tr>',
+        ' </table>',
+        '</div',
         '</div>'
       ].join("")
     };
