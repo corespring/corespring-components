@@ -2,11 +2,10 @@
 
 The default corespring component set.
 
+## Requirements
 
-## Testing
-
-See [test-rig](test-rig)
-
+* bower >= 1.2.7
+* node/npm >= 0.10.*
 
 ## Running
 
