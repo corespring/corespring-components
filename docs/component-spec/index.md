@@ -1,6 +1,14 @@
 # Component Spec
 
-## Introduction
+This spec defines how to create a component that can run within a corespring container.
+
+A component is a self contained unit that defines client side behaviour and server side processing.
+
+On the client side the component must support the following modes:
+* render mode - how the client looks/behaves when rendered to the student
+* config mode - how the client looks/behaves when used by an item author
+
+On the server side the component must define 1 method `respond` that takes the model, the answer and some settings.
 
 ## Folder Structure
 
@@ -24,7 +32,27 @@ If model.empty == true - it means that the object is empty and you can generate 
 
 ### Testing
 
+* write your tests in jasmine for the client side and server side
+* for the client side you'll need to do a bit more setup depending on the framework you have chosen to use
+* run tests using the [test-rig](test-rig)
+
 ## Server
+
+### Allowed dependencies
+
+* underscore/lodash
+
+### respond method
+
+    ```javascript
+    /**
+     * @return an object with the following properties:
+     *   - correctness: "correct|incorrect|unknown"
+     *   - response: an response object for the client side part of your component - typically contains feedback
+     *   - score: a value from 0.0 - 1.0
+     */
+    response(question, answer, settings)
+    ```
 
 ### Respond Function
 
