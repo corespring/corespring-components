@@ -18,7 +18,16 @@
     top: 5px;
 }
 
+.view-multiple-choice .choices-container.tile {
+    max-width: 200px;
+}
+
 .view-multiple-choice .choice-holder.horizontal{
+    float:left;
+    padding-right: 10px;
+}
+
+.view-multiple-choice .choice-holder.tile {
     float:left;
     padding-right: 10px;
 }

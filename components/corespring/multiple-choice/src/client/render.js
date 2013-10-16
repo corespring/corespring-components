@@ -108,17 +108,19 @@ main = [
       template: [ '<div class="view-multiple-choice">',
                   '  <label ng-bind-html-unsafe="question.prompt"></label>',
                   '  <br/>',
+                  '  <div class="choices-container" ng-class="question.config.orientation">',
                   '  <div ng-repeat="o in question.choices" class="choice-holder" ng-class="question.config.orientation">',
-                  '    <label ng-switch="o.labelType">',
-                  '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
-                  '      <span ng-switch-default>{{o.label}}</span>',
-                  '    </label>',
                   '    <span ng-switch="inputType">',
                   '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
                   '      <input ng-switch-when="radio" type="radio" ng-disabled="sessionFinished" name="group" ng-value="o.value" ng-model="answer.choice"></input>',
                   '    </span>',
                   '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null">{{o.feedback}}</span>',
+                  '    <label ng-switch="o.labelType">',
+                  '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
+                  '      <span ng-switch-default>{{o.label}}</span>',
+                  '    </label>',
                   '  </div>',
+                  '</div>',
                   '</div>'].join("\n")
     };
 

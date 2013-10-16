@@ -12,9 +12,14 @@ main = [
           setModel: function (model) {
             scope.fullModel = model;
             scope.model = scope.fullModel.model;
+            scope.model.config.orientation = scope.model.config.orientation || "vertical";
             scope.feedback = {};
             scope.correctMap = {};
+            scope.scoreMapping = {};
             scope.model.scoringType = scope.model.scoringType || "standard";
+            _.each(model.scoreMapping, function (v,k) {
+              scope.scoreMapping[k] = String(v);
+            });
             _.each(model.feedback, function (feedback) {
               var choice = _.find(model.model.choices, function (choice) {
                 return choice.value === feedback.value;
@@ -42,6 +47,10 @@ main = [
               if (v) {
                 correctAnswers.push(k);
               }
+            });
+            model.scoreMapping = {};
+            _.each(scope.scoreMapping, function(v,k) {
+              model.scoreMapping[k] = Number(v);
             });
             model.correctResponse.value = correctAnswers;
             model.model.config.singleChoice = correctAnswers.length === 1;
@@ -89,7 +98,7 @@ main = [
           });
         };
 
-        scope.toChar = function(num) {
+        scope.toChar = function (num) {
           return String.fromCharCode(65 + num);
         };
 
@@ -139,9 +148,9 @@ main = [
         ' <table> ',
         ' <tr> ',
         ' <td> Layout: ',
-        ' <td> <input type="radio" value="vertical" ng-model="model.config.layout"></input><td>A<br/>B<br/>C<br/>D',
-        ' <td> <input type="radio" value="horizontal" ng-model="model.config.layout"></input><td>A B C D',
-        ' <td> <input type="radio" value="tile" ng-model="model.config.layout"></input><td>A B<br/>C D',
+        ' <td> <input type="radio" value="vertical" ng-model="model.config.orientation"></input><td>A<br/>B<br/>C<br/>D',
+        ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
+        ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
         ' </table>',
         '</div>',
         '<div>',
@@ -156,7 +165,7 @@ main = [
         '   <th>Points If Selected</th>',
         '   <tr ng-repeat="ch in model.choices">',
         '     <td>{{toChar($index)}}</td>',
-        '     <td><select><option>-1</option><option>0</option><option>1</option></select></td>',
+        '     <td><select ng-model="scoreMapping[ch.value]"><option value="-1">-1</option><option value="0">0</option><option value="1">1</option></select></td>',
         '   </tr>',
         ' </table>',
         '</div',
