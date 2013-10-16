@@ -34,6 +34,11 @@ describe('corespring', function () {
           "value": "3"
         }
       ],
+      "scoreMapping": {
+        "1": 0,
+        "2": 1,
+        "3": -1
+      },
       "model": {
         "choices": [
           {
@@ -92,6 +97,19 @@ describe('corespring', function () {
         expect(scope.feedback['2'].feedbackType).toBe('custom');
         expect(scope.feedback['2'].feedback).toBe('4 to the floor');
         expect(scope.feedback['3'].feedbackType).toBe('standard');
+        expect(scope.scoreMapping).toEqual({'1': '0', '2': '1', '3': '-1'});
+      });
+    });
+
+    it('component serializes model backwards', function () {
+      inject(function (CorespringContainer) {
+        CorespringContainer.elements['1'].setModel(testModel);
+        var model = CorespringContainer.elements['1'].getModel();
+        expect(model).not.toBe(null);
+        expect(model.scoreMapping).not.toBe(null);
+        expect(model.scoreMapping).toEqual({'1': 0, '2': 1, '3': -1});
+        expect(model.feedback).not.toBe(null);
+        expect(model.model).not.toBe(null);
       });
     });
 
