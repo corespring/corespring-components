@@ -9,14 +9,14 @@ link = function(CorespringContainer, $sce) {
     };
 
     scope.$watch('session', function(newValue) {
-      if (newValue == null) {
+      if (newValue === null) {
         return;
       }
-      return scope.sessionFinished = newValue.isFinished;
+      scope.sessionFinished = newValue.isFinished;
     }, true);
 
     scope.$watch('question.config.singleChoice', function(newValue) {
-      return scope.inputType = !!newValue ? "radio" : "checkbox";
+      scope.inputType = !!newValue ? "radio" : "checkbox";
     });
 
 
@@ -77,7 +77,7 @@ link = function(CorespringContainer, $sce) {
       },
 
       setSession: function(session) {
-        return scope.session = session;
+        scope.session = session;
       },
 
       setResponse: function(response) {
@@ -90,7 +90,7 @@ link = function(CorespringContainer, $sce) {
               return c.value === fb.value;
             });
 
-            if (choice != null) {
+            if (choice !== null) {
               choice.feedback = fb.feedback;
               choice.correct = fb.correct;
             }
@@ -100,7 +100,7 @@ link = function(CorespringContainer, $sce) {
       }
     };
 
-    CorespringContainer.register(attrs['id'], scope.containerBridge);
+    CorespringContainer.register(attrs.id, scope.containerBridge);
   };
 };
 

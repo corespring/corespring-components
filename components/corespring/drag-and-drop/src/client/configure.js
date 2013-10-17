@@ -27,13 +27,16 @@ componentDefinition = {
               return {};
             }
           };
-          CorespringContainer.registerConfigPanel(attrs["id"], $scope.containerBridge);
+
+          CorespringContainer.registerConfigPanel(attrs.id, $scope.containerBridge);
+
           $scope.remove = function(c) {
             $scope.model.choices = _.filter($scope.model.choices, function(existing) {
               return existing !== c;
             });
           };
-          return $scope.add = function() {
+
+          $scope.add = function() {
             $scope.model.choices.push({
               id: "" + $scope.model.choices.length,
               content: "new choice"
