@@ -3,13 +3,16 @@ var componentDefinition, link, main;
 link = function(CorespringContainer, $sce) {
   return function(scope, element, attrs) {
 
+
+    console.log("> Player on scope: ", scope.player);
+
     scope.inputType = 'checkbox';
     scope.answer = {
       choices: {}
     };
 
     scope.$watch('session', function(newValue) {
-      if (newValue === null) {
+      if (!newValue) {
         return;
       }
       scope.sessionFinished = newValue.isFinished;
@@ -93,7 +96,11 @@ link = function(CorespringContainer, $sce) {
       }
     };
 
-    CorespringContainer.register(attrs.id, scope.containerBridge);
+    if(scope.registerComponent){
+      scope.registerComponent(attrs.id, scope.containerBridge);
+    } else {
+      CorespringContainer.register(attrs.id, scope.containerBridge);
+    }
   };
 };
 
