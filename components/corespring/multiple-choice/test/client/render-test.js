@@ -6,7 +6,7 @@ describe('corespring', function(){
 
       this.register = function(){
         console.log("Register", arguments);
-      }
+      };
     };
 
     var element = null;

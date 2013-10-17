@@ -15,12 +15,14 @@
     "grunt": "~0.4.1",
     "lodash": "*",
     "underscore": "*",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-jasmine": "~0.5.2",
     "coffee-script": "*",
     "grunt-contrib-clean": "~0.5.0",
     "globule": "*",
     "mocha" : "*",
-    "grunt-mocha-test": "~0.7.0"
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-jasmine": "~0.5.2",
+    "grunt-mocha-test": "~0.7.0",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-watch": "~0.5.3"
   }
 }

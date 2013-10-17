@@ -1,6 +1,7 @@
 var ckeditor, componentDefinition, main;
 
 main = [
+
   'CorespringContainer', function (CorespringContainer) {
     var def;
     def = {
@@ -60,8 +61,8 @@ main = [
                 return fb.value === choice.value;
               });
               if (feedback) {
-                feedback.feedback = (_ref = scope.feedback[choice.value]) != null ? _ref.feedback : void 0;
-                feedback.isDefault = ((_ref1 = scope.feedback[choice.value]) != null ? _ref1.feedbackType : void 0) === "standard";
+                feedback.feedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
+                feedback.isDefault = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0) === "standard";
               }
             });
 
@@ -83,7 +84,7 @@ main = [
           return console.log(scope.model);
         }, true);
 
-        CorespringContainer.registerConfigPanel(attrs["id"], scope.containerBridge);
+        CorespringContainer.registerConfigPanel(attrs.id, scope.containerBridge);
 
         scope.removeQuestion = function (q) {
           scope.model.choices = _.filter(scope.model.choices, function (cq) {
@@ -178,8 +179,7 @@ main = [
 
 ckeditor = [
   function () {
-    var def;
-    return def = {
+    return {
       require: '?ngModel',
       link: function (scope, elm, attr, ngModel) {
         var ck;
@@ -198,7 +198,7 @@ ckeditor = [
             ngModel.$setViewValue(ck.getData());
           });
         });
-        return ngModel.$render = function (value) {
+        ngModel.$render = function (value) {
           ck.setData(ngModel.$viewValue);
         };
       }

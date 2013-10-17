@@ -13,8 +13,10 @@ module.exports = (grunt) ->
     componentPath: grunt.config("componentPath") || "components"
 
   config =
+
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
+
     jasmine:
       unit:
         src: '<%= grunt.config("testClient.wrapped") %>'
@@ -30,20 +32,34 @@ module.exports = (grunt) ->
             '<%= grunt.config("testClient.appDeclaration") %>'
           ]
           specs: '<%= grunt.config("testClient.specPath") %>'
+
+    # Our custom test client
     testClient:
       componentPath: commonConfig.componentPath
+
     mochaTest:
       test:
         options:
           reporter: 'spec'
         src: ['<%= common.componentPath %>/**/test/server/**/*-test.js']
 
+    jshint:
+      jshintrc: '.jshintrc'
+      main: ['<%= common.componentPath %>/**/*.js']
+
+    watch:
+      js:
+        files: ['<%= common.componentPath %>/**/*.js']
+        tasks: ['jshint:main']
+
   grunt.initConfig(config)
 
   npmTasks = [
     'grunt-contrib-jasmine',
     'grunt-contrib-clean',
-    'grunt-mocha-test'
+    'grunt-mocha-test',
+    'grunt-contrib-watch',
+    'grunt-contrib-jshint'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks

@@ -7,7 +7,7 @@ describe('corespring', function () {
       this.registerConfigPanel = function (id, bridge) {
         console.info("Registering ", id, " => ", bridge);
         this.elements[id] = bridge;
-      }
+      };
     };
 
     var element = null, scope;

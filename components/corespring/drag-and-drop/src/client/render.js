@@ -5,7 +5,7 @@ var main = [ '$compile', 'CorespringContainer', function($compile, CorespringCon
   var link = function(scope, element, attrs){
 
     scope.$on('dropped', function(event,object){
-      scope.model.choices = _.filter(scope.model.choices, function(o){ return o != object } );
+      scope.model.choices = _.filter(scope.model.choices, function(o){ return o != object; } );
     });
 
     scope.containerBridge = {
@@ -19,9 +19,9 @@ var main = [ '$compile', 'CorespringContainer', function($compile, CorespringCon
         console.log("returning answer for: Drag and drop");
         return { landingPlace: "1", choice: "1" };
       }
-    }
+    };
 
-    CorespringContainer.register(attrs['id'], scope.containerBridge);
+    CorespringContainer.register(attrs.id, scope.containerBridge);
 
   };
 
@@ -49,7 +49,7 @@ var main = [ '$compile', 'CorespringContainer', function($compile, CorespringCon
     scope: 'isolate',
     restrict : 'E',
     template : tmpl
-  }
+  };
 }];
 
 var landingPlace = [function(){
@@ -63,7 +63,7 @@ var landingPlace = [function(){
         if(newValue){
           scope.$emit('dropped', newValue);
         }
-      })
+      });
     },
     template: [
       '    <div',
@@ -74,8 +74,8 @@ var landingPlace = [function(){
       '      style="padding: 5px; width: 200px; height: 50px; background-color: #e4d5fc;">',
       '        <div ng-show="dropped" class="btn btn-primary">{{dropped.content}}</div>',
       '    </div>'].join("")
-    }
-  return def
+    };
+  return def;
 }];
 
 /**
@@ -90,5 +90,5 @@ var componentDefinition = {
     /** A 2nd directive */
     { name: 'landingplace', directive: landingPlace }
   ]
-}
+};
 
