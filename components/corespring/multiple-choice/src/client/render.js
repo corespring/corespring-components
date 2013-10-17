@@ -43,7 +43,14 @@ link = function(CorespringContainer, $sce) {
 
       setModel: function(model) {
         scope.question = model;
+
         scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
+
+        if (scope.question.config.shuffle)
+          scope.choices = _.shuffle(_.cloneDeep(scope.question.choices));
+        else
+          scope.choices = _.cloneDeep(scope.question.choices);
+
         updateChoice();
       },
 
@@ -109,7 +116,7 @@ main = [
                   '  <label ng-bind-html-unsafe="question.prompt"></label>',
                   '  <br/>',
                   '  <div class="choices-container" ng-class="question.config.orientation">',
-                  '  <div ng-repeat="o in question.choices" class="choice-holder" ng-class="question.config.orientation">',
+                  '  <div ng-repeat="o in choices" class="choice-holder" ng-class="question.config.orientation">',
                   '    <span ng-switch="inputType">',
                   '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
                   '      <input ng-switch-when="radio" type="radio" ng-disabled="sessionFinished" name="group" ng-value="o.value" ng-model="answer.choice"></input>',
