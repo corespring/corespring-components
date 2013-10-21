@@ -85,6 +85,31 @@ describe('corespring', function () {
       expect($(element).find('input[type="checkbox"]').length).toBe(3);
     });
 
+    it('get answer returns selected answers', function () {
+      container.elements['1'].setModel(testModel);
+      scope.answer.choices['1'] = true;
+      var answer = container.elements['1'].getAnswer();
+      expect(answer).toEqual(['1']);
+    });
+
+    it('setting answer updates the UI (single choice)', function () {
+      container.elements['1'].setModel(testModel);
+      container.elements['1'].setAnswer(['1']);
+      rootScope.$digest();
+      expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
+      expect($(element).find('input[value="2"]').is(':checked')).toBe(false);
+      expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
+    });
+
+    it('setting answer updates the UI (multi choice)', function () {
+      testModel.config.singleChoice = false;
+      container.elements['1'].setModel(testModel);
+      container.elements['1'].setAnswer(['1','2']);
+      rootScope.$digest();
+      expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
+      expect($(element).find('input[value="2"]').is(':checked')).toBe(true);
+      expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
+    });
 
 
   });

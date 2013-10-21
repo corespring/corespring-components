@@ -9,7 +9,7 @@ link = function(CorespringContainer, $sce) {
     };
 
     scope.$watch('session', function(newValue) {
-      if (newValue === null) {
+      if (_.isUndefined(newValue)) {
         return;
       }
       scope.sessionFinished = newValue.isFinished;
@@ -54,6 +54,7 @@ link = function(CorespringContainer, $sce) {
         updateChoice();
       },
 
+      // sets the student's answer
       setAnswer: function(answer) {
         rawAnswer = answer;
         updateChoice();
@@ -80,6 +81,7 @@ link = function(CorespringContainer, $sce) {
         scope.session = session;
       },
 
+      // sets the server's response
       setResponse: function(response) {
         scope.response = response;
         console.log("set response for single-choice", response);
@@ -114,7 +116,6 @@ main = [
       link: link(CorespringContainer, $sce),
       template: [ '<div class="view-multiple-choice">',
                   '  <label ng-bind-html-unsafe="question.prompt"></label>',
-                  '  <br/>',
                   '  <div class="choices-container" ng-class="question.config.orientation">',
                   '  <div ng-repeat="o in choices" class="choice-holder" ng-class="question.config.orientation">',
                   '    <span ng-switch="inputType">',
