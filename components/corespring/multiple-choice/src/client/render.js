@@ -42,6 +42,15 @@ link = function($sce) {
       }
     };
 
+
+    //TODO: Reset a function exposed in the bridge?
+    resetFeedback = function(){
+      _.each(scope.question.choices, function(c){
+        delete c.feedback;
+        delete c.correct;
+      });
+    }
+
     scope.containerBridge = {
 
       setModel: function(model) {
@@ -77,6 +86,9 @@ link = function($sce) {
       },
 
       setResponse: function(response) {
+
+        resetFeedback();
+
         scope.response = response;
         console.log("set response for single-choice", response);
         if (response.feedback) {

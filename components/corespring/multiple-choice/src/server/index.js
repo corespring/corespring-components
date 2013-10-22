@@ -17,9 +17,10 @@ exports.render = function(element) {
 };
 
 feedbackByValue = function(q, v) {
-  return _.find(q.feedback, function(f) {
+  var originalFb = _.find(q.feedback, function(f) {
     return f.value === v;
   });
+  return _.cloneDeep(originalFb);
 };
 
 correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
