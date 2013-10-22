@@ -1,6 +1,6 @@
 var componentDefinition, link, main;
 
-link = function(CorespringContainer, $sce) {
+link = function($sce) {
   return function(scope, element, attrs) {
 
 
@@ -105,13 +105,13 @@ link = function(CorespringContainer, $sce) {
 };
 
 main = [
-  'CorespringContainer', '$sce', function(CorespringContainer, $sce) {
+  '$sce', function($sce) {
     var def;
     def = {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      link: link(CorespringContainer, $sce),
+      link: link($sce),
       template: [ '<div class="view-multiple-choice">',
                   '  <label ng-bind-html-unsafe="question.prompt"></label>',
                   '  <br/>',
