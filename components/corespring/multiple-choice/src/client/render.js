@@ -44,8 +44,9 @@ link = function($sce) {
 
 
     //TODO: Reset a function exposed in the bridge?
-    resetFeedback = function(){
-      _.each(scope.question.choices, function(c){
+    resetFeedback = function(choices){
+      console.log("choices: ", choices);
+      _.each(choices, function(c){
         delete c.feedback;
         delete c.correct;
       });
@@ -95,11 +96,12 @@ link = function($sce) {
 
       // sets the server's response
       setResponse: function(response) {
+        console.log( scope.$id, "set response for multiple-choice", response);
+        console.log( scope.$id, "choices", scope.choices);
 
-        resetFeedback();
+        resetFeedback(scope.choices);
 
         scope.response = response;
-        console.log("set response for single-choice", response);
         if (response.feedback) {
           _.each(response.feedback, function(fb) {
 

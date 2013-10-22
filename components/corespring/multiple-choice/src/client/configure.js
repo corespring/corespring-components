@@ -97,6 +97,10 @@ main = [
           scope.model.choices = _.filter(scope.model.choices, function (cq) {
             return cq !== q;
           });
+          scope.fullModel.feedback = _.filter(scope.fullModel.feedback, function(fb){
+            return fb.value !== q.value;
+          });
+
           return null;
         };
 

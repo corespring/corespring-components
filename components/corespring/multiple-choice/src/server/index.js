@@ -24,12 +24,19 @@ feedbackByValue = function(q, v) {
 };
 
 correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
-  var correctKey, fb, nc, _i, _len, _ref, _results;
+
+  var correctKey, fb, nc, _i, _len, _ref;
+
   _ref = q.correctResponse.value;
-  _results = [];
+
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     correctKey = _ref[_i];
     fb = feedbackByValue(q, correctKey);
+
+    if(!fb){
+      return;
+    }
+
     if (userGotItRight) {
       delete fb.notChosenFeedback;
     } else {
@@ -42,9 +49,8 @@ correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
       }
     }
     fb.correct = true;
-    _results.push(fbArray.push(fb));
+    fbArray.push(fb);
   }
-  return _results;
 };
 
 exports.isCorrect = function(answer, correctAnswer) {
