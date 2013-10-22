@@ -3,7 +3,7 @@ var componentDefinition;
 componentDefinition = {
   framework: "angular",
   directive: [
-    "$compile", "CorespringContainer", function($compile, CorespringContainer) {
+    "$compile", function($compile) {
       var input, inputs, template;
       console.log("corespring/drag-and-drop");
       input = function(attrs) {
@@ -28,7 +28,7 @@ componentDefinition = {
             }
           };
 
-          CorespringContainer.registerConfigPanel(attrs.id, $scope.containerBridge);
+          $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
 
           $scope.remove = function(c) {
             $scope.model.choices = _.filter($scope.model.choices, function(existing) {

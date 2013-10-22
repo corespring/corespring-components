@@ -1,4 +1,4 @@
-var main = [ '$compile', 'CorespringContainer', function($compile, CorespringContainer){
+var main = [ '$compile', function($compile){
 
   console.log("define component");
 
@@ -12,7 +12,7 @@ var main = [ '$compile', 'CorespringContainer', function($compile, CorespringCon
       setModel : function(model){
         scope.model = _.clone(model);
         console.log("Config Model is ", scope.model);
-        $answerArea = element.find("#answer-area").append("<div> " + scope.model.answerArea + "</div>");
+        $answerArea = element.find("#answer-area").html("<div> " + scope.model.answerArea + "</div>");
         $compile($answerArea)(scope.$new());
       },
       getAnswer: function(){
@@ -21,8 +21,7 @@ var main = [ '$compile', 'CorespringContainer', function($compile, CorespringCon
       }
     };
 
-    CorespringContainer.register(attrs.id, scope.containerBridge);
-
+    scope.registerComponent(attrs.id, scope.containerBridge);
   };
 
   var tmpl = [

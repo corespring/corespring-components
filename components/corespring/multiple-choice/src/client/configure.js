@@ -2,7 +2,7 @@ var ckeditor, componentDefinition, main;
 
 main = [
 
-  'CorespringContainer', function (CorespringContainer) {
+  function () {
     var def;
     def = {
       scope: 'isolate',
@@ -18,9 +18,11 @@ main = [
             scope.correctMap = {};
             scope.scoreMapping = {};
             scope.model.scoringType = scope.model.scoringType || "standard";
+
             _.each(model.scoreMapping, function (v,k) {
               scope.scoreMapping[k] = String(v);
             });
+
             _.each(model.feedback, function (feedback) {
               var choice = _.find(model.model.choices, function (choice) {
                 return choice.value === feedback.value;
@@ -32,9 +34,11 @@ main = [
                 };
               }
             });
+
             _.each(scope.fullModel.correctResponse.value, function (cr) {
               scope.correctMap[cr] = true;
             });
+
             _.each(scope.model.choices, function (c) {
               c.labelType = c.labelType || "text";
             });
@@ -44,17 +48,20 @@ main = [
           getModel: function () {
             var model = _.cloneDeep(scope.fullModel);
             var correctAnswers = [];
+
             _.each(scope.correctMap, function (v, k) {
               if (v) {
                 correctAnswers.push(k);
               }
             });
             model.scoreMapping = {};
+
             _.each(scope.scoreMapping, function(v,k) {
               model.scoreMapping[k] = Number(v);
             });
             model.correctResponse.value = correctAnswers;
             model.model.config.singleChoice = correctAnswers.length === 1;
+
             _.each(model.model.choices, function (choice) {
               var feedback, _ref, _ref1;
               feedback = _.find(model.feedback, function (fb) {
@@ -84,7 +91,7 @@ main = [
           return console.log(scope.model);
         }, true);
 
-        CorespringContainer.registerConfigPanel(attrs.id, scope.containerBridge);
+        scope.registerConfigPanel(attrs.id, scope.containerBridge);
 
         scope.removeQuestion = function (q) {
           scope.model.choices = _.filter(scope.model.choices, function (cq) {
@@ -94,7 +101,7 @@ main = [
         };
 
         scope.addQuestion = function () {
-          return scope.model.choices.push({
+          scope.model.choices.push({
             label: "new Question"
           });
         };
