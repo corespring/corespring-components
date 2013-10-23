@@ -2,9 +2,9 @@ describe('corespring', function () {
 
   describe('multiple-choice render', function () {
 
-    var MockCorespringContainer = function () {
+    var MockComponentRegister = function () {
       this.elements = {};
-      this.register = function (id, bridge) {
+      this.registerComponent = function (id, bridge) {
         this.elements[id] = bridge;
       }
     };
@@ -38,16 +38,16 @@ describe('corespring', function () {
 
     beforeEach(function () {
       module(function ($provide) {
-        $provide.value('CorespringContainer', new MockCorespringContainer());
         testModel = _.cloneDeep(testModelTemplate);
       });
     });
 
-    beforeEach(inject(function ($compile, $rootScope, CorespringContainer) {
+    beforeEach(inject(function ($compile, $rootScope) {
+      container = new MockComponentRegister();
+      $rootScope.registerComponent = function(id,b){ container.registerComponent(id,b) };
       element = $compile("<corespring-multiple-choice-render id='1'></corespring-multiple-choice-render>")($rootScope.$new());
       scope = element.scope();
       rootScope = $rootScope;
-      container = CorespringContainer;
     }));
 
     it('constructs', function () {

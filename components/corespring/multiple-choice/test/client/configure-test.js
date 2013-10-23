@@ -2,15 +2,14 @@ describe('corespring', function () {
 
   describe('multiple-choice configure', function () {
 
-    var MockCorespringContainer = function () {
+    var MockComponentRegister = function () {
       this.elements = {};
       this.registerConfigPanel = function (id, bridge) {
-        console.info("Registering ", id, " => ", bridge);
         this.elements[id] = bridge;
-      };
+      }
     };
 
-    var element = null, scope;
+    var element = null, scope, container = null;
 
     var testModel = {
       "componentType": "corespring-multiple-choice",
@@ -65,14 +64,10 @@ describe('corespring', function () {
 
     beforeEach(angular.mock.module('test-app'));
 
-    beforeEach(function () {
-      module(function ($provide) {
-        $provide.value('CorespringContainer', new MockCorespringContainer());
-      });
-    });
-
     beforeEach(inject(function ($compile, $rootScope) {
       scope = $rootScope.$new();
+      container = new MockComponentRegister();
+      $rootScope.registerConfigPanel = function(id,b){ container.registerConfigPanel(id,b) };
       element = $compile("<corespring-multiple-choice-configure id='1'></corespring-multiple-choice-configure>")(scope);
       scope = element.scope();
     }));
@@ -82,35 +77,29 @@ describe('corespring', function () {
     });
 
     it('component is being registered by the container', function () {
-      inject(function (CorespringContainer) {
-        expect(CorespringContainer.elements['1']).toNotBe(undefined);
-        expect(CorespringContainer.elements['2']).toBeUndefined();
-      });
+      expect(container.elements['1']).toNotBe(undefined);
+      expect(container.elements['2']).toBeUndefined();
     });
 
     it('component builds its internal model', function () {
-      inject(function (CorespringContainer) {
-        CorespringContainer.elements['1'].setModel(testModel);
-        expect(scope.model.choices.length).toBe(3);
-        expect(scope.feedback['1'].feedbackType).toBe('custom');
-        expect(scope.feedback['1'].feedback).toBe('Huh?');
-        expect(scope.feedback['2'].feedbackType).toBe('custom');
-        expect(scope.feedback['2'].feedback).toBe('4 to the floor');
-        expect(scope.feedback['3'].feedbackType).toBe('standard');
-        expect(scope.scoreMapping).toEqual({'1': '0', '2': '1', '3': '-1'});
-      });
+      container.elements['1'].setModel(testModel);
+      expect(scope.model.choices.length).toBe(3);
+      expect(scope.feedback['1'].feedbackType).toBe('custom');
+      expect(scope.feedback['1'].feedback).toBe('Huh?');
+      expect(scope.feedback['2'].feedbackType).toBe('custom');
+      expect(scope.feedback['2'].feedback).toBe('4 to the floor');
+      expect(scope.feedback['3'].feedbackType).toBe('standard');
+      expect(scope.scoreMapping).toEqual({'1': '0', '2': '1', '3': '-1'});
     });
 
     it('component serializes model backwards', function () {
-      inject(function (CorespringContainer) {
-        CorespringContainer.elements['1'].setModel(testModel);
-        var model = CorespringContainer.elements['1'].getModel();
-        expect(model).not.toBe(null);
-        expect(model.scoreMapping).not.toBe(null);
-        expect(model.scoreMapping).toEqual({'1': 0, '2': 1, '3': -1});
-        expect(model.feedback).not.toBe(null);
-        expect(model.model).not.toBe(null);
-      });
+      container.elements['1'].setModel(testModel);
+      var model = container.elements['1'].getModel();
+      expect(model).not.toBe(null);
+      expect(model.scoreMapping).not.toBe(null);
+      expect(model.scoreMapping).toEqual({'1': 0, '2': 1, '3': -1});
+      expect(model.feedback).not.toBe(null);
+      expect(model.model).not.toBe(null);
     });
 
 
