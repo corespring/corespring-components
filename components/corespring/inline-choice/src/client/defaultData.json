@@ -1,0 +1,32 @@
+{
+  "componentType": "corespring-inline-choice",
+  "correctResponse": {
+    "value": "2"
+  },
+  "feedback": [
+    {
+      "feedback": "Huh?",
+      "value": "1"
+    },
+    {
+      "feedback": "4 to the floor",
+      "value": "2"
+    }
+  ],
+  "model": {
+    "choices": [
+      {
+        "label": "1",
+        "value": "1"
+      },
+      {
+        "label": "2",
+        "value": "2"
+      }
+    ],
+    "config": {
+      "shuffle": true
+    },
+    "prompt": "Add your question here..."
+  }
+}
