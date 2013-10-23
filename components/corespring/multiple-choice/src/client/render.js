@@ -119,11 +119,10 @@ link = function($sce) {
       }
     };
 
-    if(scope.registerComponent){
-      scope.registerComponent(attrs.id, scope.containerBridge);
-    } else {
-      CorespringContainer.register(attrs.id, scope.containerBridge);
+    if(!scope.registerComponent){
+      throw new Error("registerComponent isn't available on the scope");
     }
+    scope.registerComponent(attrs.id, scope.containerBridge);
   };
 };
 
