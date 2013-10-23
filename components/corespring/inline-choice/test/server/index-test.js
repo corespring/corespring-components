@@ -28,9 +28,7 @@ component = {
       }
     ]
   },
-  correctResponse: {
-    value: "carrot"
-  },
+  correctResponse: "carrot",
   feedback: [
     {
       value: "apple",
