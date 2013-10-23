@@ -1,0 +1,53 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "corespring-inline-choice",
+        "model": {
+          "choices": [
+            {
+              "label": "kennedy",
+              "value": "Kennedy"
+            },
+            {
+              "label": "obama",
+              "value": "Obama"
+            }
+          ],
+          "config": {
+            "shuffle": true
+          },
+          "prompt": "Who is the president of the US?"
+        }
+      }
+    },
+    "xhtml": "<corespring-inline-choice id=\"1\"></corespring-multiple-choice>"
+  },
+  "responses": {
+    "kennedy": {
+      "correctness": "incorrect",
+      "feedback": [
+        {
+          "correct": false,
+          "feedback": "No that is incorrect",
+          "value": "kennedy"
+        }
+      ],
+      "score": 0
+    }
+  },
+  "session": {
+    "answers": {
+      "1": "kennedy"
+    },
+    "isFinished": true,
+    "remainingAttempts": 0,
+    "settings": {
+      "allowEmptyResponses": true,
+      "highlightCorrectResponse": true,
+      "highlightUserResponse": true,
+      "maxNoOfAttempts": 2,
+      "showFeedback": true
+    }
+  }
+}

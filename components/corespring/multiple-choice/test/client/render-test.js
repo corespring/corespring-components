@@ -111,6 +111,34 @@ describe('corespring', function () {
       expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
     });
 
+    it('setting response shows correctness and feedback', function () {
+      container.elements['1'].setModel(testModel);
+      var response = {
+        "correctness": "correct",
+        "score": 1,
+        "feedback": [
+          {
+            "value": "1",
+            "feedback": "yup",
+            "correct": true
+          },
+          {
+            "value": "2",
+            "correct": true
+          },
+          {
+            "value": "3",
+            "correct": false
+          }
+        ]
+      };
+      container.elements['1'].setResponse(response);
+      rootScope.$digest();
+      expect($(element).find(".cs-feedback:contains('yup')").length).toBe(1);
+      expect($(element).find(".correct").length).toBe(2);
+      expect($(element).find(".incorrect").length).toBe(1);
+    });
+
 
   });
 
