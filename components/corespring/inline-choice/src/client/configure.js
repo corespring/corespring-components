@@ -2,7 +2,7 @@ var ckeditor, componentDefinition, main;
 
 main = [
 
-  'CorespringContainer', function (CorespringContainer) {
+   function () {
     var def;
     def = {
       scope: 'isolate',
@@ -84,7 +84,7 @@ main = [
           return console.log(scope.model);
         }, true);
 
-        CorespringContainer.registerConfigPanel(attrs.id, scope.containerBridge);
+        scope.registerConfigPanel(attrs.id, scope.containerBridge);
 
         scope.removeQuestion = function (q) {
           scope.model.choices = _.filter(scope.model.choices, function (cq) {
