@@ -1,38 +1,38 @@
-.view-multiple-choice .correct-label {
+.view-inline-choice .correct-label {
     color: #008000;
 }
 
-.view-multiple-choice td {
+.view-inline-choice td {
     vertical-align: middle;
     padding: 5px;
 }
 
-.view-multiple-choice .correct-block {
+.view-inline-choice .correct-block {
     display: inline-block;
     text-align: center;
 }
 
-.view-multiple-choice .remove-button {
+.view-inline-choice .remove-button {
     position: absolute;
     right: 10px;
     top: 5px;
 }
 
-.view-multiple-choice .choices-container.tile {
+.view-inline-choice .choices-container.tile {
     max-width: 200px;
 }
 
-.view-multiple-choice .choice-holder.horizontal{
+.view-inline-choice .choice-holder.horizontal{
     float:left;
     padding-right: 10px;
 }
 
-.view-multiple-choice .choice-holder.tile {
+.view-inline-choice .choice-holder.tile {
     float:left;
     padding-right: 10px;
 }
 
-.view-multiple-choice .choice {
+.view-inline-choice .choice {
     background-color: #fff;
     border: 1px solid #888;
     border-radius: 4px;
@@ -41,7 +41,7 @@
     position: relative;
 }
 
-.view-multiple-choice .choice-image {
+.view-inline-choice .choice-image {
     max-width: 50px;
     max-height: 50px;
 }
