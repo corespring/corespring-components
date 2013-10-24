@@ -15,7 +15,7 @@ main = [
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
             scope.feedback = {};
-            scope.correctMap = {};
+            scope.correctValue = scope.fullModel.correctResponse;
             scope.scoreMapping = {};
             scope.model.scoringType = scope.model.scoringType || "standard";
             _.each(model.scoreMapping, function (v,k) {
@@ -32,9 +32,7 @@ main = [
                 };
               }
             });
-            _.each(scope.fullModel.correctResponse.value, function (cr) {
-              scope.correctMap[cr] = true;
-            });
+
             _.each(scope.model.choices, function (c) {
               c.labelType = c.labelType || "text";
             });
@@ -43,18 +41,11 @@ main = [
 
           getModel: function () {
             var model = _.cloneDeep(scope.fullModel);
-            var correctAnswers = [];
-            _.each(scope.correctMap, function (v, k) {
-              if (v) {
-                correctAnswers.push(k);
-              }
-            });
             model.scoreMapping = {};
             _.each(scope.scoreMapping, function(v,k) {
               model.scoreMapping[k] = Number(v);
             });
-            model.correctResponse.value = correctAnswers;
-            model.model.config.singleChoice = correctAnswers.length === 1;
+            model.correctResponse = scope.correctValue;
             _.each(model.model.choices, function (choice) {
               var feedback, _ref, _ref1;
               feedback = _.find(model.feedback, function (fb) {
@@ -70,19 +61,10 @@ main = [
           }
         };
 
-        scope.$watch('correctMap', function (value) {
-          var res;
-          res = [];
-          _.each(value, function (v, k) {
-            if (v) {
-              return res.push(k);
-            }
-          });
-          scope.fullModel.correctResponse.value = res;
-          console.log(scope.fullModel.correctResponse.value);
-          scope.model.config.singleChoice = res.length === 1;
-          return console.log(scope.model);
-        }, true);
+//        scope.$watch('correctValue', function (value) {
+//          scope.fullModel.correctResponse = value;
+//          return console.log(scope.model);
+//        }, true);
 
         scope.registerConfigPanel(attrs.id, scope.containerBridge);
 
@@ -106,7 +88,7 @@ main = [
       },
       template: [
         '<div class="view-inline-choice">',
-        '<label>Prompt: </label>',
+        '<label>Prompt: {{correctValue}}</label>',
         '<textarea ng-ic-ckeditor ng-model="model.prompt"></textarea><br/>',
         '<div class="choice" ng-repeat="q in model.choices">',
         '  <div class="remove-button" ng-click="removeQuestion(q)">X</div>',
@@ -115,7 +97,7 @@ main = [
         '      <td>',
         '        <div class="correct-block">',
         '          <span class="correct-label">Correct</span><br/>',
-        '          <input type="checkbox" ng-model="correctMap[q.value]"></input>',
+        '          <input type="radio" value="{{q.value}}" ng-model="$parent.correctValue" ></input>',
         '        </div>',
         '      </td>',
         '     <td>{{toChar($index)}}</td>',
@@ -146,13 +128,6 @@ main = [
         '<a ng-click="addQuestion()">Add</a>',
         '<div class="well">',
         ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
-        ' <table> ',
-        ' <tr> ',
-        ' <td> Layout: ',
-        ' <td> <input type="radio" value="vertical" ng-model="model.config.orientation"></input><td>A<br/>B<br/>C<br/>D',
-        ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
-        ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
-        ' </table>',
         '</div>',
         '<div>',
         ' <p>Scoring:</p>',
