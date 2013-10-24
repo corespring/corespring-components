@@ -1,4 +1,4 @@
-var componentDefinition, link, main;
+var link, main;
 
 link = function($sce) {
   return function(scope, element, attrs) {
@@ -90,7 +90,5 @@ main = [
   }
 ];
 
-componentDefinition = {
-  framework: 'angular',
-  directive: main
-};
+exports.framework = 'angular';
+exports.directive = main;

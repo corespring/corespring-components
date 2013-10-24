@@ -77,17 +77,11 @@ var landingPlace = [function(){
   return def;
 }];
 
-/**
- * componentDefinition - this is mandatory.
- * within this you define your component.
- */
-var componentDefinition = {
-  framework: 'angular',
-  directives : [
-    /** The default definition - no name is needed. 1 main def is mandatory */
-    { directive : main },
-    /** A 2nd directive */
-    { name: 'landingplace', directive: landingPlace }
-  ]
-};
+exports.framework = 'angular';
+exports.directives = [
+  /** The default definition - no name is needed. 1 main def is mandatory */
+  { directive : main },
+  /** A 2nd directive */
+  { name: 'landingplace', directive: landingPlace }
+];
 
