@@ -113,38 +113,22 @@ describe('inline-choice server logic', function() {
     });
 
 
-//    it('should respond to an incorrect response (do not show correct too)', function() {
-//      var expected, response;
-//      response = server.respond(_.cloneDeep(component), "apple", settings(true, true, false));
-//      expected = {
-//        correctness: "incorrect",
-//        score: 0,
-//        feedback: [
-//          {
-//            value: "apple",
-//            feedback: "Huh?",
-//            correct: false
-//          }
-//        ]
-//      };
-//      response.should.eql(expected);
-//    });
-//
-//    it('should respond to an incorrect response and show feedback for 1 incorrect and 1 correct', function() {
-//      var expected, response;
-//      response = server.respond(_.cloneDeep(component), "apple", settings(true, true, false));
-//      expected = {
-//        correctness: "incorrect",
-//        score: 0.5,
-//        feedback: [
-//          {
-//            value: "apple",
-//            feedback: "Huh?",
-//            correct: false
-//          }
-//        ]
-//      };
-//      response.should.eql(expected);
-//    });
+    it('should respond to an incorrect response (do not show correct too)', function() {
+      var expected, response;
+      response = server.respond(_.cloneDeep(component), "apple", settings(true, true, false));
+      expected = {
+        correctness: "incorrect",
+        score: 0,
+        feedback: [
+          {
+            value: "apple",
+            feedback: "Huh?",
+            correct: false
+          }
+        ]
+      };
+      response.should.eql(expected);
+    });
+
   });
 });
