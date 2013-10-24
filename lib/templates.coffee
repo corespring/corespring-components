@@ -2,22 +2,22 @@ exports.wrapDirective = (name, contents) ->
   """
   (function(){
 
-    //component definition --
+    var exports = {};
+    //component definition -----------------------
     #{contents}
-    //end
+    //end ----------------------------------------
 
     var ngModule = angular.module('test-app');
     console.log("#{name}");
-    //angular.module('test-app').directive('#{name}', componentDefinition.directive);
 
-    if( componentDefinition.directive ){
-      ngModule.directive( '#{name}', componentDefinition.directive);
-    } else if( componentDefinition.directives ){
+    if( exports.directive ){
+      ngModule.directive( '#{name}', exports.directive);
+    } else if( exports.directives ){
 
       var hasDefault = false;
 
-      for( var i = 0; i < componentDefinition.directives.length; i++ ){
-        var innerDef = componentDefinition.directives[i];
+      for( var i = 0; i < exports.directives.length; i++ ){
+        var innerDef = exports.directives[i];
         var name = innerDef.name ? innerDef.name : '#{name}';
 
         if(!hasDefault){
