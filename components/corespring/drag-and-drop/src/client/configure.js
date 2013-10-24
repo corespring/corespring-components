@@ -1,8 +1,7 @@
-var componentDefinition;
 
-componentDefinition = {
-  framework: "angular",
-  directive: [
+
+exports.framework = "angular";
+exports.directive = [
     "$compile", function($compile) {
       var input, inputs, template;
       console.log("corespring/drag-and-drop");
@@ -45,5 +44,4 @@ componentDefinition = {
         }
       };
     }
-  ]
-};
+  ];

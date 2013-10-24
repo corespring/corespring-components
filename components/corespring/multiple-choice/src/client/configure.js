@@ -1,4 +1,4 @@
-var ckeditor, componentDefinition, main;
+var ckeditor, main;
 
 main = [
 
@@ -217,10 +217,8 @@ ckeditor = [
   }
 ];
 
-componentDefinition = {
-  framework: 'angular',
-  directives: [
+exports.framework = 'angular';
+exports.directives = [
     {directive: main},
     {name: 'ngCkeditor', directive: ckeditor }
-  ]
-};
+    ];
