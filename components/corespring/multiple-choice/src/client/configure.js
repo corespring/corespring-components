@@ -1,8 +1,8 @@
 var ckeditor, main;
 
 main = [
-
-  function () {
+  '$log',
+  function ($log) {
     var def;
     def = {
       scope: 'isolate',
@@ -27,6 +27,8 @@ main = [
               var choice = _.find(model.model.choices, function (choice) {
                 return choice.value === feedback.value;
               });
+
+
               if (choice) {
                 scope.feedback[choice.value] = {
                   feedback: feedback.feedback,
@@ -42,7 +44,6 @@ main = [
             _.each(scope.model.choices, function (c) {
               c.labelType = c.labelType || "text";
             });
-            return console.log(model);
           },
 
           getModel: function () {
@@ -91,6 +92,19 @@ main = [
           return console.log(scope.model);
         }, true);
 
+        scope.$watch('feedback', function(newFeedback){
+          $log.debug("update feedback in components");
+
+          var buildFeedback = function(){
+            var keys = _.keys(newFeedback);
+            var values = _.values(newFeedback);
+            var labelled = _.map(keys, function(k){ return { value: k}});
+            var out = _.merge(labelled, values);
+            return out;
+          };
+          scope.fullModel.feedback = buildFeedback(newFeedback);
+        }, true);
+
         scope.registerConfigPanel(attrs.id, scope.containerBridge);
 
         scope.removeQuestion = function (q) {
@@ -105,9 +119,21 @@ main = [
         };
 
         scope.addQuestion = function () {
+          var uid = _.uniqueId("mc_");
+
           scope.model.choices.push({
-            label: "new Question"
+            label: "new Question",
+            value: uid,
+            labelType: "text"
           });
+
+          scope.feedback[uid] = {
+            feedback: "here is some feedback",
+            feedbackType: "custom",
+            value: uid
+          };
+
+          scope.fullModel.feedback.push(scope.feedback[uid]);
         };
 
         scope.toChar = function (num) {
@@ -152,6 +178,9 @@ main = [
         '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="custom">Custom</input>',
         '  <div ng-show="feedback[q.value].feedbackType == \'custom\'">',
         '    <label>Feedback: </label><input type="text" ng-model="feedback[q.value].feedback"></input>',
+        '    <div ng-show="correctMap[q.value]">',
+        '      <label>Not chosen feedback:</label><input type="text" ng-model="feedback[q.value].notChosenFeedback"></input>',
+        '    </div>',
         '  </div>',
         '</div>',
         '<a ng-click="addQuestion()">Add</a>',
