@@ -95,14 +95,8 @@ main = [
         scope.$watch('feedback', function(newFeedback){
           $log.debug("update feedback in components");
 
-          var buildFeedback = function(){
-            var keys = _.keys(newFeedback);
-            var values = _.values(newFeedback);
-            var labelled = _.map(keys, function(k){ return { value: k}});
-            var out = _.merge(labelled, values);
-            return out;
-          };
-          scope.fullModel.feedback = buildFeedback(newFeedback);
+          var out = _.makeArray(newFeedback, "value");
+          scope.fullModel.feedback = out;
         }, true);
 
         scope.registerConfigPanel(attrs.id, scope.containerBridge);
