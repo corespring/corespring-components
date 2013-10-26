@@ -10,13 +10,13 @@ link = function($sce) {
     };
 
     //TODO - globalSession watcher instead?
-    scope.$watch('session', function(newValue) {
+    /*scope.$watch('session', function(newValue) {
       if (_.isUndefined(newValue)) {
         return;
       }
       scope.sessionFinished = newValue.isFinished;
     }, true);
-
+    */
     //TODO: Necessary in player?
     /*scope.$watch('question.config.singleChoice', function(newValue) {
       scope.inputType = !!newValue ? "radio" : "checkbox";
@@ -26,7 +26,10 @@ link = function($sce) {
       if (scope.answer.choice) {
         return [scope.answer.choice];
       } else {
-        return _.keys(scope.answer.choices);
+        var isTrue = function(k){ return scope.answer.choices[k] === true;};
+        var allKeys = _.keys(scope.answer.choices);
+        var keys = _.filter(allKeys, isTrue);
+        return keys;
       }
     };
 
@@ -63,11 +66,13 @@ link = function($sce) {
         return shuffled;
       } else {
         var ordered = _.map(order, function(v){
-          return _.find(_.cloneDeep(choices), function(c){
+          return _.find(choices, function(c){
             return c.value == v;
           });
         });
-        return ordered;
+
+        var missing = _.difference(choices, ordered)
+        return _.union(ordered, missing);
       }
     };
 
@@ -94,6 +99,7 @@ link = function($sce) {
       } else if(model.config.shuffle) {
         scope.choices = layoutChoices(model.choices)
         stash.shuffledOrder = stashOrder(scope.choices);
+        scope.$emit('saveStash', attrs.id, stash);
       } else {
         scope.choices = _.cloneDeep(scope.question.choices);
       }
@@ -103,17 +109,9 @@ link = function($sce) {
 
     scope.containerBridge = {
 
-      setModel: function(model) {
-        scope.question = model;
-        updateUi();
-      },
-
-      /**
-       *  - sets the component session
-       *  -- contains: answer and session
-       */
-      setSession: function(componentSession) {
-        scope.session = componentSession || {};
+      setDataAndSession: function(dataAndSession) {
+        scope.question = dataAndSession.data.model;
+        scope.session = dataAndSession.session || {};
         updateUi();
       },
 
