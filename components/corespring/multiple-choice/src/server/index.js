@@ -100,7 +100,7 @@ buildFeedback = function(question, answer, settings, isCorrect) {
 calculateScore = function(question, answer) {
   var correctCount, maxCorrect, rawScore, wrongAnswers;
   maxCorrect = question.correctResponse.value.length;
-  wrongAnswers = _.without.apply(null, [question.correctResponse.value].concat(answer));
+  wrongAnswers = _.without.apply( null, [answer].concat(question.correctResponse.value));
   correctCount = Math.max(question.correctResponse.value.length - wrongAnswers.length, 0);
   rawScore = correctCount / maxCorrect;
   return Math.round(rawScore * 100) / 100;
