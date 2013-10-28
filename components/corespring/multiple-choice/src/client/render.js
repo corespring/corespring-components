@@ -42,8 +42,10 @@ link = function($sce) {
     var resetFeedback = function(choices){
       console.log("choices: ", choices);
       _.each(choices, function(c){
-        delete c.feedback;
-        delete c.correct;
+        if (c) {
+          delete c.feedback;
+          delete c.correct;
+        };
       });
     };
 
