@@ -70,6 +70,8 @@ describe('multiple-choice server logic', function() {
 
   describe('respond', function() {
 
+
+
     it('should not show any feedback', function() {
       var expected, response;
       response = server.respond(_.cloneDeep(component), ["apple"], settings(false, true, true));
@@ -79,6 +81,7 @@ describe('multiple-choice server logic', function() {
       };
       response.should.eql(expected);
     });
+
 
     it('should respond to a correct answer', function() {
       var expected, response;
@@ -144,12 +147,14 @@ describe('multiple-choice server logic', function() {
       response.should.eql(expected);
     });
 
+
+
     it('should respond to an incorrect response and show feedback for 1 incorrect and 1 correct', function() {
       var expected, response;
       response = server.respond(_.cloneDeep(component), ["apple", "carrot"], settings(true, true, false));
       expected = {
         correctness: "incorrect",
-        score: 0.5,
+        score: 0,
         feedback: [
           {
             value: "apple",
@@ -164,5 +169,6 @@ describe('multiple-choice server logic', function() {
       };
       response.should.eql(expected);
     });
+
   });
 });
