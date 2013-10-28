@@ -11,8 +11,12 @@ describe('corespring', function () {
 
     var element, scope, rootScope, container;
 
-    var testModel, testModelTemplate = {
-      "choices": [
+    var testModel;
+
+    var testModelTemplate = {
+      data: {
+        model : {
+        "choices": [
         {
           "label": "1",
           "value": "1"
@@ -32,7 +36,9 @@ describe('corespring', function () {
         "singleChoice": true
       },
       "prompt": "Add your question here..."
-    };
+    }
+  }
+  };
 
     beforeEach(angular.mock.module('test-app'));
 
@@ -44,7 +50,11 @@ describe('corespring', function () {
 
     beforeEach(inject(function ($compile, $rootScope) {
       container = new MockComponentRegister();
-      $rootScope.registerComponent = function(id,b){ container.registerComponent(id,b) };
+
+      $rootScope.$on('registerComponent', function(event, id, obj){
+        container.registerComponent(id,obj);
+      });
+
       element = $compile("<corespring-multiple-choice-render id='1'></corespring-multiple-choice-render>")($rootScope.$new());
       scope = element.scope();
       rootScope = $rootScope;
@@ -55,7 +65,7 @@ describe('corespring', function () {
     });
 
     it('sets model', function () {
-      container.elements['1'].setModel(testModel);
+      container.elements['1'].setDataAndSession( testModel );
       expect(scope.question).toNotBe(null);
       expect(scope.inputType).toBe('radio');
       expect(scope.choices).not.toBe(null);
@@ -64,37 +74,42 @@ describe('corespring', function () {
 
     it('shuffles is shuffle is true', function () {
       spyOn(_, 'shuffle');
-      container.elements['1'].setModel(testModel);
+      container.elements['1'].setDataAndSession(testModel);
       expect(_.shuffle).toHaveBeenCalled();
     });
 
     it('doesnt shuffle is shuffle is false', function () {
       spyOn(_, 'shuffle');
-      testModel.config.shuffle = false;
-      container.elements['1'].setModel(testModel);
+      testModel.data.model.config.shuffle = false;
+      container.elements['1'].setDataAndSession(testModel);
       expect(_.shuffle).not.toHaveBeenCalled();
     });
 
     it('button is radio if singleChoice is true, checkbox if it is false', function () {
-      container.elements['1'].setModel(testModel);
+      container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect($(element).find('input[type="radio"]').length).toBe(3);
-      testModel.config.singleChoice = false;
-      container.elements['1'].setModel(testModel);
+      testModel.data.model.config.singleChoice = false;
+      container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect($(element).find('input[type="checkbox"]').length).toBe(3);
     });
 
     it('get answer returns selected answers', function () {
-      container.elements['1'].setModel(testModel);
+      container.elements['1'].setDataAndSession(testModel);
       scope.answer.choices['1'] = true;
-      var answer = container.elements['1'].getAnswer();
-      expect(answer).toEqual(['1']);
+      var answer = container.elements['1'].getSession();
+
+      expect(answer.answers).toEqual(['1']);
     });
 
     it('setting answer updates the UI (single choice)', function () {
-      container.elements['1'].setModel(testModel);
-      container.elements['1'].setAnswer(['1']);
+
+      testModel.session = {
+        answers : ['1']
+      };
+
+      container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
       expect($(element).find('input[value="2"]').is(':checked')).toBe(false);
@@ -102,9 +117,13 @@ describe('corespring', function () {
     });
 
     it('setting answer updates the UI (multi choice)', function () {
-      testModel.config.singleChoice = false;
-      container.elements['1'].setModel(testModel);
-      container.elements['1'].setAnswer(['1','2']);
+      testModel.data.model.config.singleChoice = false;
+
+      testModel.session = {
+        answers : ['1','2']
+      };
+
+      container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
       expect($(element).find('input[value="2"]').is(':checked')).toBe(true);
@@ -112,7 +131,7 @@ describe('corespring', function () {
     });
 
     it('setting response shows correctness and feedback', function () {
-      container.elements['1'].setModel(testModel);
+      container.elements['1'].setDataAndSession(testModel);
       var response = {
         "correctness": "correct",
         "score": 1,
@@ -139,7 +158,5 @@ describe('corespring', function () {
       expect($(element).find(".incorrect").length).toBe(1);
     });
 
-
   });
-
 });
