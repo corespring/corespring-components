@@ -1,8 +1,6 @@
 {
   "componentType": "corespring-inline-choice",
-  "correctResponse": {
-    "value": "2"
-  },
+  "correctResponse": "2",
   "feedback": [
     {
       "feedback": "Huh?",
