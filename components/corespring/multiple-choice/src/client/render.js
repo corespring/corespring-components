@@ -144,6 +144,7 @@ main = [
                   '    </span>',
                   '    <label ng-switch="o.labelType">',
                   '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
+                  '      <span ng-switch-when="mathml" ng-bind-html-unsafe="o.mathml"></span>',
                   '      <span ng-switch-default>{{o.label}}</span>',
                   '    </label>',
                   '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null">{{o.feedback}}</span>',
