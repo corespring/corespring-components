@@ -9,19 +9,6 @@ link = function($sce) {
       choices: {}
     };
 
-    //TODO - globalSession watcher instead?
-    /*scope.$watch('session', function(newValue) {
-      if (_.isUndefined(newValue)) {
-        return;
-      }
-      scope.sessionFinished = newValue.isFinished;
-    }, true);
-    */
-    //TODO: Necessary in player?
-    /*scope.$watch('question.config.singleChoice', function(newValue) {
-      scope.inputType = !!newValue ? "radio" : "checkbox";
-    });*/
-
     var getAnswers = function(){
       if (scope.answer.choice) {
         return [scope.answer.choice];
@@ -144,6 +131,10 @@ link = function($sce) {
             console.log("choice: ", choice);
           });
         }
+      },
+
+      setGlobalSession: function(session){
+        scope.sessionFinished = session.isFinished;
       }
     };
 

@@ -1,7 +1,5 @@
 var main = [ '$compile', function($compile){
 
-  console.log("define component");
-
   var link = function(scope, element, attrs){
 
     scope.$on('dropped', function(event,object){
@@ -9,19 +7,17 @@ var main = [ '$compile', function($compile){
     });
 
     scope.containerBridge = {
-      setModel : function(model){
-        scope.model = _.clone(model);
-        console.log("Config Model is ", scope.model);
+      setDataAndSession : function(dataAndSession){
+        scope.model = _.clone( dataAndSession.data.model);
         $answerArea = element.find("#answer-area").html("<div> " + scope.model.answerArea + "</div>");
         $compile($answerArea)(scope.$new());
       },
-      getAnswer: function(){
+      getSession: function(){
         console.log("returning answer for: Drag and drop");
-        return { landingPlace: "1", choice: "1" };
+        return { answers : {landingPlace: "1", choice: "1" }};
       }
     };
-
-    scope.registerComponent(attrs.id, scope.containerBridge);
+    scope.$emit('registerComponent', attrs.id, scope.containerBridge);
   };
 
   var tmpl = [
@@ -45,7 +41,7 @@ var main = [ '$compile', function($compile){
 
   return {
     link: link,
-    scope: 'isolate',
+    scope: {},
     restrict : 'E',
     template : tmpl
   };
@@ -53,7 +49,7 @@ var main = [ '$compile', function($compile){
 
 var landingPlace = [function(){
   var def = {
-    scope: 'isolate',
+    scope: {},
     restrict: 'E',
     transclude: true,
     replace: false,

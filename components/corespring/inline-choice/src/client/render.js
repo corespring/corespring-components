@@ -3,40 +3,33 @@ var link, main;
 link = function($sce) {
   return function(scope, element, attrs) {
 
-    scope.inputType = 'checkbox';
     scope.answer = {
       choice: ""
     };
 
-    scope.$watch('session', function(newValue) {
-      if (_.isUndefined(newValue)) {
-        return;
-      }
-      scope.sessionFinished = newValue.isFinished;
-    }, true);
-
     scope.containerBridge = {
 
-      setModel: function(model) {
-        scope.question = model;
-
+      setDataAndSession: function(dataAndSession){
+        scope.question = dataAndSession.data.model;
         var shuffleFn = (scope.question.config.shuffle) ? _.shuffle : _.identity;
-
         scope.choices = shuffleFn(_.cloneDeep(scope.question.choices));
+
+        if(dataAndSession.session){
+          scope.answer.choice = dataAndSession.session.answers;
+        }
       },
 
-      // sets the student's answer
-      setAnswer: function(answer) {
-        scope.answer.choice = answer;
-        console.log("Set answer to ", answer);
+      getSession: function() {
+        return {
+          answers: scope.answer.choice,
+          stash: {}
+        };
       },
 
-      getAnswer: function() {
-        return scope.answer.choice;
-      },
-
-      setSession: function(session) {
-        scope.session = session;
+      setGlobalSession: function(session){
+        if (session) {
+          scope.sessionFinished = session.isFinished;
+        };
       },
 
       // sets the server's response
@@ -60,10 +53,7 @@ link = function($sce) {
       }
     };
 
-     if(!scope.registerComponent){
-      throw new Error("registerComponent isn't available on the scope");
-    }
-    scope.registerComponent(attrs.id, scope.containerBridge);
+    scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
   };
 };
@@ -72,7 +62,7 @@ main = [
   '$sce', function($sce) {
     var def;
     def = {
-      scope: 'isolate',
+      scope: {},
       restrict: 'E',
       replace: true,
       link: link($sce),
