@@ -134,6 +134,11 @@ main = [
           return String.fromCharCode(65 + num);
         };
 
+        scope.updateMathJax = function() {
+          scope.$emit('mathJaxUpdateRequest');
+        }
+
+
       },
       template: [
         '<div class="view-multiple-choice">',
@@ -164,7 +169,7 @@ main = [
         '           <label>Image: </label>',
         '           <input type="text" ng-model="q.imageName"></input>',
         '          </span>',
-        '          <textarea ng-switch-when="mathml" ng-model="q.mathml"></textarea>',
+        '          <textarea ng-switch-when="mathml" ng-model="q.mathml" ng-change="updateMathJax()"></textarea>',
         '        </div>',
         '      </td>',
         '    </tr>',
