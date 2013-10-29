@@ -67,13 +67,12 @@ describe('corespring', function () {
     it('sets the session choice correctly', function(){
 
       testModel.session = {
-        answer : '1'
+        answer : { label: '1', value: '1' }
       };
 
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-
-      expect(scope.answer.choice).toBe('1');
+      expect(scope.answer.choice).toEqual({label: '1', value: '1'});
 
     });
   });

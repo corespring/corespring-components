@@ -7,18 +7,24 @@ link = function($sce, $timeout) {
       choice: ""
     };
 
+
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession){
         scope.question = dataAndSession.data.model;
         var shuffleFn = (scope.question.config.shuffle) ? _.shuffle : _.identity;
+
+
         scope.choices = shuffleFn(_.cloneDeep(scope.question.choices));
 
-        if(dataAndSession.session){
-          $timeout( function(){
-            scope.answer.choice = dataAndSession.session.answer;
+
+        if(dataAndSession.session && dataAndSession.session.answer){
+          var selectedChoice = _.find(scope.choices, function(c){
+            return c.value == dataAndSession.session.answer.value;
           });
+          scope.answer.choice = selectedChoice;
         }
+
       },
 
       getSession: function() {
@@ -73,9 +79,7 @@ main = [
       template: [ '<div class="view-multiple-choice">',
                   '  <label ng-bind-html-unsafe="question.prompt"></label>',
                   '  <div class="choices-container" >',
-                  '  <select ng-model="answer.choice" class="choice-holder">',
-                  '   <option ng-repeat="c in choices" value="{{c.value}}">{{c.label}}</option>',
-                  '  </select>',
+                  '  <select ng-model="answer.choice" ng-options="c.label for c in choices" class="choice-holder"></select>',
                   '</div>',
                   '</div>'].join("\n")
     };
