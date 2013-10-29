@@ -1,6 +1,6 @@
 var link, main;
 
-link = function($sce) {
+link = function($sce, $timeout) {
   return function(scope, element, attrs) {
 
     scope.answer = {
@@ -15,13 +15,15 @@ link = function($sce) {
         scope.choices = shuffleFn(_.cloneDeep(scope.question.choices));
 
         if(dataAndSession.session){
-          scope.answer.choice = dataAndSession.session.answers;
+          $timeout( function(){
+            scope.answer.choice = dataAndSession.session.answer;
+          });
         }
       },
 
       getSession: function() {
         return {
-          answers: scope.answer.choice,
+          answer: scope.answer.choice,
           stash: {}
         };
       },
@@ -59,14 +61,16 @@ link = function($sce) {
 };
 
 main = [
-  '$sce', function($sce) {
+  '$sce',
+  '$timeout',
+  function($sce, $timeout) {
     var def;
     def = {
       scope: {},
       restrict: 'E',
       replace: true,
-      link: link($sce),
-      template: [ '<div class="view-multiple-choice">{{answer.choice}}',
+      link: link($sce, $timeout),
+      template: [ '<div class="view-multiple-choice">',
                   '  <label ng-bind-html-unsafe="question.prompt"></label>',
                   '  <div class="choices-container" >',
                   '  <select ng-model="answer.choice" class="choice-holder">',
