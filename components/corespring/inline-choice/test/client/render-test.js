@@ -67,7 +67,7 @@ describe('corespring', function () {
     it('sets the session choice correctly', function(){
 
       testModel.session = {
-        answer :  '1'
+        answers :  '1'
       };
 
       container.elements['1'].setDataAndSession(testModel);
