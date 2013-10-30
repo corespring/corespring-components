@@ -18,9 +18,9 @@ link = function($sce, $timeout) {
         scope.choices = shuffleFn(_.cloneDeep(scope.question.choices));
 
 
-        if(dataAndSession.session && dataAndSession.session.answer){
+        if(dataAndSession.session && dataAndSession.session.answers){
           var selectedChoice = _.find(scope.choices, function(c){
-            return c.value == dataAndSession.session.answer;
+            return c.value == dataAndSession.session.answers;
           });
           scope.answer.choice = selectedChoice;
         }
@@ -31,7 +31,7 @@ link = function($sce, $timeout) {
         var answer = scope.answer ? scope.answer.choice.value : null;
 
         return {
-          answer: answer,
+          answers: answer,
           stash: {}
         };
       },
