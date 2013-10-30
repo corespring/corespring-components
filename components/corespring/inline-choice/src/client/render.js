@@ -20,7 +20,7 @@ link = function($sce, $timeout) {
 
         if(dataAndSession.session && dataAndSession.session.answer){
           var selectedChoice = _.find(scope.choices, function(c){
-            return c.value == dataAndSession.session.answer.value;
+            return c.value == dataAndSession.session.answer;
           });
           scope.answer.choice = selectedChoice;
         }
@@ -28,8 +28,10 @@ link = function($sce, $timeout) {
       },
 
       getSession: function() {
+        var answer = scope.answer ? scope.answer.choice.value : null;
+
         return {
-          answer: scope.answer.choice,
+          answer: answer,
           stash: {}
         };
       },
