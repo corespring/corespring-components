@@ -24,28 +24,9 @@ var correctResponseFeedback = function (fbArray, q, userGotItRight, answer) {
   _results = [];
   correctKey = q.correctResponse;
   fb = feedbackByValue(q, correctKey);
-  if (userGotItRight) {
-    delete fb.notChosenFeedback;
-  } else {
-    if (_.indexOf(answer, correctKey) === -1) {
-      nc = fb.notChosenFeedback;
-      delete fb.notChosenFeedback;
-      fb.feedback = nc;
-    } else {
-      delete fb.notChosenFeedback;
-    }
-  }
   fb.correct = true;
   _results.push(fbArray.push(fb));
   return _results;
-};
-
-exports.isCorrect = function (answer, correctAnswer) {
-  return answer == correctAnswer;
-};
-
-var isCorrectChoice = function (q, choice) {
-  return q.correctResponse == choice;
 };
 
 var userResponseFeedback = function (fbArray, q, answer) {
@@ -54,11 +35,17 @@ var userResponseFeedback = function (fbArray, q, answer) {
   userChoice = answer;
   fb = feedbackByValue(q, userChoice);
   fb.correct = isCorrectChoice(q, userChoice);
-  if (fb.correct) {
-    delete fb.notChosenFeedback;
-  }
   _results.push(fbArray.push(fb));
   return _results;
+};
+
+
+exports.isCorrect = function (answer, correctAnswer) {
+  return answer == correctAnswer;
+};
+
+var isCorrectChoice = function (q, choice) {
+  return q.correctResponse == choice;
 };
 
 var buildFeedback = function (question, answer, settings, isCorrect) {

@@ -99,7 +99,7 @@ describe('inline-choice server logic', function() {
         feedback: [
           {
             value: "carrot",
-            feedback: undefined,
+            feedback: "Yes",
             correct: true
           },
           {
