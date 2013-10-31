@@ -7,6 +7,23 @@
     padding: 5px;
 }
 
+.view-inline-choice select {
+    display: inline-block;
+}
+
+.view-inline-choice .tooltip {
+    opacity: 1;
+    display: inline-block;
+}
+
+.correct .tooltip-inner {
+    background-color: green;
+}
+
+.incorrect .tooltip-inner {
+    background-color: red;
+}
+
 .view-inline-choice .correct-block {
     display: inline-block;
     text-align: center;
@@ -16,6 +33,10 @@
     position: absolute;
     right: 10px;
     top: 5px;
+}
+
+.view-inline-choice .choices-container {
+    position: relative;
 }
 
 .view-inline-choice .choices-container.tile {
