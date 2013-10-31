@@ -44,6 +44,10 @@ link = function ($sce, $timeout) {
 
       // sets the server's response
       setResponse: function (response) {
+        _(scope.choices).each(function(c) {
+          delete c.feedback;
+          delete c.correct;
+        });
         scope.response = response;
         console.log("set response for single-choice", response);
         if (response.feedback) {
