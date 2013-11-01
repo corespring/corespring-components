@@ -78,7 +78,7 @@ var calculateScore = function (question, answer) {
 exports.respond = function (question, answer, settings) {
   var answerIsCorrect, response;
 
-  if (question._uid !== answer._uid) {
+  if (question && answer && question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
   answerIsCorrect = this.isCorrect(answer, question.correctResponse);

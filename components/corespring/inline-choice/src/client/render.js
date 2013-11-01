@@ -3,6 +3,30 @@ var link, main;
 link = function ($sce, $timeout) {
   return function (scope, element, attrs) {
 
+
+    var layoutChoices = function (choices, order) {
+      if (!order) {
+        var shuffled = _.shuffle(_.cloneDeep(choices));
+        return shuffled;
+      } else {
+        var ordered = _.map(order, function (v) {
+          return _.find(choices, function (c) {
+            return c.value == v;
+          });
+        });
+
+        var missing = _.difference(choices, ordered)
+        return _.union(ordered, missing);
+      }
+    };
+
+    var stashOrder = function(choices) {
+      return _.map(choices, function(c){
+        return c.value;
+      });
+    };
+
+
     scope.answer = {
       choice: ""
     };
@@ -12,11 +36,20 @@ link = function ($sce, $timeout) {
 
       setDataAndSession: function (dataAndSession) {
         scope.question = dataAndSession.data.model;
-        var shuffleFn = (scope.question.config.shuffle) ? _.shuffle : _.identity;
+        scope.session = dataAndSession.session || {};
 
+        var stash = scope.session.stash = scope.session.stash || {};
+        var model = scope.question;
 
-        scope.choices = shuffleFn(_.cloneDeep(scope.question.choices));
-
+        if(stash.shuffledOrder && model.config.shuffle){
+          scope.choices = layoutChoices(model.choices, stash.shuffledOrder)
+        } else if(model.config.shuffle) {
+          scope.choices = layoutChoices(model.choices)
+          stash.shuffledOrder = stashOrder(scope.choices);
+          scope.$emit('saveStash', attrs.id, stash);
+        } else {
+          scope.choices = _.cloneDeep(scope.question.choices);
+        }
 
         if (dataAndSession.session && dataAndSession.session.answers) {
           var selectedChoice = _.find(scope.choices, function (c) {
@@ -32,7 +65,7 @@ link = function ($sce, $timeout) {
 
         return {
           answers: answer,
-          stash: {}
+          stash: scope.session.stash
         };
       },
 
@@ -44,7 +77,7 @@ link = function ($sce, $timeout) {
 
       // sets the server's response
       setResponse: function (response) {
-        _(scope.choices).each(function(c) {
+        _(scope.choices).each(function (c) {
           delete c.feedback;
           delete c.correct;
         });
