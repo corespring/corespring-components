@@ -145,7 +145,7 @@ main = [
         '<label>Prompt: </label>',
         '<textarea ng-ckeditor ng-model="model.prompt"></textarea><br/>',
         '<div class="choice" ng-repeat="q in model.choices">',
-        '  <div class="remove-button" ng-click="removeQuestion(q)">X</div>',
+        '  <div class="remove-button" ng-click="removeQuestion(q)"><i class="glyphicon glyphicon-remove"></i></div>',
         '  <table>',
         '    <tr>',
         '      <td>',
