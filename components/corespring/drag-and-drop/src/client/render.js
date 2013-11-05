@@ -2,9 +2,7 @@ var main = [ '$compile', function($compile){
 
   var link = function(scope, element, attrs){
 
-    scope.$on('dropped', function(event,object){
-      scope.model.choices = _.filter(scope.model.choices, function(o){ return o != object; } );
-    });
+    scope.landingPlaceChoices = {};
 
     scope.containerBridge = {
       setDataAndSession : function(dataAndSession){
@@ -13,28 +11,33 @@ var main = [ '$compile', function($compile){
         $compile($answerArea)(scope.$new());
       },
       getSession: function(){
-        console.log("returning answer for: Drag and drop");
-        return { answers : {landingPlace: "1", choice: "1" }};
+        var answer = _.cloneDeep(scope.landingPlaceChoices);
+        _.each(answer, function(v,k) {
+          answer[k] = v.id;
+        });
+        return {
+          answers : answer
+        };
       }
     };
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
   };
 
   var tmpl = [
-  '        <div>',
+  '        <div class="view-drag-and-drop">',
   '        <h5>{{model.prompt}}</h5>',
   '        <div id="answer-area">',
   '        </div>',
-  '        <div id="options">',
+  '        <div class="choices" >',
   '          <div',
   '            ng-repeat="o in model.choices"',
-  '            class="btn btn-primary"',
+  '            class="btn btn-primary choice"',
   '            data-drag="true"',
   '            data-jqyoui-options="{revert: \'invalid\'}"',
-  '            ng-model="o"',
-  '            jqyoui-draggable="{animate:true}"',
+  '            ng-model="model.choices[$index]"',
+  '            jqyoui-draggable',
   '            data-id="{{o.id}}"',
-  '            drag-drop="true">{{o.content}}</div>',
+  '           >{{o.content}}</div>',
   '          </div>',
   '      </div>'
     ].join("");
@@ -49,25 +52,40 @@ var main = [ '$compile', function($compile){
 
 var landingPlace = [function(){
   var def = {
-    scope: {},
+    scope: true,  //TODO: should use isolate scope, but = doesn't seem to inherit from DanD's scope
     restrict: 'E',
     transclude: true,
     replace: false,
     link: function(scope, element, attrs) {
-      scope.$watch('dropped', function(newValue, oldValue) {
-        if(newValue){
-          scope.$emit('dropped', newValue);
+      scope.class = attrs['class'];
+      scope.id = attrs['id'];
+      scope.onDrop = function() {
+        console.log("onDrop", scope.model.choices);
+        scope.model.choices = _.filter(scope.model.choices, function(c) {
+          return c;
+        });
+      };
+      scope.draggableOptions = {
+        revert: function(isValid) {
+          if (isValid) return false;
+          scope.$apply(function() {
+            scope.model.choices.push(scope.landingPlaceChoices[scope.id]);
+            delete scope.landingPlaceChoices[scope.id];
+          });
+
+          return true;
         }
-      });
+      }
     },
     template: [
       '    <div',
       '      data-drop="true"',
-      '      ng-model="dropped"',
+      '      ng-model="landingPlaceChoices[id]"',
       '      data-jqyoui-options',
-      '      jqyoui-droppable',
-      '      style="padding: 5px; width: 200px; height: 50px; background-color: #e4d5fc;">',
-      '        <div ng-show="dropped" class="btn btn-primary">{{dropped.content}}</div>',
+      '      jqyoui-droppable="{onDrop: \'onDrop\'}"',
+      '      class="landing-place {{class}}"',
+      '      style="padding: 5px">',
+      '        <div ng-show="landingPlaceChoices[id]" jqyoui-draggable data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id]" data-drag="true" class="btn btn-primary">{{landingPlaceChoices[id].content}}</div>',
       '    </div>'].join("")
     };
   return def;

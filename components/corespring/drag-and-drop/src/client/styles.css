@@ -1,0 +1,20 @@
+.view-drag-and-drop {
+}
+
+.view-drag-and-drop .choices {
+    border: 1px solid black;
+}
+
+.view-drag-and-drop .choice {
+    margin: 5px;
+}
+
+.view-drag-and-drop .landing-place {
+    min-width: 100px;
+    min-height: 30px;
+    background-color: #f7f6e1;
+}
+
+.view-drag-and-drop .landing-place.inline {
+    display: inline-block;
+}
