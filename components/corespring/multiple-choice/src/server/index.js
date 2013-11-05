@@ -2,6 +2,8 @@ var buildFeedback, calculateScore, correctResponseFeedback, feedbackByValue, isC
 
 _ = require('lodash');
 
+var scoringUtils = require("corespring.scoring-utils.server");
+
 exports.render = function(element) {
   element.choices = _.map(element.choices, function(e) {
     return {
