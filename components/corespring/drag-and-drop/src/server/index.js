@@ -1,8 +1,11 @@
+var _ = require('lodash');
+
 exports.respond = function(question, answer, settings){
+  var isCorrect = _.isEqual(question.correctResponse, answer);
   return {
-    correctness: "correct",
-    answer : "corespring-drag-and-drop TODO",
-    score: 1
+    correctness: isCorrect ? "correct" : "incorrect",
+    answer : answer,
+    score: isCorrect ? 1 : 0
   };
 };
 

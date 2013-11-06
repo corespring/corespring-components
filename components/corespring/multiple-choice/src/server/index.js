@@ -1,8 +1,6 @@
 var buildFeedback, calculateScore, correctResponseFeedback, feedbackByValue, isCorrectChoice, userResponseFeedback;
-
-var _ = require('lodash');
-
 var scoringUtils = require("corespring.scoring-utils.server");
+var _ = require('lodash');
 
 exports.render = function(element) {
   element.choices = _.map(element.choices, function(e) {
@@ -17,14 +15,14 @@ exports.render = function(element) {
   return element;
 };
 
-feedbackByValue = function(q, v) {
+var feedbackByValue = function(q, v) {
   var originalFb = _.find(q.feedback, function(f) {
     return f.value === v;
   });
   return _.cloneDeep(originalFb);
 };
 
-correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
+var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
 
   var correctKey, fb, nc, _i, _len, _ref;
 
@@ -61,11 +59,11 @@ exports.isCorrect = function(answer, correctAnswer) {
   return diff.length === 0 && diff2.length === 0;
 };
 
-isCorrectChoice = function(q, choice) {
+var isCorrectChoice = function(q, choice) {
   return _.indexOf(q.correctResponse.value, choice) !== -1;
 };
 
-userResponseFeedback = function(fbArray, q, answer) {
+var userResponseFeedback = function(fbArray, q, answer) {
   var fb, userChoice, _i, _len, _results;
   _results = [];
   for (_i = 0, _len = answer.length; _i < _len; _i++) {
@@ -80,7 +78,7 @@ userResponseFeedback = function(fbArray, q, answer) {
   return _results;
 };
 
-buildFeedback = function(question, answer, settings, isCorrect) {
+var buildFeedback = function(question, answer, settings, isCorrect) {
   var out;
   out = [];
   if (isCorrect) {
@@ -98,7 +96,7 @@ buildFeedback = function(question, answer, settings, isCorrect) {
   return out;
 };
 
-calculateScore = function(question, answer) {
+var calculateScore = function(question, answer) {
 
   var countCorrectAnswers = function(){
     var sum = _.reduce(answer, function(sum, a) {

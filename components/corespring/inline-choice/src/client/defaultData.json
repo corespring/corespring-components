@@ -1,24 +1,25 @@
 {
   "componentType": "corespring-inline-choice",
   "correctResponse": "2",
+  "title": "Sample Inline Choice",
   "feedback": [
     {
-      "feedback": "Huh?",
+      "feedback": "Incorrect",
       "value": "1"
     },
     {
-      "feedback": "4 to the floor",
+      "feedback": "Correct",
       "value": "2"
     }
   ],
   "model": {
     "choices": [
       {
-        "label": "1",
+        "label": "Answer 1",
         "value": "1"
       },
       {
-        "label": "2",
+        "label": "Answer 2",
         "value": "2"
       }
     ],
