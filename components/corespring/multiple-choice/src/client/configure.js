@@ -83,14 +83,16 @@ var scoring = [
 
 
 main = [
-  '$log',
-  function ($log) {
+  '$log', 'ScoringUtils',
+  function ($log, ScoringUtils) {
     var def;
     def = {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
       link: function (scope, element, attrs) {
+
+        $log.debug("scoring utils: " + ScoringUtils.sayHello(">>>>>>>>>>>>>"));
         scope.containerBridge = {
           setModel: function (model) {
             scope.fullModel = model;
