@@ -9,10 +9,19 @@ globule = require "globule"
 wrapAndWriteJs = (mode) ->
   (component) ->
     directiveName = utils.directiveName(component.organization, "#{component.name}-#{mode}")
-    wrapped = templates.wrapDirective( directiveName, component.client[mode])
+    wrapped = templates.wrapAngular( "test-app", directiveName, component.client[mode])
+
     path = "#{component.componentPath}/src/client/#{mode}-wrapped.js"
     fs.writeFileSync(path, wrapped)
     path
+
+wrapAndWriteLibJs = (lib) ->
+    _.each lib.client, (cl) ->
+      serviceName = utils.serviceName(cl.name)
+      wrapped = templates.wrapAngular( "test-app", serviceName, cl.src)
+      path = "#{lib.componentPath}/src/client/#{serviceName}-wrapped.js"
+      fs.writeFileSync(path, wrapped)
+      path
 
 cleanWrapped = (path, log) ->
   ->
@@ -23,6 +32,33 @@ cleanWrapped = (path, log) ->
       log("removing: #{p}")
       fs.unlinkSync(p)
 
+
+writeComponentJs = (grunt, comps) ->
+
+  grunt.log.writeln( _.map comps, (c) -> "#{c.organization}/#{c.name}")
+
+  if comps.length == 0
+    grunt.log.writeln("nothing to test")
+    return
+
+  grunt.log.writeln("comps: #{ _.pluck(comps, 'name')}")
+
+  _.each comps, wrapAndWriteJs("render")
+  _.each comps, wrapAndWriteJs("configure")
+
+writeLibJs = (grunt, libs) ->
+
+  grunt.log.writeln(" ----------libs: write lib js")
+
+  if libs.length == 0
+    grunt.log.writeln "no libs"
+    return
+
+  grunt.log.writeln("libs: #{ _.pluck(libs, 'name')}")
+
+  _.each libs, wrapAndWriteLibJs
+
+
 ###
 Run the client side tests
 ###
@@ -30,7 +66,7 @@ module.exports = (grunt) ->
 
   (org,name,type) ->
 
-    fs.writeFileSync("./appDeclaration.js", "console.log('init');\nangular.module('test-app', []);\n")
+    fs.writeFileSync("./appDeclaration.js", templates.preroll() )
     grunt.config("testClient.appDeclaration", "./appDeclaration.js")
 
     if !grunt.config("testClient.componentPath")
@@ -40,38 +76,18 @@ module.exports = (grunt) ->
     componentPath = grunt.config("testClient.componentPath")
     components.init(componentPath)
 
-    allComps = components.all()
-    grunt.log.writeln(this.name + ", " + org + " " + name + " " + type)
-    grunt.log.writeln( _.map allComps, (c) -> "#{c.organization}/#{c.name}")
-
     filterOrg = (comp) -> if org? then comp.organization == org else true
     filterName = (comp) -> if name? then comp.name == name else true
 
-    allComps = _.chain(allComps)
-      .filter(filterOrg)
-      .filter(filterName).value()
+    allComps = _.chain(components.allComponents()).filter(filterOrg).filter(filterName).value()
 
-    if allComps.length == 0
-      grunt.log.writeln("nothing to test")
-      return
+    writeComponentJs(grunt, allComps)
 
-    grunt.log.writeln("comps: #{ _.pluck(allComps, 'name')}")
+    allLibs = _.chain(components.allLibraries()).filter(filterOrg).filter(filterName).value()
 
-    wrappedRenders = _.map allComps, wrapAndWriteJs("render")
-    wrappedConfigures = _.map allComps, wrapAndWriteJs("configure")
+    writeLibJs(grunt, allLibs)
 
-    srcPaths = _.union(wrappedRenders,wrappedConfigures)
     grunt.config("testClient.wrapped", "#{componentPath}/**/*-wrapped.js")
-
-    specPaths = _.map allComps, (c) ->
-      all = ["#{c.componentPath}/test/client/render-test.js",
-             "#{c.componentPath}/test/client/configure-test.js"]
-
-
-      existing = _.filter all, (p) -> fs.existsSync(p)
-      existing
-
-    specPaths = _.flatten(specPaths)
 
     grunt.config("testClient.specPath", "#{componentPath}/**/client/*-test.js")
 

@@ -1,6 +1,7 @@
 path = require 'path'
 fs = require 'fs'
 coffeeScript = require 'coffee-script'
+_ = require 'lodash'
 
 class ClientDef
   constructor: (@render, @configure) ->
@@ -8,6 +9,15 @@ class ClientDef
 class ComponentDef
   constructor: (@organization, @name, @icon, @client, @server, @pkg, @componentPath) ->
     @componentType = "#{@organization}-#{@name}"
+
+class Library
+  constructor: (@organization, @name, @pkg, @client, @server, @componentPath) ->
+    @componentType = "#{@organization}-#{@name}"
+    @isLibrary = true
+
+class LibrarySource
+  constructor: (@name, @src) ->
+
 
 # private
 orgName = (p) ->
@@ -65,14 +75,38 @@ exports.fromFolder = (p, done) ->
 
   done("[component-reader] Folder: #{p} doesn't exist") if !fs.existsSync(p)
 
+  pk = pkg(p)
   org = orgName(p)
   comp = componentName(p)
-  ico = icon(p)
-  cl = clientDef(p)
-  srvr = {} #serverDef(p)
-  pk = pkg(p)
 
-  def = new ComponentDef(org, comp, ico, cl, srvr, pk, p )
+  if pk.isLibrary
 
-  done(null, def)
+    fileToLib = (f) ->
+      fileName = path.basename(f, ".js")
+      fileName = if fileName == "index" then comp else fileName
+      console.log(fileName)
+      src = fs.readFileSync(path.join(p, "src", "client", f))
+      new LibrarySource(fileName, src)
+
+    loadLibraries = ->
+      files = fs.readdirSync path.join(p, "src", "client")
+
+      jsFiles = _.chain(files)
+        .filter((f) -> path.extname(f) == ".js")
+        .map( fileToLib )
+        .value()
+
+      jsFiles
+
+    clientLibraries = loadLibraries()
+
+    def = new Library(org, comp, pk, clientLibraries, [], p)
+    done(null, def)
+  else
+    ico = icon(p)
+    cl = clientDef(p)
+    srvr = {} #serverDef(p)
+    pk = pkg(p)
+    def = new ComponentDef(org, comp, ico, cl, srvr, pk, p )
+    done(null, def)
 

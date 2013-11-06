@@ -11,6 +11,7 @@ module.exports = (grunt) ->
   commonConfig =
     app: "."
     componentPath: grunt.config("componentPath") || "components"
+    corespringCore: "../modules/container-client/src/main/resources/container-client/js/corespring/core.js"
 
   config =
 
@@ -23,12 +24,13 @@ module.exports = (grunt) ->
         options:
           keepRunner: true
           vendor: [
+            '<%= common.app %>/bower_components/lodash/dist/lodash.js',
             '<%= common.app %>/bower_components/angular/angular.js',
             '<%= common.app %>/bower_components/angular-mocks/angular-mocks.js',
             '<%= common.app %>/bower_components/jquery/jquery.js',
-            '<%= common.app %>/bower_components/lodash/dist/lodash.js',
             # TODO : how to build out packages like this..
             '<%= common.app %>/bower_components/ckeditor/ckeditor.js',
+            '<%= common.corespringCore %>',
             '<%= grunt.config("testClient.appDeclaration") %>'
           ]
           specs: '<%= grunt.config("testClient.specPath") %>'

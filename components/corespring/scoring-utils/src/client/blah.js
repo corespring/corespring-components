@@ -1,4 +1,12 @@
-//accessible @ require("corespring.scoring-utils.server.blah")
-exports.blah = function(msg){
-  return "Blah said: " + msg;
-}
+// module: corespring.scoring-utils
+// service: Blah
+
+exports.framework = "angular";
+exports.service = [ '$log', function($log){
+  $log.debug("Service created!");
+  return {
+    sayHello: function(msg){
+      return "!!" + msg;
+    }
+  };
+}];

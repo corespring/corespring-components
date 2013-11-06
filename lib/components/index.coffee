@@ -48,7 +48,8 @@ exports.loaded = -> loaded
 ###
 Return all loaded components
 ###
-exports.all = -> loadedComponents
+exports.allComponents = -> _.filter(loadedComponents, (c) -> !c.isLibrary )
+exports.allLibraries = -> _.filter(loadedComponents, (c) -> c.isLibrary )
 
 exports.defSync = (componentType) ->
   [all, org, name] = componentType.match /(.*?)\-(.*)/
