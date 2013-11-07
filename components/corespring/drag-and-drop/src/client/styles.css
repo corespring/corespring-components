@@ -18,3 +18,12 @@
 .view-drag-and-drop .landing-place.inline {
     display: inline-block;
 }
+
+
+.drag-and-drop-choices {
+	list-style-type: upper-alpha;
+}
+
+.drag-and-drop-choices li {
+	float: left;
+}
