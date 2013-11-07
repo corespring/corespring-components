@@ -10,8 +10,7 @@
     "angular-ui": "latest",
     "angular-ui-sortable" : "latest",
     "jquery": "latest",
-    "lodash" : "latest",
-    "ckeditor": "https://github.com/eymengunay/ckeditor.git"
+    "lodash" : "latest"
   },
   "devDependencies": {
     "angular-mocks": "1.2.0-rc.2",

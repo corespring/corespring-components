@@ -17,6 +17,10 @@
     {
       "name": "ck-editor",
       "organization": "corespring"
+    },
+    {
+      "name": "mu-editor",
+      "organization": "corespring"
     }
   ]
 

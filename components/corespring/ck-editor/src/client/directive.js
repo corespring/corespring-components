@@ -9,14 +9,19 @@ var def = [
         var ck;
         ck = CKEDITOR.replace(elm[0], {
           toolbar: [
-            ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo'],
+            ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo','Smiley'],
             ['Bold', 'Italic', 'Underline'],
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Image']
           ],
           height: '100px'
         });
+
+
         if (!ngModel) return;
+
+
+
         ck.on('pasteState', function () {
           return scope.$apply(function () {
             ngModel.$setViewValue(ck.getData());
