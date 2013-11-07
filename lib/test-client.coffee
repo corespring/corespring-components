@@ -107,4 +107,4 @@ module.exports = (grunt) ->
 
     keepWrapped = !grunt.option("keepWrapped") == false
     grunt.log.writeln("keep wrapped? #{keepWrapped}")
-    grunt.task.run("cleanWrapped", "--force") unless keepWrapped
+    grunt.task.run("cleanWrapped") unless keepWrapped
