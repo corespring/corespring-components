@@ -3,6 +3,10 @@
     {
       "name": "scoring-utils",
       "organization": "corespring"
+    },
+    {
+      "name": "ck-editor",
+      "organization": "corespring"
     }
   ],
   "name": "multiple-choice",

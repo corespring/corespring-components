@@ -12,6 +12,12 @@
     }
   },
   "server" : {
+  },
+  "libraries": [
+    {
+      "name": "ck-editor",
+      "organization": "corespring"
+    }
+  ]
 
-  }
 }

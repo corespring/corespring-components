@@ -1,16 +1,47 @@
-
-
-exports.framework = "angular";
-exports.directive = [
+var main = [
     "$compile", function($compile) {
       var input, inputs, template;
       console.log("corespring/drag-and-drop");
-      input = function(attrs) {
-        return "<div class=\"col-lg-4\">" + "  <input type=\"text\" class=\"form-control\" " + attrs + ">" + "</div>";
+      input = function(attrs, label) {
+        return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + "</div>";
       };
+
       inputs = input("ng-model=\"c.content\" ng-model-onblur") + input("ng-model=\"c.id\" ng-model-onblur");
-      template = "<p>\n   Shuffle:\n   <input type=\"checkbox\" ng-model=\"model.config.shuffle\"></input>\n  <br/>\n  <br/>\n  <textarea rows=\"2\" cols=\"60\" ng-model=\"model.prompt\" ng-model-onblur></textarea>\n  <br/>\n  <table>\n    <tr ng-repeat=\"c in model.choices\">\n      <td>\n        " + inputs + "\n        <button class=\"btn btn-xs\" ng-click=\"remove(c)\">X</button>\n      </td>\n     </tr>\n  </table>\n  <br/>\n  <button class=\"btn\" ng-click=\"add()\">Add</button>\n</p>";
-      return {
+      var inputHolder = function(header, body) {
+          return [
+            '<div class="input-holder">',
+            ' <div class="header">'+header+'</div>',
+            ' <div class="body">',
+            body,
+            ' </div>',
+            '</div>'
+          ].join("");
+      };
+
+      var choiceArea = function() {
+        return [
+        '<ol class="drag-and-drop-choices" >',
+        '<li ng-repeat="c in model.choices" class="col-lg-4" >',
+          input("ng-model=\"c.content\" ", "<label>{{letter($index)}}</label>"),
+        '</li>',
+        '</ol>',
+        '<div class="clearfix"></div>',
+        '  <button class=\"btn\" ng-click=\"add()\">Add</button>'
+
+        ].join("");
+      }
+
+      template = 
+            ['<p>',
+            inputHolder('Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
+            inputHolder('Choices', choiceArea()),
+            '   Shuffle:',
+            '   <input type=\"checkbox\" ng-model=\"model.config.shuffle\"></input>',
+            '  <br/>',
+            '</p>',
+            ''].join('\n'); 
+
+     return {
         restrict: "E",
         scope: "isolate",
         template: template,
@@ -29,6 +60,11 @@ exports.directive = [
 
           $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
 
+
+          $scope.letter = function(idx) {
+            return String.fromCharCode(65 + idx);
+          };
+
           $scope.remove = function(c) {
             $scope.model.choices = _.filter($scope.model.choices, function(existing) {
               return existing !== c;
@@ -44,4 +80,9 @@ exports.directive = [
         }
       };
     }
-  ];
+  ];  
+
+exports.framework = 'angular';
+exports.directives = [
+    {directive: main}
+];  

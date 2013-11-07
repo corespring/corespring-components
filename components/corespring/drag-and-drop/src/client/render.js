@@ -25,7 +25,7 @@ var main = [ '$compile', function($compile){
 
   var tmpl = [
   '        <div class="view-drag-and-drop">',
-  '        <h5>{{model.prompt}}</h5>',
+  '        <h5 ng-bind-html-unsafe="model.prompt"></h5>',
   '        <div id="answer-area">',
   '        </div>',
   '        <div class="choices" >',
