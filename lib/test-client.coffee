@@ -32,7 +32,7 @@ cleanWrapped = (path, log) ->
     filepaths = globule.find "#{path}/**/*-wrapped.js"
 
     log("found files: #{filepaths}")
-    
+
     _.each filepaths, (p) ->
       log("removing: #{p}")
       fs.unlinkSync(p)
@@ -107,4 +107,4 @@ module.exports = (grunt) ->
 
     keepWrapped = !grunt.option("keepWrapped") == false
     grunt.log.writeln("keep wrapped? #{keepWrapped}")
-    grunt.task.run("cleanWrapped") unless keepWrapped
+    grunt.task.run("cleanWrapped --force") unless keepWrapped
