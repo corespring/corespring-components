@@ -4,20 +4,24 @@
 var def = [
   function () {
     return {
-      require: '?ngModel',
       link: function (scope, elm, attr, ngModel) {
-
-        $(elm).markItUp();
-        if (!ngModel) return;
-//
-//        ck.on('pasteState', function () {
-//          return scope.$apply(function () {
-//            ngModel.$setViewValue(ck.getData());
-//          });
-//        });
-//        ngModel.$render = function (value) {
-//          ck.setData(ngModel.$viewValue);
-//        };
+        var mySettings = {
+          onShiftEnter:  	{keepDefault:false, replaceWith:'<br />\n'},
+          onCtrlEnter:  	{keepDefault:false, openWith:'\n<p>', closeWith:'</p>'},
+          onTab:    		{keepDefault:false, replaceWith:'    '},
+          markupSet:  [
+            {name:'Bold', key:'B', openWith:'(!(<strong>|!|<b>)!)', closeWith:'(!(</strong>|!|</b>)!)' },
+            {name:'Italic', key:'I', openWith:'(!(<em>|!|<i>)!)', closeWith:'(!(</em>|!|</i>)!)'  },
+            {name:'Stroke through', key:'S', openWith:'<del>', closeWith:'</del>' },
+            {separator:'---------------' },
+            {name:'Bulleted List', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'\n</ul>'},
+            {name:'Numeric List', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'\n</ol>'},
+            {separator:'---------------' },
+            {name:'Picture', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
+            {name:'Link', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
+          ]
+        };
+        $(elm).markItUp(mySettings);
       }
     };
   }

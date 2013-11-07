@@ -32,7 +32,7 @@ var main = [
 
     var answerArea = function () {
       return [
-        '<textarea mu-editor ng-model="answerArea"></textarea>'
+        '<textarea mu-editor ng-model="model.answerArea"></textarea>'
       ].join("");
     };
 
