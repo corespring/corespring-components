@@ -57,6 +57,10 @@ module.exports = (grunt) ->
         files: ['<%= common.componentPath %>/**/*.js']
         tasks: ['jshint:main']
 
+    clean:
+      test: ["<%= common.componentPath %>/**/*-wrapped.js"]
+
+
   grunt.initConfig(config)
 
   npmTasks = [
@@ -68,7 +72,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
-  grunt.registerTask('test', 'test client side js', ['testserver', 'testclient'])
+  grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest' )
   grunt.registerTask('default', ['wrap', 'jasmine:unit'])
