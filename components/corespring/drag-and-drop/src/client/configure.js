@@ -33,7 +33,7 @@ var main = [
 
       template = 
             ['<p>',
-            inputHolder('Prompt', '<textarea ng-ckeditor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
+            inputHolder('Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
             inputHolder('Choices', choiceArea()),
             '   Shuffle:',
             '   <input type=\"checkbox\" ng-model=\"model.config.shuffle\"></input>',
@@ -82,38 +82,7 @@ var main = [
     }
   ];  
 
-var ckeditor = [
-  function () {
-    return {
-      require: '?ngModel',
-      link: function (scope, elm, attr, ngModel) {
-        var ck;
-        ck = CKEDITOR.replace(elm[0], {
-          toolbar: [
-            ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo'],
-            ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Image']
-          ],
-          height: '100px'
-        });
-        if (!ngModel) return;
-        ck.on('pasteState', function () {
-          return scope.$apply(function () {
-            ngModel.$setViewValue(ck.getData());
-          });
-        });
-        ngModel.$render = function (value) {
-          ck.setData(ngModel.$viewValue);
-        };
-      }
-    };
-  }
-];
-
-
 exports.framework = 'angular';
 exports.directives = [
-    {directive: main},
-    {name: 'ngCkeditor', directive: ckeditor }
+    {directive: main}
 ];  
