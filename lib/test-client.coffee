@@ -25,9 +25,14 @@ wrapAndWriteLibJs = (lib) ->
 
 cleanWrapped = (path, log) ->
   ->
+    log("-----> cleanWrapped -------> path: #{path}")
+
     fs.unlinkSync("./appDeclaration.js")
 
     filepaths = globule.find "#{path}/**/*-wrapped.js"
+
+    log("found files: #{filepaths}")
+    
     _.each filepaths, (p) ->
       log("removing: #{p}")
       fs.unlinkSync(p)
@@ -64,6 +69,7 @@ Run the client side tests
 ###
 module.exports = (grunt) ->
 
+
   (org,name,type) ->
 
     fs.writeFileSync("./appDeclaration.js", templates.preroll() )
@@ -74,6 +80,11 @@ module.exports = (grunt) ->
       return
 
     componentPath = grunt.config("testClient.componentPath")
+
+    grunt.registerTask("cleanWrapped", cleanWrapped(componentPath, grunt.log.writeln))
+    #grunt.task.run("cleanWrapped")
+    #cleanWrapped(componentPath, grunt.log.writeln)()
+
     components.init(componentPath)
 
     filterOrg = (comp) -> if org? then comp.organization == org else true
@@ -91,7 +102,6 @@ module.exports = (grunt) ->
 
     grunt.config("testClient.specPath", "#{componentPath}/**/client/*-test.js")
 
-    grunt.registerTask("cleanWrapped", cleanWrapped(componentPath, grunt.log.writeln))
 
     grunt.task.run("jasmine:unit")
 
