@@ -1,5 +1,14 @@
 # Component Spec
 
+There are 2 types of component: UiComponent and Library
+
+## UiComponent ----------------
+
+### How to depend on a library
+
+
+## Library ----------------
+
 This spec defines how to create a component that can run within a corespring container.
 
 A component is a self contained unit that defines client side behaviour and server side processing.
@@ -20,15 +29,7 @@ On the server side the component must define 1 method `respond` that takes the m
 
 #### register config panel
 
-    CorespringContainer.registerConfigPanel(id, registrationObject )
-
 ##### setModel
-
-    setModel: function(model){
-
-    }
-
-If model.empty == true - it means that the object is empty and you can generate your own default data model.
 
 ### Testing
 
@@ -64,3 +65,5 @@ All components must output a score between 0.0 and 1.0
 #### Feedback
 
 ### Testing
+
+
