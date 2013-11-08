@@ -1,17 +1,15 @@
 {
-  "name" : "drag-and-drop",
-  "organization" : "corespring",
-  "corespring-container-version" : "0.0.1",
-  "version" : "0.0.1",
-  "client" : {
-    "bower" : {
-      "dependencies" : {
-        "jquery" : "latest",
-        "jquery-ui" : "latest"
+  "name": "drag-and-drop",
+  "organization": "corespring",
+  "corespring-container-version": "0.0.1",
+  "version": "0.0.1",
+  "dependencies": {
+    "client": {
+      "angular-dragdrop": {
+        "bower_target": "latest",
+        "file" : "src/angular-dragdrop.js"
       }
     }
-  },
-  "server" : {
   },
   "libraries": [
     {
@@ -23,5 +21,4 @@
       "organization": "corespring"
     }
   ]
-
 }
