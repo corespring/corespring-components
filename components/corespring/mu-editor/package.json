@@ -1,5 +1,13 @@
 {
   "name": "mu-editor",
   "organization": "corespring",
-  "isLibrary" : true
+  "isLibrary" : true,
+   "dependencies" : {
+    "client" : {
+      "markitup": {
+        "bower_target" : "https://github.com/markitup/1.x.git",
+        "file" : "markitup/jquery.markitup.js"
+      }
+    }
+  }
 }

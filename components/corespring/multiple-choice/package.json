@@ -6,9 +6,18 @@
     },
     {
       "name": "ck-editor",
-      "organization": "corespring"
+      "organization": "corespring",
+       "scope" : "editor"
     }
   ],
+  "dependencies" : {
+    "client" : {
+      "mathjax" : {
+        "bower_target" : "https://github.com/mathjax/MathJax.git",
+        "file" : "MathJax.js"
+      }
+    }
+  },
   "name": "multiple-choice",
   "organization": "corespring"
 }
