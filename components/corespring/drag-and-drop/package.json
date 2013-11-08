@@ -14,11 +14,13 @@
   "libraries": [
     {
       "name": "ck-editor",
-      "organization": "corespring"
+      "organization": "corespring",
+      "scope" : "editor"
     },
     {
       "name": "mu-editor",
-      "organization": "corespring"
+      "organization": "corespring",
+      "scope" : "editor"
     }
   ]
 }

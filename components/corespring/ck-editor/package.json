@@ -6,7 +6,8 @@
 
     "client" : {
       "ckeditor": {
-        "bower_target" : "https://github.com/eymengunay/ckeditor.git"
+        "bower_target" : "https://github.com/eymengunay/ckeditor.git",
+        "file" : "ckeditor.js"
       }
     }
   }

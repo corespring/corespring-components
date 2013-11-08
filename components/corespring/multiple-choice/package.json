@@ -6,7 +6,8 @@
     },
     {
       "name": "ck-editor",
-      "organization": "corespring"
+      "organization": "corespring",
+       "scope" : "editor"
     }
   ],
   "dependencies" : {
