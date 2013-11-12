@@ -34,7 +34,7 @@ var main = [
       return [
         '<ol class="drag-and-drop-answers" >',
         '<li ng-repeat="c in model.answers" class="col-lg-4" >',
-        input('answer-popover ng-model="c"'),
+        input('answer-popover ng-model="c" active-popover="activePopover" placeholder="Click to configure"'),
         '</li>',
         '</ol>',
         '<div class="clearfix"></div>',
@@ -43,7 +43,7 @@ var main = [
     };
 
     template =
-      ['<div class="drag-and-drop-config-panel">',
+      ['<div class="drag-and-drop-config-panel">{{active}}',
         inputHolder('Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
         inputHolder('Choices', choiceArea()),
         inputHolder('Answer Area', answerArea()),
@@ -51,7 +51,6 @@ var main = [
         '   <input type=\"checkbox\" ng-model=\"model.config.shuffle\"></input>',
         '  <br/>',
         '</p>',
-        '<a href="#" id="blob" class="btn large primary" rel="popover">hover for popover</a>',
         '</div>'].join('\n');
 
     return {
@@ -74,7 +73,7 @@ var main = [
 
         $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
 
-        $scope.answerArea = "Something <dummyLanding></dummyLanding> something";
+        $scope.activePopover = {value: ""};
 
         $scope.remove = function (c) {
           $scope.model.choices = _.filter($scope.model.choices, function (existing) {
@@ -110,35 +109,55 @@ var answerPopoverDirective = ['$compile',
   function ($compile) {
     return {
       scope: {
-        model: "=ngModel"
+        model: "=ngModel",
+        activePopover: "="
       },
       link: function (scope, elm, attr) {
-        var formGroup = function(label, body) {
+        var formGroup = function (label, body) {
           return [
             "<div class='form-group'>",
-            " <label class='col-sm-2 control-label'>"+label+"</label>",
+            " <label class='col-sm-2 control-label'>" + label + "</label>",
             " <div class='col-sm-10'>",
-            "   "+body,
+            "   " + body,
             " </div>",
             "</div>",
           ].join("");
         };
         var html = [
           "<form class='form-horizontal'>",
-          formGroup("Text Before:", "<input type='text' class='form-control' ng-model='model.textBefore'></input>"),
+          formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'></input>"),
           formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'></input>"),
           formGroup("Inline:", "<input type='checkbox' class='form-control' ng-model='model.inline'></input>"),
           "</form>"
         ].join("");
-        var compiled = $compile(html)(scope);
-        $(elm).popover(
-          {
-            title: 'Answer Blank',
-            content: compiled,
-            html: true,
-            placement: 'auto'
+
+        // We need to manually show/hide the popup as the automatic one breaks angular bindings because of some internal
+        // caching mechanism
+        elm.click(function () {
+          var same = scope.activePopover.value == elm;
+          if (scope.activePopover.value) {
+            $(scope.activePopover.value).popover('destroy');
+            scope.$apply(function() {
+              scope.activePopover.value = undefined;
+            });
           }
-        );
+          if (same) return;
+            var compiled = $compile(html)(scope);
+            $(elm).popover(
+              {
+                title: 'Answer Blank',
+                content: compiled,
+                html: true,
+                placement: 'auto',
+                trigger: 'manual'
+              }
+            );
+
+            scope.$apply(function() {
+              $(elm).popover('show');
+              scope.activePopover.value = elm;
+            });
+        });
       }
     };
   }
