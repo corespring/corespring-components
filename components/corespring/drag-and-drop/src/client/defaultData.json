@@ -1,49 +1,14 @@
 {
   "componentType": "corespring-drag-and-drop",
   "title": "Sample Drag and Drop",
-  "correctResponse": [
-    {
-      "choiceId": "larva",
-      "landingPlace": "1"
-    }
-  ],
-  "feedback": [
-    {
-      "feedback": [
-        {
-          "larva": "Great"
-        },
-        {
-          "other": "Not great"
-        }
-      ],
-      "landingPlace": "1"
-    }
-  ],
+  "correctResponse": {},
   "model": {
-    "answerArea": "<div>Drop your answer here: <landingPlace id='1'></landingPlace></div>",
     "choices": [
-      {
-        "content": "Pupa",
-        "fixed": true,
-        "id": "pupa"
-      },
-      {
-        "content": "Egg",
-        "id": "egg"
-      },
-      {
-        "content": "Larva",
-        "id": "larva"
-      },
-      {
-        "content": "Adult",
-        "id": "adult"
-      }
     ],
     "config": {
       "shuffle": true
     },
     "prompt": "Add your text here"
-  }
+  },
+  "weight": 1
 }

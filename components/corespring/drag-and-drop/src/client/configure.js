@@ -63,13 +63,38 @@ var main = [
           setModel: function (model) {
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
+            _.each($scope.model.answers, function (answer) {
+
+              var correctResponse = model.correctResponse[answer.id];
+              var idx = _.indexOf(_.pluck($scope.model.choices, 'id'), correctResponse);
+              answer.correctResponse = String.fromCharCode(65 + idx);
+            });
             console.log(model);
           },
+          getModel: function () {
+            var model = _.cloneDeep($scope.fullModel);
+            _.each(model.model.answers, function (answer) {
+              delete answer.correctResponse;
+            });
+            console.log(model.correctResponse);
+            return model;
+          },
+
           getAnswer: function () {
             console.log("returning answer for: Drag and drop");
             return {};
           }
         };
+
+        $scope.$watch('model.answers', function(val) {
+          if (!val) return;
+          var model = $scope.fullModel;
+          _.each(model.model.answers, function (answer) {
+            var idx = answer.correctResponse.charCodeAt(0) - 65;
+            var correctResponse = model.model.choices[idx].id;
+            model.correctResponse[answer.id] = correctResponse;
+          });
+        }, true);
 
         $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
 
@@ -89,6 +114,7 @@ var main = [
         };
 
         $scope.addAnswer = function () {
+          $scope.model.answers = $scope.model.answers || [];
           $scope.model.answers.push({
             id: "" + $scope.model.answers.length,
             textBefore: "",
@@ -116,7 +142,7 @@ var answerPopoverDirective = ['$compile',
         var formGroup = function (label, body) {
           return [
             "<div class='form-group'>",
-            " <label class='col-sm-2 control-label'>" + label + "</label>",
+            " <label class='col-sm-4 control-label'>" + label + "</label>",
             " <div class='col-sm-10'>",
             "   " + body,
             " </div>",
@@ -127,6 +153,7 @@ var answerPopoverDirective = ['$compile',
           "<form class='form-horizontal'>",
           formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'></input>"),
           formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'></input>"),
+          formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'></input>"),
           formGroup("Inline:", "<input type='checkbox' class='form-control' ng-model='model.inline'></input>"),
           "</form>"
         ].join("");
@@ -137,26 +164,26 @@ var answerPopoverDirective = ['$compile',
           var same = scope.activePopover.value == elm;
           if (scope.activePopover.value) {
             $(scope.activePopover.value).popover('destroy');
-            scope.$apply(function() {
+            scope.$apply(function () {
               scope.activePopover.value = undefined;
             });
           }
           if (same) return;
-            var compiled = $compile(html)(scope);
-            $(elm).popover(
-              {
-                title: 'Answer Blank',
-                content: compiled,
-                html: true,
-                placement: 'auto',
-                trigger: 'manual'
-              }
-            );
+          var compiled = $compile(html)(scope);
+          $(elm).popover(
+            {
+              title: 'Answer Blank',
+              content: compiled,
+              html: true,
+              placement: 'top',
+              trigger: 'manual'
+            }
+          );
 
-            scope.$apply(function() {
-              $(elm).popover('show');
-              scope.activePopover.value = elm;
-            });
+          scope.$apply(function () {
+            $(elm).popover('show');
+            scope.activePopover.value = elm;
+          });
         });
       }
     };
