@@ -1,22 +1,37 @@
-var main = [ '$compile', function($compile){
+var main = [ '$compile', function ($compile) {
 
-  var link = function(scope, element, attrs){
+  var link = function (scope, element, attrs) {
 
     scope.landingPlaceChoices = {};
 
     scope.containerBridge = {
-      setDataAndSession : function(dataAndSession){
-        scope.model = _.clone( dataAndSession.data.model);
-        $answerArea = element.find("#answer-area").html("<div> " + scope.model.answerArea + "</div>");
+      setDataAndSession: function (dataAndSession) {
+        scope.model = _.clone(dataAndSession.data.model);
+
+        var landingPlaceHtml = function(a) {
+          var cssClass = a.inline ? "inline" : "";
+          return ['<landingPlace id="',
+            a.id,
+            '" class="',
+            cssClass,
+            '">',
+            '</landingPlace>'
+          ].join("");
+
+        }
+        var answerHtml = _.map(scope.model.answers, function (a) {
+          return a.textBefore + landingPlaceHtml(a) + a.textAfter;
+        }).join("");
+        $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
         $compile($answerArea)(scope.$new());
       },
-      getSession: function(){
+      getSession: function () {
         var answer = _.cloneDeep(scope.landingPlaceChoices);
-        _.each(answer, function(v,k) {
+        _.each(answer, function (v, k) {
           answer[k] = v.id;
         });
         return {
-          answers : answer
+          answers: answer
         };
       }
     };
@@ -24,51 +39,51 @@ var main = [ '$compile', function($compile){
   };
 
   var tmpl = [
-  '        <div class="view-drag-and-drop">',
-  '        <h5 ng-bind-html-unsafe="model.prompt"></h5>',
-  '        <div id="answer-area">',
-  '        </div>',
-  '        <div class="choices" >',
-  '          <div',
-  '            ng-repeat="o in model.choices"',
-  '            class="btn btn-primary choice"',
-  '            data-drag="true"',
-  '            data-jqyoui-options="{revert: \'invalid\'}"',
-  '            ng-model="model.choices[$index]"',
-  '            jqyoui-draggable',
-  '            data-id="{{o.id}}"',
-  '           >{{o.content}}</div>',
-  '          </div>',
-  '      </div>'
-    ].join("");
+    '        <div class="view-drag-and-drop">',
+    '        <h5 ng-bind-html-unsafe="model.prompt"></h5>',
+    '        <div id="answer-area">',
+    '        </div>',
+    '        <div class="choices" >',
+    '          <div',
+    '            ng-repeat="o in model.choices"',
+    '            class="btn btn-primary choice"',
+    '            data-drag="true"',
+    '            data-jqyoui-options="{revert: \'invalid\'}"',
+    '            ng-model="model.choices[$index]"',
+    '            jqyoui-draggable',
+    '            data-id="{{o.id}}"',
+    '           >{{o.content}}</div>',
+    '          </div>',
+    '      </div>'
+  ].join("");
 
   return {
     link: link,
     scope: {},
-    restrict : 'E',
-    template : tmpl
+    restrict: 'E',
+    template: tmpl
   };
 }];
 
-var landingPlace = [function(){
+var landingPlace = [function () {
   var def = {
     scope: true,  //TODO: should use isolate scope, but = doesn't seem to inherit from DanD's scope
     restrict: 'E',
     transclude: true,
     replace: false,
-    link: function(scope, element, attrs) {
+    link: function (scope, element, attrs) {
       scope.class = attrs['class'];
       scope.id = attrs['id'];
-      scope.onDrop = function() {
+      scope.onDrop = function () {
         console.log("onDrop", scope.model.choices);
-        scope.model.choices = _.filter(scope.model.choices, function(c) {
+        scope.model.choices = _.filter(scope.model.choices, function (c) {
           return c;
         });
       };
       scope.draggableOptions = {
-        revert: function(isValid) {
+        revert: function (isValid) {
           if (isValid) return false;
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.model.choices.push(scope.landingPlaceChoices[scope.id]);
             delete scope.landingPlaceChoices[scope.id];
           });
@@ -87,15 +102,15 @@ var landingPlace = [function(){
       '      style="padding: 5px">',
       '        <div ng-show="landingPlaceChoices[id]" jqyoui-draggable data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id]" data-drag="true" class="btn btn-primary">{{landingPlaceChoices[id].content}}</div>',
       '    </div>'].join("")
-    };
+  };
   return def;
 }];
 
 exports.framework = 'angular';
 exports.directives = [
-  /** The default definition - no name is needed. 1 main def is mandatory */
-  { directive : main },
-  /** A 2nd directive */
+/** The default definition - no name is needed. 1 main def is mandatory */
+  { directive: main },
+/** A 2nd directive */
   { name: 'landingplace', directive: landingPlace }
 ];
 

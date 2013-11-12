@@ -25,19 +25,25 @@ var main = [
         '</li>',
         '</ol>',
         '<div class="clearfix"></div>',
-        '  <button class=\"btn\" ng-click=\"add()\">Add</button>'
+        '  <button class=\"btn\" ng-click=\"addChoice()\">Add</button>'
 
       ].join("");
     };
 
     var answerArea = function () {
       return [
-        '<textarea mu-editor ng-model="model.answerArea"></textarea>'
+        '<ol class="drag-and-drop-answers" >',
+        '<li ng-repeat="c in model.answers" class="col-lg-4" >',
+        input('answer-popover ng-model="c"'),
+        '</li>',
+        '</ol>',
+        '<div class="clearfix"></div>',
+        '  <button class=\"btn\" ng-click=\"addAnswer()\">Add</button>'
       ].join("");
     };
 
     template =
-      ['<p>',
+      ['<div class="drag-and-drop-config-panel">',
         inputHolder('Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
         inputHolder('Choices', choiceArea()),
         inputHolder('Answer Area', answerArea()),
@@ -45,13 +51,15 @@ var main = [
         '   <input type=\"checkbox\" ng-model=\"model.config.shuffle\"></input>',
         '  <br/>',
         '</p>',
-        ''].join('\n');
+        '<a href="#" id="blob" class="btn large primary" rel="popover">hover for popover</a>',
+        '</div>'].join('\n');
 
     return {
       restrict: "E",
       scope: "isolate",
       template: template,
       link: function ($scope, element, attrs) {
+
         $scope.containerBridge = {
           setModel: function (model) {
             $scope.fullModel = model;
@@ -67,66 +75,82 @@ var main = [
         $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
 
         $scope.answerArea = "Something <dummyLanding></dummyLanding> something";
+
         $scope.remove = function (c) {
           $scope.model.choices = _.filter($scope.model.choices, function (existing) {
             return existing !== c;
           });
         };
 
-        $scope.add = function () {
+        $scope.addChoice = function () {
           $scope.model.choices.push({
             id: "" + $scope.model.choices.length,
             content: "new choice"
           });
         };
+
+        $scope.addAnswer = function () {
+          $scope.model.answers.push({
+            id: "" + $scope.model.answers.length,
+            textBefore: "",
+            textAfter: "",
+            inline: false
+          });
+        };
+
+        $scope.clickAnswer = function () {
+        };
+
       }
     };
   }
 ];
 
-var dummyLanding = [
-  "$compile", function ($compile) {
-
+var answerPopoverDirective = ['$compile',
+  function ($compile) {
     return {
-      restrict: "E",
-      scope: "isolate",
-      link: function ($scope, element, attrs) {
-        $scope.containerBridge = {
-          setModel: function (model) {
-            $scope.fullModel = model;
-            $scope.model = $scope.fullModel.model;
-            console.log(model);
-          },
-          getAnswer: function () {
-            console.log("returning answer for: Drag and drop");
-            return {};
+      scope: {
+        model: "=ngModel"
+      },
+      link: function (scope, elm, attr) {
+        var formGroup = function(label, body) {
+          return [
+            "<div class='form-group'>",
+            " <label class='col-sm-2 control-label'>"+label+"</label>",
+            " <div class='col-sm-10'>",
+            "   "+body,
+            " </div>",
+            "</div>",
+          ].join("");
+        };
+        var html = [
+          "<form class='form-horizontal'>",
+          formGroup("Text Before:", "<input type='text' class='form-control' ng-model='model.textBefore'></input>"),
+          formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'></input>"),
+          formGroup("Inline:", "<input type='checkbox' class='form-control' ng-model='model.inline'></input>"),
+          "</form>"
+        ].join("");
+        var compiled = $compile(html)(scope);
+        $(elm).popover(
+          {
+            title: 'Answer Blank',
+            content: compiled,
+            html: true,
+            placement: 'auto'
           }
-        };
-
-        $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
-
-        $scope.answerArea = "Something <div style='width: 5px; height: 5px; background-color: red'></div> something";
-        $scope.remove = function (c) {
-          $scope.model.choices = _.filter($scope.model.choices, function (existing) {
-            return existing !== c;
-          });
-        };
-
-        $scope.add = function () {
-          $scope.model.choices.push({
-            id: "" + $scope.model.choices.length,
-            content: "new choice"
-          });
-        };
+        );
       }
     };
   }
 ];
-
 
 exports.framework = 'angular';
 exports.directives = [
   {
     directive: main
+  },
+  {
+    name: 'answerPopover',
+    directive: answerPopoverDirective
   }
-];  
+];
