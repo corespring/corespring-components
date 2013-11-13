@@ -3,34 +3,17 @@
   "title": "Sample Multiple Choice",
   "correctResponse": {
     "value": [
-      "2"
     ]
   },
   "feedback": [
-    {
-      "feedback": "Incorrect",
-      "value": "1"
-    },
-    {
-      "feedback": "Correct",
-      "value": "2"
-    }
   ],
   "model": {
     "choices": [
-      {
-        "label": "Answer 1",
-        "value": "1"
-      },
-      {
-        "label": "Answer 2",
-        "value": "2"
-      }
     ],
     "config": {
       "orientation": "vertical",
       "shuffle": true,
-      "singleChoice": true
+      "singleChoice": false
     },
     "prompt": "Add your question here..."
   }
