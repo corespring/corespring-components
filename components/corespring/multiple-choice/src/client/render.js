@@ -164,7 +164,6 @@ var main = [
       replace: true,
       link: link,
       template: [ '<div class="view-multiple-choice">',
-                  '  <directive-test></directive-test>',
                   '  <label ng-bind-html-unsafe="question.prompt"></label>',
                   '  <div class="choices-container" ng-class="question.config.orientation">',
                   '  <div ng-repeat="o in choices" class="choice-holder" ng-class="question.config.orientation">',
