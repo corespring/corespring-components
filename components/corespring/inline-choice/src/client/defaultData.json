@@ -3,28 +3,12 @@
   "correctResponse": "2",
   "title": "Sample Inline Choice",
   "feedback": [
-    {
-      "feedback": "Incorrect",
-      "value": "1"
-    },
-    {
-      "feedback": "Correct",
-      "value": "2"
-    }
   ],
   "model": {
     "choices": [
-      {
-        "label": "Answer 1",
-        "value": "1"
-      },
-      {
-        "label": "Answer 2",
-        "value": "2"
-      }
     ],
     "config": {
-      "shuffle": true
+      "shuffle": false
     },
     "prompt": "Add your question here..."
   }
