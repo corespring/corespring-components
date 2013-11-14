@@ -29,18 +29,17 @@ component = {
     ]
   },
   correctResponse: "carrot",
-  feedback: [
-    {
-      value: "apple",
+  feedback: {
+    "apple": {
       feedback: "Huh?"
-    }, {
-      value: "carrot",
+    },
+    "carrot": {
       feedback: "Yes"
-    }, {
-      value: "banana",
+    },
+    "banana": {
       feedback: "Nopes"
     }
-  ]
+  }
 };
 
 settings = function(feedback, userResponse, correctResponse) {
@@ -80,13 +79,12 @@ describe('inline-choice server logic', function() {
       expected = {
         correctness: "correct",
         score: 1,
-        feedback: [
-          {
-            value: "carrot",
+        feedback: {
+          "carrot": {
             feedback: "Yes",
             correct: true
           }
-        ]
+        }
       };
       response.should.eql(expected);
     });
@@ -96,18 +94,16 @@ describe('inline-choice server logic', function() {
       var expected = {
         correctness: "incorrect",
         score: 0,
-        feedback: [
-          {
-            value: "carrot",
+        feedback: {
+          "carrot": {
             feedback: "Yes",
             correct: true
           },
-          {
-            value: "apple",
+          "apple": {
             feedback: "Huh?",
             correct: false
           }
-        ]
+        }
       };
       response.should.eql(expected);
     });
@@ -119,13 +115,12 @@ describe('inline-choice server logic', function() {
       expected = {
         correctness: "incorrect",
         score: 0,
-        feedback: [
-          {
-            value: "apple",
+        feedback: {
+          "apple": {
             feedback: "Huh?",
             correct: false
           }
-        ]
+        }
       };
       response.should.eql(expected);
     });
