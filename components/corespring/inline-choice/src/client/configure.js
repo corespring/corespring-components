@@ -14,23 +14,10 @@ main = [
             scope.fullModel = model;
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
-            scope.feedback = {};
-            scope.correctValue = scope.fullModel.correctResponse;
             scope.scoreMapping = {};
             scope.model.scoringType = scope.model.scoringType || "standard";
             _.each(model.scoreMapping, function (v,k) {
               scope.scoreMapping[k] = String(v);
-            });
-            _.each(model.feedback, function (feedback) {
-              var choice = _.find(model.model.choices, function (choice) {
-                return choice.value === feedback.value;
-              });
-              if (choice) {
-                scope.feedback[choice.value] = {
-                  feedback: feedback.feedback,
-                  feedbackType: feedback.isDefault ? "standard" : "custom"
-                };
-              }
             });
 
             _.each(scope.model.choices, function (c) {
@@ -45,27 +32,11 @@ main = [
             _.each(scope.scoreMapping, function(v,k) {
               model.scoreMapping[k] = Number(v);
             });
-            model.correctResponse = scope.correctValue;
-            _.each(model.model.choices, function (choice) {
-              var feedback = scope.feedback[choice.value];
-              if (feedback) {
-                model.feedback.push( {
-                  isDefault: feedback.feedbackType == 'standard',
-                  feedback: feedback.feedback,
-                  value: choice.value
-                });
-              }
-            });
             console.log("getting model: ", model);
 
             return model;
           }
         };
-
-        scope.$watch('correctValue', function (value) {
-          scope.fullModel.correctResponse = value;
-          return console.log(scope.model);
-        }, true);
 
         scope.registerConfigPanel(attrs.id, scope.containerBridge);
 
@@ -83,7 +54,7 @@ main = [
             label: "new Question",
             labelType: "text"
           });
-          scope.feedback[id] = {feedbackType: 'standard'};
+          scope.fullModel.feedback[id] = {feedbackType: 'standard'};
         };
 
         scope.toChar = function (num) {
@@ -102,7 +73,7 @@ main = [
         '      <td>',
         '        <div class="correct-block">',
         '          <span class="correct-label">Correct</span><br/>',
-        '          <input type="radio" value="{{q.value}}" ng-model="$parent.correctValue" ></input>',
+        '          <input type="radio" value="{{q.value}}" ng-model="$parent.fullModel.correctResponse" ></input>',
         '        </div>',
         '      </td>',
         '     <td>{{toChar($index)}}</td>',
@@ -124,10 +95,10 @@ main = [
         '    </tr>',
         '  </table>',
         '  <label>Student Feedback: </label>',
-        '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="standard">Standard</input>',
-        '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="custom">Custom</input>',
-        '  <div ng-show="feedback[q.value].feedbackType == \'custom\'">',
-        '    <label>Feedback: </label><input type="text" ng-model="feedback[q.value].feedback"></input>',
+        '  <input type="radio" ng-model="fullModel.feedback[q.value].feedbackType" value="standard">Standard</input>',
+        '  <input type="radio" ng-model="fullModel.feedback[q.value].feedbackType" value="custom">Custom</input>',
+        '  <div ng-show="fullModel.feedback[q.value].feedbackType == \'custom\'">',
+        '    <label>Feedback: </label><input type="text" ng-model="fullModel.feedback[q.value].feedback"></input>',
         '  </div>',
         '</div>',
         '<a ng-click="addQuestion()">Add</a>',
@@ -157,35 +128,6 @@ main = [
   }
 ];
 
-ckeditor = [
-  function () {
-    return {
-      require: '?ngModel',
-      link: function (scope, elm, attr, ngModel) {
-        var ck;
-        ck = CKEDITOR.replace(elm[0], {
-          toolbar: [
-            ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo'],
-            ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Image']
-          ],
-          height: '100px'
-        });
-        if (!ngModel) return;
-        ck.on('pasteState', function () {
-          return scope.$apply(function () {
-            ngModel.$setViewValue(ck.getData());
-          });
-        });
-        ngModel.$render = function (value) {
-          ck.setData(ngModel.$viewValue);
-        };
-      }
-    };
-  }
-];
-
 exports.framework = 'angular';
-exports.directives = [{directive: main}, {name: 'ngIcCkeditor', directive: ckeditor } ];
+exports.directives = [{directive: main}];
 

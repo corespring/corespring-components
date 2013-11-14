@@ -77,27 +77,17 @@ link = function ($sce, $timeout) {
 
       // sets the server's response
       setResponse: function (response) {
+        console.log("Setting Response for inline choice:");
+        console.log(response);
         _(scope.choices).each(function (c) {
           delete c.feedback;
           delete c.correct;
+          if (response.feedback && response.feedback[c.value]) {
+            c.feedback = response.feedback[c.value].feedback;
+            c.correct = response.feedback[c.value].correct;
+          }
         });
         scope.response = response;
-        console.log("set response for single-choice", response);
-        if (response.feedback) {
-          _.each(response.feedback, function (fb) {
-
-            var choice = _.find(scope.choices, function (c) {
-              return c.value === fb.value;
-            });
-
-            if (choice !== null) {
-              choice.feedback = fb.feedback;
-              choice.correct = fb.correct;
-            }
-
-            console.log("choice: ", choice);
-          });
-        }
       }
     };
 

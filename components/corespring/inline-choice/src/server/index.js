@@ -14,29 +14,23 @@ exports.render = function (element) {
 };
 
 var feedbackByValue = function (q, v) {
-  return _.find(q.feedback, function (f) {
-    return f.value === v;
-  });
+  return q.feedback[v];
 };
 
 var correctResponseFeedback = function (fbArray, q, userGotItRight, answer) {
   var correctKey, fb, nc, _i, _len, _ref, _results;
-  _results = [];
   correctKey = q.correctResponse;
   fb = feedbackByValue(q, correctKey);
   fb.correct = true;
-  _results.push(fbArray.push(fb));
-  return _results;
+  fbArray[correctKey] = fb;
 };
 
 var userResponseFeedback = function (fbArray, q, answer) {
   var fb, userChoice, _i, _len, _results;
-  _results = [];
   userChoice = answer;
   fb = feedbackByValue(q, userChoice);
   fb.correct = isCorrectChoice(q, userChoice);
-  _results.push(fbArray.push(fb));
-  return _results;
+  fbArray[userChoice] = fb;
 };
 
 
@@ -49,8 +43,7 @@ var isCorrectChoice = function (q, choice) {
 };
 
 var buildFeedback = function (question, answer, settings, isCorrect) {
-  var out;
-  out = [];
+  var out = {};
   if (isCorrect) {
     if (settings.highlightCorrectResponse || settings.highlightUserResponse) {
       correctResponseFeedback(out, question, true, answer);
