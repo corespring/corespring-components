@@ -90,6 +90,7 @@ var main = [
           if (!val) return;
           var model = $scope.fullModel;
           _.each(model.model.answers, function (answer) {
+            if (!answer.correctResponse) return;
             var idx = answer.correctResponse.charCodeAt(0) - 65;
             var correctResponse = model.model.choices[idx].id;
             model.correctResponse[answer.id] = correctResponse;
