@@ -47,24 +47,25 @@ main = [
             });
             model.correctResponse = scope.correctValue;
             _.each(model.model.choices, function (choice) {
-              var feedback, _ref, _ref1;
-              feedback = _.find(model.feedback, function (fb) {
-                return fb.value === choice.value;
-              });
+              var feedback = scope.feedback[choice.value];
               if (feedback) {
-                feedback.feedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
-                feedback.isDefault = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0) === "standard";
+                model.feedback.push( {
+                  isDefault: feedback.feedbackType == 'standard',
+                  feedback: feedback.feedback,
+                  value: choice.value
+                });
               }
             });
+            console.log("getting model: ", model);
 
             return model;
           }
         };
 
-//        scope.$watch('correctValue', function (value) {
-//          scope.fullModel.correctResponse = value;
-//          return console.log(scope.model);
-//        }, true);
+        scope.$watch('correctValue', function (value) {
+          scope.fullModel.correctResponse = value;
+          return console.log(scope.model);
+        }, true);
 
         scope.registerConfigPanel(attrs.id, scope.containerBridge);
 
@@ -76,9 +77,13 @@ main = [
         };
 
         scope.addQuestion = function () {
-          return scope.model.choices.push({
-            label: "new Question"
+          var id = ""+scope.model.choices.length;
+          scope.model.choices.push({
+            value: id,
+            label: "new Question",
+            labelType: "text"
           });
+          scope.feedback[id] = {feedbackType: 'standard'};
         };
 
         scope.toChar = function (num) {

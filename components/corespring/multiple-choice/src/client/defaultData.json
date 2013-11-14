@@ -1,6 +1,6 @@
 {
   "componentType": "corespring-multiple-choice",
-  "title": "Sample Multiple Choice",
+  "title": "Multiple Choice",
   "correctResponse": {
     "value": [
     ]
