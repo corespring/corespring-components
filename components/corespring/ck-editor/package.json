@@ -1,14 +1,12 @@
 {
   "name": "ck-editor",
   "organization": "corespring",
-  "isLibrary" : true,
-  "dependencies" : {
-
-    "client" : {
-      "ckeditor": {
-        "bower_target" : "https://github.com/eymengunay/ckeditor.git",
-        "file" : "ckeditor.js"
-      }
+  "isLibrary": true,
+  "libs": {
+    "client": {
+      "ckeditor": [
+        "ckeditor-modular/ckeditor.js"
+      ]
     }
   }
 }
