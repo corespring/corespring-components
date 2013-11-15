@@ -36,6 +36,23 @@
 }
 
 .drag-and-drop-config-panel .popover {
-    max-width: 300px;
-    width: 300px;
+    max-width: 350px;
+    width: 350px;
+}
+
+.popover-row {
+    margin-bottom: 10px;
+}
+
+.popover-label {
+    width: 100px;
+    display: inline-block;
+}
+
+.popover-input {
+    display: inline-block;
+}
+
+.popover-content {
+    padding: 10px;
 }

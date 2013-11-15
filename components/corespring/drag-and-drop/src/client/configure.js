@@ -142,9 +142,9 @@ var answerPopoverDirective = ['$compile',
       link: function (scope, elm, attr) {
         var formGroup = function (label, body) {
           return [
-            "<div class='form-group'>",
-            " <label class='col-sm-4 control-label'>" + label + "</label>",
-            " <div class='col-sm-10'>",
+            "<div class='popover-row'>",
+            " <label class='popover-label'>" + label + "</label>",
+            " <div class='popover-input'>",
             "   " + body,
             " </div>",
             "</div>",
@@ -155,7 +155,7 @@ var answerPopoverDirective = ['$compile',
           formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'></input>"),
           formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'></input>"),
           formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'></input>"),
-          formGroup("Inline:", "<input type='checkbox' class='form-control' ng-model='model.inline'></input>"),
+          formGroup("Inline:", "<input type='checkbox' ng-model='model.inline'></input>"),
           "</form>"
         ].join("");
 
