@@ -1,6 +1,11 @@
 .view-drag-and-drop {
 }
 
+.view-drag-and-drop .prompt {
+    color: #666666;
+    font-style: italic;
+}
+
 .view-drag-and-drop .choices {
     border: 1px solid black;
 }

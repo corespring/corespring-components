@@ -107,7 +107,7 @@ main = [
       replace: true,
       link: link($sce, $timeout),
       template: [ '<div class="view-inline-choice">',
-        '  <label ng-bind-html-unsafe="question.prompt"></label>',
+        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
         '  <div class="choices-container" >',
         '  <select ng-disabled="sessionFinished" ng-model="answer.choice" ng-options="c.label for c in choices" class="choice-holder"></select>',
         '  <div ng-show="answer.choice.feedback" class="tooltip" ng-class="{true:\'correct\', false:\'incorrect\'}[answer.choice.correct]">',
