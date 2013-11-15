@@ -2,6 +2,11 @@
   "name": "ck-editor",
   "organization": "corespring",
   "isLibrary" : true,
+  "libs" : {
+    "ckeditor" : [
+      "libs/ckeditor-modular/ckeditor.js"
+      ]
+    },
   "dependencies" : {
 
     "client" : {
