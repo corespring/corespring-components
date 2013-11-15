@@ -50,7 +50,7 @@ var choices = [
         '    </div>',
         '</div>',
         '</div>',
-        '<a ng-click="addQuestion()">Add</a>'
+        '<button class=\"btn\" ng-click=\"addQuestion()\">Add</button>'
 ].join('\n');
 
 var shuffle = [

@@ -101,7 +101,7 @@ main = [
         '    <label>Feedback: </label><input type="text" ng-model="fullModel.feedback[q.value].feedback"></input>',
         '  </div>',
         '</div>',
-        '<a ng-click="addQuestion()">Add</a>',
+        '<button class=\"btn\" ng-click=\"addQuestion()\">Add</button>',
         '<div class="well">',
         ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
         '</div>',
