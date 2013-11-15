@@ -1,14 +1,48 @@
 {
   "componentType": "corespring-multiple-choice",
   "title": "Multiple Choice",
+  "weight" : 1,
   "correctResponse": {
     "value": [
+      "2"
     ]
   },
   "feedback": [
+    {
+      "feedback": "Incorrect",
+      "value": "1"
+    },
+    {
+      "feedback": "Correct",
+      "value": "2"
+    },
+    {
+      "feedback": "Incorrect",
+      "value": "3"
+    },
+    {
+      "feedback": "Incorrect",
+      "value": "4"
+    }
   ],
   "model": {
     "choices": [
+      {
+        "label": "Answer 1",
+        "value": "1"
+      },
+      {
+        "label": "Answer 2",
+        "value": "2"
+      },
+      {
+        "label": "Answer 3",
+        "value": "3"
+      },
+      {
+        "label": "Answer 4",
+        "value": "4"
+      }
     ],
     "config": {
       "orientation": "vertical",
