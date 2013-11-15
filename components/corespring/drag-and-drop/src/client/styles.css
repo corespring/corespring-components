@@ -20,6 +20,15 @@
 }
 
 
+.drag-and-drop-config-panel .answer-placeholder {
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    max-width: 130px;
+}
+
 .drag-and-drop-config-panel .drag-and-drop-choices {
 	list-style-type: upper-alpha;
 }

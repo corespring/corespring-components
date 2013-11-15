@@ -34,7 +34,7 @@ var main = [
       return [
         '<ol class="drag-and-drop-answers" >',
         '<li ng-repeat="c in model.answers" class="col-lg-4" >',
-        input('answer-popover ng-model="c" active-popover="activePopover" placeholder="Click to configure"'),
+        '<div class="answer-placeholder" answer-popover ng-model="c" active-popover="activePopover">Click to configure</div>',
         '</li>',
         '</ol>',
         '<div class="clearfix"></div>',
