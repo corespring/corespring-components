@@ -5,19 +5,19 @@
   "model": {
     "choices": [
       {
-        "content": "Choice 1",
+        "content": "",
         "id": "1"
       },
       {
-        "content": "Choice 2",
+        "content": "",
         "id": "2"
       },
       {
-        "content": "Choice 3",
+        "content": "",
         "id": "3"
       },
       {
-        "content": "Choice 4",
+        "content": "",
         "id": "4"
       }
     ],

@@ -17,11 +17,6 @@
       "name": "ck-editor",
       "organization": "corespring",
       "scope" : "editor"
-    },
-    {
-      "name": "mu-editor",
-      "organization": "corespring",
-      "scope" : "editor"
     }
   ]
 }

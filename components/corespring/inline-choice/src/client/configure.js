@@ -98,7 +98,7 @@ main = [
         '  <input type="radio" ng-model="fullModel.feedback[q.value].feedbackType" value="standard">Standard</input>',
         '  <input type="radio" ng-model="fullModel.feedback[q.value].feedbackType" value="custom">Custom</input>',
         '  <div ng-show="fullModel.feedback[q.value].feedbackType == \'custom\'">',
-        '    <label>Feedback: </label><input type="text" ng-model="fullModel.feedback[q.value].feedback"></input>',
+        '    <label>Feedback: </label><input type="text" ng-model="fullModel.feedback[q.value].feedback" placeholder="Enter feedback to display if this choice is selected."></input>',
         '  </div>',
         '</div>',
         '<button class=\"btn\" ng-click=\"addQuestion()\">Add</button>',

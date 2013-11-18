@@ -9,38 +9,38 @@
   },
   "feedback": [
     {
-      "feedback": "Incorrect",
+      "isDefault": "true",
       "value": "1"
     },
     {
-      "feedback": "Correct",
+      "isDefault": "true",
       "value": "2"
     },
     {
-      "feedback": "Incorrect",
+      "isDefault": "true",
       "value": "3"
     },
     {
-      "feedback": "Incorrect",
+      "isDefault": "true",
       "value": "4"
     }
   ],
   "model": {
     "choices": [
       {
-        "label": "Answer 1",
+        "label": "",
         "value": "1"
       },
       {
-        "label": "Answer 2",
+        "label": "",
         "value": "2"
       },
       {
-        "label": "Answer 3",
+        "label": "",
         "value": "3"
       },
       {
-        "label": "Answer 4",
+        "label": "",
         "value": "4"
       }
     ],

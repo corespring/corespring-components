@@ -69,11 +69,13 @@ var userResponseFeedback = function(fbArray, q, answer) {
   for (_i = 0, _len = answer.length; _i < _len; _i++) {
     userChoice = answer[_i];
     fb = feedbackByValue(q, userChoice);
-    fb.correct = isCorrectChoice(q, userChoice);
-    if (fb.correct) {
-      delete fb.notChosenFeedback;
+    if (fb) {
+      fb.correct = isCorrectChoice(q, userChoice);
+      if (fb.correct) {
+        delete fb.notChosenFeedback;
+      }
+      _results.push(fbArray.push(fb));
     }
-    _results.push(fbArray.push(fb));
   }
   return _results;
 };
@@ -134,6 +136,7 @@ exports.respond = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
   answerIsCorrect = this.isCorrect(answer, question.correctResponse.value);
+
   response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
     score: calculateScore(question, answer)
