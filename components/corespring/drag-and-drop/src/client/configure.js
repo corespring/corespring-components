@@ -44,10 +44,10 @@ var main = [
 
     var displayOptions = function () {
       return [
-        '<div><label class="col-sm-2">Shuffle</label><input type=\"checkbox\" ng-model=\"model.config.shuffle\" /></div>',
-        '<div><label class="col-sm-2">Show choice area </label><select ng-model="model.config.position"><option value="above">Above</option><option value="below">Below</option></select> the answer area</div>',
-        '<div><label class="col-sm-2">Label for choice area </label><div class="col-sm-3"><input type="text" class="form-control"  ng-model="model.config.choiceAreaLabel"/></div></div>',
-        '<div><label class="col-sm-2">Label for answer area </label><div class="col-sm-3"><input type="text" class="form-control"  ng-model="model.config.answerAreaLabel"/></div></div>',
+        '<div class="display-row"><label class="col-sm-4">Shuffle</label><input type=\"checkbox\" ng-model=\"model.config.shuffle\" /></div>',
+        '<div class="display-row"><label class="col-sm-4">Show choice area </label><select ng-model="model.config.position"><option value="above">Above</option><option value="below">Below</option></select> the answer area</div>',
+        '<div class="display-row"><label class="col-sm-4">Label for choice area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.choiceAreaLabel"/></div></div>',
+        '<div class="display-row"><label class="col-sm-4">Label for answer area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.answerAreaLabel"/></div></div>',
       ].join("");
     };
 

@@ -45,8 +45,20 @@
 .drag-and-drop-config-panel .drag-and-drop-answers {
 }
 
-/*.drag-and-drop-config-panel .container {
-}*/
+
+.display-row:before, .display-row:after {
+    content: " ";
+    display: table;
+}
+
+.drag-and-drop-config-panel .display-row {
+    width: 100%;
+}
+
+.drag-and-drop-config-panel .display-row:after {
+    clear: both;
+}
+
 
 .drag-and-drop-answers li {
 	float: left;
