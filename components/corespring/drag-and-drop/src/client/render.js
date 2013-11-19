@@ -6,7 +6,16 @@ var main = [ '$compile', function ($compile) {
 
     scope.containerBridge = {
       setDataAndSession: function (dataAndSession) {
+
+        // TODO: rewrite this using stash
+        var isNew = !scope.model;
+
         scope.model = _.clone(dataAndSession.data.model);
+
+        if (isNew && scope.model.config.shuffle) {
+          // TODO: rewrite this using stash
+          scope.model.choices = _.shuffle(scope.model.choices);
+        }
 
         var landingPlaceHtml = function(a) {
           var cssClass = a.inline ? "inline" : "";
@@ -38,22 +47,36 @@ var main = [ '$compile', function ($compile) {
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
   };
 
+  var answerArea = function() {
+    return  ['        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+      '        <div id="answer-area">',
+      '        </div>'].join('');
+
+  };
+
+  var choiceArea = function() {
+    return  ['        <div class="choices" >',
+      '          <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
+      '          <div',
+      '            ng-repeat="o in model.choices"',
+      '            class="btn btn-primary choice"',
+      '            data-drag="true"',
+      '            data-jqyoui-options="{revert: \'invalid\'}"',
+      '            ng-model="model.choices[$index]"',
+      '            jqyoui-draggable',
+      '            data-id="{{o.id}}"',
+      '           >{{o.content}}</div>',
+      '          </div>'].join('');
+
+  }
+
   var tmpl = [
     '        <div class="view-drag-and-drop">',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
-    '        <div id="answer-area">',
-    '        </div>',
-    '        <div class="choices" >',
-    '          <div',
-    '            ng-repeat="o in model.choices"',
-    '            class="btn btn-primary choice"',
-    '            data-drag="true"',
-    '            data-jqyoui-options="{revert: \'invalid\'}"',
-    '            ng-model="model.choices[$index]"',
-    '            jqyoui-draggable',
-    '            data-id="{{o.id}}"',
-    '           >{{o.content}}</div>',
-    '          </div>',
+    '        <div ng-if="model.config.position == \'above\'">',choiceArea(),'</div>',
+    answerArea(),
+    '        <div ng-if="model.config.position != \'above\'">',choiceArea(),'</div>',
+    '     </div>',
     '      </div>'
   ].join("");
 
