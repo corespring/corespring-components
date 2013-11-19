@@ -1,5 +1,11 @@
 var main;
 
+
+var placeholderText = {
+  selectedFeedback: 'Enter feedback to display if this choice is selected.',
+  notSelectedFeedback: 'Enter feedback to display if this choice is not selected.'
+}
+
 var wrap = function(title, body){
   return ['<div class="input-holder">',
         '  <div class="header">' + title + '</div>',
@@ -7,22 +13,26 @@ var wrap = function(title, body){
         '</div>' ].join('\n');
 };
 
+
+var inline = function(type, value, body, attrs){
+
+  return ['<label class="'+ type +'-inline">',
+          '  <input type="'+ type +'" value="'+ value +'" '+ attrs+'>' + body,
+          '</label>'].join('\n');
+}
+
 var prompt =  '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
 
 var choices = [
         '<div class="choice" ng-repeat="q in model.choices">',
-        '  <div class="remove-button" ng-click="removeQuestion(q)"><i class="glyphicon glyphicon-remove"></i></div>',
         '  <table>',
         '    <tr>',
-        '     <td>Choice {{toChar($index)}}</td>',
+        '     <td><b>Choice {{toChar($index)}}</b></td>',
         '      <td>',
-        '        <div class="correct-block">',
-        '          <input type="checkbox" ng-model="correctMap[q.value]"></input>',
-        '          <label class="correct-label">Correct</label>',
-        '        </div>',
+                  inline("checkbox", null, "Correct", "ng-model='correctMap[q.value]'"),
         '      </td>',
         '      <td>',
-        '        <select ng-model="q.labelType">',
+        '        <select class="form-control" ng-model="q.labelType">',
         '          <option value="text">Text</option>',
 //        '          <option value="image">Image</option>',
         '          <option value="mathml">MathML</option>',
@@ -30,7 +40,7 @@ var choices = [
         '      </td>',
         '      <td>',
         '        <div ng-switch="q.labelType">',
-        '          <textarea ng-switch-when="text" ng-model="q.label"></textarea>',
+        '          <input class="form-control" type="text" ng-switch-when="text" ng-model="q.label"></input>',
         '          <span ng-switch-when="image">',
         '           <label>Image: </label>',
         '           <input type="text" ng-model="q.imageName"></input>',
@@ -38,19 +48,32 @@ var choices = [
         '          <textarea ng-switch-when="mathml" ng-model="q.mathml" ng-change="updateMathJax()"></textarea>',
         '        </div>',
         '      </td>',
+        '      <td>',
+        '         <div class="remove-button" ng-click="removeQuestion(q)">',
+        '           <i class="glyphicon glyphicon-remove"></i>',
+        '         </div>',
+        '      </td>',
+        '    </tr>',
+        '    <tr>',
+        '      <td>',
+        '      </td>',
+        '      <td colspan="3">',
+        '        <label style="margin-right: 10px">Feedback to student</label>',
+                 inline("radio", "standard", "Standard", "ng-model='feedback[q.value].feedbackType'"),
+                 inline("radio", "custom", "Custom", "ng-model='feedback[q.value].feedbackType'"),
+        '      </td>',
+        '    </tr>',
+        '    <tr>',
+        '      <td>',
+        '      </td>',
+        '      <td colspan="3" ng-show="feedback[q.value].feedbackType == \'custom\'">',
+        '        <input class="form-control" style="margin-bottom: 8px;" type="text" ng-model="feedback[q.value].feedback" placeholder="'+ placeholderText.selectedFeedback +'"></input>',
+        '        <div ng-show="correctMap[q.value]">',
+        '          <input class="form-control" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="'+ placeholderText.notSelectedFeedback +'"></input>',
+        '        </div>',
+        '      </td>',
         '    </tr>',
         '  </table>',
-        '  <div style="text-align: center; width: 100%">',
-        '  <label style="margin-right: 10px">Feedback to student</label>',
-        '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="standard">Standard</input>',
-        '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="custom">Custom</input>',
-        '  <div ng-show="feedback[q.value].feedbackType == \'custom\'">',
-        '    <input class="form-control" type="text" ng-model="feedback[q.value].feedback" placeholder="Enter feedback to display if this choice is selected."></input>',
-        '    <div ng-show="correctMap[q.value]">',
-        '      <input class="form-control" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="Enter feedback to display if this choice is not selected."></input>',
-        '    </div>',
-        ' </div>',
-        '</div>',
         '</div>',
         '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
 ].join('\n');

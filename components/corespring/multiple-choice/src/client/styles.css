@@ -18,8 +18,8 @@
 }
 
 .view-multiple-choice .remove-button {
-    position: absolute;
-    right: 10px;
+    position: relative;
+    right: 0px;
     top: 5px;
 }
 
@@ -39,9 +39,13 @@
 
 .view-multiple-choice .choice {
     background-color: #fff;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     padding: 5px;
     position: relative;
+}
+
+.view-multiple-choice .choice table{
+    width: 100%;
 }
 
 .view-multiple-choice .choice-image {
