@@ -40,7 +40,8 @@ var choices = [
         '      </td>',
         '    </tr>',
         '  </table>',
-        '  <label>Student Feedback: </label>',
+        '  <div style="text-align: center; width: 100%">',
+        '  <label style="margin-right: 10px">Feedback to student</label>',
         '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="standard">Standard</input>',
         '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="custom">Custom</input>',
         '  <div ng-show="feedback[q.value].feedbackType == \'custom\'">',
@@ -48,6 +49,7 @@ var choices = [
         '    <div ng-show="correctMap[q.value]">',
         '      <input class="form-control" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="Enter feedback to display if this choice is not selected."></input>',
         '    </div>',
+        ' </div>',
         '</div>',
         '</div>',
         '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
@@ -228,7 +230,7 @@ main = [
       template: [
         '<div class="view-multiple-choice">',
           wrap('Prompt', prompt),
-          wrap('Choices', choices),
+          wrap('Answer Area', choices),
           wrap('Shuffle', shuffle),
           wrap('Scoring', scoring),
         '</div>'
