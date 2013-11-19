@@ -1,11 +1,10 @@
-
 var main = [
   '$sce', '$log',
 
-  function($sce, $log) {
+  function ($sce, $log) {
     var def;
 
-    var link = function(scope, element, attrs) {
+    var link = function (scope, element, attrs) {
 
       scope.inputType = 'checkbox';
 
@@ -13,26 +12,28 @@ var main = [
         choices: {}
       };
 
-      var getAnswers = function(){
+      var getAnswers = function () {
         if (scope.answer.choice) {
           return [scope.answer.choice];
         } else {
-          var isTrue = function(k){ return scope.answer.choices[k] === true;};
+          var isTrue = function (k) {
+            return scope.answer.choices[k] === true;
+          };
           var allKeys = _.keys(scope.answer.choices);
           var keys = _.filter(allKeys, isTrue);
           return keys;
         }
       };
 
-      var applyChoices = function(){
+      var applyChoices = function () {
 
-        if(!scope.question || !scope.session.answers){
+        if (!scope.question || !scope.session.answers) {
           return;
         }
 
         var answers = scope.session.answers;
 
-        if( scope.inputType == "radio"){
+        if (scope.inputType == "radio") {
           scope.answer.choice = answers[0];
         } else {
           for (var i = 0; i < answers.length; i++) {
@@ -43,45 +44,48 @@ var main = [
       };
 
       //TODO: Reset a function exposed in the bridge?
-      var resetFeedback = function(choices){
+      var resetFeedback = function (choices) {
         console.log("choices: ", choices);
-        _.each(choices, function(c){
+        _.each(choices, function (c) {
           if (c) {
             delete c.feedback;
             delete c.correct;
-          };
+          }
+          ;
         });
       };
 
-      var resetChoices = function(){
+      var resetChoices = function () {
         scope.answer.choices = [];
       };
 
-      var layoutChoices = function(choices, order){
-        if(!order){
+      var layoutChoices = function (choices, order) {
+        if (!order) {
           var shuffled = _.shuffle(_.cloneDeep(choices));
           return shuffled;
         } else {
-          var ordered = _.map(order, function(v){
-            return _.find(choices, function(c){
+          var ordered = _(order).map(function (v) {
+            return _.find(choices, function (c) {
               return c.value == v;
             });
+          }).filter(function (v) {
+            return v;
           });
 
-          var missing = _.difference(choices, ordered)
+          var missing = _.difference(choices, ordered);
           return _.union(ordered, missing);
         }
       };
 
-      var stashOrder = function(choices) {
-        return _.map(choices, function(c){
+      var stashOrder = function (choices) {
+        return _.map(choices, function (c) {
           return c.value;
         });
       };
 
-      var updateUi = function(){
+      var updateUi = function () {
 
-        if(!scope.question || !scope.session) {
+        if (!scope.question || !scope.session) {
           return;
         }
 
@@ -93,9 +97,9 @@ var main = [
 
         scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
 
-        if(stash.shuffledOrder && model.config.shuffle){
+        if (stash.shuffledOrder && model.config.shuffle) {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder)
-        } else if(model.config.shuffle) {
+        } else if (model.config.shuffle) {
           scope.choices = layoutChoices(model.choices)
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
@@ -108,14 +112,14 @@ var main = [
 
       scope.containerBridge = {
 
-        setDataAndSession: function(dataAndSession) {
+        setDataAndSession: function (dataAndSession) {
           $log.debug("multiple-choice setDataAndSession", dataAndSession);
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
           updateUi();
         },
 
-        getSession: function() {
+        getSession: function () {
 
           var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
 
@@ -126,17 +130,17 @@ var main = [
         },
 
         // sets the server's response
-        setResponse: function(response) {
-          console.log( scope.$id, "set response for multiple-choice", response);
-          console.log( scope.$id, "choices", scope.choices);
+        setResponse: function (response) {
+          console.log(scope.$id, "set response for multiple-choice", response);
+          console.log(scope.$id, "choices", scope.choices);
 
           resetFeedback(scope.choices);
 
           scope.response = response;
           if (response.feedback) {
-            _.each(response.feedback, function(fb) {
+            _.each(response.feedback, function (fb) {
 
-              var choice = _.find(scope.choices, function(c) {
+              var choice = _.find(scope.choices, function (c) {
                 return c.value === fb.value;
               });
 
@@ -149,7 +153,7 @@ var main = [
           }
         },
 
-        setGlobalSession: function(session){
+        setGlobalSession: function (session) {
           scope.sessionFinished = session.isFinished;
         }
       };
@@ -164,22 +168,22 @@ var main = [
       replace: true,
       link: link,
       template: [ '<div class="view-multiple-choice">',
-                  '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
-                  '  <div class="choices-container" ng-class="question.config.orientation">',
-                  '  <div ng-repeat="o in choices" class="choice-holder" ng-class="question.config.orientation">',
-                  '    <span ng-switch="inputType">',
-                  '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
-                  '      <input ng-switch-when="radio" type="radio" ng-disabled="sessionFinished" name="group" ng-value="o.value" ng-model="answer.choice"></input>',
-                  '    </span>',
-                  '    <label ng-switch="o.labelType">',
-                  '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
-                  '      <span ng-switch-when="mathml" ng-bind-html-unsafe="o.mathml"></span>',
-                  '      <span ng-switch-default>{{o.label}}</span>',
-                  '    </label>',
-                  '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null">{{o.feedback}}</span>',
-                  '  </div>',
-                  '</div>',
-                  '</div>'].join("\n")
+        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
+        '  <div class="choices-container" ng-class="question.config.orientation">',
+        '  <div ng-repeat="o in choices" class="choice-holder" ng-class="question.config.orientation">',
+        '    <span ng-switch="inputType">',
+        '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
+        '      <input ng-switch-when="radio" type="radio" ng-disabled="sessionFinished" name="group" ng-value="o.value" ng-model="answer.choice"></input>',
+        '    </span>',
+        '    <label ng-switch="o.labelType">',
+        '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
+        '      <span ng-switch-when="mathml" ng-bind-html-unsafe="o.mathml"></span>',
+        '      <span ng-switch-default>{{o.label}}</span>',
+        '    </label>',
+        '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null">{{o.feedback}}</span>',
+        '  </div>',
+        '</div>',
+        '</div>'].join("\n")
     };
 
     return def;
