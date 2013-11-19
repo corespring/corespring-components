@@ -25,7 +25,7 @@ var main = [
         '</li>',
         '</ol>',
         '<div class="clearfix"></div>',
-        '  <button class=\"btn\" ng-click=\"addChoice()\">Add</button>'
+        '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
 
       ].join("");
     };
@@ -38,7 +38,7 @@ var main = [
         '</li>',
         '</ol>',
         '<div class="clearfix"></div>',
-        '  <button class=\"btn\" ng-click=\"addAnswer()\">Add</button>'
+        '  <button class=\"btn\" ng-click=\"addAnswer()\">Add an Answer Blank</button>'
       ].join("");
     };
 
