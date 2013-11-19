@@ -1,6 +1,6 @@
 {
   "componentType": "corespring-drag-and-drop",
-  "title": "Sample Drag and Drop",
+  "title": "[Drag and Drop Question Name]",
   "correctResponse": {},
   "model": {
     "choices": [
