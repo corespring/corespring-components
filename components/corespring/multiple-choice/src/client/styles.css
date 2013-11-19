@@ -48,3 +48,7 @@
     max-width: 50px;
     max-height: 50px;
 }
+
+.score-table td {
+    padding-right: 80px;
+}
