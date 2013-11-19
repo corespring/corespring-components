@@ -206,8 +206,7 @@ main = [
           });
 
           scope.feedback[uid] = {
-            feedback: "here is some feedback",
-            feedbackType: "custom",
+            feedbackType: "standard",
             value: uid
           };
 
