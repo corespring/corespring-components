@@ -11,7 +11,7 @@ var prompt =  '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
 
 var choices = [
         '<div class="choice" ng-repeat="q in model.choices">',
-        '  <div class="remove-button" ng-click="removeQuestion(q)"><i class="glyphicon glyphicon-remove"></i></div>',
+        '  <div class="remove-button" ng-click="removeQuestion(q)"><button type="button" class="close">&times;</button></div>',
         '  <table>',
         '    <tr>',
         '     <td>Choice {{toChar($index)}}</td>',

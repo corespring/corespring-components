@@ -167,6 +167,11 @@ var answerPopoverDirective = ['$compile',
           "</form>"
         ].join("");
 
+        scope.hideMe = function() {
+          $(scope.activePopover.value).popover('destroy');
+          scope.activePopover.value = undefined;
+        };
+
         // We need to manually show/hide the popup as the automatic one breaks angular bindings because of some internal
         // caching mechanism
         elm.click(function () {
@@ -179,9 +184,15 @@ var answerPopoverDirective = ['$compile',
           }
           if (same) return;
           var compiled = $compile(html)(scope);
+
+          var titleHtml = '<span class="text-info"><strong>Answer Blank</strong></span>'+
+            '<button type="button" class="close" ng-click="hideMe()">&times;</button>';
+          var compiledTitle = $compile(titleHtml)(scope);
+
           $(elm).popover(
             {
-              title: 'Answer Blank',
+              title : compiledTitle,
+
               content: compiled,
               html: true,
               placement: 'top',
