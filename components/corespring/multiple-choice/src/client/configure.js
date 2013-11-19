@@ -14,17 +14,17 @@ var choices = [
         '  <div class="remove-button" ng-click="removeQuestion(q)"><i class="glyphicon glyphicon-remove"></i></div>',
         '  <table>',
         '    <tr>',
+        '     <td>Choice {{toChar($index)}}</td>',
         '      <td>',
         '        <div class="correct-block">',
-        '          <span class="correct-label">Correct</span><br/>',
         '          <input type="checkbox" ng-model="correctMap[q.value]"></input>',
+        '          <label class="correct-label">Correct</label>',
         '        </div>',
         '      </td>',
-        '     <td>{{toChar($index)}}</td>',
         '      <td>',
         '        <select ng-model="q.labelType">',
         '          <option value="text">Text</option>',
-        '          <option value="image">Image</option>',
+//        '          <option value="image">Image</option>',
         '          <option value="mathml">MathML</option>',
         '        </select>',
         '      </td>',
@@ -44,13 +44,13 @@ var choices = [
         '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="standard">Standard</input>',
         '  <input type="radio" ng-model="feedback[q.value].feedbackType" value="custom">Custom</input>',
         '  <div ng-show="feedback[q.value].feedbackType == \'custom\'">',
-        '    <label>Feedback: </label><input type="text" ng-model="feedback[q.value].feedback"></input>',
+        '    <input class="form-control" type="text" ng-model="feedback[q.value].feedback" placeholder="Enter feedback to display if this choice is selected."></input>',
         '    <div ng-show="correctMap[q.value]">',
-        '      <label>Not chosen feedback:</label><input type="text" ng-model="feedback[q.value].notChosenFeedback"></input>',
+        '      <input class="form-control" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="Enter feedback to display if this choice is not selected."></input>',
         '    </div>',
         '</div>',
         '</div>',
-        '<button class=\"btn\" ng-click=\"addQuestion()\">Add</button>'
+        '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
 ].join('\n');
 
 var shuffle = [

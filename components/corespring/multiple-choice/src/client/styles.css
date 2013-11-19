@@ -3,7 +3,7 @@
 }
 
 .view-multiple-choice td {
-    vertical-align: middle;
+    vertical-align: top;
     padding: 5px;
 }
 
@@ -39,9 +39,7 @@
 
 .view-multiple-choice .choice {
     background-color: #fff;
-    border: 1px solid #888;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     padding: 5px;
     position: relative;
 }
