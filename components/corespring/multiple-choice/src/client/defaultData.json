@@ -49,6 +49,6 @@
       "shuffle": true,
       "singleChoice": false
     },
-    "prompt": "Add your question here..."
+    "prompt": "Enter a prompt for the student."
   }
 }
