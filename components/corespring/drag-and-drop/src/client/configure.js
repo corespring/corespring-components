@@ -72,8 +72,10 @@ var main = [
             _.each($scope.model.answers, function (answer) {
 
               var correctResponse = model.correctResponse[answer.id];
-              var idx = _.indexOf(_.pluck($scope.model.choices, 'id'), correctResponse);
-              answer.correctResponse = String.fromCharCode(65 + idx);
+              if (correctResponse) {
+                var idx = _.indexOf(_.pluck($scope.model.choices, 'id'), correctResponse);
+                answer.correctResponse = String.fromCharCode(65 + idx);
+              }
             });
             console.log(model);
           },
