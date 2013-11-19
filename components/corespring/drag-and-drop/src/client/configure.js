@@ -44,7 +44,7 @@ var main = [
 
     template =
       ['<div class="drag-and-drop-config-panel">{{active}}',
-        inputHolder('Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
+        inputHolder('Question Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
         inputHolder('Choices', choiceArea()),
         inputHolder('Answer Area', answerArea()),
         '   Shuffle:',
