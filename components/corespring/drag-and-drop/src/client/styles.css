@@ -45,6 +45,9 @@
 .drag-and-drop-config-panel .drag-and-drop-answers {
 }
 
+/*.drag-and-drop-config-panel .container {
+}*/
+
 .drag-and-drop-answers li {
 	float: left;
 }
