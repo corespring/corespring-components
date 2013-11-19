@@ -202,7 +202,7 @@ main = [
           var uid = _.uniqueId("mc_");
 
           scope.model.choices.push({
-            label: "new Question",
+            label: "",
             value: uid,
             labelType: "text"
           });
@@ -231,7 +231,7 @@ main = [
         '<div class="view-multiple-choice">',
           wrap('Prompt', prompt),
           wrap('Answer Area', choices),
-          wrap('Shuffle', shuffle),
+          wrap('Display Options', shuffle),
           wrap('Scoring', scoring),
         '</div>'
       ].join("")
