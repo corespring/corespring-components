@@ -58,6 +58,10 @@
     padding-right: 10px;
 }
 
+.view-inline-choice .choice table {
+    width: 100%;
+}
+
 .view-inline-choice .choice {
     background-color: #fff;
     border: 1px solid #888;

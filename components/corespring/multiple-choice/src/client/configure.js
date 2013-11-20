@@ -1,82 +1,4 @@
-var main;
-
-
-var placeholderText = {
-  selectedFeedback: 'Enter feedback to display if this choice is selected.',
-  notSelectedFeedback: 'Enter feedback to display if this choice is not selected.'
-}
-
-var wrap = function(title, body){
-  return ['<div class="input-holder">',
-        '  <div class="header">' + title + '</div>',
-        '  <div class="body">' + body + '</div>',
-        '</div>' ].join('\n');
-};
-
-
-var inline = function(type, value, body, attrs){
-
-  return ['<label class="'+ type +'-inline">',
-          '  <input type="'+ type +'" value="'+ value +'" '+ attrs+'>' + body,
-          '</label>'].join('\n');
-}
-
 var prompt =  '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
-
-var choices = [
-        '<div class="choice" ng-repeat="q in model.choices">',
-        '  <table>',
-        '    <tr>',
-        '     <td><b>Choice {{toChar($index)}}</b></td>',
-        '      <td>',
-                  inline("checkbox", null, "Correct", "ng-model='correctMap[q.value]'"),
-        '      </td>',
-        '      <td>',
-        '        <select class="form-control" ng-model="q.labelType">',
-        '          <option value="text">Text</option>',
-//        '          <option value="image">Image</option>',
-        '          <option value="mathml">MathML</option>',
-        '        </select>',
-        '      </td>',
-        '      <td>',
-        '        <div ng-switch="q.labelType">',
-        '          <input class="form-control" type="text" ng-switch-when="text" ng-model="q.label"></input>',
-        '          <span ng-switch-when="image">',
-        '           <label>Image: </label>',
-        '           <input type="text" ng-model="q.imageName"></input>',
-        '          </span>',
-        '          <textarea ng-switch-when="mathml" ng-model="q.mathml" ng-change="updateMathJax()"></textarea>',
-        '        </div>',
-        '      </td>',
-        '      <td>',
-        '         <div class="remove-button" ng-click="removeQuestion(q)">', 
-        '           <button type="button" class="close">&times;</button>',
-        '         </div>',
-        '      </td>',
-        '    </tr>',
-        '    <tr>',
-        '      <td>',
-        '      </td>',
-        '      <td colspan="3">',
-        '        <label style="margin-right: 10px">Feedback to student</label>',
-                 inline("radio", "standard", "Standard", "ng-model='feedback[q.value].feedbackType'"),
-                 inline("radio", "custom", "Custom", "ng-model='feedback[q.value].feedbackType'"),
-        '      </td>',
-        '    </tr>',
-        '    <tr>',
-        '      <td>',
-        '      </td>',
-        '      <td colspan="3" ng-show="feedback[q.value].feedbackType == \'custom\'">',
-        '        <input class="form-control" style="margin-bottom: 8px;" type="text" ng-model="feedback[q.value].feedback" placeholder="'+ placeholderText.selectedFeedback +'"></input>',
-        '        <div ng-show="correctMap[q.value]">',
-        '          <input class="form-control" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="'+ placeholderText.notSelectedFeedback +'"></input>',
-        '        </div>',
-        '      </td>',
-        '    </tr>',
-        '  </table>',
-        '</div>',
-        '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
-].join('\n');
 
 var shuffle = [
        '<div class="well">',
@@ -90,28 +12,20 @@ var shuffle = [
         ' </table>',
         '</div>'].join('\n');
 
-var scoring = [
-        ' <p>',
-        '   <input type="radio" ng-model="model.scoringType" value="standard"></input> <label>Standard</label>',
-        '   <input type="radio" ng-model="model.scoringType" value="custom"></input> <label>Custom</label>',
-        ' </p>',
-        ' <table ng-show="model.scoringType==\'custom\'" class="score-table">',
-        '   <tr>',
-        '   <th>Choice</th>',
-        '   <th>Points If Selected</th>',
-        '   <tr ng-repeat="ch in model.choices">',
-        '     <td>{{toChar($index)}}</td>',
-        '     <td><select ng-model="scoreMapping[ch.value]"><option value="-1">-1</option><option value="0">0</option><option value="1">1</option></select></td>',
-        '   </tr>',
-        ' </table>'
-        ].join('\n');
+
+var main = [
+  '$log', 'ScoringUtils', 'ChoiceTemplates',
+  function ($log, ScoringUtils, ChoiceTemplates) {
+
+    var choices = [
+        '<div class="choice" ng-repeat="q in model.choices">',
+           ChoiceTemplates.choice(),
+        '</div>',
+        '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
+      ].join('\n');
 
 
-main = [
-  '$log', 'ScoringUtils',
-  function ($log, ScoringUtils) {
-    var def;
-    def = {
+    return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
@@ -246,20 +160,19 @@ main = [
           scope.$emit('mathJaxUpdateRequest');
         }
 
-
       },
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
         '<div class="view-multiple-choice">',
-          wrap('Prompt', prompt),
-          wrap('Answer Area', choices),
-          wrap('Display Options', shuffle),
-          wrap('Scoring', scoring),
+          ChoiceTemplates.wrap('Prompt', prompt),
+          ChoiceTemplates.wrap('Answer Area', choices),
+          ChoiceTemplates.wrap('Display Options', shuffle),
+          ChoiceTemplates.wrap('Scoring', ChoiceTemplates.scoring()),
         '</div>'
       ].join("")
     };
-    return def;
+    
   }
 ];
 

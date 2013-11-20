@@ -1,10 +1,22 @@
-var ckeditor, main;
+var main = [
+  'ChoiceTemplates',
+  function (ChoiceTemplates) {
+    var correct = ChoiceTemplates.inline("radio", "{{q.value}}", "Correct", "ng-model='$parent.fullModel.correctResponse'");
+    
+    var choices = [
+        '<div class="choice" ng-repeat="q in model.choices">',
+          ChoiceTemplates.choice({correct: correct}),
+        '</div>',
+        '<button class=\"btn\" ng-click=\"addQuestion()\">Add</button>'
+      ].join('\n'); 
 
-main = [
-
-   function () {
-    var def;
-    def = {
+    var displayOptions = [
+      '<div class="well">',
+        ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
+      '</div>'
+    ].join('\n');
+    
+    return { 
       scope: 'isolate',
       restrict: 'E',
       replace: true,
@@ -12,6 +24,7 @@ main = [
         scope.containerBridge = {
           setModel: function (model) {
             scope.fullModel = model;
+            scope.feedback = model.feedback;
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
             scope.scoreMapping = {};
@@ -64,67 +77,13 @@ main = [
       },
       template: [
         '<div class="view-inline-choice">',
-        '<label>Prompt:</label>',
-        '<textarea ck-editor ng-model="model.prompt"></textarea><br/>',
-        '<div class="choice" ng-repeat="q in model.choices">',
-        '  <div class="remove-button" ng-click="removeQuestion(q)"><button type="button" class="close">&times;</button></div>',
-        '  <table>',
-        '    <tr>',
-        '      <td>',
-        '        <div class="correct-block">',
-        '          <span class="correct-label">Correct</span><br/>',
-        '          <input type="radio" value="{{q.value}}" ng-model="$parent.fullModel.correctResponse" ></input>',
-        '        </div>',
-        '      </td>',
-        '     <td>{{toChar($index)}}</td>',
-        '      <td>',
-        '        <select ng-model="q.labelType">',
-        '          <option value="text">Text</option>',
-        '          <option value="image">Image</option>',
-        '        </select>',
-        '      </td>',
-        '      <td>',
-        '        <div ng-switch="q.labelType">',
-        '          <textarea ng-switch-when="text" ng-model="q.label"></textarea>',
-        '          <span ng-switch-when="image">',
-        '           <label>Image: </label>',
-        '           <input type="text" ng-model="q.imageName"></input>',
-        '          </span>',
-        '        </div>',
-        '      </td>',
-        '    </tr>',
-        '  </table>',
-        '  <label>Student Feedback: </label>',
-        '  <input type="radio" ng-model="fullModel.feedback[q.value].feedbackType" value="standard">Standard</input>',
-        '  <input type="radio" ng-model="fullModel.feedback[q.value].feedbackType" value="custom">Custom</input>',
-        '  <div ng-show="fullModel.feedback[q.value].feedbackType == \'custom\'">',
-        '    <label>Feedback: </label><input type="text" ng-model="fullModel.feedback[q.value].feedback" placeholder="Enter feedback to display if this choice is selected."></input>',
-        '  </div>',
-        '</div>',
-        '<button class=\"btn\" ng-click=\"addQuestion()\">Add</button>',
-        '<div class="well">',
-        ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
-        '</div>',
-        '<div>',
-        ' <p>Scoring:</p>',
-        ' <p>',
-        '   <input type="radio" ng-model="model.scoringType" value="standard"></input> <label>Standard</label>',
-        '   <input type="radio" ng-model="model.scoringType" value="custom"></input> <label>Custom</label>',
-        ' </p>',
-        ' <table ng-show="model.scoringType==\'custom\'">',
-        '   <tr>',
-        '   <th>Distractor Choice</th>',
-        '   <th>Points If Selected</th>',
-        '   <tr ng-repeat="ch in model.choices">',
-        '     <td>{{toChar($index)}}</td>',
-        '     <td><select ng-model="scoreMapping[ch.value]"><option value="-1">-1</option><option value="0">0</option><option value="1">1</option></select></td>',
-        '   </tr>',
-        ' </table>',
-        '</div',
+          ChoiceTemplates.wrap('Prompt', ChoiceTemplates.prompt),
+          ChoiceTemplates.wrap('Choices', choices),
+          ChoiceTemplates.wrap('Display Options', displayOptions),
+          ChoiceTemplates.wrap("Scoring", ChoiceTemplates.scoring()),
         '</div>'
       ].join("")
     };
-    return def;
   }
 ];
 
