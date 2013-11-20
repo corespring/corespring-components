@@ -3,9 +3,7 @@
   "title": "Multiple Choice",
   "weight" : 1,
   "correctResponse": {
-    "value": [
-      "2"
-    ]
+    "value": []
   },
   "feedback": [
     {
