@@ -159,22 +159,27 @@ var answerPopoverDirective = ['$compile',
           ].join("");
         };
         var html = [
-          "<form class='form-horizontal'>",
+          "<div class='form-horizontal'>",
           formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'></input>"),
           formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'></input>"),
           formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'></input>"),
           formGroup("Inline:", "<input type='checkbox' ng-model='model.inline'></input>"),
-          "</form>"
+          formGroup("<button class='btn btn-primary' ng-click='hideMe()'>Ok</button>",""),
+          "</div>"
         ].join("");
 
         scope.hideMe = function() {
-          $(scope.activePopover.value).popover('destroy');
-          scope.activePopover.value = undefined;
+          if (scope.activePopover.value) {
+            $(scope.activePopover.value).popover('destroy');
+            scope.activePopover.value = undefined;
+          }
         };
+
+        scope.$on('clickOutsidePopover', scope.hideMe);
 
         // We need to manually show/hide the popup as the automatic one breaks angular bindings because of some internal
         // caching mechanism
-        elm.click(function () {
+        elm.click(function (ev) {
           var same = scope.activePopover.value == elm;
           if (scope.activePopover.value) {
             $(scope.activePopover.value).popover('destroy');
@@ -192,7 +197,6 @@ var answerPopoverDirective = ['$compile',
           $(elm).popover(
             {
               title : compiledTitle,
-
               content: compiled,
               html: true,
               placement: 'top',
@@ -204,6 +208,9 @@ var answerPopoverDirective = ['$compile',
             $(elm).popover('show');
             scope.activePopover.value = elm;
           });
+
+          ev.stopImmediatePropagation();
+          ev.preventDefault();
         });
       }
     };
