@@ -59,6 +59,11 @@
     clear: both;
 }
 
+.remove-choice {
+    position: absolute;
+    right: 38px;
+    top: -7px;
+}
 
 .drag-and-drop-answers li {
 	float: left;
@@ -85,3 +90,4 @@
 .popover-content {
     padding: 10px;
 }
+

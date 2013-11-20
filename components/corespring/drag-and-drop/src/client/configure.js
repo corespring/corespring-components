@@ -3,7 +3,7 @@ var main = [
     var input, inputs, template;
     console.log("corespring/drag-and-drop");
     input = function (attrs, label) {
-      return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + "</div>";
+      return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label +"</div>";
     };
 
     var inputHolder = function (header, body) {
@@ -21,7 +21,7 @@ var main = [
       return [
         '<ol class="drag-and-drop-choices" >',
         '<li ng-repeat="c in model.choices" class="col-lg-4" >',
-        input("ng-model=\"c.content\" "),
+        input("ng-model=\"c.content\" ", '<button type="button" class="close remove-choice" ng-click="remove(c)">&times;</button>'),
         '</li>',
         '</ol>',
         '<div class="clearfix"></div>',
