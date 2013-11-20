@@ -40,6 +40,7 @@
 
 .drag-and-drop-config-panel .drag-and-drop-choices li {
 	float: left;
+    width: 145px;
 }
 
 .drag-and-drop-config-panel .drag-and-drop-answers {

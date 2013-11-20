@@ -20,7 +20,7 @@ var main = [
     var choiceArea = function () {
       return [
         '<ol class="drag-and-drop-choices" >',
-        '<li ng-repeat="c in model.choices" class="col-lg-4" >',
+        '<li ng-repeat="c in model.choices">',
         input("ng-model=\"c.content\" ", '<button type="button" class="close remove-choice" ng-click="remove(c)">&times;</button>'),
         '</li>',
         '</ol>',
