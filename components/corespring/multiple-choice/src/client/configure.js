@@ -163,7 +163,7 @@ var main = [
       //templateUrl: 'configure.html',
       template: [
         '<div class="view-multiple-choice">',
-          ChoiceTemplates.wrap('Prompt', ChoiceTemplate.prompt),
+          ChoiceTemplates.wrap('Prompt', ChoiceTemplates.prompt),
           ChoiceTemplates.wrap('Answer Area', choices),
           ChoiceTemplates.wrap('Display Options', shuffle),
           ChoiceTemplates.wrap('Scoring', ChoiceTemplates.scoring()),
