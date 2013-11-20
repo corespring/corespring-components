@@ -1,5 +1,3 @@
-var prompt =  '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
-
 var shuffle = [
        '<div class="well">',
         ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
@@ -165,7 +163,7 @@ var main = [
       //templateUrl: 'configure.html',
       template: [
         '<div class="view-multiple-choice">',
-          ChoiceTemplates.wrap('Prompt', prompt),
+          ChoiceTemplates.wrap('Prompt', ChoiceTemplate.prompt),
           ChoiceTemplates.wrap('Answer Area', choices),
           ChoiceTemplates.wrap('Display Options', shuffle),
           ChoiceTemplates.wrap('Scoring', ChoiceTemplates.scoring()),
