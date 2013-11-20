@@ -2,7 +2,8 @@
 
 
 var def = [
-  function () {
+  '$log',
+  function ($log) {
     
     var ck;
     
@@ -30,7 +31,9 @@ var def = [
           });
 
           ngModel.$render = function (value) {
-            ck.setData(ngModel.$viewValue);
+            if(ck.getData() !== ngModel.$viewValue){
+              ck.setData(ngModel.$viewValue);
+            }
           };
         };
 
