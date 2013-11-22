@@ -17,7 +17,7 @@ var main = [ '$compile', function ($compile) {
           scope.model.choices = _.shuffle(scope.model.choices);
         }
 
-        var landingPlaceHtml = function(a) {
+        var landingPlaceHtml = function (a) {
           var cssClass = a.inline ? "inline" : "";
           return ['<landingPlace id="',
             a.id,
@@ -28,14 +28,14 @@ var main = [ '$compile', function ($compile) {
           ].join("");
 
         }
-        var answerHtml = _.map(scope.model.answers, function (a) {
+        var answerHtml = _.map(scope.model.answers,function (a) {
           return a.textBefore + landingPlaceHtml(a) + a.textAfter;
         }).join("");
         $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
         $compile($answerArea)(scope.$new());
       },
       getSession: function () {
-        var answer = _.cloneDeep(scope.landingPlaceChoices);
+        var answer = _(scope.landingPlaceChoices).omit("undefined").cloneDeep();
         _.each(answer, function (v, k) {
           answer[k] = v.id;
         });
@@ -47,14 +47,14 @@ var main = [ '$compile', function ($compile) {
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
   };
 
-  var answerArea = function() {
+  var answerArea = function () {
     return  ['        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
       '        <div id="answer-area">',
       '        </div>'].join('');
 
   };
 
-  var choiceArea = function() {
+  var choiceArea = function () {
     return  ['        <div class="choices" >',
       '          <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
       '          <div',
@@ -73,9 +73,9 @@ var main = [ '$compile', function ($compile) {
   var tmpl = [
     '        <div class="view-drag-and-drop">',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
-    '        <div ng-if="model.config.position == \'above\'">',choiceArea(),'</div>',
+    '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
-    '        <div ng-if="model.config.position != \'above\'">',choiceArea(),'</div>',
+    '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
     '     </div>',
     '      </div>'
   ].join("");
