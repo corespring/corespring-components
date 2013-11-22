@@ -93,7 +93,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
   }
 
   var tmpl = [
-    '        <div class="view-drag-and-drop">{{landingPlaceChoices}}',
+    '        <div class="view-drag-and-drop">',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
