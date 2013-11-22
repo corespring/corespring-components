@@ -1,4 +1,4 @@
-var main = [ '$compile', function ($compile) {
+var main = [ '$compile', '$log', function ($compile, $log) {
 
   var link = function (scope, element, attrs) {
 
@@ -6,6 +6,7 @@ var main = [ '$compile', function ($compile) {
 
     scope.containerBridge = {
       setDataAndSession: function (dataAndSession) {
+        $log.debug("DnD setting session: ", dataAndSession);
 
         // TODO: rewrite this using stash
         var isNew = !scope.model;
@@ -18,6 +19,26 @@ var main = [ '$compile', function ($compile) {
           scope.model.choices = _.shuffle(scope.model.choices);
         }
 
+        if (dataAndSession.session && dataAndSession.session.answers) {
+
+          // Build up the landing places with the selected choices
+          _.each(dataAndSession.session.answers, function (v, k) {
+            var choice = _.find(dataAndSession.data.model.choices, function (choice) {
+              return choice.id == v;
+            });
+
+            scope.landingPlaceChoices[k] = {id: v, content: choice.content};
+          });
+
+          // Remove choices that are in landing place area
+          scope.model.choices = _.filter(scope.model.choices, function (choice) {
+            var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function (c) {
+              return c.id == choice.id;
+            });
+            return _.isUndefined(landingPlaceWithChoice);
+          });
+        }
+
         var landingPlaceHtml = function (a) {
           var cssClass = a.inline ? "inline" : "";
           return ['<landingPlace id="',
@@ -27,8 +48,7 @@ var main = [ '$compile', function ($compile) {
             '">',
             '</landingPlace>'
           ].join("");
-
-        }
+        };
         var answerHtml = _.map(scope.model.answers,function (a) {
           return a.textBefore + landingPlaceHtml(a) + a.textAfter;
         }).join("");
@@ -73,7 +93,7 @@ var main = [ '$compile', function ($compile) {
   }
 
   var tmpl = [
-    '        <div class="view-drag-and-drop">',
+    '        <div class="view-drag-and-drop">{{landingPlaceChoices}}',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
