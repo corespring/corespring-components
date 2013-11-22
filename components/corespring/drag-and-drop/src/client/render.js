@@ -11,6 +11,7 @@ var main = [ '$compile', function ($compile) {
         var isNew = !scope.model;
 
         scope.model = _.clone(dataAndSession.data.model);
+        scope.landingPlaceChoices = {};
 
         if (isNew && scope.model.config.shuffle) {
           // TODO: rewrite this using stash
@@ -33,6 +34,7 @@ var main = [ '$compile', function ($compile) {
         }).join("");
         $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
         $compile($answerArea)(scope.$new());
+
       },
       getSession: function () {
         var answer = _(scope.landingPlaceChoices).omit("undefined").cloneDeep();
