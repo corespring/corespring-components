@@ -76,6 +76,13 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       },
       isAnswerEmpty: function(){
         return _.isEmpty(this.getSession().answers);
+      },
+      answerChangedHandler: function(callback){
+        scope.$watch("landingPlaceChoices", function(newValue, oldValue){
+          if(newValue){
+            callback();
+          }
+        }, true);  
       }
     };
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);

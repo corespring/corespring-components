@@ -9,7 +9,8 @@ var main = [
       scope.inputType = 'checkbox';
 
       scope.answer = {
-        choices: {}
+        choices: {},
+        choice: ""
       };
 
       var getAnswers = function () {
@@ -56,8 +57,8 @@ var main = [
       };
 
       var resetChoices = function () {
-        scope.answer.choices = [];
-        scope.answer.choice = null;
+        scope.answer.choices = {};
+        scope.answer.choice = "";
       };
 
       var layoutChoices = function (choices, order) {
@@ -166,6 +167,13 @@ var main = [
         },
         isAnswerEmpty: function(){
           return _.isEmpty(this.getSession().answers);
+        },
+        answerChangedHandler: function(callback){
+          scope.$watch("answer", function(newValue, oldValue){
+            if(newValue){
+              callback();
+            }
+          }, true);  
         }
       };
 
