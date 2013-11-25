@@ -4,20 +4,26 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
     scope.landingPlaceChoices = {};
 
+
+    var resetChoices = function(model){
+      // TODO: rewrite this using stash
+      var isNew = !scope.model;
+
+      scope.model = _.cloneDeep(model);
+      scope.landingPlaceChoices = {};
+      if (isNew && scope.model.config.shuffle) {
+        // TODO: rewrite this using stash
+        scope.model.choices = _.shuffle(scope.model.choices);
+      }
+    };
+
     scope.containerBridge = {
       setDataAndSession: function (dataAndSession) {
         $log.debug("DnD setting session: ", dataAndSession);
 
-        // TODO: rewrite this using stash
-        var isNew = !scope.model;
-
-        scope.model = _.clone(dataAndSession.data.model);
-        scope.landingPlaceChoices = {};
-
-        if (isNew && scope.model.config.shuffle) {
-          // TODO: rewrite this using stash
-          scope.model.choices = _.shuffle(scope.model.choices);
-        }
+    
+        scope.rawModel = dataAndSession.data.model;
+        resetChoices(scope.rawModel);
 
         if (dataAndSession.session && dataAndSession.session.answers) {
 
@@ -64,6 +70,12 @@ var main = [ '$compile', '$log', function ($compile, $log) {
         return {
           answers: answer
         };
+      },
+      reset: function(){
+        resetChoices(scope.rawModel);
+      },
+      isAnswerEmpty: function(){
+        return _.isEmpty(this.getSession().answers);
       }
     };
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);

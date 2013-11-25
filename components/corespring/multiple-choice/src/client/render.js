@@ -57,6 +57,7 @@ var main = [
 
       var resetChoices = function () {
         scope.answer.choices = [];
+        scope.answer.choice = null;
       };
 
       var layoutChoices = function (choices, order) {
@@ -155,6 +156,16 @@ var main = [
 
         setGlobalSession: function (session) {
           scope.sessionFinished = session.isFinished;
+        },
+        /**
+         * Reset the ui back to an unanswered state
+         */
+        reset : function(){
+          resetChoices();
+          resetFeedback(scope.choices);
+        },
+        isAnswerEmpty: function(){
+          return _.isEmpty(this.getSession().answers);
         }
       };
 
