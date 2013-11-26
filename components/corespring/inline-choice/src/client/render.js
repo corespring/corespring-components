@@ -3,6 +3,19 @@ var link, main;
 link = function ($sce, $timeout) {
   return function (scope, element, attrs) {
 
+    var resetFeedback = function (choices) {
+      _.each(choices, function (c) {
+        if (c) {
+          delete c.feedback;
+          delete c.correct;
+        }
+      });
+    };
+
+    var resetChoices = function () {
+      scope.answer.choices = {};
+      scope.answer.choice = "";
+    };
 
     var layoutChoices = function (choices, order) {
       if (!order) {
@@ -88,7 +101,25 @@ link = function ($sce, $timeout) {
           }
         });
         scope.response = response;
+      },
+
+      reset : function(){
+        resetChoices();
+        resetFeedback(scope.choices);
+      },
+
+      isAnswerEmpty: function(){
+        return _.isEmpty(this.getSession().answers);
+      },
+
+      answerChangedHandler: function(callback){
+        scope.$watch("answer", function(newValue, oldValue){
+          if(newValue){
+            callback();
+          }
+        }, true);
       }
+
     };
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
