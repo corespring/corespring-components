@@ -83,6 +83,11 @@ var main = [ '$compile', '$log', function ($compile, $log) {
             callback();
           }
         }, true);  
+      },
+      editable: function(e){
+        scope.$apply(function(){
+          scope.editable = e;
+        });
       }
     };
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -96,7 +101,8 @@ var main = [ '$compile', '$log', function ($compile, $log) {
   };
 
   var choiceArea = function () {
-    return  ['        <div class="choices" >',
+    return  [
+      '        <div class="choices" >',
       '          <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
       '          <div',
       '            ng-repeat="o in model.choices"',

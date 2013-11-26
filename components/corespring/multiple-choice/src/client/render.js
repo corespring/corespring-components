@@ -7,7 +7,7 @@ var main = [
     var link = function (scope, element, attrs) {
 
       scope.inputType = 'checkbox';
-
+      scope.editable = true;
       scope.answer = {
         choices: {},
         choice: ""
@@ -154,9 +154,8 @@ var main = [
             });
           }
         },
-
         setGlobalSession: function (session) {
-          scope.sessionFinished = session.isFinished;
+          throw new Error("Unsupported method");
         },
         /**
          * Reset the ui back to an unanswered state
@@ -174,6 +173,12 @@ var main = [
               callback();
             }
           }, true);  
+        },
+        editable: function(e){
+          scope.$apply(function(){
+            $log.debug('editable: ', e);
+            scope.editable = e;
+          });
         }
       };
 
@@ -191,8 +196,8 @@ var main = [
         '  <div class="choices-container" ng-class="question.config.orientation">',
         '  <div ng-repeat="o in choices" class="choice-holder" ng-class="question.config.orientation">',
         '    <span ng-switch="inputType">',
-        '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="sessionFinished" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
-        '      <input ng-switch-when="radio" type="radio" ng-disabled="sessionFinished" name="group" ng-value="o.value" ng-model="answer.choice"></input>',
+        '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable" name="group" ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
+        '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" name="group" ng-value="o.value" ng-model="answer.choice"></input>',
         '    </span>',
         '    <label ng-switch="o.labelType">',
         '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
