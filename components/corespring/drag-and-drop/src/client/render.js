@@ -71,6 +71,8 @@ var main = [ '$compile', '$log', function ($compile, $log) {
           answers: answer
         };
       },
+      setMode : function(newMode) {
+      },
       reset: function(){
         resetChoices(scope.rawModel);
       },

@@ -103,6 +103,9 @@ link = function ($sce, $timeout) {
         scope.response = response;
       },
 
+      setMode : function(newMode) {
+      },
+
       reset : function(){
         resetChoices();
         resetFeedback(scope.choices);

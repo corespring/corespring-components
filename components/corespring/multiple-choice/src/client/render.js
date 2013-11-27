@@ -157,6 +157,8 @@ var main = [
         setGlobalSession: function (session) {
           throw new Error("Unsupported method");
         },
+        setMode : function(newMode) {
+        },
         /**
          * Reset the ui back to an unanswered state
          */
