@@ -21,8 +21,8 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       setDataAndSession: function (dataAndSession) {
         $log.debug("DnD setting session: ", dataAndSession);
 
-    
         scope.rawModel = dataAndSession.data.model;
+        scope.editable = true;
         resetChoices(scope.rawModel);
 
         if (dataAndSession.session && dataAndSession.session.answers) {
@@ -63,9 +63,9 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
       },
       getSession: function () {
-        var answer = _(scope.landingPlaceChoices).omit("undefined").cloneDeep();
-        _.each(answer, function (v, k) {
-          answer[k] = v.id;
+        var answer = {};
+        _.each(scope.landingPlaceChoices, function (v, k) {
+          if (k && v && v.id) answer[k] = v.id;
         });
         return {
           answers: answer
@@ -109,7 +109,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       '          <div',
       '            ng-repeat="o in model.choices"',
       '            class="btn btn-primary choice"',
-      '            data-drag="true"',
+      '            data-drag="editable"',
       '            data-jqyoui-options="{revert: \'invalid\'}"',
       '            ng-model="model.choices[$index]"',
       '            jqyoui-draggable',
@@ -172,7 +172,7 @@ var landingPlace = [function () {
       '      jqyoui-droppable="{onDrop: \'onDrop\'}"',
       '      class="landing-place {{class}}"',
       '      style="padding: 5px">',
-      '        <div ng-show="landingPlaceChoices[id]" jqyoui-draggable data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id]" data-drag="true" class="btn btn-primary">{{landingPlaceChoices[id].content}}</div>',
+      '        <div ng-show="landingPlaceChoices[id]" jqyoui-draggable data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id]" data-drag="editable" class="btn btn-primary">{{landingPlaceChoices[id].content}}</div>',
       '    </div>'].join("")
   };
   return def;
