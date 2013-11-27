@@ -154,9 +154,6 @@ var main = [
             });
           }
         },
-        setGlobalSession: function (session) {
-          throw new Error("Unsupported method");
-        },
         setMode : function(newMode) {
         },
         /**

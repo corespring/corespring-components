@@ -82,12 +82,6 @@ link = function ($sce, $timeout) {
         };
       },
 
-      setGlobalSession: function (session) {
-        if (session) {
-          scope.sessionFinished = session.isFinished;
-        }
-      },
-
       // sets the server's response
       setResponse: function (response) {
         console.log("Setting Response for inline choice:");
