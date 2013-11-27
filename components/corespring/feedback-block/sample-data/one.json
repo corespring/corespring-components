@@ -1,0 +1,15 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "feedback-block",
+        "feedback": {
+          "correct": "Yes this is correct"
+        }
+      }
+    },
+    "xhtml": "<feedback-block id=\"1\"></feedback-block>"
+  },
+  "session": {
+  }
+}

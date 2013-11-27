@@ -1,0 +1,7 @@
+{
+  "componentType": "corespring-feedback-block",
+  "title": "Feedback Block",
+  "feedback": {
+    "correct" : "Yes that is correct"
+  }
+}

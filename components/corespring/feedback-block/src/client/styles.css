@@ -1,0 +1,58 @@
+.view-multiple-choice .correct-label {
+    color: #008000;
+}
+
+.view-multiple-choice td {
+    vertical-align: top;
+    padding: 5px;
+}
+
+.view-multiple-choice .prompt {
+    color: #666666;
+    font-style: italic;
+}
+
+.view-multiple-choice .correct-block {
+    display: inline-block;
+    text-align: center;
+}
+
+.view-multiple-choice .remove-button {
+    position: relative;
+    right: 0px;
+    top: 5px;
+}
+
+.view-multiple-choice .choices-container.tile {
+    max-width: 200px;
+}
+
+.view-multiple-choice .choice-holder.horizontal{
+    float:left;
+    padding-right: 10px;
+}
+
+.view-multiple-choice .choice-holder.tile {
+    float:left;
+    padding-right: 10px;
+}
+
+.view-multiple-choice .choice {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 5px;
+    position: relative;
+}
+
+.view-multiple-choice .choice table{
+    width: 100%;
+}
+
+.view-multiple-choice .choice-image {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.score-table td {
+    padding-right: 80px;
+}
