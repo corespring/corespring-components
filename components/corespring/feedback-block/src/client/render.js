@@ -21,6 +21,7 @@ var main = [
 
         setResponse: function (response) {
           console.log("FB response: ", response);
+          scope.correctClass = response.correctness;
           scope.feedback = response.feedback;
         },
 
@@ -49,7 +50,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: link,
-      template: [ '<div>{{feedback}}</div>' ]
+      template: [ '<div class="view-feedback {{correctClass}}">{{feedback}}</div>' ]
     };
 
     return def;
