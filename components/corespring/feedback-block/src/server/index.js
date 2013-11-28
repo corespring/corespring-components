@@ -8,9 +8,9 @@ exports.isCorrect = function () {
   return true;
 };
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function (model, answer, settings, targetOutcome) {
   var response = {
   };
-  response.feedback = {"correct": "true"};
+  response.feedback = model.feedback[targetOutcome.correctness];
   return response;
 };

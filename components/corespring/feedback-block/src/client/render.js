@@ -21,7 +21,7 @@ var main = [
 
         setResponse: function (response) {
           console.log("FB response: ", response);
-          scope.feedback = response.feedback.correct;
+          scope.feedback = response.feedback;
         },
 
         setMode : function(newMode) {
