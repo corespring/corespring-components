@@ -10,9 +10,7 @@ exports.isCorrect = function () {
 
 exports.respond = function (question, answer, settings) {
   var response = {
-    correctness: "correct",
-    score: 0
   };
-  response.feedback = {"malac": "fasz"};
+  response.feedback = {"correct": "true"};
   return response;
 };

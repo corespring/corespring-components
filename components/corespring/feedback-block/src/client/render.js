@@ -21,6 +21,7 @@ var main = [
 
         setResponse: function (response) {
           console.log("FB response: ", response);
+          scope.feedback = response.feedback.correct;
         },
 
         setMode : function(newMode) {
@@ -48,7 +49,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: link,
-      template: [ '<div>Bukfa</div>' ]
+      template: [ '<div>{{feedback}}</div>' ]
     };
 
     return def;
