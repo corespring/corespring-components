@@ -13,5 +13,6 @@ exports.respond = function (model, answer, settings, targetOutcome) {
   };
   response.feedback = model.feedback[targetOutcome.correctness];
   response.correctness = targetOutcome.correctness;
+  response.studentResponse = targetOutcome.studentResponse;
   return response;
 };
