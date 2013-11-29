@@ -140,7 +140,6 @@ exports.respond = function(question, answer, settings) {
   response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
     score: calculateScore(question, answer),
-    outcome: {"overLimit": true}
   };
   if (settings.showFeedback) {
     response.feedback = buildFeedback(question, answer, settings, answerIsCorrect);
