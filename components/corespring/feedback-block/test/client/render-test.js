@@ -35,5 +35,13 @@ describe('corespring', function () {
       expect(scope.correctClass).toBe('correct');
     });
 
+    it('only shows feedback if present', function () {
+      rootScope.$digest();
+      expect($(element).attr('class')).toContain("ng-hide");
+      container.elements['1'].setResponse({feedback: "sampleFeedback", correctness: "correct"});
+      rootScope.$digest();
+      expect($(element).attr('class')).not.toContain("ng-hide");
+    });
+
   });
 });

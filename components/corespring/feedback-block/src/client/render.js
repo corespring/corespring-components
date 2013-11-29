@@ -50,7 +50,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: link,
-      template: [ '<div class="view-feedback {{correctClass}}">{{feedback}}</div>' ]
+      template: [ '<div class="view-feedback {{correctClass}}" ng-show="feedback">{{feedback}}</div>' ]
     };
 
     return def;
