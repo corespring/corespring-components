@@ -1,0 +1,7 @@
+{
+  "componentType": "corespring-image",
+  "title": "Image component",
+  "model" : {
+    "imageUrl": "puppy.jpg"
+  }
+}

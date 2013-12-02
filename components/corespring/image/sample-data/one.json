@@ -1,0 +1,12 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "image"
+      }
+    },
+    "xhtml": "<image id=\"1\"></image>"
+  },
+  "session": {
+  }
+}

@@ -14,23 +14,12 @@ should = require('should');
 _ = require('lodash');
 
 component = {
-  componentType: "corespring-feedback-block",
+  componentType: "corespring-image",
   feedback: {
     correct: "it is correct"
   }
 };
 
-describe('feedback-block server logic', function () {
-
-  it('should proxy values from targetOutcome', function() {
-    var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], undefined, {correctness: 'correct', studentResponse: "apple"});
-    expected = {
-      feedback: "it is correct",
-      correctness: "correct",
-      studentResponse: "apple"
-    };
-    outcome.should.eql(expected);
-  });
+describe('image server logic', function () {
 
 });
