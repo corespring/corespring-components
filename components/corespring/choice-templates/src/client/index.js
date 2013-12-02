@@ -39,7 +39,7 @@ exports.service = [ '$log', function($log){
         '      <td>',
         '        <select class="form-control" ng-model="q.labelType">',
         '          <option value="text">Text</option>',
-//        '          <option value="image">Image</option>',
+        '          <option value="image">Image</option>',
         '          <option value="mathml">MathML</option>',
         '        </select>',
         '      </td>',

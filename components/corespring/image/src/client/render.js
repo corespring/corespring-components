@@ -48,7 +48,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: link,
-      template: [ '<div class="view-image">Img: <img ng-src="{{imageUrl}}"></img></div>' ]
+      template: [ '<div class="view-image"><img ng-src="{{imageUrl}}"></img></div>' ]
     };
 
     return def;
