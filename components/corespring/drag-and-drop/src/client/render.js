@@ -145,7 +145,7 @@ var landingPlace = [function () {
     transclude: true,
     replace: false,
     link: function (scope, element, attrs) {
-      scope.class = attrs['class'];
+      scope['class'] = attrs['class'];
       scope.id = attrs['id'];
       scope.onDrop = function () {
         console.log("onDrop", scope.model.choices);
