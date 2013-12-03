@@ -2,6 +2,9 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
   var link = function (scope, element, attrs) {
 
+
+    console.log( ">>", element.html());
+
     scope.landingPlaceChoices = {};
 
 
@@ -47,14 +50,16 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
         var landingPlaceHtml = function (a) {
           var cssClass = a.inline ? "inline" : "";
-          return ['<landingPlace id="',
+          return ['<span landing-place id="',
             a.id,
             '" class="',
             cssClass,
             '">',
-            '</landingPlace>'
+            '</span>'
           ].join("");
         };
+
+        console.log(element.html());
         var answerHtml = _.map(scope.model.answers,function (a) {
           return a.textBefore + landingPlaceHtml(a) + a.textAfter;
         }).join("");
@@ -120,28 +125,29 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
   }
 
-  var tmpl = [
-    '        <div class="view-drag-and-drop">',
+  var tmpl = [ '        <div class="view-drag-and-drop">',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
     '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
-    '     </div>',
     '      </div>'
   ].join("");
+  
+  console.log("arstarst: " , tmpl);
 
   return {
     link: link,
     scope: {},
-    restrict: 'E',
-    template: tmpl
+    restrict: 'AE',
+    replace: false,
+    template: '' + tmpl
   };
 }];
 
 var landingPlace = [function () {
   var def = {
     scope: true,  //TODO: should use isolate scope, but = doesn't seem to inherit from DanD's scope
-    restrict: 'E',
+    restrict: 'AE',
     transclude: true,
     replace: false,
     link: function (scope, element, attrs) {
@@ -184,6 +190,6 @@ exports.directives = [
 /** The default definition - no name is needed. 1 main def is mandatory */
   { directive: main },
 /** A 2nd directive */
-  { name: 'landingplace', directive: landingPlace }
+  { name: 'landingPlace', directive: landingPlace }
 ];
 

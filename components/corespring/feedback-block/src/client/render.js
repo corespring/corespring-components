@@ -47,7 +47,7 @@ var main = [
 
     def = {
       scope: {},
-      restrict: 'E',
+      restrict: 'AE',
       replace: true,
       link: link,
       template: [ '<div class="view-feedback {{correctClass}}" ng-show="feedback">{{feedback}}</div>' ]
