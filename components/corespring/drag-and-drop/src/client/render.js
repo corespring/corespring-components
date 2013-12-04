@@ -11,7 +11,8 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     };
 
     scope.draggableOptions = {
-      onStart: 'onStart'
+      onStart: 'onStart',
+      revert: 'invalid'
     };
 
     var resetChoices = function(model){
@@ -144,6 +145,7 @@ var landingPlace = [function () {
     transclude: true,
     replace: false,
     link: function (scope, element, attrs) {
+      console.log("LINKING LP");
       scope['class'] = attrs['class'];
       scope.id = attrs['id'];
       scope.landingPlaceChoices[scope.id] = [];
@@ -154,6 +156,7 @@ var landingPlace = [function () {
 
       scope.onDrop = function () {
         console.log("onDrop", scope.model.choices);
+        scope.dragging.isOut = false;
         scope.model.choices = _.filter(scope.model.choices, nonEmptyElement);
         _.each(scope.landingPlaceChoices, function(lpc, key) {
           scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
@@ -167,54 +170,79 @@ var landingPlace = [function () {
         scope.dragging.fromTarget = scope.id;
       };
 
-//      scope.draggableOptions = {
-//        onStart: 'onStart',
-//        revert: function (isValid, element) {
-//          if (isValid) return false;
-//          scope.$apply(function () {
-//            var choice = _.find(scope.landingPlaceChoices[scope.id], function(c) {
-//              return c.id == scope.dragging.id;
-//            });
-//            scope.model.choices.push(choice);
-//            console.log("Excluding", scope.dragging);
-//            scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function(e) {
-//              return e.id != scope.dragging.id;
-//            });
-//          });
-//
-//          return true;
-//        }
-//      };
+      scope.revertFunction = function(isValid) {
+        console.log("reverting");
+        if (isValid) return false;
+        scope.$apply(function () {
+          var choice = _.find(scope.landingPlaceChoices[scope.id], function(c) {
+            return c.id == scope.dragging.id;
+          });
+          scope.model.choices.push(choice);
+          console.log("Excluding", scope.dragging);
+          scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function(e) {
+            return e.id != scope.dragging.id;
+          });
+        });
+
+        return true;
+
+      };
+
+      scope.overCallback = function() {
+        console.log("over");
+        scope.dragging.isOut = false;
+      };
+
+      scope.outCallback = function() {
+        console.log("out");
+        scope.dragging.isOut = true;
+      };
+
+
+      scope.draggableOptions = {
+        onStart: 'onStart',
+        revert: scope.revertFunction
+      };
+
       scope.droppableOptions = {
         accept: function(a,b) {
           return scope.dragging.fromTarget != scope.id;
         },
         onDrop: 'onDrop',
+        onOver: 'overCallback',
         multiple: isMultiple
       };
+
       scope.sortableOptions = {
         start: function(ev, b) {
           scope.$apply(function() {
-            scope.dragging.id = $(event.currentTarget).attr('data-id');
+            scope.dragging.id = $(b.item).attr('data-id');
             scope.dragging.fromTarget = scope.id;
           });
         },
         beforeStop: function() {
-          console.log("BeforeStop");
+          console.log("BS: ", scope.dragging.isOut);
+          if (scope.dragging.isOut) {
+            scope.revertFunction();
+          }
+          scope.dragging.fromTarget = undefined;
         },
-        over: function() {
-          console.log("BeforeStop");
-        }
+        stop: scope.onDrop,
+        out: scope.outCallback,
+        over:  scope.overCallback,
+        revert: false
       };
+
+
 
     },
     template: [
-      '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="padding: 5px">',
+      '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions" class="landing-place {{class}}" >',
       '    <ul',
       '      ui-sortable="sortableOptions" ',
       '      ng-model="landingPlaceChoices[id]"',
       '      >',
-      '        <li ng-repeat="choice in landingPlaceChoices[id]"  ng-model="landingPlaceChoices[id][$index]"  data-id="{{choice.id}}" class="btn btn-primary" ng-bind-html-unsafe="choice.content"></li>',
+      '        <li ng-repeat="choice in landingPlaceChoices[id]" jqyoui-draggable="{index: {{$index}}, onStart: \'onStart\'}" data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id][$index]" data-id="{{choice.id}}" class="btn btn-primary" ng-bind-html-unsafe="choice.content"></li>',
       '    </ul>',
       '    </div>'].join("")
 
