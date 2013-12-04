@@ -124,15 +124,15 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
     '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
-    '     </div>',
     '      </div>'
   ].join("");
-
+  
   return {
     link: link,
     scope: {},
-    restrict: 'E',
-    template: tmpl
+    restrict: 'AE',
+    replace: false,
+    template: '' + tmpl
   };
 }];
 
@@ -140,11 +140,11 @@ var landingPlace = [function () {
   var isMultiple = true;
   var def = {
     scope: true,  //TODO: should use isolate scope, but = doesn't seem to inherit from DanD's scope
-    restrict: 'E',
+    restrict: 'AE',
     transclude: true,
     replace: false,
     link: function (scope, element, attrs) {
-      scope.class = attrs['class'];
+      scope['class'] = attrs['class'];
       scope.id = attrs['id'];
       scope.landingPlaceChoices[scope.id] = [];
 
@@ -227,6 +227,6 @@ exports.directives = [
 /** The default definition - no name is needed. 1 main def is mandatory */
   { directive: main },
 /** A 2nd directive */
-  { name: 'landingplace', directive: landingPlace }
+  { name: 'landingPlace', directive: landingPlace }
 ];
 

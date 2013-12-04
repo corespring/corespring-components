@@ -131,7 +131,7 @@ main = [
     var def;
     def = {
       scope: {},
-      restrict: 'E',
+      restrict: 'AE',
       replace: true,
       link: link($sce, $timeout),
       template: [ '<div class="view-inline-choice">',

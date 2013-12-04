@@ -187,7 +187,7 @@ var main = [
 
     def = {
       scope: {},
-      restrict: 'E',
+      restrict: 'EA',
       replace: true,
       link: link,
       template: [ '<div class="view-multiple-choice">',
