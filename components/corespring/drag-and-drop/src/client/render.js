@@ -45,19 +45,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
           });
         }
 
-        var landingPlaceHtml = function (a) {
-          var cssClass = a.inline ? "inline" : "";
-          return ['<landingPlace id="',
-            a.id,
-            '" class="',
-            cssClass,
-            '">',
-            '</landingPlace>'
-          ].join("");
-        };
-        var answerHtml = _.map(scope.model.answers,function (a) {
-          return a.textBefore + landingPlaceHtml(a) + a.textAfter;
-        }).join("");
+        var answerHtml = scope.model.answerArea;
         $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
         $compile($answerArea)(scope.$new());
 
@@ -115,7 +103,8 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       '            ng-model="model.choices[$index]"',
       '            jqyoui-draggable',
       '            data-id="{{o.id}}"',
-      '           >{{o.content}}</div>',
+      '            ng-bind-html-unsafe="o.content"',
+      '           ></div>',
       '          </div>'].join('');
 
   }
@@ -173,7 +162,7 @@ var landingPlace = [function () {
       '      jqyoui-droppable="{onDrop: \'onDrop\'}"',
       '      class="landing-place {{class}}"',
       '      style="padding: 5px">',
-      '        <div ng-show="landingPlaceChoices[id]" jqyoui-draggable data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id]" data-drag="editable" class="btn btn-primary">{{landingPlaceChoices[id].content}}</div>',
+      '        <div ng-show="landingPlaceChoices[id]" jqyoui-draggable data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id]" data-drag="editable" class="btn btn-primary" ng-bind-html-unsafe="landingPlaceChoices[id].content"></div>',
       '    </div>'].join("")
   };
   return def;

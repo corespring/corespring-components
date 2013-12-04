@@ -3,14 +3,7 @@
   "title": "[Drag and Drop Question Name]",
   "correctResponse": {},
   "model": {
-    "answers": [
-      {
-        "id": "0",
-        "textBefore": "",
-        "textAfter": "",
-        "inline": true
-      }
-    ],
+    "answerArea": "",
     "choices": [
       {
         "content": "",
