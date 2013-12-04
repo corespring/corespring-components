@@ -3,7 +3,16 @@ var main = [ '$compile', '$log', function ($compile, $log) {
   var link = function (scope, element, attrs) {
 
     scope.landingPlaceChoices = {};
+    scope.dragging = {};
 
+    scope.onStart = function(event) {
+      scope.dragging.id = $(event.currentTarget).attr('data-id');
+      scope.dragging.fromTarget = undefined;
+    };
+
+    scope.draggableOptions = {
+      onStart: 'onStart'
+    };
 
     var resetChoices = function(model){
       // TODO: rewrite this using stash
@@ -99,9 +108,9 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       '            class="btn btn-primary choice"',
       '            data-drag="editable"',
       '            ng-disabled="!editable"',
-      '            data-jqyoui-"options="{revert: \'invalid\'}"',
+      '            data-jqyoui-options="draggableOptions"',
       '            ng-model="model.choices[$index]"',
-      '            jqyoui-draggable',
+      '            jqyoui-draggable="draggableOptions"',
       '            data-id="{{o.id}}"',
       '            ng-bind-html-unsafe="o.content"',
       '           ></div>',
@@ -110,7 +119,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
   }
 
   var tmpl = [
-    '        <div class="view-drag-and-drop">',
+    '        <div class="view-drag-and-drop">{{dragging}} {{landingPlaceChoices}}',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
@@ -128,6 +137,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 }];
 
 var landingPlace = [function () {
+  var isMultiple = true;
   var def = {
     scope: true,  //TODO: should use isolate scope, but = doesn't seem to inherit from DanD's scope
     restrict: 'E',
@@ -136,34 +146,78 @@ var landingPlace = [function () {
     link: function (scope, element, attrs) {
       scope.class = attrs['class'];
       scope.id = attrs['id'];
+      scope.landingPlaceChoices[scope.id] = [];
+
+      var nonEmptyElement = function(c) {
+        return c && c.id;
+      };
+
       scope.onDrop = function () {
         console.log("onDrop", scope.model.choices);
-        scope.model.choices = _.filter(scope.model.choices, function (c) {
-          return c;
+        scope.model.choices = _.filter(scope.model.choices, nonEmptyElement);
+        _.each(scope.landingPlaceChoices, function(lpc, key) {
+          scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
         });
       };
-      scope.draggableOptions = {
-        revert: function (isValid) {
-          if (isValid) return false;
-          scope.$apply(function () {
-            scope.model.choices.push(scope.landingPlaceChoices[scope.id]);
-            delete scope.landingPlaceChoices[scope.id];
-          });
 
-          return true;
+      scope.onStart = function(event) {
+        console.log("Starting");
+        scope.dragging.id = $(event.currentTarget).attr('data-id');
+        console.log("Setting fromtarget to ", scope.id);
+        scope.dragging.fromTarget = scope.id;
+      };
+
+//      scope.draggableOptions = {
+//        onStart: 'onStart',
+//        revert: function (isValid, element) {
+//          if (isValid) return false;
+//          scope.$apply(function () {
+//            var choice = _.find(scope.landingPlaceChoices[scope.id], function(c) {
+//              return c.id == scope.dragging.id;
+//            });
+//            scope.model.choices.push(choice);
+//            console.log("Excluding", scope.dragging);
+//            scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function(e) {
+//              return e.id != scope.dragging.id;
+//            });
+//          });
+//
+//          return true;
+//        }
+//      };
+      scope.droppableOptions = {
+        accept: function(a,b) {
+          return scope.dragging.fromTarget != scope.id;
+        },
+        onDrop: 'onDrop',
+        multiple: isMultiple
+      };
+      scope.sortableOptions = {
+        start: function(ev, b) {
+          scope.$apply(function() {
+            scope.dragging.id = $(event.currentTarget).attr('data-id');
+            scope.dragging.fromTarget = scope.id;
+          });
+        },
+        beforeStop: function() {
+          console.log("BeforeStop");
+        },
+        over: function() {
+          console.log("BeforeStop");
         }
-      }
+      };
+
     },
     template: [
-      '    <div',
-      '      data-drop="true"',
+      '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="padding: 5px">',
+      '    <ul',
+      '      ui-sortable="sortableOptions" ',
       '      ng-model="landingPlaceChoices[id]"',
-      '      data-jqyoui-options',
-      '      jqyoui-droppable="{onDrop: \'onDrop\'}"',
-      '      class="landing-place {{class}}"',
-      '      style="padding: 5px">',
-      '        <div ng-show="landingPlaceChoices[id]" jqyoui-draggable data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id]" data-drag="editable" class="btn btn-primary" ng-bind-html-unsafe="landingPlaceChoices[id].content"></div>',
+      '      >',
+      '        <li ng-repeat="choice in landingPlaceChoices[id]"  ng-model="landingPlaceChoices[id][$index]"  data-id="{{choice.id}}" class="btn btn-primary" ng-bind-html-unsafe="choice.content"></li>',
+      '    </ul>',
       '    </div>'].join("")
+
   };
   return def;
 }];

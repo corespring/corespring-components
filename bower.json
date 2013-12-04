@@ -8,7 +8,6 @@
     "angular-animate" : "1.2.0-rc.2",
     "angular-dragdrop" : "latest",
     "angular-ui": "latest",
-    "angular-ui-sortable" : "latest",
     "jquery": "latest",
     "lodash" : "latest",
     "ckeditor" : "latest"
