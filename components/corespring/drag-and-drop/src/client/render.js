@@ -2,11 +2,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
   var link = function (scope, element, attrs) {
 
-
-    console.log( ">>", element.html());
-
     scope.landingPlaceChoices = {};
-
 
     var resetChoices = function(model){
       // TODO: rewrite this using stash
@@ -59,7 +55,6 @@ var main = [ '$compile', '$log', function ($compile, $log) {
           ].join("");
         };
 
-        console.log(element.html());
         var answerHtml = _.map(scope.model.answers,function (a) {
           return a.textBefore + landingPlaceHtml(a) + a.textAfter;
         }).join("");
@@ -133,8 +128,6 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     '      </div>'
   ].join("");
   
-  console.log("arstarst: " , tmpl);
-
   return {
     link: link,
     scope: {},
