@@ -10,8 +10,10 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     scope.stack = [];
 
     scope.propagateDimension = function (w, h) {
-      if (w > scope.maxWidth) scope.maxWidth = w;
-      if (h > scope.maxHeight) scope.maxHeight = h;
+      scope.$apply(function () {
+        if (w > scope.maxWidth) scope.maxWidth = w;
+        if (h > scope.maxHeight) scope.maxHeight = h;
+      });
     };
 
     var lastW, lastH;
@@ -19,21 +21,19 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     setInterval(function () {
 
       if (!scope.$$phase) {
-        scope.$apply(function () {
-          var w = 0, h = 0;
+        var w = 0, h = 0;
 
-          $(element).find('.sizerHolder').each(function (idx, e) {
-            if ($(e).width() > w) w = $(e).width();
-          });
-          $(element).find('.sizerHolder').each(function (idx, e) {
-            if ($(e).height() > h) h = $(e).height();
-          });
-          if (lastW != w || lastH != h) {
-            scope.propagateDimension(w, h);
-          }
-          lastW = w;
-          lastH = h;
+        $(element).find('.sizerHolder').each(function (idx, e) {
+          if ($(e).width() > w) w = $(e).width();
         });
+        $(element).find('.sizerHolder').each(function (idx, e) {
+          if ($(e).height() > h) h = $(e).height();
+        });
+        if (lastW != w || lastH != h) {
+          scope.propagateDimension(w, h);
+        }
+        lastW = w;
+        lastH = h;
       }
     }, 1000);
 
@@ -54,7 +54,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
       scope.stack = [];
       scope.model = _.cloneDeep(model);
-      _.each(scope.landingPlaceChoices, function(lpc, key) {
+      _.each(scope.landingPlaceChoices, function (lpc, key) {
         scope.landingPlaceChoices[key] = [];
       });
 
@@ -64,7 +64,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       }
     };
 
-    scope.undo = function() {
+    scope.undo = function () {
       if (scope.stack.length < 2) return;
       var o = scope.stack.pop();
       var state = _.last(scope.stack);
@@ -72,7 +72,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
     };
 
-    scope.$watch('landingPlaceChoices', function(n) {
+    scope.$watch('landingPlaceChoices', function (n) {
       var state = {choices: _.cloneDeep(scope.model.choices), landingPlaces: _.cloneDeep(scope.landingPlaceChoices)};
       if (!_.isEqual(state, _.last(scope.stack))) {
         scope.stack.push(state);
@@ -116,10 +116,12 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
       },
       getSession: function () {
+//        console.log("Getting answer");
         var answer = {};
         _.each(scope.landingPlaceChoices, function (v, k) {
-          if (k && v && v.id) answer[k] = v.id;
+          if (k) answer[k] = _.pluck(v, 'id');
         });
+//        console.log(answer);
         return {
           answers: answer
         };
@@ -263,11 +265,14 @@ var landingPlace = [function () {
           scope.$apply(function () {
             scope.dragging.id = $(b.item).attr('data-id');
             scope.dragging.fromTarget = scope.id;
+            scope.revertNext = false;
           });
         },
+        beforeStop: function() {
+          scope.revertNext = scope.dragging.isOut;
+        },
         stop: function () {
-          console.log("BS: ", scope.dragging.isOut);
-          if (scope.dragging.isOut) {
+          if (scope.revertNext) {
             scope.revertFunction();
           }
           scope.dragging.fromTarget = undefined;
