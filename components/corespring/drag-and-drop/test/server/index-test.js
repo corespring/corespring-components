@@ -12,10 +12,10 @@ component = {
   "componentType": "corespring-drag-and-drop",
   "title": "Butterfly D&D",
   "correctResponse": {
-    "1": "egg",
-    "2": "pupa",
-    "3": "larva",
-    "4": "adult"
+    "1": ["egg","pupa"],
+    "2": [],
+    "3": ["larva"],
+    "4": ["adult"]
   },
   "feedback": [
     {
@@ -74,16 +74,16 @@ settings = function(feedback, userResponse, correctResponse) {
 describe('drag and drop server logic', function() {
 
   describe('respond incorrect', function() {
-    var response = server.respond(_.cloneDeep(component), {1: 'larva'}, settings(false, true, true));
-    response.should.eql({ correctness: 'incorrect', answer: { '1': 'larva' }, score: 0 });
+    var response = server.respond(_.cloneDeep(component), {1: ['larva']}, settings(false, true, true));
+    response.should.eql({ correctness: 'incorrect', answer: { '1': ['larva'] }, score: 0 });
   });
 
   describe('respond correct', function() {
     var answer = {
-      "1": "egg",
-      "2": "pupa",
-      "3": "larva",
-      "4": "adult"
+      "1": ["egg","pupa"],
+      "2": [],
+      "3": ["larva"],
+      "4": ["adult"]
     };
     var response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));
     response.should.eql({ correctness: 'correct', answer: answer, score: 1 });

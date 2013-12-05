@@ -37,7 +37,6 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       }
     }, 1000);
 
-
     scope.onStart = function (event) {
       scope.dragging.id = $(event.currentTarget).attr('data-id');
       scope.dragging.fromTarget = undefined;
@@ -147,13 +146,25 @@ var main = [ '$compile', '$log', function ($compile, $log) {
         });
       }
     };
+
+    scope.helperForChoice = function(choice) {
+      return (!!choice.copyOnDrag ? "'clone'" : "''");
+    };
+
+    scope.placeholderForChoice = function(choice) {
+      return (!!choice.copyOnDrag ? "'keep'" : "''");
+    };
+
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
   };
 
+
   var answerArea = function () {
-    return  ['        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+    return  [
+      '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
       '        <div id="answer-area">',
-      '        </div>'].join('');
+      '        </div>'
+    ].join('');
 
   };
 
@@ -166,16 +177,16 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       '            class="btn btn-primary choice"',
       '            data-drag="editable"',
       '            ng-disabled="!editable"',
-      '            data-jqyoui-options="draggableOptions"',
+      '            data-jqyoui-options="{revert: \'invalid\',helper: {{helperForChoice(o)}} }"',
       '            ng-model="model.choices[$index]"',
-      '            jqyoui-draggable="draggableOptions"',
+      '            jqyoui-draggable="{placeholder: {{placeholderForChoice(o)}} }"',
       '            data-id="{{o.id}}">',
       '               <div ng-bind-html-unsafe="o.content" />',
       '               <div class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="o.content" />',
       '           </div>',
-      '          </div>'].join('');
-
-  }
+      '          </div>'
+    ].join('');
+  };
 
   var tmpl = [
     '        <div class="view-drag-and-drop">',
@@ -206,6 +217,7 @@ var landingPlace = [function () {
     link: function (scope, element, attrs) {
       scope['class'] = attrs['class'];
       scope.id = attrs['id'];
+      scope.cardinality = attrs['cardinality'] || 'single';
       scope.landingPlaceChoices[scope.id] = [];
 
 
@@ -252,6 +264,7 @@ var landingPlace = [function () {
 
       scope.droppableOptions = {
         accept: function (a, b) {
+          if (scope.cardinality == 'single' && scope.landingPlaceChoices[scope.id].length > 0) return false;
           return scope.dragging.fromTarget != scope.id;
         },
         onDrop: 'onDrop',
