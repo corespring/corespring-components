@@ -1,7 +1,7 @@
 {
   "name": "ck-editor",
   "organization": "corespring",
-  "isLibrary": true,
+  "purpose" : "library",
   "libs": {
     "client": {
       "ckeditor": [

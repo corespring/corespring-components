@@ -1,5 +1,5 @@
 {
   "name": "tabs",
   "organization": "corespring",
-  "type" : "markup-only"
+  "purpose" : "layout"
 }
