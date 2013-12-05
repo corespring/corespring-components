@@ -7,6 +7,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     scope.maxWidth = 50;
     scope.maxHeight = 20;
     scope.expandHorizontal = true;
+    scope.stack = [];
 
     scope.propagateDimension = function (w, h) {
       if (w > scope.maxWidth) scope.maxWidth = w;
@@ -17,14 +18,14 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
     setInterval(function () {
 
-      if(!scope.$$phase) {
+      if (!scope.$$phase) {
         scope.$apply(function () {
           var w = 0, h = 0;
 
-          $(element).find('.sizerHolder').each(function(idx, e) {
+          $(element).find('.sizerHolder').each(function (idx, e) {
             if ($(e).width() > w) w = $(e).width();
           });
-          $(element).find('.sizerHolder').each(function(idx, e) {
+          $(element).find('.sizerHolder').each(function (idx, e) {
             if ($(e).height() > h) h = $(e).height();
           });
           if (lastW != w || lastH != h) {
@@ -37,7 +38,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     }, 1000);
 
 
-    scope.onStart = function(event) {
+    scope.onStart = function (event) {
       scope.dragging.id = $(event.currentTarget).attr('data-id');
       scope.dragging.fromTarget = undefined;
     };
@@ -47,17 +48,37 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       revert: 'invalid'
     };
 
-    var resetChoices = function(model){
+    var resetChoices = function (model) {
       // TODO: rewrite this using stash
       var isNew = !scope.model;
 
+      scope.stack = [];
       scope.model = _.cloneDeep(model);
-      scope.landingPlaceChoices = {};
+      _.each(scope.landingPlaceChoices, function(lpc, key) {
+        scope.landingPlaceChoices[key] = [];
+      });
+
       if (isNew && scope.model.config.shuffle) {
         // TODO: rewrite this using stash
         scope.model.choices = _.shuffle(scope.model.choices);
       }
     };
+
+    scope.undo = function() {
+      if (scope.stack.length < 2) return;
+      var o = scope.stack.pop();
+      var state = _.last(scope.stack);
+      scope.model.choices = _.cloneDeep(state.choices);
+      scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+    };
+
+    scope.$watch('landingPlaceChoices', function(n) {
+      var state = {choices: _.cloneDeep(scope.model.choices), landingPlaces: _.cloneDeep(scope.landingPlaceChoices)};
+      if (!_.isEqual(state, _.last(scope.stack))) {
+        scope.stack.push(state);
+      }
+    }, true);
+
 
     scope.containerBridge = {
       setDataAndSession: function (dataAndSession) {
@@ -103,23 +124,23 @@ var main = [ '$compile', '$log', function ($compile, $log) {
           answers: answer
         };
       },
-      setMode : function(newMode) {
+      setMode: function (newMode) {
       },
-      reset: function(){
+      reset: function () {
         resetChoices(scope.rawModel);
       },
-      isAnswerEmpty: function(){
+      isAnswerEmpty: function () {
         return _.isEmpty(this.getSession().answers);
       },
-      answerChangedHandler: function(callback){
-        scope.$watch("landingPlaceChoices", function(newValue, oldValue){
-          if(newValue){
+      answerChangedHandler: function (callback) {
+        scope.$watch("landingPlaceChoices", function (newValue, oldValue) {
+          if (newValue) {
             callback();
           }
-        }, true);  
+        }, true);
       },
-      editable: function(e){
-        scope.$apply(function(){
+      editable: function (e) {
+        scope.$apply(function () {
           scope.editable = e;
         });
       }
@@ -155,14 +176,15 @@ var main = [ '$compile', '$log', function ($compile, $log) {
   }
 
   var tmpl = [
-    '        <div class="view-drag-and-drop">{{dragging}} {{landingPlaceChoices}}',
+    '        <div class="view-drag-and-drop">',
+    ' <p><button ng-click="undo()">Undo</button></p>',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
     '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
     '      </div>'
   ].join("");
-  
+
   return {
     link: link,
     scope: {},
@@ -185,60 +207,49 @@ var landingPlace = [function () {
       scope.landingPlaceChoices[scope.id] = [];
 
 
-      var nonEmptyElement = function(c) {
+      var nonEmptyElement = function (c) {
         return c && c.id;
       };
 
       scope.onDrop = function () {
-        console.log("onDrop", scope.model.choices);
         scope.dragging.isOut = false;
         scope.model.choices = _.filter(scope.model.choices, nonEmptyElement);
-        _.each(scope.landingPlaceChoices, function(lpc, key) {
+        _.each(scope.landingPlaceChoices, function (lpc, key) {
           scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
         });
+
       };
 
-      scope.onStart = function(event) {
-        console.log("Starting");
+      scope.onStart = function (event) {
         scope.dragging.id = $(event.currentTarget).attr('data-id');
-        console.log("Setting fromtarget to ", scope.id);
         scope.dragging.fromTarget = scope.id;
       };
 
-      scope.revertFunction = function(isValid) {
-        console.log("reverting");
+      scope.revertFunction = function (isValid) {
         if (isValid) return false;
         scope.$apply(function () {
-          var choice = _.find(scope.landingPlaceChoices[scope.id], function(c) {
+          var choice = _.find(scope.landingPlaceChoices[scope.id], function (c) {
             return c.id == scope.dragging.id;
           });
           scope.model.choices.push(choice);
           console.log("Excluding", scope.dragging);
-          scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function(e) {
+          scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function (e) {
             return e.id != scope.dragging.id;
           });
         });
-
         return true;
-
       };
 
-      scope.overCallback = function() {
-        console.log("over");
-        scope.$apply(function() {
-          scope.dragging.isOut = false;
-        });
+      scope.overCallback = function () {
+        scope.dragging.isOut = false;
       };
 
-      scope.outCallback = function() {
-        console.log("out");
-        scope.$apply(function() {
-          scope.dragging.isOut = true;
-        });
+      scope.outCallback = function () {
+        scope.dragging.isOut = true;
       };
 
       scope.droppableOptions = {
-        accept: function(a,b) {
+        accept: function (a, b) {
           return scope.dragging.fromTarget != scope.id;
         },
         onDrop: 'onDrop',
@@ -248,32 +259,32 @@ var landingPlace = [function () {
       };
 
       scope.sortableOptions = {
-        start: function(ev, b) {
-          scope.$apply(function() {
+        start: function (ev, b) {
+          scope.$apply(function () {
             scope.dragging.id = $(b.item).attr('data-id');
             scope.dragging.fromTarget = scope.id;
           });
         },
-        beforeStop: function() {
+        stop: function () {
           console.log("BS: ", scope.dragging.isOut);
           if (scope.dragging.isOut) {
             scope.revertFunction();
           }
           scope.dragging.fromTarget = undefined;
         },
+
         out: scope.outCallback,
-        over:  scope.overCallback,
+        over: scope.overCallback,
         revert: false
       };
 
-      scope.$watch("maxWidth + maxHeight", function(n) {
+      scope.$watch("maxWidth + maxHeight", function (n) {
         if (scope.expandHorizontal) {
-          scope.style = "min-height: "+(scope.maxHeight+20)+"px; min-width: "+(scope.maxWidth+30)+"px";
+          scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + (scope.maxWidth + 30) + "px";
         } else {
-          scope.style = "min-height: "+(scope.maxHeight+20)+"px; width: "+(scope.maxWidth+30)+"px";
+          scope.style = "min-height: " + (scope.maxHeight + 20) + "px; width: " + (scope.maxWidth + 30) + "px";
         }
       });
-
 
 
     },
