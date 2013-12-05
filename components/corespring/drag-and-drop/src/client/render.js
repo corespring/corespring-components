@@ -4,6 +4,38 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
     scope.landingPlaceChoices = {};
     scope.dragging = {};
+    scope.maxWidth = 50;
+    scope.maxHeight = 20;
+    scope.expandHorizontal = true;
+
+    scope.propagateDimension = function (w, h) {
+      if (w > scope.maxWidth) scope.maxWidth = w;
+      if (h > scope.maxHeight) scope.maxHeight = h;
+    };
+
+    var lastW, lastH;
+
+    setInterval(function () {
+
+      if(!scope.$$phase) {
+        scope.$apply(function () {
+          var w = 0, h = 0;
+
+          $(element).find('.sizerHolder').each(function(idx, e) {
+            if ($(e).width() > w) w = $(e).width();
+          });
+          $(element).find('.sizerHolder').each(function(idx, e) {
+            if ($(e).height() > h) h = $(e).height();
+          });
+          if (lastW != w || lastH != h) {
+            scope.propagateDimension(w, h);
+          }
+          lastW = w;
+          lastH = h;
+        });
+      }
+    }, 1000);
+
 
     scope.onStart = function(event) {
       scope.dragging.id = $(event.currentTarget).attr('data-id');
@@ -34,6 +66,8 @@ var main = [ '$compile', '$log', function ($compile, $log) {
         scope.rawModel = dataAndSession.data.model;
         scope.editable = true;
         resetChoices(scope.rawModel);
+
+        scope.expandHorizontal = dataAndSession.data.model.config.expandHorizontal;
 
         if (dataAndSession.session && dataAndSession.session.answers) {
 
@@ -112,9 +146,10 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       '            data-jqyoui-options="draggableOptions"',
       '            ng-model="model.choices[$index]"',
       '            jqyoui-draggable="draggableOptions"',
-      '            data-id="{{o.id}}"',
-      '            ng-bind-html-unsafe="o.content"',
-      '           ></div>',
+      '            data-id="{{o.id}}">',
+      '               <div ng-bind-html-unsafe="o.content" />',
+      '               <div class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="o.content" />',
+      '           </div>',
       '          </div>'].join('');
 
   }
@@ -145,10 +180,10 @@ var landingPlace = [function () {
     transclude: true,
     replace: false,
     link: function (scope, element, attrs) {
-      console.log("LINKING LP");
       scope['class'] = attrs['class'];
       scope.id = attrs['id'];
       scope.landingPlaceChoices[scope.id] = [];
+
 
       var nonEmptyElement = function(c) {
         return c && c.id;
@@ -190,18 +225,16 @@ var landingPlace = [function () {
 
       scope.overCallback = function() {
         console.log("over");
-        scope.dragging.isOut = false;
+        scope.$apply(function() {
+          scope.dragging.isOut = false;
+        });
       };
 
       scope.outCallback = function() {
         console.log("out");
-        scope.dragging.isOut = true;
-      };
-
-
-      scope.draggableOptions = {
-        onStart: 'onStart',
-        revert: scope.revertFunction
+        scope.$apply(function() {
+          scope.dragging.isOut = true;
+        });
       };
 
       scope.droppableOptions = {
@@ -210,6 +243,7 @@ var landingPlace = [function () {
         },
         onDrop: 'onDrop',
         onOver: 'overCallback',
+        onOut: 'outCallback',
         multiple: isMultiple
       };
 
@@ -227,23 +261,31 @@ var landingPlace = [function () {
           }
           scope.dragging.fromTarget = undefined;
         },
-        stop: scope.onDrop,
         out: scope.outCallback,
         over:  scope.overCallback,
         revert: false
       };
 
+      scope.$watch("maxWidth + maxHeight", function(n) {
+        if (scope.expandHorizontal) {
+          scope.style = "min-height: "+(scope.maxHeight+20)+"px; min-width: "+(scope.maxWidth+30)+"px";
+        } else {
+          scope.style = "min-height: "+(scope.maxHeight+20)+"px; width: "+(scope.maxWidth+30)+"px";
+        }
+      });
+
 
 
     },
     template: [
-      '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions" class="landing-place {{class}}" >',
-      '    <ul',
+      '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
+      '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="{{style}}" >',
+      '    <div',
       '      ui-sortable="sortableOptions" ',
       '      ng-model="landingPlaceChoices[id]"',
       '      >',
-      '        <li ng-repeat="choice in landingPlaceChoices[id]" jqyoui-draggable="{index: {{$index}}, onStart: \'onStart\'}" data-jqyoui-options="draggableOptions" ng-model="landingPlaceChoices[id][$index]" data-id="{{choice.id}}" class="btn btn-primary" ng-bind-html-unsafe="choice.content"></li>',
-      '    </ul>',
+      '        <div ng-repeat="choice in landingPlaceChoices[id]" jqyoui-draggable="{index: {{$index}}, placeholder: true}" data-jqyoui-options="" ng-model="landingPlaceChoices[id][$index]" data-id="{{choice.id}}" class="btn btn-primary" ng-bind-html-unsafe="choice.content"></div>',
+      '    </div>',
       '    </div>'].join("")
 
   };
