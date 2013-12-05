@@ -1,79 +1,92 @@
 var tabs = [
-    '$timeout', function($timeout) {
-      var controllerFn;
-      controllerFn = function($scope, $element, $attrs) {
+    '$timeout', '$log', function($timeout, $log) {
+      
+      var controllerFn = function($scope, $element, $attrs) {
+        
         var _this = this;
         
         if ($attrs['ngShow']) {
           $scope.$watch($attrs['ngShow'], function(newValue, oldValue) {
-            return _this.tabsAreVisible = newValue;
+            _this.tabsAreVisible = newValue;
           });
         } else {
           this.tabsAreVisible = true;
         }
+
         $scope.tabs = [];
+
         $scope.$watch('tabs.length', function(tabsL, oldL) {
           if (tabsL > 0 && tabsL < oldL) {
             if ($scope.tabs.indexOf($scope.selectedTab === -1)) {
-              return $scope.selectTab($scope.tabs[Math.max($scope.selectedIdx - 1, 0)]);
+              $scope.selectTab($scope.tabs[Math.max($scope.selectedIdx - 1, 0)]);
             }
           }
         });
+
+
         $scope.selectTab = function(tab, $event) {
-          var _i, _len, _ref, _tab;
-          if (!(tab != null)) {
+          
+          if (!tab) {
             return;
           }
-          _ref = $scope.tabs;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            _tab = _ref[_i];
-            _tab.selected(false);
+
+          for (var i = 0; i < $scope.tabs.length; i++) {
+            $scope.tabs[i].selected(false);
           }
+
           $timeout(function() {
-            return tab.selected(true);
+            tab.selected(true);
           });
+
           $scope.selectedTab = tab;
+
           $scope.selectedIdx = $scope.tabs.indexOf(tab);
+
           if ($scope.onTabSelect != null) {
             $scope.onTabSelect(tab);
           }
-          if (!(!$event)) {
-              $event.preventDefault();
-              $event.stopPropagation();
+
+          if ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
           }
-          return null;
         };
+
         $scope.changeTab = function(index) {
           try {
-            return $scope.selectTab($scope.tabs[index]);
+            $scope.selectTab($scope.tabs[index]);
           } catch (e) {
-            console.error("could not change tab, probably array out of bounds");
+            $log.error("could not change tab, probably array out of bounds");
             throw e;
           }
         };
+
         this.addTab = function(tab, index) {
           $scope.tabs.push(tab);
           if ($scope.tabs.length === 1) {
-            return $scope.selectTab(tab);
+            $scope.selectTab(tab);
           }
         };
+
         this.removeTab = function(tab) {
-          return $timeout(function() {
-            return $scope.tabs.splice($scope.tabs.indexOf(tab, 1));
+          $timeout(function() {
+            $scope.tabs.splice($scope.tabs.indexOf(tab, 1));
           });
         };
+
         this.nextTab = function() {
           var newIdx;
           newIdx = $scope.selectedIdx + 1;
-          return $scope.changeTab(newIdx);
+          $scope.changeTab(newIdx);
         };
-         this.previousTab = function() {
+
+        this.previousTab = function() {
           var newIdx;
           newIdx = $scope.selectedIdx - 1;
-          return $scope.changeTab(newIdx);
+          $scope.changeTab(newIdx);
         };
-        return this;
       };
+
       return {
         restrict: 'EA',
         transclude: true,

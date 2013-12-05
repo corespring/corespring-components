@@ -1,22 +1,26 @@
 var tab = [
     function() {
-      var linkFn, nextTab;
-      nextTab = 0;
-      linkFn = function(scope, elm, attrs, container) {
-        var tab;
-        tab = {
+      var linkFn = function(scope, elm, attrs, container) {
+        
+        var tab = {
           title: attrs['title'],
+          
           selected: function(newVal) {
             if (newVal == null) {
+              //treat it as a getter
               return scope.selected;
             }
-            return scope.selected = newVal;
+            //treat it as a setter
+            scope.selected = newVal;
           }
         };
+        
         container.addTab(tab);
-        return scope.$on('$destroy', function() {
-          return container.removeTab(tab);
+        
+        scope.$on('$destroy', function() {
+          container.removeTab(tab);
         });
+
       };
       return {
         restrict: 'EA',
