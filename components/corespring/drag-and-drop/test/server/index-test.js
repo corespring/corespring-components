@@ -12,7 +12,7 @@ component = {
   "componentType": "corespring-drag-and-drop",
   "title": "Butterfly D&D",
   "correctResponse": {
-    "1": ["egg","pupa"],
+    "1": ["egg", "pupa"],
     "2": [],
     "3": ["larva"],
     "4": ["adult"]
@@ -59,9 +59,9 @@ component = {
   "weight": 1
 };
 
-settings = function(feedback, userResponse, correctResponse) {
+settings = function (feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {
@@ -71,22 +71,45 @@ settings = function(feedback, userResponse, correctResponse) {
   };
 };
 
-describe('drag and drop server logic', function() {
+describe('drag and drop server logic', function () {
 
-  describe('respond incorrect', function() {
+  describe('respond incorrect', function () {
     var response = server.respond(_.cloneDeep(component), {1: ['larva']}, settings(false, true, true));
-    response.should.eql({ correctness: 'incorrect', answer: { '1': ['larva'] }, score: 0 });
+    response.should.eql(
+      {
+        correctResponse: {
+          '1': [ 'egg', 'pupa' ],
+          '2': [],
+          '3': [ 'larva' ],
+          '4': [ 'adult' ]
+        },
+        correctness: 'incorrect',
+        answer: { '1': ['larva'] },
+        score: 0
+      });
   });
 
-  describe('respond correct', function() {
+  describe('respond correct', function () {
     var answer = {
-      "1": ["egg","pupa"],
+      "1": ["egg", "pupa"],
       "2": [],
       "3": ["larva"],
       "4": ["adult"]
     };
     var response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));
-    response.should.eql({ correctness: 'correct', answer: answer, score: 1 });
+    response.should.eql(
+      {
+        correctResponse: {
+          '1': [ 'egg', 'pupa' ],
+          '2': [],
+          '3': [ 'larva' ],
+          '4': [ 'adult' ]
+        },
+        correctness: 'correct',
+        answer: answer,
+        score: 1
+      }
+    );
   });
 
 });
