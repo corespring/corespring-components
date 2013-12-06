@@ -93,7 +93,6 @@ exports.fromFolder = (p, done) ->
   org = orgName(p)
   comp = componentName(p)
    
-  console.log(">>>>>>>>> " + pk.purpose)
   switch pk.purpose
     when "library" then loadLib(p, pk, org, comp, done)
     when "layout" then loadLayout(p, pk, org, comp, done)
