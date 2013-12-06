@@ -1,5 +1,5 @@
 {
   "name": "choice-templates",
   "organization": "corespring",
-  "isLibrary" : true
+  "purpose" : "library"
 }

@@ -1,5 +1,5 @@
 {
   "name": "scoring-utils",
   "organization": "corespring",
-  "isLibrary" : true
+  "purpose" : "library"
 }

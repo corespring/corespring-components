@@ -1,11 +1,24 @@
 # Component Spec
 
-There are 2 types of component: UiComponent and Library
+There are 3 types of component: UiComponent and Library
 
-## UiComponent ----------------
+## UiComponent ---------------- 
+//TODO - UiComponent rename to Interaction
 
 ### How to depend on a library
 
+## Layout Component -------------------
+
+A layout component is a component that only has logic that 
+provides layouts within an item. For example: Tabs, Carousel, Expanders etc.
+
+* no server side logic required
+* can not be configured using a ui component instead they are added to the item xhtml
+
+The container decides to include the components by inspecting the Item.xhtml property for usage.
+
+### Defining
+### Adding multiple items
 
 ## Library ----------------
 
