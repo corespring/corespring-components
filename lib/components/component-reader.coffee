@@ -13,11 +13,12 @@ class ComponentDef
 class Library
   constructor: (@organization, @name, @pkg, @client, @server, @componentPath) ->
     @componentType = "#{@organization}-#{@name}"
-    @isLibrary = true
 
 class LibrarySource
   constructor: (@name, @src) ->
 
+class LayoutComponent
+  constructor: (@organization, @name, @pkg, @client, @css, @componentPath) ->
 
 # private
 orgName = (p) ->
@@ -48,23 +49,36 @@ clientDef = (p) ->
   configJs = load(p, 'src', 'client', 'configure')
   new ClientDef(renderJs, configJs)
 
-###
-# TODO: calling 'require' - requires that dependencies are available at call site or in a parent folder
-# This isn't the case for the test-rig at the moment
-requireServer = (folders ...) ->
-  p = path.join.apply(null, folders)
-
-  #if fs.existsSync(p)
-  #  require path.join(process.cwd(), p)
-  #else
-  render : (q) -> q
-  respond: (question, answer, settings) -> { message: "No respond function defined - please implement one for: #{p}" }
-
-serverDef = (p) -> requireServer(p, 'src', 'server')
-###
-
 pkg = (p) ->
   require path.join( process.cwd(), p, 'package.json')
+
+fileToLib = (p, comp) ->
+  (f) ->
+    fileName = path.basename(f, ".js")
+    fileName = if fileName == "index" then comp else fileName
+    console.log(fileName)
+    src = fs.readFileSync(path.join(p, "src", "client", f))
+    new LibrarySource(fileName, src)
+
+loadLibraries = (p, comp) ->
+  files = fs.readdirSync path.join(p, "src", "client")
+
+  jsFiles = _.chain(files)
+    .filter((f) -> path.extname(f) == ".js")
+    .map( fileToLib(p, comp) )
+    .value()
+
+  jsFiles
+
+loadLib = (p, pk, org, comp, done) ->
+  clientLibraries = loadLibraries(p, comp)
+  def = new Library(org, comp, pk, clientLibraries, [], p)
+  done(null, def)
+
+loadLayout = (p, pk, org, comp, done) ->
+  client = loadLibraries(p, comp) 
+  def = new LayoutComponent(org, comp, pk, client, "", p)
+  done(null, def)
 
 ###
   Parse a folder structure into a component definition
@@ -78,35 +92,16 @@ exports.fromFolder = (p, done) ->
   pk = pkg(p)
   org = orgName(p)
   comp = componentName(p)
-
-  if pk.isLibrary
-
-    fileToLib = (f) ->
-      fileName = path.basename(f, ".js")
-      fileName = if fileName == "index" then comp else fileName
-      console.log(fileName)
-      src = fs.readFileSync(path.join(p, "src", "client", f))
-      new LibrarySource(fileName, src)
-
-    loadLibraries = ->
-      files = fs.readdirSync path.join(p, "src", "client")
-
-      jsFiles = _.chain(files)
-        .filter((f) -> path.extname(f) == ".js")
-        .map( fileToLib )
-        .value()
-
-      jsFiles
-
-    clientLibraries = loadLibraries()
-
-    def = new Library(org, comp, pk, clientLibraries, [], p)
-    done(null, def)
-  else
-    ico = icon(p)
-    cl = clientDef(p)
-    srvr = {} #serverDef(p)
-    pk = pkg(p)
-    def = new ComponentDef(org, comp, ico, cl, srvr, pk, p )
-    done(null, def)
+   
+  console.log(">>>>>>>>> " + pk.purpose)
+  switch pk.purpose
+    when "library" then loadLib(p, pk, org, comp, done)
+    when "layout" then loadLayout(p, pk, org, comp, done)
+    else 
+      ico = icon(p)
+      cl = clientDef(p)
+      srvr = {} #serverDef(p)
+      pk = pkg(p)
+      def = new ComponentDef(org, comp, ico, cl, srvr, pk, p )
+      done(null, def)
 

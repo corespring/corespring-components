@@ -48,8 +48,11 @@ exports.loaded = -> loaded
 ###
 Return all loaded components
 ###
-exports.allComponents = -> _.filter(loadedComponents, (c) -> !c.isLibrary )
-exports.allLibraries = -> _.filter(loadedComponents, (c) -> c.isLibrary )
+exports.allComponents = -> 
+  _.filter loadedComponents, (c) -> c.pkg.purpose != "library" and c.pkg.purpose != "layout"
+
+exports.allLibraries = -> _.filter(loadedComponents, (c) -> c.pkg.purpose == "library" )
+exports.allLayoutComponents = -> _.filter(loadedComponents, (c) -> c.pkg.purpose == "layout" )
 
 exports.defSync = (componentType) ->
   [all, org, name] = componentType.match /(.*?)\-(.*)/
