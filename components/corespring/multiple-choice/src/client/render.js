@@ -174,10 +174,7 @@ var main = [
           }, true);  
         },
         editable: function(e){
-          scope.$apply(function(){
-            $log.debug('editable: ', e);
-            scope.editable = e;
-          });
+          scope.editable = e;
         }
       };
 
