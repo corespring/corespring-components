@@ -14,16 +14,19 @@
     margin: 5px;
 }
 
-.view-drag-and-drop .landing-place {
+.landing-place {
     min-width: 100px;
     min-height: 30px;
     background-color: #f7f6e1;
 }
 
-.view-drag-and-drop .landing-place.inline {
+.landing-place.inline {
     display: inline-block;
 }
 
+.modal .landing-place {
+    background-color: #edffe3;
+}
 
 .drag-and-drop-config-panel .answer-placeholder {
     border: 1px solid #999;
@@ -90,5 +93,9 @@
 
 .popover-content {
     padding: 10px;
+}
+
+.modal {
+    display: block;
 }
 

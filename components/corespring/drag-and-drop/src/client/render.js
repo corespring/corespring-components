@@ -1,4 +1,4 @@
-var main = [ '$compile', '$log', function ($compile, $log) {
+var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $log, $modal, $rootScope) {
 
   var link = function (scope, element, attrs) {
 
@@ -71,12 +71,48 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
     };
 
+    scope.seeSolution = function() {
+
+      $modal.open({
+        controller : function($scope, $modalInstance) {
+          $scope.ok = function () {
+            $modalInstance.dismiss('cancel');
+          };
+        },
+        template: [
+            '<div class="modal">',
+            ' <div class="modal-dialog">',
+            '   <div class="modal-content">',
+            '     <div class="modal-header">',
+            '     <h3>Answer</h3>',
+            '   </div>',
+            '   <div class="modal-body">',
+                  scope.model.answerArea,
+            '   </div>',
+            '   <div class="modal-footer">',
+            '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
+            '   </div>',
+            ' </div>',
+            '</div>'
+          ].join(""),
+        backdrop: true,
+        scope: scope.solutionScope
+      });
+    };
+
     scope.$watch('landingPlaceChoices', function (n) {
       var state = {choices: _.cloneDeep(scope.model.choices), landingPlaces: _.cloneDeep(scope.landingPlaceChoices)};
       if (!_.isEqual(state, _.last(scope.stack))) {
         scope.stack.push(state);
       }
     }, true);
+
+    var choiceForId = function(id) {
+      var choice = _.find(scope.originalChoices, function (c) {
+        return c.id == id;
+      });
+      return choice;
+    };
 
 
     scope.containerBridge = {
@@ -88,14 +124,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
         resetChoices(scope.rawModel);
 
         scope.expandHorizontal = dataAndSession.data.model.config.expandHorizontal;
-
-
-        var choiceForId = function(id) {
-          var choice = _.find(dataAndSession.data.model.choices, function (c) {
-            return c.id == id;
-          });
-          return choice;
-        };
+        scope.originalChoices = _.cloneDeep(scope.model.choices);
 
         if (dataAndSession.session && dataAndSession.session.answers) {
 
@@ -127,14 +156,32 @@ var main = [ '$compile', '$log', function ($compile, $log) {
           answers: answer
         };
       },
+
+      setResponse: function (response) {
+        console.log("set response for DnD", response);
+        scope.correctResponse = response.correctResponse;
+
+        // Populate solutionScope with the correct response
+        scope.solutionScope = $rootScope.$new();
+        scope.solutionScope.landingPlaceChoices = {};
+        _.each(scope.correctResponse, function(v,k) {
+          scope.solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
+            return choiceForId(r);
+          });
+        });
+      },
+
       setMode: function (newMode) {
       },
+
       reset: function () {
         resetChoices(scope.rawModel);
       },
+
       isAnswerEmpty: function () {
         return _.isEmpty(this.getSession().answers);
       },
+
       answerChangedHandler: function (callback) {
         scope.$watch("landingPlaceChoices", function (newValue, oldValue) {
           if (newValue) {
@@ -142,6 +189,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
           }
         }, true);
       },
+
       editable: function (e) {
         scope.$apply(function () {
           scope.editable = e;
@@ -158,6 +206,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     };
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+
   };
 
 
@@ -189,7 +238,6 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       '          </div>'
     ].join('');
   };
-
   var tmpl = [
     '        <div class="view-drag-and-drop">',
     ' <p><button ng-click="undo()">Undo</button></p>',
@@ -197,8 +245,12 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
     '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
-    '      </div>'
+    ' <p ng-show="correctResponse"><button ng-click="seeSolution()">See solution</button></p>',
+    '      </div>',
+
   ].join("");
+
+
 
   return {
     link: link,
@@ -217,6 +269,7 @@ var landingPlace = [function () {
     transclude: true,
     replace: false,
     link: function (scope, element, attrs) {
+
       scope['class'] = attrs['class'];
       scope.id = attrs['id'];
       scope.cardinality = attrs['cardinality'] || 'single';
@@ -265,7 +318,7 @@ var landingPlace = [function () {
       scope.droppableOptions = {
         accept: function (a, b) {
           if (scope.cardinality == 'single' && scope.landingPlaceChoices[scope.id].length > 0) return false;
-          return scope.dragging.fromTarget != scope.id;
+          return scope.dragging && (scope.dragging.fromTarget != scope.id);
         },
         onDrop: 'onDrop',
         onOver: 'overCallback',
@@ -328,4 +381,3 @@ exports.directives = [
 /** A 2nd directive */
   { name: 'landingPlace', directive: landingPlace }
 ];
-
