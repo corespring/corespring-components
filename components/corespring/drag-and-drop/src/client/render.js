@@ -314,7 +314,6 @@ var landingPlace = [function () {
             return c.id == scope.dragging.id;
           });
           scope.model.choices.push(choice);
-          console.log("Excluding", scope.dragging);
           scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function (e) {
             return e.id != scope.dragging.id;
           });
@@ -374,7 +373,6 @@ var landingPlace = [function () {
 
       scope.classForChoice = function(choice, idx) {
         if (!scope.correctResponse) return;
-        console.log(scope.correctResponse[scope.id], scope.cardinality);
         var isCorrect;
         if (scope.cardinality == "ordered")
           isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) == idx;
