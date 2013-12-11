@@ -47,7 +47,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       revert: 'invalid'
     };
 
-    var resetChoices = function (model) {
+    scope.resetChoices = function (model) {
       // TODO: rewrite this using stash
       var isNew = !scope.model;
 
@@ -61,6 +61,14 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
         // TODO: rewrite this using stash
         scope.model.choices = _.shuffle(scope.model.choices);
       }
+    };
+
+    scope.startOver = function() {
+      scope.stack = [];
+      scope.model.choices = _.cloneDeep(scope.originalChoices);
+      _.each(scope.landingPlaceChoices, function (lpc, key) {
+        scope.landingPlaceChoices[key] = [];
+      });
     };
 
     scope.undo = function () {
@@ -121,7 +129,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
 
         scope.rawModel = dataAndSession.data.model;
         scope.editable = true;
-        resetChoices(scope.rawModel);
+        scope.resetChoices(scope.rawModel);
 
         scope.expandHorizontal = dataAndSession.data.model.config.expandHorizontal;
         scope.originalChoices = _.cloneDeep(scope.model.choices);
@@ -175,7 +183,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       },
 
       reset: function () {
-        resetChoices(scope.rawModel);
+        scope.resetChoices(scope.rawModel);
       },
 
       isAnswerEmpty: function () {
@@ -240,12 +248,15 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
   };
   var tmpl = [
     '        <div class="view-drag-and-drop">',
-    ' <p><button ng-click="undo()">Undo</button></p>',
+    ' <div ng-show="!correctResponse" class="pull-right">',
+    '   <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
+    '   <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
+    ' </div><div class="clearfix" />',
     '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
     '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
-    ' <p ng-show="correctResponse"><button ng-click="seeSolution()">See solution</button></p>',
+    ' <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
     '      </div>',
 
   ].join("");
@@ -278,6 +289,10 @@ var landingPlace = [function () {
       var nonEmptyElement = function (c) {
         return c && c.id;
       };
+
+      scope.$watch('editable', function(e) {
+         scope.sortableOptions.disabled =  !e;
+      });
 
       scope.onDrop = function () {
         scope.dragging.isOut = false;
@@ -357,6 +372,18 @@ var landingPlace = [function () {
         }
       });
 
+      scope.classForChoice = function(choice, idx) {
+        if (!scope.correctResponse) return;
+        console.log(scope.correctResponse[scope.id], scope.cardinality);
+        var isCorrect;
+        if (scope.cardinality == "ordered")
+          isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) == idx;
+        else
+          isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) >= 0;
+
+        return isCorrect ? "correct" : "incorrect";
+      };
+
 
     },
     template: [
@@ -366,7 +393,7 @@ var landingPlace = [function () {
       '      ui-sortable="sortableOptions" ',
       '      ng-model="landingPlaceChoices[id]"',
       '      >',
-      '        <div ng-repeat="choice in landingPlaceChoices[id]" jqyoui-draggable="{index: {{$index}}, placeholder: true}" data-jqyoui-options="" ng-model="landingPlaceChoices[id][$index]" data-id="{{choice.id}}" class="btn btn-primary" ng-bind-html-unsafe="choice.content"></div>',
+      '        <div ng-repeat="choice in landingPlaceChoices[id]" jqyoui-draggable="{index: {{$index}}, placeholder: true}" data-jqyoui-options="" ng-model="landingPlaceChoices[id][$index]" data-id="{{choice.id}}" class="btn btn-primary {{classForChoice(choice, $index)}}" ng-bind-html-unsafe="choice.content"></div>',
       '    </div>',
       '    </div>'].join("")
 
