@@ -33,6 +33,7 @@ module.exports = (grunt) ->
             '<%= common.app %>/bower_components/jquery/jquery.js',
             # TODO : how to build out packages like this..
             '<%= common.app %>/bower_components/ckeditor/ckeditor.js',
+            '<%= common.app %>/bower_components/saxjs/lib/sax.js',
             '<%= common.corespringCore %>',
             '<%= grunt.config("testClient.appDeclaration") %>'
           ]

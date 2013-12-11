@@ -10,7 +10,8 @@
     "angular-ui": "latest",
     "jquery": "latest",
     "lodash" : "latest",
-    "ckeditor" : "latest"
+    "ckeditor" : "latest",
+    "saxjs": "https://github.com/isaacs/sax-js.git"
   },
   "devDependencies": {
     "angular-mocks": "1.2.0-rc.2",
