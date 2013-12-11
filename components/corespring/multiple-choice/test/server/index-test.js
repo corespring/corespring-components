@@ -84,7 +84,8 @@ describe('multiple-choice server logic', function() {
         correctness: "incorrect",
         score: 0
       };
-      response.should.eql(expected);
+      response.correctness.should.eql(expected.correctness);
+      response.score.should.eql(expected.score);
     });
 
 
@@ -106,7 +107,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.should.eql(expected);
+      response.correctness.should.eql(expected.correctness);
+      response.feedback.should.eql(expected.feedback);
+      response.score.should.eql(expected.score);
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
@@ -131,7 +134,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.should.eql(expected);
+      response.correctness.should.eql(expected.correctness);
+      response.feedback.should.eql(expected.feedback);
+      response.score.should.eql(expected.score);
     });
 
 
@@ -149,7 +154,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.should.eql(expected);
+      response.correctness.should.eql(expected.correctness);
+      response.feedback.should.eql(expected.feedback);
+      response.score.should.eql(expected.score);
     });
 
 
@@ -172,7 +179,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.should.eql(expected);
+      response.correctness.should.eql(expected.correctness);
+      response.feedback.should.eql(expected.feedback);
+      response.score.should.eql(expected.score);
     });
 
   });

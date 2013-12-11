@@ -9,10 +9,20 @@ exports.isCorrect = function () {
 };
 
 exports.respond = function (model, answer, settings, targetOutcome) {
-  var response = {
-  };
-  response.feedback = model.feedback[targetOutcome.correctness];
-  response.correctness = targetOutcome.correctness;
+  var response = {};
+
+  var isCorrect = _.find(model.feedback.correct, function(v,k) {
+     return k == targetOutcome.studentResponse;
+  });
+
+  if (isCorrect) {
+    response.feedback = model.feedback.correct[targetOutcome.studentResponse];
+  } else {
+    response.feedback = model.feedback.incorrect[targetOutcome.studentResponse] || model.feedback.incorrect["*"];
+  }
+
+  response.correctness = isCorrect ? "correct" : "incorrect";
+
   response.studentResponse = targetOutcome.studentResponse;
   return response;
 };

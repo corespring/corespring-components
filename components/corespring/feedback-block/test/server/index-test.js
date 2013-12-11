@@ -16,7 +16,9 @@ _ = require('lodash');
 component = {
   componentType: "corespring-feedback-block",
   feedback: {
-    correct: "it is correct"
+    correct: {
+      "apple": "it is correct"
+    }
   }
 };
 

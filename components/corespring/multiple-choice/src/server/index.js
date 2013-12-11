@@ -124,25 +124,28 @@ var calculateScore = function(question, answer) {
   return Math.round(rawScore * 100) / 100;
 };
 
+
+
 /*
 Create a response to the answer based on the question, the answer and the respond settings
 */
-
-
 exports.respond = function(question, answer, settings) {
 
-  var answerIsCorrect, response;
   if (question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
-  answerIsCorrect = this.isCorrect(answer, question.correctResponse.value);
 
-  response = {
+  var answerIsCorrect = this.isCorrect(answer, question.correctResponse.value);
+
+  var response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
     score: calculateScore(question, answer),
+    studentResponse: answer
   };
+
   if (settings.showFeedback) {
     response.feedback = buildFeedback(question, answer, settings, answerIsCorrect);
   }
+
   return response;
 };
