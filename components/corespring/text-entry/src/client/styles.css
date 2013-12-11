@@ -1,0 +1,7 @@
+.view-text-entry .correct {
+    border: 3px solid #008000;
+}
+
+.view-text-entry .incorrect {
+    border: 3px solid red;
+}

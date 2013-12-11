@@ -1,0 +1,28 @@
+{
+  "libraries": [
+    {
+      "name": "scoring-utils",
+      "organization": "corespring"
+    },
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope" : "editor"
+    },
+    {
+      "name": "ck-editor",
+      "organization": "corespring",
+      "scope" : "editor"
+    }
+  ],
+  "dependencies" : {
+    "client" : {
+      "mathjax" : {
+        "bower_target" : "https://github.com/mathjax/MathJax.git",
+        "file" : "MathJax.js"
+      }
+    }
+  },
+  "name": "inline-choice",
+  "organization": "corespring"
+}
