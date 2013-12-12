@@ -21,8 +21,7 @@ exports.respond = function (question, answer, settings) {
   answerIsCorrect = this.isCorrect(answer, question.correctResponse);
   response = {
     correctness:  answerIsCorrect ? "correct" : "incorrect",
-    score: answerIsCorrect ? 1 : 0,
-    studentResponse: answer
+    score: answerIsCorrect ? 1 : 0
   };
   if (settings.showFeedback) {
     response.feedback = "boo";

@@ -139,8 +139,7 @@ exports.respond = function(question, answer, settings) {
 
   var response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
-    score: calculateScore(question, answer),
-    studentResponse: answer
+    score: calculateScore(question, answer)
   };
 
   if (settings.showFeedback) {
