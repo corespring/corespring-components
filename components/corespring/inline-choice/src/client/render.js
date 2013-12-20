@@ -39,11 +39,11 @@ link = function ($sce, $timeout) {
       });
     };
 
-
     scope.answer = {
       choice: ""
     };
 
+    scope.editable = true;
 
     scope.containerBridge = {
 
@@ -115,7 +115,12 @@ link = function ($sce, $timeout) {
             callback();
           }
         }, true);
+      },
+
+      editable: function(e){
+        scope.editable = e;
       }
+
 
     };
 
@@ -137,7 +142,7 @@ main = [
       template: [ '<div class="view-inline-choice">',
         '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
         '  <div class="choices-container" >',
-        '  <select ng-disabled="sessionFinished" ng-model="answer.choice" ng-options="c.label for c in choices" class="choice-holder"></select>',
+        '  <select ng-disabled="!editable" ng-model="answer.choice" ng-options="c.label for c in choices" class="choice-holder"></select>',
         '  <div ng-show="answer.choice.feedback" class="tooltip" ng-class="{true:\'correct\', false:\'incorrect\'}[answer.choice.correct]">',
         '  <div class="tooltip-inner">',
         '    {{answer.choice.feedback}}',
