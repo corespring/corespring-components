@@ -23,17 +23,78 @@
     top: 5px;
 }
 
+.view-multiple-choice .choices-container {
+    display: table;
+}
+
 .view-multiple-choice .choices-container.tile {
     max-width: 200px;
 }
 
-.view-multiple-choice .choice-holder.horizontal{
-    float:left;
-    padding-right: 10px;
+.view-multiple-choice .choice-holder {
+    display: table-row;
+}
+
+.view-multiple-choice .choice-feedback-holder {
+    height: 30px;
+    padding-left: 40px;
+}
+
+.choice-feedback-holder .cs-feedback {
+    position: absolute;
+    border: none;
+}
+
+.incorrect .choice-letter,
+.correct .choice-letter {
+    border: 2px solid #80b312;
+    border-right: none;
+    border-radius: 6px 0px 0px 6px;
+}
+
+.incorrect .choice-currency-symbol,
+.correct .choice-currency-symbol {
+    border: 2px solid #80b312;
+    border-right: none;
+    border-left: none;
+}
+
+.incorrect .choice-label,
+.correct .choice-label {
+    border: 2px solid #80b312;
+    border-left: none;
+    border-radius: 0px 6px 6px 0px;
+}
+
+.incorrect .choice-label,
+.incorrect .choice-letter,
+.incorrect .choice-currency-symbol {
+    border-color: #F8A31A;
+}
+
+.view-multiple-choice .choice-input,
+.view-multiple-choice .choice-letter,
+.view-multiple-choice .choice-currency-symbol,
+.view-multiple-choice .choice-label {
+    display: table-cell;
+    padding: 10px;
+}
+
+.view-multiple-choice .choice-label span {
+    width: 100%;
+    display: inline-block;
+}
+
+.view-multiple-choice .rightAlign .choice-label span {
+    text-align: right;
+}
+
+.view-multiple-choice .horizontal {
+    display: table-cell;
 }
 
 .view-multiple-choice .choice-holder.tile {
-    float:left;
+    float: left;
     padding-right: 10px;
 }
 
@@ -44,13 +105,21 @@
     position: relative;
 }
 
-.view-multiple-choice .choice table{
+.view-multiple-choice .choice table {
     width: 100%;
 }
 
 .view-multiple-choice .choice-image {
     max-width: 50px;
     max-height: 50px;
+}
+
+.view-multiple-choice .cs-feedback {
+    display: table-row;
+}
+
+.view-multiple-choice .horizontal .choice-feedback-holder {
+    display: none;
 }
 
 .score-table td {

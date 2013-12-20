@@ -178,6 +178,10 @@ var main = [
         }
       };
 
+      scope.letter = function(idx) {
+        return String.fromCharCode(65 + idx);
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
@@ -187,22 +191,27 @@ var main = [
       restrict: 'EA',
       replace: true,
       link: link,
-      template: [ '<div class="view-multiple-choice">',
+      template:
+      [ '<div class="view-multiple-choice">',
         '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
         '  <div class="choices-container" ng-class="question.config.orientation">',
-        '  <div ng-repeat="o in choices" class="choice-holder" ng-class="question.config.orientation">',
-        '    <span ng-switch="inputType">',
-        '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
-        '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice"></input>',
-        '    </span>',
-        '    <label ng-switch="o.labelType">',
-        '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
-        '      <span ng-switch-when="mathml" ng-bind-html-unsafe="o.mathml"></span>',
-        '      <span ng-switch-default>{{o.label}}</span>',
-        '    </label>',
-        '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null">{{o.feedback}}</span>',
+        '  <div ng-repeat-start="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
+        '      <span class="choice-input" ng-switch="inputType">',
+        '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-model="answer.choices[o.value]"></input>',
+        '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice"></input>',
+        '      </span>',
+        '      <label class="choice-letter">{{letter($index)}}.</label>',
+        '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+        '      <label class="choice-label" ng-switch="o.labelType">',
+        '        <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}"></img>',
+        '        <span ng-switch-when="mathml" ng-bind-html-unsafe="o.mathml"></span>',
+        '        <span ng-switch-default>{{o.label}}</span>',
+        '      </label>',
+        '   </div>',
+        '   <div ng-repeat-end="" class="choice-feedback-holder" ng-show="o.feedback != null">',
+        '      <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null">{{o.feedback}}</span>',
+        '    </div>',
         '  </div>',
-        '</div>',
         '</div>'].join("\n")
     };
 
