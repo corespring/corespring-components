@@ -154,8 +154,8 @@ describe('corespring', function () {
       container.elements['1'].setResponse(response);
       rootScope.$digest();
       expect($(element).find(".cs-feedback:contains('yup')").length).toBe(1);
-      expect($(element).find(".correct").length).toBe(2);
-      expect($(element).find(".incorrect").length).toBe(1);
+      expect($(element).find(".choice-holder.correct").length).toBe(2);
+      expect($(element).find(".choice-holder.incorrect").length).toBe(1);
     });
 
   });
