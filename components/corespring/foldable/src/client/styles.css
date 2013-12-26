@@ -1,0 +1,11 @@
+.view-foldable {
+    padding: 10px;
+}
+
+.view-foldable .toggle-icon {
+    cursor: hand;
+    cursor: pointer;
+    position: relative;
+    left: -10px;
+    top: -10px;
+}
