@@ -5,10 +5,15 @@ var directive = [
       restrict: 'EA',
       transclude: true,
       template: [
-          "<div style='height: {{maxHeight}}px'>",
-          "<a ng-click='goLeft()'>Left</a>",
-          "<a ng-click='goRight()'>Right</a>",
-          "<div class='transcluded-content' ng-transclude></div></div>",
+          "<div class='view-coverflow' style='height: {{maxHeight}}px'>",
+          "<div class='coverflow-control-bar'>Question {{currentPage+1}} / {{numberOfQuestions}}",
+          "<span class='pull-right'>",
+          "<button ng-disabled='currentPage < 1' class='btn btn-primary' ng-click='goLeft()' > Previous </button>",
+          "<button ng-disabled='currentPage == numberOfQuestions-1' class='btn btn-primary' ng-click='goRight()' >Next</button>",
+          "</span>",
+          "</div>",
+          "<div class='transcluded-content' ng-transclude></div>",
+          "</div>"
         ].join(''),
       link: function (scope, element, attrs) {
         scope.currentPage = 0;
@@ -18,6 +23,8 @@ var directive = [
         $(element).find('.transcluded-content').children().each(function(idx, e) {
           scope.childElements.push(e);
         });
+
+        scope.numberOfQuestions = scope.childElements.length;
 
         scope.goLeft = function() {
           scope.currentPage = (scope.currentPage > 0) ?  scope.currentPage - 1 : 0;
@@ -33,11 +40,12 @@ var directive = [
           });
         });
 
-        $timeout(function() {
+        setInterval(function() {
           _.each(scope.childElements, function(e) {
             var h = $(e).height() + 30;
             if (h > scope.maxHeight) scope.maxHeight = h;
           });
+          scope.$apply();
         }, 101);
 
       }

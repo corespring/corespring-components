@@ -1,0 +1,11 @@
+.view-coverflow {
+    position: relative;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.view-coverflow .coverflow-control-bar {
+    height: 30px;
+    width: 100%;
+}
+
