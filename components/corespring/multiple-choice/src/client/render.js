@@ -44,15 +44,12 @@ var main = [
         }
       };
 
-      //TODO: Reset a function exposed in the bridge?
       var resetFeedback = function (choices) {
-        console.log("choices: ", choices);
         _.each(choices, function (c) {
           if (c) {
             delete c.feedback;
             delete c.correct;
           }
-          ;
         });
       };
 
