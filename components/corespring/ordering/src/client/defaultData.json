@@ -1,0 +1,31 @@
+{
+  "componentType": "corespring-ordering",
+  "title": "[Ordering Question Name]",
+  "correctResponse": {},
+  "model": {
+    "answerArea": "",
+    "choices": [
+      {
+        "content": "",
+        "id": "1"
+      },
+      {
+        "content": "",
+        "id": "2"
+      },
+      {
+        "content": "",
+        "id": "3"
+      },
+      {
+        "content": "",
+        "id": "4"
+      }
+    ],
+    "config": {
+      "shuffle": true
+    },
+    "prompt": "Enter a prompt for the student, e.g. 'Drag the answers into the correct order.'"
+  },
+  "weight": 1
+}

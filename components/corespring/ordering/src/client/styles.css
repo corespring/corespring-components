@@ -1,0 +1,22 @@
+.view-ordering {
+}
+
+.view-ordering li {
+    list-style: none;
+    margin-top: 5px;
+}
+
+.view-ordering .choice {
+    background: #efefef;
+    border-radius: 6px;
+    display: inline-block;
+    padding: 10px;
+}
+
+.view-ordering .choice.correct {
+    border: 3px solid #008000;
+}
+
+.view-ordering .choice.incorrect {
+    border: 3px solid #ff0000;
+}
