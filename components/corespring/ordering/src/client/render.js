@@ -40,14 +40,14 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       }
     };
 
+    scope.editable = true;
+
     scope.containerBridge = {
       setDataAndSession: function (dataAndSession) {
         $log.debug("Ordering setting session: ", dataAndSession);
 
         scope.model = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
-
-        scope.editable = true;
 
         updateUi();
       },
@@ -103,7 +103,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     restrict: 'AE',
     template: [
       "<div class='view-ordering'>",
-      '<ul ui-sortable="" ng-model="model.choices">',
+      '<ul ui-sortable="{disabled: !editable}" ng-model="choices">',
       '<li ng-repeat="choice in choices">',
       '<div class="choice" ng-class="{true:\'correct\', false:\'incorrect\'}[feedback[choice.value].correct]">{{choice.label}} </div>',
       '</li>',
