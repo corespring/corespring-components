@@ -1,8 +1,15 @@
 .view-ordering {
 }
 
+.view-ordering ul {
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
 .view-ordering li {
     list-style: none;
+    padding-left: 0px;
+    margin-left: 0px;
     margin-top: 5px;
 }
 
@@ -14,9 +21,9 @@
 }
 
 .view-ordering .choice.correct {
-    border: 3px solid #008000;
+    border: 2px solid #80b312;
 }
 
 .view-ordering .choice.incorrect {
-    border: 3px solid #ff0000;
+    border: 2px solid #F8A31A;
 }
