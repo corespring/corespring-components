@@ -18,6 +18,8 @@
     border-radius: 6px;
     display: inline-block;
     padding: 10px;
+    cursor: pointer;
+    cursor: hand;
 }
 
 .view-ordering .choice.correct {
