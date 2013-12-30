@@ -50,6 +50,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
         scope.session = dataAndSession.session || {};
 
         updateUi();
+        scope.originalChoices = _.cloneDeep(scope.choices);
       },
 
       getSession: function () {
@@ -74,7 +75,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       },
 
       reset: function () {
-        scope.resetChoices(scope.rawModel);
+        scope.resetChoices();
       },
 
       isAnswerEmpty: function () {
@@ -96,6 +97,11 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
+    scope.resetChoices = function() {
+      scope.choices = _.cloneDeep(scope.originalChoices);
+
+    };
+
   };
 
   return {
@@ -112,6 +118,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     ].join("")
   };
 }];
+
 exports.directives = [
   { directive: main }
 ];
