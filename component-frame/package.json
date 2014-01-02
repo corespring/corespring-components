@@ -1,0 +1,18 @@
+{
+  "libraries": [
+    {
+      "name": "scoring-utils",
+      "organization": "corespring"
+    }
+  ],
+  "dependencies" : {
+    "client" : {
+      "mathjax" : {
+        "bower_target" : "https://github.com/mathjax/MathJax.git",
+        "file" : "MathJax.js"
+      }
+    }
+  },
+  "name": "NAME GOES HERE eg. inline-choice",
+  "organization": "corespring"
+}
