@@ -1,17 +1,22 @@
 var _ = require('lodash');
 
 var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
-var sentenceRegexp = /()(\|*[A-Z].+?)([.?!])/g;
+var sentenceRegexp = /()(\|*[A-Z](?:.|\n)+?)([.?!])/g;
+
+exports.preprocessText = function(text) {
+  var nameRegexp = /([A-Z][a-z]+ [A-Z])\.( [A-Z][a-z]+)/g;
+  var result = text.replace(nameRegexp, "$1&#46;$2");
+  return result;
+};
 
 exports.tokenizeText = function (text, selectionUnit) {
   var tokens = [];
 
   var regexp = selectionUnit == "sentence" ? sentenceRegexp : wordRegexp;
   var match;
-  while (match = regexp.exec(text)) {
+  while (match = regexp.exec(exports.preprocessText(text))) {
     tokens.push(match[2]);
   }
-  console.log("tok: "+ tokens);
   return tokens;
 };
 
@@ -47,13 +52,9 @@ var buildFeedback = function(answer, correctIndexes) {
 };
 
 exports.respond = function (question, answer, settings) {
-  console.log("Responding");
-  console.log(JSON.stringify(question.model.text));
-
-  var text = question.model.text;
+  var text = exports.preprocessText(question.model.text);
   var correctIndexes = buildCorrectIndexesArray(text, question.model.config.selectionUnit);
-  var tokens = exports.tokenizeText(text, question.model.config.selectionUnit);
-  console.log(tokens);
+
   var isCorrect = _.isEqual(answer, correctIndexes);
 
   var res = {

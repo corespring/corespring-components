@@ -1,18 +1,19 @@
-var assert, component, server, settings, should, _;
+var server = require('../../src/server');
+var should = require('should');
+var _ = require('lodash');
 
-server = require('../../src/server');
-
-assert = require('assert');
-
-should = require('should');
-
-_ = require('lodash');
-
-component = {
-  componentType: "corespring-select-text"
+var component = {
+  "componentType" : "corespring-select-text",
+  "model" : {
+    "prompt": "Select the fruits from the text",
+    "config": {
+      "selectionUnit": "word"
+    },
+    "text": "I ate some |banana and carrot and cheese and |apple"
+  }
 };
 
-settings = function (feedback, userResponse, correctResponse) {
+var settings = function (feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
   userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
@@ -24,7 +25,7 @@ settings = function (feedback, userResponse, correctResponse) {
   };
 };
 
-describe('tokenizer logic', function () {
+describe('select text tokenizer logic', function () {
 
   // words
   it('should tokenize words from a simple sentence (happy path)', function () {
@@ -57,6 +58,12 @@ describe('tokenizer logic', function () {
     tokens.should.eql(["I","went","to","the&acute;","pool","and","ate","a","sandwich"]);
   });
 
+  it('should handle newlines', function () {
+    var text = "I went to the pool\n and ate a sandwich.";
+    var tokens = server.tokenizeText(text, "word");
+    tokens.should.eql(["I","went","to","the","pool","and","ate","a","sandwich"]);
+  });
+
   // sentences
   it('should tokenize sentences from a simple sentence (happy path)', function () {
     var text = "I was hungry. I went to the pool and ate a sandwich. Then that's all.";
@@ -76,7 +83,54 @@ describe('tokenizer logic', function () {
     tokens.should.eql(["I talked to Mr Brown","I said hello"]);
   });
 
+  it('should not consider names as new sentences', function () {
+    var text = "I talked to Victor S. Brown. I said hello.";
+    var tokens = server.tokenizeText(text, "sentence");
+    tokens.should.eql(["I talked to Victor S&#46; Brown","I said hello"]);
+  });
+
+  it('should handle newlines', function () {
+    var text = "I was hungry.\n I went to \nthe pool and ate a sandwich. Then that's all.";
+    var tokens = server.tokenizeText(text, "sentence");
+    tokens.should.eql(["I was hungry","I went to \nthe pool and ate a sandwich","Then that's all"]);
+  });
+
+
 });
 
-describe('server logic', function () {
+describe('select text server logic', function () {
+  it('should respond with correct true in answer is correct', function() {
+    var response = server.respond(_.cloneDeep(component), ['3','9'], settings(true, true, true));
+    response.correctness.should.eql('correct');
+    response.score.should.eql(1);
+  });
+
+  it('should respond with incorrect in answer is correct', function() {
+    var response = server.respond(_.cloneDeep(component), ['1','2'], settings(false, true, true));
+    response.correctness.should.eql('incorrect');
+    response.score.should.eql(0);
+  });
+
+  it('should have incorrect selections in the feedback', function() {
+    var response = server.respond(_.cloneDeep(component), ['1','2'], settings(true, true, true));
+    response.feedback['1'].should.eql({correct: false});
+    response.feedback['2'].should.eql({correct: false});
+  });
+
+  it('should have correct selections in the feedback', function() {
+    var response = server.respond(_.cloneDeep(component), ['1','9'], settings(true, true, true));
+    response.feedback['1'].should.eql({correct: false});
+    response.feedback['9'].should.eql({correct: true});
+  });
+
+  it('should have incorrect non-selections in the feedback', function() {
+    var response = server.respond(_.cloneDeep(component), ['1','2'], settings(true, true, true));
+    response.feedback['3'].should.eql({wouldBeCorrect: true});
+    response.feedback['9'].should.eql({wouldBeCorrect: true});
+  });
+
+  it('should not have feedback is show feedback is false', function() {
+    var response = server.respond(_.cloneDeep(component), ['1','2'], settings(false, true, true));
+    response.should.not.have.property('feedback');
+  });
 });

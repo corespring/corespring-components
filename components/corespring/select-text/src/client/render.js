@@ -1,10 +1,11 @@
+var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
+var sentenceRegexp = /()(\|*[A-Z](?:.|\n)+?)([.?!])/g;
+
 var link = function () {
   return function (scope, element, attrs) {
 
     scope.editable = true;
 
-    var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
-    var sentenceRegexp = /()(\|*[A-Z].+?)([.?!])/g;
 
     var tokenize = function (inputText, regexp) {
 
