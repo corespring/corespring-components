@@ -8,7 +8,7 @@
 }
 
 .view-select-text.enabled .selected.token:hover,
-.view-select-text.enabled .selected {
+.view-select-text .selected {
     background-color: rgb(255,241,00);
 }
 

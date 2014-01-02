@@ -8,9 +8,8 @@ var link = function () {
 
 
     var tokenize = function (inputText, regexp) {
-
       var idx = 0;
-      var s = inputText.replace(regexp, function (match, prefix, token, delimiter) {
+      var wrappedToken = inputText.replace(regexp, function (match, prefix, token, delimiter) {
         var cs = "";
         var prefixTags = "";
         var correctTokenMatch = token.match(/[|](.*)/);
@@ -18,31 +17,40 @@ var link = function () {
           token = correctTokenMatch[1];
           cs = 'correct="true"';
         }
-        return prefix+"<span class='token' " + cs + "id='" + (idx++) + "'>" + prefixTags + token + "</span>" + delimiter;
+        return prefix + "<span class='token' " + cs + "id='" + (idx++) + "'>" + prefixTags + token + "</span>" + delimiter;
       });
-      console.log(s);
-      return s;
+      return wrappedToken;
     };
 
-    scope.updateSelection = function () {
-      var selection = [];
+    scope.highlightSelection = function (selection) {
       $(element).find('.token').each(function () {
-        if ($(this).hasClass('selected')) selection.push($(this).attr('id'));
+        if (_.contains(selection, $(this).attr('id')))
+          $(this).addClass('selected');
+        else
+          $(this).removeClass('selected');
       });
+
       scope.selectedTokens = selection;
     };
 
+    scope.$watch('selectedTokens', function (value) {
+      console.log('selecting ', value);
+      scope.highlightSelection(scope.selectedTokens || []);
+    });
+
     scope.$watch('text', function () {
-      setTimeout(function () {
-        if (scope.editable) {
-          $(element).find('.token').each(function (idx, elem) {
-            $(elem).click(function () {
-              $(this).toggleClass('selected');
-              scope.updateSelection();
-            });
-          });
-        }
-      }, 100);
+      var contentElement = $(element).find('.select-text-content');
+      contentElement.html(scope.text);
+      contentElement.find('.token').each(function (idx, elem) {
+        $(elem).click(function () {
+          if (scope.editable) {
+            scope.selectedTokens = _.xor(scope.selectedTokens, [$(this).attr('id')]);
+            scope.$apply();
+          }
+        });
+      });
+
+      scope.highlightSelection(scope.selectedTokens);
     });
 
     scope.containerBridge = {
@@ -51,6 +59,9 @@ var link = function () {
         console.log("Setting data for Select Text: ", dataAndSession);
         scope.model = dataAndSession.data.model;
         scope.text = tokenize(scope.model.text, scope.model.config.selectionUnit == "sentence" ? sentenceRegexp : wordRegexp);
+        if (dataAndSession.session) {
+          scope.selectedTokens = _.cloneDeep(dataAndSession.session.answers);
+        }
       },
 
       getSession: function () {
@@ -63,7 +74,7 @@ var link = function () {
         console.log("Setting response", response);
         $(element).find('.token').each(function (idx, elem) {
           var id = $(elem).attr('id');
-          var feedback = response.feedback[id] || {};
+          var feedback = (response && response.feedback[id]) || {};
           if (feedback.correct == false) $(elem).addClass('incorrect');
           if (feedback.correct == true) $(elem).addClass('correct');
           if (feedback.wouldBeCorrect == true) $(elem).addClass('incorrectlyNotSelected');
@@ -102,7 +113,8 @@ main = [
       link: link(),
       template: ['<div class="view-select-text" ng-class="{true: \'enabled\', false: \'\'}[editable]">',
         '<h1>{{model.prompt}}</h1>',
-        '<div ng-bind-html-unsafe="text"></div>',
+        '<div>{{selectedTokens}}</div>',
+        '<div class="select-text-content"></div>',
         '</div>'].join("")
     };
 
