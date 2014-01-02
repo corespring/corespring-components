@@ -1,0 +1,37 @@
+.view-select-text {
+}
+
+.view-select-text.enabled .token:hover {
+    background-color: rgb(255, 255, 192);
+    background-color: rgba(255, 255, 192, 0.4);
+    cursor: hand; cursor: pointer;
+}
+
+.view-select-text.enabled .selected.token:hover,
+.view-select-text.enabled .selected {
+    background-color: rgb(255,241,00);
+}
+
+.view-select-text .token.incorrect {
+    background-color: #F8A31A;
+    border:none;
+    line-height:24px;
+    margin:0 2px 0 2px;
+    padding: 3px 4px;
+}
+
+.view-select-text .token.incorrectlyNotSelected {
+    border: 2px solid #80B312;
+    line-height:24px;
+    margin:0 2px 0 2px;
+    padding:1px 2px;
+}
+
+.view-select-text .token.correct {
+    background-color: #80B312;
+    border: none;
+    color:#fff;
+    line-height:24px;
+    margin:0 2px 0 2px;
+    padding: 3px 4px;
+}
