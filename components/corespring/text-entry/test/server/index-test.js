@@ -86,6 +86,9 @@ describe('text entry server logic', function() {
       correctness: "incorrect",
       score: 0
     };
+    response.correctness.should.eql(expected.correctness);
+    response.score.should.eql(expected.score);
+
   });
 
 });

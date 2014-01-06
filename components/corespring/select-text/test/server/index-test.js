@@ -133,4 +133,13 @@ describe('select text server logic', function () {
     var response = server.respond(_.cloneDeep(component), ['1','2'], settings(false, true, true));
     response.should.not.have.property('feedback');
   });
+
+  it('should have the tagged text in the model at the render phase', function() {
+    var response = server.render(component);
+    response.should.have.property('wrappedText');
+
+    var wt = response.wrappedText;
+    wt.should.match(/span class=.token. id=.0.*?<\/span>/);
+  });
 });
+

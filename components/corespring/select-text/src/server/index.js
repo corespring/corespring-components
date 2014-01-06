@@ -20,6 +20,22 @@ exports.tokenizeText = function (text, selectionUnit) {
   return tokens;
 };
 
+exports.wrapTokensWithHtml = function (text, selectionUnit) {
+  var regexp = selectionUnit == "sentence" ? sentenceRegexp : wordRegexp;
+  var idx = 0;
+  var wrappedToken = text.replace(regexp, function (match, prefix, token, delimiter) {
+    var cs = "";
+    var prefixTags = "";
+    var correctTokenMatch = token.match(/[|](.*)/);
+    if (correctTokenMatch) {
+      token = correctTokenMatch[1];
+      cs = 'correct="true"';
+    }
+    return prefix + "<span class='token' " + cs + "id='" + (idx++) + "'>" + prefixTags + token + "</span>" + delimiter;
+  });
+  return wrappedToken;
+};
+
 var buildCorrectIndexesArray = function (text, selectionUnit) {
   var correctIndexes = [];
 
@@ -50,6 +66,11 @@ var buildFeedback = function(answer, correctIndexes) {
   });
   return feedback;
 };
+
+exports.render = function(json) {
+  json.wrappedText = exports.wrapTokensWithHtml(json.model.text, json.model.config.selectionUnit)
+  return json;
+}
 
 exports.respond = function (question, answer, settings) {
   var text = exports.preprocessText(question.model.text);

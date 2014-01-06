@@ -1,26 +1,7 @@
-var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
-var sentenceRegexp = /()(\|*[A-Z](?:.|\n)+?)([.?!])/g;
-
 var link = function () {
   return function (scope, element, attrs) {
 
     scope.editable = true;
-
-
-    var tokenize = function (inputText, regexp) {
-      var idx = 0;
-      var wrappedToken = inputText.replace(regexp, function (match, prefix, token, delimiter) {
-        var cs = "";
-        var prefixTags = "";
-        var correctTokenMatch = token.match(/[|](.*)/);
-        if (correctTokenMatch) {
-          token = correctTokenMatch[1];
-          cs = 'correct="true"';
-        }
-        return prefix + "<span class='token' " + cs + "id='" + (idx++) + "'>" + prefixTags + token + "</span>" + delimiter;
-      });
-      return wrappedToken;
-    };
 
     scope.highlightSelection = function (selection) {
       $(element).find('.token').each(function () {
@@ -58,7 +39,7 @@ var link = function () {
       setDataAndSession: function (dataAndSession) {
         console.log("Setting data for Select Text: ", dataAndSession);
         scope.model = dataAndSession.data.model;
-        scope.text = tokenize(scope.model.text, scope.model.config.selectionUnit == "sentence" ? sentenceRegexp : wordRegexp);
+        scope.text = dataAndSession.data.wrappedText;
         if (dataAndSession.session) {
           scope.selectedTokens = _.cloneDeep(dataAndSession.session.answers);
         }
