@@ -120,3 +120,8 @@
     float: right;
     margin-right: 20px;
 }
+
+
+.modal {
+    display: block;
+}
