@@ -387,6 +387,42 @@ var main = ['$compile',
           showLabels: attrs.showLabels ? attrs.showLabels : "true"
         };
         return function (scope, element, attrs, AssessmentItemController) {
+
+          scope.containerBridge = {
+
+            setDataAndSession: function (dataAndSession) {
+              console.log("Setting Session for Point", dataAndSession);
+              var config = dataAndSession.data.model.config;
+
+              scope.additionalText = config.additionalText;
+            },
+
+            getSession: function () {
+            },
+
+            setResponse: function (response) {
+            },
+
+            setMode : function(newMode) {
+            },
+
+            reset : function(){
+            },
+
+            isAnswerEmpty: function(){
+            },
+
+            answerChangedHandler: function(callback){
+            },
+
+            editable: function (e) {
+            }
+
+          };
+
+          scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+
+
           var containerWidth, containerHeight;
           var graphContainer = element.find('.graph-container')
           if (attrs.graphWidth && attrs.graphHeight) {
@@ -398,14 +434,11 @@ var main = ['$compile',
           graphContainer.attr(graphAttrs);
           graphContainer.css({width: containerWidth, height: containerHeight});
           $compile(graphContainer)(scope);
-          scope.additionalText = attrs.additionalText;
           scope.scale = graphAttrs.scale;
           scope.domain = graphAttrs.domain;
           scope.range = graphAttrs.range;
           scope.sigfigs = parseInt(attrs.sigfigs ? attrs.sigfigs : -1);
           scope.responseIdentifier = attrs.responseidentifier;
-          scope.controller = AssessmentItemController;
-          if (scope.controller) scope.controller.registerInteraction(element.attr('responseIdentifier'), "line graph", "graph");
           scope.locked = attrs.hasOwnProperty('locked') ? true : false;
           if (!scope.locked && scope.controller) {
             scope.controller.setResponse(scope.responseIdentifier, null);
