@@ -1,5 +1,14 @@
 {
   "name": "scoring-utils",
   "organization": "corespring",
-  "purpose" : "library"
+  "purpose" : "library",
+  "dependencies": {
+    "client": {
+      "jsxgraph": {
+        "bower_target": "https://github.com/jsxgraph/jsxgraph.git",
+        "file": "distrib/jsxgraphcore.js"
+
+      }
+    }
+  }
 }

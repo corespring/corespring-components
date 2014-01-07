@@ -9,16 +9,11 @@
       "organization": "corespring"
     }
   ],
-  "dependencies" : {
-    "client" : {
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js"
-      },
-      "jsxgraph": {
-        "bower_target" : "https://github.com/jsxgraph/jsxgraph.git",
-        "file" : "distrib/jsxgraphcore.js"
-
+  "dependencies": {
+    "client": {
+      "mathjax": {
+        "bower_target": "https://github.com/mathjax/MathJax.git",
+        "file": "MathJax.js"
       }
     }
   },
