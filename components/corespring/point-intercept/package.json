@@ -1,0 +1,27 @@
+{
+  "libraries": [
+    {
+      "name": "scoring-utils",
+      "organization": "corespring"
+    },
+    {
+      "name": "canvas",
+      "organization": "corespring"
+    }
+  ],
+  "dependencies" : {
+    "client" : {
+      "mathjax" : {
+        "bower_target" : "https://github.com/mathjax/MathJax.git",
+        "file" : "MathJax.js"
+      },
+      "jsxgraph": {
+        "bower_target" : "https://github.com/jsxgraph/jsxgraph.git",
+        "file" : "distrib/jsxgraphcore.js"
+
+      }
+    }
+  },
+  "name": "point-intercept",
+  "organization": "corespring"
+}
