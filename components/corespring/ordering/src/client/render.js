@@ -36,7 +36,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
         stash.shuffledOrder = stashOrder(scope.choices);
         scope.$emit('saveStash', attrs.id, stash);
       } else {
-        scope.choices = _.cloneDeep(scope.question.choices);
+        scope.choices = _.cloneDeep(scope.model.choices);
       }
     };
 
@@ -107,6 +107,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
   return {
     link: link,
     restrict: 'AE',
+    scope: {},
     template: [
       "<div class='view-ordering'>",
       '<ul ui-sortable="{disabled: !editable}" ng-model="choices">',

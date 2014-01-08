@@ -1,0 +1,40 @@
+{
+  "item": {
+    "xhtml": "<corespring-ordering id=\"RESPONSE\"></corespring-ordering>",
+    "components": {
+      "RESPONSE": {
+        "componentType": "corespring-ordering",
+        "correctResponses": [
+          "ChoiceB",
+          "ChoiceD",
+          "ChoiceA",
+          "ChoiceC"
+        ],
+        "model": {
+          "prompt": "Arrange these lengths from shortest to longest.",
+          "config": {
+            "shuffle": false
+          },
+          "choices": [
+            {
+              "label": "5.46",
+              "value": "ChoiceA"
+            },
+            {
+              "label": "5.089",
+              "value": "ChoiceB"
+            },
+            {
+              "label": "5.6",
+              "value": "ChoiceC"
+            },
+            {
+              "label": "5.17",
+              "value": "ChoiceD"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
