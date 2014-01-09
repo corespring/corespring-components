@@ -3,7 +3,7 @@
     "metadata": {
       "title": ""
     },
-    "xhtml": "<corespring-drag-and-drop id=\"seedlings\"/>",
+    "xhtml": "<corespring-drag-and-drop id='seedlings'/>",
     "components": {
       "seedlings": {
         "componentType": "corespring-drag-and-drop",
@@ -22,19 +22,19 @@
           "choices": [
             {
               "id": "Pot A",
-              "content": "<img src=\"Pot A.png\" />"
+              "content": "Pot A"
             },
             {
               "id": "Pot B",
-              "content": "<img src=\"Pot B.png\" />"
+              "content": "Pot B"
             },
             {
               "id": "Pot C",
-              "content": "<img src=\"Pot C.png\" />"
+              "content": "Pot C"
             }
           ],
           "prompt": "",
-          "answerArea": "<landingPlaceGroup itemsPerRow=\"3\" >\n                    <span cardinality=\"single\" identifier=\"Raul\" label=\"Raul\" landing-place=\"landing-place\"/>\n                    <span cardinality=\"single\" identifier=\"Pablo\" label=\"Pablo\" landing-place=\"landing-place\"/>\n                    <span cardinality=\"single\" identifier=\"Celina\" label=\"Celina\" landing-place=\"landing-place\"/>\n                </landingPlaceGroup>\n            ",
+          "answerArea": "<landingPlaceGroup itemsPerRow='3'><span cardinality='single' identifier='Celina' label='Celina' landing-place='landing-place'/></landingPlaceGroup>",
           "config": {
             "shuffle": true,
             "expandHorizontal": false
