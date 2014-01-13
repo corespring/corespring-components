@@ -5,10 +5,6 @@
   "version": "0.0.1",
   "dependencies": {
     "client": {
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js"
-      },
       "angular-ui-sortable": {
         "bower_target" : "https://github.com/angular-ui/ui-sortable/archive/angular1.2.zip",
         "file" : "src/sortable.js",

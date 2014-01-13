@@ -3,10 +3,6 @@
   ],
   "dependencies" : {
     "client" : {
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js"
-      }
     }
   },
   "name": "feedback-block",

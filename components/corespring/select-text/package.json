@@ -5,14 +5,6 @@
       "organization": "corespring"
     }
   ],
-  "dependencies" : {
-    "client" : {
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js"
-      }
-    }
-  },
   "name": "select-text",
   "organization": "corespring"
 }

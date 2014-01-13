@@ -10,10 +10,6 @@
         "file" : "src/angular-dragdrop.js",
         "angular-module" : "ngDragDrop"
       },
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js"
-      },
       "angular-bootstrap": {
         "version" : "latest",
         "file" : "ui-bootstrap-tpls.min.js",

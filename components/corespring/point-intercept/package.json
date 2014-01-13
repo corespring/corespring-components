@@ -11,10 +11,6 @@
   ],
   "dependencies": {
     "client": {
-      "mathjax": {
-        "bower_target": "https://github.com/mathjax/MathJax.git",
-        "file": "MathJax.js"
-      },
       "angular-bootstrap": {
         "version": "latest",
         "file": "ui-bootstrap-tpls.min.js",
