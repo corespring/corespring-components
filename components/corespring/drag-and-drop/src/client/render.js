@@ -88,10 +88,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
           };
         },
         template: [
-            '<div class="modal">',
-            ' <div class="modal-dialog">',
-            '   <div class="modal-content">',
-            '     <div class="modal-header">',
+            '   <div class="modal-header">',
             '     <h3>Answer</h3>',
             '   </div>',
             '   <div class="modal-body">',
@@ -100,8 +97,6 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
             '   <div class="modal-footer">',
             '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
             '   </div>',
-            ' </div>',
-            '</div>'
           ].join(""),
         backdrop: true,
         scope: scope.solutionScope
@@ -285,6 +280,7 @@ var landingPlace = [function () {
       scope.id = attrs['id'];
       scope.cardinality = attrs['cardinality'] || 'single';
       scope.landingPlaceChoices[scope.id] = scope.landingPlaceChoices[scope.id] || [];
+      scope.label = attrs['label'] || "";
 
       var nonEmptyElement = function (c) {
         return c && c.id;
@@ -387,6 +383,7 @@ var landingPlace = [function () {
     template: [
       '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
       '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="{{style}}" >',
+      '    <div class="label-holder"><div class="label">{{label}}</div>&nbsp;</div>',
       '    <div',
       '      ui-sortable="sortableOptions" ',
       '      ng-model="landingPlaceChoices[id]"',

@@ -17,11 +17,30 @@
 .landing-place {
     min-width: 100px;
     min-height: 30px;
-    background-color: #f7f6e1;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 3px 3px 3px 3px;
+    border: 1px solid #999;
+    margin: 5px;
+    position: relative;
 }
 
 .landing-place.inline {
     display: inline-block;
+}
+
+.landing-place .label-holder {
+    position: relative;
+    top: -10px;
+    width: 100%;
+    text-align: center;
+}
+
+.landing-place .label {
+    padding-left: 3px;
+    padding-right: 3px;
+    background-color: #fff;
+    color: #000;
 }
 
 .correct {
