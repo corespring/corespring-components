@@ -306,10 +306,15 @@ var landingPlace = [function () {
       scope.revertFunction = function (isValid) {
         if (isValid) return false;
         scope.$apply(function () {
-          var choice = _.find(scope.landingPlaceChoices[scope.id], function (c) {
+          var choiceInLandingPlace = _.find(scope.landingPlaceChoices[scope.id], function (c) {
             return c.id == scope.dragging.id;
           });
-          scope.model.choices.push(choice);
+          var choiceInChoiceArea = _.find(scope.model.choices, function(c) {
+            return c.id == scope.dragging.id;
+          });
+          if (!choiceInChoiceArea) {
+            scope.model.choices.push(choiceInLandingPlace);
+          }
           scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function (e) {
             return e.id != scope.dragging.id;
           });
