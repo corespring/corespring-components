@@ -1,5 +1,5 @@
-var main = ['$compile', '$modal',
-  function ($compile, $modal) {
+var main = ['$compile', '$modal', '$rootScope',
+  function ($compile, $modal, $rootScope) {
     return {
       template: [
         "<div class='graph-interaction'>",
@@ -12,7 +12,7 @@ var main = ['$compile', '$modal',
         "       <button type='button' class='btn btn-default btn-start-over' ng-click='startOver()'>Start Over</button>",
         "   </div>",
         "   <div class='graph-container'></div>",
-        "   <div style='padding-top: 20px'><a ng-click='seeSolution()'>See correct answer</a></div>",
+        "   <div ng-show='correctResponse' style='padding-top: 20px'><a href='#' ng-click='seeSolution()' class='pull-right'>See correct answer</a></div>",
         "   <div id='initialParams' ng-transclude></div>",
         "</div>"].join("\n"),
       restrict: 'AE',
@@ -81,7 +81,6 @@ var main = ['$compile', '$modal',
               return newCoord.x + "," + newCoord.y;
             });
             $scope.graphCallback({graphStyle: {}});
-            console.log("Response is: ", $scope.pointResponse);
           } else {
             $scope.pointResponse = null;
           }
@@ -113,47 +112,6 @@ var main = ['$compile', '$modal',
           return response;
         };
 
-        $scope.$on("formSubmitted", function () {
-          if (!$scope.locked) {
-            $scope.submissions++;
-            var response = $scope.renewResponse();
-            if ($scope.itemSession.settings.highlightUserResponse) {
-              if (response && response.outcome.isCorrect) {
-                $scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, pointsStyle: "green"})
-              } else {
-                $scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, pointsStyle: "red"})
-              }
-            }
-            var maxAttempts = $scope.itemSession.settings.maxNoOfAttempts ? $scope.itemSession.settings.maxNoOfAttempts : 1
-            if ($scope.submissions >= maxAttempts) {
-              lockGraph();
-            } else if (maxAttempts == 0 && response && response.outcome.isCorrect) {
-              lockGraph();
-            }
-            if ($scope.itemSession.settings.highlightCorrectResponse) {
-              var correctResponse = _.find($scope.itemSession.sessionData.correctResponses, function (cr) {
-                return cr.id == $scope.responseIdentifier;
-              });
-              if (correctResponse && correctResponse.value && !response.outcome.isCorrect) {
-                var startElem = [
-                  "<corespring-point-intercept responseIdentifier=" + $scope.responseIdentifier,
-                  "point-labels=" + $scope.pointLabels,
-                  "max-points=" + $scope.maxPoints,
-                  "locked=''",
-                  "graph-width=300",
-                  "graph-height=300",
-                  ">"
-                ]
-                var body = _.map(correctResponse.value, function (value) {
-                  return "<graphpoint color='green'>" + value + "</graphpoint>"
-                })
-                var endElem = ["</corespring-point-intercept>"]
-                $scope.correctAnswerBody = _.flatten([startElem, body, endElem]).join("\n");
-              }
-            }
-          }
-        });
-
         $scope.undo = function () {
           if (!$scope.locked) {
             var pointsArray = _.map($scope.points, function (point, ptName) {
@@ -180,7 +138,40 @@ var main = ['$compile', '$modal',
 
       link: function (scope, element, attrs) {
 
+        var createGraphAttributes = function(config) {
+          return {
+            "jsx-graph": "",
+            "graph-callback": "graphCallback",
+            "interaction-callback": "interactionCallback",
+            domain: parseInt(config.domain ? config.domain : 10),
+            range: parseInt(config.range ? config.range : 10),
+            scale: parseFloat(config.scale ? config.scale : 1),
+            domainLabel: config.domainLabel,
+            rangeLabel: config.rangeLabel,
+            tickLabelFrequency: config.tickLabelFrequency,
+            pointLabels: config.pointLabels,
+            maxPoints: config.maxPoints,
+            showLabels: config.showLabels ? config.showLabels : "true"
+          }
+        };
+
+        if (attrs.solutionView) {
+          var containerWidth, containerHeight;
+          var graphContainer = element.find('.graph-container');
+          containerHeight = containerWidth = graphContainer.width();
+
+          var graphAttrs = createGraphAttributes(scope.config);
+          graphContainer.attr(graphAttrs);
+          graphContainer.css({width: containerWidth, height: containerHeight});
+
+          $compile(graphContainer)(scope);
+        }
+
         scope.seeSolution = function () {
+          scope.solutionScope = $rootScope.$new();
+          scope.solutionScope.answers = scope.correctResponse;
+          scope.solutionScope.config = scope.config;
+
           $modal.open({
             controller: function ($scope, $modalInstance) {
               $scope.ok = function () {
@@ -188,11 +179,11 @@ var main = ['$compile', '$modal',
               };
             },
             template: [
-              '     <div class="modal-header">',
+              '   <div class="modal-header">',
               '     <h3>Answer</h3>',
               '   </div>',
               '   <div class="modal-body">',
-              '     <corespring-point-intercept id="solution"></corespring-point-intercept>',
+              '     <corespring-point-intercept solution-view="true" id="solution"></corespring-point-intercept>',
               '   </div>',
               '   <div class="modal-footer">',
               '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
@@ -209,6 +200,7 @@ var main = ['$compile', '$modal',
           setDataAndSession: function (dataAndSession) {
             console.log("Setting Session for Point", dataAndSession);
             var config = dataAndSession.data.model.config;
+            scope.config = config;
 
             scope.additionalText = config.additionalText;
             scope.scale = config.scale;
@@ -216,10 +208,6 @@ var main = ['$compile', '$modal',
             scope.range = config.range;
             scope.sigfigs = parseInt(config.sigfigs ? config.sigfigs : -1);
             scope.locked = config.hasOwnProperty('locked') ? true : false;
-//              if (!scope.locked) {
-//                element.find(".graph-interaction").append("<correctanswer class='correct-answer' correct-answer-body='correctAnswerBody' responseIdentifier={{responseIdentifier}}>See the correct answer</correctanswer>")
-//                $compile(element.find("correctanswer"))(scope)
-//              }
             scope.domainLabel = config.domainLabel
             scope.rangeLabel = config.rangeLabel
             scope.tickLabelFrequency = config.tickLabelFrequency
@@ -237,20 +225,7 @@ var main = ['$compile', '$modal',
               containerHeight = containerWidth = graphContainer.width()
             }
 
-            var graphAttrs = {
-              "jsx-graph": "",
-              "graph-callback": "graphCallback",
-              "interaction-callback": "interactionCallback",
-              domain: parseInt(config.domain ? config.domain : 10),
-              range: parseInt(config.range ? config.range : 10),
-              scale: parseFloat(config.scale ? config.scale : 1),
-              domainLabel: config.domainLabel,
-              rangeLabel: config.rangeLabel,
-              tickLabelFrequency: config.tickLabelFrequency,
-              pointLabels: config.pointLabels,
-              maxPoints: config.maxPoints,
-              showLabels: config.showLabels ? config.showLabels : "true"
-            };
+            var graphAttrs = createGraphAttributes(config);
 
             graphContainer.attr(graphAttrs);
             graphContainer.css({width: containerWidth, height: containerHeight});
@@ -268,40 +243,21 @@ var main = ['$compile', '$modal',
           },
 
           setResponse: function (response) {
-            console.log("Setting Response for Point Interaction", response);
             if (response && response.correctness == "correct") {
               scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, pointsStyle: "green"})
             } else {
               scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, pointsStyle: "red"})
+              scope.correctResponse = response.correctResponse;
             }
 
             scope.lockGraph();
-
-            var correctResponse = response.correctResponse;
-            if (correctResponse) {
-              var startElem = [
-                "<pointInteraction ",
-                "point-labels=" + scope.pointLabels,
-                "max-points=" + scope.maxPoints,
-                "locked=''",
-                "graph-width=300",
-                "graph-height=300",
-                ">"
-              ]
-              var body = _.map(correctResponse, function (value) {
-                return "<graphpoint color='green'>" + value + "</graphpoint>"
-              })
-              var endElem = ["</pointInteraction>"]
-              scope.correctAnswerBody = _.flatten([startElem, body, endElem]).join("\n");
-              console.log("Corr Ans: ", scope.correctAnswerBody);
-            }
-
           },
 
           setMode: function (newMode) {
           },
 
           reset: function () {
+            scope.renewResponse([]);
           },
 
           isAnswerEmpty: function () {
@@ -324,45 +280,8 @@ var main = ['$compile', '$modal',
   }
 ];
 
-
-var correctanswer = ['$compile', function ($compile) {
-  return {
-    restrict: 'E',
-    template: [
-      "<div>",
-      "<a href='' ng-click='showCorrectAnswer=true' ng-show='incorrectResponse' ng-transclude></a>",
-      "<div ui-modal ng-model='showCorrectAnswer' close='showCorrectAnswer=false'>",
-      "<div class='modal-header'>",
-      "<button type='button' class='close' ng-click='showCorrectAnswer=false'>&#215;</button>",
-      "<h3 id='myModalLabel'>The Correct Answer</h3>",
-      "</div>",
-      "<div class='modal-body'></div>",
-      "<div class='modal-footer' style='text-align: left;'><a href='' ng-click='showCorrectAnswer=false'>See your answer</a></div>",
-      "</div>",
-      "</div>"
-    ].join("\n"),
-    scope: {correctAnswerBody: '='},
-    transclude: true,
-    link: function (scope, element, attrs) {
-      scope.$watch("correctAnswerBody", function () {
-        if (scope.correctAnswerBody) {
-          if (scope.correctAnswerBody === "clear") {
-            scope.incorrectResponse = false
-          } else {
-            scope.incorrectResponse = true;
-            element.find('.modal-body').html(scope.correctAnswerBody)
-            $compile(element.find('.modal-body'))(scope)
-          }
-        }
-      })
-    }
-  }
-}];
-
-
 exports.framework = 'angular';
 exports.directives = [
-  { directive: main },
-  { name: 'correctanswer', directive: correctanswer }
+  { directive: main }
 ];
 
