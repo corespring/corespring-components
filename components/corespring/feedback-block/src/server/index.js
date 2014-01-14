@@ -11,12 +11,10 @@ exports.isCorrect = function () {
 exports.respond = function (model, answer, settings, targetOutcome) {
   var response = {};
 
-  var isCorrect = _.find(model.feedback.correct, function(v,k) {
-     return k == targetOutcome.studentResponse;
-  });
+  var isCorrect = targetOutcome.correctness == "correct";
 
   if (isCorrect) {
-    response.feedback = model.feedback.correct[targetOutcome.studentResponse];
+    response.feedback = model.feedback.correct[targetOutcome.studentResponse] || model.feedback.correct["*"];
   } else {
     response.feedback = model.feedback.incorrect[targetOutcome.studentResponse] || model.feedback.incorrect["*"];
   }
