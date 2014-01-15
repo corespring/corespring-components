@@ -15,6 +15,10 @@
         "version": "~0.10.0",
         "file": "ui-bootstrap-tpls.min.js",
         "angular-module": "ui.bootstrap"
+      },
+      "mathjax" : {
+        "bower_target" : "https://github.com/mathjax/MathJax.git",
+        "file" : "MathJax.js?config=TeX-AMS-MML_HTMLorMML"
       }
     }
   },
