@@ -12,7 +12,7 @@
   "dependencies": {
     "client": {
       "angular-bootstrap": {
-        "version": "latest",
+        "version": "~0.10.0",
         "file": "ui-bootstrap-tpls.min.js",
         "angular-module": "ui.bootstrap"
       }

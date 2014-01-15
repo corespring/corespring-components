@@ -6,7 +6,7 @@
   "dependencies": {
     "client": {
       "angular-ui-sortable": {
-        "bower_target" : "https://github.com/angular-ui/ui-sortable/archive/angular1.2.zip",
+        "version" : "~0.0.1",
         "file" : "src/sortable.js",
         "angular-module" : "ui.sortable"
       }
