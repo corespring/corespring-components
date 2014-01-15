@@ -16,7 +16,7 @@
         "angular-module" : "ui.bootstrap"
       },
       "angular-ui-sortable": {
-        "version" : "~0.0.1",
+        "bower_target" : "https://github.com/angular-ui/ui-sortable/archive/angular1.2.zip",
         "file" : "src/sortable.js",
         "angular-module" : "ui.sortable"
       }
