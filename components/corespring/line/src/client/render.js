@@ -31,6 +31,7 @@ var main = ['$compile', '$modal', '$rootScope',
         "      </div>",
         "   </div>",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
+        "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See correct answer</a></div>",
         "   <div id='initialParams' ng-transclude></div>",
         "</div>"].join(""),
       restrict: 'AE',
@@ -182,15 +183,24 @@ var main = ['$compile', '$modal', '$rootScope',
           containerHeight = containerWidth = graphContainer.width();
 
           var graphAttrs = createGraphAttributes(scope.config);
+          scope.additionalText = "The equation is "+scope.answer.equation;
           graphContainer.attr(graphAttrs);
           graphContainer.css({width: containerWidth, height: containerHeight});
+          scope.locked = false;
 
           $compile(graphContainer)(scope);
+          scope.initialParams = {
+            drawShape:{
+              curve: function(x){return eval(scope.answer.expression)}
+            },
+            submission:{lockGraph: false}
+          };
+
         }
 
         scope.seeSolution = function () {
           scope.solutionScope = $rootScope.$new();
-          scope.solutionScope.answers = scope.correctResponse;
+          scope.solutionScope.answer = scope.correctResponse;
           scope.solutionScope.config = scope.config;
 
           $modal.open({
@@ -204,7 +214,7 @@ var main = ['$compile', '$modal', '$rootScope',
               '     <h3>Answer</h3>',
               '   </div>',
               '   <div class="modal-body">',
-              '     <corespring-point-intercept solution-view="true" id="solution"></corespring-point-intercept>',
+              '     <corespring-line solution-view="true" id="solution"></corespring-line>',
               '   </div>',
               '   <div class="modal-footer">',
               '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
@@ -264,6 +274,7 @@ var main = ['$compile', '$modal', '$rootScope',
           },
 
           setResponse: function (response) {
+            console.log("Setting response for line interaction", response);
             if (response && response.correctness == "correct") {
               scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, shapesStyle: "green"})
               scope.inputStyle = _.extend(scope.inputStyle, {border: 'thin solid green'})

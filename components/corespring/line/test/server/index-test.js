@@ -1,10 +1,13 @@
-var assert, component, server, settings, should, _;
+var assert, component, server, settings, should;
+
+var _ = require('lodash');
 
 var proxyquire = require('proxyquire').noCallThru();
 
 var sinon = require('sinon');
 
 var serverObj = {
+  expressionize: _.identity,
   isEquationEqual: function (e1, e2, options) {
     return e1 == e2;
   }

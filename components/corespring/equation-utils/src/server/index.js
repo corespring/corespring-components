@@ -22,6 +22,15 @@ var replaceVar = function (expression, variable) {
   }
 };
 
+exports.expressionize = function(eq, varname) {
+  if (eq.indexOf("=")) {
+    eq = eq.split("=")[1];
+  }
+  eq = trimSpaces(eq);
+  eq = replaceVar(eq, varname);
+  return eq;
+};
+
 exports.isEquationEqual = function (eq1, eq2, options) {
   console.log("IsEqual: "+eq1+" with "+eq2);
   options = options || {};
@@ -30,8 +39,8 @@ exports.isEquationEqual = function (eq1, eq2, options) {
   var sigfigs = options.sigfigs || 3;
   var numberOfTestPoints = options.numberOfTestPoints || 50;
 
-  var eq1r = replaceVar(trimSpaces(eq1.split("=")[1]), variable);
-  var eq2r = replaceVar(trimSpaces(eq2.split("=")[1]), variable);
+  var eq1r = exports.expressionize(eq1, variable);
+  var eq2r = exports.expressionize(eq2, variable);
 
   var round = function(num) {
     var multiplier = Math.pow(10, sigfigs);

@@ -19,6 +19,9 @@ exports.respond = function (question, answer, settings) {
   return {
     "correctness": isCorrect ? "correct" : "incorrect",
     "score": isCorrect ? 1 : 0,
-    "correctResponse": correctResponse
+    "correctResponse": {
+      "equation": correctResponse.equation,
+      "expression": equationUtils.expressionize(correctResponse.equation, 'x')
+    }
   };
 };
