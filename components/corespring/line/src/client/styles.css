@@ -1,14 +1,14 @@
 /* JSX */
 .jxgbox {
-    position:relative; /* for IE 7 */
-    overflow:hidden;
-    background-color:#ffffff;
-    border-style:solid;
-    border-width:1px;
-    border-color:#356AA0;
-    border-radius:10px;
+    position: relative; /* for IE 7 */
+    overflow: hidden;
+    background-color: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #356AA0;
+    border-radius: 10px;
     /*-moz-border-radius:10px;*/
-    -webkit-border-radius:10px;
+    -webkit-border-radius: 10px;
     -ms-touch-action: none;
     /*
         -moz-box-shadow:black 2px 2px 2px -2px, #151A10 4px 4px;
@@ -21,23 +21,24 @@
     font-family: Arial, Helvetica, Geneva;
     padding: 0px;
     margin: 0px;
-    /*line-height:100%;*/ /* This has to be commented out. Otherwise subscripts are not visible in IE */
+    /*line-height:100%;*/
+    /* This has to be commented out. Otherwise subscripts are not visible in IE */
     /*border-style:dotted;*/
     /*border-width:0.4px;*/
 }
 
 .JXGinfobox {
-    border-style:none;
-    border-width:1px;
-    border-color:black;
+    border-style: none;
+    border-width: 1px;
+    border-color: black;
 }
 
 .JXGimage {
-    opacity:1.0;
+    opacity: 1.0;
 }
 
 .JXGimageHighlight {
-    opacity:0.6;
+    opacity: 0.6;
     /*
     border-style:solid;
     border-width:10px;
@@ -57,7 +58,6 @@
     bottom: 5px;
 }
 
-/* Point */
 .graph-interaction {
     background-color: #CCCCCC;
     margin-top: 10px;
@@ -76,27 +76,19 @@
     display: inline;
 }
 
-.scale-display p {
-    margin-bottom: -10px;
-    margin-right: 22px;
-}
-
 .additional-text p {
     font-family: 'Ubuntu' !important;
     font-style: normal;
     font-size: 13px;
+    padding-bottom: 17px;
 }
 
-.graph-container {
-    margin-top: 20px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: 20px;
-}
-
-.correct-answer {
-    margin-top: 5px;
-    float: right;
+.point-display-break {
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 8px;
+    border-color: #999999;
 }
 
 .btn-undo {
@@ -115,12 +107,20 @@
     border-width: 1px;
 }
 
-.scale-display {
-    margin-bottom: 10px;
-    float: right;
-    margin-right: 20px;
+.graph-container {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
+.correct-answer {
+    margin-top: 5px;
+    float: right;
+}
+
+.scale-display {
+    text-align: right;
+}
 
 .modal {
     display: block;

@@ -5,6 +5,10 @@
       "organization": "corespring"
     },
     {
+      "name": "equation-utils",
+      "organization": "corespring"
+    },
+    {
       "name": "canvas",
       "organization": "corespring"
     }

@@ -61,13 +61,6 @@ var main = ['$compile', '$modal', '$rootScope',
           }
         });
 
-        $scope.$watch('showNoResponseFeedback', function () {
-          // TODO: Empty response submission - 2px yellow border
-//          if (!$scope.locked && $scope.isEmptyItem($scope.graphCoords) && $scope.showNoResponseFeedback) {
-//            $scope.graphCallback({graphStyle: {borderColor: "yellow", borderWidth: "2px"}});
-//          }
-        });
-
         $scope.interactionCallback = function (params) {
 
           function setPoint(name){
@@ -164,6 +157,8 @@ var main = ['$compile', '$modal', '$rootScope',
       },
 
       link: function (scope, element, attrs) {
+
+        scope.inputStyle = {width: "40px"}
 
         var createGraphAttributes = function(config) {
           return {
@@ -270,9 +265,11 @@ var main = ['$compile', '$modal', '$rootScope',
 
           setResponse: function (response) {
             if (response && response.correctness == "correct") {
-              scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, pointsStyle: "green"})
+              scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, shapesStyle: "green"})
+              scope.inputStyle = _.extend(scope.inputStyle, {border: 'thin solid green'})
             } else {
-              scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, pointsStyle: "red"})
+              scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, shapesStyle: "red"})
+              scope.inputStyle = _.extend(scope.inputStyle, {border: 'thin solid red'})
               scope.correctResponse = response.correctResponse;
             }
 
