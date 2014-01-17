@@ -1,0 +1,12 @@
+{
+  "componentType": "corespring-text-entry",
+  "correctResponse": "2",
+  "title": "Text Entry",
+  "feedback" :  {
+  },
+  "model": {
+    "config": {
+    },
+    "prompt": "Add your question here..."
+  }
+}
