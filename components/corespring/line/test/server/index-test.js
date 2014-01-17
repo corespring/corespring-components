@@ -8,14 +8,14 @@ var sinon = require('sinon');
 
 var serverObj = {
   expressionize: _.identity,
-  isEquationEqual: function (e1, e2, options) {
+  isFunctionEqual: function (e1, e2, options) {
     return e1 == e2;
   }
 };
 
 server = proxyquire('../../src/server',
   {
-    'corespring.equation-utils.server': serverObj
+    'corespring.function-utils.server': serverObj
   }
 );
 
@@ -62,7 +62,7 @@ settings = function (feedback, userResponse, correctResponse) {
 describe('line interaction server logic', function () {
 
   it('respond incorrect', function () {
-    var spy = sinon.spy(serverObj, 'isEquationEqual');
+    var spy = sinon.spy(serverObj, 'isFunctionEqual');
     var response = server.respond(_.cloneDeep(component), {A: {x: -1, y: -1}, B: {x: 1, y: 1}}, settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);

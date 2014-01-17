@@ -1,16 +1,25 @@
 var assert, component, server, settings, should, _;
 
-server = require('../../src/server');
+_ = require('lodash');
+
+var proxyquire =  require('proxyquire').noCallThru();
+
+var mockFnUtils = {
+  expressionize: _.identity,
+  isFunctionEqual: function (e1, e2, options) {
+    return e1 == e2;
+  }
+};
+
+server = proxyquire('../../src/server', {'corespring.function-utils.server' : mockFnUtils});
 
 assert = require('assert');
 
 should = require('should');
 
-_ = require('lodash');
-
 component = {
-  componentType: "corespring-text-entry",
-  correctResponse: "carrot"
+  componentType: "corespring-function-entry",
+  correctResponse: {equation: "y=2x+4"}
 };
 
 
@@ -26,11 +35,11 @@ settings = function(feedback, userResponse, correctResponse) {
   };
 };
 
-describe('text entry server logic', function() {
+describe('equation entry server logic', function() {
 
   it('should respond with correct and score 1 if the answer is correct', function() {
     var expected, response;
-    response = server.respond(_.cloneDeep(component), "carrot", settings(false, true, true));
+    response = server.respond(_.cloneDeep(component), "y=2x+4", settings(false, true, true));
     expected = {
       correctness: "correct",
       score: 1
@@ -39,9 +48,9 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  it('should respond with incorrect and score 0 if the answer is correct', function() {
+  it('should respond with incorrect and score 0 if the answer is incorrect', function() {
     var expected, response;
-    response = server.respond(_.cloneDeep(component), "salami", settings(false, true, true));
+    response = server.respond(_.cloneDeep(component), "y=3x+2", settings(false, true, true));
     expected = {
       correctness: "incorrect",
       score: 0
@@ -50,45 +59,6 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  it('should respond with correct and score 1 if the answer is among correct ones', function() {
-    var component2 = {
-      componentType: "corespring-text-entry",
-      correctResponse: ["carrot","apple"]
-    };
 
-    var expected, response;
-    response = server.respond(_.cloneDeep(component2), "carrot", settings(false, true, true));
-    expected = {
-      correctness: "correct",
-      score: 1
-    };
-    response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
-
-    response = server.respond(_.cloneDeep(component2), "apple", settings(false, true, true));
-    expected = {
-      correctness: "correct",
-      score: 1
-    };
-    response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
-  });
-
-  it('should respond with incorrect and score 0 if the answer is not among correct ones', function() {
-    var component2 = {
-      componentType: "corespring-text-entry",
-      correctResponse: ["carrot","apple"]
-    };
-
-    var expected, response;
-    response = server.respond(_.cloneDeep(component2), "salami", settings(false, true, true));
-    expected = {
-      correctness: "incorrect",
-      score: 0
-    };
-    response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
-
-  });
 
 });

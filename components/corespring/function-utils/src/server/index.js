@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var mathjs = require('mathjs');
 
 var trimSpaces = function(s) {
   return s.replace(/\s+/g,"");
@@ -23,15 +24,12 @@ var replaceVar = function (expression, variable) {
 };
 
 exports.expressionize = function(eq, varname) {
-  if (eq.indexOf("=") >= 0) {
-    eq = eq.split("=")[1];
-  }
   eq = trimSpaces(eq);
   eq = replaceVar(eq, varname);
   return eq;
 };
 
-exports.isEquationEqual = function (eq1, eq2, options) {
+exports.isFunctionEqual = function (eq1, eq2, options) {
   console.log("IsEqual: "+eq1+" with "+eq2);
   options = options || {};
   var variable = options.variable || 'x';
