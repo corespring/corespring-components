@@ -23,7 +23,7 @@ var replaceVar = function (expression, variable) {
 };
 
 exports.expressionize = function(eq, varname) {
-  if (eq.indexOf("=")) {
+  if (eq.indexOf("=") >= 0) {
     eq = eq.split("=")[1];
   }
   eq = trimSpaces(eq);
