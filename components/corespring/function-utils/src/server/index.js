@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var mathjs = require('mathjs');
 
 var trimSpaces = function(s) {
   return s.replace(/\s+/g,"");
