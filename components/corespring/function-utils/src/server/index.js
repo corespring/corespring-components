@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var mathjs = require('mathjs')();
 
 var trimSpaces = function(s) {
   return s.replace(/\s+/g,"");
@@ -29,7 +30,6 @@ exports.expressionize = function(eq, varname) {
 };
 
 exports.isFunctionEqual = function (eq1, eq2, options) {
-  console.log("IsEqual: "+eq1+" with "+eq2);
   options = options || {};
   var variable = options.variable || 'x';
   var domain = options.domain || [-10,10];
@@ -48,14 +48,22 @@ exports.isFunctionEqual = function (eq1, eq2, options) {
   var step = (domain[1] - domain[0]) / numberOfTestPoints;
 
   var x = domain[0];
-  while (x < domain[1]) {
-    var y1 = eval(eq1r);
-    var y2 = eval(eq2r);
 
-    if (round(Math.abs(y1-y2)) > limit) return false;
+  var t0 = new Date().getTime();
+  while (x < domain[1]) {
+    try {
+      var y1 = mathjs.eval(eq1r, {x: x});
+      var y2 = mathjs.eval(eq2r, {x: x});
+
+      if (round(Math.abs(y1-y2)) > limit) return false;
+    } catch (e) {
+      // evaluation error in x
+    }
 
     x += step;
   }
+
+  var t1 = new Date().getTime();
 
   return true;
 };

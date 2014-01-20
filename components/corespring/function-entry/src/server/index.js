@@ -9,6 +9,7 @@ exports.isCorrect = function (answer, correctEquation) {
 };
 
 exports.respond = function (question, answer, settings) {
+
   var answerIsCorrect, response;
 
   if (question && answer && question._uid !== answer._uid) {
@@ -23,7 +24,6 @@ exports.respond = function (question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    response.feedback = "boo";
   }
 
   return response;
