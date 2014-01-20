@@ -118,12 +118,10 @@ var main = ['$compile', '$modal', '$rootScope',
         });
 
         $scope.renewResponse = function (response) {
-          console.log("renewing", response);
           if(response && response.A && response.B){
             var A = response.A;
             var B = response.B;
             $scope.points = {A: {x: A.x, y: A.y},B: {x: B.x, y: B.y}};
-            console.log("Points: ", $scope.points);
           }
           return response;
         };
@@ -246,6 +244,16 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.maxPoints = config.maxPoints
             scope.showInputs = (config.showInputs ? config.showInputs : 'true') == 'true'
 
+            if (dataAndSession.data.initialCurve) {
+              scope.initialParams = {
+                drawShape:{
+                  curve: function(x) {
+                    return eval(dataAndSession.data.initialCurve)
+                  }
+                }
+              };
+            }
+
 
             var containerWidth, containerHeight;
             var graphContainer = element.find('.graph-container')
@@ -265,6 +273,13 @@ var main = ['$compile', '$modal', '$rootScope',
             if (dataAndSession.session) {
               scope.points = dataAndSession.session.answers;
             }
+
+            if (_.isArray(config.initialValues)) {
+              var pointA = config.initialValues[0].split(",");
+              var pointB = config.initialValues[1].split(",");
+              scope.points = {A: {x: pointA[0], y: pointA[1], isSet: true}, B: {x: pointB[0], y: pointB[1], isSet: true}};
+            }
+
           },
 
           getSession: function () {
