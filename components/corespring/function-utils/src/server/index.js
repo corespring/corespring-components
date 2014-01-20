@@ -49,7 +49,6 @@ exports.isFunctionEqual = function (eq1, eq2, options) {
 
   var x = domain[0];
 
-  var t0 = new Date().getTime();
   while (x < domain[1]) {
     try {
       var y1 = mathjs.eval(eq1r, {x: x});
@@ -62,8 +61,6 @@ exports.isFunctionEqual = function (eq1, eq2, options) {
 
     x += step;
   }
-
-  var t1 = new Date().getTime();
 
   return true;
 };
