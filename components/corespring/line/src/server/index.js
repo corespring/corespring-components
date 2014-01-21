@@ -17,7 +17,6 @@ exports.respond = function (question, answer, settings) {
   var options = {};
   options.variable = (question.correctResponse.vars && question.correctResponse.vars.split(",")[0]) || 'x';
   options.sigfigs = question.correctResponse.sigfigs || 3;
-  options.domain = question.correctResponse.domain || [-10, 10];
 
   var correctResponse = question.correctResponse;
   var correctFunction = question.correctResponse.equation.split("=")[1];

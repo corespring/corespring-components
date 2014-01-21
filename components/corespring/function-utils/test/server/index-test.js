@@ -4,6 +4,38 @@ var should = require('should');
 var _ = require('lodash');
 
 
+describe('random point generator', function () {
+  it('domain', function () {
+    var domain = {
+      include: ["-5,-4", "-1,1", "5,6", "8,10"],
+      exclude: [7, 9]
+    };
+
+    // 500 iterations for sufficient sample size
+    for (var i = 0; i < 500; i++) {
+      var result = server.generateRandomPointsForDomain(domain, 50, 3);
+
+      var allNumbersAreInRanges = _.every(result, function (number) {
+        for (var i = 0; i < domain.include.length; i++) {
+          var min = Number(domain.include[i].split(",")[0]);
+          var max = Number(domain.include[i].split(",")[1]);
+          if (number >= min && number <= max) return true;
+        }
+        return false;
+      });
+
+      var noNumbersIsFromExcluded = _.every(result, function (number) {
+        return !_.contains(domain.exclude, number);
+      });
+
+      result.length.should.eql(50);
+      allNumbersAreInRanges.should.eql(true);
+      noNumbersIsFromExcluded.should.eql(true);
+    }
+  });
+
+});
+
 describe('expressionize', function () {
   it('trims spaces', function () {
     var eq = "  12x +   3   ";
@@ -30,6 +62,12 @@ describe('linear function equal logic', function () {
     var eq1 = "3x+5";
     var eq2 = "3x+5";
     server.isFunctionEqual(eq1, eq2).should.eql(true);
+  });
+
+  it('different functions are not equal', function () {
+    var eq1 = "3x+5";
+    var eq2 = "3x+6";
+    server.isFunctionEqual(eq1, eq2).should.eql(false);
   });
 
   it('same slope (fraction)', function () {
@@ -76,7 +114,7 @@ describe('linear function equal logic', function () {
 
   it('precision is up to 10^-sigfigs', function () {
     var eq1 = "3x+5";
-    var eq2 = "3x+5.001";
+    var eq2 = "3x+5.0005";
     server.isFunctionEqual(eq1, eq2, {sigfigs: 3}).should.eql(true);
     server.isFunctionEqual(eq1, eq2, {sigfigs: 4}).should.eql(false);
   });

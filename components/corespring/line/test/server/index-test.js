@@ -67,7 +67,7 @@ describe('line interaction server logic', function () {
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
     // check if it was called with the right options
-    spy.getCall(0).args[2].should.eql({variable: 'g', sigfigs: 3, domain: [-10,10]});
+    spy.getCall(0).args[2].should.eql({variable: 'g', sigfigs: 3});
   });
 
   it('respond correct', function () {
