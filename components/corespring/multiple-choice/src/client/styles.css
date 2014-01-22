@@ -38,10 +38,10 @@
 .view-multiple-choice .choice-feedback-holder {
     height: 30px;
     padding-left: 40px;
+    position: relative;
 }
 
 .choice-feedback-holder .cs-feedback {
-    position: absolute;
     border: none;
 }
 
@@ -115,7 +115,9 @@
 }
 
 .view-multiple-choice .cs-feedback {
-    display: table-row;
+    display: table-cell;
+    position: absolute;
+    width: 300px;
 }
 
 .view-multiple-choice .horizontal .choice-feedback-holder {
