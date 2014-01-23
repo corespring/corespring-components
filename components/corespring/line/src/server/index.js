@@ -19,15 +19,15 @@ exports.respond = function (question, answer, settings) {
   options.sigfigs = question.correctResponse.sigfigs || 3;
 
   var correctResponse = question.correctResponse;
-  var correctFunction = question.correctResponse.equation.split("=")[1];
+  var correctFunction = question.correctResponse.split("=")[1];
   var isCorrect = functionUtils.isFunctionEqual(eq, correctFunction, options);
 
   return {
     "correctness": isCorrect ? "correct" : "incorrect",
     "score": isCorrect ? 1 : 0,
     "correctResponse": {
-      "equation": correctResponse.equation,
-      "expression": functionUtils.expressionize(correctResponse.equation, 'x')
+      "equation": correctResponse,
+      "expression": functionUtils.expressionize(correctResponse, 'x')
     }
   };
 };

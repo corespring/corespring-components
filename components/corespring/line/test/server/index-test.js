@@ -27,12 +27,7 @@ _ = require('lodash');
 
 component = {
   "componentType": "corespring-line",
-  "correctResponse": {
-    "equation": "y=2x+7",
-    "range": "10",
-    "vars": "g,y",
-    "sigfigs": 3
-  },
+  "correctResponse": "y=2x+7",
   "model": {
     "prompt": "Line interaction prompt",
     "config": {
@@ -67,7 +62,7 @@ describe('line interaction server logic', function () {
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
     // check if it was called with the right options
-    spy.getCall(0).args[2].should.eql({variable: 'g', sigfigs: 3});
+    spy.getCall(0).args[2].should.eql({variable: 'x', sigfigs: 3});
   });
 
   it('respond correct', function () {
