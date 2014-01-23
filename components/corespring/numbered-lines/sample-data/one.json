@@ -1,0 +1,16 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "numbered-lines",
+        "model": {
+          "lines": [
+          ]
+        }
+      }
+    },
+    "xhtml": "<corespring-numbered-lines id=\"1\"></corespring-numbered-lines>"
+  },
+  "session": {
+  }
+}

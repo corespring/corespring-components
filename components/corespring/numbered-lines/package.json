@@ -1,0 +1,10 @@
+{
+  "libraries": [
+  ],
+  "dependencies" : {
+    "client" : {
+    }
+  },
+  "name": "numbered-lines",
+  "organization": "corespring"
+}
