@@ -104,6 +104,7 @@ var main = [
           $log.debug("multiple-choice setDataAndSession", dataAndSession);
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
+          scope.itemShape = dataAndSession.data.model.config.itemShape || "circle";
           updateUi();
         },
 
@@ -170,7 +171,7 @@ var main = [
       };
 
       scope.getChoiceClass = function (o) {
-        var cl = "";
+        var cl = scope.itemShape+" ";
         if (scope.answer.choices[o.value]) cl += "selected ";
         if (o.correct) cl += o.correct;
         return cl;
@@ -198,7 +199,7 @@ var main = [
         '    <div ng-repeat="row in getRows()">',
         '      <div class="focus-row" ng-class="question.config.orientation">',
         '        <div class="inner">',
-        '          <div ng-repeat="o in getChoicesForRow(row)" ng-click="toggleChoice(o)" enabled="{{editable}}" class="focus-element circle {{getChoiceClass(o)}}">',
+        '          <div ng-repeat="o in getChoicesForRow(row)" ng-click="toggleChoice(o)" enabled="{{editable}}" class="focus-element {{getChoiceClass(o)}}">',
         '            <span>{{o.label}}</span>',
         '           </div>',
         '         </div>',
