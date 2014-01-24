@@ -40,7 +40,7 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
       delete fb.notChosenFeedback;
     } else {
       if (_.indexOf(answer, correctKey) === -1) {
-        nc = fb.notChosenFeedback;
+        nc = fb.notChosenFeedback || fb.feedback;
         delete fb.notChosenFeedback;
         fb.feedback = nc;
       } else {

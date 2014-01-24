@@ -36,7 +36,7 @@
 }
 
 .view-multiple-choice .choice-feedback-holder {
-    height: 30px;
+    height: 40px;
     padding-left: 40px;
     position: relative;
 }
@@ -70,6 +70,18 @@
 .incorrect .choice-letter,
 .incorrect .choice-currency-symbol {
     border-color: #F8A31A;
+}
+
+.incorrect.cs-feedback,
+.correct.cs-feedback {
+    margin-top: 5px;
+    padding-bottom: 30px;
+    background: url("/assets/images/wrong-icon.png") no-repeat scroll 0px -0px transparent;
+    padding-left: 30px;
+}
+
+.correct.cs-feedback {
+    background: url("/assets/images/correct-icon.png") no-repeat scroll 0px -0px transparent;
 }
 
 .view-multiple-choice .choice-input,

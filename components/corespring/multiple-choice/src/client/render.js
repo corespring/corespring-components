@@ -206,7 +206,7 @@ var main = [
         '      </label>',
         '   </div>',
         '   <div ng-repeat-end="" class="choice-feedback-holder" ng-show="o.feedback != null">',
-        '      <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null">{{o.feedback}}</span>',
+        '      <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
         '    </div>',
         '  </div>',
         '</div>'].join("\n")
