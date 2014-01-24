@@ -28,18 +28,14 @@ component = {
       }
     ]
   },
-  correctResponse: "carrot",
-  feedback: {
-    "apple": {
-      feedback: "Huh?"
-    },
-    "carrot": {
-      feedback: "Yes"
-    },
-    "banana": {
-      feedback: "Nopes"
-    }
-  }
+  correctResponse: {
+    value: "carrot"
+  },
+  feedback: [
+    {value: "apple", feedback: "Huh?"},
+    {value: "carrot", feedback: "Yes"},
+    {value:  "banana", feedback: "Nopes"}
+  ]
 };
 
 settings = function(feedback, userResponse, correctResponse) {
@@ -95,10 +91,6 @@ describe('inline-choice server logic', function() {
         correctness: "incorrect",
         score: 0,
         feedback: {
-          "carrot": {
-            feedback: "Yes",
-            correct: true
-          },
           "apple": {
             feedback: "Huh?",
             correct: false

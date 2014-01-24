@@ -129,7 +129,7 @@
 .view-multiple-choice .cs-feedback {
     display: table-cell;
     position: absolute;
-    width: 300px;
+    width: 500px;
 }
 
 .view-multiple-choice .horizontal .choice-feedback-holder {
