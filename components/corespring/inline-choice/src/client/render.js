@@ -1,6 +1,6 @@
 var link, main;
 
-link = function ($sce, $timeout) {
+link = function ($sce, $timeout, MathJaxService) {
   return function (scope, element, attrs) {
 
     var resetFeedback = function (choices) {
@@ -39,10 +39,6 @@ link = function ($sce, $timeout) {
       });
     };
 
-    scope.answer = {
-      choice: ""
-    };
-
     scope.editable = true;
 
     scope.containerBridge = {
@@ -68,13 +64,14 @@ link = function ($sce, $timeout) {
           var selectedChoice = _.find(scope.choices, function (c) {
             return c.value == dataAndSession.session.answers;
           });
-          scope.answer.choice = selectedChoice;
+
+          scope.select(selectedChoice);
         }
 
       },
 
       getSession: function () {
-        var answer = scope.answer ? scope.answer.choice.value : null;
+        var answer = scope.selected ? scope.selected.value : null;
 
         return {
           answers: answer,
@@ -124,6 +121,11 @@ link = function ($sce, $timeout) {
 
     };
 
+    scope.select = function(choice) {
+      scope.selected = choice;
+      MathJaxService.parseDomForMath(1);
+    };
+
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
   };
@@ -132,25 +134,27 @@ link = function ($sce, $timeout) {
 main = [
   '$sce',
   '$timeout',
-  function ($sce, $timeout) {
+  'MathJaxService',
+  function ($sce, $timeout, MathJaxService) {
     var def;
     def = {
       scope: {},
       restrict: 'AE',
       replace: true,
-      link: link($sce, $timeout),
-      template: [ '<div class="view-inline-choice form-inline">',
-        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
-        '  <div class="choices-container" >',
-        '  <select ng-disabled="!editable" ng-model="answer.choice" ng-options="c.label for c in choices" ></select>',
-        '  <div ng-show="answer.choice.feedback" class="tooltip" ng-class="{true:\'correct\', false:\'incorrect\'}[answer.choice.correct]">',
-        '  <div class="tooltip-inner">',
-        '    {{answer.choice.feedback}}',
-        '  </div>',
-        '  <div class="tooltip-arrow"></div>',
+      link: link($sce, $timeout, MathJaxService),
+      template: [
+        '<div class="view-inline-choice" >',
+        '<div class="dropdown" >',
+          '<span class="btn dropdown-toggle" ng-class="{true:\'correct\', false:\'incorrect\'}[selected.correct]">',
+          '<span ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
+          '</span>',
+          '<ul class="dropdown-menu">',
+            '<li ng-repeat="choice in choices">',
+              '<a ng-click="select(choice)">{{choice.label}}</a>',
+            '</li>',
+          '</ul>',
         '</div>',
-        '</div>',
-        '</div>'].join("\n")
+       '</div>'].join("\n")
     };
 
     return def;
