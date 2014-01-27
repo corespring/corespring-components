@@ -72,7 +72,7 @@ describe('corespring', function () {
 
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect(scope.answer.choice).toEqual({label: '1', value: '1'});
+      expect(_.pick(scope.selected,'label','value')).toEqual({label: '1', value: '1'});
 
     });
   });

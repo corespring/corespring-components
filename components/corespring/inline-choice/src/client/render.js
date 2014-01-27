@@ -1,6 +1,6 @@
 var link, main;
 
-link = function ($sce, $timeout, MathJaxService) {
+link = function ($sce, $timeout) {
   return function (scope, element, attrs) {
 
     var resetFeedback = function (choices) {
@@ -123,7 +123,7 @@ link = function ($sce, $timeout, MathJaxService) {
 
     scope.select = function(choice) {
       scope.selected = choice;
-      MathJaxService.parseDomForMath(1);
+      scope.$emit('rerender-math', 1);
     };
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -134,20 +134,27 @@ link = function ($sce, $timeout, MathJaxService) {
 main = [
   '$sce',
   '$timeout',
-  'MathJaxService',
-  function ($sce, $timeout, MathJaxService) {
+  function ($sce, $timeout) {
     var def;
     def = {
       scope: {},
       restrict: 'AE',
       replace: true,
-      link: link($sce, $timeout, MathJaxService),
+      link: link($sce, $timeout),
       template: [
-        '<div class="view-inline-choice" >',
+        '<div class="view-inline-choice" ng-class="{true:\'correct\', false:\'incorrect\'}[selected.correct]">',
         '<div class="dropdown" >',
-          '<span class="btn dropdown-toggle" ng-class="{true:\'correct\', false:\'incorrect\'}[selected.correct]">',
-          '<span ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
+          '<span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
+          '  <span ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
           '</span>',
+          '<span ng-show="selected.feedback" class="feedback">&nbsp;',
+        '  <div class="tooltip">',
+        '  <div class="tooltip-inner">',
+        '    {{selected.feedback}}',
+        '  </div>',
+        '  <span class="caret"></span>',
+        '</div>',
+        '</span>',
           '<ul class="dropdown-menu">',
             '<li ng-repeat="choice in choices">',
               '<a ng-click="select(choice)">{{choice.label}}</a>',
