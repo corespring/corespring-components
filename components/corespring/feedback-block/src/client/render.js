@@ -6,7 +6,6 @@ var main = [
 
     var link = function (scope, element, attrs) {
 
-
       scope.containerBridge = {
 
         setDataAndSession: function (dataAndSession) {
@@ -50,7 +49,7 @@ var main = [
       restrict: 'AE',
       replace: true,
       link: link,
-      template: [ '<div class="view-feedback {{correctClass}}" ng-show="feedback">{{feedback}}</div>' ]
+      template: [ '<div class="view-feedback {{correctClass}}" ng-show="feedback">{{feedback}}</div>' ].join("")
     };
 
     return def;
