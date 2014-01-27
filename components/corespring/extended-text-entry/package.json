@@ -1,0 +1,8 @@
+{
+  "libraries": [
+  ],
+  "dependencies" : {
+  },
+  "name": "extended-text-entry",
+  "organization": "corespring"
+}

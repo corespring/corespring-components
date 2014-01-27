@@ -1,0 +1,9 @@
+{
+  "componentType": "corespring-extended-text-entry",
+  "title": "Extended Text Entry",
+  "model": {
+    "config": {
+    },
+    "prompt": "Add your question here..."
+  }
+}

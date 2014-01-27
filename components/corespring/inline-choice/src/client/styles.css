@@ -71,6 +71,7 @@
     display: inline-block;
     position: absolute;
     top: -25px;
+    max-width: 400px;
 }
 
 .view-inline-choice.correct .tooltip-inner,
@@ -79,6 +80,8 @@
     height: 17px;
     padding-top: 0px;
     border-radius: 2px;
+    max-width: 400px;
+    white-space: nowrap;
 }
 
 .view-inline-choice.incorrect .tooltip-inner {

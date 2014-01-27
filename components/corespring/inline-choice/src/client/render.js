@@ -153,7 +153,7 @@ main = [
         '    {{selected.feedback}}',
         '  </div>',
         '  <span class="caret"></span>',
-        '</div>',
+        '  </div>',
         '</span>',
           '<ul class="dropdown-menu">',
             '<li ng-repeat="choice in choices">',
