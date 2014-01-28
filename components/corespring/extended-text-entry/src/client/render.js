@@ -11,7 +11,8 @@ link = function () {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
-        scope.rows = (dataAndSession.data.model.config && dataAndSession.data.model.config.rows) || 4;
+        scope.rows = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLines) || 4;
+        scope.cols = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLength) || 60;
       },
 
       getSession: function () {
@@ -70,7 +71,7 @@ main = [
       link: link(),
       template: [
         '<div class="view-extended-text-entry">',
-        '<textarea ng-model="answer" rows="{{rows}}" ng-disabled="!editable" class="form-control text-input" />',
+        '<textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="form-control text-input" />',
         '</div>'].join("\n")
     };
 
