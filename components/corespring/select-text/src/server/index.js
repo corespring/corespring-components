@@ -91,7 +91,8 @@ exports.respond = function (question, answer, settings) {
   var selectionCount = answer.length;
   var minSelection = question.model.config.minSelections || 0;
   var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
-  var checkIfCorrect = question.model.config.checkIfCorrect == true;
+  var checkIfCorrect = (question.model.config.checkIfCorrect == "yes" || question.model.config.checkIfCorrect == "true");
+
 
   var correctIndexes =  buildCorrectIndexesArray(text, question.model.config.selectionUnit);
   var selectionCountIsFine = (minSelection <= selectionCount && maxSelection >= selectionCount);
