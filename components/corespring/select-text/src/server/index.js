@@ -4,8 +4,15 @@ var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
 var sentenceRegexp = /()(\|*[A-Z](?:.|\n)+?)([.?!])/g;
 
 exports.preprocessText = function(text) {
+
   var nameRegexp = /([A-Z][a-z]+ [A-Z])\.( [A-Z][a-z]+)/g;
-  var result = text.replace(nameRegexp, "$1&#46;$2");
+  var correctOpenTagRegexp = /<correct>/ig;
+  var correctCloseTagRegexp = /<\/correct>/ig;
+
+  var result = text.replace(nameRegexp, "$1&#46;$2")
+    .replace(correctOpenTagRegexp, "|")
+    .replace(correctCloseTagRegexp, "");
+
   return result;
 };
 
@@ -68,15 +75,22 @@ var buildFeedback = function(answer, correctIndexes) {
 };
 
 exports.render = function(json) {
+
+  json.model.text = exports.preprocessText(json.model.text);
   json.wrappedText = exports.wrapTokensWithHtml(json.model.text, json.model.config.selectionUnit)
+
   return json;
 }
 
 exports.respond = function (question, answer, settings) {
+
   var text = exports.preprocessText(question.model.text);
   var correctIndexes = buildCorrectIndexesArray(text, question.model.config.selectionUnit);
 
   var isCorrect = _.isEqual(answer, correctIndexes);
+  var selectionCount = answer.length;
+  var minSelection = question.model.config.minSelections || 0;
+  var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
 
   var res = {
     correctness: isCorrect ? "correct" : "incorrect",
@@ -85,6 +99,11 @@ exports.respond = function (question, answer, settings) {
 
   if (settings.showFeedback) {
     res.feedback = buildFeedback(answer, correctIndexes);
+
+    res.outcome = [];
+    if (selectionCount < minSelection) res.outcome.push("responsesBelowMin");
+    if (selectionCount > maxSelection) res.outcome.push("responsesExceedMax");
+    if (isCorrect) res.outcome.push("responsesCorrect"); else res.outcome.push("responsesIncorrect");
   }
 
   return res;
