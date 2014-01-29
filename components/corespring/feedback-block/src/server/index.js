@@ -9,18 +9,41 @@ exports.isCorrect = function () {
 };
 
 exports.respond = function (model, answer, settings, targetOutcome) {
-  var response = {};
 
-  var isCorrect = targetOutcome.correctness == "correct";
+  var isCorrect;
+  var feedback;
 
-  if (isCorrect) {
-    response.feedback = model.feedback.correct[targetOutcome.studentResponse] || model.feedback.correct["*"];
+  var correctFeedback = model.feedback.correct || {};
+  var incorrectFeedback = model.feedback.incorrect || {};
+
+  feedback = correctFeedback[targetOutcome.studentResponse];
+  if (feedback) {
+    isCorrect = true;
   } else {
-    response.feedback = model.feedback.incorrect[targetOutcome.studentResponse] || model.feedback.incorrect["*"];
+    feedback = incorrectFeedback[targetOutcome.studentResponse];
+    isCorrect = false;
   }
 
-  response.correctness = isCorrect ? "correct" : "incorrect";
+  if (!feedback) {
+    isCorrect = targetOutcome.correctness == "correct";
+    feedback = (isCorrect ? correctFeedback["*"] : incorrectFeedback["*"]);
+  }
 
-  response.studentResponse = targetOutcome.studentResponse;
+  if (targetOutcome.outcome) {
+    var outcome = targetOutcome.outcome;
+    var feedbackForOutcome = _.find(outcome, function (o) {
+      return !_.isUndefined(model.feedback.outcome[o]);
+    });
+    if (feedbackForOutcome) {
+      feedback = model.feedback.outcome[feedbackForOutcome].text;
+      isCorrect = model.feedback.outcome[feedbackForOutcome].correct;
+    }
+  }
+
+  var response = {
+    correctness: isCorrect ? "correct" : "incorrect",
+    feedback: feedback
+  };
+
   return response;
 };
