@@ -76,8 +76,7 @@ var buildFeedback = function(answer, correctIndexes) {
 
 exports.render = function(json) {
 
-  json.model.text = exports.preprocessText(json.model.text);
-  json.wrappedText = exports.wrapTokensWithHtml(json.model.text, json.model.config.selectionUnit)
+  json.wrappedText = exports.wrapTokensWithHtml(exports.preprocessText(json.model.text), json.model.config.selectionUnit)
 
   return json;
 }
