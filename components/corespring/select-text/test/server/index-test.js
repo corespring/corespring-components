@@ -8,7 +8,7 @@ var component = {
     "prompt": "Select the fruits from the text",
     "config": {
       "selectionUnit": "word",
-      "checkIfCorrect": true
+      "checkIfCorrect": "yes"
     },
     "text": "I ate some |banana and carrot and cheese and |apple"
   }
@@ -20,7 +20,7 @@ var componentIgnoreCorrect = {
     "prompt": "Select the fruits from the text",
     "config": {
       "selectionUnit": "word",
-      "checkIfCorrect": false,
+      "checkIfCorrect": "no",
       "minSelections": 2,
       "maxSelections": 3
     },
