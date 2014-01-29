@@ -7,9 +7,24 @@ var component = {
   "model" : {
     "prompt": "Select the fruits from the text",
     "config": {
-      "selectionUnit": "word"
+      "selectionUnit": "word",
+      "checkIfCorrect": true
     },
     "text": "I ate some |banana and carrot and cheese and |apple"
+  }
+};
+
+var componentIgnoreCorrect = {
+  "componentType" : "corespring-select-text",
+  "model" : {
+    "prompt": "Select the fruits from the text",
+    "config": {
+      "selectionUnit": "word",
+      "checkIfCorrect": false,
+      "minSelections": 2,
+      "maxSelections": 3
+    },
+    "text": "I ate some banana and carrot and cheese and apple"
   }
 };
 
@@ -141,5 +156,23 @@ describe('select text server logic', function () {
     var wt = response.wrappedText;
     wt.should.match(/span class=.token. id=.0.*?<\/span>/);
   });
+
+  it('selection should be marked correct if checkIfCorrect is false and selection count is okay', function() {
+    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1','2'], settings(true, true, true));
+    response.feedback['1'].should.eql({correct: true});
+    response.feedback['2'].should.eql({correct: true});
+  });
+
+  it('selection should be marked incorrect if checkIfCorrect is false and selection count is not okay', function() {
+    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1'], settings(true, true, true));
+    response.feedback['1'].should.eql({correct: false});
+
+    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1','2','3','4'], settings(true, true, true));
+    response.feedback['1'].should.eql({correct: false});
+    response.feedback['2'].should.eql({correct: false});
+    response.feedback['3'].should.eql({correct: false});
+    response.feedback['4'].should.eql({correct: false});
+  });
+
 });
 

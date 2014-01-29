@@ -59,16 +59,19 @@ var buildCorrectIndexesArray = function (text, selectionUnit) {
   return correctIndexes;
 };
 
-var buildFeedback = function(answer, correctIndexes) {
+var buildFeedback = function(answer, correctIndexes, checkIfCorrect, selectionCountIsFine) {
   var feedback = {};
-  _.each(correctIndexes, function(correctIndex) {
-    feedback[correctIndex] = {
-      wouldBeCorrect: true
-    };
-  });
+
+  if (checkIfCorrect) {
+    _.each(correctIndexes, function(correctIndex) {
+      feedback[correctIndex] = {
+        wouldBeCorrect: true
+      };
+    });
+  }
   _.each(answer, function(answerIndex) {
      feedback[answerIndex] = {
-       correct: _.contains(correctIndexes, answerIndex)
+       correct: (!checkIfCorrect && selectionCountIsFine) || (checkIfCorrect && _.contains(correctIndexes, answerIndex))
      };
   });
   return feedback;
@@ -84,12 +87,15 @@ exports.render = function(json) {
 exports.respond = function (question, answer, settings) {
 
   var text = exports.preprocessText(question.model.text);
-  var correctIndexes = buildCorrectIndexesArray(text, question.model.config.selectionUnit);
 
-  var isCorrect = _.isEqual(answer, correctIndexes);
   var selectionCount = answer.length;
   var minSelection = question.model.config.minSelections || 0;
   var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
+  var checkIfCorrect = question.model.config.checkIfCorrect == true;
+
+  var correctIndexes =  buildCorrectIndexesArray(text, question.model.config.selectionUnit);
+  var selectionCountIsFine = (minSelection <= selectionCount && maxSelection >= selectionCount);
+  var isCorrect = checkIfCorrect ? _.isEqual(answer, correctIndexes) : selectionCountIsFine;
 
   var res = {
     correctness: isCorrect ? "correct" : "incorrect",
@@ -97,7 +103,7 @@ exports.respond = function (question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    res.feedback = buildFeedback(answer, correctIndexes);
+    res.feedback = buildFeedback(answer, correctIndexes, checkIfCorrect, selectionCountIsFine);
 
     res.outcome = [];
     if (selectionCount < minSelection) res.outcome.push("responsesBelowMin");
