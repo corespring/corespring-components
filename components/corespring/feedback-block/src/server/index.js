@@ -32,11 +32,14 @@ exports.respond = function (model, answer, settings, targetOutcome) {
   if (targetOutcome.outcome) {
     var outcome = targetOutcome.outcome;
     var feedbackForOutcome = _.find(outcome, function (o) {
-      return !_.isUndefined(model.feedback.outcome[o]);
+      return model.feedback.outcome && !_.isUndefined(model.feedback.outcome[o]);
     });
     if (feedbackForOutcome) {
-      feedback = model.feedback.outcome[feedbackForOutcome].text;
-      isCorrect = model.feedback.outcome[feedbackForOutcome].correct;
+      var modelOutcome = model.feedback.outcome && model.feedback.outcome[feedbackForOutcome];
+      if (modelOutcome) {
+        feedback = modelOutcome.text;
+        isCorrect = modelOutcome.correct;
+      }
     }
   }
 
