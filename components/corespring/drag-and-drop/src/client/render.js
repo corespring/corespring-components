@@ -81,7 +81,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
     };
 
     scope.seeSolution = function() {
-
+      scope.solutionScope.choiceStyle = scope.choiceStyle;
       $modal.open({
         controller : function($scope, $modalInstance) {
           $scope.ok = function () {
@@ -256,11 +256,11 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
   };
   var tmpl = [
     '        <div class="view-drag-and-drop">',
+    '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     ' <div ng-show="!correctResponse" class="pull-right">',
     '   <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
     '   <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
     ' </div><div class="clearfix" />',
-    '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
     answerArea(),
     '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
@@ -292,6 +292,7 @@ var landingPlace = [function () {
       scope['class'] = attrs['class'];
       scope.id = attrs['id'];
       scope.cardinality = attrs['cardinality'] || 'single';
+      scope.columnsPerRow = attrs['columnsperrow'] || 3;
       scope.landingPlaceChoices[scope.id] = scope.landingPlaceChoices[scope.id] || [];
       scope.label = attrs['label'] || "";
       isMultiple = scope.cardinality != 'single';
@@ -381,7 +382,7 @@ var landingPlace = [function () {
       scope.$watch("maxWidth + maxHeight", function (n) {
         var isMultiple = scope.cardinality != 'single';
         var mw = scope.maxWidth + 25;
-        var maxWidth = isMultiple ? (mw * 3) : mw;
+        var maxWidth = isMultiple ? (mw * scope.columnsPerRow) : mw;
         if (scope.expandHorizontal) {
           scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
         } else {
