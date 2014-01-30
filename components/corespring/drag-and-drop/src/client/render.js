@@ -13,6 +13,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       scope.$apply(function () {
         if (w > scope.maxWidth) scope.maxWidth = w;
         if (h > scope.maxHeight) scope.maxHeight = h;
+        scope.choiceStyle = {width: (scope.maxWidth+16)+'px', height: (scope.maxHeight+10)+'px'};
       });
     };
 
@@ -127,6 +128,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
         scope.resetChoices(scope.rawModel);
 
         scope.expandHorizontal = dataAndSession.data.model.config.expandHorizontal;
+        scope.itemsPerRow = dataAndSession.data.model.config.itemsPerRow || 2;
         scope.originalChoices = _.cloneDeep(scope.model.choices);
 
         if (dataAndSession.session && dataAndSession.session.answers) {
@@ -208,6 +210,14 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       return (!!choice.copyOnDrag ? "'keep'" : "''");
     };
 
+    scope.getChoiceRows = function() {
+      return _.range(scope.model.choices.length / scope.itemsPerRow);
+    };
+
+    scope.getChoicesForRow = function(row) {
+      return scope.model.choices.slice(row * scope.itemsPerRow, row * scope.itemsPerRow + scope.itemsPerRow);
+    }
+
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
   };
@@ -226,18 +236,21 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
     return  [
       '        <div class="choices" >',
       '          <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
-      '          <div',
-      '            ng-repeat="o in model.choices"',
-      '            class="btn btn-primary choice"',
-      '            data-drag="editable"',
-      '            ng-disabled="!editable"',
-      '            data-jqyoui-options="{revert: \'invalid\',helper: {{helperForChoice(o)}} }"',
-      '            ng-model="model.choices[$index]"',
-      '            jqyoui-draggable="{placeholder: {{placeholderForChoice(o)}} }"',
-      '            data-id="{{o.id}}">',
+      '          <div class="choices-table">',
+      '            <div ng-repeat="row in getChoiceRows()" class="choices-table-row">',
+      '              <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
+      '                   ng-style="choiceStyle"',
+      '                   data-drag="editable"',
+      '                   ng-disabled="!editable"',
+      '                   data-jqyoui-options="{revert: \'invalid\',helper: {{helperForChoice(o)}} }"',
+      '                   ng-model="model.choices[$parent.$index * itemsPerRow + $index]"',
+      '                   jqyoui-draggable="{placeholder: {{placeholderForChoice(o)}} }"',
+      '                   data-id="{{o.id}}">',
       '               <div ng-bind-html-unsafe="o.content" />',
       '               <div class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="o.content" />',
-      '           </div>',
+      '              </div>',
+      '            </div>',
+      '          </div>',
       '          </div>'
     ].join('');
   };
@@ -281,6 +294,7 @@ var landingPlace = [function () {
       scope.cardinality = attrs['cardinality'] || 'single';
       scope.landingPlaceChoices[scope.id] = scope.landingPlaceChoices[scope.id] || [];
       scope.label = attrs['label'] || "";
+      isMultiple = scope.cardinality != 'single';
 
       var nonEmptyElement = function (c) {
         return c && c.id;
@@ -365,10 +379,13 @@ var landingPlace = [function () {
       };
 
       scope.$watch("maxWidth + maxHeight", function (n) {
+        var isMultiple = scope.cardinality != 'single';
+        var mw = scope.maxWidth + 25;
+        var maxWidth = isMultiple ? (mw * 3) : mw;
         if (scope.expandHorizontal) {
-          scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + (scope.maxWidth + 30) + "px";
+          scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
         } else {
-          scope.style = "min-height: " + (scope.maxHeight + 20) + "px; width: " + (scope.maxWidth + 30) + "px";
+          scope.style = "min-height: " + (scope.maxHeight + 20) + "px; width: " + maxWidth + "px";
         }
       });
 
@@ -388,12 +405,19 @@ var landingPlace = [function () {
     template: [
       '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
       '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="{{style}}" >',
-      '    <div class="label-holder"><div class="label">{{label}}</div>&nbsp;</div>',
+      '    <div class="label-holder"><div class="landingLabel">{{label}}</div>&nbsp;</div>',
       '    <div',
       '      ui-sortable="sortableOptions" ',
       '      ng-model="landingPlaceChoices[id]"',
       '      >',
-      '        <div ng-repeat="choice in landingPlaceChoices[id]" jqyoui-draggable="{index: {{$index}}, placeholder: true}" data-jqyoui-options="" ng-model="landingPlaceChoices[id][$index]" data-id="{{choice.id}}" class="btn btn-primary {{classForChoice(choice, $index)}}" ng-bind-html-unsafe="choice.content"></div>',
+      '        <div ng-repeat="choice in landingPlaceChoices[id]"',
+      '             ng-style="choiceStyle" ',
+      '             jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
+      '             data-jqyoui-options=""',
+      '             ng-model="landingPlaceChoices[id][$index]"',
+      '             data-id="{{choice.id}}"',
+      '             class="choice {{classForChoice(choice, $index)}}"',
+      '             ng-bind-html-unsafe="choice.content"></div>',
       '    </div>',
       '    </div>'].join("")
 
