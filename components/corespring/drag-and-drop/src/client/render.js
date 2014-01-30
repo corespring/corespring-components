@@ -255,20 +255,19 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
     ].join('');
   };
   var tmpl = [
-    '        <div class="view-drag-and-drop">',
-    '        <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
-    ' <div ng-show="!correctResponse" class="pull-right">',
-    '   <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
-    '   <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
-    ' </div><div class="clearfix" />',
-    '        <div ng-if="model.config.position == \'above\'">', choiceArea(), '</div>',
-    answerArea(),
-    '        <div ng-if="model.config.position != \'above\'">', choiceArea(), '</div>',
-    ' <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
-    '      </div>',
+    '<div class="view-drag-and-drop">',
+    '  <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
+    '  <div ng-show="!correctResponse" class="pull-right">',
+    '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
+    '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
+    '  </div> <div class="clearfix" />',
+    '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
+    ''+answerArea(),
+    '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
+    '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
+    '</div>',
 
   ].join("");
-
 
 
   return {
