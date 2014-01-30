@@ -49,7 +49,9 @@ var main = [
       restrict: 'AE',
       replace: true,
       link: link,
-      template: [ '<div class="view-feedback {{correctClass}}" ng-show="feedback">{{feedback}}</div>' ].join("")
+      template: [
+        '<div class="view-feedback-container" ng-show="feedback" ><div class="view-feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div></div>'
+      ].join("")
     };
 
     return def;

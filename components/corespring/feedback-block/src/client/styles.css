@@ -1,14 +1,19 @@
+.view-feedback-container {
+    display: block;
+    margin-bottom: 5px;
+}
+
 .view-feedback {
+    display: inline-block;
     border: 2px solid #000000;
     border-radius: 5px;
     padding: 5px;
-    display: inline-block;
 }
 
 .view-feedback.correct {
-    border-color: #008000;
+    border-color: #80B312;
 }
 
 .view-feedback.incorrect {
-    border-color: red;
+    border-color: #F8A31B;
 }
