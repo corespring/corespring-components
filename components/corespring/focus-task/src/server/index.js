@@ -33,33 +33,6 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
   return out;
 };
 
-var calculateScore = function(question, answer) {
-
-  var countCorrectAnswers = function(){
-    var sum = _.reduce(answer, function(sum, a) {
-      var contains = _.contains(question.correctResponse.value, a);
-      var newsum = sum + (contains ? 1 : 0);
-      return newsum;
-    }, 0);
-    return sum;
-  };
-
-  var rawScore, wrongAnswers;
-  var maxCorrect = question.correctResponse.value.length;
-  var correctCount = countCorrectAnswers();
-
-  if (correctCount === 0) {
-    return 0;
-  }
-
-  var incorrectCount = answer.length - correctCount;
-  var finalIncorrect = correctCount - incorrectCount;
-
-  rawScore = finalIncorrect / maxCorrect;
-  return Math.round(rawScore * 100) / 100;
-};
-
-
 
 /*
  Create a response to the answer based on the question, the answer and the respond settings
@@ -70,15 +43,36 @@ exports.respond = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
 
-  var answerIsCorrect = this.isCorrect(answer, question.correctResponse.value);
+  var config = question.model.config || {};
+  var minSelections = config.minSelections || 0;
+  var maxSelections = config.maxSelections || Number.MAX_VALUE;
+  var checkIfCorrect = config.checkIfCorrect == "yes" || config.checkIfCorrect == "true";
+  var selectionNumberIsCorrect = answer.length >= minSelections && answer.length <= maxSelections;
+  var isAnswerPartOfCorrectAnswer = _.every(answer, function(a) {
+     return _.contains(question.correctResponse.value, a);
+  });
+
+  var answerIsCorrect = checkIfCorrect ? isAnswerPartOfCorrectAnswer : selectionNumberIsCorrect;
+  var answerIsIncorrect = !answerIsCorrect;
 
   var response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
-    score: calculateScore(question, answer)
+    score: answerIsCorrect ? 1 : 0
   };
 
   if (settings.showFeedback) {
     response.feedback = buildFeedback(question, answer, settings, answerIsCorrect);
+
+    response.outcome = [];
+
+    if (selectionNumberIsCorrect) {
+      response.outcome.push("responsesNumberCorrect");
+      if (answerIsCorrect) response.outcome.push("responsesCorrect");
+      if (answerIsIncorrect) response.outcome.push("responsesIncorrect");
+    }
+    if (answer.length < minSelections) response.outcome.push("responsesBelowMin");
+    if (answer.length > maxSelections) response.outcome.push("responsesExceedMax");
+
   }
 
   return response;

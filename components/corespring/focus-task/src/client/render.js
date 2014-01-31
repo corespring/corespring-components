@@ -194,7 +194,7 @@ var main = [
       link: link,
       template: [
         '<div>',
-        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
+        '  <span class="prompt" ng-bind-html-unsafe="question.prompt"></span>',
         '  <div class="focus-container">',
         '    <div ng-repeat="row in getRows()">',
         '      <div class="focus-row" ng-class="question.config.orientation">',
