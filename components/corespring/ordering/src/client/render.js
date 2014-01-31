@@ -54,7 +54,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       },
 
       getSession: function () {
-        var answer = _.map(scope.model.choices, function (c) {
+        var answer = _.map(scope.choices, function (c) {
           return c.value;
         });
         var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
@@ -110,6 +110,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     scope: {},
     template: [
       "<div class='view-ordering'>",
+      '<div class="prompt" ng-bind-html-unsafe="model.prompt"></div> ',
       '<ul ui-sortable="{disabled: !editable}" ng-model="choices">',
       '<li ng-repeat="choice in choices">',
       '<div class="choice" ng-class="{true:\'correct\', false:\'incorrect\'}[feedback[choice.value].correct]">{{choice.label}} </div>',

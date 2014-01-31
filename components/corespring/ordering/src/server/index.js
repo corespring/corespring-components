@@ -26,7 +26,3 @@ exports.respond = function (question, answer, settings) {
 
   return response;
 };
-
-exports.render = function (model) {
-  return model;
-};
