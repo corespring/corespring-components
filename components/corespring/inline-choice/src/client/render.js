@@ -157,7 +157,7 @@ main = [
         '</span>',
           '<ul class="dropdown-menu">',
             '<li ng-repeat="choice in choices">',
-              '<a ng-click="select(choice)">{{choice.label}}</a>',
+              '<a ng-click="select(choice)" ng-bind-html-unsafe="choice.label"></a>',
             '</li>',
           '</ul>',
         '</div>',
