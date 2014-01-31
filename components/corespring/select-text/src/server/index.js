@@ -3,7 +3,7 @@ var _ = require('lodash');
 var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
 var sentenceRegexp = /()(\|*[A-Z](?:.|\n)+?)([.?!])/g;
 
-exports.preprocessText = function(text) {
+exports.preprocessText = function (text) {
 
   var nameRegexp = /([A-Z][a-z]+ [A-Z])\.( [A-Z][a-z]+)/g;
   var correctOpenTagRegexp = /<correct>/ig;
@@ -52,32 +52,32 @@ var buildCorrectIndexesArray = function (text, selectionUnit) {
   while (match = regexp.exec(text)) {
     var correctTokenMatch = match[0].match(/[|](.*)/);
     if (correctTokenMatch) {
-      correctIndexes.push(""+idx);
+      correctIndexes.push("" + idx);
     }
     idx++;
   }
   return correctIndexes;
 };
 
-var buildFeedback = function(answer, correctIndexes, checkIfCorrect, selectionCountIsFine) {
+var buildFeedback = function (answer, correctIndexes, checkIfCorrect, selectionCountIsFine) {
   var feedback = {};
 
   if (checkIfCorrect) {
-    _.each(correctIndexes, function(correctIndex) {
+    _.each(correctIndexes, function (correctIndex) {
       feedback[correctIndex] = {
         wouldBeCorrect: true
       };
     });
   }
-  _.each(answer, function(answerIndex) {
-     feedback[answerIndex] = {
-       correct: (!checkIfCorrect && selectionCountIsFine) || (checkIfCorrect && _.contains(correctIndexes, answerIndex))
-     };
+  _.each(answer, function (answerIndex) {
+    feedback[answerIndex] = {
+      correct: (!checkIfCorrect && selectionCountIsFine) || (checkIfCorrect && _.contains(correctIndexes, answerIndex))
+    };
   });
   return feedback;
 };
 
-exports.render = function(json) {
+exports.render = function (json) {
 
   json.wrappedText = exports.wrapTokensWithHtml(exports.preprocessText(json.model.text), json.model.config.selectionUnit)
 
@@ -94,9 +94,13 @@ exports.respond = function (question, answer, settings) {
   var checkIfCorrect = (question.model.config.checkIfCorrect == "yes" || question.model.config.checkIfCorrect == "true");
 
 
-  var correctIndexes =  buildCorrectIndexesArray(text, question.model.config.selectionUnit);
+  var correctIndexes = buildCorrectIndexesArray(text, question.model.config.selectionUnit);
   var selectionCountIsFine = (minSelection <= selectionCount && maxSelection >= selectionCount);
-  var isCorrect = checkIfCorrect ? _.isEqual(answer, correctIndexes) : selectionCountIsFine;
+  var isEverySelectedCorrect = _.every(answer, function (a) {
+    return _.contains(correctIndexes, a);
+  });
+  var isCorrect = selectionCountIsFine;
+  if (checkIfCorrect) isCorrect &= isEverySelectedCorrect;
 
   var res = {
     correctness: isCorrect ? "correct" : "incorrect",
@@ -108,8 +112,10 @@ exports.respond = function (question, answer, settings) {
 
     res.outcome = [];
     if (selectionCount < minSelection) res.outcome.push("responsesBelowMin");
-    if (selectionCount > maxSelection) res.outcome.push("responsesExceedMax");
-    if (isCorrect) res.outcome.push("responsesCorrect"); else res.outcome.push("responsesIncorrect");
+    else if (selectionCount > maxSelection) res.outcome.push("responsesExceedMax");
+    else res.outcome.push("responsesNumberCorrect");
+    if (isCorrect) res.outcome.push("responsesCorrect");
+    if (checkIfCorrect && !isEverySelectedCorrect) res.outcome.push("responsesIncorrect");
   }
 
   return res;
