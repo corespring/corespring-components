@@ -4,11 +4,13 @@
 }
 
 .view-feedback {
+    margin-top: 10px;
     display: inline-block;
     border: 2px solid #000000;
     border-radius: 5px;
     padding: 10px;
     padding-left: 30px;
+    min-width: 500px;
 }
 
 .view-feedback.correct {
