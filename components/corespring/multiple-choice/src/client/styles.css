@@ -4,12 +4,6 @@
 
 .view-multiple-choice td {
     vertical-align: top;
-    padding: 5px;
-}
-
-.view-multiple-choice .prompt {
-    color: #666666;
-    font-style: italic;
 }
 
 .view-multiple-choice .correct-block {
@@ -33,6 +27,7 @@
 
 .view-multiple-choice .choice-holder {
     display: table-row;
+    line-height: 10px;
 }
 
 .view-multiple-choice .choice-feedback-holder {
