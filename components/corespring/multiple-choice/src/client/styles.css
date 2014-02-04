@@ -27,7 +27,6 @@
 
 .view-multiple-choice .choice-holder {
     display: table-row;
-    line-height: 10px;
 }
 
 .view-multiple-choice .choice-feedback-holder {
@@ -84,7 +83,8 @@
 .view-multiple-choice .choice-currency-symbol,
 .view-multiple-choice .choice-label {
     display: table-cell;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .view-multiple-choice .choice-label span {
