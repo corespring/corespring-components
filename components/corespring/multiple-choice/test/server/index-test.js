@@ -184,5 +184,26 @@ describe('multiple-choice server logic', function() {
       response.score.should.eql(expected.score);
     });
 
+    it('should show empty feedback if no feedback is defined', function() {
+      var noFeedbackComponent = _.cloneDeep(component);
+      delete noFeedbackComponent.feedback;
+
+      var response = server.respond(noFeedbackComponent, ["apple", "carrot"], settings(true, true, false));
+      var expected = {
+        correctness: "incorrect",
+        score: 0,
+        feedback: [
+          {
+            value: "apple",
+            correct: false
+          }, {
+            value: "carrot",
+            correct: true
+          }
+        ]
+      };
+      response.should.eql(expected);
+    });
+
   });
 });

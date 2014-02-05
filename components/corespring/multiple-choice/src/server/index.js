@@ -1,19 +1,5 @@
-var buildFeedback, calculateScore, correctResponseFeedback, feedbackByValue, isCorrectChoice, userResponseFeedback;
-var scoringUtils = require("corespring.scoring-utils.server");
 var _ = require('lodash');
 
-exports.render = function(element) {
-  element.choices = _.map(element.choices, function(e) {
-    return {
-      label: e.label,
-      value: e.value
-    };
-  });
-  delete element.points;
-  delete element.correctResponse;
-  delete element.feedback;
-  return element;
-};
 
 var feedbackByValue = function(q, v) {
   var originalFb = _.find(q.feedback, function(f) {
@@ -30,7 +16,7 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
 
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     correctKey = _ref[_i];
-    fb = feedbackByValue(q, correctKey);
+    fb = feedbackByValue(q, correctKey) || {value: correctKey};
 
     if(!fb){
       return;
@@ -68,7 +54,7 @@ var userResponseFeedback = function(fbArray, q, answer) {
   _results = [];
   for (_i = 0, _len = answer.length; _i < _len; _i++) {
     userChoice = answer[_i];
-    fb = feedbackByValue(q, userChoice);
+    fb = feedbackByValue(q, userChoice) || {value: userChoice};
     if (fb) {
       fb.correct = isCorrectChoice(q, userChoice);
       if (fb.correct) {
