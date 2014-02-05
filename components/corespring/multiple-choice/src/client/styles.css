@@ -1,5 +1,6 @@
 .view-multiple-choice {
     margin-bottom: 20px;
+    margin-left: 20px;
 }
 .view-multiple-choice .correct-label {
     color: #008000;
@@ -100,19 +101,6 @@
     vertical-align: top;
 }
 
-.view-multiple-choice .choice-label span {
-    width: 100%;
-    display: inline-block;
-}
-
-.view-multiple-choice .rightAlign .choice-label span {
-    text-align: right;
-}
-
-.view-multiple-choice .horizontal {
-    display: table-cell;
-}
-
 .view-multiple-choice .choice-holder.tile {
     float: left;
     padding-right: 10px;
@@ -140,10 +128,77 @@
     width: 500px;
 }
 
+/* Horizontal Layout */
+
+
+
+.view-multiple-choice .horizontal .choice-input {
+    display: table-row;
+}
+
+.view-multiple-choice .horizontal .choice-input input {
+}
+
+.cell-wrapper {
+    display: table-cell;
+}
+
+.view-multiple-choice .choice-label span {
+    width: 100%;
+    display: inline-block;
+}
+
+.view-multiple-choice .rightAlign .choice-label span {
+    text-align: right;
+}
+
+.view-multiple-choice .horizontal {
+    display: table-cell;
+}
+
+.view-multiple-choice .horizontal .choice-wrapper {
+    text-align: center;
+}
+
+
+.view-multiple-choice .horizontal .correct * {
+    border: none;
+}
+
+.view-multiple-choice .horizontal .incorrect * {
+    border: none;
+}
+
+.view-multiple-choice .horizontal .correct .choice-wrapper {
+    border: 2px solid #80b312;
+    border-radius: 6px;
+}
+
+.view-multiple-choice .horizontal .incorrect .choice-wrapper {
+    border: 2px solid #F8A31A;
+    border-radius: 6px;
+}
+
+
 .view-multiple-choice .horizontal .choice-feedback-holder {
+}
+
+.view-multiple-choice .horizontal .choice-feedback-holder div {
     display: none;
+    margin-left: 0px;
+}
+
+.view-multiple-choice .horizontal .cs-feedback {
+    display: inline-block;
+    position: relative;
+    width: auto;
+    margin-left: -32px;
 }
 
 .score-table td {
     padding-right: 80px;
 }
+
+
+
+
