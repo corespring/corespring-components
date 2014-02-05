@@ -16,7 +16,8 @@ component = {
     prompt: "Which of these is a vegetable?",
     config: {
       orientation: "vertical",
-      shuffle: true
+      shuffle: true,
+      checkIfCorrect: "yes"
     },
     choices: [
       {
