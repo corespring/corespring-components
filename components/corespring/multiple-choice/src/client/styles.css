@@ -143,11 +143,6 @@
     display: table-cell;
 }
 
-.view-multiple-choice .choice-label span {
-    width: 100%;
-    display: inline-block;
-}
-
 .view-multiple-choice .rightAlign .choice-label span {
     text-align: right;
 }
