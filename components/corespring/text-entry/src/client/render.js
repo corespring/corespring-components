@@ -69,7 +69,7 @@ main = [
       replace: true,
       link: link(),
       template: [ '<div class="view-text-entry">',
-        '<input type="text" ng-model="answer" class="form-control text-input {{correctClass}}"/>',
+        '<input type="text" ng-model="answer" ng-disabled="!editable" class="form-control text-input {{correctClass}}"/>',
         '</div>'].join("\n")
     };
 
