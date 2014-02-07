@@ -2,3 +2,17 @@
     width: 100%;
 }
 
+.view-extended-text-entry textarea {
+    display: block;
+    margin: 0 0 30px;
+    border: 1px solid #797979;
+    -moz-box-shadow: inset 0 0 8px #d1d1d1;
+    -webkit-box-shadow: inset 0 0 8px #d1d1d1;
+    box-shadow: inset 0 0 8px #d1d1d1;
+    padding: 7px;
+    text-align: left;
+    font: 14px 'Ubuntu', Arial, Helvetica, sans-serif;
+    color: #333;
+    resize: none;
+    max-width: 95%;
+}
