@@ -38,6 +38,10 @@ var main = [
         }
       };
 
+      scope.trust = function(line) {
+        return $sce.trustAsHtml(line);
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
@@ -50,7 +54,7 @@ var main = [
       template: [
         '<div class="view-numbered-lines">',
         '  <ol>',
-        '    <li ng-repeat="line in lines">{{line}}',
+        '    <li ng-repeat="line in lines"  ng-bind-html="trust(line)"></li>',
         '    </li>',
         '  </ol>',
         '</div>'

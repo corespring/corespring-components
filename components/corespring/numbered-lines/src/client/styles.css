@@ -13,8 +13,9 @@
 .view-numbered-lines li {
     display: block;
     margin-left: 2em;
-    padding: 0px;
-
+    padding: 0px 0px 0px 2em;
+    text-indent: -1em;
+    margin-bottom: 2px;
 }
 
 .view-numbered-lines li:before {
@@ -26,3 +27,4 @@
     padding-right: 1em;
     margin-left: -2em;
 }
+
