@@ -1,2 +1,3 @@
 exports.respond = function () {
+  return {};
 };
