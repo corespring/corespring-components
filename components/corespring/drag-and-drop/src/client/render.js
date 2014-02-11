@@ -13,7 +13,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       scope.$apply(function () {
         if (w > scope.maxWidth) scope.maxWidth = w;
         if (h > scope.maxHeight) scope.maxHeight = h;
-        scope.choiceStyle = {width: (scope.maxWidth+16)+'px', height: (scope.maxHeight+10)+'px'};
+        scope.choiceStyle = {width: (scope.maxWidth+20)+'px', height: (scope.maxHeight+16)+'px'};
       });
     };
 
@@ -382,7 +382,7 @@ var landingPlace = [function () {
 
       scope.$watch("maxWidth + maxHeight", function (n) {
         var isMultiple = scope.cardinality != 'single';
-        var mw = scope.maxWidth + 25;
+        var mw = scope.maxWidth + 30;
         var maxWidth = isMultiple ? (mw * scope.columnsPerRow) : mw;
         if (scope.expandHorizontal) {
           scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
@@ -412,14 +412,16 @@ var landingPlace = [function () {
       '      ui-sortable="sortableOptions" ',
       '      ng-model="landingPlaceChoices[id]"',
       '      >',
-      '        <div ng-repeat="choice in landingPlaceChoices[id]"',
+      '        <div ng-repeat-start="choice in landingPlaceChoices[id]"',
       '             ng-style="choiceStyle" ',
       '             jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
       '             data-jqyoui-options=""',
       '             ng-model="landingPlaceChoices[id][$index]"',
       '             data-id="{{choice.id}}"',
       '             class="choice {{classForChoice(choice, $index)}}"',
-      '             ng-bind-html-unsafe="choice.content"></div>',
+      '             ng-bind-html-unsafe="choice.content">',
+      '        </div>',
+      '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
       '    </div>',
       '    </div>'].join("")
 
