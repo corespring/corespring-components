@@ -113,7 +113,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       '<div class="prompt" ng-bind-html-unsafe="model.prompt"></div> ',
       '<ul ui-sortable="{disabled: !editable}" ng-model="choices">',
       '<li ng-repeat="choice in choices">',
-      '<div class="choice" ng-class="{true:\'correct\', false:\'incorrect\'}[feedback[choice.value].correct]">{{choice.label}} </div>',
+      '<div class="choice" ng-class="{true:\'correct\', false:\'incorrect\'}[feedback[choice.value].correct]" ng-bind-html-unsafe="choice.label"> </div>',
       '</li>',
       '</ul>',
       "</div>"
