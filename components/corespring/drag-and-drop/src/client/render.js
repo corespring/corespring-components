@@ -13,7 +13,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       scope.$apply(function () {
         if (w > scope.maxWidth) scope.maxWidth = w;
         if (h > scope.maxHeight) scope.maxHeight = h;
-        scope.choiceStyle = {width: (scope.maxWidth+20)+'px', height: (scope.maxHeight+16)+'px'};
+        scope.choiceStyle = {width: (scope.maxWidth)+'px', height: (scope.maxHeight+16)+'px'};
       });
     };
 
@@ -31,7 +31,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
           if ($(e).height() > h) h = $(e).height();
         });
         if (lastW != w || lastH != h) {
-          scope.propagateDimension(w, h);
+          scope.propagateDimension(w+18, h);
         }
         lastW = w;
         lastH = h;
@@ -382,7 +382,7 @@ var landingPlace = [function () {
 
       scope.$watch("maxWidth + maxHeight", function (n) {
         var isMultiple = scope.cardinality != 'single';
-        var mw = scope.maxWidth + 30;
+        var mw = scope.maxWidth + 25;
         var maxWidth = isMultiple ? (mw * scope.columnsPerRow) : mw;
         if (scope.expandHorizontal) {
           scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
