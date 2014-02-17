@@ -98,7 +98,7 @@
     display: table-cell;
     padding-left: 10px;
     padding-right: 10px;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .view-multiple-choice .choice-holder.tile {
