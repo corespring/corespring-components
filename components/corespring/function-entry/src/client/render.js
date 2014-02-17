@@ -36,6 +36,7 @@ link = function () {
       },
 
       reset : function(){
+        scope.answer = undefined;
       },
 
       isAnswerEmpty: function(){

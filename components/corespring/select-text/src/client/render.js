@@ -3,6 +3,12 @@ var link = function () {
 
     scope.editable = true;
 
+    scope.resetSelection = function() {
+      $(element).find('.token').each(function () {
+        $(this).removeClass('correct').removeClass('incorrect');
+      });
+    };
+
     scope.highlightSelection = function (selection) {
       $(element).find('.token').each(function () {
         if (_.contains(selection, $(this).attr('id')))
@@ -67,6 +73,8 @@ var link = function () {
       },
 
       reset: function () {
+        scope.selectedTokens = undefined;
+        scope.resetSelection();
       },
 
       isAnswerEmpty: function () {
@@ -92,7 +100,8 @@ main = [
       restrict: 'AE',
       replace: true,
       link: link(),
-      template: ['<div class="view-select-text" ng-class="{true: \'enabled\', false: \'\'}[editable]">',
+      template: [
+        '<div class="view-select-text" ng-class="{true: \'enabled\', false: \'\'}[editable]">',
         '<h1>{{model.prompt}}</h1>',
         '<div class="select-text-content"></div>',
         '</div>'].join("")

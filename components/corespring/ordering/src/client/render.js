@@ -76,6 +76,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
 
       reset: function () {
         scope.resetChoices();
+        scope.feedback = undefined;
       },
 
       isAnswerEmpty: function () {

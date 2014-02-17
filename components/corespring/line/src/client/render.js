@@ -33,7 +33,8 @@ var main = ['$compile', '$modal', '$rootScope',
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See correct answer</a></div>",
         "   <div id='initialParams' ng-transclude></div>",
-        "</div>"].join(""),
+        "</div>"
+      ].join(""),
       restrict: 'AE',
       transclude: true,
       scope: true,
@@ -307,6 +308,8 @@ var main = ['$compile', '$modal', '$rootScope',
 
           reset: function () {
             scope.renewResponse([]);
+            scope.points.B = {}
+            scope.points.A = {}
           },
 
           isAnswerEmpty: function () {

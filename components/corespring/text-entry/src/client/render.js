@@ -35,6 +35,8 @@ link = function () {
       },
 
       reset : function(){
+        scope.answer = undefined;
+        scope.correctClass = undefined;
       },
 
       isAnswerEmpty: function(){

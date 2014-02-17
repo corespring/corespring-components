@@ -3,20 +3,6 @@ var link, main;
 link = function ($sce, $timeout) {
   return function (scope, element, attrs) {
 
-    var resetFeedback = function (choices) {
-      _.each(choices, function (c) {
-        if (c) {
-          delete c.feedback;
-          delete c.correct;
-        }
-      });
-    };
-
-    var resetChoices = function () {
-      scope.answer.choices = {};
-      scope.answer.choice = "";
-    };
-
     var layoutChoices = function (choices, order) {
       if (!order) {
         var shuffled = _.shuffle(_.cloneDeep(choices));
@@ -98,8 +84,7 @@ link = function ($sce, $timeout) {
       },
 
       reset : function(){
-        resetChoices();
-        resetFeedback(scope.choices);
+        scope.selected = undefined;
       },
 
       isAnswerEmpty: function(){

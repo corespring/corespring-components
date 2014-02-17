@@ -34,7 +34,8 @@ link = function () {
       setMode : function(newMode) {
       },
 
-      reset : function(){
+      reset : function() {
+        scope.answer = undefined;
       },
 
       isAnswerEmpty: function(){

@@ -28,6 +28,7 @@ var main = [
         },
 
         reset : function(){
+          scope.correctClass = scope.feedback = undefined;
         },
 
         isAnswerEmpty: function(){
