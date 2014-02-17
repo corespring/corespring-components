@@ -16,11 +16,14 @@ exports.respond = function (question, answer, settings) {
     throw "Error - the uids must match";
   }
 
-  var options = {};
-  options.variable = (question.correctResponse.vars && question.correctResponse.vars.split(",")[0]) || 'x';
-  options.sigfigs = question.correctResponse.sigfigs || 3;
+  var correctResponse = _.isObject(question.correctResponse) ? question.correctResponse : {equation: question.correctResponse};
 
-  answerIsCorrect = this.isCorrect(answer, question.correctResponse.equation, options);
+  var options = {};
+  options.variable = (correctResponse.vars && correctResponse.vars.split(",")[0]) || 'x';
+  options.sigfigs = correctResponse.sigfigs || 3;
+
+  var isCorrectForm = !_.isUndefined(answer.match(/y\s*=/));
+  answerIsCorrect = exports.isCorrect(answer, correctResponse.equation, options);
 
   response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
@@ -28,6 +31,9 @@ exports.respond = function (question, answer, settings) {
   };
 
   if (settings.showFeedback) {
+    response.outcome = [];
+    if (!answerIsCorrect) response.outcome.push("incorrectEquation");
+    if (!isCorrectForm) response.outcome.push("lineEquationMatch");
   }
 
   return response;

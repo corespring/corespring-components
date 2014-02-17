@@ -3,6 +3,8 @@ var link, main;
 link = function () {
   return function (scope, element, attrs) {
 
+    scope.editable = true;
+
     scope.containerBridge = {
 
       setDataAndSession: function (dataAndSession) {
