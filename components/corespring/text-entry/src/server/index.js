@@ -1,11 +1,5 @@
 var _ = require('lodash');
 
-exports.render = function (element) {
-  delete element.points;
-  delete element.correctResponse;
-  delete element.feedback;
-  return element;
-};
 
 exports.isCorrect = function (answer, correctAnswer) {
   if (_.isArray(correctAnswer))
@@ -26,11 +20,12 @@ exports.respond = function (question, answer, settings) {
 
   response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
-    score: answerIsCorrect ? 1 : 0
+    score: answerIsCorrect ? 1 : 0,
+    feedback: {}
   };
 
   if (settings.showFeedback) {
-    response.feedback = "boo";
+    response.feedback = {correctness: response.correctness};
   }
 
   return response;

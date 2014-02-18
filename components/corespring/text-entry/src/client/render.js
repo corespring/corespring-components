@@ -28,7 +28,7 @@ link = function () {
         console.log("Setting Response for text entry:");
         console.log(response);
 
-        scope.correctClass = response.correctness;
+        scope.correctClass = response.feedback.correctness;
       },
 
       setMode : function(newMode) {
@@ -71,7 +71,8 @@ main = [
       restrict: 'AE',
       replace: true,
       link: link(),
-      template: [ '<div class="view-text-entry">',
+      template: [
+        '<div class="view-text-entry">',
         '<input type="text" ng-model="answer" ng-disabled="!editable" class="form-control text-input {{correctClass}}"/>',
         '</div>'].join("\n")
     };

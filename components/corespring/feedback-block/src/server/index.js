@@ -10,6 +10,8 @@ exports.isCorrect = function () {
 
 exports.respond = function (model, answer, settings, targetOutcome) {
 
+  if (!settings.showFeedback) return {};
+
   var isCorrect;
   var feedback;
 
