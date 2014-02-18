@@ -97,7 +97,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
             '   </div>',
             '   <div class="modal-footer">',
             '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-            '   </div>',
+            '   </div>'
           ].join(""),
         backdrop: true,
         scope: scope.solutionScope
@@ -265,7 +265,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
     ''+answerArea(),
     '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
     '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
-    '</div>',
+    '</div>'
 
   ].join("");
 

@@ -217,7 +217,7 @@ var main = ['$compile', '$modal', '$rootScope',
               '   </div>',
               '   <div class="modal-footer">',
               '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-              '   </div>',
+              '   </div>'
             ].join(""),
             backdrop: true,
             scope: scope.solutionScope
