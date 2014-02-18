@@ -34,7 +34,7 @@ var main = [
 
         var answers = scope.session.answers;
 
-        if (scope.inputType == "radio") {
+        if (scope.inputType === "radio") {
           scope.answer.choice = answers[0];
         } else {
           for (var i = 0; i < answers.length; i++) {
@@ -65,7 +65,7 @@ var main = [
         } else {
           var ordered = _(order).map(function (v) {
             return _.find(choices, function (c) {
-              return c.value == v;
+              return c.value === v;
             });
           }).filter(function (v) {
             return v;
@@ -94,14 +94,14 @@ var main = [
         var stash = scope.session.stash = scope.session.stash || {};
         var answers = scope.session.answers = scope.session.answers || {};
 
-        var shuffle = model.config.shuffle == true || model.config.shuffle == "true";
+        var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
 
         scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
 
         if (stash.shuffledOrder && shuffle) {
-          scope.choices = layoutChoices(model.choices, stash.shuffledOrder)
+          scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
         } else if (shuffle) {
-          scope.choices = layoutChoices(model.choices)
+          scope.choices = layoutChoices(model.choices);
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
         } else {
@@ -182,7 +182,7 @@ var main = [
       };
 
       scope.isHorizontal = function() {
-        return scope.question.config && scope.question.config.orientation == 'horizontal';
+        return scope.question.config && scope.question.config.orientation === 'horizontal';
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -206,7 +206,7 @@ var main = [
       '  <div ng-repeat-end="" class="choice-feedback-holder" ng-show="o.feedback != null">',
       '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
       '  </div>',
-      '</div>',
+      '</div>'
     ].join("");
 
     var horizontalTemplate = [
@@ -229,7 +229,7 @@ var main = [
       '      </div>',
       '    </div>',
       '  </div>',
-      '</div>',
+      '</div>'
     ].join("");
 
 

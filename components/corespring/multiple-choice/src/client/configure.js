@@ -8,7 +8,8 @@ var shuffle = [
         ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
         ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
         ' </table>',
-        '</div>'].join('\n');
+        '</div>'
+        ].join('\n');
 
 
 var main = [
@@ -156,7 +157,7 @@ var main = [
 
         scope.updateMathJax = function() {
           scope.$emit('mathJaxUpdateRequest');
-        }
+        };
 
       },
       //TODO - allow the use of templates...

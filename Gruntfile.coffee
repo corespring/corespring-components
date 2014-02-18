@@ -50,8 +50,9 @@ module.exports = (grunt) ->
         src: ['<%= common.componentPath %>/**/test/server/**/*-test.js']
 
     jshint:
-      jshintrc: '.jshintrc'
-      main: ['<%= common.componentPath %>/**/*.js']
+      options: 
+        jshintrc: '.jshintrc'
+      main: ['<%= common.componentPath %>/**/*.js', '!<%= common.componentPath %>/**/libs/**/*.js']
 
     watch:
       js:
@@ -76,6 +77,6 @@ module.exports = (grunt) ->
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest' )
-  grunt.registerTask('default', ['wrap', 'jasmine:unit'])
+  grunt.registerTask('default', ['jshint', 'test'])
 
 
