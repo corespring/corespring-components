@@ -2,10 +2,12 @@ var _ = require('lodash');
 
 
 exports.isCorrect = function (answer, correctAnswer) {
-  if (_.isArray(correctAnswer))
+  if (_.isArray(correctAnswer)){
     return _.contains(correctAnswer, answer);
-  else
-    return answer == correctAnswer;
+  }
+  else{
+    return answer === correctAnswer;
+  }
 };
 
 

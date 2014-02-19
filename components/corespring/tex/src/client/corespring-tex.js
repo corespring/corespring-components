@@ -4,10 +4,12 @@ var directive = function () {
     restrict: 'EA',
     compile: function (element, attrs) {
       var content = element.html();
-      if (attrs.inline == "false")
+      if (attrs.inline === "false"){
         element.html("$$" + content + "$$");
-      else
+      }
+      else{
         element.html("\\(" + content + "\\)");
+      }
     }
   };
 };

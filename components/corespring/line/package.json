@@ -1,10 +1,6 @@
 {
   "libraries": [
     {
-      "name": "scoring-utils",
-      "organization": "corespring"
-    },
-    {
       "name": "function-utils",
       "organization": "corespring"
     },

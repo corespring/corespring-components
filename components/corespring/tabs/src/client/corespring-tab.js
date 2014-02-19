@@ -3,7 +3,7 @@ var tab = [
       var linkFn = function(scope, elm, attrs, container) {
         
         var tab = {
-          title: attrs['title'],
+          title: attrs.title,
           
           selected: function(newVal) {
             if (newVal == null) {

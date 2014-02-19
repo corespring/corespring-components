@@ -1,10 +1,6 @@
 {
   "libraries": [
     {
-      "name": "scoring-utils",
-      "organization": "corespring"
-    },
-    {
       "name": "choice-templates",
       "organization": "corespring",
       "scope" : "editor"

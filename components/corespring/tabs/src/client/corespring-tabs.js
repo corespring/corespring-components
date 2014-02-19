@@ -5,8 +5,8 @@ var tabs = [
         
         var _this = this;
         
-        if ($attrs['ngShow']) {
-          $scope.$watch($attrs['ngShow'], function(newValue, oldValue) {
+        if ($attrs.ngShow) {
+          $scope.$watch($attrs.ngShow, function(newValue, oldValue) {
             _this.tabsAreVisible = newValue;
           }); 
         } else {

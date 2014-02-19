@@ -11,10 +11,12 @@ var link = function () {
 
     scope.highlightSelection = function (selection) {
       $(element).find('.token').each(function () {
-        if (_.contains(selection, $(this).attr('id')))
+        if (_.contains(selection, $(this).attr('id'))){
           $(this).addClass('selected');
-        else
+        }
+        else{
           $(this).removeClass('selected');
+        }
       });
 
       scope.selectedTokens = selection;
@@ -62,9 +64,9 @@ var link = function () {
         $(element).find('.token').each(function (idx, elem) {
           var id = $(elem).attr('id');
           var feedback = (response && response.feedback[id]) || {};
-          if (feedback.correct == false) $(elem).addClass('incorrect');
-          if (feedback.correct == true) $(elem).addClass('correct');
-          if (feedback.wouldBeCorrect == true) $(elem).addClass('incorrectlyNotSelected');
+          if (feedback.correct === false){ $(elem).addClass('incorrect'); }
+          if (feedback.correct === true) {$(elem).addClass('correct');}
+          if (feedback.wouldBeCorrect === true) { $(elem).addClass('incorrectlyNotSelected'); }
         });
 
       },
@@ -93,7 +95,7 @@ var link = function () {
   };
 };
 
-main = [
+var main = [
   function () {
     var def = {
       scope: {},
