@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function(question, answer, settings) {
   var correctResponse = question.correctResponse;
   var isCorrect = _.isEqual(correctResponse, answer);
   var res = {
@@ -11,7 +11,11 @@ exports.respond = function (question, answer, settings) {
 
   if (settings.showFeedback) {
     res.outcome = [];
-    if (isCorrect) {res.outcome.push('correct');} else {res.outcome.push('incorrect');}
+    if (isCorrect) {
+      res.outcome.push('correct');
+    } else {
+      res.outcome.push('incorrect');
+    }
   }
 
   return res;

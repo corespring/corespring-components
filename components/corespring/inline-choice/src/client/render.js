@@ -1,15 +1,15 @@
 var link, main;
 
-link = function ($sce, $timeout) {
-  return function (scope, element, attrs) {
+link = function($sce, $timeout) {
+  return function(scope, element, attrs) {
 
-    var layoutChoices = function (choices, order) {
+    var layoutChoices = function(choices, order) {
       if (!order) {
         var shuffled = _.shuffle(_.cloneDeep(choices));
         return shuffled;
       } else {
-        var ordered = _.map(order, function (v) {
-          return _.find(choices, function (c) {
+        var ordered = _.map(order, function(v) {
+          return _.find(choices, function(c) {
             return c.value === v;
           });
         });
@@ -20,7 +20,7 @@ link = function ($sce, $timeout) {
     };
 
     var stashOrder = function(choices) {
-      return _.map(choices, function(c){
+      return _.map(choices, function(c) {
         return c.value;
       });
     };
@@ -29,16 +29,16 @@ link = function ($sce, $timeout) {
 
     scope.containerBridge = {
 
-      setDataAndSession: function (dataAndSession) {
+      setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
         var stash = scope.session.stash = scope.session.stash || {};
         var model = scope.question;
 
-        if(stash.shuffledOrder && model.config.shuffle){
+        if (stash.shuffledOrder && model.config.shuffle) {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
-        } else if(model.config.shuffle) {
+        } else if (model.config.shuffle) {
           scope.choices = layoutChoices(model.choices);
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
@@ -47,7 +47,7 @@ link = function ($sce, $timeout) {
         }
 
         if (dataAndSession.session && dataAndSession.session.answers) {
-          var selectedChoice = _.find(scope.choices, function (c) {
+          var selectedChoice = _.find(scope.choices, function(c) {
             return c.value === dataAndSession.session.answers;
           });
 
@@ -56,7 +56,7 @@ link = function ($sce, $timeout) {
 
       },
 
-      getSession: function () {
+      getSession: function() {
         var answer = scope.selected ? scope.selected.value : null;
 
         return {
@@ -66,10 +66,10 @@ link = function ($sce, $timeout) {
       },
 
       // sets the server's response
-      setResponse: function (response) {
+      setResponse: function(response) {
         console.log("Setting Response for inline choice:");
         console.log(response);
-        _(scope.choices).each(function (c) {
+        _(scope.choices).each(function(c) {
           delete c.feedback;
           delete c.correct;
           if (response.feedback && response.feedback[c.value]) {
@@ -80,26 +80,25 @@ link = function ($sce, $timeout) {
         scope.response = response;
       },
 
-      setMode : function(newMode) {
-      },
+      setMode: function(newMode) {},
 
-      reset : function(){
+      reset: function() {
         scope.selected = undefined;
       },
 
-      isAnswerEmpty: function(){
+      isAnswerEmpty: function() {
         return _.isEmpty(this.getSession().answers);
       },
 
-      answerChangedHandler: function(callback){
-        scope.$watch("answer", function(newValue, oldValue){
-          if(newValue){
+      answerChangedHandler: function(callback) {
+        scope.$watch("answer", function(newValue, oldValue) {
+          if (newValue) {
             callback();
           }
         }, true);
       },
 
-      editable: function(e){
+      editable: function(e) {
         scope.editable = e;
       }
 
@@ -119,7 +118,7 @@ link = function ($sce, $timeout) {
 main = [
   '$sce',
   '$timeout',
-  function ($sce, $timeout) {
+  function($sce, $timeout) {
     var def;
     def = {
       scope: {},

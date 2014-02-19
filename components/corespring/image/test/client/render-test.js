@@ -1,10 +1,10 @@
-describe('corespring', function () {
+describe('corespring', function() {
 
-  describe('feedback-block render', function () {
+  describe('feedback-block render', function() {
 
-    var MockComponentRegister = function () {
+    var MockComponentRegister = function() {
       this.elements = {};
-      this.registerComponent = function (id, bridge) {
+      this.registerComponent = function(id, bridge) {
         this.elements[id] = bridge;
       };
     };
@@ -13,11 +13,11 @@ describe('corespring', function () {
 
     beforeEach(angular.mock.module('test-app'));
 
-    beforeEach(inject(function ($compile, $rootScope) {
+    beforeEach(inject(function($compile, $rootScope) {
       container = new MockComponentRegister();
 
-      $rootScope.$on('registerComponent', function(event, id, obj){
-        container.registerComponent(id,obj);
+      $rootScope.$on('registerComponent', function(event, id, obj) {
+        container.registerComponent(id, obj);
       });
 
       element = $compile("<corespring-image-render id='1'></corespring-image-render>")($rootScope.$new());
@@ -25,7 +25,7 @@ describe('corespring', function () {
       rootScope = $rootScope;
     }));
 
-    it('constructs', function () {
+    it('constructs', function() {
       expect(element).toNotBe(null);
     });
 

@@ -1,5 +1,5 @@
 var main = ['$compile', '$modal', '$rootScope',
-  function ($compile, $modal, $rootScope) {
+  function($compile, $modal, $rootScope) {
     return {
       template: [
         "<div class='graph-interaction'>",
@@ -18,24 +18,26 @@ var main = ['$compile', '$modal', '$rootScope',
       restrict: 'AE',
       transclude: true,
       scope: true,
-      controller: function ($scope) {
+      controller: function($scope) {
         $scope.submissions = 0;
         $scope.points = {};
-        this.setInitialParams = function (initialParams) {
+        this.setInitialParams = function(initialParams) {
           $scope.initialParams = initialParams;
         };
 
-        this.getInitialParams = function () {
+        this.getInitialParams = function() {
           return $scope.initialParams;
         };
 
-        $scope.$watch('graphCallback', function (n) {
+        $scope.$watch('graphCallback', function(n) {
           if ($scope.graphCallback) {
             if ($scope.initialParams) {
               $scope.graphCallback($scope.initialParams);
             }
             if ($scope.locked) {
-              $scope.graphCallback({lockGraph: true});
+              $scope.graphCallback({
+                lockGraph: true
+              });
             }
             if ($scope.answers) {
               $scope.renewResponse($scope.answers);
@@ -43,27 +45,25 @@ var main = ['$compile', '$modal', '$rootScope',
           }
         });
 
-        $scope.$watch('showNoResponseFeedback', function () {
+        $scope.$watch('showNoResponseFeedback', function() {
           // TODO: Empty response submission - 2px yellow border
-//          if (!$scope.locked && $scope.isEmptyItem($scope.graphCoords) && $scope.showNoResponseFeedback) {
-//            $scope.graphCallback({graphStyle: {borderColor: "yellow", borderWidth: "2px"}});
-//          }
+          //          if (!$scope.locked && $scope.isEmptyItem($scope.graphCoords) && $scope.showNoResponseFeedback) {
+          //            $scope.graphCallback({graphStyle: {borderColor: "yellow", borderWidth: "2px"}});
+          //          }
         });
 
-        $scope.interactionCallback = function (params) {
+        $scope.interactionCallback = function(params) {
           function round(coord) {
             var px = coord.x;
             var py = coord.y;
             if (px > $scope.domain) {
               px = $scope.domain;
-            }
-            else if (px < (0 - $scope.domain)) {
+            } else if (px < (0 - $scope.domain)) {
               px = 0 - $scope.domain;
             }
             if (py > $scope.range) {
               py = $scope.range;
-            }
-            else if (py < (0 - $scope.range)) {
+            } else if (py < (0 - $scope.range)) {
               py = 0 - $scope.range;
             }
             if ($scope.sigfigs > -1) {
@@ -71,73 +71,94 @@ var main = ['$compile', '$modal', '$rootScope',
               px = Math.round(px * multiplier) / multiplier;
               py = Math.round(py * multiplier) / multiplier;
             }
-            return {x: px, y: py};
+            return {
+              x: px,
+              y: py
+            };
           }
 
           if (params.points) {
             $scope.points = params.points;
-            $scope.pointResponse = _.map(params.points, function (coord) {
+            $scope.pointResponse = _.map(params.points, function(coord) {
               var newCoord = round(coord);
               return newCoord.x + "," + newCoord.y;
             });
-            $scope.graphCallback({graphStyle: {}});
+            $scope.graphCallback({
+              graphStyle: {}
+            });
           } else {
             $scope.pointResponse = null;
           }
         };
 
-        $scope.lockGraph = function () {
+        $scope.lockGraph = function() {
           $scope.locked = true;
-          $scope.graphCallback({lockGraph: true});
+          $scope.graphCallback({
+            lockGraph: true
+          });
         };
 
-        $scope.$on('controlBarChanged', function () {
+        $scope.$on('controlBarChanged', function() {
           if ($scope.settingsHaveChanged) {
-            $scope.graphCallback({clearBoard: true});
+            $scope.graphCallback({
+              clearBoard: true
+            });
             $scope.correctAnswerBody = "clear";
             $scope.locked = false;
           }
         });
 
-        $scope.renewResponse = function (response) {
+        $scope.renewResponse = function(response) {
           if (response) {
             var points = [];
             for (var i = 0; i < response.length; i++) {
               var point = response[i].split(",");
-              points.push({x: point[0], y: point[1]});
+              points.push({
+                x: point[0],
+                y: point[1]
+              });
             }
-            if ($scope.graphCallback){
-              $scope.graphCallback({points: points});
+            if ($scope.graphCallback) {
+              $scope.graphCallback({
+                points: points
+              });
             }
           }
           return response;
         };
 
-        $scope.undo = function () {
+        $scope.undo = function() {
           if (!$scope.locked) {
-            var pointsArray = _.map($scope.points, function (point, ptName) {
-              return {name: ptName, index: point.index };
+            var pointsArray = _.map($scope.points, function(point, ptName) {
+              return {
+                name: ptName,
+                index: point.index
+              };
             });
-            var removeName = _.max(pointsArray,function (point) {
+            var removeName = _.max(pointsArray, function(point) {
               return point.index;
             }).name;
             delete $scope.points[removeName];
             if ($scope.graphCallback) {
-              $scope.graphCallback({points: $scope.points});
+              $scope.graphCallback({
+                points: $scope.points
+              });
             }
           }
         };
 
-        $scope.startOver = function () {
+        $scope.startOver = function() {
           if (!$scope.locked) {
             if ($scope.graphCallback) {
-              $scope.graphCallback({points: {}});
+              $scope.graphCallback({
+                points: {}
+              });
             }
           }
         };
       },
 
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
 
         var createGraphAttributes = function(config) {
           return {
@@ -163,19 +184,22 @@ var main = ['$compile', '$modal', '$rootScope',
 
           var graphAttrs = createGraphAttributes(scope.config);
           graphContainer.attr(graphAttrs);
-          graphContainer.css({width: containerWidth, height: containerHeight});
+          graphContainer.css({
+            width: containerWidth,
+            height: containerHeight
+          });
 
           $compile(graphContainer)(scope);
         }
 
-        scope.seeSolution = function () {
+        scope.seeSolution = function() {
           scope.solutionScope = $rootScope.$new();
           scope.solutionScope.answers = scope.correctResponse;
           scope.solutionScope.config = scope.config;
 
           $modal.open({
-            controller: function ($scope, $modalInstance) {
-              $scope.ok = function () {
+            controller: function($scope, $modalInstance) {
+              $scope.ok = function() {
                 $modalInstance.dismiss('cancel');
               };
             },
@@ -198,7 +222,7 @@ var main = ['$compile', '$modal', '$rootScope',
 
         scope.containerBridge = {
 
-          setDataAndSession: function (dataAndSession) {
+          setDataAndSession: function(dataAndSession) {
             console.log("Setting Session for Point", dataAndSession);
             var config = dataAndSession.data.model.config;
             scope.config = config;
@@ -221,7 +245,7 @@ var main = ['$compile', '$modal', '$rootScope',
             var graphContainer = element.find('.graph-container');
             if (config.graphWidth && config.graphHeight) {
               containerWidth = parseInt(config.graphWidth, 10);
-             containerHeight = parseInt(config.graphHeight, 10);
+              containerHeight = parseInt(config.graphHeight, 10);
             } else {
               containerHeight = containerWidth = graphContainer.width();
             }
@@ -229,7 +253,10 @@ var main = ['$compile', '$modal', '$rootScope',
             var graphAttrs = createGraphAttributes(config);
 
             graphContainer.attr(graphAttrs);
-            graphContainer.css({width: containerWidth, height: containerHeight});
+            graphContainer.css({
+              width: containerWidth,
+              height: containerHeight
+            });
             $compile(graphContainer)(scope);
 
             if (dataAndSession.session) {
@@ -237,38 +264,48 @@ var main = ['$compile', '$modal', '$rootScope',
             }
           },
 
-          getSession: function () {
+          getSession: function() {
             return {
               answers: scope.pointResponse
             };
           },
 
-          setResponse: function (response) {
+          setResponse: function(response) {
             if (response && response.correctness === "correct") {
-              scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, pointsStyle: "green"});
+              scope.graphCallback({
+                graphStyle: {
+                  borderColor: "green",
+                  borderWidth: "2px"
+                },
+                pointsStyle: "green"
+              });
             } else {
-              scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, pointsStyle: "red"});
+              scope.graphCallback({
+                graphStyle: {
+                  borderColor: "red",
+                  borderWidth: "2px"
+                },
+                pointsStyle: "red"
+              });
               scope.correctResponse = response.correctResponse;
             }
 
             scope.lockGraph();
           },
 
-          setMode: function (newMode) {
-          },
+          setMode: function(newMode) {},
 
-          reset: function () {
+          reset: function() {
             scope.renewResponse([]);
           },
 
-          isAnswerEmpty: function () {
+          isAnswerEmpty: function() {
             return _.isUndefined(scope.pointResponse) || _.isEmpty(scope.pointResponse) || scope.pointResponse.length === 0;
           },
 
-          answerChangedHandler: function (callback) {
-          },
+          answerChangedHandler: function(callback) {},
 
-          editable: function (e) {
+          editable: function(e) {
             scope.editable = e;
           }
 
@@ -283,6 +320,7 @@ var main = ['$compile', '$modal', '$rootScope',
 
 exports.framework = 'angular';
 exports.directives = [
-  { directive: main }
+  {
+    directive: main
+  }
 ];
-

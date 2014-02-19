@@ -3,17 +3,17 @@
 
 var def = [
   '$log',
-  function ($log) {
+  function($log) {
     var ck;
     return {
       require: '?ngModel',
-      link: function (scope, elm, attr, ngModel) {
-       
-        var initCk = function(){
+      link: function(scope, elm, attr, ngModel) {
+
+        var initCk = function() {
 
           ck = CKEDITOR.replace(elm[0], {
             toolbar: [
-              ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo','Smiley'],
+              ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo', 'Smiley'],
               ['Bold', 'Italic', 'Underline'],
               ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
               ['Image']
@@ -21,14 +21,14 @@ var def = [
             height: '100px'
           });
 
-          ck.on('pasteState', function () {
-              return scope.$apply(function () {
-                ngModel.$setViewValue(ck.getData());
-              });
+          ck.on('pasteState', function() {
+            return scope.$apply(function() {
+              ngModel.$setViewValue(ck.getData());
+            });
           });
 
-          ngModel.$render = function (value) {
-            if(ck.getData() !== ngModel.$viewValue){
+          ngModel.$render = function(value) {
+            if (ck.getData() !== ngModel.$viewValue) {
               ck.setData(ngModel.$viewValue);
             }
           };
@@ -38,8 +38,8 @@ var def = [
           return;
         }
 
-        if(!CKEDITOR.replace) {
-          CKEDITOR.domReady(function(event){
+        if (!CKEDITOR.replace) {
+          CKEDITOR.domReady(function(event) {
             initCk();
           });
         } else {
@@ -52,4 +52,7 @@ var def = [
 
 
 exports.framework = "angular";
-exports.directive = { name: "ckEditor", directive: def };
+exports.directive = {
+  name: "ckEditor",
+  directive: def
+};

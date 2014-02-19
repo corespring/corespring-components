@@ -1,12 +1,12 @@
 var _ = require('lodash');
 
-var feedbackByValue = function (q, v) {
+var feedbackByValue = function(q, v) {
   return _.find(q.feedback, function(f) {
     return f.value === v;
   });
 };
 
-var userResponseFeedback = function (fbArray, q, answer) {
+var userResponseFeedback = function(fbArray, q, answer) {
   var fb, userChoice, _i, _len, _results;
   userChoice = answer;
   fb = feedbackByValue(q, userChoice);
@@ -15,15 +15,15 @@ var userResponseFeedback = function (fbArray, q, answer) {
   fbArray[userChoice] = fb;
 };
 
-exports.isCorrect = function (answer, correctAnswer) {
+exports.isCorrect = function(answer, correctAnswer) {
   return answer === correctAnswer;
 };
 
-var isCorrectChoice = function (q, choice) {
+var isCorrectChoice = function(q, choice) {
   return q.correctResponse.value === choice;
 };
 
-var buildFeedback = function (question, answer, settings, isCorrect) {
+var buildFeedback = function(question, answer, settings, isCorrect) {
   var out = {};
   if (settings.highlightUserResponse) {
     userResponseFeedback(out, question, answer);
@@ -31,7 +31,7 @@ var buildFeedback = function (question, answer, settings, isCorrect) {
   return out;
 };
 
-var calculateScore = function (question, answer) {
+var calculateScore = function(question, answer) {
   return question.correctResponse.value === answer ? 1.0 : 0.0;
 };
 
@@ -40,7 +40,7 @@ var calculateScore = function (question, answer) {
  */
 
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function(question, answer, settings) {
   var answerIsCorrect, response;
 
   if (question && answer && question._uid !== answer._uid) {
@@ -48,7 +48,7 @@ exports.respond = function (question, answer, settings) {
   }
   answerIsCorrect = this.isCorrect(answer, question.correctResponse.value);
   response = {
-    correctness:  answerIsCorrect ? "correct" : "incorrect",
+    correctness: answerIsCorrect ? "correct" : "incorrect",
     score: calculateScore(question, answer)
   };
   if (settings.showFeedback) {

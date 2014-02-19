@@ -3,7 +3,7 @@ var _ = require('lodash');
 var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
 var sentenceRegexp = /()(\|*[A-Z](?:.|\n)+?)([.?!])/g;
 
-exports.preprocessText = function (text) {
+exports.preprocessText = function(text) {
 
   var nameRegexp = /([A-Z][a-z]+ [A-Z])\.( [A-Z][a-z]+)/g;
   var correctOpenTagRegexp = /<correct>/ig;
@@ -16,7 +16,7 @@ exports.preprocessText = function (text) {
   return result;
 };
 
-exports.tokenizeText = function (text, selectionUnit) {
+exports.tokenizeText = function(text, selectionUnit) {
   var tokens = [];
 
   var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
@@ -28,10 +28,10 @@ exports.tokenizeText = function (text, selectionUnit) {
   return tokens;
 };
 
-exports.wrapTokensWithHtml = function (text, selectionUnit) {
+exports.wrapTokensWithHtml = function(text, selectionUnit) {
   var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
   var idx = 0;
-  var wrappedToken = text.replace(regexp, function (match, prefix, token, delimiter) {
+  var wrappedToken = text.replace(regexp, function(match, prefix, token, delimiter) {
     var cs = "";
     var prefixTags = "";
     var correctTokenMatch = token.match(/[|](.*)/);
@@ -44,7 +44,7 @@ exports.wrapTokensWithHtml = function (text, selectionUnit) {
   return wrappedToken;
 };
 
-var buildCorrectIndexesArray = function (text, selectionUnit) {
+var buildCorrectIndexesArray = function(text, selectionUnit) {
   var correctIndexes = [];
 
   var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
@@ -63,17 +63,17 @@ var buildCorrectIndexesArray = function (text, selectionUnit) {
   return correctIndexes;
 };
 
-var buildFeedback = function (answer, correctIndexes, checkIfCorrect, selectionCountIsFine) {
+var buildFeedback = function(answer, correctIndexes, checkIfCorrect, selectionCountIsFine) {
   var feedback = {};
 
   if (checkIfCorrect) {
-    _.each(correctIndexes, function (correctIndex) {
+    _.each(correctIndexes, function(correctIndex) {
       feedback[correctIndex] = {
         wouldBeCorrect: true
       };
     });
   }
-  _.each(answer, function (answerIndex) {
+  _.each(answer, function(answerIndex) {
     feedback[answerIndex] = {
       correct: (!checkIfCorrect && selectionCountIsFine) || (checkIfCorrect && _.contains(correctIndexes, answerIndex))
     };
@@ -81,14 +81,14 @@ var buildFeedback = function (answer, correctIndexes, checkIfCorrect, selectionC
   return feedback;
 };
 
-exports.render = function (json) {
+exports.render = function(json) {
 
   json.wrappedText = exports.wrapTokensWithHtml(exports.preprocessText(json.model.text), json.model.config.selectionUnit);
 
   return json;
 };
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function(question, answer, settings) {
 
   var text = exports.preprocessText(question.model.text);
 
@@ -100,7 +100,7 @@ exports.respond = function (question, answer, settings) {
 
   var correctIndexes = buildCorrectIndexesArray(text, question.model.config.selectionUnit);
   var selectionCountIsFine = (minSelection <= selectionCount && maxSelection >= selectionCount);
-  var isEverySelectedCorrect = _.every(answer, function (a) {
+  var isEverySelectedCorrect = _.every(answer, function(a) {
     return _.contains(correctIndexes, a);
   });
   var isCorrect = selectionCountIsFine;
@@ -121,11 +121,9 @@ exports.respond = function (question, answer, settings) {
 
     if (selectionCount < minSelection) {
       res.outcome.push("responsesBelowMin");
-    }
-    else if (selectionCount > maxSelection) {
+    } else if (selectionCount > maxSelection) {
       res.outcome.push("responsesExceedMax");
-    }
-    else {
+    } else {
       res.outcome.push("responsesNumberCorrect");
     }
 

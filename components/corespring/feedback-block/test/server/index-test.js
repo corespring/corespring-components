@@ -16,7 +16,7 @@ _ = require('lodash');
 
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {
@@ -42,11 +42,14 @@ component = {
   }
 };
 
-describe('feedback-block server logic', function () {
+describe('feedback-block server logic', function() {
 
   it('should proxy values from targetOutcome', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {correctness: 'correct', studentResponse: "apple"});
+    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+      correctness: 'correct',
+      studentResponse: "apple"
+    });
     expected = {
       feedback: "apple correct",
       correctness: "correct"
@@ -56,7 +59,10 @@ describe('feedback-block server logic', function () {
 
   it('matching correct response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {correctness: 'correct', studentResponse: "apple"});
+    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+      correctness: 'correct',
+      studentResponse: "apple"
+    });
     expected = {
       feedback: "apple correct",
       correctness: "correct"
@@ -66,7 +72,10 @@ describe('feedback-block server logic', function () {
 
   it('matching incorrect response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {correctness: 'correct', studentResponse: "bean"});
+    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+      correctness: 'correct',
+      studentResponse: "bean"
+    });
     expected = {
       feedback: "bean incorrect",
       correctness: "incorrect"
@@ -76,7 +85,10 @@ describe('feedback-block server logic', function () {
 
   it('catchall correct response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {correctness: 'correct', studentResponse: "bag"});
+    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+      correctness: 'correct',
+      studentResponse: "bag"
+    });
     expected = {
       feedback: "catchall correct",
       correctness: "correct"
@@ -86,7 +98,10 @@ describe('feedback-block server logic', function () {
 
   it('catchall incorrect response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {correctness: 'incorrect', studentResponse: "table"});
+    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+      correctness: 'incorrect',
+      studentResponse: "table"
+    });
     expected = {
       feedback: "catchall incorrect",
       correctness: "incorrect"

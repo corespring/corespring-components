@@ -1,6 +1,6 @@
 var main = [
-  "$compile", function ($compile) {
-  }
+  "$compile",
+  function($compile) {}
 ];
 
 

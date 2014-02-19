@@ -1,13 +1,13 @@
 var link, main;
 
-link = function () {
-  return function (scope, element, attrs) {
+link = function() {
+  return function(scope, element, attrs) {
 
     scope.editable = true;
 
     scope.containerBridge = {
 
-      setDataAndSession: function (dataAndSession) {
+      setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
@@ -15,14 +15,14 @@ link = function () {
         scope.cols = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLength) || 60;
       },
 
-      getSession: function () {
+      getSession: function() {
         return {
           answers: scope.answer
         };
       },
 
       // sets the server's response
-      setResponse: function (response) {
+      setResponse: function(response) {
         console.log("Setting Response for extended text entry:");
         console.log(response);
 
@@ -31,26 +31,25 @@ link = function () {
         scope.received = true;
       },
 
-      setMode : function(newMode) {
-      },
+      setMode: function(newMode) {},
 
-      reset : function() {
+      reset: function() {
         scope.answer = undefined;
       },
 
-      isAnswerEmpty: function(){
+      isAnswerEmpty: function() {
         return _.isEmpty(this.getSession().answers);
       },
 
-      answerChangedHandler: function(callback){
-        scope.$watch("answer", function(newValue, oldValue){
-          if(newValue){
+      answerChangedHandler: function(callback) {
+        scope.$watch("answer", function(newValue, oldValue) {
+          if (newValue) {
             callback();
           }
         }, true);
       },
 
-      editable: function (e) {
+      editable: function(e) {
         scope.editable = e;
       }
 
@@ -63,7 +62,8 @@ link = function () {
 };
 
 main = [
-  function () {
+
+  function() {
     var def;
     def = {
       scope: {},

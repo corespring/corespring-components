@@ -16,9 +16,11 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
 
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     correctKey = _ref[_i];
-    fb = feedbackByValue(q, correctKey) || {value: correctKey};
+    fb = feedbackByValue(q, correctKey) || {
+      value: correctKey
+    };
 
-    if(!fb){
+    if (!fb) {
       return;
     }
 
@@ -54,7 +56,9 @@ var userResponseFeedback = function(fbArray, q, answer) {
   _results = [];
   for (_i = 0, _len = answer.length; _i < _len; _i++) {
     userChoice = answer[_i];
-    fb = feedbackByValue(q, userChoice) || {value: userChoice};
+    fb = feedbackByValue(q, userChoice) || {
+      value: userChoice
+    };
     if (fb) {
       fb.correct = isCorrectChoice(q, userChoice);
       if (fb.correct) {
@@ -86,7 +90,7 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
 
 var calculateScore = function(question, answer) {
 
-  var countCorrectAnswers = function(){
+  var countCorrectAnswers = function() {
     var sum = _.reduce(answer, function(sum, a) {
       var contains = _.contains(question.correctResponse.value, a);
       var newsum = sum + (contains ? 1 : 0);

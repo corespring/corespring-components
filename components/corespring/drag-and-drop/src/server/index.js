@@ -1,19 +1,19 @@
 var _ = require('lodash');
 var sax = require('sax');
 
-exports.respond = function(question, answer, settings){
+exports.respond = function(question, answer, settings) {
 
   var parser = sax.parser(false);
   var lps = {};
 
-  parser.onopentag = function (node) {
+  parser.onopentag = function(node) {
     // opened a tag.  node has "name" and "attributes"
     if (node.attributes['landing-place'] !== undefined) {
       lps[node.attributes.ID] = node.attributes.CARDINALITY || 'multiple';
     }
   };
 
-  parser.write('<xml>'+question.model.answerArea+'</xml>').close();
+  parser.write('<xml>' + question.model.answerArea + '</xml>').close();
 
   var isCorrect = 1;
 
@@ -33,12 +33,12 @@ exports.respond = function(question, answer, settings){
   return {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
-    answer : answer,
+    answer: answer,
     score: isCorrect ? 1 : 0
   };
 };
 
-exports.render = function(model){
+exports.render = function(model) {
   delete model.correctResponse;
   delete model.feedback;
   return model;

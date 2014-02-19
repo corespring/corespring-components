@@ -1,20 +1,19 @@
-var link = function () {
-  return function (scope, element, attrs) {
+var link = function() {
+  return function(scope, element, attrs) {
 
     scope.editable = true;
 
     scope.resetSelection = function() {
-      $(element).find('.token').each(function () {
+      $(element).find('.token').each(function() {
         $(this).removeClass('correct').removeClass('incorrect');
       });
     };
 
-    scope.highlightSelection = function (selection) {
-      $(element).find('.token').each(function () {
-        if (_.contains(selection, $(this).attr('id'))){
+    scope.highlightSelection = function(selection) {
+      $(element).find('.token').each(function() {
+        if (_.contains(selection, $(this).attr('id'))) {
           $(this).addClass('selected');
-        }
-        else{
+        } else {
           $(this).removeClass('selected');
         }
       });
@@ -22,16 +21,16 @@ var link = function () {
       scope.selectedTokens = selection;
     };
 
-    scope.$watch('selectedTokens', function (value) {
+    scope.$watch('selectedTokens', function(value) {
       console.log('selecting ', value);
       scope.highlightSelection(scope.selectedTokens || []);
     });
 
-    scope.$watch('text', function () {
+    scope.$watch('text', function() {
       var contentElement = $(element).find('.select-text-content');
       contentElement.html(scope.text);
-      contentElement.find('.token').each(function (idx, elem) {
-        $(elem).click(function () {
+      contentElement.find('.token').each(function(idx, elem) {
+        $(elem).click(function() {
           if (scope.editable) {
             scope.selectedTokens = _.xor(scope.selectedTokens, [$(this).attr('id')]);
             scope.$apply();
@@ -44,7 +43,7 @@ var link = function () {
 
     scope.containerBridge = {
 
-      setDataAndSession: function (dataAndSession) {
+      setDataAndSession: function(dataAndSession) {
         console.log("Setting data for Select Text: ", dataAndSession);
         scope.model = dataAndSession.data.model;
         scope.text = dataAndSession.data.wrappedText;
@@ -53,39 +52,42 @@ var link = function () {
         }
       },
 
-      getSession: function () {
+      getSession: function() {
         return {
           answers: scope.selectedTokens
         };
       },
 
-      setResponse: function (response) {
+      setResponse: function(response) {
         console.log("Setting response", response);
-        $(element).find('.token').each(function (idx, elem) {
+        $(element).find('.token').each(function(idx, elem) {
           var id = $(elem).attr('id');
           var feedback = (response && response.feedback[id]) || {};
-          if (feedback.correct === false){ $(elem).addClass('incorrect'); }
-          if (feedback.correct === true) {$(elem).addClass('correct');}
-          if (feedback.wouldBeCorrect === true) { $(elem).addClass('incorrectlyNotSelected'); }
+          if (feedback.correct === false) {
+            $(elem).addClass('incorrect');
+          }
+          if (feedback.correct === true) {
+            $(elem).addClass('correct');
+          }
+          if (feedback.wouldBeCorrect === true) {
+            $(elem).addClass('incorrectlyNotSelected');
+          }
         });
 
       },
 
-      setMode: function (newMode) {
-      },
+      setMode: function(newMode) {},
 
-      reset: function () {
+      reset: function() {
         scope.selectedTokens = undefined;
         scope.resetSelection();
       },
 
-      isAnswerEmpty: function () {
-      },
+      isAnswerEmpty: function() {},
 
-      answerChangedHandler: function (callback) {
-      },
+      answerChangedHandler: function(callback) {},
 
-      editable: function (e) {
+      editable: function(e) {
         scope.editable = e;
       }
 
@@ -96,7 +98,8 @@ var link = function () {
 };
 
 var main = [
-  function () {
+
+  function() {
     var def = {
       scope: {},
       restrict: 'AE',

@@ -1,10 +1,10 @@
 var main = [
   '$sce', '$log',
 
-  function ($sce, $log) {
+  function($sce, $log) {
     var def;
 
-    var link = function (scope, element, attrs) {
+    var link = function(scope, element, attrs) {
 
       scope.inputType = 'checkbox';
       scope.editable = true;
@@ -12,8 +12,8 @@ var main = [
         choices: {}
       };
 
-      var getAnswers = function () {
-        var isTrue = function (k) {
+      var getAnswers = function() {
+        var isTrue = function(k) {
           return scope.answer.choices[k] === true;
         };
         var allKeys = _.keys(scope.answer.choices);
@@ -21,7 +21,7 @@ var main = [
         return keys;
       };
 
-      var applyChoices = function () {
+      var applyChoices = function() {
         if (!scope.question || !scope.session.answers) {
           return;
         }
@@ -33,8 +33,8 @@ var main = [
         }
       };
 
-      var resetFeedback = function (choices) {
-        _.each(choices, function (c) {
+      var resetFeedback = function(choices) {
+        _.each(choices, function(c) {
           if (c) {
             delete c.feedback;
             delete c.correct;
@@ -42,36 +42,36 @@ var main = [
         });
       };
 
-      var resetChoices = function () {
+      var resetChoices = function() {
         scope.answer.choices = {};
         scope.answer.choice = "";
       };
 
-      var layoutChoices = function (choices, order) {
+      var layoutChoices = function(choices, order) {
         if (!order) {
           var shuffled = _.shuffle(_.cloneDeep(choices));
           return shuffled;
         } else {
-          var ordered = _(order).map(function (v) {
-            return _.find(choices, function (c) {
+          var ordered = _(order).map(function(v) {
+            return _.find(choices, function(c) {
               return c.value === v;
             });
-          }).filter(function (v) {
-              return v;
-            });
+          }).filter(function(v) {
+            return v;
+          });
 
           var missing = _.difference(choices, ordered);
           return _.union(ordered, missing);
         }
       };
 
-      var stashOrder = function (choices) {
-        return _.map(choices, function (c) {
+      var stashOrder = function(choices) {
+        return _.map(choices, function(c) {
           return c.value;
         });
       };
 
-      var updateUi = function () {
+      var updateUi = function() {
 
         if (!scope.question || !scope.session) {
           return;
@@ -83,7 +83,7 @@ var main = [
         var stash = scope.session.stash = scope.session.stash || {};
         var answers = scope.session.answers = scope.session.answers || {};
 
-        scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
+        scope.inputType = !! model.config.singleChoice ? "radio" : "checkbox";
 
         if (stash.shuffledOrder && model.config.shuffle) {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
@@ -100,7 +100,7 @@ var main = [
 
       scope.containerBridge = {
 
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           $log.debug("multiple-choice setDataAndSession", dataAndSession);
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
@@ -108,7 +108,7 @@ var main = [
           updateUi();
         },
 
-        getSession: function () {
+        getSession: function() {
 
           var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
 
@@ -119,15 +119,15 @@ var main = [
         },
 
         // sets the server's response
-        setResponse: function (response) {
+        setResponse: function(response) {
           console.log(scope.$id, "set response for focus-task", response);
           console.log(scope.$id, "choices", scope.choices);
 
           resetFeedback(scope.choices);
 
           scope.response = response;
-          _.each(response.feedback, function (v, k) {
-            var choice = _.find(scope.choices, function (c) {
+          _.each(response.feedback, function(v, k) {
+            var choice = _.find(scope.choices, function(c) {
               return c.value === k;
             });
 
@@ -137,41 +137,40 @@ var main = [
             console.log("choice: ", choice);
           });
         },
-        setMode: function (newMode) {
-        },
+        setMode: function(newMode) {},
         /**
          * Reset the ui back to an unanswered state
          */
-        reset: function () {
+        reset: function() {
           resetChoices();
           resetFeedback(scope.choices);
         },
-        isAnswerEmpty: function () {
+        isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
         },
-        answerChangedHandler: function (callback) {
-          scope.$watch("answer", function (newValue, oldValue) {
+        answerChangedHandler: function(callback) {
+          scope.$watch("answer", function(newValue, oldValue) {
             if (newValue) {
               callback();
             }
           }, true);
         },
-        editable: function (e) {
+        editable: function(e) {
           scope.editable = e;
         }
       };
 
-      scope.getRows = function () {
+      scope.getRows = function() {
         return _.range(scope.choices.length / 5);
       };
 
-      scope.getChoicesForRow = function (row) {
+      scope.getChoicesForRow = function(row) {
         return scope.choices.slice(row * 5, row * 5 + 5);
 
       };
 
-      scope.getChoiceClass = function (o) {
-        var cl = scope.itemShape+" ";
+      scope.getChoiceClass = function(o) {
+        var cl = scope.itemShape + " ";
         if (scope.answer.choices[o.value]) {
           cl += "selected ";
         }
@@ -181,7 +180,7 @@ var main = [
         return cl;
       };
 
-      scope.toggleChoice = function (choice) {
+      scope.toggleChoice = function(choice) {
         if (scope.editable) {
           scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
         }
@@ -220,4 +219,3 @@ var main = [
 
 exports.framework = 'angular';
 exports.directive = main;
-

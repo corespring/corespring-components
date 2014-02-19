@@ -16,7 +16,7 @@ component = {
 
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {
@@ -53,7 +53,7 @@ describe('text entry server logic', function() {
   it('should respond with correct and score 1 if the answer is among correct ones', function() {
     var component2 = {
       componentType: "corespring-text-entry",
-      correctResponse: ["carrot","apple"]
+      correctResponse: ["carrot", "apple"]
     };
 
     var expected, response;
@@ -77,7 +77,7 @@ describe('text entry server logic', function() {
   it('should respond with incorrect and score 0 if the answer is not among correct ones', function() {
     var component2 = {
       componentType: "corespring-text-entry",
-      correctResponse: ["carrot","apple"]
+      correctResponse: ["carrot", "apple"]
     };
 
     var expected, response;

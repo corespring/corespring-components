@@ -4,13 +4,13 @@ var _ = require('lodash');
 var mathjs = require('mathjs')();
 
 var trimSpaces = function(s) {
-  return s.replace(/\s+/g,"");
+  return s.replace(/\s+/g, "");
 };
 
-var replaceVar = function (expression, variable) {
+var replaceVar = function(expression, variable) {
   var m;
 
-  var patternMatch = function (pattern) {
+  var patternMatch = function(pattern) {
     return pattern.exec(expression);
   };
 
@@ -26,7 +26,7 @@ var replaceVar = function (expression, variable) {
 
   m = patternMatch(new RegExp(".*?" + variable + "([(0-9]).*"));
   if (m) {
-    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]),variable);
+    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]), variable);
   }
 
   return expression;
@@ -46,9 +46,9 @@ var round = function(sigfigs) {
 };
 
 var closeEnough = function(sigfigs) {
-  return function(a,b) {
-    var limit = Math.pow(10, 0-sigfigs);
-    return Math.abs(a-b) < limit;
+  return function(a, b) {
+    var limit = Math.pow(10, 0 - sigfigs);
+    return Math.abs(a - b) < limit;
   };
 };
 
@@ -56,7 +56,9 @@ exports.generateRandomPointsForDomain = function(domain, numPoints, sigfigs) {
   var pointsPerSection = Math.ceil(numPoints / domain.include.length);
   var i = 0;
   var result = [];
-  var excludedNumbers = _.map(domain.exclude, function(n) { return Number(n); });
+  var excludedNumbers = _.map(domain.exclude, function(n) {
+    return Number(n);
+  });
   while (i < numPoints) {
     var sectionIndex = Math.floor(i / pointsPerSection);
     var section = domain.include[sectionIndex].split(",");
@@ -71,10 +73,12 @@ exports.generateRandomPointsForDomain = function(domain, numPoints, sigfigs) {
   return result;
 };
 
-exports.isFunctionEqual = function (eq1, eq2, options) {
+exports.isFunctionEqual = function(eq1, eq2, options) {
   options = options || {};
   var variable = options.variable || 'x';
-  var domain = options.domain || {include: ["-10,10"]};
+  var domain = options.domain || {
+    include: ["-10,10"]
+  };
   var sigfigs = options.sigfigs || 3;
   var numberOfTestPoints = options.numberOfTestPoints || 50;
 
@@ -83,11 +87,17 @@ exports.isFunctionEqual = function (eq1, eq2, options) {
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var y1 = mathjs['eval'](eq1r, {x: x});
-      var y2 = mathjs['eval'](eq2r, {x: x});
-      if (!closeEnough(sigfigs)(y1,y2)) {return true;}
+      var y1 = mathjs['eval'](eq1r, {
+        x: x
+      });
+      var y2 = mathjs['eval'](eq2r, {
+        x: x
+      });
+      if (!closeEnough(sigfigs)(y1, y2)) {
+        return true;
+      }
     } catch (e) {
-      console.log('error: '+e);
+      console.log('error: ' + e);
       // evaluation error in x
     }
     return false;

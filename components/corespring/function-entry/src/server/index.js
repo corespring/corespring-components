@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
 
-exports.isCorrect = function (answer, correctEquation, options) {
+exports.isCorrect = function(answer, correctEquation, options) {
   var correctFunction = correctEquation.split("=")[1];
   if (answer.indexOf('=') >= 0) {
     answer = answer.split("=")[1];
@@ -9,7 +9,7 @@ exports.isCorrect = function (answer, correctEquation, options) {
   return functionUtils.isFunctionEqual(answer, correctFunction, options);
 };
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function(question, answer, settings) {
 
   var answerIsCorrect, response;
 
@@ -17,7 +17,9 @@ exports.respond = function (question, answer, settings) {
     throw "Error - the uids must match";
   }
 
-  var correctResponse = _.isObject(question.correctResponse) ? question.correctResponse : {equation: question.correctResponse};
+  var correctResponse = _.isObject(question.correctResponse) ? question.correctResponse : {
+    equation: question.correctResponse
+  };
 
   var options = {};
   options.variable = (correctResponse.vars && correctResponse.vars.split(",")[0]) || 'x';

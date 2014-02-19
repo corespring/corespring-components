@@ -15,7 +15,7 @@ component = {
 
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {

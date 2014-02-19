@@ -1,29 +1,28 @@
-describe('corespring', function () {
+describe('corespring', function() {
 
   var testModel, scope, rootScope, container, element;
 
-  var MockComponentRegister = function () {
+  var MockComponentRegister = function() {
     this.elements = {};
-    this.registerComponent = function (id, bridge) {
+    this.registerComponent = function(id, bridge) {
       this.elements[id] = bridge;
     };
   };
 
-  var testModelTemplate = {
-  };
+  var testModelTemplate = {};
 
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(function () {
-    module(function ($provide) {
+  beforeEach(function() {
+    module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
     });
   });
 
-  beforeEach(inject(function ($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope) {
     container = new MockComponentRegister();
 
-    $rootScope.$on('registerComponent', function (event, id, obj) {
+    $rootScope.$on('registerComponent', function(event, id, obj) {
       container.registerComponent(id, obj);
     });
 
@@ -32,8 +31,8 @@ describe('corespring', function () {
     rootScope = $rootScope;
   }));
 
-  it('constructs', function () {
-//    expect(element).toNotBe(null);
+  it('constructs', function() {
+    //    expect(element).toNotBe(null);
   });
 
 

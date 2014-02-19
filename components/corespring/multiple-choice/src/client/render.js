@@ -1,10 +1,10 @@
 var main = [
   '$sce', '$log',
 
-  function ($sce, $log) {
+  function($sce, $log) {
     var def;
 
-    var link = function (scope, element, attrs) {
+    var link = function(scope, element, attrs) {
 
       scope.inputType = 'checkbox';
       scope.editable = true;
@@ -13,11 +13,11 @@ var main = [
         choice: ""
       };
 
-      var getAnswers = function () {
+      var getAnswers = function() {
         if (scope.answer.choice) {
           return [scope.answer.choice];
         } else {
-          var isTrue = function (k) {
+          var isTrue = function(k) {
             return scope.answer.choices[k] === true;
           };
           var allKeys = _.keys(scope.answer.choices);
@@ -26,7 +26,7 @@ var main = [
         }
       };
 
-      var applyChoices = function () {
+      var applyChoices = function() {
 
         if (!scope.question || !scope.session.answers) {
           return;
@@ -44,8 +44,8 @@ var main = [
         }
       };
 
-      var resetFeedback = function (choices) {
-        _.each(choices, function (c) {
+      var resetFeedback = function(choices) {
+        _.each(choices, function(c) {
           if (c) {
             delete c.feedback;
             delete c.correct;
@@ -53,21 +53,21 @@ var main = [
         });
       };
 
-      var resetChoices = function () {
+      var resetChoices = function() {
         scope.answer.choices = {};
         scope.answer.choice = "";
       };
 
-      var layoutChoices = function (choices, order) {
+      var layoutChoices = function(choices, order) {
         if (!order) {
           var shuffled = _.shuffle(_.cloneDeep(choices));
           return shuffled;
         } else {
-          var ordered = _(order).map(function (v) {
-            return _.find(choices, function (c) {
+          var ordered = _(order).map(function(v) {
+            return _.find(choices, function(c) {
               return c.value === v;
             });
-          }).filter(function (v) {
+          }).filter(function(v) {
             return v;
           });
 
@@ -76,13 +76,13 @@ var main = [
         }
       };
 
-      var stashOrder = function (choices) {
-        return _.map(choices, function (c) {
+      var stashOrder = function(choices) {
+        return _.map(choices, function(c) {
           return c.value;
         });
       };
 
-      var updateUi = function () {
+      var updateUi = function() {
 
         if (!scope.question || !scope.session) {
           return;
@@ -96,7 +96,7 @@ var main = [
 
         var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
 
-        scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
+        scope.inputType = !! model.config.singleChoice ? "radio" : "checkbox";
 
         if (stash.shuffledOrder && shuffle) {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
@@ -113,14 +113,14 @@ var main = [
 
       scope.containerBridge = {
 
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           $log.debug("multiple-choice setDataAndSession", dataAndSession);
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
           updateUi();
         },
 
-        getSession: function () {
+        getSession: function() {
 
           var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
 
@@ -131,7 +131,7 @@ var main = [
         },
 
         // sets the server's response
-        setResponse: function (response) {
+        setResponse: function(response) {
           console.log(scope.$id, "set response for multiple-choice", response);
           console.log(scope.$id, "choices", scope.choices);
 
@@ -139,9 +139,9 @@ var main = [
 
           scope.response = response;
           if (response.feedback) {
-            _.each(response.feedback, function (fb) {
+            _.each(response.feedback, function(fb) {
 
-              var choice = _.find(scope.choices, function (c) {
+              var choice = _.find(scope.choices, function(c) {
                 return c.value === fb.value;
               });
 
@@ -153,26 +153,25 @@ var main = [
             });
           }
         },
-        setMode : function(newMode) {
-        },
+        setMode: function(newMode) {},
         /**
          * Reset the ui back to an unanswered state
          */
-        reset : function(){
+        reset: function() {
           resetChoices();
           resetFeedback(scope.choices);
         },
-        isAnswerEmpty: function(){
+        isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
         },
-        answerChangedHandler: function(callback){
-          scope.$watch("answer", function(newValue, oldValue){
-            if(newValue){
+        answerChangedHandler: function(callback) {
+          scope.$watch("answer", function(newValue, oldValue) {
+            if (newValue) {
               callback();
             }
-          }, true);  
+          }, true);
         },
-        editable: function(e){
+        editable: function(e) {
           scope.editable = e;
         }
       };
@@ -238,8 +237,7 @@ var main = [
       restrict: 'EA',
       replace: true,
       link: link,
-      template:
-      [
+      template: [
         '<div class="view-multiple-choice">',
         '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
         '  <div ng-if="!isHorizontal()">' + verticalTemplate + '</div>',
@@ -255,4 +253,3 @@ var main = [
 
 exports.framework = 'angular';
 exports.directive = main;
-

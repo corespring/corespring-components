@@ -15,7 +15,7 @@ component = {
 
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {
@@ -27,10 +27,8 @@ settings = function(feedback, userResponse, correctResponse) {
 
 describe('server logic', function() {
 
-  it('should respond with correct and score 1 if the answer is correct', function() {
-  });
+  it('should respond with correct and score 1 if the answer is correct', function() {});
 
-  it('should respond with incorrect and score 0 if the answer is correct', function() {
-  });
+  it('should respond with incorrect and score 0 if the answer is correct', function() {});
 
 });

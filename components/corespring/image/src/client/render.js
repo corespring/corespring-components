@@ -1,42 +1,36 @@
 var main = [
   '$sce', '$log',
 
-  function ($sce, $log) {
+  function($sce, $log) {
     var def;
 
-    var link = function (scope, element, attrs) {
+    var link = function(scope, element, attrs) {
 
 
       scope.containerBridge = {
 
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           console.log("Image, setting model: ", dataAndSession);
           scope.imageUrl = dataAndSession.data.imageUrl;
         },
 
-        getSession: function () {
+        getSession: function() {
           return {
             answers: ""
           };
         },
 
-        setResponse: function (response) {
-        },
+        setResponse: function(response) {},
 
-        setMode : function(newMode) {
-        },
+        setMode: function(newMode) {},
 
-        reset : function(){
-        },
+        reset: function() {},
 
-        isAnswerEmpty: function(){
-        },
+        isAnswerEmpty: function() {},
 
-        answerChangedHandler: function(callback){
-        },
+        answerChangedHandler: function(callback) {},
 
-        editable: function(e){
-        }
+        editable: function(e) {}
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -48,7 +42,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: link,
-      template: [ '<div class="view-image"><img ng-src="{{imageUrl}}"></img></div>' ]
+      template: ['<div class="view-image"><img ng-src="{{imageUrl}}"></img></div>']
     };
 
     return def;
@@ -57,4 +51,3 @@ var main = [
 
 exports.framework = 'angular';
 exports.directive = main;
-

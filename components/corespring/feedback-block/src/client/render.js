@@ -1,44 +1,40 @@
 var main = [
   '$sce', '$log',
 
-  function ($sce, $log) {
+  function($sce, $log) {
     var def;
 
-    var link = function (scope, element, attrs) {
+    var link = function(scope, element, attrs) {
 
       scope.containerBridge = {
 
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           console.log("FB block: ", dataAndSession);
         },
 
-        getSession: function () {
+        getSession: function() {
           return {
             answers: "ok"
           };
         },
 
-        setResponse: function (response) {
+        setResponse: function(response) {
           console.log("FB response: ", response);
           scope.correctClass = response.correctness;
           scope.feedback = response.feedback;
         },
 
-        setMode : function(newMode) {
-        },
+        setMode: function(newMode) {},
 
-        reset : function(){
+        reset: function() {
           scope.correctClass = scope.feedback = undefined;
         },
 
-        isAnswerEmpty: function(){
-        },
+        isAnswerEmpty: function() {},
 
-        answerChangedHandler: function(callback){
-        },
+        answerChangedHandler: function(callback) {},
 
-        editable: function(e){
-        }
+        editable: function(e) {}
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -61,4 +57,3 @@ var main = [
 
 exports.framework = 'angular';
 exports.directive = main;
-
