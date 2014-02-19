@@ -15,9 +15,9 @@ var replaceVar = function (expression, variable) {
   if (m = patternMatch(new RegExp(".*?([0-9)])" + variable + "([(0-9]).*"))) {
     return replaceVar(expression.replace(new RegExp("[0-9)]" + variable + "[(0-9]"), m[1] + "*(x)*" + m[2]), variable);
   } else if (m = patternMatch(new RegExp(".*?([0-9)])" + variable + ".*"))) {
-    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable), m[1] + "*(x)"), variable)
+    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable), m[1] + "*(x)"), variable);
   } else if (m = patternMatch(new RegExp(".*?" + variable + "([(0-9]).*"))) {
-    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]),variable)
+    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]),variable);
   } else {
     return expression;
   }
@@ -33,27 +33,27 @@ var round = function(sigfigs) {
   return function(num) {
     var multiplier = Math.pow(10, sigfigs);
     return Math.floor(num * multiplier) / multiplier;
-  }
+  };
 };
 
 var closeEnough = function(sigfigs) {
   return function(a,b) {
     var limit = Math.pow(10, 0-sigfigs);
     return Math.abs(a-b) < limit;
-  }
+  };
 };
 
 exports.generateRandomPointsForDomain = function(domain, numPoints, sigfigs) {
   var pointsPerSection = Math.ceil(numPoints / domain.include.length);
   var i = 0;
-  var result = []
+  var result = [];
   var excludedNumbers = _.map(domain.exclude, function(n) { return Number(n); });
   while (i < numPoints) {
     var sectionIndex = Math.floor(i / pointsPerSection);
     var section = domain.include[sectionIndex].split(",");
     var min = Number(section[0]);
     var max = Number(section[1]);
-    var random = round(sigfigs)(Math.random() * (max - min) + min)
+    var random = round(sigfigs)(Math.random() * (max - min) + min);
     if (!_.contains(excludedNumbers, random)) {
       i++;
       result.push(random);
@@ -74,9 +74,9 @@ exports.isFunctionEqual = function (eq1, eq2, options) {
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var y1 = mathjs.eval(eq1r, {x: x});
-      var y2 = mathjs.eval(eq2r, {x: x});
-      if (!closeEnough(sigfigs)(y1,y2)) return true;
+      var y1 = mathjs.eval(eq1r, {x: x}); // jshint ignore:line
+      var y2 = mathjs.eval(eq2r, {x: x}); // jshint ignore:line
+      if (!closeEnough(sigfigs)(y1,y2)) {return true;}
     } catch (e) {
       console.log('error: '+e);
       // evaluation error in x
