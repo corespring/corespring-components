@@ -62,6 +62,12 @@ module.exports = (grunt) ->
     clean:
       test: ["<%= common.componentPath %>/**/*-wrapped.js"]
 
+    jsbeautifier: 
+      files : ["<%= common.componentPath %>/**/*.js"],
+      #options : 
+    
+
+
 
   grunt.initConfig(config)
 
@@ -70,7 +76,8 @@ module.exports = (grunt) ->
     'grunt-contrib-clean',
     'grunt-mocha-test',
     'grunt-contrib-watch',
-    'grunt-contrib-jshint'
+    'grunt-contrib-jshint',
+    'grunt-jsbeautifier'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
