@@ -47,7 +47,7 @@ var main = [
         '<div class="display-row"><label class="col-sm-4">Shuffle</label><input type=\"checkbox\" ng-model=\"model.config.shuffle\" /></div>',
         '<div class="display-row"><label class="col-sm-4">Show choice area </label><select ng-model="model.config.position"><option value="above">Above</option><option value="below">Below</option></select> the answer area</div>',
         '<div class="display-row"><label class="col-sm-4">Label for choice area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.choiceAreaLabel"/></div></div>',
-        '<div class="display-row"><label class="col-sm-4">Label for answer area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.answerAreaLabel"/></div></div>',
+        '<div class="display-row"><label class="col-sm-4">Label for answer area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.answerAreaLabel"/></div></div>'
       ].join("");
     };
 
@@ -95,10 +95,14 @@ var main = [
         };
 
         $scope.$watch('model.answers', function(val) {
-          if (!val) return;
+          if (!val) {
+            return;
+          }
           var model = $scope.fullModel;
           _.each(model.model.answers, function (answer) {
-            if (!answer.correctResponse) return;
+            if (!answer.correctResponse) {
+              return;
+            }
             var idx = answer.correctResponse.charCodeAt(0) - 65;
             var correctResponse = model.model.choices[idx].id;
             model.correctResponse[answer.id] = correctResponse;
@@ -155,15 +159,15 @@ var answerPopoverDirective = ['$compile',
             " <div class='popover-input'>",
             "   " + body,
             " </div>",
-            "</div>",
+            "</div>"
           ].join("");
         };
         var html = [
           "<div class='form-horizontal'>",
-          formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'></input>"),
-          formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'></input>"),
-          formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'></input>"),
-          formGroup("Inline:", "<input type='checkbox' ng-model='model.inline'></input>"),
+          formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'/>"),
+          formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'/>"),
+          formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'/>"),
+          formGroup("Inline:", "<input type='checkbox' ng-model='model.inline'/>"),
           formGroup("<button class='btn btn-primary' ng-click='hideMe()'>Ok</button>",""),
           "</div>"
         ].join("");
@@ -180,14 +184,16 @@ var answerPopoverDirective = ['$compile',
         // We need to manually show/hide the popup as the automatic one breaks angular bindings because of some internal
         // caching mechanism
         elm.click(function (ev) {
-          var same = scope.activePopover.value == elm;
+          var same = scope.activePopover.value === elm;
           if (scope.activePopover.value) {
             $(scope.activePopover.value).popover('destroy');
             scope.$apply(function () {
               scope.activePopover.value = undefined;
             });
           }
-          if (same) return;
+          if (same) {
+            return;
+          }
           var compiled = $compile(html)(scope);
 
           var titleHtml = '<span class="text-info"><strong>Answer Blank</strong></span>'+

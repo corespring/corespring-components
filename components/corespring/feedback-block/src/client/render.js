@@ -15,7 +15,7 @@ var main = [
         getSession: function () {
           return {
             answers: "ok"
-          }
+          };
         },
 
         setResponse: function (response) {

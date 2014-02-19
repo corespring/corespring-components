@@ -12,13 +12,13 @@ var directive = [
 
         var isComplete = function () {
           return !(_.reduce(containedIds, function (memo, elem) {
-            return memo || ComponentRegister.isAnswerEmpty(elem)
+            return memo || ComponentRegister.isAnswerEmpty(elem);
           }, ComponentRegister.isAnswerEmpty(containedIds[0])));
         };
 
         var isEmpty = function () {
           return _.reduce(containedIds, function (memo, elem) {
-            return memo && ComponentRegister.isAnswerEmpty(elem)
+            return memo && ComponentRegister.isAnswerEmpty(elem);
           }, ComponentRegister.isAnswerEmpty(containedIds[0]));
         };
 

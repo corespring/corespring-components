@@ -1,13 +1,10 @@
 // module: corespring.ck-editor
-
+/* global CKEDITOR */
 
 var def = [
   '$log',
   function ($log) {
-    
     var ck;
-    
-
     return {
       require: '?ngModel',
       link: function (scope, elm, attr, ngModel) {
@@ -37,7 +34,9 @@ var def = [
           };
         };
 
-        if (!ngModel) return;
+        if (!ngModel) {
+          return;
+        }
 
         if(!CKEDITOR.replace) {
           CKEDITOR.domReady(function(event){
@@ -46,12 +45,6 @@ var def = [
         } else {
           initCk();
         }
-
-        
-
-       
-
-       
       }
     };
   }

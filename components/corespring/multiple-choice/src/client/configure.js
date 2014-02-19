@@ -13,8 +13,8 @@ var shuffle = [
 
 
 var main = [
-  '$log', 'ScoringUtils', 'ChoiceTemplates',
-  function ($log, ScoringUtils, ChoiceTemplates) {
+  '$log', 'ChoiceTemplates',
+  function ($log, ChoiceTemplates) {
 
     var choices = [
         '<div class="choice" ng-repeat="q in model.choices">',
@@ -30,7 +30,6 @@ var main = [
       replace: true,
       link: function (scope, element, attrs) {
 
-        $log.debug("scoring utils: " + ScoringUtils.sayHello(">>>>>>>>>>>>>"));
         scope.containerBridge = {
           setModel: function (model) {
             scope.fullModel = model;
