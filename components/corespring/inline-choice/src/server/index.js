@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var feedbackByValue = function (q, v) {
   return _.find(q.feedback, function(f) {
-    return f.value == v;
+    return f.value === v;
   });
 };
 
@@ -16,11 +16,11 @@ var userResponseFeedback = function (fbArray, q, answer) {
 };
 
 exports.isCorrect = function (answer, correctAnswer) {
-  return answer == correctAnswer;
+  return answer === correctAnswer;
 };
 
 var isCorrectChoice = function (q, choice) {
-  return q.correctResponse.value == choice;
+  return q.correctResponse.value === choice;
 };
 
 var buildFeedback = function (question, answer, settings, isCorrect) {
@@ -32,7 +32,7 @@ var buildFeedback = function (question, answer, settings, isCorrect) {
 };
 
 var calculateScore = function (question, answer) {
-  return question.correctResponse.value == answer ? 1.0 : 0.0;
+  return question.correctResponse.value === answer ? 1.0 : 0.0;
 };
 
 /*

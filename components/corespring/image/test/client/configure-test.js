@@ -6,7 +6,7 @@ describe('corespring', function () {
       this.elements = {};
       this.registerConfigPanel = function (id, bridge) {
         this.elements[id] = bridge;
-      }
+      };
     };
 
     var element = null, scope, container = null;
@@ -16,7 +16,7 @@ describe('corespring', function () {
     beforeEach(inject(function ($compile, $rootScope) {
       scope = $rootScope.$new();
       container = new MockComponentRegister();
-      $rootScope.registerConfigPanel = function(id,b){ container.registerConfigPanel(id,b) };
+      $rootScope.registerConfigPanel = function(id,b){ container.registerConfigPanel(id,b); };
       element = $compile("<corespring-image-configure id='1'></corespring-image-configure>")(scope);
       scope = element.scope();
     }));
