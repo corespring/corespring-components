@@ -64,8 +64,26 @@ module.exports = (grunt) ->
 
     jsbeautifier: 
       files : ["<%= common.componentPath %>/**/*.js"],
-      #options : 
-    
+      options : 
+        js: 
+          braceStyle: "collapse",
+          breakChainedMethods: false,
+          e4x: false,
+          evalCode: false,
+          indentChar: " ",
+          indentLevel: 0,
+          indentSize: 2,
+          indentWithTabs: false,
+          jslintHappy: false,
+          keepArrayIndentation: true,
+          keepFunctionIndentation: true,
+          maxPreserveNewlines: 10,
+          preserveNewlines: true,
+          spaceBeforeConditional: true,
+          spaceInParen: false,
+          unescapeStrings: false,
+          wrapLineLength: 0
+          
 
 
 
