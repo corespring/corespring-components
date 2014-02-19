@@ -9,7 +9,7 @@ var sinon = require('sinon');
 var serverObj = {
   expressionize: _.identity,
   isFunctionEqual: function (e1, e2, options) {
-    return e1 == e2;
+    return e1 === e2;
   }
 };
 

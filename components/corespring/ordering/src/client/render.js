@@ -7,7 +7,7 @@ var main = [ '$compile', '$log', function ($compile, $log) {
     var layoutChoices = function (choices, order) {
       var ordered = _(order).map(function (v) {
         return _.find(choices, function (c) {
-          return c.value == v;
+          return c.value === v;
         });
       }).filter(function (v) {
           return v;
@@ -30,9 +30,9 @@ var main = [ '$compile', '$log', function ($compile, $log) {
       var model = scope.model;
       var stash = scope.session.stash = scope.session.stash || {};
       if (stash.shuffledOrder && model.config.shuffle) {
-        scope.choices = layoutChoices(model.choices, stash.shuffledOrder)
+        scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
       } else if (model.config.shuffle) {
-        scope.choices = shuffleChoices(model.choices)
+        scope.choices = shuffleChoices(model.choices);
         stash.shuffledOrder = stashOrder(scope.choices);
         scope.$emit('saveStash', attrs.id, stash);
       } else {
