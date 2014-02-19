@@ -1,3 +1,5 @@
+/** TODO: using eval - is that avoidable? */
+/* jshint evil: true */
 var main = ['$compile', '$modal', '$rootScope',
   function ($compile, $modal, $rootScope) {
     return {
@@ -55,7 +57,7 @@ var main = ['$compile', '$modal', '$rootScope',
               $scope.graphCallback($scope.initialParams);
             }
             if ($scope.locked) {
-              $scope.graphCallback({lockGraph: true})
+              $scope.graphCallback({lockGraph: true});
             }
             if ($scope.points) {
               $scope.renewResponse($scope.points);
@@ -99,7 +101,7 @@ var main = ['$compile', '$modal', '$rootScope',
             }
 
             var phase = $scope.$root.$$phase;
-            if(phase != '$apply' && phase != '$digest') {
+            if(phase !== '$apply' && phase !== '$digest') {
               $scope.$apply();
             }
           }
@@ -108,7 +110,7 @@ var main = ['$compile', '$modal', '$rootScope',
         $scope.lockGraph = function () {
           $scope.locked = true;
           $scope.graphCallback({lockGraph: true});
-        }
+        };
 
         $scope.$on('controlBarChanged', function () {
           if ($scope.settingsHaveChanged) {
@@ -133,32 +135,32 @@ var main = ['$compile', '$modal', '$rootScope',
           }
           var graphPoints = {};
           _.each(points,function(coords,ptName){
-            if(checkCoords(coords)) graphPoints[ptName] = coords;
+            if(checkCoords(coords)) {graphPoints[ptName] = coords;}
           });
           if($scope.graphCallback){
             $scope.graphCallback({points: graphPoints});
           }
-        }, true)
+        }, true);
 
         $scope.undo = function () {
           if(!$scope.locked && $scope.points.B && $scope.points.B.isSet){
-            $scope.points.B = {}
+            $scope.points.B = {};
           } else if(!$scope.locked && $scope.points.A && $scope.points.A.isSet){
-            $scope.points.A = {}
+            $scope.points.A = {};
           }
         };
 
         $scope.startOver = function () {
           if(!$scope.locked){
-            $scope.points.B = {}
-            $scope.points.A = {}
+            $scope.points.B = {};
+            $scope.points.A = {};
           }
-        }
+        };
       },
 
       link: function (scope, element, attrs) {
 
-        scope.inputStyle = {width: "40px"}
+        scope.inputStyle = {width: "40px"};
 
         var createGraphAttributes = function(config) {
           return {
@@ -166,14 +168,14 @@ var main = ['$compile', '$modal', '$rootScope',
             "graph-callback": "graphCallback",
             "interaction-callback": "interactionCallback",
             maxPoints:2,
-            domain: parseInt(config.domain ? config.domain : 10),
-            range: parseInt(config.range ? config.range : 10),
+            domain: parseInt(config.domain ? config.domain : 10, 10),
+            range: parseInt(config.range ? config.range : 10, 10),
             scale: parseFloat(config.scale ? config.scale : 1),
             domainLabel: config.domainLabel,
             rangeLabel: config.rangeLabel,
             tickLabelFrequency: config.tickLabelFrequency,
             showLabels: config.showLabels ? config.showLabels : "true"
-          }
+          };
         };
 
         if (attrs.solutionView) {
@@ -190,7 +192,7 @@ var main = ['$compile', '$modal', '$rootScope',
           $compile(graphContainer)(scope);
           scope.initialParams = {
             drawShape:{
-              curve: function(x){return eval(scope.answer.expression)}
+              curve: function(x){return eval(scope.answer.expression);}
             },
             submission:{lockGraph: false}
           };
@@ -236,20 +238,20 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.scale = config.scale;
             scope.domain = config.domain;
             scope.range = config.range;
-            scope.sigfigs = parseInt(config.sigfigs ? config.sigfigs : -1);
+            scope.sigfigs = parseInt(config.sigfigs ? config.sigfigs : -1, 10);
             scope.locked = config.hasOwnProperty('locked') ? true : false;
-            scope.domainLabel = config.domainLabel
-            scope.rangeLabel = config.rangeLabel
-            scope.tickLabelFrequency = config.tickLabelFrequency
-            scope.pointLabels = config.pointLabels
-            scope.maxPoints = config.maxPoints
-            scope.showInputs = (config.showInputs ? config.showInputs : 'true') == 'true'
+            scope.domainLabel = config.domainLabel;
+            scope.rangeLabel = config.rangeLabel;
+            scope.tickLabelFrequency = config.tickLabelFrequency;
+            scope.pointLabels = config.pointLabels;
+            scope.maxPoints = config.maxPoints;
+            scope.showInputs = (config.showInputs ? config.showInputs : 'true') === 'true';
 
             if (dataAndSession.data.initialCurve) {
               scope.initialParams = {
                 drawShape:{
                   curve: function(x) {
-                    return eval(dataAndSession.data.initialCurve)
+                    return eval(dataAndSession.data.initialCurve);
                   }
                 }
               };
@@ -257,12 +259,12 @@ var main = ['$compile', '$modal', '$rootScope',
 
 
             var containerWidth, containerHeight;
-            var graphContainer = element.find('.graph-container')
+            var graphContainer = element.find('.graph-container');
             if (config.graphWidth && config.graphHeight) {
-              containerWidth = parseInt(config.graphWidth)
-              containerHeight = parseInt(config.graphHeight)
+              containerWidth = parseInt(config.graphWidth, 10);
+              containerHeight = parseInt(config.graphHeight, 10);
             } else {
-              containerHeight = containerWidth = graphContainer.width()
+              containerHeight = containerWidth = graphContainer.width();
             }
 
             var graphAttrs = createGraphAttributes(config);
@@ -291,12 +293,12 @@ var main = ['$compile', '$modal', '$rootScope',
 
           setResponse: function (response) {
             console.log("Setting response for line interaction", response);
-            if (response && response.correctness == "correct") {
-              scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, shapesStyle: "green"})
-              scope.inputStyle = _.extend(scope.inputStyle, {border: 'thin solid green'})
+            if (response && response.correctness === "correct") {
+              scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, shapesStyle: "green"});
+              scope.inputStyle = _.extend(scope.inputStyle, {border: 'thin solid green'});
             } else {
-              scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, shapesStyle: "red"})
-              scope.inputStyle = _.extend(scope.inputStyle, {border: 'thin solid red'})
+              scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, shapesStyle: "red"});
+              scope.inputStyle = _.extend(scope.inputStyle, {border: 'thin solid red'});
               scope.correctResponse = response.correctResponse;
             }
 
@@ -308,12 +310,12 @@ var main = ['$compile', '$modal', '$rootScope',
 
           reset: function () {
             scope.renewResponse([]);
-            scope.points.B = {}
-            scope.points.A = {}
+            scope.points.B = {};
+            scope.points.A = {};
           },
 
           isAnswerEmpty: function () {
-            return _.isUndefined(scope.pointResponse) || _.isEmpty(scope.pointResponse) || scope.pointResponse.length == 0;
+            return _.isUndefined(scope.pointResponse) || _.isEmpty(scope.pointResponse) || scope.pointResponse.length === 0;
           },
 
           answerChangedHandler: function (callback) {
@@ -328,7 +330,7 @@ var main = ['$compile', '$modal', '$rootScope',
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
       }
-    }
+    };
   }
 ];
 

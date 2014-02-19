@@ -10,11 +10,11 @@ link = function ($sce, $timeout) {
       } else {
         var ordered = _.map(order, function (v) {
           return _.find(choices, function (c) {
-            return c.value == v;
+            return c.value === v;
           });
         });
 
-        var missing = _.difference(choices, ordered)
+        var missing = _.difference(choices, ordered);
         return _.union(ordered, missing);
       }
     };
@@ -37,9 +37,9 @@ link = function ($sce, $timeout) {
         var model = scope.question;
 
         if(stash.shuffledOrder && model.config.shuffle){
-          scope.choices = layoutChoices(model.choices, stash.shuffledOrder)
+          scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
         } else if(model.config.shuffle) {
-          scope.choices = layoutChoices(model.choices)
+          scope.choices = layoutChoices(model.choices);
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
         } else {
@@ -48,7 +48,7 @@ link = function ($sce, $timeout) {
 
         if (dataAndSession.session && dataAndSession.session.answers) {
           var selectedChoice = _.find(scope.choices, function (c) {
-            return c.value == dataAndSession.session.answers;
+            return c.value === dataAndSession.session.answers;
           });
 
           scope.select(selectedChoice);

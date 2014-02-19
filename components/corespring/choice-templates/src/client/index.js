@@ -18,7 +18,7 @@ exports.service = [ '$log', function($log){
       return ['<label class="'+ type +'-inline">',
               '  <input type="'+ type +'" value="'+ value +'" '+ attrs+'>' + body,
               '</label>'].join('\n');
-    }
+    };
 
     this.choice = function(opts){
 
@@ -108,7 +108,7 @@ exports.service = [ '$log', function($log){
         '   </tr>',
         ' </table>'
         ].join('\n');
-    }
+    };
 
   };
 

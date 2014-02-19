@@ -8,12 +8,13 @@ var shuffle = [
         ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
         ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
         ' </table>',
-        '</div>'].join('\n');
+        '</div>'
+        ].join('\n');
 
 
 var main = [
-  '$log', 'ScoringUtils', 'ChoiceTemplates',
-  function ($log, ScoringUtils, ChoiceTemplates) {
+  '$log', 'ChoiceTemplates',
+  function ($log, ChoiceTemplates) {
 
     var choices = [
         '<div class="choice" ng-repeat="q in model.choices">',
@@ -29,7 +30,6 @@ var main = [
       replace: true,
       link: function (scope, element, attrs) {
 
-        $log.debug("scoring utils: " + ScoringUtils.sayHello(">>>>>>>>>>>>>"));
         scope.containerBridge = {
           setModel: function (model) {
             scope.fullModel = model;
@@ -156,7 +156,7 @@ var main = [
 
         scope.updateMathJax = function() {
           scope.$emit('mathJaxUpdateRequest');
-        }
+        };
 
       },
       //TODO - allow the use of templates...

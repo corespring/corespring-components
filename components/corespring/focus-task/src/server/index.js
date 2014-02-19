@@ -13,11 +13,13 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
   var correctResponse = question.correctResponse.value;
   var arr = [];
 
-  if (settings.highlightUserResponse)
+  if (settings.highlightUserResponse) {
     arr = answer;
+  }
 
-  if (settings.highlightCorrectResponse)
+  if (settings.highlightCorrectResponse) {
     arr = _.union(arr, correctResponse);
+  }
 
   for (var _i = 0; _i < arr.length; _i++) {
     var key = arr[_i];
@@ -46,7 +48,7 @@ exports.respond = function(question, answer, settings) {
   var config = question.model.config || {};
   var minSelections = config.minSelections || 0;
   var maxSelections = config.maxSelections || Number.MAX_VALUE;
-  var checkIfCorrect = config.checkIfCorrect == "yes" || config.checkIfCorrect == "true";
+  var checkIfCorrect = config.checkIfCorrect === "yes" || config.checkIfCorrect === "true";
   var selectionNumberIsCorrect = answer.length >= minSelections && answer.length <= maxSelections;
   var isAnswerPartOfCorrectAnswer = _.every(answer, function(a) {
      return _.contains(question.correctResponse.value, a);
@@ -67,11 +69,19 @@ exports.respond = function(question, answer, settings) {
 
     if (selectionNumberIsCorrect) {
       response.outcome.push("responsesNumberCorrect");
-      if (answerIsCorrect) response.outcome.push("responsesCorrect");
-      if (answerIsIncorrect) response.outcome.push("responsesIncorrect");
+      if (answerIsCorrect) {
+        response.outcome.push("responsesCorrect");
+      }
+      if (answerIsIncorrect) {
+        response.outcome.push("responsesIncorrect");
+      }
     }
-    if (answer.length < minSelections) response.outcome.push("responsesBelowMin");
-    if (answer.length > maxSelections) response.outcome.push("responsesExceedMax");
+    if (answer.length < minSelections) {
+      response.outcome.push("responsesBelowMin");
+    }
+    if (answer.length > maxSelections) {
+      response.outcome.push("responsesExceedMax");
+    }
 
   }
 

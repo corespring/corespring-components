@@ -1,12 +1,12 @@
 describe('corespring', function () {
 
-
+  var testModel, container, scope, rootScope, element;
 
   var MockComponentRegister = function () {
       this.elements = {};
       this.registerComponent = function (id, bridge) {
         this.elements[id] = bridge;
-      }
+      };
     };
 
   var testModelTemplate = {

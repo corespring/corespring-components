@@ -10,7 +10,9 @@ exports.isCorrect = function () {
 
 exports.respond = function (model, answer, settings, targetOutcome) {
 
-  if (!settings.showFeedback) return {};
+  if (!settings.showFeedback) {
+    return {};
+  }
 
   var isCorrect;
   var feedback;
@@ -27,7 +29,7 @@ exports.respond = function (model, answer, settings, targetOutcome) {
   }
 
   if (!feedback) {
-    isCorrect = targetOutcome.correctness == "correct";
+    isCorrect = targetOutcome.correctness === "correct";
     feedback = (isCorrect ? correctFeedback["*"] : incorrectFeedback["*"]);
   }
 

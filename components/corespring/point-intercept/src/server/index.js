@@ -11,7 +11,7 @@ exports.respond = function (question, answer, settings) {
 
   if (settings.showFeedback) {
     res.outcome = [];
-    if (isCorrect) res.outcome.push('correct'); else res.outcome.push('incorrect');
+    if (isCorrect) {res.outcome.push('correct');} else {res.outcome.push('incorrect');}
   }
 
   return res;

@@ -1,9 +1,24 @@
 {
+  "browser": true,
   "curly": true,
   "eqnull": true,
   "eqeqeq": true,
   "undef": true,
+  "es3" : true,
   "globals": {
-    "jQuery": true
+    "jQuery": true,
+    "$" : true,
+    "_" : true,
+    "console" : true,
+    "require" : true,
+    "describe" : true,
+    "it" : true,
+    "expect" : true,
+    "angular" : true,
+    "beforeEach" : true,
+    "exports" : true,
+    "module" : true,
+    "spyOn" : true,
+    "inject" : true
   }
 }

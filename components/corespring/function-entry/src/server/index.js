@@ -3,8 +3,9 @@ var functionUtils = require("corespring.function-utils.server");
 
 exports.isCorrect = function (answer, correctEquation, options) {
   var correctFunction = correctEquation.split("=")[1];
-  if (answer.indexOf('=') >= 0)
+  if (answer.indexOf('=') >= 0) {
     answer = answer.split("=")[1];
+  }
   return functionUtils.isFunctionEqual(answer, correctFunction, options);
 };
 
@@ -32,8 +33,12 @@ exports.respond = function (question, answer, settings) {
 
   if (settings.showFeedback) {
     response.outcome = [];
-    if (!answerIsCorrect) response.outcome.push("incorrectEquation");
-    if (!isCorrectForm) response.outcome.push("lineEquationMatch");
+    if (!answerIsCorrect) {
+      response.outcome.push("incorrectEquation");
+    }
+    if (!isCorrectForm) {
+      response.outcome.push("lineEquationMatch");
+    }
   }
 
   return response;

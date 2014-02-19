@@ -20,6 +20,7 @@ link = function () {
         return {
           answers: answer,
           stash: scope.session.stash
+
         };
       },
 
@@ -31,21 +32,21 @@ link = function () {
         scope.correctClass = response.feedback.correctness;
       },
 
-      setMode : function(newMode) {
+      setMode: function (newMode) {
       },
 
-      reset : function(){
+      reset: function () {
         scope.answer = undefined;
         scope.correctClass = undefined;
       },
 
-      isAnswerEmpty: function(){
+      isAnswerEmpty: function () {
         return _.isEmpty(this.getSession().answers);
       },
 
-      answerChangedHandler: function(callback){
-        scope.$watch("answer", function(newValue, oldValue){
-          if(newValue){
+      answerChangedHandler: function (callback) {
+        scope.$watch("answer", function (newValue, oldValue) {
+          if (newValue) {
             callback();
           }
         }, true);

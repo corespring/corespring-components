@@ -35,7 +35,7 @@ var main = ['$compile', '$modal', '$rootScope',
               $scope.graphCallback($scope.initialParams);
             }
             if ($scope.locked) {
-              $scope.graphCallback({lockGraph: true})
+              $scope.graphCallback({lockGraph: true});
             }
             if ($scope.answers) {
               $scope.renewResponse($scope.answers);
@@ -89,7 +89,7 @@ var main = ['$compile', '$modal', '$rootScope',
         $scope.lockGraph = function () {
           $scope.locked = true;
           $scope.graphCallback({lockGraph: true});
-        }
+        };
 
         $scope.$on('controlBarChanged', function () {
           if ($scope.settingsHaveChanged) {
@@ -106,8 +106,9 @@ var main = ['$compile', '$modal', '$rootScope',
               var point = response[i].split(",");
               points.push({x: point[0], y: point[1]});
             }
-            if ($scope.graphCallback)
+            if ($scope.graphCallback){
               $scope.graphCallback({points: points});
+            }
           }
           return response;
         };
@@ -115,12 +116,12 @@ var main = ['$compile', '$modal', '$rootScope',
         $scope.undo = function () {
           if (!$scope.locked) {
             var pointsArray = _.map($scope.points, function (point, ptName) {
-              return {name: ptName, index: point.index }
+              return {name: ptName, index: point.index };
             });
             var removeName = _.max(pointsArray,function (point) {
               return point.index;
             }).name;
-            delete $scope.points[removeName]
+            delete $scope.points[removeName];
             if ($scope.graphCallback) {
               $scope.graphCallback({points: $scope.points});
             }
@@ -133,7 +134,7 @@ var main = ['$compile', '$modal', '$rootScope',
               $scope.graphCallback({points: {}});
             }
           }
-        }
+        };
       },
 
       link: function (scope, element, attrs) {
@@ -143,8 +144,8 @@ var main = ['$compile', '$modal', '$rootScope',
             "jsx-graph": "",
             "graph-callback": "graphCallback",
             "interaction-callback": "interactionCallback",
-            domain: parseInt(config.domain ? config.domain : 10),
-            range: parseInt(config.range ? config.range : 10),
+            domain: parseInt(config.domain ? config.domain : 10, 10),
+            range: parseInt(config.range ? config.range : 10, 10),
             scale: parseFloat(config.scale ? config.scale : 1),
             domainLabel: config.domainLabel,
             rangeLabel: config.rangeLabel,
@@ -152,7 +153,7 @@ var main = ['$compile', '$modal', '$rootScope',
             pointLabels: config.pointLabels,
             maxPoints: config.maxPoints,
             showLabels: config.showLabels ? config.showLabels : "true"
-          }
+          };
         };
 
         if (attrs.solutionView) {
@@ -206,23 +207,23 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.scale = config.scale;
             scope.domain = config.domain;
             scope.range = config.range;
-            scope.sigfigs = parseInt(config.sigfigs ? config.sigfigs : -1);
+            scope.sigfigs = parseInt(config.sigfigs ? config.sigfigs : -1, 10);
             scope.locked = config.hasOwnProperty('locked') ? true : false;
-            scope.domainLabel = config.domainLabel
-            scope.rangeLabel = config.rangeLabel
-            scope.tickLabelFrequency = config.tickLabelFrequency
-            scope.pointLabels = config.pointLabels
-            scope.maxPoints = config.maxPoints
-            scope.showInputs = (config.showInputs ? config.showInputs : 'true') == 'true'
+            scope.domainLabel = config.domainLabel;
+            scope.rangeLabel = config.rangeLabel;
+            scope.tickLabelFrequency = config.tickLabelFrequency;
+            scope.pointLabels = config.pointLabels;
+            scope.maxPoints = config.maxPoints;
+            scope.showInputs = (config.showInputs ? config.showInputs : 'true') === 'true';
 
 
             var containerWidth, containerHeight;
-            var graphContainer = element.find('.graph-container')
+            var graphContainer = element.find('.graph-container');
             if (config.graphWidth && config.graphHeight) {
-              containerWidth = parseInt(config.graphWidth)
-              containerHeight = parseInt(config.graphHeight)
+              containerWidth = parseInt(config.graphWidth, 10);
+             containerHeight = parseInt(config.graphHeight, 10);
             } else {
-              containerHeight = containerWidth = graphContainer.width()
+              containerHeight = containerWidth = graphContainer.width();
             }
 
             var graphAttrs = createGraphAttributes(config);
@@ -243,10 +244,10 @@ var main = ['$compile', '$modal', '$rootScope',
           },
 
           setResponse: function (response) {
-            if (response && response.correctness == "correct") {
-              scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, pointsStyle: "green"})
+            if (response && response.correctness === "correct") {
+              scope.graphCallback({graphStyle: {borderColor: "green", borderWidth: "2px"}, pointsStyle: "green"});
             } else {
-              scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, pointsStyle: "red"})
+              scope.graphCallback({graphStyle: {borderColor: "red", borderWidth: "2px"}, pointsStyle: "red"});
               scope.correctResponse = response.correctResponse;
             }
 
@@ -261,7 +262,7 @@ var main = ['$compile', '$modal', '$rootScope',
           },
 
           isAnswerEmpty: function () {
-            return _.isUndefined(scope.pointResponse) || _.isEmpty(scope.pointResponse) || scope.pointResponse.length == 0;
+            return _.isUndefined(scope.pointResponse) || _.isEmpty(scope.pointResponse) || scope.pointResponse.length === 0;
           },
 
           answerChangedHandler: function (callback) {
@@ -276,7 +277,7 @@ var main = ['$compile', '$modal', '$rootScope',
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
       }
-    }
+    };
   }
 ];
 

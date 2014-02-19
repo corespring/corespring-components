@@ -50,8 +50,9 @@ module.exports = (grunt) ->
         src: ['<%= common.componentPath %>/**/test/server/**/*-test.js']
 
     jshint:
-      jshintrc: '.jshintrc'
-      main: ['<%= common.componentPath %>/**/*.js']
+      options: 
+        jshintrc: '.jshintrc'
+      main: ['<%= common.componentPath %>/**/*.js', '!<%= common.componentPath %>/**/libs/**/*.js']
 
     watch:
       js:
@@ -61,6 +62,30 @@ module.exports = (grunt) ->
     clean:
       test: ["<%= common.componentPath %>/**/*-wrapped.js"]
 
+    jsbeautifier: 
+      files : ["<%= common.componentPath %>/**/*.js"],
+      options : 
+        js: 
+          braceStyle: "collapse",
+          breakChainedMethods: false,
+          e4x: false,
+          evalCode: false,
+          indentChar: " ",
+          indentLevel: 0,
+          indentSize: 2,
+          indentWithTabs: false,
+          jslintHappy: false,
+          keepArrayIndentation: true,
+          keepFunctionIndentation: true,
+          maxPreserveNewlines: 10,
+          preserveNewlines: true,
+          spaceBeforeConditional: true,
+          spaceInParen: false,
+          unescapeStrings: false,
+          wrapLineLength: 0
+          
+
+
 
   grunt.initConfig(config)
 
@@ -69,13 +94,14 @@ module.exports = (grunt) ->
     'grunt-contrib-clean',
     'grunt-mocha-test',
     'grunt-contrib-watch',
-    'grunt-contrib-jshint'
+    'grunt-contrib-jshint',
+    'grunt-jsbeautifier'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest' )
-  grunt.registerTask('default', ['wrap', 'jasmine:unit'])
+  grunt.registerTask('default', ['jshint', 'test'])
 
 

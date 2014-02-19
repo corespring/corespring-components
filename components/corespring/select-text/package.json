@@ -1,9 +1,5 @@
 {
   "libraries": [
-    {
-      "name": "scoring-utils",
-      "organization": "corespring"
-    }
   ],
   "name": "select-text",
   "organization": "corespring"

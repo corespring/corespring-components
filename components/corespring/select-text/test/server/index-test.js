@@ -167,11 +167,11 @@ describe('select text server logic', function () {
     var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1'], settings(true, true, true));
     response.feedback['1'].should.eql({correct: false});
 
-    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1','2','3','4'], settings(true, true, true));
-    response.feedback['1'].should.eql({correct: false});
-    response.feedback['2'].should.eql({correct: false});
-    response.feedback['3'].should.eql({correct: false});
-    response.feedback['4'].should.eql({correct: false});
+    var responseTwo = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1','2','3','4'], settings(true, true, true));
+    responseTwo.feedback['1'].should.eql({correct: false});
+    responseTwo.feedback['2'].should.eql({correct: false});
+    responseTwo.feedback['3'].should.eql({correct: false});
+    responseTwo.feedback['4'].should.eql({correct: false});
   });
 
 });

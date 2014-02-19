@@ -1,3 +1,4 @@
+/* jshint loopfunc: true */
 var server = require('../../src/server');
 var assert = require('assert');
 var should = require('should');
@@ -19,7 +20,7 @@ describe('random point generator', function () {
         for (var i = 0; i < domain.include.length; i++) {
           var min = Number(domain.include[i].split(",")[0]);
           var max = Number(domain.include[i].split(",")[1]);
-          if (number >= min && number <= max) return true;
+          if (number >= min && number <= max) {return true;}
         }
         return false;
       });

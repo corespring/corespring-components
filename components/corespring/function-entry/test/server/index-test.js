@@ -7,7 +7,7 @@ var proxyquire =  require('proxyquire').noCallThru();
 var mockFnUtils = {
   expressionize: _.identity,
   isFunctionEqual: function (e1, e2, options) {
-    return e1 == e2;
+    return e1 === e2;
   }
 };
 

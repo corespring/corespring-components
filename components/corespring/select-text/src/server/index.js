@@ -19,16 +19,17 @@ exports.preprocessText = function (text) {
 exports.tokenizeText = function (text, selectionUnit) {
   var tokens = [];
 
-  var regexp = selectionUnit == "sentence" ? sentenceRegexp : wordRegexp;
-  var match;
-  while (match = regexp.exec(exports.preprocessText(text))) {
+  var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
+  var match = regexp.exec(exports.preprocessText(text));
+  while (match) {
     tokens.push(match[2]);
+    match = regexp.exec(exports.preprocessText(text));
   }
   return tokens;
 };
 
 exports.wrapTokensWithHtml = function (text, selectionUnit) {
-  var regexp = selectionUnit == "sentence" ? sentenceRegexp : wordRegexp;
+  var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
   var idx = 0;
   var wrappedToken = text.replace(regexp, function (match, prefix, token, delimiter) {
     var cs = "";
@@ -46,16 +47,19 @@ exports.wrapTokensWithHtml = function (text, selectionUnit) {
 var buildCorrectIndexesArray = function (text, selectionUnit) {
   var correctIndexes = [];
 
-  var regexp = selectionUnit == "sentence" ? sentenceRegexp : wordRegexp;
+  var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
   var idx = 0;
   var match;
-  while (match = regexp.exec(text)) {
-    var correctTokenMatch = match[0].match(/[|](.*)/);
-    if (correctTokenMatch) {
-      correctIndexes.push("" + idx);
+  do {
+    match = regexp.exec(text);
+    if (match) {
+      var correctTokenMatch = match[0].match(/[|](.*)/);
+      if (correctTokenMatch) {
+        correctIndexes.push("" + idx);
+      }
+      idx++;
     }
-    idx++;
-  }
+  } while (match);
   return correctIndexes;
 };
 
@@ -79,10 +83,10 @@ var buildFeedback = function (answer, correctIndexes, checkIfCorrect, selectionC
 
 exports.render = function (json) {
 
-  json.wrappedText = exports.wrapTokensWithHtml(exports.preprocessText(json.model.text), json.model.config.selectionUnit)
+  json.wrappedText = exports.wrapTokensWithHtml(exports.preprocessText(json.model.text), json.model.config.selectionUnit);
 
   return json;
-}
+};
 
 exports.respond = function (question, answer, settings) {
 
@@ -91,7 +95,7 @@ exports.respond = function (question, answer, settings) {
   var selectionCount = answer.length;
   var minSelection = question.model.config.minSelections || 0;
   var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
-  var checkIfCorrect = (question.model.config.checkIfCorrect == "yes" || question.model.config.checkIfCorrect == "true");
+  var checkIfCorrect = (question.model.config.checkIfCorrect === "yes" || question.model.config.checkIfCorrect === "true");
 
 
   var correctIndexes = buildCorrectIndexesArray(text, question.model.config.selectionUnit);
@@ -100,7 +104,10 @@ exports.respond = function (question, answer, settings) {
     return _.contains(correctIndexes, a);
   });
   var isCorrect = selectionCountIsFine;
-  if (checkIfCorrect) isCorrect &= isEverySelectedCorrect;
+
+  if (checkIfCorrect) {
+    isCorrect &= isEverySelectedCorrect;
+  }
 
   var res = {
     correctness: isCorrect ? "correct" : "incorrect",
@@ -111,11 +118,23 @@ exports.respond = function (question, answer, settings) {
     res.feedback = buildFeedback(answer, correctIndexes, checkIfCorrect, selectionCountIsFine);
 
     res.outcome = [];
-    if (selectionCount < minSelection) res.outcome.push("responsesBelowMin");
-    else if (selectionCount > maxSelection) res.outcome.push("responsesExceedMax");
-    else res.outcome.push("responsesNumberCorrect");
-    if (isCorrect) res.outcome.push("responsesCorrect");
-    if (checkIfCorrect && !isEverySelectedCorrect) res.outcome.push("responsesIncorrect");
+
+    if (selectionCount < minSelection) {
+      res.outcome.push("responsesBelowMin");
+    }
+    else if (selectionCount > maxSelection) {
+      res.outcome.push("responsesExceedMax");
+    }
+    else {
+      res.outcome.push("responsesNumberCorrect");
+    }
+
+    if (isCorrect) {
+      res.outcome.push("responsesCorrect");
+    }
+    if (checkIfCorrect && !isEverySelectedCorrect) {
+      res.outcome.push("responsesIncorrect");
+    }
   }
 
   return res;
