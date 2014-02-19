@@ -1,7 +1,5 @@
 var link, main;
 
-"use strict";
-
 link = function () {
   return function (scope, element, attrs) {
 

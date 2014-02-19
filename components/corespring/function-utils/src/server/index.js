@@ -12,15 +12,22 @@ var replaceVar = function (expression, variable) {
     return pattern.exec(expression);
   };
 
-  if (m = patternMatch(new RegExp(".*?([0-9)])" + variable + "([(0-9]).*"))) {
+  m = patternMatch(new RegExp(".*?([0-9)])" + variable + "([(0-9]).*"));
+  if (m) {
     return replaceVar(expression.replace(new RegExp("[0-9)]" + variable + "[(0-9]"), m[1] + "*(x)*" + m[2]), variable);
-  } else if (m = patternMatch(new RegExp(".*?([0-9)])" + variable + ".*"))) {
-    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable), m[1] + "*(x)"), variable);
-  } else if (m = patternMatch(new RegExp(".*?" + variable + "([(0-9]).*"))) {
-    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]),variable);
-  } else {
-    return expression;
   }
+
+  m = patternMatch(new RegExp(".*?([0-9)])" + variable + ".*"));
+  if (m) {
+    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable), m[1] + "*(x)"), variable);
+  }
+
+  m = patternMatch(new RegExp(".*?" + variable + "([(0-9]).*"));
+  if (m) {
+    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]),variable);
+  }
+
+  return expression;
 };
 
 exports.expressionize = function(eq, varname) {

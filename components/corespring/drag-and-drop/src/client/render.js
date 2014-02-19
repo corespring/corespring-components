@@ -11,8 +11,12 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
 
     scope.propagateDimension = function (w, h) {
       scope.$apply(function () {
-        if (w > scope.maxWidth) scope.maxWidth = w;
-        if (h > scope.maxHeight) scope.maxHeight = h;
+        if (w > scope.maxWidth) {
+          scope.maxWidth = w;
+        }
+        if (h > scope.maxHeight) {
+          scope.maxHeight = h;
+        }
         scope.choiceStyle = {width: (scope.maxWidth)+'px', height: (scope.maxHeight+16)+'px'};
       });
     };

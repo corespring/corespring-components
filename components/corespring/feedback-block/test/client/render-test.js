@@ -6,7 +6,7 @@ describe('corespring', function () {
       this.elements = {};
       this.registerComponent = function (id, bridge) {
         this.elements[id] = bridge;
-      }
+      };
     };
 
     var element, scope, rootScope, container;

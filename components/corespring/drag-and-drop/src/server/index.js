@@ -8,8 +8,8 @@ exports.respond = function(question, answer, settings){
 
   parser.onopentag = function (node) {
     // opened a tag.  node has "name" and "attributes"
-    if (node.attributes['landing-place'] != undefined) {
-      lps[node.attributes['ID']] = node.attributes['CARDINALITY'] || 'multiple';
+    if (node.attributes['landing-place'] !== undefined) {
+      lps[node.attributes.ID] = node.attributes.CARDINALITY || 'multiple';
     }
   };
 

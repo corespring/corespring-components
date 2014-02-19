@@ -36,14 +36,20 @@ var directive = [
 
         scope.$watch('currentPage', function (v) {
           _.each(scope.childElements, function (e, idx) {
-            if (idx != scope.currentPage) $(e).hide(); else $(e).show();
+            if (idx !== scope.currentPage) {
+              $(e).hide();
+            } else {
+              $(e).show();
+            }
           });
         });
 
         setInterval(function() {
           _.each(scope.childElements, function(e) {
             var h = $(e).height() + 30;
-            if (h > scope.maxHeight) scope.maxHeight = h;
+            if (h > scope.maxHeight) {
+              scope.maxHeight = h;
+            }
           });
           scope.$apply();
         }, 101);

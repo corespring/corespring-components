@@ -6,7 +6,7 @@ describe('corespring', function () {
       this.elements = {};
       this.registerConfigPanel = function (id, bridge) {
         this.elements[id] = bridge;
-      }
+      };
     };
 
     var element = null, scope, container = null;
