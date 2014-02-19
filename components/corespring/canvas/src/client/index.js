@@ -36,7 +36,7 @@ exports.service = [ '$log',
       this.texts = [];
       this.shapes = [];
       this.scale = attrs.scale;
-      this.showLabels = attrs.showLabels == "true"
+      this.showLabels = attrs.showLabels === "true";
       if (attrs.pointLabels) {
         this.pointLabels = attrs.pointLabels;
       } else {
@@ -58,7 +58,7 @@ exports.service = [ '$log',
     };
     Canvas.prototype.getPoint = function (ptName) {
       return _.find(this.points, function (p) {
-        return p.name == ptName;
+        return p.name === ptName;
       });
     };
 
@@ -126,10 +126,10 @@ exports.service = [ '$log',
 
     Canvas.prototype.removePoint = function (pointId) {
       for (var i = 0; i < this.points.length; i++) {
-        if (this.points[i].id == pointId) {
-          this.board.removeObject(this.points[i].text)
+        if (this.points[i].id === pointId) {
+          this.board.removeObject(this.points[i].text);
           this.board.removeObject(this.points[i]);
-          this.points.splice(i, 1)
+          this.points.splice(i, 1);
         }
       }
     };
@@ -144,7 +144,7 @@ exports.service = [ '$log',
         strokeWidth: 2,
         fixed: true
       });
-      this.shapes.push(shape)
+      this.shapes.push(shape);
       return shape;
     };
 
@@ -153,8 +153,8 @@ exports.service = [ '$log',
         strokeColor: '#0000ff',
         strokeWidth: 2,
         fixed: true
-      })
-      this.shapes.push(shape)
+      });
+      this.shapes.push(shape);
       return shape;
     };
 
@@ -163,17 +163,17 @@ exports.service = [ '$log',
     };
 
     Canvas.prototype.changePointColor = function (point, color) {
-      point.setAttribute({fillColor: color, strokeColor: color})
+      point.setAttribute({fillColor: color, strokeColor: color});
       var index = _.indexOf(_.map(this.points, function (p) {
-        return p.id
-      }), point.id)
+        return p.id;
+      }), point.id);
       if (this.texts[index]) { //check to see if exists as labels may be disabled
-        this.texts[index].setAttribute({strokeColor: color})
+        this.texts[index].setAttribute({strokeColor: color});
       }
     };
 
     Canvas.prototype.changeShapeColor = function (shape, color) {
-      shape.setAttribute({strokeColor: color})
+      shape.setAttribute({strokeColor: color});
     };
 
     return Canvas;
