@@ -1,6 +1,6 @@
 describe('corespring', function () {
 
-  var testModel, scope, rootScope;
+  var testModel, scope, rootScope, container, element;
 
   var MockComponentRegister = function () {
       this.elements = {};

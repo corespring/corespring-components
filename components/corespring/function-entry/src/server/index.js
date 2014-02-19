@@ -33,8 +33,12 @@ exports.respond = function (question, answer, settings) {
 
   if (settings.showFeedback) {
     response.outcome = [];
-    if (!answerIsCorrect) response.outcome.push("incorrectEquation");
-    if (!isCorrectForm) response.outcome.push("lineEquationMatch");
+    if (!answerIsCorrect) {
+      response.outcome.push("incorrectEquation");
+    }
+    if (!isCorrectForm) {
+      response.outcome.push("lineEquationMatch");
+    }
   }
 
   return response;

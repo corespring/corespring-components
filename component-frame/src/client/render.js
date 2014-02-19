@@ -33,7 +33,7 @@ var link = function () {
   };
 };
 
-main = [
+var main = [
   function () {
     var def = {
       scope: {},

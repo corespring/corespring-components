@@ -17,7 +17,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
         if (h > scope.maxHeight) {
           scope.maxHeight = h;
         }
-        scope.choiceStyle = {width: (scope.maxWidth)+'px', height: (scope.maxHeight+16)+'px'};
+        scope.choiceStyle = {width: (scope.maxWidth) + 'px', height: (scope.maxHeight + 16) + 'px'};
       });
     };
 
@@ -29,13 +29,17 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
         var w = 0, h = 0;
 
         $(element).find('.sizerHolder').each(function (idx, e) {
-          if ($(e).width() > w) w = $(e).width();
+          if ($(e).width() > w) {
+            w = $(e).width();
+          }
         });
         $(element).find('.sizerHolder').each(function (idx, e) {
-          if ($(e).height() > h) h = $(e).height();
+          if ($(e).height() > h) {
+            h = $(e).height();
+          }
         });
-        if (lastW != w || lastH != h) {
-          scope.propagateDimension(w+18, h);
+        if (lastW !== w || lastH !== h) {
+          scope.propagateDimension(w + 18, h);
         }
         lastW = w;
         lastH = h;
@@ -68,7 +72,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       }
     };
 
-    scope.startOver = function() {
+    scope.startOver = function () {
       scope.stack = [];
       scope.model.choices = _.cloneDeep(scope.originalChoices);
       _.each(scope.landingPlaceChoices, function (lpc, key) {
@@ -77,32 +81,34 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
     };
 
     scope.undo = function () {
-      if (scope.stack.length < 2) return;
+      if (scope.stack.length < 2) {
+        return;
+      }
       var o = scope.stack.pop();
       var state = _.last(scope.stack);
       scope.model.choices = _.cloneDeep(state.choices);
       scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
     };
 
-    scope.seeSolution = function() {
+    scope.seeSolution = function () {
       scope.solutionScope.choiceStyle = scope.choiceStyle;
       $modal.open({
-        controller : function($scope, $modalInstance) {
+        controller: function ($scope, $modalInstance) {
           $scope.ok = function () {
             $modalInstance.dismiss('cancel');
           };
         },
         template: [
-            '   <div class="modal-header">',
-            '     <h3>Answer</h3>',
-            '   </div>',
-            '   <div class="modal-body">',
-                  scope.model.answerArea,
-            '   </div>',
-            '   <div class="modal-footer">',
-            '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-            '   </div>'
-          ].join(""),
+          '   <div class="modal-header">',
+          '     <h3>Answer</h3>',
+          '   </div>',
+          '   <div class="modal-body">',
+          scope.model.answerArea,
+          '   </div>',
+          '   <div class="modal-footer">',
+          '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
+          '   </div>'
+        ].join(""),
         backdrop: true,
         scope: scope.solutionScope
       });
@@ -115,9 +121,9 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       }
     }, true);
 
-    var choiceForId = function(id) {
+    var choiceForId = function (id) {
       var choice = _.find(scope.originalChoices, function (c) {
-        return c.id == id;
+        return c.id === id;
       });
       return choice;
     };
@@ -152,14 +158,16 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
         }
 
         var answerHtml = scope.model.answerArea;
-        $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
+        var $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
         $compile($answerArea)(scope.$new());
 
       },
       getSession: function () {
         var answer = {};
         _.each(scope.landingPlaceChoices, function (v, k) {
-          if (k) answer[k] = _.pluck(v, 'id');
+          if (k) {
+            answer[k] = _.pluck(v, 'id');
+          }
         });
         return {
           answers: answer
@@ -173,8 +181,8 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
         // Populate solutionScope with the correct response
         scope.solutionScope = $rootScope.$new();
         scope.solutionScope.landingPlaceChoices = {};
-        _.each(scope.correctResponse, function(v,k) {
-          scope.solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
+        _.each(scope.correctResponse, function (v, k) {
+          scope.solutionScope.landingPlaceChoices[k] = _.map(v, function (r) {
             return choiceForId(r);
           });
         });
@@ -206,21 +214,21 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
       }
     };
 
-    scope.helperForChoice = function(choice) {
+    scope.helperForChoice = function (choice) {
       return (!!choice.copyOnDrag ? "'clone'" : "''");
     };
 
-    scope.placeholderForChoice = function(choice) {
+    scope.placeholderForChoice = function (choice) {
       return (!!choice.copyOnDrag ? "'keep'" : "''");
     };
 
-    scope.getChoiceRows = function() {
+    scope.getChoiceRows = function () {
       return _.range(scope.model.choices.length / scope.itemsPerRow);
     };
 
-    scope.getChoicesForRow = function(row) {
+    scope.getChoicesForRow = function (row) {
       return scope.model.choices.slice(row * scope.itemsPerRow, row * scope.itemsPerRow + scope.itemsPerRow);
-    }
+    };
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
@@ -266,7 +274,7 @@ var main = [ '$compile', '$log', '$modal', '$rootScope', function ($compile, $lo
     '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
     '  </div> <div class="clearfix" />',
     '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
-    ''+answerArea(),
+    '' + answerArea(),
     '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
     '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
     '</div>'
@@ -293,19 +301,19 @@ var landingPlace = [function () {
     link: function (scope, element, attrs) {
 
       scope['class'] = attrs['class'];
-      scope.id = attrs['id'];
-      scope.cardinality = attrs['cardinality'] || 'single';
-      scope.columnsPerRow = attrs['columnsperrow'] || 3;
+      scope.id = attrs.id;
+      scope.cardinality = attrs.cardinality || 'single';
+      scope.columnsPerRow = attrs.columnsperrow || 3;
       scope.landingPlaceChoices[scope.id] = scope.landingPlaceChoices[scope.id] || [];
-      scope.label = attrs['label'] || "";
-      isMultiple = scope.cardinality != 'single';
+      scope.label = attrs.label || "";
+      isMultiple = scope.cardinality !== 'single';
 
       var nonEmptyElement = function (c) {
         return c && c.id;
       };
 
-      scope.$watch('editable', function(e) {
-         scope.sortableOptions.disabled =  !e;
+      scope.$watch('editable', function (e) {
+        scope.sortableOptions.disabled = !e;
       });
 
       scope.onDrop = function () {
@@ -323,19 +331,21 @@ var landingPlace = [function () {
       };
 
       scope.revertFunction = function (isValid) {
-        if (isValid) return false;
+        if (isValid) {
+          return false;
+        }
         scope.$apply(function () {
           var choiceInLandingPlace = _.find(scope.landingPlaceChoices[scope.id], function (c) {
-            return c.id == scope.dragging.id;
+            return c.id === scope.dragging.id;
           });
-          var choiceInChoiceArea = _.find(scope.model.choices, function(c) {
-            return c.id == scope.dragging.id;
+          var choiceInChoiceArea = _.find(scope.model.choices, function (c) {
+            return c.id === scope.dragging.id;
           });
           if (!choiceInChoiceArea) {
             scope.model.choices.push(choiceInLandingPlace);
           }
           scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function (e) {
-            return e.id != scope.dragging.id;
+            return e.id !== scope.dragging.id;
           });
         });
         scope.$emit('rerender-math', 1);
@@ -352,8 +362,10 @@ var landingPlace = [function () {
 
       scope.droppableOptions = {
         accept: function (a, b) {
-          if (scope.cardinality == 'single' && scope.landingPlaceChoices[scope.id].length > 0) return false;
-          return scope.dragging && (scope.dragging.fromTarget != scope.id);
+          if (scope.cardinality === 'single' && scope.landingPlaceChoices[scope.id].length > 0) {
+            return false;
+          }
+          return scope.dragging && (scope.dragging.fromTarget !== scope.id);
         },
         onDrop: 'onDrop',
         onOver: 'overCallback',
@@ -369,7 +381,7 @@ var landingPlace = [function () {
             scope.revertNext = false;
           });
         },
-        beforeStop: function() {
+        beforeStop: function () {
           scope.revertNext = scope.dragging.isOut;
         },
         stop: function () {
@@ -385,7 +397,7 @@ var landingPlace = [function () {
       };
 
       scope.$watch("maxWidth + maxHeight", function (n) {
-        var isMultiple = scope.cardinality != 'single';
+        var isMultiple = scope.cardinality !== 'single';
         var mw = scope.maxWidth + 25;
         var maxWidth = isMultiple ? (mw * scope.columnsPerRow) : mw;
         if (scope.expandHorizontal) {
@@ -395,13 +407,17 @@ var landingPlace = [function () {
         }
       });
 
-      scope.classForChoice = function(choice, idx) {
-        if (!scope.correctResponse) return;
+      scope.classForChoice = function (choice, idx) {
+        if (!scope.correctResponse) {
+          return;
+        }
         var isCorrect;
-        if (scope.cardinality == "ordered")
-          isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) == idx;
-        else
+        if (scope.cardinality === "ordered") {
+          isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) === idx;
+        }
+        else {
           isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) >= 0;
+        }
 
         return isCorrect ? "correct" : "incorrect";
       };

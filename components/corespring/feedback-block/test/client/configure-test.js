@@ -16,7 +16,9 @@ describe('corespring', function () {
     beforeEach(inject(function ($compile, $rootScope) {
       scope = $rootScope.$new();
       container = new MockComponentRegister();
-      $rootScope.registerConfigPanel = function(id,b){ container.registerConfigPanel(id,b) };
+      $rootScope.registerConfigPanel = function (id, b) {
+        container.registerConfigPanel(id, b);
+      };
       element = $compile("<corespring-feedback-block-configure id='1'></corespring-feedback-block-configure>")(scope);
       scope = element.scope();
     }));

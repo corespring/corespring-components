@@ -1,3 +1,5 @@
+/* jslint evil: true */
+
 var _ = require('lodash');
 var mathjs = require('mathjs')();
 
@@ -81,8 +83,8 @@ exports.isFunctionEqual = function (eq1, eq2, options) {
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var y1 = mathjs.eval(eq1r, {x: x}); // jshint ignore:line
-      var y2 = mathjs.eval(eq2r, {x: x}); // jshint ignore:line
+      var y1 = mathjs['eval'](eq1r, {x: x});
+      var y2 = mathjs['eval'](eq2r, {x: x});
       if (!closeEnough(sigfigs)(y1,y2)) {return true;}
     } catch (e) {
       console.log('error: '+e);

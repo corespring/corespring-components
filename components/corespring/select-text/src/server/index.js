@@ -10,8 +10,8 @@ exports.preprocessText = function (text) {
   var correctCloseTagRegexp = /<\/correct>/ig;
 
   var result = text.replace(nameRegexp, "$1&#46;$2")
-  .replace(correctOpenTagRegexp, "|")
-  .replace(correctCloseTagRegexp, "");
+    .replace(correctOpenTagRegexp, "|")
+    .replace(correctCloseTagRegexp, "");
 
   return result;
 };
@@ -20,9 +20,10 @@ exports.tokenizeText = function (text, selectionUnit) {
   var tokens = [];
 
   var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
-  var match;
-  while (match = regexp.exec(exports.preprocessText(text))) {
+  var match = regexp.exec(exports.preprocessText(text));
+  while (match) {
     tokens.push(match[2]);
+    match = regexp.exec(exports.preprocessText(text));
   }
   return tokens;
 };
@@ -49,13 +50,16 @@ var buildCorrectIndexesArray = function (text, selectionUnit) {
   var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
   var idx = 0;
   var match;
-  while (match = regexp.exec(text)) {
-    var correctTokenMatch = match[0].match(/[|](.*)/);
-    if (correctTokenMatch) {
-      correctIndexes.push("" + idx);
+  do {
+    match = regexp.exec(text);
+    if (match) {
+      var correctTokenMatch = match[0].match(/[|](.*)/);
+      if (correctTokenMatch) {
+        correctIndexes.push("" + idx);
+      }
+      idx++;
     }
-    idx++;
-  }
+  } while (match);
   return correctIndexes;
 };
 
@@ -100,37 +104,38 @@ exports.respond = function (question, answer, settings) {
     return _.contains(correctIndexes, a);
   });
   var isCorrect = selectionCountIsFine;
-  
-  if (checkIfCorrect){
-   isCorrect &= isEverySelectedCorrect;
- }
 
- var res = {
-  correctness: isCorrect ? "correct" : "incorrect",
-  score: isCorrect ? 1 : 0
-};
-
-if (settings.showFeedback) {
-  res.feedback = buildFeedback(answer, correctIndexes, checkIfCorrect, selectionCountIsFine);
-
-  res.outcome = [];
-  
-  if (selectionCount < minSelection) {
-    res.outcome.push("responsesBelowMin");
-  }
-  else if (selectionCount > maxSelection){
-    res.outcome.push("responsesExceedMax");
-  }
-  else {
-    res.outcome.push("responsesNumberCorrect");
+  if (checkIfCorrect) {
+    isCorrect &= isEverySelectedCorrect;
   }
 
-  if (isCorrect) { 
-    res.outcome.push("responsesCorrect");
-  }
-  if (checkIfCorrect && !isEverySelectedCorrect) { 
-    res.outcome.push("responsesIncorrect");}
+  var res = {
+    correctness: isCorrect ? "correct" : "incorrect",
+    score: isCorrect ? 1 : 0
+  };
+
+  if (settings.showFeedback) {
+    res.feedback = buildFeedback(answer, correctIndexes, checkIfCorrect, selectionCountIsFine);
+
+    res.outcome = [];
+
+    if (selectionCount < minSelection) {
+      res.outcome.push("responsesBelowMin");
+    }
+    else if (selectionCount > maxSelection) {
+      res.outcome.push("responsesExceedMax");
+    }
+    else {
+      res.outcome.push("responsesNumberCorrect");
+    }
+
+    if (isCorrect) {
+      res.outcome.push("responsesCorrect");
+    }
+    if (checkIfCorrect && !isEverySelectedCorrect) {
+      res.outcome.push("responsesIncorrect");
+    }
   }
 
-return res;
+  return res;
 };

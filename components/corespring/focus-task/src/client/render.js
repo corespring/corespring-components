@@ -54,7 +54,7 @@ var main = [
         } else {
           var ordered = _(order).map(function (v) {
             return _.find(choices, function (c) {
-              return c.value == v;
+              return c.value === v;
             });
           }).filter(function (v) {
               return v;
@@ -86,9 +86,9 @@ var main = [
         scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
 
         if (stash.shuffledOrder && model.config.shuffle) {
-          scope.choices = layoutChoices(model.choices, stash.shuffledOrder)
+          scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
         } else if (model.config.shuffle) {
-          scope.choices = layoutChoices(model.choices)
+          scope.choices = layoutChoices(model.choices);
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
         } else {
@@ -172,8 +172,12 @@ var main = [
 
       scope.getChoiceClass = function (o) {
         var cl = scope.itemShape+" ";
-        if (scope.answer.choices[o.value]) cl += "selected ";
-        if (o.correct) cl += o.correct;
+        if (scope.answer.choices[o.value]) {
+          cl += "selected ";
+        }
+        if (o.correct) {
+          cl += o.correct;
+        }
         return cl;
       };
 
