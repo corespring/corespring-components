@@ -14,7 +14,7 @@ component = {
   "correctResponse": {
     "1": ["egg", "pupa"],
     "2": [],
-    "3": ["larva","adult"],
+    "3": ["larva", "adult"],
     "4": []
   },
   "feedback": [
@@ -59,7 +59,7 @@ component = {
   "weight": 1
 };
 
-settings = function (feedback, userResponse, correctResponse) {
+settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
   userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
@@ -71,15 +71,17 @@ settings = function (feedback, userResponse, correctResponse) {
   };
 };
 
-describe('drag and drop server logic', function () {
+describe('drag and drop server logic', function() {
 
-  describe('respond incorrect', function () {
-    var response = server.respond(_.cloneDeep(component), {1: ['larva']}, settings(false, true, true));
+  describe('respond incorrect', function() {
+    var response = server.respond(_.cloneDeep(component), {
+      1: ['larva']
+    }, settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
   });
 
-  describe('respond correct', function () {
+  describe('respond correct', function() {
     var answer = {
       "1": ["egg", "pupa"],
       "2": [],
@@ -91,7 +93,7 @@ describe('drag and drop server logic', function () {
     response.score.should.eql(1);
   });
 
-  describe('cardinality is considered', function () {
+  describe('cardinality is considered', function() {
     var answer = {
       "1": ["egg", "pupa"],
       "2": [],
@@ -102,7 +104,7 @@ describe('drag and drop server logic', function () {
     response.correctness.should.eql('correct');
 
     answer = {
-      "1": ["pupa", "egg"],     // ordered, so incorrect
+      "1": ["pupa", "egg"], // ordered, so incorrect
       "2": [],
       "3": ["larva", "adult"],
       "4": []
@@ -113,7 +115,7 @@ describe('drag and drop server logic', function () {
     answer = {
       "1": ["egg", "pupa"],
       "2": [],
-      "3": ["adult", "larva"],  // not ordered, so correct
+      "3": ["adult", "larva"], // not ordered, so correct
       "4": []
     };
     response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));

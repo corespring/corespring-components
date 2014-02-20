@@ -1,14 +1,14 @@
 var _ = require('lodash');
 
-exports.render = function (element) {
+exports.render = function(element) {
   return element;
 };
 
-exports.isCorrect = function () {
+exports.isCorrect = function() {
   return true;
 };
 
-exports.respond = function (model, answer, settings, targetOutcome) {
+exports.respond = function(model, answer, settings, targetOutcome) {
 
   if (!settings.showFeedback) {
     return {};
@@ -35,7 +35,7 @@ exports.respond = function (model, answer, settings, targetOutcome) {
 
   if (targetOutcome.outcome) {
     var outcome = targetOutcome.outcome;
-    var feedbackForOutcome = _.find(outcome, function (o) {
+    var feedbackForOutcome = _.find(outcome, function(o) {
       return model.feedback.outcome && !_.isUndefined(model.feedback.outcome[o]);
     });
     if (feedbackForOutcome) {

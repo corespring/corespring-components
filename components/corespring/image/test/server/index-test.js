@@ -5,7 +5,9 @@ var assert, component, server, settings, should, _;
 //And specify any custom dependencies
 var proxyquire = require('proxyquire').noCallThru();
 
-server = proxyquire('../../src/server', {'corespring.scoring-utils.server': {}});
+server = proxyquire('../../src/server', {
+  'corespring.scoring-utils.server': {}
+});
 
 assert = require('assert');
 
@@ -20,6 +22,6 @@ component = {
   }
 };
 
-describe('image server logic', function () {
+describe('image server logic', function() {
 
 });

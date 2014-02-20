@@ -1,4 +1,3 @@
-describe('corespring', function () {
-  describe('configure', function () {
-  });
+describe('corespring', function() {
+  describe('configure', function() {});
 });

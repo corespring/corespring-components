@@ -1,5 +1,6 @@
 var directive = [
-  '$timeout', '$log', function ($timeout, $log) {
+  '$timeout', '$log',
+  function($timeout, $log) {
 
     return {
       restrict: 'EA',
@@ -15,7 +16,7 @@ var directive = [
           "<div class='transcluded-content' ng-transclude></div>",
           "</div>"
         ].join(''),
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         scope.currentPage = 0;
         scope.childElements = [];
         scope.maxHeight = 100;
@@ -27,15 +28,15 @@ var directive = [
         scope.numberOfQuestions = scope.childElements.length;
 
         scope.goLeft = function() {
-          scope.currentPage = (scope.currentPage > 0) ?  scope.currentPage - 1 : 0;
+          scope.currentPage = (scope.currentPage > 0) ? scope.currentPage - 1 : 0;
         };
 
         scope.goRight = function() {
-          scope.currentPage = (scope.currentPage < scope.childElements.length - 1) ?  scope.currentPage + 1 : scope.childElements.length - 1;
+          scope.currentPage = (scope.currentPage < scope.childElements.length - 1) ? scope.currentPage + 1 : scope.childElements.length - 1;
         };
 
-        scope.$watch('currentPage', function (v) {
-          _.each(scope.childElements, function (e, idx) {
+        scope.$watch('currentPage', function(v) {
+          _.each(scope.childElements, function(e, idx) {
             if (idx !== scope.currentPage) {
               $(e).hide();
             } else {

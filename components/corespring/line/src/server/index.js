@@ -8,7 +8,7 @@ exports.render = function(item) {
   return item;
 };
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function(question, answer, settings) {
 
   var slope = (answer.B.y - answer.A.y) / (answer.B.x - answer.A.x);
   var yintercept = answer.A.y - (slope * answer.A.x);

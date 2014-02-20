@@ -11,7 +11,7 @@ _ = require('lodash');
 component = {
   "componentType": "corespring-ordering",
   "title": "Butterfly Ordering",
-  "correctResponse": ["egg", "pupa","larva","adult"],
+  "correctResponse": ["egg", "pupa", "larva", "adult"],
   "model": {
     "choices": [
       {
@@ -39,7 +39,7 @@ component = {
   "weight": 1
 };
 
-settings = function (feedback, userResponse, correctResponse) {
+settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
   userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
@@ -51,16 +51,16 @@ settings = function (feedback, userResponse, correctResponse) {
   };
 };
 
-describe('ordering server logic', function () {
+describe('ordering server logic', function() {
 
-  describe('respond incorrect', function () {
-    var response = server.respond(_.cloneDeep(component), ['larva','egg','pupa','adult'], settings(false, true, true));
+  describe('respond incorrect', function() {
+    var response = server.respond(_.cloneDeep(component), ['larva', 'egg', 'pupa', 'adult'], settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
   });
 
-  describe('respond correct', function () {
-    var response = server.respond(_.cloneDeep(component), ["egg", "pupa","larva","adult"], settings(false, true, true));
+  describe('respond correct', function() {
+    var response = server.respond(_.cloneDeep(component), ["egg", "pupa", "larva", "adult"], settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });

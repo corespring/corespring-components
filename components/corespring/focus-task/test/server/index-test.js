@@ -1,8 +1,10 @@
 var assert, component, server, settings, should, _;
 
-var proxyquire =  require('proxyquire').noCallThru();
+var proxyquire = require('proxyquire').noCallThru();
 
-server = proxyquire('../../src/server', {'corespring.scoring-utils.server' : {}});
+server = proxyquire('../../src/server', {
+  'corespring.scoring-utils.server': {}
+});
 
 assert = require('assert');
 
@@ -39,7 +41,7 @@ component = {
 
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {

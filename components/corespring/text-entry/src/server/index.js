@@ -1,17 +1,16 @@
 var _ = require('lodash');
 
 
-exports.isCorrect = function (answer, correctAnswer) {
-  if (_.isArray(correctAnswer)){
+exports.isCorrect = function(answer, correctAnswer) {
+  if (_.isArray(correctAnswer)) {
     return _.contains(correctAnswer, answer);
-  }
-  else{
+  } else {
     return answer === correctAnswer;
   }
 };
 
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function(question, answer, settings) {
   var answerIsCorrect, response;
 
   if (question && answer && question._uid !== answer._uid) {
@@ -27,7 +26,9 @@ exports.respond = function (question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    response.feedback = {correctness: response.correctness};
+    response.feedback = {
+      correctness: response.correctness
+    };
   }
 
   return response;

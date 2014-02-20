@@ -1,11 +1,11 @@
 var main = [
-  function () {
-    return { 
+
+  function() {
+    return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      link: function (scope, element, attrs) {
-      },
+      link: function(scope, element, attrs) {},
       template: [
       ].join("")
     };
@@ -13,5 +13,6 @@ var main = [
 ];
 
 exports.framework = 'angular';
-exports.directives = [{directive: main}];
-
+exports.directives = [{
+  directive: main
+}];

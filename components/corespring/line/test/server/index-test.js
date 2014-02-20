@@ -8,16 +8,14 @@ var sinon = require('sinon');
 
 var serverObj = {
   expressionize: _.identity,
-  isFunctionEqual: function (e1, e2, options) {
+  isFunctionEqual: function(e1, e2, options) {
     return e1 === e2;
   }
 };
 
-server = proxyquire('../../src/server',
-  {
-    'corespring.function-utils.server': serverObj
-  }
-);
+server = proxyquire('../../src/server', {
+  'corespring.function-utils.server': serverObj
+});
 
 assert = require('assert');
 
@@ -42,7 +40,7 @@ component = {
   }
 };
 
-settings = function (feedback, userResponse, correctResponse) {
+settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
   userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
@@ -54,27 +52,43 @@ settings = function (feedback, userResponse, correctResponse) {
   };
 };
 
-describe('line interaction server logic', function () {
+describe('line interaction server logic', function() {
 
-  it('respond incorrect', function () {
+  it('respond incorrect', function() {
     var spy = sinon.spy(serverObj, 'isFunctionEqual');
-    var response = server.respond(_.cloneDeep(component), {A: {x: -1, y: -1}, B: {x: 1, y: 1}}, settings(false, true, true));
+    var response = server.respond(_.cloneDeep(component), {
+      A: {
+        x: -1,
+        y: -1
+      },
+      B: {
+        x: 1,
+        y: 1
+      }
+    }, settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
     // check if it was called with the right options
-    spy.getCall(0).args[2].should.eql({variable: 'x', sigfigs: 3});
+    spy.getCall(0).args[2].should.eql({
+      variable: 'x',
+      sigfigs: 3
+    });
   });
 
-  it('respond correct', function () {
-    var response = server.respond(_.cloneDeep(component), {A: {x: 0, y: 7}, B: {x: 1, y: 9}}, settings(false, true, true));
+  it('respond correct', function() {
+    var response = server.respond(_.cloneDeep(component), {
+      A: {
+        x: 0,
+        y: 7
+      },
+      B: {
+        x: 1,
+        y: 9
+      }
+    }, settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
 
 
 });
-
-
-
-
-

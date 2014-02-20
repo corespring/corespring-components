@@ -32,15 +32,24 @@ component = {
     value: "carrot"
   },
   feedback: [
-    {value: "apple", feedback: "Huh?"},
-    {value: "carrot", feedback: "Yes"},
-    {value:  "banana", feedback: "Nopes"}
+    {
+      value: "apple",
+      feedback: "Huh?"
+    },
+    {
+      value: "carrot",
+      feedback: "Yes"
+    },
+    {
+      value: "banana",
+      feedback: "Nopes"
+    }
   ]
 };
 
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {

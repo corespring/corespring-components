@@ -1,41 +1,35 @@
 var main = [
   '$sce', '$log',
 
-  function ($sce, $log) {
+  function($sce, $log) {
     var def;
 
-    var link = function (scope, element, attrs) {
+    var link = function(scope, element, attrs) {
 
 
       scope.containerBridge = {
 
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           scope.lines = dataAndSession.data.model.lines;
         },
 
-        getSession: function () {
+        getSession: function() {
           return {
             answers: ""
           };
         },
 
-        setResponse: function (response) {
-        },
+        setResponse: function(response) {},
 
-        setMode : function(newMode) {
-        },
+        setMode: function(newMode) {},
 
-        reset : function(){
-        },
+        reset: function() {},
 
-        isAnswerEmpty: function(){
-        },
+        isAnswerEmpty: function() {},
 
-        answerChangedHandler: function(callback){
-        },
+        answerChangedHandler: function(callback) {},
 
-        editable: function(e){
-        }
+        editable: function(e) {}
       };
 
       scope.trust = function(line) {
@@ -67,4 +61,3 @@ var main = [
 
 exports.framework = 'angular';
 exports.directive = main;
-

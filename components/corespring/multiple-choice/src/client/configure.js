@@ -14,7 +14,7 @@ var shuffle = [
 
 var main = [
   '$log', 'ChoiceTemplates',
-  function ($log, ChoiceTemplates) {
+  function($log, ChoiceTemplates) {
 
     var choices = [
         '<div class="choice" ng-repeat="q in model.choices">',
@@ -28,10 +28,10 @@ var main = [
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
 
         scope.containerBridge = {
-          setModel: function (model) {
+          setModel: function(model) {
             scope.fullModel = model;
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
@@ -40,12 +40,12 @@ var main = [
             scope.scoreMapping = {};
             scope.model.scoringType = scope.model.scoringType || "standard";
 
-            _.each(model.scoreMapping, function (v,k) {
+            _.each(model.scoreMapping, function(v, k) {
               scope.scoreMapping[k] = String(v);
             });
 
-            _.each(model.feedback, function (feedback) {
-              var choice = _.find(model.model.choices, function (choice) {
+            _.each(model.feedback, function(feedback) {
+              var choice = _.find(model.model.choices, function(choice) {
                 return choice.value === feedback.value;
               });
 
@@ -58,35 +58,35 @@ var main = [
               }
             });
 
-            _.each(scope.fullModel.correctResponse.value, function (cr) {
+            _.each(scope.fullModel.correctResponse.value, function(cr) {
               scope.correctMap[cr] = true;
             });
 
-            _.each(scope.model.choices, function (c) {
+            _.each(scope.model.choices, function(c) {
               c.labelType = c.labelType || "text";
             });
           },
 
-          getModel: function () {
+          getModel: function() {
             var model = _.cloneDeep(scope.fullModel);
             var correctAnswers = [];
 
-            _.each(scope.correctMap, function (v, k) {
+            _.each(scope.correctMap, function(v, k) {
               if (v) {
                 correctAnswers.push(k);
               }
             });
             model.scoreMapping = {};
 
-            _.each(scope.scoreMapping, function(v,k) {
+            _.each(scope.scoreMapping, function(v, k) {
               model.scoreMapping[k] = Number(v);
             });
             model.correctResponse.value = correctAnswers;
             model.model.config.singleChoice = correctAnswers.length === 1;
 
-            _.each(model.model.choices, function (choice) {
+            _.each(model.model.choices, function(choice) {
               var feedback, _ref, _ref1;
-              feedback = _.find(model.feedback, function (fb) {
+              feedback = _.find(model.feedback, function(fb) {
                 return fb.value === choice.value;
               });
               if (feedback) {
@@ -99,10 +99,10 @@ var main = [
           }
         };
 
-        scope.$watch('correctMap', function (value) {
+        scope.$watch('correctMap', function(value) {
           var res;
           res = [];
-          _.each(value, function (v, k) {
+          _.each(value, function(v, k) {
             if (v) {
               return res.push(k);
             }
@@ -113,7 +113,7 @@ var main = [
           return console.log(scope.model);
         }, true);
 
-        scope.$watch('feedback', function(newFeedback){
+        scope.$watch('feedback', function(newFeedback) {
           $log.debug("update feedback in components");
 
           var out = _.makeArray(newFeedback, "value");
@@ -122,18 +122,18 @@ var main = [
 
         scope.registerConfigPanel(attrs.id, scope.containerBridge);
 
-        scope.removeQuestion = function (q) {
-          scope.model.choices = _.filter(scope.model.choices, function (cq) {
+        scope.removeQuestion = function(q) {
+          scope.model.choices = _.filter(scope.model.choices, function(cq) {
             return cq !== q;
           });
-          scope.fullModel.feedback = _.filter(scope.fullModel.feedback, function(fb){
+          scope.fullModel.feedback = _.filter(scope.fullModel.feedback, function(fb) {
             return fb.value !== q.value;
           });
 
           return null;
         };
 
-        scope.addQuestion = function () {
+        scope.addQuestion = function() {
           var uid = _.uniqueId("mc_");
 
           scope.model.choices.push({
@@ -150,7 +150,7 @@ var main = [
           scope.fullModel.feedback.push(scope.feedback[uid]);
         };
 
-        scope.toChar = function (num) {
+        scope.toChar = function(num) {
           return String.fromCharCode(65 + num);
         };
 
@@ -170,11 +170,13 @@ var main = [
         '</div>'
       ].join("")
     };
-    
+
   }
 ];
 
 exports.framework = 'angular';
 exports.directives = [
-    {directive: main}
+  {
+    directive: main
+  }
 ];

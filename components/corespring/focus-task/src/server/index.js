@@ -51,7 +51,7 @@ exports.respond = function(question, answer, settings) {
   var checkIfCorrect = config.checkIfCorrect === "yes" || config.checkIfCorrect === "true";
   var selectionNumberIsCorrect = answer.length >= minSelections && answer.length <= maxSelections;
   var isAnswerPartOfCorrectAnswer = _.every(answer, function(a) {
-     return _.contains(question.correctResponse.value, a);
+    return _.contains(question.correctResponse.value, a);
   });
 
   var answerIsCorrect = checkIfCorrect ? isAnswerPartOfCorrectAnswer : selectionNumberIsCorrect;

@@ -1,2 +1,1 @@
-describe('corespring', function () {
-});
+describe('corespring', function() {});

@@ -2,16 +2,18 @@ var assert, component, server, settings, should, _;
 
 _ = require('lodash');
 
-var proxyquire =  require('proxyquire').noCallThru();
+var proxyquire = require('proxyquire').noCallThru();
 
 var mockFnUtils = {
   expressionize: _.identity,
-  isFunctionEqual: function (e1, e2, options) {
+  isFunctionEqual: function(e1, e2, options) {
     return e1 === e2;
   }
 };
 
-server = proxyquire('../../src/server', {'corespring.function-utils.server' : mockFnUtils});
+server = proxyquire('../../src/server', {
+  'corespring.function-utils.server': mockFnUtils
+});
 
 assert = require('assert');
 
@@ -19,13 +21,15 @@ should = require('should');
 
 component = {
   componentType: "corespring-function-entry",
-  correctResponse: {equation: "y=2x+4"}
+  correctResponse: {
+    equation: "y=2x+4"
+  }
 };
 
 
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ?  true : userResponse;
+  userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
 
   return {

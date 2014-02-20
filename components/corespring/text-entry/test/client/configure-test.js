@@ -1,4 +1,3 @@
-describe('corespring', function () {
-  describe('inline-choice configure', function () {
-  });
+describe('corespring', function() {
+  describe('inline-choice configure', function() {});
 });

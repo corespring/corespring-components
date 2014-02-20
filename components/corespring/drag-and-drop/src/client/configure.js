@@ -1,12 +1,13 @@
 var main = [
-  "$compile", function ($compile) {
+  "$compile",
+  function($compile) {
     var input, inputs, template;
     console.log("corespring/drag-and-drop");
-    input = function (attrs, label) {
-      return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label +"</div>";
+    input = function(attrs, label) {
+      return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label + "</div>";
     };
 
-    var inputHolder = function (header, body) {
+    var inputHolder = function(header, body) {
       return [
         '<div class="input-holder">',
         ' <div class="header">' + header + '</div>',
@@ -14,10 +15,10 @@ var main = [
         body,
         ' </div>',
         '</div>'
-      ].join("");
+        ].join("");
     };
 
-    var choiceArea = function () {
+    var choiceArea = function() {
       return [
         '<ol class="drag-and-drop-choices" >',
         '<li ng-repeat="c in model.choices">',
@@ -27,10 +28,10 @@ var main = [
         '<div class="clearfix"></div>',
         '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
 
-      ].join("");
+        ].join("");
     };
 
-    var answerArea = function () {
+    var answerArea = function() {
       return [
         '<ol class="drag-and-drop-answers" >',
         '<li ng-repeat="c in model.answers" class="col-lg-4" >',
@@ -39,20 +40,19 @@ var main = [
         '</ol>',
         '<div class="clearfix"></div>',
         '  <button class=\"btn\" ng-click=\"addAnswer()\">Add an Answer Blank</button>'
-      ].join("");
+        ].join("");
     };
 
-    var displayOptions = function () {
+    var displayOptions = function() {
       return [
         '<div class="display-row"><label class="col-sm-4">Shuffle</label><input type=\"checkbox\" ng-model=\"model.config.shuffle\" /></div>',
         '<div class="display-row"><label class="col-sm-4">Show choice area </label><select ng-model="model.config.position"><option value="above">Above</option><option value="below">Below</option></select> the answer area</div>',
         '<div class="display-row"><label class="col-sm-4">Label for choice area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.choiceAreaLabel"/></div></div>',
         '<div class="display-row"><label class="col-sm-4">Label for answer area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.answerAreaLabel"/></div></div>'
-      ].join("");
+        ].join("");
     };
 
-    template =
-      ['<div class="drag-and-drop-config-panel">{{active}}',
+    template = ['<div class="drag-and-drop-config-panel">{{active}}',
         inputHolder('Question Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
         inputHolder('Choices', choiceArea()),
         inputHolder('Answer Area', answerArea()),
@@ -63,13 +63,13 @@ var main = [
       restrict: "E",
       scope: "isolate",
       template: template,
-      link: function ($scope, element, attrs) {
+      link: function($scope, element, attrs) {
 
         $scope.containerBridge = {
-          setModel: function (model) {
+          setModel: function(model) {
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
-            _.each($scope.model.answers, function (answer) {
+            _.each($scope.model.answers, function(answer) {
 
               var correctResponse = model.correctResponse[answer.id];
               if (correctResponse) {
@@ -79,16 +79,16 @@ var main = [
             });
             console.log(model);
           },
-          getModel: function () {
+          getModel: function() {
             var model = _.cloneDeep($scope.fullModel);
-            _.each(model.model.answers, function (answer) {
+            _.each(model.model.answers, function(answer) {
               delete answer.correctResponse;
             });
             console.log(model.correctResponse);
             return model;
           },
 
-          getAnswer: function () {
+          getAnswer: function() {
             console.log("returning answer for: Drag and drop");
             return {};
           }
@@ -99,7 +99,7 @@ var main = [
             return;
           }
           var model = $scope.fullModel;
-          _.each(model.model.answers, function (answer) {
+          _.each(model.model.answers, function(answer) {
             if (!answer.correctResponse) {
               return;
             }
@@ -111,22 +111,24 @@ var main = [
 
         $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
 
-        $scope.activePopover = {value: ""};
+        $scope.activePopover = {
+          value: ""
+        };
 
-        $scope.remove = function (c) {
-          $scope.model.choices = _.filter($scope.model.choices, function (existing) {
+        $scope.remove = function(c) {
+          $scope.model.choices = _.filter($scope.model.choices, function(existing) {
             return existing !== c;
           });
         };
 
-        $scope.addChoice = function () {
+        $scope.addChoice = function() {
           $scope.model.choices.push({
             id: "" + $scope.model.choices.length,
             content: "new choice"
           });
         };
 
-        $scope.addAnswer = function () {
+        $scope.addAnswer = function() {
           $scope.model.answers = $scope.model.answers || [];
           $scope.model.answers.push({
             id: "" + $scope.model.answers.length,
@@ -136,8 +138,7 @@ var main = [
           });
         };
 
-        $scope.clickAnswer = function () {
-        };
+        $scope.clickAnswer = function() {};
 
       }
     };
@@ -145,14 +146,14 @@ var main = [
 ];
 
 var answerPopoverDirective = ['$compile',
-  function ($compile) {
+  function($compile) {
     return {
       scope: {
         model: "=ngModel",
         activePopover: "="
       },
-      link: function (scope, elm, attr) {
-        var formGroup = function (label, body) {
+      link: function(scope, elm, attr) {
+        var formGroup = function(label, body) {
           return [
             "<div class='popover-row'>",
             " <label class='popover-label'>" + label + "</label>",
@@ -160,7 +161,7 @@ var answerPopoverDirective = ['$compile',
             "   " + body,
             " </div>",
             "</div>"
-          ].join("");
+            ].join("");
         };
         var html = [
           "<div class='form-horizontal'>",
@@ -168,7 +169,7 @@ var answerPopoverDirective = ['$compile',
           formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'/>"),
           formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'/>"),
           formGroup("Inline:", "<input type='checkbox' ng-model='model.inline'/>"),
-          formGroup("<button class='btn btn-primary' ng-click='hideMe()'>Ok</button>",""),
+          formGroup("<button class='btn btn-primary' ng-click='hideMe()'>Ok</button>", ""),
           "</div>"
         ].join("");
 
@@ -183,11 +184,11 @@ var answerPopoverDirective = ['$compile',
 
         // We need to manually show/hide the popup as the automatic one breaks angular bindings because of some internal
         // caching mechanism
-        elm.click(function (ev) {
+        elm.click(function(ev) {
           var same = scope.activePopover.value === elm;
           if (scope.activePopover.value) {
             $(scope.activePopover.value).popover('destroy');
-            scope.$apply(function () {
+            scope.$apply(function() {
               scope.activePopover.value = undefined;
             });
           }
@@ -196,21 +197,19 @@ var answerPopoverDirective = ['$compile',
           }
           var compiled = $compile(html)(scope);
 
-          var titleHtml = '<span class="text-info"><strong>Answer Blank</strong></span>'+
+          var titleHtml = '<span class="text-info"><strong>Answer Blank</strong></span>' +
             '<button type="button" class="close" ng-click="hideMe()">&times;</button>';
           var compiledTitle = $compile(titleHtml)(scope);
 
-          $(elm).popover(
-            {
-              title : compiledTitle,
-              content: compiled,
-              html: true,
-              placement: 'top',
-              trigger: 'manual'
-            }
-          );
+          $(elm).popover({
+            title: compiledTitle,
+            content: compiled,
+            html: true,
+            placement: 'top',
+            trigger: 'manual'
+          });
 
-          scope.$apply(function () {
+          scope.$apply(function() {
             $(elm).popover('show');
             scope.activePopover.value = elm;
           });
