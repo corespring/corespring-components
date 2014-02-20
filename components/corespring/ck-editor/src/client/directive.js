@@ -18,6 +18,8 @@ var def = [
               ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
               ['Image']
             ],
+
+            removeButtons: 'About',
             height: '100px'
           });
 
