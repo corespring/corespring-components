@@ -10,7 +10,11 @@ _ = require('lodash');
 
 component = {
   componentType: "corespring-text-entry",
-  correctResponse: "carrot"
+  correctResponse: "carrot",
+  model: {
+    config: {
+    }
+  }
 };
 
 
@@ -91,7 +95,10 @@ describe('text entry server logic', function() {
   it('should respond with correct and score 1 if the answer is among correct ones', function() {
     var component2 = {
       componentType: "corespring-text-entry",
-      correctResponse: ["carrot", "apple"]
+      correctResponse: ["carrot", "apple"],
+      model: {
+        config: {}
+      }
     };
 
     var expected, response;
@@ -115,7 +122,10 @@ describe('text entry server logic', function() {
   it('should respond with incorrect and score 0 if the answer is not among correct ones', function() {
     var component2 = {
       componentType: "corespring-text-entry",
-      correctResponse: ["carrot", "apple"]
+      correctResponse: ["carrot", "apple"],
+      model: {
+        config: {}
+      }
     };
 
     var expected, response;
