@@ -181,7 +181,7 @@ var main = [
       };
 
       scope.isHorizontal = function() {
-        return scope.question.config && scope.question.config.orientation === 'horizontal';
+        return scope.question && scope.question.config && scope.question.config.orientation === 'horizontal';
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
