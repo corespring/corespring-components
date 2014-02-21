@@ -26,6 +26,44 @@ settings = function(feedback, userResponse, correctResponse) {
   };
 };
 
+describe('text equality logic', function() {
+  it('strict comparison should be true if they are equal', function() {
+    var s1 = "The little cow";
+    var s2 = "The little cow";
+
+    server.isEqual(s1, s2, false, false).should.eql(true);
+  });
+
+  it('strict comparison should be false if they differ in case', function() {
+    var s1 = "The little cow";
+    var s2 = "the little COW";
+
+    server.isEqual(s1, s2, false, false).should.eql(false);
+  });
+
+  it('strict comparison should be false if they differ in whitespace', function() {
+    var s1 = "The little cow";
+    var s2 = "The    little   cow";
+
+    server.isEqual(s1, s2, false, false).should.eql(false);
+  });
+
+  it('comparison should be true if they differ in case and ignoreCase is true', function() {
+    var s1 = "The little cow";
+    var s2 = "the little COW";
+
+    server.isEqual(s1, s2, true, false).should.eql(true);
+  });
+
+  it('comparison should be true if they differ in whitespace and ignoreWhitespace is true', function() {
+    var s1 = "The little cow";
+    var s2 = "The    little   cow";
+
+    server.isEqual(s1, s2, false, true).should.eql(true);
+  });
+
+});
+
 describe('text entry server logic', function() {
 
   it('should respond with correct and score 1 if the answer is correct', function() {

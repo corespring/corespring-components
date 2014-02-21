@@ -1,11 +1,27 @@
 var _ = require('lodash');
 
 
-exports.isCorrect = function(answer, correctAnswer) {
+exports.isEqual = function(s1, s2, ignoreCase, ignoreWhitespace) {
+  if (ignoreCase) {
+    s1 = s1.toLowerCase();
+    s2 = s2.toLowerCase();
+  }
+
+  if (ignoreWhitespace) {
+    s1 = s1.replace(/\s*/g,'');
+    s2 = s2.replace(/\s*/g,'');
+  }
+
+  return s1 === s2;
+};
+
+exports.isCorrect = function(answer, correctAnswer, ignoreCase, ignoreWhitespace) {
   if (_.isArray(correctAnswer)) {
-    return _.contains(correctAnswer, answer);
+    return _.some(correctAnswer, function(a) {
+      return exports.isEqual(a, answer, ignoreCase, ignoreWhitespace);
+    });
   } else {
-    return answer === correctAnswer;
+    return exports.isEqual(answer, correctAnswer, ignoreCase, ignoreWhitespace);
   }
 };
 
@@ -17,7 +33,10 @@ exports.respond = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
 
-  answerIsCorrect = this.isCorrect(answer, question.correctResponse);
+  var ignoreCase = question.model.config.ignoreCase || false;
+  var ignoreWhitespace = question.model.config.ignoreCase || false;
+
+  answerIsCorrect = this.isCorrect(answer, question.correctResponse, ignoreCase, ignoreWhitespace);
 
   response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
