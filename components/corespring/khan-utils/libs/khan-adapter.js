@@ -1,13 +1,13 @@
 var KhanUtil = {};
 var Khan = {
-    Util: KhanUtil,
-    error: function () {
+  Util: KhanUtil,
+  error: function () {
+  },
+  query: {debug: ""},
+  scratchpad: {
+    enable: function () {
     },
-    query: {debug: ""},
-    scratchpad: {
-        enable: function () {
-        },
-        disable: function () {
-        }
+    disable: function () {
     }
+  }
 };

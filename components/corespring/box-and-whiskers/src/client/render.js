@@ -1,57 +1,66 @@
 var main = [
   '$sce', '$log',
 
-  function($sce, $log) {
+  function ($sce, $log) {
     var def;
 
-    var link = function(scope, element, attrs) {
+    var link = function (scope, element, attrs) {
 
       scope.editable = true;
 
       scope.containerBridge = {
 
-        setDataAndSession: function(dataAndSession) {
+        setDataAndSession: function (dataAndSession) {
           $log.debug("multiple-choice setDataAndSession", dataAndSession);
         },
 
-        getSession: function() {
+        getSession: function () {
           return {
             answers: ""
           };
         },
 
-        setResponse: function(response) {
+        setResponse: function (response) {
         },
 
-        setMode: function(newMode) {
+        setMode: function (newMode) {
         },
 
-        reset: function() {
+        reset: function () {
         },
 
-        isAnswerEmpty: function() {
+        isAnswerEmpty: function () {
           return _.isEmpty(this.getSession().answers);
         },
 
-        answerChangedHandler: function(callback) {
-          scope.$watch("answer", function(newValue, oldValue) {
+        answerChangedHandler: function (callback) {
+          scope.$watch("answer", function (newValue, oldValue) {
             if (newValue) {
               callback();
             }
           }, true);
         },
 
-        editable: function(e) {
+        editable: function (e) {
           scope.editable = e;
         }
       };
 
       scope.model = {
-        plots: 1
+        graphs: [
+          {
+            orientation: 'horizontal',
+            plots: 3
+          },
+          {
+            orientation: 'vertical',
+            plots: 1
+          }
+        ]
       };
 
-      scope.bok = function() {
-        scope.model.plots++;
+      scope.bok = function () {
+        scope.model.graphs[0].plots++;
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -66,7 +75,8 @@ var main = [
       template: [
         '<div>',
         ' <div><a ng-click="bok()">Bok</a>',
-        ' <div khan-box-and-whiskers ngModel="model"></div>',
+        ' <div>{{model}}</div>',
+        ' <div box-and-whiskers ngModel="model"></div>',
         '</div>'
       ].join("\n")
     };
