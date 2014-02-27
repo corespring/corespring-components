@@ -1,0 +1,18 @@
+{
+  "libraries": [
+    {
+      "name": "khan-utils",
+      "organization": "corespring"
+    }
+  ],
+  "dependencies": {
+    "client": {
+      "mathjax": {
+        "bower_target": "https://github.com/mathjax/MathJax.git",
+        "file": "MathJax.js"
+      }
+    }
+  },
+  "name": "box-and-whiskers",
+  "organization": "corespring"
+}
