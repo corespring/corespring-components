@@ -1,5 +1,5 @@
 var def = [
-  '$log', 'KhanUtil','BoxAndWhiskersPlot',
+  '$log', 'KhanUtil', 'BoxAndWhiskersPlot',
   function ($log, KhanUtilService, BoxAndWhiskersPlot) {
 
     return {
@@ -9,21 +9,12 @@ var def = [
       template: "<div><div class='box-and-whiskers-graph'></div></div>",
       link: function (scope, elm, attr, ngModel) {
 
-        var dataSet = _.sortBy([14, 6, 3, 2, 4, 15, 11, 8, 1, 7, 2, 1, 3, 4, 10, 22, 20], _.identity);
-
-        var domainMin = _.first(dataSet) - 1;
-        var domainMax = _.last(dataSet) + 1;
-        var domainLength = domainMax - domainMin;
-        var tickLength = Math.ceil(domainLength / 15);
-
-        BoxAndWhiskersPlot.configure(dataSet);
-
-        scope.isVertical = function() {
-          return scope.model && scope.model.orientation == 'vertical';
+        scope.isVertical = function () {
+          return scope.model && scope.model.orientation === 'vertical';
         };
 
         var translateGraphCoordToDomain = function (val) {
-          return Math.floor(val * tickLength + domainMin);
+          return Number((val * scope.tickLength + scope.domainMin).toFixed(2));
         };
 
         scope.$watch(function () {
@@ -32,7 +23,7 @@ var def = [
           }, "");
         }, function () {
           if (!scope.plots) return;
-          var coords =[];
+          var coords = [];
           var idx = scope.isVertical() ? 1 : 0;
           for (var i = 0; i < scope.plots.length; i++) {
             coords.push({
@@ -47,23 +38,22 @@ var def = [
         });
 
         var drawGraph = function (element) {
-          var isVertical = scope.model.orientation === 'vertical';
+          var isVertical = scope.isVertical();
 
           element.empty();
 
           var graphie = KhanUtilService.KhanUtil.createGraphie(element[0]);
 
-          var numPlots = scope.model.plots || 1;
+          var numPlots = scope.model.plots.length || 1;
           var range = isVertical ? [
-            [ -3.5, 15.5 + 4 * numPlots ],
-            [ -0.5, 15 ]
+            [ -4.5,  4 * numPlots ],
+            [ -1, 15.5 ]
           ] : [
-            [ -0.5, 15.5 ],
+            [ -3.5, 15.5 ],
             [ -3.5, 4 * numPlots ]
           ];
 
-          graphie.init(
-            {
+          graphie.init({
               range: range,
               scale: [ 30, 30 ]
             }
@@ -71,16 +61,18 @@ var def = [
 
           if (isVertical) {
             graphie.line([ -2, 0 ], [ -2, 15 ]);
+            graphie.label([ -4.5, 8 ], scope.model.domain.label, "below", false).addClass('vertical');
             for (var tick = 0; tick <= 15; tick += 1) {
               graphie.line([ -2.25, tick], [ -1.75, tick ]);
-              $('#container').append(graphie.label([ -2.2, tick ], Math.floor(tick * tickLength + domainMin), "left", false));
+              graphie.label([ -2.2, tick ], Math.floor(tick * scope.tickLength + scope.domainMin), "left", false);
             }
           }
           else {
             graphie.line([ 0, -2 ], [ 15, -2 ]);
+            graphie.label([ 7.5, -3.25 ], scope.model.domain.label, "below", false);
             for (var tick = 0; tick <= 15; tick += 1) {
               graphie.line([ tick, -1.75 ], [ tick, -2.25 ]);
-              $('#container').append(graphie.label([ tick, -2.25 ], Math.floor(tick * tickLength + domainMin), "below", false));
+              graphie.label([ tick, -2.25 ], Math.floor(tick * scope.tickLength + scope.domainMin), "below", false);
             }
 
           }
@@ -88,16 +80,40 @@ var def = [
           graphie.addMouseLayer();
 
           scope.plots = [];
-          for (var i = 0; i < scope.model.plots; i++) {
-            scope.plots.push(isVertical ? BoxAndWhiskersPlot.addVerticalPlot(graphie, i*4) : BoxAndWhiskersPlot.addHorizontalPlot(graphie, i*4));
-          }
+          _.each(scope.model.plots, function (plot, i) {
+              var plotData = BoxAndWhiskersPlot.calculateQuarterPoints(plot.dataSet);
+              plotData.label = plot.label;
+              console.log(plotData);
+              if (isVertical) {
+                scope.plots.push(BoxAndWhiskersPlot.addVerticalPlot(graphie, i * 4, plotData));
+              } else {
+                scope.plots.push(BoxAndWhiskersPlot.addHorizontalPlot(graphie, i * 4, plotData));
+              }
+            }
+          );
 
           $(graphie.mouselayer.canvas).css('position', 'absolute');
 
         };
 
-        scope.$watch(_.pick(scope.model, 'orientation', 'plots'), function () {
+        scope.$watch(function() {
+          return _.omit(scope.model, 'coords');
+        }, function () {
+
+          var dataSet = _.sortBy(_.flatten(_.union(_.pluck(scope.model.plots, 'dataSet'))), _.identity);
+
+          console.log("Common dataset is: ");
+          console.log(dataSet);
+
+          scope.domainMin = _.first(dataSet) - 1;
+          scope.domainMax = _.last(dataSet) + 1;
+          scope.domainLength = scope.domainMax - scope.domainMin;
+          scope.tickLength = Math.ceil(scope.domainLength / 15);
+
+          BoxAndWhiskersPlot.configure(dataSet);
+
           drawGraph($(elm).find('.box-and-whiskers-graph'));
+
         }, true);
 
 

@@ -4,10 +4,12 @@ exports.framework = "angular";
 exports.service = [ '$log', '$rootScope', function($log, $rootScope){
   var service = {
     configure: function(dataSet) {
+
       service.domainMin = _.first(dataSet) - 1;
       service.domainMax = _.last(dataSet) + 1;
       service.domainLength = service.domainMax - service.domainMin;
       service.tickLength = Math.ceil(service.domainLength / 15);
+
       service.translateGraphCoordToDomain = function (val) {
         return Math.floor(val * service.tickLength + service.domainMin);
       };
@@ -17,15 +19,53 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
       };
     },
 
-    addVerticalPlot: function (graphie, x, q0, q1, q2, q3, q4) {
+    calculateQuarterPoints: function(dataSet) {
+
+      var calculateMedianAndSplit = function(array) {
+        var median, midIdx;
+        var dsLeft, dsRight;
+
+        if (array.length % 2 === 0) {
+          // 1 2 3 4
+          midIdx = array.length / 2 - 1;
+          median = (array[midIdx] + array[midIdx+1]) / 2;
+        } else {
+          // 1 2 3 4 5
+          midIdx = Math.floor(array.length / 2);
+          median = array[midIdx];
+        }
+        dsLeft = _.first(array, midIdx);
+        dsRight = _.last(array, midIdx);
+
+        return {left: dsLeft, right: dsRight, median: median};
+      };
+
+      var ds = _.sortBy(_.clone(dataSet), _.identity);
+
+      var main = calculateMedianAndSplit(ds);
+      var left = calculateMedianAndSplit(main.left);
+      var right = calculateMedianAndSplit(main.right);
+
+      return {
+        q0: _.first(ds),
+        q1: left.median,
+        q2: main.median,
+        q3: right.median,
+        q4: _.last(ds)
+      };
+    },
+
+    addVerticalPlot: function (graphie, x, plotData) {
 
       var scope = $rootScope;
 
-      q0 = q0 || Math.floor(service.domainLength / 8);
-      q1 = q1 || Math.floor(service.domainLength / 4);
-      q2 = q2 || Math.floor(service.domainLength / 2);
-      q3 = q3 || Math.floor((3 * service.domainLength) / 4);
-      q4 = q4 || service.domainLength;
+      var q0 = plotData.q0 || Math.floor(service.domainLength / 8);
+      var q1 = plotData.q1 || Math.floor(service.domainLength / 4);
+      var q2 = plotData.q2 || Math.floor(service.domainLength / 2);
+      var q3 = plotData.q3 || Math.floor((3 * service.domainLength) / 4);
+      var q4 = plotData.q4 || service.domainLength;
+
+      graphie.label([ x, 0 ], plotData.label, "below", false);
 
       var graph = {};
       graph.q0 = graphie.addMovablePoint({ coord: [ x, service.translateDomainToGraphCoord(q0) ], snapY: 0.5, constraints: { constrainX: true }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
@@ -156,13 +196,16 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
       return graph;
     },
 
-    addHorizontalPlot: function (graphie, y, q0, q1, q2, q3, q4) {
+    addHorizontalPlot: function (graphie, y, plotData) {
       var scope = $rootScope;
-      q0 = q0 || Math.floor(service.domainLength / 8);
-      q1 = q1 || Math.floor(service.domainLength / 4);
-      q2 = q2 || Math.floor(service.domainLength / 2);
-      q3 = q3 || Math.floor((3 * service.domainLength) / 4);
-      q4 = q4 || service.domainLength;
+      var q0 = plotData.q0 || Math.floor(service.domainLength / 8);
+      var q1 = plotData.q1 || Math.floor(service.domainLength / 4);
+      var q2 = plotData.q2 || Math.floor(service.domainLength / 2);
+      var q3 = plotData.q3 || Math.floor((3 * service.domainLength) / 4);
+      var q4 = plotData.q4 || service.domainLength;
+
+
+      graphie.label([ 0, y ], plotData.label, "left", false);
 
       var graph = {};
       graph.q0 = graphie.addMovablePoint({ coord: [ service.translateDomainToGraphCoord(q0), y ], snapX: 0.5, constraints: { constrainY: true }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
