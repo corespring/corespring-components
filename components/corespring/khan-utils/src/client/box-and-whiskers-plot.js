@@ -68,7 +68,8 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
       graphie.label([ x, 0 ], plotData.label, "below", false);
 
       var graph = {};
-      graph.q0 = graphie.addMovablePoint({ coord: [ x, service.translateDomainToGraphCoord(q0) ], snapY: 0.5, constraints: { constrainX: true }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
+      graph.q0 = graphie.addMovablePoint({ coord: [ x, service.translateDomainToGraphCoord(q0) ], snapY: 0.5, constraints: { constrainX: true, fixed: plotData.fixed }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
+
       graph.moveQ0 = function (y) {
         graph.q0.setCoord([graph.q0.coord[0], y]);
         graph.q0.updateLineEnds();
@@ -129,7 +130,7 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
         scope.$apply();
       };
 
-      graph.q4 = graphie.addMovablePoint({ coord: [ x, service.translateDomainToGraphCoord(q4) ], snapY: 0.5, constraints: { constrainX: true }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
+      graph.q4 = graphie.addMovablePoint({ coord: [ x, service.translateDomainToGraphCoord(q4) ], snapY: 0.5, constraints: { constrainX: true, fixed: plotData.fixed }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
       graph.moveQ4 = function (y) {
         graph.q4.setCoord([graph.q4.coord[0], y]);
         graph.q4.updateLineEnds();
@@ -145,9 +146,9 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
       graph.topLine = graphie.addMovableLineSegment({ pointA: graph.q3mid, pointZ: graph.q4, fixed: true });
 
 
-      graph.q1Line = graphie.addMovableLineSegment({ pointA: graph.q1right, pointZ: graph.q1left, snapY: 0.5, constraints: { constrainX: true } });
-      graph.medianLine = graphie.addMovableLineSegment({ pointA: graph.mleft, pointZ: graph.mright, snapY: 0.5, constraints: { constrainX: true } });
-      graph.q3Line = graphie.addMovableLineSegment({ pointA: graph.q3right, pointZ: graph.q3left, snapY: 0.5, constraints: { constrainX: true } });
+      graph.q1Line = graphie.addMovableLineSegment({ pointA: graph.q1right, pointZ: graph.q1left, snapY: 0.5, constraints: { constrainX: true, fixed: plotData.fixed } });
+      graph.medianLine = graphie.addMovableLineSegment({ pointA: graph.mleft, pointZ: graph.mright, snapY: 0.5, constraints: { constrainX: true, fixed: plotData.fixed } });
+      graph.q3Line = graphie.addMovableLineSegment({ pointA: graph.q3right, pointZ: graph.q3left, snapY: 0.5, constraints: { constrainX: true, fixed: plotData.fixed } });
 
       graph.q0.onMove = function (x, y) {
         if (y < 0 || y > 13) {
@@ -208,7 +209,8 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
       graphie.label([ 0, y ], plotData.label, "left", false);
 
       var graph = {};
-      graph.q0 = graphie.addMovablePoint({ coord: [ service.translateDomainToGraphCoord(q0), y ], snapX: 0.5, constraints: { constrainY: true }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
+      graph.q0 = graphie.addMovablePoint({ coord: [ service.translateDomainToGraphCoord(q0), y ], snapX: 0.5, constraints: { constrainY: true, fixed: plotData.fixed }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
+      $(graph.q0).unbind();
       graph.moveQ0 = function (x) {
         graph.q0.setCoord([x, graph.q0.coord[1]]);
         graph.q0.updateLineEnds();
@@ -269,7 +271,7 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
         scope.$apply();
       };
 
-      graph.q4 = graphie.addMovablePoint({ coord: [ service.translateDomainToGraphCoord(q4), y ], snapX: 0.5, constraints: { constrainY: true }, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
+      graph.q4 = graphie.addMovablePoint({ coord: [ service.translateDomainToGraphCoord(q4), y ], snapX: 0.5, constraints: { constrainY: true, fixed: plotData.fixed}, normalStyle: { fill: KhanUtil.BLUE, stroke: KhanUtil.BLUE } });
       graph.moveQ4 = function (x) {
         graph.q4.setCoord([x, graph.q4.coord[1]]);
         graph.q4.updateLineEnds();
@@ -284,9 +286,9 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
       graph.botLine = graphie.addMovableLineSegment({ pointA: graph.q1bot, pointZ: graph.q3bot, fixed: true });
       graph.rightLine = graphie.addMovableLineSegment({ pointA: graph.q3mid, pointZ: graph.q4, fixed: true });
 
-      graph.q1Line = graphie.addMovableLineSegment({ pointA: graph.q1bot, pointZ: graph.q1top, snapX: 0.5, constraints: { constrainY: true } });
-      graph.medianLine = graphie.addMovableLineSegment({ pointA: graph.mbot, pointZ: graph.mtop, snapX: 0.5, constraints: { constrainY: true } });
-      graph.q3Line = graphie.addMovableLineSegment({ pointA: graph.q3bot, pointZ: graph.q3top, snapX: 0.5, constraints: { constrainY: true } });
+      graph.q1Line = graphie.addMovableLineSegment({ pointA: graph.q1bot, pointZ: graph.q1top, snapX: 0.5, constraints: { constrainY: true, fixed: plotData.fixed } });
+      graph.medianLine = graphie.addMovableLineSegment({ pointA: graph.mbot, pointZ: graph.mtop, snapX: 0.5, constraints: { constrainY: true, fixed: plotData.fixed } });
+      graph.q3Line = graphie.addMovableLineSegment({ pointA: graph.q3bot, pointZ: graph.q3top, snapX: 0.5, constraints: { constrainY: true, fixed: plotData.fixed } });
 
 
       graph.q0.onMove = function (x, y) {

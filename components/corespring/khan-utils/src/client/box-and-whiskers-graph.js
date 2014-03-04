@@ -83,7 +83,8 @@ var def = [
           _.each(scope.model.plots, function (plot, i) {
               var plotData = BoxAndWhiskersPlot.calculateQuarterPoints(plot.dataSet);
               plotData.label = plot.label;
-              console.log(plotData);
+              plotData.fixed = !plot.adjustable;
+
               if (isVertical) {
                 scope.plots.push(BoxAndWhiskersPlot.addVerticalPlot(graphie, i * 4, plotData));
               } else {
