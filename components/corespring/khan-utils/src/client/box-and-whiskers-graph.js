@@ -22,7 +22,9 @@ var def = [
             return memo + plot.q0.coord + plot.q1Line.coordA + plot.medianLine.coordA + plot.q3Line.coordA + plot.q4.coord;
           }, "");
         }, function () {
-          if (!scope.plots) return;
+          if (!scope.plots) {
+            return;
+          }
           var coords = [];
           var idx = scope.isVertical() ? 1 : 0;
           for (var i = 0; i < scope.plots.length; i++) {
@@ -59,10 +61,12 @@ var def = [
             }
           );
 
+          var tick;
+
           if (isVertical) {
             graphie.line([ -2, 0 ], [ -2, 15 ]);
             graphie.label([ -4.5, 8 ], scope.model.domain.label, "below", false).addClass('vertical');
-            for (var tick = 0; tick <= 15; tick += 1) {
+            for (tick = 0; tick <= 15; tick += 1) {
               graphie.line([ -2.25, tick], [ -1.75, tick ]);
               graphie.label([ -2.2, tick ], Math.floor(tick * scope.tickLength + scope.domainMin), "left", false);
             }
@@ -70,7 +74,7 @@ var def = [
           else {
             graphie.line([ 0, -2 ], [ 15, -2 ]);
             graphie.label([ 7.5, -3.25 ], scope.model.domain.label, "below", false);
-            for (var tick = 0; tick <= 15; tick += 1) {
+            for (tick = 0; tick <= 15; tick += 1) {
               graphie.line([ tick, -1.75 ], [ tick, -2.25 ]);
               graphie.label([ tick, -2.25 ], Math.floor(tick * scope.tickLength + scope.domainMin), "below", false);
             }
