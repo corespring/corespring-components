@@ -2,6 +2,9 @@
 
 exports.framework = "angular";
 exports.service = [ '$log', '$rootScope', function($log, $rootScope){
+  var getOrElse = function(val, elseVal) {
+    return _.isUndefined(val) ? elseVal : val;
+  }
   var service = {
     configure: function(dataSet) {
 
@@ -59,11 +62,11 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
 
       var scope = $rootScope;
 
-      var q0 = plotData.q0 || Math.floor(service.domainLength / 8);
-      var q1 = plotData.q1 || Math.floor(service.domainLength / 4);
-      var q2 = plotData.q2 || Math.floor(service.domainLength / 2);
-      var q3 = plotData.q3 || Math.floor((3 * service.domainLength) / 4);
-      var q4 = plotData.q4 || service.domainLength;
+      var q0 = getOrElse(plotData.q0, Math.floor(service.domainLength / 8));
+      var q1 = getOrElse(plotData.q1Line, Math.floor(service.domainLength / 4));
+      var q2 = getOrElse(plotData.medianLine, Math.floor(service.domainLength / 2));
+      var q3 = getOrElse(plotData.q3Line, Math.floor((3 * service.domainLength) / 4));
+      var q4 = getOrElse(plotData.q4, service.domainLength);
 
       graphie.label([ x, 0 ], plotData.label, "below", false);
 
@@ -199,11 +202,11 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
 
     addHorizontalPlot: function (graphie, y, plotData) {
       var scope = $rootScope;
-      var q0 = plotData.q0 || Math.floor(service.domainLength / 8);
-      var q1 = plotData.q1 || Math.floor(service.domainLength / 4);
-      var q2 = plotData.q2 || Math.floor(service.domainLength / 2);
-      var q3 = plotData.q3 || Math.floor((3 * service.domainLength) / 4);
-      var q4 = plotData.q4 || service.domainLength;
+      var q0 = getOrElse(plotData.q0, Math.floor(service.domainLength / 8));
+      var q1 = getOrElse(plotData.q1Line, Math.floor(service.domainLength / 4));
+      var q2 = getOrElse(plotData.medianLine, Math.floor(service.domainLength / 2));
+      var q3 = getOrElse(plotData.q3Line, Math.floor((3 * service.domainLength) / 4));
+      var q4 = getOrElse(plotData.q4, service.domainLength);
 
 
       graphie.label([ 0, y ], plotData.label, "left", false);

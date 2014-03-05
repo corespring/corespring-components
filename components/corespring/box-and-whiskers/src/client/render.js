@@ -7,21 +7,32 @@ var main = [
     var link = function (scope, element, attrs) {
 
       scope.editable = true;
+      scope.response = {};
 
       scope.containerBridge = {
 
         setDataAndSession: function (dataAndSession) {
-          $log.debug("multiple-choice setDataAndSession", dataAndSession);
+          $log.debug("box and whiskers setDataAndSession", dataAndSession);
+
           scope.model = dataAndSession.data.model;
+
+          if (dataAndSession.session && dataAndSession.session.answers) {
+            console.log("Plott: ",dataAndSession.session.answers);
+            scope.response = dataAndSession.session.answers;
+            console.log("Plott2: ",scope.response);
+          }
+
+
         },
 
         getSession: function () {
           return {
-            answers: ""
+            answers: scope.response
           };
         },
 
         setResponse: function (response) {
+          $log.debug("box and whiskers setResponse", response);
         },
 
         setMode: function (newMode) {
@@ -58,8 +69,10 @@ var main = [
       link: link,
       template: [
         '<div>',
+        ' <div>{{response}}</div>',
+        ' <div class="prompt" ng-bind-html-unsafe="model.prompt"></div>',
         ' <table><tr>',
-        ' <td ng-repeat="g in model.graphs" box-and-whiskers-graph ngModel="g" style="background-color: #d3d3d3; border: 1px solid black"></td>',
+        ' <td ng-repeat="g in model.graphs" box-and-whiskers-graph editable="editable" ngModel="g" responseModel="response[$index]" style="background-color: #d3d3d3; border: 1px solid black">{{$index}}</td>',
         ' </table>',
         '</div>'
       ].join("\n")
