@@ -51,9 +51,9 @@ exports.service = [ '$log', '$rootScope', function($log, $rootScope){
 
       return {
         q0: _.first(ds),
-        q1: left.median,
-        q2: main.median,
-        q3: right.median,
+        q1Line: left.median,
+        medianLine: main.median,
+        q3Line: right.median,
         q4: _.last(ds)
       };
     },

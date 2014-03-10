@@ -22,7 +22,6 @@ var main = [
             console.log("Plott2: ",scope.response);
           }
 
-
         },
 
         getSession: function () {

@@ -108,14 +108,15 @@ var def = [
 
           scope.plots = [];
           _.each(scope.model.plots, function (plot, i) {
-              var plotData = {};//BoxAndWhiskersPlot.calculateQuarterPoints(plot.dataSet);
+              var plotData = {};
               plotData.label = plot.label;
               plotData.fixed = !scope.editable || !plot.adjustable;
-
 
               if (scope.responseModel) {
                 console.log("Plott Marklar:", scope.responseModel);
                 _.extend(plotData, scope.responseModel[i]);
+              } else {
+                _.extend(plotData, BoxAndWhiskersPlot.calculateQuarterPoints(plot.dataSet));
               }
 
               if (isVertical) {
