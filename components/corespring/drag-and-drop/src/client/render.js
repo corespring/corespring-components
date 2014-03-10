@@ -1,5 +1,5 @@
-var main = ['$compile', '$log', '$modal', '$rootScope',
-  function($compile, $log, $modal, $rootScope) {
+var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
+  function($compile, $log, $modal, $rootScope, $timeout) {
 
     var link = function(scope, element, attrs) {
 
@@ -166,8 +166,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope',
           }
 
           var answerHtml = scope.model.answerArea;
+
           var $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
-          $compile($answerArea)(scope.$new());
+          $timeout(function() {
+            $compile($answerArea)(scope.$new());
+          });
 
         },
         getSession: function() {
@@ -391,12 +394,19 @@ var landingPlace = [
           },
           beforeStop: function() {
             scope.revertNext = scope.dragging.isOut;
+
+            scope.model.choices = _.filter(scope.model.choices, nonEmptyElement);
+            _.each(scope.landingPlaceChoices, function(lpc, key) {
+              scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
+            });
+
           },
           stop: function() {
             if (scope.revertNext) {
               scope.revertFunction();
             }
             scope.dragging.fromTarget = undefined;
+
           },
 
           out: scope.outCallback,

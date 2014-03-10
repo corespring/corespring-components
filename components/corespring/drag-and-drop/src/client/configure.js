@@ -33,11 +33,12 @@ var main = [
 
     var answerArea = function() {
       return [
-        '<ol class="drag-and-drop-answers" >',
-        '<li ng-repeat="c in model.answers" class="col-lg-4" >',
-        '<div class="answer-placeholder" answer-popover ng-model="c" active-popover="activePopover">Click to configure</div>',
-        '</li>',
-        '</ol>',
+          '<textarea ng-model="model.answerArea" rows="5" style="width: 100%"></textarea>',
+//        '<ol class="drag-and-drop-answers" >',
+//        '<li ng-repeat="c in answers" class="col-lg-4" >',
+//        '<div class="answer-placeholder" answer-popover ng-model="c" active-popover="activePopover">Click to configure</div>',
+//        '</li>',
+//        '</ol>',
         '<div class="clearfix"></div>',
         '  <button class=\"btn\" ng-click=\"addAnswer()\">Add an Answer Blank</button>'
         ].join("");
@@ -69,6 +70,13 @@ var main = [
           setModel: function(model) {
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
+
+            $scope.answers = [];
+            var node = $("<div/>").html($scope.model.answerArea);
+            node.find("span[landing-place]").each(function() {
+              $scope.answers.push({});
+            });
+
             _.each($scope.model.answers, function(answer) {
 
               var correctResponse = model.correctResponse[answer.id];
