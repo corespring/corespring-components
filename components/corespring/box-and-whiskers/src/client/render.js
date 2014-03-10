@@ -67,7 +67,7 @@ var main = [
       replace: true,
       link: link,
       template: [
-        '<div>',
+        '<div class="box-and-whiskers">',
         ' <div>{{response}}</div>',
         ' <div class="prompt" ng-bind-html-unsafe="model.prompt"></div>',
         ' <table><tr>',

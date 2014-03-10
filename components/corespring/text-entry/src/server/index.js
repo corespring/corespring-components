@@ -33,8 +33,8 @@ exports.respond = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
 
-  var ignoreCase = question.model.config.ignoreCase || false;
-  var ignoreWhitespace = question.model.config.ignoreCase || false;
+  var ignoreCase = (question.model.config && question.model.config.ignoreCase) || false;
+  var ignoreWhitespace = (question.model.config && question.model.config.ignoreCase) || false;
 
   answerIsCorrect = this.isCorrect(answer, question.correctResponse, ignoreCase, ignoreWhitespace);
 
