@@ -4,7 +4,8 @@ exports.framework = "angular";
 exports.service = [ '$log', '$rootScope', function($log, $rootScope){
   var getOrElse = function(val, elseVal) {
     return _.isUndefined(val) ? elseVal : val;
-  }
+  };
+
   var service = {
     configure: function(dataSet) {
 
