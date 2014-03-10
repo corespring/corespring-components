@@ -34,7 +34,7 @@ exports.respond = function(question, answer, settings) {
   }
 
   var ignoreCase = (question.model.config && question.model.config.ignoreCase) || false;
-  var ignoreWhitespace = (question.model.config && question.model.config.ignoreCase) || false;
+  var ignoreWhitespace = (question.model.config && question.model.config.ignoreWhitespace) || false;
 
   answerIsCorrect = this.isCorrect(answer, question.correctResponse, ignoreCase, ignoreWhitespace);
 

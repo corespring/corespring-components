@@ -18,3 +18,17 @@
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 4px rgba(248, 163, 26, 0.8);
     outline: 0px none;
 }
+
+
+/*Config Panel*/
+
+.short-text-entry-configuration .correct-holder {
+    position: relative;
+    margin: 3px 0px 5px 3px;
+}
+
+.short-text-entry-configuration .remove-button {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
