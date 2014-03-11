@@ -72,6 +72,7 @@ main = [
       link: link(),
       template: [
         '<div class="view-extended-text-entry">',
+        '<div class="prompt" ng-bind-html-unsafe="question.prompt"></div>',
         '<textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="form-control text-input" />',
         '</div>'].join("\n")
     };
