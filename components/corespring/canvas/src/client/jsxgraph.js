@@ -41,7 +41,7 @@ var def = ['Canvas',
         var points = {};
         var onPointMove = function(point, coords) {
           if (!lockGraph) {
-            if (coords !== null) {
+            if (coords) {
               point.moveTo([coords.x, coords.y]);
             }
             points[point.name] = {
