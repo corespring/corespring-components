@@ -2,9 +2,10 @@ var main = ['$compile', '$modal', '$rootScope',
   function($compile, $modal, $rootScope) {
     return {
       template: [
+        "<div class='prompt' ng-bind-html-unsafe='model.prompt'></div>",
         "<div class='graph-interaction'>",
         "   <div class='additional-text' ng-show='additionalText'>",
-        "       <p>{{additionalText}}</p>",
+        "       <p ng-bind-html-unsafe='additionalText'></p>",
         "   </div>",
         "   <div id='scale-display' class='scale-display' ng-show='showInputs'>",
         "       scale={{scale}}",
@@ -14,7 +15,8 @@ var main = ['$compile', '$modal', '$rootScope',
         "   <div class='graph-container'></div>",
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a href='#' ng-click='seeSolution()' class='pull-right'>See correct answer</a></div>",
         "   <div id='initialParams' ng-transclude></div>",
-        "</div>"].join("\n"),
+        "</div>"
+      ].join("\n"),
       restrict: 'AE',
       transclude: true,
       scope: true,
@@ -86,6 +88,7 @@ var main = ['$compile', '$modal', '$rootScope',
             $scope.graphCallback({
               graphStyle: {}
             });
+            $scope.$apply();
           } else {
             $scope.pointResponse = null;
           }
@@ -95,6 +98,19 @@ var main = ['$compile', '$modal', '$rootScope',
           $scope.locked = true;
           $scope.graphCallback({
             lockGraph: true
+          });
+        };
+
+        $scope.unlockGraph = function() {
+          $scope.locked = false;
+          $scope.graphCallback({
+            unlockGraph: true
+          });
+          $scope.graphCallback({
+            graphStyle: {
+              borderWidth: "0px"
+            },
+            pointsStyle: "blue"
           });
         };
 
@@ -226,6 +242,7 @@ var main = ['$compile', '$modal', '$rootScope',
             console.log("Setting Session for Point", dataAndSession);
             var config = dataAndSession.data.model.config;
             scope.config = config;
+            scope.model = dataAndSession.data.model;
 
             scope.additionalText = config.additionalText;
             scope.scale = config.scale;
@@ -296,14 +313,26 @@ var main = ['$compile', '$modal', '$rootScope',
           setMode: function(newMode) {},
 
           reset: function() {
-            scope.renewResponse([]);
+            scope.unlockGraph();
+
+            scope.graphCallback({
+              points: {}
+            });
+
           },
 
           isAnswerEmpty: function() {
-            return _.isUndefined(scope.pointResponse) || _.isEmpty(scope.pointResponse) || scope.pointResponse.length === 0;
+            return _.isEmpty(scope.pointResponse);// || scope.pointResponse.length === 0;
           },
 
-          answerChangedHandler: function(callback) {},
+          answerChangedHandler: function(callback) {
+            scope.$watch("pointResponse", function(newValue) {
+              if (newValue) {
+                callback();
+              }
+            }, true);
+
+          },
 
           editable: function(e) {
             scope.editable = e;

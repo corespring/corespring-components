@@ -181,6 +181,14 @@ var def = ['Canvas',
             });
             lockGraph = true;
           }
+          if (params.unlockGraph && canvas) {
+            _.each(canvas.points, function(p) {
+              p.setAttribute({
+                fixed: false
+              });
+            });
+            lockGraph = false;
+          }
         };
       }
     };
