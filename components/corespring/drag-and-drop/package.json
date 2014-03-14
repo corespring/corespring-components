@@ -19,10 +19,6 @@
         "bower_target" : "https://github.com/corespring/ui-sortable.git",
         "file" : "src/sortable.js",
         "angular-module" : "ui.sortable"
-      },
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js?config=TeX-AMS-MML_HTMLorMML"
       }
     }
   },

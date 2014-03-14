@@ -1,13 +1,5 @@
 {
   "name": "tex",
   "organization": "corespring",
-  "purpose" : "layout",
-  "dependencies": {
-    "client": {
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-      }
-    }
-  }
+  "purpose" : "layout"
 }

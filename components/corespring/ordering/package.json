@@ -9,10 +9,6 @@
         "bower_target" : "https://github.com/angular-ui/ui-sortable/archive/angular1.2.zip",
         "file" : "src/sortable.js",
         "angular-module" : "ui.sortable"
-      },
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js?config=TeX-AMS-MML_HTMLorMML"
       }
     }
   },
