@@ -13,10 +13,6 @@
   ],
   "dependencies" : {
     "client" : {
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-      },
       "angular-bootstrap": {
         "version" : "~0.10.0",
         "file" : "ui-bootstrap-tpls.min.js",

@@ -11,14 +11,6 @@
        "scope" : "editor"
     }
   ],
-  "dependencies" : {
-    "client" : {
-      "mathjax" : {
-        "bower_target" : "https://github.com/mathjax/MathJax.git",
-        "file" : "MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-      }
-    }
-  },
   "name": "multiple-choice",
   "organization": "corespring"
 }
