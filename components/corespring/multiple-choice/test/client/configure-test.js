@@ -68,6 +68,11 @@ describe('corespring', function() {
     beforeEach(inject(function($compile, $rootScope) {
       scope = $rootScope.$new();
       container = new MockComponentRegister();
+
+      $rootScope.$on('registerConfigPanel', function(ev, id, b) {
+        container.registerConfigPanel(id, b);
+      });
+
       $rootScope.registerConfigPanel = function(id, b) {
         container.registerConfigPanel(id, b);
       };
