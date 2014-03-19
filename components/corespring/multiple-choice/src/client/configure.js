@@ -120,7 +120,7 @@ var main = [
           scope.fullModel.feedback = out;
         }, true);
 
-        scope.registerConfigPanel(attrs.id, scope.containerBridge);
+        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
         scope.removeQuestion = function(q) {
           scope.model.choices = _.filter(scope.model.choices, function(cq) {
