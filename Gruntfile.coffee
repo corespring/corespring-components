@@ -28,9 +28,10 @@ module.exports = (grunt) ->
           keepRunner: true
           vendor: [
             '<%= common.app %>/bower_components/lodash/dist/lodash.js',
+            '<%= common.app %>/bower_components/headjs/dist/1.0.0/head.js',
+            '<%= common.app %>/bower_components/jquery/dist/jquery.js',
             '<%= common.app %>/bower_components/angular/angular.js',
             '<%= common.app %>/bower_components/angular-mocks/angular-mocks.js',
-            '<%= common.app %>/bower_components/jquery/jquery.js',
             # TODO : how to build out packages like this..
             '<%= common.app %>/bower_components/ckeditor/ckeditor.js',
             '<%= common.app %>/bower_components/saxjs/lib/sax.js',
@@ -52,7 +53,7 @@ module.exports = (grunt) ->
     jshint:
       options: 
         jshintrc: '.jshintrc'
-      main: ['<%= common.componentPath %>/**/*.js', '!<%= common.componentPath %>/**/libs/**/*.js']
+      main: ['<%= common.componentPath %>/**/*.js', '!**/*-wrapped.js', '!<%= common.componentPath %>/**/libs/**/*.js']
 
     watch:
       js:
