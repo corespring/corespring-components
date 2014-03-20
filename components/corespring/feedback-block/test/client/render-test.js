@@ -20,8 +20,8 @@ describe('corespring', function() {
         container.registerComponent(id, obj);
       });
 
-      element = $compile("<corespring-feedback-block-render id='1'></corespring-feedback-block-render>")($rootScope.$new());
-      scope = element.scope();
+      scope = $rootScope.$new();
+      element = $compile("<corespring-feedback-block-render id='1'></corespring-feedback-block-render>")(scope);
       rootScope = $rootScope;
     }));
 
@@ -34,8 +34,8 @@ describe('corespring', function() {
         feedback: "sampleFeedback",
         correctness: "correct"
       });
-      expect(scope.feedback).toBe('sampleFeedback');
-      expect(scope.correctClass).toBe('correct');
+      expect(scope.$$childHead.feedback).toBe('sampleFeedback');
+      expect(scope.$$childHead.correctClass).toBe('correct');
     });
 
     it('only shows feedback if present', function() {

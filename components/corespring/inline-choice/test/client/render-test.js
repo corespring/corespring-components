@@ -53,7 +53,7 @@ describe('corespring', function() {
     });
 
     element = $compile("<corespring-inline-choice-render id='1'></corespring-inline-choice-render>")($rootScope.$new());
-    scope = element.scope();
+    scope = element.scope().$$childHead;
     rootScope = $rootScope;
   }));
 
