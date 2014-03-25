@@ -1,7 +1,7 @@
 .view-multiple-choice {
     margin-bottom: 20px;
-    margin-left: 20px;
 }
+
 .view-multiple-choice .correct-label {
     color: #008000;
 }
@@ -130,8 +130,6 @@
 
 /* Horizontal Layout */
 
-
-
 .view-multiple-choice .horizontal .choice-input {
     display: table-row;
 }
@@ -155,7 +153,6 @@
     text-align: center;
 }
 
-
 .view-multiple-choice .horizontal .correct * {
     border: none;
 }
@@ -173,7 +170,6 @@
     border: 2px solid #F8A31A;
     border-radius: 6px;
 }
-
 
 .view-multiple-choice .horizontal .choice-feedback-holder {
 }
@@ -193,7 +189,4 @@
 .score-table td {
     padding-right: 80px;
 }
-
-
-
 

@@ -6,6 +6,10 @@
       "scope" : "editor"
     },
     {
+      "name": "navigator",
+      "organization": "corespring"
+    },
+    {
       "name": "ck-editor",
       "organization": "corespring",
        "scope" : "editor"

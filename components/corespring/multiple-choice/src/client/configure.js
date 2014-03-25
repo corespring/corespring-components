@@ -158,15 +158,26 @@ var main = [
           scope.$emit('mathJaxUpdateRequest');
         };
 
+        scope.navClosed = false;
+        scope.toggleNav = function() {
+          scope.navClosed = !scope.navClosed;
+        };
+
       },
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
-        '<div class="view-multiple-choice">',
-          ChoiceTemplates.wrap('Prompt', ChoiceTemplates.prompt),
-          ChoiceTemplates.wrap('Answer Area', choices),
-          ChoiceTemplates.wrap('Display Options', shuffle),
-          ChoiceTemplates.wrap('Scoring', ChoiceTemplates.scoring()),
+        '<div>',
+        '  <div navigator="">',
+        '    <div navigator-panel="Design">',
+              ChoiceTemplates.wrap('Prompt', ChoiceTemplates.prompt),
+              ChoiceTemplates.wrap('Answer Area', choices),
+              ChoiceTemplates.wrap('Display Options', shuffle),
+              ChoiceTemplates.wrap('Scoring', ChoiceTemplates.scoring()),
+        '    </div>',
+        '    <div navigator-panel="Scoring">',
+        '    </div>',
+        '  </div>',
         '</div>'
       ].join("")
     };
