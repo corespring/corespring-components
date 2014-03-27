@@ -239,7 +239,7 @@ var main = [
       link: link,
       template: [
         '<div class="view-multiple-choice">',
-        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
+//        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
         '  <div ng-if="!isHorizontal()">' + verticalTemplate + '</div>',
         '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
         '</div>'
