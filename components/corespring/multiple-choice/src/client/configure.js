@@ -167,7 +167,7 @@ var main = [
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
-        '<div>',
+        '<div class="config-multiple-choice">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
 //              ChoiceTemplates.wrap('Prompt', ChoiceTemplates.prompt),

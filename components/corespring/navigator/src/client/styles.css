@@ -7,6 +7,7 @@
 
 .navigator .nav-container {
     transition: width 300ms;
+    position: absolute;
     top: 0px;
     bottom: 0px;
     width: 200px;
@@ -15,9 +16,12 @@
 }
 
 .navigator .nav-left-panel {
-    padding-top: 60px;
+    padding-top: 35px;
 }
 
+.navigator .nav-left-panel ul {
+    min-width: 300px;
+}
 .navigator.nav-closed .nav-container {
     width: 30px;
 }
