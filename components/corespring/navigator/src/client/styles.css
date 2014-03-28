@@ -7,7 +7,6 @@
 
 .navigator .nav-container {
     transition: width 300ms;
-    position: fixed;
     top: 0px;
     bottom: 0px;
     width: 200px;
