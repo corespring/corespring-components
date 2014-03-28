@@ -92,8 +92,10 @@ var main = ['$log','$timeout',
         '        </li>',
         '      </ul>',
         '    </div>',
+        '    <div style="position: absolute; left: 5px; top: 35px"><a ng-click="toggleNav()"><button class="btn btn-nav-toggle btn-default"><i class="fa fa-bars"></i></button></a></div>',
+
         '  </div>',
-        '  <div style="position: absolute; left: 5px; top: 5px"><a ng-click="toggleNav()"><button class="btn btn-nav-toggle btn-default"><i class="fa fa-bars"></i></button></a></div>',
+
         '  <div class="config-panel-body" ng-transclude>',
         '  </div>',
         '</div>'

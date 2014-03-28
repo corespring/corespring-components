@@ -1,5 +1,4 @@
 /* Navigator CSS */
-/* TODO: move this to the navigator library */
 
 .navigator {
     position: relative;
@@ -8,7 +7,7 @@
 
 .navigator .nav-container {
     transition: width 300ms;
-    position: absolute;
+    position: fixed;
     top: 0px;
     bottom: 0px;
     width: 200px;
@@ -17,7 +16,7 @@
 }
 
 .navigator .nav-left-panel {
-    padding-top: 30px;
+    padding-top: 60px;
 }
 
 .navigator.nav-closed .nav-container {
