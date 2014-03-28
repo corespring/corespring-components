@@ -17,13 +17,14 @@
     float: left;
 }
 
-.navigator .navigator-toggle-button{
-  left: 5px;
-  top: 35px;
+.navigator .navigator-toggle-button {
+    right: 5px;
+    top: 15px;
+    position: absolute;
 }
 
 .navigator .navigator-left-panel {
-    padding-top: 60px;
+    padding-top: 40px;
 }
 
 .navigator .nav-left-panel {
