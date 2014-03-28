@@ -1,4 +1,4 @@
-var main = ['$log','$timeout',
+var main = ['$log', '$timeout',
   function($log, $timeout) {
 
     var link = function(scope, element, attrs) {
@@ -83,19 +83,17 @@ var main = ['$log','$timeout',
       controller: controllerFn,
       link: link,
       template: [
-        '<div class="navigator" ng-class="{\'nav-closed\':navClosed==true}">',
-        '  <div class="nav-container">',
-        '    <div class="nav-left-panel">',
+        '<div class="navigator" ng-class="{\'navigator-closed\':navClosed==true}">',
+        '  <div class="navigator-container">',
+        '    <div class="navigator-left-panel">',
         '      <ul class="nav nav-stacked">',
         '        <li ng-repeat="panel in panels" >',
         '          <a href="" ng-class="{active: panel.selected()}" ng-click="selectPanel(panel, $event)">{{panel.title}}</a>',
         '        </li>',
         '      </ul>',
         '    </div>',
-        '    <div style="position: absolute; left: 5px; top: 35px"><a ng-click="toggleNav()"><button class="btn btn-nav-toggle btn-default"><i class="fa fa-bars"></i></button></a></div>',
-
+        '    <div class="navigator-toggle-button" ><a ng-click="toggleNav()"><button class="btn btn-nav-toggle btn-default"><i class="fa fa-bars"></i></button></a></div>',
         '  </div>',
-
         '  <div class="config-panel-body" ng-transclude>',
         '  </div>',
         '</div>'
@@ -137,21 +135,17 @@ var navigatorPanel = ['$log',
       transclude: true,
       template: "<div ng-class=\"{active:selected}\" ng-show=\"selected\" ng-transclude></div>"
     };
-  }];
+  }
+];
 
 
 exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: function() {
-    }
-  },
-  {
-    name: 'navigator',
-    directive: main
-  },
-  {
-    name: 'navigatorPanel',
-    directive: navigatorPanel
-  }
-];
+exports.directives = [{
+  directive: function() {}
+}, {
+  name: 'navigator',
+  directive: main
+}, {
+  name: 'navigatorPanel',
+  directive: navigatorPanel
+}];

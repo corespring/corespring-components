@@ -5,20 +5,27 @@
     min-height: 300px;
 }
 
-.navigator .nav-container {
+.navigator .navigator-container {
     transition: width 300ms;
     top: 0px;
     bottom: 0px;
     width: 200px;
     overflow: hidden;
     background-color: #3b383b;
+    position: absolute;
+    float: left;
 }
 
-.navigator .nav-left-panel {
+.navigator .navigator-toggle-button{
+  left: 5px;
+  top: 35px;
+}
+
+.navigator .navigator-left-panel {
     padding-top: 60px;
 }
 
-.navigator.nav-closed .nav-container {
+.navigator.navigator-closed .navigator-container {
     width: 30px;
 }
 
@@ -27,7 +34,7 @@
     transition: padding-left 300ms;
 }
 
-.navigator.nav-closed .config-panel-body {
+.navigator.navigator-closed .config-panel-body {
     padding-left: 30px;
 }
 
@@ -37,7 +44,7 @@
     color: #c2bfc2;
 }
 
-.navigator .btn-nav-toggle {
+.navigator .btn-navigator-toggle {
     padding: 2px 5px;
     font-size: 12px;
     line-height: 1.5;
