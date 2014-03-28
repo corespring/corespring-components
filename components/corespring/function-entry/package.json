@@ -8,11 +8,6 @@
       "name": "choice-templates",
       "organization": "corespring",
       "scope" : "editor"
-    },
-    {
-      "name": "ck-editor",
-      "organization": "corespring",
-      "scope" : "editor"
     }
   ],
   "name": "function-entry",

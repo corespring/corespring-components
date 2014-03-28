@@ -190,4 +190,9 @@
     padding-right: 80px;
 }
 
+.config-multiple-choice table,
+.config-multiple-choice tr,
+.config-multiple-choice td {
+    padding: 10px;
+}
 

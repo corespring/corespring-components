@@ -8,11 +8,6 @@
     {
       "name": "navigator",
       "organization": "corespring"
-    },
-    {
-      "name": "ck-editor",
-      "organization": "corespring",
-       "scope" : "editor"
     }
   ],
   "name": "multiple-choice",
