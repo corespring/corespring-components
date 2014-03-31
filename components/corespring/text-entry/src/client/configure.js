@@ -47,7 +47,7 @@ var main = [
           }
         };
 
-        scope.registerConfigPanel(attrs.id, scope.containerBridge);
+        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
         scope.addCorrectResponse = function() {
           scope.fullModel.correctResponse = scope.fullModel.correctResponse || [];
