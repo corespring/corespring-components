@@ -4,9 +4,26 @@ var main = ['$log', '$timeout',
     var link = function(scope, element, attrs) {
       scope.navClosed = false;
 
-      scope.toggleNav = function() {
+      scope.toggleLeftPanel = function() {
         scope.navClosed = !scope.navClosed;
+        if (scope.navClosed) {
+          $(element).find('.navigator-left-panel').animate({'width': '0px'}, {
+            duration: 300,
+            step: function() {
+              $(element).find('.config-panel-body').css('left', $(element).find('.navigator-left-panel').width() + "px");
+            }
+          });
+        } else {
+          $(element).find('.navigator-left-panel').css('width', 'auto');
+          $(element).find('.config-panel-body').css('left', $(element).find('.navigator-left-panel').width() + "px");
+        }
       };
+
+      scope.$watch(function() {
+        return $(element).find('.navigator-left-panel').width();
+      }, function() {
+        $(element).find('.config-panel-body').css('left', $(element).find('.navigator-left-panel').width() + "px");
+      });
     };
 
     var controllerFn = function($scope, $element, $attrs) {
@@ -83,18 +100,22 @@ var main = ['$log', '$timeout',
       controller: controllerFn,
       link: link,
       template: [
-        '<div class="navigator" ng-class="{\'navigator-closed\':navClosed==true}">',
+        '<div class="navigator">',
+        '  <div class="navigator-toggle-button-row" >',
+        '    <div class="navigator-toggle-button" >',
+        '      <a ng-click="toggleLeftPanel()"><button class="btn btn-navigator-toggle btn-default btn-xs"><i class="fa fa-bars"></i></button></a>',
+        '    </div>',
+        '  </div>',
         '  <div class="navigator-container">',
         '    <div class="navigator-left-panel">',
-        '      <ul class="nav nav-stacked" ng-hide="navClosed">',
+        '      <ul class="nav nav-stacked" >',
         '        <li ng-repeat="panel in panels" ng-class="{ active: panel.selected()}">',
         '          <a href="" ng-class="{active: panel.selected()}" ng-click="selectPanel(panel, $event)">{{panel.title}}</a>',
         '        </li>',
         '      </ul>',
         '    </div>',
-        '    <div class="navigator-toggle-button" ><a ng-click="toggleNav()"><button class="btn btn-navigator-toggle btn-default"><i class="fa fa-bars"></i></button></a></div>',
-        '  </div>',
-        '  <div class="config-panel-body" ng-transclude>',
+        '    <div class="config-panel-body" ng-transclude>',
+        '    </div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -143,9 +164,9 @@ exports.framework = 'angular';
 exports.directives = [{
   directive: function() {}
 }, {
-  name: 'navigator',
-  directive: main
+    name: 'navigator',
+    directive: main
 }, {
-  name: 'navigatorPanel',
-  directive: navigatorPanel
+    name: 'navigatorPanel',
+    directive: navigatorPanel
 }];

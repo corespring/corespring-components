@@ -1,51 +1,49 @@
 /* Navigator CSS */
 
 .navigator {
-    position: relative;
-    min-height: 300px;
 }
 
 .navigator .navigator-container {
-    transition: width 300ms;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    width: 200px;
     overflow: hidden;
-    background-color: #3b383b;
-    position: absolute;
-    float: left;
+    height: 100%;
 }
 
-.navigator .navigator-toggle-button {
-    right: 5px;
-    top: 15px;
+.navigator-toggle-button-row {
     position: absolute;
+    height: 30px;
+    left: 0px;
+    right: 0px;
+    background-color: #3b383b;
+}
+
+.navigator-toggle-button {
+    padding: 5px;
 }
 
 .navigator .navigator-left-panel {
-    padding-top: 40px;
+    background-color: #3b383b;
+    position: absolute;
+    overflow: hidden;
+    top: 30px;
+    bottom: 0px;
 }
 
-.navigator .nav-left-panel {
-    padding-top: 35px;
-}
-
-.navigator .nav-left-panel ul {
-    min-width: 300px;
-}
-
-.navigator.navigator-closed .navigator-container {
-    width: 30px;
+.navigator.navigator-closed .navigator-left-panel {
+    width: 0px;
 }
 
 .navigator .config-panel-body {
-    padding-left: 200px;
-    transition: padding-left 300ms;
+    display: block;
+    position: absolute;
+    top: 30px;
+    bottom: 0px;
+    left: 100px;
+    right: 0px;
+    overflow: scroll;
+
 }
 
 .navigator.navigator-closed .config-panel-body {
-    padding-left: 30px;
 }
 
 .navigator .nav li a {
