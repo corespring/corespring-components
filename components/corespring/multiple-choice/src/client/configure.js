@@ -1,15 +1,15 @@
 var shuffle = [
-       '<div class="well">',
-        ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
-        ' <table> ',
-        ' <tr> ',
-        ' <td> Layout: ',
-        ' <td> <input type="radio" value="vertical" ng-model="model.config.orientation"></input><td>A<br/>B<br/>C<br/>D',
-        ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
-        ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
-        ' </table>',
-        '</div>'
-        ].join('\n');
+  '<div class="well">',
+  ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
+  ' <table> ',
+  ' <tr> ',
+  ' <td> Layout: ',
+  ' <td> <input type="radio" value="vertical" ng-model="model.config.orientation"></input><td>A<br/>B<br/>C<br/>D',
+  ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
+  ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
+  ' </table>',
+  '</div>'
+].join('\n');
 
 
 var main = [
@@ -17,11 +17,11 @@ var main = [
   function($log, ChoiceTemplates) {
 
     var choices = [
-        '<div class="choice" ng-repeat="q in model.choices">',
-           ChoiceTemplates.choice(),
-        '</div>',
-        '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
-      ].join('\n');
+      '<div class="choice" ng-repeat="q in model.choices">',
+      ChoiceTemplates.choice(),
+      '</div>',
+      '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
+    ].join('\n');
 
 
     return {
@@ -167,17 +167,17 @@ var main = [
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
-        '<div class="config-multiple-choice">',
+        '<div class="config-multiple-choice" file-uploader-host="">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
 //              ChoiceTemplates.wrap('Prompt', ChoiceTemplates.prompt),
-              ChoiceTemplates.wrap('Answer Area', choices),
+        ChoiceTemplates.wrap('Answer Area', choices),
         '    </div>',
         '    <div navigator-panel="Display">',
-              ChoiceTemplates.wrap('Display Options', shuffle),
+        ChoiceTemplates.wrap('Display Options', shuffle),
         '    </div>',
         '    <div navigator-panel="Scoring">',
-              ChoiceTemplates.wrap('Scoring', ChoiceTemplates.scoring()),
+        ChoiceTemplates.wrap('Scoring', ChoiceTemplates.scoring()),
         '    </div>',
         '  </div>',
         '</div>'
