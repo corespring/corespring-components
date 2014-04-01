@@ -195,4 +195,21 @@
 .config-multiple-choice td {
     padding: 10px;
 }
+input[type="checkbox"] {
+    display:none;
+}
+input[type="checkbox"] + label span {
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    background:url("/assets/images/checkbox.png");
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    cursor:pointer;
+}
+input[type="checkbox"]:checked + label span {
+    background-position: 0 -23px;
+}
 
