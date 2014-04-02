@@ -198,7 +198,6 @@ var main = [
       '    <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
       '    <div class="choice-label" ng-switch="o.labelType">',
       '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
-      '      <span ng-switch-when="mathml" ng-bind-html-unsafe="o.mathml"></span>',
       '      <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '    </div>',
       '  </div>',
