@@ -1,7 +1,12 @@
+.choice-template-choice {
+    width: 100%;
+    vertical-align: bottom;
+}
+
 .choice-template-choice .choice-remove-button {
     position: relative;
-    left: -33px;
-    top: -6px;
+    left: -4px;
+    top: 18px;
 }
 
 .choice-template-choice .choice-checkbox {

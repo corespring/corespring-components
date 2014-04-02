@@ -193,7 +193,7 @@
 
 .choice-config-panel .check-correct-label {
     position: absolute;
-    left: 400px;
+    right: 10px;
     top: 20px;
 }
 
@@ -204,5 +204,6 @@
 .config-multiple-choice table,
 .config-multiple-choice tr,
 .config-multiple-choice td {
-    padding: 10px;
+    padding: 0px 10px 10px;
+    vertical-align: bottom;
 }
