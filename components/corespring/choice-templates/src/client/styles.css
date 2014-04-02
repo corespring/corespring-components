@@ -1,0 +1,18 @@
+.choice-template-choice .choice-remove-button {
+    position: relative;
+    left: -33px;
+    top: -6px;
+}
+
+.choice-template-choice .choice-checkbox {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.choice-template-choice .choice-checkbox.checked {
+    color: limegreen;
+}
+
+.choice-template-choice .feedback-label {
+    font-size: smaller;
+}

@@ -17,10 +17,13 @@ var main = [
   function($log, ChoiceTemplates) {
 
     var choices = [
-      '<div class="choice" ng-repeat="q in model.choices">',
-      ChoiceTemplates.choice(),
-      '</div>',
-      '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>'
+      '<div class="choice-config-panel">',
+      '  <div class="check-correct-label">Check correct answers!</div>',
+      '  <div class="choice" ng-repeat="q in model.choices">',
+           ChoiceTemplates.choice(),
+      '  </div>',
+      '  <button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
+      '</div>'
     ].join('\n');
 
 

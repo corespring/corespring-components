@@ -22,19 +22,17 @@ exports.service = ['$log',
       };
 
       this.choice = function(opts) {
-
         var defaults = {
-          correct: this.inline("checkbox", null, "Correct", "ng-model='correctMap[q.value]'")
+          correct: '<i class="fa fa-check fa-1 choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>'
         };
 
         opts = _.extend(defaults, opts);
 
         return [
-          '  <table>',
+          '  <table class="choice-template-choice">',
           '    <tr>',
           '     <td><b>Choice {{toChar($index)}}</b></td>',
           '      <td>',
-          opts.correct,
           //inline("checkbox", null, "Correct", "ng-model='" + opts.correctNgModel + "'"),
           '      </td>',
           '      <td>',
@@ -56,20 +54,23 @@ exports.service = ['$log',
           '        </div>',
           '      </td>',
           '      <td>',
-          '         <div class="remove-button" ng-click="removeQuestion(q)">',
-          '           <button type="button" class="close">&times;</button>',
-          '         </div>',
+          '      <div class="choice-remove-button" ng-click="removeQuestion(q)">',
+          '         <button type="button" class="close">&times;</button>',
+          '      </div>',
+          '      </td>',
+          '      <td>',
+          opts.correct,
           '      </td>',
           '    </tr>',
           '    <tr>',
           '      <td colspan="4" style="text-align: left">',
-          '        <div ng-click="feedbackOn = !feedbackOn"><span class="glyphicon glyphicon-plus"></span> Feedback</div>',
+          '        <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-plus-square-o"></i> Feedback</div>',
           '        <div class="well" ng-show="feedbackOn">',
           '          <div><label>If selected</label></div>',
           '          <input class="form-control" type="text" ng-model="feedback[q.value].feedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
 
           '          <div class="pull-right">',
-          this.inline("radio", "normal", "Normal", "ng-model='feedback[q.value].feedbackType'"),
+          this.inline("radio", "none", "None", "ng-model='feedback[q.value].feedbackType'"),
           this.inline("radio", "standard", "Standard", "ng-model='feedback[q.value].feedbackType'"),
           this.inline("radio", "custom", "Custom", "ng-model='feedback[q.value].feedbackType'"),
           '          </div>',
@@ -82,13 +83,13 @@ exports.service = ['$log',
           '      </td>',
           '    </tr>',
           '  </table>'
-          ].join('\n');
+        ].join('\n');
 
       };
 
       this.wrap = function(title, body) {
         return ['<div class="input-holder">',
-          '  <div class="header">' + title + '</div>',
+          title ? '  <div class="header">' + title + '</div>' : '',
           '  <div class="body">' + body + '</div>',
           '</div>'].join('\n');
       };
@@ -110,10 +111,10 @@ exports.service = ['$log',
           '     <td><select ng-model="scoreMapping[ch.value]"><option value="-1">-1</option><option value="0">0</option><option value="1">1</option></select></td>',
           '   </tr>',
           ' </table>'
-          ].join('\n');
+        ].join('\n');
       };
 
     };
 
     return new ChoiceTemplates();
-}];
+  }];

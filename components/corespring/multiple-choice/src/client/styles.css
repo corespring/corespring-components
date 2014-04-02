@@ -186,6 +186,17 @@
     margin-left: -32px;
 }
 
+
+.choice-config-panel {
+    padding-top: 20px;
+}
+
+.choice-config-panel .check-correct-label {
+    position: absolute;
+    left: 400px;
+    top: 20px;
+}
+
 .score-table td {
     padding-right: 80px;
 }
@@ -195,21 +206,3 @@
 .config-multiple-choice td {
     padding: 10px;
 }
-input[type="checkbox"] {
-    display:none;
-}
-input[type="checkbox"] + label span {
-    display:inline-block;
-    width:19px;
-    height:19px;
-    margin:-1px 4px 0 0;
-    vertical-align:middle;
-    background:url("/assets/images/checkbox.png");
-    background-repeat:no-repeat;
-    background-position: 0 0;
-    cursor:pointer;
-}
-input[type="checkbox"]:checked + label span {
-    background-position: 0 -23px;
-}
-
