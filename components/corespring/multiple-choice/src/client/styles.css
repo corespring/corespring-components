@@ -26,10 +26,6 @@
     max-width: 95%;
 }
 
-.view-multiple-choice .choices-container.tile {
-    max-width: 200px;
-}
-
 .view-multiple-choice .choice-holder {
     display: table-row;
 }
@@ -101,10 +97,6 @@
     vertical-align: middle;
 }
 
-.view-multiple-choice .choice-holder.tile {
-    float: left;
-    padding-right: 10px;
-}
 
 .view-multiple-choice .choice {
     background-color: #fff;
@@ -184,6 +176,13 @@
     position: relative;
     width: auto;
     margin-left: -32px;
+}
+
+
+/* Tile */
+.view-multiple-choice .tile.choice-holder {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 
