@@ -56,7 +56,9 @@ var main = [
               if (choice) {
                 scope.feedback[choice.value] = {
                   feedback: feedback.feedback,
-                  feedbackType: feedback.isDefault ? "standard" : "custom"
+                  feedbackType: feedback.feedbackType || "default",
+                  notChosenFeedback: feedback.notChosenFeedback,
+                  notChosenFeedbackType: feedback.notChosenFeedbackType || "default"
                 };
               }
             });
@@ -94,7 +96,9 @@ var main = [
               });
               if (feedback) {
                 feedback.feedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
-                feedback.isDefault = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0) === "standard";
+                feedback.feedbackType = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0);
+                feedback.notChosenFeedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
+                feedback.notChosenFeedbackType = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0);
               }
             });
 

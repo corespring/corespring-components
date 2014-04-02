@@ -22,15 +22,16 @@ describe('corespring', function() {
       "feedback": [
         {
           "feedback": "Huh?",
+          "feedbackType": "custom",
           "value": "1"
         },
         {
           "feedback": "4 to the floor",
-          "isDefault": false,
+          "feedbackType": "custom",
           "value": "2"
         },
         {
-          "isDefault": true,
+          "feedbackType": "default",
           "value": "3"
         }
       ],
@@ -96,7 +97,7 @@ describe('corespring', function() {
       expect(scope.feedback['1'].feedback).toBe('Huh?');
       expect(scope.feedback['2'].feedbackType).toBe('custom');
       expect(scope.feedback['2'].feedback).toBe('4 to the floor');
-      expect(scope.feedback['3'].feedbackType).toBe('standard');
+      expect(scope.feedback['3'].feedbackType).toBe('default');
       expect(scope.scoreMapping).toEqual({
         '1': '0',
         '2': '1',

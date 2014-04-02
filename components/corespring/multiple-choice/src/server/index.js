@@ -8,14 +8,30 @@ var feedbackByValue = function(q, v) {
   return _.cloneDeep(originalFb);
 };
 
+var handleDefaultAndNoneFeedback = function(fb) {
+  if (fb.feedbackType === 'default') {
+    fb.feedback = "Default Feedback";
+  }
+  if (fb.notChosenFeedbackType === 'default') {
+    fb.notChosenFeedback = "Default Not Chosen Feedback";
+  }
+  if (fb.feedbackType === 'none') {
+    delete fb.feedback;
+  }
+  if (fb.notChosenFeedbackType === 'none') {
+    delete fb.notChosenFeedback;
+  }
+};
+
 var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
 
-  var correctKey, fb, nc, _i, _len, _ref;
+  var correctKey, fb, nc, i, _len, correctResponses;
 
-  _ref = q.correctResponse.value;
+  correctResponses = q.correctResponse.value;
 
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    correctKey = _ref[_i];
+  for (i = 0; i < correctResponses.length; i++) {
+    correctKey = correctResponses[i];
+
     fb = feedbackByValue(q, correctKey) || {
       value: correctKey
     };
@@ -24,17 +40,22 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
       return;
     }
 
+    fb = _.clone(fb);
+
+    handleDefaultAndNoneFeedback(fb);
+
     if (userGotItRight) {
       delete fb.notChosenFeedback;
     } else {
       if (_.indexOf(answer, correctKey) === -1) {
-        nc = fb.notChosenFeedback || fb.feedback;
-        delete fb.notChosenFeedback;
+        nc = fb.notChosenFeedback;
         fb.feedback = nc;
+        delete fb.notChosenFeedback;
       } else {
         delete fb.notChosenFeedback;
       }
     }
+
     fb.correct = true;
     fbArray.push(fb);
   }
@@ -64,6 +85,7 @@ var userResponseFeedback = function(fbArray, q, answer) {
       if (fb.correct) {
         delete fb.notChosenFeedback;
       }
+      handleDefaultAndNoneFeedback(fb);
       _results.push(fbArray.push(fb));
     }
   }
@@ -115,10 +137,9 @@ var calculateScore = function(question, answer) {
 };
 
 
-
 /*
-Create a response to the answer based on the question, the answer and the respond settings
-*/
+ Create a response to the answer based on the question, the answer and the respond settings
+ */
 exports.respond = function(question, answer, settings) {
 
   if (question._uid !== answer._uid) {
