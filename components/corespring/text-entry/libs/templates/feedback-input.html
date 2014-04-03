@@ -1,10 +1,10 @@
 <div class="feedback-input-holder">
-  <div ng-click="showToggle=!showToggle"><span class="glyphicon glyphicon-minus"></span>
+  <div ng-click="showToggle=!showToggle"><span class="glyphicon glyphicon-{{ showToggle ? 'minus' : 'plus' }}"></span>
     {{feedback.title}}
   </div>
   <div class="well" ng-show="showToggle">
     <div><label>{{feedback.headline}}</label></div>
-    <input class="form-control text-input" type="text" ng-model="feedback.value" placeholder="{{feedback.prompt}}"/>
+    <input class="form-control text-input" type="text" ng-model="feedback.value" placeholder="{{feedback.prompt}}" ng-readonly="feedback.readonly" title="{{feedback.tooltip}}"  />
 
     <div class="pull-right">
       <label class="radio-inline">

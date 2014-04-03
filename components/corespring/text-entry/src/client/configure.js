@@ -1,25 +1,25 @@
 var main = [
-  function() {
+  function () {
 
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
       templateUrl: "/client/libs/corespring/text-entry/templates/design-panel.html",
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
         scope.containerBridge = {
-          setModel: function(fullModel) {
+          setModel: function (fullModel) {
             scope.fullModel = fullModel;
 
             scope.fullModel.correctResponses = scope.fullModel.correctResponses || {
               responses: ["A", "B", "C"],
-              award : 1,
+              award: 1,
               ignoreCase: true,
               ignoreWhitespace: true
             };
             scope.fullModel.partialResponses = scope.fullModel.partialResponses || {
               responses: ["D", "E", "F"],
-              award : 0.5,
+              award: 0.5,
               ignoreCase: true,
               ignoreWhitespace: true
             };
@@ -29,37 +29,34 @@ var main = [
 
             fullModel.model.config.correctResponse = fullModel.model.config.correctResponse || {};
             fullModel.model.config.correctResponse.feedback = fullModel.model.config.correctResponse.feedback || {
-              title:"Positive Feedback",
-              headline:"If response is correct",
-              value:"Correct!",
-              prompt:"Correct!",
-              type:"default"
+              type: "default",
+              title: "Positive Feedback",
+              headline: "If response is correct"
             };
+
             fullModel.model.config.partialResponse = fullModel.model.config.partialResponse || {};
             fullModel.model.config.partialResponse.feedback = fullModel.model.config.partialResponse.feedback || {
-              title:"Negative Feedback",
-              headline:"If response is incorrect or partially correct",
-              value:"Try again!",
-              prompt:"Try again!",
-              type:"default"
+              type: "default",
+              title: "Negative Feedback",
+              headline: "If response is incorrect or partially correct"
             };
           },
 
-          getModel: function() {
+          getModel: function () {
             return scope.fullModel;
           }
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
-        scope.addCorrectResponse = function() {
+        scope.addCorrectResponse = function () {
           scope.fullModel.correctResponse = scope.fullModel.correctResponse || [];
           scope.fullModel.correctResponse.push("");
         };
 
-        scope.removeCorrectResponseWithIndex = function(idx) {
-          scope.fullModel.correctResponse = _.filter(scope.fullModel.correctResponse, function(cr, i) {
-             return idx !== i;
+        scope.removeCorrectResponseWithIndex = function (idx) {
+          scope.fullModel.correctResponse = _.filter(scope.fullModel.correctResponse, function (cr, i) {
+            return idx !== i;
           });
         };
       }
@@ -68,7 +65,42 @@ var main = [
 ];
 
 var csFeedbackInput = [
-  function() {
+  function () {
+
+    var feedbackConfig = {
+      none: {
+        value: "",
+        prompt: "No feedback is given.",
+        tooltip: "Select 'Default' or 'Custom' to show feedback.",
+        readonly: true
+      },
+      default: {
+        value: "Try again!",
+        prompt: "",
+        tooltip: "Select 'None' to disable or 'Custom' to show customized feedback.",
+        readonly: true
+      },
+      custom: {
+        value: "",
+        prompt: "Enter custom feedback.",
+        tooltip: "Select 'None' to disable or 'DefauLt' to show the default feedback.",
+        readonly: false
+      }
+    };
+
+    function setFeedbackType(feedback, newType) {
+      function assignFeedbackConfig(config) {
+        _.extend(feedback, config);
+      }
+
+      if (newType === 'none') {
+        assignFeedbackConfig(feedbackConfig.none);
+      } else if (newType === 'default') {
+        assignFeedbackConfig(feedbackConfig.default);
+      } else if (newType === 'custom') {
+        assignFeedbackConfig(feedbackConfig.custom);
+      }
+    }
 
     return {
       scope: {
@@ -77,15 +109,18 @@ var csFeedbackInput = [
       restrict: 'A',
       replace: true,
       templateUrl: "/client/libs/corespring/text-entry/templates/feedback-input.html",
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
 
+        scope.$watch('feedback.type', function (newType) {
+          setFeedbackType(scope.feedback, newType);
+        });
       }
-    }
+    };
   }
 ];
 
 var csResponseInput = [
-  function() {
+  function () {
 
     return {
       scope: {
@@ -94,7 +129,7 @@ var csResponseInput = [
       restrict: 'A',
       replace: true,
       templateUrl: "/client/libs/corespring/text-entry/templates/response-input.html",
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
 
       }
     }

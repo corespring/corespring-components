@@ -9,26 +9,30 @@
   },
   "partialResponse": {
     "award": 0.25,
-    "responses":["four", "five", "six"]
+    "responses": ["four", "five", "six"],
+    "ignoreWhitespace": true,
+    "ignoreCase": true
   },
   "model": {
     "config": {
-      "correctResponse" : {
-        "ignoreWhitespace" : true,
-        "ignoreCase" : true,
-        "feedback" : {
-          "type" : "default",
-          "value" : "default positive feedback",
-          "prompt" : "prompt for positive feedback"
+      "correctResponse": {
+        "feedback": {
+          "title": "Positive Feedback",
+          "headline": "If response is correct",
+          "type": "default",
+          "value": "default positive feedback",
+          "default": "default positive feedback",
+          "prompt": "prompt for positive feedback"
         }
       },
-      "partiallyCorrectResponse" : {
-        "ignoreWhitespace" : true,
-        "ignoreCase" : true,
-        "feedback" : {
-          "type" : "default",
-          "value" : "default negative feedback",
-          "prompt" : "prompt for negative feedback"
+      "partialResponse": {
+        "feedback": {
+          "title": "Negative Feedback",
+          "headline": "If response is incorrect or partially correct",
+          "type": "default",
+          "value": "default negative feedback",
+          "default": "default negative feedback",
+          "prompt": "prompt for negative feedback"
         }
       }
     }
