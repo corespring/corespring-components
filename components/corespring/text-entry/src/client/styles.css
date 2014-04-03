@@ -54,3 +54,7 @@
 .config-text-entry .partially-correct-holder {
   padding-bottom: 10px;
 }
+
+.responses-input-dropdown-noshow {
+  display: none !important;
+}

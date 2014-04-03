@@ -1,48 +1,51 @@
 var _ = require('lodash');
 
 
-exports.isEqual = function(s1, s2, ignoreCase, ignoreWhitespace) {
+exports.isEqual = function (s1, s2, ignoreCase, ignoreWhitespace) {
   if (ignoreCase) {
     s1 = s1.toLowerCase();
     s2 = s2.toLowerCase();
   }
 
   if (ignoreWhitespace) {
-    s1 = s1.replace(/\s*/g,'');
-    s2 = s2.replace(/\s*/g,'');
+    s1 = s1.replace(/\s*/g, '');
+    s2 = s2.replace(/\s*/g, '');
   }
 
   return s1 === s2;
 };
 
-exports.isCorrect = function(answer, correctAnswer, ignoreCase, ignoreWhitespace) {
-  if (_.isArray(correctAnswer)) {
-    return _.some(correctAnswer, function(a) {
-      return exports.isEqual(a, answer, ignoreCase, ignoreWhitespace);
-    });
-  } else {
-    return exports.isEqual(answer, correctAnswer, ignoreCase, ignoreWhitespace);
-  }
+exports.isCorrect = function (answer, responses) {
+  var ignoreCase = (responses.ignoreCase) || false;
+  var ignoreWhitespace = (responses.ignoreWhitespace) || false;
+
+  return _.some(responses.values, function (a) {
+    return exports.isEqual(answer, a, ignoreCase, ignoreWhitespace);
+  });
 };
 
+exports.respond = function (question, answer, settings) {
+  var response;
 
-exports.respond = function(question, answer, settings) {
-  var answerIsCorrect, response;
+  function createResponse(correctness, score) {
+    return {
+      correctness: correctness,
+      score: score,
+      feedback: {}
+    };
+  }
 
   if (question && answer && question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
 
-  var ignoreCase = (question.model.config && question.model.config.ignoreCase) || false;
-  var ignoreWhitespace = (question.model.config && question.model.config.ignoreWhitespace) || false;
-
-  answerIsCorrect = this.isCorrect(answer, question.correctResponse, ignoreCase, ignoreWhitespace);
-
-  response = {
-    correctness: answerIsCorrect ? "correct" : "incorrect",
-    score: answerIsCorrect ? 1 : 0,
-    feedback: {}
-  };
+  if (exports.isCorrect(answer, question.correctResponse)) {
+    response = createResponse("correct", 1);
+  } else if (exports.isCorrect(answer, question.partialResponse)) {
+    response = createResponse("correct", question.partialResponse.award / 100);
+  } else {
+    response = createResponse("incorrect", 0);
+  }
 
   if (settings.showFeedback) {
     response.feedback = {

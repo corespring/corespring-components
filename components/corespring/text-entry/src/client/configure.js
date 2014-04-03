@@ -57,7 +57,7 @@ var main = [
 
     function createResponsesModel(responses, award) {
       return {
-        responses: responses.split(","),
+        values: responses.split(","),
         award: award,
         ignoreCase: true,
         ignoreWhitespace: true
@@ -117,11 +117,11 @@ var csFeedbackInput = [
       templateUrl: "/client/libs/corespring/text-entry/templates/feedback-input.html",
       link: function (scope, element, attrs) {
 
-        function assignDefaults(destination, source){
+        function assignDefaults(destination, source) {
           _.extend(destination, source);
         }
 
-        function initFeedbackForType(newType){
+        function initFeedbackForType(newType) {
           assignDefaults(scope.feedback, scope.feedback.config[newType]);
         }
 
@@ -145,6 +145,7 @@ var csResponseInput = [
       replace: true,
       templateUrl: "/client/libs/corespring/text-entry/templates/response-input.html",
       link: function (scope, element, attrs) {
+
       }
     }
   }
