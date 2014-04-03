@@ -1,12 +1,36 @@
 {
-  "componentType": "corespring-text-entry",
-  "correctResponse": "2",
   "title": "Text Entry",
-  "feedback" :  {
+  "componentType": "corespring-text-entry",
+  "correctResponse": {
+    "award": 1,
+    "responses": ["one", "two", "three"],
+    "ignoreWhitespace": true,
+    "ignoreCase": true
+  },
+  "partialResponse": {
+    "award": 0.25,
+    "responses":["four", "five", "six"]
   },
   "model": {
     "config": {
-    },
-    "prompt": "Add your question here..."
+      "correctResponse" : {
+        "ignoreWhitespace" : true,
+        "ignoreCase" : true,
+        "feedback" : {
+          "type" : "default",
+          "value" : "default positive feedback",
+          "prompt" : "prompt for positive feedback"
+        }
+      },
+      "partiallyCorrectResponse" : {
+        "ignoreWhitespace" : true,
+        "ignoreCase" : true,
+        "feedback" : {
+          "type" : "default",
+          "value" : "default negative feedback",
+          "prompt" : "prompt for negative feedback"
+        }
+      }
+    }
   }
 }

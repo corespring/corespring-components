@@ -20,15 +20,31 @@
 }
 
 
-/*Config Panel*/
-
-.short-text-entry-configuration .correct-holder {
-    position: relative;
-    margin: 3px 0px 5px 3px;
+/* Config Panel */
+.config-text-entry .well{
+  padding: 8px;
 }
 
-.short-text-entry-configuration .remove-button {
-    position: absolute;
-    right: 0px;
-    top: 0px;
+.config-text-entry .feedback-input-holder{
+
+}
+
+.config-text-entry .award-config{
+  padding-bottom: 10px;
+}
+
+.config-text-entry .main-header {
+  padding: 10px 10px 0px 10px;
+}
+
+.config-text-entry .number-input {
+  width: 40px;
+}
+
+.config-text-entry .correct-holder {
+  padding-bottom: 10px;
+}
+
+.config-text-entry .partially-correct-holder {
+  padding-bottom: 10px;
 }

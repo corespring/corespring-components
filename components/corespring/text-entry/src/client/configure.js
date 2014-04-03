@@ -1,45 +1,48 @@
 var main = [
   function() {
 
-    var correctResponseBlock = [
-      '<div class="input-holder">',
-      '  <div class="header">Correct Response</div>',
-      '  <div class="body">',
-      '     <div ng-repeat="cr in fullModel.correctResponse track by $index" class="correct-holder">',
-      '       <input class="form-control text-input" type="text"  ng-model="$parent.fullModel.correctResponse[$index]" />',
-      '       <button type="button" class="close remove-button" ng-click="removeCorrectResponseWithIndex($index)">&times;</button>',
-      '     </div>',
-      '     <a href="" ng-click="addCorrectResponse()">Add correct response</a>',
-      '  </div>',
-      '</div>'].join('\n');
-
-    var configurationBlock = [
-      '<div class="input-holder">',
-      '  <div class="header">Configuration</div>',
-      '  <div class="body">',
-      '     <div>',
-      '       <div>',
-      '         <input type="checkbox" id="ignore-case" ng-model="fullModel.model.config.ignoreCase" />',
-      '         <label for="ignore-case">Ignore Case</label>',
-      '       </div>',
-      '       <div>',
-      '         <input type="checkbox" id="ignore-whitespace" ng-model="fullModel.model.config.ignoreWhitespace" />',
-      '         <label for="ignore-whitespace">Ignore Whitespace</label>',
-      '       </div>',
-      '     </div>',
-      '  </div>',
-      '</div>'].join('\n');
-
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
+      templateUrl: "/client/libs/corespring/text-entry/templates/design-panel.html",
       link: function(scope, element, attrs) {
         scope.containerBridge = {
-          setModel: function(model) {
-            scope.fullModel = model;
-            model.model = model.model || {};
-            model.model.config = model.model.config || {};
+          setModel: function(fullModel) {
+            scope.fullModel = fullModel;
+
+            scope.fullModel.correctResponses = scope.fullModel.correctResponses || {
+              responses: ["A", "B", "C"],
+              award : 1,
+              ignoreCase: true,
+              ignoreWhitespace: true
+            };
+            scope.fullModel.partialResponses = scope.fullModel.partialResponses || {
+              responses: ["D", "E", "F"],
+              award : 0.5,
+              ignoreCase: true,
+              ignoreWhitespace: true
+            };
+
+            fullModel.model = fullModel.model || {};
+            fullModel.model.config = fullModel.model.config || {};
+
+            fullModel.model.config.correctResponse = fullModel.model.config.correctResponse || {};
+            fullModel.model.config.correctResponse.feedback = fullModel.model.config.correctResponse.feedback || {
+              title:"Positive Feedback",
+              headline:"If response is correct",
+              value:"Correct!",
+              prompt:"Correct!",
+              type:"default"
+            };
+            fullModel.model.config.partialResponse = fullModel.model.config.partialResponse || {};
+            fullModel.model.config.partialResponse.feedback = fullModel.model.config.partialResponse.feedback || {
+              title:"Negative Feedback",
+              headline:"If response is incorrect or partially correct",
+              value:"Try again!",
+              prompt:"Try again!",
+              type:"default"
+            };
           },
 
           getModel: function() {
@@ -59,15 +62,42 @@ var main = [
              return idx !== i;
           });
         };
-
-      },
-      template: [
-        '<div class="short-text-entry-configuration">',
-        correctResponseBlock,
-        configurationBlock,
-        '</div>'
-      ].join('\n')
+      }
     };
+  }
+];
+
+var csFeedbackInput = [
+  function() {
+
+    return {
+      scope: {
+        feedback: '=model'
+      },
+      restrict: 'A',
+      replace: true,
+      templateUrl: "/client/libs/corespring/text-entry/templates/feedback-input.html",
+      link: function(scope, element, attrs) {
+
+      }
+    }
+  }
+];
+
+var csResponseInput = [
+  function() {
+
+    return {
+      scope: {
+        response: '=model'
+      },
+      restrict: 'A',
+      replace: true,
+      templateUrl: "/client/libs/corespring/text-entry/templates/response-input.html",
+      link: function(scope, element, attrs) {
+
+      }
+    }
   }
 ];
 
@@ -75,5 +105,13 @@ exports.framework = 'angular';
 exports.directives = [
   {
     directive: main
+  },
+  {
+    name: 'csFeedbackInput',
+    directive: csFeedbackInput
+  },
+  {
+    name: 'csResponseInput',
+    directive: csResponseInput
   }
 ];
