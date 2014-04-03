@@ -1,5 +1,5 @@
-<div class="feedback-input-holder">
-  <div ng-click="showToggle=!showToggle"><span class="glyphicon glyphicon-{{ showToggle ? 'minus' : 'plus' }}"></span>
+<div class="feedback-input-holder {{ showToggle ? 'open' : 'closed'}}">
+  <div ng-click="showToggle=!showToggle"><span class="glyphicon glyphicon-{{showToggle ? 'minus' : 'plus'}}"></span>
     {{feedback.title}}
   </div>
   <div class="well" ng-show="showToggle">
