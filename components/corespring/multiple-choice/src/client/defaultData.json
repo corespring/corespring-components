@@ -26,19 +26,19 @@
   "model": {
     "choices": [
       {
-        "label": "Choice One",
+        "label": "",
         "value": "1"
       },
       {
-        "label": "Choice Two",
+        "label": "",
         "value": "2"
       },
       {
-        "label": "Choice Tree",
+        "label": "",
         "value": "3"
       },
       {
-        "label": "Choice Four",
+        "label": "",
         "value": "4"
       }
     ],
