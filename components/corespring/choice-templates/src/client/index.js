@@ -101,19 +101,24 @@ exports.service = ['$log',
       this.scoring = function() {
 
         return [
-          ' <p>',
-          '   <input type="radio" ng-model="model.scoringType" value="standard"></input> <label>Standard</label>',
-          '   <input type="radio" ng-model="model.scoringType" value="custom"></input> <label>Custom</label>',
-          ' </p>',
-          ' <table ng-show="model.scoringType==\'custom\'" class="score-table">',
-          '   <tr>',
-          '   <th>Choice</th>',
-          '   <th>Points If Selected</th>',
-          '   <tr ng-repeat="ch in model.choices">',
-          '     <td>{{toChar($index)}}</td>',
-          '     <td><select ng-model="scoreMapping[ch.value]"><option value="-1">-1</option><option value="0">0</option><option value="1">1</option></select></td>',
-          '   </tr>',
-          ' </table>'
+          '<div>',
+          '   <input id="partialScoring" type="checkbox" ng-model="fullModel.allowPartialScoring"></input> <label for="partialScoring">Allow partial scoring</label>',
+          '</div>',
+
+          '<form class="form-inline choice-template-scoring-section">',
+          '<div class="well" ng-show="fullModel.allowPartialScoring">',
+          '  <div class="score-row" ng-repeat="scenario in fullModel.partialScoring">',
+          '    <label>If</label> <div class="form-group"><input type="number" min="1" max="{{model.choices.length - 1}}" style="width: 70px" class="form-control" ng-model="scenario.numberOfCorrect"/></div> of correct answers selected, award',
+          '     <span class="form-group"><input type="number" min="1" max="99" style="width: 70px" class="form-control" ng-model="scenario.scorePercentage"/>% of full credit</span>',
+          '  </div>',
+          '  <div ng-click="addScoringScenario()" ng-show="fullModel.partialScoring.length < model.choices.length - 1">',
+          '   <i class="fa fa-plus-square-o"></i> Add another scenario',
+          '  </div>',
+          '</div>',
+          '</form>',
+
+          '<div>{{model.partialScoring}}</div>'
+
         ].join('\n');
       };
 
