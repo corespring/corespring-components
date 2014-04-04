@@ -102,7 +102,6 @@ module.exports = (grunt) ->
 
     grunt.config("testClient.specPath", "#{componentPath}/**/client/*-test.js")
 
-
     grunt.task.run("jasmine:unit")
 
     keepWrapped = !grunt.option("keepWrapped") == false
