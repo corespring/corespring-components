@@ -69,7 +69,7 @@ var main = [
             });
           }).filter(function(v) {
             return v;
-          });
+          }).value();
 
           var missing = _.difference(choices, ordered);
           return _.union(ordered, missing);
@@ -269,7 +269,6 @@ var main = [
       link: link,
       template: [
         '<div class="view-multiple-choice">',
-//        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
         '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
         '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
         '  <div ng-if="isTile()">' + tileTemplate + '</div>',
