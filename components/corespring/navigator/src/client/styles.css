@@ -58,3 +58,7 @@
     line-height: 1.5;
     border-radius: 3px;
 }
+
+.navigator .nav li.active a {
+    color: #94d228;
+}
