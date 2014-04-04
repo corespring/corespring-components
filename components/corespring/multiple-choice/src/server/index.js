@@ -125,7 +125,7 @@ var calculateScore = function(question, answer) {
 
   var calculatePartialScore = function(correctCount) {
     var partialScore = _.find(question.partialScoring, function(ps) {
-      return ps.numberOfCorrect == correctCount;
+      return ps.numberOfCorrect === correctCount;
     });
 
     return _.isUndefined(partialScore) ? 0 : partialScore.scorePercentage;
