@@ -5,10 +5,19 @@
 
 .choice-template-choice .choice-remove-button {
     position: absolute;
-    right: 4px;
-    top: 0px;
-    opacity: 0.5;
-    border: none;
+    right: 3px;
+    top: -8px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.choice-template-choice .choice-remove-button i {
+    font-size: 20px;
+    color: #76a720;
+}
+
+.choice-template-choice .choice-remove-button:hover i {
+    color: #466213;
 }
 
 .choice-template-choice .choice-checkbox {

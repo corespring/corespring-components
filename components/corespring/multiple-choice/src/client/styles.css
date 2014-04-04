@@ -186,14 +186,17 @@
 }
 
 
+
+/* Config Panel */
 .choice-config-panel {
-    padding-top: 20px;
+    padding-top: 30px;
 }
 
 .choice-config-panel .check-correct-label {
     position: absolute;
     right: 10px;
     top: 20px;
+    margin-bottom: 20px;
 }
 
 .score-table td {

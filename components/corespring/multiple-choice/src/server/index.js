@@ -1,5 +1,8 @@
 var _ = require('lodash');
 
+var DEFAULT_CORRECT_FEEDBACK = "Default Correct Feedback";
+var DEFAULT_INCORRECT_FEEDBACK = "Default Incorrect Feedback";
+var DEFAULT_NOT_CHOSEN_FEEDBACK = "Default Not Chosen Feedback";
 
 var feedbackByValue = function(q, v) {
   var originalFb = _.find(q.feedback, function(f) {
@@ -8,12 +11,12 @@ var feedbackByValue = function(q, v) {
   return _.cloneDeep(originalFb);
 };
 
-var handleDefaultAndNoneFeedback = function(fb) {
+var handleDefaultAndNoneFeedback = function(fb, isCorrect) {
   if (fb.feedbackType === 'default') {
-    fb.feedback = "Default Feedback";
+    fb.feedback = isCorrect ? DEFAULT_CORRECT_FEEDBACK : DEFAULT_INCORRECT_FEEDBACK;
   }
   if (fb.notChosenFeedbackType === 'default') {
-    fb.notChosenFeedback = "Default Not Chosen Feedback";
+    fb.notChosenFeedback = DEFAULT_NOT_CHOSEN_FEEDBACK;
   }
   if (fb.feedbackType === 'none') {
     delete fb.feedback;
@@ -42,7 +45,7 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
 
     fb = _.clone(fb);
 
-    handleDefaultAndNoneFeedback(fb);
+    handleDefaultAndNoneFeedback(fb, userGotItRight || _.indexOf(answer, correctKey) !== -1);
 
     if (userGotItRight) {
       delete fb.notChosenFeedback;
@@ -85,7 +88,7 @@ var userResponseFeedback = function(fbArray, q, answer) {
       if (fb.correct) {
         delete fb.notChosenFeedback;
       }
-      handleDefaultAndNoneFeedback(fb);
+      handleDefaultAndNoneFeedback(fb, fb.correct);
       _results.push(fbArray.push(fb));
     }
   }
@@ -109,8 +112,6 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
   }
   return out;
 };
-
-
 
 var calculateScore = function(question, answer) {
 

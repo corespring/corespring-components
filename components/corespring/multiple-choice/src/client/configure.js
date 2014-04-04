@@ -42,6 +42,7 @@ var main = [
             scope.correctMap = {};
             scope.scoreMapping = {};
             scope.model.scoringType = scope.model.scoringType || "standard";
+            scope.fullModel.partialScoring = scope.fullModel.partialScoring || [];
 
             _.each(model.scoreMapping, function(v, k) {
               scope.scoreMapping[k] = String(v);
