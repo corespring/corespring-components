@@ -1,6 +1,6 @@
-var shuffle = [
+var displayOptions = [
   '<div class="well">',
-  ' <input type="checkbox" ng-model="model.config.shuffle"></input> <label>Shuffle Distractors</label>',
+  ' <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Distractors</label>',
   ' <table> ',
   ' <tr> ',
   ' <td> Layout: ',
@@ -18,7 +18,7 @@ var main = [
 
     var choices = [
       '<div class="choice-config-panel">',
-      '  <div class="check-correct-label">Check correct answers!</div>',
+      '  <div class="check-correct-label">Select Correct Answer(s)</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
            ChoiceTemplates.choice(),
       '  </div>',
@@ -189,7 +189,7 @@ var main = [
         '      </div>',
         '    </div>',
         '    <div navigator-panel="Display">',
-               ChoiceTemplates.wrap(undefined, shuffle),
+               ChoiceTemplates.wrap(undefined, displayOptions),
         '    </div>',
         '  </div>',
         '</div>'

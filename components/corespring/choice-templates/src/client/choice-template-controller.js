@@ -1,9 +1,9 @@
 var def = [
   '$log',
-  function ($log) {
+  function($log) {
     return {
       scope: true,
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
         scope.imageUploadedToChoice = function(q) {
           q.imageName = scope.uploadingFilename;
           scope.$apply();
@@ -15,7 +15,27 @@ var def = [
         };
 
         scope.addScoringScenario = function() {
-          scope.fullModel.partialScoring.push({numberOfCorrect: 3, score: 1});
+          var maxNumberOfCorrect = 1;
+          _.each(scope.fullModel.partialScoring, function(ps) {
+            if (ps.numberOfCorrect > maxNumberOfCorrect) {
+              maxNumberOfCorrect = ps.numberOfCorrect;
+            }
+          });
+          scope.fullModel.partialScoring.push({numberOfCorrect: maxNumberOfCorrect + 1, scorePercentage: 20});
+        };
+
+        scope.removeScoringScenario = function(scoringScenario) {
+          scope.fullModel.partialScoring = _.filter(scope.fullModel.partialScoring, function(ps) {
+            return ps !== scoringScenario;
+          });
+        };
+
+        scope.validClass = function(scoringScenario) {
+          var sameScore = _.find(scope.fullModel.partialScoring, function(ps) {
+            return ps !== scoringScenario && ps.numberOfCorrect === scoringScenario.numberOfCorrect;
+          });
+
+          return sameScore ? "invalid" : "";
         };
 
       }

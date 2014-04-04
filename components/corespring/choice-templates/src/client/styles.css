@@ -4,9 +4,11 @@
 }
 
 .choice-template-choice .choice-remove-button {
-    position: relative;
-    left: -4px;
-    top: 18px;
+    position: absolute;
+    right: 4px;
+    top: 0px;
+    opacity: 0.5;
+    border: none;
 }
 
 .choice-template-choice .choice-checkbox {
@@ -25,7 +27,25 @@
 .choice-template-scoring-section .score-row {
     margin-top: 10px;
     margin-bottom: 10px;
+    position: relative;
 }
 .choice-template-scoring-section .score-row:hover {
-    background-color: #fee;
+    background-color: #eeeeff;
+}
+
+.choice-template-scoring-section .score-row .remove-button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: none;
+    background-color: rgb(245, 244, 253);
+}
+
+.choice-template-scoring-section .score-row:hover .remove-button {
+    display: block;
+}
+
+
+.choice-template-scoring-section .invalid {
+    background-color: #ffdcdc;
 }
