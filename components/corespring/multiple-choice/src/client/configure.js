@@ -157,6 +157,10 @@ var main = [
           scope.fullModel.feedback.push(scope.feedback[uid]);
         };
 
+        scope.isSingleChoice = function() {
+          return scope.correctMap.length === 1;
+        };
+
         scope.toChar = function(num) {
           return String.fromCharCode(65 + num);
         };
@@ -174,13 +178,15 @@ var main = [
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
-        '<div class="config-multiple-choice" file-uploader-host="">',
+        '<div class="config-multiple-choice" choice-template-controller="">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
                ChoiceTemplates.wrap(undefined, choices),
         '    </div>',
         '    <div navigator-panel="Scoring">',
-               ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
+        '      <div ng-hide="isSingleChoice()">',
+                 ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
+        '      </div>',
         '    </div>',
         '    <div navigator-panel="Display">',
                ChoiceTemplates.wrap(undefined, shuffle),

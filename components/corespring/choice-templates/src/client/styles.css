@@ -21,3 +21,11 @@
 .choice-template-choice .feedback-label {
     font-size: smaller;
 }
+
+.choice-template-scoring-section .score-row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.choice-template-scoring-section .score-row:hover {
+    background-color: #fee;
+}

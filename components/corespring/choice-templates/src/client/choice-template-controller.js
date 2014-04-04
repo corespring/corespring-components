@@ -4,7 +4,6 @@ var def = [
     return {
       scope: true,
       link: function (scope, elm, attr) {
-        console.log("Linking File Uploader Host");
         scope.imageUploadedToChoice = function(q) {
           q.imageName = scope.uploadingFilename;
           scope.$apply();
@@ -15,6 +14,10 @@ var def = [
           return file.name;
         };
 
+        scope.addScoringScenario = function() {
+          scope.fullModel.partialScoring.push({numberOfCorrect: 3, score: 1});
+        };
+
       }
     };
   }
@@ -23,6 +26,6 @@ var def = [
 
 exports.framework = "angular";
 exports.directive = {
-  name: "fileUploaderHost",
+  name: "choiceTemplateController",
   directive: def
 };

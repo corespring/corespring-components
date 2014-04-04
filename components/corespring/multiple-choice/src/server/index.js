@@ -110,6 +110,8 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
   return out;
 };
 
+
+
 var calculateScore = function(question, answer) {
 
   var countCorrectAnswers = function() {
@@ -121,7 +123,14 @@ var calculateScore = function(question, answer) {
     return sum;
   };
 
-  var rawScore, wrongAnswers;
+  var calculatePartialScore = function(correctCount) {
+    var partialScore = _.find(question.partialScoring, function(ps) {
+      return ps.numberOfCorrect == correctCount;
+    });
+
+    return _.isUndefined(partialScore) ? 0 : partialScore.scorePercentage;
+  };
+
   var maxCorrect = question.correctResponse.value.length;
   var correctCount = countCorrectAnswers();
 
@@ -131,9 +140,8 @@ var calculateScore = function(question, answer) {
 
   var incorrectCount = answer.length - correctCount;
   var finalIncorrect = correctCount - incorrectCount;
-
-  rawScore = finalIncorrect / maxCorrect;
-  return Math.round(rawScore * 100) / 100;
+  var rawScore = finalIncorrect / maxCorrect;
+  return question.allowPartialScoring ? (calculatePartialScore(correctCount) / 100) : Math.round(rawScore * 100) / 100;
 };
 
 

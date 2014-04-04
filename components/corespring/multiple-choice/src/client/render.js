@@ -180,8 +180,16 @@ var main = [
         return String.fromCharCode(65 + idx);
       };
 
+      scope.isVertical = function() {
+        return scope.question && scope.question.config && scope.question.config.orientation === 'vertical';
+      };
+
       scope.isHorizontal = function() {
         return scope.question && scope.question.config && scope.question.config.orientation === 'horizontal';
+      };
+
+      scope.isTile = function() {
+        return scope.question && scope.question.config && scope.question.config.orientation === 'tile';
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -230,6 +238,29 @@ var main = [
       '</div>'
     ].join("");
 
+    var tileTemplate = [
+      '<div class="choices-container" ng-class="question.config.orientation">',
+      '  <div ng-repeat="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
+      '    <div class="choice-wrapper">',
+      '      <label class="choice-letter">{{letter($index)}}.</label>',
+      '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+      '      <div class="choice-label" ng-switch="o.labelType">',
+      '        <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+      '        <span ng-switch-when="mathml" ng-bind-html-unsafe="o.mathml"></span>',
+      '        <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
+      '      </div>',
+      '      <div ng-switch="inputType">',
+      '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-model="answer.choices[o.value]" />',
+      '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice" />',
+      '      </div>',
+      '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
+      '        <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null"></span>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join("");
+
 
     def = {
       scope: {},
@@ -239,8 +270,9 @@ var main = [
       template: [
         '<div class="view-multiple-choice">',
 //        '  <label class="prompt" ng-bind-html-unsafe="question.prompt"></label>',
-        '  <div ng-if="!isHorizontal()">' + verticalTemplate + '</div>',
+        '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
         '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
+        '  <div ng-if="isTile()">' + tileTemplate + '</div>',
         '</div>'
       ].join("\n")
 
