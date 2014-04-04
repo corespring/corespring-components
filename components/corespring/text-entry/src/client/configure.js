@@ -31,10 +31,10 @@ var main = [
 
     function getFeedbackConfig(type) {
       return {
-        none: feedbackConfig.none,
-        default: feedbackConfig[type],
-        custom: feedbackConfig.custom
-      }
+        "none": feedbackConfig.none,
+        "default": feedbackConfig[type],
+        "custom": feedbackConfig.custom
+      };
     }
 
     function getCorrectResponseFeedbackModel() {
@@ -43,7 +43,7 @@ var main = [
         title: "Positive Feedback",
         headline: "If response is correct",
         config: getFeedbackConfig('positive')
-      }
+      };
     }
 
     function getPartialResponseFeedbackModel() {
@@ -126,7 +126,7 @@ var csFeedbackInput = [
         }
 
         scope.$watch('feedback.type', function (newType) {
-          initFeedbackForType(newType)
+          initFeedbackForType(newType);
         });
       }
     };
@@ -147,7 +147,7 @@ var csResponseInput = [
       link: function (scope, element, attrs) {
 
       }
-    }
+    };
   }
 ];
 
