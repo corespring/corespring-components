@@ -160,6 +160,7 @@ var main = [
         reset: function() {
           resetChoices();
           resetFeedback(scope.choices);
+          scope.response = undefined;
         },
         isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
