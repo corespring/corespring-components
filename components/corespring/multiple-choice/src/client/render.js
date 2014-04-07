@@ -114,7 +114,6 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          $log.debug("multiple-choice setDataAndSession", dataAndSession);
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
           updateUi();
@@ -132,8 +131,6 @@ var main = [
 
         // sets the server's response
         setResponse: function(response) {
-          console.log(scope.$id, "set response for multiple-choice", response);
-          console.log(scope.$id, "choices", scope.choices);
 
           resetFeedback(scope.choices);
 
