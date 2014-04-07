@@ -94,7 +94,7 @@ var csFeedbackInput = [
             readonly: true
           },
           partial: {
-            value: "Good try but the correct answer is <random selection from correct answers>",
+            value: "Good try, but the correct answer is <random selection from correct answers>",
             prompt: "",
             tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
             readonly: true
