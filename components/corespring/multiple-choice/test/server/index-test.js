@@ -227,7 +227,8 @@ describe('multiple-choice server logic', function() {
             value: "carrot",
             correct: true
           }
-        ]
+        ],
+        comments: undefined
       };
       response.should.eql(expected);
     });

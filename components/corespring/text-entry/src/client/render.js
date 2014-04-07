@@ -29,12 +29,14 @@ link = function() {
         console.log("Setting Response for text entry:");
         console.log(response);
 
+        scope.feedback = response.feedback;
         scope.correctClass = response.feedback.correctness;
       },
 
       setMode: function(newMode) {},
 
       reset: function() {
+        scope.feedback = undefined;
         scope.answer = undefined;
         scope.correctClass = undefined;
       },
@@ -66,19 +68,23 @@ link = function() {
 main = [
 
   function() {
-    var def;
-    def = {
+    return {
       scope: {},
       restrict: 'AE',
       replace: true,
       link: link(),
       template: [
         '<div class="view-text-entry">',
-        '<input type="text" ng-model="answer" ng-disabled="!editable" class="form-control text-input {{correctClass}}"/>',
-        '</div>'].join("\n")
+        '  <input type="text" ng-model="answer" ng-disabled="!editable"',
+        '         class="form-control text-input {{feedback.correctness}}"/>',
+        '',
+        '  <div class="choice-feedback-holder" ng-show="feedback != null">',
+        '    <span class="cs-feedback" ng-class="feedback.correctness" ng-show="feedback != null"></span>',
+        '     {{feedback.message}}',
+        '  </div>',
+        '</div>'
+      ].join("\n")
     };
-
-    return def;
   }
 ];
 

@@ -2,56 +2,15 @@ var main = [
   '$log',
   function ($log) {
 
-    var feedbackConfig = {
-      none: {
-        value: "",
-        prompt: "No feedback is given.",
-        tooltip: "Select 'Default' or 'Custom' to show feedback.",
-        readonly: true
-      },
-      positive: {
-        value: "Correct!",
-        prompt: "",
-        tooltip: "Select 'None' to disable or 'Custom' to show customized feedback.",
-        readonly: true
-      },
-      negative: {
-        value: "Try again!",
-        prompt: "",
-        tooltip: "Select 'None' to disable or 'Custom' to show customized feedback.",
-        readonly: true
-      },
-      custom: {
-        value: "",
-        prompt: "Enter custom feedback.",
-        tooltip: "Select 'None' to disable or 'Default' to show the default feedback.",
-        readonly: false
-      }
-    };
-
-    function getFeedbackConfig(type) {
+    function createCorrectResponseFeedbackModel() {
       return {
-        "none": feedbackConfig.none,
-        "default": feedbackConfig[type],
-        "custom": feedbackConfig.custom
+        type: "default"
       };
     }
 
-    function getCorrectResponseFeedbackModel() {
+    function createPartialResponseFeedbackModel() {
       return {
-        type: "default",
-        title: "Positive Feedback",
-        headline: "If response is correct",
-        config: getFeedbackConfig('positive')
-      };
-    }
-
-    function getPartialResponseFeedbackModel() {
-      return {
-        type: "default",
-        title: "Negative Feedback",
-        headline: "If response is incorrect or partially correct",
-        config: getFeedbackConfig('negative')
+        type: "default"
       };
     }
 
@@ -73,6 +32,9 @@ var main = [
 
         scope.itemId = attrs.id;
 
+        scope.correctResponsesPrompt = "Type all the possible correct answers here";
+        scope.partialResponsesPrompt = "Type all acceptable partially correct answers here";
+
         scope.containerBridge = {
           setModel: function (fullModel) {
             fullModel.correctResponses = fullModel.correctResponses ||
@@ -83,13 +45,13 @@ var main = [
             fullModel.model = fullModel.model || {};
             fullModel.model.config = fullModel.model.config || {};
 
-            fullModel.model.config.correctResponse = fullModel.model.config.correctResponse || {};
-            fullModel.model.config.correctResponse.feedback = fullModel.model.config.correctResponse.feedback ||
-              getCorrectResponseFeedbackModel();
+            fullModel.model.config.correctResponses = fullModel.model.config.correctResponses || {};
+            fullModel.model.config.correctResponses.feedback =
+              _.extend({}, createCorrectResponseFeedbackModel(), fullModel.model.config.correctResponses.feedback || {});
 
-            fullModel.model.config.partialResponse = fullModel.model.config.partialResponse || {};
-            fullModel.model.config.partialResponse.feedback = fullModel.model.config.partialResponse.feedback ||
-              getPartialResponseFeedbackModel();
+            fullModel.model.config.partialResponses = fullModel.model.config.partialResponses || {};
+            fullModel.model.config.partialResponses.feedback =
+              _.extend({}, createPartialResponseFeedbackModel(), fullModel.model.config.partialResponses.feedback || {});
 
             scope.fullModel = fullModel;
           },
@@ -110,24 +72,99 @@ var csFeedbackInput = [
 
     return {
       scope: {
-        feedback: '=model'
+        feedback: '=model',
+        type: '=type'
       },
       restrict: 'A',
       replace: true,
       templateUrl: "/client/libs/corespring/text-entry/templates/feedback-input.html",
       link: function (scope, element, attrs) {
 
-        function assignDefaults(destination, source) {
-          _.extend(destination, source);
+        var feedbackConfig = {
+          none: {
+            value: "",
+            prompt: "No information will be shown.",
+            tooltip: "Select 'Default' or 'Custom' to show feedback.",
+            readonly: true
+          },
+          correct: {
+            value: "Correct!",
+            prompt: "",
+            tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
+            readonly: true
+          },
+          partial: {
+            value: "Good try, but the correct answer is <random selection from correct answers>",
+            prompt: "",
+            tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
+            readonly: true
+          },
+          custom: {
+            value: "",
+            prompt: "Enter your customized feedback.",
+            tooltip: "Select 'No' to disable or 'Default' to show the default feedback.",
+            readonly: false
+          }
+        };
+
+        var feedbackInputConfig = {
+          correct : {
+            title: "Feedback",
+            headline: "If correct, show"
+          },
+          partial : {
+            title: "If incorrect",
+            headline: "If incorrect or partially correct, show"
+          }
+        };
+
+        function getFeedbackConfig(type) {
+          return {
+            "none": feedbackConfig.none,
+            "default": feedbackConfig[type],
+            "custom": feedbackConfig.custom
+          };
         }
 
-        function initFeedbackForType(newType) {
-          assignDefaults(scope.feedback, scope.feedback.config[newType]);
+        function getFeedbackTitle(type) {
+          return feedbackInputConfig.hasOwnProperty(type) ? feedbackInputConfig[type].title : "Unexpected type <" + type + ">";
         }
 
-        scope.$watch('feedback.type', function (newType) {
-          initFeedbackForType(newType);
+        function getFeedbackHeadline(type) {
+          return feedbackInputConfig.hasOwnProperty(type) ? feedbackInputConfig[type].headline : "Unexpected type <" + type + ">";
+        }
+
+        scope.config = getFeedbackConfig(attrs.type);
+        scope.title = getFeedbackTitle(attrs.type);
+        scope.headline = getFeedbackHeadline(attrs.type);
+
+        function initFeedbackForType(newType, oldType) {
+          //The initFeedbackForType function is called in two different situations
+          //1. When the feedback model is assigned during initialisation
+          //2. When the user changed the feedback type
+          //During initialisation we either get default values or values from db
+          //If the data comes from db and the feedback type is custom, we don't want to overwrite
+          //this value with the default value. That is why the value is reassigned here
+          //after the defaults have been set.
+          var valueToKeep = "";
+          if(newType === 'custom' && newType === oldType){
+            valueToKeep = scope.feedback.value;
+          }
+          _.extend(scope.feedback, scope.config[newType]);
+          if(valueToKeep){
+            scope.feedback.value = valueToKeep;
+          }
+        }
+
+        scope.$watch('feedback.type', function (newType, oldType) {
+          initFeedbackForType(newType, oldType);
         });
+
+        scope.navClosed = false;
+        scope.toggleNav = function() {
+          scope.navClosed = !scope.navClosed;
+        };
+
       }
     };
   }
@@ -139,7 +176,8 @@ var csResponseInput = [
 
     return {
       scope: {
-        response: '=model'
+        response: '=model',
+        prompt: '=prompt'
       },
       restrict: 'A',
       replace: true,

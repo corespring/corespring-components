@@ -23,7 +23,7 @@ exports.service = ['$log',
 
       this.choice = function(opts) {
         var defaults = {
-          correct: '<i class="fa fa-check fa-1 choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>'
+          correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>'
         };
 
         opts = _.extend(defaults, opts);
