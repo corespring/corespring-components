@@ -5,13 +5,13 @@
 
       <div class="section-header">Correct Answers</div>
       <div class="answers-holder">
-        <div cs-response-input model="fullModel.correctResponses"/>
+        <div cs-response-input model="fullModel.correctResponses" prompt="correctResponsesPrompt"/>
         <div cs-feedback-input model="fullModel.model.config.correctResponses.feedback" type="correct"/>
       </div>
 
       <div class="section-header">Partially Correct Answers</div>
       <div class="answers-holder">
-        <div cs-response-input model="fullModel.partialResponses"/>
+        <div cs-response-input model="fullModel.partialResponses" prompt="partialResponsesPrompt"/>
 
         <div class="award-config">Award
           <input class="number-input" type="number"

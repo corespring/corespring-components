@@ -1,6 +1,8 @@
 <div class="responses-input-holder">
   <input style="width:100%;" type="text" ng-model="response.values"
-         ui-select2="{tags:[],tokenSeparators:[','],simple_tags:true,multiple:true,dropdownCssClass:'responses-input-dropdown-noshow'}"/>
+         ui-select2="{tags:[],tokenSeparators:[','],simple_tags:true,multiple:true,dropdownCssClass:'responses-input-dropdown-noshow'}"
+         placeholder="{{prompt}}"
+    />
 
   <div class="pull-right">
     <label class="checkbox-inline">

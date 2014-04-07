@@ -32,7 +32,8 @@ var main = [
 
         scope.itemId = attrs.id;
 
-        scope.correctResponsesFeedbackConfig
+        scope.correctResponsesPrompt = "Type all the possible correct answers here";
+        scope.partialResponsesPrompt = "Type all acceptable partially correct answers here";
 
         scope.containerBridge = {
           setModel: function (fullModel) {
@@ -89,19 +90,19 @@ var csFeedbackInput = [
           correct: {
             value: "Correct!",
             prompt: "",
-            tooltip: "Select 'None' to disable or 'Custom' to show customized feedback.",
+            tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
             readonly: true
           },
           partial: {
             value: "Good try but the correct answer is <random selection from correct answers>",
             prompt: "",
-            tooltip: "Select 'None' to disable or 'Custom' to show customized feedback.",
+            tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
             readonly: true
           },
           custom: {
             value: "",
             prompt: "Enter your customized feedback.",
-            tooltip: "Select 'None' to disable or 'Default' to show the default feedback.",
+            tooltip: "Select 'No' to disable or 'Default' to show the default feedback.",
             readonly: false
           }
         };
@@ -109,11 +110,11 @@ var csFeedbackInput = [
         var feedbackInputConfig = {
           correct : {
             title: "Feedback",
-            headline: "If correct show"
+            headline: "If correct, show"
           },
           partial : {
             title: "If incorrect",
-            headline: "If incorrect or partially correct show"
+            headline: "If incorrect or partially correct, show"
           }
         };
 
@@ -169,7 +170,8 @@ var csResponseInput = [
 
     return {
       scope: {
-        response: '=model'
+        response: '=model',
+        prompt: '=prompt'
       },
       restrict: 'A',
       replace: true,
