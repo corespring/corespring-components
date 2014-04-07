@@ -185,6 +185,10 @@
     vertical-align: middle;
 }
 
+/* Comments block */
+.view-multiple-choice .comments-block {
+    margin-top: 10px;
+}
 
 
 /* Config Panel */
@@ -208,4 +212,8 @@
 .config-multiple-choice td {
     padding: 0px 10px 10px;
     vertical-align: bottom;
+}
+
+.config-multiple-choice .comments-block {
+
 }

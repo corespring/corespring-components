@@ -272,6 +272,7 @@ var main = [
         '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
         '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
         '  <div ng-if="isTile()">' + tileTemplate + '</div>',
+        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '</div>'
       ].join("\n")
 

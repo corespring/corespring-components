@@ -23,6 +23,11 @@ var main = [
            ChoiceTemplates.choice(),
       '  </div>',
       '  <button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
+      '  <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Comments (optional)</span></div>',
+      '  <div ng-show="commentOn">',
+      '    <textarea ng-model="fullModel.comments" class="form-control"></textarea>',
+      '  </div>',
+
       '</div>'
     ].join('\n');
 
