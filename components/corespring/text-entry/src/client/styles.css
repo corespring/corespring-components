@@ -33,6 +33,10 @@
   margin-bottom: 10px;
 }
 
+.feedback-input-holder .feedback-type-options-holder {
+  margin-bottom: 6px;
+}
+
 .config-text-entry .award-config{
   padding-bottom: 15px;
 }

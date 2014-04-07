@@ -6,7 +6,7 @@
       <div class="section-header">Correct Answers</div>
       <div class="answers-holder">
         <div cs-response-input model="fullModel.correctResponses"/>
-        <div cs-feedback-input model="fullModel.model.config.correctResponse.feedback"/>
+        <div cs-feedback-input model="fullModel.model.config.correctResponses.feedback" type="correct"/>
       </div>
 
       <div class="section-header">Partially Correct Answers</div>
@@ -18,7 +18,7 @@
                  ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit
         </div>
 
-        <div cs-feedback-input model="fullModel.model.config.partialResponse.feedback"/>
+        <div cs-feedback-input model="fullModel.model.config.partialResponses.feedback" type="partial"/>
       </div>
     </div>
   </div>
