@@ -159,6 +159,12 @@ var csFeedbackInput = [
         scope.$watch('feedback.type', function (newType, oldType) {
           initFeedbackForType(newType, oldType);
         });
+
+        scope.navClosed = false;
+        scope.toggleNav = function() {
+          scope.navClosed = !scope.navClosed;
+        };
+
       }
     };
   }
