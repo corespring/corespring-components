@@ -103,6 +103,10 @@ exports.service = ['$log',
       this.scoring = function() {
 
         return [
+          '<div class="scoring-header-text">',
+          'If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted. This is optional.',
+          '</div>',
+
           '<div>',
           '   <input id="partialScoring" type="checkbox" ng-model="fullModel.allowPartialScoring"></input> <label for="partialScoring">Allow partial scoring</label>',
           '</div>',
