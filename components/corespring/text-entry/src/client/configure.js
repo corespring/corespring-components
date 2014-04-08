@@ -108,25 +108,21 @@ var csFeedbackInput = [
           }
         };
 
-        function getFeedbackConfig(type) {
+        function getFeedbackConfig(correctness) {
           return {
             "none": feedbackConfig.none,
-            "default": feedbackConfig[type],
+            "default": feedbackConfig[correctness],
             "custom": feedbackConfig.custom
           };
         }
 
-        function getFeedbackTitle(type) {
-          return feedbackInputConfig.hasOwnProperty(type) ? feedbackInputConfig[type].title : "Unexpected type <" + type + ">";
+        function getFeedbackTitle(correctness) {
+          return feedbackInputConfig.hasOwnProperty(correctness) ? feedbackInputConfig[correctness].title : "Unexpected correctness <" + correctness + ">";
         }
 
-        function getFeedbackHeadline(type) {
-          return feedbackInputConfig.hasOwnProperty(type) ? feedbackInputConfig[type].headline : "Unexpected type <" + type + ">";
+        function getFeedbackHeadline(correctness) {
+          return feedbackInputConfig.hasOwnProperty(correctness) ? feedbackInputConfig[correctness].headline : "Unexpected correctness <" + correctness + ">";
         }
-
-        scope.config = getFeedbackConfig(attrs.type);
-        scope.title = getFeedbackTitle(attrs.type);
-        scope.headline = getFeedbackHeadline(attrs.type);
 
         function initFeedbackForType(newType, oldType) {
           //The initFeedbackForType function is called in two different situations
@@ -146,8 +142,21 @@ var csFeedbackInput = [
           }
         }
 
+        function initInputStyleForType(type){
+          if(type === 'none'){
+            scope.inputStyle = ""
+          } else {
+            scope.inputStyle = attrs.correctness
+          }
+        }
+
+        scope.config = getFeedbackConfig(attrs.correctness);
+        scope.title = getFeedbackTitle(attrs.correctness);
+        scope.headline = getFeedbackHeadline(attrs.correctness);
+
         scope.$watch('feedback.type', function (newType, oldType) {
           initFeedbackForType(newType, oldType);
+          initInputStyleForType(newType);
         });
 
         scope.navClosed = false;

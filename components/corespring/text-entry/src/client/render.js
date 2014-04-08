@@ -10,7 +10,6 @@ link = function() {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
         scope.answer = scope.session.answers;
-
       },
 
       getSession: function() {
@@ -19,7 +18,6 @@ link = function() {
         return {
           answers: answer,
           stash: scope.session.stash
-
         };
       },
 
@@ -36,8 +34,8 @@ link = function() {
       setMode: function(newMode) {},
 
       reset: function() {
-        scope.feedback = undefined;
         scope.answer = undefined;
+        scope.feedback = undefined;
         scope.correctClass = undefined;
         scope.response = undefined;
       },
