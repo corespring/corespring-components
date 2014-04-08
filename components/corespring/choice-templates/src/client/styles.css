@@ -33,11 +33,28 @@
     font-size: smaller;
 }
 
+.choice-template-choice .feedback-preview {
+    height: 36px;
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 6px 6px 36px;
+    background: #ffffff url("/assets/images/wrong-icon.png") no-repeat scroll 4px 6px;
+    border: 2px solid #F8A31A;
+    border-radius: 4px;
+    width: 80%;
+}
+
+.choice-template-choice .feedback-preview.correct {
+    background: #ffffff url("/assets/images/correct-icon.png") no-repeat scroll 4px 6px;
+    border: 2px solid #80b312;
+}
+
 .choice-template-scoring-section .score-row {
     margin-top: 10px;
     margin-bottom: 10px;
     position: relative;
 }
+
 .choice-template-scoring-section .score-row:hover {
     background-color: #eeeeff;
 }
@@ -54,7 +71,7 @@
     display: block;
 }
 
-
 .choice-template-scoring-section .invalid {
     background-color: #ffdcdc;
 }
+
