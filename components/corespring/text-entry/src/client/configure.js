@@ -148,7 +148,7 @@ var csFeedbackInput = [
 
         function replaceVariablesInDefaultFeedback(){
           if(scope.feedback.type === 'default') {
-            scope.feedback.value = replaceVariables(scope.config.default.value);
+            scope.feedback.value = replaceVariables(scope.config['default'].value);
           }
         }
 
