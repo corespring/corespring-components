@@ -5,6 +5,13 @@
   "correctResponse": {
     "value": []
   },
+
+  "allowPartialScoring": false,
+
+  "partialScoring" : [
+    {"numberOfCorrect": 1, "scorePercentage": 25}
+  ],
+
   "feedback": [
     {
       "isDefault": "true",
