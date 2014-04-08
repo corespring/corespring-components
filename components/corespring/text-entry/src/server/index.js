@@ -37,17 +37,17 @@ exports.respond = function (question, answer, settings) {
 
   function createFeedbackMessage(question, response){
     var result = "";
-    if(response.correctness == "correct"){
-      result = replaceVariables(question.model.config.correctResponses.feedback.value, question)
-    } else if(response.correctness == "incorrect"){
-      result = replaceVariables(question.model.config.partialResponses.feedback.value, question)
+    if(response.correctness === "correct"){
+      result = replaceVariables(question.model.config.correctResponses.feedback.value, question);
+    } else if(response.correctness === "incorrect"){
+      result = replaceVariables(question.model.config.partialResponses.feedback.value, question);
     }
     return result;
   }
 
   function replaceVariables(template, question){
     return template
-      .replace("\<random selection from correct answers\>", randomCorrectAnswer(question))
+      .replace("<random selection from correct answers>", randomCorrectAnswer(question));
   }
 
   function randomCorrectAnswer(question){

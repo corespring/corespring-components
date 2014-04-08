@@ -13,6 +13,7 @@
     "require" : true,
     "describe" : true,
     "it" : true,
+    "xit" : true,
     "expect" : true,
     "angular" : true,
     "beforeEach" : true,
