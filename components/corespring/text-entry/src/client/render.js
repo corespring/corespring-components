@@ -30,6 +30,7 @@ link = function() {
 
         scope.feedback = response.feedback;
         scope.correctClass = response.feedback.correctness;
+        scope.comments = response.comments;
       },
 
       setMode: function(newMode) {},
@@ -38,6 +39,7 @@ link = function() {
         scope.feedback = undefined;
         scope.answer = undefined;
         scope.correctClass = undefined;
+        scope.response = undefined;
       },
 
       isAnswerEmpty: function() {
@@ -80,7 +82,7 @@ main = [
         '    <span class="cs-feedback" ng-class="feedback.correctness" ng-show="feedback != null"></span>',
         '     {{feedback.message}}',
         '  </div>',
-        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
+        '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
         '</div>'
       ].join("\n")
     };
