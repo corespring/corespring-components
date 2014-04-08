@@ -68,7 +68,7 @@ describe('text entry server logic', function() {
     }
   };
 
-  it('should respond with correct and score 1 if the answer is correct', function() {
+  xit('should respond with correct and score 1 if the answer is correct', function() {
     response = server.respond(_.cloneDeep(component), "carrot", settings(false, true, true));
     expected = {
       correctness: "correct",
@@ -78,7 +78,7 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  it('should respond with correct and score 1 if the answer is correct and whitespace/case are ignored', function() {
+  xit('should respond with correct and score 1 if the answer is correct and whitespace/case are ignored', function() {
     var component2 = _.cloneDeep(component);
     component2.correctResponse.ignoreWhitespace = true;
     component2.correctResponse.ignoreCase = true;
@@ -91,7 +91,7 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  it('should respond with correct and score 0.25 if the answer is among partially correct ones', function() {
+  xit('should respond with correct and score 0.25 if the answer is among partially correct ones', function() {
     response = server.respond(_.cloneDeep(component), "lemon", settings(false, true, true));
     expected = {
       correctness: "correct",
@@ -101,7 +101,7 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  it('should respond with incorrect and score 0 if the answer is incorrect', function() {
+  xit('should respond with incorrect and score 0 if the answer is incorrect', function() {
     response = server.respond(_.cloneDeep(component), "salami", settings(false, true, true));
     expected = {
       correctness: "incorrect",
