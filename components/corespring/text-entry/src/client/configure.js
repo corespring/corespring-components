@@ -74,13 +74,13 @@ var csFeedbackInput = [
             readonly: true
           },
           partial: {
-            value: "Partially correct!",
+            value: "Very good, but an even better answer would have been <random selection from correct answers>.",
             prompt: "",
             tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
             readonly: true
           },
           incorrect: {
-            value: "Good try, but the correct answer is <random selection from correct answers>",
+            value: "Good try, but the correct answer is <random selection from correct answers>.",
             prompt: "",
             tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
             readonly: true
@@ -99,7 +99,7 @@ var csFeedbackInput = [
             headline: "If correct, show"
           },
           partial : {
-            title: "If partially correct",
+            title: "Feedback",
             headline: "If submitted answer is partially correct, show"
           },
           incorrect : {
@@ -179,7 +179,6 @@ var csFeedbackInput = [
         scope.$watch('correctResponses.values.length', function () {
           replaceVariablesInDefaultFeedback();
         });
-
 
         scope.navClosed = false;
         scope.toggleNav = function() {
