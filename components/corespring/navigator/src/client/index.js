@@ -109,7 +109,7 @@ var main = ['$log', '$timeout',
         '  <div class="navigator-container">',
         '    <div class="navigator-left-panel">',
         '      <ul class="nav nav-stacked" >',
-        '        <li ng-repeat="panel in panels" ng-class="{ active: panel.selected()}">',
+        '        <li ng-repeat="panel in panels" ng-class="{ active: panel.selected()}" ng-show="panel.visible()">',
         '          <a href="" ng-class="{active: panel.selected()}" ng-click="selectPanel(panel, $event)">{{panel.title}}</a>',
         '        </li>',
         '      </ul>',
@@ -123,10 +123,23 @@ var main = ['$log', '$timeout',
   }
 ];
 
-var navigatorPanel = ['$log',
-  function($log) {
+var navigatorPanel = ['$log','$parse',
+  function($log,$parse) {
 
     var link = function(scope, element, attrs, container) {
+
+      scope.visible = true;
+
+      attrs.$observe('ngHide', function (expr) {
+        scope.$watch(function () {
+          return $parse(expr)(scope);
+        }, function (value) {
+          if (value !== undefined) {
+            scope.visible = !value;
+          }
+        });
+      });
+
       var tab = {
         title: attrs.navigatorPanel,
 
@@ -137,7 +150,12 @@ var navigatorPanel = ['$log',
           }
           //treat it as a setter
           scope.selected = newVal;
+        },
+
+        visible: function() {
+          return scope.visible;
         }
+
       };
 
       container.addPanel(tab);
