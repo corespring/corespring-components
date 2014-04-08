@@ -5,7 +5,7 @@
 
 .choice-template-choice .choice-remove-button {
     position: absolute;
-    right: -7px;
+    right: 3px;
     top: -8px;
     cursor: pointer;
     cursor: hand;
@@ -47,6 +47,10 @@
 .choice-template-choice .feedback-preview.correct {
     background: #ffffff url("/assets/images/correct-icon.png") no-repeat scroll 4px 6px;
     border: 2px solid #80b312;
+}
+
+.choice-template-scoring-section .scoring-well {
+    min-width: 515px;
 }
 
 .choice-template-scoring-section .score-row {
