@@ -141,9 +141,13 @@ var main = [
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
         scope.removeQuestion = function(q) {
+
+          scope.correctMap[q.value] = false;
+
           scope.model.choices = _.filter(scope.model.choices, function(cq) {
             return cq !== q;
           });
+
           scope.fullModel.feedback = _.filter(scope.fullModel.feedback, function(fb) {
             return fb.value !== q.value;
           });
@@ -169,7 +173,9 @@ var main = [
         };
 
         scope.isSingleChoice = function() {
-          return scope.correctMap.length === 1;
+          return (_(scope.correctMap).keys().filter(function(ck) {
+            return scope.correctMap[ck];
+          }).size() <= 1);
         };
 
         scope.toChar = function(num) {
@@ -194,7 +200,7 @@ var main = [
         '    <div navigator-panel="Design">',
                ChoiceTemplates.wrap(undefined, choices),
         '    </div>',
-        '    <div navigator-panel="Scoring">',
+        '    <div navigator-panel="Scoring" ng-hide="{{isSingleChoice()}}">',
         '      <div ng-hide="isSingleChoice()">',
                  ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
         '      </div>',
