@@ -21,9 +21,9 @@
                        ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit for a partially correct answer
               </div>
 
-              <div cs-feedback-input model="fullModel.partialResponses.feedback" correctness="partial"/>
+              <div cs-feedback-input model="fullModel.partialResponses.feedback" correctness="partial" correct-responses="fullModel.correctResponses"/>
             </div>
-            <div cs-feedback-input model="fullModel.incorrectResponses.feedback" correctness="incorrect"/>
+            <div cs-feedback-input model="fullModel.incorrectResponses.feedback" correctness="incorrect" correct-responses="fullModel.correctResponses"/>
             <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i
               class="fa fa-{{commentOn ? 'minus' : 'plus'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>
             </div>

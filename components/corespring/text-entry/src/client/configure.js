@@ -53,7 +53,7 @@ var csFeedbackInput = [
     return {
       scope: {
         feedback: '=model',
-        type: '=type'
+        correctResponses: '=correctResponses'
       },
       restrict: 'A',
       replace: true,
@@ -143,12 +143,28 @@ var csFeedbackInput = [
         }
 
         function initInputStyleForType(type){
-          if(type === 'none'){
-            scope.inputStyle = ""
-          } else {
-            scope.inputStyle = attrs.correctness
+          scope.inputStyle = type === 'none' ? "" : attrs.correctness;
+        }
+
+        function replaceVariablesInDefaultFeedback(){
+          if(scope.feedback.type === 'default') {
+            scope.feedback.value = replaceVariables(scope.config.default.value);
           }
         }
+
+        function replaceVariables(template) {
+          var correctAnswer = randomCorrectAnswer();
+          if(correctAnswer){
+            template = template.replace("<random selection from correct answers>", correctAnswer);
+          }
+          return template;
+        }
+
+        function randomCorrectAnswer() {
+          var result = scope.correctResponses ? _.sample(scope.correctResponses.values) : "";
+          return result;
+        }
+
 
         scope.config = getFeedbackConfig(attrs.correctness);
         scope.title = getFeedbackTitle(attrs.correctness);
@@ -157,7 +173,13 @@ var csFeedbackInput = [
         scope.$watch('feedback.type', function (newType, oldType) {
           initFeedbackForType(newType, oldType);
           initInputStyleForType(newType);
+          replaceVariablesInDefaultFeedback();
         });
+
+        scope.$watch('correctResponses.values.length', function () {
+          replaceVariablesInDefaultFeedback();
+        });
+
 
         scope.navClosed = false;
         scope.toggleNav = function() {
