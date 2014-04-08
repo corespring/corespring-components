@@ -2,24 +2,13 @@ var main = [
   '$log',
   function ($log) {
 
-    function createCorrectResponseFeedbackModel() {
+    function createResponsesModel(award) {
       return {
-        type: "default"
-      };
-    }
-
-    function createPartialResponseFeedbackModel() {
-      return {
-        type: "default"
-      };
-    }
-
-    function createResponsesModel(responses, award) {
-      return {
-        values: responses.split(","),
+        values: [],
         award: award,
-        ignoreCase: true,
-        ignoreWhitespace: true
+        ignoreCase: false,
+        ignoreWhitespace: false,
+        feedback: {type: "default"}
       };
     }
 
@@ -38,27 +27,18 @@ var main = [
         scope.containerBridge = {
           setModel: function (fullModel) {
             fullModel.correctResponses = fullModel.correctResponses ||
-              createResponsesModel("A,B,C", 100);
+              createResponsesModel(100);
             fullModel.partialResponses = fullModel.partialResponses ||
-              createResponsesModel("D,E,F", 25);
-
-            fullModel.model = fullModel.model || {};
-            fullModel.model.config = fullModel.model.config || {};
-
-            fullModel.model.config.correctResponses = fullModel.model.config.correctResponses || {};
-            fullModel.model.config.correctResponses.feedback =
-              _.extend({}, createCorrectResponseFeedbackModel(), fullModel.model.config.correctResponses.feedback || {});
-
-            fullModel.model.config.partialResponses = fullModel.model.config.partialResponses || {};
-            fullModel.model.config.partialResponses.feedback =
-              _.extend({}, createPartialResponseFeedbackModel(), fullModel.model.config.partialResponses.feedback || {});
-
+              createResponsesModel(25);
+            fullModel.incorrectResponses = fullModel.incorrectResponses ||
+              createResponsesModel(0);
             scope.fullModel = fullModel;
           },
 
           getModel: function () {
             return scope.fullModel;
           }
+
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
@@ -83,7 +63,7 @@ var csFeedbackInput = [
         var feedbackConfig = {
           none: {
             value: "",
-            prompt: "No information will be shown.",
+            prompt: "No feedback will be presented to the student.",
             tooltip: "Select 'Default' or 'Custom' to show feedback.",
             readonly: true
           },
@@ -94,6 +74,12 @@ var csFeedbackInput = [
             readonly: true
           },
           partial: {
+            value: "Partially correct!",
+            prompt: "",
+            tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
+            readonly: true
+          },
+          incorrect: {
             value: "Good try, but the correct answer is <random selection from correct answers>",
             prompt: "",
             tooltip: "Select 'No' to disable or 'Custom' to show customized feedback.",
@@ -101,7 +87,7 @@ var csFeedbackInput = [
           },
           custom: {
             value: "",
-            prompt: "Enter your customized feedback.",
+            prompt: "Enter customized feedback to present to student.",
             tooltip: "Select 'No' to disable or 'Default' to show the default feedback.",
             readonly: false
           }
@@ -113,8 +99,12 @@ var csFeedbackInput = [
             headline: "If correct, show"
           },
           partial : {
+            title: "If partially correct",
+            headline: "If submitted answer is partially correct, show"
+          },
+          incorrect : {
             title: "If incorrect",
-            headline: "If incorrect or partially correct, show"
+            headline: "If submitted answer is incorrect, show"
           }
         };
 
@@ -141,7 +131,7 @@ var csFeedbackInput = [
         function initFeedbackForType(newType, oldType) {
           //The initFeedbackForType function is called in two different situations
           //1. When the feedback model is assigned during initialisation
-          //2. When the user changed the feedback type
+          //2. When the user changes the feedback type by clicking one of the radio buttons
           //During initialisation we either get default values or values from db
           //If the data comes from db and the feedback type is custom, we don't want to overwrite
           //this value with the default value. That is why the value is reassigned here

@@ -9,7 +9,6 @@ link = function() {
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
-
         scope.answer = scope.session.answers;
 
       },
@@ -57,7 +56,6 @@ link = function() {
         scope.editable = e;
       }
 
-
     };
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -82,6 +80,7 @@ main = [
         '    <span class="cs-feedback" ng-class="feedback.correctness" ng-show="feedback != null"></span>',
         '     {{feedback.message}}',
         '  </div>',
+        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '</div>'
       ].join("\n")
     };

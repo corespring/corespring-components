@@ -9,7 +9,7 @@
             <div class="section-header">Correct Answers</div>
             <div class="answers-holder">
               <div cs-response-input model="fullModel.correctResponses" prompt="correctResponsesPrompt"/>
-              <div cs-feedback-input model="fullModel.model.config.correctResponses.feedback" type="correct"/>
+              <div cs-feedback-input model="fullModel.correctResponses.feedback" type="correct"/>
             </div>
 
             <div class="section-header">Partially Correct Answers</div>
@@ -18,10 +18,18 @@
 
               <div class="award-config">Award
                 <input class="number-input" type="number"
-                       ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit
+                       ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit for a partially correct answer
               </div>
 
-              <div cs-feedback-input model="fullModel.model.config.partialResponses.feedback" type="partial"/>
+              <div cs-feedback-input model="fullModel.partialResponses.feedback" type="partial"/>
+            </div>
+            <div cs-feedback-input model="fullModel.incorrectResponses.feedback" type="incorrect"/>
+            <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i
+              class="fa fa-{{commentOn ? 'minus' : 'plus'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>
+            </div>
+            <div ng-show="commentOn">
+              <textarea ng-model="fullModel.comments" class="form-control"
+                        placeholder="Use this space to provide summary level feedback for this interaction."></textarea>
             </div>
           </div>
         </div>

@@ -27,30 +27,34 @@ exports.isCorrect = function (answer, responses) {
 exports.respond = function (question, answer, settings) {
   var response;
 
-  function createResponse(correctness, score) {
+  function createResponse(correctness, score, comments) {
     return {
       correctness: correctness,
       score: score / 100,
-      feedback: {}
+      feedback: {},
+      comments: comments
     };
   }
 
-  function createFeedbackMessage(question, response){
-    var result = "";
-    if(response.correctness === "correct"){
-      result = replaceVariables(question.model.config.correctResponses.feedback.value, question);
-    } else if(response.correctness === "incorrect"){
-      result = replaceVariables(question.model.config.partialResponses.feedback.value, question);
+  function createFeedbackMessage(question, response) {
+    var feedbackTemplate = "";
+    if (response.correctness === "correct") {
+      feedbackTemplate = question.correctResponses.feedback.value;
+    } else if (response.correctness === "partial") {
+      feedbackTemplate = question.partialResponses.feedback.value;
+    } else if (response.correctness === "incorrect") {
+      feedbackTemplate = question.incorrectResponses.feedback.value;
     }
+    var result = replaceVariables(feedbackTemplate, question);
     return result;
   }
 
-  function replaceVariables(template, question){
+  function replaceVariables(template, question) {
     return template
       .replace("<random selection from correct answers>", randomCorrectAnswer(question));
   }
 
-  function randomCorrectAnswer(question){
+  function randomCorrectAnswer(question) {
     var result = _.sample(question.correctResponses.values);
     return result;
   }
@@ -60,11 +64,11 @@ exports.respond = function (question, answer, settings) {
   }
 
   if (exports.isCorrect(answer, question.correctResponses)) {
-    response = createResponse("correct", question.correctResponses.award);
+    response = createResponse("correct", question.correctResponses.award, question.comments);
   } else if (exports.isCorrect(answer, question.partialResponses)) {
-    response = createResponse("incorrect", question.partialResponses.award);
+    response = createResponse("partial", question.partialResponses.award, question.comments);
   } else {
-    response = createResponse("incorrect", 0);
+    response = createResponse("incorrect", 0, question.comments);
   }
 
   if (settings.showFeedback) {

@@ -60,15 +60,15 @@ describe('text entry server logic', function() {
   var expected, response;
   var component = {
     componentType: "corespring-text-entry",
-    correctResponse: {values:["carrot", "apple"], award: 100, ignoreWhitespace: false, ignoreCase: false},
-    partialResponse: {values:["lemon", "orange"], award: 25, ignoreWhitespace: false, ignoreCase: false},
+    correctResponses: {values:["carrot", "apple"], award: 100, ignoreWhitespace: false, ignoreCase: false},
+    partialResponses: {values:["lemon", "orange"], award: 25, ignoreWhitespace: false, ignoreCase: false},
     model: {
       config: {
       }
     }
   };
 
-  xit('should respond with correct and score 1 if the answer is correct', function() {
+  it('should respond with correct and score 1 if the answer is correct', function() {
     response = server.respond(_.cloneDeep(component), "carrot", settings(false, true, true));
     expected = {
       correctness: "correct",
@@ -78,10 +78,10 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  xit('should respond with correct and score 1 if the answer is correct and whitespace/case are ignored', function() {
+  it('should respond with correct and score 1 if the answer is correct and whitespace/case are ignored', function() {
     var component2 = _.cloneDeep(component);
-    component2.correctResponse.ignoreWhitespace = true;
-    component2.correctResponse.ignoreCase = true;
+    component2.correctResponses.ignoreWhitespace = true;
+    component2.correctResponses.ignoreCase = true;
     response = server.respond(component2, "caR Rot", settings(false, true, true));
     expected = {
       correctness: "correct",
@@ -91,17 +91,17 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  xit('should respond with correct and score 0.25 if the answer is among partially correct ones', function() {
+  it('should respond with incorrect and score 0.25 if the answer is among partially correct ones', function() {
     response = server.respond(_.cloneDeep(component), "lemon", settings(false, true, true));
     expected = {
-      correctness: "correct",
+      correctness: "partial",
       score: 0.25
     };
     response.correctness.should.eql(expected.correctness);
     response.score.should.eql(expected.score);
   });
 
-  xit('should respond with incorrect and score 0 if the answer is incorrect', function() {
+  it('should respond with incorrect and score 0 if the answer is incorrect', function() {
     response = server.respond(_.cloneDeep(component), "salami", settings(false, true, true));
     expected = {
       correctness: "incorrect",
