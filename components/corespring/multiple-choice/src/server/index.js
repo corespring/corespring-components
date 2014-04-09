@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var DEFAULT_CORRECT_FEEDBACK = "Correct!";
 var DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer";
-var DEFAULT_NOT_CHOSEN_FEEDBACK = "Default Not Chosen Feedback";
+var DEFAULT_NOT_CHOSEN_FEEDBACK = "This answer is correct";
 
 var feedbackByValue = function(q, v) {
   var originalFb = _.find(q.feedback, function(f) {
