@@ -1,29 +1,33 @@
 <div>
   <div navigator="">
     <div navigator-panel="Design">
-      <div class="config-text-entry">
+      <div class="cs-text-entry-cfg">
         <div class="input-holder">
           <div class="main-header">Configure Text Entry: {{itemId}}</div>
           <div class="body">
 
             <div class="section-header">Correct Answers</div>
-            <div class="answers-holder">
+            <div class="cs-text-entry-cfg__answers-holder">
               <div cs-response-input model="fullModel.correctResponses" prompt="correctResponsesPrompt"/>
-              <div cs-feedback-input model="fullModel.correctResponses.feedback" correctness="correct"/>
             </div>
 
             <div class="section-header">Partially Correct Answers (optional)</div>
-            <div class="answers-holder">
+            <div class="cs-text-entry-cfg__answers-holder">
               <div cs-response-input model="fullModel.partialResponses" prompt="partialResponsesPrompt"/>
 
-              <div class="award-config">Award
-                <input class="number-input" type="number"
+              <div class="cs-text-entry-cfg__award-config">Award
+                <input class="cs-text-entry-cfg__number-input" type="number"
                        ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit for a partially correct answer
               </div>
-
-              <div cs-feedback-input model="fullModel.partialResponses.feedback" correctness="partial" correct-responses="fullModel.correctResponses"/>
             </div>
-            <div cs-feedback-input model="fullModel.incorrectResponses.feedback" correctness="incorrect" correct-responses="fullModel.correctResponses"/>
+            <div ng-click="feedbackOn = !feedbackOn" style="margin-top: 10px"><i
+              class="fa fa-{{feedbackOn ? 'minus' : 'plus'}}-square-o"></i><span style="margin-left: 3px">Feedback</span>
+            </div>
+            <div ng-show="feedbackOn">
+              <div cs-feedback-input model="fullModel.correctResponses.feedback" correctness="correct"/>
+              <div cs-feedback-input model="fullModel.partialResponses.feedback" correctness="partial" correct-responses="fullModel.correctResponses"/>
+              <div cs-feedback-input model="fullModel.incorrectResponses.feedback" correctness="incorrect" correct-responses="fullModel.correctResponses"/>
+            </div>
             <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i
               class="fa fa-{{commentOn ? 'minus' : 'plus'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>
             </div>

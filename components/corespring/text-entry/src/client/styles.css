@@ -1,107 +1,99 @@
-.view-text-entry {
+.cs-text-entry {
   display: inline-block;
   margin: 0 8px 0 3px;
 }
 
-.view-text-entry .text-input {
+.cs-text-entry__text-input {
   width: auto;
   margin-bottom: 10px;
 }
 
-.view-text-entry .correct .partial {
+.cs-text-entry__text-input-holder .correct {
   border-color: #53C516;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 4px rgba(161, 225, 23, 0.8);
-  outline: 0px none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 4px rgba(161, 225, 23, 0.8);
+  outline: 0 none;
 }
 
-.view-text-entry .incorrect {
+.cs-text-entry__text-input-holder .partial {
+  border-color: #53C516;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 4px rgba(161, 225, 23, 0.8);
+  outline: 0 none;
+}
+
+.cs-text-entry__text-input-holder .incorrect {
   border-color: #F8A31A;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 4px rgba(248, 163, 26, 0.8);
-  outline: 0px none;
+  outline: 0 none;
 }
 
-.view-text-entry .choice-feedback-holder {
+.cs-text-entry__feedback-holder {
   height: 40px;
   padding-top: 8px;
-  padding-left: 0px;
+  padding-left: 0;
   position: relative;
 }
 
-.view-text-entry .cs-feedback {
-  border: none;
-  box-shadow: none;
+.cs-text-entry__feedback {
   margin-top: 5px;
   padding-bottom: 30px;
   padding-left: 30px;
 }
 
-.view-text-entry .incorrect.cs-feedback {
+.cs-text-entry__feedback.incorrect {
   background: url("/assets/images/wrong-icon.png") no-repeat scroll 0px -0px transparent;
 }
 
-.view-text-entry .correct.cs-feedback {
+.cs-text-entry__feedback.correct {
   background: url("/assets/images/correct-icon.png") no-repeat scroll 0px -0px transparent;
 }
 
-.view-text-entry .partial.cs-feedback {
+.cs-text-entry__feedback.partial {
   background: url("/assets/images/correct-icon.png") no-repeat scroll 0px -0px transparent;
 }
 
 /* Config Panel */
-.config-text-entry .well {
+.cs-text-entry-cfg .well {
   padding: 8px;
 }
 
-.config-text-entry .feedback-input-holder.open {
-
+.cs-text-entry-cfg .main-header {
+  padding: 10px 10px 0px 10px;
 }
 
-.config-text-entry .feedback-input-holder.closed {
-  margin-bottom: 10px;
-}
-
-.feedback-input-holder .feedback-type-options-holder {
+.cs-text-entry-cfg__feedback-type-options {
   margin-bottom: 6px;
 }
 
-.feedback-input-holder .text-input.correct {
+.cs-text-entry-cfg__feedback-text-input.correct {
   padding-left: 40px;
   background: url("/assets/images/correct-icon.png") no-repeat scroll 5px 5px transparent;
 }
 
-.feedback-input-holder .text-input.partial {
+.cs-text-entry-cfg__feedback-text-input.partial {
   padding-left: 40px;
   background: url("/assets/images/correct-icon.png") no-repeat scroll 5px 5px transparent;
 }
 
-.feedback-input-holder .text-input.incorrect {
+.cs-text-entry-cfg__feedback-text-input.incorrect {
   padding-left: 40px;
   background: url("/assets/images/wrong-icon.png") no-repeat scroll 5px 5px transparent;
 }
 
-.config-text-entry .award-config {
+.cs-text-entry-cfg__award-config {
   padding-bottom: 15px;
 }
 
-.config-text-entry .main-header {
-  padding: 10px 10px 0px 10px;
-}
-
-.config-text-entry .number-input {
+.cs-text-entry-cfg__number-input {
   width: 60px;
   text-align: right;
   padding-right: 10px;
 }
 
-.config-text-entry .correct-holder {
-  padding-bottom: 10px;
-}
-
-.config-text-entry .partially-correct-holder {
+.cs-text-entry-cfg__answers-holder {
   padding-bottom: 10px;
 }
 
 /* suppress the dropdown of the answer inputs which are select2 components */
-.responses-input-dropdown-noshow {
+.cs-text-entry-cfg__responses-input--dropdown-noshow {
   display: none !important;
 }
