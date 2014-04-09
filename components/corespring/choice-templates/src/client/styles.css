@@ -5,7 +5,7 @@
 
 .choice-template-choice .choice-remove-button {
     position: absolute;
-    right: 3px;
+    right: -7px;
     top: -8px;
     cursor: pointer;
     cursor: hand;
