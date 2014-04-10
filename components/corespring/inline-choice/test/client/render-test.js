@@ -16,16 +16,16 @@ describe('corespring', function() {
           {
             "label": "1",
             "value": "1"
-        },
+          },
           {
             "label": "2",
             "value": "2"
-        },
+          },
           {
             "label": "3",
             "value": "3"
-        }
-      ],
+          }
+        ],
         "config": {
           "orientation": "vertical",
           "shuffle": true,
@@ -43,6 +43,7 @@ describe('corespring', function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
     });
+
   });
 
   beforeEach(inject(function($compile, $rootScope) {
@@ -76,8 +77,30 @@ describe('corespring', function() {
         label: '1',
         value: '1'
       });
-
     });
+
+    it('setting response shows correctness', function() {
+      testModel.session = {answers: "1"};
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+
+      var response = {
+        "correctness": "incorrect",
+        "score": 0,
+        "feedback": {
+          "1": {
+            correct: false,
+            feedback: "cccc"
+          }
+        }
+      };
+      container.elements['1'].setResponse(response);
+      rootScope.$digest();
+      var wrapper = $("<div/>");
+      wrapper.append($(element));
+      expect(wrapper.find(".incorrect").length).toBe(1);
+    });
+
   });
 
 });

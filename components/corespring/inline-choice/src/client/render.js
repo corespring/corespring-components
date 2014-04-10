@@ -30,6 +30,7 @@ link = function($sce, $timeout) {
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
+        console.log("Inline Choice setDataAndSession: ", dataAndSession);
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
@@ -53,6 +54,8 @@ link = function($sce, $timeout) {
 
           scope.select(selectedChoice);
         }
+
+        scope.$emit('rerender-math', 100);
 
       },
 
@@ -80,7 +83,8 @@ link = function($sce, $timeout) {
         scope.response = response;
       },
 
-      setMode: function(newMode) {},
+      setMode: function(newMode) {
+      },
 
       reset: function() {
         scope.selected = undefined;
@@ -128,23 +132,24 @@ main = [
       template: [
         '<div class="view-inline-choice" ng-class="{true:\'correct\', false:\'incorrect\'}[selected.correct]">',
         '<div class="dropdown" >',
-          '<span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
-          '  <span ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
-          '</span>',
-          '<span ng-show="selected.feedback" class="feedback">&nbsp;',
+        '<span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
+        '  <span ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
+        '</span>',
+        '<span ng-show="selected.feedback" class="feedback">&nbsp;',
         '  <div class="tooltip">',
         '  <div class="tooltip-inner" ng-bind-html-unsafe="selected.feedback">',
         '  </div>',
         '  <span class="caret"></span>',
         '  </div>',
         '</span>',
-          '<ul class="dropdown-menu">',
-            '<li ng-repeat="choice in choices">',
-              '<a ng-click="select(choice)" ng-bind-html-unsafe="choice.label"></a>',
-            '</li>',
-          '</ul>',
+        '<ul class="dropdown-menu">',
+        '  <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
+        '    <a ng-click="select(choice)" ng-switch-when="image"><img class="choice-image" ng-src="{{choice.imageName}}"></img></a>',
+        '    <a ng-click="select(choice)" ng-switch-default ng-bind-html-unsafe="choice.label"></a>',
+        '  </li>',
+        '</ul>',
         '</div>',
-       '</div>'].join("\n")
+        '</div>'].join("\n")
     };
 
     return def;

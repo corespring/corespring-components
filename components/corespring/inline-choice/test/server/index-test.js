@@ -28,9 +28,7 @@ component = {
       }
     ]
   },
-  correctResponse: {
-    value: "carrot"
-  },
+  correctResponse: "carrot",
   feedback: [
     {
       value: "apple",
@@ -38,11 +36,11 @@ component = {
     },
     {
       value: "carrot",
-      feedback: "Yes"
+      feedbackType: "default"
     },
     {
       value: "banana",
-      feedback: "Nopes"
+      feedbackType: "default"
     }
   ]
 };
@@ -86,7 +84,8 @@ describe('inline-choice server logic', function() {
         score: 1,
         feedback: {
           "carrot": {
-            feedback: "Yes",
+            feedbackType: "default",
+            feedback: server.defaultFeedbacks.correct,
             correct: true
           }
         }
@@ -119,6 +118,23 @@ describe('inline-choice server logic', function() {
         feedback: {
           "apple": {
             feedback: "Huh?",
+            correct: false
+          }
+        }
+      };
+      response.should.eql(expected);
+    });
+
+    it('should respond to an incorrect response with default feedback if feedbackType is default', function() {
+      var expected, response;
+      response = server.respond(_.cloneDeep(component), "banana", settings(true, true, false));
+      expected = {
+        correctness: "incorrect",
+        score: 0,
+        feedback: {
+          "banana": {
+            feedbackType: "default",
+            feedback: server.defaultFeedbacks.incorrect,
             correct: false
           }
         }

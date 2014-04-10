@@ -18,13 +18,14 @@ exports.service = ['$log',
 
       this.inline = function(type, value, body, attrs) {
         return ['<label class="' + type + '-inline">',
-          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
+            '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
           '</label>'].join('\n');
       };
 
       this.choice = function(opts) {
         var defaults = {
-          correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>'
+          correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>',
+          correctnessPredicate: "correctMap[q.value]"
         };
 
         opts = _.extend(defaults, opts);
@@ -67,29 +68,29 @@ exports.service = ['$log',
           '        <div class="well" ng-show="feedbackOn">',
           '          <div><label>If this choice is selected, show</label></div>',
           '          <div>',
-                         this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].feedbackType'"),
-                         this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].feedbackType'"),
-                         this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].feedbackType'"),
+          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].feedbackType'"),
+          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].feedbackType'"),
+          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].feedbackType'"),
           '          </div>',
           '          <div class="clearfix"></div>',
           '          <span ng-switch="feedback[q.value].feedbackType">',
-          '          <input ng-switch-when="custom" class="form-control feedback-preview custom" ng-class="{correct: correctMap[q.value]}" type="text" ng-model="feedback[q.value].feedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
-          '          <input ng-switch-when="default" class="form-control feedback-preview" ng-class="{correct: correctMap[q.value]}" disabled="true" type="text" value="{{correctMap[q.value] ? defaultCorrectFeedback : defaultIncorrectFeedback}}"></input>',
-          '          <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
+          '            <input ng-switch-when="custom" class="form-control feedback-preview custom" ng-class="{correct: ' + opts.correctnessPredicate + '}" type="text" ng-model="feedback[q.value].feedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
+          '            <input ng-switch-when="default" class="form-control feedback-preview" ng-class="{correct: ' + opts.correctnessPredicate + '}" disabled="true" type="text" value="{{' + opts.correctnessPredicate + ' ? defaultCorrectFeedback : defaultIncorrectFeedback}}"></input>',
+          '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
           '          </span>',
 
           '          <div ng-show="correctMap[q.value]" style="margin-top: 15px">',
           '            <div><label>If this choice is NOT selected, show</label></div>',
           '            <div>',
-                          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
-                          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
-                          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
+          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
+          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
+          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
           '            </div>',
           '            <div class="clearfix"></div>',
           '          <span ng-switch="feedback[q.value].notChosenFeedbackType">',
-          '            <input ng-switch-when="custom" class="form-control feedback-preview custom correct" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
+            '            <input ng-switch-when="custom" class="form-control feedback-preview custom correct" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
           '            <input ng-switch-when="default" class="form-control feedback-preview  correct" disabled="true" type="text" value="{{defaultNotChosenFeedback}}"></input>',
-          '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
+            '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
           '          </span>',
           '          </div>',
           '        </div>',
@@ -103,7 +104,7 @@ exports.service = ['$log',
       this.wrap = function(title, body) {
         return ['<div class="input-holder">',
           title ? '  <div class="header">' + title + '</div>' : '',
-          '  <div class="body">' + body + '</div>',
+            '  <div class="body">' + body + '</div>',
           '</div>'].join('\n');
       };
 
