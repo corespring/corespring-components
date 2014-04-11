@@ -27,6 +27,7 @@ link = function() {
         console.log(response);
 
         scope.answer = response.studentResponse;
+        scope.feedback = response.feedback;
 
         scope.received = true;
       },
@@ -52,8 +53,6 @@ link = function() {
       editable: function(e) {
         scope.editable = e;
       }
-
-
     };
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -72,8 +71,8 @@ main = [
       link: link(),
       template: [
         '<div class="view-extended-text-entry">',
-        '<div class="prompt" ng-bind-html-unsafe="question.prompt"></div>',
         '<textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="form-control text-input" />',
+        '<div class="feedback" ng-show="feedback" ng-bind-html-unsafe="feedback"></div>',
         '</div>'].join("\n")
     };
 
