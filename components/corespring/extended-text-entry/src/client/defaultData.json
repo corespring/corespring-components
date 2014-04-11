@@ -1,9 +1,13 @@
 {
   "componentType": "corespring-extended-text-entry",
   "title": "Extended Text Entry",
+  "feedback": {
+    "feedbackType": "default"
+  },
   "model": {
     "config": {
-    },
-    "prompt": "Add your question here..."
+      "expectedLength": "100",
+      "expectedLines": "5"
+    }
   }
 }

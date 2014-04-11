@@ -71,7 +71,7 @@ main = [
       link: link(),
       template: [
         '<div class="view-extended-text-entry">',
-        '<textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="form-control text-input" />',
+        '<textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="text-input" />',
         '<div class="feedback" ng-show="feedback" ng-bind-html-unsafe="feedback"></div>',
         '</div>'].join("\n")
     };

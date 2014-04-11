@@ -9,14 +9,12 @@ exports.respond = function(question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    var isEmpty = _.isEmpty(answer);
-    var fbSelector = isEmpty ? "noAnswer" : "isAnswer";
-    var fb = (question.feedback && question.feedback[fbSelector]) || {feedbackType: "default"};
+    var fb = question.feedback || {feedbackType: "default"};
     var feedbackType = fb.feedbackType || "default";
     if (feedbackType === "custom") {
-      response.feedback = question.feedback[fbSelector].feedback;
+      response.feedback = question.feedback.feedback;
     } else if (feedbackType === "default") {
-      response.feedback = isEmpty ? "DEFAULT EMPTY" : "DEFAULT SOMETHING";
+      response.feedback = "Your answer has been submitted";
     }
   }
 
