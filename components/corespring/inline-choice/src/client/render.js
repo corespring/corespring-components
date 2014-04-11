@@ -134,7 +134,7 @@ main = [
         '<div class="dropdown" >',
         '<span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
         '  <span ng-switch="selected.labelType">',
-        '    <img ng-switch-when="image" ng-src="selected.imageName"></img>',
+        '    <img ng-switch-when="image" ng-src="{{selected.imageName}}"></img>',
         '    <span ng-switch-default ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
         '  </span>',
         '</span>',
