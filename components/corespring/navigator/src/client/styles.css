@@ -13,19 +13,46 @@
     height: 30px;
     left: 0px;
     right: 0px;
-    background-color: #3b383b;
+    border-bottom: 1px solid #292f36;
+    background-color: #556270;
+    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
 }
 
-.navigator-toggle-button {
-    padding: 5px;
+.navigator .navigator-toggle-button .btn-navigator-toggle {
+    background: #3c454e;
+    border: none;
+    border-radius: 0;
+    height: 29px;
+    width: 29px;
+}
+
+.navigator .navigator-toggle-button .btn-navigator-toggle:hover {
+    background: #0a0c0d;
+}
+
+.navigator-toggle-button .btn-navigator-toggle .fa {
+    color: #ffffff;
+    font-size: 16px;
 }
 
 .navigator .navigator-left-panel {
-    background-color: #3b383b;
+    text-transform: uppercase;
+    background-color: #333333;
     position: absolute;
     overflow: hidden;
     top: 30px;
     bottom: 0px;
+}
+
+.navigator .navigator-left-panel .nav > li {
+  border-top: 1px solid #292929;
+}
+
+.navigator .navigator-left-panel .nav > li > a:hover {
+    background-color: #292929;
+    color: #808080;
 }
 
 .navigator.navigator-closed .navigator-left-panel {
@@ -60,5 +87,9 @@
 }
 
 .navigator .nav li.active a {
-    color: #94d228;
+    color: #ffffff;
+}
+
+.navigator .navigator-left-panel .nav > li.active > a:hover {
+    color: #ffffff;
 }
