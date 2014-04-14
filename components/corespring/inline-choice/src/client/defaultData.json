@@ -2,20 +2,24 @@
   "componentType": "corespring-inline-choice",
   "correctResponse": "2",
   "title": "Inline Choice",
-  "feedback" :  {
-    "1": {
-      "feedbackType" : "standard"
+  "feedback" :  [
+    {
+      "value": "1",
+      "feedbackType" : "default"
     },
-    "2": {
-      "feedbackType" : "standard"
+    {
+      "value": "2",
+      "feedbackType" : "default"
     },
-    "3": {
-      "feedbackType" : "standard"
+    {
+      "value": "3",
+      "feedbackType" : "default"
     },
-    "4": {
-      "feedbackType" : "standard"
+    {
+      "value": "4",
+      "feedbackType" : "default"
     }
-  },
+  ],
   "model": {
     "choices": [
       {
