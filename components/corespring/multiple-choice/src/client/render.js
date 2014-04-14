@@ -109,6 +109,7 @@ var main = [
         }
 
         applyChoices();
+        scope.$emit('rerender-math', 100);
       };
 
       scope.containerBridge = {
