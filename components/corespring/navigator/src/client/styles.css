@@ -24,6 +24,14 @@
     position: relative;
 }
 
+.navigator .navigator-toggle-button-row {
+    display: none;
+}
+
+.content .navigator-toggle-button-row {
+    position: relative;
+}
+
 .navigator-toggle-button-row .navigator-title {
     position: absolute;
     top: 0;
