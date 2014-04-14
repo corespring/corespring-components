@@ -4,11 +4,13 @@ var main = [
 
     var inputHolder = function(header, body) {
       return [
-        '<div class="input-holder">',
-        ' <div class="header">' + header + '</div>',
-        ' <div class="body">',
-        body,
-        ' </div>',
+        '<div class="config-panel">',
+        '  <div class="input-holder">',
+        '    <div class="header">' + header + '</div>',
+        '    <div class="body">',
+               body,
+        '    </div>',
+        '  </div>',
         '</div>'
       ].join("");
     };

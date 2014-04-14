@@ -24,12 +24,8 @@
     position: relative;
 }
 
-.navigator .navigator-toggle-button-row {
-    display: none;
-}
-
-.content .navigator-toggle-button-row {
-    position: relative;
+.config-panel {
+    margin-top: 40px;
 }
 
 .navigator-toggle-button-row .navigator-title {

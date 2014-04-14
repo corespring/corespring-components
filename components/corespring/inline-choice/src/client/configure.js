@@ -10,7 +10,7 @@ var main = [
   function($log, ChoiceTemplates) {
 
     var choices = [
-      '<div class="choice-config-panel">',
+      '<div class="choice-config-panel config-panel">',
       '  <div class="check-correct-label">Select Correct Answer</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
