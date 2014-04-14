@@ -16,5 +16,7 @@
     }
   },
   "name": "inline-choice",
+  "title": "Drop Down Choice",
+  "titleGroup": "Fixed Choice",
   "organization": "corespring"
 }

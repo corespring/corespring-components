@@ -15,5 +15,7 @@
     }
   },
   "name": "point-intercept",
+  "title": "Plot Points",
+  "titleGroup": "Mathematics",
   "organization": "corespring"
 }

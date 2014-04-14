@@ -19,5 +19,7 @@
     }
   },
   "name": "line",
+  "title": "Draw Lines",
+  "titleGroup": "Mathematics",
   "organization": "corespring"
 }

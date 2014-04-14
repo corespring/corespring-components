@@ -7,5 +7,7 @@
     }
   ],
   "name": "text-entry",
+  "title": "Short Answer",
+  "titleGroup": "Text Entry",
   "organization": "corespring"
 }

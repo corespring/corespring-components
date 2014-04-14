@@ -1,8 +1,6 @@
 {
-  "libraries": [
-  ],
-  "dependencies" : {
-  },
   "name": "extended-text-entry",
+  "title": "Extended Answer",
+  "titleGroup": "Text Entry",
   "organization": "corespring"
 }

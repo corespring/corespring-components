@@ -11,5 +11,7 @@
     }
   ],
   "name": "multiple-choice",
-  "organization": "corespring"
+  "organization": "corespring",
+  "title": "Multiple Choice",
+  "titleGroup": "Fixed Choice"
 }

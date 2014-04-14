@@ -2,5 +2,7 @@
   "libraries": [
   ],
   "name": "select-text",
+  "title": "Select Evidence in Text",
+  "titleGroup": "English Language Arts",
   "organization": "corespring"
 }
