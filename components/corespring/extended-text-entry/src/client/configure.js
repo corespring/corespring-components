@@ -32,13 +32,14 @@ var main = [
     var scoring = [
       '<div class="input-holder">',
       '  <div class="body">',
-      '    Please include a scoring guide in the Supporting Materials area',
+      '    Open Ended questions are not automatically scored by the system. Please include a scoring guide or rubric in the Supporting Materials area.',
       '  </div>',
       '</div>'].join('\n');
 
     var displayOptions = [
       '<div class="input-holder">',
       '  <div class="body">',
+      '     <div>Adjust the height and width of student response area below.</div>',
       '     <div>Answer box:</div>',
       '     <form class="form-horizontal" role="form" style="margin-top: 10px">',
       '       <div class="form-group" style="max-width: 80%">',
@@ -84,13 +85,11 @@ var main = [
         '<div class="extended-text-entry-configuration">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
+               displayOptions,
                design,
         '    </div>',
         '    <div navigator-panel="Scoring">',
                scoring,
-        '    </div>',
-        '    <div navigator-panel="Display">',
-               displayOptions,
         '    </div>',
         '  </div>',
         '</div>'
