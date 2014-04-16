@@ -28,3 +28,10 @@
     border-radius: 4px;
     width: 90%;
 }
+
+/* Config Panel */
+
+.extended-text-entry-configuration .narrow-form-label {
+    text-align: left;
+    width: 110px;
+}
