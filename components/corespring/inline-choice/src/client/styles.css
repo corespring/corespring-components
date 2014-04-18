@@ -1,3 +1,9 @@
+.component-placeholder.corespring-inline-choice {
+  display: inline-block;
+  max-width: 200px;
+  margin-right: 10px;
+}
+
 .view-inline-choice {
     display: inline-block;
 }

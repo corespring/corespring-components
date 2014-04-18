@@ -1,3 +1,10 @@
+/** editor placeholder */
+.component-placeholder.corespring-text-entry {
+  display: inline-block;
+  max-width: 200px;
+  margin-right: 10px;
+}
+
 .cs-text-entry {
   display: inline-block;
   margin: 0 8px 0 3px;
