@@ -187,7 +187,7 @@ var main = ['$compile', '$modal', '$rootScope',
             domainLabel: config.domainLabel,
             rangeLabel: config.rangeLabel,
             tickLabelFrequency: config.tickLabelFrequency,
-            pointLabels: config.pointLabels,
+            pointLabels: config.labelsType === 'present' ? config.pointLabels : "",
             maxPoints: config.maxPoints,
             showLabels: config.showLabels ? config.showLabels : "true"
           };
@@ -253,7 +253,7 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.domainLabel = config.domainLabel;
             scope.rangeLabel = config.rangeLabel;
             scope.tickLabelFrequency = config.tickLabelFrequency;
-            scope.pointLabels = config.pointLabels;
+            scope.pointLabels = config.labelsType === 'present' ? config.pointLabels : "";
             scope.maxPoints = config.maxPoints;
             scope.showInputs = (config.showInputs ? config.showInputs : 'true') === 'true';
 

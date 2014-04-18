@@ -25,6 +25,18 @@ settings = function(feedback, userResponse, correctResponse) {
   };
 };
 
+describe('correctness logic', function() {
+  it('when order matters', function() {
+     server.isCorrect(['0,1','12,4'], ['12,4','0,1'], true).should.eql(false);
+     server.isCorrect(['0,1','12,4'], ['0,1','12,4'], true).should.eql(true);
+  });
+
+  it('when order doesnt matter', function() {
+     server.isCorrect(['0,1','12,4'], ['12,4','0,1'], false).should.eql(true);
+     server.isCorrect(['0,9','12,4'], ['0,1','12,4'], true).should.eql(false);
+  });
+});
+
 describe('server logic', function() {
 
   it('should respond with correct and score 1 if the answer is correct', function() {});

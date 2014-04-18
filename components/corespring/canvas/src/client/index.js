@@ -54,7 +54,7 @@ exports.service = ['$log',
       if (attrs.pointLabels) {
         this.pointLabels = attrs.pointLabels;
       } else {
-        this.pointLabels = 'letters';
+        this.pointLabels = 'none';
       }
     }
 
@@ -120,8 +120,11 @@ exports.service = ['$log',
               return points.length + ".";
             } else if (labels === "letters") {
               return point.name;
+            } else if (labels === "none") {
+              return "";
             } else {
-              return labels.split(",")[points.length - 1];
+              var labelsArray = labels.split(",");
+              return points.length <= labelsArray.length ? labelsArray[points.length - 1] : "";
             }
           }
         })(this.pointLabels, this.points);

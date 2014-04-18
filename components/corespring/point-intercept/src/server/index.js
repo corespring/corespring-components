@@ -1,8 +1,20 @@
 var _ = require('lodash');
 
+exports.isCorrect = function(answer, correctResponse, orderMatters) {
+  if (orderMatters) {
+    return _.isEqual(answer, correctResponse);
+  } else {
+    return _.isEqual(answer.sort(), correctResponse.sort());
+  }
+};
+
 exports.respond = function(question, answer, settings) {
   var correctResponse = question.correctResponse;
-  var isCorrect = _.isEqual(correctResponse, answer);
+
+  var orderMatters = (question.model.config.labelsType === 'present' && !!question.model.config.orderMatters);
+
+  var isCorrect = exports.isCorrect(answer, correctResponse, orderMatters);
+
   var res = {
     "correctness": isCorrect ? "correct" : "incorrect",
     "score": isCorrect ? 1 : 0,
