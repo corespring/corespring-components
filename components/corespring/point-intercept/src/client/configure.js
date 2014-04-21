@@ -7,12 +7,13 @@ var main = [
         '</label>'].join('\n');
     };
 
-    var labelWithInput = function(size, label, modelKey, labelSize) {
+    var labelWithInput = function(size, label, modelKey, labelSize, inputType) {
       labelSize = labelSize || size;
+      inputType = inputType || "text";
       return [
           '<label class="col-sm-' + labelSize + ' control-label">' + label + '</label>',
           '<div class="col-sm-' + size + '">',
-          '  <input type="text" class="form-control"  ng-model="fullModel.model.config.' + modelKey + '" />',
+          '  <input type="' + inputType + '" class="form-control"  ng-model="fullModel.model.config.' + modelKey + '" />',
         '</div>'
       ].join('');
     };
@@ -27,16 +28,16 @@ var main = [
       labelWithInput(2, 'Height:', 'graphHeight'),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(2, 'Domain:', 'domain'),
+      labelWithInput(2, 'Domain:', 'domain', 2, "number"),
       labelWithInput(3, 'Domain Label:', 'domainLabel'),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(2, 'Range:', 'range'),
+      labelWithInput(2, 'Range:', 'range', 2, "number"),
       labelWithInput(3, 'Range Label:', 'rangeLabel'),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(2, 'Tick Label Frequency::', 'tickLabelFrequency', 4),
-      labelWithInput(2, 'Scale:', 'scale'),
+      labelWithInput(2, 'Tick Label Frequency::', 'tickLabelFrequency', 4, "number"),
+      labelWithInput(2, 'Scale:', 'scale', 2, "number"),
       '       </div>',
       '     </form>',
       '  </div>',
@@ -86,7 +87,7 @@ var main = [
       '         <button class="btn btn-default" ng-click="addPoint()">Add Point</button>',
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(2, "Maximum number of points a student is allowed to plot:", 'maxPoints', 8),
+      labelWithInput(2, "Maximum number of points a student is allowed to plot:", 'maxPoints', 8, "number"),
       '       </div>',
       '     </form>',
       '  </div>',
@@ -181,9 +182,13 @@ var main = [
       },
       template: [
         '<div class="point-intercept-configuration">',
+        '  <div navigator="">',
+        '    <div navigator-panel="Design">',
         pointsBlock,
         graphAttributes,
         feedback,
+        '</div>',
+        '</div>',
         '</div>'
       ].join('\n')
     };

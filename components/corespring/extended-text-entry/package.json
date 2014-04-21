@@ -7,6 +7,10 @@
     {
       "name": "feedback-templates",
       "organization": "corespring"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
     }
   ]
 }
