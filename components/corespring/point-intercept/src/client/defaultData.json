@@ -1,11 +1,33 @@
 {
-  "componentType": "",
-  "correctResponse": "",
-  "title": "",
+  "componentType": "corespring-point-intercept",
+  "correctResponse": [
+    "0,0",
+    "1,1",
+    "2,2",
+    "3,3"
+  ],
   "feedback" :  {
+    "correctFeedbackType": "default",
+    "incorrectFeedbackType": "default"
   },
   "model": {
     "config": {
+      "graphWidth": "300px",
+      "graphHeight": "300px",
+      "maxPoints": "",
+      "labelsType": "present",
+      "pointLabels": [
+        "label1",
+        "label2",
+        "label3",
+        "label4"
+      ],
+      "domainLabel": "domain",
+      "domain": 10,
+      "rangeLabel": "range",
+      "range": 10,
+      "tickLabelFrequency": 5,
+      "scale": 1
     }
   }
 }
