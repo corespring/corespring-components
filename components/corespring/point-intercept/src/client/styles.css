@@ -121,7 +121,7 @@
     margin-right: 20px;
 }
 
-.feedback {
+.point-interaction-view .feedback {
     display: inline-block;
     margin-top: 10px;
     margin-bottom: 15px;
@@ -133,7 +133,7 @@
 
 }
 
-.feedback.incorrect {
+.point-interaction-view .feedback.incorrect {
     border-color: #F8A31A;
     background: url("/assets/images/wrong-icon.png") no-repeat scroll 3px 8px transparent;
 }

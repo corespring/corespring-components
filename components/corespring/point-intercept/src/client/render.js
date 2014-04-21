@@ -2,6 +2,7 @@ var main = ['$compile', '$modal', '$rootScope',
   function($compile, $modal, $rootScope) {
     return {
       template: [
+        "<div class='point-interaction-view'>",
         "<div class='graph-interaction'>",
         "   <div class='additional-text' ng-show='additionalText'>",
         "       <p ng-bind-html-unsafe='additionalText'></p>",
@@ -15,7 +16,8 @@ var main = ['$compile', '$modal', '$rootScope',
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a href='#' ng-click='seeSolution()' class='pull-right'>See correct answer</a></div>",
         "   <div id='initialParams' ng-transclude></div>",
         "</div>",
-        "<div ng-show='feedback' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>"
+        "<div ng-show='feedback' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
+        "</div>"
       ].join("\n"),
       restrict: 'AE',
       transclude: true,

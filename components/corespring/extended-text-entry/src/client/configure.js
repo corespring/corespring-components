@@ -12,20 +12,14 @@ var main = [
 
       '        <div class="feedback-label">Feedback</div>',
       '        <div class="well">',
-      '          <div><label>When answer submitted, show</label></div>',
-      '          <div>',
-      this.inline("radio", "default", "Default Feedback", "ng-model='fullModel.feedback.feedbackType'"),
-      this.inline("radio", "none", "No Feedback", "ng-model='fullModel.feedback.feedbackType'"),
-      this.inline("radio", "custom", "Customized Feedback", "ng-model='fullModel.feedback.feedbackType'"),
-      '          </div>',
-      '          <div class="clearfix"></div>',
 
-      '          <span ng-switch="fullModel.feedback.feedbackType">',
-      '            <input ng-switch-when="custom" class="form-control feedback-preview custom" ng-class="{correct: true}" type="text" ng-model="fullModel.feedback.feedback" placeholder="Enter customized feedback to be presented to the student" />',
-      '            <input ng-switch-when="default" class="form-control feedback-preview" ng-class="{correct: true}" disabled="true" type="text" value="{{defaultIsAnswerFeedback}}" />',
-      '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="No feedback will be presented to the student" />',
-      '          </span>',
-      '  </div>',
+      '          <div feedback-selector',
+      '               fb-sel-label="When answer submitted, show"',
+      '               fb-sel-feedback-type="fullModel.feedback.feedbackType"',
+      '               fb-sel-custom-feedback="fullModel.feedback.feedback"',
+      '               fb-sel-default-feedback="{{defaultIsAnswerFeedback}}"',
+      '          ></div>',
+      '    </div>',
       '  </div>',
       '</div>'].join('\n');
 
