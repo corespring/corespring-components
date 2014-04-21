@@ -76,18 +76,23 @@ var main = [
       '         <div class="col-sm-1"><button ng-click="removePoint(p)" type="button" class="close">&times;</button>',
       '         </div>',
       '       </div>',
+      '       <div class="config-form-row">',
+      '         <button class="btn btn-default" ng-click="addPoint()">Add Point</button>',
+      '       </div>',
       '       <div class="config-form-row" ng-show="fullModel.model.config.labelsType == \'present\'">',
-      '         <div class="col-sm-4"></div>',
       '         <div class="col-sm-6">',
       '           <input id="mustMatch" type="checkbox" ng-model="fullModel.model.config.orderMatters" />',
       '           <label for="mustMatch" class="control-label">Points must match labels</label>',
       '         </div>',
       '       </div>',
       '       <div class="config-form-row">',
-      '         <button class="btn btn-default" ng-click="addPoint()">Add Point</button>',
+      '         <div class="col-sm-6">',
+      '           <input id="showCoords" type="checkbox" ng-model="fullModel.model.config.showCoordinates" />',
+      '           <label for="showCoords" class="control-label">Show Coordinates</label>',
+      '         </div>',
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(2, "Maximum number of points a student is allowed to plot:", 'maxPoints', 8, "number"),
+      labelWithInput(3, "Maximum number of points a student is allowed to plot:", 'maxPoints', 8, "number"),
       '       </div>',
       '     </form>',
       '  </div>',
@@ -168,6 +173,16 @@ var main = [
           });
         };
 
+
+        scope.$watch('fullModel.model.config.maxPoints', function(n) {
+          var min = scope.points.length;
+          if (!_.isUndefined(n) && n < min) {
+            scope.fullModel.model.config.maxPoints = min;
+          }
+          if (!_.isUndefined(n) && !_.isNumber(n)) {
+            scope.fullModel.model.config.maxPoints = "";
+          }
+        });
 
         scope.$watch('points', function(n) {
           if (n) {

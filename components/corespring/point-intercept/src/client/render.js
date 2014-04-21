@@ -191,7 +191,8 @@ var main = ['$compile', '$modal', '$rootScope',
             tickLabelFrequency: config.tickLabelFrequency,
             pointLabels: config.labelsType === 'present' ? config.pointLabels : "",
             maxPoints: config.maxPoints,
-            showLabels: config.showLabels ? config.showLabels : "true"
+            showLabels: config.showLabels ? config.showLabels : "true",
+            showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : "true"
           };
         };
 
@@ -255,6 +256,7 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.domainLabel = config.domainLabel;
             scope.rangeLabel = config.rangeLabel;
             scope.tickLabelFrequency = config.tickLabelFrequency;
+            scope.showCoordinates = config.showCoordinates;
             scope.pointLabels = config.labelsType === 'present' ? config.pointLabels : "";
             scope.maxPoints = config.maxPoints;
             scope.showInputs = (config.showInputs ? config.showInputs : 'true') === 'true';
