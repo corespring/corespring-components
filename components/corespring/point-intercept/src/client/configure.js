@@ -1,6 +1,12 @@
 var main = [
   function() {
 
+    this.inline = function(type, value, body, attrs) {
+      return ['<label class="' + type + '-inline">',
+          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
+        '</label>'].join('\n');
+    };
+
     var labelWithInput = function(size, label, modelKey, labelSize) {
       labelSize = labelSize || size;
       return [
@@ -86,11 +92,38 @@ var main = [
       '  </div>',
       '</div>'].join('\n');
 
+
+    var feedback = [
+      '<div class="input-holder">',
+      '  <div class="header">Feedback</div>',
+      '  <div class="body">',
+      '        <div class="well">',
+      '          <div feedback-selector',
+      '               fb-sel-label="If answered correctly, show"',
+      '               fb-sel-class="correct"',
+      '               fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+      '               fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+      '               fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
+      '          ></div>',
+      '        </div>',
+      '        <div class="well">',
+      '          <div feedback-selector',
+      '               fb-sel-label="If answered incorrectly, show"',
+      '               fb-sel-class="incorrect"',
+      '               fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+      '               fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+      '               fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
+      '          ></div>',
+      '  </div>',
+      '</div>'].join('\n');
+
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
+        scope.defaultCorrectFeedback = "Correct!";
+        scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
@@ -150,6 +183,7 @@ var main = [
         '<div class="point-intercept-configuration">',
         pointsBlock,
         graphAttributes,
+        feedback,
         '</div>'
       ].join('\n')
     };

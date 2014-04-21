@@ -121,6 +121,23 @@
     margin-right: 20px;
 }
 
+.feedback {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding: 10px 10px 10px 33px;
+    border: 2px solid #80b312;
+    border-radius: 5px;
+    width: 90%;
+    background: url("/assets/images/correct-icon.png") no-repeat scroll 3px 8px transparent;
+
+}
+
+.feedback.incorrect {
+    border-color: #F8A31A;
+    background: url("/assets/images/wrong-icon.png") no-repeat scroll 3px 8px transparent;
+}
+
 
 .modal {
     display: block;
@@ -133,3 +150,4 @@
 .point-intercept-configuration .point-row:hover {
     background-color: #eeeeff;
 }
+

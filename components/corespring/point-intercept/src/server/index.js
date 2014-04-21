@@ -28,6 +28,17 @@ exports.respond = function(question, answer, settings) {
     } else {
       res.outcome.push('incorrect');
     }
+
+    var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
+    var fbTypeSelector = isCorrect ? "correctFeedbackType" : "incorrectFeedbackType";
+
+    var feedbackType = question.feedback[fbTypeSelector] || "default";
+    if (feedbackType === "custom") {
+      res.feedback = question.feedback[fbSelector];
+    } else if (feedbackType === "default") {
+      res.feedback = isCorrect ? "Correct!" : "Good try but that is not the correct answer.";
+    }
+
   }
 
   return res;
