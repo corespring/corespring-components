@@ -1,11 +1,23 @@
 {
-  "componentType": "",
-  "correctResponse": "",
+  "componentType" : "corespring-line",
   "title": "",
+  "weight" : 1,
+  "correctResponse": "y=x+1",
   "feedback" :  {
+    "correctFeedbackType": "default",
+    "incorrectFeedbackType": "default"
   },
-  "model": {
+  "model" : {
     "config": {
+      "domain": 10,
+      "range": 10,
+      "scale": 1,
+      "domainLabel": "x",
+      "rangeLabel": "y",
+      "tickLabelFrequency": 5,
+      "sigfigs": -1,
+      "showCoordinates": true,
+      "showInputs": true
     }
   }
 }

@@ -3,6 +3,7 @@ var main = ['$compile', '$modal', '$rootScope',
   function($compile, $modal, $rootScope) {
     return {
       template: [
+        "<div class='line-interaction-view'>",
         "<div class='container-fluid graph-interaction' >",
         "   <div id='additional-text' class='row-fluid additional-text' ng-show='additionalText'>",
         "       <p>{{additionalText}}</p>",
@@ -33,6 +34,8 @@ var main = ['$compile', '$modal', '$rootScope',
         "   </div>",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See correct answer</a></div>",
+        "</div>",
+        "<div ng-show='feedback' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
         "</div>"
       ].join(""),
       restrict: 'AE',
@@ -274,6 +277,9 @@ var main = ['$compile', '$modal', '$rootScope',
 
         scope.pointsFromCurve = function(curve) {
           var ic = curve;
+          if (!ic) {
+            return undefined;
+          }
           if (ic.indexOf('=') >= 0) {
             ic = ic.split("=")[1];
           }
@@ -368,6 +374,8 @@ var main = ['$compile', '$modal', '$rootScope',
 
           setResponse: function(response) {
             console.log("Setting response for line interaction", response);
+            scope.feedback = response && response.feedback;
+            scope.correctClass = response.correctness;
             if (response && response.correctness === "correct") {
               scope.graphCallback({
                 graphStyle: {
@@ -399,6 +407,7 @@ var main = ['$compile', '$modal', '$rootScope',
           setMode: function(newMode) {},
 
           reset: function() {
+            scope.feedback = undefined;
             scope.unlockGraph();
 
             scope.inputStyle = {

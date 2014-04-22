@@ -22,7 +22,7 @@ exports.respond = function(question, answer, settings) {
   var correctFunction = question.correctResponse.split("=")[1];
   var isCorrect = functionUtils.isFunctionEqual(eq, correctFunction, options);
 
-  return {
+  var res = {
     "correctness": isCorrect ? "correct" : "incorrect",
     "score": isCorrect ? 1 : 0,
     "correctResponse": {
@@ -30,4 +30,19 @@ exports.respond = function(question, answer, settings) {
       "expression": functionUtils.expressionize(correctResponse, 'x')
     }
   };
+
+  if (settings.showFeedback) {
+    var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
+    var fbTypeSelector = isCorrect ? "correctFeedbackType" : "incorrectFeedbackType";
+
+    var feedbackType = question.feedback[fbTypeSelector] || "default";
+    if (feedbackType === "custom") {
+      res.feedback = question.feedback[fbSelector];
+    } else if (feedbackType === "default") {
+      res.feedback = isCorrect ? "Correct!" : "Good try but that is not the correct answer.";
+    }
+  }
+
+  return res;
+
 };
