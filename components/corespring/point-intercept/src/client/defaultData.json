@@ -22,12 +22,13 @@
         "label3",
         "label4"
       ],
-      "domainLabel": "domain",
+      "domainLabel": "x",
       "domain": 10,
-      "rangeLabel": "range",
+      "rangeLabel": "y",
       "range": 10,
       "tickLabelFrequency": 5,
-      "scale": 1
+      "scale": 1,
+      "showCoordinates": true
     }
   }
 }
