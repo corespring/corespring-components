@@ -273,7 +273,7 @@ var main = ['$compile', '$modal', '$rootScope',
         };
 
         scope.pointsFromCurve = function(curve) {
-          var ic = curve
+          var ic = curve;
           if (ic.indexOf('=') >= 0) {
             ic = ic.split("=")[1];
           }
