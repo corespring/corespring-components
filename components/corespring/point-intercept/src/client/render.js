@@ -49,13 +49,6 @@ var main = ['$compile', '$modal', '$rootScope',
           }
         });
 
-        $scope.$watch('showNoResponseFeedback', function() {
-          // TODO: Empty response submission - 2px yellow border
-          //          if (!$scope.locked && $scope.isEmptyItem($scope.graphCoords) && $scope.showNoResponseFeedback) {
-          //            $scope.graphCallback({graphStyle: {borderColor: "yellow", borderWidth: "2px"}});
-          //          }
-        });
-
         $scope.interactionCallback = function(params) {
           function round(coord) {
             var px = coord.x;
@@ -115,16 +108,6 @@ var main = ['$compile', '$modal', '$rootScope',
             pointsStyle: "blue"
           });
         };
-
-        $scope.$on('controlBarChanged', function() {
-          if ($scope.settingsHaveChanged) {
-            $scope.graphCallback({
-              clearBoard: true
-            });
-            $scope.correctAnswerBody = "clear";
-            $scope.locked = false;
-          }
-        });
 
         $scope.renewResponse = function(response) {
           if (response) {
@@ -326,11 +309,10 @@ var main = ['$compile', '$modal', '$rootScope',
             });
 
             scope.feedback = undefined;
-
           },
 
           isAnswerEmpty: function() {
-            return _.isEmpty(scope.pointResponse);// || scope.pointResponse.length === 0;
+            return _.isEmpty(scope.pointResponse);
           },
 
           answerChangedHandler: function(callback) {
