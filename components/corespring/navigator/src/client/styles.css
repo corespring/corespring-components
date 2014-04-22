@@ -37,6 +37,12 @@
     color: white;
 }
 
+.navigator-toggle-button-row .navigator-title .close-icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
 .navigator .navigator-toggle-button .btn-navigator-toggle {
     position: absolute;
     background: #3c454e;
