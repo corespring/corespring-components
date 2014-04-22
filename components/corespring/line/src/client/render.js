@@ -1,4 +1,3 @@
-/** TODO: using eval - is that avoidable? */
 /* jshint evil: true */
 var main = ['$compile', '$modal', '$rootScope',
   function($compile, $modal, $rootScope) {
@@ -34,11 +33,9 @@ var main = ['$compile', '$modal', '$rootScope',
         "   </div>",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See correct answer</a></div>",
-        "   <div id='initialParams' ng-transclude></div>",
         "</div>"
       ].join(""),
       restrict: 'AE',
-      transclude: true,
       scope: true,
       controller: function($scope) {
         $scope.submissions = 0;
@@ -131,16 +128,6 @@ var main = ['$compile', '$modal', '$rootScope',
           });
         };
 
-        $scope.$on('controlBarChanged', function() {
-          if ($scope.settingsHaveChanged) {
-            $scope.graphCallback({
-              clearBoard: true
-            });
-            $scope.correctAnswerBody = "clear";
-            $scope.locked = false;
-          }
-        });
-
         $scope.renewResponse = function(response) {
           if (response && response.A && response.B) {
             var A = response.A;
@@ -210,7 +197,9 @@ var main = ['$compile', '$modal', '$rootScope',
             domainLabel: config.domainLabel,
             rangeLabel: config.rangeLabel,
             tickLabelFrequency: config.tickLabelFrequency,
-            showLabels: config.showLabels ? config.showLabels : "true"
+            showLabels: config.showLabels ? config.showLabels : "true",
+            showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : "true",
+            pointLabels: "letters"
           };
         };
 
@@ -270,6 +259,38 @@ var main = ['$compile', '$modal', '$rootScope',
 
         };
 
+        scope.unlockGraph = function() {
+          scope.locked = false;
+          scope.graphCallback({
+            unlockGraph: true
+          });
+          scope.graphCallback({
+            graphStyle: {
+              borderWidth: "0px"
+            },
+            pointsStyle: "blue"
+          });
+        };
+
+        scope.pointsFromCurve = function(curve) {
+          var ic = curve
+          if (ic.indexOf('=') >= 0) {
+            ic = ic.split("=")[1];
+          }
+          var b = Number(ic.substring(ic.indexOf('+')));
+
+          var mStr = ic.substring(0, ic.indexOf('x'));
+          mStr = mStr.replace(/[^\d]/g,"");
+          if (mStr === "") {
+            mStr = "1";
+          }
+          if (mStr === "-") {
+            mStr = "-1";
+          }
+          var m = (mStr && mStr.length > 0) ? Number(mStr) : 1;
+          return [[0,b],[1,m+b]];
+        };
+
         scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
@@ -288,18 +309,7 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.tickLabelFrequency = config.tickLabelFrequency;
             scope.pointLabels = config.pointLabels;
             scope.maxPoints = config.maxPoints;
-            scope.showInputs = (config.showInputs ? config.showInputs : 'true') === 'true';
-
-            if (dataAndSession.data.initialCurve) {
-              scope.initialParams = {
-                drawShape: {
-                  curve: function(x) {
-                    return eval(dataAndSession.data.initialCurve);
-                  }
-                }
-              };
-            }
-
+            scope.showInputs = !!config.showInputs;
 
             var containerWidth, containerHeight;
             var graphContainer = element.find('.graph-container');
@@ -323,9 +333,11 @@ var main = ['$compile', '$modal', '$rootScope',
               scope.points = dataAndSession.session.answers;
             }
 
-            if (_.isArray(config.initialValues)) {
-              var pointA = config.initialValues[0].split(",");
-              var pointB = config.initialValues[1].split(",");
+            var initialValues = scope.pointsFromCurve(config.initialCurve);
+
+            if (_.isArray(initialValues)) {
+              var pointA = initialValues[0];
+              var pointB = initialValues[1];
               scope.points = {
                 A: {
                   x: pointA[0],
@@ -338,6 +350,12 @@ var main = ['$compile', '$modal', '$rootScope',
                   isSet: true
                 }
               };
+            }
+
+            if (config.exhibitOnly) {
+              setTimeout(function() {
+                scope.lockGraph();
+              }, 100);
             }
 
           },
@@ -381,16 +399,47 @@ var main = ['$compile', '$modal', '$rootScope',
           setMode: function(newMode) {},
 
           reset: function() {
-            scope.renewResponse([]);
-            scope.points.B = {};
-            scope.points.A = {};
+            scope.unlockGraph();
+
+            scope.inputStyle = {
+              width: "40px"
+            };
+
+            scope.correctResponse = undefined;
+            scope.points.B = scope.points.A = {};
+
+            var initialValues = scope.pointsFromCurve(scope.config.initialCurve);
+            if (_.isArray(initialValues)) {
+              var pointA = initialValues[0];
+              var pointB = initialValues[1];
+              scope.points = {
+                A: {
+                  x: pointA[0],
+                  y: pointA[1],
+                  isSet: true
+                },
+                B: {
+                  x: pointB[0],
+                  y: pointB[1],
+                  isSet: true
+                }
+              };
+            }
+
           },
 
           isAnswerEmpty: function() {
-            return _.isUndefined(scope.pointResponse) || _.isEmpty(scope.pointResponse) || scope.pointResponse.length === 0;
+            return _.isUndefined(scope.points) || _.isEmpty(scope.points) || scope.points.length === 0;
           },
 
-          answerChangedHandler: function(callback) {},
+          answerChangedHandler: function(callback) {
+            scope.$watch("points", function(newValue) {
+              if (newValue) {
+                callback();
+              }
+            }, true);
+
+          },
 
           editable: function(e) {
             scope.editable = e;
