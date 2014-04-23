@@ -1,5 +1,8 @@
 var _ = require('lodash');
 
+exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
+exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+
 exports.isCorrect = function(answer, correctResponse, orderMatters) {
   if (orderMatters) {
     return _.isEqual(answer, correctResponse);
@@ -36,7 +39,7 @@ exports.respond = function(question, answer, settings) {
     if (feedbackType === "custom") {
       res.feedback = question.feedback[fbSelector];
     } else if (feedbackType === "default") {
-      res.feedback = isCorrect ? "Correct!" : "Good try but that is not the correct answer.";
+      res.feedback = isCorrect ? exports.DEFAULT_CORRECT_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK;
     }
 
   }

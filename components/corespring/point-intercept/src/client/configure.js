@@ -1,3 +1,5 @@
+/* global corespring */
+
 var main = [
   function() {
 
@@ -129,8 +131,9 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-        scope.defaultCorrectFeedback = "Correct!";
-        scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
+        var server = corespring.server.logic('corespring-point-intercept');
+        scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
+        scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
