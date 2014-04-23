@@ -1,19 +1,27 @@
-var assert, component, server, settings, should, _;
+var server = require('../../src/server');
+var assert = require('assert');
+var should = require('should');
+var _ = require('lodash');
 
-server = require('../../src/server');
-
-assert = require('assert');
-
-should = require('should');
-
-_ = require('lodash');
-
-component = {
-  componentType: "org-tag",
-  correctResponse: ""
+var component = {
+  componentType: "corespring-point-interaction",
+  "correctResponse": [
+    "0,0",
+    "1,1"
+  ],
+  "feedback" :  {
+    "correctFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "model": {
+    "config": {
+      "labelsType": "present",
+      "orderMatters": true
+    }
+  }
 };
 
-settings = function(feedback, userResponse, correctResponse) {
+var settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
   userResponse = userResponse === undefined ? true : userResponse;
   correctResponse = correctResponse === undefined ? true : correctResponse;
@@ -24,6 +32,8 @@ settings = function(feedback, userResponse, correctResponse) {
     showFeedback: feedback
   };
 };
+
+var defaultSettings = settings(true, true, false); 
 
 describe('correctness logic', function() {
   it('when order matters', function() {
@@ -39,8 +49,55 @@ describe('correctness logic', function() {
 
 describe('server logic', function() {
 
-  it('should respond with correct and score 1 if the answer is correct', function() {});
+  it('should respond with correct and score 1 if the answer is correct', function() {
+    var response = server.respond(_.cloneDeep(component), ["0,0","1,1"], defaultSettings);
+    response.correctness.should.eql("correct");
+    response.score.should.eql(1);
+  });
 
-  it('should respond with incorrect and score 0 if the answer is correct', function() {});
+  it('should respond with incorrect and score 0 if the answer is incorrect', function() {
+    var response = server.respond(_.cloneDeep(component), ["1,2","3,1"], defaultSettings);
+    response.correctness.should.eql("incorrect");
+    response.score.should.eql(0);
+  });
+
+  it('respects order matters', function() {
+    var response = server.respond(_.cloneDeep(component), ["0,0","1,1"], defaultSettings);
+    response.correctness.should.eql("correct");
+    response.score.should.eql(1);
+
+    response = server.respond(_.cloneDeep(component), ["1,1","0,0"], defaultSettings);
+    response.correctness.should.eql("incorrect");
+    response.score.should.eql(0);
+  });
+
+  it('respects order doesnt matter', function() {
+    var clone = _.cloneDeep(component);
+    clone.model.config.labelsType = "absent";
+    clone.model.config.orderMatters = false;
+
+    var response = server.respond(clone, ["0,0","1,1"], defaultSettings);
+    response.correctness.should.eql("correct");
+    response.score.should.eql(1);
+
+    response = server.respond(clone, ["1,1","0,0"], defaultSettings);
+    response.correctness.should.eql("correct");
+    response.score.should.eql(1);
+  });
+
+  it('gives default feedback', function() {
+    var response = server.respond(_.cloneDeep(component), ["0,0","1,1"], defaultSettings);
+    response.feedback.should.eql(server.DEFAULT_CORRECT_FEEDBACK);
+
+    var response = server.respond(_.cloneDeep(component), ["2,2","1,1"], defaultSettings);
+    response.feedback.should.eql(server.DEFAULT_INCORRECT_FEEDBACK);
+
+//    response = server.respond(clone, ["1,1","0,0"], defaultSettings);
+//    response.correctness.should.eql("correct");
+//    response.score.should.eql(1);
+  });
+
+
+
 
 });
