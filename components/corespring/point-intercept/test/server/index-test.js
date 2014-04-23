@@ -85,12 +85,39 @@ describe('server logic', function() {
     response.score.should.eql(1);
   });
 
-  it('gives default feedback', function() {
+  it('gives default feedback if feedback type is default', function() {
     var response = server.respond(_.cloneDeep(component), ["0,0","1,1"], defaultSettings);
     response.feedback.should.eql(server.DEFAULT_CORRECT_FEEDBACK);
 
     response = server.respond(_.cloneDeep(component), ["2,2","1,1"], defaultSettings);
     response.feedback.should.eql(server.DEFAULT_INCORRECT_FEEDBACK);
+  });
+
+  it('gives no feedback if feedback type is none', function() {
+    var clone = _.cloneDeep(component);
+    clone.feedback.correctFeedbackType = "none";
+    clone.feedback.incorrectFeedbackType = "none";
+
+    var response = server.respond(clone, ["0,0","1,1"], defaultSettings);
+    response.should.not.have.property('feedback');
+
+    response = server.respond(clone, ["2,2","1,1"], defaultSettings);
+    response.should.not.have.property('feedback');
+  });
+
+  it('gives custom feedback if feedback type is custom', function() {
+    var clone = _.cloneDeep(component);
+    clone.feedback.correctFeedbackType = "custom";
+    clone.feedback.correctFeedback = "CustomCorrect";
+
+    clone.feedback.incorrectFeedbackType = "custom";
+    clone.feedback.incorrectFeedback = "CustomIncorrect";
+
+    var response = server.respond(clone, ["0,0","1,1"], defaultSettings);
+    response.feedback.should.eql("CustomCorrect");
+
+    response = server.respond(clone, ["2,2","1,1"], defaultSettings);
+    response.feedback.should.eql("CustomIncorrect");
   });
 
 });
