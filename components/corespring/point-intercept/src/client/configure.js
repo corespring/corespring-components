@@ -1,7 +1,7 @@
 /* global corespring */
 
-var main = [
-  function() {
+var main = [ 'ServerLogic',
+  function(ServerLogic) {
 
     this.inline = function(type, value, body, attrs) {
       return ['<label class="' + type + '-inline">',
@@ -131,7 +131,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-        var server = corespring.server.logic('corespring-point-intercept');
+        var server = ServerLogic.load('corespring-point-intercept');
         scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
         scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
         scope.containerBridge = {
