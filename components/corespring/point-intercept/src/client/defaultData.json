@@ -12,15 +12,15 @@
   },
   "model": {
     "config": {
-      "graphWidth": "300px",
-      "graphHeight": "300px",
+      "graphWidth": "550px",
+      "graphHeight": "550px",
       "maxPoints": "",
       "labelsType": "present",
       "pointLabels": [
-        "label1",
-        "label2",
-        "label3",
-        "label4"
+        "A",
+        "B",
+        "C",
+        "D"
       ],
       "domainLabel": "x",
       "domain": 10,
@@ -28,7 +28,7 @@
       "range": 10,
       "tickLabelFrequency": 5,
       "scale": 1,
-      "showCoordinates": true
+      "showCoordinates": false
     }
   }
 }

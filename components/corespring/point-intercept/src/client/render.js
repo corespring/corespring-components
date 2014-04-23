@@ -207,7 +207,7 @@ var main = ['$compile', '$modal', '$rootScope',
             },
             template: [
               '   <div class="modal-header">',
-              '     <h3>Answer</h3>',
+              '     <h3>Correct Answer</h3>',
               '   </div>',
               '   <div class="modal-body">',
               '     <corespring-point-intercept solution-view="true" id="solution"></corespring-point-intercept>',
@@ -242,7 +242,7 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.showCoordinates = config.showCoordinates;
             scope.pointLabels = config.labelsType === 'present' ? config.pointLabels : "";
             scope.maxPoints = config.maxPoints;
-            scope.showInputs = (config.showInputs ? config.showInputs : 'true') === 'true';
+            scope.showInputs = true;//(config.showInputs ? config.showInputs : 'true') === 'true';
 
 
             var containerWidth, containerHeight;
@@ -309,6 +309,7 @@ var main = ['$compile', '$modal', '$rootScope',
             });
 
             scope.feedback = undefined;
+            scope.correctResponse = undefined;
           },
 
           isAnswerEmpty: function() {

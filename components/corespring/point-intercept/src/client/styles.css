@@ -146,6 +146,10 @@
 .point-intercept-configuration {
 }
 
+.point-intercept-configuration .coordinate-input {
+    max-width: 80px;
+}
+
 .point-intercept-configuration .point-row:hover {
     background-color: #eeeeff;
 }
