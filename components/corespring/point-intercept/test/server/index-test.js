@@ -89,15 +89,8 @@ describe('server logic', function() {
     var response = server.respond(_.cloneDeep(component), ["0,0","1,1"], defaultSettings);
     response.feedback.should.eql(server.DEFAULT_CORRECT_FEEDBACK);
 
-    var response = server.respond(_.cloneDeep(component), ["2,2","1,1"], defaultSettings);
+    response = server.respond(_.cloneDeep(component), ["2,2","1,1"], defaultSettings);
     response.feedback.should.eql(server.DEFAULT_INCORRECT_FEEDBACK);
-
-//    response = server.respond(clone, ["1,1","0,0"], defaultSettings);
-//    response.correctness.should.eql("correct");
-//    response.score.should.eql(1);
   });
-
-
-
 
 });
