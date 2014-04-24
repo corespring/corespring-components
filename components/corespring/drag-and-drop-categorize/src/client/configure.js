@@ -1,8 +1,8 @@
 var main = [
-  "$compile",
-  function($compile) {
+  "ChoiceTemplates", "$compile",
+  function(ChoiceTemplates, $compile) {
     var input, inputs, template;
-    console.log("corespring/drag-and-drop");
+
     input = function(attrs, label) {
       return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label + "</div>";
     };
@@ -18,29 +18,31 @@ var main = [
         ].join("");
     };
 
-    var choiceArea = function() {
-      return [
-        '<ol class="drag-and-drop-choices" >',
-        '<li ng-repeat="c in model.choices">',
-        input("ng-model=\"c.content\" ", '<button type="button" class="close remove-choice" ng-click="remove(c)">&times;</button>'),
-        '</li>',
-        '</ol>',
+    var choiceArea = [
+//        '<ol class="drag-and-drop-choices" >',
+//        '<li ng-repeat="c in model.choices" style="position: relative">',
+      '  <div class="choice" ng-repeat="q in model.choices">',
+      ChoiceTemplates.choice({feedback: false, correct: ''}),
+      '  </div>',
+
+//      input("ng-model=\"c.content\" ", '<button type="button" class="close remove-choice" ng-click="remove(c)">&times;</button>'),
+//        '</li>',
+//        '</ol>',
         '<div class="clearfix"></div>',
         '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
 
         ].join("");
-    };
 
     var answerArea = function() {
       return [
-          '<textarea ng-model="model.answerArea" rows="5" style="width: 100%"></textarea>',
+//          '<textarea ng-model="model.answerArea" rows="5" style="width: 100%"></textarea>',
 //        '<ol class="drag-and-drop-answers" >',
 //        '<li ng-repeat="c in answers" class="col-lg-4" >',
 //        '<div class="answer-placeholder" answer-popover ng-model="c" active-popover="activePopover">Click to configure</div>',
 //        '</li>',
 //        '</ol>',
-        '<div class="clearfix"></div>',
-        '  <button class=\"btn\" ng-click=\"addAnswer()\">Add an Answer Blank</button>'
+//        '<div class="clearfix"></div>',
+//        '  <button class=\"btn\" ng-click=\"addAnswer()\">Add an Answer Blank</button>'
         ].join("");
     };
 
@@ -55,9 +57,7 @@ var main = [
 
     template = [
       '<div class="drag-and-drop-config-panel config-panel">{{active}}',
-        inputHolder('Choices', choiceArea()),
-        inputHolder('Answer Area', answerArea()),
-//        inputHolder('Display Options', displayOptions()),
+        inputHolder('Choices', choiceArea),
         '</div>'].join('\n');
 
     return {
@@ -65,6 +65,10 @@ var main = [
       scope: "isolate",
       template: template,
       link: function($scope, element, attrs) {
+
+        $scope.toChar = function(num) {
+          return String.fromCharCode(65 + num);
+        };
 
         $scope.containerBridge = {
           setModel: function(model) {

@@ -1,0 +1,32 @@
+{
+  "componentType": "corespring-drag-and-drop-categorize",
+  "title": "[Drag and Drop Question Name]",
+  "correctResponse": {},
+  "model": {
+    "answerArea": "",
+    "choices": [
+      {
+        "content": "",
+        "id": "1"
+      },
+      {
+        "content": "",
+        "id": "2"
+      },
+      {
+        "content": "",
+        "id": "3"
+      },
+      {
+        "content": "",
+        "id": "4"
+      }
+    ],
+    "config": {
+      "shuffle": true,
+      "position": "above"
+    },
+    "prompt": "Enter a prompt for the student, e.g. 'Drag the correct answers into the spaces below.'"
+  },
+  "weight": 1
+}

@@ -1,16 +1,7 @@
 {
-  "name": "drag-and-drop",
-  "title": "Drag & Drop",
-  "titleGroup": "Fixed Choice",
+  "name": "drag-and-drop-engine",
   "organization": "corespring",
-  "corespring-container-version": "0.0.1",
-  "version": "0.0.1",
-  "libraries": [
-    {
-      "name": "drag-and-drop-engine",
-      "organization": "corespring"
-    }
-  ],
+  "purpose" : "library",
   "dependencies": {
     "client": {
       "angular-dragdrop": {

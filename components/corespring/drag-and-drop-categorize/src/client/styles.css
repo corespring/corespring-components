@@ -1,0 +1,170 @@
+.view-drag-and-drop {
+}
+
+.view-drag-and-drop .prompt {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    font: 14px/20px;
+    font-weight: bold;
+    padding: 16px 0 16px 0;
+}
+
+.view-drag-and-drop .choices {
+}
+
+.view-drag-and-drop .choices-table {
+    display: table;
+    border-spacing: 3px;
+}
+
+.view-drag-and-drop .choices-table-row {
+    display: table-row;
+}
+
+.view-drag-and-drop .choices-table-cell {
+    display: inline-block;
+
+}
+
+.modal .choice,
+.view-drag-and-drop .choice {
+    vertical-align: top;
+    background-color: #EFEFEF;
+    height: 100%;
+    margin: 3px 3px 1px 1px;
+    padding: 8px;
+    text-align: center;
+    /*z-index: 1040;*/
+}
+
+.view-drag-and-drop .choice:hover {
+    box-shadow: 0px 0px 5px #000;
+    border: 1px solid #333;
+    cursor: hand; cursor: pointer;
+}
+
+.view-drag-and-drop .landing-place {
+    min-width: 100px;
+    min-height: 30px;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 3px 3px 3px 3px;
+    border: 1px solid #999;
+    position: relative;
+    margin: 5px 5px 20px;
+}
+
+.view-drag-and-drop .landing-place.inline {
+    display: inline-block;
+}
+
+.view-drag-and-drop .landing-place .label-holder {
+    position: relative;
+    top: -10px;
+    width: 100%;
+    text-align: center;
+}
+
+.view-drag-and-drop .landing-place .landingLabel {
+    display: inline-block;
+    padding-left: 3px;
+    padding-right: 3px;
+    background-color: #fff;
+    color: #000;
+}
+
+.view-drag-and-drop .landing-place .choice {
+    display: inline-block;
+}
+
+.view-drag-and-drop .correct {
+    box-shadow: 0px 0px 5px #95C444;
+    border: 1px solid #95C444;
+}
+
+.view-drag-and-drop .incorrect {
+    box-shadow: 0px 0px 5px #F8A31A;
+    border: 1px solid #F8A31A;
+}
+
+.modal .landing-place {
+    background-color: #edffe3;
+}
+
+
+/* Config Panel */
+
+.drag-and-drop-config-panel td {
+    padding: 5px;
+}
+
+.drag-and-drop-config-panel .answer-placeholder {
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    max-width: 130px;
+}
+
+.drag-and-drop-config-panel .drag-and-drop-choices {
+    list-style-type: upper-alpha;
+}
+
+.drag-and-drop-config-panel .drag-and-drop-choices li {
+    float: left;
+    width: 145px;
+}
+
+.drag-and-drop-config-panel .drag-and-drop-answers {
+}
+
+.display-row:before, .display-row:after {
+    content: " ";
+    display: table;
+}
+
+.drag-and-drop-config-panel .display-row {
+    width: 100%;
+}
+
+.drag-and-drop-config-panel .display-row:after {
+    clear: both;
+}
+
+.drag-and-drop-config-panel .remove-choice {
+    position: absolute;
+    right: 38px;
+    top: -7px;
+}
+
+.drag-and-drop-answers li {
+    float: left;
+}
+
+.drag-and-drop-config-panel .popover {
+    max-width: 350px;
+    width: 350px;
+}
+
+.popover-row {
+    margin-bottom: 10px;
+}
+
+.popover-label {
+    width: 100px;
+    display: inline-block;
+}
+
+.popover-input {
+    display: inline-block;
+}
+
+.popover-content {
+    padding: 10px;
+}
+
+.modal {
+    display: block;
+}
+
