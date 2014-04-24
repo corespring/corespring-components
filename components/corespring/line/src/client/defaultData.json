@@ -2,13 +2,15 @@
   "componentType" : "corespring-line",
   "title": "",
   "weight" : 1,
-  "correctResponse": "y=x+1",
+  "correctResponse": "",
   "feedback" :  {
     "correctFeedbackType": "default",
     "incorrectFeedbackType": "default"
   },
   "model" : {
     "config": {
+      "width": "550",
+      "height": "550",
       "domain": 10,
       "range": 10,
       "scale": 1,

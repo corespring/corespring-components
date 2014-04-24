@@ -142,3 +142,13 @@
     border-color: #F8A31A;
     background: url("/assets/images/wrong-icon.png") no-repeat scroll 3px 8px transparent;
 }
+
+.point-intercept-configuration .intro-text {
+    padding: 10px;
+}
+
+.point-intercept-configuration .informative-label {
+    font-size: small;
+    font-style: italic;
+    margin-bottom: 10px;
+}
