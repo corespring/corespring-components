@@ -118,7 +118,7 @@ var main = [
 
             var choiceById = function(cid) {
               return _.find(model.model.choices, function(c) {
-                return c.id === cid
+                return c.id === cid;
               });
             };
 
