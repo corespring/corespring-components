@@ -13,5 +13,6 @@
   "name": "multiple-choice",
   "organization": "corespring",
   "title": "Multiple Choice",
-  "titleGroup": "Fixed Choice"
+  "titleGroup": "Fixed Choice",
+  "released": true
 }

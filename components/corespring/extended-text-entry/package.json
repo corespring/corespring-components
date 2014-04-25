@@ -3,6 +3,7 @@
   "title": "Open Ended Answer",
   "titleGroup": "Text Entry",
   "organization": "corespring",
+  "released": true,
   "libraries": [
     {
       "name": "feedback-templates",
