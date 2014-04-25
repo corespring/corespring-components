@@ -53,11 +53,11 @@ var main = [
         ].join("");
     };
 
-    template = ['<div class="drag-and-drop-config-panel config-panel">{{active}}',
-        inputHolder('Question Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
+    template = [
+      '<div class="drag-and-drop-config-panel config-panel">{{active}}',
         inputHolder('Choices', choiceArea()),
         inputHolder('Answer Area', answerArea()),
-        inputHolder('Display Options', displayOptions()),
+//        inputHolder('Display Options', displayOptions()),
         '</div>'].join('\n');
 
     return {
@@ -117,7 +117,7 @@ var main = [
           });
         }, true);
 
-        $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
+        $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
 
         $scope.activePopover = {
           value: ""

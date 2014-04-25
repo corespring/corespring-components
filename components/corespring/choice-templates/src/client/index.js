@@ -25,10 +25,47 @@ exports.service = ['$log',
       this.choice = function(opts) {
         var defaults = {
           correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>',
-          correctnessPredicate: "correctMap[q.value]"
+          correctnessPredicate: "correctMap[q.value]",
+          feedback: true
         };
 
         opts = _.extend(defaults, opts);
+
+        var feedback = opts.feedback ? [
+          '      <td colspan="6" style="text-align: left">',
+          '        <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
+          '        <div class="well" ng-show="feedbackOn">',
+          '          <div><label>If this choice is selected, show</label></div>',
+          '          <div>',
+          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].feedbackType'"),
+          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].feedbackType'"),
+          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].feedbackType'"),
+          '          </div>',
+          '          <div class="clearfix"></div>',
+          '          <span ng-switch="feedback[q.value].feedbackType">',
+            '            <input ng-switch-when="custom" class="form-control feedback-preview custom" ng-class="{correct: ' + opts.correctnessPredicate + '}" type="text" ng-model="feedback[q.value].feedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
+            '            <input ng-switch-when="default" class="form-control feedback-preview" ng-class="{correct: ' + opts.correctnessPredicate + '}" disabled="true" type="text" value="{{' + opts.correctnessPredicate + ' ? defaultCorrectFeedback : defaultIncorrectFeedback}}"></input>',
+            '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
+          '          </span>',
+
+          '          <div ng-show="correctMap[q.value]" style="margin-top: 15px">',
+          '            <div><label>If this choice is NOT selected, show</label></div>',
+          '            <div>',
+          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
+          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
+          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
+          '            </div>',
+          '            <div class="clearfix"></div>',
+          '          <span ng-switch="feedback[q.value].notChosenFeedbackType">',
+            '            <input ng-switch-when="custom" class="form-control feedback-preview custom correct" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
+          '            <input ng-switch-when="default" class="form-control feedback-preview  correct" disabled="true" type="text" value="{{defaultNotChosenFeedback}}"></input>',
+            '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
+          '          </span>',
+          '          </div>',
+          '        </div>',
+          '      </td>'
+
+        ].join('') : '';
 
         return [
           '  <table class="choice-template-choice">',
@@ -63,38 +100,7 @@ exports.service = ['$log',
           '      </td>',
           '    </tr>',
           '    <tr>',
-          '      <td colspan="6" style="text-align: left">',
-          '        <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
-          '        <div class="well" ng-show="feedbackOn">',
-          '          <div><label>If this choice is selected, show</label></div>',
-          '          <div>',
-          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].feedbackType'"),
-          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].feedbackType'"),
-          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].feedbackType'"),
-          '          </div>',
-          '          <div class="clearfix"></div>',
-          '          <span ng-switch="feedback[q.value].feedbackType">',
-          '            <input ng-switch-when="custom" class="form-control feedback-preview custom" ng-class="{correct: ' + opts.correctnessPredicate + '}" type="text" ng-model="feedback[q.value].feedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
-          '            <input ng-switch-when="default" class="form-control feedback-preview" ng-class="{correct: ' + opts.correctnessPredicate + '}" disabled="true" type="text" value="{{' + opts.correctnessPredicate + ' ? defaultCorrectFeedback : defaultIncorrectFeedback}}"></input>',
-          '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
-          '          </span>',
-
-          '          <div ng-show="correctMap[q.value]" style="margin-top: 15px">',
-          '            <div><label>If this choice is NOT selected, show</label></div>',
-          '            <div>',
-          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
-          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
-          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
-          '            </div>',
-          '            <div class="clearfix"></div>',
-          '          <span ng-switch="feedback[q.value].notChosenFeedbackType">',
-            '            <input ng-switch-when="custom" class="form-control feedback-preview custom correct" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
-          '            <input ng-switch-when="default" class="form-control feedback-preview  correct" disabled="true" type="text" value="{{defaultNotChosenFeedback}}"></input>',
-            '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
-          '          </span>',
-          '          </div>',
-          '        </div>',
-          '      </td>',
+          feedback,
           '    </tr>',
           '  </table>'
         ].join('\n');
