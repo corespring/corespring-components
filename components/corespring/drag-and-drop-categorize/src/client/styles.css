@@ -147,6 +147,14 @@
     width: 350px;
 }
 
+.drag-and-drop-config-panel .answer-area {
+    margin-bottom: 20px;
+}
+
+.drag-and-drop-config-panel .answer-area-select {
+    width: 200px;
+}
+
 .popover-row {
     margin-bottom: 10px;
 }

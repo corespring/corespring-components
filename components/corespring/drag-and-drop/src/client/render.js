@@ -474,7 +474,7 @@ exports.directives = [
   },
 /** A 2nd directive */
   {
-    name: 'landingPlaceLegacy',
+    name: 'landingPlace',
     directive: landingPlace
   }
 ];

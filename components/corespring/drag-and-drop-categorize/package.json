@@ -11,6 +11,10 @@
       "organization": "corespring"
     },
     {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    },
+    {
       "name": "choice-templates",
       "organization": "corespring",
       "scope" : "editor"

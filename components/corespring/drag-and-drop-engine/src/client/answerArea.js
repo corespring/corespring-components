@@ -1,4 +1,4 @@
-var landingPlace = [
+var answerArea = [
   function() {
 
     var def = {
@@ -25,11 +25,12 @@ var landingPlace = [
         });
 
         bindAttribute('label', 'label');
-        bindAttribute('cardinality', 'cardinality', function(n) {
-          scope.isMultiple = n !== 'single';
-        });
 
         scope.columnsPerRow = attrs.columnsperrow || 3;
+
+        scope.isMultiple = function() {
+          return attrs.cardinality !== 'single';
+        };
 
         var nonEmptyElement = function(c) {
           return c && c.id;
@@ -93,7 +94,7 @@ var landingPlace = [
           onDrop: 'onDrop',
           onOver: 'overCallback',
           onOut: 'outCallback',
-          multiple: scope.isMultiple
+          multiple: scope.isMultiple()
         };
 
         scope.sortableOptions = {
@@ -128,7 +129,7 @@ var landingPlace = [
 
         scope.$watch("maxWidth + maxHeight", function(n) {
           var mw = scope.maxWidth + 25;
-          var maxWidth = scope.isMultiple ? (mw * scope.columnsPerRow) : mw;
+          var maxWidth = scope.isMultiple() ? (mw * scope.columnsPerRow) : mw;
           if (scope.expandHorizontal) {
             scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
           } else {
@@ -180,6 +181,6 @@ var landingPlace = [
 
 exports.framework = "angular";
 exports.directive = {
-  name: "landingPlace",
-  directive: landingPlace
+  name: "answerArea",
+  directive: answerArea
 };

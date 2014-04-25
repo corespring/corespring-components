@@ -108,7 +108,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           },
           template: [
             '   <div class="modal-header">',
-            '     <h3>Answer</h3>',
+            '     <h3>Correct Answer</h3>',
             '   </div>',
             '   <div class="modal-body">',
             scope.model.answerArea,
@@ -148,7 +148,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.editable = true;
           scope.resetChoices(scope.rawModel);
 
-          scope.expandHorizontal = dataAndSession.data.model.config.expandHorizontal;
           scope.itemsPerRow = dataAndSession.data.model.config.itemsPerRow || 2;
           scope.originalChoices = _.cloneDeep(scope.model.choices);
 
@@ -200,6 +199,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
         reset: function() {
           scope.resetChoices(scope.rawModel);
+          scope.correctResponse = undefined;
         },
 
         isAnswerEmpty: function() {
@@ -241,11 +241,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var answerArea = [
         '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
         '        <div ng-repeat="c in model.categories">',
-        '          <landing-place landingId="{{c.id}}"',
+        '          <div answer-area landingId="{{c.id}}"',
         '                          label="{{c.label}}"',
         '                          cardinality="multiple"',
         '                          expandHorizontally="true">',
-        '          </landing-place>',
+        '          </div>',
         '        </div>'
       ].join('');
 
@@ -290,8 +290,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       link: link,
       scope: {},
       restrict: 'AE',
-      replace: false,
-      template: '' + tmpl
+      replace: true,
+      template: tmpl
     };
   }];
 

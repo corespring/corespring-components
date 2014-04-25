@@ -1,6 +1,6 @@
 var main = [
-  "ChoiceTemplates", "$compile",
-  function(ChoiceTemplates, $compile) {
+  "ChoiceTemplates", 'ServerLogic',
+  function(ChoiceTemplates, ServerLogic) {
     var input, inputs, template;
 
     input = function(attrs, label) {
@@ -19,32 +19,54 @@ var main = [
     };
 
     var choiceArea = [
-//        '<ol class="drag-and-drop-choices" >',
-//        '<li ng-repeat="c in model.choices" style="position: relative">',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({feedback: false, correct: ''}),
       '  </div>',
 
-//      input("ng-model=\"c.content\" ", '<button type="button" class="close remove-choice" ng-click="remove(c)">&times;</button>'),
-//        '</li>',
-//        '</ol>',
         '<div class="clearfix"></div>',
         '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
 
         ].join("");
 
-    var answerArea = function() {
-      return [
-//          '<textarea ng-model="model.answerArea" rows="5" style="width: 100%"></textarea>',
-//        '<ol class="drag-and-drop-answers" >',
-//        '<li ng-repeat="c in answers" class="col-lg-4" >',
-//        '<div class="answer-placeholder" answer-popover ng-model="c" active-popover="activePopover">Click to configure</div>',
-//        '</li>',
-//        '</ol>',
-//        '<div class="clearfix"></div>',
-//        '  <button class=\"btn\" ng-click=\"addAnswer()\">Add an Answer Blank</button>'
-        ].join("");
-    };
+    var answerArea = [
+        '<div class="answer-area" ng-repeat="category in model.categories">',
+        '  <div>Correct tiles for {{$first ? "Default Answer Area" :"Answer Area "+($index+1)}}</div>',
+        '  <select class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices"></select>',
+        '  <div><a href="#" ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
+        '</div>',
+        '<a ng-click="addCategory()">Add Answer Area</a>'
+
+      ].join("");
+
+    var feedback = [
+      '        <div class="well">',
+      '          <div feedback-selector',
+      '               fb-sel-label="Correct"',
+      '               fb-sel-class="correct"',
+      '               fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+      '               fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+      '               fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
+      '          ></div>',
+      '        </div>',
+      '        <div class="well">',
+      '          <div feedback-selector',
+      '               fb-sel-label="Partial"',
+      '               fb-sel-class="correct"',
+      '               fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+      '               fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+      '               fb-sel-default-feedback="{{defaultPartialFeedback}}"',
+      '          ></div>',
+      '        </div>',
+      '        <div class="well">',
+      '          <div feedback-selector',
+      '               fb-sel-label="Incorrect"',
+      '               fb-sel-class="incorrect"',
+      '               fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+      '               fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+      '               fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
+      '          ></div>',
+      '        </div>'
+      ].join("");
 
     var displayOptions = function() {
       return [
@@ -56,15 +78,34 @@ var main = [
     };
 
     template = [
-      '<div class="drag-and-drop-config-panel config-panel">{{active}}',
-        inputHolder('Choices', choiceArea),
-        '</div>'].join('\n');
+      '<div class="drag-and-drop-config-panel">',
+      '  <div navigator="">',
+      '    <div navigator-panel="Design">',
+      inputHolder('Choices', choiceArea),
+      inputHolder('Answer Areas', answerArea),
+      inputHolder('Feedback', feedback),
+      '    </div>',
+      '  </div>',
+      '</div>'].join('\n');
 
     return {
       restrict: "E",
       scope: "isolate",
       template: template,
+      replace: true,
       link: function($scope, element, attrs) {
+
+        var server = ServerLogic.load('corespring-drag-and-drop-categorize');
+        $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
+        $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
+        $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
+
+        $scope.correctAnswers = {};
+
+        $scope.choiceToLetter = function(c) {
+          var idx = $scope.model.choices.indexOf(c);
+          return $scope.toChar(idx);
+        };
 
         $scope.toChar = function(num) {
           return String.fromCharCode(65 + num);
@@ -75,28 +116,21 @@ var main = [
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
 
-            $scope.answers = [];
-            var node = $("<div/>").html($scope.model.answerArea);
-            node.find("span[landing-place]").each(function() {
-              $scope.answers.push({});
-            });
+            var choiceById = function(cid) {
+              return _.find(model.model.choices, function(c) {
+                return c.id === cid
+              });
+            };
 
-            _.each($scope.model.answers, function(answer) {
-
-              var correctResponse = model.correctResponse[answer.id];
-              if (correctResponse) {
-                var idx = _.indexOf(_.pluck($scope.model.choices, 'id'), correctResponse);
-                answer.correctResponse = String.fromCharCode(65 + idx);
-              }
+            _.each(model.correctResponse, function(val, key) {
+               $scope.correctAnswers[key] = _.map(val, function(choiceId) {
+                  return choiceById(choiceId);
+               });
             });
             console.log(model);
           },
           getModel: function() {
             var model = _.cloneDeep($scope.fullModel);
-            _.each(model.model.answers, function(answer) {
-              delete answer.correctResponse;
-            });
-            console.log(model.correctResponse);
             return model;
           },
 
@@ -106,26 +140,16 @@ var main = [
           }
         };
 
-        $scope.$watch('model.answers', function(val) {
-          if (!val) {
-            return;
+        $scope.$watch('correctAnswers', function(n) {
+          if (n) {
+            $scope.fullModel.correctResponse = _.cloneDeep($scope.correctAnswers);
+            _.each($scope.fullModel.correctResponse, function(val, key) {
+              $scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
+            });
           }
-          var model = $scope.fullModel;
-          _.each(model.model.answers, function(answer) {
-            if (!answer.correctResponse) {
-              return;
-            }
-            var idx = answer.correctResponse.charCodeAt(0) - 65;
-            var correctResponse = model.model.choices[idx].id;
-            model.correctResponse[answer.id] = correctResponse;
-          });
         }, true);
 
         $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
-
-        $scope.activePopover = {
-          value: ""
-        };
 
         $scope.remove = function(c) {
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
@@ -140,95 +164,21 @@ var main = [
           });
         };
 
-        $scope.addAnswer = function() {
-          $scope.model.answers = $scope.model.answers || [];
-          $scope.model.answers.push({
-            id: "" + $scope.model.answers.length,
-            textBefore: "",
-            textAfter: "",
-            inline: false
+        $scope.removeCategory = function(category) {
+          $scope.model.categories = _.filter($scope.model.categories, function(existing) {
+            return existing !== category;
           });
         };
 
-        $scope.clickAnswer = function() {};
-
-      }
-    };
-  }
-];
-
-var answerPopoverDirective = ['$compile',
-  function($compile) {
-    return {
-      scope: {
-        model: "=ngModel",
-        activePopover: "="
-      },
-      link: function(scope, elm, attr) {
-        var formGroup = function(label, body) {
-          return [
-            "<div class='popover-row'>",
-            " <label class='popover-label'>" + label + "</label>",
-            " <div class='popover-input'>",
-            "   " + body,
-            " </div>",
-            "</div>"
-            ].join("");
-        };
-        var html = [
-          "<div class='form-horizontal'>",
-          formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'/>"),
-          formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'/>"),
-          formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'/>"),
-          formGroup("Inline:", "<input type='checkbox' ng-model='model.inline'/>"),
-          formGroup("<button class='btn btn-primary' ng-click='hideMe()'>Ok</button>", ""),
-          "</div>"
-        ].join("");
-
-        scope.hideMe = function() {
-          if (scope.activePopover.value) {
-            $(scope.activePopover.value).popover('destroy');
-            scope.activePopover.value = undefined;
-          }
+        $scope.addCategory = function() {
+          var idx = $scope.model.categories.length + 1;
+          $scope.model.categories.push({
+            id: "cat_"+idx,
+            label: "Category "+idx,
+            orientation: "vertical"
+          });
         };
 
-        scope.$on('clickOutsidePopover', scope.hideMe);
-
-        // We need to manually show/hide the popup as the automatic one breaks angular bindings because of some internal
-        // caching mechanism
-        elm.click(function(ev) {
-          var same = scope.activePopover.value === elm;
-          if (scope.activePopover.value) {
-            $(scope.activePopover.value).popover('destroy');
-            scope.$apply(function() {
-              scope.activePopover.value = undefined;
-            });
-          }
-          if (same) {
-            return;
-          }
-          var compiled = $compile(html)(scope);
-
-          var titleHtml = '<span class="text-info"><strong>Answer Blank</strong></span>' +
-            '<button type="button" class="close" ng-click="hideMe()">&times;</button>';
-          var compiledTitle = $compile(titleHtml)(scope);
-
-          $(elm).popover({
-            title: compiledTitle,
-            content: compiled,
-            html: true,
-            placement: 'top',
-            trigger: 'manual'
-          });
-
-          scope.$apply(function() {
-            $(elm).popover('show');
-            scope.activePopover.value = elm;
-          });
-
-          ev.stopImmediatePropagation();
-          ev.preventDefault();
-        });
       }
     };
   }
@@ -238,9 +188,5 @@ exports.framework = 'angular';
 exports.directives = [
   {
     directive: main
-  },
-  {
-    name: 'answerPopover',
-    directive: answerPopoverDirective
   }
 ];

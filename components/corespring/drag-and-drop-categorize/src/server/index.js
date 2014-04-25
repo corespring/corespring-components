@@ -1,6 +1,10 @@
 var _ = require('lodash');
 var sax = require('sax');
 
+exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
+exports.DEFAULT_PARTIAL_FEEDBACK = "Partially Correct!";
+exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+
 exports.respond = function(question, answer, settings) {
 
   var parser = sax.parser(false);
