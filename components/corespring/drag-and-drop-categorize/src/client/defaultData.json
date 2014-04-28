@@ -1,32 +1,55 @@
 {
   "componentType": "corespring-drag-and-drop-categorize",
   "title": "[Drag and Drop Question Name]",
-  "correctResponse": {},
+  "correctResponse": {
+    "cat_1": [],
+    "cat_2": []
+  },
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": false,
+  "partialScoring" : [
+    {"numberOfCorrect": 1, "scorePercentage": 25},
+    {"numberOfCorrect": 2, "scorePercentage": 50},
+    {"numberOfCorrect": 3, "scorePercentage": 75}
+  ],
   "model": {
-    "answerArea": "",
+    "categories": [
+      {
+        "id": "cat_1",
+        "hasLabel": true,
+        "label": "Category 1",
+        "layout": "vertical"
+      },
+      {
+        "id": "cat_2",
+        "hasLabel": true,
+        "label": "Category 2",
+        "layout": "vertical"
+      }
+    ],
     "choices": [
       {
-        "content": "",
-        "id": "1"
+        "label": "",
+        "labelType": "text",
+        "id": "pupa"
       },
       {
-        "content": "",
-        "id": "2"
-      },
-      {
-        "content": "",
-        "id": "3"
-      },
-      {
-        "content": "",
-        "id": "4"
+        "label": "Egg",
+        "labelType": "text",
+        "id": "egg"
       }
     ],
     "config": {
-      "shuffle": true,
-      "position": "above"
-    },
-    "prompt": "Enter a prompt for the student, e.g. 'Drag the correct answers into the spaces below.'"
+      "shuffle": false,
+      "removeTilesOnDrop": true,
+      "choiceAreaLayout": "vertical",
+      "answerAreaPosition": "below"
+
+    }
   },
   "weight": 1
 }

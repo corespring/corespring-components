@@ -11,10 +11,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.propagateDimension = function(w, h) {
         scope.$apply(function() {
-          if (w > scope.maxWidth) {
+          if (w !== scope.maxWidth) {
             scope.maxWidth = w;
           }
-          if (h > scope.maxHeight) {
+          if (h !== scope.maxHeight) {
             scope.maxHeight = h;
           }
           scope.choiceStyle = {
@@ -148,7 +148,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.editable = true;
           scope.resetChoices(scope.rawModel);
 
-          scope.itemsPerRow = dataAndSession.data.model.config.itemsPerRow || 2;
           scope.originalChoices = _.cloneDeep(scope.model.choices);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
@@ -165,6 +164,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
               });
               return _.isUndefined(landingPlaceWithChoice);
             });
+
           }
 
         },
@@ -225,15 +225,23 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.placeholderForChoice = function(choice) {
-        return ( !!choice.copyOnDrag ? "'keep'" : "''");
+        return ( !scope.model.config.removeTilesOnDrop ? "'keep'" : "''");
+      };
+
+      scope.itemsPerRow = function() {
+        if (scope.model.config.choiceAreaLayout === 'vertical') {
+          return 1;
+        } else {
+          return 550 / scope.maxWidth;
+        }
       };
 
       scope.getChoiceRows = function() {
-        return _.range(scope.model.choices.length / scope.itemsPerRow);
+        return _.range(scope.model.choices.length / scope.itemsPerRow());
       };
 
       scope.getChoicesForRow = function(row) {
-        return scope.model.choices.slice(row * scope.itemsPerRow, row * scope.itemsPerRow + scope.itemsPerRow);
+        return scope.model.choices.slice(row * scope.itemsPerRow(), row * scope.itemsPerRow() + scope.itemsPerRow());
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -245,7 +253,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
         '        <div ng-repeat="c in model.categories">',
         '          <div answer-area landingId="{{c.id}}"',
-        '                          label="{{c.label}}"',
+        '                          label="{{c.hasLabel ? c.label : \'\'}}"',
+        '                          layout="{{c.layout}}"',
         '                          cardinality="multiple"',
         '                          expandHorizontally="true">',
         '          </div>',
@@ -255,7 +264,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var choiceArea = function() {
       return [
         '        <div class="choices" >',
-        '          <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
+        '          <h5 ng-show="model.config.choiceAreaHasLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
         '          <div class="choices-table">',
         '            <div ng-repeat="row in getChoiceRows()" class="choices-table-row">',
         '              <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
@@ -263,11 +272,17 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         '                   data-drag="editable"',
         '                   ng-disabled="!editable"',
         '                   data-jqyoui-options="{revert: \'invalid\' }"',
-        '                   ng-model="model.choices[$parent.$index * itemsPerRow + $index]"',
+        '                   ng-model="model.choices[$parent.$index * itemsPerRow() + $index]"',
         '                   jqyoui-draggable="{placeholder: {{placeholderForChoice(o)}} }"',
         '                   data-id="{{o.id}}">',
-        '               <div ng-bind-html-unsafe="o.label" />',
-        '               <div class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="o.label" />',
+        '               <div ng-switch="o.labelType">',
+        '                 <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+        '                 <div ng-switch-default="" ng-bind-html-unsafe="o.label" />',
+        '               </div>',
+        '               <div class="sizerHolder" style="display: none; position: absolute" ng-switch="o.labelType">',
+        '                 <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+        '                 <div ng-switch-default="" ng-bind-html-unsafe="o.label" />',
+        '               </div>',
         '              </div>',
         '            </div>',
         '          </div>',
@@ -280,9 +295,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
       '  </div> <div class="clearfix" />',
-      '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
+      '  <div ng-if="model.config.answerAreaPosition != \'above\'">', choiceArea(), '</div>',
       answerArea,
-      '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
+      '  <div ng-if="model.config.answerAreaPosition == \'above\'">', choiceArea(), '</div>',
       '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div class="cs-feedback" ng-bind-html-unsafe="feedback"></div>',
