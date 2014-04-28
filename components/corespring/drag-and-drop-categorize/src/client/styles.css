@@ -1,7 +1,7 @@
-.view-drag-and-drop {
+.view-drag-and-drop-categorize {
 }
 
-.view-drag-and-drop .prompt {
+.view-drag-and-drop-categorize .prompt {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     font: 14px/20px;
@@ -9,25 +9,25 @@
     padding: 16px 0 16px 0;
 }
 
-.view-drag-and-drop .choices {
+.view-drag-and-drop-categorize .choices {
 }
 
-.view-drag-and-drop .choices-table {
+.view-drag-and-drop-categorize .choices-table {
     display: table;
     border-spacing: 3px;
 }
 
-.view-drag-and-drop .choices-table-row {
+.view-drag-and-drop-categorize .choices-table-row {
     display: table-row;
 }
 
-.view-drag-and-drop .choices-table-cell {
+.view-drag-and-drop-categorize .choices-table-cell {
     display: inline-block;
 
 }
 
 .modal .choice,
-.view-drag-and-drop .choice {
+.view-drag-and-drop-categorize .choice {
     vertical-align: top;
     background-color: #EFEFEF;
     height: 100%;
@@ -37,13 +37,13 @@
     /*z-index: 1040;*/
 }
 
-.view-drag-and-drop .choice:hover {
+.view-drag-and-drop-categorize .choice:hover {
     box-shadow: 0px 0px 5px #000;
     border: 1px solid #333;
     cursor: hand; cursor: pointer;
 }
 
-.view-drag-and-drop .landing-place {
+.view-drag-and-drop-categorize .landing-place {
     min-width: 100px;
     min-height: 30px;
     background-color: #fff;
@@ -54,18 +54,18 @@
     margin: 5px 5px 20px;
 }
 
-.view-drag-and-drop .landing-place.inline {
+.view-drag-and-drop-categorize .landing-place.inline {
     display: inline-block;
 }
 
-.view-drag-and-drop .landing-place .label-holder {
+.view-drag-and-drop-categorize .landing-place .label-holder {
     position: relative;
     top: -10px;
     width: 100%;
     text-align: center;
 }
 
-.view-drag-and-drop .landing-place .landingLabel {
+.view-drag-and-drop-categorize .landing-place .landingLabel {
     display: inline-block;
     padding-left: 3px;
     padding-right: 3px;
@@ -73,16 +73,16 @@
     color: #000;
 }
 
-.view-drag-and-drop .landing-place .choice {
+.view-drag-and-drop-categorize .landing-place .choice {
     display: inline-block;
 }
 
-.view-drag-and-drop .correct {
+.view-drag-and-drop-categorize .correct {
     box-shadow: 0px 0px 5px #95C444;
     border: 1px solid #95C444;
 }
 
-.view-drag-and-drop .incorrect {
+.view-drag-and-drop-categorize .incorrect {
     box-shadow: 0px 0px 5px #F8A31A;
     border: 1px solid #F8A31A;
 }
@@ -90,6 +90,23 @@
 .modal .landing-place {
     background-color: #edffe3;
 }
+
+.view-drag-and-drop-categorize.correct .feedback {
+    background: url("/assets/images/correct-icon.png") no-repeat scroll 0px -0px transparent;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    margin-left: -3px;
+}
+
+.view-drag-and-drop-categorize.incorrect .feedback {
+    background: url("/assets/images/wrong-icon.png") no-repeat scroll 0px -0px transparent;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    margin-left: -3px;
+}
+
 
 
 /* Config Panel */

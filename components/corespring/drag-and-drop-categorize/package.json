@@ -19,5 +19,6 @@
       "organization": "corespring",
       "scope" : "editor"
     }
-  ]
+  ],
+  "released": true
 }

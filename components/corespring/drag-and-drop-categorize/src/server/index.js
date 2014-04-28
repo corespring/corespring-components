@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var sax = require('sax');
 
 exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
 exports.DEFAULT_PARTIAL_FEEDBACK = "Partially Correct!";
@@ -7,43 +6,34 @@ exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answe
 
 exports.respond = function(question, answer, settings) {
 
-  var parser = sax.parser(false);
-  var lps = {};
-
-  parser.onopentag = function(node) {
-    // opened a tag.  node has "name" and "attributes"
-    if (node.attributes['landing-place'] !== undefined) {
-      lps[node.attributes.ID] = node.attributes.CARDINALITY || 'multiple';
-    }
-  };
-
-  parser.write('<xml>' + question.model.answerArea + '</xml>').close();
-
-  var isCorrect = 1;
+  var isCorrect = true;
+  var isPartiallyCorrect = false;
 
   for (var k in answer) {
     var correctResponseForId = question.correctResponse[k];
-    if (lps[k] === 'ordered') {
-      isCorrect &= _.isEqual(answer[k], correctResponseForId);
-    } else {
-      isCorrect &= _.isEmpty(_.xor(answer[k], correctResponseForId));
-    }
-
-    if (!isCorrect) {
-      break;
-    }
+    isCorrect &= _.isEmpty(_.xor(answer[k], correctResponseForId));
+    isPartiallyCorrect |= _.xor(answer[k], correctResponseForId).length < (answer[k].length + correctResponseForId.length);
   }
 
-  return {
+  var res = {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
     answer: answer,
     score: isCorrect ? 1 : 0
   };
-};
 
-exports.render = function(model) {
-  delete model.correctResponse;
-  delete model.feedback;
-  return model;
+  if (settings.showFeedback) {
+    var fbSelector = isCorrect ? "correctFeedback" : (isPartiallyCorrect ? "partialFeedback" : "incorrectFeedback");
+    var fbTypeSelector = fbSelector + "Type";
+
+    var feedbackType = question.feedback[fbTypeSelector] || "default";
+    if (feedbackType === "custom") {
+      res.feedback = question.feedback[fbSelector];
+    } else if (feedbackType === "default") {
+      res.feedback = isCorrect ? exports.DEFAULT_CORRECT_FEEDBACK : (isPartiallyCorrect ? exports.DEFAULT_PARTIAL_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK);
+    }
+  }
+
+
+  return res;
 };

@@ -183,6 +183,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         setResponse: function(response) {
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
+          scope.feedback = response.feedback;
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
@@ -192,6 +193,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
               return choiceForId(r);
             });
           });
+
         },
 
         setMode: function(newMode) {
@@ -200,6 +202,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         reset: function() {
           scope.resetChoices(scope.rawModel);
           scope.correctResponse = undefined;
+          scope.feedback = undefined;
         },
 
         isAnswerEmpty: function() {
@@ -272,7 +275,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       ].join('');
     };
     var tmpl = [
-      '<div class="view-drag-and-drop">',
+      '<div class="view-drag-and-drop-categorize">',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
@@ -281,6 +284,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       answerArea,
       '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
       '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
+      '  <div class="clearfix"></div>',
+      '  <div class="cs-feedback" ng-bind-html-unsafe="feedback"></div>',
       '</div>'
 
     ].join("");
