@@ -32,6 +32,7 @@ var main = [
         // TODO: this needs to be centralised and not duplicated here and the server side
         scope.defaultCorrectFeedback = "Correct!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer";
+        scope.correctMap = [];
 
         scope.containerBridge = {
           setModel: function(model) {
@@ -158,8 +159,6 @@ var main = [
 ];
 
 exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  }
-];
+exports.directives = [{
+  directive: main
+}];
