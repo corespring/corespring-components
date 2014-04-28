@@ -115,7 +115,11 @@ exports.service = ['$log',
       };
 
 
-      this.scoring = function() {
+      this.scoring = function(opts) {
+
+        var o = _.extend({
+          maxNumberOfPartialScores: "model.choices.length - 1"
+        }, opts);
 
         return [
           '<div class="scoring-header-text">',
@@ -133,7 +137,7 @@ exports.service = ['$log',
           '    <label>If</label> <div class="form-group"><input type="number" min="1" max="{{model.choices.length - 1}}" style="width: 60px" class="form-control {{validClass(scenario)}}" ng-model="scenario.numberOfCorrect"/></div> of correct answers selected, award',
           '    <span class="form-group"><input type="number" min="1" max="99" style="width: 60px" class="form-control" ng-model="scenario.scorePercentage"/>% of full credit</span>',
           '  </div>',
-          '  <div ng-click="addScoringScenario()" ng-show="fullModel.partialScoring.length < model.choices.length - 1">',
+            '  <div ng-click="addScoringScenario()" ng-show="fullModel.partialScoring.length < ' + o.maxNumberOfPartialScores + '">',
           '   <i class="fa fa-plus-square-o"></i> Add another scenario',
           '  </div>',
           '</div>',

@@ -78,13 +78,21 @@ var main = [
     };
 
     template = [
-      '<div class="drag-and-drop-config-panel">',
+      '<div class="drag-and-drop-config-panel" choice-template-controller="">',
       '  <div navigator="">',
       '    <div navigator-panel="Design">',
       inputHolder('Choices', choiceArea),
       inputHolder('Answer Areas', answerArea),
       inputHolder('Feedback', feedback),
       '    </div>',
+
+      '    <div navigator-panel="Scoring">',
+      '      <div>',
+      ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"})),
+      '      </div>',
+      '    </div>',
+
+
       '  </div>',
       '</div>'].join('\n');
 
@@ -109,6 +117,12 @@ var main = [
 
         $scope.toChar = function(num) {
           return String.fromCharCode(65 + num);
+        };
+
+        $scope.sumCorrectResponses = function() {
+          return _.reduce($scope.correctAnswers, function(memo, ca) {
+            return ca.length + memo;
+          }, 0);
         };
 
         $scope.containerBridge = {

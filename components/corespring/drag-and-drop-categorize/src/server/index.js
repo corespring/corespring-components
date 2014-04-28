@@ -8,18 +8,33 @@ exports.respond = function(question, answer, settings) {
 
   var isCorrect = true;
   var isPartiallyCorrect = false;
+  var numberOfCorrectAnswers = 0;
 
   for (var k in answer) {
     var correctResponseForId = question.correctResponse[k];
     isCorrect &= _.isEmpty(_.xor(answer[k], correctResponseForId));
     isPartiallyCorrect |= _.xor(answer[k], correctResponseForId).length < (answer[k].length + correctResponseForId.length);
+    numberOfCorrectAnswers += correctResponseForId.length - _.xor(answer[k], correctResponseForId).length;
+  }
+
+  var score = 0;
+
+  if (question.allowPartialScoring) {
+    var partialScore = _.find(question.partialScoring, function(ps) {
+       return ps.numberOfCorrect === numberOfCorrectAnswers;
+    });
+    if (partialScore) {
+      score = partialScore.scorePercentage / 100;
+    }
+  } else {
+    score = isCorrect ? 1 : 0;
   }
 
   var res = {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
     answer: answer,
-    score: isCorrect ? 1 : 0
+    score: score
   };
 
   if (settings.showFeedback) {

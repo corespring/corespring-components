@@ -15,7 +15,7 @@ var def = [
         };
 
         scope.addScoringScenario = function() {
-          var maxNumberOfCorrect = 1;
+          var maxNumberOfCorrect = 0;
           _.each(scope.fullModel.partialScoring, function(ps) {
             if (ps.numberOfCorrect > maxNumberOfCorrect) {
               maxNumberOfCorrect = ps.numberOfCorrect;
