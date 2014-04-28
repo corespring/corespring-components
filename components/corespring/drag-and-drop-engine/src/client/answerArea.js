@@ -25,6 +25,7 @@ var answerArea = [
         });
 
         bindAttribute('label', 'label');
+        bindAttribute('layout', 'layout');
 
         scope.columnsPerRow = attrs.columnsperrow || 3;
 
@@ -128,9 +129,8 @@ var answerArea = [
         };
 
         scope.$watch("maxWidth + maxHeight", function(n) {
-          var mw = scope.maxWidth + 25;
-          var maxWidth = scope.isMultiple() ? (mw * scope.columnsPerRow) : mw;
-          if (scope.expandHorizontal) {
+          var maxWidth = Math.min(scope.maxWidth + 25, 550);
+          if (scope.layout === 'horizontal') {
             scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
           } else {
             scope.style = "min-height: " + (scope.maxHeight + 20) + "px; width: " + maxWidth + "px";
@@ -156,7 +156,7 @@ var answerArea = [
       template: [
         '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
         '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="{{style}}" >',
-        '    <div class="label-holder"><div class="landingLabel">{{label}}</div>&nbsp;</div>',
+        '    <div class="label-holder" ng-show="label"><div class="landingLabel">{{label}}</div>&nbsp;</div>',
         '    <div',
         '      ui-sortable="sortableOptions" ',
         '      ng-model="landingPlaceChoices[id]"',
@@ -168,9 +168,14 @@ var answerArea = [
         '             ng-model="landingPlaceChoices[id][$index]"',
         '             data-id="{{choice.id}}"',
         '             class="choice {{classForChoice(choice, $index)}}"',
-        '             ng-bind-html-unsafe="choice.label">',
+        '             ng-switch="choice.labelType">',
+        '           <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
+        '           <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
         '        </div>',
-        '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
+        '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-switch="choice.labelType">',
+        '          <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
+        '          <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
+        '        </div>',
         '    </div>',
         '    </div>'].join("")
 

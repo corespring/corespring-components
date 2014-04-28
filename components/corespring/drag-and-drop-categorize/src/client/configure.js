@@ -68,14 +68,105 @@ var main = [
       '        </div>'
       ].join("");
 
-    var displayOptions = function() {
-      return [
-        '<div class="display-row"><label class="col-sm-4">Shuffle</label><input type=\"checkbox\" ng-model=\"model.config.shuffle\" /></div>',
-        '<div class="display-row"><label class="col-sm-4">Show choice area </label><select ng-model="model.config.position"><option value="above">Above</option><option value="below">Below</option></select> the answer area</div>',
-        '<div class="display-row"><label class="col-sm-4">Label for choice area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.choiceAreaLabel"/></div></div>',
-        '<div class="display-row"><label class="col-sm-4">Label for answer area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.answerAreaLabel"/></div></div>'
-        ].join("");
-    };
+    var choiceAreaDisplayOptions = [
+      '     <form class="form-horizontal" role="form">',
+      '       <div class="config-form-row">',
+      '         <div class="col-sm-4">',
+      '           <input id="includeLabel" type="checkbox" ng-model="fullModel.model.config.choiceAreaHasLabel" />',
+      '           <label for="includeLabel" class="control-label">Include a label</label>',
+      '         </div>',
+      '         <div class="col-sm-5" ng-show="fullModel.model.config.choiceAreaHasLabel">',
+      '           <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" />',
+      '         </div>',
+      '       </div>',
+      '       <div class="config-form-row">Layout',
+      '       </div>',
+      '       <div class="config-form-row">',
+      '         <div class="col-sm-3">',
+      '           <input id="vertical" type="radio" value="vertical" ng-model="fullModel.model.config.choiceAreaLayout" />',
+      '           <label for="vertical" class="control-label">Vertical</label>',
+      '         </div>',
+      '         <div class="col-sm-3">',
+      '           <input id="horizontal" type="radio" value="horizontal" ng-model="fullModel.model.config.choiceAreaLayout" />',
+      '           <label for="horizontal" class="control-label">Horizontal</label>',
+      '         </div>',
+      '         <div class="col-sm-3">',
+      '           <input id="tile" type="radio" value="tile" ng-model="fullModel.model.config.choiceAreaLayout" />',
+      '           <label for="tile" class="control-label">Tile</label>',
+      '         </div>',
+      '       </div>',
+      '       <div class="config-form-row">',
+      '         <div class="col-sm-8">',
+      '           <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
+      '           <label for="shuffle" class="control-label">Shuffle Tiles</label>',
+      '         </div>',
+      '       </div>',
+      '       <div class="config-form-row">',
+      '         <div class="col-sm-8">',
+      '           <input id="removetiles" type="checkbox" ng-model="fullModel.model.config.removeTilesOnDrop" />',
+      '           <label for="removetiles" class="control-label">Remove tiles when selected</label>',
+      '         </div>',
+      '       </div>',
+
+
+      '     </form>'
+    ].join('');
+
+    var answerAreaDisplayOptions = [
+      '<div class="config-form-row">',
+      '  <div class="col-sm-4">',
+      '    <label>Answer area is </label>',
+      '  </div>',
+      '  <div class="col-sm-3">',
+      '    <input id="above" type="radio" value="above" ng-model="fullModel.model.config.answerAreaPosition" />',
+      '    <label for="above" class="control-label">above</label>',
+      '  </div>',
+      '  <div class="col-sm-3">',
+      '    <input id="below" type="radio" value="below" ng-model="fullModel.model.config.answerAreaPosition" />',
+      '    <label for="below" class="control-label">below</label>',
+      '  </div>',
+      '  <div class="col-sm-2">',
+      '    <label>choices</label>',
+      '  </div>',
+      '</div>',
+
+      '<div ng-repeat="area in model.categories">',
+      '  <div class="well">',
+      '  {{$first ? \'Default\' : \'\'}} Answer area {{$first ? \'\' : \'#\'+($index+1)}}',
+      '  <form class="form-horizontal" role="form">',
+      '    <div class="config-form-row">',
+      '      <div class="col-sm-4">',
+      '        <input id="includeLabelAnswerArea{{$index}}" type="checkbox" ng-model="area.hasLabel" />',
+      '        <label for="includeLabelAnswerArea{{$index}}" class="control-label">Include a label</label>',
+      '      </div>',
+      '      <div class="col-sm-5" ng-show="area.hasLabel">',
+      '        <input type="text" class="form-control" ng-model="area.label" />',
+      '      </div>',
+      '    </div>',
+
+      '    <div class="config-form-row">',
+      '      <div class="col-sm-5"><label>Answer Area Display</label></div>',
+      '    </div>',
+      '    <div class="config-form-row">',
+      '      <div class="col-sm-4">',
+      '        <input id="vertical{{$index}}" type="radio" value="vertical" ng-model="area.layout" />',
+      '        <label for="vertical{{$index}}" class="control-label">Vertical</label>',
+      '      </div>',
+      '      <div class="col-sm-4">',
+      '        <input id="horizontal{{$index}}" type="radio" value="horizontal" ng-model="area.layout" />',
+      '        <label for="horizontal{{$index}}" class="control-label">Horizontal</label>',
+      '      </div>',
+      '    </div>',
+      '  </form>',
+      '  </div>',
+      '</div>'
+    ].join('');
+
+    var displayOptions = [
+      inputHolder('Choice Area', choiceAreaDisplayOptions),
+      inputHolder('Answer Areas', answerAreaDisplayOptions)
+
+    ].join("");
 
     template = [
       '<div class="drag-and-drop-config-panel" choice-template-controller="">',
@@ -89,6 +180,12 @@ var main = [
       '    <div navigator-panel="Scoring">',
       '      <div>',
       ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"})),
+      '      </div>',
+      '    </div>',
+
+      '    <div navigator-panel="Display">',
+      '      <div>',
+      displayOptions,
       '      </div>',
       '    </div>',
 
@@ -165,7 +262,7 @@ var main = [
 
         $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
 
-        $scope.remove = function(c) {
+        $scope.removeQuestion = function(c) {
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
             return existing !== c;
           });
@@ -173,8 +270,9 @@ var main = [
 
         $scope.addChoice = function() {
           $scope.model.choices.push({
-            id: "" + $scope.model.choices.length,
-            content: "new choice"
+            id: "choice_" + $scope.model.choices.length,
+            labelType: "text",
+            label: ""
           });
         };
 
@@ -189,7 +287,7 @@ var main = [
           $scope.model.categories.push({
             id: "cat_"+idx,
             label: "Category "+idx,
-            orientation: "vertical"
+            layout: "vertical"
           });
         };
 
