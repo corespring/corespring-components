@@ -38,7 +38,7 @@ var main = [
       '       </div>',
       '       <div class="config-form-row">',
       labelWithInput(3, 'Tick Label Frequency:', 'tickLabelFrequency', 3, "number"),
-      labelWithInput(3, 'Significant Figures', 'sigfigs', 3, "number"),
+      labelWithInput(3, 'Significant Figures:', 'sigfigs', 3, "number"),
       '       </div>',
       '       <div class="config-form-row">',
       '         <div class="col-sm-6">',
@@ -87,7 +87,7 @@ var main = [
       '</div>'].join('\n');
 
     var feedback = [
-      '<div class="input-holder">',
+      '<div ng-hide="fullModel.model.config.exhibitOnly" class="input-holder">',
       '  <div class="header">Feedback</div>',
       '  <div class="body">',
       '        <div class="well">',
@@ -149,7 +149,10 @@ var main = [
         '<div class="point-intercept-configuration">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
-        '      <div class="intro-text">This question type asks a student to draw a line by clicking on two points on the graph.</div>',
+        '      <div class="intro-text">',
+        '        This interaction asks a student to draw a line that meets specific criteria.',
+        '        The student will draw the line by clicking on two points on the graph.',
+        '    </div>',
         linesBlock,
         graphAttributes,
         feedback,

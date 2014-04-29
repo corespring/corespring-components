@@ -22,16 +22,20 @@ exports.respond = function(question, answer, settings) {
   var correctFunction = question.correctResponse.split("=")[1];
   var isCorrect = functionUtils.isFunctionEqual(eq, correctFunction, options);
 
-  var res = {
-    "correctness": isCorrect ? "correct" : "incorrect",
-    "score": isCorrect ? 1 : 0,
-    "correctResponse": {
-      "equation": correctResponse,
-      "expression": functionUtils.expressionize(correctResponse, 'x')
-    }
-  };
+  var res = {};
 
-  if (settings.showFeedback) {
+  if (!question.model.config.exhibitOnly) {
+    res = {
+      "correctness": isCorrect ? "correct" : "incorrect",
+      "score": isCorrect ? 1 : 0,
+      "correctResponse": {
+        "equation": correctResponse,
+        "expression": functionUtils.expressionize(correctResponse, 'x')
+      }
+    };
+  }
+
+  if (settings.showFeedback && !question.model.config.exhibitOnly) {
     var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
     var fbTypeSelector = isCorrect ? "correctFeedbackType" : "incorrectFeedbackType";
 

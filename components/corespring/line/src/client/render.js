@@ -388,7 +388,7 @@ var main = ['$compile', '$modal', '$rootScope',
               scope.inputStyle = _.extend(scope.inputStyle, {
                 border: 'thin solid green'
               });
-            } else {
+            } else if (response.correctness === "incorrect") {
               scope.graphCallback({
                 graphStyle: {
                   borderColor: "red",
