@@ -6,6 +6,7 @@ The default corespring component set.
 
 * bower >= 1.2.7
 * node/npm >= 0.10.*
+* grunt
 
 ## Running
 
@@ -26,6 +27,14 @@ This rig runs the component tests.
 
 
 ## Usage
+
+First ensure that you have all the dependencies installed:
+    
+    sudo npm install grunt-cli
+    npm install
+    bower install
+    
+Then you can use the following test commands:
 
     # Test all components (server side and client side)
     grunt test
