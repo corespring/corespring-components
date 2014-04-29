@@ -218,9 +218,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         editable: function(e) {
-          scope.$apply(function() {
-            scope.editable = e;
-          });
+          scope.editable = e;
         }
       };
 
@@ -250,16 +248,16 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
 
     var answerArea = [
-        '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-        '        <div ng-repeat="c in model.categories">',
-        '          <div answer-area landingId="{{c.id}}"',
-        '                          label="{{c.hasLabel ? c.label : \'\'}}"',
-        '                          layout="{{c.layout}}"',
-        '                          cardinality="multiple"',
-        '                          expandHorizontally="true">',
-        '          </div>',
-        '        </div>'
-      ].join('');
+      '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+      '        <div ng-repeat="c in model.categories">',
+      '          <div answer-area landingId="{{c.id}}"',
+      '                          label="{{c.hasLabel ? c.label : \'\'}}"',
+      '                          layout="{{c.layout}}"',
+      '                          cardinality="multiple"',
+      '                          expandHorizontally="true">',
+      '          </div>',
+      '        </div>'
+    ].join('');
 
     var choiceArea = function() {
       return [

@@ -10,33 +10,36 @@ var main = [
     var inputHolder = function(header, body) {
       return [
         '<div class="input-holder">',
-        ' <div class="header">' + header + '</div>',
+          ' <div class="header">' + header + '</div>',
         ' <div class="body">',
         body,
         ' </div>',
         '</div>'
-        ].join("");
+      ].join("");
     };
 
     var choiceArea = [
       '  <div class="choice" ng-repeat="q in model.choices">',
-      ChoiceTemplates.choice({feedback: false, correct: ''}),
+      ChoiceTemplates.choice({
+        correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.id]}" ng-click="correctMap[q.id] = !correctMap[q.id]"></i>',
+        feedback: false
+      }),
       '  </div>',
 
-        '<div class="clearfix"></div>',
-        '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
+      '<div class="clearfix"></div>',
+      '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
 
-        ].join("");
+    ].join("");
 
     var answerArea = [
-        '<div class="answer-area" ng-repeat="category in model.categories">',
-        '  <div>Correct tiles for {{$first ? "Default Answer Area" :"Answer Area "+($index+1)}}</div>',
-        '  <select class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices"></select>',
-        '  <div><a href="#" ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
-        '</div>',
-        '<a ng-click="addCategory()">Add Answer Area</a>'
+      '<div class="answer-area" ng-repeat="category in model.categories" ng-show="$index > 0">',
+      '  <div>Correct tiles for {{$first ? "Default Answer Area" :"Answer Area "+($index+1)}}</div>',
+      '  <select class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices"></select>',
+      '  <div><a href="#" ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
+      '</div>',
+      '<a ng-click="addCategory()">Add Answer Area</a>'
 
-      ].join("");
+    ].join("");
 
     var feedback = [
       '        <div class="well">',
@@ -66,7 +69,7 @@ var main = [
       '               fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
       '          ></div>',
       '        </div>'
-      ].join("");
+    ].join("");
 
     var choiceAreaDisplayOptions = [
       '     <form class="form-horizontal" role="form">',
@@ -206,6 +209,8 @@ var main = [
         $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
 
         $scope.correctAnswers = {};
+        $scope.correctMap = {};
+
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
@@ -234,10 +239,16 @@ var main = [
             };
 
             _.each(model.correctResponse, function(val, key) {
-               $scope.correctAnswers[key] = _.map(val, function(choiceId) {
-                  return choiceById(choiceId);
-               });
+              if (key === 'cat_1') {
+                _.each(val, function(cid) {
+                   $scope.correctMap[cid] = true;
+                });
+              }
+              $scope.correctAnswers[key] = _.map(val, function(choiceId) {
+                return choiceById(choiceId);
+              });
             });
+
             console.log(model);
           },
           getModel: function() {
@@ -250,6 +261,18 @@ var main = [
             return {};
           }
         };
+
+        $scope.$watch('correctMap', function(n) {
+          if (n) {
+            var res = [];
+            for (var key in $scope.correctMap) {
+              if ($scope.correctMap[key]) {
+                res.push(key);
+              }
+            }
+            $scope.fullModel.correctResponse['cat_1'] = res;
+          }
+        }, true);
 
         $scope.$watch('correctAnswers', function(n) {
           if (n) {
@@ -285,8 +308,8 @@ var main = [
         $scope.addCategory = function() {
           var idx = $scope.model.categories.length + 1;
           $scope.model.categories.push({
-            id: "cat_"+idx,
-            label: "Category "+idx,
+            id: "cat_" + idx,
+            label: "Category " + idx,
             layout: "vertical"
           });
         };
