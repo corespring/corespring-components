@@ -6,7 +6,8 @@
 
   <div class="pull-right">
     <label class="checkbox-inline">
-      <input type="checkbox" value="ignore-case" ng-model="response.ignoreCase"/>Case sensitive?
+      <input type="checkbox" value="ignore-case" ng-init="response.caseSensitive = !response.ignoreCase"
+             ng-model="response.caseSensitive" ng-change="response.ignoreCase = !response.caseSensitive"/>Case sensitive?
     </label>
     <label class="checkbox-inline">
       <input type="checkbox" value="ignore-whitespace" ng-model="response.ignoreWhitespace"/>Ignore spacing?
