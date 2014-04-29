@@ -51,7 +51,7 @@
     ],
     "config": {
       "orientation": "vertical",
-      "shuffle": true,
+      "shuffle": false,
       "singleChoice": false
     },
     "prompt": "Enter a prompt for the student."
