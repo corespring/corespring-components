@@ -1,29 +1,15 @@
 var main = ['$log', '$timeout',
   function($log, $timeout) {
 
+    var log = $log.debug.bind($log, '[navigator]');
+
     var link = function(scope, element, attrs) {
-      scope.navClosed = false;
+
+      scope.leftPanelClosed = true;
 
       scope.toggleLeftPanel = function() {
-        scope.navClosed = !scope.navClosed;
-        if (scope.navClosed) {
-          $(element).find('.navigator-left-panel').animate({'width': '0px'}, {
-            duration: 300,
-            step: function() {
-              $(element).find('.config-panel-body').css('left', $(element).find('.navigator-left-panel').width() + "px");
-            }
-          });
-        } else {
-          $(element).find('.navigator-left-panel').css('width', 'auto');
-          $(element).find('.config-panel-body').css('left', $(element).find('.navigator-left-panel').width() + "px");
-        }
+        scope.leftPanelClosed = !scope.leftPanelClosed;
       };
-
-      scope.$watch(function() {
-        return $(element).find('.navigator-left-panel').width();
-      }, function() {
-        $(element).find('.config-panel-body').css('left', $(element).find('.navigator-left-panel').width() + "px");
-      });
     };
 
     var controllerFn = function($scope, $element, $attrs) {
@@ -108,14 +94,14 @@ var main = ['$log', '$timeout',
         '    </div>',
         '  </div>',
         '  <div class="navigator-container">',
-        '    <div class="navigator-left-panel">',
+        '    <div class="navigator-left-panel" ng-class="{closed: leftPanelClosed}">',
         '      <ul class="nav nav-stacked" >',
         '        <li ng-repeat="panel in panels" ng-class="{ active: panel.selected()}" ng-show="panel.visible()">',
         '          <a href="" ng-class="{active: panel.selected()}" ng-click="selectPanel(panel, $event)">{{panel.title}}</a>',
         '        </li>',
         '      </ul>',
         '    </div>',
-        '    <div class="config-panel-body" ng-transclude>',
+        '    <div class="config-panel-body" ng-class="{\'full-width\': leftPanelClosed}" ng-transclude>',
         '    </div>',
         '  </div>',
         '</div>'
@@ -124,17 +110,17 @@ var main = ['$log', '$timeout',
   }
 ];
 
-var navigatorPanel = ['$log','$parse',
-  function($log,$parse) {
+var navigatorPanel = ['$log', '$parse',
+  function($log, $parse) {
 
     var link = function(scope, element, attrs, container) {
 
       scope.visible = true;
 
-      attrs.$observe('ngHide', function (expr) {
-        scope.$watch(function () {
+      attrs.$observe('ngHide', function(expr) {
+        scope.$watch(function() {
           return $parse(expr)(scope);
-        }, function (value) {
+        }, function(value) {
           if (value !== undefined) {
             scope.visible = !value;
           }
@@ -183,9 +169,9 @@ exports.framework = 'angular';
 exports.directives = [{
   directive: function() {}
 }, {
-    name: 'navigator',
-    directive: main
+  name: 'navigator',
+  directive: main
 }, {
-    name: 'navigatorPanel',
-    directive: navigatorPanel
+  name: 'navigatorPanel',
+  directive: navigatorPanel
 }];
