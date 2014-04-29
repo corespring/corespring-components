@@ -38,6 +38,7 @@ link = function() {
         scope.feedback = undefined;
         scope.correctClass = undefined;
         scope.response = undefined;
+        scope.comments = undefined;
       },
 
       isAnswerEmpty: function() {
