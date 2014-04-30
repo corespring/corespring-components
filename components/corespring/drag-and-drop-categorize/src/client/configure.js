@@ -19,6 +19,7 @@ var main = [
     };
 
     var choiceArea = [
+      '  <div class="pull-right select-correct-answers">Select Correct Answer(s)</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.id]}" ng-click="correctMap[q.id] = !correctMap[q.id]"></i>',
@@ -35,7 +36,7 @@ var main = [
       '<div class="answer-area" ng-repeat="category in model.categories" ng-show="$index > 0">',
       '  <div>Correct tiles for {{$first ? "Default Answer Area" :"Answer Area "+($index+1)}}</div>',
       '  <select class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices"></select>',
-      '  <div><a href="#" ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
+      '  <div><a ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
       '</div>',
       '<a ng-click="addCategory()">Add Answer Area</a>'
 

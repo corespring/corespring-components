@@ -133,6 +133,14 @@
     width: 145px;
 }
 
+.drag-and-drop-config-panel .choice {
+    margin-right: 20px;
+}
+
+.drag-and-drop-config-panel .select-correct-answers {
+    margin-bottom: 10px;
+}
+
 .drag-and-drop-config-panel .drag-and-drop-answers {
 }
 
