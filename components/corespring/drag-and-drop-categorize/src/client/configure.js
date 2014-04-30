@@ -271,7 +271,7 @@ var main = [
                 res.push(key);
               }
             }
-            $scope.fullModel.correctResponse['cat_1'] = res;
+            $scope.fullModel.correctResponse.cat_1 = res;
           }
         }, true);
 
