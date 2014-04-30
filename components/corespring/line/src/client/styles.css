@@ -143,12 +143,16 @@
     background: url("/assets/images/wrong-icon.png") no-repeat scroll 3px 8px transparent;
 }
 
-.point-intercept-configuration .intro-text {
+.line-interaction-configuration .intro-text {
     padding: 10px;
 }
 
-.point-intercept-configuration .informative-label {
+.line-interaction-configuration .informative-label {
     font-size: small;
     font-style: italic;
     margin-bottom: 10px;
+}
+
+.line-interaction-configuration .default-input {
+    max-width: 120px;
 }

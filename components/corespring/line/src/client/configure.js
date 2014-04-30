@@ -7,14 +7,15 @@ var main = [
         '</label>'].join('\n');
     };
 
-    var labelWithInput = function(size, label, modelKey, labelSize, inputType) {
+    var labelWithInput = function(size, label, modelKey, labelSize, inputType, inputClass) {
       labelSize = labelSize || size;
       inputType = inputType || "text";
+      inputClass = inputClass || "default-input";
       return [
           '<label class="col-sm-' + labelSize + '">' + label + '</label>',
-          '<div class="col-sm-' + size + '">',
+          '<div class="col-sm-' + size + ' ' + inputClass + '">',
           '  <input type="' + inputType + '" class="form-control"  ng-model="fullModel.model.config.' + modelKey + '" />',
-          '</div>'
+        '</div>'
       ].join('');
     };
 
@@ -146,7 +147,7 @@ var main = [
 
       },
       template: [
-        '<div class="point-intercept-configuration">',
+        '<div class="line-interaction-configuration">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
         '      <div class="intro-text">',
