@@ -34,8 +34,11 @@ var main = [
     var answerArea = [
       '<div class="answer-area" ng-repeat="category in model.categories" ng-show="$index > 0">',
       '  <div>Correct tiles for {{$first ? "Default Answer Area" :"Answer Area "+($index+1)}}</div>',
-      '  <select class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices"></select>',
-      '  <div><a href="#" ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
+      '  <select class="kuku answer-area-select" multiple="true" ng-model="correctAnswers[category.id]">',
+      '    <option ng-repeat="c in model.choices" value="{{c.id}}">{{c.label}}</option>',
+      '  </select>',
+      '  <div>{{correctAnswers[category.id]}}</div>',
+      '  <div><a ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
       '</div>',
       '<a ng-click="addCategory()">Add Answer Area</a>'
 
@@ -211,6 +214,7 @@ var main = [
         $scope.correctAnswers = {};
         $scope.correctMap = {};
 
+        $(element).find('.kuku').multiselect();
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);

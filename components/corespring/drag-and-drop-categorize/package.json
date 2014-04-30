@@ -7,6 +7,10 @@
   "version": "0.0.1",
   "dependencies": {
     "client": {
+      "bootstrap-multiselect": {
+        "version": "*",
+        "file": "js/bootstrap-multiselect.js"
+      }
     }
   },
   "libraries": [
