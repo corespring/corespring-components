@@ -8,7 +8,7 @@
   "dependencies": {
     "client": {
       "angular-ui-sortable": {
-        "bower_target" : "https://github.com/angular-ui/ui-sortable/archive/angular1.2.zip",
+        "bower_target" : "https://github.com/corespring/ui-sortable.git#2ffb9fc44b30685d58d2df9223b3ad52de215e6f",
         "file" : "src/sortable.js",
         "angular-module" : "ui.sortable"
       }
