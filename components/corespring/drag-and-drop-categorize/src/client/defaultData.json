@@ -23,24 +23,18 @@
         "hasLabel": true,
         "label": "Category 1",
         "layout": "vertical"
-      },
-      {
-        "id": "cat_2",
-        "hasLabel": true,
-        "label": "Category 2",
-        "layout": "vertical"
       }
     ],
     "choices": [
       {
         "label": "",
         "labelType": "text",
-        "id": "pupa"
+        "id": "choice_0"
       },
       {
-        "label": "Egg",
+        "label": "",
         "labelType": "text",
-        "id": "egg"
+        "id": "choice_1"
       }
     ],
     "config": {

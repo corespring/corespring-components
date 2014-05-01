@@ -35,7 +35,8 @@ var main = [
     var answerArea = [
       '<div class="answer-area" ng-repeat="category in model.categories" ng-show="$index > 0">',
       '  <div>Correct tiles for {{$first ? "Default Answer Area" :"Answer Area "+($index+1)}}</div>',
-      '  <select class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices"></select>',
+      '  <select bootstrap-multiselect="{{componentState}}" class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices">',
+      '  </select>',
       '  <div><a ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
       '</div>',
       '<a ng-click="addCategory()">Add Answer Area</a>'
@@ -212,7 +213,6 @@ var main = [
         $scope.correctAnswers = {};
         $scope.correctMap = {};
 
-
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
           return $scope.toChar(idx);
@@ -250,6 +250,7 @@ var main = [
               });
             });
 
+            $scope.componentState = "initialized";
             console.log(model);
           },
           getModel: function() {
@@ -277,9 +278,10 @@ var main = [
 
         $scope.$watch('correctAnswers', function(n) {
           if (n) {
-            $scope.fullModel.correctResponse = _.cloneDeep($scope.correctAnswers);
-            _.each($scope.fullModel.correctResponse, function(val, key) {
-              $scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
+            _.each($scope.correctAnswers, function(val, key) {
+              if (key !== 'cat_1') {
+                $scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
+              }
             });
           }
         }, true);
@@ -320,9 +322,30 @@ var main = [
   }
 ];
 
+var bootstrapMultiselect = [
+  '$log',
+  function($log) {
+    return {
+      link: function(scope, element, attrs) {
+        attrs.$observe('bootstrapMultiselect', function(n) {
+          if (n === 'initialized') {
+            $(element).multiselect();
+          }
+        });
+      }
+    };
+
+  }
+];
+
 exports.framework = 'angular';
 exports.directives = [
   {
     directive: main
+  },
+  {
+    name: 'bootstrapMultiselect',
+    directive: bootstrapMultiselect
   }
+
 ];
