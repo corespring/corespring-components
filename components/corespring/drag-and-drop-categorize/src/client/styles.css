@@ -91,20 +91,18 @@
     background-color: #edffe3;
 }
 
-.view-drag-and-drop-categorize.correct .feedback {
-    background: url("/assets/images/correct-icon.png") no-repeat scroll 0px -0px transparent;
-    width: 32px;
-    height: 32px;
-    display: inline-block;
-    margin-left: -3px;
+.view-drag-and-drop-categorize .feedback-correct {
+    background: url("/assets/images/correct-icon.png") no-repeat scroll 0px 5px;
+    border: solid 2px #80b312;
+    border-radius: 5px;
+    padding: 5px 5px 5px 35px;
 }
 
-.view-drag-and-drop-categorize.incorrect .feedback {
-    background: url("/assets/images/wrong-icon.png") no-repeat scroll 0px -0px transparent;
-    width: 32px;
-    height: 32px;
-    display: inline-block;
-    margin-left: -3px;
+.view-drag-and-drop-categorize .feedback-incorrect {
+    border: solid 2px #F8A31A;
+    padding: 5px 5px 5px 35px;
+    border-radius: 5px;
+    background: transparent url("/assets/images/wrong-icon.png") no-repeat scroll 0px 5px;
 }
 
 

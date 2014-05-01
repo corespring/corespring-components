@@ -111,7 +111,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
             '     <h3>Correct Answer</h3>',
             '   </div>',
             '   <div class="modal-body">',
-            scope.model.answerArea,
+            answerArea,
             '   </div>',
             '   <div class="modal-footer">',
             '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
@@ -184,10 +184,12 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
           scope.feedback = response.feedback;
+          scope.correctClass = response.correctness;
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
           scope.solutionScope.landingPlaceChoices = {};
+          scope.solutionScope.model = scope.model;
           _.each(scope.correctResponse, function(v, k) {
             scope.solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
               return choiceForId(r);
@@ -298,7 +300,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  <div ng-if="model.config.answerAreaPosition == \'above\'">', choiceArea(), '</div>',
       '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
-      '  <div class="cs-feedback" ng-bind-html-unsafe="feedback"></div>',
+      '  <div ng-show="feedback" class="feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
       '</div>'
 
     ].join("");
