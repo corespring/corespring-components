@@ -165,7 +165,7 @@ var main = [
           });
 
           scope.feedback[uid] = {
-            feedbackType: "standard",
+            feedbackType: "default",
             value: uid
           };
 
