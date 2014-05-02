@@ -1,7 +1,7 @@
 {
-  "componentType": "",
+  "componentType": "select-text",
   "correctResponse": "",
-  "title": "",
+  "title": "Select Evidence in Text",
   "feedback" :  {
   },
   "model": {
