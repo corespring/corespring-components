@@ -3,7 +3,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var link = function(scope, element, attrs) {
 
-      scope.landingPlaceChoices = {};
       scope.dragging = {};
       scope.maxWidth = 50;
       scope.maxHeight = 20;
@@ -147,6 +146,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
           scope.resetChoices(scope.rawModel);
+          scope.landingPlaceChoices = {};
 
           scope.originalChoices = _.cloneDeep(scope.model.choices);
 

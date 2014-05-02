@@ -306,6 +306,9 @@ var main = [
           $scope.model.categories = _.filter($scope.model.categories, function(existing) {
             return existing !== category;
           });
+          delete $scope.correctAnswers[category.id];
+          delete $scope.fullModel.correctResponse[category.id];
+
         };
 
         $scope.addCategory = function() {
