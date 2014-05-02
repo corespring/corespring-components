@@ -1,6 +1,6 @@
 {
+  "title": "Draw Lines",
   "componentType" : "corespring-line",
-  "title": "",
   "weight" : 1,
   "correctResponse": "",
   "feedback" :  {

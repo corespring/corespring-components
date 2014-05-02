@@ -1,4 +1,5 @@
 {
+  "title": "Plot Points",
   "componentType": "corespring-point-intercept",
   "correctResponse": [
     "0,0",
