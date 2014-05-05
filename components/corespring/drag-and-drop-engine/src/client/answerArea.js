@@ -90,12 +90,18 @@ var answerArea = [
             if (scope.cardinality === 'single' && scope.landingPlaceChoices[scope.id].length > 0) {
               return false;
             }
+            if (scope.dragging) {
+              var elem = _.find(scope.landingPlaceChoices[scope.id], function(c) {
+                 return c.id === scope.dragging.id;
+              });
+              return _.isUndefined(elem);
+            }
             return scope.dragging && (scope.dragging.fromTarget !== scope.id);
           },
           onDrop: 'onDrop',
           onOver: 'overCallback',
           onOut: 'outCallback',
-          multiple: scope.isMultiple()
+          multiple: true
         };
 
         scope.sortableOptions = {
@@ -130,10 +136,16 @@ var answerArea = [
 
         scope.$watch("maxWidth + maxHeight", function(n) {
           var maxWidth = Math.min(scope.maxWidth + 25, 550);
-          if (scope.layout === 'horizontal') {
-            scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
+          if (scope.layout === 'inline') {
+            scope.elementStyle = {
+              height: (scope.maxHeight + 30) + "px",
+              "min-width": maxWidth + "px"
+            };
           } else {
-            scope.style = "min-height: " + (scope.maxHeight + 20) + "px; width: " + maxWidth + "px";
+            scope.elementStyle = {
+              "min-height": (scope.maxHeight + 20) + "px",
+              "width": maxWidth + "px"
+            };
           }
         });
 
@@ -154,13 +166,15 @@ var answerArea = [
 
       },
       template: [
-        '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
-        '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="{{style}}" >',
+        '<div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
+        '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" ng-style="elementStyle" >',
         '    <div class="label-holder" ng-show="label"><div class="landingLabel">{{label}}</div>&nbsp;</div>',
+//        '    <div>{{layout}}</div>',
         '    <div',
         '      ui-sortable="sortableOptions" ',
         '      ng-model="landingPlaceChoices[id]"',
         '      >',
+        '        <span>&nbsp;</span>',
         '        <div ng-repeat-start="choice in landingPlaceChoices[id]"',
         '             ng-style="choiceStyle" ',
         '             jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
@@ -177,7 +191,8 @@ var answerArea = [
         '          <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
         '        </div>',
         '    </div>',
-        '    </div>'].join("")
+        '    <div class="clearfix" />',
+        '</div>'].join("")
 
     };
     return def;

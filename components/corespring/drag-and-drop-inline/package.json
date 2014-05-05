@@ -1,0 +1,33 @@
+{
+  "name": "drag-and-drop-inline",
+  "title": "Drag & Drop Inline",
+  "titleGroup": "Fixed Choice",
+  "organization": "corespring",
+  "corespring-container-version": "0.0.1",
+  "version": "0.0.1",
+  "dependencies": {
+    "client": {
+      "bootstrap-multiselect": {
+        "version": "*",
+        "file": "js/bootstrap-multiselect.js"
+      }
+    }
+  },
+  "libraries": [
+    {
+      "name": "drag-and-drop-engine",
+      "organization": "corespring"
+    },
+    {
+      "name": "feedback-templates",
+      "organization": "corespring",
+      "scope" : "editor"
+    },
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope" : "editor"
+    }
+  ],
+  "released": true
+}
