@@ -22,7 +22,9 @@ exports.service = ['$log',
         ticks: {
           minorTicks: attrs.tickLabelFrequency - 1,
           drawLabels: true
-        }
+        },
+        lastArrow: true,
+        firstArrow: true
       };
       this.board.create('axis', [
         [0, 0],
