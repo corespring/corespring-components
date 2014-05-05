@@ -4,7 +4,7 @@ var main = ['$compile', '$modal', '$rootScope',
     return {
       template: [
         "<div class='line-interaction-view'>",
-        "<div class='container-fluid graph-interaction' >",
+        "<div class='graph-interaction'>",
         "   <div id='additional-text' class='row-fluid additional-text' ng-show='additionalText'>",
         "       <p>{{additionalText}}</p>",
         "   </div>",

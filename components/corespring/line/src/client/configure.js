@@ -7,14 +7,20 @@ var main = [
         '</label>'].join('\n');
     };
 
-    var labelWithInput = function(size, label, modelKey, labelSize, inputType, inputClass) {
-      labelSize = labelSize || size;
-      inputType = inputType || "text";
-      inputClass = inputClass || "default-input";
+    var labelWithInput = function(options) {
+      options.size = options.size || 3;
+      options.labelSize = options.labelSize || options.size;
+      options.inputType = options.inputType || "text";
+      options.inputClass = options.inputClass || "default-input";
       return [
-          '<label class="col-sm-' + labelSize + '">' + label + '</label>',
-          '<div class="col-sm-' + size + ' ' + inputClass + '">',
-          '  <input type="' + inputType + '" class="form-control"  ng-model="fullModel.model.config.' + modelKey + '" />',
+          '<label class="col-sm-' + options.labelSize + '">' + options.label + '</label>',
+          '<div class="col-sm-' + options.size + ' ' + options.inputClass + '">',
+          '  <input ',
+          '    type="' + options.inputType + '" ',
+          '    class="form-control" ',
+          '    ng-model="fullModel.model.config.' + options.modelKey + '" ',
+          options.placeholder ? ('placeholder="' + options.placeholder + '"') : '',
+          '  />',
         '</div>'
       ].join('');
     };
@@ -26,20 +32,22 @@ var main = [
       '     <div class="informative-label">Use this section to setup the graph area.</div>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Width:', 'graphWidth'),
-      labelWithInput(3, 'Height:', 'graphHeight'),
+      labelWithInput({ label: 'Width:', modelKey: 'graphWidth', placeholder: '{{defaults.graphWidth}}' }),
+      labelWithInput({ label: 'Height:', modelKey: 'graphHeight', placeholder: '{{defaults.graphHeight}}' }),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Domain:', 'domain', 3, "number"),
-      labelWithInput(3, 'Domain Label:', 'domainLabel'),
+      labelWithInput({ label: 'Domain:', modelKey: 'domain', inputType: "number", placeholder: '{{defaults.domain}}' }),
+      labelWithInput({ label: 'Domain Label:', modelKey: 'domainLabel', placeholder: '{{defaults.domainLabel}}' }),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Range:', 'range', 3, "number"),
-      labelWithInput(3, 'Range Label:', 'rangeLabel'),
+      labelWithInput({ label: 'Range:', modelKey: 'range', inputType: "number", placeholder: '{{defaults.range}}' }),
+      labelWithInput({ label: 'Range Label:', modelKey: 'rangeLabel', placeholder: "y" }),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Tick Label Frequency:', 'tickLabelFrequency', 3, "number"),
-      labelWithInput(3, 'Significant Figures:', 'sigfigs', 3, "number"),
+      labelWithInput({ label: 'Tick Label Frequency:', modelKey: 'tickLabelFrequency', inputType: "number",
+        placeholder: '{{defaults.tickLabelFrequency}}' }),
+      labelWithInput({ label: 'Significant Figures:', modelKey: 'sigfigs', inputType: "number",
+        placeholder: '{{defaults.sigfigs}}' }),
       '       </div>',
       '       <div class="config-form-row">',
       '         <div class="col-sm-6">',
@@ -77,7 +85,7 @@ var main = [
       '       </div>',
       '       <div class="config-form-row">',
       '         <div class="col-sm-2">',
-      '           <label class="control-label">Initial State</label>',
+      '           <label class="control-label">Initial Line (optional)</label>',
       '         </div>',
       '         <div class="col-sm-8">',
       '           <input type="text" class="form-control" placeholder="Enter initial line equation in y=mx+b form." ng-model="fullModel.model.config.initialCurve" />',
@@ -116,6 +124,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
+        scope.defaults = scope.data.defaultData.model.config;
         scope.defaultCorrectFeedback = "Correct!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
         scope.containerBridge = {
@@ -142,23 +151,37 @@ var main = [
           }
         };
 
+        scope.resetDefaults = function() {
+          var defaults = scope.defaults;
+
+          function reset(property, value) {
+            scope.fullModel.model.config[property] = value;
+          }
+
+          reset('graphWidth', defaults.graphWidth);
+          reset('graphHeight', defaults.graphHeight);
+          reset('domain', defaults.domain);
+          reset('domainLabel', defaults.domainLabel);
+          reset('range', defaults.range);
+          reset('rangeLabel', defaults.rangeLabel);
+          reset('tickLabelFrequency', defaults.tickLabelFrequency);
+          reset('sigfigs', defaults.sigfigs);
+        };
+
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
 
       },
       template: [
         '<div class="line-interaction-configuration">',
-        '  <div navigator="">',
-        '    <div navigator-panel="Design">',
         '      <div class="intro-text">',
         '        This interaction asks a student to draw a line that meets specific criteria.',
         '        The student will draw the line by clicking on two points on the graph.',
         '    </div>',
         linesBlock,
         graphAttributes,
+        '<a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
         feedback,
-        '</div>',
-        '</div>',
         '</div>'
       ].join('\n')
     };
