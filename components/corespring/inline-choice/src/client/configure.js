@@ -1,17 +1,11 @@
-var displayOptions = [
-  '<div class="well">',
-  ' <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Distractors</label>',
-  '</div>'
-].join('\n');
-
-
 var main = [
   '$log', 'ChoiceTemplates',
   function($log, ChoiceTemplates) {
 
     var choices = [
       '<div class="choice-config-panel config-panel">',
-      '  <div class="check-correct-label">Select Correct Answer</div>',
+      '  <div class="check-correct-label">Check Correct Answer</div>',
+      '  <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Distractors</label>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: fullModel.correctResponse == q.value}" ng-click="fullModel.correctResponse = q.value"></i>',
@@ -143,14 +137,7 @@ var main = [
       //templateUrl: 'configure.html',
       template: [
         '<div class="config-multiple-choice" choice-template-controller="">',
-        '  <div navigator="">',
-        '    <div navigator-panel="Design">',
-        ChoiceTemplates.wrap(undefined, choices),
-        '    </div>',
-        '    <div navigator-panel="Display">',
-        ChoiceTemplates.wrap(undefined, displayOptions),
-        '    </div>',
-        '  </div>',
+               ChoiceTemplates.wrap(undefined, choices),
         '</div>'
       ].join("")
     };

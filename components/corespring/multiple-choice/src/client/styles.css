@@ -195,10 +195,7 @@
 }
 
 .choice-config-panel .check-correct-label {
-    position: absolute;
-    right: 10px;
-    top: 20px;
-    margin-bottom: 20px;
+    text-align: right;
 }
 
 .score-table td {
