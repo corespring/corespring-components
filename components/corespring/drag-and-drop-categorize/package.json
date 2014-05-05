@@ -20,7 +20,8 @@
     },
     {
       "name": "feedback-templates",
-      "organization": "corespring"
+      "organization": "corespring",
+      "scope" : "editor"
     },
     {
       "name": "choice-templates",
