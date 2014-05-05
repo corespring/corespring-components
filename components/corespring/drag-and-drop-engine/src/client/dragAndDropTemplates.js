@@ -1,0 +1,36 @@
+exports.framework = "angular";
+exports.service = [ '$log', function($log) {
+
+  var service = {
+
+    choiceArea: function() {
+      return [
+        '<div class="choices" >',
+        '  <h5 ng-show="model.config.choiceAreaHasLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
+        '  <div class="choices-table">',
+        '    <div ng-repeat="row in getChoiceRows()" class="choices-table-row">',
+        '      <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
+        '           ng-style="choiceStyle"',
+        '           data-drag="editable"',
+        '           ng-disabled="!editable"',
+        '           data-jqyoui-options="draggableOptions"',
+        '           ng-model="model.choices[$parent.$index * itemsPerRow() + $index]"',
+        '           jqyoui-draggable="{onStart: \'onStart\'}"',
+        '           data-id="{{o.id}}">',
+        '       <div ng-switch="o.labelType">',
+        '         <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+        '         <div ng-switch-default="" ng-bind-html-unsafe="o.label" />',
+        '       </div>',
+        '       <div class="sizerHolder" style="display: none; position: absolute" ng-switch="o.labelType">',
+        '         <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+        '         <div ng-switch-default="" ng-bind-html-unsafe="o.label" />',
+        '       </div>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    }
+  };
+  return service;
+}];

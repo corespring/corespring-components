@@ -9,6 +9,26 @@ var answerArea = [
 
         scope['class'] = attrs['class'];
 
+        var updateLayout = function(newLayout) {
+          var maxWidth = Math.min(scope.maxWidth + 25, 550);
+          if (newLayout === 'inline') {
+            scope.elementStyle = {
+              height: (scope.maxHeight + 30) + "px",
+              "min-width": maxWidth + "px"
+            };
+          } else if (newLayout === 'horizontal') {
+            scope.elementStyle = {
+              "min-height": (scope.maxHeight + 30) + "px",
+              "min-width": maxWidth + "px"
+            };
+          } else {
+            scope.elementStyle = {
+              "min-height": (scope.maxHeight + 20) + "px",
+              "width": maxWidth + "px"
+            };
+          }
+        };
+
         var bindAttribute = function(attrName, scopeKey, callback) {
           attrs.$observe(attrName, function(n) {
             if (n) {
@@ -24,8 +44,8 @@ var answerArea = [
           scope.landingPlaceChoices[n] = scope.landingPlaceChoices[n] || [];
         });
 
-        bindAttribute('label', 'label');
-        bindAttribute('layout', 'layout');
+        bindAttribute('answerAreaLabel', 'answerAreaLabel');
+        bindAttribute('answerAreaLayout', 'layout', updateLayout);
 
         scope.columnsPerRow = attrs.columnsperrow || 3;
 
@@ -135,18 +155,7 @@ var answerArea = [
         };
 
         scope.$watch("maxWidth + maxHeight", function(n) {
-          var maxWidth = Math.min(scope.maxWidth + 25, 550);
-          if (scope.layout === 'inline') {
-            scope.elementStyle = {
-              height: (scope.maxHeight + 30) + "px",
-              "min-width": maxWidth + "px"
-            };
-          } else {
-            scope.elementStyle = {
-              "min-height": (scope.maxHeight + 20) + "px",
-              "width": maxWidth + "px"
-            };
-          }
+          updateLayout(scope.layout);
         });
 
         scope.classForChoice = function(choice, idx) {
@@ -168,13 +177,11 @@ var answerArea = [
       template: [
         '<div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
         '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" ng-style="elementStyle" >',
-        '    <div class="label-holder" ng-show="label"><div class="landingLabel">{{label}}</div>&nbsp;</div>',
-//        '    <div>{{layout}}</div>',
+        '    <div class="label-holder" ng-show="answerAreaLabel"><div class="landingLabel">{{answerAreaLabel}}</div>&nbsp;</div>',
         '    <div',
         '      ui-sortable="sortableOptions" ',
         '      ng-model="landingPlaceChoices[id]"',
         '      >',
-        '        <span>&nbsp;</span>',
         '        <div ng-repeat-start="choice in landingPlaceChoices[id]"',
         '             ng-style="choiceStyle" ',
         '             jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
@@ -192,6 +199,7 @@ var answerArea = [
         '        </div>',
         '    </div>',
         '    <div class="clearfix" />',
+        '    <div ng-show="landingPlaceChoices[id].length == 0">&nbsp;</div>',
         '</div>'].join("")
 
     };

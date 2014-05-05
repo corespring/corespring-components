@@ -158,7 +158,7 @@ var main = [
       '  <div class="col-sm-2">',
       '    <label>choices</label>',
       '  </div>',
-      '</div>',
+      '</div>'
     ].join('');
 
     var displayOptions = [
