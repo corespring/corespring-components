@@ -52,7 +52,7 @@ var main = [
       '       <div class="config-form-row">',
       '         <div class="col-sm-6">',
       '           <input id="showCoords" type="checkbox" ng-model="fullModel.model.config.showCoordinates" />',
-      '           <label for="showCoords" class="control-label">Show Coordinates</label>',
+      '           <label for="showCoords" class="control-label">Show Point Coordinates</label>',
       '         </div>',
       '         <div class="col-sm-6">',
       '           <input id="showInputs" type="checkbox" ng-model="fullModel.model.config.showInputs" />',
