@@ -195,12 +195,12 @@ var main = [
         return scope.question && scope.question.config ? scope.question.config.orientation : '';
       }
 
-      scope.onClickItem = function(o){
+      scope.onClickChoice = function(choice){
         if(scope.editable) {
           if (scope.inputType == 'radio') {
-            scope.answer.choice = o.value;
+            scope.answer.choice = choice.value;
           } else {
-            scope.answer.choices[o.value] = !scope.answer.choices[o.value];
+            scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
           }
         }
       }
@@ -211,10 +211,10 @@ var main = [
     var verticalTemplate = [
       '<div class="choices-container" ng-class="question.config.orientation">',
       '  <div ng-repeat-start="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ',
-      '       ng-click="onClickItem(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
+      '       ng-click="onClickChoice(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <span class="choice-input" ng-switch="inputType">',
       '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]" />',
-      '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice" />',
+      '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
       '    </span>',
       '    <label class="choice-letter">{{letter($index)}}.</label>',
       '    <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
@@ -232,7 +232,7 @@ var main = [
     var horizontalTemplate = [
       '<div class="choices-container" ng-class="question.config.orientation">',
       '  <div ng-repeat="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ',
-      '       ng-click="onClickItem(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
+      '       ng-click="onClickChoice(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <div class="choice-wrapper">',
       '      <label class="choice-letter">{{letter($index)}}.</label>',
       '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
@@ -243,7 +243,7 @@ var main = [
       '      </div>',
       '      <div ng-switch="inputType">',
       '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]" />',
-      '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice" />',
+      '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
       '        <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
