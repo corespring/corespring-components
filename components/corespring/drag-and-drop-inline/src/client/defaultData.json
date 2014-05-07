@@ -2,8 +2,7 @@
   "componentType": "corespring-drag-and-drop-categorize",
   "title": "[Drag and Drop Question Name]",
   "correctResponse": {
-    "aa_1": [],
-    "aa_2": []
+    "aa_1": []
   },
   "feedback": {
     "correctFeedbackType": "default",
@@ -19,7 +18,7 @@
   "model": {
     "answerAreas": [
       {
-        "id": "cat_1",
+        "id": "aa_1",
         "textBefore": "",
         "textAfter": ""
       }
