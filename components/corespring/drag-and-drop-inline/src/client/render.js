@@ -99,7 +99,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       '  <div ng-if="model.config.answerAreaPosition != \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',
       answerArea,
       '  <div ng-if="model.config.answerAreaPosition == \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="_seeSolution()">See solution</a></div>',
+      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" class="feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
       '</div>'

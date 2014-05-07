@@ -286,7 +286,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
     '' + answerArea(),
     '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
-    '  <div class="pull-right" ng-show="correctResponse"><a href="#" ng-click="seeSolution()">See solution</a></div>',
+    '  <div class="pull-right" ng-show="correctResponse"><a ng-click="seeSolution()">See solution</a></div>',
     '</div>'
 
   ].join("");
