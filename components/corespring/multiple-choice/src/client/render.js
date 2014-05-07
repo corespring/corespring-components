@@ -197,13 +197,13 @@ var main = [
 
       scope.onClickChoice = function(choice){
         if(scope.editable) {
-          if (scope.inputType == 'radio') {
+          if (scope.inputType === 'radio') {
             scope.answer.choice = choice.value;
           } else {
             scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
           }
         }
-      }
+      };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
