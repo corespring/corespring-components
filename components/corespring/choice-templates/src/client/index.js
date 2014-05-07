@@ -24,7 +24,7 @@ exports.service = ['$log',
 
       this.choice = function(opts) {
         var defaults = {
-          correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>',
+          correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]" tooltip="{{isSingleChoice() ? \'\' : \'See the scoring tab for more options\'}}"></i>',
           correctnessPredicate: "correctMap[q.value]",
           feedback: true
         };
@@ -123,11 +123,12 @@ exports.service = ['$log',
 
         return [
           '<div class="scoring-header-text">',
-          'If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted. This is optional.',
+          '  If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted. This is optional.',
           '</div>',
 
           '<div>',
-          '   <input id="partialScoring" type="checkbox" ng-model="fullModel.allowPartialScoring"></input> <label for="partialScoring">Allow partial scoring</label>',
+          '   <input id="partialScoring" type="checkbox" ng-model="fullModel.allowPartialScoring" ng-disabled="isSingleChoice()"></input>',
+          '   <label for="partialScoring" ng-class="{ disabled: isSingleChoice() }">Allow partial scoring</label>',
           '</div>',
 
           '<form class="form-inline choice-template-scoring-section">',
