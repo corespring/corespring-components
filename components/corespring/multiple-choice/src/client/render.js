@@ -180,26 +180,41 @@ var main = [
       };
 
       scope.isVertical = function() {
-        return scope.question && scope.question.config && scope.question.config.orientation === 'vertical';
+        return orientation() === 'vertical';
       };
 
       scope.isHorizontal = function() {
-        return scope.question && scope.question.config && scope.question.config.orientation === 'horizontal';
+        return orientation() === 'horizontal';
       };
 
       scope.isTile = function() {
-        return scope.question && scope.question.config && scope.question.config.orientation === 'tile';
+        return orientation() === 'tile';
       };
+
+      function orientation(){
+        return scope.question && scope.question.config ? scope.question.config.orientation : '';
+      }
+
+      scope.onClickItem = function(o){
+        if(scope.editable) {
+          if (scope.inputType == 'radio') {
+            scope.answer.choice = o.value;
+          } else {
+            scope.answer.choices[o.value] = !scope.answer.choices[o.value];
+          }
+        }
+      }
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
     var verticalTemplate = [
       '<div class="choices-container" ng-class="question.config.orientation">',
-      '  <div ng-repeat-start="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
+      '  <div ng-repeat-start="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '       ng-click="onClickItem(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <span class="choice-input" ng-switch="inputType">',
-      '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-model="answer.choices[o.value]" />',
-      '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice" />',
+      '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]" />',
+      '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice" />',
       '    </span>',
       '    <label class="choice-letter">{{letter($index)}}.</label>',
       '    <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
@@ -216,7 +231,8 @@ var main = [
 
     var horizontalTemplate = [
       '<div class="choices-container" ng-class="question.config.orientation">',
-      '  <div ng-repeat="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
+      '  <div ng-repeat="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '       ng-click="onClickItem(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <div class="choice-wrapper">',
       '      <label class="choice-letter">{{letter($index)}}.</label>',
       '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
@@ -226,8 +242,8 @@ var main = [
       '        <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '      </div>',
       '      <div ng-switch="inputType">',
-      '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-model="answer.choices[o.value]" />',
-      '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice" />',
+      '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]" />',
+      '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice" />',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
       '        <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
@@ -259,7 +275,6 @@ var main = [
       '  </div>',
       '</div>'
     ].join("");
-
 
     def = {
       scope: {},
