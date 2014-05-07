@@ -277,7 +277,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         ].join('');
     };
     var tmpl = [
-    '<div class="view-drag-and-drop">',
+    '<div class="view-drag-and-drop-legacy">',
     '  <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '  <div ng-show="!correctResponse" class="pull-right">',
     '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',

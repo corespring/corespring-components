@@ -24,8 +24,8 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
+          scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.resetChoices(scope.rawModel);
-          scope.landingPlaceChoices = {};
 
           scope.originalChoices = _.cloneDeep(scope.model.choices);
 
@@ -74,18 +74,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
               return scope.choiceForId(r);
             });
           });
-
-        },
-
-        setMode: function(newMode) {
-        },
-
-        reset: function() {
-          scope.resetChoices(scope.rawModel);
-          scope.correctResponse = undefined;
-          scope.feedback = undefined;
         }
-
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -94,7 +83,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
 
     var tmpl = [
-      '<div class="view-drag-and-drop-categorize" drag-and-drop-controller>',
+      '<div class="view-drag-and-drop-categorize view-drag-and-drop" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
@@ -102,7 +91,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       '  <div ng-if="model.config.answerAreaPosition != \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',
       answerArea,
       '  <div ng-if="model.config.answerAreaPosition == \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="seeSolution()">See solution</a></div>',
+      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" class="feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
       '</div>'

@@ -149,6 +149,15 @@ var dragAndDropController = [
 
         /* Common container bridge implementations */
         scope.containerBridge = {
+          setMode: function(newMode) {
+          },
+
+          reset: function() {
+            scope.resetChoices(scope.rawModel);
+            scope.correctResponse = undefined;
+            scope.feedback = undefined;
+          },
+
           isAnswerEmpty: function() {
             return _.isEmpty(this.getSession().answers);
           },

@@ -3,10 +3,12 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
     var answerArea = [
       '<h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+      '<div>',
       '<div style="display: inline; vertical-align: top" ng-repeat="c in model.answerAreas">',
       '  <div style="display: inline-block" ng-bind-html-unsafe="c.textBefore"></div>',
       '  <div style="display: inline-block" answer-area class="inline" landingId="{{c.id}}" answer-area-layout="inline"></div>',
       '  <div style="display: inline-block" ng-bind-html-unsafe="c.textAfter"></div>',
+      '</div>',
       '</div>'
     ].join('');
 
@@ -73,16 +75,8 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
             });
           });
 
-        },
-
-        setMode: function(newMode) {
-        },
-
-        reset: function() {
-          scope.resetChoices(scope.rawModel);
-          scope.correctResponse = undefined;
-          scope.feedback = undefined;
         }
+
 
       });
 
@@ -91,7 +85,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
     };
 
     var tmpl = [
-      '<div class="view-drag-and-drop-inline" drag-and-drop-controller>',
+      '<div class="view-drag-and-drop view-drag-and-drop-inline" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
