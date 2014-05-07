@@ -1,6 +1,10 @@
 var assert, component, server, settings, should, _;
 
-server = require('../../src/server');
+var proxyquire = require('proxyquire').noCallThru();
+
+server = proxyquire('../../src/server', {
+  'corespring.drag-and-drop-engine.server': {}
+});
 
 assert = require('assert');
 
