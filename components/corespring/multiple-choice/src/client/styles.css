@@ -94,7 +94,7 @@
     display: table-cell;
     padding-left: 10px;
     padding-right: 10px;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 
@@ -209,6 +209,15 @@
     vertical-align: bottom;
 }
 
-.config-multiple-choice .comments-block {
+.config-multiple-choice .choice-config-panel {
+    margin-bottom: 40px;
+}
 
+.config-multiple-choice .config-shuffle {
+    display: inline-block;
+}
+
+.config-multiple-choice label.disabled {
+    color: #cccccc;
+    cursor: not-allowed;
 }

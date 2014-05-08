@@ -1,36 +1,32 @@
-var displayOptions = [
-  '<div class="well">',
-  ' <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Distractors</label>',
-  ' <table> ',
-  ' <tr> ',
-  ' <td> Layout: ',
-  ' <td> <input type="radio" value="vertical" ng-model="model.config.orientation"></input><td>A<br/>B<br/>C<br/>D',
-  ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
-  ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
-  ' </table>',
-  '</div>'
-].join('\n');
-
-
 var main = [
   '$log', 'ChoiceTemplates',
   function($log, ChoiceTemplates) {
 
     var choices = [
       '<div class="choice-config-panel config-panel">',
-      '  <div class="check-correct-label">Select Correct Answer(s)</div>',
+      '  <div class="check-correct-label">Check Correct Answer(s)</div>',
+      '  <div class="well config-shuffle">',
+      '    <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Distractors</label>',
+      '  </div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
            ChoiceTemplates.choice(),
       '  </div>',
       '  <button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
-      '  <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
-      '  <div ng-show="commentOn">',
-      '    <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
-      '  </div>',
-
+      '</div>',
+      '<div class="well">',
+      ' <table> ',
+      ' <tr> ',
+      ' <td> Layout: ',
+      ' <td> <input type="radio" value="vertical" ng-model="model.config.orientation"></input><td>A<br/>B<br/>C<br/>D',
+      ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
+      ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
+      ' </table>',
+      '</div>',
+      '<div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
+      '<div ng-show="commentOn">',
+      '  <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
       '</div>'
     ].join('\n');
-
 
     return {
       scope: 'isolate',
@@ -191,22 +187,17 @@ var main = [
           scope.navClosed = !scope.navClosed;
         };
 
+        scope.leftPanelClosed = false;
       },
-      //TODO - allow the use of templates...
-      //templateUrl: 'configure.html',
+
       template: [
         '<div class="config-multiple-choice" choice-template-controller="">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
                ChoiceTemplates.wrap(undefined, choices),
         '    </div>',
-        '    <div navigator-panel="Scoring" ng-hide="{{isSingleChoice()}}">',
-        '      <div ng-hide="isSingleChoice()">',
-                 ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
-        '      </div>',
-        '    </div>',
-        '    <div navigator-panel="Display">',
-               ChoiceTemplates.wrap(undefined, displayOptions),
+        '    <div navigator-panel="Scoring">',
+               ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
         '    </div>',
         '  </div>',
         '</div>'
