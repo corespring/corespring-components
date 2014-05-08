@@ -6,8 +6,8 @@ exports.service = [ '$log', function($log) {
     choiceArea: function() {
       return [
         '<div class="choices" >',
-        '  <h5 ng-show="model.config.choiceAreaHasLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
         '  <div class="choices-table">',
+        '    <div class="label-holder" ng-show="model.config.choiceAreaLabel"><div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div></div>',
         '    <div ng-repeat="row in getChoiceRows()" class="choices-table-row">',
         '      <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
         '           ng-style="choiceStyle"',

@@ -1,6 +1,10 @@
 
 /* Config Panel */
 
+.drag-and-drop-config-panel .description {
+    padding: 10px;
+}
+
 .drag-and-drop-config-panel td {
     padding: 5px;
 }
@@ -69,6 +73,30 @@
 .drag-and-drop-config-panel .answer-area-select {
     width: 200px;
 }
+
+.drag-and-drop-config-panel .category-row {
+    margin-bottom: 10px;
+    width: 300px;
+    position: relative;
+}
+
+.drag-and-drop-config-panel .category-remove-button {
+    position: absolute;
+    right: -7px;
+    top: -8px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.drag-and-drop-config-panel .category-remove-button i {
+    font-size: 20px;
+    color: #76a720;
+}
+
+.drag-and-drop-config-panel .category-remove-button:hover i {
+    color: #466213;
+}
+
 
 .popover-row {
     margin-bottom: 10px;

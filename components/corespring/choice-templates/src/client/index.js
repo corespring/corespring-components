@@ -26,7 +26,8 @@ exports.service = ['$log',
         var defaults = {
           correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>',
           correctnessPredicate: "correctMap[q.value]",
-          feedback: true
+          feedback: true,
+          columnWidths: []
         };
 
         opts = _.extend(defaults, opts);
@@ -70,16 +71,14 @@ exports.service = ['$log',
         return [
           '  <table class="choice-template-choice">',
           '    <tr>',
-          '     <td><b>Choice {{toChar($index)}}</b></td>',
-          '      <td>',
-          '      </td>',
-          '      <td>',
+          '     <td width="'+opts.columnWidths[0]+'"><b>Choice {{toChar($index)}}</b></td>',
+          '      <td width="'+opts.columnWidths[1]+'">',
           '        <select class="form-control" ng-model="q.labelType">',
           '          <option value="text">Text</option>',
           '          <option value="image">Image</option>',
           '        </select>',
           '      </td>',
-          '      <td>',
+          '      <td  width="'+opts.columnWidths[2]+'">',
           '        <div style="position: relative">',
           '        <span class="choice-remove-button" ng-click="removeQuestion(q)">',
           '          <i class="fa fa-times-circle"></i>',
@@ -92,8 +91,6 @@ exports.service = ['$log',
           '          </span>',
           '          <textarea ng-switch-when="mathml" ng-model="q.mathml" ng-change="updateMathJax()"></textarea>',
           '        </div>',
-          '      </td>',
-          '      <td>',
           '      </td>',
           '      <td>',
           opts.correct,

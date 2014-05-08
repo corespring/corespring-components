@@ -35,6 +35,16 @@
         "label": "",
         "labelType": "text",
         "id": "choice_1"
+      },
+      {
+        "label": "",
+        "labelType": "text",
+        "id": "choice_2"
+      },
+      {
+        "label": "",
+        "labelType": "text",
+        "id": "choice_3"
       }
     ],
     "config": {

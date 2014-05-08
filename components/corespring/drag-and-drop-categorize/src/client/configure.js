@@ -10,20 +10,34 @@ var main = [
     var inputHolder = function(header, body) {
       return [
         '<div class="input-holder">',
-          ' <div class="header">' + header + '</div>',
-        ' <div class="body">',
+        '  <div class="header">' + header + '</div>',
+        '  <div class="body">',
         body,
-        ' </div>',
+        '  </div>',
         '</div>'
       ].join("");
     };
+
+    var categories = [
+      '  <div class="category-row" ng-repeat="cat in model.categories">',
+      '   <span class="category-remove-button" ng-click="removeCategory(cat)">',
+      '     <i class="fa fa-times-circle"></i>',
+      '   </span>',
+      '    <input type="text" class="form-control" ng-model="cat.label" placeholder="Enter category label" />',
+      '  </div>',
+
+      '<div class="clearfix"></div>',
+      '  <button class=\"btn\" ng-click=\"addCategory()\">Add category</button>'
+
+    ].join("");
 
     var choiceArea = [
       '  <div class="pull-right select-correct-answers">Select Correct Answer(s)</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.id]}" ng-click="correctMap[q.id] = !correctMap[q.id]"></i>',
-        feedback: false
+        feedback: false,
+        columnWidths: ["100px","100px","200px"]
       }),
       '  </div>',
 
@@ -98,6 +112,14 @@ var main = [
       '         <div class="col-sm-3">',
       '           <input id="tile" type="radio" value="tile" ng-model="fullModel.model.config.choiceAreaLayout" />',
       '           <label for="tile" class="control-label">Tile</label>',
+      '         </div>',
+      '       </div>',
+      '       <div class="config-form-row" ng-show="fullModel.model.config.choiceAreaLayout == \'tile\'">',
+      '         <div class="col-sm-3">',
+      '           <label for="itemsPerRow" class="control-label">Items Per Row</label>',
+      '         </div>',
+      '         <div class="col-sm-3">',
+      '           <input id="itemsPerRow" type="text" class="form-control" ng-model="fullModel.model.config.itemsPerRow" />',
       '         </div>',
       '       </div>',
       '       <div class="config-form-row">',
@@ -177,6 +199,10 @@ var main = [
       '<div class="drag-and-drop-config-panel" choice-template-controller="">',
       '  <div navigator="">',
       '    <div navigator-panel="Design">',
+      '      <div class="description">',
+      '      In Categorize, students may drag & drop answer tiles to the appropriate category area(s).',
+      '      </div>',
+      inputHolder('Categories', categories),
       inputHolder('Choices', choiceArea),
       inputHolder('Answer Areas', answerArea),
       inputHolder('Feedback', feedback),
@@ -315,6 +341,7 @@ var main = [
           var idx = $scope.model.categories.length + 1;
           $scope.model.categories.push({
             id: "cat_" + idx,
+            hasLabel: true,
             label: "Category " + idx,
             layout: "vertical"
           });

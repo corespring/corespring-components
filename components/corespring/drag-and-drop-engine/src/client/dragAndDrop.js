@@ -110,6 +110,8 @@ var dragAndDropController = [
         scope.itemsPerRow = function() {
           if (scope.model.config.choiceAreaLayout === 'vertical') {
             return 1;
+          } else if (scope.model.config.choiceAreaLayout === 'tile') {
+            return Number(scope.model.config.itemsPerRow) || (550 / scope.maxWidth);
           } else {
             return 550 / scope.maxWidth;
           }
