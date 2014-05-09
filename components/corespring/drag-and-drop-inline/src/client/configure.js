@@ -19,21 +19,38 @@ var main = [
     };
 
     var choiceArea = [
+      '  <div class="config-form-row">',
+      '    <div class="col-sm-5">',
+      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" placeholder="Enter choice area label or leave blank"/>',
+      '    </div>',
+      '  </div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '',
-        feedback: false
+        feedback: false,
+        columnWidths: ["100px", "100px", "", "100px"]
       }),
+      '    <div style="padding-left: 210px">',
+      '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
+      '      <label for="moveOnDrag{{$index}}">Remove tile after placing</label>',
+      '    </div>',
       '  </div>',
 
       '<div class="clearfix"></div>',
-      '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
+      '<button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
+      '<div class="config-form-row">',
+      '  <div class="col-sm-8">',
+      '    <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
+      '    <label for="shuffle" class="control-label">Shuffle Tiles</label>',
+      '  </div>',
+      '</div>'
+
 
     ].join("");
 
     var answerArea = [
       '<div class="well answer-area" ng-repeat="aa in model.answerAreas">',
-      '  <div>Answer Area {{($index+1)}}</div>',
+      '  <div>Answer Blank {{($index+1)}}</div>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       '         <div class="col-sm-3">',
@@ -46,7 +63,7 @@ var main = [
       '       </div>',
       '       <div class="config-form-row">',
       '         <div class="col-sm-3">',
-      '            Text Before',
+      '            Text Before (optional)',
       '         </div>',
       '         <div class="col-sm-6">',
       '            <input class="form-control" type="text" ng-model="aa.textBefore"/>',
@@ -54,7 +71,7 @@ var main = [
       '       </div>',
       '       <div class="config-form-row">',
       '         <div class="col-sm-3">',
-      '            Text After',
+      '            Text After (optional)',
       '         </div>',
       '         <div class="col-sm-6">',
       '            <input class="form-control" type="text" ng-model="aa.textAfter" />',
@@ -101,10 +118,6 @@ var main = [
     var choiceAreaDisplayOptions = [
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
-      '         <div class="col-sm-4">',
-      '           <input id="includeLabel" type="checkbox" ng-model="fullModel.model.config.choiceAreaHasLabel" />',
-      '           <label for="includeLabel" class="control-label">Include a label</label>',
-      '         </div>',
       '         <div class="col-sm-5" ng-show="fullModel.model.config.choiceAreaHasLabel">',
       '           <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" />',
       '         </div>',
@@ -125,38 +138,24 @@ var main = [
       '           <label for="tile" class="control-label">Tile</label>',
       '         </div>',
       '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-8">',
-      '           <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
-      '           <label for="shuffle" class="control-label">Shuffle Tiles</label>',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-8">',
-      '           <input id="removetiles" type="checkbox" ng-model="fullModel.model.config.removeTilesOnDrop" />',
-      '           <label for="removetiles" class="control-label">Remove tiles when selected</label>',
-      '         </div>',
-      '       </div>',
-
-
       '     </form>'
     ].join('');
 
     var answerAreaDisplayOptions = [
       '<div class="config-form-row">',
-      '  <div class="col-sm-4">',
-      '    <label>Answer area is </label>',
+      '  <div class="col-sm-4 fixed-150">',
+      '    <label>Choice area is </label>',
       '  </div>',
-      '  <div class="col-sm-3">',
-      '    <input id="above" type="radio" value="above" ng-model="fullModel.model.config.answerAreaPosition" />',
+      '  <div class="col-sm-3 fixed-100">',
+      '    <input id="above" type="radio" value="above" ng-model="fullModel.model.config.choiceAreaPosition" />',
       '    <label for="above" class="control-label">above</label>',
       '  </div>',
-      '  <div class="col-sm-3">',
-      '    <input id="below" type="radio" value="below" ng-model="fullModel.model.config.answerAreaPosition" />',
+      '  <div class="col-sm-3 fixed-100">',
+      '    <input id="below" type="radio" value="below" ng-model="fullModel.model.config.choiceAreaPosition" />',
       '    <label for="below" class="control-label">below</label>',
       '  </div>',
-      '  <div class="col-sm-2">',
-      '    <label>choices</label>',
+      '  <div class="col-sm-4">',
+      '    <label>answer blanks</label>',
       '  </div>',
       '</div>'
     ].join('');
@@ -172,7 +171,7 @@ var main = [
       '  <div navigator="">',
       '    <div navigator-panel="Design">',
       inputHolder('Choices', choiceArea),
-      inputHolder('Answer Areas', answerArea),
+      inputHolder('Answer Blanks', answerArea),
       inputHolder('Feedback', feedback),
       '    </div>',
 
@@ -236,7 +235,7 @@ var main = [
             _.each(model.correctResponse, function(val, key) {
               if (key === 'cat_1') {
                 _.each(val, function(cid) {
-                   $scope.correctMap[cid] = true;
+                  $scope.correctMap[cid] = true;
                 });
               }
               $scope.correctAnswers[key] = _.map(val, function(choiceId) {
@@ -292,7 +291,8 @@ var main = [
           $scope.model.choices.push({
             id: "choice_" + $scope.model.choices.length,
             labelType: "text",
-            label: ""
+            label: "",
+            moveOnDrag: true
           });
         };
 

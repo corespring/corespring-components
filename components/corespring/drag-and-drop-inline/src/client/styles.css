@@ -69,6 +69,14 @@
     width: 200px;
 }
 
+.drag-and-drop-config-panel .fixed-100 {
+    width: 100px;
+}
+
+.drag-and-drop-config-panel .fixed-150 {
+    width: 150px;
+}
+
 .popover-row {
     margin-bottom: 10px;
 }

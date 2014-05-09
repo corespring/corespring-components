@@ -281,7 +281,8 @@ var main = [
           $scope.model.choices.push({
             id: "choice_" + $scope.model.choices.length,
             labelType: "text",
-            label: ""
+            label: "",
+            moveOnDrag: true
           });
         };
 
