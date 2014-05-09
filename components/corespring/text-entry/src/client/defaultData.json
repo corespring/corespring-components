@@ -17,22 +17,14 @@
     "config": {
       "correctResponse": {
         "feedback": {
-          "title": "Positive Feedback",
-          "headline": "If response is correct",
           "type": "default",
-          "value": "default positive feedback",
-          "default": "default positive feedback",
-          "prompt": "prompt for positive feedback"
+          "default": "default positive feedback"
         }
       },
       "partialResponse": {
         "feedback": {
-          "title": "Negative Feedback",
-          "headline": "If response is incorrect or partially correct",
           "type": "default",
-          "value": "default negative feedback",
-          "default": "default negative feedback",
-          "prompt": "prompt for negative feedback"
+          "default": "default negative feedback"
         }
       }
     }

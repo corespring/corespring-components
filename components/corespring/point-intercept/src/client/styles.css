@@ -129,13 +129,13 @@
     border: 2px solid #80b312;
     border-radius: 5px;
     width: 90%;
-    background: url("/assets/images/correct-icon.png") no-repeat scroll 3px 8px transparent;
+    background: url("/assets/images/feedback/correct-icon.png") no-repeat scroll 3px 8px transparent;
 
 }
 
 .point-interaction-view .feedback.incorrect {
     border-color: #F8A31A;
-    background: url("/assets/images/wrong-icon.png") no-repeat scroll 3px 8px transparent;
+    background: url("/assets/images/feedback/wrong-icon.png") no-repeat scroll 3px 8px transparent;
 }
 
 

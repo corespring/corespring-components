@@ -16,16 +16,42 @@
 
               <div class="cs-text-entry-cfg__award-config">Award
                 <input class="cs-text-entry-cfg__number-input" type="number"
-                       ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit for a partially correct answer
+                       ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit for a partially
+                correct answer
               </div>
             </div>
             <div ng-click="feedbackOn = !feedbackOn" style="margin-top: 10px"><i
-              class="fa fa-{{feedbackOn ? 'minus' : 'plus'}}-square-o"></i><span style="margin-left: 3px">Feedback</span>
+              class="fa fa-{{feedbackOn ? 'minus' : 'plus'}}-square-o"></i><span
+              style="margin-left: 3px">Feedback</span>
             </div>
             <div ng-show="feedbackOn">
-              <div cs-feedback-input model="fullModel.correctResponses.feedback" correctness="correct"/>
-              <div cs-feedback-input model="fullModel.partialResponses.feedback" correctness="partial" correct-responses="fullModel.correctResponses"/>
-              <div cs-feedback-input model="fullModel.incorrectResponses.feedback" correctness="incorrect" correct-responses="fullModel.correctResponses"/>
+              <div class="well">
+                <div feedback-selector
+                     fb-sel-label="If correct, show"
+                     fb-sel-class="correct"
+                     fb-sel-feedback-type="fullModel.correctResponses.feedback.type"
+                     fb-sel-custom-feedback="fullModel.correctResponses.feedback.custom"
+                     fb-sel-default-feedback="{{defaultCorrectFeedback}}"
+                  ></div>
+              </div>
+              <div class="well">
+                <div feedback-selector
+                     fb-sel-label="If partially correct, show"
+                     fb-sel-class="partial"
+                     fb-sel-feedback-type="fullModel.partialResponses.feedback.type"
+                     fb-sel-custom-feedback="fullModel.partialResponses.feedback.custom"
+                     fb-sel-default-feedback="{{defaultPartialFeedback}}"
+                  ></div>
+              </div>
+              <div class="well">
+                <div feedback-selector
+                     fb-sel-label="If incorrect, show"
+                     fb-sel-class="incorrect"
+                     fb-sel-feedback-type="fullModel.incorrectResponses.feedback.type"
+                     fb-sel-custom-feedback="fullModel.incorrectResponses.feedback.custom"
+                     fb-sel-default-feedback="{{defaultIncorrectFeedback}}"
+                  ></div>
+              </div>
             </div>
             <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i
               class="fa fa-{{commentOn ? 'minus' : 'plus'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>

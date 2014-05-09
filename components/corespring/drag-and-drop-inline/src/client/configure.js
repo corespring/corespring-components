@@ -98,7 +98,7 @@ var main = [
       '        <div class="well">',
       '          <div feedback-selector',
       '               fb-sel-label="If partially correct, show"',
-      '               fb-sel-class="correct"',
+      '               fb-sel-class="partial"',
       '               fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
       '               fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
       '               fb-sel-default-feedback="{{defaultPartialFeedback}}"',

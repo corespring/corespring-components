@@ -50,8 +50,7 @@ exports.respond = function (question, answer, settings) {
   }
 
   function replaceVariables(template, question) {
-    return template
-      .replace("<random selection from correct answers>", randomCorrectAnswer(question));
+    return template.replace("<random selection from correct answers>", randomCorrectAnswer(question));
   }
 
   function randomCorrectAnswer(question) {
@@ -64,7 +63,7 @@ exports.respond = function (question, answer, settings) {
   }
 
   if (exports.isCorrect(answer, question.correctResponses)) {
-    response = createResponse("correct", question.correctResponses.award, question.comments);
+    response = createResponse("correct", 100, question.comments);
   } else if (exports.isCorrect(answer, question.partialResponses)) {
     response = createResponse("partial", question.partialResponses.award, question.comments);
   } else {
@@ -78,5 +77,6 @@ exports.respond = function (question, answer, settings) {
     };
   }
 
+  console.log("text-entry.respond", response);
   return response;
 };

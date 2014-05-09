@@ -1,13 +1,13 @@
 var def = [
   '$log',
-  function() {
-    var inline = function(type, value, body, attrs) {
+  function($log) {
+    function inline(type, value, body, attrs) {
       return [
           '<label class="' + type + '-inline">',
           '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
           '</label>'
       ].join('\n');
-    };
+    }
 
     return {
       scope: {

@@ -151,7 +151,7 @@
 }
 
 .view-inline-choice.correct .feedback {
-    background: url("/assets/images/correct-icon.png") no-repeat scroll 0px -0px transparent;
+    background: url("/assets/images/feedback/correct-icon.png") no-repeat scroll 0px -0px transparent;
     width: 32px;
     height: 32px;
     display: inline-block;
@@ -159,7 +159,7 @@
 }
 
 .view-inline-choice.incorrect .feedback {
-    background: url("/assets/images/wrong-icon.png") no-repeat scroll 0px -0px transparent;
+    background: url("/assets/images/feedback/wrong-icon.png") no-repeat scroll 0px -0px transparent;
     width: 32px;
     height: 32px;
     display: inline-block;
