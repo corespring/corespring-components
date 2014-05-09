@@ -1,6 +1,8 @@
 var main = [
   '$log',
-  function ($log) {
+  function($log) {
+
+    "use strict";
 
     function createResponsesModel(award) {
       return {
@@ -10,7 +12,8 @@ var main = [
         ignoreWhitespace: false,
         feedback: {
           type: "default",
-          custom: ""}
+          custom: ""
+        }
       };
     }
 
@@ -19,7 +22,7 @@ var main = [
       restrict: 'E',
       replace: true,
       templateUrl: "/client/libs/corespring/text-entry/templates/design-panel.html",
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
 
         scope.itemId = attrs.id;
 
@@ -31,14 +34,14 @@ var main = [
         var defaultIncorrectFeedback = "Good try, but the correct answer is <random selection from correct answers>.";
 
         scope.containerBridge = {
-          setModel: function (fullModel) {
+          setModel: function(fullModel) {
             fullModel.correctResponses = fullModel.correctResponses || createResponsesModel(100);
             fullModel.partialResponses = fullModel.partialResponses || createResponsesModel(25);
             fullModel.incorrectResponses = fullModel.incorrectResponses || createResponsesModel(0);
             scope.fullModel = fullModel;
           },
 
-          getModel: function () {
+          getModel: function() {
             setFeedbackValue(scope.fullModel.correctResponses.feedback, defaultCorrectFeedback);
             setFeedbackValue(scope.fullModel.partialResponses.feedback, defaultPartialFeedback);
             setFeedbackValue(scope.fullModel.incorrectResponses.feedback, defaultIncorrectFeedback);
@@ -46,7 +49,7 @@ var main = [
           }
         };
 
-        scope.$watch('fullModel.correctResponses.values.length', function () {
+        scope.$watch('fullModel.correctResponses.values.length', function() {
           initFeedbacks();
         });
 
@@ -61,12 +64,12 @@ var main = [
         function setFeedbackValue(feedback, defaultFeedback) {
           function getFeedbackValue(feedback) {
             switch (feedback.type) {
-              case 'custom' :
+              case 'custom':
                 return feedback.custom;
-              case 'none' :
+              case 'none':
                 return "";
-              default :
-                return defaultFeedback
+              default:
+                return defaultFeedback;
             }
           }
 
@@ -93,7 +96,9 @@ var main = [
 
 var csResponseInput = [
   '$log',
-  function ($log) {
+  function($log) {
+
+    "use strict";
 
     return {
       scope: {
@@ -103,7 +108,7 @@ var csResponseInput = [
       restrict: 'A',
       replace: true,
       templateUrl: "/client/libs/corespring/text-entry/templates/response-input.html",
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
 
       }
     };
@@ -111,12 +116,9 @@ var csResponseInput = [
 ];
 
 exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  },
-  {
-    name: 'csResponseInput',
-    directive: csResponseInput
-  }
-];
+exports.directives = [{
+  directive: main
+}, {
+  name: 'csResponseInput',
+  directive: csResponseInput
+}];
