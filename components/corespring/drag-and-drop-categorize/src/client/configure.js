@@ -38,7 +38,7 @@ var main = [
       '    </div>',
       '  </div>',
 
-      '  <div class="pull-right select-correct-answers">Select Correct Answer(s)</div>',
+      '  <div class="pull-right select-correct-answers">Select Correct Categories</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '<select bootstrap-multiselect="{{componentState}}" multiple="true" ng-model="correctMap[q.id]" ng-options="c.label for c in model.categories"></select>',
@@ -47,7 +47,7 @@ var main = [
       }),
       '    <div style="padding-left: 210px">',
       '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
-      '      <label for="moveOnDrag{{$index}}">Remove tile when dragged</label>',
+      '      <label for="moveOnDrag{{$index}}">Remove tile after placing</label>',
       '    </div>',
       '  </div>',
 
@@ -118,14 +118,6 @@ var main = [
       '           <label for="shuffle" class="control-label">Shuffle Tiles</label>',
       '         </div>',
       '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-8">',
-      '           <input id="removetiles" type="checkbox" ng-model="fullModel.model.config.removeTilesOnDrop" />',
-      '           <label for="removetiles" class="control-label">Remove tiles when selected</label>',
-      '         </div>',
-      '       </div>',
-
-
       '     </form>'
     ].join('');
 
@@ -149,21 +141,8 @@ var main = [
 
       '<div ng-repeat="area in model.categories">',
       '  <div class="well">',
-      '  {{$first ? \'Default\' : \'\'}} Answer area {{$first ? \'\' : \'#\'+($index+1)}}',
+      '  {{area.label}}',
       '  <form class="form-horizontal" role="form">',
-      '    <div class="config-form-row">',
-      '      <div class="col-sm-4">',
-      '        <input id="includeLabelAnswerArea{{$index}}" type="checkbox" ng-model="area.hasLabel" />',
-      '        <label for="includeLabelAnswerArea{{$index}}" class="control-label">Include a label</label>',
-      '      </div>',
-      '      <div class="col-sm-5" ng-show="area.hasLabel">',
-      '        <input type="text" class="form-control" ng-model="area.label" />',
-      '      </div>',
-      '    </div>',
-
-      '    <div class="config-form-row">',
-      '      <div class="col-sm-5"><label>Answer Area Display</label></div>',
-      '    </div>',
       '    <div class="config-form-row">',
       '      <div class="col-sm-4">',
       '        <input id="vertical{{$index}}" type="radio" value="vertical" ng-model="area.layout" />',
