@@ -29,3 +29,42 @@
 .view-ordering .choice.incorrect {
     border: 2px solid #F8A31A;
 }
+
+.view-ordering-config {
+    margin: 40px 20px;
+}
+
+.view-ordering-config .info {
+    margin: 20px 0;
+}
+
+.view-ordering-config input[type=text] {
+    width: 100%;
+}
+
+.view-ordering-config .prompt {
+    margin-bottom: 25px;
+}
+
+.view-ordering-config ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.view-ordering-config li {
+    position: relative;
+    display: block;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 5px 0;
+    max-width: 200px;
+    min-height: 36px;
+    padding: 4px 4px 4px 18px;
+    background: url('../../images/grabber-icon.png') #efefef no-repeat 4px center;
+    cursor: move;
+}
+
+.view-ordering-config span {
+    display: inline-block;
+    padding: 3px 0 0 3px;
+}
