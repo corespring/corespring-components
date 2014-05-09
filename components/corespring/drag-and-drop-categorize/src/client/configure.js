@@ -10,7 +10,7 @@ var main = [
     var inputHolder = function(header, body) {
       return [
         '<div class="input-holder">',
-        '  <div class="header">' + header + '</div>',
+          '  <div class="header">' + header + '</div>',
         '  <div class="body">',
         body,
         '  </div>',
@@ -32,28 +32,27 @@ var main = [
     ].join("");
 
     var choiceArea = [
+      '  <div class="config-form-row">',
+      '    <div class="col-sm-8">',
+      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" placeholder="Enter choice area label or leave blank" />',
+      '    </div>',
+      '  </div>',
+
       '  <div class="pull-right select-correct-answers">Select Correct Answer(s)</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
-        correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.id]}" ng-click="correctMap[q.id] = !correctMap[q.id]"></i>',
+        correct: '<select bootstrap-multiselect="{{componentState}}" multiple="true" ng-model="correctMap[q.id]" ng-options="c.label for c in model.categories"></select>',
         feedback: false,
-        columnWidths: ["100px","100px","200px"]
+        columnWidths: ["100px", "100px", "", "100px"]
       }),
+      '    <div style="padding-left: 210px">',
+      '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
+      '      <label for="moveOnDrag{{$index}}">Remove tile when dragged</label>',
+      '    </div>',
       '  </div>',
 
       '<div class="clearfix"></div>',
       '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
-
-    ].join("");
-
-    var answerArea = [
-      '<div class="answer-area" ng-repeat="category in model.categories" ng-show="$index > 0">',
-      '  <div>Correct tiles for {{$first ? "Default Answer Area" :"Answer Area "+($index+1)}}</div>',
-      '  <select bootstrap-multiselect="{{componentState}}" class="answer-area-select" multiple="true" ng-model="correctAnswers[category.id]" ng-options="choiceToLetter(c) for c in model.choices">',
-      '  </select>',
-      '  <div><a ng-hide="$first" ng-click="removeCategory(category)">Remove Answer Area</a></div>',
-      '</div>',
-      '<a ng-click="addCategory()">Add Answer Area</a>'
 
     ].join("");
 
@@ -89,15 +88,6 @@ var main = [
 
     var choiceAreaDisplayOptions = [
       '     <form class="form-horizontal" role="form">',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-4">',
-      '           <input id="includeLabel" type="checkbox" ng-model="fullModel.model.config.choiceAreaHasLabel" />',
-      '           <label for="includeLabel" class="control-label">Include a label</label>',
-      '         </div>',
-      '         <div class="col-sm-5" ng-show="fullModel.model.config.choiceAreaHasLabel">',
-      '           <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" />',
-      '         </div>',
-      '       </div>',
       '       <div class="config-form-row">Layout',
       '       </div>',
       '       <div class="config-form-row">',
@@ -204,7 +194,6 @@ var main = [
       '      </div>',
       inputHolder('Categories', categories),
       inputHolder('Choices', choiceArea),
-      inputHolder('Answer Areas', answerArea),
       inputHolder('Feedback', feedback),
       '    </div>',
 
@@ -236,7 +225,6 @@ var main = [
         $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
         $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
 
-        $scope.correctAnswers = {};
         $scope.correctMap = {};
 
         $scope.choiceToLetter = function(c) {
@@ -259,22 +247,21 @@ var main = [
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
 
-            var choiceById = function(cid) {
-              return _.find(model.model.choices, function(c) {
+            var categoryById = function(cid) {
+              return _.find(model.model.categories, function(c) {
                 return c.id === cid;
               });
             };
 
-            _.each(model.correctResponse, function(val, key) {
-              if (key === 'cat_1') {
-                _.each(val, function(cid) {
-                   $scope.correctMap[cid] = true;
-                });
-              }
-              $scope.correctAnswers[key] = _.map(val, function(choiceId) {
-                return choiceById(choiceId);
+            $scope.correctMap = {};
+            console.log("Correct repsonse is ", model.correctResponse);
+            _.each(model.correctResponse, function(val, catId) {
+              _.each(val, function(cr) {
+                $scope.correctMap[cr] = $scope.correctMap[cr] || [];
+                $scope.correctMap[cr].push(categoryById(catId));
               });
             });
+            console.log("Correct map  is ", $scope.correctMap);
 
             $scope.componentState = "initialized";
             console.log(model);
@@ -292,23 +279,14 @@ var main = [
 
         $scope.$watch('correctMap', function(n) {
           if (n) {
-            var res = [];
-            for (var key in $scope.correctMap) {
-              if ($scope.correctMap[key]) {
-                res.push(key);
-              }
-            }
-            $scope.fullModel.correctResponse.cat_1 = res;
-          }
-        }, true);
-
-        $scope.$watch('correctAnswers', function(n) {
-          if (n) {
-            _.each($scope.correctAnswers, function(val, key) {
-              if (key !== 'cat_1') {
-                $scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
-              }
+            var res = {};
+            _.each(n, function(correctCategories, choiceId) {
+              _.each(correctCategories, function(category) {
+                res[category.id] = res[category.id] || [];
+                res[category.id].push(choiceId);
+              });
             });
+            $scope.fullModel.correctResponse = res;
           }
         }, true);
 
@@ -332,7 +310,11 @@ var main = [
           $scope.model.categories = _.filter($scope.model.categories, function(existing) {
             return existing !== category;
           });
-          delete $scope.correctAnswers[category.id];
+          _.each($scope.correctMap, function(val, key) {
+            $scope.correctMap[key] = _.filter(val, function(cat) {
+              return cat.id !== category.id;
+            });
+          });
           delete $scope.fullModel.correctResponse[category.id];
 
         };
@@ -356,12 +338,26 @@ var bootstrapMultiselect = [
   '$log',
   function($log) {
     return {
+      scope: true,
       link: function(scope, element, attrs) {
+        var rebuild = function() {
+          $(element).multiselect('setOptions', {
+            numberDisplayed: 1
+          });
+          $(element).multiselect('rebuild');
+        };
         attrs.$observe('bootstrapMultiselect', function(n) {
           if (n === 'initialized') {
-            $(element).multiselect();
+            rebuild();
           }
         });
+        var n = attrs.ngOptions;
+        if (n) {
+          var model = n.split("in ")[1];
+          scope.$watch(model, function(n) {
+            rebuild();
+          }, true);
+        }
       }
     };
 

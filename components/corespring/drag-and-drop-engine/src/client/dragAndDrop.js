@@ -17,8 +17,12 @@ var dragAndDropController = [
           scope.dragging.fromTarget = undefined;
         };
 
-        scope.draggableOptions = {
-          revert: 'invalid'
+        scope.draggableOptions = function(choice) {
+          return {
+            revert: 'invalid',
+            placeholder: (!choice || choice.moveOnDrag) ? '' : 'keep',
+            onStart: 'onStart'
+          };
         };
 
         scope.propagateDimension = function(w, h) {

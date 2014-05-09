@@ -159,7 +159,7 @@ var answerArea = [
         });
 
         scope.classForChoice = function(choice, idx) {
-          if (!scope.correctResponse) {
+          if (!scope.correctResponse || !scope.correctResponse[scope.id]) {
             return;
           }
           var isCorrect;

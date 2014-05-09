@@ -6,9 +6,11 @@ exports.createResponse = function(question, answer, settings, defaults) {
 
   for (var k in answer) {
     var correctResponseForId = question.correctResponse[k];
-    isCorrect &= _.isEmpty(_.xor(answer[k], correctResponseForId));
-    isPartiallyCorrect |= _.xor(answer[k], correctResponseForId).length < (answer[k].length + correctResponseForId.length);
-    numberOfCorrectAnswers += correctResponseForId.length - _.xor(answer[k], correctResponseForId).length;
+    if (correctResponseForId && answer[k]) {
+      isCorrect &= _.isEmpty(_.xor(answer[k], correctResponseForId));
+      isPartiallyCorrect |= _.xor(answer[k], correctResponseForId).length < (answer[k].length + correctResponseForId.length);
+      numberOfCorrectAnswers += correctResponseForId.length - _.xor(answer[k], correctResponseForId).length;
+    }
   }
 
   var score = 0;
