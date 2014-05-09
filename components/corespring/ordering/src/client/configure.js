@@ -1,12 +1,19 @@
 var main = [
-  "$compile",
-  function($compile) {}
+  function() {
+    return {
+      scope: {},
+      restrict: 'AE',
+      link: function() {
+      },
+      template: [
+        '<div></div>'
+      ].join('\n')
+    };
+  }
 ];
 
 
 exports.framework = 'angular';
-exports.directives = [
-  {
+exports.directives = [{
     directive: main
-  }
-];
+}];
