@@ -126,3 +126,15 @@
 .view-ordering-config .blocker:hover {
     opacity: 1.0;
 }
+
+.view-ordering-config .mini-wiggi-wiz .btn-group button {
+    padding: 2px 8px;
+}
+
+.view-ordering-config .toolbar {
+    padding: 0 5px;
+}
+
+.view-ordering-config .toolbar .wiggi-wiz-toolbar {
+    border-bottom: none;
+}

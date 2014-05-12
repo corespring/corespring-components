@@ -1,18 +1,64 @@
 var main = [
   '$sce',
+  '$log',
+  'ImageUtils',
   'WiggiMathJaxFeatureDef',
-  function($sce, WiggiMathJaxFeatureDef) {
+  function($sce, $log, ImageUtils, WiggiMathJaxFeatureDef) {
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
       link: function($scope, $element, $attrs) {
 
+        var log = $log.debug.bind($log, '[ordering-interaction-config] - ');
+
         $scope.extraFeatures = {
           definitions: [{
             type: 'group',
             buttons: [new WiggiMathJaxFeatureDef()]
           }]
+        };
+
+        $scope.imageService = {
+
+          deleteFile: function(url) {
+            $http['delete'](url);
+          },
+          addFile: function(file, onComplete, onProgress) {
+            var url = '' + file.name;
+
+            if (ImageUtils.bytesToKb(file.size) > 500) {
+              onComplete(ImageUtils.fileTooBigError(file.size, 500));
+              return;
+            }
+
+            var opts = {
+              onUploadComplete: function(body, status) {
+                log('done: ', body, status);
+                onComplete(null, url);
+              },
+              onUploadProgress: function() {
+                log('progress', arguments);
+                onProgress(null, 'started');
+              },
+              onUploadFailed: function() {
+                log('failed', arguments);
+                onComplete({
+                  code: 'UPLOAD_FAILED',
+                  message: 'upload failed!'
+                });
+              }
+            };
+
+            var reader = new FileReader();
+
+            reader.onloadend = function() {
+              var uploader = new com.ee.RawFileUploader(file, reader.result, url, name, opts);
+              uploader.beginUpload();
+            };
+
+            reader.readAsBinaryString(file);
+          }
         };
 
         $scope.containerBridge = {
@@ -65,7 +111,8 @@ var main = [
         '  </p>',
         '  <input class="prompt" type="text" ng-model="model.prompt" placeholder="Enter a label or leave blank"/>',
         '  <ul ui-sortable="" ng-model="model.choices">',
-        '    <li ng-repeat="choice in model.choices" ng-click="$event.stopPropagation()" ng-dblclick="activate($index)">',
+        '    <li ng-repeat="choice in model.choices" ng-click="$event.stopPropagation()"',
+        '      ng-dblclick="activate($index)">',
         '      <div class="delete-icon" ng-show="active[$index]">',
         '        <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
         '      </div>',
@@ -79,7 +126,8 @@ var main = [
         '        <i ng-click="deleteNode()" class="fa fa-times-circle"></i>',
         '      </div>',
         '      <span ng-hide="active[$index]" ng-bind-html="choiceMarkup(choice)"></span>',
-        '      <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz />',
+        '      <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz features="extraFeatures"',
+        '        image-service="imageService" />',
         '    </li>',
         '  </ul>',
         '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
@@ -88,7 +136,6 @@ var main = [
     };
   }
 ];
-
 
 exports.framework = 'angular';
 exports.directives = [{
