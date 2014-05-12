@@ -4,6 +4,100 @@ var main = [
 
     "use strict";
 
+    var designPanel = [
+      '    <div navigator-panel="Design">',
+      '      <div class="cs-text-entry-cfg">',
+      '        <div class="input-holder">',
+      '          <div class="body">',
+      '            <div class="section-header">Correct Answers</div>',
+      '            <div class="cs-text-entry-cfg__answers-holder">',
+      '              <div cs-response-input model="fullModel.correctResponses" prompt="correctResponsesPrompt"/>',
+      '            </div>',
+      '            <div class="section-header">Partially Correct Answers (optional)</div>',
+      '            <div class="cs-text-entry-cfg__answers-holder">',
+      '              <div cs-response-input model="fullModel.partialResponses" prompt="partialResponsesPrompt"/>',
+      '              <div class="cs-text-entry-cfg__award-config">Award',
+      '                <input class="cs-text-entry-cfg__number-input" type="number"',
+      '                       ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit for a partially',
+      '                correct answer',
+      '              </div>',
+      '            </div>',
+      '            <div ng-click="feedbackOn = !feedbackOn" style="margin-top: 10px"><i',
+      '              class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i><span',
+      '              style="margin-left: 3px">Feedback</span>',
+      '            </div>',
+      '            <div ng-show="feedbackOn">',
+      '              <div class="well">',
+      '                <div feedback-selector',
+      '                     fb-sel-label="If correct, show"',
+      '                     fb-sel-class="correct"',
+      '                     fb-sel-feedback-type="fullModel.correctResponses.feedback.type"',
+      '                     fb-sel-custom-feedback="fullModel.correctResponses.feedback.custom"',
+      '                     fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
+      '                  ></div>',
+      '              </div>',
+      '              <div class="well">',
+      '                <div feedback-selector',
+      '                     fb-sel-label="If partially correct, show"',
+      '                     fb-sel-class="partial"',
+      '                     fb-sel-feedback-type="fullModel.partialResponses.feedback.type"',
+      '                     fb-sel-custom-feedback="fullModel.partialResponses.feedback.custom"',
+      '                     fb-sel-default-feedback="{{defaultPartialFeedback}}"',
+      '                  ></div>',
+      '              </div>',
+      '              <div class="well">',
+      '                <div feedback-selector',
+      '                     fb-sel-label="If incorrect, show"',
+      '                     fb-sel-class="incorrect"',
+      '                     fb-sel-feedback-type="fullModel.incorrectResponses.feedback.type"',
+      '                     fb-sel-custom-feedback="fullModel.incorrectResponses.feedback.custom"',
+      '                     fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
+      '                  ></div>',
+      '              </div>',
+      '            </div>',
+      '            <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i',
+      '              class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>',
+      '            </div>',
+      '            <div ng-show="commentOn">',
+      '              <textarea ng-model="fullModel.comments" class="form-control"',
+      '                        placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
+      '            </div>',
+      '          </div>',
+      '        </div>',
+      '     </div>'
+    ].join("\n");
+
+    var displayPanel = [
+      '    <div navigator-panel="Display">',
+      '      <div style="margin: 12px 10px 20px 10px;">',
+      '        <div style="margin-bottom: 20px;">',
+      '          <label>Answer blank size:</label>',
+      '          <div ng-repeat="o in answerBlankSizeDataProvider" style="margin: 0 0 5px 10px;">',
+      '            <input type="radio" value="{{o.size}}" ng-model="fullModel.model.answerBlankSize"/>',
+      '            <input type="text" value="{{o.demoLabel}}" ng-class="o.cssClass"/> {{o.defaultLabel}}',
+      '          </div>',
+      '        </div>',
+      '        <div>',
+      '          <label>Align text in answer blank:</label>',
+      '          <select ng-model="fullModel.model.answerAlignment">',
+      '            <option value="left">Left</option>',
+      '            <option value="center">Center</option>',
+      '            <option value="right">Right</option>',
+      '          </select>',
+      '        </div>',
+      '      </div>',
+      '    </div>'
+    ].join("\n");
+
+    var panels = [
+      '<div>',
+      '  <div navigator="">',
+           designPanel,
+           displayPanel,
+      '  </div>',
+      '</div>'
+    ].join("\n");
+
     function createResponsesModel(award) {
       return {
         values: [],
@@ -21,7 +115,7 @@ var main = [
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      templateUrl: "/client/libs/corespring/text-entry/templates/design-panel.html",
+      template: panels,
       link: function(scope, element, attrs) {
 
         scope.itemId = attrs.id;
@@ -38,6 +132,9 @@ var main = [
             fullModel.correctResponses = fullModel.correctResponses || createResponsesModel(100);
             fullModel.partialResponses = fullModel.partialResponses || createResponsesModel(25);
             fullModel.incorrectResponses = fullModel.incorrectResponses || createResponsesModel(0);
+            fullModel.model = fullModel.model || {};
+            fullModel.model.answerBlankSize = fullModel.model.answerBlankSize || 3;
+            fullModel.model.answerAlignment = fullModel.model.answerAlignment || 'left';
             scope.fullModel = fullModel;
           },
 
@@ -52,6 +149,13 @@ var main = [
         scope.$watch('fullModel.correctResponses.values.length', function() {
           initFeedbacks();
         });
+
+        scope.answerBlankSizeDataProvider = [
+          {size:1,cssClass:"cs-text-entry-cfg__answer-size-1",demoLabel:"ABC", defaultLabel:""},
+          {size:2,cssClass:"cs-text-entry-cfg__answer-size-2",demoLabel:"ABCDE", defaultLabel:""},
+          {size:3,cssClass:"cs-text-entry-cfg__answer-size-3",demoLabel:"ABCDEFG", defaultLabel:"(Default)"},
+          {size:4,cssClass:"cs-text-entry-cfg__answer-size-4",demoLabel:"ABCDEFGHIJ", defaultLabel:""}
+        ];
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -100,6 +204,27 @@ var csResponseInput = [
 
     "use strict";
 
+    var template = [
+      '<div class="cs-text-entry-cfg__responses-input">',
+      '  <input style="width:100%;" type="text" ng-model="response.values"',
+      '         ui-select2="{tags:[],tokenSeparators:[','],simple_tags:true,multiple:true,',
+      '         dropdownCssClass:\'cs-text-entry-cfg__responses-input--dropdown-noshow\'}"',
+      '         data-placeholder="{{prompt}}"',
+      '    />',
+      '',
+      '  <div class="pull-right">',
+      '    <label class="checkbox-inline">',
+      '      <input type="checkbox" value="ignore-case" ng-init="response.caseSensitive = !response.ignoreCase"',
+      '             ng-model="response.caseSensitive" ng-change="response.ignoreCase = !response.caseSensitive"/>Case sensitive?',
+      '    </label>',
+      '    <label class="checkbox-inline">',
+      '      <input type="checkbox" value="ignore-whitespace" ng-model="response.ignoreWhitespace"/>Ignore spacing?',
+      '    </label>',
+      '  </div>',
+      '  <div class="clearfix"></div>',
+      '</div>'
+    ].join("\n");
+
     return {
       scope: {
         response: '=model',
@@ -107,9 +232,8 @@ var csResponseInput = [
       },
       restrict: 'A',
       replace: true,
-      templateUrl: "/client/libs/corespring/text-entry/templates/response-input.html",
+      template: template,
       link: function(scope, element, attrs) {
-
       }
     };
   }
