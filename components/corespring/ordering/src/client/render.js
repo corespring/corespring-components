@@ -41,8 +41,6 @@ var main = ['$compile', '$log',
         }
       };
 
-      scope.editable = true;
-
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
           $log.debug("Ordering setting session: ", dataAndSession);
@@ -93,14 +91,19 @@ var main = ['$compile', '$log',
 
         editable: function(e) {
           scope.editable = e;
+          if (scope.editable) {
+            $('.choices', element).attr('ui-sortable', '');
+          }
+          $compile(element.contents())(scope);
         }
       };
+
+      scope.containerBridge.editable(true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
       scope.resetChoices = function() {
         scope.choices = _.cloneDeep(scope.originalChoices);
-
       };
 
     };
@@ -110,15 +113,16 @@ var main = ['$compile', '$log',
       restrict: 'AE',
       scope: {},
       template: [
-      "<div class='view-ordering'>",
-      '<div class="prompt" ng-bind-html-unsafe="model.prompt"></div> ',
-      '<ul ui-sortable="{disabled: !editable}" ng-model="choices">',
-      '<li ng-repeat="choice in choices">',
-      '<div class="choice" ng-class="{true:\'correct\', false:\'incorrect\'}[feedback[choice.value].correct]" ng-bind-html-unsafe="choice.label"> </div>',
-      '</li>',
-      '</ul>',
-      "</div>"
-    ].join("")
+        '<div class="view-ordering">',
+        '  <div class="prompt" ng-bind-html-unsafe="model.prompt"></div> ',
+        '  <ul class="choices" ng-model="choices">',
+        '    <li ng-repeat="choice in choices">',
+        '      <div class="choice" ng-class="{true:\'correct\', false:\'incorrect\'}[feedback[choice.value].correct]" ',
+        '        ng-bind-html-unsafe="choice.label"> </div>',
+        '    </li>',
+        '  </ul>',
+        '</div>'
+      ].join('\n')
     };
 }];
 
