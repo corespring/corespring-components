@@ -25,7 +25,7 @@
     "config": {
       "shuffle": true
     },
-    "prompt": "Enter a prompt for the student, e.g. 'Drag the answers into the correct order.'"
+    "prompt": ""
   },
   "weight": 1
 }

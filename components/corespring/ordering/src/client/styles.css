@@ -15,7 +15,6 @@
 
 .view-ordering .choice {
     border: 1px #000000 solid;
-    cursor: move;
     background: #efefef;
     border-radius: 6px;
     display: inline-block;
@@ -61,7 +60,6 @@
     min-height: 36px;
     padding: 4px 4px 4px 18px;
     background: url('../../images/grabber-icon.png') #efefef no-repeat 4px center;
-    cursor: move;
 }
 
 .view-ordering-config span {
