@@ -1,10 +1,19 @@
 var main = [
-  function() {
+  '$sce',
+  'WiggiMathJaxFeatureDef',
+  function($sce, WiggiMathJaxFeatureDef) {
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
       link: function($scope, $element, $attrs) {
+
+        $scope.extraFeatures = {
+          definitions: [{
+            type: 'group',
+            buttons: [new WiggiMathJaxFeatureDef()]
+          }]
+        };
 
         $scope.containerBridge = {
           setModel: function(model) {
@@ -25,7 +34,7 @@ var main = [
         $scope.activate = function($index) {
           $scope.active[$index] = true;
 
-          $element.find('.text-field').each(function(i, el) {
+          $element.find('.wiggi-wiz-editable').each(function(i, el) {
             $scope.active[i] = $index === i;
             if ($index === i) {
               $(el).focus();
@@ -34,7 +43,6 @@ var main = [
         };
 
         $scope.deactivate = function() {
-          console.log($scope.model.choices);
           $scope.active = _.map($scope.model.choices, function() { return false; });
         };
 
@@ -43,6 +51,10 @@ var main = [
         }
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
+
+        $scope.choiceMarkup = function(choice) {
+          return $sce.trustAsHtml(choice.label);
+        };
       },
       template: [
         '<div class="view-ordering-config" ng-click="deactivate()">',
@@ -57,8 +69,17 @@ var main = [
         '      <div class="delete-icon" ng-show="active[$index]">',
         '        <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
         '      </div>',
-        '      <span ng-hide="active[$index]">{{choice.label}}</span>',
-        '      <input type="text" ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz />',
+        '      <div class="blocker" ng-hide="active[$index]">',
+        '        <div class="bg"></div>',
+        '        <div class="content">',
+        '          <div class="title">Double Click to Edit</div>',
+        '        </div>',
+        '      </div>',
+        '      <div class="delete-icon">',
+        '        <i ng-click="deleteNode()" class="fa fa-times-circle"></i>',
+        '      </div>',
+        '      <span ng-hide="active[$index]" ng-bind-html="choiceMarkup(choice)"></span>',
+        '      <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz />',
         '    </li>',
         '  </ul>',
         '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
