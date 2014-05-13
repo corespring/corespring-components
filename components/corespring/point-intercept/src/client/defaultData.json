@@ -13,8 +13,8 @@
   },
   "model": {
     "config": {
-      "graphWidth": "300px",
-      "graphHeight": "300px",
+      "graphWidth": "300",
+      "graphHeight": "300",
       "maxPoints": "",
       "labelsType": "present",
       "pointLabels": [

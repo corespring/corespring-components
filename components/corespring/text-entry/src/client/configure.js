@@ -75,7 +75,7 @@ var main = [
       '          <label>Answer blank size:</label>',
       '          <div ng-repeat="o in answerBlankSizeDataProvider" style="margin: 0 0 5px 10px;">',
       '            <input type="radio" value="{{o.size}}" ng-model="fullModel.model.answerBlankSize"/>',
-      '            <input type="text" value="{{o.demoLabel}}" ng-class="o.cssClass"/> {{o.defaultLabel}}',
+      '            <input type="text" readonly value="{{o.demoLabel}}" ng-class="o.cssClass"/> {{o.defaultLabel}}',
       '          </div>',
       '        </div>',
       '        <div>',
