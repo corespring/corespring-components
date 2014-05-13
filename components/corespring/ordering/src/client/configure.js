@@ -146,7 +146,7 @@ var main = [
 
         $scope.addChoice = function() {
           $scope.model.choices.push({content: "", label: ""});
-        }
+        };
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
