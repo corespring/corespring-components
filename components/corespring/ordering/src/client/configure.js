@@ -128,7 +128,7 @@ var main = [
           $('.sortable-choices', $element).sortable("disable");
         };
 
-        $scope.something = function($event) {
+        $scope.itemClick = function($event) {
           function isField($event) {
             return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
           }
@@ -164,7 +164,7 @@ var main = [
         '  </p>',
         '  <input class="prompt" type="text" ng-model="model.prompt" placeholder="Enter a label or leave blank"/>',
         '  <ul class="sortable-choices" ui-sortable="" ng-model="model.choices">',
-        '    <li ng-repeat="choice in model.choices" ng-click="something($event)"',
+        '    <li ng-repeat="choice in model.choices" ng-click="itemClick($event)"',
         '      ng-dblclick="activate($index)">',
         '      <div class="delete-icon" ng-show="active[$index]">',
         '        <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
