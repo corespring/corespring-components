@@ -1,3 +1,4 @@
+/* global com */
 var main = [
   '$sce',
   '$log',
