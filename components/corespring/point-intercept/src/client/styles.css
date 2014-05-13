@@ -61,6 +61,8 @@
 .graph-interaction {
     background-color: #CCCCCC;
     margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
     padding-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
