@@ -1,9 +1,48 @@
 var main = [
   '$sce',
   '$log',
+  '$http',
   'ImageUtils',
   'WiggiMathJaxFeatureDef',
-  function($sce, $log, ImageUtils, WiggiMathJaxFeatureDef) {
+  function($sce, $log, $http, ImageUtils, WiggiMathJaxFeatureDef) {
+
+    var placeholderText = {
+      selectedFeedback: function(attribute) {
+        var message = {
+          correct: 'correct',
+          partial: 'partially correct',
+          incorrect: 'incorrect'
+        };
+        return 'Enter feedback to display if ' + message[attribute] + '.';
+      },
+      noFeedback: 'No feedback will be presented to the student.'
+    };
+
+    function feedback(options) {
+      function inline(type, value, body, attrs) {
+        return ['<label class="' + type + '-inline">',
+          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
+          '</label>'].join('\n');
+      }
+
+      return [
+        '<div class="well" ng-show="feedbackOn">',
+        '  <div><label>' + options.header + '</label></div>',
+        '  <div>',
+            inline("radio", "default", "Default Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
+            inline("radio", "none", "No Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
+            inline("radio", "custom", "Customized Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
+        '  </div>',
+        '  <div class="clearfix"></div>',
+        '  <span ng-switch="model.feedback.' + options.attribute + '.feedbackType" class="choice-template-choice">',
+        '    <input ng-switch-when="custom" class="form-control feedback-preview custom ' + options.attribute + '" type="text" ng-model="model.feedback.' + options.attribute + '.notChosenFeedback" placeholder="' + placeholderText.selectedFeedback(options.attribute) + '"/>',
+        '    <input ng-switch-when="default" class="form-control feedback-preview ' + options.attribute + '" disabled="true" type="text" value="{{defaultNotChosenFeedback.' + options.attribute + '}}"/>',
+        '    <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"/>',
+        '  </span>',
+        '</div>'
+      ].join('\n');
+    }
+
     return {
       scope: 'isolate',
       restrict: 'E',
@@ -17,6 +56,13 @@ var main = [
             type: 'group',
             buttons: [new WiggiMathJaxFeatureDef()]
           }]
+        };
+
+        // TODO: Same as the other todo... should find a way to share these.
+        $scope.defaultNotChosenFeedback = {
+          correct: 'Correct!',
+          partial: 'Almost!',
+          incorrect: 'Good try, but that is not the correct answer.'
         };
 
         $scope.imageService = {
@@ -79,17 +125,23 @@ var main = [
 
         $scope.activate = function($index) {
           $scope.active[$index] = true;
+          $('.sortable-choices', $element).sortable("disable");
+        };
 
-          $element.find('.wiggi-wiz-editable').each(function(i, el) {
-            $scope.active[i] = $index === i;
-            if ($index === i) {
-              $(el).focus();
-            }
-          });
+        $scope.something = function($event) {
+          function isField($event) {
+            return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
+          }
+          $event.stopPropagation();
+          $event.preventDefault();
+          if (!isField($event)) {
+            $scope.deactivate();
+          }
         };
 
         $scope.deactivate = function() {
           $scope.active = _.map($scope.model.choices, function() { return false; });
+          $('.sortable-choices', $element).sortable("enable");
         };
 
         $scope.addChoice = function() {
@@ -104,14 +156,15 @@ var main = [
       },
       template: [
         '<div class="view-ordering-config" ng-click="deactivate()">',
+        '<div navigator="">',
         '  <p class="info">In Ordering, a student is asked to sequence events or inputs in a specific order.</p>',
         '  <p class="info">',
         '    Drag and drop your choices to set the correct order. The student view will display the choices in ',
         '    randomized order.',
         '  </p>',
         '  <input class="prompt" type="text" ng-model="model.prompt" placeholder="Enter a label or leave blank"/>',
-        '  <ul ui-sortable="" ng-model="model.choices">',
-        '    <li ng-repeat="choice in model.choices" ng-click="$event.stopPropagation()"',
+        '  <ul class="sortable-choices" ui-sortable="" ng-model="model.choices">',
+        '    <li ng-repeat="choice in model.choices" ng-click="something($event)"',
         '      ng-dblclick="activate($index)">',
         '      <div class="delete-icon" ng-show="active[$index]">',
         '        <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
@@ -133,7 +186,22 @@ var main = [
         '    </li>',
         '  </ul>',
         '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
-        '</div>'
+        '  <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
+        '    <div ng-show="commentOn">',
+        '    <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
+        '  </div>',
+        '  <table>',
+        '    <tr>',
+        '    <td colspan="6" style="text-align: left">',
+        '      <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
+                 feedback({header: "If ordered correctly, show:", attribute: 'correct'}),
+                 feedback({header: "If partially ordered correctly, show:", attribute: 'partial'}),
+                 feedback({header: "If ordered incorrectly, show:", attribute: 'incorrect'}),
+        '      </div>',
+        '    </td>',
+        '    </tr>',
+        '  </table>',
+        '</div></div>'
       ].join('\n')
     };
   }

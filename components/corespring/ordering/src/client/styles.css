@@ -50,6 +50,10 @@
     list-style-type: none;
 }
 
+.view-ordering-config .config-panel-body {
+    padding: 20px;
+}
+
 .view-ordering-config li {
     position: relative;
     display: block;
@@ -145,4 +149,9 @@
 
 .view-ordering-config .toolbar .wiggi-wiz-toolbar {
     border-bottom: none;
+}
+
+.view-ordering-config .navigator-toggle-button-row {
+    /*do not show the hamburger but keep the scrollable container*/
+    display: none;
 }
