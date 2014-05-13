@@ -1,11 +1,14 @@
 {
-  "libraries": [
-    {
-      "name": "choice-templates",
-      "organization": "corespring",
-      "scope" : "editor"
+  "libraries": [{
+    "name": "choice-templates",
+    "organization": "corespring",
+    "scope": "editor"
+  }],
+  "external-configuration": {
+    "corespring-editor": {
+      "placeholder-show-tooltip": true
     }
-  ],
+  },
   "name": "text-entry",
   "title": "Short Answer",
   "titleGroup": "Text Entry",
