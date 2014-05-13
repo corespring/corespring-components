@@ -58,7 +58,6 @@ var main = [
           }]
         };
 
-        // TODO: Same as the other todo... should find a way to share these.
         $scope.defaultNotChosenFeedback = {
           correct: 'Correct!',
           partial: 'Almost!',
