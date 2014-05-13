@@ -14,7 +14,7 @@
     }
   },
   "external-configuration": {
-    "corespring-visual-authoring": {
+    "corespring-editor": {
       "placeholder-show-tooltip": true
     }
   },
