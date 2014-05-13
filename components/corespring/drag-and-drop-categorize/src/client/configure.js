@@ -52,7 +52,14 @@ var main = [
       '  </div>',
 
       '<div class="clearfix"></div>',
-      '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
+      '<button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
+      '<div style="margin-top: 10px" class="config-form-row">',
+      '  <div class="col-sm-8">',
+      '    <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
+      '    <label for="shuffle" class="control-label">Shuffle Tiles</label>',
+      '  </div>',
+      '</div>'
+
 
     ].join("");
 
@@ -110,12 +117,6 @@ var main = [
       '         </div>',
       '         <div class="col-sm-3">',
       '           <input id="itemsPerRow" type="text" class="form-control" ng-model="fullModel.model.config.itemsPerRow" />',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-8">',
-      '           <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
-      '           <label for="shuffle" class="control-label">Shuffle Tiles</label>',
       '         </div>',
       '       </div>',
       '     </form>'
