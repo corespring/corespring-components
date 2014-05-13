@@ -58,8 +58,8 @@
     margin: 5px 0;
     max-width: 200px;
     min-height: 36px;
-    padding: 4px 4px 4px 18px;
-    background: url('../../images/grabber-icon.png') #efefef no-repeat 4px center;
+    padding: 4px;
+    background: #efefef;
 }
 
 .view-ordering-config span {
@@ -75,9 +75,10 @@
     right: 0;
     top: 0;
     bottom: 0;
+    overflow: visible;
 }
 
-.view-ordering-config .blocker .content .title{
+.view-ordering-config .blocker .content .title {
     width: 100%;
     text-align: center;
     color: #000000;
@@ -85,6 +86,13 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow-x: hidden;
+}
+
+.view-ordering-config .blocker .content .drag-icon {
+    display: block;
+    position: absolute;
+    top: -8px;
+    left: 90px;
 }
 
 .view-ordering-config .delete-icon {
