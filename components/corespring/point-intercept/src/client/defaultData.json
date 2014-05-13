@@ -13,8 +13,8 @@
   },
   "model": {
     "config": {
-      "graphWidth": "550px",
-      "graphHeight": "550px",
+      "graphWidth": "300px",
+      "graphHeight": "300px",
       "maxPoints": "",
       "labelsType": "present",
       "pointLabels": [
@@ -29,7 +29,9 @@
       "range": 10,
       "tickLabelFrequency": 5,
       "scale": 1,
-      "showCoordinates": false
+      "sigfigs": -1,
+      "showCoordinates": false,
+      "showInputs": true
     }
   }
 }

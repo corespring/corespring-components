@@ -61,6 +61,8 @@
 .graph-interaction {
     background-color: #CCCCCC;
     margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
     padding-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
@@ -145,6 +147,12 @@
 
 .point-intercept-configuration {
 }
+
+.point-intercept-configuration .navigator-toggle-button-row {
+  /*do not show the hamburger but keep the scrollable container*/
+  display: none;
+}
+
 
 .point-intercept-configuration .coordinate-input {
     max-width: 80px;

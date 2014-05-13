@@ -207,7 +207,7 @@ var main = ['$compile', '$modal', '$rootScope',
             },
             template: [
               '   <div class="modal-header">',
-              '     <h3>Correct Answer</h3>',
+              '     <h3>Solution</h3>',
               '   </div>',
               '   <div class="modal-body">',
               '     <corespring-point-intercept solution-view="true" id="solution"></corespring-point-intercept>',

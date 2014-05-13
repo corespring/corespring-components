@@ -174,14 +174,16 @@ var main = [
       },
       template: [
         '<div class="line-interaction-configuration">',
-        '      <div class="intro-text">',
-        '        This interaction asks a student to draw a line that meets specific criteria.',
-        '        The student will draw the line by clicking on two points on the graph.',
+        '  <div navigator="">',
+        '    <div class="intro-text">',
+        '      This interaction asks a student to draw a line that meets specific criteria.',
+        '      The student will draw the line by clicking on two points on the graph.',
         '    </div>',
         linesBlock,
         graphAttributes,
         '<a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
         feedback,
+        '  </div>',
         '</div>'
       ].join('\n')
     };

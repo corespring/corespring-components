@@ -25,12 +25,7 @@ exports.respond = function(question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    res.outcome = [];
-    if (isCorrect) {
-      res.outcome.push('correct');
-    } else {
-      res.outcome.push('incorrect');
-    }
+    res.outcome = [isCorrect ? "correct" : "incorrect"];
 
     var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
     var fbTypeSelector = isCorrect ? "correctFeedbackType" : "incorrectFeedbackType";
@@ -41,7 +36,6 @@ exports.respond = function(question, answer, settings) {
     } else if (feedbackType === "default") {
       res.feedback = isCorrect ? exports.DEFAULT_CORRECT_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK;
     }
-
   }
 
   return res;
