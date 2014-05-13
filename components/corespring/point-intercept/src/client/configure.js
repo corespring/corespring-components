@@ -205,13 +205,9 @@ var main = [ 'ServerLogic',
       },
       template: [
         '<div class="point-intercept-configuration">',
-        '  <div navigator="">',
-        '    <div navigator-panel="Design">',
         pointsBlock,
         graphAttributes,
         feedback,
-        '</div>',
-        '</div>',
         '</div>'
       ].join('\n')
     };
