@@ -155,14 +155,18 @@ var answerArea = [
         });
 
         scope.classForChoice = function(choice, idx) {
-          if (!scope.correctResponse || !scope.correctResponse[scope.id]) {
+          if (!scope.correctResponse) {
+            return;
+          }
+          var correctResponse = _.isArray(scope.correctResponse) ? scope.correctResponse : scope.correctResponse[scope.id];
+          if (!correctResponse) {
             return;
           }
           var isCorrect;
           if (scope.cardinality === "ordered") {
-            isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) === idx;
+            isCorrect = correctResponse.indexOf(choice.id) === idx;
           } else {
-            isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) >= 0;
+            isCorrect = correctResponse.indexOf(choice.id) >= 0;
           }
 
           return isCorrect ? "correct" : "incorrect";

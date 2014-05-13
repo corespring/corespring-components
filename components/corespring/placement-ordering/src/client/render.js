@@ -2,10 +2,9 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
   function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
 
     var answerArea = [
-      '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
       '        <div>',
       '          <div answer-area landingId="answer"',
-      '                          answer-area-label="Kuku"',
+      '                          answer-area-label="{{model.config.answerAreaLabel}}"',
       '                          answer-area-layout="vertical"',
       '          >',
       '          </div>',
@@ -20,11 +19,12 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
       _.extend(scope.containerBridge, {
         setDataAndSession: function(dataAndSession) {
-          $log.debug("DnD setting session: ", dataAndSession);
+          $log.debug("Placement Ordering setting session: ", dataAndSession);
 
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
+          scope.cardinality = 'ordered';
           scope.resetChoices(scope.rawModel);
 
           scope.originalChoices = _.cloneDeep(scope.model.choices);

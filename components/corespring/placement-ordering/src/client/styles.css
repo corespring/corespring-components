@@ -12,14 +12,12 @@
 }
 
 .view-placement-ordering .choice-area {
-    background-color: red;
     display: table-cell;
     width: 50%;
     vertical-align: top;
 }
 
 .view-placement-ordering .answer-area {
-    background-color: beige;
     display: table-cell;
     width: 50%;
     vertical-align: top;
