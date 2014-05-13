@@ -1,21 +1,29 @@
 /* global corespring */
 
-var main = [ 'ServerLogic',
+var main = ['ServerLogic',
   function(ServerLogic) {
 
     this.inline = function(type, value, body, attrs) {
       return ['<label class="' + type + '-inline">',
-          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
-        '</label>'].join('\n');
+        '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
+        '</label>'
+      ].join('\n');
     };
 
-    var labelWithInput = function(size, label, modelKey, labelSize, inputType) {
-      labelSize = labelSize || size;
-      inputType = inputType || "text";
+    var labelWithInput = function(options) {
+      options.size = options.size || 3;
+      options.labelSize = options.labelSize || options.size;
+      options.inputType = options.inputType || "text";
+      options.inputClass = options.inputClass || "default-input";
       return [
-          '<label class="col-sm-' + labelSize + ' ">' + label + '</label>',
-          '<div class="col-sm-' + size + '">',
-          '  <input type="' + inputType + '" class="form-control"  ng-model="fullModel.model.config.' + modelKey + '" />',
+        '<label class="col-sm-' + options.labelSize + '">' + options.label + '</label>',
+        '<div class="col-sm-' + options.size + ' ' + options.inputClass + '">',
+        '  <input ',
+        '    type="' + options.inputType + '" ',
+        '    class="form-control" ',
+        '    ng-model="fullModel.model.config.' + options.modelKey + '" ',
+        options.placeholder ? ('placeholder="' + options.placeholder + '"') : '',
+        '  />',
         '</div>'
       ].join('');
     };
@@ -26,19 +34,56 @@ var main = [ 'ServerLogic',
       '  <div class="body">',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Width:', 'graphWidth'),
-      labelWithInput(3, 'Height:', 'graphHeight'),
+      labelWithInput({
+        label: 'Width:',
+        modelKey: 'graphWidth',
+        placeholder: '{{defaults.graphWidth}}'
+      }),
+      labelWithInput({
+        label: 'Height:',
+        modelKey: 'graphHeight',
+        placeholder: '{{defaults.graphHeight}}'
+      }),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Domain:', 'domain', 3, "number"),
-      labelWithInput(3, 'Domain Label:', 'domainLabel'),
+      labelWithInput({
+        label: 'Domain:',
+        modelKey: 'domain',
+        inputType: "number",
+        placeholder: '{{defaults.domain}}'
+      }),
+      labelWithInput({
+        label: 'Domain Label:',
+        modelKey: 'domainLabel',
+        placeholder: '{{defaults.domainLabel}}'
+      }),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Range:', 'range', 3, "number"),
-      labelWithInput(3, 'Range Label:', 'rangeLabel'),
+      labelWithInput({
+        label: 'Range:',
+        modelKey: 'range',
+        inputType: "number",
+        placeholder: '{{defaults.range}}'
+      }),
+      labelWithInput({
+        label: 'Range Label:',
+        modelKey: 'rangeLabel',
+        placeholder: "y"
+      }),
       '       </div>',
       '       <div class="config-form-row">',
-      labelWithInput(3, 'Tick Label Frequency:', 'tickLabelFrequency', 3, "number"),
+      labelWithInput({
+        label: 'Tick Label Frequency:',
+        modelKey: 'tickLabelFrequency',
+        inputType: "number",
+        placeholder: '{{defaults.tickLabelFrequency}}'
+      }),
+      labelWithInput({
+        label: 'Significant Figures:',
+        modelKey: 'sigfigs',
+        inputType: "number",
+        placeholder: '{{defaults.sigfigs}}'
+      }),
       '       </div>',
       '     </form>',
       '  </div>',
@@ -49,6 +94,7 @@ var main = [ 'ServerLogic',
       '<div class="input-holder">',
       '  <div class="header">Points</div>',
       '  <div class="body">',
+      '     <p>In Plot Points, students identify coordinates or plot points on a graph by clicking on the graph.</p>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       '         <div class="col-sm-8">',
@@ -103,7 +149,8 @@ var main = [ 'ServerLogic',
       '       </div>',
       '     </form>',
       '  </div>',
-      '</div>'].join('\n');
+      '</div>'
+    ].join('\n');
 
 
     var feedback = [
@@ -128,13 +175,15 @@ var main = [ 'ServerLogic',
       '               fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
       '          ></div>',
       '  </div>',
-      '</div>'].join('\n');
+      '</div>'
+    ].join('\n');
 
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
+        scope.defaults = scope.data.defaultData.model.config;
         var server = ServerLogic.load('corespring-point-intercept');
         scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
         scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
@@ -201,13 +250,32 @@ var main = [ 'ServerLogic',
           }
         }, true);
 
+        scope.resetDefaults = function() {
+          var defaults = scope.defaults;
+
+          function reset(property, value) {
+            scope.fullModel.model.config[property] = value;
+          }
+
+          reset('graphWidth', defaults.graphWidth);
+          reset('graphHeight', defaults.graphHeight);
+          reset('domain', defaults.domain);
+          reset('domainLabel', defaults.domainLabel);
+          reset('range', defaults.range);
+          reset('rangeLabel', defaults.rangeLabel);
+          reset('tickLabelFrequency', defaults.tickLabelFrequency);
+          reset('sigfigs', defaults.sigfigs);
+        };
 
       },
       template: [
         '<div class="point-intercept-configuration">',
+        '  <div navigator="">',
         pointsBlock,
         graphAttributes,
+        '<a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
         feedback,
+        '  </div>',
         '</div>'
       ].join('\n')
     };
@@ -215,8 +283,6 @@ var main = [ 'ServerLogic',
 ];
 
 exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  }
-];
+exports.directives = [{
+  directive: main
+}];

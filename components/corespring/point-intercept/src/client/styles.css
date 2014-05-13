@@ -148,6 +148,12 @@
 .point-intercept-configuration {
 }
 
+.point-intercept-configuration .navigator-toggle-button-row {
+  /*do not show the hamburger but keep the scrollable container*/
+  display: none;
+}
+
+
 .point-intercept-configuration .coordinate-input {
     max-width: 80px;
 }
