@@ -13,11 +13,9 @@
       }
     }
   },
-  "configuration": {
+  "external-configuration": {
     "corespring-visual-authoring": {
-      "placeholder": {
-        "show-tooltip": true
-      }
+      "placeholder-show-tooltip": true
     }
   },
   "name": "inline-choice",
