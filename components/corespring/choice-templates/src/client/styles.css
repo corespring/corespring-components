@@ -49,6 +49,11 @@
     border: 2px solid #80b312;
 }
 
+.choice-template-choice .feedback-preview.partial {
+    background: url("/assets/images/feedback/partial-icon.png") no-repeat scroll 4px 6px;
+    border: 2px solid #843ABC;
+}
+
 .choice-template-choice .feedback-preview.nofeedback {
     background: none;
     border-color: white;

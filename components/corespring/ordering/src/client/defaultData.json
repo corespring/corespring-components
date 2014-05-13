@@ -25,7 +25,18 @@
     "config": {
       "shuffle": true
     },
-    "prompt": "Enter a prompt for the student, e.g. 'Drag the answers into the correct order.'"
+    "prompt": "",
+    "feedback" : {
+      "correct" : {
+        "feedbackType" : "default"
+      },
+      "partial" : {
+        "feedbackType" : "default"
+      },
+      "incorrect" : {
+        "feedbackType" : "default"
+      }
+    }
   },
   "weight": 1
 }
