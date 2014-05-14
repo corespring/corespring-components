@@ -89,7 +89,6 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
       '      <div class="answer-area">' + answerArea + '</div>',
       '    </div>',
       '  </div>',
-      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" class="feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
       '</div>'
