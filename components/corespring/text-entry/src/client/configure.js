@@ -93,8 +93,8 @@ var main = [
     var panels = [
       '<div>',
       '  <div navigator="">',
-           designPanel,
-           displayPanel,
+      designPanel,
+      displayPanel,
       '  </div>',
       '</div>'
     ].join("\n");
@@ -151,12 +151,27 @@ var main = [
           initFeedbacks();
         });
 
-        scope.answerBlankSizeDataProvider = [
-          {size:1,cssClass:"cs-text-entry-cfg__answer-size-1",demoLabel:"ABC", defaultLabel:""},
-          {size:2,cssClass:"cs-text-entry-cfg__answer-size-2",demoLabel:"ABCDE", defaultLabel:""},
-          {size:3,cssClass:"cs-text-entry-cfg__answer-size-3",demoLabel:"ABCDEFG", defaultLabel:"(Default)"},
-          {size:4,cssClass:"cs-text-entry-cfg__answer-size-4",demoLabel:"ABCDEFGHIJ", defaultLabel:""}
-        ];
+        scope.answerBlankSizeDataProvider = [{
+          size: 1,
+          cssClass: "cs-text-entry-cfg__answer-size-1",
+          demoLabel: "ABC",
+          defaultLabel: ""
+        }, {
+          size: 2,
+          cssClass: "cs-text-entry-cfg__answer-size-2",
+          demoLabel: "ABCDE",
+          defaultLabel: ""
+        }, {
+          size: 3,
+          cssClass: "cs-text-entry-cfg__answer-size-3",
+          demoLabel: "ABCDEFG",
+          defaultLabel: "(Default)"
+        }, {
+          size: 4,
+          cssClass: "cs-text-entry-cfg__answer-size-4",
+          demoLabel: "ABCDEFGHIJ",
+          defaultLabel: ""
+        }];
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -208,11 +223,9 @@ var csResponseInput = [
     var template = [
       '<div class="cs-text-entry-cfg__responses-input">',
       '  <input style="width:100%;" type="text" ng-model="response.values"',
-      '         ui-select2="{tags:[],tokenSeparators:[','],simple_tags:true,multiple:true,',
-      '         dropdownCssClass:\'cs-text-entry-cfg__responses-input--dropdown-noshow\'}"',
+      '         ui-select2="select2Options"',
       '         data-placeholder="{{prompt}}"',
       '    />',
-      '',
       '  <div class="pull-right">',
       '    <label class="checkbox-inline">',
       '      <input type="checkbox" value="ignore-case" ng-init="response.caseSensitive = !response.ignoreCase"',
@@ -234,6 +247,17 @@ var csResponseInput = [
       restrict: 'A',
       replace: true,
       template: template,
+      controller: function($scope){
+        //it is important to set the options in the controller
+        //because the link function is executed too late
+        $scope.select2Options = {
+          tags: [],
+          simple_tags: true,
+          multiple: true,
+          dropdownCssClass: 'cs-text-entry-cfg__responses-input--dropdown-noshow',
+          tokenSeparators:[',']
+        };
+      },
       link: function(scope, element, attrs) {
       }
     };
