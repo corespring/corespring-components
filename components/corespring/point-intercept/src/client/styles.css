@@ -153,6 +153,9 @@
   display: none;
 }
 
+.point-intercept-configuration .intro-text {
+  padding: 10px;
+}
 
 .point-intercept-configuration .coordinate-input {
     max-width: 80px;
