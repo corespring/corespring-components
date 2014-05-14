@@ -142,6 +142,7 @@ var main = [
         $scope.deactivate = function() {
           $scope.active = _.map($scope.model.choices, function() { return false; });
           $('.sortable-choices', $element).sortable("enable");
+          $scope.$emit('mathJaxUpdateRequest');
         };
 
         $scope.addChoice = function() {
@@ -150,9 +151,6 @@ var main = [
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
-        $scope.choiceMarkup = function(choice) {
-          return $sce.trustAsHtml(choice.label);
-        };
       },
       template: [
         '<div class="view-ordering-config" ng-click="deactivate()">',
@@ -179,8 +177,9 @@ var main = [
         '      <div class="delete-icon">',
         '        <i ng-click="deleteNode()" class="fa fa-times-circle"></i>',
         '      </div>',
-        '      <span ng-hide="active[$index]" ng-bind-html="choiceMarkup(choice)"></span>',
+        '      <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
         '      <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz features="extraFeatures"',
+        '        parent-selector=".editor-container"',
         '        placeholder="Enter choice and/or add an image or math code."',
         '        image-service="imageService" />',
         '    </li>',
