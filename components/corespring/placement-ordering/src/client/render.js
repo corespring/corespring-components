@@ -2,13 +2,13 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
   function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
 
     var answerArea = [
-      '        <div>',
-      '          <div answer-area landingId="answer"',
-      '                          answer-area-label="{{model.config.answerAreaLabel}}"',
-      '                          answer-area-layout="vertical"',
-      '          >',
-      '          </div>',
-      '        </div>'
+      '<div>',
+      '  <div answer-area landingId="answer"',
+      '                  answer-area-label="{{model.config.answerAreaLabel}}"',
+      '                  answer-area-layout="vertical"',
+      '  >',
+      '  </div>',
+      '</div>'
     ].join('');
 
     var link = function(scope, element, attrs) {
@@ -48,7 +48,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
         },
         getSession: function() {
-          var answer = _.pluck(scope.landingPlaceChoices['answer'], 'id');
+          var answer = _.pluck(scope.landingPlaceChoices.answer, 'id');
           return {
             answers: answer
           };
