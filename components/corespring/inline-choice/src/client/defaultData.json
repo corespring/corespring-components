@@ -1,6 +1,6 @@
 {
   "componentType": "corespring-inline-choice",
-  "correctResponse": "2",
+  "correctResponse": "",
   "title": "Inline Choice",
   "feedback" :  [
     {
