@@ -75,7 +75,7 @@ var main = [
       '          <label>Answer blank size:</label>',
       '          <div ng-repeat="o in answerBlankSizeDataProvider" style="margin: 0 0 5px 10px;">',
       '            <input type="radio" value="{{o.size}}" ng-model="fullModel.model.answerBlankSize"/>',
-      '            <input type="text" readonly value="{{o.demoLabel}}" ng-class="o.cssClass"/> {{o.defaultLabel}}',
+      '            <input type="text" readonly value="{{o.demoLabel}}" size="{{o.size}}"/> {{o.defaultLabel}}',
       '          </div>',
       '        </div>',
       '        <div>',
@@ -124,9 +124,11 @@ var main = [
         scope.correctResponsesPrompt = "Type all the possible correct answers here";
         scope.partialResponsesPrompt = "Type all acceptable partially correct answers here";
 
+        var correctAnswerPlaceholder = "<random selection from correct answers>";
+
         var defaultCorrectFeedback = "Correct!";
-        var defaultPartialFeedback = "Very good, but an even better answer would have been <random selection from correct answers>.";
-        var defaultIncorrectFeedback = "Good try, but the correct answer is <random selection from correct answers>.";
+        var defaultPartialFeedback = "Very good, but an even better answer would have been " + correctAnswerPlaceholder + ".";
+        var defaultIncorrectFeedback = "Good try, but the correct answer is " + correctAnswerPlaceholder + ".";
 
         scope.containerBridge = {
           setModel: function(fullModel) {
@@ -134,7 +136,7 @@ var main = [
             fullModel.partialResponses = fullModel.partialResponses || createResponsesModel(25);
             fullModel.incorrectResponses = fullModel.incorrectResponses || createResponsesModel(0);
             fullModel.model = fullModel.model || {};
-            fullModel.model.answerBlankSize = fullModel.model.answerBlankSize || 3;
+            fullModel.model.answerBlankSize = fullModel.model.answerBlankSize || 8;
             fullModel.model.answerAlignment = fullModel.model.answerAlignment || 'left';
             scope.fullModel = fullModel;
           },
@@ -152,23 +154,19 @@ var main = [
         });
 
         scope.answerBlankSizeDataProvider = [{
-          size: 1,
-          cssClass: "cs-text-entry-cfg__answer-size-1",
+          size: 3,
           demoLabel: "ABC",
           defaultLabel: ""
         }, {
-          size: 2,
-          cssClass: "cs-text-entry-cfg__answer-size-2",
+          size: 5 + 1,
           demoLabel: "ABCDE",
           defaultLabel: ""
         }, {
-          size: 3,
-          cssClass: "cs-text-entry-cfg__answer-size-3",
+          size: 7 + 1,
           demoLabel: "ABCDEFG",
           defaultLabel: "(Default)"
         }, {
-          size: 4,
-          cssClass: "cs-text-entry-cfg__answer-size-4",
+          size: 10 + 1,
           demoLabel: "ABCDEFGHIJ",
           defaultLabel: ""
         }];
@@ -199,7 +197,7 @@ var main = [
         function replaceVariables(template) {
           var correctAnswer = randomCorrectAnswer();
           if (correctAnswer) {
-            template = template.replace("<random selection from correct answers>", correctAnswer);
+            template = template.replace(correctAnswerPlaceholder, correctAnswer);
           }
           return template;
         }
@@ -247,7 +245,7 @@ var csResponseInput = [
       restrict: 'A',
       replace: true,
       template: template,
-      controller: function($scope){
+      controller: function($scope) {
         //it is important to set the options in the controller
         //because the link function is executed too late
         $scope.select2Options = {
@@ -255,11 +253,10 @@ var csResponseInput = [
           simple_tags: true,
           multiple: true,
           dropdownCssClass: 'cs-text-entry-cfg__responses-input--dropdown-noshow',
-          tokenSeparators:[',']
+          tokenSeparators: [',']
         };
       },
-      link: function(scope, element, attrs) {
-      }
+      link: function(scope, element, attrs) {}
     };
   }
 ];
