@@ -73,6 +73,10 @@
     width: 100px;
 }
 
+.drag-and-drop-config-panel .fixed-120 {
+    width: 120px;
+}
+
 .drag-and-drop-config-panel .fixed-150 {
     width: 150px;
 }

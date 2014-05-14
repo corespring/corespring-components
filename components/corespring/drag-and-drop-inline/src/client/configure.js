@@ -125,15 +125,15 @@ var main = [
       '       <div class="config-form-row">Layout',
       '       </div>',
       '       <div class="config-form-row">',
-      '         <div class="col-sm-3">',
+      '         <div class="col-sm-2 fixed-100">',
       '           <input id="vertical" type="radio" value="vertical" ng-model="fullModel.model.config.choiceAreaLayout" />',
       '           <label for="vertical" class="control-label">Vertical</label>',
       '         </div>',
-      '         <div class="col-sm-3">',
+      '         <div class="col-sm-2 fixed-120">',
       '           <input id="horizontal" type="radio" value="horizontal" ng-model="fullModel.model.config.choiceAreaLayout" />',
       '           <label for="horizontal" class="control-label">Horizontal</label>',
       '         </div>',
-      '         <div class="col-sm-3">',
+      '         <div class="col-sm-2 fixed-150">',
       '           <input id="tile" type="radio" value="tile" ng-model="fullModel.model.config.choiceAreaLayout" />',
       '           <label for="tile" class="control-label">Tile</label>',
       '         </div>',
@@ -143,26 +143,18 @@ var main = [
 
     var answerAreaDisplayOptions = [
       '<div class="config-form-row">',
-      '  <div class="col-sm-4 fixed-150">',
-      '    <label>Choice area is </label>',
-      '  </div>',
-      '  <div class="col-sm-3 fixed-100">',
+      '    <label style="margin-right: 5px">Choice area is </label>',
       '    <input id="above" type="radio" value="above" ng-model="fullModel.model.config.choiceAreaPosition" />',
-      '    <label for="above" class="control-label">above</label>',
-      '  </div>',
-      '  <div class="col-sm-3 fixed-100">',
+      '    <label style="margin-right: 10px" for="above" class="control-label">above</label>',
       '    <input id="below" type="radio" value="below" ng-model="fullModel.model.config.choiceAreaPosition" />',
       '    <label for="below" class="control-label">below</label>',
-      '  </div>',
-      '  <div class="col-sm-4">',
       '    <label>answer blanks</label>',
-      '  </div>',
       '</div>'
     ].join('');
 
     var displayOptions = [
       inputHolder('Choice Area', choiceAreaDisplayOptions),
-      inputHolder('Answer Areas', answerAreaDisplayOptions)
+      inputHolder('', answerAreaDisplayOptions)
 
     ].join("");
 
