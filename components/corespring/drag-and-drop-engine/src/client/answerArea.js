@@ -111,12 +111,15 @@ var answerArea = [
               return false;
             }
             if (scope.dragging) {
+              if (scope.dragging.fromTarget === scope.id) {
+                return false;
+              }
               var elem = _.find(scope.landingPlaceChoices[scope.id], function(c) {
                  return c.id === scope.dragging.id;
               });
               return _.isUndefined(elem);
             }
-            return scope.dragging && (scope.dragging.fromTarget !== scope.id);
+            return true;
           },
           onDrop: 'onDrop',
           onOver: 'overCallback',
@@ -134,19 +137,12 @@ var answerArea = [
           },
           beforeStop: function() {
             scope.revertNext = scope.dragging.isOut;
-
-            scope.model.choices = _.filter(scope.model.choices, nonEmptyElement);
-            _.each(scope.landingPlaceChoices, function(lpc, key) {
-              scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
-            });
-
           },
           stop: function() {
             if (scope.revertNext) {
               scope.revertFunction();
             }
             scope.dragging.fromTarget = undefined;
-
           },
 
           out: scope.outCallback,
@@ -159,14 +155,18 @@ var answerArea = [
         });
 
         scope.classForChoice = function(choice, idx) {
-          if (!scope.correctResponse || !scope.correctResponse[scope.id]) {
+          if (!scope.correctResponse) {
+            return;
+          }
+          var correctResponse = _.isArray(scope.correctResponse) ? scope.correctResponse : scope.correctResponse[scope.id];
+          if (!correctResponse) {
             return;
           }
           var isCorrect;
           if (scope.cardinality === "ordered") {
-            isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) === idx;
+            isCorrect = correctResponse.indexOf(choice.id) === idx;
           } else {
-            isCorrect = scope.correctResponse[scope.id].indexOf(choice.id) >= 0;
+            isCorrect = correctResponse.indexOf(choice.id) >= 0;
           }
 
           return isCorrect ? "correct" : "incorrect";
@@ -182,7 +182,7 @@ var answerArea = [
         '      ui-sortable="sortableOptions" ',
         '      ng-model="landingPlaceChoices[id]"',
         '      >',
-        '        <div ng-repeat-start="choice in landingPlaceChoices[id]"',
+        '        <div ng-repeat="choice in landingPlaceChoices[id]"',
         '             ng-style="choiceStyle" ',
         '             jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
         '             data-jqyoui-options=""',
@@ -193,10 +193,10 @@ var answerArea = [
         '           <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
         '           <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
         '        </div>',
-        '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-switch="choice.labelType">',
-        '          <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
-        '          <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
-        '        </div>',
+//        '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-switch="choice.labelType">',
+//        '          <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
+//        '          <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
+//        '        </div>',
         '    </div>',
         '    <div class="clearfix" />',
         '    <div ng-show="landingPlaceChoices[id].length == 0">&nbsp;</div>',

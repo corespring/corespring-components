@@ -1,0 +1,46 @@
+{
+  "item": {
+    "metadata": {
+      "title": ""
+    },
+    "xhtml": "<corespring-drag-and-drop id='seedlings'/>",
+    "components": {
+      "seedlings": {
+        "componentType": "corespring-drag-and-drop",
+        "correctResponse": {
+          "Raul": [
+            "Pot B"
+          ],
+          "Pablo": [
+            "Pot C"
+          ],
+          "Celina": [
+            "Pot A"
+          ]
+        },
+        "model": {
+          "choices": [
+            {
+              "id": "Pot A",
+              "content": "Pot A"
+            },
+            {
+              "id": "Pot B",
+              "content": "Pot B"
+            },
+            {
+              "id": "Pot C",
+              "content": "Pot C"
+            }
+          ],
+          "prompt": "",
+          "answerArea": "<landingPlaceGroup itemsPerRow='3'><span cardinality='single' identifier='Celina' label='Celina' landing-place='landing-place'/></landingPlaceGroup>",
+          "config": {
+            "shuffle": true,
+            "expandHorizontal": false
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,144 @@
+.view-placement-ordering {
+}
+
+.view-placement-ordering .main-table {
+    display: table;
+    width: 100%;
+}
+
+.view-placement-ordering .main-row {
+    display: table-row;
+    width: 100%;
+}
+
+.view-placement-ordering .choice-area {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+}
+
+.view-placement-ordering .answer-area {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+}
+
+/* Config Panel */
+
+.drag-and-drop-config-panel .description {
+    padding: 10px;
+}
+
+.drag-and-drop-config-panel td {
+    padding: 5px;
+}
+
+.drag-and-drop-config-panel .answer-placeholder {
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    max-width: 130px;
+}
+
+.drag-and-drop-config-panel .drag-and-drop-choices {
+    list-style-type: upper-alpha;
+}
+
+.drag-and-drop-config-panel .drag-and-drop-choices li {
+    float: left;
+    width: 145px;
+}
+
+.drag-and-drop-config-panel .choice {
+    margin-right: 20px;
+}
+
+.drag-and-drop-config-panel .select-correct-answers {
+    margin-bottom: 10px;
+}
+
+.drag-and-drop-config-panel .drag-and-drop-answers {
+}
+
+.display-row:before, .display-row:after {
+    content: " ";
+    display: table;
+}
+
+.drag-and-drop-config-panel .display-row {
+    width: 100%;
+}
+
+.drag-and-drop-config-panel .display-row:after {
+    clear: both;
+}
+
+.drag-and-drop-config-panel .remove-choice {
+    position: absolute;
+    right: 38px;
+    top: -7px;
+}
+
+.drag-and-drop-answers li {
+    float: left;
+}
+
+.drag-and-drop-config-panel .popover {
+    max-width: 350px;
+    width: 350px;
+}
+
+.drag-and-drop-config-panel .answer-area {
+    margin-bottom: 20px;
+}
+
+.drag-and-drop-config-panel .answer-area-select {
+    width: 200px;
+}
+
+.drag-and-drop-config-panel .category-row {
+    margin-bottom: 10px;
+    width: 300px;
+    position: relative;
+}
+
+.drag-and-drop-config-panel .category-remove-button {
+    position: absolute;
+    right: -7px;
+    top: -8px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.drag-and-drop-config-panel .category-remove-button i {
+    font-size: 20px;
+    color: #76a720;
+}
+
+.drag-and-drop-config-panel .category-remove-button:hover i {
+    color: #466213;
+}
+
+.popover-row {
+    margin-bottom: 10px;
+}
+
+.popover-label {
+    width: 100px;
+    display: inline-block;
+}
+
+.popover-input {
+    display: inline-block;
+}
+
+.popover-content {
+    padding: 10px;
+}
+
+.modal {
+    display: block;
+}
+

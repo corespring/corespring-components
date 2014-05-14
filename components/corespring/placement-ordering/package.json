@@ -1,0 +1,25 @@
+{
+  "name": "placement-ordering",
+  "title": "Placement Ordering",
+  "titleGroup": "Fixed Choice",
+  "organization": "corespring",
+  "corespring-container-version": "0.0.1",
+  "version": "0.0.1",
+  "libraries": [
+    {
+      "name": "drag-and-drop-engine",
+      "organization": "corespring"
+    },
+    {
+      "name": "feedback-templates",
+      "organization": "corespring",
+      "scope" : "editor"
+    },
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope" : "editor"
+    }
+  ],
+  "released": true
+}

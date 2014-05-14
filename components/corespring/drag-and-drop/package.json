@@ -25,7 +25,7 @@
       },
       "angular-ui-sortable": {
         "bower_target" : "https://github.com/corespring/ui-sortable.git",
-        "file" : "src/sortable.js",
+        "file" : "sortable.js",
         "angular-module" : "ui.sortable"
       }
     }
