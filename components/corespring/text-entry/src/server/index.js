@@ -36,15 +36,36 @@ exports.respond = function (question, answer, settings) {
     };
   }
 
-  function createFeedbackMessage(question, response) {
+  function isCorrectResponse(response){
+    return response && response.score === 1;
+  }
+
+  function isIncorrectResponse(response){
+    return response && response.score === 0;
+  }
+
+  function isPartialResponse(response){
+    return response && response.score >= 0 && response.score <= 1;
+  }
+
+  function getFeedbackType(response){
+    return isCorrectResponse(response) ? "correct" : (isIncorrectResponse(response) ? "incorrect" : "partial");
+  }
+
+  function getFeedbackTemplate(question,response) {
     var feedbackTemplate = "";
-    if (response.correctness === "correct") {
+    if (isCorrectResponse(response)) {
       feedbackTemplate = question.correctResponses.feedback.value;
-    } else if (response.correctness === "partial") {
+    } else if (isPartialResponse(response)) {
       feedbackTemplate = question.partialResponses.feedback.value;
-    } else if (response.correctness === "incorrect") {
+    } else if (isIncorrectResponse(response.correctness)) {
       feedbackTemplate = question.incorrectResponses.feedback.value;
     }
+    return feedbackTemplate;
+  }
+
+  function createFeedbackMessage(question, response) {
+    var feedbackTemplate = getFeedbackTemplate(question,response);
     var result = replaceVariables(feedbackTemplate, question);
     return result;
   }
@@ -65,14 +86,14 @@ exports.respond = function (question, answer, settings) {
   if (exports.isCorrect(answer, question.correctResponses)) {
     response = createResponse("correct", 100, question.comments);
   } else if (exports.isCorrect(answer, question.partialResponses)) {
-    response = createResponse("partial", question.partialResponses.award, question.comments);
+    response = createResponse("incorrect", question.partialResponses.award, question.comments);
   } else {
     response = createResponse("incorrect", 0, question.comments);
   }
 
   if (settings.showFeedback) {
     response.feedback = {
-      correctness: response.correctness,
+      correctness: getFeedbackType(response),
       message: createFeedbackMessage(question, response)
     };
   }
