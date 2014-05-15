@@ -94,7 +94,7 @@ describe('text entry server logic', function() {
   it('should respond with incorrect and score 0.25 if the answer is among partially correct ones', function() {
     response = server.respond(_.cloneDeep(component), "lemon", settings(false, true, true));
     expected = {
-      correctness: "partial",
+      correctness: "incorrect",
       score: 0.25
     };
     response.correctness.should.eql(expected.correctness);
