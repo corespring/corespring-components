@@ -29,10 +29,6 @@
     border: 2px solid #F8A31A;
 }
 
-.view-ordering-config {
-    margin: 40px 20px;
-}
-
 .view-ordering-config .info {
     margin: 20px 0;
 }
@@ -54,7 +50,7 @@
     padding: 20px;
 }
 
-.view-ordering-config li {
+.view-ordering-config .sortable-choice {
     position: relative;
     display: block;
     border: 1px solid #000;
@@ -66,7 +62,7 @@
     background: #efefef;
 }
 
-.view-ordering-config span {
+.view-ordering-config .sortable-choice span {
     display: inline-block;
     padding: 3px 0 0 3px;
 }
@@ -149,9 +145,4 @@
 
 .view-ordering-config .toolbar .wiggi-wiz-toolbar {
     border-bottom: none;
-}
-
-.view-ordering-config .navigator-toggle-button-row {
-    /*do not show the hamburger but keep the scrollable container*/
-    display: none;
 }

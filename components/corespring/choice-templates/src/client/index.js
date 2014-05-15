@@ -124,6 +124,8 @@ exports.service = ['$log',
           maxNumberOfPartialScores: "model.choices.length - 1"
         }, opts);
 
+        console.log('cnt', o.maxNumberOfPartialScores);
+
         return [
           '<div class="scoring-header-text">',
           '  If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted. This is optional.',
@@ -141,8 +143,8 @@ exports.service = ['$log',
           '    <label>If</label> <div class="form-group"><input type="number" min="1" max="{{model.choices.length - 1}}" style="width: 60px" class="form-control {{validClass(scenario)}}" ng-model="scenario.numberOfCorrect"/></div> of correct answers selected, award',
           '    <span class="form-group"><input type="number" min="1" max="99" style="width: 60px" class="form-control" ng-model="scenario.scorePercentage"/>% of full credit</span>',
           '  </div>',
-            '  <div ng-click="addScoringScenario()" ng-show="fullModel.partialScoring.length < ' + o.maxNumberOfPartialScores + '">',
-          '   <i class="fa fa-plus-square-o"></i> Add another scenario',
+          '  <div ng-click="addScoringScenario()" ng-show="fullModel.partialScoring.length < ' + o.maxNumberOfPartialScores + '">',
+          '    <i class="fa fa-plus-square-o"></i> Add another scenario',
           '  </div>',
           '</div>',
           '</form>',

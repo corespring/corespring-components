@@ -3,9 +3,10 @@ var main = [
   '$sce',
   '$log',
   '$http',
+  'ChoiceTemplates',
   'ImageUtils',
   'WiggiMathJaxFeatureDef',
-  function($sce, $log, $http, ImageUtils, WiggiMathJaxFeatureDef) {
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, WiggiMathJaxFeatureDef) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -40,6 +41,56 @@ var main = [
         '    <input ng-switch-when="default" class="form-control feedback-preview ' + options.attribute + '" disabled="true" type="text" value="{{defaultNotChosenFeedback.' + options.attribute + '}}"/>',
         '    <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"/>',
         '  </span>',
+        '</div>'
+      ].join('\n');
+    }
+
+    function designTemplate() {
+      return [
+        '<p class="info">In Ordering, a student is asked to sequence events or inputs in a specific order.</p>',
+        '<p class="info">',
+        '  Drag and drop your choices to set the correct order. The student view will display the choices in ',
+        '  randomized order.',
+        '</p>',
+        '<input class="prompt" type="text" ng-model="model.prompt" placeholder="Enter a label or leave blank"/>',
+        '<ul class="sortable-choices" ui-sortable="" ng-model="model.choices">',
+        '  <li class="sortable-choice" ng-repeat="choice in model.choices" ng-click="itemClick($event)"',
+        '    ng-dblclick="activate($index)">',
+        '    <div class="delete-icon" ng-show="active[$index]">',
+        '      <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
+        '    </div>',
+        '    <div class="blocker" ng-hide="active[$index]">',
+        '      <div class="bg"></div>',
+        '      <div class="content">',
+        '        <img class="drag-icon" src="../../images/hand-grab-icon.png"/>',
+        '        <div class="title">Double Click to Edit</div>',
+        '      </div>',
+        '    </div>',
+        '    <div class="delete-icon">',
+        '      <i ng-click="deleteNode()" class="fa fa-times-circle"></i>',
+        '    </div>',
+        '    <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
+        '    <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz features="extraFeatures"',
+        '      parent-selector=".editor-container"',
+        '      placeholder="Enter choice and/or add an image or math code."',
+        '      image-service="imageService" />',
+        '  </li>',
+        '</ul>',
+        '<button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
+        '<table>',
+        '  <tr>',
+        '    <td colspan="6" style="text-align: left">',
+        '      <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
+                 feedback({header: "If ordered correctly, show:", attribute: 'correct'}),
+                 feedback({header: "If partially ordered correctly, show:", attribute: 'partial'}),
+                 feedback({header: "If ordered incorrectly, show:", attribute: 'incorrect'}),
+        '      </div>',
+        '    </td>',
+        '  </tr>',
+        '</table>',
+        '<div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
+        '<div ng-show="commentOn">',
+        '  <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
         '</div>'
       ].join('\n');
     }
@@ -110,6 +161,7 @@ var main = [
         $scope.containerBridge = {
           setModel: function(model) {
             $scope.fullModel = model;
+            $scope.fullModel.partialScoring = $scope.fullModel.partialScoring || [];
             $scope.model = $scope.fullModel.model;
             $scope.deactivate();
           },
@@ -153,54 +205,18 @@ var main = [
 
       },
       template: [
-        '<div class="view-ordering-config" ng-click="deactivate()">',
-        '<div navigator="">',
-        '  <p class="info">In Ordering, a student is asked to sequence events or inputs in a specific order.</p>',
-        '  <p class="info">',
-        '    Drag and drop your choices to set the correct order. The student view will display the choices in ',
-        '    randomized order.',
-        '  </p>',
-        '  <input class="prompt" type="text" ng-model="model.prompt" placeholder="Enter a label or leave blank"/>',
-        '  <ul class="sortable-choices" ui-sortable="" ng-model="model.choices">',
-        '    <li ng-repeat="choice in model.choices" ng-click="itemClick($event)"',
-        '      ng-dblclick="activate($index)">',
-        '      <div class="delete-icon" ng-show="active[$index]">',
-        '        <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
+        '<div class="view-ordering-config" choice-template-controller="" ng-click="deactivate()">',
+        '  <div navigator="">',
+        '    <div navigator-panel="Design">',
+                designTemplate(),
+        '    </div>',
+        '    <div navigator-panel="Scoring">',
+        '      <div>',
+                 ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
         '      </div>',
-        '      <div class="blocker" ng-hide="active[$index]">',
-        '        <div class="bg"></div>',
-        '        <div class="content">',
-        '          <img class="drag-icon" src="../../images/hand-grab-icon.png"/>',
-        '          <div class="title">Double Click to Edit</div>',
-        '        </div>',
-        '      </div>',
-        '      <div class="delete-icon">',
-        '        <i ng-click="deleteNode()" class="fa fa-times-circle"></i>',
-        '      </div>',
-        '      <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
-        '      <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz features="extraFeatures"',
-        '        parent-selector=".editor-container"',
-        '        placeholder="Enter choice and/or add an image or math code."',
-        '        image-service="imageService" />',
-        '    </li>',
-        '  </ul>',
-        '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
-        '  <table>',
-        '    <tr>',
-        '    <td colspan="6" style="text-align: left">',
-        '      <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
-                 feedback({header: "If ordered correctly, show:", attribute: 'correct'}),
-                 feedback({header: "If partially ordered correctly, show:", attribute: 'partial'}),
-                 feedback({header: "If ordered incorrectly, show:", attribute: 'incorrect'}),
-        '      </div>',
-        '    </td>',
-        '    </tr>',
-        '  </table>',
-        '  <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
-        '    <div ng-show="commentOn">',
-        '    <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
+        '    </div>',
         '  </div>',
-        '</div></div>'
+        '</div>'
       ].join('\n')
     };
   }
