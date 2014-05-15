@@ -309,7 +309,7 @@ var main = [
             layout: "vertical"
           });
         };
-
+        $scope.leftPanelClosed = false;
       }
     };
   }

@@ -72,6 +72,7 @@ var main = [
         };
 
         scope.$emit('registerConfigPanel',attrs.id, scope.containerBridge);
+        scope.leftPanelClosed = false;
       },
       template: [
 
