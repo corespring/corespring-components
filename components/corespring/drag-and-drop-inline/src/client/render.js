@@ -63,7 +63,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
           scope.feedback = response.feedback;
-          scope.correctClass = response.correctness;
+          scope.correctClass = response.score === 1 ? 'correct' : (response.score === 0 ? 'incorrect' : 'partial');
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
