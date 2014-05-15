@@ -30,7 +30,8 @@ exports.createResponse = function(question, answer, settings, defaults) {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
     answer: answer,
-    score: score
+    score: score,
+    correctClass: isCorrect ? 'correct' : (isPartiallyCorrect ? 'partial' : 'incorrect')
   };
 
   if (settings.showFeedback) {
