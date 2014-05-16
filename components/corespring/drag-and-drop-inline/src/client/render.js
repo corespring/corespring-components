@@ -8,6 +8,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       '  <div style="display: inline-block" ng-bind-html-unsafe="c.textBefore"></div>',
       '  <div style="display: inline-block" answer-area class="inline" landingId="{{c.id}}" answer-area-layout="inline"></div>',
       '  <div style="display: inline-block" ng-bind-html-unsafe="c.textAfter"></div>',
+      '  <br ng-show="c.insertBr"/>',
       '</div>',
       '</div>'
     ].join('');
