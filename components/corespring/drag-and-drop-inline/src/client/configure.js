@@ -144,10 +144,8 @@ var main = [
     var answerAreaDisplayOptions = [
       '<div class="config-form-row">',
       '    <label style="margin-right: 5px">Choice area is </label>',
-      '    <input id="above" type="radio" value="above" ng-model="fullModel.model.config.choiceAreaPosition" />',
-      '    <label style="margin-right: 10px" for="above" class="control-label">above</label>',
-      '    <input id="below" type="radio" value="below" ng-model="fullModel.model.config.choiceAreaPosition" />',
-      '    <label for="below" class="control-label">below</label>',
+      '    <select ng-model="fullModel.model.config.choiceAreaPosition" ng-options="c for c in [\'above\', \'below\']">',
+      '    </select>',
       '    <label>answer blanks</label>',
       '</div>'
     ].join('');
