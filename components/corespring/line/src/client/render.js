@@ -317,7 +317,7 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.tickLabelFrequency = config.tickLabelFrequency;
             scope.pointLabels = config.pointLabels;
             scope.maxPoints = config.maxPoints;
-            scope.showInputs = !!config.showInputs;
+            scope.showInputs = !!config.showInputs && !config.exhibitOnly;
 
             var containerWidth, containerHeight;
             var graphContainer = element.find('.graph-container');
