@@ -48,7 +48,7 @@
     "config": {
       "shuffle": false,
       "removeTilesOnDrop": true,
-      "choiceAreaLayout": "vertical",
+      "choiceAreaLayout": "horizontal",
       "choiceAreaPosition": "below"
 
     }
