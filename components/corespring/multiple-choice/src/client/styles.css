@@ -215,7 +215,7 @@
 }
 
 .config-multiple-choice .config-shuffle {
-    display: inline-block;
+    margin-top: 10px;
 }
 
 .config-multiple-choice label.disabled {
