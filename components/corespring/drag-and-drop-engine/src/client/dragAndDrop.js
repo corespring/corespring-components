@@ -70,19 +70,50 @@ var dragAndDropController = [
           }
         }, freq);
 
-        scope.resetChoices = function(model) {
-          // TODO: rewrite this using stash
-          var isNew = !scope.model;
+        var layoutChoices = function(choices, order) {
+          if (!order) {
+            var shuffled = _.shuffle(_.cloneDeep(choices));
+            return shuffled;
+          } else {
+            var ordered = _(order).map(function(v) {
+              return _.find(choices, function(c) {
+                return c.id === v;
+              });
+            }).filter(function(v) {
+              return v;
+            }).value();
 
+            var missing = _.difference(choices, ordered);
+            return _.union(ordered, missing);
+          }
+        };
+
+        var stashOrder = function(choices) {
+          return _.map(choices, function(c) {
+            return c.id;
+          });
+        };
+
+        scope.resetChoices = function(model) {
           scope.stack = [];
           scope.model = _.cloneDeep(model);
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = [];
           });
 
-          if (isNew && scope.model.config.shuffle) {
-            // TODO: rewrite this using stash
-            scope.model.choices = _.shuffle(scope.model.choices);
+          var stash = scope.session.stash = scope.session.stash || {};
+          var shuffle = scope.model.config.shuffle;
+          console.log('bbb');
+          console.log(shuffle);
+          console.log(stash.shuffledOrder);
+          if (stash.shuffledOrder && shuffle) {
+            scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
+          } else if (shuffle) {
+            scope.choices = layoutChoices(model.choices);
+            stash.shuffledOrder = stashOrder(scope.choices);
+            scope.$emit('saveStash', attrs.id, stash);
+          } else {
+            scope.choices = _.cloneDeep(model.choices);
           }
         };
 
@@ -122,11 +153,13 @@ var dragAndDropController = [
         };
 
         scope.getChoiceRows = function() {
-          return _.range(scope.model.choices.length / scope.itemsPerRow());
+          var choices = scope.choices || scope.model.choices;
+          return _.range(choices.length / scope.itemsPerRow());
         };
 
         scope.getChoicesForRow = function(row) {
-          return scope.model.choices.slice(row * scope.itemsPerRow(), row * scope.itemsPerRow() + scope.itemsPerRow());
+          var choices = scope.choices || scope.model.choices;
+          return choices.slice(row * scope.itemsPerRow(), row * scope.itemsPerRow() + scope.itemsPerRow());
         };
 
         scope.seeSolution = function(answerArea) {

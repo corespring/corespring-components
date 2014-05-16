@@ -21,6 +21,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
         setDataAndSession: function(dataAndSession) {
           $log.debug("Placement Ordering setting session: ", dataAndSession);
 
+          scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
