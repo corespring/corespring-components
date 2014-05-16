@@ -49,7 +49,7 @@
       "shuffle": false,
       "removeTilesOnDrop": true,
       "choiceAreaLayout": "vertical",
-      "answerAreaPosition": "below"
+      "choiceAreaPosition": "below"
 
     }
   },
