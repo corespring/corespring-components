@@ -1,346 +1,231 @@
 var main = [
-  "ChoiceTemplates", 'ServerLogic',
-  function(ChoiceTemplates, ServerLogic) {
-    var input, inputs, template;
+  '$timeout',
+  function($timeout) {
 
-    input = function(attrs, label) {
-      return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label + "</div>";
-    };
-
-    var inputHolder = function(header, body) {
+    function designTemplate() {
       return [
-        '<div class="input-holder">',
-          '  <div class="header">' + header + '</div>',
-        '  <div class="body">',
-        body,
-        '  </div>',
-        '</div>'
-      ].join("");
-    };
-
-    var categories = [
-      '  <div class="category-row" ng-repeat="cat in model.categories">',
-      '   <span class="category-remove-button" ng-click="removeCategory(cat)">',
-      '     <i class="fa fa-times-circle"></i>',
-      '   </span>',
-      '    <input type="text" class="form-control" ng-model="cat.label" placeholder="Enter category label" />',
-      '  </div>',
-
-      '<div class="clearfix"></div>',
-      '  <button class=\"btn\" ng-click=\"addCategory()\">Add category</button>'
-
-    ].join("");
-
-    var choiceArea = [
-      '  <div class="config-form-row">',
-      '    <div class="col-sm-8">',
-      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" placeholder="Enter choice area label or leave blank" />',
-      '    </div>',
-      '  </div>',
-
-      '  <div class="pull-right select-correct-answers">Select Correct Categories</div>',
-      '  <div class="choice" ng-repeat="q in model.choices">',
-      ChoiceTemplates.choice({
-        correct: '<select bootstrap-multiselect="{{componentState}}" multiple="true" ng-model="correctMap[q.id]" ng-options="c.label for c in model.categories"></select>',
-        feedback: false,
-        columnWidths: ["100px", "100px", "", "100px"]
-      }),
-      '    <div style="padding-left: 210px">',
-      '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
-      '      <label for="moveOnDrag{{$index}}">Remove tile after placing</label>',
-      '    </div>',
-      '  </div>',
-
-      '<div class="clearfix"></div>',
-      '  <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>'
-
-    ].join("");
-
-    var feedback = [
-      '        <div class="well">',
-      '          <div feedback-selector',
-      '               fb-sel-label="If correct, show"',
-      '               fb-sel-class="correct"',
-      '               fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-      '               fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-      '               fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
-      '          ></div>',
-      '        </div>',
-      '        <div class="well">',
-      '          <div feedback-selector',
-      '               fb-sel-label="If partially correct, show"',
-      '               fb-sel-class="partial"',
-      '               fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-      '               fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-      '               fb-sel-default-feedback="{{defaultPartialFeedback}}"',
-      '          ></div>',
-      '        </div>',
-      '        <div class="well">',
-      '          <div feedback-selector',
-      '               fb-sel-label="If incorrect, show"',
-      '               fb-sel-class="incorrect"',
-      '               fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-      '               fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-      '               fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
-      '          ></div>',
-      '        </div>'
-    ].join("");
-
-    var choiceAreaDisplayOptions = [
-      '     <form class="form-horizontal" role="form">',
-      '       <div class="config-form-row">Layout',
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-3">',
-      '           <input id="vertical" type="radio" value="vertical" ng-model="fullModel.model.config.choiceAreaLayout" />',
-      '           <label for="vertical" class="control-label">Vertical</label>',
-      '         </div>',
-      '         <div class="col-sm-3">',
-      '           <input id="horizontal" type="radio" value="horizontal" ng-model="fullModel.model.config.choiceAreaLayout" />',
-      '           <label for="horizontal" class="control-label">Horizontal</label>',
-      '         </div>',
-      '         <div class="col-sm-3">',
-      '           <input id="tile" type="radio" value="tile" ng-model="fullModel.model.config.choiceAreaLayout" />',
-      '           <label for="tile" class="control-label">Tile</label>',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row" ng-show="fullModel.model.config.choiceAreaLayout == \'tile\'">',
-      '         <div class="col-sm-3">',
-      '           <label for="itemsPerRow" class="control-label">Items Per Row</label>',
-      '         </div>',
-      '         <div class="col-sm-3">',
-      '           <input id="itemsPerRow" type="text" class="form-control" ng-model="fullModel.model.config.itemsPerRow" />',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-8">',
-      '           <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
-      '           <label for="shuffle" class="control-label">Shuffle Tiles</label>',
-      '         </div>',
-      '       </div>',
-      '     </form>'
-    ].join('');
-
-    var answerAreaDisplayOptions = [
-      '<div class="config-form-row">',
-      '  <div class="col-sm-4">',
-      '    <label>Answer area is </label>',
-      '  </div>',
-      '  <div class="col-sm-3">',
-      '    <input id="above" type="radio" value="above" ng-model="fullModel.model.config.answerAreaPosition" />',
-      '    <label for="above" class="control-label">above</label>',
-      '  </div>',
-      '  <div class="col-sm-3">',
-      '    <input id="below" type="radio" value="below" ng-model="fullModel.model.config.answerAreaPosition" />',
-      '    <label for="below" class="control-label">below</label>',
-      '  </div>',
-      '  <div class="col-sm-2">',
-      '    <label>choices</label>',
-      '  </div>',
-      '</div>',
-
-      '<div ng-repeat="area in model.categories">',
-      '  <div class="well">',
-      '  {{area.label}}',
-      '  <form class="form-horizontal" role="form">',
-      '    <div class="config-form-row">',
-      '      <div class="col-sm-4">',
-      '        <input id="vertical{{$index}}" type="radio" value="vertical" ng-model="area.layout" />',
-      '        <label for="vertical{{$index}}" class="control-label">Vertical</label>',
-      '      </div>',
-      '      <div class="col-sm-4">',
-      '        <input id="horizontal{{$index}}" type="radio" value="horizontal" ng-model="area.layout" />',
-      '        <label for="horizontal{{$index}}" class="control-label">Horizontal</label>',
-      '      </div>',
-      '    </div>',
-      '  </form>',
-      '  </div>',
-      '</div>'
-    ].join('');
-
-    var displayOptions = [
-      inputHolder('Choice Area', choiceAreaDisplayOptions),
-      inputHolder('Answer Areas', answerAreaDisplayOptions)
-
-    ].join("");
-
-    template = [
-      '<div class="drag-and-drop-config-panel" choice-template-controller="">',
-      '  <div navigator="">',
-      '    <div navigator-panel="Design">',
-      '      <div class="description">',
-      '      In Categorize, students may drag & drop answer tiles to the appropriate category area(s).',
-      '      </div>',
-      inputHolder('Categories', categories),
-      inputHolder('Choices', choiceArea),
-      inputHolder('Feedback', feedback),
-      '    </div>',
-
-      '    <div navigator-panel="Scoring">',
-      '      <div>',
-      ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"})),
-      '      </div>',
-      '    </div>',
-
-      '    <div navigator-panel="Display">',
-      '      <div>',
-      displayOptions,
-      '      </div>',
-      '    </div>',
-
-
-      '  </div>',
-      '</div>'].join('\n');
+        '<p class="intro">',
+        '  In Placement Ordering, a student is asked to sequence events or inputs in a specific order by dragging',
+        '  the answers to a placement area.',
+        '</p>',
+        '<table class="choice-columns"><tr>',
+        '  <td>',
+        '    <input class="prompt" type="text" ng-model="model.config.choiceAreaLabel"',
+        '      placeholder="Enter a label or leave blank"/>',
+        '    <ul class="sortable-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="choicesProxy">',
+        '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in choicesProxy" ng-click="itemClick($event)"',
+        '        ng-dblclick="activate($index)">',
+        '        <div class="blocker" ng-hide="active[$index]">',
+        '          <div class="bg"></div>',
+        '          <div class="content">',
+        '            <img class="drag-icon" src="../../images/hand-grab-icon.png"/>',
+        '            <div class="title">Double Click to Edit</div>',
+        '          </div>',
+        '        </div>',
+        '        <div class="delete-icon">',
+        '          <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
+        '        </div>',
+        '        <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
+        '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz features="extraFeatures"',
+        '          parent-selector=".editor-container"',
+        '          placeholder="Enter choice and/or add an image or math code."',
+        '          image-service="imageService" />',
+        '      </li>',
+        '    </ul>',
+        '    <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
+        '  </td>',
+        '  <td>',
+        '    <input class="prompt" type="text" ng-model="model.config.answerAreaLabel"',
+        '      placeholder="Enter a label or leave blank" />',
+        '    <div class="draggable-choices-container">',
+        '      <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets">',
+        '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets">',
+        '          <div class="delete-icon">',
+        '            <i ng-click="deleteTarget($index)" class="fa fa-times-circle"></i>',
+        '          </div>',
+        '          <span ng-bind-html-unsafe="choice.label"></span>',
+        '        </li>',
+        '      </ul>',
+        '     <div class="zero-state" ng-show="targets.length == 0">',
+        '       Drag and order correct answers here.',
+        '     </div>',
+        '   </div>',
+        '  </td>',
+        '</tr></table>',
+        '<label>',
+        '  <input type="checkbox" ng-model="model.config.shuffle" />',
+        '  Shuffle tiles',
+        '</label>'
+      ].join('\n');
+    }
 
     return {
-      restrict: "E",
-      scope: "isolate",
-      template: template,
+      scope: 'isolate',
+      restrict: 'E',
       replace: true,
-      link: function($scope, element, attrs) {
+      link: function ($scope, $element, $attrs) {
 
-        var server = ServerLogic.load('corespring-drag-and-drop-categorize');
-        $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
-        $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
-        $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
-
-        $scope.correctMap = {};
-
-        $scope.choiceToLetter = function(c) {
-          var idx = $scope.model.choices.indexOf(c);
-          return $scope.toChar(idx);
-        };
-
-        $scope.toChar = function(num) {
-          return String.fromCharCode(65 + num);
-        };
-
-        $scope.sumCorrectResponses = function() {
-          return _.reduce($scope.correctAnswers, function(memo, ca) {
-            return ca.length + memo;
-          }, 0);
-        };
+        function initTargets() {
+          $scope.targets = _.map($scope.fullModel.correctResponse, function(id) {
+            return _.find($scope.choicesProxy, function(choice) {
+              return choice.id === id;
+            });
+          });
+        }
 
         $scope.containerBridge = {
           setModel: function(model) {
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
-
-            var categoryById = function(cid) {
-              return _.find(model.model.categories, function(c) {
-                return c.id === cid;
-              });
-            };
-
-            $scope.correctMap = {};
-            console.log("Correct repsonse is ", model.correctResponse);
-            _.each(model.correctResponse, function(val, catId) {
-              _.each(val, function(cr) {
-                $scope.correctMap[cr] = $scope.correctMap[cr] || [];
-                $scope.correctMap[cr].push(categoryById(catId));
-              });
-            });
-            console.log("Correct map  is ", $scope.correctMap);
-
-            $scope.componentState = "initialized";
-            console.log(model);
+            $scope.choicesProxy = _.cloneDeep($scope.model.choices);
+            initTargets();
           },
           getModel: function() {
             var model = _.cloneDeep($scope.fullModel);
             return model;
-          },
-
-          getAnswer: function() {
-            console.log("returning answer for: Drag and drop");
-            return {};
           }
         };
 
-        $scope.$watch('correctMap', function(n) {
-          if (n) {
-            var res = {};
-            _.each(n, function(correctCategories, choiceId) {
-              _.each(correctCategories, function(category) {
-                res[category.id] = res[category.id] || [];
-                res[category.id].push(choiceId);
-              });
-            });
-            $scope.fullModel.correctResponse = res;
+        $scope.sortableOptions = {
+          placeholder: "app",
+          connectWith: ".draggable-choices"
+        };
+
+
+        $scope.targetSortableOptions = (function() {
+          var copying = false;
+
+          function isCopy(ui) {
+            return ui.sender !== null;
           }
-        }, true);
+          function containsChoice(ui) {
+            return isCopy(ui) && _.contains($scope.fullModel.correctResponse, ui.item.data('choiceId'));
+          }
 
-        $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
+          return {
+            placeholder: "app",
+            connectWith: ".draggable-choices",
+            receive: function(event, ui) {
+              if (containsChoice(ui)) {
+                ui.item.sortable.cancel();
+              }
+            },
+            update: function(event, ui) {
+              if (isCopy(ui)) {
+                copying = true;
+                ui.item.sortable.cancel();
+              }
+            },
+            stop: function() {
+              if (!copying) {
+                $scope.pushChoiceUpdates();
+              }
+              copying = false;
+            }
+          };
+        })();
 
-        $scope.removeQuestion = function(c) {
-          $scope.model.choices = _.filter($scope.model.choices, function(existing) {
-            return existing !== c;
+        $scope.activate = function($index) {
+          $scope.active[$index] = true;
+          $('.sortable-choices', $element).sortable("disable");
+        };
+
+        $scope.itemClick = function($event) {
+          function isField($event) {
+            return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
+          }
+          $event.stopPropagation();
+          $event.preventDefault();
+          if (!isField($event)) {
+            $scope.deactivate();
+          }
+        };
+
+        $scope.deactivate = function() {
+          $scope.active = _.map($scope.model.choices, function() { return false; });
+          $('.sortable-choices', $element).sortable("enable");
+          $scope.choicesProxy = _.map($scope.choicesProxy, function(choice) {
+            choice.id = _.isEmpty(choice.id) ? choice.label.toLowerCase().replace(/ /g, '-') : choice.id;
+            return choice;
           });
+          $scope.$emit('mathJaxUpdateRequest');
         };
 
         $scope.addChoice = function() {
-          $scope.model.choices.push({
-            id: "choice_" + $scope.model.choices.length,
-            labelType: "text",
-            label: "",
-            moveOnDrag: true
-          });
+          $scope.choicesProxy.push({content: "", label: ""});
+          $scope.pushChoiceUpdates();
         };
 
-        $scope.removeCategory = function(category) {
-          $scope.model.categories = _.filter($scope.model.categories, function(existing) {
-            return existing !== category;
+        $scope.deleteChoice = function(index) {
+          var choice = $scope.choicesProxy.splice(index, 1);
+          var deletedChoiceId = choice[0].id;
+          $scope.fullModel.correctResponse = _.filter($scope.fullModel.correctResponse, function(responseId) {
+            return responseId !== deletedChoiceId;
           });
-          _.each($scope.correctMap, function(val, key) {
-            $scope.correctMap[key] = _.filter(val, function(cat) {
-              return cat.id !== category.id;
-            });
-          });
-          delete $scope.fullModel.correctResponse[category.id];
-
+          $scope.pushChoiceUpdates();
         };
 
-        $scope.addCategory = function() {
-          var idx = $scope.model.categories.length + 1;
-          $scope.model.categories.push({
-            id: "cat_" + idx,
-            hasLabel: true,
-            label: "Category " + idx,
-            layout: "vertical"
-          });
+        $scope.deleteTarget = function(index) {
+          $scope.targets.splice(index, 1);
         };
 
-      }
-    };
-  }
-];
-
-var bootstrapMultiselect = [
-  '$log',
-  function($log) {
-    return {
-      scope: true,
-      link: function(scope, element, attrs) {
-        var rebuild = function() {
-          $(element).multiselect('setOptions', {
-            numberDisplayed: 1
-          });
-          $(element).multiselect('rebuild');
+        $scope.adjustListHeights = function() {
+          $timeout(function() {
+            $('.sorted-choices', $element).css('height', $('.sortable-choices', $element).css('height'));
+          }, 200);
         };
-        attrs.$observe('bootstrapMultiselect', function(n) {
-          if (n === 'initialized') {
-            rebuild();
-          }
+
+        $scope.pushChoiceUpdates = function() {
+          $scope.model.choices = _.cloneDeep($scope.choicesProxy);
+          initTargets();
+        };
+
+        $scope.$watchCollection('model.choices', function() {
+          $scope.adjustListHeights();
         });
-        var n = attrs.ngOptions;
-        if (n) {
-          var model = n.split("in ")[1];
-          scope.$watch(model, function(n) {
-            rebuild();
-          }, true);
-        }
-      }
-    };
 
+        $scope.$watchCollection('targets', function() {
+          var newOrder = _.pluck($scope.targets, 'id');
+          $scope.fullModel.correctResponse = newOrder;
+        });
+
+        $scope.$watch('choicesProxy', function(oldValue, newValue) {
+          function isLabelChange() {
+            return _.chain(oldValue).find(function(oldChoice) {
+              var newChoice = _.find(newValue, function(newChoice) {
+                return newChoice.id === oldChoice.id;
+              });
+              return newChoice && (newChoice.label !== oldChoice.label);
+            }).value() !== undefined;
+          }
+          if (isLabelChange()) {
+            $scope.pushChoiceUpdates();
+          } else {
+            console.log('not label change');
+          }
+        }, true);
+
+        $scope.init = function() {
+          $scope.active = [];
+          $scope.adjustListHeights();
+          $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
+        };
+
+        $scope.init();
+      },
+      template: [
+        '<div class="placement-ordering-config" ng-click="deactivate()">',
+        '  <div navigator="">',
+        '    <div navigator-panel="Design">',
+               designTemplate(),
+        '    </div>',
+        '    <div navigator-panel="Scoring">',
+        '      TODO',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join('\n')
+    };
   }
 ];
 
@@ -348,10 +233,6 @@ exports.framework = 'angular';
 exports.directives = [
   {
     directive: main
-  },
-  {
-    name: 'bootstrapMultiselect',
-    directive: bootstrapMultiselect
   }
-
 ];
+
