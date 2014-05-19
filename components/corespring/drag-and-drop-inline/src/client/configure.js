@@ -50,6 +50,8 @@ var main = [
 
     var answerArea = [
       '<div class="well answer-area" ng-repeat="aa in model.answerAreas">',
+      '  <div class="remove-button" ng-click="removeAnswerArea(aa)"><i class="fa fa-times-circle"></i>',
+      '  </div>',
       '  <div>Answer Blank {{($index+1)}}</div>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
@@ -84,7 +86,6 @@ var main = [
       '         </div>',
       '       </div>',
       '    </form>',
-      '  <div><a ng-click="removeAnswerArea(aa)">Remove Answer Area</a></div>',
       '  <div></div>',
       '</div>',
       '<a ng-click="addAnswerArea()">Add Answer Area</a>'

@@ -30,6 +30,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.resetChoices(scope.rawModel);
+          scope.originalChoices = _.cloneDeep(scope.local.choices);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
 
