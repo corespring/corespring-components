@@ -57,7 +57,7 @@ var main = [
       '            Select Correct Answers',
       '         </div>',
       '         <div class="col-sm-6">',
-      '           <select bootstrap-multiselect="{{componentState}}" class="answer-area-select form-control" multiple="true" ng-model="correctAnswers[aa.id]" ng-options="choiceToLetter(c) for c in model.choices">',
+      '           <select bootstrap-multiselect="{{componentState}}" class="answer-area-select form-control" multiple="true" ng-model="correctAnswers[aa.id]" ng-options="choiceToDropDownItem(c) for c in model.choices">',
       '          </select>',
       '         </div>',
       '       </div>',
@@ -201,6 +201,16 @@ var main = [
 
         $scope.correctAnswers = {};
         $scope.correctMap = {};
+
+        $scope.choiceToDropDownItem = function(c) {
+          if (!c) {
+            return;
+          }
+          if (c.labelType === 'image') {
+            return c.imageName;
+          }
+          return c.label;
+        };
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
