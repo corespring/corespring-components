@@ -26,11 +26,10 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
+          scope.local = {};
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.resetChoices(scope.rawModel);
-
-          scope.originalChoices = _.cloneDeep(scope.model.choices);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
 
@@ -40,7 +39,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
             });
 
             // Remove choices that are in landing place area
-            scope.model.choices = _.filter(scope.model.choices, function(choice) {
+            scope.local.choices = _.filter(scope.local.choices, function(choice) {
               var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
                 return _.pluck(c, 'id').indexOf(choice.id) >= 0;
               });

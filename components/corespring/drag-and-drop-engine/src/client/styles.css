@@ -12,6 +12,9 @@
     border-spacing: 3px;
     border: 1px solid black;
     border-radius: 3px;
+    margin: 0 auto;
+    min-width: 50px;
+    min-height: 50px;
 }
 
 .view-drag-and-drop .choices-table-row {
@@ -59,6 +62,11 @@
     top: -10px;
     width: 100%;
     text-align: center;
+}
+
+.view-drag-and-drop .label-sizer-holder {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .view-drag-and-drop .landingLabel,

@@ -26,9 +26,10 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
+          scope.local = {};
           scope.resetChoices(scope.rawModel);
 
-          scope.originalChoices = _.cloneDeep(scope.model.choices);
+          scope.originalChoices = _.cloneDeep(scope.local.choices);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
 

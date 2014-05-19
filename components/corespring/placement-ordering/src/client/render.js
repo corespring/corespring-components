@@ -26,6 +26,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           scope.editable = true;
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.cardinality = 'ordered';
+          scope.local = {};
           scope.resetChoices(scope.rawModel);
 
           scope.originalChoices = _.cloneDeep(scope.model.choices);
@@ -38,7 +39,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
             });
 
             // Remove choices that are in landing place area
-            scope.model.choices = _.filter(scope.model.choices, function(choice) {
+            scope.local.choices = _.filter(scope.local.choices, function(choice) {
               var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
                 return _.pluck(c, 'id').indexOf(choice.id) >= 0;
               });

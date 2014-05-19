@@ -63,7 +63,7 @@ var answerArea = [
 
         scope.onDrop = function() {
           scope.dragging.isOut = false;
-          scope.model.choices = _.filter(scope.model.choices, nonEmptyElement);
+          scope.local.choices = _.filter(scope.local.choices, nonEmptyElement);
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
           });
@@ -83,11 +83,11 @@ var answerArea = [
             var choiceInLandingPlace = _.find(scope.landingPlaceChoices[scope.id], function(c) {
               return c.id === scope.dragging.id;
             });
-            var choiceInChoiceArea = _.find(scope.model.choices, function(c) {
+            var choiceInChoiceArea = _.find(scope.local.choices, function(c) {
               return c.id === scope.dragging.id;
             });
             if (!choiceInChoiceArea) {
-              scope.model.choices.push(choiceInLandingPlace);
+              scope.local.choices.push(choiceInLandingPlace);
             }
             scope.landingPlaceChoices[scope.id] = _.filter(scope.landingPlaceChoices[scope.id], function(e) {
               return e.id !== scope.dragging.id;
@@ -192,11 +192,12 @@ var answerArea = [
         '             ng-switch="choice.labelType">',
         '           <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
         '           <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
+        '           <div class="sizerHolder" style="display: none; position: absolute" ng-switch="choice.labelType">',
+        '             <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
+        '             <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
+        '           </div>',
+
         '        </div>',
-//        '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-switch="choice.labelType">',
-//        '          <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
-//        '          <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
-//        '        </div>',
         '    </div>',
         '    <div class="clearfix" />',
         '    <div ng-show="landingPlaceChoices[id].length == 0">&nbsp;</div>',

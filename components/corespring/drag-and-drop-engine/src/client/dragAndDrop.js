@@ -20,7 +20,7 @@ var dragAndDropController = [
         scope.draggableOptions = function(choice) {
           return {
             revert: 'invalid',
-            placeholder: (!choice || choice.moveOnDrag) ? '' : 'keep',
+            placeholder: (!choice || choice.moveOnDrag) ? false : 'keep',
             onStart: 'onStart'
           };
         };
@@ -103,18 +103,17 @@ var dragAndDropController = [
 
           var stash = scope.session.stash = scope.session.stash || {};
           var shuffle = scope.model.config.shuffle;
-          console.log('bbb');
-          console.log(shuffle);
-          console.log(stash.shuffledOrder);
           if (stash.shuffledOrder && shuffle) {
-            scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
+            scope.local.choices = layoutChoices(model.choices, stash.shuffledOrder);
           } else if (shuffle) {
-            scope.choices = layoutChoices(model.choices);
+            scope.local.choices = layoutChoices(model.choices);
             stash.shuffledOrder = stashOrder(scope.choices);
             scope.$emit('saveStash', attrs.id, stash);
           } else {
-            scope.choices = _.cloneDeep(model.choices);
+            scope.local.choices = _.cloneDeep(model.choices);
           }
+
+          scope.originalChoices = _.cloneDeep(scope.choices);
         };
 
         scope.choiceForId = function(id) {
@@ -126,7 +125,7 @@ var dragAndDropController = [
 
         scope.startOver = function() {
           scope.stack = [];
-          scope.model.choices = _.cloneDeep(scope.originalChoices);
+          scope.local.choices = _.cloneDeep(scope.originalChoices);
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = [];
           });
@@ -138,7 +137,7 @@ var dragAndDropController = [
           }
           var o = scope.stack.pop();
           var state = _.last(scope.stack);
-          scope.model.choices = _.cloneDeep(state.choices);
+          scope.local.choices = _.cloneDeep(state.choices);
           scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
         };
 
@@ -153,12 +152,12 @@ var dragAndDropController = [
         };
 
         scope.getChoiceRows = function() {
-          var choices = scope.choices || scope.model.choices;
+          var choices = scope.local.choices;
           return _.range(choices.length / scope.itemsPerRow());
         };
 
         scope.getChoicesForRow = function(row) {
-          var choices = scope.choices || scope.model.choices;
+          var choices = scope.local.choices;
           return choices.slice(row * scope.itemsPerRow(), row * scope.itemsPerRow() + scope.itemsPerRow());
         };
 
@@ -216,7 +215,7 @@ var dragAndDropController = [
 
         scope.$watch('landingPlaceChoices', function(n) {
           var state = {
-            choices: _.cloneDeep(scope.model.choices),
+            choices: _.cloneDeep(scope.choices),
             landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
           };
           if (!_.isEqual(state, _.last(scope.stack))) {
