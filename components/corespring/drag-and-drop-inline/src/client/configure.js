@@ -19,11 +19,6 @@ var main = [
     };
 
     var choiceArea = [
-      '  <div class="config-form-row">',
-      '    <div class="col-sm-5">',
-      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" placeholder="Enter choice area label or leave blank"/>',
-      '    </div>',
-      '  </div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '',
@@ -43,7 +38,13 @@ var main = [
       '    <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
       '    <label for="shuffle" class="control-label">Shuffle Tiles</label>',
       '  </div>',
-      '</div>'
+      '</div>',
+      '  <div class="config-form-row">',
+      '    <div class="col-sm-8">',
+      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" placeholder="Enter choice area label or leave blank"/>',
+      '    </div>',
+      '  </div>'
+
 
 
     ].join("");
