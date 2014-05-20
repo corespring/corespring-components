@@ -37,7 +37,7 @@ var main = [
       '<div class="config-form-row">',
       '  <div class="col-sm-8">',
       '    <input id="shuffle" type="checkbox" ng-model="fullModel.model.config.shuffle" />',
-      '    <label for="shuffle" class="control-label">Shuffle Tiles</label>',
+      '    <label for="shuffle" class="control-label">Shuffle Choices</label>',
       '  </div>',
       '</div>',
       '  <div class="config-form-row">',
