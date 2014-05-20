@@ -24,6 +24,7 @@ exports.service = ['$log',
 
       this.choice = function(opts) {
         var defaults = {
+          choice: "<b>Choice {{toChar($index)}}</b>",
           correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]" tooltip="{{isSingleChoice() ? \'\' : \'See the scoring tab for more options\'}}"></i>',
           correctnessPredicate: "correctMap[q.value]",
           feedback: true,
@@ -77,7 +78,7 @@ exports.service = ['$log',
         return [
           '  <table class="choice-template-choice">',
           '    <tr>',
-          '     <td '+optWidth(opts.columnWidths[0])+'><b>Choice {{toChar($index)}}</b></td>',
+          !_.isEmpty(opts.choice) ? '     <td '+optWidth(opts.columnWidths[0])+'>'+opts.choice+'</td>' : '',
           '     <td '+optWidth(opts.columnWidths[1])+'>',
           '       <select class="form-control" ng-model="q.labelType">',
           '         <option value="text">Text</option>',

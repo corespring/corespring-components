@@ -21,11 +21,12 @@ var main = [
     var choiceArea = [
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
+        choice: '',
         correct: '',
         feedback: false,
         columnWidths: ["100px", "100px", "", "100px"]
       }),
-      '    <div style="padding-left: 210px">',
+      '    <div style="padding-left: 110px">',
       '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
       '      <label for="moveOnDrag{{$index}}">Remove tile after placing</label>',
       '    </div>',
