@@ -1,0 +1,5 @@
+.modal .choice,
+.view-drag-and-drop .choice {
+    min-width: 90px;
+    min-height: 50px;
+}
