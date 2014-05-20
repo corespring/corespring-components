@@ -97,7 +97,6 @@ var main = [
 
 
           $scope.choicesSortableOptions = {
-            placeholder: "app",
             disabled: false,
             start: function(event, ui) {
               var li = ui.item;
@@ -108,7 +107,6 @@ var main = [
           };
 
           $scope.targetSortableOptions = {
-            placeholder: "app",
             start: function() {
               $scope.targetDragging = true;
             },
