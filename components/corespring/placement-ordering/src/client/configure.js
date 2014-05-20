@@ -143,12 +143,13 @@ var main = [
               return choice;
             });
             $scope.choicesSortableOptions.disabled = false;
+            $scope.model.choices = _.cloneDeep($scope.choicesProxy);
             $scope.$emit('mathJaxUpdateRequest');
           };
 
           $scope.addChoice = function() {
             $scope.choicesProxy.push({content: "", label: "", id: 'id_' + ($scope.choicesProxy.length + 1)});
-            $scope.pushChoiceUpdates();
+            $scope.model.choices = _.cloneDeep($scope.choicesProxy);
           };
 
           $scope.deleteChoice = function(index) {
@@ -157,6 +158,7 @@ var main = [
             $scope.fullModel.correctResponse = _.filter($scope.fullModel.correctResponse, function(responseId) {
               return responseId !== deletedChoiceId;
             });
+            initTargets();
           };
 
           $scope.deleteTarget = function(choice) {
@@ -189,11 +191,9 @@ var main = [
           '  </div>',
           '</div>'
         ].join('\n')
-      }
-        ;
+      };
     }
-  ]
-  ;
+  ];
 
 exports.framework = 'angular';
 exports.directives = [
