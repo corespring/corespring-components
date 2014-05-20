@@ -58,7 +58,7 @@ var main = [
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       '         <div class="col-sm-3">',
-      '            Select Correct Answers',
+      '            Correct Answer(s)',
       '         </div>',
       '         <div class="col-sm-6">',
       '           <select bootstrap-multiselect="{{componentState}}" class="answer-area-select form-control" multiple="true" ng-model="correctAnswers[aa.id]" ng-options="choiceToDropDownItem(c) for c in model.choices">',
