@@ -13,9 +13,9 @@ var main = [
           '    <input class="prompt" type="text" ng-model="model.config.choiceAreaLabel"',
           '      placeholder="Enter a label or leave blank"/>',
           '    <ul class="sortable-choices draggable-choices" ui-sortable="choicesSortableOptions"',
-          '      ng-model="choicesProxy">',
-          '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in choicesProxy"',
-          '        ng-model="choicesProxy[$index]" ng-click="itemClick($event)"',
+          '      ng-model="model.choices">',
+          '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
+          '        ng-model="model.choices[$index]" ng-click="itemClick($event)"',
           '        jqyoui-draggable="{index: {{$index}}, placeholder: \'keep\'}"',
           '        data-jqyoui-options="{revert: \'invalid\'}"',
           '        ng-dblclick="activate($index)">',
@@ -74,7 +74,7 @@ var main = [
 
           function initTargets() {
             $scope.targets = _.map($scope.fullModel.correctResponse, function(id) {
-              return _.find($scope.choicesProxy, function(choice) {
+              return _.find($scope.model.choices, function(choice) {
                 return choice.id === id;
               });
             });
@@ -84,7 +84,6 @@ var main = [
             setModel: function(model) {
               $scope.fullModel = model;
               $scope.model = $scope.fullModel.model;
-              $scope.choicesProxy = $scope.model.choices;
               initTargets();
             },
             getModel: function() {
@@ -141,22 +140,26 @@ var main = [
             $scope.active = _.map($scope.model.choices, function() {
               return false;
             });
-            $scope.choicesProxy = _.map($scope.choicesProxy, function(choice) {
-              choice.id = _.isEmpty(choice.id) ? choice.label.toLowerCase().replace(/ /g, '-') : choice.id;
-              return choice;
-            });
             $scope.choicesSortableOptions.disabled = false;
-            $scope.model.choices = _.cloneDeep($scope.choicesProxy);
             $scope.$emit('mathJaxUpdateRequest');
           };
 
           $scope.addChoice = function() {
-            $scope.choicesProxy.push({content: "", label: "", id: 'id_' + ($scope.choicesProxy.length + 1)});
-            $scope.model.choices = _.cloneDeep($scope.choicesProxy);
+            function getNextId() {
+              var prefix = 'id_';
+              var id = 1;
+              while(_.find($scope.model.choices, function(choice) {
+                return choice.id === (prefix + id);
+              })) {
+                id++;
+              }
+              return prefix + id;
+            }
+            $scope.model.choices.push({content: "", label: "", id: getNextId()});
           };
 
           $scope.deleteChoice = function(index) {
-            var choice = $scope.choicesProxy.splice(index, 1);
+            var choice = $scope.model.choices.splice(index, 1);
             var deletedChoiceId = choice[0].id;
             $scope.fullModel.correctResponse = _.filter($scope.fullModel.correctResponse, function(responseId) {
               return responseId !== deletedChoiceId;
