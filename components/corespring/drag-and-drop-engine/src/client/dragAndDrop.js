@@ -107,7 +107,7 @@ var dragAndDropController = [
             scope.local.choices = layoutChoices(model.choices, stash.shuffledOrder);
           } else if (shuffle) {
             scope.local.choices = layoutChoices(model.choices);
-            stash.shuffledOrder = stashOrder(scope.choices);
+            stash.shuffledOrder = stashOrder(scope.local.choices);
             scope.$emit('saveStash', attrs.id, stash);
           } else {
             scope.local.choices = _.cloneDeep(model.choices);
