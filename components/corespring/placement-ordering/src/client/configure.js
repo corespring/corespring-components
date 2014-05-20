@@ -1,6 +1,6 @@
 var main = [
-    '$timeout',
-    function($timeout) {
+    'ChoiceTemplates',
+    function(ChoiceTemplates) {
 
       function designTemplate() {
         return [
@@ -93,7 +93,7 @@ var main = [
           };
 
           $scope.droppableOptions = {
-            accept: function(a, b) {
+            accept: function() {
               var contains = _($scope.targets).pluck('id').contains($scope.draggging);
               return !$scope.targetDragging && !contains;
             }
@@ -192,7 +192,7 @@ var main = [
           designTemplate(),
           '    </div>',
           '    <div navigator-panel="Scoring">',
-          '      TODO',
+                 ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
           '    </div>',
           '  </div>',
           '</div>'
