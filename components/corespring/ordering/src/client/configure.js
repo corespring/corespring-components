@@ -5,8 +5,9 @@ var main = [
   '$http',
   'ChoiceTemplates',
   'ImageUtils',
+  'WiggiWizHelper',
   'WiggiMathJaxFeatureDef',
-  function($sce, $log, $http, ChoiceTemplates, ImageUtils, WiggiMathJaxFeatureDef) {
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, WiggiWizHelper, WiggiMathJaxFeatureDef) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -52,7 +53,6 @@ var main = [
         '  Drag and drop your choices to set the correct order. The student view will display the choices in ',
         '  randomized order.',
         '</p>',
-        '<input class="prompt" type="text" ng-model="model.prompt" placeholder="Enter a label or leave blank"/>',
         '<ul class="sortable-choices" ui-sortable="" ng-model="model.choices">',
         '  <li class="sortable-choice" ng-repeat="choice in model.choices" ng-click="itemClick($event)"',
         '    ng-dblclick="activate($index)">',
@@ -72,7 +72,6 @@ var main = [
         '    <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
         '    <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz features="extraFeatures"',
         '      parent-selector=".editor-container"',
-        '      placeholder="Enter choice and/or add an image or math code."',
         '      image-service="imageService" />',
         '  </li>',
         '</ul>',
@@ -178,6 +177,7 @@ var main = [
         $scope.activate = function($index) {
           $scope.active[$index] = true;
           $('.sortable-choices', $element).sortable("disable");
+          WiggiWizHelper.focusCaretAtEnd('.wiggi-wiz-editable', $($('.sortable-choice')[$index]));
         };
 
         $scope.itemClick = function($event) {
