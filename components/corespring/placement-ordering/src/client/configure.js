@@ -1,9 +1,51 @@
 var main = [
-    'ChoiceTemplates',
-    function(ChoiceTemplates) {
+    'ChoiceTemplates', 'ServerLogic',
+    function(ChoiceTemplates, ServerLogic) {
 
       function designTemplate() {
+
+        var feedback = [
+          '<div class="input-holder">',
+          '  <div class="header">Feedback</div>',
+          '  <div class="body">',
+          '    <div class="well">',
+          '      <div feedback-selector',
+          '        fb-sel-label="If correct, show"',
+          '        fb-sel-class="correct"',
+          '        fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+          '        fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+          '        fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
+          '      </div>',
+          '    </div>',
+          '    <div class="well">',
+          '      <div feedback-selector',
+          '        fb-sel-label="If partially correct, show"',
+          '        fb-sel-class="partial"',
+          '        fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+          '        fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+          '        fb-sel-default-feedback="{{defaultPartialFeedback}}">',
+          '      </div>',
+          '    </div>',
+          '    <div class="well">',
+          '      <div feedback-selector',
+          '        fb-sel-label="If incorrect, show"',
+          '        fb-sel-class="incorrect"',
+          '        fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+          '        fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+          '        fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
+          '      </div>',
+          '    </div>',
+          '  </div>',
+          '</div>',
+          '<div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
+          '<div ng-show="commentOn">',
+          '  <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
+          '</div>'
+        ].join("");
+
         return [
+          '<div class="input-holder">',
+          '<div class="body">',
           '<p class="intro">',
           '  In Placement Ordering, a student is asked to sequence events or inputs in a specific order by dragging',
           '  the answers to a placement area.',
@@ -57,10 +99,13 @@ var main = [
           '   </div>',
           '  </td>',
           '</tr></table>',
-          '<label>',
+          '<label class="shuffle">',
           '  <input type="checkbox" ng-model="model.config.shuffle" />',
           '  Shuffle tiles',
-          '</label>'
+          '</label>',
+          '</div>',
+          '</div>',
+          feedback
         ].join('\n');
       }
 
@@ -69,6 +114,11 @@ var main = [
         restrict: 'E',
         replace: true,
         link: function($scope, $element, $attrs) {
+
+          var server = ServerLogic.load('corespring-drag-and-drop-categorize');
+          $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
+          $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
+          $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
 
           $scope.targetDragging = false;
 

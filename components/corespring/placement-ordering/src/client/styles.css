@@ -146,6 +146,10 @@
     margin: 20px;
 }
 
+.placement-ordering-config .shuffle {
+    margin-top: 10px;
+}
+
 .placement-ordering-config .choice-columns {
     width: 100%;
 }
@@ -163,10 +167,6 @@
 .placement-ordering-config ul {
     padding: 0;
     list-style-type: none;
-}
-
-.placement-ordering-config .config-panel-body {
-    padding: 20px;
 }
 
 .placement-ordering-config .sorted-choices {
