@@ -198,9 +198,10 @@ var main = [
             function getNextId() {
               var prefix = 'id_';
               var id = 1;
-              while(_.find($scope.model.choices, function(choice) {
+              function isTaken(choice) {
                 return choice.id === (prefix + id);
-              })) {
+              }
+              while(_.find($scope.model.choices, isTaken)) {
                 id++;
               }
               return prefix + id;
