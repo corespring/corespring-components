@@ -10,7 +10,7 @@ var answerArea = [
         scope['class'] = attrs['class'];
 
         var updateLayout = function(newLayout) {
-          var maxWidth = Math.min(scope.maxWidth + 25, 550);
+          var maxWidth = Math.max(Math.min(scope.maxWidth + 25, 550), 120);
           if (newLayout === 'inline') {
             scope.elementStyle = {
               height: (scope.maxHeight + 30) + "px",
