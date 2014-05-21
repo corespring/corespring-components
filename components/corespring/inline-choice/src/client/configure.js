@@ -4,6 +4,10 @@ var main = [
 
     var choices = [
       '<div class="choice-config-panel config-panel">',
+      '  <p class="info">',
+      '    In Drop Down Choice, students select the best response from a list of options presented. This interaction ',
+      '    type may be embedded inline with other content such as text.',
+      '  </p>',
       '  <div class="check-correct-label">Check Correct Answer</div>',
       '  <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Distractors</label>',
       '  <div class="choice" ng-repeat="q in model.choices">',
