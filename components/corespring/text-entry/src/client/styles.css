@@ -64,6 +64,14 @@
   padding: 8px;
 }
 
+.cs-text-entry-cfg .info {
+  margin-bottom: 20px;
+}
+
+.cs-text-entry-cfg .checkbox-inline {
+  padding-left: 50px;
+}
+
 .cs-text-entry-cfg .main-header {
   padding: 10px 10px 0px 10px;
 }
