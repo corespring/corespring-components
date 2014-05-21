@@ -172,8 +172,8 @@ var main = [
       '      <div class="description">',
       '      In Fill in the Blank, students are asked to complete a sentence, word, phrase or equation using context clues presented in the text that surrounds it.',
       '      </div>',
-      inputHolder('Choices', choiceArea),
       inputHolder('Answer Blanks', answerArea),
+      inputHolder('Choices', choiceArea),
       inputHolder('Feedback', feedback),
       '    </div>',
 
