@@ -20,15 +20,6 @@ var main = [
       '<div ng-show="commentOn">',
       '  <p>Use this space to provide summary level feedback for this interaction.</p>',
       '  <textarea ng-model="fullModel.comments" class="form-control"></textarea>',
-      '</div>',
-      '<div>',
-      ' <table> ',
-      ' <tr> ',
-      ' <td> Layout: ',
-      ' <td> <input type="radio" value="vertical" ng-model="model.config.orientation"></input><td>A<br/>B<br/>C<br/>D',
-      ' <td> <input type="radio" value="horizontal" ng-model="model.config.orientation"></input><td>A B C D',
-      ' <td> <input type="radio" value="tile" ng-model="model.config.orientation"></input><td>A B<br/>C D',
-      ' </table>',
       '</div>'
     ].join('\n');
 
