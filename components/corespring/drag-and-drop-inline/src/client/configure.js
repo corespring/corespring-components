@@ -304,7 +304,7 @@ var main = [
             id: "choice_" + $scope.model.choices.length,
             labelType: "text",
             label: "",
-            moveOnDrag: true
+            moveOnDrag: false
           });
         };
 
