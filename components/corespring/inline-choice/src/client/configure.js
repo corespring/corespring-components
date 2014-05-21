@@ -9,7 +9,6 @@ var main = [
       '    type may be embedded inline with other content such as text.',
       '  </p>',
       '  <div class="check-correct-label">Check Correct Answer</div>',
-      '  <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Distractors</label>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: fullModel.correctResponse == q.value}" ng-click="fullModel.correctResponse = q.value"></i>',
@@ -17,6 +16,9 @@ var main = [
       }),
       '  </div>',
       '  <button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
+      '  <label class="shuffle">',
+      '    <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"/> Shuffle Choices',
+      '  </label>',
       '</div>'
     ].join('\n');
 
@@ -140,7 +142,7 @@ var main = [
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
-        '<div class="config-multiple-choice" choice-template-controller="">',
+        '<div class="config-inline-choice" choice-template-controller="">',
                ChoiceTemplates.wrap(undefined, choices),
         '</div>'
       ].join("")

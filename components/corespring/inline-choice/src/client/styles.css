@@ -166,3 +166,11 @@
     margin-left: -3px;
 
 }
+
+.config-inline-choice button {
+    margin: 20px 0;
+}
+
+.config-inline-choice .shuffle {
+    display: block;
+}
