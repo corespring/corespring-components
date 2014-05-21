@@ -33,6 +33,10 @@ var main = [
     var displayOptions = [
       '<div class="input-holder">',
       '  <div class="body">',
+      '     <p class="info">',
+      '       In an Open Ended interaction, students respond to a prompt in short or long form. These interactions ',
+      '       are not automatically scored.',
+      '     </p>',
       '     <div>Adjust the height and width of student response area below.</div>',
       '     <form class="form-horizontal" role="form" style="margin-top: 10px">',
       '       <div class="form-group" style="max-width: 80%">',
