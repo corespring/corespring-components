@@ -29,6 +29,26 @@
     color: limegreen;
 }
 
+.choice-template-choice td {
+    vertical-align: top;
+}
+
+.choice-template-choice .selector {
+    padding-bottom: 0;
+}
+
+.choice-template-choice .selector select {
+    width: 205px;
+}
+
+.choice-template-choice .selector .shuffle {
+    visibility: hidden;
+}
+
+.choice-template-choice .selector .shuffle.shown {
+    visibility: visible;
+}
+
 .choice-template-choice .feedback-label {
     font-size: smaller;
 }

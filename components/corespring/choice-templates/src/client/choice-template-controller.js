@@ -1,6 +1,7 @@
 var def = [
+  '$rootScope',
   '$log',
-  function($log) {
+  function($rootScope, $log) {
     return {
       scope: true,
       link: function(scope, elm, attr) {
@@ -12,6 +13,10 @@ var def = [
         scope.getUploadUrl = function(file) {
           scope.uploadingFilename = file.name;
           return file.name;
+        };
+
+        scope.resetStash = function() {
+          $rootScope.$broadcast('resetStash');
         };
 
         scope.addScoringScenario = function() {

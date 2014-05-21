@@ -58,10 +58,31 @@ var main = [
         scope.answer.choice = "";
       };
 
+      function shuffle(choices) {
+        function newIndex(item, array) {
+          var t = _.find(array, function(el) {
+            return el.value === item.value;
+          });
+          return t ? array.indexOf(t) : -1;
+        }
+
+        var shuffled = _.shuffle(_.cloneDeep(choices));
+        _.each(choices, function(choice, index) {
+          var temp;
+          var remain = !_.isUndefined(choice.shuffle) && choice.shuffle === false;
+          if (remain) {
+            temp = shuffled[newIndex(choice, shuffled)];
+            shuffled[newIndex(choice, shuffled)] = shuffled[index];
+            shuffled[index] = temp;
+          }
+        });
+
+        return shuffled;
+      }
+
       var layoutChoices = function(choices, order) {
         if (!order) {
-          var shuffled = _.shuffle(_.cloneDeep(choices));
-          return shuffled;
+          return shuffle(choices);
         } else {
           var ordered = _(order).map(function(v) {
             return _.find(choices, function(c) {
@@ -159,6 +180,9 @@ var main = [
           resetChoices();
           resetFeedback(scope.choices);
           scope.response = undefined;
+        },
+        resetStash: function() {
+          scope.session.stash = {};
         },
         isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
