@@ -8,11 +8,13 @@ var main = [
       '    In Drop Down Choice, students select the best response from a list of options presented. This interaction ',
       '    type may be embedded inline with other content such as text.',
       '  </p>',
-      '  <div class="check-correct-label">Check Correct Answer</div>',
+      '  <div class="check-correct-label">Check Correct Answer(s)</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
         correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: fullModel.correctResponse == q.value}" ng-click="fullModel.correctResponse = q.value"></i>',
-        correctnessPredicate: 'fullModel.correctResponse == q.value'
+        correctnessPredicate: 'fullModel.correctResponse == q.value',
+        selectType: false,
+        showLabel: false
       }),
       '  </div>',
       '  <button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',

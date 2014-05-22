@@ -174,3 +174,16 @@
 .config-inline-choice .shuffle {
     display: block;
 }
+
+.config-inline-choice .check-correct-label {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.config-inline-choice .correct {
+    padding-left: 10px;
+}
+
+.config-inline-choice .choice-template-choice {
+    margin-bottom: 15px;
+}

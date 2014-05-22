@@ -196,7 +196,7 @@
 }
 
 .config-panel-body .check-correct-label {
-    float: right;
+    text-align: right;
     margin-bottom: 10px;
 }
 

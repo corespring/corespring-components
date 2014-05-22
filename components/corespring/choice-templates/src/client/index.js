@@ -28,7 +28,9 @@ exports.service = ['$log',
           correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]" tooltip="{{isSingleChoice() ? \'\' : \'See the scoring tab for more options\'}}"></i>',
           correctnessPredicate: "correctMap[q.value]",
           feedback: true,
-          columnWidths: []
+          columnWidths: [],
+          selectType: true,
+          showLabel: true
         };
 
         opts = _.extend(defaults, opts);
@@ -72,47 +74,55 @@ exports.service = ['$log',
         var optWidth = function(w) {
           if (!_.isEmpty(w)) {
             return 'width="' + w + '"';
+          } else {
+            return '';
           }
         };
 
-        return [
-          '  <table class="choice-template-choice">',
-          '    <tr>',
-          !_.isEmpty(opts.choice) ? '     <td '+optWidth(opts.columnWidths[0])+'>'+opts.choice+'</td>' : '',
-          '     <td class="selector" ' + optWidth(opts.columnWidths[1]) + '>',
-          '       <select class="form-control" ng-model="q.labelType">',
-          '         <option value="text">Text</option>',
-          '         <option value="image">Image</option>',
-          '       </select>',
-          '       <label class="shuffle" ng-class="{shown: model.config.shuffle}">',
-          '         <input type="checkbox" ',
-          '           ng-init="remain = q.shuffle == undefined ? false : !q.shuffle" ng-model="remain"',
-          '           ng-change="q.shuffle = !remain; resetStash()" /> Remain in place',
-          '       </label>',
-          '     </td>',
-          '     <td '+optWidth(opts.columnWidths[2])+'>',
-          '       <div style="position: relative">',
-          '       <span class="choice-remove-button" ng-click="removeQuestion(q)">',
-          '         <i class="fa fa-times-circle"></i>',
-          '       </span>',
-          '       </div>',
-          '       <div ng-switch="q.labelType">',
-          '         <input class="form-control" type="text" ng-switch-when="text" ng-model="q.label" placeholder="Enter a choice"></input>',
-          '         <span ng-switch-when="image">',
-          '           <input class="form-control" type="text" ng-model="q.imageName" placeholder="Click here to upload a .jpeg, .png or .gif file" file-uploader fu-url="getUploadUrl()" fu-upload-completed="imageUploadedToChoice(q)" fu-mode="raw" fu-max-size="1000" placeholder="Click to upload..."></input>',
-          '         </span>',
-          '         <textarea ng-switch-when="mathml" ng-model="q.mathml" ng-change="updateMathJax()"></textarea>',
-          '       </div>',
-          '     </td>',
-          '     <td '+optWidth(opts.columnWidths[3])+'>',
-          opts.correct,
-          '      </td>',
-          '    </tr>',
-          '    <tr>',
-          feedback,
-          '    </tr>',
-          '  </table>'
-        ].join('\n');
+        return _.flatten([
+          [
+            '  <table class="choice-template-choice">',
+            '    <tr>',
+            !_.isEmpty(opts.choice) && opts.showLabel ? '     <td '+optWidth(opts.columnWidths[0])+'>'+opts.choice+'</td>' : '',
+          ],
+          opts.selectType ? [
+            '     <td class="selector" ' + optWidth(opts.columnWidths[1]) + '>',
+            '       <select class="form-control" ng-model="q.labelType">',
+            '         <option value="text">Text</option>',
+            '         <option value="image">Image</option>',
+            '       </select>',
+            '       <label class="shuffle" ng-class="{shown: model.config.shuffle}">',
+            '         <input type="checkbox" ',
+            '           ng-init="remain = q.shuffle == undefined ? false : !q.shuffle" ng-model="remain"',
+            '           ng-change="q.shuffle = !remain; resetStash()" /> Remain in place',
+            '       </label>',
+            '     </td>',
+          ] : [],
+          [
+            '     <td '+optWidth(opts.columnWidths[2])+'>',
+            '       <div style="position: relative">',
+            '       <span class="choice-remove-button" ng-click="removeQuestion(q)">',
+            '         <i class="fa fa-times-circle"></i>',
+            '       </span>',
+            '       </div>',
+            '       <div ng-switch="q.labelType">',
+            '         <input class="form-control" type="text" ng-switch-when="text" ng-model="q.label" placeholder="Enter a choice"></input>',
+            '         <span ng-switch-when="image">',
+            '           <input class="form-control" type="text" ng-model="q.imageName" placeholder="Click here to upload a .jpeg, .png or .gif file" file-uploader fu-url="getUploadUrl()" fu-upload-completed="imageUploadedToChoice(q)" fu-mode="raw" fu-max-size="1000" placeholder="Click to upload..."></input>',
+            '         </span>',
+            '         <textarea ng-switch-when="mathml" ng-model="q.mathml" ng-change="updateMathJax()"></textarea>',
+            '       </div>',
+            '     </td>',
+            '     <td class="correct" '+ optWidth(opts.columnWidths[3]) + '>',
+            opts.correct,
+            '      </td>',
+            '    </tr>',
+            '    <tr>',
+            feedback,
+            '    </tr>',
+            '  </table>'
+          ]
+        ]).join('\n');
 
       };
 
