@@ -5,7 +5,9 @@ var main = [
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      link: function(scope, element, attrs) {},
+      link: function($scope, $element, $attrs) {
+
+      },
       template: [
       ].join("")
     };

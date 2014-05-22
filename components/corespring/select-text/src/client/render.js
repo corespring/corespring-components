@@ -107,7 +107,7 @@ var main = [
       link: link(),
       template: [
         '<div class="view-select-text" ng-class="{true: \'enabled\', false: \'\'}[editable]">',
-        '<h1>{{model.prompt}}</h1>',
+        '<p class="prompt">{{model.prompt}}</p>',
         '<div class="select-text-content"></div>',
         '</div>'].join("")
     };

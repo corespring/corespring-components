@@ -81,10 +81,8 @@ var buildFeedback = function(answer, correctIndexes, checkIfCorrect, selectionCo
   return feedback;
 };
 
-exports.render = function(json) {
-
+exports.preprocess = function(json) {
   json.wrappedText = exports.wrapTokensWithHtml(exports.preprocessText(json.model.text), json.model.config.selectionUnit);
-
   return json;
 };
 
