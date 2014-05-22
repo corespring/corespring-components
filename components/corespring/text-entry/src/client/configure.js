@@ -1,6 +1,7 @@
 var main = [
   '$log',
-  function($log) {
+  '$timeout',
+  function($log, $timeout) {
 
     "use strict";
 
@@ -216,6 +217,14 @@ var main = [
           var result = scope.fullModel.correctResponses ? _.sample(scope.fullModel.correctResponses.values) : "";
           return result;
         }
+
+        // Workaround for https://github.com/ivaynberg/select2/issues/291
+        $timeout(function() {
+          $('.select2-search-field input', element).each(function(i, el) {
+            el.focus();
+            el.blur();
+          });
+        }, 200);
 
       }
     };
