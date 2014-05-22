@@ -35,3 +35,22 @@
     margin:0 2px 0 2px;
     padding: 3px 4px;
 }
+
+.select-text-configuration .prompt {
+    width: 100%;
+}
+
+.root .designer .editor-container .select-text-configuration .wiggi-wiz {
+    position: relative;
+    border: 1px solid #a9a9a9;
+    margin: 20px 0;
+}
+
+.select-text-configuration label {
+    margin-right: 10px;
+}
+
+.select-text-configuration .form-control {
+    width: 110px;
+    display: inline-block;
+}
