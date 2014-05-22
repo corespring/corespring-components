@@ -83,7 +83,7 @@ exports.service = ['$log',
           [
             '  <table class="choice-template-choice">',
             '    <tr>',
-            !_.isEmpty(opts.choice) && opts.showLabel ? '     <td '+optWidth(opts.columnWidths[0])+'>'+opts.choice+'</td>' : '',
+            !_.isEmpty(opts.choice) && opts.showLabel ? ' <td ' + optWidth(opts.columnWidths[0]) + '>' + opts.choice + '</td>' : ''
           ],
           opts.selectType ? [
             '     <td class="selector" ' + optWidth(opts.columnWidths[1]) + '>',
