@@ -161,8 +161,8 @@ describe('select text server logic', function() {
     response.should.not.have.property('feedback');
   });
 
-  it('should have the tagged text in the model at the precompile phase', function() {
-    var response = server.precompile(component);
+  it('should have the tagged text in the model at the preprocess phase', function() {
+    var response = server.preprocess(component);
     response.should.have.property('wrappedText');
 
     var wt = response.wrappedText;
