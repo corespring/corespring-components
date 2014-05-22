@@ -1,8 +1,14 @@
 var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
 
+exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
+exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+
 exports.isCorrect = function(answer, correctEquation, options) {
-  var correctFunction = correctEquation.split("=")[1];
+  var correctFunction;
+  if (correctEquation.indexOf('=') >= 0) {
+    correctFunction = correctEquation.split("=")[1];
+  }
   if (answer.indexOf('=') >= 0) {
     answer = answer.split("=")[1];
   }
@@ -24,6 +30,7 @@ exports.respond = function(question, answer, settings) {
   var options = {};
   options.variable = (correctResponse.vars && correctResponse.vars.split(",")[0]) || 'x';
   options.sigfigs = correctResponse.sigfigs || 3;
+  options.ignoreSpacing = question.model.config.ignoreSpacing;
 
   var isCorrectForm = !_.isUndefined(answer.match(/y\s*=/));
   answerIsCorrect = exports.isCorrect(answer, correctResponse.equation, options);
@@ -41,6 +48,16 @@ exports.respond = function(question, answer, settings) {
     if (!isCorrectForm) {
       response.outcome.push("lineEquationMatch");
     }
+    var fbSelector = answerIsCorrect ? "correctFeedback" : "incorrectFeedback";
+    var fbTypeSelector = fbSelector + "Type";
+
+    var feedbackType = question.feedback[fbTypeSelector] || "default";
+    if (feedbackType === "custom") {
+      response.feedback = question.feedback[fbSelector];
+    } else if (feedbackType === "default") {
+      response.feedback = answerIsCorrect ? exports.DEFAULT_CORRECT_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK;
+    }
+    response.comments = question.comments;
   }
 
   return response;
