@@ -96,7 +96,7 @@ exports.service = ['$log',
             '           ng-init="remain = q.shuffle == undefined ? false : !q.shuffle" ng-model="remain"',
             '           ng-change="q.shuffle = !remain; resetStash()" /> Remain in place',
             '       </label>',
-            '     </td>',
+            '     </td>'
           ] : [],
           [
             '     <td '+optWidth(opts.columnWidths[2])+'>',
