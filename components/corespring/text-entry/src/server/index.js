@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 
-exports.isEqual = function (s1, s2, ignoreCase, ignoreWhitespace) {
+exports.isEqual = function(s1, s2, ignoreCase, ignoreWhitespace) {
   if (ignoreCase) {
     s1 = s1.toLowerCase();
     s2 = s2.toLowerCase();
@@ -15,16 +15,16 @@ exports.isEqual = function (s1, s2, ignoreCase, ignoreWhitespace) {
   return s1 === s2;
 };
 
-exports.isCorrect = function (answer, responses) {
+exports.isCorrect = function(answer, responses) {
   var ignoreCase = (responses.ignoreCase) || false;
   var ignoreWhitespace = (responses.ignoreWhitespace) || false;
 
-  return _.some(responses.values, function (a) {
+  return _.some(responses.values, function(a) {
     return exports.isEqual(answer, a, ignoreCase, ignoreWhitespace);
   });
 };
 
-exports.respond = function (question, answer, settings) {
+exports.respond = function(question, answer, settings) {
   var response;
 
   function createResponse(correctness, score, comments) {
@@ -36,23 +36,23 @@ exports.respond = function (question, answer, settings) {
     };
   }
 
-  function isCorrectResponse(response){
+  function isCorrectResponse(response) {
     return response && response.score === 1;
   }
 
-  function isIncorrectResponse(response){
+  function isIncorrectResponse(response) {
     return response && response.score === 0;
   }
 
-  function isPartialResponse(response){
+  function isPartialResponse(response) {
     return response && response.score >= 0 && response.score <= 1;
   }
 
-  function getFeedbackType(response){
+  function getFeedbackType(response) {
     return isCorrectResponse(response) ? "correct" : (isIncorrectResponse(response) ? "incorrect" : "partial");
   }
 
-  function getFeedbackTemplate(question,response) {
+  function getFeedbackTemplate(question, response) {
     var feedbackTemplate = "";
     if (isCorrectResponse(response)) {
       feedbackTemplate = question.correctResponses.feedback.value;
@@ -65,7 +65,7 @@ exports.respond = function (question, answer, settings) {
   }
 
   function createFeedbackMessage(question, response) {
-    var feedbackTemplate = getFeedbackTemplate(question,response);
+    var feedbackTemplate = getFeedbackTemplate(question, response);
     var result = replaceVariables(feedbackTemplate, question);
     return result;
   }
@@ -98,6 +98,6 @@ exports.respond = function (question, answer, settings) {
     };
   }
 
-  console.log("text-entry.respond", response);
+  console.log("text-entry.respond" + response);
   return response;
 };

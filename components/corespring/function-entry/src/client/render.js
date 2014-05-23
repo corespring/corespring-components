@@ -12,7 +12,6 @@ link = function() {
         scope.session = dataAndSession.session || {};
 
         scope.answer = scope.session.answers;
-
       },
 
       getSession: function() {
@@ -76,6 +75,19 @@ main = [
       replace: true,
       link: link(),
       template: ['<div class="view-function-entry">',
+        '<div ng-show="question.config.showFormattingHelp">',
+        '  <div ng-click="helpOn = !helpOn" style="margin-top: 10px">',
+        '    <i class="fa fa-{{helpOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Show Acceptable Formats</span>',
+        '  </div>',
+        '  <ul ng-show="helpOn" class="well format-help">',
+        '     <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
+        '     <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
+        '     <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
+        '     <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
+        '     <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
+        '     <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
+        '  </ul>',
+        '</div>',
         '<input type="text" ng-model="answer" class="form-control text-input {{correctClass}}"/>',
         '<div ng-show="feedback" class="feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '<div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',

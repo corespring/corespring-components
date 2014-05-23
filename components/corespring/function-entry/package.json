@@ -13,5 +13,6 @@
   "name": "function-entry",
   "title": "Evaluate an Equation",
   "titleGroup": "Mathematics",
-  "organization": "corespring"
+  "organization": "corespring",
+  "released": true
 }

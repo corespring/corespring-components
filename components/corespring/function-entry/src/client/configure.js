@@ -13,6 +13,10 @@ var main = [
       '         <div class="cs-function-entry-cfg__answers-holder">',
       '           <input type="text" class="form-control" ng-model="fullModel.correctResponse.equation" />',
       '         </div>',
+      '         <div class="cs-function-entry-cfg__answers-holder pull-right">',
+      '           <a tooltip="Help Tooltip Placeholder" tooltip-placement="left">Help</a>',
+      '         </div>',
+      '         <div class="clearfix"></div>',
       '         <div class="cs-function-entry-cfg__answers-holder">',
       '           <input id="ignoreSpacing" type="checkbox" ng-model="fullModel.model.config.ignoreSpacing" />',
       '           <label for="ignoreSpacing">Ignore Spacing</label>',
@@ -93,12 +97,7 @@ var main = [
 
         scope.containerBridge = {
           setModel: function(fullModel) {
-            fullModel.correctResponses = fullModel.correctResponses || createResponsesModel(100);
-            fullModel.partialResponses = fullModel.partialResponses || createResponsesModel(25);
-            fullModel.incorrectResponses = fullModel.incorrectResponses || createResponsesModel(0);
             fullModel.model = fullModel.model || {};
-            fullModel.model.answerBlankSize = fullModel.model.answerBlankSize || 8;
-            fullModel.model.answerAlignment = fullModel.model.answerAlignment || 'left';
             scope.fullModel = fullModel;
           },
 
@@ -109,11 +108,6 @@ var main = [
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
-        function initFeedbacks() {
-          scope.defaultCorrectFeedback = replaceVariables(defaultCorrectFeedback);
-          scope.defaultPartialFeedback = replaceVariables(defaultPartialFeedback);
-          scope.defaultIncorrectFeedback = replaceVariables(defaultIncorrectFeedback);
-        }
       }
     };
   }
