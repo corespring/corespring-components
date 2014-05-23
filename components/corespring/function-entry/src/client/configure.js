@@ -93,12 +93,7 @@ var main = [
 
         scope.containerBridge = {
           setModel: function(fullModel) {
-            fullModel.correctResponses = fullModel.correctResponses || createResponsesModel(100);
-            fullModel.partialResponses = fullModel.partialResponses || createResponsesModel(25);
-            fullModel.incorrectResponses = fullModel.incorrectResponses || createResponsesModel(0);
             fullModel.model = fullModel.model || {};
-            fullModel.model.answerBlankSize = fullModel.model.answerBlankSize || 8;
-            fullModel.model.answerAlignment = fullModel.model.answerAlignment || 'left';
             scope.fullModel = fullModel;
           },
 
@@ -109,11 +104,6 @@ var main = [
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
-        function initFeedbacks() {
-          scope.defaultCorrectFeedback = replaceVariables(defaultCorrectFeedback);
-          scope.defaultPartialFeedback = replaceVariables(defaultPartialFeedback);
-          scope.defaultIncorrectFeedback = replaceVariables(defaultIncorrectFeedback);
-        }
       }
     };
   }

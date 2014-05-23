@@ -1,3 +1,5 @@
+/* jslint evil: true */
+
 var _ = require('lodash');
 var mathjs = require('mathjs')();
 

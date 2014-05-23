@@ -23,6 +23,10 @@ component = {
   componentType: "corespring-function-entry",
   correctResponse: {
     equation: "y=2x+4"
+  },
+  model: {
+    config: {
+    }
   }
 };
 
