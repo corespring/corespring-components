@@ -1,12 +1,17 @@
 {
-  "componentType": "corespring-text-entry",
-  "correctResponse": "2",
-  "title": "Text Entry",
+  "componentType" : "corespring-function-entry",
+  "title": "Function Entry",
+  "weight" : 1,
   "feedback" :  {
+    "correctFeedbackType": "default",
+    "incorrectFeedbackType": "default"
   },
-  "model": {
+  "correctResponse" : {
+    "equation": "y=x+1"
+  },
+  "model" : {
     "config": {
-    },
-    "prompt": "Add your question here..."
+      "ignoreSpacing": true
+    }
   }
 }
