@@ -21,6 +21,13 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
 
+    webdriver:
+      options:
+        desiredCapabilities:
+          browserName: 'chrome'
+      regression:
+        tests: ['components/**/regression/*.js']
+
     jasmine:
       unit:
         src: '<%= grunt.config("testClient.wrapped") %>'
@@ -94,15 +101,16 @@ module.exports = (grunt) ->
     'grunt-contrib-jasmine',
     'grunt-contrib-clean',
     'grunt-mocha-test',
+    'grunt-webdriver',
     'grunt-contrib-watch',
     'grunt-contrib-jshint',
     'grunt-jsbeautifier'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
-  grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
+  grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient', 'webdriver'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
-  grunt.registerTask('testserver', 'test server side js', 'mochaTest' )
+  grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
 
 
