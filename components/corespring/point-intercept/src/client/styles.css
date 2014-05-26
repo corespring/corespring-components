@@ -160,3 +160,14 @@
     background-color: #eeeeff;
 }
 
+.point-intercept-configuration .reset-defaults {
+  display: inline-block;
+  margin: 0 0 20px 25px;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.point-intercept-configuration .graph-attributes-usage-section {
+  margin: 0 0 15px 8px;
+  font-style: italic;
+}
