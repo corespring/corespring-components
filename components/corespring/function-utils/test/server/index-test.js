@@ -127,4 +127,10 @@ describe('linear function equal logic', function() {
       sigfigs: 4
     }).should.eql(false);
   });
+
+  it('invalid equation should evaluate to incorrect', function() {
+    var eq1 = "3x+5";
+    var eq2 = "something";
+    server.isFunctionEqual(eq1, eq2).should.eql(false);
+  });
 });
