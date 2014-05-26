@@ -101,6 +101,7 @@ exports.isFunctionEqual = function(eq1, eq2, options) {
     } catch (e) {
       console.log('error: ' + e);
       // evaluation error in x
+      return true;
     }
     return false;
   });
