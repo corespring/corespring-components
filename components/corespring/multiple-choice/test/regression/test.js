@@ -7,12 +7,9 @@ describe('multiple-choice', function() {
 
   beforeEach(function() {
     var app = express();
-
     app.use(express.static(__dirname + '/../../src/client'));
-
     app.listen(3000);
-
-  })
+  });
 
   it('displays correct feedback when answered', function(done) {
 
