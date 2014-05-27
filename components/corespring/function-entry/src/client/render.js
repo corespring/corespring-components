@@ -77,7 +77,7 @@ main = [
       template: ['<div class="view-function-entry">',
         '<div ng-show="question.config.showFormattingHelp">',
         '  <div ng-click="helpOn = !helpOn" style="margin-top: 10px">',
-        '    <i class="fa fa-{{helpOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Show Acceptable Formats</span>',
+        '    <i class="fa fa-{{helpOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Help</span>',
         '  </div>',
         '  <ul ng-show="helpOn" class="well format-help">',
         '     <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
