@@ -58,6 +58,10 @@
 
 
 /* Config Panel */
+.cs-function-entry-cfg .description {
+    margin-bottom: 10px;
+}
+
 .cs-function-entry-cfg .well {
     padding: 8px;
 }
