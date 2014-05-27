@@ -1,8 +1,22 @@
 var main = [
-  '$log', 'ServerLogic',
-  function($log, ServerLogic) {
+  '$log', 'ServerLogic', 'MathJaxService',
+  function($log, ServerLogic, MathJaxService) {
 
     "use strict";
+
+    var equationGuide = [
+      '<div  class="well">',
+      '  <a ng-click="hideHints = !hideHints">{{hideHints ? \'Show\' : \'Hide\'}} Formatting Hints</a>',
+      '  <div ng-hide="hideHints">',
+      '    <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
+      '    <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
+      '    <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
+      '    <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
+      '    <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
+      '    <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
+      '  </div>',
+      '</div>'
+    ].join('');
 
     var designPanel = [
       ' <div navigator-panel="Design">',
@@ -10,21 +24,27 @@ var main = [
       '     <div class="input-holder">',
       '       <div class="body">',
       '         <div class="description">This interaction requires a student to evaluate a linear or polynomial equation.</div>',
-      '         <div class="section-header">Correct Answer</div>',
-      '         <div class="cs-function-entry-cfg__answers-holder">',
-      '           <input type="text" class="form-control" ng-model="fullModel.correctResponse.equation" placeholder="Enter the correct equation here."/>',
-      '         </div>',
-      '         <div class="cs-function-entry-cfg__answers-holder">',
-      '           <a tooltip="Acceptable equation formats" tooltip-placement="right">Help</a>',
-      '         </div>',
-      '         <div class="clearfix"></div>',
-      '         <div class="cs-function-entry-cfg__answers-holder">',
-      '           <input id="ignoreSpacing" type="checkbox" ng-model="fullModel.model.config.ignoreSpacing" />',
-      '           <label for="ignoreSpacing">Ignore Spacing</label>',
-      '         </div>',
-      '         <div class="cs-function-entry-cfg__answers-holder">',
-      '           <input id="showHelp" type="checkbox" ng-model="fullModel.model.config.showFormattingHelp" />',
-      '           <label for="showHelp">Show student formatting help</label>',
+      '         <div class="description"> The equation entered below is evaluated as an equation of the form y=f(x) where y is the dependent variable and f(x) is some function where x is the independent variable.</div>',
+      '         <div class="flex-container">',
+      '           <div class="flex-item">',
+      '             <div class="section-header">Correct Answer',
+      '               <a class="help-questionmark" tooltip-html-unsafe="The Correct Answer given below will be used to generate the test points. The test points are created by replacing the <i>x</i> value within the function with random whole numbers within the domain." tooltip-placement="right"><i class="fa fa-question-circle"></i></a>',
+      '             </div>',
+      '             <div class="">',
+      '               <span class="">y = </span>',
+      '               <span>',
+      '               <input type="text" class="form-control equation-input" ng-model="fullModel.correctResponse.equation" placeholder="Enter the correct equation here."/>',
+      '               </span>',
+      '             </div>',
+      '             <div class="clearfix"></div>',
+      '             <div class="cs-function-entry-cfg__answers-holder">',
+      '               <input id="showHelp" type="checkbox" ng-model="fullModel.model.config.showFormattingHelp" />',
+      '               <label for="showHelp">Show student formatting help</label>',
+      '             </div>',
+      '           </div>',
+      '           <div class="flex-item"><br/>',
+      equationGuide,
+      '           </div>',
       '         </div>',
 
       '         <div ng-click="feedbackOn = !feedbackOn" style="margin-top: 10px"><i',
@@ -108,7 +128,7 @@ var main = [
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
-
+        MathJaxService.parseDomForMath();
       }
     };
   }

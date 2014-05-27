@@ -5,7 +5,7 @@ exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
 exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
 
 exports.isCorrect = function(answer, correctEquation, options) {
-  var correctFunction;
+  var correctFunction = correctEquation;
   if (correctEquation.indexOf('=') >= 0) {
     correctFunction = correctEquation.split("=")[1];
   }
@@ -30,7 +30,6 @@ exports.respond = function(question, answer, settings) {
   var options = {};
   options.variable = (correctResponse.vars && correctResponse.vars.split(",")[0]) || 'x';
   options.sigfigs = correctResponse.sigfigs || 3;
-  options.ignoreSpacing = question.model.config.ignoreSpacing;
 
   var isCorrectForm = !_.isUndefined(answer.match(/y\s*=/));
   answerIsCorrect = exports.isCorrect(answer, correctResponse.equation, options);
