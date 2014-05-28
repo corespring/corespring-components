@@ -5,7 +5,10 @@ var fs = require('fs');
 var _ = require('lodash');
 
 // Is there an better Node way of doing this that I don't know about?
-var RegressionHelper = require('./../../../../../helper-libs/regression-helper');
+var RegressionHelper = (function() {
+  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
+  return new RegressionHelperDef(baseUrl)
+})();
 
 describe('multiple-choice', function() {
 

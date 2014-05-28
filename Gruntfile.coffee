@@ -9,7 +9,8 @@ local = false
 
 module.exports = (grunt) ->
 
-  local = grunt.option("local") isnt false
+  local = grunt.option('local') isnt false
+  GLOBAL.baseUrl = (if grunt.option('baseUrl') then grunt.option('baseUrl') else "http://localhost:9000")
 
   corespringCore = grunt.option("corespringCore") ||  "../modules/container-client/src/main/resources/container-client/js/corespring/core.js"
 
