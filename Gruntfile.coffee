@@ -5,8 +5,11 @@ _ = require "lodash"
 utils = require "./lib/utils"
 testClient = require "./lib/test-client"
 
+local = false
 
 module.exports = (grunt) ->
+
+  local = grunt.option("local") isnt false
 
   corespringCore = grunt.option("corespringCore") ||  "../modules/container-client/src/main/resources/container-client/js/corespring/core.js"
 
@@ -16,15 +19,27 @@ module.exports = (grunt) ->
     componentPath: grunt.config("componentPath") || "components"
     corespringCore: corespringCore
 
+  localWebdriverOptions =
+    desiredCapabilities:
+      browserName: 'chrome'
+
+  sauceLabsWebdriverOptions =
+    host: 'ondemand.saucelabs.com',
+    port: 80,
+    user: process.env.SAUCE_USERNAME,
+    key: process.env.SAUCE_ACCESS_KEY,
+    desiredCapabilities:
+      platform: 'OS X 10.8',
+      browserName: 'chrome',
+      'tunnel-identifier': 'regression-tunnel'
+
   config =
 
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
 
     webdriver:
-      options:
-        desiredCapabilities:
-          browserName: 'chrome'
+      options: if local then localWebdriverOptions else sauceLabsWebdriverOptions
       regression:
         tests: ['components/**/regression/*.js']
 
