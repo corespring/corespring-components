@@ -5,8 +5,6 @@ _ = require "lodash"
 utils = require "./lib/utils"
 testClient = require "./lib/test-client"
 
-local = false
-
 module.exports = (grunt) ->
 
   local = grunt.option('local') isnt false

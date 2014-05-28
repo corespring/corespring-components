@@ -35,9 +35,11 @@ First ensure that you have all the dependencies installed:
     bower install
 
 
-If you want to run the functional tests, the
+If you want to run the functional tests, then ensure that you have a version of
+[corespring-container](https://github.com/corespring/corespring-container) running on your local machine at port 9000.
+Alternatively, you can run the regression tests against a different url by passing the `--baseUrl` argument.
     
-Then you can use the following test commands:
+You can use the following test commands:
 
     # Test all components (server side and client side)
     grunt test
