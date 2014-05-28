@@ -98,8 +98,9 @@ main = [
       link: link(),
       template: [
         '<div class="view-function-entry">',
-        '  <span class="text-input">',
-        '    <input type="text" ng-model="answer" class="form-control {{correctClass}}" ng-mouseover="showTooltip($event)" tooltip-html-unsafe="{{tooltipText()}}" tooltip-placement="bottom" />',
+        '  <span class="text-input" ng-mouseover="showTooltip($event)" tooltip-html-unsafe="{{tooltipText()}}" tooltip-placement="bottom" >',
+        // angular tooltip spawns child scope so we need to access it through $parent
+        '    <input type="text" ng-model="$parent.answer" class="form-control {{correctClass}}" />',
         '  </span>',
         '  <div ng-show="feedback" class="feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
