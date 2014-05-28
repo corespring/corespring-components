@@ -22,7 +22,7 @@ var main = [
       'with random whole numbers within the domain. ',
       'The <i>y</i> value is then determined by evaluating the equation using the javascript eval function. ',
       'This is done many times (~50) in order to be sure of the correctness.The test points then replace the ',
-      'dependent and independent variables (<i>x</i> and <i>y</i>) in the response.',
+      'dependent and independent variables (<i>x</i> and <i>y</i>) in the response.'
     ].join('');
 
     var designPanel = [
