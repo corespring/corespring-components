@@ -33,6 +33,9 @@ First ensure that you have all the dependencies installed:
     sudo npm install grunt-cli
     npm install
     bower install
+
+
+If you want to run the functional tests, the
     
 Then you can use the following test commands:
 
@@ -55,3 +58,8 @@ Then you can use the following test commands:
     --componentPath=path_to_comps (default: ../components) - the path to the components folder
     --keepWrapped=true|false (default: false) - keep the generated js files
 
+    # Run functional tests
+    grunt webdriver
+
+    # Run functional tests against SauceLabs with a non-local base URL
+    grunt webdriver --local=false --baseUrl=http://corespring-container-devt.herokuapp.com
