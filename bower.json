@@ -12,8 +12,7 @@
     "lodash": "~2.4.1",
     "ckeditor": "~4.3.3",
     "saxjs": "https://github.com/isaacs/sax-js.git",
-    "headjs": "~1.0.3",
-    "express": "latest"
+    "headjs": "~1.0.3"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.15",
