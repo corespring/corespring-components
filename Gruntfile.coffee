@@ -124,7 +124,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
-  grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient', 'webdriver'])
+  grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
