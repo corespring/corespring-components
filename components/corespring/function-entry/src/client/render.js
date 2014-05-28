@@ -3,6 +3,7 @@ var link, main;
 link = function() {
   return function(scope, element, attrs) {
 
+    scope.helpOn = false;
     scope.editable = true;
 
     scope.containerBridge = {
@@ -12,7 +13,6 @@ link = function() {
         scope.session = dataAndSession.session || {};
 
         scope.answer = scope.session.answers;
-        scope.helpOn = true;
       },
 
       getSession: function() {
@@ -78,7 +78,7 @@ main = [
       template: [
         '<div class="view-function-entry">',
         '  <span class="text-input">',
-        '    <input type="text" ng-model="answer" class="form-control {{correctClass}}"/>',
+        '    <input type="text" ng-model="answer" class="form-control {{correctClass}}" popover-html-unsafe="Kaka<i>Matyi</i>"/>',
         '  </span>',
         '  <div ng-show="question.config.showFormattingHelp" style="display: inline-block; vertical-align: top; margin-left: 10px">',
         '    <div ng-click="helpOn = !helpOn">',
