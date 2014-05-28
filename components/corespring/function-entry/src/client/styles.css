@@ -1,12 +1,12 @@
 /** editor placeholder */
 .component-placeholder.corespring-function-entry {
-    display: block;
+    display: inline-block;
     max-width: 200px;
     margin-right: 10px;
 }
 
 .view-function-entry {
-    display: block;
+    display: inline-block;
     margin: 0 8px 0 3px;
 }
 
