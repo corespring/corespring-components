@@ -41,7 +41,7 @@ var main = [
       '             <div class="">',
       '               <span class="">y = </span>',
       '               <span>',
-      '               <input type="text" class="form-control equation-input" ng-model="fullModel.correctResponse.equation" placeholder="Enter the correct equation here."/>',
+      '               <input type="text" class="form-control equation-input" ng-model="fullModel.correctResponse.equation" placeholder="Enter the equation here."/>',
       '               </span>',
       '             </div>',
       '             <div class="clearfix"></div>',

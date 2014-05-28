@@ -7,9 +7,25 @@ main = [
     link = function() {
       return function(scope, element, attrs) {
 
+        scope.tooltipText = function() {
+          if (scope.question && scope.question.config.showFormattingHelp) {
+            return [
+              '<ul style=\'text-align: left\'>',
+              '   <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
+              '   <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
+              '   <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
+              '   <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
+              '   <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
+              '   <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
+              '</ul>'
+            ].join('');
+          } else {
+            return '';
+          }
+        };
+
+
         scope.showTooltip = function(ev) {
-          var inputElement = $(ev.target);
-          inputElement.tooltip('show');
           setTimeout(function() {
             MathJaxService.parseDomForMath();
           }, 10);
@@ -74,17 +90,6 @@ main = [
       };
     };
 
-    var hintTooltip = [
-      '<ul style=\'text-align: left\'>',
-      '   <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
-      '   <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
-      '   <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
-      '   <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
-      '   <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
-      '   <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
-      '</ul>'
-    ].join('');
-
     var def;
     def = {
       scope: {},
@@ -94,7 +99,7 @@ main = [
       template: [
         '<div class="view-function-entry">',
         '  <span class="text-input">',
-          '    <input type="text" ng-model="answer" class="form-control {{correctClass}}" ng-mouseover="showTooltip($event)" tooltip-html-unsafe="' + hintTooltip + '" tooltip-placement="bottom" />',
+        '    <input type="text" ng-model="answer" class="form-control {{correctClass}}" ng-mouseover="showTooltip($event)" tooltip-html-unsafe="{{tooltipText()}}" tooltip-placement="bottom" />',
         '  </span>',
         '  <div ng-show="feedback" class="feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
@@ -103,7 +108,8 @@ main = [
 
     return def;
   }
-];
+]
+;
 
 exports.framework = 'angular';
 exports.directive = main;

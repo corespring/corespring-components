@@ -87,9 +87,6 @@
     padding-bottom: 10px;
 }
 
-
-
-
 .cs-function-entry-cfg .flex-container {
     padding: 0;
     margin: 0;
@@ -106,5 +103,8 @@
     flex: 1;
     padding: 5px;
     margin-top: 10px;
+}
 
+.tooltip-inner {
+    max-width: 350px;
 }
