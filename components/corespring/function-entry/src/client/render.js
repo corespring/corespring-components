@@ -77,9 +77,12 @@ main = [
       link: link(),
       template: [
         '<div class="view-function-entry">',
-        '  <div ng-show="question.config.showFormattingHelp">',
-        '    <div ng-click="helpOn = !helpOn" style="margin-top: 10px">',
-        '      <i class="fa fa-{{helpOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Help</span>',
+        '  <span class="text-input">',
+        '    <input type="text" ng-model="answer" class="form-control {{correctClass}}"/>',
+        '  </span>',
+        '  <div ng-show="question.config.showFormattingHelp" style="display: inline-block; vertical-align: top; margin-left: 10px">',
+        '    <div ng-click="helpOn = !helpOn">',
+        '      <a>{{helpOn ? \'Hide\' : \'Show\'}} Formatting Help</a>',
         '    </div>',
         '    <ul ng-show="helpOn" class="well format-help">',
         '       <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
@@ -90,7 +93,6 @@ main = [
         '       <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
         '    </ul>',
         '  </div>',
-        '  <input type="text" ng-model="answer" class="form-control text-input {{correctClass}}"/>',
         '  <div ng-show="feedback" class="feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
         '</div>'].join("\n")

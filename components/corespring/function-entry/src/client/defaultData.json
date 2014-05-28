@@ -7,7 +7,7 @@
     "incorrectFeedbackType": "default"
   },
   "correctResponse" : {
-    "equation": "y=x+1"
+    "equation": ""
   },
   "model" : {
     "config": {

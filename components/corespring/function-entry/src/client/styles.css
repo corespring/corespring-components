@@ -12,6 +12,8 @@
 
 .view-function-entry .text-input {
     width: auto;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .view-function-entry .format-help {
