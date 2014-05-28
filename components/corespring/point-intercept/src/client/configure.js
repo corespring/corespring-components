@@ -32,6 +32,7 @@ var main = ['ServerLogic',
       '<div class="input-holder">',
       '  <div class="header">Graph Attributes</div>',
       '  <div class="body">',
+      '  <div class="graph-attributes-usage-section">Use this section to setup the graph area</div>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       labelWithInput({

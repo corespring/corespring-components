@@ -7,11 +7,12 @@
     "incorrectFeedbackType": "default"
   },
   "correctResponse" : {
-    "equation": "y=x+1"
+    "equation": ""
   },
   "model" : {
     "config": {
-      "ignoreSpacing": true
+      "ignoreSpacing": true,
+      "showFormattingHelp": true
     }
   }
 }

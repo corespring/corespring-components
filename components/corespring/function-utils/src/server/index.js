@@ -32,10 +32,8 @@ var replaceVar = function(expression, variable) {
   return expression;
 };
 
-exports.expressionize = function(eq, varname, ignoreSpacing) {
-  if (_.isUndefined(ignoreSpacing) || ignoreSpacing === true) {
-    eq = trimSpaces(eq);
-  }
+exports.expressionize = function(eq, varname) {
+  eq = trimSpaces(eq);
   eq = replaceVar(eq, varname);
   return eq;
 };
@@ -84,8 +82,8 @@ exports.isFunctionEqual = function(eq1, eq2, options) {
   var sigfigs = options.sigfigs || 3;
   var numberOfTestPoints = options.numberOfTestPoints || 50;
 
-  var eq1r = exports.expressionize(eq1, variable, options.ignoreSpacing);
-  var eq2r = exports.expressionize(eq2, variable, options.ignoreSpacing);
+  var eq1r = exports.expressionize(eq1, variable);
+  var eq2r = exports.expressionize(eq2, variable);
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
@@ -101,6 +99,7 @@ exports.isFunctionEqual = function(eq1, eq2, options) {
     } catch (e) {
       console.log('error: ' + e);
       // evaluation error in x
+      return true;
     }
     return false;
   });

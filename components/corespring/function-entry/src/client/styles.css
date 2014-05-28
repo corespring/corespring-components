@@ -1,22 +1,24 @@
 /** editor placeholder */
 .component-placeholder.corespring-function-entry {
-    display: block;
+    display: inline-block;
     max-width: 200px;
     margin-right: 10px;
 }
 
 .view-function-entry {
-    display: block;
+    display: inline-block;
     margin: 0 8px 0 3px;
 }
 
 .view-function-entry .text-input {
     width: auto;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .view-function-entry .format-help {
     padding-left: 30px;
-    max-width: 280px;
+    width: 280px;
     line-height: 30px;
 }
 
@@ -58,6 +60,10 @@
 
 
 /* Config Panel */
+.cs-function-entry-cfg .description {
+    margin-bottom: 10px;
+}
+
 .cs-function-entry-cfg .well {
     padding: 8px;
 }
@@ -66,7 +72,39 @@
     padding: 10px 10px 0px 10px;
 }
 
+.cs-function-entry-cfg .help-questionmark {
+    position: absolute;
+    margin-top: -5px;
+    margin-left: 5px;
+}
+
+.cs-function-entry-cfg .equation-input {
+    display: inline-block;
+    width: 90%;
+}
+
 .cs-function-entry-cfg__answers-holder {
     padding-bottom: 10px;
 }
 
+.cs-function-entry-cfg .flex-container {
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.cs-function-entry-cfg .flex-item {
+    flex: 1;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.tooltip-inner {
+    max-width: 350px;
+}
