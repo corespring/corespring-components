@@ -34,6 +34,8 @@
     margin: 3px 3px 1px 1px;
     padding: 8px;
     text-align: center;
+    max-width: 500px;
+    overflow: hidden;
 }
 
 .view-drag-and-drop .choice:hover {
@@ -69,6 +71,12 @@
 .view-drag-and-drop .label-sizer-holder {
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.view-drag-and-drop .sizerHolder {
+    visibility: hidden;
+    position: fixed;
+    max-width: 500px;
 }
 
 .view-drag-and-drop .landingLabel,

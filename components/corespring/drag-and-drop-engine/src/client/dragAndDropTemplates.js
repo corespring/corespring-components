@@ -22,7 +22,7 @@ exports.service = [ '$log', function($log) {
         '         <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
         '         <div ng-switch-default="" ng-bind-html-unsafe="o.label" />',
         '       </div>',
-        '       <div class="sizerHolder" style="display: none; position: absolute" ng-switch="o.labelType">',
+        '       <div class="sizerHolder" ng-switch="o.labelType">',
         '         <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
         '         <div ng-switch-default="" ng-bind-html-unsafe="o.label" />',
         '       </div>',

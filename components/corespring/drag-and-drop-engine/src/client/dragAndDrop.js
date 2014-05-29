@@ -59,7 +59,7 @@ var dragAndDropController = [
               }
             });
             if (lastW !== w || lastH !== h) {
-              scope.propagateDimension(w + 18, h);
+              scope.propagateDimension(w + 8, h);
             }
             lastW = w;
             lastH = h;
