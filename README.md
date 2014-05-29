@@ -33,8 +33,13 @@ First ensure that you have all the dependencies installed:
     sudo npm install grunt-cli
     npm install
     bower install
+
+
+If you want to run the functional tests, then ensure that you have a version of
+[corespring-container](https://github.com/corespring/corespring-container) running on your local machine at port 9000.
+Alternatively, you can run the regression tests against a different url by passing the `--baseUrl` argument.
     
-Then you can use the following test commands:
+You can use the following test commands:
 
     # Test all components (server side and client side)
     grunt test
@@ -55,3 +60,8 @@ Then you can use the following test commands:
     --componentPath=path_to_comps (default: ../components) - the path to the components folder
     --keepWrapped=true|false (default: false) - keep the generated js files
 
+    # Run functional tests
+    grunt webdriver
+
+    # Run functional tests against SauceLabs with a non-local base URL
+    grunt webdriver --local=false --baseUrl=http://corespring-container-devt.herokuapp.com

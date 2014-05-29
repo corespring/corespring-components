@@ -5,8 +5,10 @@ _ = require "lodash"
 utils = require "./lib/utils"
 testClient = require "./lib/test-client"
 
-
 module.exports = (grunt) ->
+
+  local = grunt.option('local') isnt false
+  GLOBAL.baseUrl = (if grunt.option('baseUrl') then grunt.option('baseUrl') else "http://localhost:9000")
 
   corespringCore = grunt.option("corespringCore") ||  "../modules/container-client/src/main/resources/container-client/js/corespring/core.js"
 
@@ -16,10 +18,29 @@ module.exports = (grunt) ->
     componentPath: grunt.config("componentPath") || "components"
     corespringCore: corespringCore
 
+  localWebdriverOptions =
+    desiredCapabilities:
+      browserName: 'chrome'
+
+  sauceLabsWebdriverOptions =
+    host: 'ondemand.saucelabs.com',
+    port: 80,
+    user: process.env.SAUCE_USERNAME,
+    key: process.env.SAUCE_ACCESS_KEY,
+    desiredCapabilities:
+      platform: 'OS X 10.8',
+      browserName: 'chrome',
+      'tunnel-identifier': 'regression-tunnel'
+
   config =
 
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
+
+    webdriver:
+      options: if local then localWebdriverOptions else sauceLabsWebdriverOptions
+      regression:
+        tests: ['components/**/regression/*.js']
 
     jasmine:
       unit:
@@ -94,6 +115,7 @@ module.exports = (grunt) ->
     'grunt-contrib-jasmine',
     'grunt-contrib-clean',
     'grunt-mocha-test',
+    'grunt-webdriver',
     'grunt-contrib-watch',
     'grunt-contrib-jshint',
     'grunt-jsbeautifier'
@@ -102,7 +124,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks(t) for t in npmTasks
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
-  grunt.registerTask('testserver', 'test server side js', 'mochaTest' )
+  grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
 
 
