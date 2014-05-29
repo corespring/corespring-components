@@ -98,3 +98,7 @@
 .cs-text-entry-cfg__responses-input--dropdown-noshow {
   display: none !important;
 }
+
+.cs-text-entry-cfg .answer-blank-size-input {
+  margin: 0 0 10px 10px;
+}
