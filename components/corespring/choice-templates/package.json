@@ -2,8 +2,10 @@
   "name": "choice-templates",
   "organization": "corespring",
   "purpose" : "library",
-  "libraries": [{
-    "name": "image-service",
-    "organization": "corespring"
-  }]
+  "libraries": [
+    {
+      "name": "image-service",
+      "organization": "corespring"
+    }
+  ]
 }
