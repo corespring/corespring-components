@@ -43,7 +43,7 @@ var main = [
       ChoiceTemplates.choice({
         correct: '<select bootstrap-multiselect="{{componentState}}" multiple="true" ng-model="correctMap[q.id]" ng-options="c.label for c in model.categories"></select>',
         feedback: false,
-        columnWidths: ["100px", "100px", "", "100px"]
+        columnWidths: ["100px", "100%", "", "100px"]
       }),
       '    <div style="padding-left: 210px">',
       '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',

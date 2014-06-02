@@ -34,11 +34,6 @@ var main = [
     var answerArea = function() {
       return [
           '<textarea ng-model="model.answerArea" rows="5" style="width: 100%"></textarea>',
-//        '<ol class="drag-and-drop-answers" >',
-//        '<li ng-repeat="c in answers" class="col-lg-4" >',
-//        '<div class="answer-placeholder" answer-popover ng-model="c" active-popover="activePopover">Click to configure</div>',
-//        '</li>',
-//        '</ol>',
         '<div class="clearfix"></div>',
         '  <button class=\"btn\" ng-click=\"addAnswer()\">Add an Answer Blank</button>'
         ].join("");
