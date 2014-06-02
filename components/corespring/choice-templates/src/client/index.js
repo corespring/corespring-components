@@ -2,10 +2,8 @@
 // service: ChoiceTemplates 
 
 exports.framework = "angular";
-exports.service = ['$log', 'ImageService',
-  function($log, ImageService) {
-
-    ImageService.test();
+exports.service = ['$log',
+  function($log) {
 
     var ChoiceTemplates = function() {
 
