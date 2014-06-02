@@ -1,6 +1,6 @@
 var main = [
-  "ChoiceTemplates", 'ServerLogic',
-  function(ChoiceTemplates, ServerLogic) {
+  "ChoiceTemplates", 'ServerLogic', 'MathJaxService',
+  function(ChoiceTemplates, ServerLogic, MathJaxService) {
     var input, inputs, template;
 
     input = function(attrs, label) {
@@ -43,7 +43,7 @@ var main = [
       ChoiceTemplates.choice({
         correct: '<select bootstrap-multiselect="{{componentState}}" multiple="true" ng-model="correctMap[q.id]" ng-options="c.label for c in model.categories"></select>',
         feedback: false,
-        columnWidths: ["100px", "100px", "", "100px"]
+        columnWidths: ["100px", "100%", "", "100px"]
       }),
       '    <div style="padding-left: 210px">',
       '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
@@ -299,6 +299,10 @@ var main = [
           delete $scope.fullModel.correctResponse[category.id];
 
         };
+
+        $scope.$watch('model', function() {
+          MathJaxService.parseDomForMath(0);
+        }, true);
 
         $scope.addCategory = function() {
           var idx = $scope.model.categories.length + 1;

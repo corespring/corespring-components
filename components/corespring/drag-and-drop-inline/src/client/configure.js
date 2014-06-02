@@ -24,9 +24,9 @@ var main = [
         choice: '',
         correct: '',
         feedback: false,
-        columnWidths: ["100px", "100px", "", "100px"]
+        columnWidths: ["100px", "100%"]
       }),
-      '    <div style="padding-left: 110px">',
+      '    <div>',
       '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
       '      <label for="moveOnDrag{{$index}}">Remove tile after placing</label>',
       '    </div>',
@@ -166,7 +166,7 @@ var main = [
     ].join("");
 
     template = [
-      '<div class="drag-and-drop-config-panel" choice-template-controller="">',
+      '<div class="drag-and-drop-config-panel drag-and-drop-inline-config-panel" choice-template-controller="">',
       '  <div navigator="">',
       '    <div navigator-panel="Design">',
       '      <div class="description">',

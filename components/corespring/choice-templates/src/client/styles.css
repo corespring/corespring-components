@@ -41,11 +41,11 @@
     width: 205px;
 }
 
-.choice-template-choice .selector .shuffle {
+.choice-template-choice .shuffle {
     visibility: hidden;
 }
 
-.choice-template-choice .selector .shuffle.shown {
+.choice-template-choice .shuffle.shown {
     visibility: visible;
 }
 
@@ -113,6 +113,14 @@
 
 .choice-template-scoring-section .invalid {
     background-color: #ffdcdc;
+}
+
+.choice-template-choice .choice-wrapper {
+    position: relative;
+}
+
+.choice-template-choice .choice-wrapper .choice-remove-button {
+    z-index: 2;
 }
 
 .scoring-header-text {

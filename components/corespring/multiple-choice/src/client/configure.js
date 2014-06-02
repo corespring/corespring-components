@@ -1,6 +1,6 @@
 var main = [
-  '$log', 'ChoiceTemplates',
-  function($log, ChoiceTemplates) {
+  '$log', '$http', 'ChoiceTemplates',
+  function($log, $http, ChoiceTemplates) {
 
     var choices = [
       '<p class="intro">',
@@ -10,7 +10,9 @@ var main = [
       '</p>',
       '<div class="check-correct-label">Check Correct Answer(s)</div>',
       '<div class="choice" ng-repeat="q in model.choices">',
-         ChoiceTemplates.choice(),
+         ChoiceTemplates.choice({
+           columnWidths: ['150px', '100%']
+         }),
       '</div>',
       '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
       '<div class="config-shuffle">',
@@ -183,6 +185,7 @@ var main = [
         };
 
         scope.leftPanelClosed = false;
+
       },
 
       template: [

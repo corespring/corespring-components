@@ -171,6 +171,10 @@
     margin: 20px 0;
 }
 
+.config-inline-choice .wiggi-wiz-toolbar button {
+    margin: 0;
+}
+
 .config-inline-choice .shuffle {
     display: block;
 }

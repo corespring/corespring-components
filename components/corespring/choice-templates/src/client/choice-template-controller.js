@@ -1,10 +1,69 @@
 var def = [
   '$rootScope',
   '$log',
-  function($rootScope, $log) {
+  '$http',
+  'ImageUtils',
+  'WiggiMathJaxFeatureDef',
+  function($rootScope, $log, $http, ImageUtils, WiggiMathJaxFeatureDef) {
+
+    function CorespringImageService() {
+
+      this.deleteFile = function(url) {
+        $http['delete'](url);
+      };
+
+      this.addFile = function(file, onComplete, onProgress) {
+        var url = '' + file.name;
+
+        if (ImageUtils.bytesToKb(file.size) > 500) {
+          onComplete(ImageUtils.fileTooBigError(file.size, 500));
+          return;
+        }
+
+        var opts = {
+          onUploadComplete: function(body, status) {
+            $log.info('done: ', body, status);
+            onComplete(null, url);
+          },
+          onUploadProgress: function() {
+            $log.info('progress', arguments);
+            onProgress(null, 'started');
+          },
+          onUploadFailed: function() {
+            $log.info('failed', arguments);
+            onComplete({
+              code: 'UPLOAD_FAILED',
+              message: 'upload failed!'
+            });
+          }
+        };
+
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+          var uploader = new com.ee.RawFileUploader(file, reader.result, url, name, opts);
+          uploader.beginUpload();
+        };
+
+        reader.readAsBinaryString(file);
+      };
+
+      return this;
+    }
+
     return {
       scope: true,
       link: function(scope, elm, attr) {
+
+        scope.imageService = new CorespringImageService();
+
+        scope.extraFeatures = {
+          definitions: [{
+            type: 'group',
+            buttons: [new WiggiMathJaxFeatureDef()]
+          }]
+        };
+
         scope.imageUploadedToChoice = function(q) {
           q.imageName = scope.uploadingFilename;
           scope.$apply();
