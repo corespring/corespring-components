@@ -3,3 +3,11 @@
     min-width: 90px;
     min-height: 50px;
 }
+
+.drag-and-drop-inline-config-panel .shuffle {
+    display: none;
+}
+
+.drag-and-drop-inline-config-panel .choice {
+    margin-bottom: 20px;
+}
