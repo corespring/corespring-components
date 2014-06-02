@@ -1,8 +1,9 @@
 var def = [
   '$rootScope',
   '$log',
+  '$http',
   'ImageUtils',
-  function($rootScope, $log, ImageUtils) {
+  function($rootScope, $log, $http, ImageUtils) {
 
     function CorespringImageService() {
 
