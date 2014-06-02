@@ -113,7 +113,7 @@ var dragAndDropController = [
             scope.local.choices = _.cloneDeep(model.choices);
           }
 
-          scope.originalChoices = _.cloneDeep(scope.choices);
+          scope.originalChoices = _.cloneDeep(model.choices);
         };
 
         scope.choiceForId = function(id) {

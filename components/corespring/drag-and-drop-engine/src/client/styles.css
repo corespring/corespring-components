@@ -73,7 +73,8 @@
     margin-right: 10px;
 }
 
-.view-drag-and-drop .sizerHolder {
+.view-drag-and-drop .sizerHolder,
+.modal .sizerHolder {
     visibility: hidden;
     position: fixed;
     max-width: 500px;
