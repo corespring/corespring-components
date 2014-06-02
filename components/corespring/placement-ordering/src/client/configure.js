@@ -72,7 +72,7 @@ var main = [
           '          <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
           '        </div>',
           '        <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
-          '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz features="extraFeatures"',
+          '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
           '          parent-selector=".editor-container"',
           '          placeholder="Enter choice and/or add an image or math code."',
           '          image-service="imageService" />',

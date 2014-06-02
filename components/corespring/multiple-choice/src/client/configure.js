@@ -1,6 +1,6 @@
 var main = [
-  '$log', '$http', 'ImageUtils', 'WiggiMathJaxFeatureDef', 'ChoiceTemplates',
-  function($log, $http, ImageUtils, WiggiMathJaxFeatureDef, ChoiceTemplates) {
+  '$log', '$http', 'ChoiceTemplates',
+  function($log, $http, ChoiceTemplates) {
 
     var choices = [
       '<p class="intro">',
@@ -185,13 +185,6 @@ var main = [
         };
 
         scope.leftPanelClosed = false;
-
-        scope.extraFeatures = {
-          definitions: [{
-            type: 'group',
-            buttons: [new WiggiMathJaxFeatureDef()]
-          }]
-        };
 
       },
 

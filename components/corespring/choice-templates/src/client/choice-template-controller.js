@@ -3,7 +3,8 @@ var def = [
   '$log',
   '$http',
   'ImageUtils',
-  function($rootScope, $log, $http, ImageUtils) {
+  'WiggiMathJaxFeatureDef',
+  function($rootScope, $log, $http, ImageUtils, WiggiMathJaxFeatureDef) {
 
     function CorespringImageService() {
 
@@ -55,6 +56,13 @@ var def = [
       link: function(scope, elm, attr) {
 
         scope.imageService = new CorespringImageService();
+
+        scope.extraFeatures = {
+          definitions: [{
+            type: 'group',
+            buttons: [new WiggiMathJaxFeatureDef()]
+          }]
+        };
 
         scope.imageUploadedToChoice = function(q) {
           q.imageName = scope.uploadingFilename;

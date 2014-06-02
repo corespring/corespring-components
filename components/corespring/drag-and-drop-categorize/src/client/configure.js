@@ -1,6 +1,6 @@
 var main = [
-  "ChoiceTemplates", 'ServerLogic',
-  function(ChoiceTemplates, ServerLogic) {
+  "ChoiceTemplates", 'ServerLogic', 'MathJaxService',
+  function(ChoiceTemplates, ServerLogic, MathJaxService) {
     var input, inputs, template;
 
     input = function(attrs, label) {
@@ -299,6 +299,10 @@ var main = [
           delete $scope.fullModel.correctResponse[category.id];
 
         };
+
+        $scope.$watch('model', function() {
+          MathJaxService.parseDomForMath(0);
+        }, true);
 
         $scope.addCategory = function() {
           var idx = $scope.model.categories.length + 1;
