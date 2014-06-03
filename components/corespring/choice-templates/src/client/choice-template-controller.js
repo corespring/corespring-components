@@ -52,7 +52,7 @@ var def = [
     }
 
     return {
-      scope: true,
+      scope: {},
       link: function(scope, elm, attr) {
 
         scope.imageService = new CorespringImageService();
