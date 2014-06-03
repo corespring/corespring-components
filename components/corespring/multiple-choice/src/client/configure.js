@@ -21,7 +21,9 @@ var main = [
       '<div ng-click="commentOn = !commentOn" style="margin: 10px 0;"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
       '<div ng-show="commentOn">',
       '  <p>Use this space to provide summary level feedback for this interaction.</p>',
-      '  <textarea ng-model="fullModel.comments" class="form-control"></textarea>',
+      '  <div mini-wiggi-wiz="" ng-model="fullModel.comments" placeholder="Enter a choice"',
+      '    image-service="imageService" features="extraFeatures"',
+      '    parent-selector=".wiggi-wiz-overlay"></div>',
       '</div>'
     ].join('\n');
 
