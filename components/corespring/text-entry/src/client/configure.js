@@ -1,13 +1,14 @@
 var main = [
   '$log',
   '$timeout',
-  function($log, $timeout) {
+  'ChoiceTemplates',
+  function($log, $timeout, ChoiceTemplates) {
 
     "use strict";
 
     var designPanel = [
       '    <div navigator-panel="Design">',
-      '      <div class="cs-text-entry-cfg">',
+      '      <div class="cs-text-entry-cfg" choice-template-controller="">',
       '        <div class="input-holder">',
       '          <div class="body">',
       '            <p class="info">',
@@ -69,9 +70,11 @@ var main = [
       '            <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i',
       '              class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>',
       '            </div>',
-      '            <div ng-show="commentOn">',
-      '              <textarea ng-model="fullModel.comments" class="form-control"',
-      '                        placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
+      '            <div ng-show="commentOn" ng-repeat="q in [1]">',
+      '              <div mini-wiggi-wiz="" ng-model="fullModel.comments"',
+      '                placeholder="Use this space to provide summary level feedback for this interaction."',
+      '                image-service="imageService" features="extraFeatures"',
+      '                parent-selector=".wiggi-wiz-overlay"/>',
       '            </div>',
       '          </div>',
       '        </div>',
