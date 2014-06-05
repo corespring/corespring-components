@@ -2,13 +2,13 @@ var main = [
   '$log',
   '$http',
   'ChoiceTemplates',
-  'ChoiceTemplateImageService',
+  'ComponentImageService',
   'ChoiceTemplateScopeExtension',
   function(
     $log,
     $http,
     ChoiceTemplates,
-    ChoiceTemplateImageService,
+    ComponentImageService,
     ChoiceTemplateScopeExtension) {
 
     var choices = [
@@ -44,7 +44,7 @@ var main = [
         function(scope) {
           $log.debug('---------> controller');
           scope.imageService = function() {
-            return ChoiceTemplateImageService;
+            return ComponentImageService;
           };
         }
       ],

@@ -2,9 +2,12 @@ var def = [
   '$rootScope',
   '$log',
   'WiggiMathJaxFeatureDef',
-  function($rootScope, $log, WiggiMathJaxFeatureDef) {
+  'ComponentImageService',
+  function($rootScope, $log, WiggiMathJaxFeatureDef, ComponentImageService) {
 
     function ChoiceScopeExtension() {
+
+      $log.debug('component image service -> ', ComponentImageService);
 
       this.postLink = function(scope, elm, attr) {
 

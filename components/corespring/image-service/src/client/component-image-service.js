@@ -5,7 +5,7 @@ var def = [
   'ImageUtils',
   function($log, $http, ImageUtils) {
 
-    function CorespringImageService() {
+    function ComponentImageService() {
 
       this.deleteFile = function(url) {
         $http['delete'](url);
@@ -48,7 +48,7 @@ var def = [
       };
     }
 
-    return new CorespringImageService();
+    return new ComponentImageService();
   }
 ];
 
