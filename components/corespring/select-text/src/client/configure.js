@@ -13,7 +13,7 @@ var main = [
       return _((content || "").match(/(.*?[.!?]([^ \\t])*)/g)).filter(_.isBlank).map(function(sentence) {
         return {
           data: sentence
-        }
+        };
       }).value();
     }
 
@@ -48,7 +48,7 @@ var main = [
 
         $scope.safeApply = function(fn) {
           var phase = this.$root.$$phase;
-          if(phase == '$apply' || phase == '$digest') {
+          if(phase === '$apply' || phase === '$digest') {
             if(fn && (typeof(fn) === 'function')) {
               fn();
             }
