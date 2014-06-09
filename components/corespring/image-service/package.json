@@ -1,5 +1,10 @@
 {
   "name": "image-service",
   "organization": "corespring",
-  "purpose": "library"
+  "purpose": "library",
+  "libraries": [{
+       "organization": "corespring",
+       "name": "choice-templates",
+       "scope": "editor"
+     }]
 }

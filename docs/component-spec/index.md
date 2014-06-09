@@ -22,7 +22,7 @@ The container decides to include the components by inspecting the Item.xhtml pro
 
 ## Library ----------------
 
-This spec defines how to create a component that can run within a corespring container.
+This spec defines how to create a component that can run within a org.corespring container.
 
 A component is a self contained unit that defines client side behaviour and server side processing.
 
