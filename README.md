@@ -1,6 +1,6 @@
 # Corespring Components
 
-The default org.corespring component set.
+The default corespring component set.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ The default org.corespring component set.
 ## Running
 
 They are designed to work with a Corespring Container implementation.
-See [org.corespring-container](https://github.com/org.corespring/org.corespring-container).
+See [corespring-container](https://github.com/corespring/corespring-container).
 
 
 ## Developing
@@ -36,7 +36,7 @@ First ensure that you have all the dependencies installed:
 
 
 If you want to run the functional tests, then ensure that you have a version of
-[org.corespring-container](https://github.com/org.corespring/org.corespring-container) running on your local machine at port 9000.
+[corespring-container](https://github.com/corespring/corespring-container) running on your local machine at port 9000.
 Alternatively, you can run the regression tests against a different url by passing the `--baseUrl` argument.
     
 You can use the following test commands:
@@ -51,10 +51,10 @@ You can use the following test commands:
     grunt testclient
 
     # Test comps for single org
-    grunt testclient:org.corespring
+    grunt testclient:corespring
 
     # Test single components for org
-    grunt testclient:org.corespring:multiple-choice --componentPath=../components
+    grunt testclient:corespring:multiple-choice --componentPath=../components
 
     ## Options
     --componentPath=path_to_comps (default: ../components) - the path to the components folder
@@ -64,4 +64,4 @@ You can use the following test commands:
     grunt webdriver
 
     # Run functional tests against SauceLabs with a non-local base URL
-    grunt webdriver --local=false --baseUrl=http://org.corespring-container-devt.herokuapp.com
+    grunt webdriver --local=false --baseUrl=http://corespring-container-devt.herokuapp.com
