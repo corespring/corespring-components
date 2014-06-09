@@ -100,6 +100,7 @@ var main = [
           },
           setProfile: function(profile) {
             $scope.profile = profile;
+            $scope.profile = _.defaults($scope.profile, { contributorDetails: { additionalCopyrights: [] }});
           }
         };
 
