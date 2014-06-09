@@ -8,9 +8,42 @@ var component = {
     "prompt": "Select the fruits from the text",
     "config": {
       "selectionUnit": "word",
-      "checkIfCorrect": "yes"
+      "checkIfCorrect": true
     },
-    "text": "I ate some |banana and carrot and cheese and |apple"
+    "selections": [
+      {
+        data: "I"
+      },
+      {
+        data: "ate"
+      },
+      {
+        data: "some"
+      },
+      {
+        data: "banana",
+        correct: true
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "carrot"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "cheese"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "apple",
+        correct: true
+      }
+    ]
   }
 };
 
@@ -20,11 +53,42 @@ var componentIgnoreCorrect = {
     "prompt": "Select the fruits from the text",
     "config": {
       "selectionUnit": "word",
-      "checkIfCorrect": "no",
+      "checkIfCorrect": false,
       "minSelections": 2,
       "maxSelections": 3
     },
-    "text": "I ate some banana and carrot and cheese and apple"
+    "selections" : [
+      {
+        data: "I"
+      },
+      {
+        data: "ate"
+      },
+      {
+        data: "some"
+      },
+      {
+        data: "banana"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "carrot"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "cheese"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "apple"
+      }
+    ]
   }
 };
 
