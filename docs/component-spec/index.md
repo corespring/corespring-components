@@ -32,6 +32,18 @@ On the client side the component must support the following modes:
 
 On the server side the component must define 1 method `respond` that takes the model, the answer and some settings.
 
+## Dependencies
+
+A UiComponent or a Library can depend on another Library so long as there are no cyclical dependencies.
+
+Eg - this is invalid:
+
+    A -depends-on-> B
+    B -depends-on-> C
+    C -depends-on-> A !! Error
+
+If this is detected an error is thrown.
+
 ## Folder Structure
 
 ## Client
