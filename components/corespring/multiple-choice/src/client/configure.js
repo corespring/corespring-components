@@ -42,7 +42,6 @@ var main = [
       replace: true,
       controller: ['$scope',
         function(scope) {
-          $log.debug('---------> controller');
           scope.imageService = function() {
             return ComponentImageService;
           };

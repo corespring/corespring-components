@@ -9,8 +9,8 @@
   },
   "model" : {
     "config": {
-      "graphWidth": "300",
-      "graphHeight": "300",
+      "graphWidth": "500",
+      "graphHeight": "500",
       "domain": 10,
       "range": 10,
       "scale": 1,

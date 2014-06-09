@@ -8,9 +8,42 @@ var component = {
     "prompt": "Select the fruits from the text",
     "config": {
       "selectionUnit": "word",
-      "checkIfCorrect": "yes"
+      "checkIfCorrect": true
     },
-    "text": "I ate some |banana and carrot and cheese and |apple"
+    "selections": [
+      {
+        data: "I"
+      },
+      {
+        data: "ate"
+      },
+      {
+        data: "some"
+      },
+      {
+        data: "banana",
+        correct: true
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "carrot"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "cheese"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "apple",
+        correct: true
+      }
+    ]
   }
 };
 
@@ -20,11 +53,42 @@ var componentIgnoreCorrect = {
     "prompt": "Select the fruits from the text",
     "config": {
       "selectionUnit": "word",
-      "checkIfCorrect": "no",
+      "checkIfCorrect": false,
       "minSelections": 2,
       "maxSelections": 3
     },
-    "text": "I ate some banana and carrot and cheese and apple"
+    "selections" : [
+      {
+        data: "I"
+      },
+      {
+        data: "ate"
+      },
+      {
+        data: "some"
+      },
+      {
+        data: "banana"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "carrot"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "cheese"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "apple"
+      }
+    ]
   }
 };
 
@@ -39,79 +103,6 @@ var settings = function(feedback, userResponse, correctResponse) {
     showFeedback: feedback
   };
 };
-
-describe('select text tokenizer logic', function() {
-
-  // words
-  it('should tokenize words from a simple sentence (happy path)', function() {
-    var text = "I went to the pool and ate a sandwich.";
-    var tokens = server.tokenizeText(text, "word");
-    tokens.should.eql(["I", "went", "to", "the", "pool", "and", "ate", "a", "sandwich"]);
-  });
-
-  it('should handle quotes', function() {
-    var text = "\"I went to\" the pool and ate a sandwich.";
-    var tokens = server.tokenizeText(text, "word");
-    tokens.should.eql(["I", "went", "to", "the", "pool", "and", "ate", "a", "sandwich"]);
-  });
-
-  it('should handle contraction', function() {
-    var text = "I'm a robot.";
-    var tokens = server.tokenizeText(text, "word");
-    tokens.should.eql(["I'm", "a", "robot"]);
-  });
-
-  it('should handle html tags', function() {
-    var text = "<b>I</b>went<i>to</i>the<u>   pool  </u>and ate a sandwich.";
-    var tokens = server.tokenizeText(text, "word");
-    tokens.should.eql(["I", "went", "to", "the", "pool", "and", "ate", "a", "sandwich"]);
-  });
-
-  it('should handle html entities', function() {
-    var text = "I went to the&acute; pool and ate a sandwich.";
-    var tokens = server.tokenizeText(text, "word");
-    tokens.should.eql(["I", "went", "to", "the&acute;", "pool", "and", "ate", "a", "sandwich"]);
-  });
-
-  it('should handle newlines', function() {
-    var text = "I went to the pool\n and ate a sandwich.";
-    var tokens = server.tokenizeText(text, "word");
-    tokens.should.eql(["I", "went", "to", "the", "pool", "and", "ate", "a", "sandwich"]);
-  });
-
-  // sentences
-  it('should tokenize sentences from a simple sentence (happy path)', function() {
-    var text = "I was hungry. I went to the pool and ate a sandwich. Then that's all.";
-    var tokens = server.tokenizeText(text, "sentence");
-    tokens.should.eql(["I was hungry", "I went to the pool and ate a sandwich", "Then that's all"]);
-  });
-
-  it('should handle html tags', function() {
-    var text = "I <b>was</b> hungry.<p>I went to the <i>pool</i> and ate a sandwich.</p>Then that's all.";
-    var tokens = server.tokenizeText(text, "sentence");
-    tokens.should.eql(["I <b>was</b> hungry", "I went to the <i>pool</i> and ate a sandwich", "Then that's all"]);
-  });
-
-  it('should not consider mid-sentence capital letters as new sentences', function() {
-    var text = "I talked to Mr Brown. I said hello.";
-    var tokens = server.tokenizeText(text, "sentence");
-    tokens.should.eql(["I talked to Mr Brown", "I said hello"]);
-  });
-
-  it('should not consider names as new sentences', function() {
-    var text = "I talked to Victor S. Brown. I said hello.";
-    var tokens = server.tokenizeText(text, "sentence");
-    tokens.should.eql(["I talked to Victor S&#46; Brown", "I said hello"]);
-  });
-
-  it('should handle newlines', function() {
-    var text = "I was hungry.\n I went to \nthe pool and ate a sandwich. Then that's all.";
-    var tokens = server.tokenizeText(text, "sentence");
-    tokens.should.eql(["I was hungry", "I went to \nthe pool and ate a sandwich", "Then that's all"]);
-  });
-
-
-});
 
 describe('select text server logic', function() {
   it('should respond with correct true in answer is correct', function() {
