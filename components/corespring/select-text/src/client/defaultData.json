@@ -7,9 +7,7 @@
   "model": {
     "config": {
       "selectionUnit": "word",
-      "minSelections": 2,
-      "maxSelections": 3,
-      "checkIfCorrect": false
+      "checkIfCorrect": true
     },
     "selections": []
   }

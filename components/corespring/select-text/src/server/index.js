@@ -1,67 +1,21 @@
 var _ = require('lodash');
 
-var wordRegexp = /([^<\w]|^)([\w';|&]+)()(?!>)/g;
-var sentenceRegexp = /()(\|*[A-Z](?:.|\n)+?)([.?!])/g;
-
-exports.preprocessText = function(text) {
-
-  var nameRegexp = /([A-Z][a-z]+ [A-Z])\.( [A-Z][a-z]+)/g;
-  var correctOpenTagRegexp = /<correct>/ig;
-  var correctCloseTagRegexp = /<\/correct>/ig;
-
-  var result = text.replace(nameRegexp, "$1&#46;$2")
-    .replace(correctOpenTagRegexp, "|")
-    .replace(correctCloseTagRegexp, "");
-
-  return result;
-};
-
-exports.tokenizeText = function(text, selectionUnit) {
-  var tokens = [];
-
-  var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
-  var match = regexp.exec(exports.preprocessText(text));
-  while (match) {
-    tokens.push(match[2]);
-    match = regexp.exec(exports.preprocessText(text));
-  }
-  return tokens;
-};
-
-exports.wrapTokensWithHtml = function(text, selectionUnit) {
-  var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
+exports.wrapTokensWithHtml = function(selections) {
   var idx = 0;
-  var wrappedToken = text.replace(regexp, function(match, prefix, token, delimiter) {
-    var cs = "";
-    var prefixTags = "";
-    var correctTokenMatch = token.match(/[|](.*)/);
-    if (correctTokenMatch) {
-      token = correctTokenMatch[1];
-      cs = 'correct="true"';
-    }
-    return prefix + "<span class='token' " + cs + "id='" + (idx++) + "'>" + prefixTags + token + "</span>" + delimiter;
-  });
-  return wrappedToken;
+  return _(selections).map(function(selection) {
+    return "<span class='token' id='" + (idx++) + "'>" + selection.data + "</span>";
+  }).value().join(' ');
 };
 
-var buildCorrectIndexesArray = function(text, selectionUnit) {
+function buildCorrectIndexesArray(selections) {
   var correctIndexes = [];
-
-  var regexp = selectionUnit === "sentence" ? sentenceRegexp : wordRegexp;
-  var idx = 0;
-  var match;
-  do {
-    match = regexp.exec(text);
-    if (match) {
-      var correctTokenMatch = match[0].match(/[|](.*)/);
-      if (correctTokenMatch) {
-        correctIndexes.push("" + idx);
-      }
-      idx++;
+  for (var i in selections) {
+    if (selections[i].correct) {
+      correctIndexes.push(i);
     }
-  } while (match);
+  }
   return correctIndexes;
-};
+}
 
 var buildFeedback = function(answer, correctIndexes, checkIfCorrect, selectionCountIsFine) {
   var feedback = {};
@@ -82,26 +36,29 @@ var buildFeedback = function(answer, correctIndexes, checkIfCorrect, selectionCo
 };
 
 exports.preprocess = function(json) {
-  json.wrappedText = exports.wrapTokensWithHtml(exports.preprocessText(json.model.text), json.model.config.selectionUnit);
+  json.wrappedText = exports.wrapTokensWithHtml(json.model.selections);
   return json;
 };
 
 exports.respond = function(question, answer, settings) {
-
-  var text = exports.preprocessText(question.model.text);
-
   var selectionCount = answer.length;
   var minSelection = question.model.config.minSelections || 0;
   var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
-  var checkIfCorrect = (question.model.config.checkIfCorrect === "yes" || question.model.config.checkIfCorrect === "true");
 
+  var checkIfCorrect = question.model.config.checkIfCorrect === undefined ?
+    false : question.model.config.checkIfCorrect;
 
-  var correctIndexes = buildCorrectIndexesArray(text, question.model.config.selectionUnit);
+  var correctIndexes = buildCorrectIndexesArray(question.model.selections);
+
   var selectionCountIsFine = (minSelection <= selectionCount && maxSelection >= selectionCount);
+
   var isEverySelectedCorrect = _.every(answer, function(a) {
     return _.contains(correctIndexes, a);
   });
+
   var isCorrect = selectionCountIsFine;
+
+  console.log('checkIfCorrect', checkIfCorrect);
 
   if (checkIfCorrect) {
     isCorrect &= isEverySelectedCorrect;
