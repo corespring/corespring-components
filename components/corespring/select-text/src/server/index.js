@@ -58,8 +58,6 @@ exports.respond = function(question, answer, settings) {
 
   var isCorrect = selectionCountIsFine;
 
-  console.log('checkIfCorrect', checkIfCorrect);
-
   if (checkIfCorrect) {
     isCorrect &= isEverySelectedCorrect;
   }
