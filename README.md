@@ -25,6 +25,14 @@ This rig runs the component tests.
 * Client side tests are run with PhantomJs, tests are written in jasmine
 * Server side tests are run with Mocha, tests are written in jasmine
 
+### Env vars
+
+#### corepringCore
+This is the path to the corespring container [core.js](https://github.com/corespring/corespring-container/blob/master/modules/container-client/src/main/resources/container-client/js/corespring/core.js) file that containse the global `corespring` object. If you are running the components from within the corespring-container you don't need to change this path as it defaults to the right file. If not the path needs to be a relative path to the `core.js` file.
+
+You can set this on the command line like so: 
+
+    grunt test --corespringCore=.....
 
 ## Usage
 
