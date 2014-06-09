@@ -1,14 +1,27 @@
 {
-  "componentType": "corespring-select-text",
-  "correctResponse": "",
+  "componentType" : "corespring-select-text",
+  "correctResponse" : "",
   "title": "Select Evidence in Text",
-  "feedback" :  {
+  "feedback" : {
   },
   "model": {
-    "config": {
-      "selectionUnit": "word",
-      "checkIfCorrect": true
+    "config" : {
+      "selectionUnit" : "word",
+      "checkIfCorrect" : true
     },
-    "selections": []
+    "selections" : [
+      {
+        "data": "Please"
+      },
+      {
+        "data": "enter"
+      },
+      {
+        "data": "some"
+      },
+      {
+        "data": "text."
+      }
+    ]
   }
 }
