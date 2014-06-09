@@ -127,11 +127,13 @@
   background-color: #cccccc;
   border-radius: 4px;
   padding: 5px;
+  position: relative;
 }
 
 .point-interaction-view .scale-display {
-  text-align: right;
-  margin-right: 5px;
+  position: absolute;
+  top:5px;
+  right: 10px;
 }
 
 .point-interaction-view .action {

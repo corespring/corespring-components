@@ -115,11 +115,18 @@
 .line-interaction-view .inputs {
 }
 
+.line-interaction-view .scale-display {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+}
+
 .line-interaction-view .point-display {
 
 }
 
-.line-interaction-view .point-display p, input {
+.line-interaction-view .point-display p,
+.line-interaction-view .point-display input {
   display: inline;
 }
 
@@ -130,12 +137,6 @@
   margin-bottom: 0px;
   margin-right: 8px;
   border-color: #999999;
-}
-
-.line-interaction-view .scale-display {
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
 }
 
 .line-interaction-view .action {
