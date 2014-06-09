@@ -59,7 +59,7 @@
 
 /* Point */
 .graph-interaction {
-    background-color: #CCCCCC;
+    background-color: #ffffff;
     margin-top: 10px;
     padding: 10px 10px 30px 10px;
     max-width: 600px;
@@ -71,17 +71,6 @@
 
 .point-display p, input {
     display: inline;
-}
-
-.scale-display p {
-    margin-bottom: -10px;
-    margin-right: 22px;
-}
-
-.additional-text p {
-    font-family: 'Ubuntu' !important;
-    font-style: normal;
-    font-size: 13px;
 }
 
 .graph-container {
@@ -96,26 +85,18 @@
     float: right;
 }
 
-.btn-undo {
-    width: 50px;
-    border-radius: 6px;
-    border-style: solid;
-    border-color: #999999;
-    border-width: 1px;
+.modal {
+  display: block;
 }
 
-.btn-start-over {
-    width: 90px;
-    border-radius: 6px;
-    border-style: solid;
-    border-color: #999999;
-    border-width: 1px;
+/* center the graph in see-solution window */
+.modal .point-interaction-view .graph-interaction {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.scale-display {
-    margin-bottom: 10px;
-    float: right;
-    margin-right: 20px;
+.point-interaction-view {
+
 }
 
 .point-interaction-view .feedback {
@@ -135,9 +116,29 @@
     background: url("/assets/images/feedback/wrong-icon.png") no-repeat scroll 3px 8px transparent;
 }
 
+.point-interaction-view .additional-text p {
+  font-family: 'Ubuntu' !important;
+  font-style: normal;
+  font-size: 13px;
+  padding-bottom: 17px;
+}
 
-.modal {
-    display: block;
+.point-interaction-view .graph-controls {
+  background-color: #cccccc;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.point-interaction-view .scale-display {
+  text-align: right;
+  margin-right: 5px;
+}
+
+.point-interaction-view .action {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .point-intercept-configuration {
