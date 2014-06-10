@@ -14,8 +14,8 @@ exports.wrapTokensWithHtml = function(choices) {
 function buildCorrectIndexesArray(choices) {
   var correctIndexes = [];
   for (var i in choices) {
-    if (choices[i].correct) {
-      choices.push(i);
+    if (choices[i].correct === true) {
+      correctIndexes.push(i);
     }
   }
   return correctIndexes;
