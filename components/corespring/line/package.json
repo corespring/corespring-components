@@ -1,14 +1,14 @@
 {
-  "libraries": [
-    {
-      "name": "function-utils",
-      "organization": "corespring"
-    },
-    {
-      "name": "canvas",
-      "organization": "corespring"
-    }
-  ],
+  "libraries": [{
+    "name": "line-utils",
+    "organization": "corespring"
+  }, {
+    "name": "function-utils",
+    "organization": "corespring"
+  }, {
+    "name": "canvas",
+    "organization": "corespring"
+  }],
   "dependencies": {
     "client": {
       "angular-bootstrap": {

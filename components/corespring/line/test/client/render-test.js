@@ -1,6 +1,6 @@
 describe('corespring line component', function() {
 
-  var testModel, scope, rootScope, container, element, factory;
+  var testModel, scope, rootScope, container, element;
 
   var MockComponentRegister = function() {
     this.elements = {};
@@ -32,18 +32,8 @@ describe('corespring line component', function() {
     rootScope = $rootScope;
   }));
 
-  beforeEach(inject(function (RenderWrapped) {
-      factory = RenderWrapped;
-  }));
-
   it('constructs line component', function() {
     expect(element).toNotBe(null);
   });
-
-  it('factory should create', function() {
-    var ob = new factory();
-    expect(ob.ping()).toBeEqual('pong');
-  });
-
 
 });
