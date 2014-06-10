@@ -1,6 +1,6 @@
-describe('corespring', function() {
+describe('corespring line component', function() {
 
-  var testModel, scope, rootScope, container, element;
+  var testModel, scope, rootScope, container, element, factory;
 
   var MockComponentRegister = function() {
     this.elements = {};
@@ -27,12 +27,22 @@ describe('corespring', function() {
     });
 
     element = $compile("<org-tag id='1'></org-tag>")($rootScope.$new());
+
     scope = element.scope();
     rootScope = $rootScope;
   }));
 
-  it('constructs', function() {
+  beforeEach(inject(function (RenderWrapped) {
+      factory = RenderWrapped;
+  }));
+
+  it('constructs line component', function() {
     expect(element).toNotBe(null);
+  });
+
+  it('factory should create', function() {
+    var ob = new factory();
+    expect(ob.ping()).toBeEqual('pong');
   });
 
 

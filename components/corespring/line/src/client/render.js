@@ -278,24 +278,48 @@ var main = ['$compile', '$modal', '$rootScope',
         };
 
         scope.pointsFromCurve = function(curve) {
-          var ic = curve;
-          if (!ic) {
+
+          if (!curve) {
             return undefined;
           }
-          if (ic.indexOf('=') >= 0) {
-            ic = ic.split("=")[1];
-          }
-          var b = Number(ic.substring(ic.indexOf('+')));
 
-          var mStr = ic.substring(0, ic.indexOf('x'));
-          mStr = mStr.replace(/[^\d]/g,"");
-          if (mStr === "") {
-            mStr = "1";
+          var patt = /y=(([\+\-])?((?:\d*\.)?\d+)?(x)?)?(([\+\-])?((?:\d*\.)?\d+))?(x)?/g;
+
+          var captures=patt.exec(curve);
+
+          if (!captures || captures.length === 0){
+            return undefined;
           }
-          if (mStr === "-") {
-            mStr = "-1";
+
+          var m = 0;
+          var b = 0;
+
+          function getSign(index){
+              return (captures[index]==="+" || captures[index]===undefined) ? 1: -1;
           }
-          var m = (mStr && mStr.length > 0) ? Number(mStr) : 1;
+
+          function getSlope(index){
+              return captures[index] ? captures[index] : 1;
+          }
+
+          function getConstant(index){
+              return captures[index] ? captures[index] : 0;
+          }
+
+          if (captures[4]==="x"){
+            m = getSign(2) * getSlope(3);
+            b = getSign(6) * getConstant(7);
+          }
+          else if (captures[8]==="x")
+          {
+            m = getSign(6) * getSlope(7);
+            b = getSign(2) * getConstant(3);
+          }
+          else
+          {
+            b = getSign(2) * getConstant(3);
+          }
+
           return [[0,b],[1,m+b]];
         };
 
