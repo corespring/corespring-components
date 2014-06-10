@@ -129,6 +129,7 @@ describe('select text server logic', function() {
 
   it('should have correct selections in the feedback', function() {
     var response = server.respond(_.cloneDeep(component), ['1', '9'], settings(true, true, true));
+
     response.feedback.choices['1'].should.eql({
       correct: false
     });

@@ -15,7 +15,7 @@ function correctIndexes(question) {
   var indexes = [];
   for (var i in question.model.choices) {
     if (question.model.choices[i].correct) {
-      indexes.push(parseInt(i, 10));
+      indexes.push(i);
     }
   }
   return indexes;
@@ -84,7 +84,6 @@ function areSomeSelectedCorrect(question, answer) {
 
 function numberOfCorrectAnswers(question, answers) {
   var correctCount = _(answers)
-    .map(function(a) { return parseInt(a, 10); })
     .filter(function(answer) {
       return _.contains(correctIndexes(question), answer);
     }).value().length;
@@ -112,7 +111,7 @@ function isPartiallyCorrect(question, answer) {
 }
 
 function score(question, answer) {
-  var scoreValue;
+  var scoreValue = 0;
 
   if (isCorrect(question, answer)) {
     scoreValue = 1;
