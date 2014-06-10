@@ -15,7 +15,7 @@ function correctIndexes(question) {
   var indexes = [];
   for (var i in question.model.choices) {
     if (question.model.choices[i].correct) {
-      indexes.push(i);
+      indexes.push(parseInt(i, 10));
     }
   }
   return indexes;
@@ -74,16 +74,21 @@ function selectionCountIsFine(question, answer) {
   return (minSelection <= selectionCount && maxSelection >= selectionCount);
 }
 
-function isEverySelectedCorrect(question, answer) {
-  return _.every(answer, function(a) {
-    return _.contains(correctIndexes(question), a);
-  });
+function areAllCorrectSelected(question, answer) {
+  return numberOfCorrectAnswers(question, answer) === correctIndexes(question).length;
 }
 
 function areSomeSelectedCorrect(question, answer) {
-  return _.find(answer, function(a) {
-    return _.contains(correctIndexes(question), a);
-  }) !== undefined;
+  return numberOfCorrectAnswers(question, answer) !== 0;
+}
+
+function numberOfCorrectAnswers(question, answers) {
+  var correctCount = _(answers)
+    .map(function(a) { return parseInt(a, 10); })
+    .filter(function(answer) {
+      return _.contains(correctIndexes(question), answer);
+    }).value().length;
+  return correctCount;
 }
 
 function isCorrect(question, answer) {
@@ -91,7 +96,7 @@ function isCorrect(question, answer) {
   var correct = selectionCountIsFine(question, answer);
 
   if (checkIfCorrect(question)) {
-    correct &= isEverySelectedCorrect(question, answer);
+    correct &= areAllCorrectSelected(question, answer);
   }
 
   return correct;
@@ -106,11 +111,28 @@ function isPartiallyCorrect(question, answer) {
   return partiallyCorrect;
 }
 
+function score(question, answer) {
+  var scoreValue;
+
+  if (isCorrect(question, answer)) {
+    scoreValue = 1;
+  } else if (question.allowPartialScoring) {
+    var partialScore = _.find(question.partialScoring, function(ps) {
+      return ps.numberOfCorrect === numberOfCorrectAnswers(question, answer);
+    });
+
+    if (partialScore) {
+      scoreValue = partialScore.scorePercentage / 100;
+    }
+  }
+  return scoreValue;
+}
+
 exports.respond = function(question, answer, settings) {
 
   var res = {
     correctness: isCorrect(question, answer) ? "correct" : "incorrect",
-    score: isCorrect(question, answer) ? 1 : 0
+    score: score(question, answer)
   };
 
   var selectionCount = answer.length;
@@ -135,7 +157,7 @@ exports.respond = function(question, answer, settings) {
     if (isCorrect(question, answer)) {
       res.outcome.push("responsesCorrect");
     }
-    if (checkIfCorrect && !isEverySelectedCorrect) {
+    if (checkIfCorrect && !areAllCorrectSelected(question, answer)) {
       res.outcome.push("responsesIncorrect");
     }
 
