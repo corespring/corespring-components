@@ -3,13 +3,16 @@
   "correctResponse" : "",
   "title": "Select Evidence in Text",
   "feedback" : {
+    "correctFeedbackType" : "default",
+    "partialFeedbackType" : "default",
+    "incorrectFeedbackType" : "default"
   },
   "model": {
     "config" : {
       "selectionUnit" : "word",
       "checkIfCorrect" : true
     },
-    "selections" : [
+    "choices" : [
       {
         "data": "Please"
       },

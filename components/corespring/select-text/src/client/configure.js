@@ -1,5 +1,14 @@
 var main = [
-  function() {
+  'ServerLogic',
+  'ChoiceTemplates',
+  'ComponentImageService',
+  'ChoiceTemplateScopeExtension',
+  'WiggiMathJaxFeatureDef',
+  function(ServerLogic,
+           ChoiceTemplates,
+           ComponentImageService,
+           ChoiceTemplateScopeExtension,
+           WiggiMathJaxFeatureDef) {
 
     function wordSplit(content) {
       return _((content || "").split(' ')).filter(_.isBlank).map(function(word) {
@@ -21,21 +30,38 @@ var main = [
       scope: 'isolate',
       restrict: 'E',
       replace: true,
+      controller: ['$scope',
+        function($scope) {
+          $scope.imageService = function() {
+            return ComponentImageService;
+          };
+        }
+      ],
       link: function($scope, $element, $attrs) {
+
+        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
+
+        var server = ServerLogic.load('corespring-select-text');
+        $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
+        $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
+        $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
 
         $scope.mode = 'editor';
 
-        $scope.test = {
-          hasCopyright: 'false'
+        $scope.extraFeatures = {
+          definitions: [{
+            type: 'group',
+            buttons: [new WiggiMathJaxFeatureDef()]
+          }]
         };
 
         function setBoundaries() {
           if ($scope.model.config.selectionUnit === 'word') {
-            $scope.model.selections = wordSplit($scope.content.xhtml);
+            $scope.model.choices = wordSplit($scope.content.xhtml);
           } else if ($scope.model.config.selectionUnit === 'sentence') {
-            $scope.model.selections = sentenceSplit($scope.content.xhtml);
+            $scope.model.choices = sentenceSplit($scope.content.xhtml);
           } else {
-            $scope.model.selections = [$scope.content.xhtml];
+            $scope.model.choices = [$scope.content.xhtml];
           }
         }
 
@@ -43,7 +69,11 @@ var main = [
         $scope.$watch('model.config.selectionUnit', setBoundaries, true);
 
         $scope.selectItem = function(index) {
-          $scope.model.selections[index].correct = !$scope.model.selections[index].correct;
+          $scope.model.choices[index].correct = !$scope.model.choices[index].correct;
+        };
+
+        $scope.isSingleChoice = function() {
+          return $scope.correctChoices() < 2;
         };
 
         $scope.safeApply = function(fn) {
@@ -57,7 +87,7 @@ var main = [
           }
         };
 
-        $scope.toggleSelection = function($event) {
+        $scope.toggleChoice = function($event) {
           $event.stopPropagation();
           if ($scope.mode === 'editor') {
             $scope.mode = 'selection';
@@ -72,11 +102,11 @@ var main = [
           }
         };
 
-        $scope.$watch('model.selections', function() {
-          $scope.correctSelections = ($scope.model && $scope.model.selections) ? _.filter($scope.model.selections, function(selection) {
-            return selection.correct === true;
+        $scope.correctChoices = function() {
+          return ($scope.model && $scope.model.choices) ? _.filter($scope.model.choices, function (choice) {
+            return choice.correct === true;
           }).length : 0;
-        }, true);
+        };
 
         $scope.hidePopover = function() {
           setTimeout(function() {
@@ -90,9 +120,10 @@ var main = [
           setModel: function(model) {
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
-            $scope.model.selections = $scope.model.selections || [];
+            $scope.model.choices = $scope.model.choices || [];
             $scope.content = {};
-            $scope.content.xhtml = _.pluck($scope.model.selections, 'data').join(' ');
+            $scope.content.xhtml = _.pluck($scope.model.choices, 'data').join(' ');
+            $scope.fullModel.partialScoring = $scope.fullModel.partialScoring || [];
           },
           getModel: function() {
             var model = _.cloneDeep($scope.fullModel);
@@ -121,9 +152,9 @@ var main = [
         '            popover="Click the {{model.config.selectionUnit}}s you want to set as choices">',
         '            <wiggi-wiz ng-show="mode == \'editor\'" ng-model="content.xhtml"></wiggi-wiz>',
         '            <div class="selection-editor" ng-show="mode == \'selection\'" ng-class="{words: model.config.selectionUnit == \'word\'}">',
-        '              <span class="selection" ng-repeat="selection in model.selections" ng-class="{correct: selection.correct}" ng-click="selectItem($index)">{{selection.data}}</span>',
+        '              <span class="selection" ng-repeat="choice in model.choices" ng-class="{correct: choice.correct}" ng-click="selectItem($index)">{{choice.data}}</span>',
         '            </div>',
-        '            <button class="btn btn-sm" ng-click="toggleSelection($event)">{{mode == \'selection\' ? \'edit passage\' : \'done\'}}</button>',
+        '            <button class="btn btn-sm" ng-click="toggleChoice($event)">{{mode == \'selection\' ? \'edit passage\' : \'done\'}}</button>',
         '          </div>',
         '          <div class="selection-unit property" ng-class="{disabled: mode != \'selection\'}">',
         '            <p>',
@@ -135,7 +166,7 @@ var main = [
         '              from the passage above.',
         '            </p>',
         '            <p>Select all possible choices {{model.config.selectionUnit}}s.</p>',
-        '            <p>{{correctSelections}} is the total number of correct selections identified.</p>',
+        '            <p>{{correctSelections()}} is the total number of correct selections identified.</p>',
         '          </div>',
         '          <div class="property response-type">',
         '            <strong>Acceptable Responses</strong>',
@@ -158,6 +189,50 @@ var main = [
         '            </additional-copyright-information>',
         '          </div>',
         '        </div>',
+        '      </div>',
+        '      <div class="input-holder">',
+        '        <div class="header">Feedback</div>',
+        '        <div class="body">',
+        '          <div class="well">',
+        '            <div feedback-selector',
+        '                 fb-sel-label="If correct, show"',
+        '                 fb-sel-class="correct"',
+        '                 fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+        '                 fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+        '                 fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
+        '            ></div>',
+        '          </div>',
+        '          <div class="well">',
+        '            <div feedback-selector',
+        '                 fb-sel-label="If partially correct, show"',
+        '                 fb-sel-class="partial"',
+        '                 fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+        '                 fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+        '                 fb-sel-default-feedback="{{defaultPartialFeedback}}"',
+        '            ></div>',
+        '          </div>',
+        '          <div class="well">',
+        '            <div feedback-selector',
+        '                 fb-sel-label="If incorrect, show"',
+        '                 fb-sel-class="incorrect"',
+        '                 fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+        '                 fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+        '                 fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
+        '            ></div>',
+        '          </div>',
+        '          <div ng-click="commentOn = !commentOn" style="margin: 10px 0;"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
+        '            <div ng-show="commentOn">',
+        '              <p>Use this space to provide summary level feedback for this interaction.</p>',
+        '              <div mini-wiggi-wiz="" ng-model="fullModel.comments"',
+        '                image-service="imageService()" features="extraFeatures"',
+        '                parent-selector=".wiggi-wiz-overlay"></div>',
+        '            </div>',
+        '          </div>',
+        '        </div>',
+        '      </div>',
+        '      <div navigator-panel="Scoring">',
+                ChoiceTemplates.wrap(undefined,
+                  ChoiceTemplates.scoring({maxNumberOfPartialScores: "correctChoices() - 1"})),
         '      </div>',
         '    </div>',
         '  </div>',

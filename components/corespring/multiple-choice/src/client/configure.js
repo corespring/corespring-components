@@ -75,7 +75,6 @@ var main = [
                 return choice.value === feedback.value;
               });
 
-
               if (choice) {
                 scope.feedback[choice.value] = {
                   feedback: feedback.feedback,

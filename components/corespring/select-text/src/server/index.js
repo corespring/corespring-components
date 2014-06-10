@@ -1,17 +1,21 @@
 var _ = require('lodash');
 
-exports.wrapTokensWithHtml = function(selections) {
+exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
+exports.DEFAULT_PARTIAL_FEEDBACK = "Almost!";
+exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+
+exports.wrapTokensWithHtml = function(choices) {
   var idx = 0;
-  return _(selections).map(function(selection) {
-    return "<span class='token' id='" + (idx++) + "'>" + selection.data + "</span>";
+  return _(choices).map(function(choice) {
+    return "<span class='token' id='" + (idx++) + "'>" + choice.data + "</span>";
   }).value().join(' ');
 };
 
-function buildCorrectIndexesArray(selections) {
+function buildCorrectIndexesArray(choices) {
   var correctIndexes = [];
-  for (var i in selections) {
-    if (selections[i].correct) {
-      correctIndexes.push(i);
+  for (var i in choices) {
+    if (choices[i].correct) {
+      choices.push(i);
     }
   }
   return correctIndexes;
@@ -36,7 +40,7 @@ var buildFeedback = function(answer, correctIndexes, checkIfCorrect, selectionCo
 };
 
 exports.preprocess = function(json) {
-  json.wrappedText = exports.wrapTokensWithHtml(json.model.selections);
+  json.wrappedText = exports.wrapTokensWithHtml(json.model.choices);
   return json;
 };
 
@@ -48,7 +52,7 @@ exports.respond = function(question, answer, settings) {
   var checkIfCorrect = question.model.config.checkIfCorrect === undefined ?
     false : question.model.config.checkIfCorrect;
 
-  var correctIndexes = buildCorrectIndexesArray(question.model.selections);
+  var correctIndexes = buildCorrectIndexesArray(question.model.choices);
 
   var selectionCountIsFine = (minSelection <= selectionCount && maxSelection >= selectionCount);
 
