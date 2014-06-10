@@ -1,6 +1,7 @@
 /* jshint evil: true */
-var main = ['$compile', '$modal', '$rootScope',
-  function($compile, $modal, $rootScope) {
+var main = ['$compile', '$modal', '$rootScope', "LineLogic",
+  function($compile, $modal, $rootScope ,LineLogic) {
+    var utilsFactory = new LineLogic();
     return {
       template: [
         "<div class='line-interaction-view'>",
@@ -285,51 +286,6 @@ var main = ['$compile', '$modal', '$rootScope',
           });
         };
 
-        scope.pointsFromCurve = function(curve) {
-
-          if (!curve) {
-            return undefined;
-          }
-
-          var patt = /y=(([\+\-])?((?:\d*\.)?\d+)?(x)?)?(([\+\-])?((?:\d*\.)?\d+))?(x)?/g;
-
-          var captures=patt.exec(curve);
-
-          if (!captures || captures.length === 0){
-            return undefined;
-          }
-
-          var m = 0;
-          var b = 0;
-
-          function getSign(index){
-              return (captures[index]==="+" || captures[index]===undefined) ? 1: -1;
-          }
-
-          function getSlope(index){
-              return captures[index] ? captures[index] : 1;
-          }
-
-          function getConstant(index){
-              return captures[index] ? captures[index] : 0;
-          }
-
-          if (captures[4]==="x"){
-            m = getSign(2) * getSlope(3);
-            b = getSign(6) * getConstant(7);
-          }
-          else if (captures[8]==="x")
-          {
-            m = getSign(6) * getSlope(7);
-            b = getSign(2) * getConstant(3);
-          }
-          else
-          {
-            b = getSign(2) * getConstant(3);
-          }
-
-          return [[0,b],[1,m+b]];
-        };
 
         scope.containerBridge = {
 
@@ -373,7 +329,7 @@ var main = ['$compile', '$modal', '$rootScope',
               scope.points = dataAndSession.session.answers;
             }
 
-            var initialValues = scope.pointsFromCurve(config.initialCurve);
+            var initialValues = utilsFactory.pointsFromEquation(config.initialCurve);
 
             if (_.isArray(initialValues)) {
               var pointA = initialValues[0];
