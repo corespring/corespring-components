@@ -1,8 +1,19 @@
 {
-  "libraries": [
-  ],
+  "libraries": [{
+    "name": "choice-templates",
+    "organization": "corespring",
+    "scope": "editor"
+  }, {
+    "name": "image-service",
+    "organization": "corespring",
+    "scope": "editor"
+  }, {
+    "name": "navigator",
+    "organization": "corespring"
+  }],
   "name": "select-text",
   "title": "Select Evidence in Text",
   "titleGroup": "English Language Arts",
-  "organization": "corespring"
+  "organization": "corespring",
+  "released": true
 }

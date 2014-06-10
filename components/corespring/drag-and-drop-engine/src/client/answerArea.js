@@ -192,7 +192,7 @@ var answerArea = [
         '             ng-switch="choice.labelType">',
         '           <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
         '           <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
-        '           <div class="sizerHolder" style="display: none; position: absolute" ng-switch="choice.labelType">',
+        '           <div class="sizerHolder" ng-switch="choice.labelType">',
         '             <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
         '             <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
         '           </div>',

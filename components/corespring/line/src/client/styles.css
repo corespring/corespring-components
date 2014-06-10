@@ -58,70 +58,23 @@
     bottom: 5px;
 }
 
-.graph-interaction {
-    background-color: #CCCCCC;
-    margin-top: 10px;
-    padding: 10px 10px 30px 10px;
-    max-width: 600px;
-}
-
-.point-display {
-
-}
-
-.point-display p, input {
-    display: inline;
-}
-
-.additional-text p {
-    font-family: 'Ubuntu' !important;
-    font-style: normal;
-    font-size: 13px;
-    padding-bottom: 17px;
-}
-
-.point-display-break {
-    margin-left: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-right: 8px;
-    border-color: #999999;
-}
-
-.btn-undo {
-    width: 50px;
-    border-radius: 6px;
-    border-style: solid;
-    border-color: #999999;
-    border-width: 1px;
-}
-
-.btn-start-over {
-    width: 90px;
-    border-radius: 6px;
-    border-style: solid;
-    border-color: #999999;
-    border-width: 1px;
-}
-
-.graph-container {
-    margin-top: 20px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
+/* TODO where is it used? */
 .correct-answer {
     margin-top: 5px;
     float: right;
 }
 
-.scale-display {
-    text-align: right;
-}
-
 .modal {
     display: block;
 }
+
+/* center the graph in see-solution window */
+.modal .line-interaction-view .graph-interaction {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 
 .line-interaction-view .feedback {
     display: inline-block;
@@ -137,6 +90,66 @@
 .line-interaction-view .feedback.incorrect {
     border-color: #F8A31A;
     background: url("/assets/images/feedback/wrong-icon.png") no-repeat scroll 3px 8px transparent;
+}
+
+.line-interaction-view .additional-text p {
+  font-family: 'Ubuntu' !important;
+  font-style: normal;
+  font-size: 13px;
+  padding-bottom: 17px;
+}
+
+.line-interaction-view .graph-container {
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.line-interaction-view .graph-controls {
+  background-color: #cccccc;
+  border-radius: 4px;
+  padding: 5px;
+  position: relative;
+}
+
+.line-interaction-view .inputs {
+}
+
+.line-interaction-view .scale-display {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+}
+
+.line-interaction-view .point-display {
+
+}
+
+.line-interaction-view .point-display p,
+.line-interaction-view .point-display input {
+  display: inline;
+}
+
+
+.line-interaction-view .point-display-break {
+  margin-left: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-right: 8px;
+  border-color: #999999;
+}
+
+.line-interaction-view .action {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.line-interaction-view .graph-interaction {
+  margin-top: 10px;
+  padding: 10px 10px 30px 10px;
+  max-width: 600px;
 }
 
 .line-interaction-configuration .navigator-toggle-button-row {
@@ -164,3 +177,4 @@
     font-style: italic;
     cursor: pointer;
 }
+

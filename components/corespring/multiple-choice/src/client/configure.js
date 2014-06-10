@@ -1,6 +1,15 @@
 var main = [
-  '$log', 'ChoiceTemplates',
-  function($log, ChoiceTemplates) {
+  '$log',
+  '$http',
+  'ChoiceTemplates',
+  'ComponentImageService',
+  'ChoiceTemplateScopeExtension',
+  function(
+    $log,
+    $http,
+    ChoiceTemplates,
+    ComponentImageService,
+    ChoiceTemplateScopeExtension) {
 
     var choices = [
       '<p class="intro">',
@@ -10,7 +19,9 @@ var main = [
       '</p>',
       '<div class="check-correct-label">Check Correct Answer(s)</div>',
       '<div class="choice" ng-repeat="q in model.choices">',
-         ChoiceTemplates.choice(),
+      ChoiceTemplates.choice({
+        columnWidths: ['150px', '100%']
+      }),
       '</div>',
       '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
       '<div class="config-shuffle">',
@@ -19,7 +30,9 @@ var main = [
       '<div ng-click="commentOn = !commentOn" style="margin: 10px 0;"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
       '<div ng-show="commentOn">',
       '  <p>Use this space to provide summary level feedback for this interaction.</p>',
-      '  <textarea ng-model="fullModel.comments" class="form-control"></textarea>',
+      '  <div mini-wiggi-wiz="" ng-model="fullModel.comments" placeholder="Enter a choice"',
+      '    image-service="imageService()" features="extraFeatures"',
+      '    parent-selector=".wiggi-wiz-overlay"></div>',
       '</div>'
     ].join('\n');
 
@@ -27,7 +40,15 @@ var main = [
       scope: 'isolate',
       restrict: 'E',
       replace: true,
+      controller: ['$scope',
+        function(scope) {
+          scope.imageService = function() {
+            return ComponentImageService;
+          };
+        }
+      ],
       link: function(scope, element, attrs) {
+
 
         // TODO: this needs to be centralised and not duplicated here and the server side
         scope.defaultCorrectFeedback = "Correct!";
@@ -53,7 +74,6 @@ var main = [
               var choice = _.find(model.model.choices, function(choice) {
                 return choice.value === feedback.value;
               });
-
 
               if (choice) {
                 scope.feedback[choice.value] = {
@@ -183,16 +203,19 @@ var main = [
         };
 
         scope.leftPanelClosed = false;
+
+        new ChoiceTemplateScopeExtension().postLink(scope, element, attrs);
+
       },
 
       template: [
-        '<div class="config-multiple-choice" choice-template-controller="">',
+        '<div class="config-multiple-choice">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
-               ChoiceTemplates.wrap(undefined, choices),
+        ChoiceTemplates.wrap(undefined, choices),
         '    </div>',
         '    <div navigator-panel="Scoring">',
-               ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
+        ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
         '    </div>',
         '  </div>',
         '</div>'
@@ -203,8 +226,6 @@ var main = [
 ];
 
 exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  }
-];
+exports.directives = [{
+  directive: main
+}];

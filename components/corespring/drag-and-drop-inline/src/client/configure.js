@@ -24,9 +24,9 @@ var main = [
         choice: '',
         correct: '',
         feedback: false,
-        columnWidths: ["100px", "100px", "", "100px"]
+        columnWidths: ["100px", "100%"]
       }),
-      '    <div style="padding-left: 110px">',
+      '    <div>',
       '      <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="q.moveOnDrag" />',
       '      <label for="moveOnDrag{{$index}}">Remove tile after placing</label>',
       '    </div>',
@@ -58,19 +58,19 @@ var main = [
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       '         <div class="col-sm-3">',
+      '            Text Before (optional)',
+      '         </div>',
+      '         <div class="col-sm-6">',
+      '            <input class="form-control" type="text" ng-model="aa.textBefore"/>',
+      '         </div>',
+      '       </div>',
+      '       <div class="config-form-row">',
+      '         <div class="col-sm-3">',
       '            Correct Answer(s)',
       '         </div>',
       '         <div class="col-sm-6">',
       '           <select bootstrap-multiselect="{{componentState}}" class="answer-area-select form-control" multiple="true" ng-model="correctAnswers[aa.id]" ng-options="choiceToDropDownItem(c) for c in model.choices">',
       '          </select>',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-3">',
-      '            Text Before (optional)',
-      '         </div>',
-      '         <div class="col-sm-6">',
-      '            <input class="form-control" type="text" ng-model="aa.textBefore"/>',
       '         </div>',
       '       </div>',
       '       <div class="config-form-row">',
@@ -90,7 +90,7 @@ var main = [
       '    </form>',
       '  <div></div>',
       '</div>',
-      '<a ng-click="addAnswerArea()">Add Answer Area</a>'
+      '<a ng-click="addAnswerArea()">Add Problem Area</a>'
 
     ].join("");
 
@@ -166,13 +166,13 @@ var main = [
     ].join("");
 
     template = [
-      '<div class="drag-and-drop-config-panel" choice-template-controller="">',
+      '<div class="drag-and-drop-config-panel drag-and-drop-inline-config-panel" choice-template-controller="">',
       '  <div navigator="">',
       '    <div navigator-panel="Design">',
       '      <div class="description">',
       '      In Fill in the Blank, students are asked to complete a sentence, word, phrase or equation using context clues presented in the text that surrounds it.',
       '      </div>',
-      inputHolder('Answer Blanks', answerArea),
+      inputHolder('Problem Area', answerArea),
       inputHolder('Choices', choiceArea),
       inputHolder('Feedback', feedback),
       '    </div>',

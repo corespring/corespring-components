@@ -22,7 +22,7 @@ The container decides to include the components by inspecting the Item.xhtml pro
 
 ## Library ----------------
 
-This spec defines how to create a component that can run within a corespring container.
+This spec defines how to create a component that can run within a org.corespring container.
 
 A component is a self contained unit that defines client side behaviour and server side processing.
 
@@ -31,6 +31,18 @@ On the client side the component must support the following modes:
 * config mode - how the client looks/behaves when used by an item author
 
 On the server side the component must define 1 method `respond` that takes the model, the answer and some settings.
+
+## Dependencies
+
+A UiComponent or a Library can depend on another Library so long as there are no cyclical dependencies.
+
+Eg - this is invalid:
+
+    A -depends-on-> B
+    B -depends-on-> C
+    C -depends-on-> A !! Error
+
+If this is detected an error is thrown.
 
 ## Folder Structure
 

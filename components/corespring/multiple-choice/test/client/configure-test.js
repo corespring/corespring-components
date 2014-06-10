@@ -66,6 +66,17 @@ describe('corespring', function() {
 
     beforeEach(angular.mock.module('test-app'));
 
+    function MockImageUtils() {}
+    function MockWiggiMathJaxFeatureDef() {}
+
+    beforeEach(function() {
+      module(function($provide) {
+        $provide.value('ImageUtils', MockImageUtils);
+        $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
+      });
+    });
+
+
     beforeEach(inject(function($compile, $rootScope) {
       scope = $rootScope.$new();
       container = new MockComponentRegister();

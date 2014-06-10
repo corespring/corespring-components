@@ -14,4 +14,11 @@ exports.preroll = ->
   """
   console.log('init');
   angular.module('test-app', []);
+
+  //Mock dependencies
+  angular.module('test-app').factory('WiggiMathJaxFeatureDef', [function(){
+    return function(){
+      return {};
+    } 
+  }]);
   """

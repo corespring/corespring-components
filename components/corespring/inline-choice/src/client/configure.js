@@ -36,6 +36,11 @@ var main = [
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer";
         scope.correctMap = [];
 
+        scope.overrideFeatures = [{
+          name: 'image',
+          action: undefined
+        }];
+
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;

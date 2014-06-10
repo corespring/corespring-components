@@ -42,15 +42,110 @@
 
 .root .designer .editor-container .select-text-configuration .wiggi-wiz {
     position: relative;
-    border: 1px solid #a9a9a9;
-    margin: 20px 0;
+}
+
+.select-text-configuration .root {
+    margin-top: 25px;
+    overflow: visible;
+}
+
+.select-text-configuration .popover {
+    min-width: 330px;
+    text-align: center;
 }
 
 .select-text-configuration label {
     margin-right: 10px;
 }
 
-.select-text-configuration .form-control {
+.select-text-configuration .select-text-editor-container.selection {
+    border: 1px solid #549e25;
+}
+
+.select-text-configuration .response-type {
+    margin: 20px 0 40px 0;
+}
+
+.select-text-configuration .form-control.selection-unit {
     width: 110px;
     display: inline-block;
+}
+
+.select-text-configuration .response-type-selection {
+    padding: 20px 0 0 20px;
+}
+
+.select-text-configuration .response-type-selection ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.select-text-configuration .response-type-selection label {
+    display: block;
+}
+
+.select-text-configuration .response-type-selection label.partial,
+.select-text-configuration .response-type-selection label.open-ended {
+    display: inline-block;
+}
+
+.select-text-configuration .response-type-selection strong {
+    display: block;
+}
+
+.select-text-configuration .response-type-selection input[type=text] {
+    width: 50px;
+}
+
+.select-text-configuration input[type=radio] {
+    margin-right: 5px;
+}
+
+.select-text-configuration .select-text-editor-container {
+    border: 1px solid #a9a9a9;
+    position: relative;
+    min-height: 45px;
+    margin-bottom: 20px;
+}
+
+.select-text-configuration .select-text-editor-container .wiggi-wiz-toolbar {
+    display: none;
+}
+
+.select-text-configuration .selection-editor {
+    padding: 10px;
+}
+
+.select-text-configuration .selection-editor .selection {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 3px;
+}
+
+.select-text-configuration .selection-editor .selection:hover {
+    background: #cccccc;
+}
+
+.select-text-configuration .selection-editor .selection.correct {
+    background: #e4ffc8;
+}
+
+.select-text-configuration .select-text-editor-container button {
+    margin: 10px;
+    float: right;
+    display: block;
+}
+
+.select-text-configuration .selection-unit.disabled {
+    color: #cccccc;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
 }

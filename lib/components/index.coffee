@@ -5,7 +5,7 @@ load all the comps to make them available elsewhere in the app.
 
 fs = require 'fs'
 path = require 'path'
-_ = require 'underscore'
+_ = require 'lodash'
 reader = require './component-reader'
 loadedComponents = {}
 loaded = false

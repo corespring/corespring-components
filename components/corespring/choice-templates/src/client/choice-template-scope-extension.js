@@ -1,10 +1,23 @@
 var def = [
   '$rootScope',
   '$log',
-  function($rootScope, $log) {
-    return {
-      scope: true,
-      link: function(scope, elm, attr) {
+  'WiggiMathJaxFeatureDef',
+  'ComponentImageService',
+  function($rootScope, $log, WiggiMathJaxFeatureDef, ComponentImageService) {
+
+    function ChoiceScopeExtension() {
+
+      $log.debug('component image service -> ', ComponentImageService);
+
+      this.postLink = function(scope, elm, attr) {
+
+        scope.extraFeatures = {
+          definitions: [{
+            type: 'group',
+            buttons: [new WiggiMathJaxFeatureDef()]
+          }]
+        };
+
         scope.imageUploadedToChoice = function(q) {
           q.imageName = scope.uploadingFilename;
           scope.$apply();
@@ -26,7 +39,10 @@ var def = [
               maxNumberOfCorrect = ps.numberOfCorrect;
             }
           });
-          scope.fullModel.partialScoring.push({numberOfCorrect: maxNumberOfCorrect + 1, scorePercentage: 20});
+          scope.fullModel.partialScoring.push({
+            numberOfCorrect: maxNumberOfCorrect + 1,
+            scorePercentage: 20
+          });
         };
 
         scope.removeScoringScenario = function(scoringScenario) {
@@ -43,14 +59,13 @@ var def = [
           return sameScore ? "invalid" : "";
         };
 
-      }
-    };
+      };
+    }
+
+    return ChoiceScopeExtension;
   }
 ];
 
 
 exports.framework = "angular";
-exports.directive = {
-  name: "choiceTemplateController",
-  directive: def
-};
+exports.factory = def;
