@@ -12,13 +12,13 @@ exports.wrapTokensWithHtml = function(choices) {
 };
 
 function correctIndexes(question) {
-  var correctIndexes = [];
+  var indexes = [];
   for (var i in question.model.choices) {
     if (question.model.choices[i].correct) {
-      correctIndexes.push(i);
+      indexes.push(i);
     }
   }
-  return correctIndexes;
+  return indexes;
 }
 
 var buildFeedback = function(question, answer) {
@@ -82,7 +82,7 @@ function isEverySelectedCorrect(question, answer) {
 
 function areSomeSelectedCorrect(question, answer) {
   return _.find(answer, function(a) {
-    return _.contains(correctIndexes(question), a)
+    return _.contains(correctIndexes(question), a);
   }) !== undefined;
 }
 

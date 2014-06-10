@@ -116,7 +116,7 @@ var main = [
         '  <div class="clearfix"></div>',
         '  <div ng-show="feedback" class="feedback feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
-        '</div>',
+        '</div>'
       ].join("")
     };
 
