@@ -22,7 +22,6 @@ var link = function() {
     };
 
     scope.$watch('selectedTokens', function(value) {
-      console.log('selecting ', value);
       scope.highlightSelection(scope.selectedTokens || []);
     });
 
@@ -62,7 +61,7 @@ var link = function() {
         console.log("Setting response", response);
         $(element).find('.token').each(function(idx, elem) {
           var id = $(elem).attr('id');
-          var feedback = (response && response.feedback[id]) || {};
+          var feedback = (response && response.feedback.choices[id]) || {};
           if (feedback.correct === false) {
             $(elem).addClass('incorrect');
           }
@@ -74,12 +73,18 @@ var link = function() {
           }
         });
 
+        scope.feedback = response.feedback.message;
+        scope.correctClass = response.correctClass;
+        scope.comments = response.comments;
       },
 
       setMode: function(newMode) {},
 
       reset: function() {
         scope.selectedTokens = undefined;
+        scope.feedback = undefined;
+        scope.correctClass = undefined;
+        scope.comments = undefined;
         scope.resetSelection();
       },
 
@@ -107,8 +112,12 @@ var main = [
       link: link(),
       template: [
         '<div class="view-select-text" ng-class="{true: \'enabled\', false: \'\'}[editable]">',
-        '<div class="select-text-content"></div>',
-        '</div>'].join("")
+        '  <div class="select-text-content"></div>',
+        '  <div class="clearfix"></div>',
+        '  <div ng-show="feedback" class="feedback feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
+        '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
+        '</div>',
+      ].join("")
     };
 
     return def;
