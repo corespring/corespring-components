@@ -31,7 +31,7 @@ var buildFeedback = function(question, answer) {
     "partialFeedback" : "incorrectFeedback");
   var fbTypeSelector = fbSelector + "Type";
 
-  var feedbackType = question.feedback[fbTypeSelector] || "default";
+  var feedbackType = question.feedback && question.feedback[fbTypeSelector] ? question.feedback[fbTypeSelector] : "default";
 
   if (feedbackType === "custom") {
     feedback.message = question.feedback[fbSelector];
@@ -110,7 +110,7 @@ exports.respond = function(question, answer, settings) {
 
   var res = {
     correctness: isCorrect(question, answer) ? "correct" : "incorrect",
-    score: isCorrect ? 1 : 0
+    score: isCorrect(question, answer) ? 1 : 0
   };
 
   var selectionCount = answer.length;

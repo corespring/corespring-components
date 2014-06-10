@@ -119,30 +119,30 @@ describe('select text server logic', function() {
 
   it('should have incorrect selections in the feedback', function() {
     var response = server.respond(_.cloneDeep(component), ['1', '2'], settings(true, true, true));
-    response.feedback['1'].should.eql({
+    response.feedback.choices['1'].should.eql({
       correct: false
     });
-    response.feedback['2'].should.eql({
+    response.feedback.choices['2'].should.eql({
       correct: false
     });
   });
 
   it('should have correct selections in the feedback', function() {
     var response = server.respond(_.cloneDeep(component), ['1', '9'], settings(true, true, true));
-    response.feedback['1'].should.eql({
+    response.feedback.choices['1'].should.eql({
       correct: false
     });
-    response.feedback['9'].should.eql({
+    response.feedback.choices['9'].should.eql({
       correct: true
     });
   });
 
   it('should have incorrect non-selections in the feedback', function() {
     var response = server.respond(_.cloneDeep(component), ['1', '2'], settings(true, true, true));
-    response.feedback['3'].should.eql({
+    response.feedback.choices['3'].should.eql({
       wouldBeCorrect: true
     });
-    response.feedback['9'].should.eql({
+    response.feedback.choices['9'].should.eql({
       wouldBeCorrect: true
     });
   });
@@ -162,31 +162,31 @@ describe('select text server logic', function() {
 
   it('selection should be marked correct if checkIfCorrect is false and selection count is okay', function() {
     var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1', '2'], settings(true, true, true));
-    response.feedback['1'].should.eql({
+    response.feedback.choices['1'].should.eql({
       correct: true
     });
-    response.feedback['2'].should.eql({
+    response.feedback.choices['2'].should.eql({
       correct: true
     });
   });
 
   it('selection should be marked incorrect if checkIfCorrect is false and selection count is not okay', function() {
     var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1'], settings(true, true, true));
-    response.feedback['1'].should.eql({
+    response.feedback.choices['1'].should.eql({
       correct: false
     });
 
     var responseTwo = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1', '2', '3', '4'], settings(true, true, true));
-    responseTwo.feedback['1'].should.eql({
+    responseTwo.feedback.choices['1'].should.eql({
       correct: false
     });
-    responseTwo.feedback['2'].should.eql({
+    responseTwo.feedback.choices['2'].should.eql({
       correct: false
     });
-    responseTwo.feedback['3'].should.eql({
+    responseTwo.feedback.choices['3'].should.eql({
       correct: false
     });
-    responseTwo.feedback['4'].should.eql({
+    responseTwo.feedback.choices['4'].should.eql({
       correct: false
     });
   });
