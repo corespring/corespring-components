@@ -10,7 +10,7 @@ var component = {
       "selectionUnit": "word",
       "checkIfCorrect": true
     },
-    "selections": [
+    "choices": [
       {
         data: "I"
       },
@@ -57,7 +57,7 @@ var componentIgnoreCorrect = {
       "minSelections": 2,
       "maxSelections": 3
     },
-    "selections" : [
+    "choices" : [
       {
         data: "I"
       },
