@@ -10,6 +10,10 @@ exports.service = ['$log',
       function getUnclosedTags(content, priorTags) {
         priorTags = priorTags || [];
 
+        /**
+         * Yes, parsing HTML with regular expressions is a bad idea in general, but for the small known subset we're
+         * using this will do nicely.
+         */
         function getCloseTags(content) {
           return _.map(content.match(/<\s*\/\s*[a-zA-Z]+(>|.*?[^?]>)/g), function (tag) {
             return tag.match(/<\s*\/\s*(.*?)[\s|>]/)[1];
