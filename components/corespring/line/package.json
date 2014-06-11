@@ -1,26 +1,26 @@
 {
-  "libraries": [{
-    "name": "line-utils",
-    "organization": "corespring"
-  }, {
-    "name": "function-utils",
-    "organization": "corespring"
-  }, {
-    "name": "canvas",
-    "organization": "corespring"
-  }],
-  "dependencies": {
-    "client": {
-      "angular-bootstrap": {
-        "version": "~0.10.0",
-        "file": "ui-bootstrap-tpls.min.js",
-        "angular-module": "ui.bootstrap"
-      }
-    }
-  },
-  "name": "line",
-  "title": "Graph Lines",
-  "titleGroup": "Mathematics",
-  "organization": "corespring",
-  "released": true
+    "libraries": [{
+        "name": "line-utils",
+        "organization": "corespring"
+    }, {
+        "name": "function-utils",
+        "organization": "corespring"
+    }, {
+        "name": "canvas",
+        "organization": "corespring"
+    }],
+    "dependencies": {
+        "client": {
+            "angular-bootstrap": {
+                "version": "~0.10.0",
+                "file": "ui-bootstrap-tpls.min.js",
+                "angular-module": "ui.bootstrap"
+            }
+        }
+    },
+    "name": "line",
+    "title": "Graph Lines",
+    "titleGroup": "Mathematics",
+    "organization": "corespring",
+    "released": true
 }
