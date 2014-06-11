@@ -1,7 +1,7 @@
 /* jshint evil: true */
 var main = ['$compile', '$modal', '$rootScope', "LineUtils",
   function($compile, $modal, $rootScope ,LineUtils) {
-    var utilsFactory = new LineUtils();
+    var lineUtils = new LineUtils();
     return {
       template: [
         "<div class='line-interaction-view'>",
@@ -329,7 +329,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
               scope.points = dataAndSession.session.answers;
             }
 
-            var initialValues = utilsFactory.pointsFromEquation(config.initialCurve);
+            var initialValues = lineUtils.pointsFromEquation(config.initialCurve);
 
             if (_.isArray(initialValues)) {
               var pointA = initialValues[0];
