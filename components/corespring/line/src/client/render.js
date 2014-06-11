@@ -1,6 +1,7 @@
 /* jshint evil: true */
-var main = ['$compile', '$modal', '$rootScope',
-  function($compile, $modal, $rootScope) {
+var main = ['$compile', '$modal', '$rootScope', "LineUtils",
+  function($compile, $modal, $rootScope ,LineUtils) {
+    var lineUtils = new LineUtils();
     return {
       template: [
         "<div class='line-interaction-view'>",
@@ -285,27 +286,6 @@ var main = ['$compile', '$modal', '$rootScope',
           });
         };
 
-        scope.pointsFromCurve = function(curve) {
-          var ic = curve;
-          if (!ic) {
-            return undefined;
-          }
-          if (ic.indexOf('=') >= 0) {
-            ic = ic.split("=")[1];
-          }
-          var b = Number(ic.substring(ic.indexOf('+')));
-
-          var mStr = ic.substring(0, ic.indexOf('x'));
-          mStr = mStr.replace(/[^\d]/g,"");
-          if (mStr === "") {
-            mStr = "1";
-          }
-          if (mStr === "-") {
-            mStr = "-1";
-          }
-          var m = (mStr && mStr.length > 0) ? Number(mStr) : 1;
-          return [[0,b],[1,m+b]];
-        };
 
         scope.containerBridge = {
 
@@ -349,7 +329,7 @@ var main = ['$compile', '$modal', '$rootScope',
               scope.points = dataAndSession.session.answers;
             }
 
-            var initialValues = scope.pointsFromCurve(config.initialCurve);
+            var initialValues = lineUtils.pointsFromEquation(config.initialCurve);
 
             if (_.isArray(initialValues)) {
               var pointA = initialValues[0];
