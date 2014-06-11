@@ -1,4 +1,4 @@
-describe('corespring', function() {
+describe('corespring line component', function() {
 
   var testModel, scope, rootScope, container, element;
 
@@ -27,13 +27,13 @@ describe('corespring', function() {
     });
 
     element = $compile("<org-tag id='1'></org-tag>")($rootScope.$new());
+
     scope = element.scope();
     rootScope = $rootScope;
   }));
 
-  it('constructs', function() {
+  it('constructs line component', function() {
     expect(element).toNotBe(null);
   });
-
 
 });
