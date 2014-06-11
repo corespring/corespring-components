@@ -4,7 +4,7 @@
 .view-select-text.enabled .token:hover {
     background-color: rgb(255, 255, 192);
     background-color: rgba(255, 255, 192, 0.4);
-    cursor: hand; cursor: pointer;
+    cursor: pointer;
 }
 
 .view-select-text.enabled .selected.token:hover,
@@ -67,6 +67,14 @@
 
 .root .designer .editor-container .select-text-configuration .wiggi-wiz {
     position: relative;
+}
+
+.select-text-configuration .select-text-editor-container .wiggi-wiz-toolbar .btn-group {
+    display: none;
+}
+
+.select-text-configuration .select-text-editor-container .wiggi-wiz-toolbar .btn-group:first-child {
+    display: inline-block;
 }
 
 .select-text-configuration .root {
@@ -133,10 +141,6 @@
     margin-bottom: 20px;
 }
 
-.select-text-configuration .select-text-editor-container .wiggi-wiz-toolbar {
-    display: none;
-}
-
 .select-text-configuration .selection-editor {
     padding: 10px;
 }
@@ -155,7 +159,7 @@
     background: #e4ffc8;
 }
 
-.select-text-configuration .select-text-editor-container button {
+.select-text-configuration .select-text-editor-container .toggle-choice {
     margin: 10px;
     float: right;
     display: block;

@@ -5,28 +5,14 @@ var main = [
   'ComponentImageService',
   'ChoiceTemplateScopeExtension',
   'WiggiMathJaxFeatureDef',
+  'TextProcessing',
   function($log,
            ServerLogic,
            ChoiceTemplates,
            ComponentImageService,
            ChoiceTemplateScopeExtension,
-           WiggiMathJaxFeatureDef) {
-
-    function wordSplit(content) {
-      return _((content || "").split(' ')).filter(_.isBlank).map(function(word) {
-        return {
-          data: word
-        };
-      }).value();
-    }
-
-    function sentenceSplit(content) {
-      return _((content || "").match(/(.*?[.!?]([^ \\t])*)/g)).filter(_.isBlank).map(function(sentence) {
-        return {
-          data: sentence
-        };
-      }).value();
-    }
+           WiggiMathJaxFeatureDef,
+           TextProcessing) {
 
     return {
       scope: 'isolate',
@@ -61,9 +47,9 @@ var main = [
           // Don't run on init, when oldValue === newValue
           if (oldValue !== newValue) {
             if ($scope.model.config.selectionUnit === 'word') {
-              $scope.model.choices = wordSplit($scope.content.xhtml);
+              $scope.model.choices = TextProcessing.wordSplit($scope.content.xhtml);
             } else if ($scope.model.config.selectionUnit === 'sentence') {
-              $scope.model.choices = sentenceSplit($scope.content.xhtml);
+              $scope.model.choices = TextProcessing.sentenceSplit($scope.content.xhtml);
             } else {
               $scope.model.choices = [$scope.content.xhtml];
             }
@@ -141,6 +127,10 @@ var main = [
         };
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
+        $scope.overrideFeatures = [{
+          name: 'image',
+          action: undefined
+        }];
       },
       template: [
         '<div class="select-text-configuration">',
@@ -155,11 +145,15 @@ var main = [
         '          <div class="select-text-editor-container clearfix" ng-class="mode" ng-click="hidePopover()"',
         '            popover-trigger="show" popover-placement="top"',
         '            popover="Click the {{model.config.selectionUnit}}s you want to set as choices">',
-        '            <wiggi-wiz ng-show="mode == \'editor\'" ng-model="content.xhtml"></wiggi-wiz>',
+        '            <wiggi-wiz ng-show="mode == \'editor\'" ng-model="content.xhtml">',
+        '              <toolbar formatting="empty" positioning="empty"></toolbar>',
+        '            </wiggi-wiz>',
         '            <div class="selection-editor" ng-show="mode == \'selection\'" ng-class="{words: model.config.selectionUnit == \'word\'}">',
-        '              <span class="selection" ng-repeat="choice in model.choices" ng-class="{correct: choice.correct}" ng-click="selectItem($index)">{{choice.data}}</span>',
+        '              <span class="selection" ng-repeat="choice in model.choices" ng-class="{correct: choice.correct}" ng-click="selectItem($index)" ng-bind-html-unsafe="choice.data"></span>',
         '            </div>',
-        '            <button class="btn btn-sm" ng-click="toggleChoice($event)">{{mode == \'selection\' ? \'edit passage\' : \'done\'}}</button>',
+        '            <button class="btn btn-sm toggle-choice" ng-click="toggleChoice($event)">',
+        '              {{mode == \'selection\' ? \'edit passage\' : \'done\'}}',
+        '            </button>',
         '          </div>',
         '          <div class="selection-unit property" ng-class="{disabled: mode != \'selection\'}">',
         '            <p>',

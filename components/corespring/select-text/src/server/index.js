@@ -40,13 +40,14 @@ var buildFeedback = function(question, answer) {
       (isPartiallyCorrect(question, answer) ? exports.DEFAULT_PARTIAL_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK);
   }
 
-  if (checkIfCorrect) {
+  if (checkIfCorrect(question)) {
     _.each(correctIndexes(question), function(correctIndex) {
       feedback.choices[correctIndex] = {
         wouldBeCorrect: true
       };
     });
   }
+
   _.each(answer, function(answerIndex) {
     feedback.choices[answerIndex] = {
       correct: (!checkIfCorrect(question) && selectionCountIsFine(question, answer)) ||
@@ -91,23 +92,34 @@ function numberOfCorrectAnswers(question, answers) {
 }
 
 function isCorrect(question, answer) {
+  var correct;
 
-  var correct = selectionCountIsFine(question, answer);
+  if (correctIndexes(question).length === 0) {
+    return false;
+  } else {
+    correct = selectionCountIsFine(question, answer);
 
-  if (checkIfCorrect(question)) {
-    correct &= areAllCorrectSelected(question, answer);
+    if (checkIfCorrect(question)) {
+      correct &= areAllCorrectSelected(question, answer);
+    }
+
+    return correct;
   }
-
-  return correct;
 }
 
 function isPartiallyCorrect(question, answer) {
-  var partiallyCorrect = selectionCountIsFine(question, answer);
+  var partiallyCorrect;
 
-  if (checkIfCorrect(question)) {
-    partiallyCorrect &= areSomeSelectedCorrect(question, answer);
+  if (correctIndexes(question).length === 0) {
+    return false;
+  } else {
+    partiallyCorrect = selectionCountIsFine(question, answer);
+
+    if (checkIfCorrect(question)) {
+      partiallyCorrect &= areSomeSelectedCorrect(question, answer);
+    }
+    return partiallyCorrect;
   }
-  return partiallyCorrect;
 }
 
 function score(question, answer) {
