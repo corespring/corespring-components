@@ -86,6 +86,7 @@ var link = function() {
         scope.correctClass = undefined;
         scope.comments = undefined;
         scope.resetSelection();
+        $('.incorrectlyNotSelected').removeClass('incorrectlyNotSelected');
       },
 
       isAnswerEmpty: function() {},

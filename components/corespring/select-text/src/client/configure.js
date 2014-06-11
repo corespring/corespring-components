@@ -1,10 +1,12 @@
 var main = [
+  '$log',
   'ServerLogic',
   'ChoiceTemplates',
   'ComponentImageService',
   'ChoiceTemplateScopeExtension',
   'WiggiMathJaxFeatureDef',
-  function(ServerLogic,
+  function($log,
+           ServerLogic,
            ChoiceTemplates,
            ComponentImageService,
            ChoiceTemplateScopeExtension,
@@ -55,13 +57,16 @@ var main = [
           }]
         };
 
-        function setBoundaries() {
-          if ($scope.model.config.selectionUnit === 'word') {
-            $scope.model.choices = wordSplit($scope.content.xhtml);
-          } else if ($scope.model.config.selectionUnit === 'sentence') {
-            $scope.model.choices = sentenceSplit($scope.content.xhtml);
-          } else {
-            $scope.model.choices = [$scope.content.xhtml];
+        function setBoundaries(oldValue, newValue) {
+          // Don't run on init, when oldValue === newValue
+          if (oldValue !== newValue) {
+            if ($scope.model.config.selectionUnit === 'word') {
+              $scope.model.choices = wordSplit($scope.content.xhtml);
+            } else if ($scope.model.config.selectionUnit === 'sentence') {
+              $scope.model.choices = sentenceSplit($scope.content.xhtml);
+            } else {
+              $scope.model.choices = [$scope.content.xhtml];
+            }
           }
         }
 
