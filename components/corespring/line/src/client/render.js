@@ -1,7 +1,7 @@
 /* jshint evil: true */
-var main = ['$compile', '$modal', '$rootScope', "LineLogic",
-  function($compile, $modal, $rootScope ,LineLogic) {
-    var utilsFactory = new LineLogic();
+var main = ['$compile', '$modal', '$rootScope', "LineUtils",
+  function($compile, $modal, $rootScope ,LineUtils) {
+    var utilsFactory = new LineUtils();
     return {
       template: [
         "<div class='line-interaction-view'>",

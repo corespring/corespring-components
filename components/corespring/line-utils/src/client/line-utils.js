@@ -2,7 +2,7 @@ exports.framework = 'angular';
 exports.factory = [
 
   function() {
-    function LineLogic() {
+    function LineUtils() {
       /**
       * Returns points to plot from given linear equation
       * Ex for input y=-5x+2
@@ -26,7 +26,7 @@ exports.factory = [
         var b = 0;
 
         function getSign(index){
-            return (captures[index]==="+" || captures[index]===undefined) ? 1: -1;
+            return captures[index]==="-" ? -1: 1;
         }
 
         function getSlope(index){
@@ -54,6 +54,6 @@ exports.factory = [
         return [[0,b],[1,m+b]];
       };
     }
-    return LineLogic;
+    return LineUtils;
   }
 ];
