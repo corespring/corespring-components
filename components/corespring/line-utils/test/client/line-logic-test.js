@@ -10,7 +10,14 @@ describe('corespring line component', function() {
 
   it('pointsFromEquation calculation', function() {
     var ob = new logic();
-    var result = ob.pointsFromEquation("y=5x+1");
+
+    var result = ob.pointsFromEquation("y");
+    expect(result).not.toBeDefined();
+
+    result = ob.pointsFromEquation("y=");
+    expect(result).not.toBeDefined();
+
+    result = ob.pointsFromEquation("y=5x+1");
     expect(result[0][0]).toEqual(0);
     expect(result[0][1]).toEqual(1);
     expect(result[1][0]).toEqual(1);
