@@ -1,10 +1,7 @@
 var def = [
-  '$log',
   'WiggiMathJaxFeatureDef',
   'ComponentImageService',
-  function($log, WiggiMathJaxFeatureDef, ComponentImageService) {
-
-    var log = $log.log.bind($log,'MiniWiggiScopeExtension');
+  function(WiggiMathJaxFeatureDef, ComponentImageService) {
 
     /**
      * Provide features to the scope that are used by mini wiggi
@@ -12,9 +9,6 @@ var def = [
     function MiniWiggiScopeExtension() {
 
       this.postLink = function(scope, elm, attr) {
-
-        //log("postLink imageService", ComponentImageService);
-        //log("postLink mathjaxFeature", WiggiMathJaxFeatureDef);
 
         scope.imageService = function(){
           return ComponentImageService;
