@@ -1,5 +1,10 @@
 {
   "name": "mini-wiggi-lib",
   "organization": "corespring",
-  "purpose": "library"
+  "purpose": "library",
+  "libraries": [{
+    "organization": "corespring",
+    "name": "image-service",
+    "scope": "editor"
+  }]
 }
