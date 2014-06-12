@@ -1,14 +1,14 @@
 var main = [
   '$log',
   '$timeout',
-  'ChoiceTemplates',
-  function($log, $timeout, ChoiceTemplates) {
+  'MiniWiggiScopeExtension',
+  function($log, $timeout, MiniWiggiScopeExtension) {
 
     "use strict";
 
     var designPanel = [
       '    <div navigator-panel="Design">',
-      '      <div class="cs-text-entry-cfg" choice-template-controller="">',
+      '      <div class="cs-text-entry-cfg">',
       '        <div class="input-holder">',
       '          <div class="body">',
       '            <p class="info">',
@@ -73,7 +73,7 @@ var main = [
       '            <div ng-show="commentOn" ng-repeat="q in [1]">',
       '              <div mini-wiggi-wiz="" ng-model="fullModel.comments"',
       '                placeholder="Use this space to provide summary level feedback for this interaction."',
-      '                image-service="imageService" features="extraFeatures"',
+      '                image-service="imageService()" features="extraFeatures"',
       '                parent-selector=".wiggi-wiz-overlay"/>',
       '            </div>',
       '          </div>',
@@ -136,6 +136,8 @@ var main = [
       replace: true,
       template: panels,
       link: function(scope, element, attrs) {
+
+        new MiniWiggiScopeExtension().postLink(scope, element, attrs);
 
         scope.itemId = attrs.id;
 

@@ -1,10 +1,10 @@
 {
-  "name": "feedback-templates",
+  "name": "mini-wiggi-lib",
   "organization": "corespring",
-  "purpose" : "library",
+  "purpose": "library",
   "libraries": [{
     "organization": "corespring",
-    "name": "mini-wiggi-lib",
+    "name": "image-service",
     "scope": "editor"
   }]
 }
