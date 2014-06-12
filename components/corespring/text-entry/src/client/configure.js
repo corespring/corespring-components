@@ -73,7 +73,7 @@ var main = [
       '            <div ng-show="commentOn" ng-repeat="q in [1]">',
       '              <div mini-wiggi-wiz="" ng-model="fullModel.comments"',
       '                placeholder="Use this space to provide summary level feedback for this interaction."',
-      '                image-service="imageService" features="extraFeatures"',
+      '                image-service="imageService()" features="extraFeatures"',
       '                parent-selector=".wiggi-wiz-overlay"/>',
       '            </div>',
       '          </div>',
