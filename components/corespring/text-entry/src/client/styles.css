@@ -44,6 +44,7 @@
   margin-top: 5px;
   padding-bottom: 30px;
   padding-left: 30px;
+  vertical-align: top;
 }
 
 .cs-text-entry__feedback-icon.correct {
