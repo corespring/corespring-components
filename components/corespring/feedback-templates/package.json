@@ -1,5 +1,10 @@
 {
   "name": "feedback-templates",
   "organization": "corespring",
-  "purpose" : "library"
+  "purpose" : "library",
+  "libraries": [{
+    "organization": "corespring",
+    "name": "mini-wiggi-lib",
+    "scope": "editor"
+  }]
 }

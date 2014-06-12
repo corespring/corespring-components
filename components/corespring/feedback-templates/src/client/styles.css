@@ -1,11 +1,16 @@
 .feedback-selector-view .feedback-preview {
-  height: 36px;
+  min-height: 36px;
   display: inline-block;
   margin-top: 10px;
   padding: 6px 6px 6px 6px;
   border-radius: 4px;
   width: 90%;
-  border: 1px solid #CCCCCC;
+  height: auto;
+
+}
+
+.feedback-selector-view .feedback-preview .mini-wiggi-wiz {
+  background-color: white;
 }
 
 .feedback-selector-view .feedback-preview.incorrect {

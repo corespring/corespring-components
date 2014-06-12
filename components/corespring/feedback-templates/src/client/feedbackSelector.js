@@ -1,11 +1,12 @@
 var def = [
   '$log',
-  function($log) {
+  'MiniWiggiScopeExtension',
+  function($log, MiniWiggiScopeExtension) {
     function inline(type, value, body, attrs) {
       return [
-          '<label class="' + type + '-inline">',
-          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
-          '</label>'
+        '<label class="' + type + '-inline">',
+        '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
+        '</label>'
       ].join('\n');
     }
 
@@ -17,7 +18,8 @@ var def = [
         fbSelCustomFeedback: "=",
         fbSelFeedbackType: "="
       },
-      link: function($scope) {
+      link: function($scope, $element, $attrs) {
+        new MiniWiggiScopeExtension().postLink($scope, $element, $attrs);
       },
       replace: true,
       template: [
@@ -30,7 +32,15 @@ var def = [
         '</div>',
         '<div class="clearfix"></div>',
         '<span ng-switch="fbSelFeedbackType">',
-        '  <input ng-switch-when="custom" class="form-control feedback-preview custom {{fbSelClass}}"  type="text" ng-model="$parent.fbSelCustomFeedback" placeholder="Enter customized feedback to be presented to the student" />',
+        '  <div ng-switch-when="custom" ',
+        '      mini-wiggi-wiz=""',
+        '      class="form-control feedback-preview custom {{fbSelClass}}"',
+        '      ng-model="$parent.fbSelCustomFeedback"',
+        '      image-service="imageService()"',
+        '      features="extraFeatures"',
+        '      placeholder="Enter customized feedback to be presented to the student"',
+        '      parent-selector=".wiggi-wiz-overlay">',
+        '  </div>',
         '  <input ng-switch-when="default" class="form-control feedback-preview {{fbSelClass}}" disabled="true" type="text" value="{{fbSelDefaultFeedback}}" />',
         '  <input ng-switch-when="none" class="form-control feedback-preview nofeedback {{fbSelClass}}" disabled="true" type="text" placeholder="No feedback will be presented to the student" />',
         '</span>',

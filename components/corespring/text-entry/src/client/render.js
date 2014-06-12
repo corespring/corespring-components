@@ -23,7 +23,7 @@ link = function() {
 
       // sets the server's response
       setResponse: function(response) {
-        console.log("Setting Response for text entry:");
+        console.log("Setting Response for text entry:", response);
         console.log(response);
 
         scope.feedback = response.feedback;
@@ -81,8 +81,8 @@ main = [
         '           style="text-align: {{question.answerAlignment}}"/>',
         '  </div>',
         '  <div class="cs-text-entry__feedback-holder" ng-show="feedback != null">',
-        '    <span class="cs-text-entry__feedback" ng-class="feedback.correctness" ng-show="feedback != null"></span>',
-        '     {{feedback.message}}',
+        '    <span class="cs-text-entry__feedback-icon" ng-class="feedback.correctness" ng-show="feedback != null"></span>',
+        '    <div class="cs-text-entry__feedback-text-holder" ng-bind-html-unsafe="feedback.message"></div>',
         '  </div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
         '</div>'
