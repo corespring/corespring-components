@@ -21,6 +21,8 @@ module.exports = (grunt) ->
   localWebdriverOptions =
     desiredCapabilities:
       browserName: 'chrome'
+    # other options firefox,internet explorer
+    # for internet explorer you have to install https://code.google.com/p/selenium/wiki/InternetExplorerDriver
 
   sauceLabsWebdriverOptions =
     host: 'ondemand.saucelabs.com',
@@ -28,12 +30,11 @@ module.exports = (grunt) ->
     user: process.env.SAUCE_USERNAME,
     key: process.env.SAUCE_ACCESS_KEY,
     desiredCapabilities:
-      platform: 'OS X 10.8',
+      platform: 'WINDOWS',
       browserName: 'chrome',
       'tunnel-identifier': 'regression-tunnel'
 
   config =
-
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
 
