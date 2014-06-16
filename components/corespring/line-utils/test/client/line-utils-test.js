@@ -17,6 +17,12 @@ describe('corespring line component', function() {
         result = ob.pointsFromEquation("y=");
         expect(result).not.toBeDefined();
 
+        result = ob.pointsFromEquation("y=x");
+        expect(result).toEqual([
+            [0, 0],
+            [1, 1]
+        ]);
+
         result = ob.pointsFromEquation("y=5x+1");
         expect(result).toEqual([
             [0, 1],
@@ -58,7 +64,6 @@ describe('corespring line component', function() {
             [0, -2],
             [1, -2]
         ]);
-
     });
 
 });

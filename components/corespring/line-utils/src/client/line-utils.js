@@ -18,7 +18,7 @@ exports.factory = [
 
                 var captures = patt.exec(equation);
 
-                if (!captures || captures.length === 0 || (!captures[3] && !captures[7])) {
+                if (!captures || captures.length === 0 || (!captures[3] && !captures[4] && !captures[7])) {
                     return undefined;
                 }
 
