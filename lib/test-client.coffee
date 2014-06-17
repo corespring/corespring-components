@@ -69,7 +69,6 @@ Run the client side tests
 ###
 module.exports = (grunt) ->
 
-
   (org,name,type) ->
 
     fs.writeFileSync("./appDeclaration.js", templates.preroll() )

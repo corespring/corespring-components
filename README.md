@@ -69,7 +69,13 @@ You can use the following test commands:
     --keepWrapped=true|false (default: false) - keep the generated js files
 
     # Run functional tests
-    grunt webdriver
+    grunt regression
 
     # Run functional tests against SauceLabs with a non-local base URL
-    grunt webdriver --local=false --baseUrl=http://corespring-container-devt.herokuapp.com
+    # Make sure SAUCE_USERNAME and SAUCE_ACCESS_KEY are set in your env  
+    grunt regression --local=false --baseUrl=http://corespring-container-devt.herokuapp.com
+    
+    ## Options
+    --browserName=firefox - passed to webdriverjs
+    --version="10.2" - passed to webdriverjs
+    --platform=windows - passed to webdriverjs
