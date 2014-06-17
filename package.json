@@ -29,6 +29,7 @@
     "mocha" : "~1.18.2",
     "nconf": "~0.6.9",
     "proxyquire" : "~0.6.0",
+    "regression-test-runner": "git+ssh://git@github.com:corespring/regression-test-runner.git",
     "sax": "~0.6.0",
     "should" : "~4.0.4",
     "sinon" : "~1.10.2"

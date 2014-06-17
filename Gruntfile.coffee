@@ -4,7 +4,7 @@ components = require "./lib/components"
 _ = require "lodash"
 utils = require "./lib/utils"
 testClient = require "./lib/test-client"
-regressionTestRunner = require "./lib/regression-test-runner"
+regressionTestRunner = require('regression-test-runner')
 
 module.exports = (grunt) ->
 
