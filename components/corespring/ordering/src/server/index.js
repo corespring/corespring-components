@@ -7,7 +7,13 @@ exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answe
 exports.respond = function(question, answer, settings) {
 
   function correctness() {
-    return _.isEqual(question.model.correctResponse, answer) ? 'correct' : 'incorrect';
+    if (_.isEqual(question.model.correctResponse, answer)) {
+      return 'correct';
+    } else {
+      return question.allowPartialScoring && _.find(_.zip(question.model.correctResponse, answer), function(pair) {
+        return pair[0] === pair[1];
+      }) ? 'partial' : 'incorrect';
+    }
   }
 
   function feedbackMessage() {
