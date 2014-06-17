@@ -5,8 +5,9 @@ var main = [
   '$http',
   'ChoiceTemplates',
   'ImageUtils',
+  'ServerLogic',
   'WiggiMathJaxFeatureDef',
-  function($sce, $log, $http, ChoiceTemplates, ImageUtils, WiggiMathJaxFeatureDef) {
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic, WiggiMathJaxFeatureDef) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -98,8 +99,8 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function($scope, $element, $attrs) {
-
         var log = $log.debug.bind($log, '[ordering-interaction-config] - ');
+        var server = ServerLogic.load('corespring-ordering');
 
         $scope.extraFeatures = {
           definitions: [{
@@ -109,9 +110,9 @@ var main = [
         };
 
         $scope.defaultNotChosenFeedback = {
-          correct: 'Correct!',
-          partial: 'Almost!',
-          incorrect: 'Good try, but that is not the correct answer.'
+          correct: server.DEFAULT_CORRECT_FEEDBACK,
+          partial: server.DEFAULT_PARTIAL_FEEDBACK,
+          incorrect: server.DEFAULT_INCORRECT_FEEDBACK
         };
 
         $scope.imageService = {
@@ -198,6 +199,12 @@ var main = [
         $scope.addChoice = function() {
           $scope.model.choices.push({content: "", label: ""});
         };
+
+        $scope.$watch('model', function(oldValue, newValue) {
+          if (oldValue.choices !== newValue.choices) {
+            $scope.model.correctResponse = _.pluck(newValue.choices, 'id');
+          }
+        }, true);
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
