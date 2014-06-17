@@ -5,9 +5,8 @@ var main = [
   '$http',
   'ChoiceTemplates',
   'ImageUtils',
-  'WiggiWizHelper',
   'WiggiMathJaxFeatureDef',
-  function($sce, $log, $http, ChoiceTemplates, ImageUtils, WiggiWizHelper, WiggiMathJaxFeatureDef) {
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, WiggiMathJaxFeatureDef) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -177,7 +176,6 @@ var main = [
         $scope.activate = function($index) {
           $scope.active[$index] = true;
           $('.sortable-choices', $element).sortable("disable");
-          WiggiWizHelper.focusCaretAtEnd('.wiggi-wiz-editable', $($('.sortable-choice')[$index]));
         };
 
         $scope.itemClick = function($event) {
