@@ -1,0 +1,11 @@
+{
+  "title": "Video",
+  "componentType": "corespring-video",
+  "weight": 0,
+  "model": {
+    "config": {
+      "type": "youtube",
+      "link": ""
+    }
+  }
+}
