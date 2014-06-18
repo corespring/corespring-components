@@ -1,0 +1,16 @@
+{
+  "libraries": [{
+    "name": "video-utils",
+    "organization": "corespring"
+  }],
+  "external-configuration": {
+    "corespring-editor": {
+      "placeholder-show-tooltip": true
+    }
+  },
+  "name": "video",
+  "title": "Video",
+  "titleGroup": "Other",
+  "organization": "corespring",
+  "released": true
+}

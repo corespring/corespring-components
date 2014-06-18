@@ -1,0 +1,29 @@
+/** editor placeholder */
+.cs-video .video-holder {
+    text-align: center;
+}
+
+.cs-video .blank-video {
+    line-height: 200px;
+    font-size: 40px;
+    vertical-align: middle;
+}
+
+.cs-video .blank-video .icon {
+    height: 100px;
+}
+
+
+/* config */
+.cs-video-config {
+}
+
+.cs-video-config .preview-video {
+    position: absolute;
+    top: 18px;
+    right: 55px;
+}
+
+.cs-video-config .cs-video-row {
+    margin-bottom: 5px;
+}
