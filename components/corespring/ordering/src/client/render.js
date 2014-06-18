@@ -101,7 +101,7 @@ var main = ['$compile', '$log',
     return {
       link: link,
       restrict: 'AE',
-      $scope: {},
+      scope: {},
       template: [
         '<div class="view-ordering">',
         '  <div class="prompt" ng-bind-html-unsafe="model.prompt"></div> ',
