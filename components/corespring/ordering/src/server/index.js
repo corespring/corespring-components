@@ -22,7 +22,7 @@ exports.respond = function(question, answer, settings) {
 
   function partialScore() {
     var partial = _.find(question.partialScoring, function(partialScoring) {
-      return partialScoring.numberOfCorrect == correctCount();
+      return partialScoring.numberOfCorrect === correctCount();
     });
     return partial ? partial.scorePercentage / 100 : 0;
   }
