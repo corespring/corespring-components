@@ -10,10 +10,21 @@ exports.respond = function(question, answer, settings) {
     if (_.isEqual(question.model.correctResponse, answer)) {
       return 'correct';
     } else {
-      return question.allowPartialScoring && _.find(_.zip(question.model.correctResponse, answer), function(pair) {
-        return pair[0] === pair[1];
-      }) ? 'partial' : 'incorrect';
+      return (question.allowPartialScoring && correctCount() !== 0) ? 'partial' : 'incorrect';
     }
+  }
+
+  function correctCount() {
+    return _.filter(_.zip(question.model.correctResponse, answer), function(pair) {
+      return pair[0] === pair[1];
+    }).length;
+  }
+
+  function partialScore() {
+    var partialScore = _.find(question.partialScoring, function(partialScoring) {
+      return partialScoring.numberOfCorrect == correctCount();
+    });
+    return partialScore ? partialScore.scorePercentage / 100 : 0;
   }
 
   function feedbackMessage() {
@@ -59,7 +70,7 @@ exports.respond = function(question, answer, settings) {
 
   var response = {
     correctness: correctness(),
-    score: (correctness() === 'correct') ? 1 : 0,
+    score: (correctness() === 'correct') ? 1 : (question.allowPartialScoring ? partialScore() : 0),
     answer: answer
   };
 

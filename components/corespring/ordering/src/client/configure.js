@@ -7,7 +7,9 @@ var main = [
   'ImageUtils',
   'ServerLogic',
   'WiggiMathJaxFeatureDef',
-  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic, WiggiMathJaxFeatureDef) {
+  'ChoiceTemplateScopeExtension',
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic, WiggiMathJaxFeatureDef,
+           ChoiceTemplateScopeExtension) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -56,9 +58,6 @@ var main = [
         '<ul class="sortable-choices" ui-sortable="" ng-model="model.choices">',
         '  <li class="sortable-choice" ng-repeat="choice in model.choices" ng-click="itemClick($event)"',
         '    ng-dblclick="activate($index)">',
-        '    <div class="delete-icon" ng-show="active[$index]">',
-        '      <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
-        '    </div>',
         '    <div class="blocker" ng-hide="active[$index]">',
         '      <div class="bg"></div>',
         '      <div class="content">',
@@ -67,7 +66,7 @@ var main = [
         '      </div>',
         '    </div>',
         '    <div class="delete-icon">',
-        '      <i ng-click="deleteNode()" class="fa fa-times-circle"></i>',
+        '      <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
         '    </div>',
         '    <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
         '    <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
@@ -101,6 +100,7 @@ var main = [
       link: function($scope, $element, $attrs) {
         var log = $log.debug.bind($log, '[ordering-interaction-config] - ');
         var server = ServerLogic.load('corespring-ordering');
+        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
 
         $scope.extraFeatures = {
           definitions: [{
@@ -113,48 +113,6 @@ var main = [
           correct: server.DEFAULT_CORRECT_FEEDBACK,
           partial: server.DEFAULT_PARTIAL_FEEDBACK,
           incorrect: server.DEFAULT_INCORRECT_FEEDBACK
-        };
-
-        $scope.imageService = {
-
-          deleteFile: function(url) {
-            $http['delete'](url);
-          },
-          addFile: function(file, onComplete, onProgress) {
-            var url = '' + file.name;
-
-            if (ImageUtils.bytesToKb(file.size) > 500) {
-              onComplete(ImageUtils.fileTooBigError(file.size, 500));
-              return;
-            }
-
-            var opts = {
-              onUploadComplete: function(body, status) {
-                log('done: ', body, status);
-                onComplete(null, url);
-              },
-              onUploadProgress: function() {
-                log('progress', arguments);
-                onProgress(null, 'started');
-              },
-              onUploadFailed: function() {
-                log('failed', arguments);
-                onComplete({
-                  code: 'UPLOAD_FAILED',
-                  message: 'upload failed!'
-                });
-              }
-            };
-
-            var reader = new FileReader();
-
-            reader.onloadend = function() {
-              var uploader = new com.ee.RawFileUploader(file, reader.result, url, name, opts);
-              uploader.beginUpload();
-            };
-
-            reader.readAsBinaryString(file);
-          }
         };
 
         $scope.containerBridge = {
@@ -177,6 +135,7 @@ var main = [
         $scope.activate = function($index) {
           $scope.active[$index] = true;
           $('.sortable-choices', $element).sortable("disable");
+          angular.element($('.sortable-choices .mini-wiggi-wiz', $element)[$index]).scope().focusCaretAtEnd();
         };
 
         $scope.itemClick = function($event) {
@@ -199,7 +158,7 @@ var main = [
         $scope.addChoice = function() {
           $scope.model.choices.push({content: "", label: ""});
         };
-
+        
         $scope.$watch('model', function(oldValue, newValue) {
           if (oldValue.choices !== newValue.choices) {
             $scope.model.correctResponse = _.pluck(newValue.choices, 'id');

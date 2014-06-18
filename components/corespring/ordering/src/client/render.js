@@ -96,7 +96,6 @@ var main = ['$compile', '$log',
       $scope.resetChoices = function() {
         $scope.choices = _.cloneDeep($scope.originalChoices);
       };
-
     };
 
     return {
