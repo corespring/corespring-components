@@ -41,6 +41,13 @@ component = {
     "prompt": "Drag the stages of the butterfly's lifecycle into order",
     "correctResponse": ["2", "1", "4", "3"]
   },
+  "partialScoring" : [
+    {
+      "numberOfCorrect" : 1,
+      "scorePercentage" : 50
+    }
+  ],
+  "allowPartialScoring" : true,
   "weight": 1
 };
 
@@ -68,6 +75,12 @@ describe('ordering server logic', function() {
     var response = server.respond(_.cloneDeep(component), ["2", "1", "4", "3"], settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
+  });
+
+  describe('respond partially correct', function() {
+    var response = server.respond(_.cloneDeep(component), ["2", "3", "1", "4"], settings(false, true, true));
+    response.correctness.should.eql('partial');
+    response.score.should.eql(0.5);
   });
 
 });
