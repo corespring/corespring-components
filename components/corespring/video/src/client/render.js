@@ -1,6 +1,7 @@
 var main = [
   '$sce',
-  function($sce) {
+  'VideoUtils',
+  function($sce, VideoUtils) {
 
     var link = function() {
       return function(scope, element, attrs) {
@@ -16,7 +17,7 @@ var main = [
             scope.question = dataAndSession.data.model;
             scope.session = dataAndSession.session || {};
             scope.answer = scope.session.answers;
-            scope.url = _.isEmpty(scope.question.config.url) ? "" : scope.question.config.url + "?controls=0&rel=0&showinfo=0";
+            scope.url = _.isEmpty(scope.question.config.url) ? "" : VideoUtils.convertYoutubeUrlToEmbedded(scope.question.config.url) + "?controls=0&rel=0&showinfo=0";
           },
           getSession: function() {
             return {

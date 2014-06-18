@@ -1,7 +1,8 @@
 var main = [
   '$log',
   '$sce',
-  function($log, $sce) {
+  'VideoUtils',
+  function($log, $sce, VideoUtils) {
 
     "use strict";
 
@@ -97,15 +98,18 @@ var main = [
           return $sce.trustAsResourceUrl(source);
         };
 
-        scope.$watch('fullModel.model.config.url', function(n) {
+
+        var updatePreview = function(n) {
           if (_.isEmpty(n)) {
             scope.previewUrl = "";
           } else {
             if (scope.fullModel.model.config.type === 'youtube') {
-              scope.previewUrl = scope.fullModel.model.config.url + "?controls=0&rel=0&showinfo=0";
+              scope.previewUrl = VideoUtils.convertYoutubeUrlToEmbedded(scope.fullModel.model.config.url) + "?controls=0&rel=0&showinfo=0";
             }
           }
-        });
+        };
+
+        scope.$watch('fullModel.model.config.url', _.debounce(updatePreview, 500));
       }
     };
   }

@@ -1,4 +1,8 @@
 {
+  "libraries": [{
+    "name": "video-utils",
+    "organization": "corespring"
+  }],
   "external-configuration": {
     "corespring-editor": {
       "placeholder-show-tooltip": true
