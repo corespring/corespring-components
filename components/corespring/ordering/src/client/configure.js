@@ -158,7 +158,7 @@ var main = [
         $scope.addChoice = function() {
           $scope.model.choices.push({content: "", label: ""});
         };
-        
+
         $scope.$watch('model', function(oldValue, newValue) {
           if (oldValue.choices !== newValue.choices) {
             $scope.model.correctResponse = _.pluck(newValue.choices, 'id');

@@ -21,10 +21,10 @@ exports.respond = function(question, answer, settings) {
   }
 
   function partialScore() {
-    var partialScore = _.find(question.partialScoring, function(partialScoring) {
+    var partial = _.find(question.partialScoring, function(partialScoring) {
       return partialScoring.numberOfCorrect == correctCount();
     });
-    return partialScore ? partialScore.scorePercentage / 100 : 0;
+    return partial ? partial.scorePercentage / 100 : 0;
   }
 
   function feedbackMessage() {
