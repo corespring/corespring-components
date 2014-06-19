@@ -24,13 +24,7 @@ var main = [
       '<div class="config-shuffle">',
       '  <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Choices</label>',
       '</div>',
-      '<div ng-click="commentOn = !commentOn" style="margin: 10px 0;"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
-      '<div ng-show="commentOn">',
-      '  <p>Use this space to provide summary level feedback for this interaction.</p>',
-      '  <div mini-wiggi-wiz="" ng-model="fullModel.comments" placeholder="Enter a choice"',
-      '    image-service="imageService()" features="extraFeatures"',
-      '    parent-selector=".wiggi-wiz-overlay"></div>',
-      '</div>'
+      '<div summary-feedback ng-model="fullModel.comments"></div>'
     ].join('\n');
 
     return {

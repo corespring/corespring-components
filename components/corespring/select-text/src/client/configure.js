@@ -4,9 +4,9 @@ var main = [
   'ChoiceTemplates',
   'TextProcessing',
   function($log,
-           ServerLogic,
-           ChoiceTemplates,
-           TextProcessing) {
+    ServerLogic,
+    ChoiceTemplates,
+    TextProcessing) {
 
     return {
       scope: 'isolate',
@@ -20,6 +20,11 @@ var main = [
         $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
 
         $scope.mode = 'editor';
+
+        $scope.overrideFeatures = [{
+          name: 'image',
+          action: undefined
+        }];
 
         function setBoundaries(oldValue, newValue) {
           // Don't run on init, when oldValue === newValue
@@ -47,8 +52,8 @@ var main = [
 
         $scope.safeApply = function(fn) {
           var phase = this.$root.$$phase;
-          if(phase === '$apply' || phase === '$digest') {
-            if(fn && (typeof(fn) === 'function')) {
+          if (phase === '$apply' || phase === '$digest') {
+            if (fn && (typeof(fn) === 'function')) {
               fn();
             }
           } else {
@@ -72,7 +77,7 @@ var main = [
         };
 
         $scope.correctChoices = function() {
-          return ($scope.model && $scope.model.choices) ? _.filter($scope.model.choices, function (choice) {
+          return ($scope.model && $scope.model.choices) ? _.filter($scope.model.choices, function(choice) {
             return choice.correct === true;
           }).length : 0;
         };
@@ -100,7 +105,11 @@ var main = [
           },
           setProfile: function(profile) {
             $scope.profile = profile;
-            $scope.profile = _.defaults($scope.profile, { contributorDetails: { additionalCopyrights: [] }});
+            $scope.profile = _.defaults($scope.profile, {
+              contributorDetails: {
+                additionalCopyrights: []
+              }
+            });
           }
         };
 
@@ -195,19 +204,14 @@ var main = [
         '                 fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
         '            ></div>',
         '          </div>',
-        '          <div ng-click="commentOn = !commentOn" style="margin: 10px 0;"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
-        '            <div ng-show="commentOn">',
-        '              <p>Use this space to provide summary level feedback for this interaction.</p>',
-        '              <div mini-wiggi-wiz="" ng-model="fullModel.comments"',
-        '                image-service="imageService()" features="extraFeatures"',
-        '                parent-selector=".wiggi-wiz-overlay"></div>',
-        '            </div>',
-        '          </div>',
+        '          <div summary-feedback ng-model="fullModel.comments"></div>',
         '        </div>',
         '      </div>',
         '      <div navigator-panel="Scoring">',
-                ChoiceTemplates.wrap(undefined,
-                  ChoiceTemplates.scoring({maxNumberOfPartialScores: "correctChoices() - 1"})),
+        ChoiceTemplates.wrap(undefined,
+          ChoiceTemplates.scoring({
+            maxNumberOfPartialScores: "correctChoices() - 1"
+          })),
         '      </div>',
         '    </div>',
         '  </div>',

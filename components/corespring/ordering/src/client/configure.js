@@ -21,27 +21,16 @@ var main = [
     };
 
     function feedback(options) {
-      function inline(type, value, body, attrs) {
-        return ['<label class="' + type + '-inline">',
-          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
-          '</label>'
-        ].join('\n');
-      }
-
+      var correctness = options.attribute;
       return [
         '<div class="well" ng-show="feedbackOn">',
-        '  <div><label>' + options.header + '</label></div>',
-        '  <div>',
-        inline("radio", "default", "Default Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
-        inline("radio", "none", "No Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
-        inline("radio", "custom", "Customized Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
+        '  <div feedback-selector',
+        '    fb-sel-label="' +  options.header + '"',
+        '    fb-sel-class="' + correctness + '"',
+        '    fb-sel-feedback-type="model.feedback.' + correctness + '.feedbackType"',
+        '    fb-sel-custom-feedback="model.feedback.' + correctness + '.notChosenFeedback"',
+        '    fb-sel-default-feedback="{{defaultNotChosenFeedback.' + correctness + '}}">',
         '  </div>',
-        '  <div class="clearfix"></div>',
-        '  <span ng-switch="model.feedback.' + options.attribute + '.feedbackType" class="choice-template-choice">',
-        '    <input ng-switch-when="custom" class="form-control feedback-preview custom ' + options.attribute + '" type="text" ng-model="model.feedback.' + options.attribute + '.notChosenFeedback" placeholder="' + placeholderText.selectedFeedback(options.attribute) + '"/>',
-        '    <input ng-switch-when="default" class="form-control feedback-preview ' + options.attribute + '" disabled="true" type="text" value="{{defaultNotChosenFeedback.' + options.attribute + '}}"/>',
-        '    <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"/>',
-        '  </span>',
         '</div>'
       ].join('\n');
     }
@@ -93,10 +82,7 @@ var main = [
         '    </td>',
         '  </tr>',
         '</table>',
-        '<div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
-        '<div ng-show="commentOn">',
-        '  <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
-        '</div>'
+        '<div summary-feedback ng-model="fullModel.comments"></div>'
       ].join('\n');
     }
 

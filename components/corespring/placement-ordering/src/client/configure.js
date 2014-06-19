@@ -37,10 +37,7 @@ var main = [
           '    </div>',
           '  </div>',
           '</div>',
-          '<div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span></div>',
-          '<div ng-show="commentOn">',
-          '  <textarea ng-model="fullModel.comments" class="form-control" placeholder="Use this space to provide summary level feedback for this interaction."></textarea>',
-          '</div>'
+          '<div summary-feedback ng-model="fullModel.comments"></div>'
         ].join("");
 
         return [
