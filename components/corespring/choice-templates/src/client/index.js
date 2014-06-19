@@ -16,7 +16,6 @@ exports.service = ['$log',
 
       this.extendScope = function(scope) {
         new ChoiceTemplateScopeExtension().postLink(scope);
-        new MiniWiggiScopeExtension().postLink(scope);
       };
 
       this.prompt = '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
@@ -42,36 +41,36 @@ exports.service = ['$log',
         opts = _.extend(defaults, opts);
 
         var feedback = opts.feedback ? [
-          '      <td colspan="6" style="text-align: left">',
-          '        <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
-          '        <div ng-show="feedbackOn">',
-          '          <div class="well">',
-          '            <div feedback-selector ng-show="correctMap[q.value]"',
-          '              fb-sel-label="If this choice is selected, show"',
-          '              fb-sel-class="correct"',
-          '              fb-sel-feedback-type="feedback[q.value].feedbackType"',
-          '              fb-sel-custom-feedback="feedback[q.value].feedback"',
-          '              fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
-          '            </div>',
-          '            <div feedback-selector ng-show="!correctMap[q.value]"',
-          '              fb-sel-label="If this choice is selected, show"',
-          '              fb-sel-class="incorrect"',
-          '              fb-sel-feedback-type="feedback[q.value].feedbackType"',
-          '              fb-sel-custom-feedback="feedback[q.value].feedback"',
-          '              fb-sel-default-feedback="{{defaultInCorrectFeedback}}">',
-          '            </div>',
-          '          </div>',
-          '          <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',
-          '            <div feedback-selector ',
-          '              fb-sel-label="If this choice is NOT selected, show"',
-          '              fb-sel-class="incorrect"',
-          '              fb-sel-feedback-type="feedback[q.value].feedbackType"',
-          '              fb-sel-custom-feedback="feedback[q.value].notChosenFeedback"',
-          '              fb-sel-default-feedback="{{defaultNotChosenFeedback}}">',
-          '            </div>',
-          '          </div>',
-          '        </div>',
-          '      </td>'
+          '<td colspan="6" style="text-align: left">',
+          '  <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
+          '  <div ng-show="feedbackOn">',
+          '    <div class="well">',
+          '      <div feedback-selector ng-show="correctMap[q.value]"',
+          '        fb-sel-label="If this choice is selected, show"',
+          '        fb-sel-class="correct"',
+          '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
+          '        fb-sel-custom-feedback="feedback[q.value].feedback"',
+          '        fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
+          '      </div>',
+          '      <div feedback-selector ng-show="!correctMap[q.value]"',
+          '        fb-sel-label="If this choice is selected, show"',
+          '        fb-sel-class="incorrect"',
+          '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
+          '        fb-sel-custom-feedback="feedback[q.value].feedback"',
+          '        fb-sel-default-feedback="{{defaultInCorrectFeedback}}">',
+          '      </div>',
+          '    </div>',
+          '    <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',
+          '      <div feedback-selector ',
+          '        fb-sel-label="If this choice is NOT selected, show"',
+          '        fb-sel-class="incorrect"',
+          '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
+          '        fb-sel-custom-feedback="feedback[q.value].notChosenFeedback"',
+          '        fb-sel-default-feedback="{{defaultNotChosenFeedback}}">',
+          '      </div>',
+          '    </div>',
+          '  </div>',
+          '</td>'
 
         ].join('') : '';
 
@@ -83,7 +82,7 @@ exports.service = ['$log',
           }
         };
 
-        return _.flatten([
+        return _.flatten([ //TODO Is this really necessary? Why is it a 2 dim array?
           [
             '  <table class="choice-template-choice">',
             '    <tr>', !_.isEmpty(opts.choice) && opts.showLabel ? ' <td ' + optWidth(opts.columnWidths[0]) + '>' + opts.choice + '</td>' : ''

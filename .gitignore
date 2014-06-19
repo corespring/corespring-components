@@ -2,6 +2,6 @@ node_modules
 .grunt
 _SpecRunner.html
 bower_components
-
+*.log
 .idea
 *.iml
