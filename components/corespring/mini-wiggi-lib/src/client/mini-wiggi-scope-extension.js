@@ -21,16 +21,6 @@ var def = [
           }]
         };
 
-        scope.imageUploadedToChoice = function(q) {
-          q.imageName = scope.uploadingFilename;
-          scope.$apply();
-        };
-
-        scope.getUploadUrl = function(file) {
-          scope.uploadingFilename = file.name;
-          return file.name;
-        };
-
       };
     }
 

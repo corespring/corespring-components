@@ -116,6 +116,7 @@ var main = [
         link: function($scope, $element, $attrs) {
 
           var server = ServerLogic.load('corespring-drag-and-drop-categorize');
+
           $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
           $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
           $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
@@ -148,7 +149,6 @@ var main = [
               return !$scope.targetDragging && !contains;
             }
           };
-
 
           $scope.choicesSortableOptions = {
             disabled: false,
@@ -233,6 +233,8 @@ var main = [
             var newOrder = _.pluck($scope.targets, 'id');
             $scope.fullModel.correctResponse = newOrder;
           });
+
+          ChoiceTemplates.extendScope($scope);
 
           $scope.init();
         },

@@ -1,22 +1,12 @@
-var def = [
+exports.framework = "angular";
+exports.factory = [
   '$rootScope',
   '$log',
-  'WiggiMathJaxFeatureDef',
-  'ComponentImageService',
-  function($rootScope, $log, WiggiMathJaxFeatureDef, ComponentImageService) {
+  function($rootScope, $log) {
 
-    function ChoiceScopeExtension() {
+    function ChoiceTemplateScopeExtension() {
 
-      $log.debug('component image service -> ', ComponentImageService);
-
-      this.postLink = function(scope, elm, attr) {
-
-        scope.extraFeatures = {
-          definitions: [{
-            type: 'group',
-            buttons: [new WiggiMathJaxFeatureDef()]
-          }]
-        };
+      this.postLink = function(scope) {
 
         scope.imageUploadedToChoice = function(q) {
           q.imageName = scope.uploadingFilename;
@@ -62,10 +52,6 @@ var def = [
       };
     }
 
-    return ChoiceScopeExtension;
+    return ChoiceTemplateScopeExtension;
   }
 ];
-
-
-exports.framework = "angular";
-exports.factory = def;

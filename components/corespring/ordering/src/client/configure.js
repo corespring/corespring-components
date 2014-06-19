@@ -6,10 +6,7 @@ var main = [
   'ChoiceTemplates',
   'ImageUtils',
   'ServerLogic',
-  'WiggiMathJaxFeatureDef',
-  'ChoiceTemplateScopeExtension',
-  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic, WiggiMathJaxFeatureDef,
-           ChoiceTemplateScopeExtension) {
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -27,16 +24,17 @@ var main = [
       function inline(type, value, body, attrs) {
         return ['<label class="' + type + '-inline">',
           '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
-          '</label>'].join('\n');
+          '</label>'
+        ].join('\n');
       }
 
       return [
         '<div class="well" ng-show="feedbackOn">',
         '  <div><label>' + options.header + '</label></div>',
         '  <div>',
-            inline("radio", "default", "Default Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
-            inline("radio", "none", "No Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
-            inline("radio", "custom", "Customized Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
+        inline("radio", "default", "Default Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
+        inline("radio", "none", "No Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
+        inline("radio", "custom", "Customized Feedback", "ng-model='model.feedback." + options.attribute + ".feedbackType'"),
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <span ng-switch="model.feedback.' + options.attribute + '.feedbackType" class="choice-template-choice">',
@@ -79,9 +77,18 @@ var main = [
         '  <tr>',
         '    <td colspan="6" style="text-align: left">',
         '      <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
-                 feedback({header: "If ordered correctly, show:", attribute: 'correct'}),
-                 feedback({header: "If partially ordered correctly, show:", attribute: 'partial'}),
-                 feedback({header: "If ordered incorrectly, show:", attribute: 'incorrect'}),
+        feedback({
+          header: "If ordered correctly, show:",
+          attribute: 'correct'
+        }),
+        feedback({
+          header: "If partially ordered correctly, show:",
+          attribute: 'partial'
+        }),
+        feedback({
+          header: "If ordered incorrectly, show:",
+          attribute: 'incorrect'
+        }),
         '      </div>',
         '    </td>',
         '  </tr>',
@@ -100,14 +107,6 @@ var main = [
       link: function($scope, $element, $attrs) {
         var log = $log.debug.bind($log, '[ordering-interaction-config] - ');
         var server = ServerLogic.load('corespring-ordering');
-        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
-
-        $scope.extraFeatures = {
-          definitions: [{
-            type: 'group',
-            buttons: [new WiggiMathJaxFeatureDef()]
-          }]
-        };
 
         $scope.defaultNotChosenFeedback = {
           correct: server.DEFAULT_CORRECT_FEEDBACK,
@@ -150,13 +149,18 @@ var main = [
         };
 
         $scope.deactivate = function() {
-          $scope.active = _.map($scope.model.choices, function() { return false; });
+          $scope.active = _.map($scope.model.choices, function() {
+            return false;
+          });
           $('.sortable-choices', $element).sortable("enable");
           $scope.$emit('mathJaxUpdateRequest');
         };
 
         $scope.addChoice = function() {
-          $scope.model.choices.push({content: "", label: ""});
+          $scope.model.choices.push({
+            content: "",
+            label: ""
+          });
         };
 
         $scope.$watch('model', function(oldValue, newValue) {
@@ -165,6 +169,8 @@ var main = [
           }
         }, true);
 
+        ChoiceTemplates.extendScope($scope);
+
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
       },
@@ -172,11 +178,11 @@ var main = [
         '<div class="view-ordering-config" choice-template-controller="" ng-click="deactivate()">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
-                designTemplate(),
+        designTemplate(),
         '    </div>',
         '    <div navigator-panel="Scoring">',
         '      <div>',
-                 ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
+        ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
         '      </div>',
         '    </div>',
         '  </div>',
@@ -188,5 +194,5 @@ var main = [
 
 exports.framework = 'angular';
 exports.directives = [{
-    directive: main
+  directive: main
 }];

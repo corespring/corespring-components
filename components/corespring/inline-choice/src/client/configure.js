@@ -36,11 +36,6 @@ var main = [
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer";
         scope.correctMap = [];
 
-        scope.overrideFeatures = [{
-          name: 'image',
-          action: undefined
-        }];
-
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
@@ -97,9 +92,6 @@ var main = [
           scope.fullModel.feedback = out;
         }, true);
 
-
-        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
-
         scope.removeQuestion = function(q) {
 
           scope.correctMap[q.value] = false;
@@ -145,12 +137,14 @@ var main = [
           scope.navClosed = !scope.navClosed;
         };
 
+        ChoiceTemplates.extendScope(scope);
+        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       },
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
         '<div class="config-inline-choice" choice-template-controller="">',
-               ChoiceTemplates.wrap(undefined, choices),
+        ChoiceTemplates.wrap(undefined, choices),
         '</div>'
       ].join("")
     };

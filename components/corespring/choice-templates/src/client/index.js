@@ -3,9 +3,10 @@
 
 exports.framework = "angular";
 exports.service = ['$log',
-  function($log) {
+  'ChoiceTemplateScopeExtension',
+  function($log, ChoiceTemplateScopeExtension) {
 
-    var ChoiceTemplates = function() {
+    function ChoiceTemplates() {
 
       var placeholderText = {
         selectedFeedback: 'Enter feedback to display if this choice is selected.',
@@ -13,13 +14,18 @@ exports.service = ['$log',
         noFeedback: 'No feedback will be presented to the student.'
       };
 
-      this.prompt = '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
+      this.extendScope = function(scope) {
+        new ChoiceTemplateScopeExtension().postLink(scope);
+        new MiniWiggiScopeExtension().postLink(scope);
+      };
 
+      this.prompt = '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
 
       this.inline = function(type, value, body, attrs) {
         return ['<label class="' + type + '-inline">',
-            '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
-          '</label>'].join('\n');
+          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
+          '</label>'
+        ].join('\n');
       };
 
       this.choice = function(opts) {
@@ -38,33 +44,31 @@ exports.service = ['$log',
         var feedback = opts.feedback ? [
           '      <td colspan="6" style="text-align: left">',
           '        <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
-          '        <div class="well" ng-show="feedbackOn">',
-          '          <div><label>If this choice is selected, show</label></div>',
-          '          <div>',
-          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].feedbackType'"),
-          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].feedbackType'"),
-          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].feedbackType'"),
-          '          </div>',
-          '          <div class="clearfix"></div>',
-          '          <span ng-switch="feedback[q.value].feedbackType">',
-            '            <input ng-switch-when="custom" class="form-control feedback-preview custom" ng-class="{correct: ' + opts.correctnessPredicate + '}" type="text" ng-model="feedback[q.value].feedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
-            '            <input ng-switch-when="default" class="form-control feedback-preview" ng-class="{correct: ' + opts.correctnessPredicate + '}" disabled="true" type="text" value="{{' + opts.correctnessPredicate + ' ? defaultCorrectFeedback : defaultIncorrectFeedback}}"></input>',
-            '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
-          '          </span>',
-
-          '          <div ng-show="correctMap[q.value]" style="margin-top: 15px">',
-          '            <div><label>If this choice is NOT selected, show</label></div>',
-          '            <div>',
-          this.inline("radio", "default", "Default Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
-          this.inline("radio", "none", "No Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
-          this.inline("radio", "custom", "Customized Feedback", "ng-model='feedback[q.value].notChosenFeedbackType'"),
+          '        <div ng-show="feedbackOn">',
+          '          <div class="well">',
+          '            <div feedback-selector ng-show="correctMap[q.value]"',
+          '              fb-sel-label="If this choice is selected, show"',
+          '              fb-sel-class="correct"',
+          '              fb-sel-feedback-type="feedback[q.value].feedbackType"',
+          '              fb-sel-custom-feedback="feedback[q.value].feedback"',
+          '              fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
           '            </div>',
-          '            <div class="clearfix"></div>',
-          '          <span ng-switch="feedback[q.value].notChosenFeedbackType">',
-            '            <input ng-switch-when="custom" class="form-control feedback-preview custom correct" type="text" ng-model="feedback[q.value].notChosenFeedback" placeholder="' + placeholderText.selectedFeedback + '"></input>',
-          '            <input ng-switch-when="default" class="form-control feedback-preview  correct" disabled="true" type="text" value="{{defaultNotChosenFeedback}}"></input>',
-            '            <input ng-switch-when="none" class="form-control feedback-preview nofeedback" disabled="true" type="text" placeholder="' + placeholderText.noFeedback + '"></input>',
-          '          </span>',
+          '            <div feedback-selector ng-show="!correctMap[q.value]"',
+          '              fb-sel-label="If this choice is selected, show"',
+          '              fb-sel-class="incorrect"',
+          '              fb-sel-feedback-type="feedback[q.value].feedbackType"',
+          '              fb-sel-custom-feedback="feedback[q.value].feedback"',
+          '              fb-sel-default-feedback="{{defaultInCorrectFeedback}}">',
+          '            </div>',
+          '          </div>',
+          '          <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',
+          '            <div feedback-selector ',
+          '              fb-sel-label="If this choice is NOT selected, show"',
+          '              fb-sel-class="incorrect"',
+          '              fb-sel-feedback-type="feedback[q.value].feedbackType"',
+          '              fb-sel-custom-feedback="feedback[q.value].notChosenFeedback"',
+          '              fb-sel-default-feedback="{{defaultNotChosenFeedback}}">',
+          '            </div>',
           '          </div>',
           '        </div>',
           '      </td>'
@@ -82,11 +86,10 @@ exports.service = ['$log',
         return _.flatten([
           [
             '  <table class="choice-template-choice">',
-            '    <tr>',
-            !_.isEmpty(opts.choice) && opts.showLabel ? ' <td ' + optWidth(opts.columnWidths[0]) + '>' + opts.choice + '</td>' : ''
+            '    <tr>', !_.isEmpty(opts.choice) && opts.showLabel ? ' <td ' + optWidth(opts.columnWidths[0]) + '>' + opts.choice + '</td>' : ''
           ],
           [
-            '     <td '+optWidth(opts.columnWidths[1])+'>',
+            '     <td ' + optWidth(opts.columnWidths[1]) + '>',
             '       <div class="choice-wrapper">',
             '         <span class="choice-remove-button" ng-click="removeQuestion(q)">',
             '           <i class="fa fa-times-circle"></i>',
@@ -101,7 +104,7 @@ exports.service = ['$log',
             '           ng-change="q.shuffle = !remain; resetStash()" /> Remain in place',
             '       </label>',
             '     </td>',
-            '     <td class="correct" '+ optWidth(opts.columnWidths[2]) + '>',
+            '     <td class="correct" ' + optWidth(opts.columnWidths[2]) + '>',
             opts.correct,
             '      </td>',
             '    </tr>',
@@ -117,8 +120,9 @@ exports.service = ['$log',
       this.wrap = function(title, body) {
         return ['<div class="input-holder">',
           title ? '  <div class="header">' + title + '</div>' : '',
-            '  <div class="body">' + body + '</div>',
-          '</div>'].join('\n');
+          '  <div class="body">' + body + '</div>',
+          '</div>'
+        ].join('\n');
       };
 
 
@@ -157,8 +161,8 @@ exports.service = ['$log',
 
         ].join('\n');
       };
-
-    };
+    }
 
     return new ChoiceTemplates();
-  }];
+  }
+];

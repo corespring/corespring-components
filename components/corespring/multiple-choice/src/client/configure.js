@@ -2,14 +2,11 @@ var main = [
   '$log',
   '$http',
   'ChoiceTemplates',
-  'ComponentImageService',
-  'ChoiceTemplateScopeExtension',
   function(
     $log,
     $http,
-    ChoiceTemplates,
-    ComponentImageService,
-    ChoiceTemplateScopeExtension) {
+    ChoiceTemplates
+    ) {
 
     var choices = [
       '<p class="intro">',
@@ -40,15 +37,7 @@ var main = [
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      controller: ['$scope',
-        function(scope) {
-          scope.imageService = function() {
-            return ComponentImageService;
-          };
-        }
-      ],
       link: function(scope, element, attrs) {
-
 
         // TODO: this needs to be centralised and not duplicated here and the server side
         scope.defaultCorrectFeedback = "Correct!";
@@ -204,8 +193,7 @@ var main = [
 
         scope.leftPanelClosed = false;
 
-        new ChoiceTemplateScopeExtension().postLink(scope, element, attrs);
-
+        ChoiceTemplates.extendScope(scope);
       },
 
       template: [

@@ -2,32 +2,17 @@ var main = [
   '$log',
   'ServerLogic',
   'ChoiceTemplates',
-  'ComponentImageService',
-  'ChoiceTemplateScopeExtension',
-  'WiggiMathJaxFeatureDef',
   'TextProcessing',
   function($log,
            ServerLogic,
            ChoiceTemplates,
-           ComponentImageService,
-           ChoiceTemplateScopeExtension,
-           WiggiMathJaxFeatureDef,
            TextProcessing) {
 
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      controller: ['$scope',
-        function($scope) {
-          $scope.imageService = function() {
-            return ComponentImageService;
-          };
-        }
-      ],
       link: function($scope, $element, $attrs) {
-
-        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
 
         var server = ServerLogic.load('corespring-select-text');
         $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
@@ -35,13 +20,6 @@ var main = [
         $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
 
         $scope.mode = 'editor';
-
-        $scope.extraFeatures = {
-          definitions: [{
-            type: 'group',
-            buttons: [new WiggiMathJaxFeatureDef()]
-          }]
-        };
 
         function setBoundaries(oldValue, newValue) {
           // Don't run on init, when oldValue === newValue
@@ -126,11 +104,9 @@ var main = [
           }
         };
 
+        ChoiceTemplates.extendScope($scope);
+
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
-        $scope.overrideFeatures = [{
-          name: 'image',
-          action: undefined
-        }];
       },
       template: [
         '<div class="select-text-configuration">',

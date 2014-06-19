@@ -54,7 +54,7 @@
 }
 
 .choice-template-choice .feedback-preview {
-    height: 36px;
+    min-height: 36px;
     display: inline-block;
     margin-top: 10px;
     padding: 6px 6px 6px 36px;
@@ -62,6 +62,11 @@
     border: 2px solid #F8A31A;
     border-radius: 4px;
     width: 90%;
+    height: auto;
+}
+
+.choice-template-choice .feedback-preview .mini-wiggi-wiz {
+  background-color: white;
 }
 
 .choice-template-choice .feedback-preview.correct {
