@@ -63,7 +63,7 @@ exports.service = ['$log',
           '    <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',
           '      <div feedback-selector ',
           '        fb-sel-label="If this choice is NOT selected, show"',
-          '        fb-sel-class="incorrect"',
+          '        fb-sel-class="correct"', //TODO shouldn't that be incorrect?
           '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
           '        fb-sel-custom-feedback="feedback[q.value].notChosenFeedback"',
           '        fb-sel-default-feedback="{{defaultNotChosenFeedback}}">',
