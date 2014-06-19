@@ -27,6 +27,22 @@ link = function($sce, $timeout) {
 
     scope.editable = true;
 
+    function clearFeedback(choices) {
+      _(choices).each(function (c) {
+        delete c.feedback;
+        delete c.correct;
+      });
+    }
+
+    function setFeedback(choices, response){
+      _(choices).each(function (c) {
+        if (response.feedback && response.feedback[c.value]) {
+          c.feedback = response.feedback[c.value].feedback;
+          c.correct = response.feedback[c.value].correct;
+        }
+      });
+    }
+
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
@@ -72,14 +88,8 @@ link = function($sce, $timeout) {
       setResponse: function(response) {
         console.log("Setting Response for inline choice:");
         console.log(response);
-        _(scope.choices).each(function(c) {
-          delete c.feedback;
-          delete c.correct;
-          if (response.feedback && response.feedback[c.value]) {
-            c.feedback = response.feedback[c.value].feedback;
-            c.correct = response.feedback[c.value].correct;
-          }
-        });
+        clearFeedback(scope.choices);
+        setFeedback(scope.choices, response);
         scope.response = response;
       },
 
@@ -88,6 +98,7 @@ link = function($sce, $timeout) {
 
       reset: function() {
         scope.selected = undefined;
+        clearFeedback(scope.choices);
       },
 
       isAnswerEmpty: function() {
