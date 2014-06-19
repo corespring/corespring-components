@@ -14,8 +14,6 @@ exports.respond = function(question, answer, settings) {
     partial: exports.DEFAULT_PARTIAL_FEEDBACK
   };
 
-
-
   var numberOfCorrectAnswers = 0;
 
   for (var idx = 0; idx < Math.min(answer.length, question.correctResponse.length); idx++) {
@@ -44,7 +42,8 @@ exports.respond = function(question, answer, settings) {
     correctResponse: question.correctResponse,
     answer: answer,
     score: score,
-    correctClass: isCorrect ? 'correct' : (isPartiallyCorrect ? 'partial' : 'incorrect')
+    correctClass: isCorrect ? 'correct' : (isPartiallyCorrect ? 'partial' : 'incorrect'),
+    comments: question.comments
   };
 
   if (settings.showFeedback) {

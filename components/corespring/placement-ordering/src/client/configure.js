@@ -37,7 +37,7 @@ var main = [
           '    </div>',
           '  </div>',
           '</div>',
-          '<div summary-feedback ng-model="fullModel.comments"></div>'
+          '<div summary-feedback-input ng-model="fullModel.comments"></div>'
         ].join("");
 
         return [

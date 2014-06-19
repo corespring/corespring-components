@@ -24,7 +24,7 @@ var main = [
       '<div class="config-shuffle">',
       '  <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Choices</label>',
       '</div>',
-      '<div summary-feedback ng-model="fullModel.comments"></div>'
+      '<div summary-feedback-input ng-model="fullModel.comments"></div>'
     ].join('\n');
 
     return {

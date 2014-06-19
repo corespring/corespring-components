@@ -61,6 +61,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           scope.correctResponse = response.correctResponse;
           scope.feedback = response.feedback;
           scope.correctClass = response.correctClass;
+          scope.comments = response.comments;
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
@@ -93,6 +94,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
       '  </div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" class="feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
+      '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
       '</div>'
 
     ].join("");

@@ -1,6 +1,6 @@
 exports.framework = "angular";
 exports.directive = {
-  name: "summaryFeedback",
+  name: "summaryFeedbackInput",
   directive: [
     '$log',
     'MiniWiggiScopeExtension',

@@ -24,7 +24,6 @@ link = function() {
       // sets the server's response
       setResponse: function(response) {
         console.log("Setting Response for text entry:", response);
-        console.log(response);
 
         scope.feedback = response.feedback;
         scope.correctClass = response.feedback.correctness;

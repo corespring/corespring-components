@@ -98,6 +98,6 @@ exports.respond = function(question, answer, settings) {
     };
   }
 
-  console.log("text-entry.respond" + response);
+  console.log("text-entry.respond", response);
   return response;
 };
