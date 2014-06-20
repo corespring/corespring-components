@@ -7,6 +7,7 @@
 
 .cs-text-entry {
   display: inline-block;
+  position: relative;
   margin: 0 8px 0 3px;
 }
 
@@ -33,34 +34,31 @@
   outline: 0 none;
 }
 
-.cs-text-entry__feedback-holder {
-  height: 40px;
-  padding-top: 8px;
-  padding-left: 0;
-  position: relative;
+.cs-text-entry .feedback {
+  position: absolute;
 }
 
-.cs-text-entry__feedback-icon {
-  margin-top: 5px;
-  padding-bottom: 30px;
-  padding-left: 30px;
-  vertical-align: top;
-}
-
-.cs-text-entry__feedback-icon.correct {
-  background: url("/assets/images/feedback/correct-icon.png") no-repeat scroll 0px -0px transparent;
-}
-
-.cs-text-entry__feedback-icon.partial {
-  background: url("/assets/images/feedback/partial-icon.png") no-repeat scroll 0px -0px transparent;
-}
-
-.cs-text-entry__feedback-icon.incorrect {
-  background: url("/assets/images/feedback/wrong-icon.png") no-repeat scroll 0px -0px transparent;
-}
-
-.cs-text-entry__feedback-text-holder {
+.cs-text-entry .tooltip {
+  opacity: 1;
   display: inline-block;
+  position: absolute;
+  top: -72px;
+  left: 5px;
+  max-width: 400px;
+}
+
+.cs-text-entry .tooltip-inner {
+  background-color: black;
+  height: 17px;
+  padding-top: 0px;
+  border-radius: 2px;
+  max-width: 400px;
+  white-space: nowrap;
+}
+
+.cs-text-entry .tooltip .caret {
+  top: 17px;
+  position: absolute;
 }
 
 /* Config Panel */

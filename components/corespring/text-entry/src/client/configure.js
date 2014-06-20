@@ -20,14 +20,14 @@ var main = [
       '          Use the tab key or the Enter/Return key for each possible word, phrase, expression, or equation.',
       '        </p>',
       '        <div class="cs-text-entry-cfg__answers-holder">',
-      '          <div cs-response-input model="fullModel.correctResponses" prompt="correctResponsesPrompt"/>',
+      '          <div cs-text-entry-response-input model="fullModel.correctResponses" prompt="correctResponsesPrompt"/>',
       '        </div>',
       '        <div class="section-header">Partially Correct Answers (optional)</div>',
       '        <p class="info field-info">',
       '          Use the tab key or the Enter/Return key for each possible word, phrase, expression, or equation.',
       '        </p>',
       '        <div class="cs-text-entry-cfg__answers-holder">',
-      '          <div cs-response-input model="fullModel.partialResponses" prompt="partialResponsesPrompt"/>',
+      '          <div cs-text-entry-response-input model="fullModel.partialResponses" prompt="partialResponsesPrompt"/>',
       '          <div class="cs-text-entry-cfg__award-config">Award',
       '            <input class="cs-text-entry-cfg__number-input" type="number"',
       '                   ng-model="fullModel.partialResponses.award" min="0" max="100"/> % of full credit for a partially',
@@ -67,7 +67,6 @@ var main = [
       '              ></div>',
       '          </div>',
       '        </div>',
-      '        <div summary-feedback-input ng-model="fullModel.comments"></div>',
       '      </div>',
       '    </div>',
       '  </div>',
@@ -232,7 +231,7 @@ var main = [
   }
 ];
 
-var csResponseInput = [
+var csTextEntryResponseInput = [
   '$log',
   function($log) {
 
@@ -285,6 +284,6 @@ exports.framework = 'angular';
 exports.directives = [{
   directive: main
 }, {
-  name: 'csResponseInput',
-  directive: csResponseInput
+  name: 'csTextEntryResponseInput',
+  directive: csTextEntryResponseInput
 }];

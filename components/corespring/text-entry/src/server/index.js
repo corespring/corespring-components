@@ -27,12 +27,11 @@ exports.isCorrect = function(answer, responses) {
 exports.respond = function(question, answer, settings) {
   var response;
 
-  function createResponse(correctness, score, comments) {
+  function createResponse(correctness, score) {
     return {
       correctness: correctness,
       score: score / 100,
-      feedback: {},
-      comments: comments
+      feedback: {}
     };
   }
 
@@ -45,7 +44,7 @@ exports.respond = function(question, answer, settings) {
   }
 
   function isPartialResponse(response) {
-    return response && response.score >= 0 && response.score <= 1;
+    return response && !(isCorrectResponse(response) || isIncorrectResponse(response));
   }
 
   function getFeedbackType(response) {
@@ -58,7 +57,7 @@ exports.respond = function(question, answer, settings) {
       feedbackTemplate = question.correctResponses.feedback.value;
     } else if (isPartialResponse(response)) {
       feedbackTemplate = question.partialResponses.feedback.value;
-    } else if (isIncorrectResponse(response.correctness)) {
+    } else {
       feedbackTemplate = question.incorrectResponses.feedback.value;
     }
     return feedbackTemplate;
@@ -84,11 +83,11 @@ exports.respond = function(question, answer, settings) {
   }
 
   if (exports.isCorrect(answer, question.correctResponses)) {
-    response = createResponse("correct", 100, question.comments);
+    response = createResponse("correct", 100);
   } else if (exports.isCorrect(answer, question.partialResponses)) {
-    response = createResponse("incorrect", question.partialResponses.award, question.comments);
+    response = createResponse("incorrect", question.partialResponses.award);
   } else {
-    response = createResponse("incorrect", 0, question.comments);
+    response = createResponse("incorrect", 0);
   }
 
   if (settings.showFeedback) {

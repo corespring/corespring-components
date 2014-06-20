@@ -23,11 +23,8 @@ link = function() {
 
       // sets the server's response
       setResponse: function(response) {
-        console.log("Setting Response for text entry:", response);
-
         scope.feedback = response.feedback;
         scope.correctClass = response.feedback.correctness;
-        scope.comments = response.comments;
       },
 
       setMode: function(newMode) {},
@@ -37,7 +34,6 @@ link = function() {
         scope.feedback = undefined;
         scope.correctClass = undefined;
         scope.response = undefined;
-        scope.comments = undefined;
       },
 
       isAnswerEmpty: function() {
@@ -79,11 +75,12 @@ main = [
         '           size="{{question.answerBlankSize}}"',
         '           style="text-align: {{question.answerAlignment}}"/>',
         '  </div>',
-        '  <div class="cs-text-entry__feedback-holder" ng-show="feedback != null">',
-        '    <span class="cs-text-entry__feedback-icon" ng-class="feedback.correctness" ng-show="feedback != null"></span>',
-        '    <div class="cs-text-entry__feedback-text-holder" ng-bind-html-unsafe="feedback.message"></div>',
+        '  <div ng-show="feedback" class="feedback">&nbsp;',
+        '    <div class="tooltip">',
+        '      <div class="tooltip-inner" ng-bind-html-unsafe="feedback.message"></div>',
+        '      <span class="caret"></span>',
+        '    </div>',
         '  </div>',
-        '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
         '</div>'
       ].join("\n")
     };
