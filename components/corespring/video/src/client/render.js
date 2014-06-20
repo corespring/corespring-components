@@ -8,7 +8,8 @@ var main = [
 
         var addEmptyFunctions = function(obj, fns) {
           _.each(fns, function(fn) {
-            obj[fn] = function() {};
+            obj[fn] = function() {
+            };
           });
         };
 
@@ -17,7 +18,9 @@ var main = [
             scope.question = dataAndSession.data.model;
             scope.session = dataAndSession.session || {};
             scope.answer = scope.session.answers;
-            scope.url = _.isEmpty(scope.question.config.url) ? "" : VideoUtils.convertYoutubeUrlToEmbedded(scope.question.config.url) + "?controls=0&rel=0&showinfo=0";
+            if (!_.isEmpty(scope.question.config.url)) {
+              scope.url = _.isEmpty(scope.question.config.url) ? "" : VideoUtils.convertYoutubeOrVimeoUrlToEmbedded(scope.question.config.url);
+            }
           },
           getSession: function() {
             return {
@@ -29,7 +32,7 @@ var main = [
           }
         };
 
-        addEmptyFunctions(scope.containerBridge, ['setResponse','setMode','reset','answerChangedHandler','editable']);
+        addEmptyFunctions(scope.containerBridge, ['setResponse', 'setMode', 'reset', 'answerChangedHandler', 'editable']);
 
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 

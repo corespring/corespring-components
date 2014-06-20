@@ -10,7 +10,7 @@
   },
   "name": "video",
   "title": "Video",
-  "titleGroup": "Other",
+  "titleGroup": "toolbar",
   "organization": "corespring",
   "released": true
 }
