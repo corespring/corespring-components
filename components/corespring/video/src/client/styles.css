@@ -18,12 +18,33 @@
 .cs-video-config {
 }
 
+.cs-video-config .description {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.cs-video-config .video-icon {
+    margin-right: 20px;
+}
+
 .cs-video-config .preview-video {
     position: absolute;
-    top: 18px;
+    top: 98px;
     right: 55px;
+}
+
+.cs-video-config .preview-player {
+    border: 1px solid #000000;
+}
+
+.cs-video-config .blank-video {
+    border: 1px solid #000000;
+    text-align: center;
+    width: 180px;
+    height: 100px;
 }
 
 .cs-video-config .cs-video-row {
     margin-bottom: 5px;
 }
+
