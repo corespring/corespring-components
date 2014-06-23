@@ -11,7 +11,7 @@ var main = [
       '  <iframe ng-if="fullModel.model.config.url" class="preview-player" width="180" height="100"',
       '          ng-src="{{trustSource(previewUrl)}}"',
       '          frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
-      '  <div ng-if="!fullModel.model.config.url" class="blank-video">Video URL not provided<br><i class="fa fa-link"></i></div>',
+      '  <div ng-if="!fullModel.model.config.url" class="blank-video">Video URL not provided<br><i class="fa fa-link"></i></div>'
     ].join('\n');
 
     var designPanel = [
