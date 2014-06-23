@@ -1,4 +1,13 @@
 /** editor placeholder */
+.component-placeholder.corespring-video {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.cs-video {
+    display: inline-block;
+}
+
 .cs-video .video-holder {
     text-align: center;
 }
@@ -16,6 +25,18 @@
 
 /* config */
 .cs-video-config {
+}
+
+.cs-video-config .split-container {
+    display: flex;
+}
+
+.cs-video-config .split-left {
+    flex: 5;
+}
+
+.cs-video-config .split-right {
+    flex: 3;
 }
 
 .cs-video-config .description {

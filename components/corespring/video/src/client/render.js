@@ -21,6 +21,8 @@ var main = [
             if (!_.isEmpty(scope.question.config.url)) {
               scope.url = _.isEmpty(scope.question.config.url) ? "" : VideoUtils.convertYoutubeOrVimeoUrlToEmbedded(scope.question.config.url);
             }
+            scope.width = (scope.question.config.width || 480) + "px";
+            scope.height = (scope.question.config.height || 270) + "px";
           },
           getSession: function() {
             return {
@@ -55,7 +57,7 @@ var main = [
         '      <i class="fa fa-film icon"></i>',
         '    </div>',
         '    <div ng-show="question.config.url">',
-        '      <iframe id="ytplayer" width="480" height="270"',
+        '      <iframe id="ytplayer" width="{{width}}" height="{{height}}"',
         '      ng-src="{{trustSource(url)}}"',
         '      frameborder="0" allowfullscreen>',
         '    </div>',

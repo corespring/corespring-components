@@ -5,7 +5,9 @@
   "model": {
     "config": {
       "type": "youtube",
-      "link": ""
+      "link": "",
+      "width": 480,
+      "height": 270
     }
   }
 }
