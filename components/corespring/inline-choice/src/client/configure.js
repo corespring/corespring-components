@@ -3,7 +3,7 @@ var main = [
   function($log, ChoiceTemplates) {
 
     var choices = [
-      '<div class="choice-config-panel config-panel">',
+      '<div class="choice-config-panel" >',
       '  <p class="info">',
       '    In Drop Down Choice, students select the best response from a list of options presented. This interaction ',
       '    type may be embedded inline with other content such as text.',
