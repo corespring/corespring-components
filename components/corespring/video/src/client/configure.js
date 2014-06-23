@@ -30,7 +30,7 @@ var main = [
       '            </span>',
       '            <span class="col-md-5">',
       '              <input type="radio" id="ytradio" ng-model="fullModel.model.config.type" value="youtube" />',
-      '              <label for="ytradio">Youtube or Vimeo</label>',
+      '              <label for="ytradio">YouTube or Vimeo</label>',
       '            </span>',
       '          </div>',
       '          <div class="cs-video-row clearfix">',
