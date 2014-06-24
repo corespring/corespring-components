@@ -213,7 +213,7 @@ var main = [
         }
       ],
       replace: true,
-      link: function($scope, element, attrs) {
+      link: function($scope, $element, $attrs) {
 
         var server = ServerLogic.load('corespring-drag-and-drop-categorize');
         $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
@@ -285,7 +285,7 @@ var main = [
           }
         }, true);
 
-        $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
+        $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
         $scope.removeQuestion = function(c) {
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
