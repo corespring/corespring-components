@@ -21,8 +21,8 @@ var main = [
             if (!_.isEmpty(scope.question.config.url)) {
               scope.url = _.isEmpty(scope.question.config.url) ? "" : VideoUtils.convertYoutubeOrVimeoUrlToEmbedded(scope.question.config.url);
             }
-            scope.width = (scope.question.config.width || 480) + "px";
-            scope.height = (scope.question.config.height || 270) + "px";
+            scope.width = Math.min(scope.question.config.width || 480, 500) + "px";
+            scope.height = Math.min(scope.question.config.height || 270, 500) + "px";
           },
           getSession: function() {
             return {
