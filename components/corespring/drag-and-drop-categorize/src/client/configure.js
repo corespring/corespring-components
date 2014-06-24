@@ -1,6 +1,14 @@
 var main = [
-  "ChoiceTemplates", 'ServerLogic', 'MathJaxService',
-  function(ChoiceTemplates, ServerLogic, MathJaxService) {
+  'ChoiceTemplates',
+  'ServerLogic',
+  'MathJaxService',
+  'ComponentImageService',
+  'ChoiceTemplateScopeExtension',
+  function(ChoiceTemplates,
+           ServerLogic,
+           MathJaxService,
+           ComponentImageService,
+           ChoiceTemplateScopeExtension) {
     var input, inputs, template;
 
     input = function(attrs, label) {
@@ -197,6 +205,13 @@ var main = [
       restrict: "E",
       scope: "isolate",
       template: template,
+      controller: ['$scope',
+        function($scope) {
+          $scope.imageService = function() {
+            return ComponentImageService;
+          };
+        }
+      ],
       replace: true,
       link: function($scope, element, attrs) {
 
@@ -314,8 +329,10 @@ var main = [
           });
         };
         $scope.leftPanelClosed = false;
+
+        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
       }
-    };
+  };
   }
 ];
 
