@@ -14,6 +14,12 @@ describe('corespring video utils', function() {
     expect(youtubeUrl).toBe("https://www.youtube.com/embed/_sBZdSHAIZI?rel=0&showinfo=0");
   });
 
+  it('youtube 2', function() {
+    var url =  "http://youtu.be/_FU0ol9lWog";
+    var youtubeUrl = videoUtils.convertYoutubeUrlToEmbedded(url);
+    expect(youtubeUrl).toBe("https://www.youtube.com/embed/_FU0ol9lWog?rel=0&showinfo=0");
+  });
+
   it('vimeo', function() {
     var url =  "http://vimeo.com/channels/staffpicks/98268016";
     var vimeoUrl = videoUtils.convertVimeoUrlToEmbedded(url);

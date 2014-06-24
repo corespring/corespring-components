@@ -3,7 +3,11 @@ exports.service = [
   function() {
     return {
       convertYoutubeUrlToEmbedded: function(url) {
-        return url.replace(/.*?\?v=(\w+)/gi, "https://www.youtube.com/embed/$1?rel=0&showinfo=0");
+        if (url.indexOf("v=") >= 0) {
+          return url.replace(/.*?\?v=([\w-]{11})/gi, "https://www.youtube.com/embed/$1?rel=0&showinfo=0");
+        } else {
+          return url.replace(/.*?\/([\w-]{11})/gi, "https://www.youtube.com/embed/$1?rel=0&showinfo=0");
+        }
       },
 
       convertVimeoUrlToEmbedded: function(url) {
@@ -11,7 +15,7 @@ exports.service = [
       },
 
       convertYoutubeOrVimeoUrlToEmbedded: function(url) {
-        var isYoutube = !_.isEmpty(url.match(/youtube\.com/));
+        var isYoutube = !_.isEmpty(url.match(/you.*?[\w-]{11}/));
         var isVimeo = !_.isEmpty(url.match(/vimeo\.com/));
         if (isYoutube) {
           return this.convertYoutubeUrlToEmbedded(url);
