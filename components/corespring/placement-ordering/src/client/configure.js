@@ -1,6 +1,12 @@
 var main = [
-    'ChoiceTemplates', 'ServerLogic',
-    function(ChoiceTemplates, ServerLogic) {
+  'ChoiceTemplates',
+  'ServerLogic',
+  'ComponentImageService',
+  'ChoiceTemplateScopeExtension',
+    function(ChoiceTemplates,
+             ServerLogic,
+             ComponentImageService,
+             ChoiceTemplateScopeExtension) {
 
       function designTemplate() {
 
@@ -72,7 +78,7 @@ var main = [
           '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
           '          parent-selector=".editor-container"',
           '          placeholder="Enter choice and/or add an image or math code."',
-          '          image-service="imageService" />',
+          '          image-service="imageService()" />',
           '      </li>',
           '    </ul>',
           '    <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
@@ -110,6 +116,13 @@ var main = [
         scope: 'isolate',
         restrict: 'E',
         replace: true,
+        controller: ['$scope',
+          function($scope) {
+            $scope.imageService = function() {
+              return ComponentImageService;
+            };
+          }
+        ],
         link: function($scope, $element, $attrs) {
 
           var server = ServerLogic.load('corespring-drag-and-drop-categorize');
@@ -234,6 +247,8 @@ var main = [
           ChoiceTemplates.extendScope($scope);
 
           $scope.init();
+
+          new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
         },
         template: [
           '<div class="placement-ordering-config" ng-click="deactivate()">',
