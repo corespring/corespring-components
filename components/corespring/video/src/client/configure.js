@@ -19,25 +19,15 @@ var main = [
       '  <div class="input-holder">',
       '    <div class="body">',
       '      <div class="description">',
-      '        <div>Add a video by providing the video URL and description below. Videos hosted by the following providers are currently supported:</div>',
-      '        <div><i class="video-icon fa fa-youtube" /><i class="fa fa-vimeo-square" /></div>',
+      '        <div>Add a video by providing the video URL and description below. Videos hosted by <i class="video-icon fa fa-youtube" /> YouTube and <i class="fa fa-vimeo-square video-icon" /> Vimeo are currently supported.</div>',
       '      </div>',
       '      <div class="split-container">',
       '        <form class="split-left" role="form">',
-      '          <div class="cs-video-row clearfix" >',
-      '            <span class="col-md-2">',
-      '              Type:',
-      '            </span>',
-      '            <span class="col-md-5">',
-      '              <input type="radio" id="ytradio" ng-model="fullModel.model.config.type" value="youtube" />',
-      '              <label for="ytradio">YouTube or Vimeo</label>',
-      '            </span>',
-      '          </div>',
       '          <div class="cs-video-row clearfix">',
       '            <span class="col-md-2">',
       '              Video URL:',
       '            </span>',
-      '            <span class="col-md-5">',
+      '            <span class="col-md-9">',
       '              <input type="text" class="form-control" ng-model="fullModel.model.config.url" />',
       '            </span>',
       '          </div>',
@@ -53,18 +43,21 @@ var main = [
       '            <span class="col-md-2">',
       '              Description:',
       '            </span>',
-      '            <span class="col-md-9">',
-      '              <input type="text" class="form-control" ng-model="fullModel.model.config.description" />',
+      '          </div>',
+      '          <div class="cs-video-row clearfix">',
+      '            <span class="col-md-11">',
+      '              <textarea class="form-control" ng-model="fullModel.model.config.description" />',
       '            </span>',
       '          </div>',
       '        </form>',
       '        <div class="split-right">',
-      '          '+previewVideo,
+        '          ' + previewVideo,
       '          <br>',
       '          <div>Video Size:</div>',
-      '          <input type="number" max="500" class="form-control" style="max-width: 80px; display: inline-block" ng-model="fullModel.model.config.width"/> x ',
-      '          <input type="number" max="500" class="form-control" style="max-width: 80px; display: inline-block" ng-model="fullModel.model.config.height" />',
+      '          <input type="number" class="form-control" style="max-width: 80px; display: inline-block" ng-blur="setConstraints()" ng-model="fullModel.model.config.width"/> x ',
+      '          <input type="number" class="form-control" style="max-width: 80px; display: inline-block" ng-blur="setConstraints()" ng-model="fullModel.model.config.height" />',
       '          px',
+      '          <button ng-click="resetDimensions()" class="btn btn-sm btn-default">Reset</button>',
       '        </div>',
       '      </div>',
       '    </div>',
@@ -98,6 +91,17 @@ var main = [
           return $sce.trustAsResourceUrl(source);
         };
 
+        scope.resetDimensions = function() {
+          scope.fullModel.model.config.width = 480;
+          scope.fullModel.model.config.height = 270;
+        };
+
+        scope.setConstraints = function() {
+          var w = scope.fullModel.model.config.width;
+          scope.fullModel.model.config.width = Math.min(Math.max(w, 177), 500);
+          var h = scope.fullModel.model.config.height;
+          scope.fullModel.model.config.height = Math.min(Math.max(h, 100), 281);
+        };
 
         var updatePreview = function(n) {
           if (_.isEmpty(n)) {
@@ -108,6 +112,24 @@ var main = [
         };
 
         scope.$watch('fullModel.model.config.url', _.debounce(updatePreview, 500));
+
+        scope.$watch('fullModel.model.config.height', function(n) {
+          if (n) {
+            var w = n / 9 * 16;
+            if (Math.abs(w - scope.fullModel.model.config.width) > 10) {
+              scope.fullModel.model.config.width = Math.floor(w);
+            }
+          }
+        });
+
+        scope.$watch('fullModel.model.config.width', function(n) {
+          if (n) {
+            var h = n / 16 * 9;
+            if (Math.abs(h - scope.fullModel.model.config.height) > 10) {
+              scope.fullModel.model.config.height = Math.floor(h);
+            }
+          }
+        });
       }
     };
   }
