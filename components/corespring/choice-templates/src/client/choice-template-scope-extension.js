@@ -2,7 +2,10 @@ exports.framework = "angular";
 exports.factory = [
   '$rootScope',
   '$log',
-  function($rootScope, $log) {
+  'MiniWiggiScopeExtension',
+
+  function($rootScope, $log, MiniWiggiScopeExtension)
+ {
 
     function ChoiceTemplateScopeExtension() {
 
@@ -48,6 +51,8 @@ exports.factory = [
 
           return sameScore ? "invalid" : "";
         };
+
+        new MiniWiggiScopeExtension().postLink(scope);
 
       };
     }
