@@ -4,7 +4,6 @@ components = require "./lib/components"
 _ = require "lodash"
 utils = require "./lib/utils"
 testClient = require "./lib/test-client"
-regressionTestRunner = require('regression-test-runner')
 
 module.exports = (grunt) ->
 
@@ -20,7 +19,10 @@ module.exports = (grunt) ->
     common: commonConfig
 
     regressionTestRunner:
-      tests: ['components/**/regression/*.js']
+      options:
+        tests: ['components/**/regression/*.js']
+      dev:
+        baseUrl: "http://localhost:9000"
 
     jasmine:
       unit:
@@ -52,7 +54,7 @@ module.exports = (grunt) ->
         src: ['<%= common.componentPath %>/**/test/server/**/*-test.js']
 
     jshint:
-      options: 
+      options:
         jshintrc: '.jshintrc'
       main: ['<%= common.componentPath %>/**/*.js', '!**/*-wrapped.js', '!<%= common.componentPath %>/**/libs/**/*.js']
 
@@ -64,10 +66,10 @@ module.exports = (grunt) ->
     clean:
       test: ["<%= common.componentPath %>/**/*-wrapped.js"]
 
-    jsbeautifier: 
+    jsbeautifier:
       files : ["<%= common.componentPath %>/**/*.js"],
-      options : 
-        js: 
+      options :
+        js:
           braceStyle: "collapse"
           breakChainedMethods: false
           e4x: false
@@ -94,14 +96,13 @@ module.exports = (grunt) ->
     'grunt-mocha-test'
     'grunt-contrib-watch'
     'grunt-contrib-jshint'
-    'grunt-jsbeautifier'
+    'grunt-jsbeautifier',
+    'regression-test-runner'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
-  grunt.registerTask('regression', regressionTestRunner(grunt).help, regressionTestRunner(grunt).task)
+  grunt.registerTask('regression', ['regressionTestRunner'])
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
-
-
