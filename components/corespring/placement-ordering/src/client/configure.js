@@ -71,7 +71,6 @@ var main = [
           '        <div class="blocker" ng-hide="active[$index]">',
           '          <div class="bg"></div>',
           '          <div class="content">',
-          '            <img class="drag-icon" src="../../images/hand-grab-icon.png"/>',
           '            <div class="title">Double Click to Edit</div>',
           '          </div>',
           '        </div>',
