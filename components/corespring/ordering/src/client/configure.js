@@ -7,8 +7,7 @@ var main = [
   'ImageUtils',
   'ServerLogic',
   'ComponentImageService',
-  'ChoiceTemplateScopeExtension',
-  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic, ComponentImageService, ChoiceTemplateScopeExtension) {
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic, ComponentImageService) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -164,7 +163,7 @@ var main = [
           }
         }, true);
 
-        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
+        ChoiceTemplates.extendScope($scope);
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
