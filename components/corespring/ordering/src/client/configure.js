@@ -6,7 +6,9 @@ var main = [
   'ChoiceTemplates',
   'ImageUtils',
   'ServerLogic',
-  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic) {
+  'ComponentImageService',
+  'ChoiceTemplateScopeExtension',
+  function($sce, $log, $http, ChoiceTemplates, ImageUtils, ServerLogic, ComponentImageService, ChoiceTemplateScopeExtension) {
 
     var placeholderText = {
       selectedFeedback: function(attribute) {
@@ -58,7 +60,7 @@ var main = [
         '    <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
         '    <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
         '      parent-selector=".editor-container"',
-        '      image-service="imageService" />',
+        '      image-service="imageService()" />',
         '  </li>',
         '</ul>',
         '<button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
@@ -90,6 +92,13 @@ var main = [
       scope: 'isolate',
       restrict: 'E',
       replace: true,
+      controller: ['$scope',
+        function($scope) {
+          $scope.imageService = function() {
+            return ComponentImageService;
+          };
+        }
+      ],
       link: function($scope, $element, $attrs) {
         var log = $log.debug.bind($log, '[ordering-interaction-config] - ');
         var server = ServerLogic.load('corespring-ordering');
@@ -155,13 +164,13 @@ var main = [
           }
         }, true);
 
-        ChoiceTemplates.extendScope($scope);
+        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
       },
       template: [
-        '<div class="view-ordering-config" choice-template-controller="" ng-click="deactivate()">',
+        '<div class="view-ordering-config" ng-click="deactivate()">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
         designTemplate(),

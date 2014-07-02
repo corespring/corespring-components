@@ -2,6 +2,13 @@
   "name": "drag-and-drop-engine",
   "organization": "corespring",
   "purpose" : "library",
+  "libraries": [
+    {
+      "name": "image-service",
+      "organization": "corespring",
+      "scope": "editor"
+    }
+  ],
   "dependencies": {
     "client": {
       "angular-dragdrop": {
