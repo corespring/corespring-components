@@ -54,7 +54,7 @@ var main = [
           '  the answers to a placement area.',
           '</p>',
           '<p class="intro">',
-          '  Enter your choices into the right column. Place the choices into the left column and drag and drop them',
+          '  Enter your choices into the left column. Place the choices into the right column and drag and drop them',
           '  to set the correct order.',
           '</p>',
           '<table class="choice-columns"><tr>',

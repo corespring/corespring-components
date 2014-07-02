@@ -1,7 +1,7 @@
 {
   "componentType": "corespring-placement-ordering",
-  "title": "Butterfly Ordering",
-  "correctResponse": ["dog","cat"],
+  "title": "",
+  "correctResponse": [],
   "feedback": {
     "correctFeedbackType": "default",
     "partialFeedbackType": "default",
@@ -16,24 +16,14 @@
   "model": {
     "choices": [
       {
-        "label": "Dog",
+        "label": "",
         "labelType": "text",
-        "id": "dog"
+        "id": "c1"
       },
       {
-        "label": "Cat",
+        "label": "",
         "labelType": "text",
-        "id": "cat"
-      },
-      {
-        "label": "Bird",
-        "labelType": "text",
-        "id": "bird"
-      },
-      {
-        "label": "Adult",
-        "labelType": "text",
-        "id": "adult"
+        "id": "c2"
       }
     ],
     "config": {
