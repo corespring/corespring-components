@@ -187,7 +187,7 @@
     display: block;
     border: 1px solid #000;
     border-radius: 5px;
-    margin: 5px 0;
+    margin: 5px 0 45px 0; /* bottom margin to leave space for remove-after-placing */
     max-width: 200px;
     min-height: 36px;
     padding: 4px;
@@ -262,6 +262,11 @@
     -ms-user-select: none;
     user-select: none;
     transition: opacity 200ms;
+}
+
+.placement-ordering-config .remove-after-placing {
+  position: absolute;
+  bottom: -35px; /*move past the bottom of the choice*/
 }
 
 .placement-ordering-config .blocker .bg {

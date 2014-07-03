@@ -75,6 +75,10 @@ var main = [
           '        <div class="delete-icon">',
           '          <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
           '        </div>',
+          '        <div class="remove-after-placing">',
+          '          <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="choice.moveOnDrag" />',
+          '          <label for="moveOnDrag{{$index}}">Remove tile after placing</label>',
+          '        </div>',
           '        <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
           '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
           '          parent-selector=".editor-container"',
@@ -162,13 +166,19 @@ var main = [
             }
           };
 
+          function setRemoveAfterPlacingVisibility(ui, visibility){
+            ui.item.find('.remove-after-placing').css('visibility', visibility);
+          }
+
           $scope.choicesSortableOptions = {
             disabled: false,
             start: function(event, ui) {
               var li = ui.item;
               $scope.draggging = li.data('choice-id');
+              setRemoveAfterPlacingVisibility(ui, 'hidden');
             },
-            stop: function() {
+            stop: function(event,ui) {
+              setRemoveAfterPlacingVisibility(ui, 'visible');
             }
           };
 
@@ -191,9 +201,10 @@ var main = [
               return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
             }
 
-            $event.stopPropagation();
-            $event.preventDefault();
-            if (!isField($event)) {
+            if (isField($event)) {
+              $event.stopPropagation();
+              $event.preventDefault();
+            } else {
               $scope.deactivate();
             }
           };
