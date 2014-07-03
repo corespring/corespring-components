@@ -3,27 +3,14 @@ var main = [
   'ServerLogic',
   'MathJaxService',
   'ComponentImageService',
-  'ChoiceTemplateScopeExtension',
   function(ChoiceTemplates,
            ServerLogic,
            MathJaxService,
-           ComponentImageService,
-           ChoiceTemplateScopeExtension) {
+           ComponentImageService) {
     var input, inputs, template;
 
     input = function(attrs, label) {
       return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label + "</div>";
-    };
-
-    var inputHolder = function(header, body) {
-      return [
-        '<div class="input-holder">',
-          '  <div class="header">' + header + '</div>',
-        '  <div class="body">',
-        body,
-        '  </div>',
-        '</div>'
-      ].join("");
     };
 
     var categories = [
@@ -168,8 +155,8 @@ var main = [
     ].join('');
 
     var displayOptions = [
-      inputHolder('Choice Area', choiceAreaDisplayOptions),
-      inputHolder('Answer Areas', answerAreaDisplayOptions)
+      ChoiceTemplates.inputHolder('Choice Area', choiceAreaDisplayOptions),
+      ChoiceTemplates.inputHolder('Answer Areas', answerAreaDisplayOptions)
 
     ].join("");
 
@@ -180,14 +167,14 @@ var main = [
       '      <div class="description">',
       '      In Categorize, students may drag & drop answer tiles to the appropriate category area(s).',
       '      </div>',
-      inputHolder('Categories', categories),
-      inputHolder('Choices', choiceArea),
-      inputHolder('Feedback', feedback),
+      ChoiceTemplates.inputHolder('Categories', categories),
+      ChoiceTemplates.inputHolder('Choices', choiceArea),
+      ChoiceTemplates.inputHolder('Feedback', feedback),
       '    </div>',
 
       '    <div navigator-panel="Scoring">',
       '      <div>',
-      ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"})),
+      ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
       '      </div>',
       '    </div>',
 
@@ -214,6 +201,8 @@ var main = [
       ],
       replace: true,
       link: function($scope, $element, $attrs) {
+
+        ChoiceTemplates.extendScope($scope);
 
         var server = ServerLogic.load('corespring-drag-and-drop-categorize');
         $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
@@ -329,8 +318,6 @@ var main = [
           });
         };
         $scope.leftPanelClosed = false;
-
-        new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
       }
   };
   }

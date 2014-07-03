@@ -2,11 +2,9 @@ var main = [
   'ChoiceTemplates',
   'ServerLogic',
   'ComponentImageService',
-  'ChoiceTemplateScopeExtension',
     function(ChoiceTemplates,
              ServerLogic,
-             ComponentImageService,
-             ChoiceTemplateScopeExtension) {
+             ComponentImageService) {
 
       function designTemplate() {
 
@@ -127,6 +125,8 @@ var main = [
         ],
         link: function($scope, $element, $attrs) {
 
+          ChoiceTemplates.extendScope($scope);
+
           var server = ServerLogic.load('corespring-drag-and-drop-categorize');
 
           $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
@@ -246,11 +246,7 @@ var main = [
             $scope.fullModel.correctResponse = newOrder;
           });
 
-          ChoiceTemplates.extendScope($scope);
-
           $scope.init();
-
-          new ChoiceTemplateScopeExtension().postLink($scope, $element, $attrs);
         },
         template: [
           '<div class="placement-ordering-config" ng-click="deactivate()">',
@@ -259,7 +255,7 @@ var main = [
           designTemplate(),
           '    </div>',
           '    <div navigator-panel="Scoring">',
-                 ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
+                 ChoiceTemplates.scoring(),
           '    </div>',
           '  </div>',
           '</div>'

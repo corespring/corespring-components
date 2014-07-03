@@ -101,7 +101,7 @@ var main = [
 
     var scorePanel = [
       '<div navigator-panel="Scoring">',
-      ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring({maxNumberOfPartialScores: "correctChoices() - 1"})),
+      ChoiceTemplates.scoring({maxNumberOfPartialScores: "correctChoices() - 1"}),
       '</div>'
     ].join('');
 
@@ -110,6 +110,8 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function ($scope, $element, $attrs) {
+
+        ChoiceTemplates.extendScope($scope);
 
         var server = ServerLogic.load('corespring-select-text');
         $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
@@ -210,8 +212,6 @@ var main = [
             });
           }
         };
-
-        ChoiceTemplates.extendScope($scope);
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
       },

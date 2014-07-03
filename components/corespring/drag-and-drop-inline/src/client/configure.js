@@ -1,21 +1,8 @@
 var main = [
   "ChoiceTemplates", 'ServerLogic',
   function(ChoiceTemplates, ServerLogic) {
-    var input, inputs, template;
-
-    input = function(attrs, label) {
+    var input = function(attrs, label) {
       return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label + "</div>";
-    };
-
-    var inputHolder = function(header, body) {
-      return [
-        '<div class="input-holder">',
-          ' <div class="header">' + header + '</div>',
-        ' <div class="body">',
-        body,
-        ' </div>',
-        '</div>'
-      ].join("");
     };
 
     var choiceArea = [
@@ -45,9 +32,6 @@ var main = [
       '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" placeholder="Enter choice area label or leave blank"/>',
       '    </div>',
       '  </div>'
-
-
-
     ].join("");
 
     var answerArea = [
@@ -160,26 +144,26 @@ var main = [
     ].join('');
 
     var displayOptions = [
-      inputHolder('Choice Area', choiceAreaDisplayOptions),
-      inputHolder('', answerAreaDisplayOptions)
+      ChoiceTemplates.inputHolder('Choice Area', choiceAreaDisplayOptions),
+      ChoiceTemplates.inputHolder('', answerAreaDisplayOptions)
 
     ].join("");
 
-    template = [
+    var template = [
       '<div class="drag-and-drop-config-panel drag-and-drop-inline-config-panel" choice-template-controller="">',
       '  <div navigator="">',
       '    <div navigator-panel="Design">',
       '      <div class="description">',
       '      In Fill in the Blank, students are asked to complete a sentence, word, phrase or equation using context clues presented in the text that surrounds it.',
       '      </div>',
-      inputHolder('Problem Area', answerArea),
-      inputHolder('Choices', choiceArea),
-      inputHolder('Feedback', feedback),
+      ChoiceTemplates.inputHolder('Problem Area', answerArea),
+      ChoiceTemplates.inputHolder('Choices', choiceArea),
+      ChoiceTemplates.inputHolder('Feedback', feedback),
       '    </div>',
 
       '    <div navigator-panel="Scoring">',
       '      <div>',
-      ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"})),
+      ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
       '      </div>',
       '    </div>',
 

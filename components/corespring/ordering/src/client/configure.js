@@ -99,6 +99,9 @@ var main = [
         }
       ],
       link: function($scope, $element, $attrs) {
+
+        ChoiceTemplates.extendScope($scope);
+
         var log = $log.debug.bind($log, '[ordering-interaction-config] - ');
         var server = ServerLogic.load('corespring-ordering');
 
@@ -163,8 +166,6 @@ var main = [
           }
         }, true);
 
-        ChoiceTemplates.extendScope($scope);
-
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
       },
@@ -176,7 +177,7 @@ var main = [
         '    </div>',
         '    <div navigator-panel="Scoring">',
         '      <div>',
-        ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
+        ChoiceTemplates.scoring(),
         '      </div>',
         '    </div>',
         '  </div>',

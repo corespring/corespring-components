@@ -1,4 +1,5 @@
-var def = [
+exports.framework = "angular";
+exports.factory = [
   'WiggiMathJaxFeatureDef',
   'ComponentImageService',
   function(WiggiMathJaxFeatureDef, ComponentImageService) {
@@ -10,7 +11,7 @@ var def = [
 
       this.postLink = function(scope, elm, attr) {
 
-        scope.imageService = function(){
+        scope.imageService = function() {
           return ComponentImageService;
         };
 
@@ -21,13 +22,13 @@ var def = [
           }]
         };
 
+        scope.updateMathJax = function() {
+          scope.$emit('mathJaxUpdateRequest');
+        };
+
       };
     }
 
     return MiniWiggiScopeExtension;
   }
 ];
-
-
-exports.framework = "angular";
-exports.factory = def;

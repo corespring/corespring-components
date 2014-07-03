@@ -33,6 +33,8 @@ var main = [
       replace: true,
       link: function(scope, element, attrs) {
 
+        ChoiceTemplates.extendScope(scope);
+
         // TODO: this needs to be centralised and not duplicated here and the server side
         scope.defaultCorrectFeedback = "Correct!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer";
@@ -132,8 +134,6 @@ var main = [
           scope.fullModel.feedback = out;
         }, true);
 
-        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
-
         scope.removeQuestion = function(q) {
 
           scope.correctMap[q.value] = false;
@@ -187,17 +187,18 @@ var main = [
 
         scope.leftPanelClosed = false;
 
-        ChoiceTemplates.extendScope(scope);
+        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
+
       },
 
       template: [
         '<div class="config-multiple-choice">',
         '  <div navigator="">',
         '    <div navigator-panel="Design">',
-        ChoiceTemplates.wrap(undefined, choices),
+        ChoiceTemplates.inputHolder(undefined, choices),
         '    </div>',
         '    <div navigator-panel="Scoring">',
-        ChoiceTemplates.wrap(undefined, ChoiceTemplates.scoring()),
+        ChoiceTemplates.scoring(),
         '    </div>',
         '  </div>',
         '</div>'
