@@ -23,6 +23,12 @@ module.exports = (grunt) ->
         tests: ['components/**/regression/*.js']
       dev:
         baseUrl: "http://localhost:9000"
+      saucelabs:
+        local: false
+        #If local is false we have to provide the user/key for saucelabs
+        user: process.env.SAUCE_USERNAME
+        key: process.env.SAUCE_ACCESS_KEY
+        baseUrl: 'http://corespring-container-devt.herokuapp.com'
 
     jasmine:
       unit:
