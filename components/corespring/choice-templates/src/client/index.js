@@ -4,7 +4,8 @@
 exports.framework = "angular";
 exports.service = ['$log',
   'ChoiceTemplateScopeExtension',
-  function($log, ChoiceTemplateScopeExtension) {
+  'MiniWiggiScopeExtension',
+  function($log, ChoiceTemplateScopeExtension, MiniWiggiScopeExtension) {
 
     function ChoiceTemplates() {
 
@@ -16,6 +17,7 @@ exports.service = ['$log',
 
       this.extendScope = function(scope) {
         new ChoiceTemplateScopeExtension().postLink(scope);
+        new MiniWiggiScopeExtension().postLink(scope);
       };
 
       this.prompt = '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
@@ -84,8 +86,7 @@ exports.service = ['$log',
 
         return [
           '<table class="choice-template-choice">',
-          '  <tr>',
-          !_.isEmpty(opts.choice) && opts.showLabel ? ' <td ' + optWidth(opts.columnWidths[0]) + '>' + opts.choice + '</td>' : '',
+          '  <tr>', !_.isEmpty(opts.choice) && opts.showLabel ? ' <td ' + optWidth(opts.columnWidths[0]) + '>' + opts.choice + '</td>' : '',
           '   <td ' + optWidth(opts.columnWidths[1]) + '>',
           '     <div class="choice-wrapper">',
           '       <span class="choice-remove-button" ng-click="removeQuestion(q)">',
@@ -111,54 +112,56 @@ exports.service = ['$log',
           '</table>'
         ].join('\n');
 
-    };
+      };
 
-    this.wrap = function(title, body) {
-      return ['<div class="input-holder">',
-        title ? '  <div class="header">' + title + '</div>' : '',
-        '  <div class="body">' + body + '</div>',
-        '</div>'
-      ].join('\n');
-    };
+      this.inputHolder = function(title, body) {
+        return ['<div class="input-holder">',
+          title ? '  <div class="header">' + title + '</div>' : '',
+          '  <div class="body">' + body + '</div>',
+          '</div>'
+        ].join('\n');
+      };
 
+      this.scoring = function(opts) {
+        return this.inputHolder(undefined, this.unwrappedScoring(opts));
+      };
 
-    this.scoring = function(opts) {
+      this.unwrappedScoring = function(opts) {
+        var o = _.extend({
+          maxNumberOfPartialScores: "model.choices.length - 1"
+        }, opts);
 
-      var o = _.extend({
-        maxNumberOfPartialScores: "model.choices.length - 1"
-      }, opts);
+        return [
+          '<div class="scoring-header-text">',
+          '  If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted. This is optional.',
+          '</div>',
 
-      return [
-        '<div class="scoring-header-text">',
-        '  If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted. This is optional.',
-        '</div>',
+          '<div>',
+          '   <input id="partialScoring" type="checkbox" ng-model="fullModel.allowPartialScoring" ng-disabled="isSingleChoice()"></input>',
+          '   <label for="partialScoring" ng-class="{ disabled: isSingleChoice() }">Allow partial scoring</label>',
+          '</div>',
 
-        '<div>',
-        '   <input id="partialScoring" type="checkbox" ng-model="fullModel.allowPartialScoring" ng-disabled="isSingleChoice()"></input>',
-        '   <label for="partialScoring" ng-class="{ disabled: isSingleChoice() }">Allow partial scoring</label>',
-        '</div>',
+          '<form class="form-inline choice-template-scoring-section">',
+          '  <div class="well scoring-well" ng-show="fullModel.allowPartialScoring">',
+          '    <div class="score-row" ng-repeat="scenario in fullModel.partialScoring">',
+          '      <div class="remove-button" ng-click="removeScoringScenario(scenario)">',
+          '        <button type="button" class="close">&times;</button>',
+          '      </div>',
+          '      <label>If</label> <div class="form-group"><input type="number" min="1" max="{{model.choices.length - 1}}" style="width: 60px" class="form-control {{validClass(scenario)}}" ng-model="scenario.numberOfCorrect"/></div> of correct answers selected, award',
+          '      <span class="form-group"><input type="number" min="1" max="99" style="width: 60px" class="form-control" ng-model="scenario.scorePercentage"/>% of full credit</span>',
+          '    </div>',
+          '    <div ng-click="addScoringScenario()" ng-show="fullModel.partialScoring.length < ' + o.maxNumberOfPartialScores + '">',
+          '      <i class="fa fa-plus-square-o"></i> Add another scenario',
+          '    </div>',
+          '  </div>',
+          '</form>',
 
-        '<form class="form-inline choice-template-scoring-section">',
-        '  <div class="well scoring-well" ng-show="fullModel.allowPartialScoring">',
-        '    <div class="score-row" ng-repeat="scenario in fullModel.partialScoring">',
-        '      <div class="remove-button" ng-click="removeScoringScenario(scenario)">',
-        '        <button type="button" class="close">&times;</button>',
-        '      </div>',
-        '      <label>If</label> <div class="form-group"><input type="number" min="1" max="{{model.choices.length - 1}}" style="width: 60px" class="form-control {{validClass(scenario)}}" ng-model="scenario.numberOfCorrect"/></div> of correct answers selected, award',
-        '      <span class="form-group"><input type="number" min="1" max="99" style="width: 60px" class="form-control" ng-model="scenario.scorePercentage"/>% of full credit</span>',
-        '    </div>',
-        '    <div ng-click="addScoringScenario()" ng-show="fullModel.partialScoring.length < ' + o.maxNumberOfPartialScores + '">',
-        '      <i class="fa fa-plus-square-o"></i> Add another scenario',
-        '    </div>',
-        '  </div>',
-        '</form>',
+          '<div>{{model.partialScoring}}</div>'
 
-        '<div>{{model.partialScoring}}</div>'
+        ].join('\n');
+      };
+    }
 
-      ].join('\n');
-    };
+    return new ChoiceTemplates();
   }
-
-  return new ChoiceTemplates();
-}
 ];

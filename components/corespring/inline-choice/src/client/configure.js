@@ -31,6 +31,8 @@ var main = [
       replace: true,
       link: function(scope, element, attrs) {
 
+        ChoiceTemplates.extendScope(scope);
+
         // TODO: this needs to be centralised and not duplicated here and the server side
         scope.defaultCorrectFeedback = "Correct!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer";
@@ -142,14 +144,13 @@ var main = [
           scope.navClosed = !scope.navClosed;
         };
 
-        ChoiceTemplates.extendScope(scope);
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       },
       //TODO - allow the use of templates...
       //templateUrl: 'configure.html',
       template: [
         '<div class="config-inline-choice" choice-template-controller="">',
-        ChoiceTemplates.wrap(undefined, choices),
+        ChoiceTemplates.inputHolder(undefined, choices),
         '</div>'
       ].join("")
     };

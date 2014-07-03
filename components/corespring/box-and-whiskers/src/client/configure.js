@@ -4,14 +4,12 @@ var main = [
 
     var inputHolder = function(header, body) {
       return [
-        '<div class="config-panel">',
         '  <div class="input-holder">',
         '    <div class="header">' + header + '</div>',
         '    <div class="body">',
                body,
         '    </div>',
-        '  </div>',
-        '</div>'
+        '  </div>'
       ].join("");
     };
 
@@ -38,7 +36,9 @@ var main = [
       },
       template: [
         '<div>',
+        '  <div class="config-panel">',
         inputHolder('Question Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
+        '  </div>',
         '</div>'
       ].join("")
     };
