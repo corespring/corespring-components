@@ -1,0 +1,19 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "title": "Video",
+        "componentType": "corespring-video",
+        "weight": 0,
+        "model": {
+          "config": {
+            "url": "http://vimeo.com/84687115",
+            "ratioType": "widescreen",
+            "size": "large"
+          }
+        }
+      }
+    },
+    "xhtml": "<corespring-video id=\"1\"></corespring-video>"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "title": "Video",
+        "componentType": "corespring-video",
+        "weight": 0,
+        "model": {
+          "config": {
+            "url": "https://www.youtube.com/watch?v=k1i9YmUgY0Q",
+            "ratioType": "standard",
+            "size": "medium"
+          }
+        }
+      }
+    },
+    "xhtml": "<corespring-video id=\"1\"></corespring-video>"
+  }
+}

@@ -44,8 +44,29 @@
     margin-bottom: 10px;
 }
 
+.cs-video-config .sizing-table {
+    padding-right: 5px;
+    border-spacing: 5px;
+    border-collapse: separate;
+    font-size: 10px;
+    cursor: pointer; cursor: hand;
+}
+
+.cs-video-config .sizing-table .selected {
+    background-color: #dddddd;
+}
+
 .cs-video-config .video-icon {
     margin-right: 5px;
+}
+
+.cs-video-config .video-icon-td {
+    padding: 5px;
+    border: 1px solid #000000;
+    vertical-align: middle;
+    text-align: center;
+    width: 40px;
+    height: 40px;
 }
 
 .cs-video-config .preview-video {

@@ -51,13 +51,47 @@ var main = [
       '          </div>',
       '        </form>',
       '        <div class="split-right">',
-        '          ' + previewVideo,
+      '          <div>Aspect Ratio{{ratioType}}</div>',
+      '            <div class="btn-group">',
+      '              <button type="button" class="btn btn-default" ng-model="fullModel.model.config.ratioType" btn-radio="\'standard\'">Standard</button>',
+      '              <button type="button" class="btn btn-default" ng-model="fullModel.model.config.ratioType" btn-radio="\'widescreen\'">Widescreen</button>',
+      '            </div>',
       '          <br>',
-      '          <div>Video Size:</div>',
-      '          <input type="number" class="form-control" style="max-width: 80px; display: inline-block" ng-blur="setConstraints()" ng-model="fullModel.model.config.width"/> x ',
-      '          <input type="number" class="form-control" style="max-width: 80px; display: inline-block" ng-blur="setConstraints()" ng-model="fullModel.model.config.height" />',
-      '          px',
-      '          <button ng-click="resetDimensions()" class="btn btn-sm btn-default">Reset</button>',
+      '            <div style="display: inline-block">',
+      '            ' + previewVideo,
+      '            </div>',
+      '            <div style="display: inline-block; vertical-align: top">',
+      '              <table class="sizing-table">',
+      '                <div style="height: 15px"></div>',
+      '                <tr>',
+      '                  <td class="video-icon-td"',
+      '                      ng-class="{selected: fullModel.model.config.size == \'small\'}"',
+      '                      ng-click="fullModel.model.config.size = \'small\'"><i class="fa fa fa-video-camera" />',
+      '                  </td>',
+      '                  <td>small<br>{{dimensions[fullModel.model.config.ratioType]["small"]}}',
+      '                  </td>',
+      '                </tr>',
+      '                <tr>',
+      '                  <td class="video-icon-td"',
+      '                      ng-class="{selected: fullModel.model.config.size == \'medium\'}"',
+      '                      ng-click="fullModel.model.config.size = \'medium\'"><i class="fa fa-lg fa-video-camera" />',
+      '                  </td>',
+      '                  </td>',
+      '                  <td>medium<br>{{dimensions[fullModel.model.config.ratioType]["medium"]}}',
+      '                  </td>',
+      '                </tr>',
+      '                <tr>',
+      '                  <td class="video-icon-td"',
+      '                      ng-class="{selected: fullModel.model.config.size == \'large\'}"',
+      '                      ng-click="fullModel.model.config.size = \'large\'"><i class="fa fa-2x fa-video-camera" />',
+      '                  </td>',
+      '                  </td>',
+      '                  <td>large<br>{{dimensions[fullModel.model.config.ratioType]["large"]}}',
+      '                  </td>',
+      '                </tr>',
+      '              </table>',
+
+      '            </div>',
       '        </div>',
       '      </div>',
       '    </div>',
@@ -87,20 +121,21 @@ var main = [
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
+        scope.dimensions = {
+          "standard": {
+            "small": "240x180",
+            "medium": "320x240",
+            "large": "480x360"
+          },
+          "widescreen": {
+            "small": "240x135",
+            "medium": "320x180",
+            "large": "480x270"
+          }
+        };
+
         scope.trustSource = function(source) {
           return $sce.trustAsResourceUrl(source);
-        };
-
-        scope.resetDimensions = function() {
-          scope.fullModel.model.config.width = 480;
-          scope.fullModel.model.config.height = 270;
-        };
-
-        scope.setConstraints = function() {
-          var w = scope.fullModel.model.config.width;
-          scope.fullModel.model.config.width = Math.min(Math.max(w, 177), 500);
-          var h = scope.fullModel.model.config.height;
-          scope.fullModel.model.config.height = Math.min(Math.max(h, 100), 281);
         };
 
         var updatePreview = function(n) {
@@ -113,23 +148,6 @@ var main = [
 
         scope.$watch('fullModel.model.config.url', _.debounce(updatePreview, 500));
 
-        scope.$watch('fullModel.model.config.height', function(n) {
-          if (n) {
-            var w = n / 9 * 16;
-            if (Math.abs(w - scope.fullModel.model.config.width) > 10) {
-              scope.fullModel.model.config.width = Math.floor(w);
-            }
-          }
-        });
-
-        scope.$watch('fullModel.model.config.width', function(n) {
-          if (n) {
-            var h = n / 16 * 9;
-            if (Math.abs(h - scope.fullModel.model.config.height) > 10) {
-              scope.fullModel.model.config.height = Math.floor(h);
-            }
-          }
-        });
       }
     };
   }

@@ -5,9 +5,9 @@
   "model": {
     "config": {
       "type": "youtube",
-      "link": "",
-      "width": 480,
-      "height": 270
+      "url": "",
+      "ratioType": "standard",
+      "size": "medium"
     }
   }
 }

@@ -21,8 +21,8 @@ var main = [
             if (!_.isEmpty(scope.question.config.url)) {
               scope.url = _.isEmpty(scope.question.config.url) ? "" : VideoUtils.convertYoutubeOrVimeoUrlToEmbedded(scope.question.config.url);
             }
-            scope.width = Math.min(scope.question.config.width || 480, 500) + "px";
-            scope.height = Math.min(scope.question.config.height || 270, 500) + "px";
+            scope.width = scope.dimensions[scope.question.config.ratioType][scope.question.config.size][0]+'px';
+            scope.height = scope.dimensions[scope.question.config.ratioType][scope.question.config.size][1]+'px';
           },
           getSession: function() {
             return {
@@ -38,10 +38,22 @@ var main = [
 
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
+        scope.dimensions = {
+          "standard": {
+            "small": [240, 180],
+            "medium": [320, 240],
+            "large": [480, 360]
+          },
+          "widescreen": {
+            "small": [240, 135],
+            "medium": [320, 180],
+            "large": [480, 270]
+          }
+        };
+
         scope.trustSource = function(source) {
           return $sce.trustAsResourceUrl(source);
         };
-
       };
     };
 
@@ -57,7 +69,7 @@ var main = [
         '      <i class="fa fa-film icon"></i>',
         '    </div>',
         '    <div ng-show="question.config.url">',
-        '      <iframe id="ytplayer" width="{{width}}" height="{{height}}"',
+        '      <iframe class="cs-video-player-frame" width="{{width}}" height="{{height}}"',
         '      ng-src="{{trustSource(url)}}"',
         '      frameborder="0" allowfullscreen>',
         '    </div>',
