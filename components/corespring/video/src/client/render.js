@@ -3,6 +3,19 @@ var main = [
   'VideoUtils',
   function($sce, VideoUtils) {
 
+    var dimensions = {
+      "standard": {
+        "small": [240, 180],
+        "medium": [320, 240],
+        "large": [480, 360]
+      },
+      "widescreen": {
+        "small": [240, 135],
+        "medium": [320, 180],
+        "large": [480, 270]
+      }
+    };
+
     var link = function() {
       return function(scope, element, attrs) {
 
@@ -21,8 +34,8 @@ var main = [
             if (!_.isEmpty(scope.question.config.url)) {
               scope.url = _.isEmpty(scope.question.config.url) ? "" : VideoUtils.convertYoutubeOrVimeoUrlToEmbedded(scope.question.config.url);
             }
-            scope.width = scope.dimensions[scope.question.config.ratioType][scope.question.config.size][0]+'px';
-            scope.height = scope.dimensions[scope.question.config.ratioType][scope.question.config.size][1]+'px';
+            scope.width = dimensions[scope.question.config.ratioType][scope.question.config.size][0]+'px';
+            scope.height = dimensions[scope.question.config.ratioType][scope.question.config.size][1]+'px';
           },
           getSession: function() {
             return {
@@ -37,19 +50,6 @@ var main = [
         addEmptyFunctions(scope.containerBridge, ['setResponse', 'setMode', 'reset', 'answerChangedHandler', 'editable']);
 
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
-
-        scope.dimensions = {
-          "standard": {
-            "small": [240, 180],
-            "medium": [320, 240],
-            "large": [480, 360]
-          },
-          "widescreen": {
-            "small": [240, 135],
-            "medium": [320, 180],
-            "large": [480, 270]
-          }
-        };
 
         scope.trustSource = function(source) {
           return $sce.trustAsResourceUrl(source);
