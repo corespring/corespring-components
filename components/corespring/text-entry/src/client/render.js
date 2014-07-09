@@ -4,6 +4,15 @@ link = function() {
   return function(scope, element, attrs) {
 
     scope.editable = true;
+
+    scope.question = {};
+    scope.session = {};
+
+    scope.answer = undefined;
+    scope.feedback = undefined;
+    scope.correctClass = undefined;
+    scope.response = undefined;
+
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
@@ -13,11 +22,9 @@ link = function() {
       },
 
       getSession: function() {
-        var answer = scope.answer;
-
         return {
-          answers: answer,
-          stash: scope.session.stash
+          answers: scope.answer,
+          stash: scope.session ? scope.session.stash : {}
         };
       },
 
