@@ -2,6 +2,7 @@
 .component-placeholder.corespring-video {
     display: inline-block;
     margin-right: 10px;
+    min-width: 90px;
 }
 
 .cs-video {
