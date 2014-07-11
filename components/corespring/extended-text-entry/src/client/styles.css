@@ -18,6 +18,11 @@
     border-radius: 4px;
 }
 
+.view-extended-text-entry textarea[disabled] {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+}
+
 .view-extended-text-entry .feedback {
     height: 36px;
     display: inline-block;
