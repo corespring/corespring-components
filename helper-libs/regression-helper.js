@@ -1,11 +1,12 @@
-RegressionHelper = function(baseUrl) {
+module.exports = function(baseUrl) {
   this.getUrl = function(componentType, jsonFile) {
-    return baseUrl + '/client/rig/corespring-' + componentType + '/index.html?data=regression_' + jsonFile;
+    var url = baseUrl + '/client/rig/corespring-' + componentType + '/index.html?data=regression_' + jsonFile;
+    console.log('[RegressionHelper] getUrl: ', url);
+    return url;
   };
+
   this.getItemJson = function(componentType, jsonFile) {
     return require('./../components/corespring/' + componentType + '/regression-data/' + jsonFile);
-  }
+  };
 };
-
-module.exports = RegressionHelper;
 
