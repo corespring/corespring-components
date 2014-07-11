@@ -49,7 +49,7 @@ var directive = [
       scope: {},
       template: [
           "<div class='view-foldable'>",
-          "<span class='toggle-icon' ng-click='folded = !folded'><img src='/assets/images/component.png'></img></span>",
+          "<span class='toggle-icon' ng-click='folded = !folded'><img src='../../images/component.png'></img></span>",
           "<div>Complete: {{isComplete}} Empty: {{isEmpty}}</div>",
           "<div ng-hide='folded' ng-transclude></div>",
           "</div>"

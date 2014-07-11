@@ -51,11 +51,11 @@
 }
 
 .view-function-entry .feedback.correct {
-    background: url("/assets/images/feedback/correct-icon.png") no-repeat scroll 0px 10px transparent;
+    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 10px transparent;
 }
 
 .view-function-entry .feedback.incorrect {
-    background: url("/assets/images/feedback/wrong-icon.png") no-repeat scroll 0px 10px transparent;
+    background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 10px transparent;
 }
 
 

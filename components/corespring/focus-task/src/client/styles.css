@@ -9,7 +9,7 @@
     border-radius: 4px;
     width: 560px;
     height: auto;
-    background: url("/assets/images/header-dark-grey-br-1.png") repeat scroll center top transparent;
+    background: url("../../images/header-dark-grey-br-1.png") repeat scroll center top transparent;
     -moz-user-select: none;
     -khtml-user-select: none;
     -webkit-user-select: none;

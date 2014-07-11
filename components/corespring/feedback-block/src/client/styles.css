@@ -16,10 +16,10 @@
 
 .view-feedback.correct {
     border-color: #80B312;
-    background: url("/assets/images/feedback/correct-icon.png") no-repeat scroll 3px 8px transparent;
+    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 3px 8px transparent;
 }
 
 .view-feedback.incorrect {
     border-color: #F8A31B;
-    background: url("/assets/images/feedback/wrong-icon.png") no-repeat scroll 3px 8px transparent;
+    background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 3px 8px transparent;
 }
