@@ -35,13 +35,18 @@ exports.respond = function(question, answer, settings) {
     };
 
     var feedbackObject = question.model.feedback[correctness()];
-    if (feedbackObject.feedbackType === 'custom') {
-      return feedbackObject.notChosenFeedback;
-    } else if (feedbackObject.feedbackType === 'none') {
-      return undefined;
+    if (feedbackObject){
+      if (feedbackObject.feedbackType === 'custom') {
+        return feedbackObject.notChosenFeedback;
+      } else if (feedbackObject.feedbackType === 'none') {
+        return undefined;
+      } else {
+        return defaults[correctness()];
+      }
     } else {
       return defaults[correctness()];
     }
+
   }
 
   var buildFeedback = function() {
@@ -57,8 +62,10 @@ exports.respond = function(question, answer, settings) {
       };
     }
 
-    if (feedbackMessage()) {
-      feedback.message = feedbackMessage();
+    var feedbackMsg = feedbackMessage();
+
+    if (feedbackMsg) {
+      feedback.message =feedbackMsg;
     }
 
     if (!_.isEmpty(question.comments)) {
