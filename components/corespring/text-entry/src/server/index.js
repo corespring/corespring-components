@@ -16,8 +16,8 @@ exports.isEqual = function(s1, s2, ignoreCase, ignoreWhitespace) {
 };
 
 exports.isCorrect = function(answer, responses) {
-  var ignoreCase = (responses.ignoreCase) || false;
-  var ignoreWhitespace = (responses.ignoreWhitespace) || false;
+  var ignoreCase = (responses && responses.ignoreCase) || false;
+  var ignoreWhitespace = (responses && responses.ignoreWhitespace) || false;
 
   return _.some(responses.values, function(a) {
     return exports.isEqual(answer, a, ignoreCase, ignoreWhitespace);

@@ -1,13 +1,13 @@
 {
   "title": "Text Entry",
   "componentType": "corespring-text-entry",
-  "correctResponse": {
+  "correctResponses": {
     "award": 1,
     "responses": ["one", "two", "three"],
     "ignoreWhitespace": true,
     "ignoreCase": true
   },
-  "partialResponse": {
+  "partialResponses": {
     "award": 0.25,
     "responses": ["four", "five", "six"],
     "ignoreWhitespace": true,
