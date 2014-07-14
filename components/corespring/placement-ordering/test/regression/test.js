@@ -16,7 +16,7 @@ describe('placement ordering', function() {
     return this;
   };
 
-  describe.only('correctness', function() {
+  describe('correctness', function() {
     beforeEach(function() {
       browser
         .url(RegressionHelper.getUrl('placement-ordering', itemJsonFilename))
