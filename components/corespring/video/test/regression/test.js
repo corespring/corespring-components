@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('video component', function() {
+describe('video component', function() {
 
   describe('youtube', function() {
     var itemJsonFilename = 'youtube.json';
