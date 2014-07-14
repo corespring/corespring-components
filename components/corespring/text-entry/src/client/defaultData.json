@@ -2,31 +2,22 @@
   "title": "Text Entry",
   "componentType": "corespring-text-entry",
   "correctResponses": {
-    "award": 1,
-    "responses": ["one", "two", "three"],
+    "award": 100,
+    "values": ["one", "two", "three"],
     "ignoreWhitespace": true,
-    "ignoreCase": true
+    "ignoreCase": true,
+    "feedback": {
+      "type": "default"
+    }
   },
-  "partialResponses": {
-    "award": 0.25,
-    "responses": ["four", "five", "six"],
-    "ignoreWhitespace": true,
-    "ignoreCase": true
+  "incorrectResponses": {
+    "award": 0,
+    "feedback": {
+      "type": "default"
+    }
   },
   "model": {
-    "config": {
-      "correctResponse": {
-        "feedback": {
-          "type": "default",
-          "default": "default positive feedback"
-        }
-      },
-      "partialResponse": {
-        "feedback": {
-          "type": "default",
-          "default": "default negative feedback"
-        }
-      }
-    }
+    "answerBlankSize": 8,
+    "answerAlignment": "left"
   }
 }
