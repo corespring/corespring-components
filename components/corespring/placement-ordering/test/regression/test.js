@@ -20,7 +20,7 @@ describe('placement ordering', function() {
     beforeEach(function() {
       browser
         .url(RegressionHelper.getUrl('placement-ordering', itemJsonFilename))
-        .waitFor('.view-placement-ordering', 2000);
+        .waitFor('.view-placement-ordering', regressionTestRunnerGlobals.defaultTimeout);
     });
 
     it('correct answer results in correct feedback', function(done) {
@@ -28,7 +28,7 @@ describe('placement ordering', function() {
         .dragAndDrop('//div[text()="Apple"]', '.landing-place')
         .dragAndDrop('//div[text()="Pear"]', '.landing-place')
         .submitItem()
-        .waitFor('.feedback-correct', 2000)
+        .waitFor('.feedback-correct', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
 
@@ -37,7 +37,7 @@ describe('placement ordering', function() {
         .dragAndDrop('//div[text()="Banana"]', '.landing-place')
         .dragAndDrop('//div[text()="Apple"]', '.landing-place')
         .submitItem()
-        .waitFor('.feedback-incorrect', 2000)
+        .waitFor('.feedback-incorrect', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
 
@@ -46,7 +46,7 @@ describe('placement ordering', function() {
         .dragAndDrop('//div[text()="Apple"]', '.landing-place')
         .dragAndDrop('//div[text()="Banana"]', '.landing-place')
         .submitItem()
-        .waitFor('.feedback-partial', 2000)
+        .waitFor('.feedback-partial', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
   });

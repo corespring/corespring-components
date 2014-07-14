@@ -50,7 +50,7 @@ describe('multiple-choice', function() {
   beforeEach(function() {
     browser
       .url(RegressionHelper.getUrl('multiple-choice', itemJsonFilename))
-      .waitFor('.choice-input input', 2000);
+      .waitFor('.choice-input input', regressionTestRunnerGlobals.defaultTimeout);
   });
 
 

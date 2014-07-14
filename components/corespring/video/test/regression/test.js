@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('video component', function() {
+describe.only('video component', function() {
 
   describe('youtube', function() {
     var itemJsonFilename = 'youtube.json';
@@ -18,7 +18,7 @@ describe('video component', function() {
     beforeEach(function() {
       browser
         .url(RegressionHelper.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video', 2000);
+        .waitFor('.cs-video', regressionTestRunnerGlobals.defaultTimeout);
     });
 
     it('video is visible', function(done) {
@@ -45,7 +45,7 @@ describe('video component', function() {
     beforeEach(function() {
       browser
         .url(RegressionHelper.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video', 2000);
+        .waitFor('.cs-video', regressionTestRunnerGlobals.defaultTimeout);
     });
 
     it('video is visible', function(done) {
