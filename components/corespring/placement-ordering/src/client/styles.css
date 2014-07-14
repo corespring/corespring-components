@@ -1,26 +1,32 @@
 .view-placement-ordering {
 }
 
-.view-placement-ordering .main-table {
+/* vertical layout */
+.view-placement-ordering .main-table.vertical {
     display: table;
     width: 100%;
 }
 
-.view-placement-ordering .main-row {
+.view-placement-ordering .main-table.vertical .main-row {
     display: table-row;
     width: 100%;
 }
 
-.view-placement-ordering .choice-area {
+.view-placement-ordering .main-table.vertical .choice-area {
     display: table-cell;
     width: 50%;
     vertical-align: top;
 }
 
-.view-placement-ordering .answer-area {
+.view-placement-ordering .main-table.vertical .answer-area {
     display: table-cell;
     width: 50%;
     vertical-align: top;
+}
+
+/* horizontal layout */
+.view-placement-ordering .main-table.horizontal .choice-area {
+    margin-bottom: 20px;
 }
 
 /* Config Panel */
