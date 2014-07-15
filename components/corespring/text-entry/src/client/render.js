@@ -82,7 +82,7 @@ main = [
         '           size="{{question.answerBlankSize}}"',
         '           style="text-align: {{question.answerAlignment}}"/>',
         '  </div>',
-        '  <div ng-show="feedback" class="feedback">&nbsp;',
+        '  <div ng-show="feedback.message" class="feedback">&nbsp;',
         '    <div class="tooltip">',
         '      <div class="tooltip-inner" ng-bind-html-unsafe="feedback.message"></div>',
         '      <span class="caret"></span>',

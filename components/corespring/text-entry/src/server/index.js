@@ -19,7 +19,7 @@ exports.isCorrect = function(answer, responses) {
   var ignoreCase = (responses && responses.ignoreCase) || false;
   var ignoreWhitespace = (responses && responses.ignoreWhitespace) || false;
 
-  return _.some(responses.values, function(a) {
+  return responses && _.some(responses.values, function(a) {
     return exports.isEqual(answer, a, ignoreCase, ignoreWhitespace);
   });
 };
@@ -70,7 +70,9 @@ exports.respond = function(question, answer, settings) {
   }
 
   function replaceVariables(template, question) {
-    return template.replace("<random selection from correct answers>", randomCorrectAnswer(question));
+    if (template) {
+      return template.replace("<random selection from correct answers>", randomCorrectAnswer(question));
+    }
   }
 
   function randomCorrectAnswer(question) {
