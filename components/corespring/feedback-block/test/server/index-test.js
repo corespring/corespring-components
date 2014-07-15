@@ -26,19 +26,30 @@ settings = function(feedback, userResponse, correctResponse) {
   };
 };
 
+
 component = {
   componentType: "corespring-feedback-block",
   feedback: {
-    correct: {
-      "apple": "apple correct",
-      "potato": "potato correct",
-      "*": "catchall correct"
-    },
-    incorrect: {
-      "bean": "bean incorrect",
-      "lentil": "lentil incorrect",
-      "*": "catchall incorrect"
-    }
+    correct: [{
+      input: "apple",
+      feedback: "apple correct"
+    }, {
+      input: "potato",
+      feedback: "potato correct"
+    }, {
+      input: "*",
+      feedback: "catchall correct"
+    }],
+    incorrect: [{
+      input: "bean",
+      feedback: "bean incorrect"
+    }, {
+      input: "lentil",
+      feedback: "lentil incorrect"
+    }, {
+      input: "*",
+      feedback: "catchall incorrect"
+    }]
   }
 };
 

@@ -10,6 +10,11 @@ exports.isCorrect = function() {
 
 exports.respond = function(model, answer, settings, targetOutcome) {
 
+  function findFeedback(feedbacks, response){
+    var o =  _.find(feedbacks, function(item){return item && item.input === response});
+    return o ? o.feedback : "";
+  }
+
   if (!settings.showFeedback) {
     return {};
   }
@@ -20,17 +25,17 @@ exports.respond = function(model, answer, settings, targetOutcome) {
   var correctFeedback = model.feedback.correct || {};
   var incorrectFeedback = model.feedback.incorrect || {};
 
-  feedback = correctFeedback[targetOutcome.studentResponse];
+  feedback = findFeedback(correctFeedback, targetOutcome.studentResponse);
   if (feedback) {
     isCorrect = true;
   } else {
-    feedback = incorrectFeedback[targetOutcome.studentResponse];
+    feedback = findFeedback(incorrectFeedback,targetOutcome.studentResponse);
     isCorrect = false;
   }
 
   if (!feedback) {
     isCorrect = targetOutcome.correctness === "correct";
-    feedback = (isCorrect ? correctFeedback["*"] : incorrectFeedback["*"]);
+    feedback = findFeedback(isCorrect ? correctFeedback : incorrectFeedback,"*");
   }
 
   if (targetOutcome.outcome) {
