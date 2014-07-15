@@ -11,7 +11,9 @@ exports.isCorrect = function() {
 exports.respond = function(model, answer, settings, targetOutcome) {
 
   function findFeedback(feedbacks, response){
-    var o =  _.find(feedbacks, function(item){return item && item.input === response;});
+    var o =  _.find(feedbacks, function(item) {
+      return item && (response === item.input || _.contains(response, item.input));
+    });
     return o ? o.feedback : "";
   }
 

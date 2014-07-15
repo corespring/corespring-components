@@ -98,7 +98,5 @@ exports.respond = function(question, answer, settings) {
       message: createFeedbackMessage(question, response)
     };
   }
-
-  console.log("text-entry.respond", response);
   return response;
 };
