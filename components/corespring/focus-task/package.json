@@ -2,5 +2,6 @@
   "name": "focus-task",
   "organization": "corespring",
   "title": "Visual Choice",
-  "titleGroup": "Fixed Choice"
+  "titleGroup": "Fixed Choice",
+  "released": true
 }
