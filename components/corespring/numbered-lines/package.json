@@ -6,5 +6,6 @@
     }
   },
   "name": "numbered-lines",
-  "organization": "corespring"
+  "organization": "corespring",
+  "released" : true
 }
