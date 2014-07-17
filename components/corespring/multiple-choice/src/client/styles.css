@@ -28,6 +28,7 @@
 
 .view-multiple-choice .choice-holder {
     display: table-row;
+    line-height: 35px;
 }
 
 .view-multiple-choice .choice-feedback-holder {
