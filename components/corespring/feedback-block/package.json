@@ -5,6 +5,7 @@
     "client" : {
     }
   },
+  "released": true,
   "name": "feedback-block",
   "organization": "corespring"
 }
