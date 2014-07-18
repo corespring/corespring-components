@@ -5,7 +5,6 @@ var _ = require('lodash');
 var component = {
   "componentType": "corespring-select-text",
   "model": {
-    "prompt": "Select the fruits from the text",
     "config": {
       "selectionUnit": "word",
       "checkIfCorrect": true

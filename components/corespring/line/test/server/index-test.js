@@ -27,7 +27,6 @@ component = {
   "componentType": "corespring-line",
   "correctResponse": "y=2x+7",
   "model": {
-    "prompt": "Line interaction prompt",
     "config": {
       "domain": "10",
       "range": "10",

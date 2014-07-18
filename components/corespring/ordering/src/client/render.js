@@ -104,7 +104,6 @@ var main = ['$compile', '$log',
       scope: {},
       template: [
         '<div class="view-ordering">',
-        '  <div class="prompt" ng-bind-html-unsafe="model.prompt"></div> ',
         '  <ul class="choices" ng-model="choices" ui-sortable="">',
         '    <li ng-repeat="choice in choices">',
         '      <div class="choice" ng-class="{true:\'correct\', false:\'incorrect\'}[feedback.responses[choice.id].correct]" ',

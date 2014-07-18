@@ -38,7 +38,6 @@ component = {
     "config": {
       "shuffle": true
     },
-    "prompt": "Drag the stages of the butterfly's lifecycle into order",
     "correctResponse": ["2", "1", "4", "3"]
   },
   "partialScoring" : [

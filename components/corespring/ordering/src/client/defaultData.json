@@ -25,7 +25,6 @@
     "config": {
       "shuffle": true
     },
-    "prompt": "",
     "feedback" : {
       "correct" : {
         "feedbackType" : "default"

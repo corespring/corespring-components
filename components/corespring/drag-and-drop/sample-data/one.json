@@ -33,7 +33,6 @@
               "content": "Pot C"
             }
           ],
-          "prompt": "",
           "answerArea": "<landingPlaceGroup itemsPerRow='3'><span cardinality='single' identifier='Celina' label='Celina' landing-place='landing-place'/></landingPlaceGroup>",
           "config": {
             "shuffle": true,

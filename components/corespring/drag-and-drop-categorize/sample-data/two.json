@@ -48,8 +48,7 @@
           "config": {
             "shuffle": true,
             "expandHorizontal": false
-          },
-          "prompt": "Drag the stages of the butterfly's lifecycle on to the the pods"
+          }
         },
         "weight": 1
       }
@@ -62,6 +61,6 @@
         "corespring/*"
       ]
     },
-    "xhtml": "<div><corespring-drag-and-drop id='1'></corespring-drag-and-drop></div>"
+    "xhtml": "<div><p>Drag the stages of the butterfly's lifecycle on to the the pods</p><corespring-drag-and-drop id='1'></corespring-drag-and-drop></div>"
   }
 }

@@ -59,8 +59,7 @@ describe('corespring', function() {
           "orientation": "vertical",
           "shuffle": true,
           "singleChoice": true
-        },
-        "prompt": "Add your question here..."
+        }
       }
     };
 

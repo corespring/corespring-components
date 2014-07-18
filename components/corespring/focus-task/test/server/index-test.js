@@ -15,7 +15,6 @@ _ = require('lodash');
 component = {
   componentType: "corespring-focus-task",
   model: {
-    prompt: "Which of these is a vegetable?",
     config: {
       orientation: "vertical",
       shuffle: true,

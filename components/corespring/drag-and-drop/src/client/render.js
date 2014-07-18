@@ -278,7 +278,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     };
     var tmpl = [
     '<div class="view-drag-and-drop-legacy">',
-    '  <h5 class="prompt" ng-bind-html-unsafe="model.prompt"></h5>',
     '  <div ng-show="!correctResponse" class="pull-right">',
     '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
     '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
