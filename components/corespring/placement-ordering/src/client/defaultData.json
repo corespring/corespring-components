@@ -18,12 +18,14 @@
       {
         "label": "",
         "labelType": "text",
-        "id": "c1"
+        "id": "c1",
+        "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c2"
+        "id": "c2",
+        "moveOnDrag": true
       }
     ],
     "config": {

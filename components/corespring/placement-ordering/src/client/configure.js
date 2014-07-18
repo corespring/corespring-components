@@ -229,7 +229,7 @@ var main = [
               }
               return prefix + id;
             }
-            $scope.model.choices.push({content: "", label: "", id: getNextId()});
+            $scope.model.choices.push({content: "", label: "", id: getNextId(), moveOnDrag: true});
           };
 
           $scope.deleteChoice = function(index) {
