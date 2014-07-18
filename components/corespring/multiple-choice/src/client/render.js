@@ -248,7 +248,7 @@ var main = [
       '    </div>',
       '  </div>',
       '  <div ng-repeat-end="" class="choice-feedback-holder" ng-show="o.feedback != null">',
-      '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
+      '    <div class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></div>',
       '  </div>',
       '</div>'
     ].join("");
@@ -270,7 +270,7 @@ var main = [
       '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
-      '        <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
+      '        <div class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></div>',
       '      </div>',
       '    </div>',
       '  </div>',
@@ -293,7 +293,7 @@ var main = [
       '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice" />',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
-      '        <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null"></span>',
+      '        <div class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null"></div>',
       '      </div>',
       '    </div>',
       '  </div>',

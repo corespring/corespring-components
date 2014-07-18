@@ -27,14 +27,11 @@
 }
 
 .view-multiple-choice .choice-holder {
-    display: table-row;
     line-height: 35px;
 }
 
 .view-multiple-choice .choice-feedback-holder {
-    height: 40px;
-    padding-left: 40px;
-    position: relative;
+    padding-left: 32px;
 }
 
 .choice-feedback-holder .cs-feedback {
@@ -119,9 +116,6 @@
 }
 
 .view-multiple-choice .cs-feedback {
-    display: table-cell;
-    position: absolute;
-    width: 500px;
 }
 
 /* Horizontal Layout */
