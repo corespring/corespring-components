@@ -82,6 +82,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
     var tmpl = [
       '<div class="view-placement-ordering view-drag-and-drop" drag-and-drop-controller>',
+      '  <p class="prompt">{{model.prompt}}</p>',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
