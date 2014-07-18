@@ -53,8 +53,7 @@ component = {
     ],
     "config": {
       "shuffle": true
-    },
-    "prompt": "Drag the 2nd stage of the butterfly's lifecycle on to the the pod"
+    }
   },
   "weight": 1
 };

@@ -18,7 +18,6 @@ _ = require('lodash');
 component = {
   componentType: "corespring-multiple-choice",
   model: {
-    prompt: "Which of these is a vegetable?",
     config: {
       orientation: "vertical",
       shuffle: true

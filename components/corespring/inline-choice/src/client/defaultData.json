@@ -41,7 +41,6 @@
     ],
     "config": {
       "shuffle": false
-    },
-    "prompt": "Add your question here..."
+    }
   }
 }

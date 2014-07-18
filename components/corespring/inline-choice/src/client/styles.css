@@ -67,11 +67,6 @@
     display: inline-block;
 }
 
-.view-inline-choice .prompt {
-    color: #666666;
-    font-style: italic;
-}
-
 .view-inline-choice .tooltip {
     opacity: 1;
     display: inline-block;

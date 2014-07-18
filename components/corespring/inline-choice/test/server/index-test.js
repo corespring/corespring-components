@@ -11,7 +11,6 @@ _ = require('lodash');
 component = {
   componentType: "corespring-inline-choice",
   model: {
-    prompt: "Which of these is a vegetable?",
     config: {
       shuffle: true
     },

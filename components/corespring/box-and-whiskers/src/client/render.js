@@ -69,7 +69,6 @@ var main = [
       template: [
         '<div class="box-and-whiskers">',
         ' <div>{{response}}</div>',
-        ' <div class="prompt" ng-bind-html-unsafe="model.prompt"></div>',
         ' <table><tr>',
         ' <td ng-repeat="g in model.graphs" box-and-whiskers-graph editable="editable" ngModel="g" responseModel="response[$index]" style="background-color: #d3d3d3; border: 1px solid black">{{$index}}</td>',
         ' </table>',

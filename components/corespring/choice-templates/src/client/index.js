@@ -20,8 +20,6 @@ exports.service = ['$log',
         new MiniWiggiScopeExtension().postLink(scope);
       };
 
-      this.prompt = '<textarea ck-editor ng-model="model.prompt"></textarea><br/>';
-
       this.inline = function(type, value, body, attrs) {
         return ['<label class="' + type + '-inline">',
           '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,

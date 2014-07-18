@@ -16,12 +16,11 @@
           ],
           "config": {
             "shuffle": true
-          },
-          "prompt": "Who is the president of the US?"
+          }
         }
       }
     },
-    "xhtml": "<corespring-inline-choice id=\"1\"></corespring-multiple-choice>"
+    "xhtml": "<p>Who is the president of the US?</p><corespring-inline-choice id=\"1\"></corespring-multiple-choice>"
   },
   "responses": {
     "kennedy": {

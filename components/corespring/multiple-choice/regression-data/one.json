@@ -36,7 +36,6 @@
           }
         ],
         "model": {
-          "prompt": "What is 1 + 1?",
           "config": {
             "orientation": "vertical",
             "shuffle": true,

@@ -25,8 +25,7 @@
     "config": {
       "shuffle": true,
       "position": "above"
-    },
-    "prompt": "Enter a prompt for the student, e.g. 'Drag the correct answers into the spaces below.'"
+    }
   },
   "weight": 1
 }
