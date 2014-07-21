@@ -218,9 +218,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         editable: function(e) {
-          scope.$apply(function() {
-            scope.editable = e;
-          });
+          scope.editable = e;
         }
       };
 
