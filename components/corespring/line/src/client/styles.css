@@ -45,7 +45,9 @@
     border-color:#A0A0A0;
     */
 }
-
+/* doesn't seem to be used, and also
+   it is interfering with the bootstrap
+   navbar which is used for the top navigation
 .navbar {
     color: #aaaaaa;
     background-color: #f5f5f5;
@@ -57,6 +59,7 @@
     right: 5px;
     bottom: 5px;
 }
+*/
 
 /* TODO where is it used? */
 .correct-answer {
