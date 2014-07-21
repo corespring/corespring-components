@@ -248,7 +248,12 @@ var main = [
       '    </div>',
       '  </div>',
       '  <div ng-repeat-end="" class="choice-feedback-holder" ng-show="o.feedback != null">',
+<<<<<<< Updated upstream
       '    <div class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></div>',
+=======
+      '    <div style="display:table-cell"></div>',
+      '    <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
+>>>>>>> Stashed changes
       '  </div>',
       '</div>'
     ].join("");
@@ -270,7 +275,13 @@ var main = [
       '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
+<<<<<<< Updated upstream
       '        <div class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></div>',
+=======
+                  '        <div style="display:table-cell"></div>',
+                  '        <div style="display:table-cell"></div>',
+      '        <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
+>>>>>>> Stashed changes
       '      </div>',
       '    </div>',
       '  </div>',

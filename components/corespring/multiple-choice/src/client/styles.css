@@ -30,6 +30,10 @@
     line-height: 35px;
 }
 
+.choice-feedback-holder {
+  display:table-row;
+}
+
 .view-multiple-choice .choice-feedback-holder {
     padding-left: 32px;
 }
@@ -116,6 +120,11 @@
 }
 
 .view-multiple-choice .cs-feedback {
+<<<<<<< Updated upstream
+=======
+    display: table-cell;
+    width: 500px;
+>>>>>>> Stashed changes
 }
 
 /* Horizontal Layout */
