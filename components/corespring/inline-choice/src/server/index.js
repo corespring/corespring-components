@@ -18,15 +18,17 @@ var userResponseFeedback = function(fbArray, q, answer) {
   var fb, userChoice, _i, _len, _results;
   userChoice = answer;
   fb = feedbackByValue(q, userChoice);
-  fb.correct = isCorrectChoice(q, userChoice);
+  if (fb) {
+    fb.correct = isCorrectChoice(q, userChoice);
 
-  if (fb.feedbackType === 'default') {
-    fb.feedback = fb.correct ? DEFAULT_CORRECT_FEEDBACK : DEFAULT_INCORRECT_FEEDBACK;
-  } else if (fb.feedbackType === 'none') {
-    delete fb.feedback;
+    if (fb.feedbackType === 'default') {
+      fb.feedback = fb.correct ? DEFAULT_CORRECT_FEEDBACK : DEFAULT_INCORRECT_FEEDBACK;
+    } else if (fb.feedbackType === 'none') {
+      delete fb.feedback;
+    }
+    delete fb.value;
+    fbArray[userChoice] = fb;
   }
-  delete fb.value;
-  fbArray[userChoice] = fb;
 };
 
 exports.isCorrect = function(answer, correctAnswer) {

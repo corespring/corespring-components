@@ -141,7 +141,7 @@ main = [
       replace: true,
       link: link($sce, $timeout),
       template: [
-        '<div class="view-inline-choice" ng-class="{true:\'correct\', false:\'incorrect\'}[selected.correct]">',
+        '<div class="view-inline-choice" ng-class="response.correctness">',
         '<div class="dropdown" >',
         '<span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
         '  <span ng-switch="selected.labelType">',
