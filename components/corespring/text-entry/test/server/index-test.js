@@ -111,5 +111,30 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
+  describe('with only one correct value', function() {
+    it('should return correct and score 1 if the answer is correct', function() {
+      var component = {
+        "weight": 1,
+        "componentType": "corespring-text-entry",
+        "model": { "answerBlankSize": 8, "answerAlignment": "left" },
+        "correctResponses": { "award": 100, "values": "15", "ignoreWhitespace": true, "ignoreCase": true,
+          "feedback": {
+            "type": "default"
+          }
+        },
+        "incorrectResponses": { "award": 0, "feedback": { "type": "default" } }
+      };
+
+      var expected = {
+        correctness: "correct",
+        score: 1
+      };
+      var response = server.respond(_.cloneDeep(component), "15", settings(false, true, true));
+
+      response.correctness.should.eql(expected.correctness);
+      response.score.should.eql(expected.score);
+    });
+  });
+
 
 });
