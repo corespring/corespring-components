@@ -80,7 +80,7 @@
 .incorrect.cs-feedback,
 .correct.cs-feedback {
     margin-top: 5px;
-    padding-bottom: 30px;
+    padding-bottom: 15px;
     background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px -0px transparent;
     padding-left: 30px;
 }
