@@ -20,7 +20,7 @@ exports.isCorrect = function(answer, responses) {
   var ignoreWhitespace = (responses && responses.ignoreWhitespace) || false;
   var responseValues = (responses.values instanceof Array) ? responses.values : [responses.values];
 
-  return responses && _.some(response.values, function(a) {
+  return responses && _.some(responseValues, function(a) {
     return exports.isEqual(answer, a, ignoreCase, ignoreWhitespace);
   });
 };
