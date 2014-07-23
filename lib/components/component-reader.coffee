@@ -28,7 +28,7 @@ orgName = (p) ->
 
 icon = (p) ->
   iconPath = path.join(p, 'icon.png')
-  fs.readFileSync( iconPath )
+  fs.readFileSync(iconPath) if fs.exists(iconPath)
 
 componentName = (p) -> path.basename(p)
 
