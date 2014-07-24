@@ -120,4 +120,56 @@ describe('feedback-block server logic', function() {
     outcome.should.eql(expected);
   });
 
+  it('CA-1779 Feedback is displaying as correct when an incorrect response is input', function() {
+
+    component = {
+      componentType: "corespring-feedback-block",
+      weight: 0,
+      feedback: {
+        correct: [
+          {
+            input: "5,5",
+            feedback: "Correct!"
+          },
+          {
+            input: "5",
+            feedback: "Correct!"
+          }
+        ],
+        incorrect: [
+          {
+            input: "*",
+            feedback: "Good try, but 5 is the correct answer."
+          }
+        ]
+      }
+    };
+
+    targetOutcome = {
+      correctness: "incorrect",
+      score: 0,
+      feedback: {
+        correctness: "incorrect"
+      },
+      studentResponse: "5f"
+    };
+
+    var expected;
+    var outcome = server.respond(component, ["the answer is not used in feedback-block"], settings(), targetOutcome);
+    expected = {
+      correctness: "incorrect",
+      feedback: component.feedback.incorrect[0].feedback
+    };
+    outcome.should.eql(expected);
+
+    targetOutcome.studentResponse = "5";
+    outcome = server.respond(component, ["the answer is not used in feedback-block"], settings, targetOutcome);
+    expected = {
+      correctness: "correct",
+      feedback: component.feedback.correct[1].feedback
+    };
+    outcome.should.eql(expected);
+
+  });
+
 });
