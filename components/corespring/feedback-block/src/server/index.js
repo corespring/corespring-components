@@ -12,7 +12,6 @@ exports.respond = function(model, answer, settings, targetOutcome) {
 
   function findFeedback(feedbacks, response){
     var o =  _.find(feedbacks, function(item) {
-      console.log(item.input , response, item && (response === item.input))
       return item && (response === item.input);
     });
     return o ? o.feedback : "";

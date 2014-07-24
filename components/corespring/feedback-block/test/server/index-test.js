@@ -145,7 +145,7 @@ describe('feedback-block server logic', function() {
       }
     };
 
-    targetOutcome = {
+    var targetOutcome = {
       correctness: "incorrect",
       score: 0,
       feedback: {
