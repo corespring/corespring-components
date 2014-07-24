@@ -162,9 +162,15 @@ describe('feedback-block server logic', function() {
     };
     outcome.should.eql(expected);
 
-    settings.showFeedback = true;
+    var newSettings = {
+      "maxNoOfAttempts": 1,
+      "highlightUserResponse": true,
+      "highlightCorrectResponse": true,
+      "showFeedback": true
+    };
+
     targetOutcome.studentResponse = "5";
-    outcome = server.respond(component, ["the answer is not used in feedback-block"], settings, targetOutcome);
+    var outcome = server.respond(component, ["the answer is not used in feedback-block"], newSettings, targetOutcome);
     expected = {
       correctness: "correct",
       feedback: component.feedback.correct[1].feedback
