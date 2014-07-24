@@ -155,13 +155,14 @@ describe('feedback-block server logic', function() {
     };
 
     var expected;
-    var outcome = server.respond(component, ["the answer is not used in feedback-block"], settings(), targetOutcome);
+    outcome = server.respond(component, ["the answer is not used in feedback-block"], settings(), targetOutcome);
     expected = {
       correctness: "incorrect",
       feedback: component.feedback.incorrect[0].feedback
     };
     outcome.should.eql(expected);
 
+    settings.showFeedback = true;
     targetOutcome.studentResponse = "5";
     outcome = server.respond(component, ["the answer is not used in feedback-block"], settings, targetOutcome);
     expected = {
