@@ -28,6 +28,7 @@
 
 .view-multiple-choice .choice-holder {
     line-height: 35px;
+    display: table-row;
 }
 
 .choice-feedback-holder {
@@ -81,12 +82,13 @@
 .correct.cs-feedback {
     margin-top: 5px;
     padding-bottom: 15px;
-    background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px -0px transparent;
+    padding-top: 10px;
+    background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 14px transparent;
     padding-left: 30px;
 }
 
 .correct.cs-feedback {
-    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px -0px transparent;
+    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 14px transparent;
 }
 
 .view-multiple-choice .choice-input,
