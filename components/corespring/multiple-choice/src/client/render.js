@@ -240,12 +240,18 @@ var main = [
       '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]" />',
       '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
       '    </span>',
-      '    <label class="choice-letter">{{letter($index)}}.</label>',
-      '    <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
-      '    <div class="choice-label" ng-switch="o.labelType">',
-      '      <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
-      '      <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
-      '    </div>',
+
+      '    <div>',
+
+      '     <label class="choice-letter">{{letter($index)}}.</label>',
+      '     <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+      '     <div class="choice-label" ng-switch="o.labelType">',
+      '       <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+      '       <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
+      '     </div>',
+
+       '  </div>',
+
       '  </div>',
       '  <div ng-repeat-end="" class="choice-feedback-holder" ng-show="o.feedback != null">',
       '    <div style="display:table-cell"></div>',
