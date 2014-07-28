@@ -99,9 +99,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         scope.solutionScope.choiceStyle = scope.choiceStyle;
         $modal.open({
           controller: function($scope, $modalInstance) {
-            $timeout(function() {
-              MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('.modal-content')[0]]);
-            });
+            scope.$emit('rerender-math', {delay: 1, element: $('.modal-content')[0]});
             $scope.ok = function() {
               $modalInstance.dismiss('cancel');
             };
@@ -335,7 +333,7 @@ var landingPlace = [
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
           });
-          scope.$emit('rerender-math', 1);
+          scope.$emit('rerender-math', {delay: 1});
         };
 
         scope.onStart = function(event) {
@@ -361,7 +359,7 @@ var landingPlace = [
               return e.id !== scope.dragging.id;
             });
           });
-          scope.$emit('rerender-math', 1);
+          scope.$emit('rerender-math', {delay: 1});
           return true;
         };
 
