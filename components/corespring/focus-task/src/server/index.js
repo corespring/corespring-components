@@ -14,32 +14,40 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
   var arr = [];
 
   if (settings.highlightUserResponse) {
-    arr = answer;
+    arr = answer || [];
   }
 
   if (settings.highlightCorrectResponse) {
     arr = _.union(arr, correctResponse);
   }
 
-  for (var _i = 0; _i < arr.length; _i++) {
-    var key = arr[_i];
-    var fb = "";
-    if (_.contains(correctResponse, key)) {
-      fb = "shouldHaveBeenSelected";
-    } else {
-      fb = "shouldNotHaveBeenSelected";
-    }
-    out[key] = fb;
+  for (var i = 0; i < arr.length; i++) {
+    var key = arr[i];
+    out[key] =  (_.contains(correctResponse, key)) ? 'shouldHaveBeenSelected' : 'shouldNotHaveBeenSelected';
   }
 
   return out;
 };
+
+exports.buildFeedback = buildFeedback;
 
 
 /*
  Create a response to the answer based on the question, the answer and the respond settings
  */
 exports.respond = function(question, answer, settings) {
+
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be undefined or empty');
+  }
+
+  if(!answer){
+    return {
+      correctness: 'incorrect', 
+      score: 0,
+      feedback: settings.showFeedback ? buildFeedback(question, answer, settings, answerIsCorrect) : null
+    };
+  }
 
   if (question._uid !== answer._uid) {
     throw "Error - the uids must match";

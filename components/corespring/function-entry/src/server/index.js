@@ -15,8 +15,34 @@ exports.isCorrect = function(answer, correctEquation, options) {
   return functionUtils.isFunctionEqual(answer, correctFunction, options);
 };
 
+function getFeedback(question, answerIsCorrect){
+  var fbSelector = answerIsCorrect ? "correctFeedback" : "incorrectFeedback";
+  var fbTypeSelector = fbSelector + "Type";
+
+  var feedbackType = question.feedback[fbTypeSelector] || "default";
+  if (feedbackType === "custom") {
+    return  question.feedback[fbSelector];
+  } else if (feedbackType === "default") {
+    return answerIsCorrect ? exports.DEFAULT_CORRECT_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK;
+  }
+}
+
 exports.respond = function(question, answer, settings) {
 
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be undefined');
+  }
+
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      feedback: settings.showFeedback ? getFeedback(question, false) : null,
+      outcome: settings.showFeedback ? ['incorrectEquation'] : [],
+      comments: settings.showFeedback ? question.comments : null
+    };
+  }
+  
   var answerIsCorrect, response;
 
   if (question && answer && question._uid !== answer._uid) {
@@ -47,15 +73,7 @@ exports.respond = function(question, answer, settings) {
     if (!isCorrectForm) {
       response.outcome.push("lineEquationMatch");
     }
-    var fbSelector = answerIsCorrect ? "correctFeedback" : "incorrectFeedback";
-    var fbTypeSelector = fbSelector + "Type";
-
-    var feedbackType = question.feedback[fbTypeSelector] || "default";
-    if (feedbackType === "custom") {
-      response.feedback = question.feedback[fbSelector];
-    } else if (feedbackType === "default") {
-      response.feedback = answerIsCorrect ? exports.DEFAULT_CORRECT_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK;
-    }
+    response.feedback = getFeedback(question, answerIsCorrect);
     response.comments = question.comments;
   }
 

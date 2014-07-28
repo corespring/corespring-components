@@ -1,11 +1,9 @@
-var assert, component, server, settings, should, _;
+var assert, component, server, settings, should, _, helper;
 
 server = require('../../src/server');
-
+helper = require('../../../../../test-lib/test-helper');
 assert = require('assert');
-
 should = require('should');
-
 _ = require('lodash');
 
 component = {
@@ -70,8 +68,11 @@ settings = function(feedback, userResponse, correctResponse) {
   };
 };
 
+
 describe('drag and drop server logic', function() {
 
+  helper.assertNullOrUndefinedAnswersReturnsIncorrect(server);
+  
   describe('respond incorrect', function() {
     var response = server.respond(_.cloneDeep(component), {
       1: ['larva']
@@ -120,5 +121,7 @@ describe('drag and drop server logic', function() {
     response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));
     response.correctness.should.eql('correct');
   });
+
+
 
 });

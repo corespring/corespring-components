@@ -106,7 +106,7 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
     if (settings.highlightCorrectResponse) {
       correctResponseFeedback(out, question, false, answer);
     }
-    if (settings.highlightUserResponse) {
+    if (settings.highlightUserResponse && answer) {
       userResponseFeedback(out, question, answer);
     }
   }
@@ -150,6 +150,14 @@ var calculateScore = function(question, answer) {
  Create a response to the answer based on the question, the answer and the respond settings
  */
 exports.respond = function(question, answer, settings) {
+
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      feedback: settings.showFeedback ? buildFeedback(question, answer, settings, false) : null
+    };
+  }
 
   if (question._uid !== answer._uid) {
     throw "Error - the uids must match";

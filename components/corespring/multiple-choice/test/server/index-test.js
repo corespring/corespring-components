@@ -1,4 +1,6 @@
-var assert, component, server, settings, should, _;
+var assert, component, server, settings, should, _, helper;
+
+helper = require('../../../../../test-lib/test-helper');
 
 //Note: because we are using non conventional requires
 //You need to load the component with proxyquire
@@ -81,6 +83,27 @@ settings = function(feedback, userResponse, correctResponse) {
 };
 
 describe('multiple-choice server logic', function() {
+
+  it('should return incorrect if the answer is null or undefined', function(){
+    var outcome = server.respond(
+      {
+        correctResponse: 
+        {
+          value: ['a']
+        },
+        feedback: [
+          {value: 'a',  feedback: 'yes', notChosenFeedback:'no'}
+        ]
+      }, 
+      null, 
+      {
+      showFeedback: true,
+      highlightUserResponse: true,
+      highlightCorrectResponse: true
+    });
+    outcome.should.eql({correctness: 'incorrect', score: 0, feedback: [{value: 'a', feedback: 'no', correct: true}]});
+  });
+
 
   describe('is correct', function() {
     server.isCorrect(["1"], ["1"]).should.eql(true);

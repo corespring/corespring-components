@@ -37,6 +37,12 @@ settings = function(feedback, userResponse, correctResponse) {
 
 describe('extended text entry server logic', function() {
 
+
+  it('should return an incorrect response for a null answer', function(){
+    var outcome = server.respond({}, null, settings(true));
+    outcome.should.eql({correctness: 'incorrect', score: 0, feedback: server.feedback.NO_ANSWER});
+  });
+
   it('should show default feedback', function() {
     var response = server.respond(_.cloneDeep(component), "Some text", settings(true, true, false));
     response.feedback.should.eql("Your answer has been submitted");
@@ -57,7 +63,7 @@ describe('extended text entry server logic', function() {
     customComponent.feedback.feedback = 'custom feedback';
 
     var response = server.respond(customComponent, "Some text", settings(true, true, false));
-    response.should.not.have.property('feedback');
+    response.should.eql({feedback: undefined});
   });
 
 });

@@ -59,6 +59,13 @@ var calculateScore = function(question, answer) {
 exports.respond = function(question, answer, settings) {
   var answerIsCorrect, response;
 
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      feedback: settings.showFeedback ? buildFeedback(question, answer, settings, false) : null
+    };
+  }
   if (question && answer && question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
@@ -70,6 +77,5 @@ exports.respond = function(question, answer, settings) {
   if (settings.showFeedback) {
     response.feedback = buildFeedback(question, answer, settings, answerIsCorrect);
   }
-
   return response;
 };

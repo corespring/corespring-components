@@ -8,7 +8,30 @@ exports.render = function(item) {
   return item;
 };
 
+function getFeedback(question, answer, settings, isCorrect){
+  var fbSelector = isCorrect ? 'correctFeedback' : 'incorrectFeedback';
+  var fbTypeSelector = isCorrect ? 'correctFeedbackType' : 'incorrectFeedbackType';
+
+  var feedbackType = question.feedback[fbTypeSelector] || 'default';
+
+  if (feedbackType === 'custom') {
+    return question.feedback[fbSelector];
+  } else if (feedbackType === 'default') {
+    return isCorrect ? 'Correct!' : 'Good try but that is not the correct answer.';
+  }
+}
+
 exports.respond = function(question, answer, settings) {
+
+  var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
+
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      feedback: addFeedback ? getFeedback(question, answer, settings, false) : null
+    };
+  }
 
   var slope = (answer.B.y - answer.A.y) / (answer.B.x - answer.A.x);
   var yintercept = answer.A.y - (slope * answer.A.x);
@@ -35,16 +58,8 @@ exports.respond = function(question, answer, settings) {
     };
   }
 
-  if (settings.showFeedback && !question.model.config.exhibitOnly) {
-    var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
-    var fbTypeSelector = isCorrect ? "correctFeedbackType" : "incorrectFeedbackType";
-
-    var feedbackType = question.feedback[fbTypeSelector] || "default";
-    if (feedbackType === "custom") {
-      res.feedback = question.feedback[fbSelector];
-    } else if (feedbackType === "default") {
-      res.feedback = isCorrect ? "Correct!" : "Good try but that is not the correct answer.";
-    }
+  if (addFeedback) {
+    res.feedback = getFeedback(question, answer, settings, isCorrect);
   }
 
   return res;

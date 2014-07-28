@@ -1,6 +1,8 @@
-var assert, component, server, settings, should;
+var assert, component, server, settings, should, helper;
 
 var _ = require('lodash');
+
+helper = require('../../../../../test-lib/test-helper');
 
 var proxyquire = require('proxyquire').noCallThru();
 
@@ -39,19 +41,13 @@ component = {
   }
 };
 
-settings = function(feedback, userResponse, correctResponse) {
-  feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ? true : userResponse;
-  correctResponse = correctResponse === undefined ? true : correctResponse;
-
-  return {
-    highlightUserResponse: userResponse,
-    highlightCorrectResponse: correctResponse,
-    showFeedback: feedback
-  };
-};
-
 describe('line interaction server logic', function() {
+
+
+  it('returns incorrect outcome for an empty answer', function(){
+      var outcome = server.respond({}, null, helper.settings(true, true, true));
+      outcome.should.eql({});
+  });
 
   it('respond incorrect', function() {
     var spy = sinon.spy(serverObj, 'isFunctionEqual');
@@ -64,7 +60,7 @@ describe('line interaction server logic', function() {
         x: 1,
         y: 1
       }
-    }, settings(false, true, true));
+    }, helper.settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
     // check if it was called with the right options
@@ -84,7 +80,7 @@ describe('line interaction server logic', function() {
         x: 1,
         y: 9
       }
-    }, settings(false, true, true));
+    }, helper.settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
