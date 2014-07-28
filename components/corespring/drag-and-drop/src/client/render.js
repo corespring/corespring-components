@@ -99,11 +99,15 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         scope.solutionScope.choiceStyle = scope.choiceStyle;
         $modal.open({
           controller: function($scope, $modalInstance) {
+            $timeout(function() {
+              MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('.modal-content')[0]]);
+            });
             $scope.ok = function() {
               $modalInstance.dismiss('cancel');
             };
           },
           template: [
+          '<div class="view-drag-and-drop">',
           '   <div class="modal-header">',
           '     <h3>Answer</h3>',
           '   </div>',
@@ -112,7 +116,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           '   </div>',
           '   <div class="modal-footer">',
           '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-          '   </div>'
+          '   </div>',
+          '</div>'
         ].join(""),
           backdrop: true,
           scope: scope.solutionScope
