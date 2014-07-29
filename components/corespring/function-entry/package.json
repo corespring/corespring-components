@@ -1,4 +1,10 @@
 {
+  "name": "function-entry",
+  "title": "Evaluate an Equation",
+  "titleGroup": "Mathematics",
+  "organization": "corespring",
+  "released": true,
+
   "libraries": [
     {
       "name": "function-utils",
@@ -7,12 +13,17 @@
     {
       "name": "choice-templates",
       "organization": "corespring",
-      "scope" : "editor"
+      "scope": "editor"
     }
   ],
-  "name": "function-entry",
-  "title": "Evaluate an Equation",
-  "titleGroup": "Mathematics",
-  "organization": "corespring",
-  "released": true
+
+  "dependencies": {
+    "client": {
+      "angular-bootstrap": {
+        "version": "~0.10.0",
+        "file": "ui-bootstrap-tpls.min.js",
+        "angular-module": "ui.bootstrap"
+      }
+    }
+  }
 }
