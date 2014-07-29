@@ -108,7 +108,7 @@ describe('line interaction server logic', function() {
     });
 
     it('should be custom feedback if feedbackType is "custom"', function() {
-      var feedbackObj = {correctFeedbackType:'custom', correctFeedback: 'Custom Correct!'}
+      var feedbackObj = {correctFeedbackType:'custom', correctFeedback: 'Custom Correct!'};
       var response = server.respond(prepareComponent(component,feedbackObj), {
         A: {
           x: 0,
@@ -123,7 +123,7 @@ describe('line interaction server logic', function() {
     });
 
     it('should be default feedback if feedbackType is not "custom"', function() {
-      var feedbackObj = {correctFeedbackType:'anything else but custom', correctFeedback: 'Custom Correct!'}
+      var feedbackObj = {correctFeedbackType:'anything else but custom', correctFeedback: 'Custom Correct!'};
       var response = server.respond(prepareComponent(component,feedbackObj), {
         A: {
           x: 0,
