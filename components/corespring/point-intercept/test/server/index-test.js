@@ -3,7 +3,7 @@ var proxyquire = require('proxyquire').noCallThru();
 var fbu = require('../../../server-shared/src/server/feedback-utils');
 
 var server = proxyquire('../../src/server', {
-  'corespring.server-shared.feedback-utils': fbu
+  'corespring.server-shared.server.feedback-utils': fbu
 });
 var assert = require('assert');
 var should = require('should');

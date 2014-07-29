@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-var keys = require('corespring.server-shared.feedback-utils').keys;
+var keys = require('corespring.server-shared.server.feedback-utils').keys;
 
 exports.feedbackMessage = function(question, correctness) {
   var defaults = {

@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var fb = require('corespring.server-shared.feedback-utils');
+var fb = require('corespring.server-shared.server.feedback-utils');
 
 exports.createResponse = function(question, answer, settings) {
 

@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-var fbu = require('corespring.server-shared.feedback-utils');
+var fbu = require('corespring.server-shared.server.feedback-utils');
 
 exports.isCorrect = function(answer, correctResponse, orderMatters) {
   if (orderMatters) {

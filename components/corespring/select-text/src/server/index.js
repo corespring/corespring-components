@@ -1,7 +1,7 @@
 var _ = require('lodash');
-var keys = require('corespring.server-shared.feedback-utils').keys;
-//corespring.server-shared.feedback-utils
-//corespring.server-shared.feedback-utils
+var keys = require('corespring.server-shared.server.feedback-utils').keys;
+//corespring.server-shared.server.feedback-utils
+//corespring.server-shared.server.feedback-utils
 
 exports.wrapTokensWithHtml = function(choices) {
   var idx = 0;

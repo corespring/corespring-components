@@ -10,7 +10,7 @@ var shared = require('../../../server-shared/src/server');
 
 server = proxyquire('../../src/server', {
   'corespring.server-shared.server': shared,
-  'corespring.server-shared.feedback-utils': fbu
+  'corespring.server-shared.server.feedback-utils': fbu
 });
 
 assert = require('assert');

@@ -15,7 +15,7 @@ var mockFnUtils = {
 
 server = proxyquire('../../src/server', {
   'corespring.function-utils.server': mockFnUtils,
-  'corespring.server-shared.feedback-utils' : fbu
+  'corespring.server-shared.server.feedback-utils' : fbu
 });
 
 assert = require('assert');

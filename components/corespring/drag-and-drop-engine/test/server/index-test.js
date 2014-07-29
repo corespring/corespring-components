@@ -6,7 +6,7 @@ var proxyquire = require('proxyquire').noCallThru();
 
 server = proxyquire('../../src/server', {
   'corespring.server-shared.server' : shared,
-  'corespring.server-shared.feedback-utils' : fbu
+  'corespring.server-shared.server.feedback-utils' : fbu
 });
 
 describe('drag-and-drop-engine', function() {

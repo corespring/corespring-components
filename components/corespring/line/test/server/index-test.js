@@ -19,7 +19,7 @@ var fbu = require('../../../server-shared/src/server/feedback-utils');
 
 server = proxyquire('../../src/server', {
   'corespring.function-utils.server': serverObj,
-  'corespring.server-shared.feedback-utils': fbu
+  'corespring.server-shared.server.feedback-utils': fbu
 });
 
 assert = require('assert');

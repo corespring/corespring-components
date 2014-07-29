@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
-var fbu = require('corespring.server-shared.feedback-utils');
+var fbu = require('corespring.server-shared.server.feedback-utils');
 
 exports.render = function(item) {
   if (_.isString(item.model.config.initialValues)) {

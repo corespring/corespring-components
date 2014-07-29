@@ -9,7 +9,7 @@ fbu = require('../../../server-shared/src/server/feedback-utils');
 server = proxyquire('../../src/server', {
   'corespring.drag-and-drop-engine.server': {},
   'corespring.server-shared.server': shared,
-  'corespring.server-shared.feedback-utils': fbu
+  'corespring.server-shared.server.feedback-utils': fbu
 });
 
 assert = require('assert');
