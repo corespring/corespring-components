@@ -1,10 +1,10 @@
-var assert, component, server, settings, should;
+var component, server, settings;
 
 var _ = require('lodash');
-
-var proxyquire = require('proxyquire').noCallThru();
-
 var sinon = require('sinon');
+var assert = require('assert');
+var should = require('should');
+var proxyquire = require('proxyquire').noCallThru();
 
 var serverObj = {
   expressionize: _.identity,
@@ -17,11 +17,6 @@ server = proxyquire('../../src/server', {
   'corespring.function-utils.server': serverObj
 });
 
-assert = require('assert');
-
-should = require('should');
-
-_ = require('lodash');
 
 component = {
   "componentType": "corespring-line",
@@ -88,6 +83,62 @@ describe('line interaction server logic', function() {
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
+
+  describe('feedback', function() {
+
+    function prepareComponent(component, feedback){
+      var result = _.cloneDeep(component);
+      result.feedback = feedback;
+      return result;
+    }
+
+    it('should be default feedback if feedback obj is null', function() {
+      var feedbackObj = null;
+      var response = server.respond(prepareComponent(component, feedbackObj), {
+        A: {
+          x: 0,
+          y: 7
+        },
+        B: {
+          x: 1,
+          y: 9
+        }
+      }, settings(true, true, true));
+      response.feedback.should.eql('Correct!');
+    });
+
+    it('should be custom feedback if feedbackType is "custom"', function() {
+      var feedbackObj = {correctFeedbackType:'custom', correctFeedback: 'Custom Correct!'}
+      var response = server.respond(prepareComponent(component,feedbackObj), {
+        A: {
+          x: 0,
+          y: 7
+        },
+        B: {
+          x: 1,
+          y: 9
+        }
+      }, settings(true, true, true));
+      response.feedback.should.eql('Custom Correct!');
+    });
+
+    it('should be default feedback if feedbackType is not "custom"', function() {
+      var feedbackObj = {correctFeedbackType:'anything else but custom', correctFeedback: 'Custom Correct!'}
+      var response = server.respond(prepareComponent(component,feedbackObj), {
+        A: {
+          x: 0,
+          y: 7
+        },
+        B: {
+          x: 1,
+          y: 9
+        }
+      }, settings(true, true, true));
+      response.feedback.should.eql('Correct!');
+    });
+
+  });
+
 
 
 });

@@ -36,13 +36,11 @@ exports.respond = function(question, answer, settings) {
   }
 
   if (settings.showFeedback && !question.model.config.exhibitOnly) {
-    var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
     var fbTypeSelector = isCorrect ? "correctFeedbackType" : "incorrectFeedbackType";
-
-    var feedbackType = question.feedback[fbTypeSelector] || "default";
-    if (feedbackType === "custom") {
+    if (question.feedback && question.feedback[fbTypeSelector] === 'custom') {
+      var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
       res.feedback = question.feedback[fbSelector];
-    } else if (feedbackType === "default") {
+    } else {
       res.feedback = isCorrect ? "Correct!" : "Good try but that is not the correct answer.";
     }
   }
