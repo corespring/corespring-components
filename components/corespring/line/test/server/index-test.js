@@ -1,4 +1,4 @@
-var component, server, settings;
+var component, server, settings, correctAnswer, incorrectAnswer;
 
 var _ = require('lodash');
 var sinon = require('sinon');
@@ -34,6 +34,28 @@ component = {
   }
 };
 
+correctAnswer = {
+  A: {
+    x: 0,
+    y: 7
+  },
+  B: {
+    x: 1,
+    y: 9
+  }
+};
+
+incorrectAnswer = {
+  A: {
+    x: -1,
+    y: -1
+  },
+  B: {
+    x: 1,
+    y: 1
+  }
+};
+
 settings = function(feedback, userResponse, correctResponse) {
   feedback = feedback === undefined ? true : feedback;
   userResponse = userResponse === undefined ? true : userResponse;
@@ -50,16 +72,7 @@ describe('line interaction server logic', function() {
 
   it('respond incorrect', function() {
     var spy = sinon.spy(serverObj, 'isFunctionEqual');
-    var response = server.respond(_.cloneDeep(component), {
-      A: {
-        x: -1,
-        y: -1
-      },
-      B: {
-        x: 1,
-        y: 1
-      }
-    }, settings(false, true, true));
+    var response = server.respond(_.cloneDeep(component), incorrectAnswer, settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
     // check if it was called with the right options
@@ -70,70 +83,40 @@ describe('line interaction server logic', function() {
   });
 
   it('respond correct', function() {
-    var response = server.respond(_.cloneDeep(component), {
-      A: {
-        x: 0,
-        y: 7
-      },
-      B: {
-        x: 1,
-        y: 9
-      }
-    }, settings(false, true, true));
+    var response = server.respond(_.cloneDeep(component), correctAnswer, settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
 
   describe('feedback', function() {
 
-    function prepareComponent(component, feedback){
-      var result = _.cloneDeep(component);
-      result.feedback = feedback;
-      return result;
+    function evaluateCorrectAnswerWithFeedback(feedback) {
+      var componentWithFeedback = _.cloneDeep(component);
+      componentWithFeedback.feedback = feedback;
+      return server.respond(componentWithFeedback, correctAnswer, settings(true, true, true));
     }
 
     it('should be default feedback if feedback obj is null', function() {
-      var feedbackObj = null;
-      var response = server.respond(prepareComponent(component, feedbackObj), {
-        A: {
-          x: 0,
-          y: 7
-        },
-        B: {
-          x: 1,
-          y: 9
-        }
-      }, settings(true, true, true));
+      var feedback = null;
+      var response = evaluateCorrectAnswerWithFeedback(feedback);
       response.feedback.should.eql('Correct!');
     });
 
     it('should be custom feedback if feedbackType is "custom"', function() {
-      var feedbackObj = {correctFeedbackType:'custom', correctFeedback: 'Custom Correct!'};
-      var response = server.respond(prepareComponent(component,feedbackObj), {
-        A: {
-          x: 0,
-          y: 7
-        },
-        B: {
-          x: 1,
-          y: 9
-        }
-      }, settings(true, true, true));
+      var feedback = {
+        correctFeedbackType: 'custom',
+        correctFeedback: 'Custom Correct!'
+      };
+      var response = evaluateCorrectAnswerWithFeedback(feedback);
       response.feedback.should.eql('Custom Correct!');
     });
 
     it('should be default feedback if feedbackType is not "custom"', function() {
-      var feedbackObj = {correctFeedbackType:'anything else but custom', correctFeedback: 'Custom Correct!'};
-      var response = server.respond(prepareComponent(component,feedbackObj), {
-        A: {
-          x: 0,
-          y: 7
-        },
-        B: {
-          x: 1,
-          y: 9
-        }
-      }, settings(true, true, true));
+      var feedback = {
+        correctFeedbackType: 'anything else but custom',
+        correctFeedback: 'Custom Correct!'
+      };
+      var response = evaluateCorrectAnswerWithFeedback(feedback);
       response.feedback.should.eql('Correct!');
     });
 
