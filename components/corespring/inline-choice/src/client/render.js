@@ -71,7 +71,7 @@ link = function($sce, $timeout) {
           scope.select(selectedChoice);
         }
 
-        scope.$emit('rerender-math', 100);
+        scope.$emit('rerender-math', {delay: 100});
 
       },
 
@@ -122,7 +122,7 @@ link = function($sce, $timeout) {
 
     scope.select = function(choice) {
       scope.selected = choice;
-      scope.$emit('rerender-math', 1);
+      scope.$emit('rerender-math', {delay: 1});
     };
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);

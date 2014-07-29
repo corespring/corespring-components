@@ -110,10 +110,6 @@
   border: 1px solid #843ABC;
 }
 
-.modal .landing-place {
-    background-color: #edffe3;
-}
-
 .view-drag-and-drop .feedback-correct {
     background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 5px;
     border: solid 2px #80b312;

@@ -130,7 +130,7 @@ var main = [
         }
 
         applyChoices();
-        scope.$emit('rerender-math', 100);
+        scope.$emit('rerender-math', {delay: 100});
       };
 
       scope.containerBridge = {

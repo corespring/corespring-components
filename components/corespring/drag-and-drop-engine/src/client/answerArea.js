@@ -67,7 +67,7 @@ var answerArea = [
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
           });
-          scope.$emit('rerender-math', 1);
+          scope.$emit('rerender-math', {delay: 1});
         };
 
         scope.onStart = function(event) {
@@ -93,7 +93,7 @@ var answerArea = [
               return e.id !== scope.dragging.id;
             });
           });
-          scope.$emit('rerender-math', 1);
+          scope.$emit('rerender-math', {delay: 1});
           return true;
         };
 

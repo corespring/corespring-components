@@ -99,11 +99,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         scope.solutionScope.choiceStyle = scope.choiceStyle;
         $modal.open({
           controller: function($scope, $modalInstance) {
+            scope.$emit('rerender-math', {delay: 1, element: $('.modal-content')[0]});
             $scope.ok = function() {
               $modalInstance.dismiss('cancel');
             };
           },
           template: [
+          '<div class="view-drag-and-drop">',
           '   <div class="modal-header">',
           '     <h3>Answer</h3>',
           '   </div>',
@@ -112,7 +114,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           '   </div>',
           '   <div class="modal-footer">',
           '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-          '   </div>'
+          '   </div>',
+          '</div>'
         ].join(""),
           backdrop: true,
           scope: scope.solutionScope
@@ -330,7 +333,7 @@ var landingPlace = [
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = _.filter(lpc, nonEmptyElement);
           });
-          scope.$emit('rerender-math', 1);
+          scope.$emit('rerender-math', {delay: 1});
         };
 
         scope.onStart = function(event) {
@@ -356,7 +359,7 @@ var landingPlace = [
               return e.id !== scope.dragging.id;
             });
           });
-          scope.$emit('rerender-math', 1);
+          scope.$emit('rerender-math', {delay: 1});
           return true;
         };
 

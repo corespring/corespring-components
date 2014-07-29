@@ -2,13 +2,23 @@ var link, main;
 
 
 main = [
+  '$timeout',
   'MathJaxService',
-  function(MathJaxService) {
+  function($timeout,MathJaxService) {
     link = function() {
       return function(scope, element, attrs) {
 
+        function shouldShowFormattingHelp() {
+          var defaultValue = true;
+          if (scope.question && scope.question.config && scope.question.config.hasOwnProperty('showFormattingHelp')) {
+            return scope.question.config.showFormattingHelp;
+          } else {
+            return defaultValue;
+          }
+        }
+
         scope.tooltipText = function() {
-          if (scope.question && scope.question.config.showFormattingHelp) {
+          if (shouldShowFormattingHelp()) {
             return [
               '<ul style=\'text-align: left\'>',
               '   <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
@@ -26,7 +36,7 @@ main = [
 
 
         scope.showTooltip = function(ev) {
-          setTimeout(function() {
+          $timeout(function() {
             MathJaxService.parseDomForMath();
           }, 10);
         };
