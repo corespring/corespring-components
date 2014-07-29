@@ -1,13 +1,31 @@
 var server;
-server = require('../../src/server');
 
-describe('corespring', function() {
+var shared = require('../../../server-shared/src/server');
+var fbu = require('../../../server-shared/src/server/feedback-utils');
+var proxyquire = require('proxyquire').noCallThru();
+
+server = proxyquire('../../src/server', {
+  'corespring.server-shared.server' : shared,
+  'corespring.server-shared.feedback-utils' : fbu
+});
+
+describe('drag-and-drop-engine', function() {
 
   var utils = null;
 
   it('should return incorrect + feedback for an empty answer', function() {
-    var outcome = server.createResponse({feedback: {}}, null, {showFeedback: true}, { incorrect: 'no'});
-    outcome.should.eql({correctness: 'incorrect', score: 0, correctResponse: null, answer: null, feedback: 'no'});
+    var outcome = server.createResponse(
+      {feedback: {}}, 
+      null, 
+      {showFeedback: true});
+
+    outcome.should.eql(
+      {
+        correctness: 'incorrect', 
+        score: 0, 
+        correctResponse: null, 
+        answer: null, 
+        feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK});
   });
 
 

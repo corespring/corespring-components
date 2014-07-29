@@ -1,18 +1,26 @@
 var _ = require('lodash');
-var dragAndDropEngine = require("corespring.drag-and-drop-engine.server");
+var dragAndDropEngine = require('corespring.drag-and-drop-engine.server');
 
-
-exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
-exports.DEFAULT_PARTIAL_FEEDBACK = "Almost!";
-exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+var keys = require('corespring.server-shared.server').keys;
+var fb = require('corespring.server-shared.feedback-utils');
 
 exports.respond = function(question, answer, settings) {
 
-  var defaults = {
-    correct: exports.DEFAULT_CORRECT_FEEDBACK,
-    incorrect: exports.DEFAULT_INCORRECT_FEEDBACK,
-    partial: exports.DEFAULT_PARTIAL_FEEDBACK
-  };
+
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be null or empty');
+  }
+
+  if (!answer) {
+    return {
+      correctness: 'incorrect',
+      correctResponse: question.correctResponse,
+      answer: answer,
+      score: 0,
+      correctClass: 'incorrect',
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null
+    };
+  }
 
   var numberOfCorrectAnswers = 0;
 
@@ -38,24 +46,16 @@ exports.respond = function(question, answer, settings) {
   }
 
   var res = {
-    correctness: isCorrect ? "correct" : "incorrect",
+    correctness: isCorrect ? 'correct' : 'incorrect',
     correctResponse: question.correctResponse,
     answer: answer,
     score: score,
-    correctClass: isCorrect ? 'correct' : (isPartiallyCorrect ? 'partial' : 'incorrect'),
+    correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
     comments: question.comments
   };
 
   if (settings.showFeedback) {
-    var fbSelector = isCorrect ? "correctFeedback" : (isPartiallyCorrect ? "partialFeedback" : "incorrectFeedback");
-    var fbTypeSelector = fbSelector + "Type";
-
-    var feedbackType = question.feedback[fbTypeSelector] || "default";
-    if (feedbackType === "custom") {
-      res.feedback = question.feedback[fbSelector];
-    } else if (feedbackType === "default") {
-      res.feedback = isCorrect ? defaults.correct : (isPartiallyCorrect ? defaults.partial : defaults.incorrect);
-    }
+    res.feedback = fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect));
   }
 
   return res;

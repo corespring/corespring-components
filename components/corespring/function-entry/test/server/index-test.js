@@ -4,6 +4,8 @@ _ = require('lodash');
 helper = require('../../../../../test-lib/test-helper');
 var proxyquire = require('proxyquire').noCallThru();
 
+var fbu = require('../../../server-shared/src/server/feedback-utils');
+
 var mockFnUtils = {
   expressionize: _.identity,
   isFunctionEqual: function(e1, e2, options) {
@@ -12,7 +14,8 @@ var mockFnUtils = {
 };
 
 server = proxyquire('../../src/server', {
-  'corespring.function-utils.server': mockFnUtils
+  'corespring.function-utils.server': mockFnUtils,
+  'corespring.server-shared.feedback-utils' : fbu
 });
 
 assert = require('assert');
@@ -32,7 +35,7 @@ component = {
 
 
 
-describe('equation entry server logic', function() {
+describe('function entry server logic', function() {
 
   it('should return incorrect outcome for empty answer', function(){
 
@@ -41,9 +44,9 @@ describe('equation entry server logic', function() {
     outcome.should.eql({
       correctness: 'incorrect',
       score: 0,
-      feedback: server.DEFAULT_INCORRECT_FEEDBACK,
+      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK,
       outcome: ['incorrectEquation'],
-      comments: null
+      comments: undefined 
     });
   });
 

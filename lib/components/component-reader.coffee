@@ -61,14 +61,17 @@ fileToLib = (p, comp) ->
     new LibrarySource(fileName, src)
 
 loadLibraries = (p, comp) ->
-  files = fs.readdirSync path.join(p, "src", "client")
+  unless fs.existsSync path.join(p, "src", "client")
+    []
+  else
+    files = fs.readdirSync path.join(p, "src", "client")
 
-  jsFiles = _.chain(files)
-    .filter((f) -> path.extname(f) == ".js")
-    .map( fileToLib(p, comp) )
-    .value()
+    jsFiles = _.chain(files)
+      .filter((f) -> path.extname(f) == ".js")
+      .map( fileToLib(p, comp) )
+      .value()
 
-  jsFiles
+    jsFiles
 
 loadLib = (p, pk, org, comp, done) ->
   clientLibraries = loadLibraries(p, comp)

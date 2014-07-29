@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
+var fbu = require('corespring.server-shared.feedback-utils');
 
 exports.render = function(item) {
   if (_.isString(item.model.config.initialValues)) {
@@ -8,28 +9,19 @@ exports.render = function(item) {
   return item;
 };
 
-function getFeedback(question, answer, settings, isCorrect){
-  var fbSelector = isCorrect ? 'correctFeedback' : 'incorrectFeedback';
-  var fbTypeSelector = isCorrect ? 'correctFeedbackType' : 'incorrectFeedbackType';
-
-  var feedbackType = question.feedback[fbTypeSelector] || 'default';
-
-  if (feedbackType === 'custom') {
-    return question.feedback[fbSelector];
-  } else if (feedbackType === 'default') {
-    return isCorrect ? 'Correct!' : 'Good try but that is not the correct answer.';
-  }
-}
-
 exports.respond = function(question, answer, settings) {
 
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be empty or null');
+  }
+  
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 
   if(!answer){
     return {
       correctness: 'incorrect',
       score: 0,
-      feedback: addFeedback ? getFeedback(question, answer, settings, false) : null
+      feedback: addFeedback ? fbu.makeFeedback(question.feedback, 'incorrect') : null
     };
   }
 
@@ -49,17 +41,17 @@ exports.respond = function(question, answer, settings) {
 
   if (!question.model.config.exhibitOnly) {
     res = {
-      "correctness": isCorrect ? "correct" : "incorrect",
-      "score": isCorrect ? 1 : 0,
-      "correctResponse": {
-        "equation": correctResponse,
-        "expression": functionUtils.expressionize(correctResponse, 'x')
+      correctness: isCorrect ? "correct" : "incorrect",
+      score: isCorrect ? 1 : 0,
+      correctResponse: {
+        equation: correctResponse,
+        expression: functionUtils.expressionize(correctResponse, 'x')
       }
     };
   }
 
   if (addFeedback) {
-    res.feedback = getFeedback(question, answer, settings, isCorrect);
+    res.feedback = fbu.makeFeedback(question.feedback, res.correctness);
   }
 
   return res;

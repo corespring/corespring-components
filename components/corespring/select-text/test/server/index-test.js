@@ -1,6 +1,11 @@
-var server = require('../../src/server');
+var proxyquire = require('proxyquire').noCallThru();
+var fbu = require('../../../server-shared/src/server/feedback-utils');
+var server = proxyquire('../../src/server', {
+  'corespring.server-shared.feedback-utils': fbu
+});
 var should = require('should');
 var _ = require('lodash');
+var helper = require('../../../../../test-lib/test-helper');
 
 var component = {
   "componentType": "corespring-select-text",
@@ -9,40 +14,29 @@ var component = {
       "selectionUnit": "word",
       "checkIfCorrect": true
     },
-    "choices": [
-      {
-        data: "I"
-      },
-      {
-        data: "ate"
-      },
-      {
-        data: "some"
-      },
-      {
-        data: "banana",
-        correct: true
-      },
-      {
-        data: "and"
-      },
-      {
-        data: "carrot"
-      },
-      {
-        data: "and"
-      },
-      {
-        data: "cheese"
-      },
-      {
-        data: "and"
-      },
-      {
-        data: "apple",
-        correct: true
-      }
-    ]
+    "choices": [{
+      data: "I"
+    }, {
+      data: "ate"
+    }, {
+      data: "some"
+    }, {
+      data: "banana",
+      correct: true
+    }, {
+      data: "and"
+    }, {
+      data: "carrot"
+    }, {
+      data: "and"
+    }, {
+      data: "cheese"
+    }, {
+      data: "and"
+    }, {
+      data: "apple",
+      correct: true
+    }]
   }
 };
 
@@ -56,68 +50,68 @@ var componentIgnoreCorrect = {
       "minSelections": 2,
       "maxSelections": 3
     },
-    "choices" : [
-      {
-        data: "I"
-      },
-      {
-        data: "ate"
-      },
-      {
-        data: "some"
-      },
-      {
-        data: "banana"
-      },
-      {
-        data: "and"
-      },
-      {
-        data: "carrot"
-      },
-      {
-        data: "and"
-      },
-      {
-        data: "cheese"
-      },
-      {
-        data: "and"
-      },
-      {
-        data: "apple"
-      }
-    ]
+    "choices": [{
+      data: "I"
+    }, {
+      data: "ate"
+    }, {
+      data: "some"
+    }, {
+      data: "banana"
+    }, {
+      data: "and"
+    }, {
+      data: "carrot"
+    }, {
+      data: "and"
+    }, {
+      data: "cheese"
+    }, {
+      data: "and"
+    }, {
+      data: "apple"
+    }]
   }
 };
 
-var settings = function(feedback, userResponse, correctResponse) {
-  feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ? true : userResponse;
-  correctResponse = correctResponse === undefined ? true : correctResponse;
-
-  return {
-    highlightUserResponse: userResponse,
-    highlightCorrectResponse: correctResponse,
-    showFeedback: feedback
-  };
-};
-
 describe('select text server logic', function() {
+
+  it('should return an incorrect outcome if answer is empty', function() {
+    var outcome = server.respond(_.cloneDeep(component), null, helper.settings(true, true, true));
+    var expected = {
+      correctness: "incorrect",
+      score: 0,
+      feedback: {
+        choices: {
+          3: {
+            wouldBeCorrect: true
+          },
+          9: {
+            wouldBeCorrect: true
+          }
+        },
+        message: "Good try but that is not the correct answer."
+      },
+      outcome: [],
+      correctClass: "incorrect"
+    };
+    outcome.should.eql(expected);
+  });
+
   it('should respond with correct true in answer is correct', function() {
-    var response = server.respond(_.cloneDeep(component), ['3', '9'], settings(true, true, true));
+    var response = server.respond(_.cloneDeep(component), ['3', '9'], helper.settings(true, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
 
   it('should respond with incorrect in answer is correct', function() {
-    var response = server.respond(_.cloneDeep(component), ['1', '2'], settings(false, true, true));
+    var response = server.respond(_.cloneDeep(component), ['1', '2'], helper.settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
   });
 
   it('should have incorrect selections in the feedback', function() {
-    var response = server.respond(_.cloneDeep(component), ['1', '2'], settings(true, true, true));
+    var response = server.respond(_.cloneDeep(component), ['1', '2'], helper.settings(true, true, true));
     response.feedback.choices['1'].should.eql({
       correct: false
     });
@@ -127,7 +121,7 @@ describe('select text server logic', function() {
   });
 
   it('should have correct selections in the feedback', function() {
-    var response = server.respond(_.cloneDeep(component), ['1', '9'], settings(true, true, true));
+    var response = server.respond(_.cloneDeep(component), ['1', '9'], helper.settings(true, true, true));
 
     response.feedback.choices['1'].should.eql({
       correct: false
@@ -138,7 +132,7 @@ describe('select text server logic', function() {
   });
 
   it('should have incorrect non-selections in the feedback', function() {
-    var response = server.respond(_.cloneDeep(component), ['1', '2'], settings(true, true, true));
+    var response = server.respond(_.cloneDeep(component), ['1', '2'], helper.settings(true, true, true));
     response.feedback.choices['3'].should.eql({
       wouldBeCorrect: true
     });
@@ -148,7 +142,7 @@ describe('select text server logic', function() {
   });
 
   it('should not have feedback is show feedback is false', function() {
-    var response = server.respond(_.cloneDeep(component), ['1', '2'], settings(false, true, true));
+    var response = server.respond(_.cloneDeep(component), ['1', '2'], helper.settings(false, true, true));
     response.should.not.have.property('feedback');
   });
 
@@ -161,7 +155,7 @@ describe('select text server logic', function() {
   });
 
   it('selection should be marked correct if checkIfCorrect is false and selection count is okay', function() {
-    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1', '2'], settings(true, true, true));
+    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1', '2'], helper.settings(true, true, true));
     response.feedback.choices['1'].should.eql({
       correct: true
     });
@@ -171,12 +165,12 @@ describe('select text server logic', function() {
   });
 
   it('selection should be marked incorrect if checkIfCorrect is false and selection count is not okay', function() {
-    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1'], settings(true, true, true));
+    var response = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1'], helper.settings(true, true, true));
     response.feedback.choices['1'].should.eql({
       correct: false
     });
 
-    var responseTwo = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1', '2', '3', '4'], settings(true, true, true));
+    var responseTwo = server.respond(_.cloneDeep(componentIgnoreCorrect), ['1', '2', '3', '4'], helper.settings(true, true, true));
     responseTwo.feedback.choices['1'].should.eql({
       correct: false
     });

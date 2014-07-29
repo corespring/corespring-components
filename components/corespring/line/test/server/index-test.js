@@ -15,8 +15,11 @@ var serverObj = {
   }
 };
 
+var fbu = require('../../../server-shared/src/server/feedback-utils');
+
 server = proxyquire('../../src/server', {
-  'corespring.function-utils.server': serverObj
+  'corespring.function-utils.server': serverObj,
+  'corespring.server-shared.feedback-utils': fbu
 });
 
 assert = require('assert');
@@ -45,8 +48,12 @@ describe('line interaction server logic', function() {
 
 
   it('returns incorrect outcome for an empty answer', function(){
-      var outcome = server.respond({}, null, helper.settings(true, true, true));
-      outcome.should.eql({});
+      var outcome = server.respond({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
+      outcome.should.eql({
+        correctness: 'incorrect',
+        score: 0,
+        feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK 
+      });
   });
 
   it('respond incorrect', function() {

@@ -28,6 +28,21 @@ exports.isCorrect = function(answer, responses) {
 exports.respond = function(question, answer, settings) {
   var response;
 
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be empty or null');
+  }
+
+  if(!answer){
+    return {
+      correctness: 'incorrect', 
+      score: 0,
+      feedback: settings.showFeedback ? {
+        correctness: 'incorrect',
+        message: createFeedbackMessage(question, createResponse('incorrect', 0))
+      } : null
+    };
+  }
+
   function createResponse(correctness, score) {
     return {
       correctness: correctness,

@@ -1,19 +1,7 @@
 var _ = require('lodash');
+var fb = require('corespring.server-shared.feedback-utils');
 
-function getFeedback(question, defaults, isCorrect, isPartiallyCorrect){
-  var fbSelector = isCorrect ? "correctFeedback" : (isPartiallyCorrect ? "partialFeedback" : "incorrectFeedback");
-  var fbTypeSelector = fbSelector + "Type";
-
-  var feedbackType = question.feedback[fbTypeSelector] || "default";
-
-  if (feedbackType === "custom") {
-    return question.feedback[fbSelector];
-  } else if (feedbackType === "default") {
-    return isCorrect ? defaults.correct : (isPartiallyCorrect ? defaults.partial : defaults.incorrect);
-  }
-}
-
-exports.createResponse = function(question, answer, settings, defaults) {
+exports.createResponse = function(question, answer, settings) {
 
   if(!question || _.isEmpty(question)){
     throw new Error('the question should never be null or empty');
@@ -25,7 +13,7 @@ exports.createResponse = function(question, answer, settings, defaults) {
       score: 0,
       correctResponse: question.correctResponse,
       answer: answer,
-      feedback: settings.showFeedback ? getFeedback(question, defaults, false, false) : null
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null
     };
   }
 
@@ -60,11 +48,11 @@ exports.createResponse = function(question, answer, settings, defaults) {
     correctResponse: question.correctResponse,
     answer: answer,
     score: score,
-    correctClass: isCorrect ? 'correct' : (isPartiallyCorrect ? 'partial' : 'incorrect')
+    correctClass: fb.correctness(isCorrect, isPartiallyCorrect)
   };
 
   if (settings.showFeedback) {
-    res.feedback = getFeedback(question, defaults, isCorrect, isPartiallyCorrect);
+    res.feedback = fb.makeFeedback(question, fb.correctness(isCorrect, isPartiallyCorrect));
   }
 
   return res;
