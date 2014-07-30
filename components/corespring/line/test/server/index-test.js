@@ -111,7 +111,6 @@ describe('line interaction server logic', function() {
         correctFeedback: 'Custom Correct!'
       };
       var response = evaluateCorrectAnswerWithFeedback(feedback); 
-      console.log('response ->', response);
       response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
     });
 
