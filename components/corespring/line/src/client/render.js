@@ -170,6 +170,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                             graphPoints[ptName] = coords;
                         }
                     });
+
                     if ($scope.graphCallback) {
                         $scope.graphCallback({
                             points: graphPoints
@@ -211,8 +212,8 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                         domainLabel: config.domainLabel,
                         rangeLabel: config.rangeLabel,
                         tickLabelFrequency: config.tickLabelFrequency,
-                        showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : "true",
-                        showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : "true",
+                        showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
+                        showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
                         pointLabels: "letters"
                     };
                 };
@@ -293,20 +294,6 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                         console.log("Setting Session for Point", dataAndSession);
                         var config = dataAndSession.data.model.config;
                         scope.config = config;
-
-                        scope.additionalText = config.additionalText;
-                        scope.scale = config.scale;
-                        scope.domain = config.domain;
-                        scope.range = config.range;
-                        scope.sigfigs = parseInt(config.sigfigs ? config.sigfigs : -1, 10);
-                        scope.locked = config.hasOwnProperty('locked') ? true : false;
-                        scope.domainLabel = config.domainLabel;
-                        scope.rangeLabel = config.rangeLabel;
-                        scope.tickLabelFrequency = config.tickLabelFrequency;
-                        scope.pointLabels = config.pointLabels;
-                        scope.maxPoints = config.maxPoints;
-                        scope.showInputs = !!config.showInputs && !config.exhibitOnly;
-                        scope.showLabels = config.showLabels;
 
                         var containerWidth, containerHeight;
                         var graphContainer = element.find('.graph-container');
