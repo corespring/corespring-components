@@ -11,8 +11,8 @@
   margin: 0 8px 0 3px;
 }
 
-.cs-text-entry__text-input {
-  width: 71px;
+.cs-text-entry__text-input-holder input {
+  padding: 4px 6px;
 }
 
 .cs-text-entry__text-input-holder .correct {
