@@ -21,7 +21,8 @@ var def = ['Canvas',
           width: elem.width(),
           height: elem.height(),
           showLabels: attr.showlabels,
-          showCoordinates: attr.showcoordinates
+          showCoordinates: attr.showcoordinates,
+          showPoints: attr.showpoints
         };
 
         function generateCanvasId() {

@@ -54,6 +54,8 @@ exports.service = ['$log',
       this.scale = attrs.scale;
       this.showLabels = attrs.showLabels === "true";
       this.showCoordinates = attrs.showCoordinates === "true";
+      this.showPoints = _.isUndefined(attrs.showPoints) ? "true" :
+        !(attrs.showPoints === 'false' || attrs.showPoints === false);
       if (attrs.pointLabels) {
         this.pointLabels = attrs.pointLabels;
       } else {
@@ -103,8 +105,8 @@ exports.service = ['$log',
 
     Canvas.prototype.addPoint = function(coords, ptName) {
       var pointAttrs = {
-        strokeColor: "blue",
-        fillColor: "blue",
+        strokeColor: this.showPoints ? "blue" : "transparent",
+        fillColor: this.showPoints ? "blue" : "transparent",
         snapToGrid: true,
         snapSizeX: this.scale,
         snapSizeY: this.scale,

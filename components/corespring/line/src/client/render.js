@@ -214,6 +214,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                         tickLabelFrequency: config.tickLabelFrequency,
                         showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
                         showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
+                        showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : !config.exhibitOnly,
                         pointLabels: "letters"
                     };
                 };
