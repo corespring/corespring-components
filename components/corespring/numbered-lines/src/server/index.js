@@ -1,3 +1,0 @@
-exports.respond = function() {
-  return {};
-};

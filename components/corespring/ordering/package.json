@@ -21,6 +21,11 @@
       "scope": "editor"
     },
     {
+      "name": "server-shared",
+      "organization": "corespring",
+      "scope" : "editor"
+    },
+    {
       "name": "choice-templates",
       "organization": "corespring",
       "scope" : "editor"

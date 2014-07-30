@@ -1,23 +1,22 @@
-var component, server, settings, correctAnswer, incorrectAnswer;
-
-var _ = require('lodash');
-var sinon = require('sinon');
-var assert = require('assert');
-var should = require('should');
-var proxyquire = require('proxyquire').noCallThru();
-
-var serverObj = {
+var 
+_ = require('lodash'), 
+assert = require('assert'), 
+helper = require('../../../../../test-lib/test-helper'),
+sinon = require('sinon'),
+assert = require('assert'),
+should = require('should'),
+proxyquire = require('proxyquire').noCallThru(),
+fbu = require('../../../server-shared/src/server/feedback-utils'),
+serverObj = {
   expressionize: _.identity,
   isFunctionEqual: function(e1, e2, options) {
     return e1 === e2;
   }
-};
-
+},
 server = proxyquire('../../src/server', {
-  'corespring.function-utils.server': serverObj
-});
-
-
+  'corespring.function-utils.server': serverObj,
+  'corespring.server-shared.server.feedback-utils': fbu
+}),
 component = {
   "componentType": "corespring-line",
   "correctResponse": "y=2x+7",
@@ -32,8 +31,7 @@ component = {
       "sigfigs": "-1"
     }
   }
-};
-
+},
 correctAnswer = {
   A: {
     x: 0,
@@ -43,8 +41,7 @@ correctAnswer = {
     x: 1,
     y: 9
   }
-};
-
+},
 incorrectAnswer = {
   A: {
     x: -1,
@@ -56,23 +53,20 @@ incorrectAnswer = {
   }
 };
 
-settings = function(feedback, userResponse, correctResponse) {
-  feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ? true : userResponse;
-  correctResponse = correctResponse === undefined ? true : correctResponse;
-
-  return {
-    highlightUserResponse: userResponse,
-    highlightCorrectResponse: correctResponse,
-    showFeedback: feedback
-  };
-};
-
 describe('line interaction server logic', function() {
+
+  it('returns incorrect outcome for an empty answer', function(){
+      var outcome = server.respond({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
+      outcome.should.eql({
+        correctness: 'incorrect',
+        score: 0,
+        feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK 
+      });
+  });
 
   it('respond incorrect', function() {
     var spy = sinon.spy(serverObj, 'isFunctionEqual');
-    var response = server.respond(_.cloneDeep(component), incorrectAnswer, settings(false, true, true));
+    var response = server.respond(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
     // check if it was called with the right options
@@ -83,7 +77,7 @@ describe('line interaction server logic', function() {
   });
 
   it('respond correct', function() {
-    var response = server.respond(_.cloneDeep(component), correctAnswer, settings(false, true, true));
+    var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
@@ -93,7 +87,7 @@ describe('line interaction server logic', function() {
     function evaluateCorrectAnswerWithFeedback(feedback) {
       var componentWithFeedback = _.cloneDeep(component);
       componentWithFeedback.feedback = feedback;
-      return server.respond(componentWithFeedback, correctAnswer, settings(true, true, true));
+      return server.respond(componentWithFeedback, correctAnswer, helper.settings(true, true, true));
     }
 
     it('should be default feedback if feedback obj is null', function() {
@@ -116,12 +110,10 @@ describe('line interaction server logic', function() {
         correctFeedbackType: 'anything else but custom',
         correctFeedback: 'Custom Correct!'
       };
-      var response = evaluateCorrectAnswerWithFeedback(feedback);
-      response.feedback.should.eql('Correct!');
+      var response = evaluateCorrectAnswerWithFeedback(feedback); 
+      response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
     });
 
   });
-
-
 
 });

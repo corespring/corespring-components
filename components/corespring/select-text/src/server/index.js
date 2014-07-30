@@ -1,8 +1,7 @@
 var _ = require('lodash');
-
-exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
-exports.DEFAULT_PARTIAL_FEEDBACK = "Almost!";
-exports.DEFAULT_INCORRECT_FEEDBACK = "Good try, but that is not the correct answer.";
+var keys = require('corespring.server-shared.server.feedback-utils').keys;
+//corespring.server-shared.server.feedback-utils
+//corespring.server-shared.server.feedback-utils
 
 exports.wrapTokensWithHtml = function(choices) {
   var idx = 0;
@@ -36,8 +35,8 @@ var buildFeedback = function(question, answer) {
   if (feedbackType === "custom") {
     feedback.message = question.feedback[fbSelector];
   } else if (feedbackType === "default") {
-    feedback.message = isCorrect(question, answer) ? exports.DEFAULT_CORRECT_FEEDBACK :
-      (isPartiallyCorrect(question, answer) ? exports.DEFAULT_PARTIAL_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK);
+    feedback.message = isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK :
+      (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK);
   }
 
   if (checkIfCorrect(question)) {
@@ -69,6 +68,11 @@ function checkIfCorrect(question) {
 }
 
 function selectionCountIsFine(question, answer) {
+
+  if(!answer){
+    return false;
+  }
+  
   var selectionCount = answer.length;
   var minSelection = question.model.config.minSelections || 0;
   var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
@@ -140,6 +144,20 @@ function score(question, answer) {
 }
 
 exports.respond = function(question, answer, settings) {
+
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be empty or null');
+  }
+
+  if(!answer){
+    return {
+      correctness: 'incorrect', 
+      score: 0,
+      feedback: settings.showFeedback ? buildFeedback(question, answer) : null,
+      outcome: [],
+      correctClass: settings.showFeedback ? 'incorrect' : null
+    };
+  }
 
   var res = {
     correctness: isCorrect(question, answer) ? "correct" : "incorrect",

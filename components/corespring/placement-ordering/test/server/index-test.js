@@ -1,9 +1,15 @@
-var assert, component, server, settings, should, _;
+var fbu, assert, component, server, settings, should, _, helper, shared, helper, proxyquire;
 
-var proxyquire = require('proxyquire').noCallThru();
+proxyquire = require('proxyquire').noCallThru();
+shared = require('../../../server-shared/src/server');
+helper = require('../../../../../test-lib/test-helper');
+
+fbu = require('../../../server-shared/src/server/feedback-utils');
 
 server = proxyquire('../../src/server', {
-  'corespring.drag-and-drop-engine.server': {}
+  'corespring.drag-and-drop-engine.server': {},
+  'corespring.server-shared.server': shared,
+  'corespring.server-shared.server.feedback-utils': fbu
 });
 
 assert = require('assert');
@@ -12,68 +18,22 @@ should = require('should');
 
 _ = require('lodash');
 
-component = {
-  "componentType": "corespring-drag-and-drop",
-  "title": "Butterfly D&D",
-  "correctResponse": {
-    "1": ["egg", "pupa"],
-    "2": [],
-    "3": ["larva", "adult"],
-    "4": []
-  },
-  "feedback": [
-    {
-      "feedback": [
-        {
-          "larva": "Great"
-        },
-        {
-          "other": "Not great"
-        }
-      ],
-      "landingPlace": "1"
-    }
-  ],
-  "model": {
-    "answerArea": "<div>A butterfly is first a <span landing-place id='1' class='inline' cardinality='ordered'></landing-place> then a <span landing-place id='2' class='inline'></landing-place> and then a <span landing-place id='3' class='inline'></landing-place> and then a <span landing-place id='4' class='inline'></landing-place> </div>",
-    "choices": [
-      {
-        "content": "Pupa",
-        "fixed": true,
-        "id": "pupa"
-      },
-      {
-        "content": "Egg",
-        "id": "egg"
-      },
-      {
-        "content": "Larva",
-        "id": "larva"
-      },
-      {
-        "content": "Adult",
-        "id": "adult"
-      }
-    ],
-    "config": {
-      "shuffle": true
-    }
-  },
-  "weight": 1
-};
 
-settings = function(feedback, userResponse, correctResponse) {
-  feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ? true : userResponse;
-  correctResponse = correctResponse === undefined ? true : correctResponse;
+describe('placement ordering', function() {
 
-  return {
-    highlightUserResponse: userResponse,
-    highlightCorrectResponse: correctResponse,
-    showFeedback: feedback
-  };
-};
+  it('should return an incorrect outcome for an empty answer', function() {
 
-describe('drag and drop server logic', function() {
-
+    var outcome = server.respond({
+      feedback: {}
+    }, null, helper.settings(true, true, true));
+    
+    outcome.should.eql({
+        correctness: "incorrect",
+        correctResponse: undefined,
+        answer: null,
+        score: 0,
+        correctClass: "incorrect",
+        feedback: "Good try but that is not the correct answer."
+      });
+  });
 });

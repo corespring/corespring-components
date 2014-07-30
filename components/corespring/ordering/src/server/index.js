@@ -1,10 +1,70 @@
 var _ = require('lodash');
 
-exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
-exports.DEFAULT_PARTIAL_FEEDBACK = "Almost!";
-exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+var keys = require('corespring.server-shared.server.feedback-utils').keys;
+
+exports.feedbackMessage = function(question, correctness) {
+  var defaults = {
+    correct: keys.DEFAULT_CORRECT_FEEDBACK,
+    partial: keys.DEFAULT_PARTIAL_FEEDBACK,
+    incorrect: keys.DEFAULT_INCORRECT_FEEDBACK
+  };
+
+  var feedbackObject = (question.model && question.model.feedback) ? question.model.feedback[correctness] : null;
+  if (feedbackObject) {
+    if (feedbackObject.feedbackType === 'custom') {
+      //TODO: Why is this called 'notChosenFeedback' ? it may have been chosen
+      return feedbackObject.notChosenFeedback;
+    } else if (feedbackObject.feedbackType === 'none') {
+      return undefined;
+    } else {
+      return defaults[correctness];
+    }
+  } else {
+    return defaults[correctness];
+  }
+};
+
+
+exports.buildFeedback = function(question, answer, correctness) {
+  var feedback = {
+    responses: {},
+    correctness: correctness
+  };
+
+  for (var i = 0; i < question.model.correctResponse.length; i++) {
+    var isCorrect = (answer && answer.length >= i && question.model.correctResponse[i] === answer[i]) ? true : false;
+    feedback.responses[question.model.correctResponse[i]] = {
+      correct: isCorrect
+    };
+  }
+
+  var feedbackMsg = exports.feedbackMessage(question, correctness);
+
+  if (feedbackMsg) {
+    feedback.message = feedbackMsg;
+  }
+
+  if (!_.isEmpty(question.comments)) {
+    feedback.comments = question.comments;
+  }
+
+  return feedback;
+};
 
 exports.respond = function(question, answer, settings) {
+
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be empty or null');
+  }
+
+  if (!answer) {
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      answer: answer,
+      feedback: settings.showFeedback ? exports.buildFeedback(question, answer, 'incorrect') : null
+    };
+  }
 
   function correctness() {
     if (_.isEqual(question.model.correctResponse, answer)) {
@@ -27,53 +87,6 @@ exports.respond = function(question, answer, settings) {
     return partial ? partial.scorePercentage / 100 : 0;
   }
 
-  function feedbackMessage() {
-    var defaults = {
-      correct: exports.DEFAULT_CORRECT_FEEDBACK,
-      partial: exports.DEFAULT_PARTIAL_FEEDBACK,
-      incorrect: exports.DEFAULT_INCORRECT_FEEDBACK
-    };
-
-    var feedbackObject = question.model.feedback[correctness()];
-    if (feedbackObject){
-      if (feedbackObject.feedbackType === 'custom') {
-        return feedbackObject.notChosenFeedback;
-      } else if (feedbackObject.feedbackType === 'none') {
-        return undefined;
-      } else {
-        return defaults[correctness()];
-      }
-    } else {
-      return defaults[correctness()];
-    }
-
-  }
-
-  var buildFeedback = function() {
-    var feedback = {
-      responses: {},
-      correctness: correctness()
-    };
-
-    for (var i = 0; i < question.model.correctResponse.length; i++) {
-      var isCorrect = answer.length >= i && question.model.correctResponse[i] === answer[i];
-      feedback.responses[question.model.correctResponse[i]] = {
-        correct: isCorrect
-      };
-    }
-
-    var feedbackMsg = feedbackMessage();
-
-    if (feedbackMsg) {
-      feedback.message =feedbackMsg;
-    }
-
-    if (!_.isEmpty(question.comments)) {
-      feedback.comments = question.comments;
-    }
-
-    return feedback;
-  };
 
   var response = {
     correctness: correctness(),
@@ -82,7 +95,7 @@ exports.respond = function(question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    response.feedback = buildFeedback();
+    response.feedback = exports.buildFeedback(question, answer, correctness());
   }
 
   return response;

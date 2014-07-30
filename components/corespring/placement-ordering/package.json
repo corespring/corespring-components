@@ -7,18 +7,22 @@
   "version": "0.0.1",
   "libraries": [
     {
+      "name": "server-shared",
+      "organization": "corespring"
+    },
+    {
       "name": "drag-and-drop-engine",
       "organization": "corespring"
     },
     {
       "name": "feedback-templates",
       "organization": "corespring",
-      "scope" : "editor"
+      "scope": "editor"
     },
     {
       "name": "choice-templates",
       "organization": "corespring",
-      "scope" : "editor"
+      "scope": "editor"
     }
   ],
   "released": true

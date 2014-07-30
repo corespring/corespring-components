@@ -1,4 +1,21 @@
-exports.createResponse = function(question, answer, settings, defaults) {
+var _ = require('lodash');
+var fb = require('corespring.server-shared.server.feedback-utils');
+
+exports.createResponse = function(question, answer, settings) {
+
+  if(!question || _.isEmpty(question)){
+    throw new Error('the question should never be null or empty');
+  }
+
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      correctResponse: question.correctResponse,
+      answer: answer,
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null
+    };
+  }
 
   var isCorrect = true;
   var isPartiallyCorrect = false;
@@ -31,19 +48,11 @@ exports.createResponse = function(question, answer, settings, defaults) {
     correctResponse: question.correctResponse,
     answer: answer,
     score: score,
-    correctClass: isCorrect ? 'correct' : (isPartiallyCorrect ? 'partial' : 'incorrect')
+    correctClass: fb.correctness(isCorrect, isPartiallyCorrect)
   };
 
   if (settings.showFeedback) {
-    var fbSelector = isCorrect ? "correctFeedback" : (isPartiallyCorrect ? "partialFeedback" : "incorrectFeedback");
-    var fbTypeSelector = fbSelector + "Type";
-
-    var feedbackType = question.feedback[fbTypeSelector] || "default";
-    if (feedbackType === "custom") {
-      res.feedback = question.feedback[fbSelector];
-    } else if (feedbackType === "default") {
-      res.feedback = isCorrect ? defaults.correct : (isPartiallyCorrect ? defaults.partial : defaults.incorrect);
-    }
+    res.feedback = fb.makeFeedback(question, fb.correctness(isCorrect, isPartiallyCorrect));
   }
 
   return res;

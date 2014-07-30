@@ -1,6 +1,7 @@
 {
   "libraries": [
   ],
-  "name": "feedback-block",
-  "organization": "corespring"
+  "name": "image",
+  "organization": "corespring",
+  "purpose" : "widget"
 }

@@ -1,4 +1,6 @@
-var assert, component, server, settings, should, _;
+var assert, component, server, settings, should, _, helper;
+
+helper = require('../../../../../test-lib/test-helper');
 
 server = require('../../src/server');
 
@@ -44,19 +46,9 @@ component = {
   ]
 };
 
-settings = function(feedback, userResponse, correctResponse) {
-  feedback = feedback === undefined ? true : feedback;
-  userResponse = userResponse === undefined ? true : userResponse;
-  correctResponse = correctResponse === undefined ? true : correctResponse;
-
-  return {
-    highlightUserResponse: userResponse,
-    highlightCorrectResponse: correctResponse,
-    showFeedback: feedback
-  };
-};
-
 describe('inline-choice server logic', function() {
+
+  helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'respond', server.DEFAULT_INCORRECT_FEEDBACK);
 
   describe('is correct', function() {
     server.isCorrect("1", "1").should.eql(true);
@@ -67,7 +59,7 @@ describe('inline-choice server logic', function() {
 
     it('should not show any feedback', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), "apple", settings(false, true, true));
+      response = server.respond(_.cloneDeep(component), "apple", helper.settings(false, true, true));
       expected = {
         correctness: "incorrect",
         score: 0
@@ -77,7 +69,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to a correct answer', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), "carrot", settings(true, true, true));
+      response = server.respond(_.cloneDeep(component), "carrot", helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -93,7 +85,7 @@ describe('inline-choice server logic', function() {
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
-      var response = server.respond(_.cloneDeep(component), "apple", settings(true, true, true));
+      var response = server.respond(_.cloneDeep(component), "apple", helper.settings(true, true, true));
       var expected = {
         correctness: "incorrect",
         score: 0,
@@ -110,7 +102,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to an incorrect response (do not show correct too)', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), "apple", settings(true, true, false));
+      response = server.respond(_.cloneDeep(component), "apple", helper.settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -126,7 +118,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to an incorrect response with default feedback if feedbackType is default', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), "banana", settings(true, true, false));
+      response = server.respond(_.cloneDeep(component), "banana", helper.settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,

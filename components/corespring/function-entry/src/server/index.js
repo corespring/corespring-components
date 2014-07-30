@@ -1,8 +1,6 @@
 var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
-
-exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
-exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+var fb = require('corespring.server-shared.server.feedback-utils');
 
 exports.isCorrect = function(answer, correctEquation, options) {
   var correctFunction = correctEquation;
@@ -17,6 +15,20 @@ exports.isCorrect = function(answer, correctEquation, options) {
 
 exports.respond = function(question, answer, settings) {
 
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be empty or null');
+  }
+
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null,
+      outcome: settings.showFeedback ? ['incorrectEquation'] : [],
+      comments: settings.showFeedback ? question.comments : null
+    };
+  }
+  
   var answerIsCorrect, response;
 
   if (question && answer && question._uid !== answer._uid) {
@@ -47,15 +59,7 @@ exports.respond = function(question, answer, settings) {
     if (!isCorrectForm) {
       response.outcome.push("lineEquationMatch");
     }
-    var fbSelector = answerIsCorrect ? "correctFeedback" : "incorrectFeedback";
-    var fbTypeSelector = fbSelector + "Type";
-
-    var feedbackType = question.feedback[fbTypeSelector] || "default";
-    if (feedbackType === "custom") {
-      response.feedback = question.feedback[fbSelector];
-    } else if (feedbackType === "default") {
-      response.feedback = answerIsCorrect ? exports.DEFAULT_CORRECT_FEEDBACK : exports.DEFAULT_INCORRECT_FEEDBACK;
-    }
+    response.feedback = fb.makeFeedback(question, response.correctness);
     response.comments = question.comments;
   }
 

@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
+var fbu = require('corespring.server-shared.server.feedback-utils');
 
 exports.render = function(item) {
   if (_.isString(item.model.config.initialValues)) {
@@ -9,6 +10,20 @@ exports.render = function(item) {
 };
 
 exports.respond = function(question, answer, settings) {
+
+  if(!question || _.isEmpty(question)){
+    throw new Error('question should never be empty or null');
+  }
+  
+  var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
+
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      feedback: addFeedback ? fbu.makeFeedback(question.feedback, 'incorrect') : null
+    };
+  }
 
   var slope = (answer.B.y - answer.A.y) / (answer.B.x - answer.A.x);
   var yintercept = answer.A.y - (slope * answer.A.x);
@@ -26,23 +41,17 @@ exports.respond = function(question, answer, settings) {
 
   if (!question.model.config.exhibitOnly) {
     res = {
-      "correctness": isCorrect ? "correct" : "incorrect",
-      "score": isCorrect ? 1 : 0,
-      "correctResponse": {
-        "equation": correctResponse,
-        "expression": functionUtils.expressionize(correctResponse, 'x')
+      correctness: isCorrect ? "correct" : "incorrect",
+      score: isCorrect ? 1 : 0,
+      correctResponse: {
+        equation: correctResponse,
+        expression: functionUtils.expressionize(correctResponse, 'x')
       }
     };
   }
 
-  if (settings.showFeedback && !question.model.config.exhibitOnly) {
-    var fbTypeSelector = isCorrect ? "correctFeedbackType" : "incorrectFeedbackType";
-    if (question.feedback && question.feedback[fbTypeSelector] === 'custom') {
-      var fbSelector = isCorrect ? "correctFeedback" : "incorrectFeedback";
-      res.feedback = question.feedback[fbSelector];
-    } else {
-      res.feedback = isCorrect ? "Correct!" : "Good try but that is not the correct answer.";
-    }
+  if (addFeedback) {
+    res.feedback = fbu.makeFeedback(question.feedback, res.correctness);
   }
 
   return res;

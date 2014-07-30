@@ -3,6 +3,16 @@ var sax = require('sax');
 
 exports.respond = function(question, answer, settings) {
 
+
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      correctResponse: question.correctResponse,
+      answer: answer,
+      score: 0
+    };
+  }
+  
   var parser = sax.parser(false);
   var lps = {};
 

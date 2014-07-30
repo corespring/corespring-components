@@ -7,6 +7,10 @@
       "name": "image-service",
       "organization": "corespring",
       "scope": "editor"
+    },
+    {
+      "name" : "server-shared",
+      "organization" : "corespring"
     }
   ],
   "dependencies": {

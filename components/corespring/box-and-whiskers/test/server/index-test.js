@@ -51,4 +51,11 @@ settings = function(feedback, userResponse, correctResponse) {
 };
 
 describe('box and whiskers server logic', function() {
+
+  it('should handle null answers', function(){
+    server.respond({}, null, {}).should.eql({correctness: 'incorrect'});
+  });
+  it('should handle undefined answers', function(){
+    server.respond({}, null, {}).should.eql({correctness: 'incorrect'});
+  });
 });
