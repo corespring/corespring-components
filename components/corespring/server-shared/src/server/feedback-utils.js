@@ -28,14 +28,15 @@ exports.correctness = function(isCorrect, isPartiallyCorrect){
  * @return {object}             the generated feedback object
  */
 exports.makeFeedback = function(feedback, correctness, defaults){
-  
   defaults = defaults || exports.defaults;
   var key = correctnessToFeedbackMap[correctness];
   var feedbackType = key + 'Type';
   var actualType = feedback ? (feedback[feedbackType] || 'default') : 'default';
   if (actualType === 'custom') {
     return feedback[key];
-  } else if (actualType === 'default') {
+  } else if(actualType === 'none' ){
+    return undefined;
+  } else {
     return defaults[correctness];
   }
 };

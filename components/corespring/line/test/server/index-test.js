@@ -1,34 +1,22 @@
-var assert, component, server, settings, should, helper;
-
-var _ = require('lodash');
-
-helper = require('../../../../../test-lib/test-helper');
-
-var proxyquire = require('proxyquire').noCallThru();
-
-var component, server, settings, correctAnswer, incorrectAnswer;
-
-var _ = require('lodash');
-var sinon = require('sinon');
-var assert = require('assert');
-var should = require('should');
-var proxyquire = require('proxyquire').noCallThru();
-
-var serverObj = {
+var 
+_ = require('lodash'), 
+assert = require('assert'), 
+helper = require('../../../../../test-lib/test-helper'),
+sinon = require('sinon'),
+assert = require('assert'),
+should = require('should'),
+proxyquire = require('proxyquire').noCallThru(),
+fbu = require('../../../server-shared/src/server/feedback-utils'),
+serverObj = {
   expressionize: _.identity,
   isFunctionEqual: function(e1, e2, options) {
     return e1 === e2;
   }
-};
-
-var fbu = require('../../../server-shared/src/server/feedback-utils');
-
+},
 server = proxyquire('../../src/server', {
   'corespring.function-utils.server': serverObj,
   'corespring.server-shared.server.feedback-utils': fbu
-});
-
-
+}),
 component = {
   "componentType": "corespring-line",
   "correctResponse": "y=2x+7",
@@ -43,8 +31,7 @@ component = {
       "sigfigs": "-1"
     }
   }
-};
-
+},
 correctAnswer = {
   A: {
     x: 0,
@@ -54,8 +41,7 @@ correctAnswer = {
     x: 1,
     y: 9
   }
-};
-
+},
 incorrectAnswer = {
   A: {
     x: -1,
@@ -124,8 +110,9 @@ describe('line interaction server logic', function() {
         correctFeedbackType: 'anything else but custom',
         correctFeedback: 'Custom Correct!'
       };
-      var response = evaluateCorrectAnswerWithFeedback(feedback);
-      response.feedback.should.eql('Correct!');
+      var response = evaluateCorrectAnswerWithFeedback(feedback); 
+      console.log('response ->', response);
+      response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
     });
 
   });
