@@ -1,4 +1,4 @@
-var _ = require('lodash');
+  var _ = require('lodash');
 
 exports.render = function(element) {
   return element;
@@ -9,6 +9,16 @@ exports.isCorrect = function() {
 };
 
 exports.respond = function(model, answer, settings, targetOutcome) {
+
+
+  if(!targetOutcome || _.isEmpty(targetOutcome)){
+    console.warn('target outcome is empty!', JSON.stringify(model));
+    
+    return {
+      correctness: 'incorrect',
+      feedback: {}
+    };
+  }
 
   function findFeedback(feedbacks, response) {
     var o =  _.find(feedbacks, function(item) {
@@ -26,7 +36,7 @@ exports.respond = function(model, answer, settings, targetOutcome) {
 
   var correctFeedback = model.feedback.correct || {};
   var incorrectFeedback = model.feedback.incorrect || {};
-
+  console.log(JSON.stringify(targetOutcome));
   feedback = findFeedback(correctFeedback, targetOutcome.studentResponse);
   if (feedback) {
     isCorrect = true;

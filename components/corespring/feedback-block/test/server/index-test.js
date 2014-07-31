@@ -55,6 +55,15 @@ component = {
 
 describe('feedback-block server logic', function() {
 
+  it('should handle an empty studentResponse', function(){
+    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {}); 
+    var expected = {
+      correctness: 'incorrect',
+      feedback: {}
+    };
+    outcome.should.eql(expected);
+  });
+
   it('should proxy values from targetOutcome', function() {
     var expected;
     var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
