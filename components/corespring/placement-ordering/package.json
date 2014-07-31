@@ -1,10 +1,5 @@
 {
-  "name": "placement-ordering",
-  "title": "Placement Ordering",
-  "titleGroup": "Fixed Choice",
-  "organization": "corespring",
   "corespring-container-version": "0.0.1",
-  "version": "0.0.1",
   "libraries": [
     {
       "name": "server-shared",
@@ -25,5 +20,10 @@
       "scope": "editor"
     }
   ],
-  "released": true
+  "name": "placement-ordering",
+  "organization": "corespring",
+  "released": true,
+  "title": "Placement Ordering",
+  "titleGroup": "Fixed Choice",
+  "version": "0.0.1"
 }

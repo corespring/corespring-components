@@ -1,26 +1,30 @@
 {
-  "libraries": [{
-    "name": "feedback-templates",
-    "organization": "corespring"
-  }, {
-    "name": "canvas",
-    "organization": "corespring"
-  }, {
-    "name": "server-shared",
-    "organization": "corespring"
-  }, ],
   "dependencies": {
     "client": {
       "angular-bootstrap": {
-        "version": "~0.10.0",
+        "angular-module": "ui.bootstrap",
         "file": "ui-bootstrap-tpls.min.js",
-        "angular-module": "ui.bootstrap"
+        "version": "~0.10.0"
       }
     }
   },
+  "libraries": [
+    {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    },
+    {
+      "name": "canvas",
+      "organization": "corespring"
+    },
+    {
+      "name": "server-shared",
+      "organization": "corespring"
+    }
+  ],
   "name": "point-intercept",
-  "title": "Plot Points",
-  "titleGroup": "Mathematics",
   "organization": "corespring",
-  "released": true
+  "released": true,
+  "title": "Plot Points",
+  "titleGroup": "Mathematics"
 }
