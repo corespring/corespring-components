@@ -12,7 +12,7 @@ exports.respond = function(model, answer, settings, targetOutcome) {
 
   function findFeedback(feedbacks, response) {
     var o =  _.find(feedbacks, function(item) {
-      return item && (response.toLowerCase().replace(/ /g, "") === item.input.toLowerCase().replace(/ /g, ""));
+      return item && ((response || "").toLowerCase().replace(/ /g, "") === (item.input || "").toLowerCase().replace(/ /g, ""));
     });
     return o ? o.feedback : "";
   }
