@@ -1,3 +1,4 @@
+/*jshint expr: true*/
 var proxyquire = require('proxyquire').noCallThru();
 
 var fbu = require('../../../server-shared/src/server/feedback-utils');
@@ -48,13 +49,12 @@ describe('server logic', function() {
 
     var outcome = server.respond({}, null, helper.settings(true, true, true));
     outcome.should.eql({
-        correctness: "incorrect",
-        score: 0,
-        correctResponse: null,
-        feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK,
-        outcome: "incorrect"
-      }
-    );
+      correctness: "incorrect",
+      score: 0,
+      correctResponse: null,
+      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK,
+      outcome: "incorrect"
+    });
   });
 
   it('should respond with correct and score 1 if the answer is correct', function() {

@@ -1,3 +1,5 @@
+/*jshint expr: true*/
+
 var assert, component, server, settings, should, _, helper, fbu;
 
 helper = require('../../../../../test-lib/test-helper');
@@ -128,29 +130,28 @@ describe('ordering server logic', function() {
   it('should return an incorrect outcome if the answer is empty', function() {
     var outcome = server.respond(component, null, helper.settings(true, true, true));
     outcome.should.eql({
-        correctness: "incorrect",
-        score: 0,
-        answer: null,
-        feedback: {
-          responses: {
-            1: {
-              correct: false
-            },
-            2: {
-              correct: false
-            },
-            3: {
-              correct: false
-            },
-            4: {
-              correct: false
-            }
+      correctness: "incorrect",
+      score: 0,
+      answer: null,
+      feedback: {
+        responses: {
+          1: {
+            correct: false
           },
-          correctness: "incorrect",
-          message: "Good try but that is not the correct answer."
-        }
+          2: {
+            correct: false
+          },
+          3: {
+            correct: false
+          },
+          4: {
+            correct: false
+          }
+        },
+        correctness: "incorrect",
+        message: "Good try but that is not the correct answer."
       }
-    );
+    });
   });
 
   it('respond incorrect', function() {
