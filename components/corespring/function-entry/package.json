@@ -5,17 +5,17 @@
   "organization": "corespring",
   "released": true,
 
-  "libraries": [
-    {
-      "name": "function-utils",
-      "organization": "corespring"
-    },
-    {
-      "name": "choice-templates",
-      "organization": "corespring",
-      "scope": "editor"
-    }
-  ],
+  "libraries": [{
+    "name": "function-utils",
+    "organization": "corespring"
+  }, {
+    "name": "server-shared",
+    "organization": "corespring"
+  }, {
+    "name": "choice-templates",
+    "organization": "corespring",
+    "scope": "editor"
+  }],
 
   "dependencies": {
     "client": {

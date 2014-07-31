@@ -6,6 +6,9 @@
         "name": "function-utils",
         "organization": "corespring"
     }, {
+        "name": "server-shared",
+        "organization": "corespring"
+    }, {
         "name": "canvas",
         "organization": "corespring"
     }],

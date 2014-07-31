@@ -1,14 +1,14 @@
 {
-  "libraries": [
-    {
-      "name": "feedback-templates",
-      "organization": "corespring"
-    },
-    {
-      "name": "canvas",
-      "organization": "corespring"
-    }
-  ],
+  "libraries": [{
+    "name": "feedback-templates",
+    "organization": "corespring"
+  }, {
+    "name": "canvas",
+    "organization": "corespring"
+  }, {
+    "name": "server-shared",
+    "organization": "corespring"
+  }, ],
   "dependencies": {
     "client": {
       "angular-bootstrap": {
