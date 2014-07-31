@@ -95,11 +95,12 @@ describe('ordering server logic', function() {
 
     function assertNone(correctness, fbModel) {
       it('should create no ' + correctness + ' message', function() {
-        ((server.feedbackMessage({
+        var result = server.feedbackMessage({
           model: {
             feedback: fbModel
           }
-        }, correctness)) === undefined).should.be.ok;
+        }, correctness) === undefined;
+        result.should.be.ok;
       });
     }
 
