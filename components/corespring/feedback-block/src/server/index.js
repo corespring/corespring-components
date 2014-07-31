@@ -36,7 +36,7 @@ exports.respond = function(model, answer, settings, targetOutcome) {
 
   var correctFeedback = model.feedback.correct || {};
   var incorrectFeedback = model.feedback.incorrect || {};
-  console.log(JSON.stringify(targetOutcome));
+
   feedback = findFeedback(correctFeedback, targetOutcome.studentResponse);
   if (feedback) {
     isCorrect = true;
