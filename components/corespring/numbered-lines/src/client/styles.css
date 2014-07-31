@@ -16,6 +16,7 @@
     padding: 0px 0px 0px 2em;
     text-indent: -1em;
     margin-bottom: 2px;
+    line-height: 28px;
 }
 
 .view-numbered-lines li:before {
