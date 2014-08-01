@@ -10,8 +10,18 @@ exports.isCorrect = function() {
 
 exports.respond = function(model, answer, settings, targetOutcome) {
 
+
+  if (!targetOutcome || _.isEmpty(targetOutcome)) {
+    console.warn('target outcome is empty!', JSON.stringify(model));
+
+    return {
+      correctness: 'incorrect',
+      feedback: {}
+    };
+  }
+
   function findFeedback(feedbacks, response) {
-    var o =  _.find(feedbacks, function(item) {
+    var o = _.find(feedbacks, function(item) {
       return item && ((response || "").toLowerCase().replace(/ /g, "") === (item.input || "").toLowerCase().replace(/ /g, ""));
     });
     return o ? o.feedback : "";
@@ -31,13 +41,13 @@ exports.respond = function(model, answer, settings, targetOutcome) {
   if (feedback) {
     isCorrect = true;
   } else {
-    feedback = findFeedback(incorrectFeedback,targetOutcome.studentResponse);
+    feedback = findFeedback(incorrectFeedback, targetOutcome.studentResponse);
     isCorrect = false;
   }
 
   if (!feedback) {
     isCorrect = targetOutcome.correctness === "correct";
-    feedback = findFeedback(isCorrect ? correctFeedback : incorrectFeedback,"*");
+    feedback = findFeedback(isCorrect ? correctFeedback : incorrectFeedback, "*");
   }
 
   if (targetOutcome.outcome) {
