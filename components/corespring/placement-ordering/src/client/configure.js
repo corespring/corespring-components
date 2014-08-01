@@ -106,10 +106,16 @@ var main = [
           '   </div>',
           '  </td>',
           '</tr></table>',
-          '<label class="shuffle">',
-          '  <input type="checkbox" ng-model="model.config.shuffle" />',
-          '  Shuffle tiles',
-          '</label>',
+          '<div>',
+          '  <label class="shuffle">',
+          '    <input type="checkbox" ng-model="model.config.shuffle" />',
+          '    Shuffle tiles',
+          '  </label>',
+          '</div>',
+          '<div>',
+          '  <label>Display:</label>',
+          '  <select ng-model="model.config.choiceAreaLayout" ng-options="layout.value as layout.name for layout in layouts"></select>',
+          '</div>',
           '</div>',
           '</div>',
           feedback
@@ -136,6 +142,10 @@ var main = [
           $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
           $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
           $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
+          $scope.layouts = [
+            {name: "Horizontal", value: "horizontal"},
+            {name: "Vertical", value: "vertical"}
+          ];
 
           $scope.targetDragging = false;
 
