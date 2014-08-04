@@ -1,5 +1,8 @@
 var main = [
 
+  //TODO Implement config panel
+  //For now you have to configure it in v1
+
   function() {
     return {
       scope: 'isolate',
