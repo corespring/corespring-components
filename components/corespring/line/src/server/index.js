@@ -11,10 +11,22 @@ exports.render = function(item) {
 
 exports.respond = function(question, answer, settings) {
 
+  console.log(JSON.stringify(question));
+
   if(!question || _.isEmpty(question)){
     throw new Error('question should never be empty or null');
   }
-  
+  console.log('->', JSON.stringify(question.model));
+  console.log('->', question.model.exhibitOnly);
+
+  if(question.model && question.model.config && question.model.config.exhibitOnly){
+    console.log('exhibit only don\'t process');
+    return {
+      correctness: 'n/a',
+      score: 0
+    };
+  }  
+
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 
   if(!answer){
