@@ -221,7 +221,7 @@ var main = [
         };
 
         $scope.sumCorrectResponses = function() {
-          return _.reduce($scope.correctAnswers, function(memo, ca) {
+          return _.reduce($scope.correctMap, function(memo, ca) {
             return ca.length + memo;
           }, 0);
         };

@@ -277,6 +277,11 @@ var main = [
             $scope.fullModel.correctResponse = newOrder;
           });
 
+          $scope.sumCorrectResponses = function() {
+            return $scope.fullModel.correctResponse.length;
+          };
+
+
           $scope.init();
         },
         template: [
@@ -286,7 +291,7 @@ var main = [
           designTemplate(),
           '    </div>',
           '    <div navigator-panel="Scoring">',
-                 ChoiceTemplates.scoring(),
+          ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
           '    </div>',
           '  </div>',
           '</div>'
