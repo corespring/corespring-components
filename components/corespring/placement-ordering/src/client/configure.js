@@ -64,16 +64,19 @@ var main = [
           '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
           '        ng-model="model.choices[$index]" ng-click="itemClick($event)"',
           '        jqyoui-draggable="{index: {{$index}}, placeholder: \'keep\'}"',
-          '        data-jqyoui-options="{revert: \'invalid\'}"',
-          '        ng-dblclick="activate($index)">',
+          '        data-jqyoui-options="{revert: \'invalid\'}">',
           '        <div class="blocker" ng-hide="active[$index]">',
           '          <div class="bg"></div>',
           '          <div class="content">',
-          '            <div class="title">Double Click to Edit</div>',
+          '            <ul class="edit-controls">',
+          '              <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true" tooltip-placement="bottom">',
+          '                <i ng-click="activate($index, $event)" class="fa fa-pencil"></i>',
+          '              </li>',
+          '              <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
+          '                <i ng-click="deleteChoice($index)" class="fa fa-trash-o"></i>',
+          '              </li>',
+          '            </ul>',
           '          </div>',
-          '        </div>',
-          '        <div class="delete-icon">',
-          '          <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
           '        </div>',
           '        <div class="remove-after-placing">',
           '          <input id="moveOnDrag{{$index}}" type="checkbox" ng-model="choice.moveOnDrag" />',
@@ -82,7 +85,13 @@ var main = [
           '        <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
           '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
           '          parent-selector=".editor-container"',
-          '          image-service="imageService()" />',
+          '          image-service="imageService()">',
+          '          <edit-pane-toolbar alignment="bottom">',
+          '            <div class="btn-group pull-right">',
+          '              <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">Done</button>',
+          '            </div>',
+          '          </edit-pane-toolbar>',
+          '        </div>',
           '      </li>',
           '    </ul>',
           '    <button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
@@ -106,10 +115,16 @@ var main = [
           '   </div>',
           '  </td>',
           '</tr></table>',
-          '<label class="shuffle">',
-          '  <input type="checkbox" ng-model="model.config.shuffle" />',
-          '  Shuffle tiles',
-          '</label>',
+          '<div>',
+          '  <label class="shuffle">',
+          '    <input type="checkbox" ng-model="model.config.shuffle" />',
+          '    Shuffle tiles',
+          '  </label>',
+          '</div>',
+          '<div>',
+          '  <label>Display:</label>',
+          '  <select ng-model="model.config.choiceAreaLayout" ng-options="layout.value as layout.name for layout in layouts"></select>',
+          '</div>',
           '</div>',
           '</div>',
           feedback
@@ -136,6 +151,10 @@ var main = [
           $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
           $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
           $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
+          $scope.layouts = [
+            {name: "Horizontal", value: "horizontal"},
+            {name: "Vertical", value: "vertical"}
+          ];
 
           $scope.targetDragging = false;
 
@@ -191,7 +210,8 @@ var main = [
             }
           };
 
-          $scope.activate = function($index) {
+          $scope.activate = function($index, $event) {
+            $event.stopPropagation();
             $scope.active[$index] = true;
             $scope.choicesSortableOptions.disabled = true;
           };
@@ -257,6 +277,11 @@ var main = [
             $scope.fullModel.correctResponse = newOrder;
           });
 
+          $scope.sumCorrectResponses = function() {
+            return $scope.fullModel.correctResponse.length;
+          };
+
+
           $scope.init();
         },
         template: [
@@ -266,7 +291,7 @@ var main = [
           designTemplate(),
           '    </div>',
           '    <div navigator-panel="Scoring">',
-                 ChoiceTemplates.scoring(),
+          ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
           '    </div>',
           '  </div>',
           '</div>'

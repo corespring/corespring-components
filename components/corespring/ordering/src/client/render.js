@@ -48,7 +48,7 @@ var main = ['$compile', '$log',
           $scope.session = dataAndSession.session || {};
 
           updateUi();
-          $scope.originalChoices = _.cloneDeep($scope.model.choices);
+          $scope.originalChoices = _.cloneDeep($scope.choices);
         },
 
         getSession: function() {

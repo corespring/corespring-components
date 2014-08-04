@@ -195,7 +195,7 @@
     border-radius: 5px;
     margin: 5px 0 45px 0; /* bottom margin to leave space for remove-after-placing */
     max-width: 200px;
-    min-height: 36px;
+    min-height: 47px;
     padding: 4px;
     background: #efefef;
 }
@@ -235,28 +235,10 @@
     overflow-x: hidden;
 }
 
-.placement-ordering-config .blocker .content .drag-icon {
-    display: block;
-    position: absolute;
-    top: -8px;
-    left: 90px;
-}
-
-.placement-ordering-config .delete-icon {
-    z-index: 11;
-    transition: opacity 200ms;
-    opacity: 0;
-}
-
-.placement-ordering-config li:hover .delete-icon {
-    opacity: 1;
-}
-
 .placement-ordering-config .blocker {
     position: absolute;
     height: 100%;
     width: 100%;
-    opacity: 0;
     left: 0;
     top: 0;
     z-index: 10;
@@ -267,7 +249,6 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    transition: opacity 200ms;
 }
 
 .placement-ordering-config .remove-after-placing {
@@ -276,16 +257,11 @@
 }
 
 .placement-ordering-config .blocker .bg {
-    background-color: black;
-    opacity: 0.3;
     position: absolute;
     width: 100%;
     height: 100%;
 }
 
-.placement-ordering-config .blocker:hover {
-    opacity: 1.0;
-}
 
 .placement-ordering-config .mini-wiggi-wiz .btn-group button {
     padding: 2px 8px;
@@ -297,4 +273,35 @@
 
 .placement-ordering-config .toolbar .wiggi-wiz-toolbar {
     border-bottom: none;
+}
+
+.placement-ordering-config .edit-controls {
+    position: absolute;
+    padding: 5px 5px 5px 20px;
+    top: 2px;
+    right: 2px;
+}
+
+.placement-ordering-config .delete-icon-button,
+.placement-ordering-config .edit-icon-button {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    font-size: 24px;
+}
+
+.placement-ordering-config .delete-icon-button:hover,
+.placement-ordering-config .edit-icon-button:hover {
+    cursor: pointer;
+}
+
+.placement-ordering-config .delete-icon-button:hover i,
+.placement-ordering-config .edit-icon-button:hover i {
+    color: #3f4953;
+}
+
+.placement-ordering-config .delete-icon-button:hover i:hover,
+.placement-ordering-config .edit-icon-button:hover i:hover {
+    color: #323942;
 }

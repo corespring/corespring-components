@@ -7,6 +7,10 @@
     "partialFeedbackType" : "default",
     "incorrectFeedbackType" : "default"
   },
+  "allowPartialScoring": false,
+  "partialScoring" : [
+    {"numberOfCorrect": 1, "scorePercentage": 25}
+  ],
   "model": {
     "config" : {
       "selectionUnit" : "word",

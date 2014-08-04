@@ -44,22 +44,30 @@ var main = [
         '  randomized order.',
         '</p>',
         '<ul class="sortable-choices" ui-sortable="" ng-model="model.choices">',
-        '  <li class="sortable-choice" ng-repeat="choice in model.choices" ng-click="itemClick($event)"',
-        '    ng-dblclick="activate($index)">',
+        '  <li class="sortable-choice" ng-repeat="choice in model.choices" ng-click="itemClick($event)">',
         '    <div class="blocker" ng-hide="active[$index]">',
         '      <div class="bg"></div>',
         '      <div class="content">',
-        '        <img class="drag-icon" src="../../images/hand-grab-icon.png"/>',
-        '        <div class="title">Double Click to Edit</div>',
+        '        <ul class="edit-controls">',
+        '          <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true" tooltip-placement="bottom">',
+        '            <i ng-click="activate($index, $event)" class="fa fa-pencil"></i>',
+        '          </li>',
+        '          <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
+        '            <i ng-click="deleteChoice($index)" class="fa fa-trash-o"></i>',
+        '          </li>',
+        '        </ul>',
         '      </div>',
-        '    </div>',
-        '    <div class="delete-icon">',
-        '      <i ng-click="deleteChoice($index)" class="fa fa-times-circle"></i>',
         '    </div>',
         '    <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
         '    <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
         '      parent-selector=".editor-container"',
-        '      image-service="imageService()" />',
+        '      image-service="imageService()">',
+        '      <edit-pane-toolbar alignment="bottom">',
+        '        <div class="btn-group pull-right">',
+        '          <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">Done</button>',
+        '        </div>',
+        '      </edit-pane-toolbar>',
+        '    </div>',
         '  </li>',
         '</ul>',
         '<button class=\"btn\" ng-click=\"addChoice()\">Add a Choice</button>',
@@ -128,7 +136,8 @@ var main = [
           $scope.model.choices.splice(index, 1);
         };
 
-        $scope.activate = function($index) {
+        $scope.activate = function($index, $event) {
+          $event.stopPropagation();
           $scope.active[$index] = true;
           $('.sortable-choices', $element).sortable("disable");
           angular.element($('.sortable-choices .mini-wiggi-wiz', $element)[$index]).scope().focusCaretAtEnd();
