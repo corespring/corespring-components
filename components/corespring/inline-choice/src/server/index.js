@@ -2,6 +2,7 @@ var _ = require('lodash');
 var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 
 exports.keys = feedbackUtils.keys;
+exports.defaults = feedbackUtils.defaults;
 
 var feedbackByValue = function(q, v) {
   return _.find(q.feedback, function(f) {

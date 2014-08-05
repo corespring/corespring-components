@@ -8,10 +8,7 @@ fbu = require('../../../server-shared/src/server/feedback-utils');
 
 var proxyquire = require('proxyquire').noCallThru();
 
-var shared = require('../../../server-shared/src/server');
-
 server = proxyquire('../../src/server', {
-  'corespring.server-shared.server': shared,
   'corespring.server-shared.server.feedback-utils': fbu
 });
 
@@ -61,15 +58,15 @@ describe('ordering server logic', function() {
   describe('build feedback message', function() {
 
     it('should create the default correct message', function() {
-      server.feedbackMessage({}, 'correct').should.eql(shared.keys.DEFAULT_CORRECT_FEEDBACK);
+      server.feedbackMessage({}, 'correct').should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
     });
 
     it('should create the default incorrect message', function() {
-      server.feedbackMessage({}, 'incorrect').should.eql(shared.keys.DEFAULT_INCORRECT_FEEDBACK);
+      server.feedbackMessage({}, 'incorrect').should.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
     });
 
     it('should create the default partially correct message', function() {
-      server.feedbackMessage({}, 'partial').should.eql(shared.keys.DEFAULT_PARTIAL_FEEDBACK);
+      server.feedbackMessage({}, 'partial').should.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
     });
 
     function mkCustom(s) {

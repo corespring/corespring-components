@@ -2,7 +2,12 @@ var assert, component, server, settings, should, _, helper;
 
 helper = require('../../../../../test-lib/test-helper');
 
-server = require('../../src/server');
+var fbu = require('../../../server-shared/src/server/feedback-utils');
+var proxyquire = require('proxyquire').noCallThru();
+
+server = proxyquire('../../src/server', {
+  'corespring.server-shared.server.feedback-utils' : fbu
+});
 
 assert = require('assert');
 
@@ -76,7 +81,7 @@ describe('inline-choice server logic', function() {
         feedback: {
           "carrot": {
             feedbackType: "default",
-            feedback: server.defaultFeedbacks.correct,
+            feedback: server.defaults.correct,
             correct: true
           }
         }
@@ -125,7 +130,7 @@ describe('inline-choice server logic', function() {
         feedback: {
           "banana": {
             feedbackType: "default",
-            feedback: server.defaultFeedbacks.incorrect,
+            feedback: server.defaults.incorrect,
             correct: false
           }
         }
