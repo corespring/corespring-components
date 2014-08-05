@@ -1,6 +1,6 @@
 var main = [
-  "ChoiceTemplates", 'ServerLogic',
-  function(ChoiceTemplates, ServerLogic) {
+  "ChoiceTemplates",
+  function(ChoiceTemplates) {
     var input = function(attrs, label) {
       return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label + "</div>";
     };
@@ -184,12 +184,7 @@ var main = [
       replace: true,
       link: function($scope, element, attrs) {
 
-        ChoiceTemplates.extendScope($scope);
-
-        var server = ServerLogic.load('corespring-drag-and-drop-inline');
-        $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
-        $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
-        $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
+        ChoiceTemplates.extendScope($scope, 'corespring-drag-and-drop-inline');
 
         $scope.correctAnswers = {};
         $scope.correctMap = {};

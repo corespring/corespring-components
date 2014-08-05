@@ -1,12 +1,7 @@
 var _ = require('lodash');
+var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 
-var DEFAULT_CORRECT_FEEDBACK = "Correct!";
-var DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer";
-
-exports.defaultFeedbacks = {
-  correct: DEFAULT_CORRECT_FEEDBACK,
-  incorrect: DEFAULT_INCORRECT_FEEDBACK
-};
+exports.keys = feedbackUtils.keys;
 
 var feedbackByValue = function(q, v) {
   return _.find(q.feedback, function(f) {
@@ -22,7 +17,7 @@ var userResponseFeedback = function(fbArray, q, answer) {
     fb.correct = isCorrectChoice(q, userChoice);
 
     if (fb.feedbackType === 'default') {
-      fb.feedback = fb.correct ? DEFAULT_CORRECT_FEEDBACK : DEFAULT_INCORRECT_FEEDBACK;
+      fb.feedback = fb.correct ? exports.keys.DEFAULT_CORRECT_FEEDBACK : exports.keys.DEFAULT_INCORRECT_FEEDBACK;
     } else if (fb.feedbackType === 'none') {
       delete fb.feedback;
     }

@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var dragAndDropEngine = require('corespring.drag-and-drop-engine.server');
 
-var keys = require('corespring.server-shared.server').keys;
 var fb = require('corespring.server-shared.server.feedback-utils');
+var keys = fb.keys;
 
 exports.respond = function(question, answer, settings) {
 

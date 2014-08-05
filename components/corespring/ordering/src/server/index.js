@@ -1,13 +1,10 @@
 var _ = require('lodash');
 
-var keys = require('corespring.server-shared.server.feedback-utils').keys;
+var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
+
+exports.keys = feedbackUtils.keys;
 
 exports.feedbackMessage = function(question, correctness) {
-  var defaults = {
-    correct: keys.DEFAULT_CORRECT_FEEDBACK,
-    partial: keys.DEFAULT_PARTIAL_FEEDBACK,
-    incorrect: keys.DEFAULT_INCORRECT_FEEDBACK
-  };
 
   var feedbackObject = (question.model && question.model.feedback) ? question.model.feedback[correctness] : null;
   if (feedbackObject) {
@@ -17,10 +14,10 @@ exports.feedbackMessage = function(question, correctness) {
     } else if (feedbackObject.feedbackType === 'none') {
       return undefined;
     } else {
-      return defaults[correctness];
+      return exports.defaults[correctness];
     }
   } else {
-    return defaults[correctness];
+    return exports.defaults[correctness];
   }
 };
 

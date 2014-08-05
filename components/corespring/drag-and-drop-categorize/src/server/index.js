@@ -1,10 +1,8 @@
 var _ = require('lodash');
 var dragAndDropEngine = require("corespring.drag-and-drop-engine.server");
+var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 
-
-exports.DEFAULT_CORRECT_FEEDBACK = "Correct!";
-exports.DEFAULT_PARTIAL_FEEDBACK = "Almost!";
-exports.DEFAULT_INCORRECT_FEEDBACK = "Good try but that is not the correct answer.";
+exports.keys = feedbackUtils.keys;
 
 exports.respond = function(question, answer, settings) {
 

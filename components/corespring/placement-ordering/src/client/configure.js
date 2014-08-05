@@ -1,9 +1,7 @@
 var main = [
   'ChoiceTemplates',
-  'ServerLogic',
   'ComponentImageService',
     function(ChoiceTemplates,
-             ServerLogic,
              ComponentImageService) {
 
       function designTemplate() {
@@ -144,13 +142,8 @@ var main = [
         ],
         link: function($scope, $element, $attrs) {
 
-          ChoiceTemplates.extendScope($scope);
+          ChoiceTemplates.extendScope($scope, 'corespring-placement-ordering');
 
-          var server = ServerLogic.load('corespring-drag-and-drop-categorize');
-
-          $scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
-          $scope.defaultPartialFeedback = server.DEFAULT_PARTIAL_FEEDBACK;
-          $scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
           $scope.layouts = [
             {name: "Horizontal", value: "horizontal"},
             {name: "Vertical", value: "vertical"}

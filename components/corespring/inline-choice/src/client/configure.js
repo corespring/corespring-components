@@ -31,11 +31,8 @@ var main = [
       replace: true,
       link: function(scope, element, attrs) {
 
-        ChoiceTemplates.extendScope(scope);
+        ChoiceTemplates.extendScope(scope, 'corespring-inline-choice');
 
-        // TODO: this needs to be centralised and not duplicated here and the server side
-        scope.defaultCorrectFeedback = "Correct!";
-        scope.defaultIncorrectFeedback = "Good try but that is not the correct answer";
         scope.correctMap = [];
 
         scope.overrideFeatures = [{
