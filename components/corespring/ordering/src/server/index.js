@@ -2,6 +2,7 @@ var _ = require('lodash');
 
 var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 
+exports.defaults = feedbackUtils.defaults;
 exports.keys = feedbackUtils.keys;
 
 exports.feedbackMessage = function(question, correctness) {
