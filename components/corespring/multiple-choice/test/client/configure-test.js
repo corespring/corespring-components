@@ -65,11 +65,17 @@ describe('corespring', function() {
 
     beforeEach(angular.mock.module('test-app'));
 
+    var MockServerLogic = {
+      load: function() {
+        return {defaults: {}, keys: {}};
+      }
+    };
     function MockImageUtils() {}
     function MockWiggiMathJaxFeatureDef() {}
 
     beforeEach(function() {
       module(function($provide) {
+        $provide.value('ServerLogic', MockServerLogic);
         $provide.value('ImageUtils', MockImageUtils);
         $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
       });

@@ -1,11 +1,9 @@
 var server;
 
-var shared = require('../../../server-shared/src/server');
 var fbu = require('../../../server-shared/src/server/feedback-utils');
 var proxyquire = require('proxyquire').noCallThru();
 
 server = proxyquire('../../src/server', {
-  'corespring.server-shared.server' : shared,
   'corespring.server-shared.server.feedback-utils' : fbu
 });
 

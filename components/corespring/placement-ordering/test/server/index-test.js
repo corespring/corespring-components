@@ -1,14 +1,12 @@
 var fbu, assert, component, server, settings, should, _, helper, shared, helper, proxyquire;
 
 proxyquire = require('proxyquire').noCallThru();
-shared = require('../../../server-shared/src/server');
 helper = require('../../../../../test-lib/test-helper');
 
 fbu = require('../../../server-shared/src/server/feedback-utils');
 
 server = proxyquire('../../src/server', {
   'corespring.drag-and-drop-engine.server': {},
-  'corespring.server-shared.server': shared,
   'corespring.server-shared.server.feedback-utils': fbu
 });
 

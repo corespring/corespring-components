@@ -6,8 +6,10 @@ helper = require('../../../../../test-lib/test-helper');
 //You need to load the component with proxyquire
 //And specify any custom dependencies
 var proxyquire = require('proxyquire').noCallThru();
+var fbu = require('../../../server-shared/src/server/feedback-utils');
 
 server = proxyquire('../../src/server', {
+  'corespring.server-shared.server.feedback-utils' : fbu,
   'corespring.scoring-utils.server': {}
 });
 
