@@ -1,13 +1,16 @@
 exports.keys = {
   DEFAULT_CORRECT_FEEDBACK:  "Correct!",
   DEFAULT_PARTIAL_FEEDBACK : "Almost!",
-  DEFAULT_INCORRECT_FEEDBACK : "Good try but that is not the correct answer."
+  DEFAULT_INCORRECT_FEEDBACK : "Good try but that is not the correct answer.",
+  DEFAULT_NOT_CHOSEN_FEEDBACK : "This answer is correct"
+
 };
 
 exports.defaults = {
   correct: exports.keys.DEFAULT_CORRECT_FEEDBACK,
   incorrect: exports.keys.DEFAULT_INCORRECT_FEEDBACK,
-  partial: exports.keys.DEFAULT_PARTIAL_FEEDBACK 
+  partial: exports.keys.DEFAULT_PARTIAL_FEEDBACK,
+  notChosen: exports.keys.DEFAULT_NOT_CHOSEN_FEEDBACK
 };
 
 var correctnessToFeedbackMap = {

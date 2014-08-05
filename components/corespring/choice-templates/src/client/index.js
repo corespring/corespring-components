@@ -5,7 +5,8 @@ exports.framework = "angular";
 exports.service = ['$log',
   'ChoiceTemplateScopeExtension',
   'MiniWiggiScopeExtension',
-  function($log, ChoiceTemplateScopeExtension, MiniWiggiScopeExtension) {
+  'ServerLogic',
+  function($log, ChoiceTemplateScopeExtension, MiniWiggiScopeExtension, ServerLogic) {
 
     function ChoiceTemplates() {
 
@@ -15,9 +16,15 @@ exports.service = ['$log',
         noFeedback: 'No feedback will be presented to the student.'
       };
 
-      this.extendScope = function(scope) {
+      this.extendScope = function(scope, componentType) {
         new ChoiceTemplateScopeExtension().postLink(scope);
         new MiniWiggiScopeExtension().postLink(scope);
+
+        var server = ServerLogic.load(componentType);
+        scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
+        scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
+        scope.defaultPartialFeedback = server.keys.DEFAULT_PARTIAL_FEEDBACK;
+        scope.defaultNotChosenFeedback = server.keys.DEFAULT_NOT_CHOSEN_FEEDBACK;
       };
 
       this.inline = function(type, value, body, attrs) {
@@ -57,7 +64,7 @@ exports.service = ['$log',
           '        fb-sel-class="incorrect"',
           '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
           '        fb-sel-custom-feedback="feedback[q.value].feedback"',
-          '        fb-sel-default-feedback="{{defaultInCorrectFeedback}}">',
+          '        fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
           '      </div>',
           '    </div>',
           '    <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',

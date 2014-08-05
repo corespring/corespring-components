@@ -108,15 +108,14 @@ var main = [
       ],
       link: function($scope, $element, $attrs) {
 
-        ChoiceTemplates.extendScope($scope);
+        ChoiceTemplates.extendScope($scope, 'corespring-ordering');
 
         var log = $log.debug.bind($log, '[ordering-interaction-config] - ');
-        var server = ServerLogic.load('corespring-ordering');
 
         $scope.defaultNotChosenFeedback = {
-          correct: server.DEFAULT_CORRECT_FEEDBACK,
-          partial: server.DEFAULT_PARTIAL_FEEDBACK,
-          incorrect: server.DEFAULT_INCORRECT_FEEDBACK
+          correct: $scope.defaultCorrectFeedback,
+          incorrect: $scope.defaultIncorrectFeedback,
+          partial: $scope.defaultPartialFeedback
         };
 
         $scope.containerBridge = {
