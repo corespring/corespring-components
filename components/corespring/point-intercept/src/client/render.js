@@ -220,7 +220,7 @@ var main = ['$compile', '$modal', '$rootScope',
               '     <h3>Solution</h3>',
               '   </div>',
               '   <div class="modal-body">',
-              '     <corespring-point-intercept solution-view="true" id="solution"></corespring-point-intercept>',
+              '     <span corespring-point-intercept="" solution-view="true" id="solution"></span>',
               '   </div>',
               '   <div class="modal-footer">',
               '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
@@ -235,7 +235,6 @@ var main = ['$compile', '$modal', '$rootScope',
         scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
-            console.log("Setting Session for Point", dataAndSession);
             var config = dataAndSession.data.model.config;
             scope.config = config;
             scope.model = dataAndSession.data.model;
