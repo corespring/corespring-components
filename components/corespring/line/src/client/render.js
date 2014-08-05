@@ -263,7 +263,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                             '     <h3>Solution</h3>',
                             '   </div>',
                             '   <div class="modal-body">',
-                            '     <corespring-line solution-view="true" id="solution"></corespring-line>',
+                            '     <span corespring-line="" solution-view="true" id="solution"></span>',
                             '   </div>',
                             '   <div class="modal-footer">',
                             '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
@@ -292,7 +292,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                 scope.containerBridge = {
 
                     setDataAndSession: function(dataAndSession) {
-                        console.log("Setting Session for Point", dataAndSession);
+
                         var config = dataAndSession.data.model.config;
                         scope.config = config;
 
@@ -352,7 +352,6 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                     },
 
                     setResponse: function(response) {
-                        console.log("Setting response for line interaction", response);
                         scope.feedback = response && response.feedback;
                         scope.correctClass = response.correctness;
                         if (response && response.correctness === "correct") {
