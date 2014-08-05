@@ -2,6 +2,10 @@
   "componentType": "corespring-ordering",
   "title": "[Ordering Question Name]",
   "correctResponse": {},
+  "allowPartialScoring": false,
+  "partialScoring" : [
+    {"numberOfCorrect": 1, "scorePercentage": 25}
+  ],
   "model": {
     "answerArea": "",
     "choices": [
