@@ -28,8 +28,14 @@ var buildFeedback = function(question, answer) {
     choices: {}
   };
 
-  var fbSelector = isCorrect(question, answer) ? "correctFeedback" : (isPartiallyCorrect(question, answer) ?
-    "partialFeedback" : "incorrectFeedback");
+  var fbSelector;
+  if (!checkIfCorrect(question)) {
+    fbSelector = "feedback";
+  } else {
+    fbSelector = isCorrect(question, answer) ? "correctFeedback" : (isPartiallyCorrect(question, answer) ?
+      "partialFeedback" : "incorrectFeedback");
+  }
+
   var fbTypeSelector = fbSelector + "Type";
 
   var feedbackType = question.feedback && question.feedback[fbTypeSelector] ? question.feedback[fbTypeSelector] : "default";
@@ -37,8 +43,8 @@ var buildFeedback = function(question, answer) {
   if (feedbackType === "custom") {
     feedback.message = question.feedback[fbSelector];
   } else if (feedbackType === "default") {
-    feedback.message = isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK :
-      (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK);
+    feedback.message = checkIfCorrect(question) ? (isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK :
+      (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK)) : keys.DEFAULT_SUBMITTED_FEEDBACK;
   }
 
   if (checkIfCorrect(question)) {
@@ -131,6 +137,10 @@ function isPartiallyCorrect(question, answer) {
 function score(question, answer) {
   var scoreValue = 0;
 
+  if (!checkIfCorrect(question)) {
+    return 1;
+  }
+
   if (isCorrect(question, answer)) {
     scoreValue = 1;
   } else if (question.allowPartialScoring) {
@@ -192,8 +202,8 @@ exports.respond = function(question, answer, settings) {
       res.outcome.push("responsesIncorrect");
     }
 
-    res.correctClass = isCorrect(question, answer) ? 'correct' :
-      (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect');
+    res.correctClass = checkIfCorrect(question) ? (isCorrect(question, answer) ? 'correct' :
+      (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect')) : 'submitted';
 
   }
 

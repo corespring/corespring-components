@@ -2,7 +2,8 @@ exports.keys = {
   DEFAULT_CORRECT_FEEDBACK:  "Correct!",
   DEFAULT_PARTIAL_FEEDBACK : "Almost!",
   DEFAULT_INCORRECT_FEEDBACK : "Good try but that is not the correct answer.",
-  DEFAULT_NOT_CHOSEN_FEEDBACK : "This answer is correct"
+  DEFAULT_NOT_CHOSEN_FEEDBACK : "This answer is correct",
+  DEFAULT_SUBMITTED_FEEDBACK : "Your answer has been submitted"
 
 };
 

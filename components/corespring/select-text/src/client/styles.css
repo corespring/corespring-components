@@ -40,6 +40,17 @@
     margin: 20px 0;
 }
 
+.view-select-text .feedback-submitted {
+    height: 36px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding: 6px 6px 6px 6px;
+    border: 2px solid #05ACCD;
+    border-radius: 4px;
+    width: 90%;
+}
+
 .view-select-text .feedback-correct {
     background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 5px;
     border: solid 2px #80b312;

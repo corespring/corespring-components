@@ -5,7 +5,8 @@
   "feedback" : {
     "correctFeedbackType" : "default",
     "partialFeedbackType" : "default",
-    "incorrectFeedbackType" : "default"
+    "incorrectFeedbackType" : "default",
+    "feedbackType" : "default"
   },
   "allowPartialScoring": false,
   "partialScoring" : [

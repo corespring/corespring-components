@@ -25,6 +25,7 @@ exports.service = ['$log',
         scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
         scope.defaultPartialFeedback = server.keys.DEFAULT_PARTIAL_FEEDBACK;
         scope.defaultNotChosenFeedback = server.keys.DEFAULT_NOT_CHOSEN_FEEDBACK;
+        scope.defaultSubmittedFeedback = server.keys.DEFAULT_SUBMITTED_FEEDBACK;
       };
 
       this.inline = function(type, value, body, attrs) {
