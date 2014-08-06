@@ -202,7 +202,7 @@ var dragAndDropController = [
 
           answerChangedHandler: function(callback) {
             scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
-              if (newValue) {
+              if (newValue !== oldValue) {
                 callback();
               }
             }, true);

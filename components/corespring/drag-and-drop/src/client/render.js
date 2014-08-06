@@ -214,7 +214,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
         answerChangedHandler: function(callback) {
           scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
-            if (newValue) {
+            if (newValue !== oldValue) {
               callback();
             }
           }, true);

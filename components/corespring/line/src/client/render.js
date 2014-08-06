@@ -420,8 +420,8 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                     },
 
                     answerChangedHandler: function(callback) {
-                        scope.$watch("points", function(newValue) {
-                            if (newValue) {
+                        scope.$watch("points", function(newValue, oldValue) {
+                            if (newValue !== oldValue) {
                                 callback();
                             }
                         }, true);

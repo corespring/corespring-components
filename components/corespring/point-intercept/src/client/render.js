@@ -326,8 +326,8 @@ var main = ['$compile', '$modal', '$rootScope',
           },
 
           answerChangedHandler: function(callback) {
-            scope.$watch("pointResponse", function(newValue) {
-              if (newValue) {
+            scope.$watch("pointResponse", function(newValue, oldValue) {
+              if (newValue !== oldValue) {
                 callback();
               }
             }, true);

@@ -80,7 +80,7 @@ var main = ['$compile', '$log',
 
         answerChangedHandler: function(callback) {
           $scope.$watch("choices", function(newValue, oldValue) {
-            if (newValue) {
+            if (newValue !== oldValue) {
               callback();
             }
           }, true);
