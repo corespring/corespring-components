@@ -1,16 +1,24 @@
 {
-  "libraries": [{
-    "name": "choice-templates",
-    "organization": "corespring",
-    "scope": "editor"
-  }, {
-    "name": "image-service",
-    "organization": "corespring",
-    "scope": "editor"
-  }, {
-    "name": "navigator",
-    "organization": "corespring"
-  }],
+  "libraries": [
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "image-service",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
+    },
+    {
+      "name" : "server-shared",
+      "organization" : "corespring"
+    }
+  ],
   "name": "multiple-choice",
   "organization": "corespring",
   "title": "Multiple Choice",
