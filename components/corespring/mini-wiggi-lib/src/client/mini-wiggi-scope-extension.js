@@ -1,8 +1,9 @@
 exports.framework = "angular";
 exports.factory = [
   'WiggiMathJaxFeatureDef',
+  'WiggiLinkFeatureDef',
   'ComponentImageService',
-  function(WiggiMathJaxFeatureDef, ComponentImageService) {
+  function(WiggiMathJaxFeatureDef, WiggiLinkFeatureDef, ComponentImageService) {
 
     /**
      * Provide features to the scope that are used by mini wiggi
@@ -16,10 +17,16 @@ exports.factory = [
         };
 
         scope.extraFeatures = {
-          definitions: [{
-            type: 'group',
-            buttons: [new WiggiMathJaxFeatureDef()]
-          }]
+          definitions: [
+            {
+              type: 'group',
+              buttons: [new WiggiMathJaxFeatureDef()]
+            },
+            {
+              type: 'group',
+              buttons: [new WiggiLinkFeatureDef()]
+            }
+          ]
         };
 
         scope.updateMathJax = function() {
