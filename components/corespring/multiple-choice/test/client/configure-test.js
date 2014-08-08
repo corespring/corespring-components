@@ -78,6 +78,7 @@ describe('corespring', function() {
         $provide.value('ServerLogic', MockServerLogic);
         $provide.value('ImageUtils', MockImageUtils);
         $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
+        $provide.value('WiggiLinkFeatureDef', function(){});
       });
     });
 
