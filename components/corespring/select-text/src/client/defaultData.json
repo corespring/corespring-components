@@ -15,7 +15,8 @@
   "model": {
     "config" : {
       "selectionUnit" : "word",
-      "checkIfCorrect" : true
+      "checkIfCorrect" : true,
+      "showFeedback": true
     },
     "choices" : [
       {

@@ -49,6 +49,7 @@ var link = function() {
         if (dataAndSession.session) {
           scope.selectedTokens = _.cloneDeep(dataAndSession.session.answers);
         }
+        scope.showFeedback = _.isUndefined(scope.model.config.showFeedback) ? true : scope.model.config.showFeedback;
       },
 
       getSession: function() {
@@ -115,7 +116,7 @@ var main = [
         '<div class="view-select-text" ng-class="{true: \'enabled\', false: \'\'}[editable]">',
         '  <div class="select-text-content"></div>',
         '  <div class="clearfix"></div>',
-        '  <div ng-show="feedback" class="feedback feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
+        '  <div ng-show="feedback && showFeedback" class="feedback feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
         '</div>'
       ].join("")
