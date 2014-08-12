@@ -38,16 +38,29 @@ describe('corespring', function() {
       expect(scope.$$childHead.correctClass).toBe('correct');
     });
 
-    it('only shows feedback if present', function() {
+    it('Shows feedback if present and the item is not editable', function() {
       rootScope.$digest();
       expect($(element).attr('class')).toContain("ng-hide");
       container.elements['1'].setResponse({
         feedback: "sampleFeedback",
         correctness: "correct"
       });
+      container.elements['1'].editable(false);
       rootScope.$digest();
       expect($(element).attr('class')).not.toContain("ng-hide");
+
     });
 
+    it('Does not show feedback if present and the item is editable', function() {
+      rootScope.$digest();
+      expect($(element).attr('class')).toContain("ng-hide");
+      container.elements['1'].setResponse({
+        feedback: "sampleFeedback",
+        correctness: "correct"
+      });
+      container.elements['1'].editable(true);
+      rootScope.$digest();
+      expect($(element).attr('class')).toContain("ng-hide");
+    });
   });
 });

@@ -22,6 +22,7 @@ var main = [
           console.log("FB response: ", response);
           scope.correctClass = response.correctness;
           scope.feedback = response.feedback;
+          this.updateVisibility();
         },
 
         setMode: function(newMode) {},
@@ -34,7 +35,14 @@ var main = [
 
         answerChangedHandler: function(callback) {},
 
-        editable: function(e) {}
+        editable: function(e) {
+          scope.isEditable = e;
+          this.updateVisibility();
+        },
+
+        updateVisibility : function(){
+          scope.isVisible = scope.feedback && !scope.isEditable;
+        }
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -47,7 +55,7 @@ var main = [
       replace: true,
       link: link,
       template: [
-        '<div class="view-feedback-container" ng-show="feedback" ><div class="view-feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div></div>'
+        '<div class="view-feedback-container" ng-show="isVisible" ><div class="view-feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div></div>'
       ].join("")
     };
 
