@@ -47,7 +47,7 @@ exports.findFeedback = function(feedbacks, response) {
   return out ? out.feedback : '';
 };
 
-exports.respond = function(model, answer, settings, targetOutcome) {
+exports.createOutcome = function(model, answer, settings, targetOutcome) {
 
   if (!settings.showFeedback) {
     return {};
