@@ -12,12 +12,6 @@ var main = [
           console.log("FB block: ", dataAndSession);
         },
 
-        getSession: function() {
-          return {
-            answers: "ok"
-          };
-        },
-
         setResponse: function(response) {
           console.log("FB response: ", response);
           scope.correctClass = response.correctness;

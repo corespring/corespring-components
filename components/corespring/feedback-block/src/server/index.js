@@ -22,6 +22,9 @@ exports.respond = function(model, answer, settings, targetOutcome) {
 
   function findFeedback(feedbacks, response) {
     var o = _.find(feedbacks, function(item) {
+      console.log("response: " + response);
+      console.log("response: " + typeof(response));
+      console.log(JSON.stringify(response));
       return item && ((response || "").toLowerCase().replace(/ /g, "") === (item.input || "").toLowerCase().replace(/ /g, ""));
     });
     return o ? o.feedback : "";
