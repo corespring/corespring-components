@@ -28,32 +28,59 @@ settings = function(feedback, userResponse, correctResponse) {
 
 
 component = {
-  componentType: "corespring-feedback-block",
+  componentType: 'corespring-feedback-block',
   feedback: {
     correct: [{
-      input: "apple",
-      feedback: "apple correct"
+      input: 'apple',
+      feedback: 'apple correct'
     }, {
-      input: "potato",
-      feedback: "potato correct"
+      input: 'potato',
+      feedback: 'potato correct'
     }, {
-      input: "*",
-      feedback: "catchall correct"
+      input: '*',
+      feedback: 'catchall correct'
     }],
     incorrect: [{
-      input: "bean",
-      feedback: "bean incorrect"
+      input: 'bean',
+      feedback: 'bean incorrect'
     }, {
-      input: "lentil",
-      feedback: "lentil incorrect"
+      input: 'lentil',
+      feedback: 'lentil incorrect'
     }, {
-      input: "*",
-      feedback: "catchall incorrect"
+      input: '*',
+      feedback: 'catchall incorrect'
     }]
   }
 };
 
-describe('feedback-block server logic', function() {
+describe('find-feedback', function(){
+
+  it('should find a string', function(){
+    var out = server.findFeedback([{input: 'a', feedback: 'a-fb'}], 'a');
+    out.should.eql('a-fb');
+  });
+
+  it('should find a string in an array', function(){
+    var out = server.findFeedback([{input: 'a', feedback: 'a-fb'}], ['a', 'b']);
+
+    console.log('-------- > ', out);
+    out.should.eql('a-fb');
+  });
+  
+  it('should find a string in an array', function(){
+    var out = server.findFeedback([{input: 'b', feedback: 'b-fb'}], ['a', 'b']);
+    out.should.eql('b-fb');
+  });
+
+  //TODO: How do we accomodate multiple feedbacks for an array of student responses
+  /*it('failing test - should find a 2 feedbacks in an array', function(){
+    var out = server.findFeedback([{input: 'a', feedback: 'a-fb'},{input: 'b', feedback: 'b-fb'}], ['a', 'b']);
+    out.should.eql(['a-fb', 'b-fb']);
+  });*/
+  
+});
+
+ describe('feedback-block server logic', function() {
 
   it('should handle an empty studentResponse', function(){
     var outcome = server.respond(_.cloneDeep(component), [''], settings(), {}); 
@@ -66,65 +93,65 @@ describe('feedback-block server logic', function() {
 
   it('should proxy values from targetOutcome', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
-      studentResponse: "apple"
+      studentResponse: 'apple'
     });
     expected = {
-      feedback: "apple correct",
-      correctness: "correct"
+      feedback: 'apple correct',
+      correctness: 'correct'
     };
     outcome.should.eql(expected);
   });
 
   it('matching correct response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
-      studentResponse: "apple"
+      studentResponse: 'apple'
     });
     expected = {
-      feedback: "apple correct",
-      correctness: "correct"
+      feedback: 'apple correct',
+      correctness: 'correct'
     };
     outcome.should.eql(expected);
   });
 
   it('matching incorrect response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
-      studentResponse: "bean"
+      studentResponse: 'bean'
     });
     expected = {
-      feedback: "bean incorrect",
-      correctness: "incorrect"
+      feedback: 'bean incorrect',
+      correctness: 'incorrect'
     };
     outcome.should.eql(expected);
   });
 
   it('catchall correct response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
-      studentResponse: "bag"
+      studentResponse: 'bag'
     });
     expected = {
-      feedback: "catchall correct",
-      correctness: "correct"
+      feedback: 'catchall correct',
+      correctness: 'correct'
     };
     outcome.should.eql(expected);
   });
 
   it('catchall incorrect response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [""], settings(), {
+    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
       correctness: 'incorrect',
-      studentResponse: "table"
+      studentResponse: 'table'
     });
     expected = {
-      feedback: "catchall incorrect",
-      correctness: "incorrect"
+      feedback: 'catchall incorrect',
+      correctness: 'incorrect'
     };
     outcome.should.eql(expected);
   });
@@ -132,56 +159,56 @@ describe('feedback-block server logic', function() {
   it('CA-1779 Feedback is displaying as correct when an incorrect response is input', function() {
 
     component = {
-      componentType: "corespring-feedback-block",
+      componentType: 'corespring-feedback-block',
       weight: 0,
       feedback: {
         correct: [
           {
-            input: "5,5",
-            feedback: "Correct!"
+            input: '5,5',
+            feedback: 'Correct!'
           },
           {
-            input: "5",
-            feedback: "Correct!"
+            input: '5',
+            feedback: 'Correct!'
           }
         ],
         incorrect: [
           {
-            input: "*",
-            feedback: "Good try, but 5 is the correct answer."
+            input: '*',
+            feedback: 'Good try, but 5 is the correct answer.'
           }
         ]
       }
     };
 
     var targetOutcome = {
-      correctness: "incorrect",
+      correctness: 'incorrect',
       score: 0,
       feedback: {
-        correctness: "incorrect"
+        correctness: 'incorrect'
       },
-      studentResponse: "5f"
+      studentResponse: '5f'
     };
 
     var expected;
-    outcome = server.respond(component, ["the answer is not used in feedback-block"], settings(), targetOutcome);
+    outcome = server.respond(component, ['the answer is not used in feedback-block'], settings(), targetOutcome);
     expected = {
-      correctness: "incorrect",
+      correctness: 'incorrect',
       feedback: component.feedback.incorrect[0].feedback
     };
     outcome.should.eql(expected);
 
     var newSettings = {
-      "maxNoOfAttempts": 1,
-      "highlightUserResponse": true,
-      "highlightCorrectResponse": true,
-      "showFeedback": true
+      'maxNoOfAttempts': 1,
+      'highlightUserResponse': true,
+      'highlightCorrectResponse': true,
+      'showFeedback': true
     };
 
-    targetOutcome.studentResponse = "5";
-    var outcome = server.respond(component, ["the answer is not used in feedback-block"], newSettings, targetOutcome);
+    targetOutcome.studentResponse = '5';
+    var outcome = server.respond(component, ['the answer is not used in feedback-block'], newSettings, targetOutcome);
     expected = {
-      correctness: "correct",
+      correctness: 'correct',
       feedback: component.feedback.correct[1].feedback
     };
     outcome.should.eql(expected);

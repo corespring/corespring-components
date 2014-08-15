@@ -8,27 +8,46 @@ exports.isCorrect = function() {
   return true;
 };
 
+function lowerCaseAndTrim(s) {
+  return (s || "").toLowerCase().replace(/ /g, "");
+}
+
+function feedbackForString(feedbacks, stringResponse) {
+  return _.find(feedbacks, function(fb) {
+    return !_.isEmpty(fb.input) && lowerCaseAndTrim(stringResponse) === lowerCaseAndTrim(fb.input);
+  });
+}
+
+exports.findFeedback = function(feedbacks, response) {
+
+  function _f() {
+    if (_.isArray(response)) {
+      var fbs = _(response)
+                .map(feedbackForString.bind(exports, feedbacks))
+                .compact()
+                .value();
+      return _.first(fbs);
+    } else {
+      return feedbackForString(feedbacks, response);
+    }
+  }
+
+  var out = _f();
+  return out ? out.feedback : '';
+};
+
 exports.respond = function(model, answer, settings, targetOutcome) {
 
+  if (!settings.showFeedback) {
+    return {};
+  }
 
   if (!targetOutcome || _.isEmpty(targetOutcome)) {
     console.warn('target outcome is empty!', JSON.stringify(model));
-
     return {
       correctness: 'incorrect',
       feedback: {}
     };
-  }
-
-  function findFeedback(feedbacks, response) {
-    var o = _.find(feedbacks, function(item) {
-      return item && ((response || "").toLowerCase().replace(/ /g, "") === (item.input || "").toLowerCase().replace(/ /g, ""));
-    });
-    return o ? o.feedback : "";
-  }
-
-  if (!settings.showFeedback) {
-    return {};
   }
 
   var isCorrect;
@@ -37,17 +56,17 @@ exports.respond = function(model, answer, settings, targetOutcome) {
   var correctFeedback = model.feedback.correct || {};
   var incorrectFeedback = model.feedback.incorrect || {};
 
-  feedback = findFeedback(correctFeedback, targetOutcome.studentResponse);
+  feedback = exports.findFeedback(correctFeedback, targetOutcome.studentResponse);
   if (feedback) {
     isCorrect = true;
   } else {
-    feedback = findFeedback(incorrectFeedback, targetOutcome.studentResponse);
+    feedback = exports.findFeedback(incorrectFeedback, targetOutcome.studentResponse);
     isCorrect = false;
   }
 
   if (!feedback) {
     isCorrect = targetOutcome.correctness === "correct";
-    feedback = findFeedback(isCorrect ? correctFeedback : incorrectFeedback, "*");
+    feedback = exports.findFeedback(isCorrect ? correctFeedback : incorrectFeedback, "*");
   }
 
   if (targetOutcome.outcome) {
