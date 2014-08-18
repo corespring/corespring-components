@@ -53,9 +53,9 @@ link = function($sce, $timeout) {
         var stash = scope.session.stash = scope.session.stash || {};
         var model = scope.question;
 
-        if (stash.shuffledOrder && model.config.shuffle) {
+        if (stash.shuffledOrder && model.config.shuffle === 'true') {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
-        } else if (model.config.shuffle) {
+        } else if (model.config.shuffle === 'true') {
           scope.choices = layoutChoices(model.choices);
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
