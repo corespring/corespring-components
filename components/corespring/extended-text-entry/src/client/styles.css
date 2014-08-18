@@ -24,14 +24,12 @@
 }
 
 .view-extended-text-entry .feedback {
-    height: 36px;
     display: inline-block;
     margin-top: 10px;
     margin-bottom: 15px;
     padding: 6px 6px 6px 6px;
     border: 2px solid #05ACCD;
     border-radius: 4px;
-    width: 90%;
 }
 
 /* Config Panel */
