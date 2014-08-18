@@ -40,12 +40,19 @@ exports.respond = function(question, answer, settings) {
     }
   }
 
-  return {
+  var res = {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
     answer: answer,
     score: isCorrect ? 1 : 0
   };
+
+  if (settings.showFeedback) {
+    res.outcome = [];
+    res.outcome.push( isCorrect ? "responseCorrect" : "responseIncorrect" );
+  }
+
+  return res;
 };
 
 exports.render = function(model) {

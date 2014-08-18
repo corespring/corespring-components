@@ -35,7 +35,7 @@ var main = [
         },
 
         updateVisibility : function(){
-          scope.isVisible = scope.feedback && !scope.isEditable;
+          scope.isVisible = angular.isString(scope.feedback) && scope.feedback.length > 0 && !scope.isEditable;
         }
       };
 
