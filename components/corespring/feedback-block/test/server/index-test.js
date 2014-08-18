@@ -83,7 +83,7 @@ describe('find-feedback', function(){
  describe('feedback-block server logic', function() {
 
   it('should handle an empty studentResponse', function(){
-    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {}); 
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {}); 
     var expected = {
       correctness: 'incorrect',
       feedback: {}
@@ -93,7 +93,7 @@ describe('find-feedback', function(){
 
   it('should proxy values from targetOutcome', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
       studentResponse: 'apple'
     });
@@ -106,7 +106,7 @@ describe('find-feedback', function(){
 
   it('matching correct response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
       studentResponse: 'apple'
     });
@@ -119,7 +119,7 @@ describe('find-feedback', function(){
 
   it('matching incorrect response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
       studentResponse: 'bean'
     });
@@ -132,7 +132,7 @@ describe('find-feedback', function(){
 
   it('catchall correct response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {
       correctness: 'correct',
       studentResponse: 'bag'
     });
@@ -145,7 +145,7 @@ describe('find-feedback', function(){
 
   it('catchall incorrect response', function() {
     var expected;
-    var outcome = server.respond(_.cloneDeep(component), [''], settings(), {
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {
       correctness: 'incorrect',
       studentResponse: 'table'
     });
@@ -191,7 +191,7 @@ describe('find-feedback', function(){
     };
 
     var expected;
-    outcome = server.respond(component, ['the answer is not used in feedback-block'], settings(), targetOutcome);
+    outcome = server.createOutcome(component, ['the answer is not used in feedback-block'], settings(), targetOutcome);
     expected = {
       correctness: 'incorrect',
       feedback: component.feedback.incorrect[0].feedback
@@ -206,7 +206,7 @@ describe('find-feedback', function(){
     };
 
     targetOutcome.studentResponse = '5';
-    var outcome = server.respond(component, ['the answer is not used in feedback-block'], newSettings, targetOutcome);
+    var outcome = server.createOutcome(component, ['the answer is not used in feedback-block'], newSettings, targetOutcome);
     expected = {
       correctness: 'correct',
       feedback: component.feedback.correct[1].feedback

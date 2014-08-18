@@ -116,4 +116,18 @@ describe('line interaction server logic', function() {
 
   });
 
+  describe('isScoreable', function(){
+    it('should be true for an incomplete model', function(){
+      server.isScoreable(null, {}, {}).should.eql(true);
+      server.isScoreable({}, {}, {}).should.eql(true);
+      server.isScoreable({ model : {}}, {}, {}).should.eql(true);
+      server.isScoreable({ model : { config:{}}}, {}, {}).should.eql(true);
+    });
+    
+    it('should be the opposite of exhibitOnly', function(){
+      server.isScoreable({ model : { config:{ exhibitOnly: false}}}, {}, {}).should.eql(true);
+      server.isScoreable({ model : { config:{ exhibitOnly: true}}}, {}, {}).should.eql(false);
+    });
+  });
+
 });
