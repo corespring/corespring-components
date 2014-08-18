@@ -8,6 +8,17 @@ exports.isCorrect = function() {
   return true;
 };
 
+/**
+ * Override score for feedback - It never returns a score
+ * as it's not scoreable.
+ * @param  {[type]} model   [description]
+ * @param  {[type]} answers [description]
+ * @return {[type]}         [description]
+ */
+exports.isScoreable = function(model, answers, outcome){
+  return false;
+};
+
 function lowerCaseAndTrim(s) {
   return (s || "").toLowerCase().replace(/ /g, "");
 }
@@ -36,7 +47,7 @@ exports.findFeedback = function(feedbacks, response) {
   return out ? out.feedback : '';
 };
 
-exports.respond = function(model, answer, settings, targetOutcome) {
+exports.createOutcome = function(model, answer, settings, targetOutcome) {
 
   if (!settings.showFeedback) {
     return {};

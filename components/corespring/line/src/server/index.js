@@ -9,6 +9,19 @@ exports.render = function(item) {
   return item;
 };
 
+
+/**
+ * if exhibitOnly is true - this component shouldn't be scoreable.
+ */
+exports.isScoreable = function(question, answer, outcome) {
+
+  if(!question || !question.model || !question.model.config){
+    return true;
+  }
+
+  return !question.model.config.exhibitOnly; 
+};
+
 exports.respond = function(question, answer, settings) {
 
   console.log(JSON.stringify(question));
