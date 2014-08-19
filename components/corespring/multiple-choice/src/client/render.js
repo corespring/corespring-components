@@ -110,6 +110,7 @@ var main = [
         }
 
         resetChoices();
+        $(element).find(".alert").hide();
 
         var model = scope.question;
         var stash = scope.session.stash = scope.session.stash || {};
@@ -153,6 +154,7 @@ var main = [
 
         // sets the server's response
         setResponse: function(response) {
+          $(element).find(".alert").hide();
 
           resetFeedback(scope.choices);
 
@@ -171,12 +173,16 @@ var main = [
               console.log("choice: ", choice);
             });
           }
+          setTimeout(function() {
+            $(element).find(".alert.visible").slideDown(400);
+          }, 10);
         },
         setMode: function(newMode) {},
         /**
          * Reset the ui back to an unanswered state
          */
         reset: function() {
+          $(element).find(".alert").hide();
           resetChoices();
           resetFeedback(scope.choices);
           scope.response = undefined;
@@ -256,8 +262,8 @@ var main = [
       '       </div>',
       '     </div>',
       '    </div>',
-      '    <div class="choice-feedback-holder" ng-show="o.feedback != null">',
-      '      <div class="alert alert-{{o.correct ? \'success\' : \'warning\'}} fade {{o.feedback ? \'in\' : \'\'}}">',
+      '    <div class="choice-feedback-holder">',
+      '      <div class="alert alert-{{o.correct ? \'success\' : \'warning\'}} fade in" ng-class="{visible: o.feedback}" style="display: none">',
       '        <span type="success" ng-bind-html-unsafe="o.feedback"></span>',
       '      </div>',
       '    </div>',
