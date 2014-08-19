@@ -26,7 +26,7 @@ var main = ['$compile', '$modal', '$rootScope',
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See Solution</a></div>",
         "   <div id='initialParams' ng-transclude></div>",
         "</div>",
-        "<div ng-show='feedback' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
+        "<div ng-show='isFeedbackVisible' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
         "</div>"
       ].join("\n"),
       restrict: 'AE',
@@ -232,13 +232,16 @@ var main = ['$compile', '$modal', '$rootScope',
 
         };
 
+        function updateFeedbackVisiblity(){
+            scope.isFeedbackVisible = scope.feedback && scope.model.config.showFeedback;
+        }
+
         scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
             var config = dataAndSession.data.model.config;
             scope.config = config;
             scope.model = dataAndSession.data.model;
-
             scope.additionalText = config.additionalText;
             scope.scale = config.scale;
             scope.domain = config.domain;
@@ -285,6 +288,9 @@ var main = ['$compile', '$modal', '$rootScope',
 
           setResponse: function(response) {
             scope.feedback = response && response.feedback;
+
+            updateFeedbackVisiblity();
+
             scope.correctClass = response.correctness;
             if (response && response.correctness === "correct") {
               scope.graphCallback({

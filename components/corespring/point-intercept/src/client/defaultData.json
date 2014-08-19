@@ -31,7 +31,8 @@
       "scale": 1,
       "sigfigs": -1,
       "showCoordinates": false,
-      "showInputs": true
+      "showInputs": true,
+      "showFeedback":true
     }
   }
 }
