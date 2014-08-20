@@ -125,7 +125,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.$watch('landingPlaceChoices', function(n) {
-        if (_.isEmpty(n)) return;
+        if (_.isEmpty(n)) {
+            return;
+        }
         var state = {
           choices: _.cloneDeep(scope.model.choices),
           landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
