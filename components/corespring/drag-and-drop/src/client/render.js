@@ -83,6 +83,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         _.each(scope.landingPlaceChoices, function(lpc, key) {
           scope.landingPlaceChoices[key] = [];
         });
+        scope.$emit('rerender-math', {delay: 20});
       };
 
       scope.undo = function() {
@@ -93,6 +94,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         var state = _.last(scope.stack);
         scope.model.choices = _.cloneDeep(state.choices);
         scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+        scope.$emit('rerender-math', {delay: 20});
       };
 
       scope.seeSolution = function() {
@@ -123,6 +125,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.$watch('landingPlaceChoices', function(n) {
+        if (_.isEmpty(n)) return;
         var state = {
           choices: _.cloneDeep(scope.model.choices),
           landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
