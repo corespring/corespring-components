@@ -137,8 +137,7 @@
 
 }
 
-.view-multiple-choice .choice-holder:not(.incorrect) .radio-choice .radio-button.selected,
-.view-multiple-choice .choice-holder.correct .radio-choice .radio-button {
+.view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .radio-choice .radio-button.selected {
     display: inline-block;
     width: 20px;
     height: 20px;
@@ -154,8 +153,16 @@
     transform: scale(1, 1);
 }
 
-.view-multiple-choice .choice-holder.correct .radio-choice .radio-button {
-    background-color: #5cb85c !important;
+.view-multiple-choice .correct .radio-choice .radio-button::after {
+    padding-left: 3px;
+    font-size: 30px;
+    line-height: 30px;
+    text-indent: 3px;
+    font-family: "FontAwesome";
+    content: "\f058";
+    color: #3C763D;
+    border: none;
+    margin-left: -2px;
 }
 
 .view-multiple-choice .incorrect .radio-choice .selected::after {
@@ -164,8 +171,8 @@
     line-height: 30px;
     text-indent: 3px;
     font-family: "FontAwesome";
-    content: "\f00d";
-    color: #d9534f;
+    content: "\f05c";
+    color: #C09853;
     border: none;
 }
 
