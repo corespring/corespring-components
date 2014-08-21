@@ -235,6 +235,14 @@ var main = [
         }
       };
 
+      scope.$watch('panelOpen', function(n) {
+         if (n) {
+           $(element).find('.panel-collapse').slideDown(400);
+         } else {
+           $(element).find('.panel-collapse').slideUp(400);
+         }
+      });
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
@@ -329,7 +337,24 @@ var main = [
         '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
         '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
         '  <div ng-if="isTile()">' + tileTemplate + '</div>',
-        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
+        '  <div class="summaryFeedbackPanel fade in" ng-show="response.comments">',
+        '    <div class="">',
+        '      <div class="panel-group" id="accordion2">',
+        '        <div class="panel panel-default">',
+        '          <div class="panel-heading">',
+        '            <h4 class="panel-title">',
+        '              <a ng-click="panelOpen = !panelOpen">',
+        '              Learn More<i class="learnMoreIcon fa fa-lightbulb-o pull-right"></i>',
+        '              </a>',
+        '            </h4>',
+        '          </div>',
+        '          <div class="panel-collapse collapse">',
+        '            <div class="panel-body" ng-bind-html-unsafe="response.comments"></div>',
+        '          </div>',
+        '        </div>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
         '</div>'
       ].join("\n")
 

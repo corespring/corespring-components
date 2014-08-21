@@ -318,6 +318,15 @@
     margin-top: 10px;
 }
 
+.view-multiple-choice .summaryFeedbackPanel {
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.view-multiple-choice .learnMoreIcon {
+    font-size: 30px;
+    margin-top: -5px;
+}
 
 /* Config Panel */
 .choice-config-panel {
