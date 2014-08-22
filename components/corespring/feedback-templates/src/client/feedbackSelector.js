@@ -5,9 +5,9 @@ exports.directive = {
     '$log',
     'MiniWiggiScopeExtension',
     function($log, MiniWiggiScopeExtension) {
-      function inline(type, value, body, attrs) {
+      function inline(type, value, body, attrs, labelAttrs) {
         return [
-          '<label class="' + type + '-inline">',
+            '<label class="' + type + '-inline" ' + labelAttrs + '>',
           '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
           '</label>'
         ].join('\n');
@@ -18,10 +18,21 @@ exports.directive = {
           fbSelLabel: "@",
           fbSelClass: "@",
           fbSelDefaultFeedback: "@",
+          fbSelHideFeedbackOptions: "@",
           fbSelCustomFeedback: "=",
           fbSelFeedbackType: "="
         },
         link: function($scope, $element, $attrs) {
+
+          $scope.$watch('fbSelHideFeedbackOptions', function(n) {
+            if (n) {
+              var opts = $scope.fbSelHideFeedbackOptions.split(",");
+              $scope.hidden = {};
+              _(["default","none","custom"]).each(function(t) {
+                $scope.hidden[t] = opts.indexOf(t) >= 0;
+              });
+            }
+          });
           new MiniWiggiScopeExtension().postLink($scope, $element, $attrs);
         },
         replace: true,
@@ -29,9 +40,9 @@ exports.directive = {
           '<div class="feedback-selector-view">',
           '<div><label ng-bind-html-unsafe="fbSelLabel"></label></div>',
           '<div>',
-          inline("radio", "default", "Default Feedback", "ng-model='fbSelFeedbackType'"),
-          inline("radio", "none", "No Feedback", "ng-model='fbSelFeedbackType'"),
-          inline("radio", "custom", "Customized Feedback", "ng-model='fbSelFeedbackType'"),
+          inline("radio", "default", "Default Feedback", "ng-model='$parent.fbSelFeedbackType'", "ng-if=\"!hidden['default']\""),
+          inline("radio", "none", "No Feedback", "ng-model='$parent.fbSelFeedbackType'", "ng-if=\"!hidden['none']\""),
+          inline("radio", "custom", "Customized Feedback", "ng-model='$parent.fbSelFeedbackType'", "ng-if=\"!hidden['custom']\""),
           '</div>',
           '<div class="clearfix"></div>',
           '<span ng-switch="fbSelFeedbackType">',

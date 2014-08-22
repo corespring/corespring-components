@@ -43,10 +43,24 @@ exports.service = ['$log',
           feedback: true,
           columnWidths: [],
           selectType: true,
-          showLabel: true
+          showLabel: true,
+          hideFeedbackOptions: []
         };
 
         opts = _.extend(defaults, opts);
+
+        var notSelectedFeedback = [
+          '    <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',
+          '      <div feedback-selector ',
+          '        fb-sel-label="If this choice is NOT selected, show"',
+          '        fb-sel-class="correct"', //Note: A bit weird that the feedback is correct, but checked with Jen
+          '        fb-sel-hide-feedback-options="'+defaults.hideFeedbackOptions.join(",")+'"',
+          '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
+          '        fb-sel-custom-feedback="feedback[q.value].notChosenFeedback"',
+          '        fb-sel-default-feedback="{{defaultNotChosenFeedback}}">',
+          '      </div>',
+          '    </div>'
+        ].join("");
 
         var feedback = opts.feedback ? [
           '<td colspan="6" style="text-align: left">',
@@ -56,6 +70,7 @@ exports.service = ['$log',
           '      <div feedback-selector ng-show="correctMap[q.value]"',
           '        fb-sel-label="If this choice is selected, show"',
           '        fb-sel-class="correct"',
+          '        fb-sel-hide-feedback-options="'+defaults.hideFeedbackOptions.join(",")+'"',
           '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
           '        fb-sel-custom-feedback="feedback[q.value].feedback"',
           '        fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
@@ -63,20 +78,13 @@ exports.service = ['$log',
           '      <div feedback-selector ng-show="!correctMap[q.value]"',
           '        fb-sel-label="If this choice is selected, show"',
           '        fb-sel-class="incorrect"',
+          '        fb-sel-hide-feedback-options="'+defaults.hideFeedbackOptions.join(",")+'"',
           '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
           '        fb-sel-custom-feedback="feedback[q.value].feedback"',
           '        fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
           '      </div>',
           '    </div>',
-          '    <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',
-          '      <div feedback-selector ',
-          '        fb-sel-label="If this choice is NOT selected, show"',
-          '        fb-sel-class="correct"', //Note: A bit weird that the feedback is correct, but checked with Jen
-          '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
-          '        fb-sel-custom-feedback="feedback[q.value].notChosenFeedback"',
-          '        fb-sel-default-feedback="{{defaultNotChosenFeedback}}">',
-          '      </div>',
-          '    </div>',
+          (opts.hideFeedbackOptions.indexOf("notSelected") === -1) ? notSelectedFeedback : "",
           '  </div>',
           '</td>'
 
