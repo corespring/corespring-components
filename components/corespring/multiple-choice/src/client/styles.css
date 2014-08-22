@@ -118,10 +118,12 @@
 
 .view-multiple-choice .correct .radio-choice {
     border-color: #5cb85c;
+    position: relative;
 }
 
 .view-multiple-choice .incorrect .radio-choice {
     border: none;
+    position: relative;
 }
 
 .view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .radio-choice .radio-button {
@@ -153,22 +155,37 @@
     transform: scale(1, 1);
 }
 
+.view-multiple-choice .correct .radio-choice .radio-button {
+    margin-top: 0px;
+    position: absolute;
+    top: 1px;
+}
+
 .view-multiple-choice .correct .radio-choice .radio-button::after {
     padding-left: 3px;
     font-size: 30px;
-    line-height: 30px;
+    line-height: 27px;
     text-indent: 3px;
     font-family: "FontAwesome";
     content: "\f058";
     color: #3C763D;
     border: none;
     margin-left: -2px;
+    width: 30px;
+    height: 30px;
+}
+
+.view-multiple-choice .incorrect .radio-choice .radio-button {
+    margin-top: 0px;
+    position: absolute;
+    top: 2px;
+    left: -1px;
 }
 
 .view-multiple-choice .incorrect .radio-choice .selected::after {
     padding-left: 3px;
     font-size: 30px;
-    line-height: 30px;
+    line-height: 27px;
     text-indent: 3px;
     font-family: "FontAwesome";
     content: "\f05c";
