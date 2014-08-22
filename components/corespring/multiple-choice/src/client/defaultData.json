@@ -14,19 +14,23 @@
 
   "feedback": [
     {
-      "isDefault": "true",
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
       "value": "1"
     },
     {
-      "isDefault": "true",
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
       "value": "2"
     },
     {
-      "isDefault": "true",
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
       "value": "3"
     },
     {
-      "isDefault": "true",
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
       "value": "4"
     }
   ],

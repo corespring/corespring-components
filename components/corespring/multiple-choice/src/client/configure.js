@@ -24,7 +24,8 @@ var main = [
       '<div class="check-correct-label">Check Correct Answer(s)</div>',
       '<div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
-        columnWidths: ['150px', '100%']
+        columnWidths: ['150px', '100%'],
+        hideFeedbackOptions: ['default','notSelected']
       }),
       '</div>',
       '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
@@ -65,9 +66,9 @@ var main = [
               if (choice) {
                 scope.feedback[choice.value] = {
                   feedback: feedback.feedback,
-                  feedbackType: feedback.feedbackType || "default",
+                  feedbackType: feedback.feedbackType || "none",
                   notChosenFeedback: feedback.notChosenFeedback,
-                  notChosenFeedbackType: feedback.notChosenFeedbackType || "default"
+                  notChosenFeedbackType: feedback.notChosenFeedbackType || "none"
                 };
               }
             });
