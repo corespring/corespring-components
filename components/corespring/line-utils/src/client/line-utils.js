@@ -10,11 +10,13 @@ exports.factory = [
              */
             this.pointsFromEquation = function(equation) {
 
-                if (!equation) {
+                if (!equation || !_.isString(equation)) {
                     return undefined;
                 }
 
-                var patt = /y=(([\+\-])?((?:\d*\.)?\d+)?(x)?)?(([\+\-])?((?:\d*\.)?\d+))?(x)?/g;
+                equation = equation.replace(/\s/gi,"");
+
+                var patt = /y=(([\+\-])?((?:\d*[\.\/])?\d+)?(x)?)?(([\+\-])?((?:\d*[\.\/])?\d+))?(x)?/g;
 
                 var captures = patt.exec(equation);
 
@@ -30,11 +32,29 @@ exports.factory = [
                 }
 
                 function getSlope(index) {
-                    return captures[index] ? captures[index] : 1;
+                    var fraction = captures[index] ? captures[index] : "1";
+                    return getDecimalRepresentation(fraction);
+                }
+
+                function getDecimalRepresentation(fraction){
+                    if (!fraction || !_.isString(fraction)){
+                        return fraction;
+                    }
+
+                    var lineIndex = fraction.indexOf('\/');
+                    if (lineIndex == -1){
+                        return fraction;
+                    }
+
+                    var numer = fraction.substring(0,lineIndex);
+                    var denom = fraction.substring(lineIndex + 1,fraction.length);
+                    var float = parseInt(numer)/parseInt(denom);
+
+                    return float;
                 }
 
                 function getConstant(index) {
-                    return captures[index] ? captures[index] : 0;
+                    return getDecimalRepresentation(captures[index] ? captures[index] : 0);
                 }
 
                 if (captures[4] === "x") {

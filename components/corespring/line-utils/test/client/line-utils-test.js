@@ -64,6 +64,36 @@ describe('corespring line component', function() {
             [0, -2],
             [1, -2]
         ]);
+
+        result = ob.pointsFromEquation("y=1/2");
+        expect(result).toEqual([
+            [0, 0.5],
+            [1, 0.5]
+        ]);
+
+        result = ob.pointsFromEquation("y=1/2x");
+        expect(result).toEqual([
+            [0, 0],
+            [1, 0.5]
+        ]);
+
+        result = ob.pointsFromEquation("y=-1/2x");
+        expect(result).toEqual([
+            [0, 0],
+            [1, -0.5]
+        ]);
+
+        result = ob.pointsFromEquation("y=-1/2x+1");
+        expect(result).toEqual([
+            [0, 1],
+            [1, 0.5]
+        ]);
+
+        result = ob.pointsFromEquation("y=1-1/2x");
+        expect(result).toEqual([
+            [0, 1],
+            [1, 0.5]
+        ]);
     });
 
 });
