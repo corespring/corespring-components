@@ -42,15 +42,15 @@ exports.factory = [
                     }
 
                     var lineIndex = fraction.indexOf('\/');
-                    if (lineIndex == -1){
+                    if (lineIndex === -1){
                         return fraction;
                     }
 
                     var numer = fraction.substring(0,lineIndex);
                     var denom = fraction.substring(lineIndex + 1,fraction.length);
-                    var float = parseInt(numer)/parseInt(denom);
+                    var flt = parseInt(numer,10)/parseInt(denom,10);
 
-                    return float;
+                    return flt;
                 }
 
                 function getConstant(index) {
