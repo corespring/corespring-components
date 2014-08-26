@@ -202,8 +202,8 @@ var main = [
       scope.letter = function(idx) {
         var type = scope.question && scope.question.config ? scope.question.config.choiceLabels : "none";
         switch (type) {
-          case "letters": return String.fromCharCode(65 + idx);
-          case "numbers": return (idx+1)+"";
+          case "letters": return String.fromCharCode(65 + idx)+".";
+          case "numbers": return (idx+1)+".";
         }
       };
 
@@ -247,7 +247,7 @@ var main = [
 
       '    <div>',
 
-      '     <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '     <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}</label>',
       '     <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
       '     <div class="choice-label" ng-switch="o.labelType">',
       '       <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
