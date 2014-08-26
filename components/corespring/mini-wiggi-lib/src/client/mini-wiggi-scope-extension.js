@@ -39,7 +39,7 @@ exports.factory = [
         };
 
         $scope.updateMathJax = function() {
-          scope.$emit('mathJaxUpdateRequest');
+          $scope.$emit('mathJaxUpdateRequest');
         };
 
       };
