@@ -1,6 +1,9 @@
 var _ = require('lodash');
 
 var fbu = require('corespring.server-shared.server.feedback-utils');
+var keys = fbu.keys;
+
+exports.keys = keys;
 
 exports.isCorrect = function(answer, correctResponse, orderMatters) {
   if (orderMatters) {

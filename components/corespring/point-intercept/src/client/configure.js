@@ -185,8 +185,8 @@ var main = ['ServerLogic',
       link: function(scope, element, attrs) {
         scope.defaults = scope.data.defaultData.model.config;
         var server = ServerLogic.load('corespring-point-intercept');
-        scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
-        scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
+        scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
+        scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
