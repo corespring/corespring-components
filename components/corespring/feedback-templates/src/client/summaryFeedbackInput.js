@@ -18,7 +18,7 @@ exports.directive = {
         template: [
           '<div>',
           '  <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i',
-          '    class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback but here we are (optional)</span>',
+          '    class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>',
           '  </div>',
           '  <div ng-show="commentOn">',
           '    <div mini-wiggi-wiz="" ng-model="comments"',
