@@ -56,9 +56,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         scope.dragging.fromTarget = undefined;
       };
 
-      scope.draggableOptions = {
-        onStart: 'onStart',
-        revert: 'invalid'
+      scope.draggableOptions = function(choice) {
+        return {
+          revert: 'invalid',
+          placeholder: (!choice || choice.moveOnDrag) ? false : 'keep'
+        }
       };
 
       scope.resetChoices = function(model) {
@@ -272,9 +274,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         '                   ng-style="choiceStyle"',
         '                   data-drag="editable"',
         '                   ng-disabled="!editable"',
-        '                   data-jqyoui-options="{revert: \'invalid\',helper: {{helperForChoice(o)}} }"',
+        '                   data-jqyoui-options="draggableOptions(o)"',
         '                   ng-model="model.choices[$parent.$index * itemsPerRow + $index]"',
-        '                   jqyoui-draggable="{placeholder: {{placeholderForChoice(o)}} }"',
+        '                   jqyoui-draggable="draggableOptions(o)"',
         '                   data-id="{{o.id}}">',
         '               <div ng-bind-html-unsafe="o.content" />',
         '               <div class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="o.content" />',
