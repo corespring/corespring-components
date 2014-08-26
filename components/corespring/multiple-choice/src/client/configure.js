@@ -14,6 +14,13 @@ var main = [
       '  allows for either one or more correct answers. Setting more than one answer as correct allows for partial',
       '  credit (see the scoring tab).',
       '</p>',
+      '<div class="">Choice Labels:',
+      '  <select ui-select2="{minimumResultsForSearch: -1}" ng-model="model.config.choiceLabels" class="label-select">',
+      '    <option value="none">None</option>',
+      '    <option value="letters">Letters</option>',
+      '    <option value="numbers">Numbers</option>',
+      '  </select>',
+      '</div>',
       '<div class="check-correct-label">Check Correct Answer(s)</div>',
       '<div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({

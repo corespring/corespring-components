@@ -200,7 +200,11 @@ var main = [
       };
 
       scope.letter = function(idx) {
-        return String.fromCharCode(65 + idx);
+        var type = scope.question && scope.question.config ? scope.question.config.choiceLabels : "none";
+        switch (type) {
+          case "letters": return String.fromCharCode(65 + idx);
+          case "numbers": return (idx+1)+"";
+        }
       };
 
       scope.isVertical = function() {
@@ -243,7 +247,7 @@ var main = [
 
       '    <div>',
 
-      '     <label class="choice-letter">{{letter($index)}}.</label>',
+      '     <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '     <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
       '     <div class="choice-label" ng-switch="o.labelType">',
       '       <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
@@ -265,7 +269,7 @@ var main = [
       '  <div ng-repeat="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <div class="choice-wrapper">',
-      '      <label class="choice-letter">{{letter($index)}}.</label>',
+      '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
       '      <div class="choice-label" ng-switch="o.labelType">',
       '        <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
@@ -288,7 +292,7 @@ var main = [
       '<div class="choices-container" ng-class="question.config.orientation">',
       '  <div ng-repeat="o in choices" class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <div class="choice-wrapper">',
-      '      <label class="choice-letter">{{letter($index)}}.</label>',
+      '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
       '      <div class="choice-label" ng-switch="o.labelType">',
       '        <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
