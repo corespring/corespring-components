@@ -10,13 +10,13 @@ exports.factory = [
      */
     function MiniWiggiScopeExtension() {
 
-      this.postLink = function(scope, elm, attr) {
+      this.postLink = function($scope) {
 
-        scope.imageService = function() {
+        $scope.imageService = function() {
           return ComponentImageService;
         };
 
-        scope.extraFeatures = {
+        $scope.extraFeatures = {
           definitions: [
             {
               type: 'group',
@@ -29,7 +29,16 @@ exports.factory = [
           ]
         };
 
-        scope.updateMathJax = function() {
+        $scope.linkFeature = {
+          definitions: [{
+            type: 'group',
+            buttons: [
+              new WiggiLinkFeatureDef()
+            ]
+          }]
+        };
+
+        $scope.updateMathJax = function() {
           scope.$emit('mathJaxUpdateRequest');
         };
 

@@ -1,3 +1,4 @@
+/* global WiggiLinkFeatureDef */
 exports.framework = "angular";
 exports.directive = {
   name: "summaryFeedbackInput",
@@ -6,17 +7,18 @@ exports.directive = {
     'MiniWiggiScopeExtension',
     function($log, MiniWiggiScopeExtension) {
       return {
+        restrict: 'A',
         scope: {
           comments: "=ngModel"
         },
-        link: function($scope, $element, $attrs) {
-          new MiniWiggiScopeExtension().postLink($scope, $element, $attrs);
-        },
         replace: true,
+        link: function($scope) {
+          new MiniWiggiScopeExtension().postLink($scope);
+        },
         template: [
           '<div>',
           '  <div ng-click="commentOn = !commentOn" style="margin-top: 10px"><i',
-          '    class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback (optional)</span>',
+          '    class="fa fa-{{commentOn ? \'minus\' : \'plus\'}}-square-o"></i><span style="margin-left: 3px">Summary Feedback but here we are (optional)</span>',
           '  </div>',
           '  <div ng-show="commentOn">',
           '    <div mini-wiggi-wiz="" ng-model="comments"',
