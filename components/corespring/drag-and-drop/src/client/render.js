@@ -60,7 +60,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         return {
           revert: 'invalid',
           placeholder: (!choice || choice.moveOnDrag) ? false : 'keep'
-        }
+        };
       };
 
       scope.resetChoices = function(model) {
