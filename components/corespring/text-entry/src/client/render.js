@@ -40,7 +40,7 @@ link = function() {
             html: true,
             content: response.feedback.message,
             title: {"correct": "Correct", "incorrect": "Incorrect", "partial": "Partial"}[response.feedback.correctness],
-            viewport: { selector: '.corespring-player', padding: 0 }
+            viewport: '.corespring-player'
           }).popover('show');
         }
       },
