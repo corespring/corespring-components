@@ -13,7 +13,17 @@
 
 .cs-text-entry__text-input-holder .popover {
     visibility: hidden;
-    width: 275px;
+    width: 200px;
+}
+
+.cs-text-entry__text-input-holder {
+    position: relative;
+}
+
+.cs-text-entry__text-input-holder .result-icon {
+    position: absolute;
+    right: 4px;
+    top: 0px;
 }
 
 .cs-text-entry__text-input-holder.incorrect .popover,

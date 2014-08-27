@@ -91,7 +91,7 @@ main = [
         '           class="input-sm form-control" ',
         '           size="{{question.answerBlankSize}}"',
         '           style="text-align: {{question.answerAlignment}}"/>',
-        '    <i ng-show="feedback" class="fa form-control-feedback" ng-class="feedback.correctness" style="display: inline;"></i>',
+        '    <i ng-show="feedback" class="fa result-icon" ng-class="feedback.correctness" style="display: inline;"></i>',
         '  </div>',
         '</form>'
       ].join("\n")

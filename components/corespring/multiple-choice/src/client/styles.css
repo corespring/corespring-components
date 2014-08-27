@@ -7,6 +7,7 @@
     color: #008000;
 }
 
+
 .view-multiple-choice td {
     vertical-align: top;
 }
@@ -259,9 +260,15 @@
 .view-multiple-choice .choice-input {
     padding-top: 0px;
 }
+
 .view-multiple-choice .choice-letter {
     font-weight: bold;
 }
+
+.view-multiple-choice .choice-letter.none {
+    display: none;
+}
+
 
 .choice-label img {
   vertical-align: bottom;
@@ -381,4 +388,9 @@
 .config-multiple-choice label.disabled {
     color: #cccccc;
     cursor: not-allowed;
+}
+
+.config-multiple-choice .label-select,
+.select2-drop {
+    min-width: 120px;
 }

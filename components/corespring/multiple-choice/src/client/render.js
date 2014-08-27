@@ -206,8 +206,16 @@ var main = [
       };
 
       scope.letter = function(idx) {
+        var type = scope.question && scope.question.config ? scope.question.config.choiceLabels : "none";
+        switch (type) {
+          case "none": return "";
+          case "numbers": return (idx+1)+"";
+        }
+
+        // default to letters
         return String.fromCharCode(65 + idx);
       };
+
 
       scope.isVertical = function() {
         return orientation() === 'vertical';
@@ -262,7 +270,7 @@ var main = [
 
       '      <div>',
 
-      '       <label class="choice-letter">{{letter($index)}}.</label>',
+      '       <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '       <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
       '       <div class="choice-label" ng-switch="o.labelType">',
       '         <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
