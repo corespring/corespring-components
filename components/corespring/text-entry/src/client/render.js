@@ -34,14 +34,15 @@ link = function() {
         if (!response) return;
         scope.feedback = response.feedback;
         scope.correctClass = response.feedback.correctness;
-        inputElement.popover({
-          placement: 'auto',
-          html: true,
-          content: response.feedback.message,
-          title: {"correct": "Correct", "incorrect": "Incorrect", "partial": "Partial"}[response.feedback.correctness],
-          viewport: { selector: '.corespring-player', padding: 0 }
-        }).popover('show');
-
+        if (!_.isEmpty(response.feedback.message)) {
+          inputElement.popover({
+            placement: 'auto',
+            html: true,
+            content: response.feedback.message,
+            title: {"correct": "Correct", "incorrect": "Incorrect", "partial": "Partial"}[response.feedback.correctness],
+            viewport: { selector: '.corespring-player', padding: 0 }
+          }).popover('show');
+        }
       },
 
       setMode: function(newMode) {},
