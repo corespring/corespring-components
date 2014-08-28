@@ -10,6 +10,9 @@ main = [
 
         function shouldShowFormattingHelp() {
           var defaultValue = true;
+          if (scope.correctClass) {
+            return false;
+          }
           if (scope.question && scope.question.config && scope.question.config.hasOwnProperty('showFormattingHelp')) {
             return scope.question.config.showFormattingHelp;
           } else {
