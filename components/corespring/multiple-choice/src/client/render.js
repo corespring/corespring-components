@@ -170,7 +170,6 @@ var main = [
                 choice.feedback = fb.feedback;
                 choice.correct = fb.correct;
               }
-              console.log("choice: ", choice);
             });
           }
           setTimeout(function() {
@@ -186,6 +185,7 @@ var main = [
           resetChoices();
           resetFeedback(scope.choices);
           scope.response = undefined;
+          scope.answerVisible = false;
         },
         resetStash: function() {
           scope.session.stash = {};
@@ -278,12 +278,36 @@ var main = [
       '       </div>',
       '     </div>',
       '    </div>',
-      '    <div class="choice-feedback-holder">',
+      '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value]">',
       '      <div class="alert alert-{{o.correct ? \'success\' : \'warning\'}} fade in" ng-class="{visible: o.feedback}" style="display: none">',
       '        <span type="success" ng-bind-html-unsafe="o.feedback"></span>',
       '      </div>',
       '    </div>',
+      '  </div>',
 
+      '  <div ng-show="response && response.correctness != \'correct\'"><a ng-click="answerVisible = !answerVisible">See Correct Answer</a></div>',
+      '  <div class="answer-holder" ng-if="answerVisible && response && response.correctness != \'correct\'">',
+      '    <div ng-repeat="o in choices" class="choice-holder-background answer {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '         ng-click="onClickChoice(o)" ng-class="{true:\'correct\'}[o.correct]">',
+      '      <div class="choice-holder" ng-class="{true:\'correct\'}[o.correct]">',
+      '        <span class="choice-input" ng-switch="inputType">',
+      '          <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
+      '            <div class="checkbox-button" />',
+      '          </div>',
+      '          <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
+      '            <div class="radio-button" />',
+      '          </div>',
+      '        </span>',
+      '        <div>',
+      '         <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '         <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+      '         <div class="choice-label" ng-switch="o.labelType">',
+      '           <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+      '           <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
+      '         </div>',
+      '       </div>',
+      '      </div>',
+      '    </div>',
       '  </div>',
       '</div>'
     ].join("");

@@ -71,6 +71,13 @@ exports.isCorrect = function(answer, correctAnswer) {
   return diff.length === 0 && diff2.length === 0;
 };
 
+exports.isPartiallyCorrect = function(answer, correctAnswer) {
+  var notInCorrect = _.find(answer, function(a) {
+    return !_.contains(correctAnswer, a);
+  });
+  return answer.length > 0 && _.isUndefined(notInCorrect);
+};
+
 var isCorrectChoice = function(q, choice) {
   return _.indexOf(q.correctResponse.value, choice) !== -1;
 };
@@ -164,6 +171,7 @@ exports.respond = function(question, answer, settings) {
   }
 
   var answerIsCorrect = this.isCorrect(answer, question.correctResponse.value);
+  var answerIsPartiallyCorrect = !answerIsCorrect && this.isPartiallyCorrect(answer, question.correctResponse.value);
 
   var response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",

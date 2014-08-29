@@ -56,7 +56,8 @@
     "config": {
       "orientation": "vertical",
       "shuffle": false,
-      "singleChoice": false
+      "singleChoice": false,
+      "choiceLabels": "letters"
     }
   }
 }

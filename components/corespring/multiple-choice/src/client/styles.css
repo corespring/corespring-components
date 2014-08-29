@@ -50,7 +50,8 @@
     border-color: #a94442;
 }
 
-.view-multiple-choice .choice-holder.correct .checkbox-choice {
+.view-multiple-choice .selected .choice-holder.correct .checkbox-choice,
+.view-multiple-choice .answer .choice-holder.correct .checkbox-choice {
     background-color: #3c763d;
     border-color: #3c763d;
 }
@@ -94,7 +95,8 @@
     color: #fff;
 }
 
-.view-multiple-choice .choice-holder.correct .checkbox-choice .checkbox-button::after {
+.view-multiple-choice .selected .choice-holder.correct .checkbox-choice .checkbox-button::after,
+.view-multiple-choice .answer .choice-holder.correct .checkbox-choice .checkbox-button::after {
     font-family: 'FontAwesome';
     width: 30px;
     height: 30px;
@@ -121,7 +123,8 @@
     transition: border 0.15s ease-in-out;
 }
 
-.view-multiple-choice .correct .radio-choice {
+.view-multiple-choice .selected .correct .radio-choice,
+.view-multiple-choice .answer .correct .radio-choice {
     border-color: #5cb85c;
     position: relative;
 }
@@ -166,7 +169,8 @@
     top: 1px;
 }
 
-.view-multiple-choice .correct .radio-choice .radio-button::after {
+.view-multiple-choice .answer .correct .radio-choice .radio-button::after,
+.view-multiple-choice .selected .correct .radio-choice .radio-button::after {
     padding-left: 3px;
     font-size: 30px;
     line-height: 27px;
@@ -232,8 +236,17 @@
     background: #f5f5f5;
     padding-top: 10px;
     padding-bottom: 10px;
-
 }
+
+.view-multiple-choice .choice-holder-background.correct {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border: 1px solid #d6e9c6;
+    border-radius: 4px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 
 .view-multiple-choice .choice-feedback-holder {
     padding-left: 32px;
@@ -354,6 +367,15 @@
 .view-multiple-choice .learnMoreIcon {
     font-size: 30px;
     margin-top: -5px;
+}
+
+.view-multiple-choice .answer-holder {
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+    padding: 20px;
+    margin-bottom: 25px;
 }
 
 /* Config Panel */
