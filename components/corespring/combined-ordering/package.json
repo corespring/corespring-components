@@ -1,0 +1,29 @@
+{
+  "corespring-container-version": "0.0.1",
+  "libraries": [
+    {
+      "name": "server-shared",
+      "organization": "corespring"
+    },
+    {
+      "name": "drag-and-drop-engine",
+      "organization": "corespring"
+    },
+    {
+      "name": "feedback-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    }
+  ],
+  "name": "combined-ordering",
+  "organization": "corespring",
+  "released": true,
+  "title": "Combined Ordering",
+  "titleGroup": "Fixed Choice",
+  "version": "0.0.1"
+}

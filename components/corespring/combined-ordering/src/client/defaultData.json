@@ -1,0 +1,38 @@
+{
+  "componentType": "corespring-combined-ordering",
+  "title": "",
+  "correctResponse": [],
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": true,
+  "partialScoring" : [
+    {"numberOfCorrect": 1, "scorePercentage": 25}
+  ],
+  "model": {
+    "choices": [
+      {
+        "label": "",
+        "labelType": "text",
+        "id": "c1",
+        "moveOnDrag": true
+      },
+      {
+        "label": "",
+        "labelType": "text",
+        "id": "c2",
+        "moveOnDrag": true
+      }
+    ],
+    "config": {
+      "shuffle": true,
+      "choiceAreaLayout": "vertical",
+      "choiceAreaLabel": "Choice Label",
+      "answerAreaLabel": "Answer Label",
+      "placementType": "placement"
+    }
+  },
+  "weight": 1
+}
