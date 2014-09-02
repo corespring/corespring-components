@@ -64,7 +64,7 @@ exports.service = ['$log',
 
         var feedback = opts.feedback ? [
           '<td colspan="6" style="text-align: left">',
-          '  <div ng-click="feedbackOn = !feedbackOn" class="feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i> Feedback</div>',
+          '  <div ng-click="feedbackOn = !feedbackOn" class="expander feedback-label"><i class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-circle"></i>Feedback</div>',
           '  <div ng-show="feedbackOn">',
           '    <div class="well">',
           '      <div feedback-selector ng-show="correctMap[q.value]"',

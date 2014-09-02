@@ -49,10 +49,6 @@
     visibility: visible;
 }
 
-.choice-template-choice .feedback-label {
-    font-size: smaller;
-}
-
 .choice-template-choice .feedback-preview {
     min-height: 36px;
     display: inline-block;
