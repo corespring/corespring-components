@@ -210,6 +210,14 @@
     margin: 20px;
 }
 
+.placement-ordering-config .placement-chooser input {
+    margin-right: 5px;
+}
+
+.placement-ordering-config .placement-chooser label {
+    margin-right: 5px;
+}
+
 .placement-ordering-config .shuffle {
     margin-top: 10px;
 }
@@ -256,6 +264,10 @@
     min-height: 47px;
     padding: 4px;
     background: #efefef;
+}
+
+.placement-ordering-config .inPlace .sortable-choice {
+    margin-bottom: 5px;
 }
 
 .placement-ordering-config .draggable-choices-container {
