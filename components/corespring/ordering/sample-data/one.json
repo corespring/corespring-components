@@ -2,7 +2,7 @@
   "item": {
     "components": {
       "1": {
-        "componentType": "corespring-placement-ordering",
+        "componentType": "corespring-ordering",
         "title": "",
         "correctResponse": ["c1","c2"],
         "feedback": {
@@ -38,12 +38,13 @@
             "shuffle": true,
             "choiceAreaLayout": "vertical",
             "choiceAreaLabel": "Choice Label",
-            "answerAreaLabel": "Answer Label"
+            "answerAreaLabel": "Answer Label",
+            "placementType": "placement"
           }
         },
         "weight": 1
       }
     },
-    "xhtml": "<corespring-placement-ordering id=\"1\"></corespring-placement-ordering>"
+    "xhtml": "<corespring-ordering id=\"1\"></corespring-ordering>"
   }
 }

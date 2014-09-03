@@ -20,10 +20,10 @@
       "scope": "editor"
     }
   ],
-  "name": "combined-ordering",
+  "name": "ordering",
   "organization": "corespring",
   "released": true,
-  "title": "Combined Ordering",
+  "title": "Ordering",
   "titleGroup": "Fixed Choice",
   "version": "0.0.1"
 }

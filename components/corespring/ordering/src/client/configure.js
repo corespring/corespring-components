@@ -151,7 +151,7 @@ var main = [
         ],
         link: function($scope, $element, $attrs) {
 
-          ChoiceTemplates.extendScope($scope, 'corespring-placement-ordering');
+          ChoiceTemplates.extendScope($scope, 'corespring-ordering');
 
           $scope.layouts = [
             {name: "Horizontal", value: "horizontal"},
