@@ -377,7 +377,7 @@ var main = [
         '        <div class="panel panel-default">',
         '          <div class="panel-heading">',
         '            <h4 class="panel-title">',
-        '              <a ng-click="panelOpen = !panelOpen">',
+        '              <a class="learn-more-link" ng-click="panelOpen = !panelOpen">',
         '              Learn More<i class="learnMoreIcon fa fa-lightbulb-o pull-right"></i>',
         '              </a>',
         '            </h4>',
