@@ -107,14 +107,14 @@
 }
 
 
-.view-multiple-choice .radio-choice[disabled] {
+.view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .radio-choice[disabled] {
     opacity: 0.65;
 }
 
 .view-multiple-choice .radio-choice {
     display: inline-block;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border: 1px solid #cccccc;
     border-radius: 50%;
     background-color: #fff;
@@ -149,12 +149,12 @@
 
 .view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .radio-choice .radio-button.selected {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    left: 5px;
-    top: 0px;
-    margin-left: 4px;
-    margin-top: 4px;
+    width: 27px;
+    height: 27px;
+    left: 3px;
+    top: -1px;
+    margin-left: 3px;
+    margin-top: 3px;
     border-radius: 50%;
     background-color: #555555;
     -webkit-transform: scale(1, 1);
@@ -166,35 +166,34 @@
 .view-multiple-choice .correct .radio-choice .radio-button {
     margin-top: 0px;
     position: absolute;
-    top: 1px;
+    top: -8px;
+    left: 0.5px;
 }
 
 .view-multiple-choice .answer .correct .radio-choice .radio-button::after,
 .view-multiple-choice .selected .correct .radio-choice .radio-button::after {
     padding-left: 3px;
-    font-size: 30px;
-    line-height: 27px;
+    font-size: 35px;
     text-indent: 3px;
     font-family: "FontAwesome";
     content: "\f058";
     color: #3C763D;
     border: none;
     margin-left: -2px;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
 }
 
 .view-multiple-choice .incorrect .radio-choice .radio-button {
     margin-top: 0px;
     position: absolute;
-    top: 2px;
-    left: -1px;
+    top: -7px;
+    left: -0.5px;
 }
 
 .view-multiple-choice .incorrect .radio-choice .selected::after {
     padding-left: 3px;
-    font-size: 30px;
-    line-height: 27px;
+    font-size: 35px;
     text-indent: 3px;
     font-family: "FontAwesome";
     content: "\f05c";
@@ -238,12 +237,10 @@
 }
 
 .view-multiple-choice .choice-holder-background.correct {
-    color: #3c763d;
     background-color: #dff0d8;
     border: 1px solid #d6e9c6;
     border-radius: 4px;
     padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 
@@ -257,6 +254,7 @@
 
 .view-multiple-choice .show-correct-answer {
     color: #428bca;
+    cursor: pointer;
 }
 
 
@@ -378,6 +376,10 @@
     overflow: hidden;
     padding: 20px;
     margin-bottom: 25px;
+}
+
+.view-multiple-choice .learn-more-link {
+    cursor: pointer;
 }
 
 /* Config Panel */
