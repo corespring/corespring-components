@@ -96,10 +96,4 @@ describe('ordering', function() {
     response.score.should.eql(0);
   });
 
-  it('respond partially correct', function() {
-    var response = server.respond(_.cloneDeep(component), ["1", "3", "2", "4"], helper.settings(false, true, true));
-    response.correctness.should.eql('partial');
-    response.score.should.eql(0.5);
-  });
-
 });
