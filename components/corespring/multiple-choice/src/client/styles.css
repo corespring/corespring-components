@@ -46,8 +46,8 @@
 }
 
 .view-multiple-choice .choice-holder.incorrect .checkbox-choice {
-    background-color: #a94442;
-    border-color: #a94442;
+    background-color: #c09853;
+    border-color: #c09853;
 }
 
 .view-multiple-choice .selected .choice-holder.correct .checkbox-choice,
@@ -235,7 +235,6 @@
     border: 1px solid #ddd;
     background: #f5f5f5;
     padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 .view-multiple-choice .choice-holder-background.correct {
@@ -251,10 +250,13 @@
 .view-multiple-choice .choice-feedback-holder {
     padding-left: 32px;
     width: 90%;
-    font-weight: bold;
 }
 
 .choice-feedback-holder .cs-feedback {
+}
+
+.view-multiple-choice .show-correct-answer {
+    color: #428bca;
 }
 
 
@@ -360,8 +362,8 @@
 }
 
 .view-multiple-choice .summaryFeedbackPanel {
-    margin-left: 40px;
     margin-right: 40px;
+    margin-top: 10px;
 }
 
 .view-multiple-choice .learnMoreIcon {
@@ -370,7 +372,7 @@
 }
 
 .view-multiple-choice .answer-holder {
-    border: 2px dashed #ddd;
+    border: 4px dashed #979797;
     border-radius: 10px;
     background: #fff;
     overflow: hidden;

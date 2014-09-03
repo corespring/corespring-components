@@ -285,7 +285,9 @@ var main = [
       '    </div>',
       '  </div>',
 
-      '  <div ng-show="response && response.correctness != \'correct\'"><a ng-click="answerVisible = !answerVisible">See Correct Answer</a></div>',
+      '  <div ng-show="response && response.correctness != \'correct\'">',
+      '    <a class="show-correct-answer" ng-click="answerVisible = !answerVisible">{{answerVisible ? \'Hide\' : \'See\' }} Correct Answer</a>',
+      '  </div>',
       '  <div class="answer-holder" ng-if="answerVisible && response && response.correctness != \'correct\'">',
       '    <div ng-repeat="o in choices" class="choice-holder-background answer {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '         ng-click="onClickChoice(o)" ng-class="{true:\'correct\'}[o.correct]">',
