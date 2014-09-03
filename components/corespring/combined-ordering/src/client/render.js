@@ -97,9 +97,19 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
               callback();
             }
           }, true);
+        },
+
+        editable: function(e) {
+          scope.editable = e;
+          scope.sortableOptions.disabled = !e;
         }
 
+
       });
+
+      scope.sortableOptions = {
+        disabled: false
+      };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
@@ -118,7 +128,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
       '    </div>',
       '  </div>',
       '  <div ng-if="model.config.placementType != \'placement\'" class="view-ordering">',
-      '    <ul class="choices" ng-model="local.choices" ui-sortable="">',
+      '    <ul class="choices" ng-model="local.choices" ui-sortable="sortableOptions">',
       '      <li ng-repeat="choice in local.choices">',
       '        <div class="choice {{classForChoice(choice.id, $index)}}" ',
       '          ng-bind-html-unsafe="choice.label"> </div>',
