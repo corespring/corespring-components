@@ -14,12 +14,22 @@ var main = [
       '  allows for either one or more correct answers. Setting more than one answer as correct allows for partial',
       '  credit (see the scoring tab).',
       '</p>',
-      '<div class="">Choice Labels:',
-      '  <select ui-select2="{minimumResultsForSearch: -1}" ng-model="model.config.choiceLabels" class="label-select">',
-      '    <option value="none">None</option>',
-      '    <option value="letters">Letters</option>',
-      '    <option value="numbers">Numbers</option>',
-      '  </select>',
+      '<div class="row"><div class="col-md-2">Choice Type:</div>',
+      '  <div class="col-md-8">',
+      '   <select ui-select2="{minimumResultsForSearch: -1}" ng-model="model.config.choiceType" class="label-select">',
+      '     <option value="radio">Radio</option>',
+      '     <option value="checkbox">Checkbox</option>',
+      '   </select>',
+      '  </div>',
+      '</div>',
+      '<div class="row"><div class="col-md-2">Choice Labels:</div>',
+      '  <div class="col-md-8">',
+      '    <select ui-select2="{minimumResultsForSearch: -1}" ng-model="model.config.choiceLabels" class="label-select">',
+      '      <option value="none">None</option>',
+      '      <option value="letters">Letters</option>',
+      '      <option value="numbers">Numbers</option>',
+      '    </select>',
+      '  </div>',
       '</div>',
       '<div class="check-correct-label">Check Correct Answer(s)</div>',
       '<div class="choice" ng-repeat="q in model.choices">',
@@ -97,7 +107,6 @@ var main = [
               model.scoreMapping[k] = Number(v);
             });
             model.correctResponse.value = correctAnswers;
-            model.model.config.singleChoice = correctAnswers.length === 1;
 
             _.each(model.model.choices, function(choice) {
               var feedback, _ref, _ref1;
@@ -126,7 +135,6 @@ var main = [
           });
           scope.fullModel.correctResponse.value = res;
           console.log(scope.fullModel.correctResponse.value);
-          scope.model.config.singleChoice = res.length === 1;
           return console.log(scope.model);
         }, true);
 

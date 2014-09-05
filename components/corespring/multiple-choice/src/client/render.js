@@ -117,7 +117,7 @@ var main = [
 
         var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
 
-        scope.inputType = !! model.config.singleChoice ? "radio" : "checkbox";
+        scope.inputType = model.config.choiceType;
 
         if (stash.shuffledOrder && shuffle) {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder);

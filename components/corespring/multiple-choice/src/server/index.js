@@ -64,11 +64,11 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
   }
 };
 
-exports.isCorrect = function(answer, correctAnswer) {
+exports.isCorrect = function(answer, correctAnswer, isSingleChoice) {
   var diff, diff2;
   diff = _.difference(answer, correctAnswer);
   diff2 = _.difference(correctAnswer, answer);
-  return diff.length === 0 && diff2.length === 0;
+  return diff.length === 0 && (diff2.length === 0 || isSingleChoice);
 };
 
 var isCorrectChoice = function(q, choice) {
@@ -113,7 +113,7 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
   return out;
 };
 
-var calculateScore = function(question, answer) {
+var calculateScore = function(question, answer, isSingleChoice) {
 
   var countCorrectAnswers = function() {
     var sum = _.reduce(answer, function(sum, a) {
@@ -139,10 +139,19 @@ var calculateScore = function(question, answer) {
     return 0;
   }
 
+  if (correctCount === maxCorrect) {
+    return 1;
+  }
+
+  if (isSingleChoice) {
+    return correctCount > 0;
+  }
+
   var incorrectCount = answer.length - correctCount;
   var finalIncorrect = correctCount - incorrectCount;
   var rawScore = finalIncorrect / maxCorrect;
-  return question.allowPartialScoring ? (calculatePartialScore(correctCount) / 100) : Math.round(rawScore * 100) / 100;
+
+  return (maxCorrect > 1 && question.allowPartialScoring) ? (calculatePartialScore(correctCount) / 100) : Math.round(rawScore * 100) / 100;
 };
 
 
@@ -163,11 +172,12 @@ exports.respond = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
 
-  var answerIsCorrect = this.isCorrect(answer, question.correctResponse.value);
+  var isSingleChoice = question.model.config.choiceType === "radio";
+  var answerIsCorrect = this.isCorrect(answer, question.correctResponse.value, isSingleChoice);
 
   var response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
-    score: calculateScore(question, answer),
+    score: calculateScore(question, answer, isSingleChoice),
     comments: question.comments
   };
 

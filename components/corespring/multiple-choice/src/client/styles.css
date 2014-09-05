@@ -225,6 +225,10 @@
     padding-right: 80px;
 }
 
+.config-multiple-choice .row {
+    margin-bottom: 10px;
+}
+
 .config-multiple-choice table,
 .config-multiple-choice tr,
 .config-multiple-choice td {

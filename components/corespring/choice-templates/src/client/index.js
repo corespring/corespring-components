@@ -38,7 +38,7 @@ exports.service = ['$log',
       this.choice = function(opts) {
         var defaults = {
           choice: "<b>Choice {{toChar($index)}}</b>",
-          correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]" tooltip="{{isSingleChoice() ? \'\' : \'See the scoring tab for more options\'}}"></i>',
+          correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>',
           correctnessPredicate: "correctMap[q.value]",
           feedback: true,
           columnWidths: [],
@@ -53,7 +53,7 @@ exports.service = ['$log',
           '    <div class="well" ng-show="correctMap[q.value]" style="margin-top: 15px">',
           '      <div feedback-selector ',
           '        fb-sel-label="If this choice is NOT selected, show"',
-          '        fb-sel-class="correct"', //Note: A bit weird that the feedback is correct, but checked with Jen
+          '        fb-sel-class="correct"',
           '        fb-sel-hide-feedback-options="'+defaults.hideFeedbackOptions.join(",")+'"',
           '        fb-sel-feedback-type="feedback[q.value].feedbackType"',
           '        fb-sel-custom-feedback="feedback[q.value].notChosenFeedback"',
