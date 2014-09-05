@@ -9,7 +9,7 @@ var proxyquire = require('proxyquire').noCallThru();
 var fbu = require('../../../server-shared/src/server/feedback-utils');
 
 server = proxyquire('../../src/server', {
-  'corespring.server-shared.server.feedback-utils' : fbu,
+  'corespring.server-shared.server.feedback-utils': fbu,
   'corespring.scoring-utils.server': {}
 });
 
@@ -24,7 +24,8 @@ component = {
   model: {
     config: {
       orientation: "vertical",
-      shuffle: true
+      shuffle: true,
+      choiceType: "checkbox"
     },
     choices: [
       {
@@ -75,28 +76,29 @@ component = {
 
 describe('multiple-choice server logic', function() {
 
-  it('should return incorrect if the answer is null or undefined', function(){
+  it('should return incorrect if the answer is null or undefined', function() {
     var outcome = server.respond(
       {
-        correctResponse: 
-        {
+        correctResponse: {
           value: ['a']
         },
         feedback: [
-          {value: 'a',  feedback: 'yes', notChosenFeedback:'no'}
+          {value: 'a', feedback: 'yes', notChosenFeedback: 'no'}
         ]
-      }, 
-      null, 
+      },
+      null,
       helper.settings(true, true, true)
     );
-    outcome.should.eql({correctness: 'incorrect', score: 0, feedback: [{value: 'a', feedback: 'no', correct: true}]});
+    outcome.should.eql({correctness: 'incorrect', score: 0, feedback: [
+      {value: 'a', feedback: 'no', correct: true}
+    ]});
   });
 
 
   describe('is correct', function() {
-    server.isCorrect(["1"], ["1"]).should.eql(true);
-    server.isCorrect(["1", "2"], ["1"]).should.eql(false);
-    server.isCorrect(["1"], ["1", "2"]).should.eql(false);
+    server.isCorrect(["1"], ["1"], true).should.eql(true);
+    server.isCorrect(["1", "2"], ["1"], true).should.eql(false);
+    server.isCorrect(["1"], ["1", "2"], false).should.eql(false);
   });
 
   describe('respond', function() {
@@ -114,7 +116,7 @@ describe('multiple-choice server logic', function() {
 
     it('should respond to a correct answer', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["carrot", "turnip","pear"], helper.settings(true, true, true));
+      response = server.respond(_.cloneDeep(component), ["carrot", "turnip", "pear"], helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -250,11 +252,11 @@ describe('multiple-choice server logic', function() {
       var response = server.respond(component, ["carrot"], helper.settings(true, true, false));
       response.score.should.eql(0.33);
 
-      response = server.respond(component, ["turnip","pear"], helper.settings(true, true, false));
+      response = server.respond(component, ["turnip", "pear"], helper.settings(true, true, false));
       response.score.should.eql(0.67);
     });
 
-    it('if no partial scoring is allowed score should be proportionate to number of correctly chosen answers', function() {
+    it('if partial scoring is allowed score should be calculated using it', function() {
       var comp = _.cloneDeep(component);
       comp.allowPartialScoring = true;
       comp.partialScoring = [
@@ -266,6 +268,36 @@ describe('multiple-choice server logic', function() {
 
       response = server.respond(comp, ["turnip", "pear"], helper.settings(true, true, false));
       response.score.should.eql(0.4);
+
+      response = server.respond(comp, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
+      response.score.should.eql(1);
     });
+
+    it('for single choice with multiple correct answer', function() {
+      var comp = _.cloneDeep(component);
+      comp.model.config.choiceType = "radio";
+      var response = server.respond(comp, ["carrot"], helper.settings(true, true, false));
+      response.score.should.eql(1);
+
+      response = server.respond(comp, ["turnip"], helper.settings(true, true, false));
+      response.score.should.eql(1);
+
+      response = server.respond(comp, ["pear"], helper.settings(true, true, false));
+      response.score.should.eql(1);
+    });
+
+    it('partial scoring is ignored for single choice', function() {
+      var comp = _.cloneDeep(component);
+      comp.allowPartialScoring = true;
+      comp.model.config.choiceType = "radio";
+      comp.partialScoring = [
+        {numberOfCorrect: 1, scorePercentage: 25},
+        {numberOfCorrect: 2, scorePercentage: 40}
+      ];
+      var response = server.respond(comp, ["carrot"], helper.settings(true, true, false));
+      response.score.should.eql(1);
+    });
+
+
   });
 });

@@ -33,7 +33,7 @@ describe('corespring', function() {
           "config": {
             "orientation": "vertical",
             "shuffle": true,
-            "singleChoice": true
+            "choiceType": "radio"
           }
         }
       }
@@ -84,11 +84,11 @@ describe('corespring', function() {
       expect(_.shuffle).not.toHaveBeenCalled();
     });
 
-    it('button is radio if singleChoice is true, checkbox if it is false', function() {
+    it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect($(element).find('input[type="radio"]').length).toBe(3);
-      testModel.data.model.config.singleChoice = false;
+      testModel.data.model.config.choiceType = "checkbox";
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect($(element).find('input[type="checkbox"]').length).toBe(3);
@@ -116,7 +116,7 @@ describe('corespring', function() {
     });
 
     it('setting answer updates the UI (multi choice)', function() {
-      testModel.data.model.config.singleChoice = false;
+      testModel.data.model.config.choiceType = "checkbox";
 
       testModel.session = {
         answers: ['1', '2']
