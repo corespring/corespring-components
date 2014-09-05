@@ -98,6 +98,7 @@ link = function($sce, $timeout) {
 
       reset: function() {
         scope.selected = undefined;
+        scope.response = undefined;
         clearFeedback(scope.choices);
       },
 
