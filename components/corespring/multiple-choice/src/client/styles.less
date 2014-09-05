@@ -1,0 +1,238 @@
+//@import '../../../../../bower_components/bootstrap/less/bootstrap';
+
+.view-multiple-choice {
+
+  padding-top: 14px;
+  margin-bottom: 20px;
+
+  td {
+    vertical-align: top;
+  }
+
+  .correct-label {
+    color: #008000;
+  }
+
+  .correct-block {
+    display: inline-block;
+    text-align: center;
+  }
+
+  .remove-button {
+    position: relative;
+    right: 0px;
+    top: 5px;
+  }
+
+  .choices-container {
+    display: table;
+    max-width: 95%;
+  }
+
+  .choice-holder {
+    line-height: 35px;
+    display: table-row;
+  }
+
+  .choice-feedback-holder {
+    padding-left: 32px;
+  }
+
+  .choice-input {
+    padding-top: 0px;
+  }
+
+  .choice-letter {
+    font-weight: bold;
+
+    &.none {
+      display: none;
+    }
+  }
+
+  .choice-label {
+    img {
+      vertical-align: bottom;
+    }
+  }
+
+  .choice-input, .choice-letter, .choice-currency-symbol, .choice-label {
+    display: table-cell;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    vertical-align: top;
+  }
+
+  .choice {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 5px;
+    position: relative;
+
+    table {
+      width: 100%;
+    }
+  }
+
+  .cs-feedback {
+    display: table-cell;
+    width: 500px;
+  }
+
+  .horizontal {
+    display: table-cell;
+
+    .choice-input {
+      display: table-row;
+    }
+
+    .choice-wrapper {
+      text-align: center;
+    }
+
+    .correct .choice-wrapper {
+      border: 2px solid #80b312;
+      border-radius: 6px;
+    }
+
+    .incorrect .choice-wrapper {
+      border: 2px solid #F8A31A;
+      border-radius: 6px;
+    }
+
+    .correct *, .incorrect * {
+      border: none;
+    }
+
+    .choice-feedback-holder div {
+      display: none;
+      margin-left: 0px;
+    }
+
+    .cs-feedback {
+      display: inline-block;
+      position: relative;
+      width: auto;
+      margin-left: -32px;
+    }
+
+  }
+
+  .rightAlign .choice-label span {
+    text-align: right;
+  }
+
+  .tile.choice-holder {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .comments-block {
+    margin-top: 10px;
+  }
+
+}
+
+// TODO: Can this be a child of .view-multiple-choice ?
+.choice-feedback-holder {
+  display: table-row;
+
+  .cs-feedback {
+    border: none;
+  }
+
+}
+
+.incorrect, .correct {
+
+  .choice-letter {
+    border: 2px solid #80b312;
+    border-right: none;
+    border-radius: 6px 0px 0px 6px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
+
+  .choice-currency-symbol {
+    border: 2px solid #80b312;
+    border-right: none;
+    border-left: none;
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
+
+  .choice-label {
+    border: 2px solid #80b312;
+    border-left: none;
+    border-radius: 0px 6px 6px 0px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
+
+  &.cs-feedback {
+    margin-top: 5px;
+    padding-bottom: 15px;
+    padding-top: 10px;
+    background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 14px transparent;
+    padding-left: 30px;
+  }
+
+}
+
+.incorrect {
+  .choice-label, .choice-letter, .choice-currency-symbol {
+    border-color: #F8A31A;
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
+}
+
+.correct {
+
+  &.cs-feedback {
+    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 14px transparent;
+  }
+
+}
+
+.cell-wrapper {
+  display: table-cell;
+}
+
+.config-panel-body {
+
+  .check-correct-label {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+
+}
+
+.score-table td {
+  padding-right: 80px;
+}
+
+.config-multiple-choice {
+  table, tr, td {
+    padding: 0 10px 10px 0;
+    vertical-align: bottom;
+  }
+
+  .choice-config-panel {
+    margin-bottom: 40px;
+  }
+
+  .config-shuffle {
+    margin-top: 10px;
+  }
+
+  label.disabled {
+    color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  .label-select, .select2-drop {
+    min-width: 120px;
+  }
+}

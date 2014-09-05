@@ -5,3 +5,5 @@ bower_components
 *.log
 .idea
 *.iml
+*.less.css
+*.less.min.css
