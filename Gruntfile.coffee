@@ -66,7 +66,25 @@ module.exports = (grunt) ->
         jshintrc: '.jshintrc'
       main: ['<%= common.componentPath %>/**/*.js', '!**/*-wrapped.js', '!<%= common.componentPath %>/**/libs/**/*.js']
 
+    less:
+      development:
+        expand: true
+        src: 'components/**/*.less'
+        ext: '.less.css'
+        flatten: false
+      production:
+        options:
+          cleancss: true
+        expand: true
+        src: 'components/**/*.less'
+        ext: '.less.min.css'
+        flatten: false
+
+
     watch:
+      less:
+        files: ['<%= common.componentPath %>/**/*.less']
+        tasks: ['less:development']
       js:
         files: ['<%= common.componentPath %>/**/*.js']
         tasks: ['jshint:main']
@@ -103,6 +121,7 @@ module.exports = (grunt) ->
     'grunt-contrib-clean'
     'grunt-mocha-test'
     'grunt-contrib-watch'
+    'grunt-contrib-less'
     'grunt-contrib-jshint'
     'grunt-jsbeautifier',
     'regression-test-runner'
