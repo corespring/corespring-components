@@ -43,13 +43,16 @@ link = function() {
             viewport: '.corespring-player'
           }).popover('show');
 
-          $(".popover").click(function() {
-             $(this).popover('hide');
-          });
+          setTimeout(function() {
+            $(".popover").click(function() {
+              $(this).popover('hide');
+            });
+          }, 100);
         }
       },
 
-      setMode: function(newMode) {},
+      setMode: function(newMode) {
+      },
 
       reset: function() {
         scope.answer = undefined;
