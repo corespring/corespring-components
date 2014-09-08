@@ -34,9 +34,12 @@ var main = [
 
         var answers = scope.session.answers;
 
-        if (scope.inputType === "radio") {
+        console.log('answers are', scope.session);
+
+        if (scope.inputType === "radio" && _.isArray(answers) && answers.length > 0) {
           scope.answer.choice = answers[0];
-        } else {
+        }
+        if (scope.inputType === "checkbox") {
           for (var i = 0; i < answers.length; i++) {
             var key = answers[i];
             scope.answer.choices[key] = true;
@@ -109,7 +112,6 @@ var main = [
           return;
         }
 
-        resetChoices();
         $(element).find(".alert").hide();
 
         var model = scope.question;
@@ -143,9 +145,7 @@ var main = [
         },
 
         getSession: function() {
-
           var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
-
           return {
             answers: getAnswers(),
             stash: stash
