@@ -11,11 +11,13 @@ exports.directive = {
         scope: {
           model: '@'
         },
-        link: function($scope, $element) {
+        link: function($scope, $element, $attr) {
           $scope.toggle = function() {
             $scope.model = ($scope.model === true ? false : true);
           };
-          console.log($element.find('.checkbox-toggle'));
+          $attr.$observe('checked', function(checked) {
+            $scope.model = (checked === true);
+          });
         },
         template: [
           '<div class="checkbox-input">',
