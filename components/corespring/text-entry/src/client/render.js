@@ -42,6 +42,10 @@ link = function() {
             title: {"correct": "Correct", "incorrect": "Incorrect", "partial": "Partial"}[response.feedback.correctness],
             viewport: '.corespring-player'
           }).popover('show');
+
+          $(".popover").click(function() {
+             $(this).popover('hide');
+          });
         }
       },
 
