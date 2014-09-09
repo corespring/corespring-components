@@ -28,6 +28,7 @@ exports.directive = {
 
       function updateChecked(scope, element) {
         scope.checked = element.attr('checked') === 'checked';
+        scope.disabled = element.attr('disabled') === 'disabled';
       }
 
       var ngModelLink = function(scope, element, attr, ctrl) {
@@ -38,11 +39,13 @@ exports.directive = {
         falseValue = (!angular.isString(falseValue)) ? false : falseValue;
 
         element.on('click', function() {
-          scope.$apply(function() {
-            toggleCheckbox(scope, element);
-            ctrl.$setViewValue(element.attr('checked') === 'checked');
-            scope.checked = element.attr('checked') === 'checked';
-          });
+          if (!element.attr('disabled')) {
+            scope.$apply(function() {
+              toggleCheckbox(scope, element);
+              ctrl.$setViewValue(element.attr('checked') === 'checked');
+              updateChecked(scope, element);
+            });
+          }
         });
 
         ctrl.$render = function() {
@@ -62,6 +65,7 @@ exports.directive = {
           return value ? trueValue : falseValue;
         });
 
+        updateChecked(scope, element);
       };
 
       /**
@@ -72,9 +76,14 @@ exports.directive = {
         attr.$observe('checked', function() {
           scope.checked = !!element.attr('checked');
         });
+        attr.$observe('disabled', function() {
+          scope.disabled = !!element.attr('disabled');
+        });
         element.on('click', function() {
           scope.$apply(function() {
-            toggleCheckbox(scope, element);
+            if (!element.attr('disabled')) {
+              toggleCheckbox(scope, element);
+            }
           });
         });
       };
@@ -93,7 +102,8 @@ exports.directive = {
         },
         template: [
           '<div class="checkbox-input">',
-          '  <div class="checkbox-toggle" ng-class="{\'checked\': checked}"/><span class="label-text" ng-transclude/>',
+          '  <div class="checkbox-toggle" ng-class="{\'checked\': checked, \'disabled\': disabled}"/>',
+          '  <span class="label-text" ng-transclude/>',
           '</div>'
         ].join('')
       };
