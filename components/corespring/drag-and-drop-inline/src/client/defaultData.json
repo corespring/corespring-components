@@ -1,5 +1,5 @@
 {
-  "componentType": "corespring-drag-and-drop-categorize",
+  "componentType": "corespring-drag-and-drop-inline",
   "title": "[Drag and Drop Question Name]",
   "correctResponse": {
     "aa_1": []
