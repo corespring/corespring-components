@@ -255,7 +255,7 @@ var main = [
     };
 
     var verticalTemplate = [
-      '<div class="choices-container" ng-class="question.config.orientation">{{choices}}',
+      '<div class="choices-container" ng-class="question.config.orientation">',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="{selected: answer.choice == o.value || answer.choices[o.value]}">',
       '    <div class="choice-holder" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
