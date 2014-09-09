@@ -73,12 +73,6 @@ exports.directive = {
        * model's attributes to reflect that it has been checked.
        */
       var simulateNativeToggle = function(scope, element, attr) {
-        attr.$observe('checked', function() {
-          scope.checked = !!element.attr('checked');
-        });
-        attr.$observe('disabled', function() {
-          scope.disabled = !!element.attr('disabled');
-        });
         element.on('click', function() {
           scope.$apply(function() {
             if (!element.attr('disabled')) {
@@ -94,6 +88,14 @@ exports.directive = {
         transclude: true,
         require: ['?ngModel'],
         link: function(scope, element, attr, ctrls) {
+          attr.$observe('checked', function() {
+            scope.checked = !!element.attr('checked');
+          });
+
+          attr.$observe('disabled', function() {
+            scope.disabled = !!element.attr('disabled');
+          });
+
           if (ctrls[0]) {
             ngModelLink(scope, element, attr, ctrls[0]);
           } else {
