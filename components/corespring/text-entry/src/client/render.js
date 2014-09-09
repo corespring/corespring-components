@@ -43,11 +43,9 @@ link = function() {
             viewport: '.corespring-player'
           }).popover('show');
 
-          setTimeout(function() {
-            $(".popover").click(function() {
-              inputElement.popover('hide');
-            });
-          }, 100);
+          $(element).find(".popover").click(function() {
+            inputElement.popover('hide');
+          });
         }
       },
 
