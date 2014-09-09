@@ -43,8 +43,10 @@ link = function() {
             viewport: '.corespring-player'
           }).popover('show');
 
+          alert('a');
           setTimeout(function() {
             $(".popover").click(function() {
+              alert('b');
               $(this).popover('hide');
             });
           }, 100);
