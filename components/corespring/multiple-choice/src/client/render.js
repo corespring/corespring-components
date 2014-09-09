@@ -123,9 +123,9 @@ var main = [
         scope.inputType = !! model.config.singleChoice ? "radio" : "checkbox";
 
         if (stash.shuffledOrder && shuffle) {
-          scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
+          scope.choices = layoutChoices(_.cloneDeep(model.choices), stash.shuffledOrder);
         } else if (shuffle) {
-          scope.choices = layoutChoices(model.choices);
+          scope.choices = layoutChoices(_.cloneDeep(model.choices));
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
         } else {
@@ -255,7 +255,7 @@ var main = [
     };
 
     var verticalTemplate = [
-      '<div class="choices-container" ng-class="question.config.orientation">',
+      '<div class="choices-container" ng-class="question.config.orientation">{{choices}}',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="{selected: answer.choice == o.value || answer.choices[o.value]}">',
       '    <div class="choice-holder" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
