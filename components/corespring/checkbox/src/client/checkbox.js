@@ -11,23 +11,37 @@ exports.directive = {
   directive: [
     function() {
 
-      var link = function(scope, element, attr, ctrl) {
+      /**
+       * Updates the provided element's checked property to be 'checked' if not defined, otherwise defines it as
+       * 'checked'.
+       */
+      function toggleCheckbox(scope, element) {
+        var isChecked = angular.isDefined(element.attr('checked'));
+        if (isChecked) {
+          element.removeAttr('checked');
+        } else {
+          element.attr('checked', 'checked');
+        }
+
+        updateChecked(scope, element);
+      }
+
+      function updateChecked(scope, element) {
+        scope.checked = element.attr('checked') === 'checked';
+      }
+
+      var ngModelLink = function(scope, element, attr, ctrl) {
         var trueValue = attr.ngTrueValue,
           falseValue = attr.ngFalseValue;
 
-        if (!angular.isString(trueValue)) trueValue = true;
-        if (!angular.isString(falseValue)) falseValue = false;
+        trueValue = (!angular.isString(trueValue)) ? true : trueValue;
+        falseValue = (!angular.isString(falseValue)) ? false : falseValue;
 
         element.on('click', function() {
           scope.$apply(function() {
-            var newValue = !element.attr('checked');
-            if (newValue === false) {
-              element.removeAttr('checked');
-            } else {
-              element.attr('checked', true);
-            }
-            ctrl.$setViewValue(newValue);
-            scope.checked = newValue;
+            toggleCheckbox(scope, element);
+            ctrl.$setViewValue(element.attr('checked') === 'checked');
+            scope.checked = element.attr('checked') === 'checked';
           });
         });
 
@@ -50,19 +64,31 @@ exports.directive = {
 
       };
 
+      /**
+       * This function emulates the functions of a regular checkbox, by toggling when it's clicked and updating the
+       * model's attributes to reflect that it has been checked.
+       */
+      var simulateNativeToggle = function(scope, element, attr) {
+        attr.$observe('checked', function() {
+          scope.checked = !!element.attr('checked');
+        });
+        element.on('click', function() {
+          scope.$apply(function() {
+            toggleCheckbox(scope, element);
+          });
+        });
+      };
+
       return {
         replace: true,
         restrict: 'E',
         transclude: true,
-        scope: {
-          model: '=?'
-        },
         require: ['?ngModel'],
         link: function(scope, element, attr, ctrls) {
           if (ctrls[0]) {
-            link(scope, element, attr, ctrls[0]);
+            ngModelLink(scope, element, attr, ctrls[0]);
           } else {
-            console.log('no link!');
+            simulateNativeToggle(scope, element, attr);
           }
         },
         template: [
