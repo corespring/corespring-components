@@ -13,9 +13,6 @@ var main = [
         choice: ""
       };
 
-      scope.remain = true;
-      console.log('scope.remain', scope.remain);
-
       var getAnswers = function() {
         if (scope.answer.choice) {
           return [scope.answer.choice];
@@ -245,7 +242,7 @@ var main = [
       '       ng-click="onClickChoice(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <span class="choice-input" ng-switch="inputType">',
       '      <span ng-switch-when="checkbox">',
-      '        <checkbox ng-checked="answer.choices[o.value]" ng-disabled="!editable"></checkbox>',
+      '        <checkbox ng-checked="answer.choices[o.value]" ng-disabled="!editable" ng-checked="answer.choices[o.value]"></checkbox>',
       '      </span>',
       '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
       '    </span>',
@@ -283,7 +280,7 @@ var main = [
       '      </div>',
       '      <div ng-switch="inputType">',
       '        <span ng-switch-when="checkbox">',
-//      '          <checkbox ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]"></checkbox>',
+      '          <checkbox ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]"></checkbox>',
       '        </span>',
       '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
       '      </div>',
@@ -307,7 +304,9 @@ var main = [
       '        <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '      </div>',
       '      <div ng-switch="inputType">',
-      '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-model="answer.choices[o.value]" />',
+      '        <span ng-switch-when="checkbox">',
+      '          <checkbox ng-disabled="!editable" ng-model="answer.choices[o.value]"></checkbox>',
+      '        </span>',
       '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice" />',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',

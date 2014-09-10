@@ -6,7 +6,7 @@
  * https://github.com/angular/angular.js/blob/5cc5cc13b9beb996e0173e97db5c0e04d0204dfb/src/ng/directive/input.js
  *
  * NOTE: *DO NOT* attempt to use this with bound values that need the checkbox set to checked for initial state. This
- * issue is documented in https://thesib.atlassian.net/browse/CA-2088 
+ * issue is documented in https://thesib.atlassian.net/browse/CA-2088
  */
 exports.framework = "angular";
 exports.directive = {
