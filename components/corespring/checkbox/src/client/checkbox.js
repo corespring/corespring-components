@@ -43,7 +43,6 @@ exports.directive = {
             scope.$apply(function() {
               toggleCheckbox(scope, element);
               ctrl.$setViewValue(element.attr('checked') === 'checked');
-              updateChecked(scope, element);
             });
           }
         });
