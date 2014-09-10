@@ -34,7 +34,6 @@ describe('checkbox', function() {
       expect($('.checkbox-toggle', element).hasClass('checked')).toBe(true);
     });
 
-
     xit('adds disabled class to .checkbox-toggle when disabled="disabled"', function() {
       var element = compile("<checkbox disabled='disabled'></checkbox>")(rootScope.$new());
       expect($('.checkbox-toggle', element).hasClass('disabled')).toBe(true);
