@@ -2,22 +2,72 @@ exports.framework = "angular";
 exports.directive = {
   name: 'radio',
   directive: [
-    function() {
+    '$rootScope',
+    function($rootScope) {
 
-      var ngModelLink = function(scope, element, attr, ctrl) {
-        element.on('click', function() {
-          if (element[0].checked) {
+      var Radio = {
+        CheckedEvent: 'radio.checked',
+        check: function(element) {
+          element.attr('checked', 'checked');
+          $('.radio-toggle', element).addClass('checked');
+        },
+        uncheck: function(element) {
+          element.removeAttr('checked');
+          $('.radio-toggle', element).removeClass('checked');
+        },
+        isChecked: function(element) {
+          return element.attr('checked') === 'checked';
+        },
+        isEnabled: function(element) {
+          return element.attr('disabled') !== 'disabled';
+        },
+        shouldCheck: function(element) {
+          return (this.isEnabled(element) && !(this.isChecked(element)));
+        },
+        enable: function(element) {
+          element.removeAttr('disabled');
+          $('.radio-toggle', element).removeClass('disabled');
+        },
+        disable: function(element) {
+          element.attr('disabled', 'disabled');
+          $('.radio-toggle', element).addClass('disabled');
+        }
+      };
+
+      function ngModelLink(scope, element, attr, ctrl) {
+        element.click(function() {
+          if (Radio.shouldCheck(element)) {
+            Radio.check(element);
             scope.$apply(function() {
               ctrl.$setViewValue(attr.value);
             });
           }
         });
 
-        scope.$watch(attrs.ngModel, function(value) {
-          
+        scope.$watch(attr.ngModel, function() {
+          if (ctrl.$viewValue !== attr.value) {
+            Radio.uncheck(element);
+          } else if (ctrl.$viewValue === attr.value) {
+            Radio.check(element);
+          }
         });
 
-      };
+      }
+
+      function doNative(scope, element) {
+        element.click(function() {
+          if (Radio.shouldCheck(element)) {
+            Radio.check(element);
+            $rootScope.$broadcast(Radio.CheckedEvent, element.attr('value'));
+          }
+        });
+
+        scope.$on(Radio.CheckedEvent, function(event, value) {
+          if (element.attr('value') !== value) {
+            Radio.uncheck(element);
+          }
+        });
+      }
 
       return {
         replace: true,
@@ -25,14 +75,16 @@ exports.directive = {
         transclude: true,
         require: ['?ngModel'],
         link: function(scope, element, attr, ctrls) {
-          if (angular.isUndefined(attr.name)) {
-            //element.attr('name', nextUid()); // need to see how angular gets this in here.
-          } else {
-            element.attr('name', attr.name);
+          if (Radio.isChecked(element)) {
+            Radio.check(element);
           }
-
+          if (!Radio.isEnabled(element)) {
+            Radio.disable(element);
+          }
           if (ctrls[0]) {
             ngModelLink(scope, element, attr, ctrls[0]);
+          } else {
+            doNative(scope, element);
           }
         },
         template: [
