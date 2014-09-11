@@ -1,14 +1,5 @@
 describe('checkbox', function() {
 
-
-  function printNode(node) {
-    expect($('<div>').append(node.clone()).html()).toBe(undefined);
-  }
-
-  function printString(string) {
-    expect(string).toBe(undefined);
-  }
-
   var compile, rootScope;
 
   beforeEach(angular.mock.module('test-app'));
