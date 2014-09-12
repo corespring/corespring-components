@@ -45,7 +45,7 @@ exports.directive = {
         });
 
         scope.$watch(attr.ngModel, function() {
-          if (ctrl.$viewValue !== attr.value) {
+          if (!angular.isDefined(ctrl.$viewValue) || ctrl.$viewValue !== attr.value) {
             Radio.uncheck(element);
           } else if (ctrl.$viewValue === attr.value) {
             Radio.check(element);
@@ -73,6 +73,7 @@ exports.directive = {
         replace: true,
         restrict: 'E',
         transclude: true,
+        priority: 90,
         require: ['?ngModel'],
         link: function(scope, element, attr, ctrls) {
           if (Radio.isChecked(element)) {
