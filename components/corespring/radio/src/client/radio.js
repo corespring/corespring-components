@@ -54,11 +54,10 @@ exports.directive = {
 
       }
 
-      function doNative(scope, element) {
+      function doNative(scope, element, attr) {
         element.click(function() {
           if (Radio.shouldCheck(element)) {
-            Radio.check(element);
-            $rootScope.$broadcast(Radio.CheckedEvent, element.attr('value'));
+            attr.$set('checked', 'checked');
           }
         });
 
@@ -67,6 +66,16 @@ exports.directive = {
             Radio.uncheck(element);
           }
         });
+
+        attr.$observe('checked', function() {
+          if (Radio.isChecked(element)) {
+            Radio.check(element);
+            $rootScope.$broadcast(Radio.CheckedEvent, element.attr('value'));
+          } else {
+            Radio.uncheck(element);
+          }
+        });
+
       }
 
       return {
@@ -85,7 +94,7 @@ exports.directive = {
           if (ctrls[0]) {
             ngModelLink(scope, element, attr, ctrls[0]);
           } else {
-            doNative(scope, element);
+            doNative(scope, element, attr);
           }
         },
         template: [
