@@ -6,9 +6,12 @@ exports.directive = {
     'MiniWiggiScopeExtension',
     function($log, MiniWiggiScopeExtension) {
       function inline(type, value, body, attrs, labelAttrs) {
+        var input = (type === 'radio') ?
+          '<radio type="' + type + '" value="' + value + '" ' + attrs + '>' + body + '</radio>' :
+          '<input type="' + type + '" value="' + value + '" ' + attrs + '>' + body;
         return [
-            '<label class="' + type + '-inline" ' + labelAttrs + '>',
-          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
+          '<label class="' + type + '-inline" ' + labelAttrs + '>',
+          input,
           '</label>'
         ].join('\n');
       }
