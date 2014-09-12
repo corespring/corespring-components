@@ -87,7 +87,7 @@ describe('corespring', function() {
     it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect($(element).find('input[type="radio"]').length).toBe(3);
+      expect($(element).find('.radio-input').length).toBe(3);
       testModel.data.model.config.choiceType = "checkbox";
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
@@ -110,9 +110,9 @@ describe('corespring', function() {
 
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
-      expect($(element).find('input[value="2"]').is(':checked')).toBe(false);
-      expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
+      expect($(element).find('.radio-input[value="1"]').attr('checked')).toBe('checked');
+      expect($(element).find('.radio-input[value="2"]').attr('checked')).toBeUndefined();
+      expect($(element).find('.radio-input[value="3"]').attr('checked')).toBeUndefined();
     });
 
     it('setting answer updates the UI (multi choice)', function() {

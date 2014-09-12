@@ -89,8 +89,8 @@ var main = [
               return c.value === v;
             });
           }).filter(function(v) {
-            return v;
-          }).value();
+              return v;
+            }).value();
 
           var missing = _.difference(choices, ordered);
           return _.union(ordered, missing);
@@ -242,7 +242,9 @@ var main = [
       '       ng-click="onClickChoice(o)" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]">',
       '    <span class="choice-input" ng-switch="inputType">',
       '      <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]" />',
-      '      <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
+      '      <div ng-switch-when="radio">',
+      '        <radio ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value"></radio>',
+      '      </div>',
       '    </span>',
 
       '    <div>',
@@ -254,7 +256,7 @@ var main = [
       '       <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '     </div>',
 
-       '  </div>',
+      '  </div>',
 
       '  </div>',
       '  <div ng-repeat-end="" class="choice-feedback-holder" ng-show="o.feedback != null">',
@@ -278,7 +280,9 @@ var main = [
       '      </div>',
       '      <div ng-switch="inputType">',
       '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-checked="answer.choices[o.value]" />',
-      '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value" />',
+      '        <div ng-switch-when="radio">',
+      '          <radio ng-disabled="!editable" ng-value="o.value" ng-checked="answer.choice == o.value"></radio>',
+      '        </div>',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
       '        <span class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null" ng-bind-html-unsafe="o.feedback"></span>',
@@ -301,7 +305,9 @@ var main = [
       '      </div>',
       '      <div ng-switch="inputType">',
       '        <input ng-switch-when="checkbox" type="checkbox" ng-disabled="!editable"  ng-value="o.label" ng-model="answer.choices[o.value]" />',
-      '        <input ng-switch-when="radio" type="radio" ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice" />',
+      '        <div ng-switch-when="radio">',
+      '          <radio ng-disabled="!editable" ng-value="o.value" ng-model="answer.choice"></radio>',
+      '        </div>',
       '      </div>',
       '      <div class="choice-feedback-holder" ng-show="o.feedback != null">',
       '        <div class="cs-feedback" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct]" ng-show="o.feedback != null"></div>',
