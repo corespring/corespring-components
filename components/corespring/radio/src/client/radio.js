@@ -76,6 +76,13 @@ exports.directive = {
           }
         });
 
+        attr.$observe('disabled', function() {
+          if (Radio.isEnabled(element)) {
+            Radio.enable(element);
+          } else {
+            Radio.disable(element);
+          }
+        });
       }
 
       return {
