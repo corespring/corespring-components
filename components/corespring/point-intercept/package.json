@@ -5,6 +5,18 @@
         "angular-module": "ui.bootstrap",
         "file": "ui-bootstrap-tpls.min.js",
         "version": "~0.10.0"
+      },
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.3",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      },
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.4",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input"
       }
     }
   },
