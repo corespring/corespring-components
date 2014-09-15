@@ -19,6 +19,16 @@
       "organization" : "corespring"
     }
   ],
+  "dependencies": {
+    "client": {
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.4",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
+      }
+    }
+  },
   "name": "select-text",
   "title": "Select Evidence in Text",
   "titleGroup": "English Language Arts",

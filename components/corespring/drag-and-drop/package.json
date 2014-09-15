@@ -28,6 +28,12 @@
         "bower_target" : "https://github.com/corespring/ui-sortable.git",
         "file" : "sortable.js",
         "angular-module" : "ui.sortable"
+      },
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.3",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
       }
     }
   }

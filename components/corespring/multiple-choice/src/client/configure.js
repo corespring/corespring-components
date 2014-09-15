@@ -46,7 +46,7 @@ var main = [
       '</div>',
       '<button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
       '<div class="config-shuffle">',
-      '  <input id="shuffle" type="checkbox" ng-model="model.config.shuffle"></input> <label for="shuffle">Shuffle Choices</label>',
+      '  <checkbox id="shuffle" ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
       '</div>',
       '<div summary-feedback-input ng-model="fullModel.comments"></div>'
     ].join('\n');

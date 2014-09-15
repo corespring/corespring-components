@@ -52,8 +52,7 @@ var main = [
       '         </div>',
 
       '         <div class="cs-function-entry-cfg__answers-holder">',
-      '           <input id="showHelp" type="checkbox" ng-model="fullModel.model.config.showFormattingHelp" />',
-      '           <label for="showHelp">Show student formatting help</label>',
+      '           <checkbox id="showHelp" ng-model="fullModel.model.config.showFormattingHelp">Show student formatting help</checkbox>',
       '         </div>',
 
       '         <div ng-click="feedbackOn = !feedbackOn" style="margin-top: 10px"><i',
