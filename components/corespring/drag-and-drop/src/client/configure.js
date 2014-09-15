@@ -41,7 +41,7 @@ var main = [
 
     var displayOptions = function() {
       return [
-        '<div class="display-row"><label class="col-sm-4">Shuffle</label><input type=\"checkbox\" ng-model=\"model.config.shuffle\" /></div>',
+        '<div class="display-row"><label class="col-sm-4">Shuffle</label><checkbox ng-model=\"model.config.shuffle\"></checkbox></div>',
         '<div class="display-row"><label class="col-sm-4">Show choice area </label><select ng-model="model.config.position"><option value="above">Above</option><option value="below">Below</option></select> the answer area</div>',
         '<div class="display-row"><label class="col-sm-4">Label for choice area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.choiceAreaLabel"/></div></div>',
         '<div class="display-row"><label class="col-sm-4">Label for answer area </label><div class="col-sm-6"><input type="text" class="form-control"  ng-model="model.config.answerAreaLabel"/></div></div>'
@@ -171,7 +171,7 @@ var answerPopoverDirective = ['$compile',
           formGroup("Text Before:", "<input type='text' class='form-control' ng-change='change()' ng-model='model.textBefore'/>"),
           formGroup("Text After:", "<input type='text' class='form-control' ng-model='model.textAfter'/>"),
           formGroup("Correct Response:", "<input type='text' class='form-control' ng-model='model.correctResponse'/>"),
-          formGroup("Inline:", "<input type='checkbox' ng-model='model.inline'/>"),
+          formGroup("Inline:", "<checkbox ng-model='model.inline'></checkbox>"),
           formGroup("<button class='btn btn-primary' ng-click='hideMe()'>Ok</button>", ""),
           "</div>"
         ].join("");

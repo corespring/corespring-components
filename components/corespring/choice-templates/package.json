@@ -6,5 +6,15 @@
     "organization": "corespring",
     "name": "mini-wiggi-lib",
     "scope": "editor"
-  }]
+  }],
+  "dependencies": {
+    "client": {
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.3",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      }
+    }
+  }
 }
