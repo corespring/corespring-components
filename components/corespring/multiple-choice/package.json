@@ -29,9 +29,15 @@
       },
       "corespring-radio": {
         "bower_target": "git@github.com:corespring/radio.git",
-        "version": "0.0.4",
+        "version": "0.0.6",
         "file": "src/directive.js",
         "angular-module": "corespring.input.radio"
+      },
+      "corespring-ng-components": {
+        "bower_target": "git@github.com:corespring/corespring-ng-components.git",
+        "version": "0.0.9",
+        "file": "build/corespring-ng-components.js",
+        "angular-module": "cs.directives"
       }
     }
   },
