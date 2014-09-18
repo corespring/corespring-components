@@ -3,7 +3,8 @@ var def = [
   '$log',
   '$http',
   'ImageUtils',
-  function($log, $http, ImageUtils) {
+  '$timeout',
+  function($log, $http, ImageUtils,$timeout) {
 
     function ComponentImageService() {
 
@@ -15,7 +16,9 @@ var def = [
         var url = '' + file.name;
 
         if (ImageUtils.bytesToKb(file.size) > 500) {
-          onComplete(ImageUtils.fileTooBigError(file.size, 500).message);
+          $timeout(function() {
+            onComplete(ImageUtils.fileTooBigError(file.size, 500).message);
+          });
           return;
         }
 
