@@ -1,9 +1,11 @@
 var main = [
   '$log',
+  '$timeout',
   '$http',
   'ChoiceTemplates',
   function(
     $log,
+    $timeout,
     $http,
     ChoiceTemplates
     ) {
@@ -53,21 +55,31 @@ var main = [
       '  </div>',
       '  <div class="container-fluid container-choices">',
       '    <div class="row">',
-      '      <div class="text-right voffset3 col-xs-offset-9 col-xs-3">',
+      '      <div class="text-right v-offset-2 col-xs-offset-9 col-xs-3">',
       '        Check correct<br/>answer(s)',
       '      </div>',
       '    </div>',
       '    <div class="choice-row" ng-repeat="choice in model.choices">',
       '      <div class="row">',
-      '        <div class="col-md-2 col-xs-3 text-center">',
-      '          <label class="control-label choice-letter">{{toChar($index)}}</label>',
-      '          <i data-toggle="tooltip" class="fa fa-trash trash" title="Delete"></i>',
+      '        <div class="col-md-2 col-xs-3 text-center choice-letter">',
+      '          <label class="control-label">{{toChar($index)}}</label>',
+      '          <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
+      '              ng-click="removeQuestion(choice)"></i>',
       '        </div>',
       '        <div class="col-md-9 col-xs-8">',
-      '          <input type="text" class="form-control"/>',
+      '          <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
+      '              image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
+      '              parent-selector=".wiggi-wiz-overlay">',
+      '            <edit-pane-toolbar alignment="bottom">',
+      '              <div class="btn-group pull-right">',
+      '                <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">Done</button>',
+      '              </div>',
+      '            </edit-pane-toolbar>',
+      '          </div>',
       '        </div>',
-      '        <div class="col-md-1 col-xs-1 big-check text-right">',
-      '          <i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[choice.value]}" ',
+      '        <div class="col-md-1 col-xs-1 text-center">',
+      '          <i class="fa fa-check fa-lg choice-checkbox" ',
+      '              ng-class="{checked: correctMap[choice.value]}"',
       '              ng-click="correctMap[choice.value] = !correctMap[choice.value]"></i>',
       '        </div>',
       '      </div>',
@@ -105,7 +117,8 @@ var main = [
       '    </div>',
       '    <div class="row">',
       '      <div class="col-xs-12">',
-      '        <button type="button" id="add-choice" class="btn btn-default">Add a Choice</button>',
+      '        <button type="button" id="add-choice" class="btn btn-default" ',
+      '            ng-click="addQuestion()">Add a Choice</button>',
       '      </div>',
       '    </div>',
       '    <div class="row">',
@@ -125,8 +138,13 @@ var main = [
       '        </div>',
       '        <div id="summary-feedback" class="panel-collapse collapse">',
       '          <div class="panel-body">',
-      '            <input type="text" class="form-control"' +
+      '            <div mini-wiggi-wiz="" ng-model="fullModel.comments" image-service="imageService()" ',
+      '                features="extraFeatures" feature-overrides="overrideFeatures"',
+      '                parent-selector=".wiggi-wiz-overlay"',
       '                placeholder="Use this space to provide summary feedback for this interaction"/>',
+      '              <edit-pane-toolbar alignment="bottom">',
+      '              </edit-pane-toolbar>',
+      '            </div>',
       '          </div>',
       '        </div>',
       '      </div>',
@@ -296,6 +314,10 @@ var main = [
         scope.leftPanelClosed = false;
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
+
+        $timeout(function() {
+          $("[data-toggle='tooltip']").tooltip();
+        });
 
       },
 

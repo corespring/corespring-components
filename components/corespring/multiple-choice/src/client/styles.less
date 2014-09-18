@@ -216,7 +216,18 @@
 .config-multiple-choice {
 
   .choice-letter {
-    font-size: 22px;
+    label {
+      font-size: 22px;
+    }
+
+    i {
+      cursor: pointer;
+    }
+
+    label, i {
+      display: inline-block;
+      vertical-align: baseline;
+    }
   }
 
   .panel-title a:before {
@@ -225,6 +236,31 @@
     margin-right: 5px;
     font-size: 18px;
     text-decoration: none;
+  }
+
+  .mini-wiggi-wiz {
+    border-radius: 4px;
+    margin-bottom: 5px;
+    border: 1px solid #cccccc;
+
+    .wiggi-wiz-editable {
+      margin-top: 0 !important;
+      border-radius: 4px;
+    }
+  }
+
+  .choice-checkbox {
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 22px;
+
+    &.checked {
+      color: #32cd32;
+    }
+  }
+
+  .v-offset-2 {
+    margin-bottom: 20px;
   }
 
 }
