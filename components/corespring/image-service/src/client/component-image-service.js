@@ -15,7 +15,7 @@ var def = [
         var url = '' + file.name;
 
         if (ImageUtils.bytesToKb(file.size) > 500) {
-          onComplete(ImageUtils.fileTooBigError(file.size, 500));
+          onComplete(ImageUtils.fileTooBigError(file.size, 500).message);
           return;
         }
 
@@ -24,16 +24,13 @@ var def = [
             $log.info('done: ', body, status);
             onComplete(null, url);
           },
-          onUploadProgress: function() {
+          onUploadProgress: function(progress) {
             $log.info('progress', arguments);
-            onProgress(null, 'started');
+            onProgress(null, progress);
           },
           onUploadFailed: function() {
             $log.info('failed', arguments);
-            onComplete({
-              code: 'UPLOAD_FAILED',
-              message: 'upload failed!'
-            });
+            onComplete('<strong>Upload error</strong><br/>Your image was not uploaded. Please try again.');
           }
         };
 
