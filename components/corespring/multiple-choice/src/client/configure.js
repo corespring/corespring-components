@@ -151,7 +151,6 @@ var main = [
       '          </div>',
       '        </div>',
       '      </div>',
-      '      </div>',
       '    </div>',
       '  </div>',
       '</div>'
@@ -331,7 +330,7 @@ var main = [
                 designTemplate,
         '    </div>',
         '    <div navigator-panel="Scoring">',
-        ChoiceTemplates.scoring(),
+                ChoiceTemplates.scoring(),
         '    </div>',
         '  </div>',
         '</div>'
