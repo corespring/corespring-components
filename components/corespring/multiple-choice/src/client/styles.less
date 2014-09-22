@@ -214,48 +214,53 @@
 }
 
 .config-multiple-choice {
-  table, tr, td {
-    padding: 0 10px 10px 0;
-    vertical-align: bottom;
+
+  .choice-letter {
+    label {
+      font-size: 22px;
+    }
+
+    i {
+      cursor: pointer;
+    }
+
+    label, i {
+      display: inline-block;
+      vertical-align: baseline;
+    }
   }
 
-  .choice-config-panel {
-    margin-bottom: 40px;
+  .panel-title a:before {
+    content: '\f055';
+    font-family: FontAwesome;
+    margin-right: 5px;
+    font-size: 18px;
+    text-decoration: none;
   }
 
-  .config-shuffle {
+  .mini-wiggi-wiz {
+    border-radius: 4px;
+    margin-bottom: 5px;
+    border: 1px solid #cccccc;
+
+    .wiggi-wiz-editable {
+      margin-top: 0 !important;
+      border-radius: 4px;
+    }
+  }
+
+  .choice-checkbox {
+    cursor: pointer;
     margin-top: 10px;
+    font-size: 22px;
+
+    &.checked {
+      color: #32cd32;
+    }
   }
 
-  label.disabled {
-    color: #cccccc;
-    cursor: not-allowed;
+  .v-offset-2 {
+    margin-bottom: 20px;
   }
 
-  .label-select, .select2-drop {
-    min-width: 120px;
-  }
-
-  .config-panel-form {
-    display: table;
-  }
-
-  .form-row {
-    display: table-row;
-  }
-
-  .form-column {
-    display: table-cell;
-    padding-bottom: 10px;
-  }
-
-  .form-label {
-    width: 140px;
-    display: table-cell;
-  }
-
-  .form-input {
-    width: 140px;
-    display: table-cell;
-  }
 }
