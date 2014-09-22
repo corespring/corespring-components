@@ -77,6 +77,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           // TODO: rewrite this using stash
           scope.model.choices = _.shuffle(scope.model.choices);
         }
+        scope.$emit('rerender-math', {delay: 20});
       };
 
       scope.startOver = function() {
