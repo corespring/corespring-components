@@ -51,7 +51,7 @@
     transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
 }
 
-.view-multiple-choice .choice-holder.incorrect .checkbox-choice {
+.view-multiple-choice .selected .choice-holder.incorrect .checkbox-choice {
     background-color: #EC971F;
     border-color: #EC971F;
 }
@@ -86,12 +86,12 @@
     color: #555555;
 }
 
-.view-multiple-choice .choice-holder.incorrect .checkbox-choice .checkbox-button {
+.view-multiple-choice .selected .choice-holder.incorrect .checkbox-choice .checkbox-button {
     margin-left: 3px;
     margin-top: -5px;
 }
 
-.view-multiple-choice .choice-holder.incorrect .checkbox-choice .checkbox-button::after {
+.view-multiple-choice .selected  .choice-holder.incorrect .checkbox-choice .checkbox-button::after {
     font-family: 'FontAwesome';
     width: 30px;
     height: 30px;
@@ -203,8 +203,8 @@
 }
 
 .view-multiple-choice .correct.selected .choice-label,
-.view-multiple-choice .incorrect.selected .choice-label,
-.view-multiple-choice .incorrect.selected .choice-letter {
+.view-multiple-choice .selected .choice-label,
+.view-multiple-choice .selected .choice-letter {
     font-size: 18px;
 }
 
