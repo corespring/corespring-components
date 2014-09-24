@@ -413,7 +413,8 @@
 }
 
 .view-multiple-choice .summaryFeedbackPanel {
-    padding: 0px 32px 10px 5px;
+    width: 565px;
+    padding-left: 5px;
 }
 
 .view-multiple-choice .summaryFeedbackPanel .panel-title {
@@ -444,6 +445,7 @@
     background: #fff;
     overflow: hidden;
     padding: 6px 5px;
+    width: 570px;
 }
 
 .view-multiple-choice .answer-holder .panel {
