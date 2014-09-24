@@ -247,8 +247,7 @@
 
 .view-multiple-choice .choices-container {
     display: table;
-    max-width: 565px;
-    min-width: 90%;
+    width: 95%;
 }
 
 .view-multiple-choice .choice-holder {
@@ -413,8 +412,9 @@
 }
 
 .view-multiple-choice .summaryFeedbackPanel {
-    width: 565px;
     padding-left: 5px;
+    padding-right: 5px;
+    width: 95%;
 }
 
 .view-multiple-choice .summaryFeedbackPanel .panel-title {
@@ -445,7 +445,6 @@
     background: #fff;
     overflow: hidden;
     padding: 6px 5px;
-    width: 570px;
 }
 
 .view-multiple-choice .answer-holder .panel {
