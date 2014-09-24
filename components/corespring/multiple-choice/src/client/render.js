@@ -254,36 +254,8 @@ var main = [
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
-    var verticalTemplate = [
-      '<div class="choices-container" ng-class="question.config.orientation">',
-      '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
-      '       ng-click="onClickChoice(o)" ng-class="{selected: answer.choice == o.value || answer.choices[o.value], correct: o.correct}">',
-      '    <div class="choice-holder" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct && (answer.choice == o.value || answer.choices[o.value])]">',
-      '      <span class="choice-input" ng-switch="inputType">',
-      '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div class="checkbox-button" ng-class="{selected: answer.choices[o.value]}" />',
-      '        </div>',
-      '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
-      '          <div class="radio-button" ng-class="{selected: answer.choice == o.value}" />',
-      '        </div>',
-      '      </span>',
 
-      '      <div>',
-
-      '       <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '       <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
-      '       <div class="choice-label" ng-switch="o.labelType">',
-      '         <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
-      '         <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
-      '       </div>',
-      '     </div>',
-      '    </div>',
-      '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value]">',
-      '      <div class="alert alert-{{o.correct ? \'success\' : \'warning\'}} fade in" ng-class="{visible: o.feedback}" style="display: none">',
-      '        <span type="success" ng-bind-html-unsafe="o.feedback"></span>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
+    var seeAnswer = [
       '  <div class="answer-holder" ng-show="response && response.correctness != \'correct\'">',
       '    <div class="panel panel-default">',
       '      <div class="panel-heading">',
@@ -313,8 +285,38 @@ var main = [
       '        </div>',
       '      </div>',
       '    </div>',
+      '  </div>'
+    ].join('');
 
+    var verticalTemplate = [
+      '<div class="choices-container" ng-class="question.config.orientation">',
+      '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '       ng-click="onClickChoice(o)" ng-class="{selected: answer.choice == o.value || answer.choices[o.value], correct: o.correct, incorrect: o.correct == false}">',
+      '    <div class="choice-holder" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct && (answer.choice == o.value || answer.choices[o.value])]">',
+      '      <span class="choice-input" ng-switch="inputType">',
+      '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
+      '          <div class="checkbox-button" ng-class="{selected: answer.choices[o.value]}" />',
+      '        </div>',
+      '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
+      '          <div class="radio-button" ng-class="{selected: answer.choice == o.value}" />',
+      '        </div>',
+      '      </span>',
+      '      <div>',
+      '       <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '       <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+      '       <div class="choice-label" ng-switch="o.labelType">',
+      '         <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+      '         <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
+      '       </div>',
+      '     </div>',
+      '    </div>',
+      '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value]">',
+      '      <div class="alert alert-{{o.correct ? \'success\' : \'warning\'}} fade in" ng-class="{visible: o.feedback}" style="display: none">',
+      '        <span type="success" ng-bind-html-unsafe="o.feedback"></span>',
+      '      </div>',
+      '    </div>',
       '  </div>',
+      seeAnswer,
       '</div>'
     ].join("");
 

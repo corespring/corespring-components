@@ -7,7 +7,6 @@
     color: #008000;
 }
 
-
 .view-multiple-choice td {
     vertical-align: top;
 }
@@ -53,8 +52,8 @@
 }
 
 .view-multiple-choice .choice-holder.incorrect .checkbox-choice {
-    background-color: #c09853;
-    border-color: #c09853;
+    background-color: #EC971F;
+    border-color: #EC971F;
 }
 
 .view-multiple-choice .selected .choice-holder.correct .checkbox-choice,
@@ -187,6 +186,23 @@
     font-size: 20px;
 }
 
+.view-multiple-choice .correct.selected .choice-input,
+.view-multiple-choice .correct.selected .choice-letter,
+.view-multiple-choice .correct.selected .choice-currency-symbol,
+.view-multiple-choice .correct.selected .choice-label,
+.view-multiple-choice .incorrect.selected .choice-input,
+.view-multiple-choice .incorrect.selected .choice-letter,
+.view-multiple-choice .incorrect.selected .choice-currency-symbol,
+.view-multiple-choice .incorrect.selected .choice-label {
+
+    vertical-align: middle;
+}
+
+.view-multiple-choice .correct.selected .choice-label,
+.view-multiple-choice .incorrect.selected .choice-label {
+    font-size: 18px;
+}
+
 .view-multiple-choice .answer .correct .radio-choice .radio-button::after,
 .view-multiple-choice .selected .correct .radio-choice .radio-button::after {
     padding-left: 3px;
@@ -214,11 +230,9 @@
     text-indent: 3px;
     font-family: "FontAwesome";
     content: "\f05c";
-    color: #C09853;
+    color: #EC971F;
     border: none;
 }
-
-
 
 .view-multiple-choice .correct-block {
     display: inline-block;
@@ -233,7 +247,7 @@
 
 .view-multiple-choice .choices-container {
     display: table;
-    max-width: 95%;
+    max-width: 565px;
     min-width: 90%;
 }
 
@@ -254,6 +268,7 @@
 }
 
 .view-multiple-choice .choice-holder-background.correct.selected {
+    margin-right: 10px;
     background-color: #dff0d8;
     border: 1px solid #d6e9c6;
     border-radius: 4px;
@@ -265,8 +280,13 @@
 }
 
 
-.view-multiple-choice .choice-feedback-holder {
-    padding-left: 32px;
+.view-multiple-choice .correct .choice-feedback-holder {
+    padding-left: 75px;
+    width: 90%;
+}
+
+.view-multiple-choice .incorrect .choice-feedback-holder {
+    padding-left: 45px;
     width: 90%;
 }
 
@@ -328,6 +348,18 @@
     width: 500px;
 }
 
+
+.view-multiple-choice .alert-success {
+    background-color: #ffffff;
+    border: 1px solid #3C763D;
+    color: #000000;
+}
+
+.view-multiple-choice .alert-warning {
+    background-color: #EC971F;
+    color: #ffffff;
+}
+
 /* Horizontal Layout */
 
 .view-multiple-choice .horizontal .choice-input {
@@ -381,7 +413,7 @@
 }
 
 .view-multiple-choice .summaryFeedbackPanel {
-    padding: 0px 50px 20px 20px;
+    padding: 0px 32px 10px 5px;
 }
 
 .view-multiple-choice .summaryFeedbackPanel .panel-title {
@@ -411,7 +443,7 @@
 .view-multiple-choice .answer-holder {
     background: #fff;
     overflow: hidden;
-    padding: 20px;
+    padding: 6px 5px;
 }
 
 .view-multiple-choice .answer-holder .panel {
