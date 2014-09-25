@@ -144,7 +144,7 @@ var main = [
         scope.containerBridge = {
           setModel: function(fullModel) {
             fullModel.correctResponses = fullModel.correctResponses || createResponsesModel(100);
-            fullModel.partialResponses = fullModel.partialResponses || createResponsesModel(25);
+            fullModel.partialResponses = fullModel.partialResponses || createResponsesModel();
             fullModel.incorrectResponses = fullModel.incorrectResponses || createResponsesModel(0);
             fullModel.model = fullModel.model || {};
             fullModel.model.answerBlankSize = fullModel.model.answerBlankSize || 8;
