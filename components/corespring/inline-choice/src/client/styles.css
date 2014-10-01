@@ -1,7 +1,7 @@
 .component-placeholder.corespring-inline-choice {
-  display: inline-block;
-  max-width: 200px;
-  margin-right: 10px;
+    display: inline-block;
+    max-width: 200px;
+    margin-right: 10px;
 }
 
 .view-inline-choice {
@@ -83,6 +83,7 @@
     border-radius: 2px;
     max-width: 400px;
     white-space: nowrap;
+    position: absolute;
 }
 
 .view-inline-choice.incorrect .tooltip-inner {
@@ -162,10 +163,10 @@
 
 }
 .config-inline-choice {
-  top: 30px;
-  bottom: 0px;
-  overflow-y: scroll;
-  position: absolute;
+    top: 30px;
+    bottom: 0px;
+    overflow-y: scroll;
+    position: absolute;
 }
 
 .config-inline-choice button {
