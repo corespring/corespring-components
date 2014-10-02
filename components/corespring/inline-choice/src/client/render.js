@@ -49,7 +49,7 @@ link = function($sce, $timeout) {
           try {
             while(tooltipOutsideViewport() && count < timeout) {
               count += 1;
-              var tooltipLeft = parseInt($('.tooltip-inner', element).css('left').match(/(-?\d+)px/)[1]);
+              var tooltipLeft = parseInt($('.tooltip-inner', element).css('left').match(/(-?\d+)px/)[1], 10);
               if (_.isNaN(tooltipLeft)) { // don't keep looping if we don't get a number
                 throw "NaN";
               }
