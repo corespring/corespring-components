@@ -25,6 +25,48 @@ link = function($sce, $timeout) {
       });
     };
 
+
+    var Tooltip = {
+      show: function() {
+        // Timeout for trying to move tooltip inside CoreSpring player. We don't want to freeze the browser.
+        var timeout = 2000;
+
+        var $tooltip = $('.tooltip', element);
+        var $tooltipInner = $('.tooltip-inner', $tooltip);
+
+        function tooltipOutsideViewport() {
+          var tooltipRight = $tooltipInner[0].getBoundingClientRect().right;
+          var playerRight = $('.corespring-player')[0].getBoundingClientRect().right;
+          return (playerRight - tooltipRight) < 0;
+        }
+
+        $tooltip.css({'visibility': 'hidden'});
+        $tooltip.removeClass('hidden');
+        $tooltipInner.css({'left': '0px'});
+
+        $timeout(function() {
+          var count = 0;
+          try {
+            while(tooltipOutsideViewport() && count < timeout) {
+              count += 1;
+              var tooltipLeft = parseInt($('.tooltip-inner', element).css('left').match(/(-?\d+)px/)[1]);
+              if (_.isNaN(tooltipLeft)) { // don't keep looping if we don't get a number
+                throw "NaN";
+              }
+              $tooltipInner.css({'left': (tooltipLeft - 1) + 'px'});
+            }
+          } finally {
+            // If there are any errors, we want to just display the tooltip
+            $tooltip.css({'visibility': 'visible'});
+          }
+        });
+      },
+
+      hide: function() {
+        $('.tooltip', element).addClass('hidden');
+      }
+    };
+
     scope.editable = true;
 
     function clearFeedback(choices) {
@@ -32,13 +74,16 @@ link = function($sce, $timeout) {
         delete c.feedback;
         delete c.correct;
       });
+      Tooltip.hide();
     }
 
-    function setFeedback(choices, response){
+
+    function setFeedback(choices, response) {
       _(choices).each(function (c) {
         if (response.feedback && response.feedback[c.value]) {
           c.feedback = response.feedback[c.value].feedback;
           c.correct = response.feedback[c.value].correct;
+          Tooltip.show();
         }
       });
     }
@@ -150,8 +195,8 @@ main = [
         '    <span ng-switch-default ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
         '  </span>',
         '</span>',
-        '<span ng-show="selected.feedback" class="feedback">&nbsp;',
-        '  <div class="tooltip">',
+        '<span class="feedback">&nbsp;',
+        '  <div class="tooltip hidden">',
         '  <div class="tooltip-inner" ng-bind-html-unsafe="selected.feedback">',
         '  </div>',
         '  <span class="caret"></span>',
