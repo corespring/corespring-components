@@ -54,7 +54,7 @@ exports.directive = {
           '    <div ',
           '        mini-wiggi-wiz=""',
           '        class="form-control feedback-preview custom"',
-          '        ng-model="$parent.fbSelCustomFeedback"',
+          '        ng-model="fbSelCustomFeedback"',
           '        image-service="imageService()"',
           '        features="extraFeatures"',
           '        placeholder="Enter customized feedback to be presented to the student"',
