@@ -80,7 +80,6 @@ module.exports = (grunt) ->
         ext: '.less.min.css'
         flatten: false
 
-
     watch:
       less:
         files: ['<%= common.componentPath %>/**/*.less']
@@ -91,6 +90,7 @@ module.exports = (grunt) ->
 
     clean:
       test: ["<%= common.componentPath %>/**/*-wrapped.js"]
+      production : ["<%= common.app %>/node_modules", "<%= common.app %>/bower_components"]
 
     jsbeautifier:
       files : ["<%= common.componentPath %>/**/*.js"],
@@ -128,6 +128,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
+  grunt.registerTask('buildcomponents', ['less:production', 'clean:test', 'clean:production'])
   grunt.registerTask('regression', ['regressionTestRunner:dev'])
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
