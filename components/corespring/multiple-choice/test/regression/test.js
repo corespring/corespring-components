@@ -59,7 +59,7 @@ describe('multiple-choice', function() {
       .selectAnswer(correctAnswer)
       .submitItem()
       .isVisible('.choice-holder.incorrect', function(err, result) {
-        (result === null).should.equal(true);
+        (result === undefined).should.equal(true);
       })
       .call(done);
 
