@@ -284,13 +284,11 @@ var main = [
         },
         template: [
           '<div class="placement-ordering-config" ng-click="deactivate()">',
-          '  <div navigator="">',
-          '    <div navigator-panel="Design">',
-          designTemplate(),
-          '    </div>',
-          '    <div navigator-panel="Scoring">',
-          ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
-          '    </div>',
+          '  <div navigator-panel="Design">',
+               designTemplate(),
+          '  </div>',
+          '  <div navigator-panel="Scoring">',
+               ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
           '  </div>',
           '</div>'
         ].join('\n')

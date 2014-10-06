@@ -145,29 +145,23 @@ var main = [
 
     var template = [
       '<div class="drag-and-drop-config-panel drag-and-drop-inline-config-panel" choice-template-controller="">',
-      '  <div navigator="">',
-      '    <div navigator-panel="Design">',
-      '      <div class="description">',
+      '  <div navigator-panel="Design">',
+      '    <div class="description">',
       '      In Fill in the Blank, students are asked to complete a sentence, word, phrase or equation using context clues presented in the text that surrounds it.',
-      '      </div>',
-      ChoiceTemplates.inputHolder('Problem Area', answerArea),
-      ChoiceTemplates.inputHolder('Choices', choiceArea),
-      ChoiceTemplates.inputHolder('Feedback', feedback),
       '    </div>',
-
-      '    <div navigator-panel="Scoring">',
-      '      <div>',
-      ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
-      '      </div>',
+           ChoiceTemplates.inputHolder('Problem Area', answerArea),
+           ChoiceTemplates.inputHolder('Choices', choiceArea),
+           ChoiceTemplates.inputHolder('Feedback', feedback),
+      '  </div>',
+      '  <div navigator-panel="Scoring">',
+      '    <div>',
+             ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
       '    </div>',
-
-      '    <div navigator-panel="Display">',
-      '      <div>',
-      displayOptions,
-      '      </div>',
+      '  </div>',
+      '  <div navigator-panel="Display">',
+      '    <div>',
+             displayOptions,
       '    </div>',
-
-
       '  </div>',
       '</div>'].join('\n');
 

@@ -3,15 +3,6 @@ var main = ['$log', '$timeout',
 
     var log = $log.debug.bind($log, '[navigator]');
 
-    var link = function(scope, element, attrs) {
-
-      scope.leftPanelClosed = true;
-
-      scope.toggleLeftPanel = function() {
-        scope.leftPanelClosed = !scope.leftPanelClosed;
-      };
-    };
-
     var controllerFn = function($scope, $element, $attrs) {
 
       var _this = this;
@@ -84,24 +75,17 @@ var main = ['$log', '$timeout',
       restrict: 'EA',
       transclude: true,
       controller: controllerFn,
-      link: link,
+      link: function() {},
       template: [
         '<div class="navigator">',
-        '  <div class="navigator-toggle-button-row">',
-        '    <div class="navigator-toggle-button">',
-        '      <div class="navigator-title">{{title}}</div>',
-        '      <a ng-click="toggleLeftPanel()"><button class="btn btn-navigator-toggle btn-default btn-xs"><i class="fa fa-bars"></i></button></a>',
-        '    </div>',
-        '  </div>',
         '  <div class="navigator-container">',
-        '    <div class="navigator-left-panel" ng-class="{closed: leftPanelClosed}">',
-        '      <ul class="nav nav-stacked" >',
-        '        <li ng-repeat="panel in panels" ng-class="{ active: panel.selected()}" ng-show="panel.visible()">',
-        '          <a href="" ng-class="{active: panel.selected()}" ng-click="selectPanel(panel, $event)">{{panel.title}}</a>',
-        '        </li>',
-        '      </ul>',
-        '    </div>',
-        '    <div class="config-panel-body" ng-class="{\'full-width\': leftPanelClosed}" ng-transclude>',
+        '    <ul ng-if="panels.length > 0" class="nav">',
+        '      <li ng-repeat="panel in panels" ng-class="{ active: panel.selected()}" ng-show="panel.visible()">',
+        '        <a href="" ng-class="{active: panel.selected()}" ng-click="selectPanel(panel, $event)">{{panel.title}}</a>',
+        '      </li>',
+        '    </ul>',
+        '    <div class="config-panel-body" ng-class="{\'with-nav\': panels.length > 0}">',
+        '      <div ng-transclude/>',
         '    </div>',
         '  </div>',
         '</div>'
