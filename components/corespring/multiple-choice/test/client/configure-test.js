@@ -82,6 +82,19 @@ describe('corespring', function() {
       });
     });
 
+    function printNode(who){
+      var deep = true;
+      if(!who || !who.tagName) return '';
+      var txt, ax, el= document.createElement("div");
+      el.appendChild(who.cloneNode(false));
+      txt= el.innerHTML;
+      if(deep){
+        ax= txt.indexOf('>')+1;
+        txt= txt.substring(0, ax)+who.innerHTML+ txt.substring(ax);
+      }
+      el= null;
+      return txt;
+    }
 
     beforeEach(inject(function($compile, $rootScope) {
       scope = $rootScope.$new();
@@ -94,8 +107,7 @@ describe('corespring', function() {
       $rootScope.registerConfigPanel = function(id, b) {
         container.registerConfigPanel(id, b);
       };
-      element = $compile("<corespring-multiple-choice-configure id='1'></corespring-multiple-choice-configure>")(scope);
-      scope = element.scope();
+      element = $compile("<div navigator=''><corespring-multiple-choice-configure id='1'></corespring-multiple-choice-configure></div>")(scope);
     }));
 
     it('constructs', function() {
