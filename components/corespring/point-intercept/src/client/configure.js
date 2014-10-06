@@ -266,15 +266,13 @@ var main = ['ServerLogic',
       },
       template: [
         '<div class="point-intercept-configuration">',
-        '  <div navigator="">',
-        '    <div class="intro-text">',
-        '      In Plot Points, students identify coordinates or plot points on a graph by clicking on the graph.',
-        '    </div>',
-        pointsBlock,
-        graphAttributes,
-        '<a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
-        feedback,
+        '  <div class="intro-text">',
+        '    In Plot Points, students identify coordinates or plot points on a graph by clicking on the graph.',
         '  </div>',
+           pointsBlock,
+           graphAttributes,
+        '  <a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
+           feedback,
         '</div>'
       ].join('\n')
     };

@@ -330,13 +330,11 @@ var main = [
 
       template: [
         '<div class="config-multiple-choice">',
-        '  <div navigator="">',
-        '    <div navigator-panel="Design">',
-                designTemplate,
-        '    </div>',
-        '    <div navigator-panel="Scoring">',
-                ChoiceTemplates.scoring(),
-        '    </div>',
+        '  <div navigator-panel="Design">',
+              designTemplate,
+        '  </div>',
+        '  <div navigator-panel="Scoring">',
+              ChoiceTemplates.scoring(),
         '  </div>',
         '</div>'
       ].join("")

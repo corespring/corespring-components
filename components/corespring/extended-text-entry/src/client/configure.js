@@ -81,14 +81,12 @@ var main = [
       template: [
 
         '<div class="extended-text-entry-configuration">',
-        '  <div navigator="">',
-        '    <div navigator-panel="Design">',
-               displayOptions,
-               design,
-        '    </div>',
-        '    <div navigator-panel="Scoring">',
-               scoring,
-        '    </div>',
+        '  <div navigator-panel="Design">',
+             displayOptions,
+             design,
+        '  </div>',
+        '  <div navigator-panel="Scoring">',
+             scoring,
         '  </div>',
         '</div>'
 

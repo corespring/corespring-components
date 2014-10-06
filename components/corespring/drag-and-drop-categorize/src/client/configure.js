@@ -151,29 +151,23 @@ var main = [
 
     template = [
       '<div class="drag-and-drop-config-panel" choice-template-controller="">',
-      '  <div navigator="">',
-      '    <div navigator-panel="Design">',
-      '      <div class="description">',
+      '  <div navigator-panel="Design">',
+      '    <div class="description">',
       '      In Categorize, students may drag & drop answer tiles to the appropriate category area(s).',
-      '      </div>',
-      ChoiceTemplates.inputHolder('Categories', categories),
-      ChoiceTemplates.inputHolder('Choices', choiceArea),
-      ChoiceTemplates.inputHolder('Feedback', feedback),
       '    </div>',
-
-      '    <div navigator-panel="Scoring">',
-      '      <div>',
-      ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
-      '      </div>',
+           ChoiceTemplates.inputHolder('Categories', categories),
+           ChoiceTemplates.inputHolder('Choices', choiceArea),
+           ChoiceTemplates.inputHolder('Feedback', feedback),
+      '  </div>',
+      '  <div navigator-panel="Scoring">',
+      '    <div>',
+             ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
       '    </div>',
-
-      '    <div navigator-panel="Display">',
-      '      <div>',
-      displayOptions,
-      '      </div>',
+      '  </div>',
+      '  <div navigator-panel="Display">',
+      '    <div>',
+             displayOptions,
       '    </div>',
-
-
       '  </div>',
       '</div>'].join('\n');
 

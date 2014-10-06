@@ -101,10 +101,8 @@ var main = [
 
     var panels = [
       '<div>',
-      '  <div navigator="">',
-      designPanel,
-      displayPanel,
-      '  </div>',
+        designPanel,
+        displayPanel,
       '</div>'
     ].join("\n");
 

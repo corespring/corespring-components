@@ -100,9 +100,7 @@ var main = [
 
     var panels = [
       '<div class="cs-video-config">',
-      '  <div navigator="">',
-      designPanel,
-      '  </div>',
+        designPanel,
       '</div>'
     ].join("\n");
 

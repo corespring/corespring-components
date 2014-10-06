@@ -220,10 +220,8 @@ var main = [
       },
       template: [
         '<div class="select-text-configuration">',
-        '  <div navigator="">',
-        designPanel,
-        scorePanel,
-        '  </div>',
+          designPanel,
+          scorePanel,
         '</div>'
       ].join("")
     };
