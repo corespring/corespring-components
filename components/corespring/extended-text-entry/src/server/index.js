@@ -1,12 +1,12 @@
 var _ = require('lodash');
 
-function getFeedback(question){
+function getFeedback(question) {
   var fb = question.feedback || {feedbackType: "default"};
   var feedbackType = fb.feedbackType || "default";
   if (feedbackType === "custom") {
     return question.feedback.feedback;
   } else if (feedbackType === "default") {
-    return "Your answer has been submitted";
+    return "<b>Submitted Successfully.</b> Your answer was submitted.";
   }
 }
 
@@ -16,8 +16,7 @@ exports.feedback = {
 
 exports.respond = function(question, answer, settings) {
 
-   if(!answer){
-
+  if (!answer) {
     return {
       correctness: 'incorrect',
       score: 0,

@@ -19,19 +19,30 @@
 }
 
 .view-extended-text-entry textarea[disabled] {
-  cursor: not-allowed;
-  background-color: #eeeeee;
+    cursor: not-allowed;
+    background-color: #eeeeee;
+}
+
+.view-extended-text-entry.received textarea {
+    border: 1px solid #3A87AD;
+    -moz-box-shadow: 0px 0px 6px 0px #3A87AD, inset 0px 1px 0px 0px #ECECEC;
+    box-shadow: 0px 0px 6px 0px #3A87AD, inset 0px 1px 0px 0px #ECECEC;
+}
+
+.view-extended-text-entry.received.incorrect textarea {
+    border: 1px solid #A94442;
+    -moz-box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
+    box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
 }
 
 .view-extended-text-entry .feedback {
-    height: 36px;
+    color: #31708f;
+    background-color: #d9edf7;
     display: inline-block;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    padding: 6px 6px 6px 6px;
-    border: 2px solid #05ACCD;
     border-radius: 4px;
-    width: 90%;
+    width: 95%;
+    padding: 15px;
+    border: 1px solid #bce8f1;
 }
 
 /* Config Panel */
