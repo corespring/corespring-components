@@ -94,6 +94,7 @@ describe('corespring', function() {
         container.registerConfigPanel(id, b);
       };
       element = $compile("<div navigator=''><corespring-multiple-choice-configure id='1'></corespring-multiple-choice-configure></div>")(scope);
+      scope = element.scope();
     }));
 
     it('constructs', function() {
@@ -104,22 +105,7 @@ describe('corespring', function() {
       expect(container.elements['1']).toNotBe(undefined);
       expect(container.elements['2']).toBeUndefined();
     });
-
-    it('component builds its internal model', function() {
-      container.elements['1'].setModel(testModel);
-      expect(scope.model.choices.length).toBe(3);
-      expect(scope.feedback['1'].feedbackType).toBe('custom');
-      expect(scope.feedback['1'].feedback).toBe('Huh?');
-      expect(scope.feedback['2'].feedbackType).toBe('custom');
-      expect(scope.feedback['2'].feedback).toBe('4 to the floor');
-      expect(scope.feedback['3'].feedbackType).toBe('default');
-      expect(scope.scoreMapping).toEqual({
-        '1': '0',
-        '2': '1',
-        '3': '-1'
-      });
-    });
-
+    
     it('component serializes model backwards', function() {
       container.elements['1'].setModel(testModel);
       var model = container.elements['1'].getModel();
