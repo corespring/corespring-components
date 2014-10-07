@@ -75,8 +75,11 @@ main = [
       link: link(),
       template: [
         '<div class="view-extended-text-entry {{correctness}}" ng-class="{received: received}">',
-        '<textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="text-input" />',
-        '<div class="alert {{correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="feedback" ng-bind-html-unsafe="feedback"></div>',
+        '  <div class="textarea-holder">',
+        '    <textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="text-input" />',
+        '    <i class="warning-icon fa fa-warning"></i>',
+        '  </div>',
+        '  <div class="alert {{correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="feedback" ng-bind-html-unsafe="feedback"></div>',
         '</div>'].join("\n")
     };
 

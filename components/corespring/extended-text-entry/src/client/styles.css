@@ -14,8 +14,13 @@
     font: 14px 'Ubuntu', Arial, Helvetica, sans-serif;
     color: #333;
     resize: none;
-    max-width: 95%;
+    max-width: 100%;
     border-radius: 4px;
+}
+
+.view-extended-text-entry .textarea-holder {
+    position: relative;
+    width: 95%;
 }
 
 .view-extended-text-entry textarea[disabled] {
@@ -36,14 +41,29 @@
     box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
 }
 
+.view-extended-text-entry .warning-icon {
+    display: none;
+}
+.view-extended-text-entry.received.incorrect .warning-icon {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    color: #a94442;
+}
+
+
+
 .view-extended-text-entry .feedback,
 .view-extended-text-entry .no-feedback {
     color: #31708f;
     background-color: #d9edf7;
     border-radius: 4px;
-    width: 95%;
     padding: 15px;
     border: 1px solid #bce8f1;
+    position: relative;
+    width: 95%;
 }
 
 .view-extended-text-entry .no-feedback {
