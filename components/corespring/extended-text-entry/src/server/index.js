@@ -11,7 +11,7 @@ function getFeedback(question) {
 }
 
 exports.feedback = {
-  NO_ANSWER: 'No answer provided'
+  NO_ANSWER: 'Please submit your answer to the question above.'
 };
 
 exports.respond = function(question, answer, settings) {
@@ -20,7 +20,7 @@ exports.respond = function(question, answer, settings) {
     return {
       correctness: 'incorrect',
       score: 0,
-      feedback: settings.showFeedback ? 'No answer provided' : null
+      feedback: settings.showFeedback ? exports.feedback.NO_ANSWER : null
     };
   }
 

@@ -21,6 +21,7 @@
 .view-extended-text-entry textarea[disabled] {
     cursor: not-allowed;
     background-color: #eeeeee;
+    color: #999;
 }
 
 .view-extended-text-entry.received textarea {
@@ -35,13 +36,20 @@
     box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
 }
 
-.view-extended-text-entry .feedback {
+.view-extended-text-entry .feedback,
+.view-extended-text-entry .no-feedback {
     color: #31708f;
     background-color: #d9edf7;
     border-radius: 4px;
     width: 95%;
     padding: 15px;
     border: 1px solid #bce8f1;
+}
+
+.view-extended-text-entry .no-feedback {
+    background-color: #f2dede;
+    border-color: #eed3d7;
+    color: #b94a48;
 }
 
 /* Config Panel */
