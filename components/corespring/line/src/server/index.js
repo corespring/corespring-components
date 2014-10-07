@@ -71,7 +71,8 @@ exports.respond = function(question, answer, settings) {
       correctResponse: {
         equation: correctResponse,
         expression: functionUtils.expressionize(correctResponse, 'x')
-      }
+      },
+      comments: question.comments
     };
   }
 

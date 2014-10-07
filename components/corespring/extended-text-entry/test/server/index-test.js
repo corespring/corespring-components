@@ -69,7 +69,7 @@ describe('extended text entry server logic', function() {
     customComponent.feedback.feedback = 'custom feedback';
 
     var response = server.respond(customComponent, "Some text", settings(true, true, false));
-    response.should.eql({feedback: undefined});
+    response.should.eql({feedback: undefined, comments: undefined});
   });
 
 });

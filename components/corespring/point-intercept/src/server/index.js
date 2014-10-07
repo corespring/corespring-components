@@ -34,7 +34,8 @@ exports.respond = function(question, answer, settings) {
   var res = {
     correctness: isCorrect ? "correct" : "incorrect",
     score: isCorrect ? 1 : 0,
-    correctResponse: correctResponse
+    correctResponse: correctResponse,
+    comments: question.comments
   };
 
   if (settings.showFeedback) {

@@ -47,6 +47,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See Solution</a></div>",
         "</div>",
         "<div ng-show='feedback' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
+        '<div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         "</div>"
       ].join(""),
       restrict: 'AE',
@@ -347,6 +348,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
           setResponse: function(response) {
             scope.feedback = response && response.feedback;
+            scope.response = response;
             scope.correctClass = response.correctness;
             if (response && response.correctness === "correct") {
               scope.graphCallback({
@@ -381,6 +383,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
           reset: function() {
             scope.feedback = undefined;
+            scope.response = undefined;
             scope.unlockGraph();
 
             scope.inputStyle = {

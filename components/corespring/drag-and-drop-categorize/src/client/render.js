@@ -63,6 +63,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
         setResponse: function(response) {
           console.log("set response for DnD", response);
+          scope.response = response;
           scope.correctResponse = response.correctResponse;
           scope.feedback = response.feedback;
           scope.correctClass = response.correctClass;
@@ -96,6 +97,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" class="feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
+      '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
       '</div>'
 
     ].join("");

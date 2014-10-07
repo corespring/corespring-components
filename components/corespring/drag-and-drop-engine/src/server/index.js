@@ -48,7 +48,8 @@ exports.createResponse = function(question, answer, settings) {
     correctResponse: question.correctResponse,
     answer: answer,
     score: score,
-    correctClass: fb.correctness(isCorrect, isPartiallyCorrect)
+    correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
+    comments: question.comments
   };
 
   if (settings.showFeedback) {

@@ -273,6 +273,7 @@ var main = ['ServerLogic',
            graphAttributes,
         '  <a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
            feedback,
+        '  <div summary-feedback-input ng-model="fullModel.comments"></div>',
         '</div>'
       ].join('\n')
     };

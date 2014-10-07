@@ -27,8 +27,7 @@ link = function() {
         console.log(response);
 
         scope.answer = response.studentResponse;
-        scope.feedback = response.feedback;
-        scope.correctness = response.correctness;
+        scope.response = response;
 
         scope.received = true;
       },
@@ -37,8 +36,7 @@ link = function() {
 
       reset: function() {
         scope.answer = undefined;
-        scope.feedback = undefined;
-        scope.correctness = undefined;
+        scope.response = undefined;
         scope.received = false;
       },
 
@@ -79,7 +77,8 @@ main = [
         '    <textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="text-input" />',
         '    <i class="warning-icon fa fa-warning"></i>',
         '  </div>',
-        '  <div class="alert {{correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="feedback" ng-bind-html-unsafe="feedback"></div>',
+        '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
+        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '</div>'].join("\n")
     };
 

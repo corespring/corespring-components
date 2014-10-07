@@ -27,6 +27,7 @@ var main = ['$compile', '$modal', '$rootScope',
         "   <div id='initialParams' ng-transclude></div>",
         "</div>",
         "<div ng-show='isFeedbackVisible' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
+        '<div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         "</div>"
       ].join("\n"),
       restrict: 'AE',
@@ -288,6 +289,7 @@ var main = ['$compile', '$modal', '$rootScope',
 
           setResponse: function(response) {
             scope.feedback = response && response.feedback;
+            scope.response = response;
 
             updateFeedbackVisiblity();
 
@@ -323,6 +325,7 @@ var main = ['$compile', '$modal', '$rootScope',
               points: {}
             });
 
+            scope.response = undefined;
             scope.feedback = undefined;
             scope.correctResponse = undefined;
           },

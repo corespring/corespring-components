@@ -1,5 +1,7 @@
 @import '../../../../../less/common';
 
+@learn-more-color: #008bc9;
+
 .feedback-selector-view {
 
   .feedback-preview {
@@ -43,7 +45,47 @@
     &.partial {
       .color-panel(@partial-color);
     }
-
   }
+}
 
+.summary-feedback-input {
+  margin-left: 10px;
+  margin-right: 10px;
+
+  .panel {
+    &.summary-panel {
+      .panel-title a:before {
+        content: '\f055';
+        font-family: FontAwesome;
+        margin-right: 5px;
+        font-size: 18px;
+        text-decoration: none;
+      }
+    }
+
+    &.color-panel {
+      box-shadow: none;
+      border: none;
+      .panel-heading {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        color: #fff;
+
+        i.fa {
+          font-size: 28px;
+          margin-right: 10px;
+        }
+      }
+
+      .panel-body {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        padding: 10px;
+      }
+
+      &.learn-more {
+        .color-panel(@learn-more-color);
+      }
+    }
+  }
 }

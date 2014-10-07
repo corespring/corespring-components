@@ -194,6 +194,7 @@ var dragAndDropController = [
             scope.resetChoices(scope.rawModel);
             scope.correctResponse = undefined;
             scope.feedback = undefined;
+            scope.response = undefined;
           },
 
           isAnswerEmpty: function() {

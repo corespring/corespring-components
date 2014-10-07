@@ -34,6 +34,7 @@ exports.respond = function(question, answer, settings) {
   if (settings.showFeedback) {
     response.feedback = getFeedback(question);
   }
+  response.comments = question.comments;
 
   return response;
 };
