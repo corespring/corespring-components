@@ -12,6 +12,8 @@ describe('corespring', function() {
     var MockMathJaxService = function() {
       this.parseDomForMath = function() {
       };
+      this.onEndProcess = function() {
+      };
     };
 
     var element, scope, rootScope, container,testModel, testModelTemplate;
@@ -47,7 +49,8 @@ describe('corespring', function() {
     beforeEach(function() {
       module(function($provide) {
         testModel = _.cloneDeep(testModelTemplate);
-        $provide.value('MathJaxService', MockMathJaxService);
+        $provide.value('MathJaxService', new MockMathJaxService());
+        $.fn.extend({popover: function(){}});
       });
     });
 
@@ -75,39 +78,6 @@ describe('corespring', function() {
       expect(scope.question).not.toBe(null);
       expect(scope.session).not.toBe(null);
       expect(scope.answer).not.toBe(null);
-    });
-
-    describe('tooltipText', function() {
-
-      it('not empty if question is null', function () {
-        scope.question = null;
-        var result = scope.tooltipText();
-        expect(result.length).not.toBe(0);
-      });
-
-      it('not empty if question.config is null', function () {
-        scope.question = {config:null};
-        var result = scope.tooltipText();
-        expect(result.length).not.toBe(0);
-      });
-
-      it('not empty if question.config.showFormattingHelp is true', function () {
-        scope.question = {config:{showFormattingHelp:true}};
-        var result = scope.tooltipText();
-        expect(result.length).not.toBe(0);
-      });
-
-      it('not empty if question.config.showFormattingHelp does not exist', function () {
-        scope.question = {config:{}};
-        var result = scope.tooltipText();
-        expect(result.length).not.toBe(0);
-      });
-
-      it('empty if question.config.showFormattingHelp is false', function () {
-        scope.question = {config:{showFormattingHelp:false}};
-        var result = scope.tooltipText();
-        expect(result.length).toBe(0);
-      });
     });
 
   });

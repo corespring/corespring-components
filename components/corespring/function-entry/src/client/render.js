@@ -24,12 +24,15 @@ main = [
 
         function resetHintPopover() {
           $(element).find('.text-input').popover('destroy');
-          $(element).find('.text-input').popover({
-            content: rawHintHtml,
-            title: 'Hints',
-            html: true,
-            placement: 'bottom'
-          });
+
+          if (shouldShowFormattingHelp()) {
+            $(element).find('.text-input').popover({
+              content: rawHintHtml,
+              title: 'Hints',
+              html: true,
+              placement: 'bottom'
+            });
+          }
 
         }
 
@@ -42,7 +45,7 @@ main = [
             scope.session = dataAndSession.session || {};
 
             scope.answer = scope.session.answers;
-
+            resetHintPopover();
           },
 
           getSession: function() {
@@ -126,7 +129,6 @@ main = [
           if (!rawHintHtml) {
             rawHintHtml = $(element).find('.hidden-math').html();
             resetHintPopover();
-
           }
         });
 
