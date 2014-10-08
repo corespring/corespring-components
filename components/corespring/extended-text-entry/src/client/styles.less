@@ -1,14 +1,9 @@
 .view-extended-text-entry {
-    width: 100%;
-}
+  width: 100%;
 
-.view-extended-text-entry textarea {
+  textarea {
     display: block;
     margin: 0 0 10px;
-    border: 1px solid #797979;
-    -moz-box-shadow: inset 0 0 8px #d1d1d1;
-    -webkit-box-shadow: inset 0 0 8px #d1d1d1;
-    box-shadow: inset 0 0 8px #d1d1d1;
     padding: 7px;
     text-align: left;
     font: 14px 'Ubuntu', Arial, Helvetica, sans-serif;
@@ -16,47 +11,46 @@
     resize: none;
     max-width: 100%;
     border-radius: 4px;
-}
+  }
 
-.view-extended-text-entry .textarea-holder {
+  .textarea-holder {
     position: relative;
     width: 95%;
-}
+  }
 
-.view-extended-text-entry textarea[disabled] {
+  textarea[disabled] {
     cursor: not-allowed;
     background-color: #eeeeee;
     color: #999;
-}
+  }
 
-.view-extended-text-entry.received textarea {
+  &.received textarea {
     border: 1px solid #3A87AD;
     -moz-box-shadow: 0px 0px 6px 0px #3A87AD, inset 0px 1px 0px 0px #ECECEC;
     box-shadow: 0px 0px 6px 0px #3A87AD, inset 0px 1px 0px 0px #ECECEC;
-}
+  }
 
-.view-extended-text-entry.received.incorrect textarea {
+  &.received.incorrect textarea {
     border: 1px solid #A94442;
     -moz-box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
     box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
-}
+  }
 
-.view-extended-text-entry .warning-icon {
+  .warning-icon {
     display: none;
-}
-.view-extended-text-entry.received.incorrect .warning-icon {
+  }
+
+  &.received.incorrect .warning-icon {
     display: block;
     position: absolute;
     top: 10px;
     right: 10px;
     font-size: 28px;
     color: #a94442;
-}
+  }
 
-
-
-.view-extended-text-entry .feedback,
-.view-extended-text-entry .no-feedback {
+  .feedback,
+  .no-feedback {
     color: #31708f;
     background-color: #d9edf7;
     border-radius: 4px;
@@ -64,17 +58,21 @@
     border: 1px solid #bce8f1;
     position: relative;
     width: 95%;
-}
+  }
 
-.view-extended-text-entry .no-feedback {
+  .no-feedback {
     background-color: #f2dede;
     border-color: #eed3d7;
     color: #b94a48;
+  }
+
 }
 
 /* Config Panel */
 
-.extended-text-entry-configuration .narrow-form-label {
+.extended-text-entry-configuration {
+  .narrow-form-label {
     text-align: left;
     width: 110px;
+  }
 }
