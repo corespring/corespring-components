@@ -4,9 +4,11 @@ var link, main;
 main = [
   '$timeout',
   'MathJaxService',
-  function($timeout,MathJaxService) {
+  function($timeout, MathJaxService) {
     link = function() {
       return function(scope, element, attrs) {
+
+        var rawHintHtml;
 
         function shouldShowFormattingHelp() {
           var defaultValue = true;
@@ -20,29 +22,16 @@ main = [
           }
         }
 
-        scope.tooltipText = function() {
-          if (shouldShowFormattingHelp()) {
-            return [
-              '<ul style=\'text-align: left\'>',
-              '   <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
-              '   <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
-              '   <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
-              '   <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
-              '   <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
-              '   <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
-              '</ul>'
-            ].join('');
-          } else {
-            return '';
-          }
-        };
+        function resetHintPopover() {
+          $(element).find('.text-input').popover('destroy');
+          $(element).find('.text-input').popover({
+            content: rawHintHtml,
+            title: 'Hints',
+            html: true,
+            placement: 'bottom'
+          });
 
-
-        scope.showTooltip = function(ev) {
-          $timeout(function() {
-            MathJaxService.parseDomForMath();
-          }, 10);
-        };
+        }
 
         scope.helpOn = false;
         scope.editable = true;
@@ -53,6 +42,7 @@ main = [
             scope.session = dataAndSession.session || {};
 
             scope.answer = scope.session.answers;
+
           },
 
           getSession: function() {
@@ -69,8 +59,39 @@ main = [
             console.log(response);
 
             scope.correctClass = response.correctness;
+            if (_.isEmpty(scope.answer)) {
+              scope.correctClass = 'warning';
+            }
             scope.feedback = response.feedback;
             scope.comments = response.comments;
+
+            $(element).find('.text-input').popover('destroy');
+
+            var title, popoverClass;
+            var content = response.feedback;
+
+            if (response.correctness === 'incorrect') {
+              if (_.isEmpty(scope.answer)) {
+                title = 'Oops. Try again.';
+                content = "There seems to be an error in your submission";
+                popoverClass = 'warning';
+              } else {
+                title = 'Incorrect.';
+                popoverClass = 'incorrect';
+              }
+            } else if (response.correctness === 'correct') {
+              title = 'Correct.';
+              popoverClass = 'correct';
+            }
+
+            $(element).find('.text-input').popover({
+                title: title,
+                template: '<div class="popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                content: content,
+                placement: 'bottom',
+                html: true}
+            ).popover('show');
+
           },
 
           setMode: function(newMode) {
@@ -81,6 +102,7 @@ main = [
             scope.correctClass = undefined;
             scope.feedback = undefined;
             scope.comments = undefined;
+            resetHintPopover();
           },
 
           isAnswerEmpty: function() {
@@ -99,6 +121,15 @@ main = [
             scope.editable = e;
           }
         };
+
+        MathJaxService.onEndProcess(function() {
+          if (!rawHintHtml) {
+            rawHintHtml = $(element).find('.hidden-math').html();
+            resetHintPopover();
+
+          }
+        });
+
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
       };
     };
@@ -111,12 +142,20 @@ main = [
       link: link(),
       template: [
         '<div class="view-function-entry">',
-        '  <span class="text-input" ng-mouseover="showTooltip($event)" tooltip-html-unsafe="{{tooltipText()}}" tooltip-placement="bottom" >',
-        // angular tooltip spawns child scope so we need to access it through $parent
-        '    <input type="text" ng-disabled="!editable" ng-model="$parent.answer" class="form-control {{correctClass}}" />',
+        '  <span class="text-input {{correctClass}}">',
+        '    <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
         '  </span>',
-        '  <div ng-show="feedback" class="feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
+        '  <div class="hidden-math">',
+        '    <ul style=\'text-align: left; padding-left: 10px\'>',
+        '       <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
+        '       <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
+        '       <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
+        '       <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
+        '       <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
+        '       <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
+        '    </ul>',
+        '  </div>',
         '</div>'].join("\n")
     };
 

@@ -1,0 +1,158 @@
+@import '../../../../../less/common';
+
+/** editor placeholder */
+.component-placeholder.corespring-function-entry {
+  display: inline-block;
+  max-width: 200px;
+  margin-right: 10px;
+}
+
+
+.view-function-entry {
+  display: inline-block;
+  margin: 0 8px 0 3px;
+
+  .text-input {
+    width: auto;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .format-help {
+    padding-left: 30px;
+    width: 280px;
+    line-height: 30px;
+  }
+
+  .warning input {
+    .warning-input();
+  }
+
+  .correct input {
+    .correct-input()
+  }
+
+  .incorrect input {
+    .incorrect-input();
+  }
+
+  .correct,
+  .incorrect,
+  .warning {
+    position: relative;
+  }
+
+  .correct:after,
+  .incorrect:after,
+  .warning:after {
+    font-family: "fontawesome";
+    font-size: 24px;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+
+  .incorrect:after {
+    color: @incorrect-color;
+    content: '\f057';
+  }
+
+  .correct:after {
+    color: @correct-color;
+    content: '\f058';
+  }
+
+  .warning:after {
+    color: @warning-color;
+    content: '\f071';
+  }
+
+  .hidden-math {
+    display: none;
+  }
+
+  .popover {
+    padding: 0px;
+  }
+
+  .popover > .arrow:after {
+    border-bottom-color: #f7f7f7;
+  }
+
+  .popover-incorrect .popover-title {
+    background-color: @incorrect-color;
+    color: #ffffff;
+  }
+
+  .popover.popover-incorrect > .arrow:after {
+    border-bottom-color: @incorrect-color;
+  }
+
+  .popover-correct .popover-title {
+    background-color: @correct-color;
+    color: #ffffff;
+  }
+
+  .popover.popover-correct > .arrow:after {
+    border-bottom-color: @correct-color;
+  }
+
+  .popover-warning .popover-title {
+    background-color: @warning-color;
+    color: #ffffff;
+  }
+
+  .popover.popover-warning > .arrow:after {
+    border-bottom-color: @warning-color;
+  }
+
+}
+
+/* Config Panel */
+.cs-function-entry-cfg {
+
+  .description {
+    margin-bottom: 10px;
+  }
+
+  .well {
+    padding: 8px;
+  }
+
+  .main-header {
+    padding: 10px 10px 0px 10px;
+  }
+
+  .help-questionmark {
+    position: absolute;
+    margin-top: -5px;
+    margin-left: 5px;
+  }
+
+  .equation-input {
+    display: inline-block;
+    width: 90%;
+  }
+
+  &.__answers-holder {
+    padding-bottom: 10px;
+  }
+
+  .flex-container {
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    justify-content: space-around;
+  }
+
+  .flex-item {
+    flex: 1;
+    padding: 5px;
+    margin-top: 10px;
+  }
+}
