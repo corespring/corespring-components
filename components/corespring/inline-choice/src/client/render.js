@@ -135,7 +135,14 @@ link = function($sce, $timeout) {
         console.log(response);
         clearFeedback(scope.choices);
         setFeedback(scope.choices, response);
-        scope.response = response;
+        var r = _.cloneDeep(response);
+        if (response && response.feedback) {
+          r.feedback = response.feedback.feedback;
+        }
+        if (!scope.selected) {
+          r.correctness = 'warning';
+        }
+        scope.response = r;
       },
 
       setMode: function(newMode) {
@@ -188,27 +195,21 @@ main = [
       link: link($sce, $timeout),
       template: [
         '<div class="view-inline-choice" ng-class="response.correctness">',
-        '<div class="dropdown" >',
-        '<span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
-        '  <span ng-switch="selected.labelType">',
-        '    <img ng-switch-when="image" ng-src="{{selected.imageName}}"></img>',
-        '    <span ng-switch-default ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
-        '  </span>',
-        '</span>',
-        '<span class="feedback">&nbsp;',
-        '  <div class="tooltip hidden">',
-        '  <div class="tooltip-inner" ng-bind-html-unsafe="selected.feedback">',
+        '  <div class="dropdown" result-popover="response">',
+        '    <span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
+        '      <span ng-switch="selected.labelType">',
+        '        <img ng-switch-when="image" ng-src="{{selected.imageName}}"></img>',
+        '        <span ng-switch-default ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
+        '      </span>',
+        '    </span>',
+        '    <ul class="dropdown-menu">',
+        '      <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
+        '        <a ng-click="select(choice)" ng-switch-when="image"><img class="choice-image" ng-src="{{choice.imageName}}"></img></a>',
+        '        <a ng-click="select(choice)" ng-switch-default ng-bind-html-unsafe="choice.label"></a>',
+        '      </li>',
+        '    </ul>',
         '  </div>',
-        '  <span class="caret"></span>',
-        '  </div>',
-        '</span>',
-        '<ul class="dropdown-menu">',
-        '  <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
-        '    <a ng-click="select(choice)" ng-switch-when="image"><img class="choice-image" ng-src="{{choice.imageName}}"></img></a>',
-        '    <a ng-click="select(choice)" ng-switch-default ng-bind-html-unsafe="choice.label"></a>',
-        '  </li>',
-        '</ul>',
-        '</div>',
+        '  <span class="result-icon"></span>',
         '</div>'].join("\n")
     };
 
