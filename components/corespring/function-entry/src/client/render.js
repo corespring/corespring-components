@@ -1,6 +1,5 @@
 var link, main;
 
-
 main = [
   '$timeout',
   'MathJaxService',
@@ -31,7 +30,7 @@ main = [
               title: 'Hints',
               html: true,
               placement: 'bottom'
-            }).on('shown.bs.popover', function () {
+            }).on('shown.bs.popover', function() {
               if (!clickBound) {
                 $(element).find('.popover').click(function() {
                   $(element).find('.text-input').popover('hide');
@@ -55,10 +54,8 @@ main = [
           },
 
           getSession: function() {
-            var answer = scope.answer;
-
             return {
-              answers: answer
+              answers: scope.answer
             };
           },
 
@@ -71,40 +68,11 @@ main = [
             if (_.isEmpty(scope.answer)) {
               scope.correctClass = 'warning';
             }
-            scope.feedback = response.feedback;
-            scope.comments = response.comments;
 
-            $(element).find('.text-input').popover('destroy');
-
-            var title, popoverClass;
-            var content = response.feedback;
-
-            if (response.correctness === 'incorrect') {
-              if (_.isEmpty(scope.answer)) {
-                title = 'Oops. Try again.';
-                content = "There seems to be an error in your submission";
-                popoverClass = 'warning';
-              } else {
-                title = 'Incorrect.';
-                popoverClass = 'incorrect';
-              }
-            } else if (response.correctness === 'correct') {
-              title = 'Correct.';
-              popoverClass = 'correct';
+            if (_.isEmpty(scope.answer)) {
+              response.correctness = 'warning';
             }
-
-            $(element).find('.text-input').popover({
-                title: title,
-                template: '<div class="popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
-                content: content,
-                placement: 'bottom',
-                html: true}
-            ).popover('show');
-
-            $(element).find('.popover').click(function() {
-              $(element).find('.text-input').popover('hide');
-            });
-
+            scope.response = response;
           },
 
           setMode: function(newMode) {
@@ -113,8 +81,7 @@ main = [
           reset: function() {
             scope.answer = undefined;
             scope.correctClass = undefined;
-            scope.feedback = undefined;
-            scope.comments = undefined;
+            scope.resonse = undefined;
             resetHintPopover();
           },
 
@@ -154,10 +121,10 @@ main = [
       link: link(),
       template: [
         '<div class="view-function-entry">',
-        '  <span class="text-input {{correctClass}}">',
+        '  <span class="text-input {{correctClass}}" result-popover="response">',
         '    <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
         '  </span>',
-        '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
+        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '  <div class="hidden-math">',
         '    <ul style=\'text-align: left; padding-left: 10px\'>',
         '       <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
@@ -173,8 +140,7 @@ main = [
 
     return def;
   }
-]
-;
+];
 
 exports.framework = 'angular';
 exports.directive = main;
