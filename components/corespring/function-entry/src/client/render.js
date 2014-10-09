@@ -121,7 +121,7 @@ main = [
       link: link(),
       template: [
         '<div class="view-function-entry">',
-        '  <span class="text-input {{correctClass}}" result-popover="response">',
+        '  <span class="text-input {{correctClass}}" feedback-popover="response">',
         '    <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
         '  </span>',
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',

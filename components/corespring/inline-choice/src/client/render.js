@@ -195,7 +195,7 @@ main = [
       link: link($sce, $timeout),
       template: [
         '<div class="view-inline-choice" ng-class="response.correctness">',
-        '  <div class="dropdown" result-popover="response">',
+        '  <div class="dropdown" feedback-popover="response">',
         '    <span class="btn dropdown-toggle" ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
         '      <span ng-switch="selected.labelType">',
         '        <img ng-switch-when="image" ng-src="{{selected.imageName}}"></img>',

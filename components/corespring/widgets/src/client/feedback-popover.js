@@ -2,7 +2,7 @@ var def = function() {
   return {
     restrict: "A",
     scope: {
-      response: "=resultPopover"
+      response: "=feedbackPopover"
     },
     link: function(scope, element, attrs) {
       scope.$watch('response', function(response) {
@@ -27,7 +27,7 @@ var def = function() {
           $(element).popover('destroy');
           $(element).popover({
               title: title,
-              template: '<div class="popover result-popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+              template: '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
               content: content,
               placement: 'bottom',
               html: true}
@@ -46,6 +46,6 @@ var def = function() {
 
 exports.framework = "angular";
 exports.directive = {
-  name: "resultPopover",
+  name: "feedbackPopover",
   directive: def
 };
