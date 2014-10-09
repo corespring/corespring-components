@@ -40,6 +40,8 @@ describe('corespring', function() {
 
   beforeEach(function() {
     module(function($provide) {
+      var mockPopover = function(){ return {on: function(){}, popover: mockPopover }; };
+      $.fn.extend({popover: mockPopover});
       testModel = _.cloneDeep(testModelTemplate);
     });
 

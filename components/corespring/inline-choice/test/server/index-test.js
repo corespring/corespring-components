@@ -6,7 +6,7 @@ var fbu = require('../../../server-shared/src/server/feedback-utils');
 var proxyquire = require('proxyquire').noCallThru();
 
 server = proxyquire('../../src/server', {
-  'corespring.server-shared.server.feedback-utils' : fbu
+  'corespring.server-shared.server.feedback-utils': fbu
 });
 
 assert = require('assert');
@@ -25,10 +25,12 @@ component = {
       {
         label: "apple",
         value: "apple"
-      }, {
+      },
+      {
         label: "carrot",
         value: "carrot"
-      }, {
+      },
+      {
         label: "banana",
         value: "banana"
       }
@@ -79,11 +81,9 @@ describe('inline-choice server logic', function() {
         correctness: "correct",
         score: 1,
         feedback: {
-          "carrot": {
-            feedbackType: "default",
-            feedback: server.defaults.correct,
-            correct: true
-          }
+          feedbackType: "default",
+          feedback: server.defaults.correct,
+          correct: true
         }
       };
       response.should.eql(expected);
@@ -95,10 +95,8 @@ describe('inline-choice server logic', function() {
         correctness: "incorrect",
         score: 0,
         feedback: {
-          "apple": {
-            feedback: "Huh?",
-            correct: false
-          }
+          feedback: "Huh?",
+          correct: false
         }
       };
       response.should.eql(expected);
@@ -112,10 +110,8 @@ describe('inline-choice server logic', function() {
         correctness: "incorrect",
         score: 0,
         feedback: {
-          "apple": {
-            feedback: "Huh?",
-            correct: false
-          }
+          feedback: "Huh?",
+          correct: false
         }
       };
       response.should.eql(expected);
@@ -128,11 +124,9 @@ describe('inline-choice server logic', function() {
         correctness: "incorrect",
         score: 0,
         feedback: {
-          "banana": {
-            feedbackType: "default",
-            feedback: server.defaults.incorrect,
-            correct: false
-          }
+          feedbackType: "default",
+          feedback: server.defaults.incorrect,
+          correct: false
         }
       };
       response.should.eql(expected);
