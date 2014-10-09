@@ -1,0 +1,33 @@
+@import '../../../../../less/common';
+
+.popover.result-popover.popover {
+  padding: 0px;
+  min-width: 120px;
+}
+
+.popover.result-popover.popover-incorrect .popover-title {
+  background-color: @incorrect-color;
+  color: #ffffff;
+}
+
+.popover.result-popover.popover.popover-incorrect > .arrow:after {
+  border-bottom-color: @incorrect-color;
+}
+
+.popover.result-popover.popover-correct .popover-title {
+  background-color: @correct-color;
+  color: #ffffff;
+}
+
+.popover.result-popover.popover.popover-correct > .arrow:after {
+  border-bottom-color: @correct-color;
+}
+
+.popover.result-popover.popover-warning .popover-title {
+  background-color: @warning-color;
+  color: #ffffff;
+}
+
+.popover.result-popover.popover.popover-warning > .arrow:after {
+  border-bottom-color: @warning-color;
+}
