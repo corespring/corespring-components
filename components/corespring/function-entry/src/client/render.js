@@ -8,7 +8,7 @@ main = [
     link = function() {
       return function(scope, element, attrs) {
 
-        var rawHintHtml;
+        var rawHintHtml, clickBound;
 
         function shouldShowFormattingHelp() {
           var defaultValue = true;
@@ -24,16 +24,22 @@ main = [
 
         function resetHintPopover() {
           $(element).find('.text-input').popover('destroy');
-
+          clickBound = false;
           if (shouldShowFormattingHelp()) {
             $(element).find('.text-input').popover({
               content: rawHintHtml,
               title: 'Hints',
               html: true,
               placement: 'bottom'
+            }).on('shown.bs.popover', function () {
+              if (!clickBound) {
+                $(element).find('.popover').click(function() {
+                  $(element).find('.text-input').popover('hide');
+                });
+                clickBound = true;
+              }
             });
           }
-
         }
 
         scope.helpOn = false;
@@ -94,6 +100,10 @@ main = [
                 placement: 'bottom',
                 html: true}
             ).popover('show');
+
+            $(element).find('.popover').click(function() {
+              $(element).find('.text-input').popover('hide');
+            });
 
           },
 
