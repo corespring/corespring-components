@@ -50,7 +50,7 @@ describe('corespring', function() {
       module(function($provide) {
         testModel = _.cloneDeep(testModelTemplate);
         $provide.value('MathJaxService', new MockMathJaxService());
-        $.fn.extend({popover: function(){}});
+        $.fn.extend({popover: function(){ return {on: function() {}};}});
       });
     });
 
