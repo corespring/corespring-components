@@ -11,7 +11,7 @@
     "client": {
       "corespring-checkbox": {
         "bower_target": "git@github.com:corespring/checkbox.git",
-        "version": "0.0.3",
+        "version": "0.0.5",
         "file": "src/directive.js",
         "angular-module": "corespring.input.checkbox"
       }
