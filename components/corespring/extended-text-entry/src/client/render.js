@@ -69,7 +69,6 @@ main = [
     def = {
       scope: {},
       restrict: 'AE',
-      replace: true,
       link: link(),
       template: [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
@@ -78,7 +77,7 @@ main = [
         '    <i class="warning-icon fa fa-warning"></i>',
         '  </div>',
         '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
-        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
+        '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
         '</div>'].join("\n")
     };
 
