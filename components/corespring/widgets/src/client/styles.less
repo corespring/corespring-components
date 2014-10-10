@@ -1,0 +1,63 @@
+@import '../../../../../less/common';
+
+.popover.feedback-popover.popover {
+  padding: 0px;
+  min-width: 120px;
+}
+
+.popover.feedback-popover.popover-incorrect .popover-title {
+  background-color: @incorrect-color;
+  color: #ffffff;
+}
+
+.popover.feedback-popover.popover {
+  &.popover-incorrect > .arrow:after {
+    border-bottom-color: @incorrect-color;
+  }
+
+  &.popover-correct .popover-title {
+    background-color: @correct-color;
+    color: #ffffff;
+  }
+
+  &.popover-correct > .arrow:after {
+    border-bottom-color: @correct-color;
+  }
+
+  &.popover-warning .popover-title {
+    background-color: @warning-color;
+    color: #ffffff;
+  }
+
+  &.popover.popover-warning > .arrow:after {
+    border-bottom-color: @warning-color;
+  }
+}
+
+.panel.learn-more-panel {
+  max-width: 95%;
+  .color-panel(@learn-more-color);
+  box-shadow: none;
+  border: none;
+
+  .panel-heading {
+    border-radius: 4px;
+
+    a {
+      color: #fff;
+    }
+
+    i.fa {
+      font-size: 28px;
+      margin-right: 10px;
+    }
+  }
+
+  .panel-body {
+    margin-top: -5px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 10px;
+  }
+
+}
