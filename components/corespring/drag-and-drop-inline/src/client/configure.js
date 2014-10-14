@@ -301,18 +301,29 @@ var main = [
 ];
 
 var bootstrapMultiselect = [
-  '$log',
-  function($log) {
-    return {
-      link: function(scope, element, attrs) {
-        attrs.$observe('bootstrapMultiselect', function(n) {
-          if (n === 'initialized') {
-            $(element).multiselect();
-          }
-        });
-      }
-    };
+  function() {
+    return function(scope, element, attrs) {
+      element.multiselect();
+      var btn = element.next().find('button');
+      btn.dropdown();
 
+      scope.$watch(function () {
+        return element[0].length;
+      }, function () {
+        element.multiselect('rebuild');
+      });
+
+      scope.$watch(attrs.ngModel, function () {
+        element.multiselect('refresh');
+      });
+
+      if (attrs.ngOptions && _.isString(attrs.ngOptions)) {
+        var model = attrs.ngOptions.split("in ")[1];
+        scope.$watch(model, function(n) {
+          element.multiselect('rebuild');
+        }, true);
+      }
+    }
   }
 ];
 

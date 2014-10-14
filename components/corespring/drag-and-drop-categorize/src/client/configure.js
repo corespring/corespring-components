@@ -34,7 +34,7 @@ var main = [
       '  <div class="pull-right select-correct-answers">Select Correct Categories</div>',
       '  <div class="choice" ng-repeat="q in model.choices">',
       ChoiceTemplates.choice({
-        correct: '<select bootstrap-multiselect="{{componentState}}" multiple="true" ng-model="correctMap[q.id]" ng-options="c.label for c in model.categories"></select>',
+        correct: '<select bootstrap-multiselect="{{componentState}}" multiple="multiple" ng-model="correctMap[q.id]" ng-options="c.label for c in model.categories"></select>',
         feedback: false,
         columnWidths: ["100px", "100%", "", "100px"]
       }),
@@ -304,33 +304,30 @@ var main = [
 ];
 
 var bootstrapMultiselect = [
-  '$log',
-  function($log) {
-    return {
-      scope: true,
-      link: function(scope, element, attrs) {
-        var rebuild = function() {
-          $(element).multiselect('setOptions', {
-            numberDisplayed: 1
-          });
-          $(element).multiselect('rebuild');
-        };
-        attrs.$observe('bootstrapMultiselect', function(n) {
-          if (n === 'initialized') {
-            rebuild();
-          }
+  function() {
+    return function(scope, element, attrs) {
+        element.multiselect();
+        var btn = element.next().find('button');
+        btn.dropdown();
+
+        scope.$watch(function () {
+          return element[0].length;
+        }, function () {
+          element.multiselect('rebuild');
         });
-        var n = attrs.ngOptions;
-        if (n) {
-          var model = n.split("in ")[1];
+
+        scope.$watch(attrs.ngModel, function () {
+          element.multiselect('refresh');
+        });
+
+        if (attrs.ngOptions && _.isString(attrs.ngOptions)) {
+          var model = attrs.ngOptions.split("in ")[1];
           scope.$watch(model, function(n) {
-            rebuild();
+            element.multiselect('rebuild');
           }, true);
         }
       }
-    };
-
-  }
+    }
 ];
 
 exports.framework = 'angular';
