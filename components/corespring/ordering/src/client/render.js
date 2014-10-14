@@ -67,6 +67,12 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           };
         },
 
+        reset: function() {
+          scope.resetChoices(scope.rawModel);
+          scope.comments = undefined;
+          scope.feedback = undefined;
+        },
+
         setResponse: function(response) {
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
