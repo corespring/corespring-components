@@ -323,7 +323,7 @@ var bootstrapMultiselect = [
           element.multiselect('rebuild');
         }, true);
       }
-    }
+    };
   }
 ];
 
