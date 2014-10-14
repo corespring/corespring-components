@@ -153,7 +153,9 @@ var dragAndDropController = [
 
         scope.getChoiceRows = function() {
           var choices = scope.local.choices;
-          return _.range(choices.length / scope.itemsPerRow());
+          if (choices) {
+            return _.range(choices.length / scope.itemsPerRow());
+          }
         };
 
         scope.getChoicesForRow = function(row) {
@@ -216,7 +218,7 @@ var dragAndDropController = [
 
         scope.$watch('landingPlaceChoices', function(n) {
           var state = {
-            choices: _.cloneDeep(scope.choices),
+            choices: _.cloneDeep(scope.local.choices),
             landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
           };
           if (!_.isEqual(state, _.last(scope.stack))) {
