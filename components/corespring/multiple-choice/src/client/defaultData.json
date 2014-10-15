@@ -56,7 +56,6 @@
     "config": {
       "orientation": "vertical",
       "shuffle": false,
-      "choiceType": "radio",
       "choiceLabels": "letters"
     }
   }

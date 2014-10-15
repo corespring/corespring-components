@@ -64,6 +64,13 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
   }
 };
 
+exports.preprocess = function(json) {
+  if (_.isUndefined(json.model.config.choiceType)) {
+    json.model.config.choiceType = (json.correctResponse.value.length === 1) ? "radio" : "checkbox";
+  }
+  return json;
+};
+
 exports.isCorrect = function(answer, correctAnswer, isSingleChoice) {
   var diff, diff2;
   diff = _.difference(answer, correctAnswer);
