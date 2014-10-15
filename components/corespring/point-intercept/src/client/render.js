@@ -328,6 +328,7 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.response = undefined;
             scope.feedback = undefined;
             scope.correctResponse = undefined;
+            scope.isFeedbackVisible = false;
           },
 
           isAnswerEmpty: function() {
