@@ -17,10 +17,10 @@ var def = function() {
             content = "There seems to be an error in your submission";
             popoverClass = 'warning';
           } else if (response.correctness === 'incorrect') {
-            title = 'Incorrect.';
+            title = '&nbsp;';
             popoverClass = 'incorrect';
           } else if (response.correctness === 'correct') {
-            title = 'Correct.';
+            title = '&nbsp;';
             popoverClass = 'correct';
           }
 
