@@ -1,0 +1,124 @@
+{
+  "title" : "CoreSpring Text Entry Question Schema",
+  "type" : "object",
+  "definitions" : {
+    "feedback" : {
+      "description" : "Describes feedback which should be presented to the user when the component is submitted.",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "description" : "Describes the type of feedback that will be shown if this answer is entered.",
+          "enum" : ["custom", "default", "none"]
+        },
+        "value" : {
+          "description" : "The value of the answer related to this feedback configuration.",
+          "type" : "string"
+        },
+        "custom" : {
+          "description" : "Custom feedback that will be displayed to the user if this choice is selected, and type is custom.",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For text entry, this must be 'corespring-text-entry'.",
+      "type" : "string"
+    },
+    "correctResponses" : {
+      "description" : "An object describing the correct responses for the component.",
+      "type" : "object",
+      "properties" : {
+        "award" : {
+          "description" : "A percentage of the score that is awarded for a correct response.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
+        },
+        "caseSensitive" : {
+          "description" : "If true, match the case of the provided answer with the correct response.",
+          "type" : "boolean"
+        },
+        "feedback" : {
+          "$ref" : "#/definitions/feedback"
+        },
+        "ignoreWhitespace" : {
+          "description" : "If true, ignore whitespace in matching the response.",
+          "type" : "boolean"
+        },
+        "values" : {
+          "type" : "array",
+          "description" : "An array of responses which are considered correct.",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "incorrectResponses" : {
+      "description" : "An object describing incorrect responses for the component.",
+      "properties" : {
+        "award" : {
+          "description" : "A percentage of the score that is awarded for an incorrect response.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
+        },
+        "feedback" : {
+          "$ref" : "#/definitions/feedback"
+        }
+      }
+    },
+    "model" : {
+      "properties" : {
+        "answerBlankSize" : {
+          "description" : "Sets the width of the field used for entering a text answer.",
+          "type" : "string"
+        },
+        "answerAlignment" : {
+          "description" : "Sets the alignment of the text answer being entered within the answer area.",
+          "enum" : ["center", "left", "right"]
+        }
+      }
+    },
+    "partialResponses" : {
+      "description" : "An object describing partially correct responses for the component.",
+      "properties" : {
+        "award" : {
+          "description" : "A percentage of the score that is awarded for a partially correct response.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
+        },
+        "ignoreCase" : {
+          "description" : "If true, ignore the case of the provided answer with the response.",
+          "type" : "boolean"
+        },
+        "ignoreWhitespace" : {
+          "description" : "If true, ignore whitespace in matching the response.",
+          "type" : "boolean"
+        },
+        "feedback" : {
+          "$ref" : "#/definitions/feedback"
+        },
+        "values" : {
+          "description" : "An array of responses which are considered partially correct.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    },
+    "weight" : {
+      "description" : "The weighting to be assigned to the interaction in the context of the overall item.",
+      "type" : "number"
+    }
+  },
+  "required" : ["componentType", "correctResponses"]
+}

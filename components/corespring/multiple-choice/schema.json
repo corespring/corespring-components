@@ -139,7 +139,7 @@
       "type" : "object"
     },
     "title" : {
-      "description" : "A title for the interaction.",
+      "description" : "A title for the interaction, displayed in the editor.",
       "type" : "string"
     },
     "weight" : {
