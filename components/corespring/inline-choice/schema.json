@@ -1,0 +1,93 @@
+{
+  "title" : "CoreSpring Inline Choice Question Schema",
+  "type" : "object",
+  "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For inline choice, this must be 'corespring-inline-choice'.",
+      "type" : "string"
+    },
+    "correctResponse" : {
+      "description" : "The value of the correct response for the inline choice.",
+      "type" : "string"
+    },
+    "feedback" : {
+      "description" : "Describes feedback which should be presented to the user when the component is submitted.",
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "description" : "The value of the answer related to this feedback configuration.",
+            "type" : "string"
+          },
+          "feedback" : {
+            "description" : "Custom feedback that will be displayed to the user if this choice is selected, and feedbackType is custom.",
+            "type" : "string"
+          },
+          "feedbackType" : {
+            "description" : "Describes the type of feedback that will be shown if this choice is selected.",
+            "enum" : ["custom", "default", "none"]
+          }
+        },
+        "required" : ["feedbackType", "value"]
+      }
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "choices" : {
+          "description" : "The choices rendered for the interaction.",
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "description" : "The label to be rendered for the choice.",
+              "label" : {
+                "type" : "string"
+              },
+              "labelType" : {
+                "description" : "The content type of the choice (at present, only text is supported).",
+                "enum" : ["text"]
+              },
+              "shuffle" : {
+                "description" : "Determines whether this particular choice should be shuffled when the config shuffle option is enabled.",
+                "type" : "boolean"
+              },
+              "value" : {
+                "description" : "The value used for the choice. This is used to determine correctness and feedback.",
+                "type" : "string"
+              }
+            },
+            "required" : ["label", "value"]
+          }
+        },
+        "config" : {
+          "type" : "object",
+          "properties" : {
+            "shuffle" : {
+              "description" : "A boolean value which indicates whether the choices should be shuffled when the component is rendered.",
+              "type" : "boolean"
+            },
+            "orientation" : {
+              "description" : "Indicates how the choices should be laid out (not sure if this should actually be here).",
+              "enum" : ["vertical"]
+            }
+          }
+        },
+        "scoringType" : {
+          "enum" : ["standard"]
+        }
+      },
+      "required" : ["choices", "config"]
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    },
+    "weight" : {
+      "description" : "The weighting to be assigned to the interaction in the context of the overall item.",
+      "type" : "number"
+    }
+  },
+  "required" : ["componentType", "correctResponse", "model"]
+}
