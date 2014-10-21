@@ -1,21 +1,75 @@
 {
-  "title" : "Multiple Choice Question Schema",
+  "title" : "CoreSpring Multiple Choice Question Schema",
   "type" : "object",
   "properties" : {
+    "allowPartialScoring" : {
+      "type" : "boolean"
+    },
     "componentType" : {
       "type" : "string"
     },
-    "title" : {
-      "type" : "string"
+    "correctResponse" : {
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : ["value"]
     },
-    "weight" : {
-      "type" : "number"
+    "feedback" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "feedback" : {
+            "type" : "string"
+          },
+          "feedbackType" : {
+            "enum" : ["none", "custom"]
+          },
+          "notChosenFeedback" : {
+            "type" : "string"
+          },
+          "notChosenFeedbackType" : {
+            "enum" : ["none", "custom"]
+          },
+          "value" : {
+            "type" : "string"
+          }
+        },
+        "required" : ["value"]
+      }
     },
     "model" : {
       "type" : "object",
       "properties" : {
         "config" : {
-          "type" : "object"
+          "type" : "object",
+          "properties" : {
+            "choiceLabels" : {
+              "enum" : ["letters", "none", "numbers"]
+            },
+            "choiceType" : {
+              "enum" : ["checkbox", "radio"]
+            },
+            "choiceStyle" : {
+              "type" : "string"
+            },
+            "orientation" : {
+              "enum" : ["vertical", "horizontal", "tile"]
+            },
+            "shuffle" : {
+              "type" : "boolean"
+            },
+            "singleChoice" : {
+              "type" : "boolean"
+            }
+          },
+          "required" : ["choiceLabels", "choiceType"]
         },
         "choices" : {
           "type" : "array",
@@ -25,6 +79,9 @@
               "label" : {
                 "type" : "string"
               },
+              "labelType" : {
+                "enum" : ["text"]
+              },
               "value" : {
                 "type" : "string"
               }
@@ -33,6 +90,33 @@
         }
       },
       "required" : ["choices", "config"]
+    },
+    "partialScoring" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "numberOfCorrect" : {
+            "type" : "number"
+          },
+          "scorePercentage" : {
+            "type" : "number",
+            "minimum" : 0,
+            "maximum" : 100
+          }
+        },
+        "required" : ["numberOfCorrect", "scorePercentage"]
+      }
+    },
+    "scoreMapping" : {
+      "type" : "object"
+    },
+    "title" : {
+      "type" : "string"
+    },
+    "weight" : {
+      "type" : "number"
     }
-  }
+  },
+  "required" : ["componentType", "model", "correctResponse"]
 }
