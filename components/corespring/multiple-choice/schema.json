@@ -1,0 +1,38 @@
+{
+  "title" : "Multiple Choice Question Schema",
+  "type" : "object",
+  "properties" : {
+    "componentType" : {
+      "type" : "string"
+    },
+    "title" : {
+      "type" : "string"
+    },
+    "weight" : {
+      "type" : "number"
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "config" : {
+          "type" : "object"
+        },
+        "choices" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "label" : {
+                "type" : "string"
+              },
+              "value" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "required" : ["choices", "config"]
+    }
+  }
+}

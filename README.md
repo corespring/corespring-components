@@ -79,3 +79,13 @@ You can use the following test commands:
     --browserName=firefox - passed to webdriverjs
     --version="10.2" - passed to webdriverjs
     --platform=windows - passed to webdriverjs
+
+## Validating an Item
+
+You can validate a item's JSON by using the `validate` grunt task with the `--file` option. For example, if you wanted
+to validate an item in the path `~/Downloads/item.json`, then you would run the following:
+
+    grunt validate --file=~/Downloads/item.json
+
+This will return warnings if there are components within the item for which a schema has not been defined, and the
+grunt task will fail for any components which do not validate against their `schema.json` file.
