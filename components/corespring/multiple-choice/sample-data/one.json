@@ -39,7 +39,9 @@
           "config": {
             "orientation": "vertical",
             "shuffle": true,
-            "singleChoice": true
+            "singleChoice": true,
+            "choiceLabels" : "letters",
+            "choiceType": "radio"
           },
           "choices": [
             {

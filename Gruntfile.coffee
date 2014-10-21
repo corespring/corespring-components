@@ -127,7 +127,10 @@ module.exports = (grunt) ->
     'regression-test-runner'
   ]
 
+
+
   grunt.loadNpmTasks(t) for t in npmTasks
+  grunt.loadTasks('tasks')
   grunt.registerTask('buildcomponents', ['less:production', 'clean:test', 'clean:production'])
   grunt.registerTask('regression', ['regressionTestRunner:dev'])
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
