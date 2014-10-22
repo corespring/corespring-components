@@ -120,8 +120,8 @@
         "description" : "A configuration object which maps the number of correct responses to the percentage to be awarded.",
         "type" : "object",
         "properties" : {
-          "description" : "The number of correct responses.",
           "numberOfCorrect" : {
+            "description" : "The number of correct responses.",
             "type" : "number"
           },
           "scorePercentage" : {

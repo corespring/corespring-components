@@ -1,0 +1,138 @@
+{
+  "title" : "CoreSpring Ordering Question Schema",
+  "type" : "object",
+  "properties" : {
+    "allowPartialScoring" : {
+      "type" : "boolean"
+    },
+    "comments" : {
+      "type" : "string"
+    },
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For ordering, this must be 'corespring-ordering'.",
+      "type" : "string"
+    },
+    "correctResponse" : {
+      "description" : "An array of choice ids representing the correct response for the interaction.",
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "feedback" : {
+      "description" : "Describes feedback which should be presented to the user when the component is submitted.",
+      "type" : "object",
+      "correctFeedback" : {
+        "description" : "A feedback string that will be shown for a correct response if correctFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "correctFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if all of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "incorrectFeedback" : {
+        "description" : "A feedback string that will be shown for a incorrect response if incorrectFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "incorrectFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if no correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "partialFeedback" : {
+        "description" : "A feedback string that will be shown for a partially correct response if partialFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "partialFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if some of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      }
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "choices" : {
+          "description" : "The choices rendered for the interaction.",
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "id" : {
+                "description" : "The id used for the choice. This is used to determine correctness and feedback.",
+                "type" : "string"
+              },
+              "label" : {
+                "description" : "The label to be rendered for the choice.",
+                "type" : "string"
+              },
+              "labelType" : {
+                "description" : "The content type of the choice (at present, only text is supported).",
+                "enum" : ["text"]
+              },
+              "moveOnDrag" : {
+                "description" : "Determines whether the choice should be removed from the choice area when dragged to the answer area.",
+                "type" : "boolean"
+              }
+            },
+            "required" : ["id", "label"]
+          }
+        },
+        "config" : {
+          "type" : "object",
+          "properties" : {
+            "answerAreaLabel" : {
+              "description" : "Text which is used to label the answer area.",
+              "type" : "string"
+            },
+            "choiceAreaLabel" : {
+              "description" : "Text which is used to label the choice area.",
+              "type" : "string"
+            },
+            "choiceAreaLayout" : {
+              "description" : "Determines whether the choices should be laid out vertically or horizontally",
+              "enum" : ["horizontal", "vertical"]
+            },
+            "placementType" : {
+              "description" : "Determines whether the interaction pertains to ordering in-place or whether choices are placed into an answer area.",
+              "enum" : ["inPlace", "placement"]
+            },
+            "shuffle" : {
+              "description" : "Sets whether to shuffle the choices.",
+              "type" : "boolean"
+            }
+          },
+          "required" : ["placementType"]
+        }
+      },
+      "required" : ["choices", "config"]
+    },
+    "partialScoring" : {
+      "description" : "A description of the partial scoring to be used by the interaction.",
+      "type" : "array",
+      "items" : {
+        "description" : "A configuration object which maps the number of correct responses to the percentage to be awarded.",
+        "type" : "object",
+        "properties" : {
+          "numberOfCorrect" : {
+            "description" : "The number of correct responses.",
+            "type" : "number"
+          },
+          "scorePercentage" : {
+            "description" : "The percentage of the score to be awarded for the number of correct responses.",
+            "type" : "number",
+            "maximum" : 100,
+            "minimum" : 0
+          }
+        }
+      }
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    },
+    "weight" : {
+      "description" : "The weighting to be assigned to the interaction in the context of the overall item.",
+      "type" : "number"
+    }
+  },
+  "required" : ["componentType", "correctResponse", "model"]
+}
