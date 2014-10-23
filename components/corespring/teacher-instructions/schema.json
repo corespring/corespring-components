@@ -1,0 +1,11 @@
+{
+  "title" : "Corespring Teacher Instructions",
+  "type" : "object",
+  "properties" : {
+    "value": {
+      "description" : "An XHTML value to be rendered by the component.",
+      "type" : "string"
+    }
+  },
+  "required" : ["value"]
+}
