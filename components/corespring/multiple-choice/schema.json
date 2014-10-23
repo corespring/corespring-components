@@ -103,6 +103,10 @@
                 "description" : "The content type of the choice (at present, only text is supported).",
                 "enum" : ["text"]
               },
+              "rationale" : {
+                "description" : "An explanation of why the answer is correct/incorrect. This is only displayed to the teacher.",
+                "type" : "string"
+              },
               "value" : {
                 "description" : "The value used for the choice. This is used to determine correctness and feedback.",
                 "type" : "string"

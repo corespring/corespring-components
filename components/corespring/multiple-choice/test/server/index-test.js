@@ -247,6 +247,44 @@ describe('multiple-choice server logic', function() {
 
   });
 
+  describe('Preprocessing', function() {
+    var preprocessComponent = {
+      componentType: 'corespring-multiple-choice',
+      correctResponse: {
+        value: ['1']
+      },
+      model: {
+        config: {},
+        choices : [
+          {
+            label: 'a',
+            value: '1',
+            rationale: 'This should be stripped by preprocessing'
+          },
+          {
+            label: 'b',
+            value: '2',
+            rationale: 'This should also be stripped by preprocessing'
+          }
+        ]
+      }
+    };
+
+    it('should add choiceType if none present', function() {
+
+      var json = server.preprocess(preprocessComponent);
+      json.model.config.choiceType.should.not.eql(undefined);
+    });
+
+    it('should remove rationale from choices', function() {
+      var json = server.preprocess(preprocessComponent);
+      _.forEach(json.model.choices, function(choice) {
+        (typeof choice.rationale).should.eql('undefined');
+      });
+    });
+
+  });
+
   describe('Scoring', function() {
     it('if no partial scoring is allowed score should be proportionate to number of correctly chosen answers', function() {
       var response = server.respond(component, ["carrot"], helper.settings(true, true, false));
