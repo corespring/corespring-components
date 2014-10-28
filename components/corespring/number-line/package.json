@@ -1,0 +1,10 @@
+{
+  "libraries": [
+    {
+      "name": "graph-utils",
+      "organization": "corespring"
+    }
+  ],
+  "name": "number-line",
+  "organization": "corespring"
+}

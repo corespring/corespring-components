@@ -1,0 +1,13 @@
+{
+  "name": "graph-utils",
+  "purpose": "library",
+  "organization": "corespring",
+  "dependencies": {
+    "client": {
+      "raphael": {
+        "version": "~2.1.2",
+        "file": "raphael-min.js"
+      }
+    }
+  }
+}
