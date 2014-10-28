@@ -1,6 +1,3 @@
-var BASE_COLOR = "#55f";
-var EMPTY_COLOR = "#fff";
-var DEFAULT_STROKE_WIDTH = 3;
 exports.framework = 'angular';
 exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorator', function($log, ScaleUtils, GraphElementFactory, RaphaelDecorator) {
 
@@ -17,6 +14,9 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       domain: [0, 20],
       range: [0, 20],
       applyCallback: function() {
+      },
+      selectionChanged: function() {
+
       }
     });
     _.defaults(options, {
@@ -44,6 +44,27 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       that.redraw();
     };
 
+    this.getSelectedElements = function() {
+      var selectedPositions = [];
+      _.each(this.elements, function(e) {
+         if (e.selected) {
+           selectedPositions.push(e.model.rangePosition);
+         }
+      });
+      return selectedPositions;
+    };
+
+    this.clear = function() {
+      _.each(that.elements, function(element) {
+        if (element.detach) {
+          element.detach();
+        }
+      });
+      that.paper.clear();
+      this.elements = [];
+      this.redraw();
+    };
+
     this.redraw = function() {
       _.each(that.elements, function(element) {
         if (element.detach) {
@@ -64,27 +85,22 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
 
     this.addHorizontalAxis = function(position, axisOptions) {
       that.horizontalAxis = new graphElementFactory.HorizontalAxis(position, axisOptions, options);
-      that.redraw();
     };
 
     this.addVerticalAxis = function(position, axisOptions) {
       that.verticalAxis = new graphElementFactory.VerticalAxis(position, axisOptions, options);
-      that.redraw();
     };
 
     this.addMovablePoint = function(pointModel, pointOptions) {
       that.elements.push(new graphElementFactory.MovablePoint(pointModel, pointOptions));
-      that.redraw();
     };
 
     this.addMovableLineSegment = function(lineModel, lineOptions) {
       that.elements.push(new graphElementFactory.MovableLineSegment(lineModel, lineOptions));
-      that.redraw();
     };
 
     this.addMovableRay = function(lineModel, lineOptions) {
       that.elements.push(new graphElementFactory.MovableRay(lineModel, lineOptions));
-      that.redraw();
     };
   };
 

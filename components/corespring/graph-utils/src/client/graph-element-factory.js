@@ -13,7 +13,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
     this.MovablePoint = function(pointModel, pointOptions) {
       var thisPoint = this;
-      this.pointModel = pointModel;
+      this.model = pointModel;
       this.selected = false;
       pointOptions = _.defaults(pointOptions || {}, {
         size: 10,
@@ -24,6 +24,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       });
       this.detach = function() {
         this.point = undefined;
+      };
+      this.remove = function() {
+        if (this.point) {
+          this.point.remove();
+        }
+        this.detach();
       };
       this.moveTo = function(d, r) {
         var tickDp = _.min(that.horizontalAxis.ticks, function(t) {
@@ -68,6 +74,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             if (pointOptions.onSelectionChanged) {
               pointOptions.onSelectionChanged(thisPoint.selected);
             }
+            options.selectionChanged();
           }
         };
 
@@ -92,10 +99,11 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       pointOptions = pointOptions || {};
       var thatLI = this;
       this.selected = false;
+      this.model = lineModel;
       function updateLineModel() {
-        lineModel.domainPosition = thatLI.p1.pointModel.domainPosition;
-        lineModel.rangePosition = thatLI.p1.pointModel.rangePosition;
-        lineModel.size = thatLI.p2.pointModel.domainPosition - thatLI.p1.pointModel.domainPosition;
+        lineModel.domainPosition = thatLI.p1.model.domainPosition;
+        lineModel.rangePosition = thatLI.p1.model.rangePosition;
+        lineModel.size = thatLI.p2.model.domainPosition - thatLI.p1.model.domainPosition;
         options.applyCallback();
       }
 
@@ -134,9 +142,19 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.p1.detach();
         this.p2.detach();
       };
+
+      this.remove = function() {
+        if (this.line) {
+          this.line.remove();
+        }
+        this.p1.remove();
+        this.p2.remove();
+        this.detach();
+      };
+
       this.drawLine = function() {
-        var x = options.margin.left + that.horizontalAxis.scale(this.p1.pointModel.domainPosition);
-        var x1 = options.margin.left + that.horizontalAxis.scale(this.p2.pointModel.domainPosition);
+        var x = options.margin.left + that.horizontalAxis.scale(this.p1.model.domainPosition);
+        var x1 = options.margin.left + that.horizontalAxis.scale(this.p2.model.domainPosition);
         x += (x < x1) ? 10 : -10;
         var y = options.height - options.margin.bottom - options.axisHeight - that.verticalAxis.scale(lineModel.rangePosition);
 
@@ -146,8 +164,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             console.log("starting");
             this.ox = this.attr("cx");
             this.oy = this.attr("cy");
-            this.op1d = thatLI.p1.pointModel.domainPosition;
-            this.op2d = thatLI.p2.pointModel.domainPosition;
+            this.op1d = thatLI.p1.model.domainPosition;
+            this.op2d = thatLI.p2.model.domainPosition;
             this.hasMoved = false;
             this.animate({"stroke-width": 10, opacity: .25}, 200, ">");
           };
@@ -157,8 +175,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
               this.op2d + dp > options.domain[0] && this.op2d + dp < options.domain[1]) {
               thatLI.p1.moveTo(this.op1d + dp, 0);
               thatLI.p2.moveTo(this.op2d + dp, 0);
-              this.x = that.horizontalAxis.scale(thatLI.p1.pointModel.domainPosition) + options.margin.left;
-              this.x1 = that.horizontalAxis.scale(thatLI.p2.pointModel.domainPosition) + options.margin.left;
+              this.x = that.horizontalAxis.scale(thatLI.p1.model.domainPosition) + options.margin.left;
+              this.x1 = that.horizontalAxis.scale(thatLI.p2.model.domainPosition) + options.margin.left;
               this.redraw();
               updateLineModel();
               this.hasMoved = true;
@@ -169,6 +187,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             if (!this.hasMoved) {
               thatLI.selected = thatLI.p1.selected = thatLI.p2.selected = !thatLI.selected;
               thatLI.draw();
+              options.selectionChanged();
             }
           };
 
@@ -197,10 +216,11 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       var thatLI = this;
 
       this.selected = false;
+      this.model = lineModel;
 
       function updateLineModel() {
-        lineModel.domainPosition = thatLI.p1.pointModel.domainPosition;
-        lineModel.rangePosition = thatLI.p1.pointModel.rangePosition;
+        lineModel.domainPosition = thatLI.p1.model.domainPosition;
+        lineModel.rangePosition = thatLI.p1.model.rangePosition;
         options.applyCallback();
       }
 
@@ -222,8 +242,16 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.p1.detach();
       };
 
+      this.remove = function() {
+        if (this.line) {
+          this.line.remove();
+        }
+        this.p1.remove();
+        this.detach();
+      };
+
       this.drawLine = function() {
-        var x = options.margin.left + that.horizontalAxis.scale(this.p1.pointModel.domainPosition);
+        var x = options.margin.left + that.horizontalAxis.scale(this.p1.model.domainPosition);
         var x1 = options.margin.left + that.horizontalAxis.scale(options.domain[lineOptions.direction === "positive" ? 1 : 0]);
         var y = options.height - options.margin.bottom - options.axisHeight - that.verticalAxis.scale(lineModel.rangePosition);
 
@@ -238,6 +266,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           this.line.click(function() {
             thatLI.selected = thatLI.p1.selected = !thatLI.selected;
             thatLI.draw();
+            options.selectionChanged();
           });
 
         }
@@ -271,6 +300,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.ticks = this.scale.ticks(axisOptions.tickFrequency);
       };
 
+      this.reCalculate();
+
       this.draw = function(paper) {
         var y;
         switch (position) {
@@ -301,7 +332,6 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           paper.text(options.margin.left + x, options.height - options.margin.bottom, tick);
         });
 
-        this.reCalculate();
       };
 
       return this;
@@ -313,12 +343,14 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         tickFrequency: 3,
         visible: true
       });
-      this.scale = ScaleUtils.linear().domain(options.range).range([0, options.verticalAxisLength]);
       this.reCalculate = function() {
         this.scale = ScaleUtils.linear().domain(options.range).range([0, options.verticalAxisLength]);
       };
+      this.reCalculate();
+
       this.detach = function() {
       };
+
       this.draw = function(paper) {
         if (!axisOptions.visible) return;
         var x;

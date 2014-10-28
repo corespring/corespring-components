@@ -68,7 +68,7 @@ var main = [
       link: link,
       template: [
         '<div class="number-line">',
-        ' <div>Cucu: {{response}}</div>',
+        ' <div>Response: {{response}}<br/><br/><br/></div>',
         ' <div interactive-graph ngModel="model" responseModel="response">{{$index}}</div>',
         '</div>'
       ].join("\n")

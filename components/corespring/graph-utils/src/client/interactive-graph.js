@@ -2,7 +2,7 @@ var def = [
   '$log', 'ScaleUtils', 'GraphHelper',
   function($log, ScaleUtils, GraphHelper) {
     return {
-      template: "<div><a ng-click='boo()'>BOOOO</a><div class='paper'></div>Kaka</div>",
+      template: "<div><a ng-click='boo()'>TestResize</a> <a ng-click='removeSelected()' ng-show='selected.length > 0'>Delete</a><div class='paper'></div></div>",
       scope: {
         ngmodel: "=",
         responsemodel: "="
@@ -16,6 +16,10 @@ var def = [
           range: [0, 3],
           applyCallback: function() {
             scope.$apply();
+          },
+          selectionChanged: function() {
+            scope.selected = scope.graph.getSelectedElements();
+            scope.$apply();
           }
         });
         scope.graph.addHorizontalAxis("bottom", {tickFrequency: 10});
@@ -26,10 +30,7 @@ var def = [
           scope.graph.updateOptions({domain: [0, scope.q ? 20 : 10]});
         };
 
-        scope.$watch('ngmodel', function(n) {
-          console.log('model changed', n);
-          scope['responsemodel'] = _.cloneDeep(n.objects);
-          if (!n) return;
+        function rebuildGraph() {
           _.each(scope['responsemodel'], function(o, level) {
             switch (o.type) {
               case "point":
@@ -42,8 +43,27 @@ var def = [
                 scope.graph.addMovableRay(o, o);
                 break;
             }
-
           });
+          scope.graph.redraw();
+        }
+
+        scope.removeSelected = function() {
+          var selectedPositions = scope.graph.getSelectedElements();
+          scope['responsemodel'] = _.filter(scope['responsemodel'], function(e) {
+             return !_.contains(selectedPositions, e.rangePosition);
+          });
+          _.each(scope['responsemodel'], function(e, idx) {
+            e.rangePosition = idx + 1;
+          });
+          scope.graph.clear();
+          rebuildGraph();
+        };
+
+        scope.$watch('ngmodel', function(n) {
+          console.log('model changed', n);
+          scope['responsemodel'] = _.cloneDeep(n.objects);
+          if (!n) return;
+          rebuildGraph();
         });
       }
     };
