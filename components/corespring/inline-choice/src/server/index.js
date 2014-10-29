@@ -10,8 +10,8 @@ var feedbackByValue = function(q, v) {
   });
 };
 
-var userResponseFeedback = function(q, answer) {
-  var fb, userChoice;
+var userResponseFeedback = function(fbArray, q, answer) {
+  var fb, userChoice, _i, _len, _results;
   userChoice = answer;
   fb = feedbackByValue(q, userChoice);
   if (fb) {
@@ -23,7 +23,7 @@ var userResponseFeedback = function(q, answer) {
       delete fb.feedback;
     }
     delete fb.value;
-    return fb;
+    fbArray[userChoice] = fb;
   }
 };
 
@@ -36,9 +36,9 @@ var isCorrectChoice = function(q, choice) {
 };
 
 var buildFeedback = function(question, answer, settings, isCorrect) {
-  var out;
+  var out = {};
   if (settings.highlightUserResponse) {
-    out = userResponseFeedback(question, answer);
+    userResponseFeedback(out, question, answer);
   }
   return out;
 };
