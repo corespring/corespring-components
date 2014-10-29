@@ -1,0 +1,110 @@
+/** editor placeholder */
+.component-placeholder.corespring-function-entry {
+    display: inline-block;
+    max-width: 200px;
+    margin-right: 10px;
+}
+
+.view-function-entry {
+    display: inline-block;
+    margin: 0 8px 0 3px;
+}
+
+.view-function-entry .text-input {
+    width: auto;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.view-function-entry .format-help {
+    padding-left: 30px;
+    width: 280px;
+    line-height: 30px;
+}
+
+.view-function-entry .correct {
+    border-color: #53C516;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 4px rgba(161, 225, 23, 0.8);
+    outline: 0px none;
+}
+
+.view-function-entry .incorrect {
+    border-color: #F8A31A;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 4px rgba(248, 163, 26, 0.8);
+    outline: 0px none;
+}
+
+
+.view-function-entry .feedback-holder {
+    height: 20px;
+    padding-top: 8px;
+    padding-left: 0;
+    position: relative;
+}
+
+.view-function-entry .feedback {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+}
+
+.view-function-entry .feedback.correct {
+    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 10px transparent;
+}
+
+.view-function-entry .feedback.incorrect {
+    background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 10px transparent;
+}
+
+
+/* Config Panel */
+.cs-function-entry-cfg .description {
+    margin-bottom: 10px;
+}
+
+.cs-function-entry-cfg .well {
+    padding: 8px;
+}
+
+.cs-function-entry-cfg .main-header {
+    padding: 10px 10px 0px 10px;
+}
+
+.cs-function-entry-cfg .help-questionmark {
+    position: absolute;
+    margin-top: -5px;
+    margin-left: 5px;
+}
+
+.cs-function-entry-cfg .equation-input {
+    display: inline-block;
+    width: 90%;
+}
+
+.cs-function-entry-cfg__answers-holder {
+    padding-bottom: 10px;
+}
+
+.cs-function-entry-cfg .flex-container {
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.cs-function-entry-cfg .flex-item {
+    flex: 1;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.tooltip-inner {
+    max-width: 350px;
+}
