@@ -1,13 +1,12 @@
 var link, main;
 
+
 main = [
   '$timeout',
   'MathJaxService',
-  function($timeout, MathJaxService) {
+  function($timeout,MathJaxService) {
     link = function() {
       return function(scope, element, attrs) {
-
-        var rawHintHtml, clickBound;
 
         function shouldShowFormattingHelp() {
           var defaultValue = true;
@@ -21,25 +20,29 @@ main = [
           }
         }
 
-        function resetHintPopover() {
-          $(element).find('.text-input').popover('destroy');
-          clickBound = false;
+        scope.tooltipText = function() {
           if (shouldShowFormattingHelp()) {
-            $(element).find('.text-input').popover({
-              content: rawHintHtml,
-              title: 'Hints',
-              html: true,
-              placement: 'bottom'
-            }).on('shown.bs.popover', function() {
-              if (!clickBound) {
-                $(element).find('.popover').click(function() {
-                  $(element).find('.text-input').popover('hide');
-                });
-                clickBound = true;
-              }
-            });
+            return [
+              '<ul style=\'text-align: left\'>',
+              '   <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
+              '   <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
+              '   <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
+              '   <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
+              '   <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
+              '   <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
+              '</ul>'
+            ].join('');
+          } else {
+            return '';
           }
-        }
+        };
+
+
+        scope.showTooltip = function(ev) {
+          $timeout(function() {
+            MathJaxService.parseDomForMath();
+          }, 10);
+        };
 
         scope.helpOn = false;
         scope.editable = true;
@@ -50,12 +53,13 @@ main = [
             scope.session = dataAndSession.session || {};
 
             scope.answer = scope.session.answers;
-            resetHintPopover();
           },
 
           getSession: function() {
+            var answer = scope.answer;
+
             return {
-              answers: scope.answer
+              answers: answer
             };
           },
 
@@ -65,14 +69,8 @@ main = [
             console.log(response);
 
             scope.correctClass = response.correctness;
-            if (_.isEmpty(scope.answer)) {
-              scope.correctClass = 'warning';
-            }
-
-            if (_.isEmpty(scope.answer)) {
-              response.correctness = 'warning';
-            }
-            scope.response = response;
+            scope.feedback = response.feedback;
+            scope.comments = response.comments;
           },
 
           setMode: function(newMode) {
@@ -81,8 +79,8 @@ main = [
           reset: function() {
             scope.answer = undefined;
             scope.correctClass = undefined;
-            scope.resonse = undefined;
-            resetHintPopover();
+            scope.feedback = undefined;
+            scope.comments = undefined;
           },
 
           isAnswerEmpty: function() {
@@ -101,14 +99,6 @@ main = [
             scope.editable = e;
           }
         };
-
-        MathJaxService.onEndProcess(function() {
-          if (!rawHintHtml) {
-            rawHintHtml = $(element).find('.hidden-math').html();
-            resetHintPopover();
-          }
-        });
-
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
       };
     };
@@ -121,26 +111,19 @@ main = [
       link: link(),
       template: [
         '<div class="view-function-entry">',
-        '  <span class="text-input {{correctClass}}" feedback-popover="response">',
-        '    <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
+        '  <span class="text-input" ng-mouseover="showTooltip($event)" tooltip-html-unsafe="{{tooltipText()}}" tooltip-placement="bottom" >',
+        // angular tooltip spawns child scope so we need to access it through $parent
+        '    <input type="text" ng-disabled="!editable" ng-model="$parent.answer" class="form-control {{correctClass}}" />',
         '  </span>',
-        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
-        '  <div class="hidden-math">',
-        '    <ul style=\'text-align: left; padding-left: 10px\'>',
-        '       <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
-        '       <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
-        '       <li>For \\( \\frac{1}{x} \\), enter \\( 1 / x \\)</li>',
-        '       <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
-        '       <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
-        '       <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
-        '    </ul>',
-        '  </div>',
+        '  <div ng-show="feedback" class="feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
+        '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
         '</div>'].join("\n")
     };
 
     return def;
   }
-];
+]
+;
 
 exports.framework = 'angular';
 exports.directive = main;

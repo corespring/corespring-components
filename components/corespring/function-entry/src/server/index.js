@@ -59,8 +59,7 @@ exports.respond = function(question, answer, settings) {
     if (!isCorrectForm) {
       response.outcome.push("lineEquationMatch");
     }
-    var defaults = _.extend(fb.defaults, {incorrect: "Good try!"});
-    response.feedback = fb.makeFeedback(question, response.correctness, defaults);
+    response.feedback = fb.makeFeedback(question, response.correctness);
     response.comments = question.comments;
   }
 
