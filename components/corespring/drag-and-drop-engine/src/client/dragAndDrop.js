@@ -139,6 +139,7 @@ var dragAndDropController = [
           var state = _.last(scope.stack);
           scope.local.choices = _.cloneDeep(state.choices);
           scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+          scope.$emit('rerender-math', {delay: 1});
         };
 
         scope.itemsPerRow = function() {
