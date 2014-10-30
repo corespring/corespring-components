@@ -151,7 +151,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
       this.p1 = new factory.MovablePoint({domainPosition: lineModel.domainPosition, rangePosition: lineModel.rangePosition}, p1Opts);
 
-      this.p2 = new factory.MovablePoint({domainPosition: lineModel.domainPosition + 1, rangePosition: lineModel.rangePosition}, p2Opts);
+      this.p2 = new factory.MovablePoint({domainPosition: lineModel.domainPosition + lineModel.size, rangePosition: lineModel.rangePosition}, p2Opts);
 
       this.detach = function() {
         this.line = undefined;
