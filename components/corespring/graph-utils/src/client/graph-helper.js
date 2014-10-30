@@ -36,6 +36,12 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     this.margin = options.margin;
     this.elements = [];
 
+    this.coordsToDomainRange = function(x, y) {
+      var dp = this.horizontalAxis.scale.invert(x - options.margin.left);
+      dp = this.horizontalAxis.scale.snapToTicks(this.horizontalAxis.ticks, dp);
+      var rp = this.horizontalAxis.scale.invert(options.verticalAxisLength - y);
+      return [dp, rp];
+    };
 
     this.updateOptions = function(newOptions) {
       options = _.extend(options, newOptions);

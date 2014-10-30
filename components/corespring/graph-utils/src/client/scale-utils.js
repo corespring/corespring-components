@@ -185,6 +185,12 @@ exports.service = [ '$log', function($log){
       return scale_linearTickFormat(domain, m, format);
     };
 
+    scale.snapToTicks = function(ticks, value) {
+      return _.min(ticks, function(t) {
+        return Math.abs(t - value);
+      });
+    };
+
     scale.copy = function() {
       return scale_linear(domain, range, interpolate, clamp);
     };
@@ -197,5 +203,4 @@ exports.service = [ '$log', function($log){
   };
 
   return Scale;
-
 }];

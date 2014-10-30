@@ -6,7 +6,17 @@ var DEFAULT_STROKE_WIDTH = 3;
 exports.framework = 'angular';
 exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
+  function cancelEvent(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
+
   var GraphElementFactory = function(graph, options) {
+
+    function cancelEvent(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
 
     var that = graph;
     var factory = this;
@@ -15,11 +25,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       var thisPoint = this;
       this.model = pointModel;
       this.selected = false;
+      pointOptions = pointOptions || {};
       pointOptions = _.defaults(pointOptions || {}, {
         size: 10,
         strokeColor: BASE_COLOR,
-        fillColor: BASE_COLOR,
-        selectedFillColor: SELECTED_COLOR,
+        fillColor: pointOptions.pointType === 'empty' ? EMPTY_COLOR : BASE_COLOR,
+        selectedFillColor: pointOptions.pointType === 'empty' ? EMPTY_COLOR : SELECTED_COLOR,
         selectedStrokeColor: SELECTED_COLOR
       });
       this.detach = function() {
@@ -32,28 +43,25 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.detach();
       };
       this.moveTo = function(d, r) {
-        var tickDp = _.min(that.horizontalAxis.ticks, function(t) {
-          return Math.abs(t - d);
-        });
+        var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, d);
         if (tickDp !== pointModel.domainPosition) {
           pointModel.domainPosition = tickDp;
           this.draw();
         }
       };
       this.draw = function() {
-        var start = function() {
+        var start = function(x,y,ev) {
           this.ox = this.attr("cx");
           this.oy = this.attr("cy");
           this.animate({r: pointOptions.size + 5, opacity: 0.25}, 200, ">");
           this.hasMoved = false;
+          cancelEvent(ev);
         };
 
         var move = function(dx, dy) {
           var newX = (this.ox + dx - options.margin.left);
           var dp = that.horizontalAxis.scale.invert(newX);
-          var tickDp = _.min(that.horizontalAxis.ticks, function(t) {
-            return Math.abs(t - dp);
-          });
+          var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, dp);
           var dpx = that.horizontalAxis.scale(tickDp) + options.margin.left;
           this.attr({cx: dpx});
           if (pointModel.domainPosition !== tickDp) {
@@ -66,7 +74,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           }
 
         };
-        var up = function() {
+        var up = function(ev) {
           this.animate({r: pointOptions.size, opacity: 1}, 200, ">");
           if (!this.hasMoved) {
             thisPoint.selected = !thisPoint.selected;
@@ -75,7 +83,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
               pointOptions.onSelectionChanged(thisPoint.selected);
             }
             options.selectionChanged();
+          } else {
+            if (pointOptions.onMoveFinished) {
+              pointOptions.onMoveFinished(pointModel.domainPosition);
+            }
           }
+          cancelEvent(ev);
         };
 
         var x = that.horizontalAxis.scale(pointModel.domainPosition);
@@ -83,6 +96,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         if (_.isUndefined(this.point)) {
           this.point = that.paper.circle(x + options.margin.left, options.height - options.margin.bottom - options.axisHeight - y, pointOptions.size);
           this.point.drag(move, start, up);
+          this.point.click(cancelEvent);
         }
         this.point.attr("cx", x + options.margin.left);
         this.point.attr("cy", options.height - options.margin.bottom - options.axisHeight - y);
@@ -104,30 +118,24 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         lineModel.domainPosition = thatLI.p1.model.domainPosition;
         lineModel.rangePosition = thatLI.p1.model.rangePosition;
         lineModel.size = thatLI.p2.model.domainPosition - thatLI.p1.model.domainPosition;
+
         options.applyCallback();
       }
 
-      this.p1 = new factory.MovablePoint({domainPosition: lineModel.domainPosition, rangePosition: lineModel.rangePosition}, {
+      var p1Opts = {
         fillColor: pointOptions.leftPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
         selectedFillColor: pointOptions.leftPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
         onMove: function(newPos) {
           thatLI.drawLine();
           updateLineModel();
         },
-        onSelectionChanged: function(sel) {
-          thatLI.selected = sel;
-          thatLI.p1.selected = sel;
-          thatLI.p2.selected = sel;
-          thatLI.draw();
-        }
-      });
-
-      this.p2 = new factory.MovablePoint({domainPosition: lineModel.domainPosition + 1, rangePosition: lineModel.rangePosition}, {
-        fillColor: pointOptions.rightPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
-        selectedFillColor: pointOptions.rightPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
-        onMove: function(newPos) {
-          thatLI.drawLine();
-          updateLineModel();
+        onMoveFinished: function() {
+          if (thatLI.p1.model.domainPosition > thatLI.p2.model.domainPosition) {
+            var d1 = thatLI.p1.model.domainPosition;
+            var d2 = thatLI.p2.model.domainPosition;
+            thatLI.p2.moveTo(d1);
+            thatLI.p1.moveTo(d2);
+          }
         },
         onSelectionChanged: function(sel) {
           thatLI.selected = sel;
@@ -135,7 +143,15 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           thatLI.p2.selected = sel;
           thatLI.draw();
         }
+      };
+      var p2Opts = _.extend(_.clone(p1Opts), {
+        fillColor: pointOptions.rightPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
+        selectedFillColor: pointOptions.rightPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
       });
+
+      this.p1 = new factory.MovablePoint({domainPosition: lineModel.domainPosition, rangePosition: lineModel.rangePosition}, p1Opts);
+
+      this.p2 = new factory.MovablePoint({domainPosition: lineModel.domainPosition + 1, rangePosition: lineModel.rangePosition}, p2Opts);
 
       this.detach = function() {
         this.line = undefined;
@@ -160,7 +176,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
         if (!this.line) {
           this.line = that.paper.line(x,y,x1,y);
-          var start = function() {
+          var start = function(x,y,ev) {
             console.log("starting");
             this.ox = this.attr("cx");
             this.oy = this.attr("cy");
@@ -168,6 +184,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             this.op2d = thatLI.p2.model.domainPosition;
             this.hasMoved = false;
             this.animate({"stroke-width": 10, opacity: .25}, 200, ">");
+            cancelEvent(ev);
           };
           var move = function(dx, dy) {
             var dp = that.horizontalAxis.scale.invert(dx);
@@ -182,16 +199,19 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
               this.hasMoved = true;
             }
           };
-          var up = function() {
+          var up = function(ev) {
             this.animate({"stroke-width": 6, opacity: 1}, 200, ">");
             if (!this.hasMoved) {
               thatLI.selected = thatLI.p1.selected = thatLI.p2.selected = !thatLI.selected;
               thatLI.draw();
               options.selectionChanged();
             }
+            cancelEvent(ev);
           };
 
           this.line.drag(move, start, up);
+          this.line.click(cancelEvent);
+
 
         }
         this.line.x = x;
@@ -340,7 +360,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
     this.VerticalAxis = function(position, axisOptions) {
       var thatVA = this;
       axisOptions = _.defaults(axisOptions || {}, {
-        tickFrequency: 3,
+        tickFrequency: 10,
         visible: true
       });
       this.reCalculate = function() {
