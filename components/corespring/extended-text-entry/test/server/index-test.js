@@ -45,7 +45,7 @@ describe('extended text entry server logic', function() {
 
   it('should show default feedback', function() {
     var response = server.respond(_.cloneDeep(component), "Some text", settings(true, true, false));
-    response.feedback.should.eql("<b>Submitted Successfully.</b> Your answer was submitted.");
+    response.feedback.should.eql("Your answer has been submitted");
   });
 
   it('should show custom feedback', function() {
@@ -57,19 +57,13 @@ describe('extended text entry server logic', function() {
     response.feedback.should.eql("custom feedback");
   });
 
-  it('should show empty response feedback', function() {
-    var customComponent = _.cloneDeep(component);
-    var response = server.respond(customComponent, "", settings(true, true, false));
-    response.correctness.should.eql("incorrect");
-  });
-
   it('should show no feedback', function() {
     var customComponent = _.cloneDeep(component);
     customComponent.feedback.feedbackType = 'none';
     customComponent.feedback.feedback = 'custom feedback';
 
     var response = server.respond(customComponent, "Some text", settings(true, true, false));
-    response.should.eql({feedback: undefined, comments: undefined});
+    response.should.eql({feedback: undefined});
   });
 
 });

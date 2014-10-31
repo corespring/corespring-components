@@ -12,10 +12,6 @@
     {
       "name": "navigator",
       "organization": "corespring"
-    },
-    {
-      "name": "widgets",
-      "organization": "corespring"
     }
   ]
 }

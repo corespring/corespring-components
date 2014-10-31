@@ -27,7 +27,7 @@ link = function() {
         console.log(response);
 
         scope.answer = response.studentResponse;
-        scope.response = response;
+        scope.feedback = response.feedback;
 
         scope.received = true;
       },
@@ -36,7 +36,7 @@ link = function() {
 
       reset: function() {
         scope.answer = undefined;
-        scope.response = undefined;
+        scope.feedback = undefined;
         scope.received = false;
       },
 
@@ -69,15 +69,12 @@ main = [
     def = {
       scope: {},
       restrict: 'AE',
+      replace: true,
       link: link(),
       template: [
-        '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
-        '  <div class="textarea-holder">',
-        '    <textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="form-control text-input" />',
-        '    <i class="warning-icon fa fa-warning"></i>',
-        '  </div>',
-        '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
-        '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
+        '<div class="view-extended-text-entry">',
+        '<textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="text-input" />',
+        '<div class="feedback" ng-show="feedback" ng-bind-html-unsafe="feedback"></div>',
         '</div>'].join("\n")
     };
 

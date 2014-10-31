@@ -1,26 +1,27 @@
 var _ = require('lodash');
 
-function getFeedback(question) {
+function getFeedback(question){
   var fb = question.feedback || {feedbackType: "default"};
   var feedbackType = fb.feedbackType || "default";
   if (feedbackType === "custom") {
     return question.feedback.feedback;
   } else if (feedbackType === "default") {
-    return "<b>Submitted Successfully.</b> Your answer was submitted.";
+    return "Your answer has been submitted";
   }
 }
 
 exports.feedback = {
-  NO_ANSWER: 'Please submit your answer to the question above.'
+  NO_ANSWER: 'No answer provided'
 };
 
 exports.respond = function(question, answer, settings) {
 
-  if (!answer) {
+   if(!answer){
+
     return {
       correctness: 'incorrect',
       score: 0,
-      feedback: settings.showFeedback ? exports.feedback.NO_ANSWER : null
+      feedback: settings.showFeedback ? 'No answer provided' : null
     };
   }
 
@@ -34,7 +35,6 @@ exports.respond = function(question, answer, settings) {
   if (settings.showFeedback) {
     response.feedback = getFeedback(question);
   }
-  response.comments = question.comments;
 
   return response;
 };
