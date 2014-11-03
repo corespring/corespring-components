@@ -72,6 +72,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     };
 
     this.redraw = function() {
+      console.log("redrawing graph "  + that.elements.length);
       _.each(that.elements, function(element) {
         if (element.detach) {
           element.detach();
@@ -85,6 +86,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
         that.verticalAxis.draw(that.paper);
       }
       _.each(that.elements, function(element) {
+        console.log("drawing element " + element);
         element.draw(that.paper);
       });
     };

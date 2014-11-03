@@ -245,8 +245,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       }
 
       this.p1 = new factory.MovablePoint({domainPosition: lineModel.domainPosition, rangePosition: lineModel.rangePosition}, {
-        fillColor: lineOptions.leftPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
-        selectedFillColor: lineOptions.leftPoint === "empty" ? EMPTY_COLOR : SELECTED_COLOR,
+        fillColor: lineOptions.pointType === "empty" ? EMPTY_COLOR : BASE_COLOR,
+        selectedFillColor: lineOptions.pointType === "empty" ? EMPTY_COLOR : SELECTED_COLOR,
         onMove: function(newPos) {
           thatLI.drawLine();
           updateLineModel();
