@@ -175,6 +175,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         var y = options.height - options.margin.bottom - options.axisHeight - that.verticalAxis.scale(lineModel.rangePosition);
 
         if (!this.line) {
+          this.grabber = that.paper.line(x,y,x1,y);
           this.line = that.paper.line(x,y,x1,y);
           var start = function(x,y,ev) {
             console.log("starting");
@@ -183,7 +184,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             this.op1d = thatLI.p1.model.domainPosition;
             this.op2d = thatLI.p2.model.domainPosition;
             this.hasMoved = false;
-            this.animate({"stroke-width": 10, opacity: .25}, 200, ">");
+            thatLI.line.animate({"stroke-width": 10, opacity: .25}, 200, ">");
             cancelEvent(ev);
           };
           var move = function(dx, dy) {
@@ -192,15 +193,17 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
               this.op2d + dp > options.domain[0] && this.op2d + dp < options.domain[1]) {
               thatLI.p1.moveTo(this.op1d + dp, 0);
               thatLI.p2.moveTo(this.op2d + dp, 0);
-              this.x = that.horizontalAxis.scale(thatLI.p1.model.domainPosition) + options.margin.left;
-              this.x1 = that.horizontalAxis.scale(thatLI.p2.model.domainPosition) + options.margin.left;
-              this.redraw();
+              thatLI.grabber.x = thatLI.line.x = that.horizontalAxis.scale(thatLI.p1.model.domainPosition) + options.margin.left;
+              thatLI.grabber.x1 = thatLI.line.x1 = that.horizontalAxis.scale(thatLI.p2.model.domainPosition) + options.margin.left;
               updateLineModel();
+              thatLI.line.redraw();
+              thatLI.grabber.redraw();
+
               this.hasMoved = true;
             }
           };
           var up = function(ev) {
-            this.animate({"stroke-width": 6, opacity: 1}, 200, ">");
+            thatLI.line.animate({"stroke-width": 6, opacity: 1}, 200, ">");
             if (!this.hasMoved) {
               thatLI.selected = thatLI.p1.selected = thatLI.p2.selected = !thatLI.selected;
               thatLI.draw();
@@ -211,13 +214,15 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
           this.line.drag(move, start, up);
           this.line.click(cancelEvent);
-
-
+          this.grabber.drag(move, start, up);
+          this.grabber.click(cancelEvent);
         }
-        this.line.x = x;
-        this.line.y = y;
-        this.line.x1 = x1;
-        this.line.y1 = y;
+        this.grabber.x = this.line.x = x;
+        this.grabber.y = this.line.y = y;
+        this.grabber.x1 = this.line.x1 = x1;
+        this.grabber.y1 = this.line.y1 = y;
+        this.grabber.attr({"stroke-width": "30", "stroke": "#9aa", opacity: 0});
+        this.grabber.redraw();
         this.line.attr({"stroke-width": "6", "stroke": thatLI.selected ? SELECTED_COLOR : BASE_COLOR});
         this.line.redraw();
       };
@@ -392,7 +397,6 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         var tickSize = 10;
 
         _.each(ticks, function(tick, idx) {
-          if (idx === 0 || idx === ticks.length - 1) return;
           var y = scale(tick);
           paper.line(x - 5, options.margin.top + y, x + 5, options.margin.top + y);
           paper.text(x - 15, options.height - options.margin.bottom - 20 - y, tick);
