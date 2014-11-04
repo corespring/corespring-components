@@ -1,47 +1,32 @@
 var main = [
+  '$log',
+  function($log) {
 
-  function() {
-
-    var inputHolder = function(header, body) {
-      return [
-        '  <div class="input-holder">',
-        '    <div class="header">' + header + '</div>',
-        '    <div class="body">',
-               body,
-        '    </div>',
-        '  </div>'
-      ].join("");
-    };
 
     return {
       scope: 'isolate',
       restrict: 'E',
       replace: true,
-      link: function($scope, element, attrs) {
+      link: function(scope, element, attrs) {
 
-        $scope.containerBridge = {
+        scope.containerBridge = {
           setModel: function(model) {
-            $scope.fullModel = model;
-            $scope.model = $scope.fullModel.model;
+            scope.fullModel = model;
           },
 
           getModel: function() {
-            var model = _.cloneDeep($scope.fullModel);
-            return model;
+            return scope.fullModel;
           }
-
         };
-//        $scope.registerConfigPanel(attrs.id, $scope.containerBridge);
-
+        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       },
       template: [
-        '<div>',
-        '  <div class="config-panel">',
-        inputHolder('Question Prompt', '<textarea ck-editor rows=\"2\" cols=\"60\" ng-model=\"model.prompt\"></textarea>'),
-        '  </div>',
+        '<div class="config-number-line">',
+        '  <div>Domain: <input type="text" ng-model="fullModel.model.config.domain[0]"/><input type="text" ng-model="fullModel.model.config.domain[1]"/></div>',
         '</div>'
       ].join("")
     };
+
   }
 ];
 

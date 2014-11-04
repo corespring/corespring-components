@@ -17,7 +17,7 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          $log.debug("number line", dataAndSession);
+          console.log("number line", dataAndSession);
 
           scope.model = dataAndSession.data.model;
 
@@ -34,7 +34,6 @@ var main = [
         },
 
         setResponse: function(response) {
-          $log.debug("box and whiskers setResponse", response);
         },
 
         setMode: function(newMode) {
@@ -66,12 +65,11 @@ var main = [
 
     def = {
       scope: {},
-      restrict: 'EA',
       replace: true,
+      restrict: 'EA',
       link: link,
       template: [
-        '<div class="number-line">',
-        ' <div>Response: {{response}}<br/><br/><br/></div>',
+        '<div>',
         ' <div interactive-graph ngModel="model" responseModel="response">{{$index}}</div>',
         '</div>'
       ].join("\n")
@@ -87,9 +85,8 @@ var interactiveGraph = [
     return {
       template: [
         "<div>",
-        "  <div><a ng-click='boo()'>TestResize</a> </div>",
-        '  <ul class="nav nav-pills" role="tablist">',
-        '    <li role="presentation" ng-class="{active: isActive(\'PF\')}" ng-mousedown="select(\'PF\')"><a>PAF</a></li>',
+        '  <ul class="nav nav-pills" >',
+        '    <li role="presentation" ng-class="{active: isActive(\'PF\')}" ng-mousedown="select(\'PF\')"><a>PF</a></li>',
         '    <li role="presentation" ng-class="{active: isActive(\'LEE\')}" ng-click="select(\'LEE\')"><a>LEE</a></li>',
         '    <li role="presentation" ng-class="{active: isActive(\'LEF\')}" ng-click="select(\'LEF\')"><a>LEF</a></li>',
         '    <li role="presentation" ng-class="{active: isActive(\'LFE\')}" ng-click="select(\'LFE\')"><a>LFE</a></li>',
@@ -194,7 +191,7 @@ var interactiveGraph = [
           }
         });
 
-        scope.graph.addHorizontalAxis("bottom", {tickFrequency: 10});
+        scope.graph.addHorizontalAxis("bottom", {tickFrequency: 20});
         scope.graph.addVerticalAxis("left", {tickFrequency: 5, visible: true});
 
         scope.boo = function() {
@@ -246,10 +243,11 @@ var interactiveGraph = [
         scope.$watch('ngmodel', function(n) {
           console.log('model changed', n);
           if (n) {
+            scope.graph.updateOptions(n.config);
             scope.responsemodel = _.cloneDeep(n.objects) || [];
             rebuildGraph();
           }
-        });
+        }, true);
       }
     };
 

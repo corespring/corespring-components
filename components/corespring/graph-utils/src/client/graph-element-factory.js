@@ -50,7 +50,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         }
       };
       this.draw = function() {
-        var start = function(x,y,ev) {
+        var start = function(x, y, ev) {
           this.ox = this.attr("cx");
           this.oy = this.attr("cy");
           this.animate({r: pointOptions.size + 5, opacity: 0.25}, 200, ">");
@@ -175,32 +175,32 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         var y = options.height - options.margin.bottom - options.axisHeight - that.verticalAxis.scale(lineModel.rangePosition);
 
         if (!this.line) {
-          this.grabber = that.paper.line(x,y,x1,y);
-          this.line = that.paper.line(x,y,x1,y);
-          var start = function(x,y,ev) {
+          this.grabber = that.paper.line(x, y, x1, y);
+          this.line = that.paper.line(x, y, x1, y);
+          var start = function(x, y, ev) {
             console.log("starting");
             this.ox = this.attr("cx");
             this.oy = this.attr("cy");
             this.op1d = thatLI.p1.model.domainPosition;
             this.op2d = thatLI.p2.model.domainPosition;
             this.hasMoved = false;
-            thatLI.line.animate({"stroke-width": 10, opacity: .25}, 200, ">");
+            thatLI.line.animate({"stroke-width": 10, opacity: 0.25}, 200, ">");
             cancelEvent(ev);
           };
           var move = function(dx, dy) {
-            var dp = that.horizontalAxis.scale.invert(dx);
-            if (this.op1d + dp > options.domain[0] && this.op1d + dp < options.domain[1] &&
-              this.op2d + dp > options.domain[0] && this.op2d + dp < options.domain[1]) {
-              thatLI.p1.moveTo(this.op1d + dp, 0);
-              thatLI.p2.moveTo(this.op2d + dp, 0);
-              thatLI.grabber.x = thatLI.line.x = that.horizontalAxis.scale(thatLI.p1.model.domainPosition) + options.margin.left;
-              thatLI.grabber.x1 = thatLI.line.x1 = that.horizontalAxis.scale(thatLI.p2.model.domainPosition) + options.margin.left;
-              updateLineModel();
-              thatLI.line.redraw();
-              thatLI.grabber.redraw();
+            var domainSize = Math.abs(options.domain[1] - options.domain[0]);
+            var dp = (dx / options.horizontalAxisLength) * domainSize;
 
-              this.hasMoved = true;
-            }
+            var p1d = Math.min(Math.max(this.op1d + dp, options.domain[0]), options.domain[1] - lineModel.size);;
+            thatLI.p1.moveTo(p1d, 0);
+            thatLI.p2.moveTo(p1d + lineModel.size, 0);
+            thatLI.grabber.x = thatLI.line.x = that.horizontalAxis.scale(thatLI.p1.model.domainPosition) + options.margin.left;
+            thatLI.grabber.x1 = thatLI.line.x1 = that.horizontalAxis.scale(thatLI.p2.model.domainPosition) + options.margin.left;
+            updateLineModel();
+            thatLI.line.redraw();
+            thatLI.grabber.redraw();
+
+            this.hasMoved = true;
           };
           var up = function(ev) {
             thatLI.line.animate({"stroke-width": 6, opacity: 1}, 200, ">");
