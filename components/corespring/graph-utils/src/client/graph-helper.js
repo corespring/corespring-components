@@ -44,7 +44,26 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     };
 
     this.updateOptions = function(newOptions) {
+
+      if (newOptions.maxNumberOfPoints != options.maxNumberOfPoints) {
+        console.log("COOCOOC", newOptions.maxNumberOfPoints);
+        options.verticalAxisLength = newOptions.maxNumberOfPoints * 50;
+        options.height = (options.verticalAxisLength + options.margin.top + options.margin.bottom) + options.axisHeight;
+
+        $(element).width(options.width);
+        $(element).height(options.height);
+        this.paper.remove();
+
+        this.paper = RaphaelDecorator.decoratePaper(Raphael(element));
+        this.paper.rect(0, 0, options.width, options.height);
+
+        this.width = options.width;
+        this.height = options.height;
+
+      }
+
       options = _.extend(options, newOptions);
+      options.range = [0, Number(options.maxNumberOfPoints) || 3];
       that.horizontalAxis.reCalculate();
       that.verticalAxis.reCalculate();
       that.redraw();
@@ -92,10 +111,16 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     };
 
     this.addHorizontalAxis = function(position, axisOptions) {
+      if (that.horizontalAxis) {
+        that.horizontalAxis.remove();
+      }
       that.horizontalAxis = new graphElementFactory.HorizontalAxis(position, axisOptions, options);
     };
 
     this.addVerticalAxis = function(position, axisOptions) {
+      if (that.verticalAxis) {
+        that.verticalAxis.remove();
+      }
       that.verticalAxis = new graphElementFactory.VerticalAxis(position, axisOptions, options);
     };
 

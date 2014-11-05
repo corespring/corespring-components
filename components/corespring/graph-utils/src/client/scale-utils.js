@@ -1,5 +1,5 @@
 exports.framework = "angular";
-exports.service = [ '$log', function($log){
+exports.service = [ '$log', function($log) {
 
   var Scale = {};
 
@@ -185,8 +185,16 @@ exports.service = [ '$log', function($log){
       return scale_linearTickFormat(domain, m, format);
     };
 
-    scale.snapToTicks = function(ticks, value) {
-      return _.min(ticks, function(t) {
+    scale.snapToTicks = function(ticks, value, snapPerTick) {
+      snapPerTick = snapPerTick || 4;
+      var snapTicks = [];
+      for (var i = 0; i < ticks.length - 1; i++) {
+        for (var j = 0; j <= snapPerTick; j++) {
+          var tickLength = (ticks[i + 1] - ticks[i]) / snapPerTick;
+          snapTicks.push(ticks[i] + j * tickLength);
+        }
+      }
+      return _.min(snapTicks, function(t) {
         return Math.abs(t - value);
       });
     };

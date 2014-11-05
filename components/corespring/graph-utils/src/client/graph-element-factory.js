@@ -61,7 +61,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         var move = function(dx, dy) {
           var newX = (this.ox + dx - options.margin.left);
           var dp = that.horizontalAxis.scale.invert(newX);
-          var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, dp);
+          var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, dp, options.snapPerTick);
           var dpx = that.horizontalAxis.scale(tickDp) + options.margin.left;
           this.attr({cx: dpx});
           if (pointModel.domainPosition !== tickDp) {
@@ -283,25 +283,31 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         var dx = lineOptions.direction === "positive" ? 10 : -10;
 
         if (!this.line) {
+          this.grabber = that.paper.line(x, y, x1 + dx, y);
           this.line = that.paper.line(x, y, x1 + dx, y);
           var adx = dx + (lineOptions.direction === "positive" ? 8 : 0);
           var arrowFn = lineOptions.direction === "positive" ? that.paper.rightArrow : that.paper.leftArrow;
           this.arrow = arrowFn(x1 + adx - 8, y, 8, 8).attr({stroke: BASE_COLOR, fill: BASE_COLOR});
 
-          this.line.click(function() {
+          var fn = function(ev) {
             thatLI.selected = thatLI.p1.selected = !thatLI.selected;
             thatLI.draw();
             options.selectionChanged();
-          });
+            cancelEvent(ev);
+          };
+          this.line.mousedown(fn);
+          this.grabber.mousedown(fn);
 
         }
-        this.line.x = x;
-        this.line.y = y;
-        this.line.x1 = x1 + dx;
-        this.line.y1 = y;
+        this.grabber.x = this.line.x = x;
+        this.grabber.y =this.line.y = y;
+        this.grabber.x1 = this.line.x1 = x1 + dx;
+        this.grabber.y1 = this.line.y1 = y;
         this.line.redraw();
+        this.grabber.redraw();
         var color = this.selected ? SELECTED_COLOR : BASE_COLOR;
         this.line.attr({"stroke-width": "6", "stroke": color});
+        this.grabber.attr({"stroke-width": "20", "opacity": 0});
         this.arrow.attr({stroke: color, fill: color});
 
       };
@@ -315,6 +321,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
     this.HorizontalAxis = function(position, axisOptions) {
       var thatHA = this;
+      thatHA.elements = [];
       axisOptions = _.defaults(axisOptions || {}, {
         tickFrequency: 20,
         visible: true
@@ -326,6 +333,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       };
 
       this.reCalculate();
+
+      this.remove = function() {
+        _.each(thatHA.element, function(e) {
+          e.remove();
+        });
+      };
 
       this.draw = function(paper) {
         var y;
@@ -340,21 +353,21 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             y = options.height - options.margin.bottom - options.axisHeight;
             break;
         }
-        paper.leftArrow(options.margin.left - 18, y, 8, 5).attr({
+        thatHA.elements.push(paper.leftArrow(options.margin.left - 18, y, 8, 5).attr({
           fill: "#000"
-        });
-        paper.rightArrow(options.margin.left + options.horizontalAxisLength + 10, y, 8, 5).attr({
+        }));
+        thatHA.elements.push(paper.rightArrow(options.margin.left + options.horizontalAxisLength + 10, y, 8, 5).attr({
           fill: "#000"
-        });
-        paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y)
+        }));
+        thatHA.elements.push(paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y))
 
         var scale = thatHA.scale;
         var tickSize = 10;
 
         _(thatHA.ticks).each(function(tick, idx) {
           var x = scale(tick);
-          paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2);
-          paper.text(options.margin.left + x, options.height - options.margin.bottom, tick);
+          thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2));
+          thatHA.elements.push(paper.text(options.margin.left + x, options.height - options.margin.bottom, tick));
         });
 
       };
@@ -364,16 +377,24 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
     this.VerticalAxis = function(position, axisOptions) {
       var thatVA = this;
+      thatVA.elements = [];
       axisOptions = _.defaults(axisOptions || {}, {
         tickFrequency: 10,
         visible: true
       });
       this.reCalculate = function() {
+        console.log("recalculating: ", options.range);
         this.scale = ScaleUtils.linear().domain(options.range).range([0, options.verticalAxisLength]);
       };
       this.reCalculate();
 
       this.detach = function() {
+      };
+
+      this.remove = function() {
+        _.each(thatVA.element, function(e) {
+          e.remove();
+        });
       };
 
       this.draw = function(paper) {
@@ -390,7 +411,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             x = options.margin.left + options.horizontalAxisLength;
             break;
         }
-        paper.line(x, options.margin.top, x, options.margin.top + options.verticalAxisLength);
+        thatVA.elements.push(paper.line(x, options.margin.top, x, options.margin.top + options.verticalAxisLength));
 
         var scale = thatVA.scale;
         var ticks = scale.ticks(axisOptions.tickFrequency);
@@ -398,8 +419,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
         _.each(ticks, function(tick, idx) {
           var y = scale(tick);
-          paper.line(x - 5, options.margin.top + y, x + 5, options.margin.top + y);
-          paper.text(x - 15, options.height - options.margin.bottom - 20 - y, tick);
+          thatVA.elements.push(paper.line(x - 5, options.margin.top + y, x + 5, options.margin.top + y));
+          thatVA.elements.push(paper.text(x - 15, options.height - options.margin.bottom - 20 - y, tick));
         });
 
       };

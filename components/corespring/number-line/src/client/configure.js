@@ -23,6 +23,9 @@ var main = [
       template: [
         '<div class="config-number-line">',
         '  <div>Domain: <input type="text" ng-model="fullModel.model.config.domain[0]"/><input type="text" ng-model="fullModel.model.config.domain[1]"/></div>',
+        '  <div>Max Number of Points: <input type="text" ng-model="fullModel.model.config.maxNumberOfPoints"/></div>',
+        '  <div>Tick Freq: <input type="text" ng-model="fullModel.model.config.tickFrequency"/></div>',
+        '  <div>Snap per Tick: <input type="text" ng-model="fullModel.model.config.snapPerTick"/></div>',
         '  <table>',
         '    <tr>',
         '      <td style="vertical-align: top">Show student options for:</td>',

@@ -1,6 +1,6 @@
 var NUMBER_OF_PLANES = 3;
 var HORIZONTAL_AXIS_WIDTH = 500;
-var VERTICAL_AXIS_HEIGHT = 300;
+var VERTICAL_AXIS_HEIGHT = 200;
 
 var main = [
   '$sce', '$log',
@@ -125,7 +125,7 @@ var interactiveGraph = [
 
         paperElement.mousedown(function(event) {
           console.log('click', event);
-          if (scope.responsemodel.length > 2) {
+          if (scope.responsemodel.length >= (scope.model.config.maxNumberOfPoints || 3)) {
             return;
           }
           var lastRange = scope.responsemodel.length + 1;
@@ -194,9 +194,9 @@ var interactiveGraph = [
             scope.$apply();
           }
         });
-
         scope.graph.addHorizontalAxis("bottom", {tickFrequency: 20});
         scope.graph.addVerticalAxis("left", {tickFrequency: 5, visible: true});
+
 
         scope.boo = function() {
           scope.q = !scope.q;
@@ -205,6 +205,8 @@ var interactiveGraph = [
 
         function rebuildGraph() {
           scope.graph.clear();
+
+
           _.each(scope.responsemodel, function(o, level) {
             var options = _.cloneDeep(o);
             switch (o.type) {
@@ -259,6 +261,12 @@ var interactiveGraph = [
           console.log('model changed', n);
           if (n) {
             scope.graph.updateOptions(n.config);
+
+            scope.graph.addHorizontalAxis("bottom", {
+              tickFrequency: n.config.tickFrequency || 10
+            });
+            scope.graph.addVerticalAxis("left");
+
             scope.responsemodel = _.cloneDeep(n.objects) || [];
             rebuildGraph();
           }
