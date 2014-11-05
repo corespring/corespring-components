@@ -85,24 +85,28 @@ var interactiveGraph = [
     return {
       template: [
         "<div>",
+        '  <ul ng-show="model.config.groupingEnabled" class="nav nav-pills" >',
+        '    <li role="presentation"  ng-show="model.config.allEnabled || model.config.pointEnabled" ng-class="{active: isGroupActive(\'Point\')}"  ng-mousedown="selectGroup(\'Point\')"><a>Point</a></li>',
+        '    <li role="presentation" ng-show="model.config.allEnabled || model.config.lineEnabled" ng-class="{active: isGroupActive(\'Line\')}" ng-mousedown="selectGroup(\'Line\')"><a>Line</a></li>',
+        '    <li role="presentation" ng-show="model.config.allEnabled || model.config.rayEnabled" ng-class="{active: isGroupActive(\'Ray\')}" ng-mousedown="selectGroup(\'Ray\')"><a>Ray</a></li>',
+        '  </ul>',
         '  <ul class="nav nav-pills" >',
-        '    <li role="presentation" ng-class="{active: isActive(\'PF\')}" ng-mousedown="select(\'PF\')"><a>PF</a></li>',
-        '    <li role="presentation" ng-class="{active: isActive(\'LEE\')}" ng-click="select(\'LEE\')"><a>LEE</a></li>',
-        '    <li role="presentation" ng-class="{active: isActive(\'LEF\')}" ng-click="select(\'LEF\')"><a>LEF</a></li>',
-        '    <li role="presentation" ng-class="{active: isActive(\'LFE\')}" ng-click="select(\'LFE\')"><a>LFE</a></li>',
-        '    <li role="presentation" ng-class="{active: isActive(\'LFF\')}" ng-click="select(\'LFF\')"><a>LFF</a></li>',
-
-        '    <li role="presentation" ng-class="{active: isActive(\'REP\')}" ng-click="select(\'REP\')"><a>REP</a></li>',
-        '    <li role="presentation" ng-class="{active: isActive(\'RFP\')}" ng-click="select(\'RFP\')"><a>RFP</a></li>',
-        '    <li role="presentation" ng-class="{active: isActive(\'REN\')}" ng-click="select(\'REN\')"><a>REN</a></li>',
-        '    <li role="presentation" ng-class="{active: isActive(\'RFN\')}" ng-click="select(\'RFN\')"><a>RFN</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Point\')" ng-show="model.config.allEnabled || model.config.pointEnabled" ng-class="{active: isActive(\'PF\')}"  ng-mousedown="select(\'PF\')"><a>PF</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Line\')" ng-show="model.config.allEnabled || model.config.lineEnabled" ng-class="{active: isActive(\'LEE\')}" ng-mousedown="select(\'LEE\')"><a>LEE</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Line\')" ng-show="model.config.allEnabled || model.config.lineEnabled" ng-class="{active: isActive(\'LEF\')}" ng-mousedown="select(\'LEF\')"><a>LEF</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Line\')" ng-show="model.config.allEnabled || model.config.lineEnabled" ng-class="{active: isActive(\'LFE\')}" ng-mousedown="select(\'LFE\')"><a>LFE</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Line\')" ng-show="model.config.allEnabled || model.config.lineEnabled" ng-class="{active: isActive(\'LFF\')}" ng-mousedown="select(\'LFF\')"><a>LFF</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Ray\')" ng-show="model.config.allEnabled || model.config.rayEnabled" ng-class="{active: isActive(\'REP\')}" ng-mousedown="select(\'REP\')"><a>REP</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Ray\')" ng-show="model.config.allEnabled || model.config.rayEnabled" ng-class="{active: isActive(\'RFP\')}" ng-mousedown="select(\'RFP\')"><a>RFP</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Ray\')" ng-show="model.config.allEnabled || model.config.rayEnabled" ng-class="{active: isActive(\'REN\')}" ng-mousedown="select(\'REN\')"><a>REN</a></li>',
+        '    <li role="presentation" ng-hide="!isGroupActive(\'Ray\')" ng-show="model.config.allEnabled || model.config.rayEnabled" ng-class="{active: isActive(\'RFN\')}" ng-mousedown="select(\'RFN\')"><a>RFN</a></li>',
         '    <li role="presentation"><a ng-click="removeSelected()" ng-show="selected.length > 0"><i class="fa fa-trash-o"></i></a></li>',
         '  </ul>',
         "  <div class='paper'></div>",
         "</div>"
       ].join(''),
       scope: {
-        ngmodel: "=",
+        model: "=ngmodel",
         responsemodel: "="
       },
       link: function(scope, elm, attr, ngModel) {
@@ -159,7 +163,7 @@ var interactiveGraph = [
               scope.responsemodel.push(_.extend(defaultLineModel, {"leftPoint": "full"}));
               break;
             case "LFF":
-              scope.responsemodel.push(_.extend(defaultLineModel, {"leftPoint": "full"}));
+              scope.responsemodel.push(_.extend(defaultLineModel, {"leftPoint": "full", "rightPoint": "full"}));
               break;
             case "REN":
               scope.responsemodel.push(_.extend(defaultRayModel, {pointType: "empty", direction: "negative"}));
@@ -240,7 +244,18 @@ var interactiveGraph = [
           scope.selectedTab = tab;
         };
 
-        scope.$watch('ngmodel', function(n) {
+        scope.isGroupActive = function(group) {
+          if (!scope.model.config.groupingEnabled) {
+            return true;
+          }
+          return group === scope.selectedGroup;
+        };
+
+        scope.selectGroup = function(group) {
+          scope.selectedGroup = group;
+        };
+
+        scope.$watch('model', function(n) {
           console.log('model changed', n);
           if (n) {
             scope.graph.updateOptions(n.config);

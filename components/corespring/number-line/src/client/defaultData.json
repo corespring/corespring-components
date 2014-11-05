@@ -1,11 +1,18 @@
 {
-  "componentType": "",
-  "correctResponse": "",
-  "title": "",
-  "feedback" :  {
-  },
+  "componentType": "corespring-number-line",
+  "title": "Number Line",
+  "weight": 1,
+  "correctResponse": [
+    {
+      "type": "point",
+      "domainPosition": 3
+    }
+  ],
   "model": {
     "config": {
-    }
+      "domain": [-10, 10]
+    },
+    "objects": [
+    ]
   }
 }
