@@ -1,0 +1,82 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "corespring-match",
+        "title": "Match component sample item",
+        "weight": 4,
+        "correctResponse": [
+          {
+            "id" : "1",
+            "matchSet" : [true,false]
+          },
+          {
+            "id" : "2",
+            "matchSet" : [true,false]
+          },
+          {
+            "id" : "3",
+            "matchSet" : [true,false]
+          },
+          {
+            "id" : "4",
+            "matchSet" : [true,false]
+          }
+        ],
+        "allowPartialScoring":true,
+        "partialScores": {
+          "1": 50,
+          "2": 20,
+          "3": 10,
+          "4": 5
+        },
+        "feedback": {
+          "all_correct": {
+            "type": "default"
+          },
+          "some_correct":{
+            "type": "default"
+          },
+          "all_incorrect" :{
+            "type": "custom",
+            "text" : "Everything is wrong !"
+          }
+        },
+        "summaryFeedback": "This is the summary feedback. This is the summary feedback. This is the summary feedback ",
+        "model": {
+          "columns" : [
+            {
+              "labelHtml": "Custom header"
+            },
+            {
+              "labelHtml": "Column 1"
+            },
+            {
+              "labelHtml": "Column 2"
+            }
+          ],
+          "rows" : [
+            {
+              "id" : "1",
+              "labelHtml": "Question text 1"
+            },
+            {
+              "id" : "2",
+              "labelHtml": "Question text 2"
+            },
+            {
+              "id" : "3",
+              "labelHtml": "Question text 3"
+            },
+            {
+              "id" : "4",
+              "labelHtml": "Question text 4"
+            }
+          ],
+          "answerType" : "MULTIPLE"
+        }
+      }
+    },
+    "xhtml": "<corespring-match id=\"1\"></corespring-match>"
+  }
+}

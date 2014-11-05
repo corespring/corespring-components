@@ -1,0 +1,73 @@
+{
+  "componentType": "corespring-match",
+  "title": "Match",
+  "weight" : 1,
+  "correctResponse": {
+    "value": []
+  },
+  "summaryFeedback": "This is the summary feedback.",
+  "feedback": [
+    {
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
+      "value": "1"
+    },
+    {
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
+      "value": "2"
+    },
+    {
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
+      "value": "3"
+    },
+    {
+      "feedbackType": "none",
+      "notChosenFeedbackType": "none",
+      "value": "4"
+    }
+  ],
+  "allowPartialScoring":true,
+  "scoreMapping": {
+    "1": 25,
+    "2": 25,
+    "3": 25,
+    "4": 25
+  },
+
+  "model": {
+    "columns" : [
+      {
+        "labelHtml": ""
+      },
+      {
+        "id":"1",
+        "labelHtml": "Column 1"
+      },
+      {
+        "id":"2",
+        "labelHtml": "Column 2"
+      }
+    ],
+    "rows" : [
+        {
+          "id" : "1",
+          "labelHtml": "Question text 1"
+        },
+        {
+          "id" : "2",
+          "labelHtml": "Question text 2"
+        },
+        {
+          "id" : "3",
+          "labelHtml": "Question text 3"
+        },
+        {
+          "id" : "4",
+          "labelHtml": "Question text 4"
+        }
+      ],
+      "answerType" : "YES_NO"
+  }
+}
