@@ -20,17 +20,22 @@ exports.preprocess = function(json) {
 
 exports.isCorrect = function(answer, correctAnswer) {
   return _.reduce(answer,function(acc, answerRow) {
-    var correctMatchSet = _.find(correctAnswer, function(correctRow){ return correctRow.id === answerRow.id}).matchSet;
+    var correctMatchSet = _.find(correctAnswer, function(correctRow){
+      return correctRow.id === answerRow.id;
+      }).matchSet;
+
     return acc && _.isEqual(answerRow.matchSet,correctMatchSet);
   }, true);
 };
 
 function countCorrectAnswers (answer, correctAnswer) {
   return _.reduce(answer,function(acc, answerRow) {
-    var correctMatchSet = _.find(correctAnswer, function(correctRow){ return correctRow.id === answerRow.id}).matchSet;
+    var correctMatchSet = _.find(correctAnswer, function(correctRow){
+      return correctRow.id === answerRow.id;
+    }).matchSet;
     return acc + (_.isEqual(answerRow.matchSet,correctMatchSet) ? 1 : 0);
   }, 0);
-};
+}
 
 var ALL_CORRECT = "all_correct";
 var SOME_CORRECT = "some_correct";
@@ -48,17 +53,18 @@ function getCorrectnessString(answer, correctAnswer) {
   }else{
     return null;
   }
-};
+}
 
 function isCorrectChoice(q, choice) {
   return _.indexOf(q.correctResponse.value, choice) !== -1;
-};
+}
 
 
 function whereIdIsEqual(id){
   return function(match){
     return match.id === id;
-}};
+  };
+}
 
 function buildCorrectnessMatrix(question, answer, settings) {
 
@@ -95,7 +101,7 @@ function buildCorrectnessMatrix(question, answer, settings) {
   });
 
   return matrix;
-};
+}
 
 var defaultFeedbackTable = {};
 defaultFeedbackTable[ALL_CORRECT] = keys.DEFAULT_CORRECT_FEEDBACK;
@@ -145,7 +151,7 @@ function calculateScore(question, answer) {
   else if (correctCount < maxCorrect){
     return 0;
   }
-};
+}
 
 
 /*
@@ -153,19 +159,19 @@ function calculateScore(question, answer) {
  */
 exports.respond = function(question, answer, settings) {
 
+  var correctness = getCorrectnessString(answer, question.correctResponse);
+
   if(!answer){
     return {
       correctness: 'incorrect',
       score: 0,
-      feedback: settings.showFeedback ? buildFeedback(question, answer, settings, false) : null
+      feedback: buildFeedbackSummary(question,correctness)
     };
   }
 
   if (question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
-
-  var correctness = getCorrectnessString(answer, question.correctResponse);
 
   var response = {
     correctness: correctness,
@@ -177,7 +183,7 @@ exports.respond = function(question, answer, settings) {
     response.feedback = {
       correctnessMatrix : buildCorrectnessMatrix(question, answer, settings),
       summary : buildFeedbackSummary(question,correctness)
-    }
+    };
     if (question.summaryFeedback){
       response.summaryFeedback = question.summaryFeedback;
     }

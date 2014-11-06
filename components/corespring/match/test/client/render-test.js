@@ -1,6 +1,6 @@
 describe('corespring', function() {
 
-  describe('multiple-choice render', function() {
+  describe('match render', function() {
 
     var MockComponentRegister = function() {
       this.elements = {};
@@ -54,7 +54,7 @@ describe('corespring', function() {
         container.registerComponent(id, obj);
       });
 
-      element = $compile("<corespring-multiple-choice-render id='1'></corespring-multiple-choice-render>")($rootScope.$new());
+      element = $compile("<corespring-match-render id='1'></corespring-match-render>")($rootScope.$new());
       scope = element.scope().$$childHead;
       rootScope = $rootScope;
     }));

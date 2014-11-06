@@ -43,10 +43,8 @@ var main = [
       }
 
       function whereIdIsEqual(id){
-        return function(match){
-          return match.id === id;
-        }};
-
+        return function(match){return match.id === id;};
+      }
 
       function getAnswers(){
          var result = scope.matchModel.rows.map(function(row){
@@ -86,7 +84,7 @@ var main = [
 
             cloneRow.matchSet = answersExist ?
               _.find(session.answers, whereIdIsEqual(row.id)).matchSet.map(function(match){
-                return { "value": match }
+                return { "value": match };
               }) :
               _.range(rawModel.columns.length - 1).map(function(){
                 return { "value": false };
