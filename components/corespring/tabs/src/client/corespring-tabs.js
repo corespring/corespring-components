@@ -18,7 +18,7 @@ var tabs = [
 
       $scope.$watch('tabs.length', function(tabsL, oldL) {
         if (tabsL > 0 && tabsL < oldL) {
-          if ($scope.tabs.indexOf($scope.selectedTab === -1)) {
+          if ($scope.tabs.indexOf($scope.selectedType === -1)) {
             $scope.selectTab($scope.tabs[Math.max($scope.selectedIdx - 1, 0)]);
           }
         }
@@ -39,7 +39,7 @@ var tabs = [
           tab.selected(true);
         });
 
-        $scope.selectedTab = tab;
+        $scope.selectedType = tab;
 
         $scope.selectedIdx = $scope.tabs.indexOf(tab);
 

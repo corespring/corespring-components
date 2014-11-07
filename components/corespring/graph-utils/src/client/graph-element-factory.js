@@ -95,8 +95,10 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         var y = that.verticalAxis.scale(pointModel.rangePosition);
         if (_.isUndefined(this.point)) {
           this.point = that.paper.circle(x + options.margin.left, options.height - options.margin.bottom - options.axisHeight - y, pointOptions.size);
-          this.point.drag(move, start, up);
-          this.point.click(cancelEvent);
+          if (!options.exhibitOnly) {
+            this.point.drag(move, start, up);
+            this.point.click(cancelEvent);
+          }
         }
         this.point.attr("cx", x + options.margin.left);
         this.point.attr("cy", options.height - options.margin.bottom - options.axisHeight - y);
@@ -109,8 +111,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       return this;
     };
 
-    this.MovableLineSegment = function(lineModel, pointOptions) {
-      pointOptions = pointOptions || {};
+    this.MovableLineSegment = function(lineModel, lineOptions) {
+      lineOptions = _.defaults(lineOptions || {}, {
+        size: 10,
+        strokeColor: BASE_COLOR
+      });
+
       var thatLI = this;
       this.selected = false;
       this.model = lineModel;
@@ -123,8 +129,9 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       }
 
       var p1Opts = {
-        fillColor: pointOptions.leftPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
-        selectedFillColor: pointOptions.leftPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
+        strokeColor: lineOptions.strokeColor,
+        fillColor: lineOptions.leftPoint === "empty" ? EMPTY_COLOR : lineOptions.strokeColor,
+        selectedFillColor: lineOptions.leftPoint === "empty" ? EMPTY_COLOR : lineOptions.strokeColor,
         onMove: function(newPos) {
           thatLI.drawLine();
           updateLineModel();
@@ -145,8 +152,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         }
       };
       var p2Opts = _.extend(_.clone(p1Opts), {
-        fillColor: pointOptions.rightPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
-        selectedFillColor: pointOptions.rightPoint === "empty" ? EMPTY_COLOR : BASE_COLOR,
+        fillColor: lineOptions.rightPoint === "empty" ? EMPTY_COLOR : lineOptions.strokeColor,
+        selectedFillColor: lineOptions.rightPoint === "empty" ? EMPTY_COLOR : lineOptions.strokeColor
       });
 
       this.p1 = new factory.MovablePoint({domainPosition: lineModel.domainPosition, rangePosition: lineModel.rangePosition}, p1Opts);
@@ -212,10 +219,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             cancelEvent(ev);
           };
 
-          this.line.drag(move, start, up);
-          this.line.click(cancelEvent);
-          this.grabber.drag(move, start, up);
-          this.grabber.click(cancelEvent);
+          if (!options.exhibitOnly) {
+            this.line.drag(move, start, up);
+            this.line.click(cancelEvent);
+            this.grabber.drag(move, start, up);
+            this.grabber.click(cancelEvent);
+          }
         }
         this.grabber.x = this.line.x = x;
         this.grabber.y = this.line.y = y;
@@ -223,7 +232,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.grabber.y1 = this.line.y1 = y;
         this.grabber.attr({"stroke-width": "30", "stroke": "#9aa", opacity: 0});
         this.grabber.redraw();
-        this.line.attr({"stroke-width": "6", "stroke": thatLI.selected ? SELECTED_COLOR : BASE_COLOR});
+        this.line.attr({"stroke-width": "6", "stroke": thatLI.selected ? SELECTED_COLOR : lineOptions.strokeColor});
         this.line.redraw();
       };
 
@@ -237,7 +246,10 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
     };
 
     this.MovableRay = function(lineModel, lineOptions) {
-      lineOptions = _.defaults(lineOptions || {}, {direction: "positive"});
+      lineOptions = _.defaults(lineOptions || {}, {
+        direction: "positive",
+        strokeColor: BASE_COLOR
+      });
       var thatLI = this;
 
       this.selected = false;
@@ -250,8 +262,9 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       }
 
       this.p1 = new factory.MovablePoint({domainPosition: lineModel.domainPosition, rangePosition: lineModel.rangePosition}, {
-        fillColor: lineOptions.pointType === "empty" ? EMPTY_COLOR : BASE_COLOR,
-        selectedFillColor: lineOptions.pointType === "empty" ? EMPTY_COLOR : SELECTED_COLOR,
+        strokeColor: lineOptions.strokeColor,
+        fillColor: lineOptions.pointType === "empty" ? EMPTY_COLOR : lineOptions.strokeColor,
+        selectedFillColor: lineOptions.pointType === "empty" ? EMPTY_COLOR : lineOptions.strokeColor,
         onMove: function(newPos) {
           thatLI.drawLine();
           updateLineModel();
@@ -295,8 +308,10 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             options.selectionChanged();
             cancelEvent(ev);
           };
-          this.line.mousedown(fn);
-          this.grabber.mousedown(fn);
+          if (!options.exhibitOnly) {
+            this.line.mousedown(fn);
+            this.grabber.mousedown(fn);
+          }
 
         }
         this.grabber.x = this.line.x = x;
@@ -305,7 +320,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.grabber.y1 = this.line.y1 = y;
         this.line.redraw();
         this.grabber.redraw();
-        var color = this.selected ? SELECTED_COLOR : BASE_COLOR;
+        var color = this.selected ? SELECTED_COLOR : lineOptions.strokeColor;
         this.line.attr({"stroke-width": "6", "stroke": color});
         this.grabber.attr({"stroke-width": "20", "opacity": 0});
         this.arrow.attr({stroke: color, fill: color});
@@ -383,7 +398,6 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         visible: true
       });
       this.reCalculate = function() {
-        console.log("recalculating: ", options.range);
         this.scale = ScaleUtils.linear().domain(options.range).range([0, options.verticalAxisLength]);
       };
       this.reCalculate();
