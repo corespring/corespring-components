@@ -20,25 +20,40 @@ exports.service = [ '$log', function($log) {
         start = 0;
       }
     }
-    if ((stop - start) / step === Infinity) throw new Error("infinite range");
-    var range = [],
+    if ((stop - start) / step === Infinity) {
+      throw new Error("infinite range");
+    }
+    var _range = [],
       k = range_integerScale(Math.abs(step)),
       i = -1,
       j;
-    start *= k, stop *= k, step *= k;
-    if (step < 0) while ((j = start + step * ++i) > stop) range.push(j / k);
-    else while ((j = start + step * ++i) < stop) range.push(j / k);
-    return range;
+    start *= k;
+    stop *= k;
+    step *= k;
+    if (step < 0) {
+      while ((j = start + step * ++i) > stop) {
+        _range.push(j / k);
+      }
+    }
+    else {
+      while ((j = start + step * ++i) < stop) {
+        _range.push(j / k);
+      }
+    }
+    return _range;
   }
 
   function range_integerScale(x) {
     var k = 1;
-    while (x * k % 1) k *= 10;
+    while (x * k % 1) {
+      k *= 10;
+    }
     return k;
   }
 
   function interpolateNumber(a, b) {
-    a = +a, b = +b;
+    a = +a;
+    b = +b;
     return function(t) {
       return a * (1 - t) + b * t;
     };
@@ -67,7 +82,9 @@ exports.service = [ '$log', function($log) {
   }
 
   function scale_linearTickRange(domain, m) {
-    if (m == null) m = 10;
+    if (m == null) {
+      m = 10;
+    }
 
     var extent = scaleExtent(domain),
       span = extent[1] - extent[0],
@@ -75,13 +92,19 @@ exports.service = [ '$log', function($log) {
       err = m / span * step;
 
     // Filter ticks to get closer to the desired count.
-    if (err <= .15) step *= 10;
-    else if (err <= .35) step *= 5;
-    else if (err <= .75) step *= 2;
+    if (err <= 0.15) {
+      step *= 10;
+    }
+    else if (err <= 0.35) {
+      step *= 5;
+    }
+    else if (err <= 0.75) {
+      step *= 2;
+    }
 
     // Round start and stop values to step interval.
     extent[0] = Math.ceil(extent[0] / step) * step;
-    extent[1] = Math.floor(extent[1] / step) * step + step * .5; // inclusive
+    extent[1] = Math.floor(extent[1] / step) * step + step * 0.5; // inclusive
     extent[2] = step;
     return extent;
   }
@@ -90,39 +113,10 @@ exports.service = [ '$log', function($log) {
     return range.apply(this, scale_linearTickRange(domain, m));
   }
 
-  function scale_linearTickFormat(domain, m, format) {
-    var range = scale_linearTickRange(domain, m);
-    if (format) {
-      var match = format_re.exec(format);
-      match.shift();
-      if (match[8] === "s") {
-        var prefix = d3.formatPrefix(Math.max(Math.abs(range[0]), Math.abs(range[1])));
-        if (!match[7]) match[7] = "." + scale_linearPrecision(prefix.scale(range[2]));
-        match[8] = "f";
-        format = d3.format(match.join(""));
-        return function(d) {
-          return format(prefix.scale(d)) + prefix.symbol;
-        };
-      }
-      if (!match[7]) match[7] = "." + scale_linearFormatPrecision(match[8], range);
-      format = match.join("");
-    } else {
-      format = ",." + scale_linearPrecision(range[2]) + "f";
-    }
-    return d3.format(format);
-  }
-
   var scale_linearFormatSignificant = {s: 1, g: 1, p: 1, r: 1, e: 1};
 
   function scale_linearPrecision(value) {
-    return -Math.floor(Math.log(value) / Math.LN10 + .01);
-  }
-
-  function scale_linearFormatPrecision(type, range) {
-    var p = scale_linearPrecision(range[2]);
-    return type in scale_linearFormatSignificant
-      ? Math.abs(p - scale_linearPrecision(Math.max(Math.abs(range[0]), Math.abs(range[1])))) + +(type !== "e")
-      : p - (type === "%") * 2;
+    return -Math.floor(Math.log(value) / Math.LN10 + 0.01);
   }
 
   function scale_linear(domain, range, interpolate, clamp) {
@@ -147,7 +141,9 @@ exports.service = [ '$log', function($log) {
     };
 
     scale.domain = function(x) {
-      if (!arguments.length) return domain;
+      if (!arguments.length) {
+        return domain;
+      }
       domain = [];
       for (var i = 0; i < x.length; i++) {
         domain.push(Number(x[i]));
@@ -156,33 +152,31 @@ exports.service = [ '$log', function($log) {
     };
 
     scale.range = function(x) {
-      if (!arguments.length) return range;
+      if (!arguments.length) {
+        return range;
+      }
       range = x;
       return rescale();
     };
 
-    scale.rangeRound = function(x) {
-      return scale.range(x).interpolate(interpolateRound);
-    };
-
     scale.clamp = function(x) {
-      if (!arguments.length) return clamp;
+      if (!arguments.length) {
+        return clamp;
+      }
       clamp = x;
       return rescale();
     };
 
     scale.interpolate = function(x) {
-      if (!arguments.length) return interpolate;
+      if (!arguments.length) {
+        return interpolate;
+      }
       interpolate = x;
       return rescale();
     };
 
     scale.ticks = function(m) {
       return scale_linearTicks(domain, m);
-    };
-
-    scale.tickFormat = function(m, format) {
-      return scale_linearTickFormat(domain, m, format);
     };
 
     scale.snapToTicks = function(ticks, value, snapPerTick) {

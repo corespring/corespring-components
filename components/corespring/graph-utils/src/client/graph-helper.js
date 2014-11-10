@@ -1,3 +1,5 @@
+/* global Raphael */
+
 exports.framework = 'angular';
 exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorator', function($log, ScaleUtils, GraphElementFactory, RaphaelDecorator) {
 

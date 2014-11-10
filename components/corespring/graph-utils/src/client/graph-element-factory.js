@@ -1,3 +1,5 @@
+/* global Raphael */
+
 var BASE_COLOR = "#000";
 var SELECTED_COLOR = "#aaf";
 var EMPTY_COLOR = "#fff";
@@ -198,7 +200,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             var domainSize = Math.abs(options.domain[1] - options.domain[0]);
             var dp = (dx / options.horizontalAxisLength) * domainSize;
 
-            var p1d = Math.min(Math.max(this.op1d + dp, options.domain[0]), options.domain[1] - lineModel.size);;
+            var p1d = Math.min(Math.max(this.op1d + dp, options.domain[0]), options.domain[1] - lineModel.size);
             thatLI.p1.moveTo(p1d, 0);
             thatLI.p2.moveTo(p1d + lineModel.size, 0);
             thatLI.grabber.x = thatLI.line.x = that.horizontalAxis.scale(thatLI.p1.model.domainPosition) + options.margin.left;
@@ -374,7 +376,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         thatHA.elements.push(paper.rightArrow(options.margin.left + options.horizontalAxisLength + 10, y, 8, 5).attr({
           fill: "#000"
         }));
-        thatHA.elements.push(paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y))
+        thatHA.elements.push(paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y));
 
         var scale = thatHA.scale;
         var tickSize = 10;
@@ -412,7 +414,9 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       };
 
       this.draw = function(paper) {
-        if (!axisOptions.visible) return;
+        if (!axisOptions.visible) {
+          return;
+        }
         var x;
         switch (position) {
           case "left" :

@@ -1,3 +1,6 @@
+/* jshint -W024 */
+/* jshint expr:true */
+
 var fbu, assert, component, server, settings, should, _, helper, shared, helper, proxyquire;
 
 proxyquire = require('proxyquire').noCallThru();
@@ -147,12 +150,15 @@ describe.only('number line', function() {
   });
 
   describe('feedback', function() {
+
     it('correct elements should have isCorrect true in feedback', function() {
       var answer = correctAnswer;
       var outcome = server.respond(component, answer, helper.settings(true, true, true));
-      expect(_.every(outcome.feedback, function(fb) {
+      var predicate = _.every(outcome.feedback, function(fb) {
         return fb.isCorrect;
-      })).to.be.true;
+      });
+      expect(predicate).to.eql(true);
+
     });
 
     it('incorrect elements should have isCorrect false in feedback', function() {
