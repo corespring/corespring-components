@@ -80,7 +80,7 @@ var main = [
       '      <div class="body">',
       '        <label>Answer blank size:</label>',
       '        <div class="answer-blank-size-input" ng-repeat="o in answerBlankSizeDataProvider">',
-      '          <radio value="{{o.size}}" ng-model="fullModel.model.answerBlankSize"></radio>',
+      '          <input type="radio" value="{{o.size}}" ng-model="fullModel.model.answerBlankSize"/>',
       '          <input type="text" readonly value="{{o.demoLabel}}" size="{{o.size}}"/> {{o.defaultLabel}}',
       '        </div>',
       '      </div>',
@@ -101,8 +101,10 @@ var main = [
 
     var panels = [
       '<div>',
-        designPanel,
-        displayPanel,
+      '  <div navigator="">',
+      designPanel,
+      displayPanel,
+      '  </div>',
       '</div>'
     ].join("\n");
 
@@ -142,7 +144,7 @@ var main = [
         scope.containerBridge = {
           setModel: function(fullModel) {
             fullModel.correctResponses = fullModel.correctResponses || createResponsesModel(100);
-            fullModel.partialResponses = fullModel.partialResponses || createResponsesModel();
+            fullModel.partialResponses = fullModel.partialResponses || createResponsesModel(25);
             fullModel.incorrectResponses = fullModel.incorrectResponses || createResponsesModel(0);
             fullModel.model = fullModel.model || {};
             fullModel.model.answerBlankSize = fullModel.model.answerBlankSize || 8;
@@ -242,11 +244,13 @@ var csTextEntryResponseInput = [
       '         data-placeholder="{{prompt}}"',
       '    />',
       '  <div class="pull-right">',
-      '    <checkbox class="checkbox-inline" value="ignore-case" ng-init="response.caseSensitive = !response.ignoreCase"',
-      '           ng-model="response.caseSensitive" ng-change="response.ignoreCase = !response.caseSensitive">',
-      '      Case sensitive?',
-      '    </checkbox>',
-      '    <checkbox value="ignore-whitespace" ng-model="response.ignoreWhitespace">Ignore spacing?</checkbox>',
+      '    <label class="checkbox-inline">',
+      '      <input type="checkbox" value="ignore-case" ng-init="response.caseSensitive = !response.ignoreCase"',
+      '             ng-model="response.caseSensitive" ng-change="response.ignoreCase = !response.caseSensitive"/>Case sensitive?',
+      '    </label>',
+      '    <label class="checkbox-inline">',
+      '      <input type="checkbox" value="ignore-whitespace" ng-model="response.ignoreWhitespace"/>Ignore spacing?',
+      '    </label>',
       '  </div>',
       '  <div class="clearfix"></div>',
       '</div>'

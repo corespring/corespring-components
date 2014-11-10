@@ -3,7 +3,7 @@
   "componentType": "corespring-text-entry",
   "correctResponses": {
     "award": 100,
-    "values": [],
+    "values": ["one", "two", "three"],
     "ignoreWhitespace": true,
     "ignoreCase": true,
     "feedback": {

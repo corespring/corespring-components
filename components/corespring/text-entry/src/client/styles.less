@@ -1,0 +1,150 @@
+.component-placeholder.corespring-text-entry {
+  display: inline-block;
+  max-width: 200px;
+  margin-right: 10px;
+}
+
+.cs-text-entry {
+  display: inline-block;
+  position: relative;
+  margin: 0 8px 0 3px;
+  .feedback {
+    position: absolute;
+  }
+  .tooltip {
+    opacity: 1;
+    display: inline-block;
+    position: absolute;
+    top: -72px;
+    left: 5px;
+    max-width: 400px;
+    .caret {
+      top: 17px;
+      position: absolute;
+    }
+  }
+  .tooltip-inner {
+    background-color: black;
+    height: 17px;
+    padding-top: 0px;
+    border-radius: 2px;
+    max-width: 400px;
+    white-space: nowrap;
+  }
+}
+
+.cs-text-entry__text-input-holder {
+  position: relative;
+  .popover {
+    visibility: hidden;
+    width: 200px;
+  }
+  .result-icon {
+    position: absolute;
+    right: 4px;
+    top: 0px;
+  }
+  input {
+    padding: 4px 6px;
+  }
+  input.partial {
+    border-color: #3A87AD;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #3A87AD;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #3A87AD;
+  }
+  input.correct {
+    border-color: #3c763d;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #3c763d;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #3c763d;
+  }
+  input.incorrect {
+    border-color: #C09853;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+  }
+  i {
+    margin: 0;
+    font-size: 25px;
+    line-height: 31px !important;
+    color: #C09853;
+  }
+  i.correct {
+    color: #3c763d;
+  }
+  i.partial {
+    color: #3A87AD;
+  }
+  i.incorrect::before {
+    content: "\f057";
+  }
+  i.correct::before {
+    content: "\f058";
+  }
+  i.partial::before {
+    content: "\f05c";
+  }
+}
+
+.cs-text-entry__text-input-holder.incorrect .popover, .cs-text-entry__text-input-holder.correct .popover, .cs-text-entry__text-input-holder.partial .popover {
+  visibility: visible;
+}
+
+.cs-text-entry__text-input-holder.partial {
+  .popover-title {
+    background: #D9EDF7;
+    color: #3A87AD;
+  }
+}
+
+.cs-text-entry__text-input-holder.correct {
+  .popover-title {
+    background: #DFF0D8;
+    color: #3c763d;
+  }
+}
+
+.cs-text-entry__text-input-holder.incorrect {
+  .popover-title {
+    background: #FCF8E3;
+    color: #C09853;
+  }
+}
+
+.cs-text-entry-cfg {
+  .well {
+    padding: 8px;
+  }
+  .info {
+    margin-bottom: 20px;
+  }
+  .info.field-info {
+    margin-bottom: 0;
+  }
+  .checkbox-inline {
+    padding-left: 50px;
+  }
+  .main-header {
+    padding: 10px 10px 0px 10px;
+  }
+  .answer-blank-size-input {
+    margin: 0 0 10px 10px;
+  }
+}
+
+.cs-text-entry-cfg__award-config {
+  padding-bottom: 15px;
+}
+
+.cs-text-entry-cfg__number-input {
+  width: 60px;
+  text-align: right;
+  padding-right: 10px;
+}
+
+.cs-text-entry-cfg__answers-holder {
+  padding-bottom: 10px;
+}
+
+.cs-text-entry-cfg__responses-input--dropdown-noshow {
+  display: none !important;
+}

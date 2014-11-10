@@ -79,7 +79,15 @@ exports.respond = function(question, answer, settings) {
     return feedbackTemplate;
   }
 
-  function createFeedbackMessage(question, response) {
+  function createFeedbackMessage(question, response, answer) {
+    var feedbackTypeResponses = getFeedbackType(response)+"Responses";
+    var specificFeedback = question[feedbackTypeResponses] && question[feedbackTypeResponses].feedback && question[feedbackTypeResponses].feedback.specific &&
+      _.find(question[feedbackTypeResponses].feedback.specific, function(fb) {
+        return fb.answer === answer;
+      });
+    if (specificFeedback) {
+      return specificFeedback.feedback;
+    }
     var feedbackTemplate = getFeedbackTemplate(question, response);
     var result = replaceVariables(feedbackTemplate, question);
     return result;
@@ -111,7 +119,7 @@ exports.respond = function(question, answer, settings) {
   if (settings.showFeedback) {
     response.feedback = {
       correctness: getFeedbackType(response),
-      message: createFeedbackMessage(question, response)
+      message: createFeedbackMessage(question, response, answer)
     };
   }
   return response;

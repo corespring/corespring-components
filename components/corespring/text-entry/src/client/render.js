@@ -29,11 +29,30 @@ link = function() {
 
       // sets the server's response
       setResponse: function(response) {
+        var inputElement = $(element).find('input');
+        inputElement.popover('destroy');
+        if (!response) {
+          return;
+        }
         scope.feedback = response.feedback;
         scope.correctClass = response.feedback.correctness;
+        if (!_.isEmpty(response.feedback.message)) {
+          inputElement.popover({
+            placement: 'auto',
+            html: true,
+            content: response.feedback.message,
+            title: {"correct": "Correct", "incorrect": "Incorrect", "partial": "Partial"}[response.feedback.correctness],
+            viewport: '.corespring-player'
+          }).popover('show');
+
+          $(element).find(".popover").click(function() {
+            inputElement.popover('hide');
+          });
+        }
       },
 
-      setMode: function(newMode) {},
+      setMode: function(newMode) {
+      },
 
       reset: function() {
         scope.answer = undefined;
@@ -74,20 +93,15 @@ main = [
       replace: true,
       link: link(),
       template: [
-        '<div class="cs-text-entry">',
-        '  <div class="cs-text-entry__text-input-holder">',
-        '    <input type="text" ng-model="answer" ng-disabled="!editable" ng-class="feedback.correctness"',
-        '           class="cs-text-entry__text-input form-control text-input" ',
+        '<form class="cs-text-entry form-inline">',
+        '  <div class="cs-text-entry__text-input-holder form-group has-feedback" ng-class="feedback.correctness">',
+        '    <input type="text" ng-model="answer" ng-readonly="!editable" ng-class="feedback.correctness"',
+        '           class="input-sm form-control" ',
         '           size="{{question.answerBlankSize}}"',
         '           style="text-align: {{question.answerAlignment}}"/>',
+        '    <i ng-show="feedback" class="fa result-icon" ng-class="feedback.correctness" style="display: inline;"></i>',
         '  </div>',
-        '  <div ng-show="feedback.message" class="feedback">&nbsp;',
-        '    <div class="tooltip">',
-        '      <div class="tooltip-inner" ng-bind-html-unsafe="feedback.message"></div>',
-        '      <span class="caret"></span>',
-        '    </div>',
-        '  </div>',
-        '</div>'
+        '</form>'
       ].join("\n")
     };
   }
