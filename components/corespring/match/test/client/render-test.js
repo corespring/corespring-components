@@ -15,26 +15,37 @@ describe('corespring', function() {
 
     var testModelTemplate = {
       data: {
-        model: {
-          "choices": [
+        "model": {
+          "columns": [
             {
-              "label": "1",
-              "value": "1"
-        },
+              "labelHtml": "Custom header"
+            },
             {
-              "label": "2",
-              "value": "2"
-        },
+              "labelHtml": "Column 1"
+            },
             {
-              "label": "3",
-              "value": "3"
-        }
-      ],
-          "config": {
-            "orientation": "vertical",
-            "shuffle": true,
-            "choiceType": "radio"
-          }
+              "labelHtml": "Column 2"
+            }
+          ],
+          "rows": [
+            {
+              "id": "1",
+              "labelHtml": "Question text 1"
+            },
+            {
+              "id": "2",
+              "labelHtml": "Question text 2"
+            },
+            {
+              "id": "3",
+              "labelHtml": "Question text 3"
+            },
+            {
+              "id": "4",
+              "labelHtml": "Question text 4"
+            }
+          ],
+          "answerType": "MULTIPLE"
         }
       }
     };
@@ -51,6 +62,7 @@ describe('corespring', function() {
       container = new MockComponentRegister();
 
       $rootScope.$on('registerComponent', function(event, id, obj) {
+        console.log('registerComponent');
         container.registerComponent(id, obj);
       });
 
@@ -66,95 +78,16 @@ describe('corespring', function() {
     it('sets model', function() {
       container.elements['1'].setDataAndSession(testModel);
       expect(scope.question).toNotBe(null);
-      expect(scope.inputType).toBe('radio');
-      expect(scope.choices).not.toBe(null);
-      expect(scope.choices.length).toBe(3);
+      expect(scope.inputType).toBe('checkbox');
     });
 
-    it('shuffles is shuffle is true', function() {
-      spyOn(_, 'shuffle');
-      container.elements['1'].setDataAndSession(testModel);
-      expect(_.shuffle).toHaveBeenCalled();
-    });
+  it('builds the table correctly', function() {
+    container.elements['1'].setDataAndSession(testModel);
+    rootScope.$digest();
+    var table = $(element).find('table');
+    expect(table.length).toBe(1);
+    expect(table.find('td').length).toBe(12);
 
-    it('doesnt shuffle is shuffle is false', function() {
-      spyOn(_, 'shuffle');
-      testModel.data.model.config.shuffle = false;
-      container.elements['1'].setDataAndSession(testModel);
-      expect(_.shuffle).not.toHaveBeenCalled();
-    });
-
-    it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      rootScope.$digest();
-      expect($(element).find('input[type="radio"]').length).toBe(3);
-      testModel.data.model.config.choiceType = "checkbox";
-      container.elements['1'].setDataAndSession(testModel);
-      rootScope.$digest();
-      expect($(element).find('input[type="checkbox"]').length).toBe(3);
-    });
-
-    it('get answer returns selected answers', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      scope.answer.choices['1'] = true;
-      var answer = container.elements['1'].getSession();
-
-      expect(answer.answers).toEqual(['1']);
-    });
-
-    it('setting answer updates the UI (single choice)', function() {
-
-      testModel.session = {
-        answers: ['1']
-      };
-
-      container.elements['1'].setDataAndSession(testModel);
-      rootScope.$digest();
-      expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
-      expect($(element).find('input[value="2"]').is(':checked')).toBe(false);
-      expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
-    });
-
-    it('setting answer updates the UI (multi choice)', function() {
-      testModel.data.model.config.choiceType = "checkbox";
-
-      testModel.session = {
-        answers: ['1', '2']
-      };
-
-      container.elements['1'].setDataAndSession(testModel);
-      rootScope.$digest();
-      expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
-      expect($(element).find('input[value="2"]').is(':checked')).toBe(true);
-      expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
-    });
-
-    it('setting response shows correctness and feedback', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      var response = {
-        "correctness": "correct",
-        "score": 1,
-        "feedback": [
-          {
-            "value": "1",
-            "feedback": "yup",
-            "correct": true
-          },
-          {
-            "value": "2",
-            "correct": true
-          },
-          {
-            "value": "3",
-            "correct": false
-          }
-        ]
-      };
-      container.elements['1'].setResponse(response);
-      rootScope.$digest();
-      expect($(element).find(".choice-holder.correct").length).toBe(2);
-      expect($(element).find(".choice-holder.incorrect").length).toBe(1);
-    });
-
+  });
   });
 });

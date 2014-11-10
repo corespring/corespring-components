@@ -226,11 +226,8 @@ var main = [
         '   </table>',
 
         '   <div class="panel feedback {{response.correctness}}" ng-if="response.feedback.summary">',
-        '    <div class="panel-heading" ng-click="isFeedbackOpen=!isFeedbackOpen">',
-        '     <span class="toggle" ng-click="isFeedbackOpen=!isFeedbackOpen" ng-class="{false:\'fa-plus-circle\', true:\'fa-minus-circle\'}[isFeedbackOpen]"></span>',
-        '     <span class="label">Feedback</span>',
-        '    </div>',
-        '    <div class="panel-body" ng-show="isFeedbackOpen">',
+        '    <div class="panel-heading"></div>',
+        '    <div class="panel-body">',
         '    {{response.feedback.summary}}',
         '   </div>',
         '   </div>',

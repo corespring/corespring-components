@@ -73,10 +73,10 @@
               "labelHtml": "Question text 4"
             }
           ],
-          "answerType" : "MULTIPLE"
+          "answerType" : "YES_NO"
         }
       }
     },
-    "xhtml": "<corespring-match id=\"1\"></corespring-match>"
+    "xhtml": "<div corespring-match=\"corespring-match\" id=\"1\"></div>"
   }
 }
