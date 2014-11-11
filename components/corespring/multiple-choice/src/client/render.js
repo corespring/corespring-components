@@ -251,6 +251,14 @@ var main = [
          }
       });
 
+      scope.choiceClass = function(o) {
+        if (_.isUndefined(o.correct)) {
+          return "default";
+        }
+
+        return (o.correct && (scope.answer.choice == o.value || scope.answer.choices[o.value])) ? 'correct' : 'incorrect';
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
@@ -290,7 +298,7 @@ var main = [
       '<div class="choices-container" ng-class="question.config.orientation">',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="{selected: answer.choice == o.value || answer.choices[o.value], correct: o.correct, incorrect: o.correct == false}">',
-      '    <div class="choice-holder" ng-class="{true:\'correct\', false:\'incorrect\'}[o.correct && (answer.choice == o.value || answer.choices[o.value])]">',
+      '    <div class="choice-holder" ng-class="choiceClass(o)">',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
       '          <div class="checkbox-button" ng-class="{selected: answer.choices[o.value]}" />',

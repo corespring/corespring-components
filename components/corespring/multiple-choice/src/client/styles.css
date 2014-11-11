@@ -63,7 +63,8 @@
 }
 
 
-.view-multiple-choice .choice-holder:not(.incorrect) .checkbox-choice .checkbox-button.selected,
+.view-multiple-choice .choice-holder.default .checkbox-choice .checkbox-button.selected,
+.view-multiple-choice .choice-holder.correct .checkbox-choice .checkbox-button.selected,
 .view-multiple-choice .choice-holder .checkbox-choice .checkbox-button {
     display: inline-block;
     width: 20px;
@@ -77,7 +78,7 @@
     transform: scale(1, 1);
 }
 
-.view-multiple-choice .choice-holder:not(.incorrect) .checkbox-choice .checkbox-button.selected::after {
+.view-multiple-choice .choice-holder .checkbox-choice .checkbox-button.selected:before {
     font-family: 'FontAwesome';
     content: "\f00c";
     width: 30px;
@@ -91,7 +92,7 @@
     margin-top: -5px;
 }
 
-.view-multiple-choice .selected  .choice-holder.incorrect .checkbox-choice .checkbox-button::after {
+.view-multiple-choice .selected  .choice-holder.incorrect .checkbox-choice .checkbox-button:before {
     font-family: 'FontAwesome';
     width: 30px;
     height: 30px;
@@ -101,8 +102,8 @@
     color: #fff;
 }
 
-.view-multiple-choice .selected .choice-holder.correct .checkbox-choice .checkbox-button::after,
-.view-multiple-choice .answer .choice-holder.correct .checkbox-choice .checkbox-button::after {
+.view-multiple-choice .selected .choice-holder.correct .checkbox-choice .checkbox-button:before,
+.view-multiple-choice .answer .choice-holder.correct .checkbox-choice .checkbox-button:before {
     font-family: 'FontAwesome';
     width: 30px;
     height: 30px;
@@ -159,7 +160,7 @@
 
 }
 
-.view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .radio-choice .radio-button.selected {
+.view-multiple-choice .choice-holder.default .radio-choice .radio-button.selected {
     display: inline-block;
     width: 27px;
     height: 27px;
@@ -208,8 +209,8 @@
     font-size: 18px;
 }
 
-.view-multiple-choice .answer .correct .radio-choice .radio-button::after,
-.view-multiple-choice .selected .correct .radio-choice .radio-button::after {
+.view-multiple-choice .answer .correct .radio-choice .radio-button:after,
+.view-multiple-choice .selected .correct .radio-choice .radio-button:after {
     padding-left: 3px;
     font-size: 51px;
     text-indent: 3px;
@@ -229,7 +230,7 @@
     left: -0.5px;
 }
 
-.view-multiple-choice .incorrect .radio-choice .selected::after {
+.view-multiple-choice .incorrect .radio-choice .selected:after {
     padding-left: 3px;
     font-size: 35px;
     text-indent: 3px;
@@ -330,7 +331,7 @@
 
 
 .choice-label img {
-  vertical-align: bottom;
+    vertical-align: bottom;
 }
 
 
