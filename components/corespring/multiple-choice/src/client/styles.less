@@ -1,297 +1,515 @@
-@import '../../../../../less/common';
-
-@learn-more-color: #008bc9;
-
 .view-multiple-choice {
-
   padding-top: 14px;
   margin-bottom: 20px;
+}
+
+.view-multiple-choice .correct-label {
+  color: #008000;
+}
+
+.view-multiple-choice td {
+  vertical-align: top;
+}
+
+.view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .checkbox-choice[disabled] {
+  opacity: 0.65;
+}
+
+.view-multiple-choice .choice-holder:hover {
+  cursor: pointer;
+}
+
+.view-multiple-choice .checkbox-choice {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  left: 0px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  background-color: #fff;
+  -webkit-transition: border 0.15s ease-in-out;
+  -o-transition: border 0.15s ease-in-out;
+  transition: border 0.15s ease-in-out;
+}
+
+.view-multiple-choice .correct.selected .checkbox-choice {
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .checkbox-choice .checkbox-button {
+  -webkit-transform: scale(0, 0);
+  -ms-transform: scale(0, 0);
+  -o-transform: scale(0, 0);
+  transform: scale(0, 0);
+
+  -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+}
+
+.view-multiple-choice .selected .choice-holder.incorrect .checkbox-choice {
+  background-color: #EC971F;
+  border-color: #EC971F;
+}
+
+.view-multiple-choice .selected .choice-holder.correct .checkbox-choice,
+.view-multiple-choice .answer .choice-holder.correct .checkbox-choice {
+  background-color: #3c763d;
+  border-color: #3c763d;
+}
 
 
-  td {
-    vertical-align: top;
-  }
+.view-multiple-choice .choice-holder.default .checkbox-choice .checkbox-button.selected,
+.view-multiple-choice .choice-holder.correct .checkbox-choice .checkbox-button.selected,
+.view-multiple-choice .choice-holder .checkbox-choice .checkbox-button {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  left: 5px;
+  top: 0px;
+  margin-top: -4px;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
 
-  .correct-label {
-    color: #008000;
-  }
+.view-multiple-choice .choice-holder .checkbox-choice .checkbox-button.selected:before {
+  font-family: 'FontAwesome';
+  content: "\f00c";
+  width: 30px;
+  height: 30px;
+  font-size: 28px;
+  color: #555555;
+}
 
-  .correct-block {
-    display: inline-block;
-    text-align: center;
-    text-align: center;
-    text-align: center;
-  }
+.view-multiple-choice .selected .choice-holder.incorrect .checkbox-choice .checkbox-button {
+  margin-left: 3px;
+  margin-top: -5px;
+}
+
+.view-multiple-choice .selected  .choice-holder.incorrect .checkbox-choice .checkbox-button:before {
+  font-family: 'FontAwesome';
+  width: 30px;
+  height: 30px;
+  font-size: 28px;
+  left: 0px;
+  content: "\f00d";
+  color: #fff;
+}
+
+.view-multiple-choice .selected .choice-holder.correct .checkbox-choice .checkbox-button:before,
+.view-multiple-choice .answer .choice-holder.correct .checkbox-choice .checkbox-button:before {
+  font-family: 'FontAwesome';
+  width: 30px;
+  height: 30px;
+  font-size: 3em;
+  margin-left: -2px;
+  content: "\f00c";
+  color: #fff !important;
+}
+
+.view-multiple-choice .correct .checkbox-button {
+  margin-top: -10px !important;
+}
 
 
-  .remove-button {
-    position: relative;
-    right: 0px;
-    top: 5px;
-  }
+.view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .radio-choice[disabled] {
+  opacity: 0.65;
+}
 
-  .choices-container {
-    display: table;
-    max-width: 95%;
-  }
+.view-multiple-choice .radio-choice {
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #cccccc;
+  border-radius: 50%;
+  background-color: #fff;
+  -webkit-transition: border 0.15s ease-in-out;
+  -o-transition: border 0.15s ease-in-out;
+  transition: border 0.15s ease-in-out;
+}
 
-  .choice-holder {
-    line-height: 35px;
-    display: table-row;
-  }
+.view-multiple-choice .selected .correct .radio-choice,
+.view-multiple-choice .answer .correct .radio-choice {
+  border-color: #5cb85c;
+  position: relative;
+  margin-left: 20px;
+  margin-right: 10px;
+}
 
-  .choice-feedback-holder {
-    padding-left: 32px;
-  }
+.view-multiple-choice .selected .incorrect .radio-choice {
+  border: none;
+  position: relative;
+}
 
-  .choice-input {
-    padding-top: 0px;
-  }
+.view-multiple-choice .choice-holder:not(.incorrect):not(.correct) .radio-choice .radio-button {
+  -webkit-transform: scale(0, 0);
+  -ms-transform: scale(0, 0);
+  -o-transform: scale(0, 0);
+  transform: scale(0, 0);
 
-  .choice-letter {
-    font-weight: bold;
-
-    &.none {
-      display: none;
-    }
-  }
-
-  .choice-label {
-    img {
-      vertical-align: bottom;
-    }
-  }
-
-  .choice-input, .choice-letter, .choice-currency-symbol, .choice-label {
-    display: table-cell;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    vertical-align: top;
-  }
-
-  .choice {
-    background-color: #fff;
-    margin-bottom: 10px;
-    padding: 5px;
-    position: relative;
-
-    table {
-      width: 100%;
-    }
-  }
-
-  .cs-feedback {
-    display: table-cell;
-    width: 500px;
-  }
-
-  .horizontal {
-    display: table-cell;
-
-    .choice-input {
-      display: table-row;
-    }
-
-    .choice-wrapper {
-      text-align: center;
-    }
-
-    .correct .choice-wrapper {
-      border: 2px solid #80b312;
-      border-radius: 6px;
-    }
-
-    .incorrect .choice-wrapper {
-      border: 2px solid #F8A31A;
-      border-radius: 6px;
-    }
-
-    .correct *, .incorrect * {
-      border: none;
-    }
-
-    .choice-feedback-holder div {
-      display: none;
-      margin-left: 0px;
-    }
-
-    .cs-feedback {
-      display: inline-block;
-      position: relative;
-      width: auto;
-      margin-left: -32px;
-    }
-
-  }
-
-  .rightAlign .choice-label span {
-    text-align: right;
-  }
-
-  .tile.choice-holder {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .comments-block {
-    margin-top: 10px;
-  }
+  -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
 
 }
 
-// TODO: Can this be a child of .view-multiple-choice ?
-.choice-feedback-holder {
+.view-multiple-choice .choice-holder.default .radio-choice .radio-button.selected {
+  display: inline-block;
+  width: 27px;
+  height: 27px;
+  left: 3px;
+  top: -1px;
+  margin-left: 3px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background-color: #555555;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+.view-multiple-choice .correct .radio-choice .radio-button {
+  margin-top: 0px;
+  position: absolute;
+  top: -16px;
+  left: 0.5px;
+}
+
+.view-multiple-choice .correct.selected .choice-letter {
+  font-size: 20px;
+}
+
+.view-multiple-choice .correct.selected .choice-input,
+.view-multiple-choice .correct.selected .choice-letter,
+.view-multiple-choice .correct.selected .choice-currency-symbol,
+.view-multiple-choice .correct.selected .choice-label,
+.view-multiple-choice .incorrect.selected .choice-input,
+.view-multiple-choice .incorrect.selected .choice-letter,
+.view-multiple-choice .incorrect.selected .choice-currency-symbol,
+.view-multiple-choice .incorrect.selected .choice-label {
+
+  vertical-align: middle;
+}
+
+.view-multiple-choice .correct.selected .choice-letter {
+  font-size: 30px;
+}
+
+.view-multiple-choice .correct.selected .choice-label,
+.view-multiple-choice .selected .choice-label,
+.view-multiple-choice .selected .choice-letter {
+  font-size: 18px;
+}
+
+.view-multiple-choice .answer .correct .radio-choice .radio-button:after,
+.view-multiple-choice .selected .correct .radio-choice .radio-button:after {
+  padding-left: 3px;
+  font-size: 51px;
+  text-indent: 3px;
+  font-family: "FontAwesome";
+  content: "\f058";
+  color: #3C763D;
+  border: none;
+  margin-left: -10px;
+  width: 35px;
+  height: 35px;
+}
+
+.view-multiple-choice .incorrect .radio-choice .radio-button {
+  margin-top: 0px;
+  position: absolute;
+  top: -7px;
+  left: -0.5px;
+}
+
+.view-multiple-choice .incorrect .radio-choice .selected:after {
+  padding-left: 3px;
+  font-size: 35px;
+  text-indent: 3px;
+  font-family: "FontAwesome";
+  content: "\f05c";
+  color: #EC971F;
+  border: none;
+}
+
+.view-multiple-choice .correct-block {
+  display: inline-block;
+  text-align: center;
+}
+
+.view-multiple-choice .remove-button {
+  position: relative;
+  right: 0px;
+  top: 5px;
+}
+
+.view-multiple-choice .choices-container {
+  display: table;
+  width: 95%;
+}
+
+.view-multiple-choice .choice-holder {
   display: table-row;
+}
 
-  .cs-feedback {
-    border: none;
-  }
+.view-multiple-choice .choice-holder-background {
+  padding-top: 5px;
+  margin-bottom: 10px;
 
 }
 
-.incorrect, .correct {
-
-  .choice-letter {
-    border: 2px solid #80b312;
-    border-right: none;
-    border-radius: 6px 0px 0px 6px;
-    padding-bottom: 5px;
-    padding-top: 5px;
-  }
-
-  .choice-currency-symbol {
-    border: 2px solid #80b312;
-    border-right: none;
-    border-left: none;
-    padding-bottom: 5px;
-    padding-top: 5px;
-  }
-
-  .choice-label {
-    border: 2px solid #80b312;
-    border-left: none;
-    border-radius: 0px 6px 6px 0px;
-    padding-bottom: 5px;
-    padding-top: 5px;
-  }
-
-  &.cs-feedback {
-    margin-top: 5px;
-    padding-bottom: 15px;
-    padding-top: 10px;
-    background: url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 14px transparent;
-    padding-left: 30px;
-  }
-
+.view-multiple-choice .choice-holder-background.selected {
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  padding-top: 10px;
+  border-radius: 4px;
 }
 
-.incorrect {
-  .choice-label, .choice-letter, .choice-currency-symbol {
-    border-color: #F8A31A;
-    padding-bottom: 5px;
-    padding-top: 5px;
-  }
+.view-multiple-choice .choice-holder-background.correct.selected {
+  margin-right: 10px;
+  background-color: #dff0d8;
+  border: 1px solid #d6e9c6;
+  border-radius: 4px;
+  padding-bottom: 15px;
+  padding-top: 20px;
+  -webkit-box-shadow: -2px 5px 12px -2px rgba(0,0,0,0.5);
+  -moz-box-shadow: -2px 5px 12px -2px rgba(0,0,0,0.5);
+  box-shadow: -2px 5px 12px -2px rgba(0,0,0,0.5);
 }
 
-.correct {
 
-  &.cs-feedback {
-    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 14px transparent;
-  }
+.view-multiple-choice .correct .choice-feedback-holder {
+  padding-left: 75px;
+  width: 90%;
+}
 
+.view-multiple-choice .incorrect .choice-feedback-holder {
+  padding-left: 45px;
+  width: 90%;
+}
+
+.view-multiple-choice .show-correct-answer {
+  color: #428bca;
+  cursor: pointer;
+}
+
+
+.view-multiple-choice .choice-input,
+.view-multiple-choice .choice-letter,
+.view-multiple-choice .choice-currency-symbol,
+.view-multiple-choice .choice-label {
+  display: table-cell;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 10px;
+  vertical-align: top;
+}
+
+.view-multiple-choice .choice-input {
+  padding-top: 0px;
+}
+
+.view-multiple-choice .choice-letter {
+  font-weight: bold;
+}
+
+.view-multiple-choice .choice-letter.none {
+  display: none;
+}
+
+
+.choice-label img {
+  vertical-align: bottom;
+}
+
+
+.view-multiple-choice .choice {
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 5px;
+  position: relative;
+}
+
+.view-multiple-choice .choice table {
+  width: 100%;
+}
+
+.view-multiple-choice .choice-image {
+}
+
+.view-multiple-choice .cs-feedback {
+  display: table-cell;
+  width: 500px;
+}
+
+
+.view-multiple-choice .alert-success {
+  background-color: #ffffff;
+  border: 1px solid #3C763D;
+  color: #000000;
+}
+
+.view-multiple-choice .alert-warning {
+  background-color: #EC971F;
+  color: #ffffff;
+}
+
+/* Horizontal Layout */
+
+.view-multiple-choice .horizontal .choice-input {
+  display: table-row;
+}
+
+.view-multiple-choice .horizontal .choice-input input {
 }
 
 .cell-wrapper {
   display: table-cell;
 }
 
-.config-panel-body {
+.view-multiple-choice .rightAlign .choice-label span {
+  text-align: right;
+}
 
-  .check-correct-label {
-    text-align: right;
-    margin-bottom: 10px;
-  }
+.view-multiple-choice .horizontal {
+  display: table-cell;
+}
 
+.view-multiple-choice .horizontal .choice-wrapper {
+  text-align: center;
+}
+
+.view-multiple-choice .horizontal .choice-feedback-holder {
+}
+
+.view-multiple-choice .horizontal .choice-feedback-holder div {
+  display: none;
+  margin-left: 0px;
+}
+
+.view-multiple-choice .horizontal .cs-feedback {
+  display: inline-block;
+  position: relative;
+  width: auto;
+  margin-left: -32px;
+}
+
+
+/* Tile */
+.view-multiple-choice .tile.choice-holder {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Comments block */
+.view-multiple-choice .comments-block {
+  margin-top: 10px;
+}
+
+.view-multiple-choice .summaryFeedbackPanel {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 95%;
+}
+
+.view-multiple-choice .summaryFeedbackPanel .panel-title {
+  border-radius: 0px;
+}
+
+.view-multiple-choice .summaryFeedbackPanel .panel-default {
+  border-color: #008BC9;
+}
+
+.view-multiple-choice .summaryFeedbackPanel .panel-default>.panel-heading {
+  color: #fff;
+  background-color: #008BC9;
+  border-color: #008BC9;
+  border-radius: 0px;
+}
+
+.summaryFeedbackPanel .panel-group .panel-heading+.panel-collapse>.panel-body {
+  border: 4px solid #008BC9;
+}
+
+.view-multiple-choice .learnMoreIcon {
+  font-size: 30px;
+  margin-top: -5px;
+}
+
+.view-multiple-choice .answer-holder {
+  background: #fff;
+  overflow: hidden;
+  padding: 6px 5px;
+}
+
+.view-multiple-choice .answer-holder .panel {
+  border: 4px solid #3C763D;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: normal;
+}
+
+.view-multiple-choice .answerIcon,
+.view-multiple-choice .learnMoreIcon {
+  font-size: 30px;
+  margin-right: 2%;
+}
+
+.view-multiple-choice .answer-holder .panel-default > .panel-heading {
+  color: #fff;
+  background-color: #3C763D;
+  border-color: #3C763D;
+  border-radius: 0px;
+  cursor: pointer;
+}
+
+.view-multiple-choice .learn-more-link {
+  cursor: pointer;
+}
+
+/* Config Panel */
+.choice-config-panel {
+  padding-top: 30px;
+}
+
+.config-panel-body .check-correct-label {
+  text-align: right;
+  margin-bottom: 10px;
 }
 
 .score-table td {
   padding-right: 80px;
 }
 
-.config-multiple-choice {
+.config-multiple-choice table,
+.config-multiple-choice tr,
+.config-multiple-choice td {
+  padding: 0 10px 10px 0;
+  vertical-align: bottom;
+}
 
-  .choice-letter {
-    label {
-      font-size: 22px;
-    }
+.config-multiple-choice .choice-config-panel {
+  margin-bottom: 40px;
+}
 
-    i {
-      cursor: pointer;
-    }
+.config-multiple-choice .config-shuffle {
+  margin-top: 10px;
+}
 
-    label, i {
-      display: inline-block;
-      vertical-align: baseline;
-    }
-  }
+.config-multiple-choice label.disabled {
+  color: #cccccc;
+  cursor: not-allowed;
+}
 
-  .panel-title a:before {
-    content: '\f055';
-    font-family: FontAwesome;
-    margin-right: 5px;
-    font-size: 18px;
-    text-decoration: none;
-  }
-
-  .mini-wiggi-wiz {
-    border-radius: 4px;
-    margin-bottom: 5px;
-    border: 1px solid #cccccc;
-
-    .wiggi-wiz-editable {
-      margin-top: 0 !important;
-      border-radius: 4px;
-    }
-  }
-
-  .choice-checkbox {
-    cursor: pointer;
-    margin-top: 10px;
-    font-size: 22px;
-
-    &.checked {
-      color: #32cd32;
-    }
-  }
-
-  .v-offset-2 {
-    margin-bottom: 20px;
-  }
-
-  .panel.color-panel {
-    box-shadow: none;
-    border: none;
-
-    .panel-heading {
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-      color: #fff;
-
-      i.fa {
-        font-size: 28px;
-        margin-right: 10px;
-      }
-    }
-
-    .panel-body {
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-      padding: 10px;
-    }
-
-    &.learn-more {
-      .color-panel(@learn-more-color);
-    }
-  }
+.config-multiple-choice .label-select,
+.select2-drop {
+  min-width: 120px;
 }
