@@ -256,7 +256,7 @@ var main = [
           return "default";
         }
 
-        return (o.correct && (scope.answer.choice == o.value || scope.answer.choices[o.value])) ? 'correct' : 'incorrect';
+        return (o.correct && (scope.answer.choice === o.value || scope.answer.choices[o.value])) ? 'correct' : 'incorrect';
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
