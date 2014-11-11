@@ -87,11 +87,11 @@ describe('corespring', function() {
     it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect($(element).find('input[type="radio"]').length).toBe(3);
+      expect($(element).find('div.radio-choice').length).toBe(6);
       testModel.data.model.config.choiceType = "checkbox";
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect($(element).find('input[type="checkbox"]').length).toBe(3);
+      expect($(element).find('div.checkbox-choice').length).toBe(6);
     });
 
     it('get answer returns selected answers', function() {
@@ -110,9 +110,9 @@ describe('corespring', function() {
 
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
-      expect($(element).find('input[value="2"]').is(':checked')).toBe(false);
-      expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
+
+      expect($(element).find('div.radio-choice').length).toBe(6);
+      expect($(element).find('div.radio-choice .selected').length).toBe(1);
     });
 
     it('setting answer updates the UI (multi choice)', function() {
@@ -124,9 +124,8 @@ describe('corespring', function() {
 
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect($(element).find('input[value="1"]').is(':checked')).toBe(true);
-      expect($(element).find('input[value="2"]').is(':checked')).toBe(true);
-      expect($(element).find('input[value="3"]').is(':checked')).toBe(false);
+      expect($(element).find('div.checkbox-choice').length).toBe(6);
+      expect($(element).find('div.checkbox-choice .selected').length).toBe(2);
     });
 
     it('setting response shows correctness and feedback', function() {
@@ -153,7 +152,7 @@ describe('corespring', function() {
       container.elements['1'].setResponse(response);
       rootScope.$digest();
       expect($(element).find(".choice-holder.correct").length).toBe(2);
-      expect($(element).find(".choice-holder.incorrect").length).toBe(1);
+      expect($(element).find(".choice-holder.incorrect").length).toBe(3);
     });
 
   });
