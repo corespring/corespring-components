@@ -179,7 +179,7 @@ var main = [
         else{
           return 'unknown';
         }
-      }
+      };
 
       scope.isCheckBox = function(inputType){
         return inputType === 'checkbox';
