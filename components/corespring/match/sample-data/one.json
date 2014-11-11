@@ -39,10 +39,10 @@
           },
           "all_incorrect" :{
             "type": "custom",
-            "text" : "Everything is wrong !"
+            "text" : " <span mathjax=\"\">\\(\\frac12\\)</span> Everything is wrong !"
           }
         },
-        "summaryFeedback": "This is the summary feedback. This is the summary feedback. This is the summary feedback ",
+        "summaryFeedback": " <span mathjax=\"\">\\(\\frac12\\)</span> This is the summary feedback. This is the summary feedback. This is the summary feedback ",
         "model": {
           "columns" : [
             {
@@ -73,7 +73,7 @@
               "labelHtml": "Question text 4"
             }
           ],
-          "answerType" : "YES_NO"
+          "answerType" : "MULTIPLE"
         }
       }
     },

@@ -8,7 +8,7 @@ var main = [
 
       scope.editable = true;
       scope.isSummaryFeedbackOpen = false;
-      scope.isFeedbackOpen = false;
+      scope.isSeeCorrectAnswerOpen = false;
 
       var YES_NO = 'YES_NO';
       var TRUE_FALSE = 'TRUE_FALSE';
@@ -21,11 +21,7 @@ var main = [
       var YES_LABEL = "Yes";
       var NO_LABEL = "No";
       var UNKNOWN = "unknown";
-      var CORRECT = "correct";
-      var INCORRECT = "incorrect";
       var ALL_CORRECT = "all_correct";
-      var SOME_CORRECT = "some_correct";
-      var ALL_INCORRECT = "all_incorrect";
 
       function updateInputType(model){
         if (!model || !model.answerType){
@@ -94,8 +90,6 @@ var main = [
           });
         }
 
-        //var selectionRows = (session && session.answers) ? session.answers : rawModel.rows
-
         return {
           "columns" : prepareColumns(),
           "rows" : prepareRows(),
@@ -117,7 +111,6 @@ var main = [
           return { answers: getAnswers() };
         },
 
-        // sets the server's response
         setResponse: function(response) {
           scope.response = response;
           if (response.feedback) {
@@ -129,22 +122,19 @@ var main = [
                 }
               }
             });
+
           }
         },
         setMode: function(newMode) {},
-        /**
-         * Reset the ui back to an unanswered state
-         */
+
         reset: function() {
           scope.session = {};
           scope.matchModel = prepareModel(scope.data.model , {});
           scope.isSummaryFeedbackOpen = false;
-          scope.isFeedbackOpen = false;
+          scope.isSeeCorrectAnswerOpen = false;
           delete scope.response;
         },
-        resetStash: function() {
-          //scope.session.stash = {};
-        },
+        resetStash: function() {},
         isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
         },
@@ -161,7 +151,9 @@ var main = [
       };
 
       scope.showSeeCorrectAnswerLink = function(feedback){
-        return (feedback && feedback.correctness && feedback.correctness !== ALL_CORRECT);
+        return (feedback && feedback.correctness &&
+          feedback.correctness !== ALL_CORRECT &&
+          scope.matchModel.answerType === MULTIPLE);
       };
 
       scope.getCorrectness = function(correct){
@@ -178,17 +170,16 @@ var main = [
         }
       };
 
-      scope.seeCorrectAnswer =function(){
-        _.each(scope.data.correctResponse, function(correctRow) {
-          var modelRow = _.find(scope.matchModel.rows, whereIdIsEqual(correctRow.id));
-          for(var i=0; i<modelRow.matchSet.length; i++){
-            if (correctRow.matchSet[i]){
-              modelRow.matchSet[i].value = true;
-              modelRow.matchSet[i].correct = CORRECT ;
-            }
-          }
-        });
-      };
+      scope.getIconClass = function(row,$index){
+        var correctRow = _.find(scope.data.correctResponse,whereIdIsEqual(row.id));
+
+        if (correctRow.matchSet[$index]){
+          return "correct-checkbox fa-check-square";
+        }
+        else{
+          return 'unknown';
+        }
+      }
 
       scope.isCheckBox = function(inputType){
         return inputType === 'checkbox';
@@ -225,25 +216,41 @@ var main = [
         '     </tr>',
         '   </table>',
 
-        '   <div class="panel feedback {{response.correctness}}" ng-if="response.feedback.summary">',
-        '    <div class="panel-heading"></div>',
-        '    <div class="panel-body">',
-        '    {{response.feedback.summary}}',
+        ' <div class="panel feedback correct-answer" ng-if="showSeeCorrectAnswerLink(response)">',
+        '   <div class="panel-heading" ng-click="isSeeCorrectAnswerOpen=!isSeeCorrectAnswerOpen">',
+        '     <span class="toggle" ng-class="{true:\'fa-eye-slash\', false:\'fa-eye\'}[isSeeCorrectAnswerOpen]"></span>',
+        '     <span class="label" ng-if="isSeeCorrectAnswerOpen">Hide correct answer</span>',
+        '     <span class="label" ng-if="!isSeeCorrectAnswerOpen">Show correct answer</span>',
         '   </div>',
+        '   <div class="panel-body"  ng-show="isSeeCorrectAnswerOpen">',
+        '     <table class="table">',
+        '       <tr>',
+        '         <th class="answer-header" ng-repeat="column in matchModel.columns" ng-bind-html-unsafe="column.labelHtml"/>',
+        '       </tr>',
+        '       <tr class="question-row" ng-repeat="row in matchModel.rows">',
+        '         <td class="question-cell" ng-bind-html-unsafe="row.labelHtml" ng-switch="inputType"></td>',
+        '           <td class="answer-cell" ng-repeat="match in row.matchSet track by $index">',
+        '             <span class="{{getIconClass(row,$index)}}"></span>',
+        '           </td>',
+        '       </tr>',
+        '     </table>',
         '   </div>',
+        ' </div>',
 
+        ' <div class="panel feedback {{response.correctness}}" ng-if="response.feedback.summary">',
+        '   <div class="panel-heading"></div>',
+        '   <div class="panel-body"  ng-bind-html-unsafe="response.feedback.summary">',
+        '   </div>',
+        ' </div>',
 
         '   <div class="panel summary-feedback" ng-if="response.summaryFeedback">',
         '    <div class="panel-heading" ng-click="isSummaryFeedbackOpen=!isSummaryFeedbackOpen">',
         '     <span class="toggle fa-lightbulb-o" ></span>',
         '     <span class="label">Summary feedback</span>',
         '    </div>',
-        '    <div class="panel-body" ng-show="isSummaryFeedbackOpen">',
-        '    {{response.summaryFeedback}}',
+        '    <div class="panel-body" ng-show="isSummaryFeedbackOpen" ng-bind-html-unsafe="response.summaryFeedback">',
         '   </div>',
         '   </div>',
-
-        '<a ng-show="showSeeCorrectAnswerLink(response)" href ng-click="seeCorrectAnswer()">See correct answer</a>',
 
         '</div>'
       ].join("\n")

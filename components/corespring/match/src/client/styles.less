@@ -5,10 +5,29 @@
 @incorrect-color: #EEA236;
 @partial-color: #3A87AD;
 @learn-more-color: #3A87AD;
+@see-correct-color:#3C763D;
 
 .view-match {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  color: #000000;
 
-  .summary-feedback, .feedback{
+  table{
+    tr{
+      td {
+        line-height: 2em;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .correct-checkbox{
+    font-family: FontAwesome;
+    font-size: 40px;
+    color:@correct-color;
+  }
+
+  .summary-feedback, .feedback, .correct-answer{
 
     border-color: @learn-more-color;
     border-width: 2px;
@@ -29,6 +48,14 @@
         color: white;
         font-weight: normal
       }
+    }
+  }
+
+  .correct-answer {
+    border-color: @see-correct-color;
+    .panel-heading {
+      background-color: @see-correct-color;
+      height:45px;
     }
   }
 
