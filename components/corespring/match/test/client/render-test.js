@@ -45,7 +45,7 @@ describe('corespring', function() {
               "labelHtml": "Question text 4"
             }
           ],
-          "answerType": "MULTIPLE"
+          "answerType": "YES_NO"
         }
       }
     };
@@ -78,16 +78,49 @@ describe('corespring', function() {
     it('sets model', function() {
       container.elements['1'].setDataAndSession(testModel);
       expect(scope.question).toNotBe(null);
-      expect(scope.inputType).toBe('checkbox');
+      expect(scope.inputType).toBe('radiobutton');
     });
 
-  it('builds the table correctly', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    rootScope.$digest();
-    var table = $(element).find('table');
-    expect(table.length).toBe(1);
-    expect(table.find('td').length).toBe(12);
+    it('builds the table correctly', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      var table = $(element).find('table');
+      expect(table.length).toBe(1);
+      expect(table.find('td').length).toBe(12);
+    });
 
-  });
+    it('selects correctly radio buttons', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      var matchSet = scope.matchModel.rows[0].matchSet;
+      scope.onClickMatch(matchSet,0);
+      rootScope.$digest();
+      expect(matchSet[0].value).toBe(true);
+      expect(matchSet[1].value).toBe(false);
+
+      scope.onClickMatch(matchSet,1);
+      rootScope.$digest();
+      expect(matchSet[0].value).toBe(false);
+      expect(matchSet[1].value).toBe(true);
+    });
+
+
+    it('returns session correctly', function() {
+      var component =  container.elements['1'];
+      component.setDataAndSession(testModel);
+      rootScope.$digest();
+
+      var matchSet = scope.matchModel.rows[0].matchSet;
+      scope.onClickMatch(matchSet,0);
+      rootScope.$digest();
+
+      var session = component.getSession();
+
+      expect(session.answers.length).toBe(testModel.data.model.rows.length);
+      expect(session.answers[0].id).toBe(testModel.data.model.rows[0].id);
+      expect(session.answers[0].matchSet[0]).toBe(true);
+      expect(session.answers[0].matchSet[1]).toBe(false);
+    });
+
   });
 });
