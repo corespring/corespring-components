@@ -31,6 +31,8 @@ var main = [
             scope.$apply(function() {
               var newModel = JSON.parse(json);
               _.merge(scope.fullModel, newModel);
+              scope.fullModel.correctResponse = newModel.correctResponse;
+              scope.fullModel.model.objects = newModel.model.objects;
             });
           }
         }, 200));
