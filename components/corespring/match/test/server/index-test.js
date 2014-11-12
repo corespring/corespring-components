@@ -19,7 +19,7 @@ var expect = require('chai').expect;
 
 _ = require('lodash');
 
-componentTemplate = {
+var componentTemplate = {
   "componentType": "corespring-match",
   "title": "Match component sample item",
   "weight": 4,
