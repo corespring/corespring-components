@@ -49,11 +49,6 @@ function getCorrectnessString(answer, correctAnswer) {
   }
 }
 
-function isCorrectChoice(q, choice) {
-  return _.indexOf(q.correctResponse.value, choice) !== -1;
-}
-
-
 function whereIdIsEqual(id){
   return function(match){
     return match.id === id;
@@ -61,7 +56,6 @@ function whereIdIsEqual(id){
 }
 
 function buildCorrectnessMatrix(question, answer, settings) {
-
 
   var matrix = question.correctResponse.map(function(correctRow){
     var answerRow = _.find(answer, whereIdIsEqual(correctRow.id));
@@ -72,15 +66,23 @@ function buildCorrectnessMatrix(question, answer, settings) {
       var correctMatch = zippedMatches[0];
       var answeredMatch = zippedMatches[1];
       var correctness = "";
+
       if (settings.highlightCorrectResponse) {
-        correctness = (answeredMatch && (correctMatch === answeredMatch))  ? "correct" : "unknown";
+        correctness = correctMatch ? "correct" : "unknown";
       }
-      if (settings.highlightUserResponse && answeredMatch){
-        correctness = correctMatch ? "correct" : "incorrect";
+      if (settings.highlightUserResponse ){
+        if (answeredMatch){
+          correctness = correctMatch ? "correct" : "incorrect";
+        }else if (settings.highlightCorrectResponse) {
+          correctness = correctMatch ? "correct" : "unknown";
+        }else{
+          correctness = "unknown";
+        }
       }
-      else{
+      if (!settings.highlightUserResponse && !settings.highlightCorrectResponse){
         correctness = "unknown";
       }
+
       return {
         "correctness":correctness,
         "value":answeredMatch

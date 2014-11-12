@@ -1,0 +1,529 @@
+var assert, component, server, settings, should, _, helper;
+
+helper = require('../../../../../test-lib/test-helper');
+
+//Note: because we are using non conventional requires
+//You need to load the component with proxyquire
+//And specify any custom dependencies
+var proxyquire = require('proxyquire').noCallThru();
+var fbu = require('../../../server-shared/src/server/feedback-utils');
+
+server = proxyquire('../../src/server', {
+  'corespring.server-shared.server.feedback-utils': fbu,
+  'corespring.scoring-utils.server': {}
+});
+
+assert = require('assert');
+
+var expect = require('chai').expect;
+
+_ = require('lodash');
+
+componentTemplate = {
+  "componentType": "corespring-match",
+  "title": "Match component sample item",
+  "weight": 4,
+  "correctResponse": [
+    {
+      "id" : "1",
+      "matchSet" : [true,false]
+    },
+    {
+      "id" : "2",
+      "matchSet" : [true,false]
+    },
+    {
+      "id" : "3",
+      "matchSet" : [true,false]
+    },
+    {
+      "id" : "4",
+      "matchSet" : [true,false]
+    }
+  ],
+  "allowPartialScoring":true,
+  "partialScores": {
+    "1": 50,
+    "2": 20,
+    "3": 10,
+    "4": 5
+  },
+  "feedback": {
+    "all_correct": {
+      "type": "default"
+    },
+    "some_correct":{
+      "type": "default"
+    },
+    "all_incorrect" :{
+      "type": "custom",
+      "text" : "Everything is wrong !"
+    }
+  },
+  "summaryFeedback": " This is the summary feedback. This is the summary feedback. This is the summary feedback ",
+  "model": {
+    "columns" : [
+      {
+        "labelHtml": "Custom header"
+      },
+      {
+        "labelHtml": "Column 1"
+      },
+      {
+        "labelHtml": "Column 2"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "1",
+        "labelHtml": "Question text 1"
+      },
+      {
+        "id" : "2",
+        "labelHtml": "Question text 2"
+      },
+      {
+        "id" : "3",
+        "labelHtml": "Question text 3"
+      },
+      {
+        "id" : "4",
+        "labelHtml": "Question text 4"
+      }
+    ],
+    "answerType" : "MULTIPLE"
+  }
+};
+
+var component;
+
+beforeEach(function(){
+  component = _.cloneDeep(componentTemplate);
+});
+
+describe('match server logic', function() {
+
+  it('should return incorrect if the answer is null or undefined', function() {
+    var outcome = server.respond(component ,null ,helper.settings(true, true, true));
+    outcome.should.eql({ correctness: 'incorrect', score: 0, feedback: component.feedback.all_incorrect.text });
+
+    outcome = server.respond(component ,undefined ,helper.settings(true, true, true));
+    outcome.should.eql({ correctness: 'incorrect', score: 0, feedback: component.feedback.all_incorrect.text });
+
+  });
+
+  describe('respond', function() {
+
+    it('should not show any feedback when no feedback is allowed', function() {
+      var incorrectAnswer = [{
+        "id":"1",
+        "matchSet":[false,false]
+      },{
+        "id":"2",
+        "matchSet":[false,false]
+      },{
+        "id":"3",
+        "matchSet":[false,true]
+      },{
+        "id":"4",
+        "matchSet":[false,false]
+      }];
+
+      var response = server.respond(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
+      response.correctness.should.eql("all_incorrect");
+      response.score.should.eql(0);
+    });
+
+
+    it('should respond to a correct answer (feedback + user + correct)', function() {
+      var correctAnswer = _.cloneDeep(component.correctResponse);
+      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
+      var expected = {
+        "correctness": "all_correct",
+        "score": 1,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            }
+          ],
+          "summary": "Correct!"
+        }
+      };
+
+      response.should.eql(expected);
+    });
+
+    it('should respond to a correct answer (feedback - user - correct)', function() {
+      var correctAnswer = _.cloneDeep(component.correctResponse);
+      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, false, false));
+      var expected = {
+        "correctness": "all_correct",
+        "score": 1,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "unknown", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "unknown", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "unknown", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "unknown", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            }
+          ],
+          "summary": "Correct!"
+        }
+      };
+
+      response.should.eql(expected);
+    });
+
+
+    it('should respond to all_incorrect result (feedback + user + correct) and user did not choose anything', function() {
+      var correctAnswer = [{
+        "id":"1",
+        "matchSet":[false,false]
+      },{
+        "id":"2",
+        "matchSet":[false,false]
+      },{
+        "id":"3",
+        "matchSet":[false,false]
+      },{
+        "id":"4",
+        "matchSet":[false,false]
+      }];
+
+      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
+
+      var expected = {
+        "correctness": "all_incorrect",
+        "score": 0,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false}
+              ]
+            }
+          ],
+          "summary": component.feedback.all_incorrect.text
+        }
+      };
+      response.should.eql(expected);
+    });
+
+    it('should respond to all_incorrect result (feedback + user + correct) and user chose incorrectly', function() {
+      var correctAnswer = [{
+        "id":"1",
+        "matchSet":[false,true]
+      },{
+        "id":"2",
+        "matchSet":[false,true]
+      },{
+        "id":"3",
+        "matchSet":[false,true]
+      },{
+        "id":"4",
+        "matchSet":[false,true]
+      }];
+
+      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
+
+      var expected = {
+        "correctness": "all_incorrect",
+        "score": 0,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            }
+          ],
+          "summary": component.feedback.all_incorrect.text
+        }
+      };
+      response.should.eql(expected);
+    });
+
+    it('should respond to all_incorrect result (feedback - user + correct) and user chose incorrectly', function() {
+      var correctAnswer = [{
+        "id":"1",
+        "matchSet":[false,true]
+      },{
+        "id":"2",
+        "matchSet":[false,true]
+      },{
+        "id":"3",
+        "matchSet":[false,true]
+      },{
+        "id":"4",
+        "matchSet":[false,true]
+      }];
+
+      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, false, true));
+
+      var expected = {
+        "correctness": "all_incorrect",
+        "score": 0,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": true}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": true}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": true}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": true}
+              ]
+            }
+          ],
+          "summary": component.feedback.all_incorrect.text
+        }
+      };
+      response.should.eql(expected);
+    });
+
+    it('should respond to partially correct result (feedback + user + correct)', function() {
+      var partiallyCorrectAnswer = [{
+        "id":"1",
+        "matchSet":[true,false]
+      },{
+        "id":"2",
+        "matchSet":[false,true]
+      },{
+        "id":"3",
+        "matchSet":[true,false]
+      },{
+        "id":"4",
+        "matchSet":[false,true]
+      }];
+
+      var response = server.respond(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
+
+      var expected = {
+        "correctness": "some_correct",
+        "score": 0.6,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "correct", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            }
+          ],
+          "summary": "Almost!"
+        }
+      };
+      response.should.eql(expected);
+    });
+
+    it('should repond to partially correct result ( feedback - correct + user)', function() {
+      var partiallyCorrectAnswer = [{
+        "id":"1",
+        "matchSet":[true,false]
+      },{
+        "id":"2",
+        "matchSet":[false,true]
+      },{
+        "id":"3",
+        "matchSet":[true,false]
+      },{
+        "id":"4",
+        "matchSet":[false,true]
+      }];
+
+      var response = server.respond(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, false));
+
+      var expected = {
+        "correctness": "some_correct",
+        "score": 0.6,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "unknown", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "unknown", "value": false},
+                {"correctness": "incorrect", "value": true}
+              ]
+            }
+          ],
+          "summary": "Almost!"
+        }
+      };
+      response.should.eql(expected);
+    });
+
+
+
+  });
+});
