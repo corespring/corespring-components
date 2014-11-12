@@ -1,6 +1,8 @@
 /* global Raphael */
 
 var BASE_COLOR = "#000";
+var DEFAULT_POINT_RADIUS = 7;
+var DEFAULT_TICK_SIZE = 20;
 var SELECTED_COLOR = "#aaf";
 var EMPTY_COLOR = "#fff";
 var DEFAULT_STROKE_WIDTH = 3;
@@ -29,7 +31,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       this.selected = false;
       pointOptions = pointOptions || {};
       pointOptions = _.defaults(pointOptions || {}, {
-        size: 10,
+        size: DEFAULT_POINT_RADIUS,
         strokeColor: BASE_COLOR,
         fillColor: pointOptions.pointType === 'empty' ? EMPTY_COLOR : BASE_COLOR,
         selectedFillColor: pointOptions.pointType === 'empty' ? EMPTY_COLOR : SELECTED_COLOR,
@@ -180,14 +182,13 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       this.drawLine = function() {
         var x = options.margin.left + that.horizontalAxis.scale(this.p1.model.domainPosition);
         var x1 = options.margin.left + that.horizontalAxis.scale(this.p2.model.domainPosition);
-        x += (x < x1) ? 10 : -10;
+        x += (x < x1) ? DEFAULT_POINT_RADIUS : -DEFAULT_POINT_RADIUS;
         var y = options.height - options.margin.bottom - options.axisHeight - that.verticalAxis.scale(lineModel.rangePosition);
 
         if (!this.line) {
           this.grabber = that.paper.line(x, y, x1, y);
           this.line = that.paper.line(x, y, x1, y);
           var start = function(x, y, ev) {
-            console.log("starting");
             this.ox = this.attr("cx");
             this.oy = this.attr("cy");
             this.op1d = thatLI.p1.model.domainPosition;
@@ -341,6 +342,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       thatHA.elements = [];
       axisOptions = _.defaults(axisOptions || {}, {
         tickFrequency: 20,
+        snapPerTick: 4,
         visible: true
       });
 
@@ -379,12 +381,20 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         thatHA.elements.push(paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y));
 
         var scale = thatHA.scale;
-        var tickSize = 10;
+        var tickSize = DEFAULT_TICK_SIZE;
+        var d = Math.abs(thatHA.ticks[1] - thatHA.ticks[0]) / axisOptions.snapPerTick;
 
         _(thatHA.ticks).each(function(tick, idx) {
           var x = scale(tick);
+
           thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2));
           thatHA.elements.push(paper.text(options.margin.left + x, options.height - options.margin.bottom, tick));
+
+          if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 1) {
+            for (var i = 0; i < axisOptions.snapPerTick; i++) {
+              thatHA.elements.push(paper.line(options.margin.left + scale(tick + d * i), y - tickSize / 4, options.margin.left + scale(tick + d * i), y + tickSize / 4));
+            }
+          }
         });
 
       };

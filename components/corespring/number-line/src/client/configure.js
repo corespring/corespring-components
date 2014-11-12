@@ -33,7 +33,7 @@ var main = [
               _.merge(scope.fullModel, newModel);
             });
           }
-        }, 1000));
+        }, 200));
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       },

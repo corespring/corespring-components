@@ -295,7 +295,9 @@ var interactiveGraph = [
           scope.graph.updateOptions(model.config);
 
           scope.graph.addHorizontalAxis("bottom", {
-            tickFrequency: model.config.tickFrequency || 10
+            tickFrequency: model.config.tickFrequency || 10,
+            snapPerTick: model.config.snapPerTick,
+            showMinorTicks: model.config.showMinorTicks
           });
           scope.graph.addVerticalAxis("left", {visible: false});
 
@@ -314,7 +316,6 @@ var interactiveGraph = [
         }, true);
 
         scope.$watch('editable', function(n) {
-          console.log('editable changed to ',n);
           if (!_.isUndefined(n) && !n) {
             scope.graph.updateOptions({exhibitOnly: true});
           }
@@ -322,7 +323,6 @@ var interactiveGraph = [
 
         scope.$watch('serverresponse', function(n, prev) {
           if (n) {
-            console.log("Rebuilding Server Response");
             scope.responsemodel = _.cloneDeep(n.feedback) || [];
             rebuildGraph();
             scope.graph.updateOptions({exhibitOnly: true});

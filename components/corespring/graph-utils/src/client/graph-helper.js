@@ -5,6 +5,8 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
 
   var GraphUtils = function(element, options) {
 
+    var PLANE_SIZE = 30;
+
     var that = this;
 
     var graphElementFactory  = new GraphElementFactory(that, options);
@@ -38,7 +40,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     this.updateOptions = function(newOptions) {
 
       if (!_.isUndefined(newOptions.maxNumberOfPoints) && newOptions.maxNumberOfPoints !== options.maxNumberOfPoints) {
-        options.verticalAxisLength = newOptions.maxNumberOfPoints * 50;
+        options.verticalAxisLength = newOptions.maxNumberOfPoints * PLANE_SIZE;
         options.height = (options.verticalAxisLength + options.margin.top + options.margin.bottom) + options.axisHeight;
 
         $(element).width(options.width);
