@@ -1,7 +1,73 @@
 @import '../../../../../less/common';
 
+.style-element(@x) {
+  display: inline-block;
+  width: 55px;
+  height: 45px;
+  margin-right: 2px;
+  background: url('/client/public/corespring/number-line/elements-sprite.png') @x 0px;
+  cursor: pointer;
+
+  &.active, &.active:hover {
+    background-position: @x -91px;
+  }
+
+  &:hover {
+    text-decoration: none;
+    background-position: @x -45px;
+  }
+
+}
+
 .view-number-line {
 
+  div.element-selector {
+    span.element-pf a {
+      .style-element(0px);
+    }
+
+    span.element-lff a {
+      .style-element(-60px);
+    }
+
+    span.element-lef a {
+      .style-element(-120px);
+    }
+
+    span.element-lfe a {
+      .style-element(-180px);
+    }
+
+    span.element-lee a {
+      .style-element(-243px);
+    }
+
+    span.element-rfn a {
+      .style-element(-304px);
+    }
+
+    span.element-rfp a {
+      .style-element(-363px);
+    }
+
+    span.element-ren a {
+      .style-element(-426px);
+    }
+
+    span.element-rep a {
+      .style-element(-485px);
+    }
+
+    .bin-icon {
+      vertical-align: -90%;
+      padding: 10px;
+    }
+
+    .bin-icon:hover {
+      color: #aaa;
+      cursor: pointer;
+    }
+  }
 
 
   .correct-element {
