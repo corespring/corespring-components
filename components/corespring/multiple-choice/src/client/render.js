@@ -277,7 +277,7 @@ var main = [
       '              <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
       '                <div class="checkbox-button" />',
       '              </div>',
-      '              <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
+      '              <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" >',
       '                <div class="radio-button" />',
       '              </div>',
       '            </span>',

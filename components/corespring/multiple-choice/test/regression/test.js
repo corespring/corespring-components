@@ -33,7 +33,7 @@ describe('multiple-choice', function() {
       });
     }
 
-    this.elements('.choice-input input', function(err, results) {
+    this.elements('.choice-input .radio-choice', function(err, results) {
       for (var i = 0; i < results.value.length; i++) {
         clickIfAnswer(results.value[i].ELEMENT);
       }
@@ -42,7 +42,18 @@ describe('multiple-choice', function() {
     return this;
   };
 
+  browser.showAnswer = function() {
+    browser.elements('.answer-holder .panel-title', function(err, results) {
+      for (var i = 0; i < results.value.length; i++) {
+        browser.elementIdClick(results.value[i].ELEMENT);
+      }
+    });
+    return this;
+
+  };
+
   browser.submitItem = function() {
+    console.log("submitting");
     this.execute('window.submit()');
     return this;
   };
@@ -50,7 +61,7 @@ describe('multiple-choice', function() {
   beforeEach(function() {
     browser
       .url(RegressionHelper.getUrl('multiple-choice', itemJsonFilename))
-      .waitFor('.choice-input input', regressionTestRunnerGlobals.defaultTimeout);
+      .waitFor('.choice-input .radio-choice', regressionTestRunnerGlobals.defaultTimeout);
   });
 
 
@@ -58,7 +69,7 @@ describe('multiple-choice', function() {
     browser
       .selectAnswer(correctAnswer)
       .submitItem()
-      .isVisible('.choice-holder.incorrect', function(err, result) {
+      .isVisible('.selected .choice-holder.incorrect', function(err, result) {
         (result === undefined).should.equal(true);
       })
       .call(done);
@@ -69,18 +80,19 @@ describe('multiple-choice', function() {
     browser
       .selectAnswer(incorrectAnswer)
       .submitItem()
-      .isVisible('.choice-holder.incorrect', function(err, result) {
+      .isVisible('.selected .choice-holder.incorrect', function(err, result) {
         (result === null).should.not.equal(true);
       })
       .call(done);
   });
 
-  it('displays correct answer help message when incorrect answer selected', function(done) {
+  it('displays correct answer in answer area when incorrect answer selected', function(done) {
     browser
       .selectAnswer(incorrectAnswer)
       .submitItem()
-      .getText('.choice-feedback-holder .cs-feedback.correct', function(err, message) {
-        message.should.eql(notChosenFeedback);
+      .showAnswer()
+      .getText('.answer-holder .choice-holder.correct .choice-label', function(err, message) {
+        message.should.eql(correctAnswer);
       })
       .call(done);
   });
