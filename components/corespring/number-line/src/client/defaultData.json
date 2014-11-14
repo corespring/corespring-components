@@ -3,14 +3,27 @@
   "title": "Number Line",
   "weight": 1,
   "correctResponse": [
-    {
-      "type": "point",
-      "domainPosition": 3
-    }
   ],
   "model": {
     "config": {
-      "domain": [-10, 10]
+      "domain": [0, 20],
+      "maxNumberOfPoints": 3,
+      "tickFrequency": 20,
+      "showMinorTicks": true,
+      "snapPerTick": 2,
+      "initialType": "PF",
+      "exhibitOnly": false,
+      "availableTypes": {
+        "PF": true,
+        "LEE": true,
+        "LEF": true,
+        "LFE": true,
+        "LFF": true,
+        "REP": true,
+        "REN": true,
+        "RFP": true,
+        "RFN": true
+      }
     },
     "objects": [
     ]
