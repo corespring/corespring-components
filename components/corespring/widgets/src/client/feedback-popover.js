@@ -10,7 +10,7 @@ var def = function() {
           $(element).popover('destroy');
         } else {
           var title, popoverClass;
-          var content = response.feedback;
+          var content = typeof response.feedback === "object" ? response.feedback.message : response.feedback;
 
           if (response.correctness === 'warning') {
             title = 'Oops. Try again.';
@@ -29,7 +29,7 @@ var def = function() {
               title: title,
               template: '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
               content: content,
-              placement: 'bottom',
+              placement: 'top',
               html: true}
           ).popover('show');
 

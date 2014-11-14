@@ -34,21 +34,9 @@ link = function() {
         if (!response) {
           return;
         }
+        scope.response = response;
         scope.feedback = response.feedback;
-        scope.correctClass = response.feedback.correctness;
-        if (!_.isEmpty(response.feedback.message)) {
-          inputElement.popover({
-            placement: 'auto',
-            html: true,
-            content: response.feedback.message,
-            title: {"correct": "Correct", "incorrect": "Incorrect", "partial": "Partial"}[response.feedback.correctness],
-            viewport: '.corespring-player'
-          }).popover('show');
-
-          $(element).find(".popover").click(function() {
-            inputElement.popover('hide');
-          });
-        }
+        scope.correctClass = response.feedback && response.feedback.correctness;
       },
 
       setMode: function(newMode) {
@@ -97,6 +85,7 @@ main = [
         '  <div class="cs-text-entry__text-input-holder form-group has-feedback" ng-class="feedback.correctness">',
         '    <input type="text" ng-model="answer" ng-readonly="!editable" ng-class="feedback.correctness"',
         '           class="input-sm form-control" ',
+        '           feedback-popover="response"',
         '           size="{{question.answerBlankSize}}"',
         '           style="text-align: {{question.answerAlignment}}"/>',
         '    <i ng-show="feedback" class="fa result-icon" ng-class="feedback.correctness" style="display: inline;"></i>',

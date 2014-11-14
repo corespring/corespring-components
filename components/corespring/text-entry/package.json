@@ -1,9 +1,15 @@
 {
-  "libraries": [{
-    "name": "choice-templates",
-    "organization": "corespring",
-    "scope": "editor"
-  }],
+  "libraries": [
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "widgets",
+      "organization": "corespring"
+    }
+  ],
   "dependencies": {
     "client": {
       "angular-bootstrap": {
