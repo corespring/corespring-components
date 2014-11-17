@@ -13,7 +13,7 @@ var def = function() {
           var content = typeof response.feedback === "object" ? response.feedback.message : response.feedback;
 
           if (response.correctness === 'warning') {
-            title = 'Oops. Try again.';
+            title = '&nbsp;';
             content = "There seems to be an error in your submission";
             popoverClass = 'warning';
           } else if (response.correctness === 'incorrect') {

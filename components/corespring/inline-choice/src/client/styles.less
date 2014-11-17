@@ -10,7 +10,7 @@
   display: inline-block;
   position: relative;
 
-  &.incorrect,  &.correct {
+  &.incorrect,  &.correct, &.warning {
     margin-right: 30px;
   }
 
@@ -132,10 +132,14 @@
     right: -23px;
   }
 
+  &.warning .result-icon {
+    right: -28px;
+  }
+
   &.incorrect .result-icon:after {
     font-family: "fontawesome";
     font-size: 24px;
-    content: '\f057';
+    content: @incorrect-character;
     color: @incorrect-color;
   }
 
@@ -143,7 +147,15 @@
     font-family: "fontawesome";
     font-size: 24px;
     color: @correct-color;
-    content: '\f058';
+    content: @correct-character;
+  }
+
+  &.warning .result-icon:after {
+    margin-left: 5px;
+    font-family: "fontawesome";
+    font-size: 24px;
+    color: @warning-color;
+    content: @warning-character;
   }
 }
 
