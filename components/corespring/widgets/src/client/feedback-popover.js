@@ -30,6 +30,7 @@ var def = function() {
               template: '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
               content: content,
               placement: 'top',
+              viewport: '.corespring-player',
               html: true}
           ).popover('show');
 
