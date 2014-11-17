@@ -38,7 +38,7 @@ exports.respond = function(question, answer, settings) {
       score: 0,
       feedback: settings.showFeedback ? {
         correctness: 'warning',
-        message: createFeedbackMessage(question, createResponse('incorrect', 0))
+        message: "Please type in your answer and press submit."
       } : null
     };
   }

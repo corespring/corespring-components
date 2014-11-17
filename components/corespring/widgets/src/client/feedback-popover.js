@@ -14,7 +14,7 @@ var def = function() {
 
           if (response.correctness === 'warning') {
             title = '&nbsp;';
-            content = "There seems to be an error in your submission";
+            content = content || "Please select your answer and press submit.";
             popoverClass = 'warning';
           } else if (response.correctness === 'incorrect') {
             title = '&nbsp;';

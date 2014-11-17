@@ -37,14 +37,20 @@
 
 .cs-text-entry__text-input-holder {
   position: relative;
+  &.warning, &.correct, &.incorrect, &.partial {
+    margin-right: 30px;
+  }
   .popover {
     visibility: hidden;
     width: 200px;
   }
   .result-icon {
     position: absolute;
-    right: 4px;
+    right: -25px;
     top: 0px;
+  }
+  .result-icon.warning {
+    right: -30px;
   }
   input {
     padding: 4px 6px;
