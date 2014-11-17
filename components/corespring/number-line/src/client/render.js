@@ -295,13 +295,14 @@ var interactiveGraph = [
           scope.graph.updateOptions(model.config);
 
           scope.graph.addHorizontalAxis("bottom", {
+            ticks: model.config.ticks,
             tickFrequency: model.config.tickFrequency || 10,
             snapPerTick: model.config.snapPerTick,
             showMinorTicks: model.config.showMinorTicks
           });
           scope.graph.addVerticalAxis("left", {visible: false});
 
-          scope.responsemodel = _.cloneDeep(model.objects) || [];
+          scope.responsemodel = _.cloneDeep(model.config.initialElements) || [];
           rebuildGraph();
           scope.selectedType = model.config.initialType;
           scope.selectedGroup = _.find(_.keys(groups), function(g) {

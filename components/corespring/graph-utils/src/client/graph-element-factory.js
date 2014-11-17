@@ -339,7 +339,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
     this.HorizontalAxis = function(position, axisOptions) {
       var thatHA = this;
-      thatHA.elements = [];
+      this.elements = [];
       axisOptions = _.defaults(axisOptions || {}, {
         tickFrequency: 20,
         snapPerTick: 4,
@@ -348,7 +348,16 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
       this.reCalculate = function() {
         this.scale = ScaleUtils.linear().domain(options.domain).range([0, options.horizontalAxisLength]);
-        this.ticks = this.scale.ticks(axisOptions.tickFrequency);
+        if (axisOptions.ticks) {
+          this.ticks = _.map(axisOptions.ticks, function(t) {
+            return t.value;
+          });
+          this.tickLabels = _.map(axisOptions.ticks, function(t) {
+            return t.label;
+          });
+        } else {
+          this.ticks = this.scale.ticks(axisOptions.tickFrequency);
+        }
       };
 
       this.reCalculate();
@@ -382,16 +391,18 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
         var scale = thatHA.scale;
         var tickSize = DEFAULT_TICK_SIZE;
-        var d = Math.abs(thatHA.ticks[1] - thatHA.ticks[0]) / axisOptions.snapPerTick;
 
         _(thatHA.ticks).each(function(tick, idx) {
           var x = scale(tick);
 
           thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2));
-          thatHA.elements.push(paper.text(options.margin.left + x, options.height - options.margin.bottom, tick));
+
+          var label = thatHA.tickLabels ? thatHA.tickLabels[idx] : tick;
+          thatHA.elements.push(paper.text(options.margin.left + x, options.height - options.margin.bottom, label));
+          var d = Math.abs(thatHA.ticks[idx+1] - thatHA.ticks[idx]) / axisOptions.snapPerTick;
 
           if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 1) {
-            for (var i = 0; i < axisOptions.snapPerTick; i++) {
+            for (var i = 1; i < axisOptions.snapPerTick; i++) {
               thatHA.elements.push(paper.line(options.margin.left + scale(tick + d * i), y - tickSize / 4, options.margin.left + scale(tick + d * i), y + tickSize / 4));
             }
           }
