@@ -67,9 +67,6 @@ main = [
             scope.correctClass = response.correctness;
             if (_.isEmpty(scope.answer)) {
               scope.correctClass = 'warning';
-            }
-
-            if (_.isEmpty(scope.answer)) {
               response.correctness = 'warning';
             }
             scope.response = response;

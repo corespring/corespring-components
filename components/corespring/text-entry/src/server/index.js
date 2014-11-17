@@ -34,10 +34,10 @@ exports.respond = function(question, answer, settings) {
 
   if(!answer){
     return {
-      correctness: 'incorrect', 
+      correctness: 'warning',
       score: 0,
       feedback: settings.showFeedback ? {
-        correctness: 'incorrect',
+        correctness: 'warning',
         message: createFeedbackMessage(question, createResponse('incorrect', 0))
       } : null
     };

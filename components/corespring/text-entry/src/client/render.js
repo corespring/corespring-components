@@ -34,9 +34,11 @@ link = function() {
         if (!response) {
           return;
         }
+
         scope.response = response;
         scope.feedback = response.feedback;
-        scope.correctClass = response.feedback && response.feedback.correctness;
+        scope.correctClass = response.feedback && response.correctness;
+
       },
 
       setMode: function(newMode) {
@@ -82,13 +84,13 @@ main = [
       link: link(),
       template: [
         '<form class="cs-text-entry form-inline">',
-        '  <div class="cs-text-entry__text-input-holder form-group has-feedback" ng-class="feedback.correctness">',
-        '    <input type="text" ng-model="answer" ng-readonly="!editable" ng-class="feedback.correctness"',
+        '  <div class="cs-text-entry__text-input-holder form-group has-feedback" ng-class="response.correctness">',
+        '    <input type="text" ng-model="answer" ng-readonly="!editable" ng-class="response.correctness"',
         '           class="input-sm form-control" ',
         '           feedback-popover="response"',
         '           size="{{question.answerBlankSize}}"',
         '           style="text-align: {{question.answerAlignment}}"/>',
-        '    <i ng-show="feedback" class="fa result-icon" ng-class="feedback.correctness" style="display: inline;"></i>',
+        '    <i ng-show="feedback" class="fa result-icon" ng-class="response.correctness" style="display: inline;"></i>',
         '  </div>',
         '</form>'
       ].join("\n")
