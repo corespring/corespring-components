@@ -7,7 +7,7 @@ testClient = require "./lib/test-client"
 
 module.exports = (grunt) ->
 
-  corespringCore = grunt.option("corespringCore") ?  "../modules/container-client/src/main/resources/container-client/js/corespring/core.js"
+  corespringCore = grunt.option("corespringCore") ?  "../modules/container-client/src/js/corespring/core.js"
 
   commonConfig =
     app: "."
