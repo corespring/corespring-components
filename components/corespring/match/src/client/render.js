@@ -173,7 +173,8 @@ var main = [
         var correctRow = _.find(scope.data.correctResponse,whereIdIsEqual(row.id));
 
         if (correctRow.matchSet[$index]){
-          return "correct-checkbox fa-check-square";
+          return (scope.inputType === 'checkbox') ?
+            "correct-indicator fa-check-square" : "correct-indicator fa-check-circle";
         }
         else{
           return 'unknown';
@@ -215,6 +216,12 @@ var main = [
         '     </tr>',
         '   </table>',
 
+        ' <div class="panel feedback {{response.correctness}}" ng-if="response.feedback.summary">',
+        '   <div class="panel-heading"></div>',
+        '   <div class="panel-body"  ng-bind-html-unsafe="response.feedback.summary">',
+        '   </div>',
+        ' </div>',
+
         ' <div class="panel feedback correct-answer" ng-if="showSeeCorrectAnswerLink(response)">',
         '   <div class="panel-heading" ng-click="isSeeCorrectAnswerOpen=!isSeeCorrectAnswerOpen">',
         '     <span class="toggle" ng-class="{true:\'fa-eye-slash\', false:\'fa-eye\'}[isSeeCorrectAnswerOpen]"></span>',
@@ -233,12 +240,6 @@ var main = [
         '           </td>',
         '       </tr>',
         '     </table>',
-        '   </div>',
-        ' </div>',
-
-        ' <div class="panel feedback {{response.correctness}}" ng-if="response.feedback.summary">',
-        '   <div class="panel-heading"></div>',
-        '   <div class="panel-body"  ng-bind-html-unsafe="response.feedback.summary">',
         '   </div>',
         ' </div>',
 
