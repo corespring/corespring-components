@@ -67,19 +67,9 @@ function buildCorrectnessMatrix(question, answer, settings) {
       var answeredMatch = zippedMatches[1];
       var correctness = "";
 
-      if (settings.highlightCorrectResponse) {
-        correctness = correctMatch ? "correct" : "unknown";
-      }
-      if (settings.highlightUserResponse ){
-        if (answeredMatch){
-          correctness = correctMatch ? "correct" : "incorrect";
-        }else if (settings.highlightCorrectResponse) {
-          correctness = correctMatch ? "correct" : "unknown";
-        }else{
-          correctness = "unknown";
-        }
-      }
-      if (!settings.highlightUserResponse && !settings.highlightCorrectResponse){
+      if (answeredMatch){
+        correctness = correctMatch ? "correct" : "incorrect";
+      }else{
         correctness = "unknown";
       }
 

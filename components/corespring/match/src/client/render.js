@@ -152,8 +152,7 @@ var main = [
 
       scope.showSeeCorrectAnswerLink = function(feedback){
         return (feedback && feedback.correctness &&
-          feedback.correctness !== ALL_CORRECT &&
-          scope.matchModel.answerType === MULTIPLE);
+          feedback.correctness !== ALL_CORRECT);
       };
 
       scope.getCorrectness = function(correct){
@@ -246,7 +245,7 @@ var main = [
         '   <div class="panel summary-feedback" ng-if="response.summaryFeedback">',
         '    <div class="panel-heading" ng-click="isSummaryFeedbackOpen=!isSummaryFeedbackOpen">',
         '     <span class="toggle fa-lightbulb-o" ></span>',
-        '     <span class="label">Summary feedback</span>',
+        '     <span class="label">Learn More</span>',
         '    </div>',
         '    <div class="panel-body" ng-show="isSummaryFeedbackOpen" ng-bind-html-unsafe="response.summaryFeedback">',
         '   </div>',

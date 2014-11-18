@@ -101,7 +101,7 @@ beforeEach(function(){
   component = _.cloneDeep(componentTemplate);
 });
 
-describe('match server logic', function() {
+describe.only('match server logic', function() {
 
   it('should return incorrect if the answer is null or undefined', function() {
     var outcome = server.respond(component ,null ,helper.settings(true, true, true));
@@ -194,28 +194,28 @@ describe('match server logic', function() {
             {
               "id": "1",
               "matchSet": [
-                {"correctness": "unknown", "value": true},
+                {"correctness": "correct", "value": true},
                 {"correctness": "unknown", "value": false}
               ]
             },
             {
               "id": "2",
               "matchSet": [
-                {"correctness": "unknown", "value": true},
+                {"correctness": "correct", "value": true},
                 {"correctness": "unknown", "value": false}
               ]
             },
             {
               "id": "3",
               "matchSet": [
-                {"correctness": "unknown", "value": true},
+                {"correctness": "correct", "value": true},
                 {"correctness": "unknown", "value": false}
               ]
             },
             {
               "id": "4",
               "matchSet": [
-                {"correctness": "unknown", "value": true},
+                {"correctness": "correct", "value": true},
                 {"correctness": "unknown", "value": false}
               ]
             }
@@ -229,7 +229,7 @@ describe('match server logic', function() {
 
 
     it('should respond to all_incorrect result (feedback + user + correct) and user did not choose anything', function() {
-      var correctAnswer = [{
+      var incorrectAnswer = [{
         "id":"1",
         "matchSet":[false,false]
       },{
@@ -243,7 +243,7 @@ describe('match server logic', function() {
         "matchSet":[false,false]
       }];
 
-      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
+      var response = server.respond(_.cloneDeep(component), incorrectAnswer, helper.settings(true, true, true));
 
       var expected = {
         "correctness": "all_incorrect",
@@ -255,28 +255,28 @@ describe('match server logic', function() {
             {
               "id": "1",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "unknown", "value": false}
               ]
             },
             {
               "id": "2",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "unknown", "value": false}
               ]
             },
             {
               "id": "3",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "unknown", "value": false}
               ]
             },
             {
               "id": "4",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "unknown", "value": false}
               ]
             }
@@ -314,28 +314,28 @@ describe('match server logic', function() {
             {
               "id": "1",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "incorrect", "value": true}
               ]
             },
             {
               "id": "2",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "incorrect", "value": true}
               ]
             },
             {
               "id": "3",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "incorrect", "value": true}
               ]
             },
             {
               "id": "4",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "incorrect", "value": true}
               ]
             }
@@ -373,29 +373,29 @@ describe('match server logic', function() {
             {
               "id": "1",
               "matchSet": [
-                {"correctness": "correct", "value": false},
-                {"correctness": "unknown", "value": true}
+                {"correctness": "unknown", "value": false},
+                {"correctness": "incorrect", "value": true}
               ]
             },
             {
               "id": "2",
               "matchSet": [
-                {"correctness": "correct", "value": false},
-                {"correctness": "unknown", "value": true}
+                {"correctness": "unknown", "value": false},
+                {"correctness": "incorrect", "value": true}
               ]
             },
             {
               "id": "3",
               "matchSet": [
-                {"correctness": "correct", "value": false},
-                {"correctness": "unknown", "value": true}
+                {"correctness": "unknown", "value": false},
+                {"correctness": "incorrect", "value": true}
               ]
             },
             {
               "id": "4",
               "matchSet": [
-                {"correctness": "correct", "value": false},
-                {"correctness": "unknown", "value": true}
+                {"correctness": "unknown", "value": false},
+                {"correctness": "incorrect", "value": true}
               ]
             }
           ],
@@ -439,7 +439,7 @@ describe('match server logic', function() {
             {
               "id": "2",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "incorrect", "value": true}
               ]
             },
@@ -453,7 +453,7 @@ describe('match server logic', function() {
             {
               "id": "4",
               "matchSet": [
-                {"correctness": "correct", "value": false},
+                {"correctness": "unknown", "value": false},
                 {"correctness": "incorrect", "value": true}
               ]
             }
