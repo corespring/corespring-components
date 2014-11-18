@@ -158,7 +158,9 @@ var interactiveGraph = [
             return;
           }
           var lastRange = scope.responsemodel.length + 1;
-          var dr = scope.graph.coordsToDomainRange(event.offsetX, event.offsetY);
+          var offX  = (event.offsetX || event.pageX - $(event.target).offset().left);
+          var offY  = (event.offsetY || event.pageY - $(event.target).offset().top);
+          var dr = scope.graph.coordsToDomainRange(offX, offY);
           var defaultLineModel = {
             "type": "line",
             "domainPosition": dr[0],

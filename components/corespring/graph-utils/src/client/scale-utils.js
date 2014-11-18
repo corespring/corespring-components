@@ -183,11 +183,12 @@ exports.service = [ '$log', function($log) {
       snapPerTick = snapPerTick || 4;
       var snapTicks = [];
       for (var i = 0; i < ticks.length - 1; i++) {
-        for (var j = 0; j <= snapPerTick; j++) {
-          var tickLength = (ticks[i + 1] - ticks[i]) / snapPerTick;
+        var tickLength = (ticks[i + 1] - ticks[i]) / snapPerTick;
+        for (var j = 0; j < snapPerTick; j++) {
           snapTicks.push(ticks[i] + j * tickLength);
         }
       }
+      snapTicks.push(ticks[ticks.length-1]);
       return _.min(snapTicks, function(t) {
         return Math.abs(t - value);
       });
