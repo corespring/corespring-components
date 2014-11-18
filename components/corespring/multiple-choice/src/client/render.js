@@ -8,6 +8,7 @@ var main = [
 
       scope.inputType = 'checkbox';
       scope.editable = true;
+      scope.bridge = {answerVisible: false};
       scope.answer = {
         choices: {},
         choice: ""
@@ -173,7 +174,7 @@ var main = [
             });
           }
           setTimeout(function() {
-            $(element).find(".alert.visible").slideDown(400);
+            $(element).find(".feedback-panel.visible").slideDown(400);
           }, 10);
         },
         setMode: function(newMode) {},
@@ -181,11 +182,10 @@ var main = [
          * Reset the ui back to an unanswered state
          */
         reset: function() {
-          $(element).find(".alert").hide();
+          $(element).find(".feedback-panel").hide();
           resetChoices();
           resetFeedback(scope.choices);
           scope.response = undefined;
-          scope.answerVisible = false;
         },
         resetStash: function() {
           scope.session.stash = {};
@@ -251,6 +251,14 @@ var main = [
          }
       });
 
+      scope.$watch('bridge.answerVisible', function(n) {
+         if (n) {
+           $(element).find('.answer-collapse').slideDown(400);
+         } else {
+           $(element).find('.answer-collapse').slideUp(400);
+         }
+      });
+
       scope.choiceClass = function(o) {
         if (_.isUndefined(o.correct)) {
           return "default";
@@ -267,25 +275,27 @@ var main = [
       '  <div class="answer-holder" ng-show="response && response.correctness != \'correct\'">',
       '    <div class="panel panel-default">',
       '      <div class="panel-heading">',
-      '        <h4 class="panel-title" ng-click="answerVisible = !answerVisible"><i class="answerIcon fa fa-eye{{answerVisible ? \'-slash\' : \'\'}}"></i>{{answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
+      '        <h4 class="panel-title" ng-click="bridge.answerVisible = !bridge.answerVisible"><i class="answerIcon fa fa-eye{{bridge.answerVisible ? \'-slash\' : \'\'}}"></i>{{bridge.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
       '      </div>',
-      '      <div class="panel-body" ng-show="answerVisible && response && response.correctness != \'correct\'">',
-      '        <div ng-repeat="o in choices" class="choice-holder-background answer {{question.config.orientation}} {{question.config.choiceStyle}}" ',
-      '             ng-click="onClickChoice(o)" ng-class="{correct: o.correct, selected: o.correct}">',
-      '          <div class="choice-holder" ng-class="{true:\'correct\'}[o.correct]">',
-      '            <span class="choice-input" ng-switch="inputType">',
-      '              <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '                <div class="checkbox-button" />',
+      '      <div class="answer-collapse">',
+      '        <div class="panel-body">',
+      '          <div ng-repeat="o in choices" class="choice-holder-background answer {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '               ng-click="onClickChoice(o)" ng-class="{correct: o.correct, selected: o.correct}">',
+      '            <div class="choice-holder" ng-class="{true:\'correct\'}[o.correct]">',
+      '              <span class="choice-input" ng-switch="inputType">',
+      '                <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
+      '                  <div class="checkbox-button" />',
+      '                </div>',
+      '                <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" >',
+      '                  <div class="radio-button" />',
+      '                </div>',
+      '              </span>',
+      '              <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '              <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+      '              <div class="choice-label" ng-switch="o.labelType">',
+      '                <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
+      '                <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '              </div>',
-      '              <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" >',
-      '                <div class="radio-button" />',
-      '              </div>',
-      '            </span>',
-      '            <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '            <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
-      '            <div class="choice-label" ng-switch="o.labelType">',
-      '              <img class="choice-image" ng-switch-when="image" ng-src="{{o.imageName}}" />',
-      '              <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '            </div>',
       '          </div>',
       '        </div>',
@@ -315,8 +325,11 @@ var main = [
       '     </div>',
       '    </div>',
       '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value]">',
-      '      <div class="alert alert-{{o.correct ? \'success\' : \'warning\'}} fade in" ng-class="{visible: o.feedback}" style="display: none">',
-      '        <span type="success" ng-bind-html-unsafe="o.feedback"></span>',
+      '      <div class="panel panel-default feedback-panel {{o.correct ? \'correct\' : \'incorrect\'}}" ng-class="{visible: o.feedback}" style="display: none">',
+      '        <div class="panel-heading">&nbsp;</div>',
+      '        <div class="panel-body">',
+      '          <span type="success" ng-bind-html-unsafe="o.feedback"></span>',
+      '        </div>',
       '      </div>',
       '    </div>',
       '  </div>',
