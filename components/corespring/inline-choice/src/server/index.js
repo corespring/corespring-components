@@ -27,6 +27,13 @@ var userResponseFeedback = function(q, answer) {
   }
 };
 
+exports.preprocess = function(json) {
+  _.forEach(json.model.choices, function(choice) {
+    delete choice.rationale;
+  });
+  return json;
+};
+
 exports.isCorrect = function(answer, correctAnswer) {
   return answer === correctAnswer;
 };
