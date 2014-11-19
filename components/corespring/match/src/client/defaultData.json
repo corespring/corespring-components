@@ -35,11 +35,10 @@
       "type": "default"
     },
     "all_incorrect" :{
-      "type": "custom",
-      "text" : "Everything is wrong !"
+      "type": "default"
     }
   },
-  "summaryFeedback": "This is the summary feedback. This is the summary feedback. This is the summary feedback ",
+  "summaryFeedback": "This is the summary feedback.",
   "model": {
     "columns" : [
       {
