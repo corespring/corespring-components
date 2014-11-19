@@ -84,7 +84,7 @@ main = [
       link: link(),
       template: [
         '<form class="cs-text-entry form-inline">',
-        '  <div class="cs-text-entry__text-input-holder form-group has-feedback" ng-class="response.correctness">',
+        '  <div class="cs-text-entry__text-input-holder form-group" ng-class="response.correctness">',
         '    <input type="text" ng-model="answer" ng-readonly="!editable" ng-class="response.correctness"',
         '           class="input-sm form-control" ',
         '           feedback-popover="response"',

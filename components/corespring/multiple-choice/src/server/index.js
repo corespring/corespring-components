@@ -176,8 +176,7 @@ var calculateScore = function(question, answer, isSingleChoice) {
  Create a response to the answer based on the question, the answer and the respond settings
  */
 exports.respond = function(question, answer, settings) {
-
-  if(!answer){
+  if(_.isEmpty(answer)) {
     return {
       correctness: 'incorrect',
       score: 0,

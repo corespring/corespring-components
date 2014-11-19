@@ -155,7 +155,7 @@ var main = [
 
         // sets the server's response
         setResponse: function(response) {
-          $(element).find(".alert").hide();
+          $(element).find(".feedback-panel").hide();
 
           resetFeedback(scope.choices);
 
