@@ -82,9 +82,9 @@
           width: 30px;
           height: 30px;
           font-size: 28px;
-          left: 0px;
           content: "\f00d";
           color: #fff;
+          left: -5px;
         }
       }
     }
@@ -105,12 +105,13 @@
         height: 30px;
         font-size: 28px;
         color: #555555;
+        left: -5px;
+        position: absolute;
       }
     }
   }
   .correct {
     .checkbox-button {
-      margin-top: -10px !important;
     }
     .radio-choice {
       .radio-button {
@@ -339,6 +340,7 @@
   left: 5px;
   top: 0px;
   margin-top: -4px;
+  position: relative;
   -webkit-transform: scale(1, 1);
   -ms-transform: scale(1, 1);
   -o-transform: scale(1, 1);
@@ -350,7 +352,9 @@
   width: 30px;
   height: 30px;
   font-size: 3em;
-  margin-left: -2px;
+  position: absolute;
+  left: -7px;
+  top: -5px;
   content: "\f00c";
   color: #fff !important;
 }
@@ -382,6 +386,7 @@
   width: 35px;
   height: 35px;
 }
+
 
 .view-multiple-choice .choice-input, .view-multiple-choice .choice-letter, .view-multiple-choice .choice-currency-symbol, .view-multiple-choice .choice-label {
   display: table-cell;
@@ -424,7 +429,6 @@
       background-color: @correct-color;
     }
   }
-
 
 }
 
