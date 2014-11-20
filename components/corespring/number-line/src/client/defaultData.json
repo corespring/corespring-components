@@ -23,9 +23,9 @@
         "REN": true,
         "RFP": true,
         "RFN": true
-      }
-    },
-    "objects": [
-    ]
+      },
+      "initialElements": [
+      ]
+    }
   }
 }
