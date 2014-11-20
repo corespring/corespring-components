@@ -101,7 +101,7 @@ beforeEach(function(){
   component = _.cloneDeep(componentTemplate);
 });
 
-describe.only('match server logic', function() {
+describe('match server logic', function() {
 
   it('should return incorrect if the answer is null or undefined', function() {
     var outcome = server.respond(component ,null ,helper.settings(true, true, true));
@@ -463,6 +463,66 @@ describe.only('match server logic', function() {
       };
       response.should.eql(expected);
     });
+
+    it('should respond to partially correct result in MULTIPLE choice case ', function() {
+      var partiallyCorrectAnswer = [{
+        "id":"1",
+        "matchSet":[true,true]
+      },{
+        "id":"2",
+        "matchSet":[false,false]
+      },{
+        "id":"3",
+        "matchSet":[false,false]
+      },{
+        "id":"4",
+        "matchSet":[false,false]
+      }];
+
+      var response = server.respond(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
+
+      var expected = {
+        "correctness": "some_correct",
+        "score": 0.25,
+        "summaryFeedback": component.summaryFeedback,
+        "comments":undefined,
+        "feedback": {
+          "correctnessMatrix": [
+            {
+              "id": "1",
+              "matchSet": [
+                {"correctness": "correct", "value": true},
+                {"correctness": "incorrect", "value": true}
+              ]
+            },
+            {
+              "id": "2",
+              "matchSet": [
+                {"correctness": "unknown", "value": false},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "3",
+              "matchSet": [
+                {"correctness": "unknown", "value": false},
+                {"correctness": "unknown", "value": false}
+              ]
+            },
+            {
+              "id": "4",
+              "matchSet": [
+                {"correctness": "unknown", "value": false},
+                {"correctness": "unknown", "value": false}
+              ]
+            }
+          ],
+          "summary": "Almost!"
+        }
+      };
+      response.should.eql(expected);
+    });
+
 
     it('should repond to partially correct result ( feedback - correct + user)', function() {
       var partiallyCorrectAnswer = [{

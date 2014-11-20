@@ -23,11 +23,18 @@ exports.isCorrect = function(answer, correctAnswer) {
 };
 
 function countCorrectAnswers (answer, correctAnswer) {
-  return _.reduce(answer,function(acc, answerRow) {
+  return _.reduce(answer,function(acc1, answerRow) {
     var correctMatchSet = _.find(correctAnswer, function(correctRow){
       return correctRow.id === answerRow.id;
     }).matchSet;
-    return acc + (_.isEqual(answerRow.matchSet,correctMatchSet) ? 1 : 0);
+
+    var zippedMatchSet = _.zip(correctMatchSet,answerRow.matchSet);
+
+    return acc1 + _.reduce(zippedMatchSet,function(acc2, pair){
+      var correctMatch = pair[0];
+      var answeredMatch = pair[1];
+      return acc2 + (correctMatch && answeredMatch ? 1 : 0);
+    }, 0);
   }, 0);
 }
 
@@ -36,13 +43,16 @@ var SOME_CORRECT = "some_correct";
 var ALL_INCORRECT = "all_incorrect";
 
 function getCorrectnessString(answer, correctAnswer) {
+
   var numAnsweredCorrectly = countCorrectAnswers(answer, correctAnswer);
 
-  if (correctAnswer.length === numAnsweredCorrectly){
+  var totalCorrectAnswers = countCorrectAnswers(correctAnswer, correctAnswer);
+
+  if (totalCorrectAnswers === numAnsweredCorrectly){
     return ALL_CORRECT;
   }else if(numAnsweredCorrectly === 0){
     return ALL_INCORRECT;
-  }else if (numAnsweredCorrectly < correctAnswer.length){
+  }else if (numAnsweredCorrectly < totalCorrectAnswers){
     return SOME_CORRECT;
   }else{
     return null;
@@ -110,12 +120,40 @@ function buildFeedbackSummary(question,correctness){
 
 function calculateScore(question, answer) {
 
+  function countWhenTrue(acc,bool){
+    return acc + (bool ? 1 : 0);
+  }
+
+  function countIncorrect(acc, correct_answer_pair) {
+    var correct = correct_answer_pair[0];
+    var answer = correct_answer_pair[1];
+    return countWhenTrue(acc, answer &&  !correct);
+  }
+
+  function countWhenTrueAndCorrect(acc, correct_answer_pair){
+    var correct = correct_answer_pair[0];
+    var answer = correct_answer_pair[1];
+    return countWhenTrue(acc, answer && correct);
+  }
+
   var calculatePartialScore = function(){
     var partialScore = _.reduce(answer,function(acc, answerRow) {
+
       var rowScore = question.partialScores[answerRow.id];
       var correctMatchSet = _.find(question.correctResponse,whereIdIsEqual(answerRow.id)).matchSet;
-      var isRowCorrect = _.isEqual(answerRow.matchSet,correctMatchSet);
-      return acc + (isRowCorrect ? rowScore : 0);
+      var zippedMatchSet = _.zip(correctMatchSet,answerRow.matchSet);
+
+      var totalCorrectAnswers = _.reduce(correctMatchSet,countWhenTrue,0);
+
+      if (totalCorrectAnswers === 0){
+        return acc;
+      }
+
+      var answeredTrueAndCorrectly = _.reduce(zippedMatchSet,countWhenTrueAndCorrect,0);
+
+      var answeredIncorrectly = _.reduce(zippedMatchSet,countIncorrect,0);
+
+      return acc + ((rowScore/(totalCorrectAnswers + answeredIncorrectly)) * answeredTrueAndCorrectly);
     },0);
     return partialScore;
   };
