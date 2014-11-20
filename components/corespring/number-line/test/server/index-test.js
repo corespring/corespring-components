@@ -154,7 +154,7 @@ describe.only('number line', function() {
     it('correct elements should have isCorrect true in feedback', function() {
       var answer = correctAnswer;
       var outcome = server.respond(component, answer, helper.settings(true, true, true));
-      var predicate = _.every(outcome.feedback, function(fb) {
+      var predicate = _.every(outcome.feedback.elements, function(fb) {
         return fb.isCorrect;
       });
       expect(predicate).to.eql(true);
@@ -168,9 +168,9 @@ describe.only('number line', function() {
         {"type": "ray", "pointType": "full", "domainPosition": 2, "direction": "negative"}
       ];
       var outcome = server.respond(component, answer, helper.settings(true, true, true));
-      expect(outcome.feedback[0].isCorrect).to.be.true;
-      expect(outcome.feedback[1].isCorrect).to.be.true;
-      expect(outcome.feedback[2].isCorrect).to.be.false;
+      expect(outcome.feedback.elements[0].isCorrect).to.be.true;
+      expect(outcome.feedback.elements[1].isCorrect).to.be.true;
+      expect(outcome.feedback.elements[2].isCorrect).to.be.false;
     });
 
     it('incorrect elements should have isCorrect false in feedback #2', function() {
@@ -196,9 +196,9 @@ describe.only('number line', function() {
         {"type": "ray", "pointType": "full", "domainPosition": 2, "direction": "negative"}
       ];
       var outcome = server.respond(_component, answer, helper.settings(true, true, true));
-      expect(outcome.feedback[0].isCorrect).to.be.true;
-      expect(outcome.feedback[1].isCorrect).to.be.true;
-      expect(outcome.feedback[2].isCorrect).to.be.false;
+      expect(outcome.feedback.elements[0].isCorrect).to.be.true;
+      expect(outcome.feedback.elements[1].isCorrect).to.be.true;
+      expect(outcome.feedback.elements[2].isCorrect).to.be.false;
     });
   });
 
