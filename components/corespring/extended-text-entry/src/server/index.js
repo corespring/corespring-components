@@ -11,7 +11,7 @@ function getFeedback(question) {
 }
 
 exports.feedback = {
-  NO_ANSWER: 'Please submit your answer to the question above.'
+  NO_ANSWER: 'You did not enter a response'
 };
 
 exports.respond = function(question, answer, settings) {
