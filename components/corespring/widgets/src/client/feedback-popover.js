@@ -12,6 +12,10 @@ var def = function() {
           var title, popoverClass;
           var content = typeof response.feedback === "object" ? response.feedback.message : response.feedback;
 
+          if (_.isEmpty(content) && response.correctness !== "warning") {
+            return;
+          }
+
           if (response.correctness === 'warning') {
             title = '&nbsp;';
             content = content || "Please select your answer and press submit.";
