@@ -99,7 +99,6 @@ var main = [
         '    <div interactive-graph',
         '         ngModel="correctModel"',
         '         responseModel="dummyResponse"',
-        '         editable="editable"',
         '         colors="colors"></div>',
         '  </div>',
         '  <div style="display: none">',
@@ -175,7 +174,6 @@ var interactiveGraph = [
           if (!scope.editable) {
             return;
           }
-          console.log('click', event);
           if (scope.responsemodel.length >= (scope.model.config.maxNumberOfPoints || 3)) {
             return;
           }
