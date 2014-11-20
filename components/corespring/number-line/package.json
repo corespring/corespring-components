@@ -3,6 +3,10 @@
     {
       "name": "graph-utils",
       "organization": "corespring"
+    },
+    {
+      "name": "widgets",
+      "organization": "corespring"
     }
   ],
   "released": true,

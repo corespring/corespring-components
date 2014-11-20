@@ -69,6 +69,30 @@
     }
   }
 
+  .panel.feedback-panel {
+    max-width: 550px;
+    border-width: 3px;
+    .panel-heading {
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+      height: 30px;
+    }
+    .panel-body {
+      padding: 10px 20px;
+    }
+    &.incorrect {
+      border-color: @incorrect-color;
+      .panel-heading {
+        background-color: @incorrect-color;
+      }
+    }
+    &.correct {
+      border-color: @correct-color;
+      .panel-heading {
+        background-color: @correct-color;
+      }
+    }
+  }
 
   .correct-element {
     color: @correct-color;

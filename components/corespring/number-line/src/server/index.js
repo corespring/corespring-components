@@ -1,4 +1,8 @@
 var _ = require('lodash');
+var fb = require('corespring.server-shared.server.feedback-utils');
+var keys = fb.keys;
+
+exports.keys = keys;
 
 var elementEqual = function(e1, e2) {
   if (e1 == null && e2 == null) {
@@ -63,9 +67,17 @@ exports.respond = function(question, answer, settings) {
 
   var response = {
     correctness: isCorrect ? "correct" : "incorrect",
-    score: isCorrect ? 1 : 0,
-    feedback: getElementsWithFeedback(answer, _.cloneDeep(question.correctResponse))
+    correctResponse: question.correctResponse,
+    score: isCorrect ? 1 : 0
   };
+
+  if (settings.showFeedback) {
+    response.feedback = {
+      elements: getElementsWithFeedback(answer, _.cloneDeep(question.correctResponse)),
+      message: fb.makeFeedback(undefined, fb.correctness(isCorrect))
+    };
+
+  }
 
   return response;
 };

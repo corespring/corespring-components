@@ -20,7 +20,7 @@ var main = [
         setDataAndSession: function(dataAndSession) {
           console.log("number line", dataAndSession);
 
-          scope.model = dataAndSession.data.model;
+          scope.correctModel = scope.model = dataAndSession.data.model;
 
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.response = dataAndSession.session.answers;
@@ -35,7 +35,17 @@ var main = [
         },
 
         setResponse: function(response) {
+          console.log('number line response ', response);
           scope.serverResponse = response;
+
+          scope.correctModel = _.cloneDeep(scope.model);
+          scope.correctModel.config.exhibitOnly = true;
+          scope.correctModel.config.margin = {top: 30, right: 10, bottom: 30, left: 20};
+          var i = 0;
+          scope.correctModel.config.initialElements = _.map(response.correctResponse, function(cr) {
+            i++;
+            return _.extend(cr, {rangePosition: i});
+          });
         },
 
         setMode: function(newMode) {
@@ -79,7 +89,19 @@ var main = [
         '       serverResponse="serverResponse"',
         '       editable="editable"',
         '       colors="colors"></div>',
-        '  <div>{{serverResponse}}</div>',
+        '  <div ng-show="serverResponse.feedback.message" class="panel panel-default feedback-panel {{serverResponse.correctness}}">',
+        '    <div class="panel-heading">&nbsp;</div>',
+        '    <div class="panel-body">',
+        '      <span type="success" ng-bind-html-unsafe="serverResponse.feedback.message"></span>',
+        '    </div>',
+        '  </div>',
+        '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness !== \'correct\'">',
+        '    <div interactive-graph',
+        '         ngModel="correctModel"',
+        '         responseModel="dummyResponse"',
+        '         editable="editable"',
+        '         colors="colors"></div>',
+        '  </div>',
         '  <div style="display: none">',
         '    <span class="correct-element"></span>',
         '    <span class="incorrect-element"></span>',
@@ -103,7 +125,7 @@ var interactiveGraph = [
     };
 
     var NUMBER_OF_PLANES = 3;
-    var HORIZONTAL_AXIS_WIDTH = 500;
+    var HORIZONTAL_AXIS_WIDTH = 480;
 
     return {
       template:[
@@ -325,8 +347,8 @@ var interactiveGraph = [
         }, true);
 
         scope.$watch('serverresponse', function(n, prev) {
-          if (n) {
-            scope.responsemodel = _.cloneDeep(n.feedback) || [];
+          if (!_.isEmpty(n)) {
+            scope.responsemodel = _.cloneDeep(n.feedback.elements) || [];
             rebuildGraph();
             scope.graph.updateOptions({exhibitOnly: true});
           } else if (prev) {
