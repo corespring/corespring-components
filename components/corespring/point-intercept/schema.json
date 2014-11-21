@@ -1,0 +1,157 @@
+{
+    "type": "object",
+    "title": "CoreSpring Point Intercept",
+    "properties": {
+        "componentType": {
+            "type": "string",
+            "title": "Component Type",
+            "description": "A required value to indicate the component type. For line interaction, this must be 'corespring-point-intercept",
+            "id": "#componentType",
+            "required": true
+        },
+        "correctResponse": {
+          "description": "An array of points. Each item should be a pair of comma separated numbers defining x,y coordinates for a point, e.g. '1,1' ",
+    			"type":"array",
+    			"id": "#correctResponse",
+    			"required":true,
+    			"items":
+    				{
+    					"type":"string",
+    					"required":false
+    				}
+    		},
+        "feedback": {
+            "type": "object",
+            "id": "#feedback",
+            "properties": {
+                "correctFeedbackType": {
+                    "description": "Determines which feedback should display for the response when correct.",
+                    "enum": [
+                        "custom",
+                        "default",
+                        "none"
+                    ],
+                    "id": "#correctFeedbackType",
+                    "required": false
+                },
+                "incorrectFeedbackType": {
+                    "description": "Determines which feedback should display for the response when incorrect.",
+                    "enum": [
+                        "custom",
+                        "default",
+                        "none"
+                    ],
+                    "id": "#incorrectFeedbackType",
+                    "required": false
+                },
+                "correctFeedback": {
+                    "type": "string",
+                    "description": "the feedback to display for a correct answer if custom feedback is selected as feedback type"
+                },
+                "incorrectFeedback": {
+                    "type": "string",
+                    "description": "the feedback to display for an incorrect answer if custom feedback is selected as feedback type"
+                }
+            }
+        },
+        "model": {
+            "type": "object",
+            "id": "#model",
+            "properties": {
+                "config": {
+                    "type": "object",
+                    "id": "#config",
+                    "properties": {
+                        "domainLabel": {
+                            "type": "string",
+                            "description": "The label to display for domain",
+                            "id": "#domainLabel",
+                            "required": false
+                        },
+                        "domain": {
+                            "type": "integer",
+                            "description": "The number to use for domain",
+                            "id": "#domain",
+                            "required": false
+                        },
+                        "graphHeight": {
+                            "type": "string",
+                            "description": "The height in pixels that should be used to display the graph",
+                            "id": "#graphHeight",
+                            "required": false
+                        },
+                        "graphWidth": {
+                            "type": "string",
+                            "description": "The width in pixels that should be used to display the graph",
+                            "id": "#graphWidth",
+                            "required": false
+                        },
+                        "rangeLabel": {
+                            "type": "string",
+                            "description": "The label to display for the range axis",
+                            "id": "#rangeLabel",
+                            "required": false
+                        },
+                        "range": {
+                            "type": "integer",
+                            "description": "The number to use for range",
+                            "id": "#range",
+                            "required": false
+                        },
+                        "showCoordinates": {
+                            "description": "Display labels for the coordinates of points placed on the graph",
+                            "type": "boolean",
+                            "id": "#showCoordinates",
+                            "required": false
+                        },
+                        "showInputs": {
+                            "description": "When in exhibit mode, whether to show the points on the line",
+                            "type": "boolean",
+                            "id": "#showInputs",
+                            "required": false
+                        },
+                        "tickLabelFrequency": {
+                            "description": "Specifies the interval of ticks shown on the axes",
+                            "type": "integer",
+                            "id": "#tickLabelFrequency",
+                            "required": false
+                        },
+            						"labelsType": {
+            							"type":"string",
+                          "description": "if set to 'present' then point labels will be shown",
+            							"id": "#labelsType",
+            							"required":false
+            						},
+            						"maxPoints": {
+                          "description": "The maximum number of points the user can place on the graph when responding.",
+            							"type":"number",
+            							"id": "#maxPoints",
+            							"required":false
+            						},
+            						"pointLabels": {
+                          "description": "The labels to be shown with points entered by learner. The labels are shown the sequence in which the user adds them to the graph",
+            							"type":"array",
+            							"id": "#pointLabels",
+            							"required":false,
+            							"items":
+            								{
+                              "description": "The label to show for the point when added. e.g. 'A' ",
+            									"type":"string",
+            									"required":false
+            								}
+
+
+            						}
+
+                    }
+                }
+            }
+        },
+        "weight": {
+            "type": "integer",
+            "description" : "The weighting to be assigned to the interaction in the context of the overall item.",
+            "id": "#weight",
+            "required": false
+        }
+    }
+}
