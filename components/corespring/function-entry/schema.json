@@ -1,0 +1,66 @@
+{
+  "title" : "CoreSpring Evaluate an Equation Question Schema",
+  "type" : "object",
+  "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For evaluate equation, this must be 'corespring-function-entry'.",
+      "type" : "string"
+    },
+    "correctResponse" : {
+      "type" : "object",
+      "description" : "An object describing the correct responses for the component.",
+      "properties" : {
+        "equation" : {
+          "type" : "string",
+          "description" : "The correct equation response for the component."
+        }
+      },
+      "required" : ["equation"]
+    },
+    "feedback" : {
+      "description": "Describes feedback which should be presented to the user when the component is submitted.",
+      "type": "object",
+      "correctFeedback" : {
+        "description" : "A feedback string that will be shown for a correct response if correctFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "correctFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if all of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "incorrectFeedback" : {
+        "description" : "A feedback string that will be shown for a incorrect response if incorrectFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "incorrectFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if no correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      }
+    },
+    "model" : {
+      "type": "object",
+      "properties": {
+        "config" : {
+          "type" : "object",
+          "properties" : {
+            "ignoreSpacing" : {
+              "description" : "If true, ignore whitespace in matching the response.",
+              "type" : "boolean"
+            },
+            "showFormattingHelp" : {
+              "description" : "If true, display the formatting help tooltip to the user.",
+              "type" : "boolean"
+            }
+          },
+          "required" : ["ignoreSpacing", "showFormattingHelp"]
+        }
+      },
+      "required" : ["config"]
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    },
+    "required" : ["componentType", "correctResponse", "model"]
+  }
+}
