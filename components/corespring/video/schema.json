@@ -1,0 +1,38 @@
+{
+  "type" : "object",
+  "title" : "CoreSpring Video Component",
+  "properties" : {
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "config" : {
+          "type" : "object",
+          "properties" : {
+            "url" : {
+              "type" : "string",
+              "description" : "The URL of the video to embed in the item."
+            },
+            "ratioType" : {
+              "description" : "Describes the ratio at which the video should be displayed.",
+              "enum" : ["standard", "widescreen"]
+            },
+            "size" : {
+              "description" : "Describes the size of the video to be rendered.",
+              "enum" : ["small", "medium", "large"]
+            },
+            "description" : {
+              "description" : "A description of the video."
+            }
+          },
+          "required" : ["url", "ratioType", "size"]
+        }
+      },
+      "required" : ["config"]
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    }
+  },
+  "required" : ["model"]
+}
