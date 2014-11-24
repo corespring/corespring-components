@@ -2,6 +2,10 @@
   "type" : "object",
   "title" : "CoreSpring Video Component",
   "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For videos, this must be 'corespring-video'.",
+      "type" : "string"
+    },
     "model" : {
       "type" : "object",
       "properties" : {
@@ -34,5 +38,5 @@
       "type" : "string"
     }
   },
-  "required" : ["model"]
+  "required" : ["componentType", "model"]
 }
