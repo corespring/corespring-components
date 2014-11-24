@@ -57,6 +57,10 @@
       },
       "required" : ["config"]
     },
+    "comments" : {
+      "type" : "string",
+      "description" : "Comments displayed to the user after the component has been submitted.",
+    },
     "title" : {
       "description" : "A title for the interaction, displayed in the editor.",
       "type" : "string"
