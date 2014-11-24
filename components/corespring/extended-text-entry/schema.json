@@ -1,0 +1,49 @@
+{
+  "type" : "object",
+  "title" : "CoreSpring Open Ended Answer Interaction",
+  "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For open ended, this must be 'corespring-extended-text-entry'",
+      "type" : "string"
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    },
+    "feedback" : {
+      "description" : "Describes feedback which should be presented to the user when the component is submitted.",
+      "type" : "object",
+      "properties" : {
+        "feedbackType" : {
+          "description" : "Describes the type of feedback that will be shown if this answer is entered.",
+          "enum" : ["custom", "default", "none"]
+        },
+        "feedback" : {
+          "description" : "Custom feedback that will be displayed to the user if this choice is selected, and type is custom.",
+          "type" : "string"
+        }
+      }
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "config" : {
+          "type" : "object",
+          "properties" : {
+            "expectedLength" : {
+              "description" : "Specifies the visible width of the text area. Corresponds to the cols attribute of <textarea/>.",
+              "type" : "string"
+            },
+            "expectedLines" : {
+              "description" : "Specifies the visible height of the text area. Corresponds to the rows attribute of <textarea/>.",
+              "type" : "string"
+            }
+          },
+          "required" : ["expectedLength", "expectedLines"]
+        }
+      },
+      "required" : ["config"]
+    },
+    "required" : ["componentType", "model"]
+  }
+}
