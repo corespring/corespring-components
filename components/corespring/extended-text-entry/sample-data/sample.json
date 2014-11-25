@@ -1,0 +1,18 @@
+{
+  "files" : [ ],
+  "xhtml" : "<itemBody><p>Explain your thoughts.</p><corespring-extended-text-entry id=\"Q_01\"></corespring-extended-text-entry></itemBody>",
+  "components" : {
+    "Q_01" : {
+      "componentType" : "corespring-extended-text-entry",
+      "model" : {
+        "config" : {
+          "expectedLength" : 200,
+          "expectedLines" : 5,
+          "maxStrings" : 20,
+          "minStrings" : 10
+        }
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}
