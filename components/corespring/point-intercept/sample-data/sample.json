@@ -1,0 +1,44 @@
+{
+  "files" : [],
+  "xhtml" : "<p>Plot the points ​<span mathjax=\"\">\\((1,1)\\)</span>​, <span style=\"line-height: 1.42857143;\">​</span><span mathjax=\"\">\\((2,2)\\)</span><span>​, and </span>​\n<span mathjax=\"\">\\((3,3)\\)</span>​ below.</p><corespring-point-intercept id=\"1\"></corespring-point-intercept>​",
+  "components" : {
+      "1" : {
+          "weight" : 1,
+          "title" : "Plot Points",
+          "componentType" : "corespring-point-intercept",
+          "correctResponse" : [ 
+              "1,1", 
+              "2,2", 
+              "3,3"
+          ],
+          "feedback" : {
+              "correctFeedbackType" : "default",
+              "incorrectFeedbackType" : "default"
+          },
+          "model" : {
+              "config" : {
+                  "graphWidth" : "500",
+                  "graphHeight" : "500",
+                  "maxPoints" : 3,
+                  "labelsType" : "absent",
+                  "pointLabels" : [ 
+                      "A", 
+                      "B", 
+                      "C"
+                  ],
+                  "domainLabel" : "x",
+                  "domain" : 10,
+                  "rangeLabel" : "y",
+                  "range" : 10,
+                  "tickLabelFrequency" : 5,
+                  "scale" : 1,
+                  "sigfigs" : -1,
+                  "showCoordinates" : false,
+                  "showInputs" : true,
+                  "showFeedback" : true
+              }
+          }
+      }
+  },
+  "summaryFeedback" : ""
+}
