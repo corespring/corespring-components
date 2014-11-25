@@ -1,0 +1,65 @@
+{
+  "files" : [],
+  "xhtml" : "<itemBody>Appliances at Discount City Store are on sale for 70% of the original price. Eli has a coupon for an 18% discount on the sale price. If the original price of a microwave oven is $500, how much will Eli pay for the oven before tax?</p><corespring-multiple-choice id=\"RESPONSE\"></corespring-multiple-choice></itemBody>",
+  "components" : {
+    "RESPONSE" : {
+      "componentType" : "corespring-multiple-choice",
+      "model" : {
+        "config" : {
+          "shuffle" : "false",
+          "orientation" : "vertical",
+          "choiceType" : "radio",
+          "choiceLabels" : "letters",
+          "singleChoice" : true
+        },
+        "prompt" : "If the original price of a microwave oven is $500, how much will Eli pay for the oven before tax?",
+        "choices" : [
+          {
+            "label" : "$440",
+            "value" : "ChoiceA"
+          },
+          {
+            "label" : "$287",
+            "value" : "ChoiceB"
+          },
+          {
+            "label" : "$260",
+            "value" : "ChoiceC"
+          },
+          {
+            "label" : "$240",
+            "value" : "ChoiceD"
+          }
+        ]
+      },
+      "feedback" : [
+        {
+          "value" : "ChoiceA",
+          "feedback" : "Your answer.",
+          "notChosenFeedback" : "Your answer."
+        },
+        {
+          "value" : "ChoiceB",
+          "feedback" : "Correct!",
+          "notChosenFeedback" : "Correct!"
+        },
+        {
+          "value" : "ChoiceC",
+          "feedback" : "Your answer.",
+          "notChosenFeedback" : "Your answer."
+        },
+        {
+          "value" : "ChoiceD",
+          "feedback" : "Your answer.",
+          "notChosenFeedback" : "Your answer."
+        }
+      ],
+      "correctResponse" : {
+        "value" : [
+          "ChoiceB"
+        ]
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}
