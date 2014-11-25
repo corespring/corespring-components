@@ -1,0 +1,61 @@
+{
+  "files" : [],
+  "xhtml" : "<itemBody><p>Paul creates a scatter plot with a negative association. The x-axis of the scatter plot is titled, &quot;Minutes Spent at Mall&quot;. Which label is most likely the title of the y-axis of Paul’s scatter plot?</p><p class=\"prompt\">The title of the y-axis of Paul's scatter plot is most likely<corespring-inline-choice id=\"Q_01\"></corespring-inline-choice>.</p></itemBody>",
+  "components" : {
+    "Q_01" : {
+      "componentType" : "corespring-inline-choice",
+      "model" : {
+        "config" : {
+          "shuffle" : "",
+          "orientation" : "vertical",
+          "choiceType" : "radio",
+          "choiceLabels" : "letters",
+          "singleChoice" : false
+        },
+        "prompt" : "",
+        "choices" : [ 
+          {
+            "label" : "Distance Walked",
+            "value" : "1"
+          }, 
+          {
+            "label" : "Money Available to Spend",
+            "value" : "2"
+          }, 
+          {
+            "label" : "Number of Movies Seen",
+            "value" : "3"
+          }, 
+          {
+            "label" : "Number of Stores Visited",
+            "value" : "4"
+          }
+        ]
+      },
+      "feedback" : [ 
+        {
+          "value" : "1",
+          "feedback" : "The correct answer is Money Available to Spend.",
+          "notChosenFeedback" : "The correct answer is Money Available to Spend."
+        }, 
+        {
+          "value" : "2",
+          "feedback" : "Correct!",
+          "notChosenFeedback" : "Correct!"
+        }, 
+        {
+          "value" : "3",
+          "feedback" : "The correct answer is Money Available to Spend.",
+          "notChosenFeedback" : "The correct answer is Money Available to Spend."
+        }, 
+        {
+          "value" : "4",
+          "feedback" : "The correct answer is Money Available to Spend.",
+          "notChosenFeedback" : "The correct answer is Money Available to Spend."
+        }
+      ],
+      "correctResponse" : "2"
+    }
+  },
+  "summaryFeedback" : ""
+}

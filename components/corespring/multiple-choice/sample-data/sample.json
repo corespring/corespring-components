@@ -1,6 +1,6 @@
 {
   "files" : [],
-  "xhtml" : "<itemBody>Appliances at Discount City Store are on sale for 70% of the original price. Eli has a coupon for an 18% discount on the sale price. If the original price of a microwave oven is $500, how much will Eli pay for the oven before tax?</p><corespring-multiple-choice id=\"RESPONSE\"></corespring-multiple-choice></itemBody>",
+  "xhtml" : "<itemBody><p>Appliances at Discount City Store are on sale for 70% of the original price. Eli has a coupon for an 18% discount on the sale price. If the original price of a microwave oven is $500, how much will Eli pay for the oven before tax?</p><corespring-multiple-choice id=\"RESPONSE\"></corespring-multiple-choice></itemBody>",
   "components" : {
     "RESPONSE" : {
       "componentType" : "corespring-multiple-choice",
@@ -12,7 +12,6 @@
           "choiceLabels" : "letters",
           "singleChoice" : true
         },
-        "prompt" : "If the original price of a microwave oven is $500, how much will Eli pay for the oven before tax?",
         "choices" : [
           {
             "label" : "$440",
