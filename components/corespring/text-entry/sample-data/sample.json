@@ -29,6 +29,13 @@
         "feedback" : {
           "type" : "default"
         }
+      },
+      "partialResponses" : {
+        "award" : 25,
+        "values" : [ "4.3", "4"],
+        "feedback" : {
+          "type" : "default"
+        }
       }
     }
   },
