@@ -18,7 +18,7 @@
           "showLabels" : true
         }
       },
-      "correctResponse" : "y=-0.5x+25"
+      "correctResponse" : "y=0.5x+25"
     }
   }
 }
