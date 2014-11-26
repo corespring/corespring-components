@@ -1,0 +1,82 @@
+{
+  "files" : [],
+  "xhtml" : "<p>Drag the even numbers into the &quot;even&quot; category, and the odd numbers into the &quot;odd&quot; category.</p></div>​\n<corespring-drag-and-drop-categorize id=\"1\"></corespring-drag-and-drop-categorize>​<div>",
+  "components" : {
+    "1": {
+      "weight": 1,
+      "componentType": "corespring-drag-and-drop-categorize",
+      "title": "[Drag and Drop Question Name]",
+      "correctResponse": {
+        "cat_1": [
+          "choice_0",
+          "choice_2"
+        ],
+        "cat_2": [
+          "choice_1",
+          "choice_3"
+        ]
+      },
+      "feedback": {
+        "correctFeedbackType": "default",
+        "partialFeedbackType": "default",
+        "incorrectFeedbackType": "default"
+      },
+      "allowPartialScoring": false,
+      "partialScoring": [
+        {
+          "numberOfCorrect": 1,
+          "scorePercentage": 25
+        }
+      ],
+      "model": {
+        "categories": [
+          {
+            "id": "cat_1",
+            "hasLabel": true,
+            "label": "Odd",
+            "layout": "vertical"
+          },
+          {
+            "id": "cat_2",
+            "hasLabel": true,
+            "label": "Even",
+            "layout": "vertical"
+          }
+        ],
+        "choices": [
+          {
+            "label": "1",
+            "labelType": "text",
+            "id": "choice_0",
+            "moveOnDrag": true
+          },
+          {
+            "label": "2",
+            "labelType": "text",
+            "id": "choice_1",
+            "moveOnDrag": true
+          },
+          {
+            "label": "3",
+            "labelType": "text",
+            "id": "choice_2",
+            "moveOnDrag": true
+          },
+          {
+            "label": "4",
+            "labelType": "text",
+            "id": "choice_3",
+            "moveOnDrag": true
+          }
+        ],
+        "config": {
+          "shuffle": false,
+          "removeTilesOnDrop": true,
+          "choiceAreaLayout": "vertical",
+          "answerAreaPosition": "below"
+        }
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}
