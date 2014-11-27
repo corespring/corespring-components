@@ -1,0 +1,72 @@
+{
+  "files" : [ ],
+  "xhtml" : "<p>Decide whether each equation has the same unknown value as ​<span mathjax=\"\">\\(42 \\div \\underline{\\hspace{5mm}} = 6\\)</span>​. Choose Yes or No for each equation.</p><p><corespring-match id=\"RESPONSE1\"/></p>",
+  "components" : {
+    "RESPONSE1" : {
+      "componentType" : "corespring-match",
+      "correctResponse" : [
+        {
+          "id" : "Row1",
+          "matchSet" : [
+            false,
+            true
+          ]
+        },
+        {
+          "id" : "Row2",
+          "matchSet" : [
+            true,
+            false
+          ]
+        },
+        {
+          "id" : "Row3",
+          "matchSet" : [
+            false,
+            true
+          ]
+        },
+        {
+          "id" : "Row4",
+          "matchSet" : [
+            true,
+            false
+          ]
+        }
+      ],
+      "model" : {
+        "columns" : [
+          {
+            "labelHtml" : "Statement"
+          },
+          {
+            "labelHtml" : "Yes"
+          },
+          {
+            "labelHtml" : "No"
+          }
+        ],
+        "rows" : [
+          {
+            "id" : "Row1",
+            "labelHtml" : "<span mathjax=\"\">\\(\\underline{\\hspace{5mm}} = 6 \\times 42\\)</span>​"
+          },
+          {
+            "id" : "Row2",
+            "labelHtml" : "<span mathjax=\"\">\\(42 = \\underline{\\hspace{5mm}} \\times 6\\)</span>"
+          },
+          {
+            "id" : "Row3",
+            "labelHtml" : "<span mathjax=\"\">\\(\\underline{\\hspace{5mm}} \\times 42 = 6\\)</span>"
+          },
+          {
+            "id" : "Row4",
+            "labelHtml" : "<span mathjax=\"\">\\(6 \\times \\underline{\\hspace{5mm}} = 42\\)</span>"
+          }
+        ],
+        "answerType" : "YES_NO"
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}

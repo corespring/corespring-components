@@ -1,0 +1,21 @@
+{
+  "files" : [],
+  "xhtml" : "<corespring-video id=\"1\"></corespring-video>",
+  "components" : {
+    "1" : {
+      "weight" : 0,
+      "title" : "Video",
+      "componentType" : "corespring-video",
+      "model" : {
+        "config" : {
+          "type" : "youtube",
+          "url" : "https://www.youtube.com/watch?v=nfWlot6h_JM",
+          "ratioType" : "widescreen",
+          "size" : "large",
+          "description" : "Shake it off!"
+        }
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}

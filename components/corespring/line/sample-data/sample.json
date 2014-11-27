@@ -1,0 +1,24 @@
+{
+  "files" : [ ],
+  "xhtml" : "<p>Plot points on the graph to display <span mathjax=\"\">\\(\\displaystyle y=\\frac{1}{2}x + 25\\)</span></p><corespring-line id=\"Q_01\"></corespring-line>",
+  "components" : {
+    "Q_01" : {
+      "componentType" : "corespring-line",
+      "model" : {
+        "config" : {
+          "domain" : 60,
+          "range" : 30,
+          "scale" : 0,
+          "domainLabel" : "x",
+          "rangeLabel" : "y",
+          "tickLabelFrequency" : 1,
+          "sigfigs" : -1,
+          "exhibitOnly" : false,
+          "showInputs" : true,
+          "showLabels" : true
+        }
+      },
+      "correctResponse" : "y=0.5x+25"
+    }
+  }
+}

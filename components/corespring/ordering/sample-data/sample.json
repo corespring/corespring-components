@@ -1,0 +1,53 @@
+{
+  "files" : [ ],
+  "xhtml" : "<itemBody><p>Order the following fractions from <b>least</b> to <b>greatest</b>:</p><corespring-ordering id=\"Q_01\"></corespring-ordering></itemBody>",
+  "components" : {
+    "Q_01" : {
+      "componentType" : "corespring-ordering",
+      "correctResponse" : [
+        "c",
+        "a",
+        "b"
+      ],
+      "feedback" : {
+        "correctFeedbackType" : "default",
+        "partialFeedbackType" : "default",
+        "incorrectFeedbackType" : "default"
+      },
+      "model" : {
+        "config" : {
+          "shuffle" : false,
+          "choiceAreaLayout" : "horizontal",
+          "answerAreaLabel" : "Place answers here",
+          "placementType" : "placement"
+        },
+        "choices" : [
+          {
+            "label" : "2",
+            "value" : "a",
+            "id" : "a",
+            "moveOnDrag" : true
+          },
+          {
+            "label" : "3",
+            "value" : "b",
+            "id" : "b",
+            "moveOnDrag" : true
+          },
+          {
+            "label" : "1",
+            "value" : "c",
+            "id" : "c",
+            "moveOnDrag" : true
+          }
+        ],
+        "correctResponse" : [
+          "c",
+          "a",
+          "b"
+        ]
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}

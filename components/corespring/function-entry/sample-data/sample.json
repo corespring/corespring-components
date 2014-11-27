@@ -1,0 +1,25 @@
+{
+  "files" : [ ],
+  "xhtml" : "<p>What is the equation for a line containing points​​ <span mathjax=\"\">\\((-1,-1)\\)</span>​ and ​\n<span mathjax=\"\">\\((0,2)\\)</span>​?</p><p><span mathjax=\"\">\\(y=\\)</span>​​\n<corespring-function-entry id=\"2\"></corespring-function-entry>​</p>",
+  "components" : {
+    "2" : {
+      "weight" : 1,
+      "componentType" : "corespring-function-entry",
+      "title" : "Function Entry",
+      "feedback" : {
+        "correctFeedbackType" : "default",
+        "incorrectFeedbackType" : "default"
+      },
+      "correctResponse" : {
+        "equation" : "3x+2"
+      },
+      "model" : {
+        "config" : {
+          "ignoreSpacing" : true,
+          "showFormattingHelp" : true
+        }
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}

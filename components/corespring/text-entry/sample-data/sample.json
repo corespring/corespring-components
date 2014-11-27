@@ -1,0 +1,43 @@
+{
+  "files" : [],
+  "xhtml" : "<itemBody><p>What is 437% as a decimal?</p><corespring-text-entry id=\"RESPONSE\"></corespring-text-entry></itemBody>",
+  "components" : {
+    "RESPONSE" : {
+      "weight" : 1,
+      "componentType" : "corespring-text-entry",
+      "model" : {
+        "answerBlankSize" : 15,
+        "answerAlignment" : "left"
+      },
+      "feedback" : {
+        "correctFeedbackType" : "default",
+        "incorrectFeedbackType" : "default"
+      },
+      "correctResponses" : {
+        "award" : 100,
+        "values" : [
+          "4.37"
+        ],
+        "ignoreWhitespace" : true,
+        "ignoreCase" : true,
+        "feedback" : {
+          "type" : "default"
+        }
+      },
+      "incorrectResponses" : {
+        "award" : 0,
+        "feedback" : {
+          "type" : "default"
+        }
+      },
+      "partialResponses" : {
+        "award" : 25,
+        "values" : [ "4.3", "4"],
+        "feedback" : {
+          "type" : "default"
+        }
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}

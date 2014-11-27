@@ -1,0 +1,66 @@
+{
+  "xhtml" : "​<corespring-drag-and-drop-inline id=\"1\"></corespring-drag-and-drop-inline>",
+  "components" : {
+    "1" : {
+      "weight" : 1,
+      "componentType" : "corespring-drag-and-drop-inline",
+      "title" : "[Drag and Drop Question Name]",
+      "correctResponse" : {
+        "aa_1" : [ 
+          "choice_0"
+        ],
+        "cat_1" : []
+      },
+      "feedback" : {
+        "correctFeedbackType" : "default",
+        "partialFeedbackType" : "default",
+        "incorrectFeedbackType" : "default"
+      },
+      "allowPartialScoring" : false,
+      "partialScoring" : [ 
+        {
+          "numberOfCorrect" : 1,
+          "scorePercentage" : 25
+        }
+      ],
+      "model" : {
+        "answerAreas" : [ 
+          {
+            "id" : "aa_1",
+            "textBefore" : "Americans eat",
+            "textAfter" : "for Thanksgiving dinner."
+          }
+        ],
+        "choices" : [ 
+          {
+            "label" : "turkey",
+            "labelType" : "text",
+            "id" : "choice_0"
+          }, 
+          {
+            "label" : "ham",
+            "labelType" : "text",
+            "id" : "choice_1"
+          }, 
+          {
+            "label" : "lamb",
+            "labelType" : "text",
+            "id" : "choice_2"
+          }, 
+          {
+            "label" : "bologna",
+            "labelType" : "text",
+            "id" : "choice_3"
+          }
+        ],
+        "config" : {
+          "shuffle" : false,
+          "choiceAreaLabel" : "Choices",
+          "choiceAreaLayout" : "horizontal",
+          "choiceAreaPosition" : "below"
+        }
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}
