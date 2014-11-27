@@ -3,6 +3,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var link = function(scope, element, attrs) {
 
+      $log.debug('drag-and-drop :: link');
+
       scope.landingPlaceChoices = {};
       scope.dragging = {};
       scope.maxWidth = 50;
@@ -43,7 +45,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
               h = $(e).height();
             }
           });
-          if (lastW !== w || lastH !== h) {
+          if (lastW !== w || lastH !== h && scope.model) {
             scope.propagateDimension(w + 18, h);
           }
           lastW = w;
@@ -243,8 +245,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         return ( !! choice.copyOnDrag ? "'keep'" : "''");
       };
 
-      scope.getChoiceRows = function() {
-        return _.range(scope.model.choices.length / scope.itemsPerRow);
+      scope.getChoiceRows = function(choicesLength) {
+        return _.range(choicesLength / scope.itemsPerRow);
       };
 
       scope.getChoicesForRow = function(row) {
@@ -270,7 +272,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         '        <div class="choices" >',
         '          <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
         '          <div class="choices-table">',
-        '            <div ng-repeat="row in getChoiceRows()" class="choices-table-row">',
+        '            <div ng-repeat="row in getChoiceRows(model.choices.length)" class="choices-table-row">',
         '              <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
         '                   ng-style="choiceStyle"',
         '                   data-drag="editable"',
