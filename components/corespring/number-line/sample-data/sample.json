@@ -1,0 +1,73 @@
+{
+  "files" : [ ],
+  "xhtml" : "<p>Place a point on the number line where <span mathjax=\"\">\\(\\displaystyle\\frac{1}{8}\\)</span> should be located.</p><corespring-number-line id=\"RESPONSE1\"/>",
+  "components" : {
+    "RESPONSE1" : {
+      "componentType" : "corespring-number-line",
+      "correctResponse" : [
+        {
+          "type" : "point",
+          "pointType" : "full",
+          "domainPosition" : 0.125
+        }
+      ],
+      "model" : {
+        "config" : {
+          "domain" : [
+            0,
+            1
+          ],
+          "initialType" : "PF",
+          "snapPerTick" : 1,
+          "showMinorTicks" : true,
+          "exhibitOnly" : false,
+          "maxNumberOfPoints" : 1,
+          "tickFrequency" : 8,
+          "availableTypes" : {
+            "PF" : true
+          },
+          "initialElements" : [ ],
+          "ticks" : [
+            {
+              "label" : "0",
+              "value" : 0
+            },
+            {
+              "label" : "0.125",
+              "value" : 0.125
+            },
+            {
+              "label" : "0.25",
+              "value" : 0.25
+            },
+            {
+              "label" : "0.375",
+              "value" : 0.375
+            },
+            {
+              "label" : "0.5",
+              "value" : 0.5
+            },
+            {
+              "label" : "0.625",
+              "value" : 0.625
+            },
+            {
+              "label" : "0.75",
+              "value" : 0.75
+            },
+            {
+              "label" : "0.875",
+              "value" : 0.875
+            },
+            {
+              "label" : "1",
+              "value" : 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "summaryFeedback" : ""
+}

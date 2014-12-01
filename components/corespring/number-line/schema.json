@@ -1,0 +1,97 @@
+{
+  "title" : "CoreSpring Number Line Question Schema",
+  "type" : "object",
+  "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For number line, this must be 'corespring-number-line'.",
+      "type" : "string"
+    },
+    "correctResponse" : {
+      "type" : "object",
+      "description" : "Describes the correct response of points, rays, lines to be displayed on the number line.",
+      "properties" : {
+        "type" : {
+          "enum" : ["point"],
+          "description" : "???"
+        },
+        "pointType" : {
+          "enum" : ["full"],
+          "description" : "???"
+        },
+        "domainPosition" : {
+          "type" : "number",
+          "description" : "The value on the number line which represents the correct answer."
+        }
+      },
+      "required" : ["domainPosition"]
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "config" : {
+          "type" : "object",
+          "description" : "An object describing the various configuration properties of the component.",
+          "properties" : {
+            "domain" : {
+              "type" : "array",
+              "description" : "A two-number array representing the minimum and maximum values to be displayed on the number line.",
+              "minItems" : 2,
+              "maxItems" : 2
+            },
+            "initialType" : {
+              "type" : "array",
+              "description" : "The initial type of point, line, or ray to be set by the component.",
+              "items" : {
+                "enum" : ["PF", "LEE", "LEF", "LFE", "LFF", "REP", "REN", "RFP", "RFN"]
+              }
+            },
+            "snapPerTick" : {
+              "type" : "number",
+              "description" : "???"
+            },
+            "showMinorTicks" : {
+              "type" : "boolean",
+              "description" : "If true, show minor tick labels in the component."
+            },
+            "exhibitOnly" : {
+              "type" : "boolean",
+              "description" : "If true, the interacting with the component is disabled."
+            },
+            "maxNumberOfPoints" : {
+              "type" : "number",
+              "description" : "The number of points which may be added to the component by the user."
+            },
+            "tickFrequency" : {
+              "type" : "number",
+              "description" : "???"
+            },
+            "availableTypes" : {
+              "type" : "object",
+              "description" : "An object mapping point, ray, and line types to boolean values which specify whether or not the types are available for use in the component."
+            },
+            "ticks" : {
+              "type" : "array",
+              "description" : "Describes the ticks that are to be displayed along the number line.",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "label" : {
+                    "type" : "string",
+                    "description" : "The label to be displayed above the tick."
+                  },
+                  "value" : {
+                    "type" : "number",
+                    "description" : "The value of the tick on the number line."
+                  }
+                },
+                "required" : ["label", "value"]
+              }
+            }
+          }
+        }
+      },
+      "required" : ["config"]
+    }
+  },
+  "required" : ["componentType", "correctResponse", "model"]
+}
