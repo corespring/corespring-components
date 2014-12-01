@@ -17,14 +17,22 @@
           },
           "pointType" : {
             "enum" : ["full", "empty"],
-            "description" : "Describes whether the correct responses points are filled-in or empty."
+            "description" : "Describes whether the point of a ray are filled-in or empty. Only applies for ray element."
+          },
+          "leftPoint" : {
+            "enum" : ["full", "empty"],
+            "description" : "Describes whether the left point of a line is filled-in or empty. Only applies for line element."
+          },
+          "rightPoint" : {
+            "enum" : ["full", "empty"],
+            "description" : "Describes whether the right point of a line is filled-in or empty. Only applies for line element."
           },
           "domainPosition" : {
             "type" : "number",
             "description" : "The value on the number line which represents the correct answer."
           }
         },
-        "required" : ["domainPosition"]
+        "required" : ["type", "domainPosition"]
       }
     },
     "model" : {
@@ -71,9 +79,42 @@
               "type" : "object",
               "description" : "An object mapping point, ray, and line types to boolean values which specify whether or not the types are available for use in the component."
             },
+            "initialElements" : {
+              "type" : "array",
+              "description" : "Describes the elements that are to be initially displayed on the number line.",
+              "items" : {
+                "properties" : {
+                  "type" : {
+                    "enum" : ["point", "line", "ray"],
+                    "description" : "Describes whether the correct response is a point, line, or ray."
+                  },
+                  "pointType" : {
+                    "enum" : ["full", "empty"],
+                    "description" : "Describes whether the point of a ray are filled-in or empty. Only applies for ray element."
+                  },
+                  "leftPoint" : {
+                    "enum" : ["full", "empty"],
+                    "description" : "Describes whether the left point of a line is filled-in or empty. Only applies for line element."
+                  },
+                  "rightPoint" : {
+                    "enum" : ["full", "empty"],
+                    "description" : "Describes whether the right point of a line is filled-in or empty. Only applies for line element."
+                  },
+                  "domainPosition" : {
+                    "type" : "number",
+                    "description" : "The domain (horizontal axis) position of the element."
+                  },
+                  "rangePosition" : {
+                    "type" : "number",
+                    "description" : "The range (vertical axis) position of the element."
+                  }
+                },
+                "required" : ["type", "domainPosition","rangePosition"]
+              }
+            },
             "ticks" : {
               "type" : "array",
-              "description" : "Describes the ticks that are to be displayed along the number line.",
+              "description" : "Describes the ticks that are to be displayed along the number line. If this is present tickFrequency will be ignored.",
               "items" : {
                 "type" : "object",
                 "properties" : {
