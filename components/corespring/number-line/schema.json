@@ -11,12 +11,12 @@
       "description" : "Describes the correct response of points, rays, lines to be displayed on the number line.",
       "properties" : {
         "type" : {
-          "enum" : ["point"],
-          "description" : "???"
+          "enum" : ["point", "line", "ray"],
+          "description" : "Describes whether the correct response is a point, line, or ray."
         },
         "pointType" : {
-          "enum" : ["full"],
-          "description" : "???"
+          "enum" : ["full", "empty"],
+          "description" : "Describes whether the correct responses points are filled-in or empty."
         },
         "domainPosition" : {
           "type" : "number",
@@ -47,7 +47,7 @@
             },
             "snapPerTick" : {
               "type" : "number",
-              "description" : "???"
+              "description" : "The number of positions that are clickable between two ticks."
             },
             "showMinorTicks" : {
               "type" : "boolean",
@@ -63,7 +63,7 @@
             },
             "tickFrequency" : {
               "type" : "number",
-              "description" : "???"
+              "description" : "The total number of major ticks on the number line."
             },
             "availableTypes" : {
               "type" : "object",
