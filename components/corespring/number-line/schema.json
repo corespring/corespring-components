@@ -7,23 +7,25 @@
       "type" : "string"
     },
     "correctResponse" : {
-      "type" : "object",
+      "type" : "array",
       "description" : "Describes the correct response of points, rays, lines to be displayed on the number line.",
-      "properties" : {
-        "type" : {
-          "enum" : ["point", "line", "ray"],
-          "description" : "Describes whether the correct response is a point, line, or ray."
+      "items" : {
+        "properties" : {
+          "type" : {
+            "enum" : ["point", "line", "ray"],
+            "description" : "Describes whether the correct response is a point, line, or ray."
+          },
+          "pointType" : {
+            "enum" : ["full", "empty"],
+            "description" : "Describes whether the correct responses points are filled-in or empty."
+          },
+          "domainPosition" : {
+            "type" : "number",
+            "description" : "The value on the number line which represents the correct answer."
+          }
         },
-        "pointType" : {
-          "enum" : ["full", "empty"],
-          "description" : "Describes whether the correct responses points are filled-in or empty."
-        },
-        "domainPosition" : {
-          "type" : "number",
-          "description" : "The value on the number line which represents the correct answer."
-        }
-      },
-      "required" : ["domainPosition"]
+        "required" : ["domainPosition"]
+      }
     },
     "model" : {
       "type" : "object",
