@@ -394,7 +394,7 @@ var main = [
         '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
         '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
         '  <div ng-if="isTile()">' + tileTemplate + '</div>',
-        '  <div class="summaryFeedbackPanel fade in" ng-show="response.comments">',
+        '  <div class="summaryFeedbackPanel fade in ng-hide" ng-show="response.comments">',
         '    <div class="">',
         '      <div class="panel-group">',
         '        <div class="panel panel-default">',
