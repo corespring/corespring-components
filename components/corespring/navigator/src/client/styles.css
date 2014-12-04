@@ -65,27 +65,6 @@
     color: white;
 }
 
-.navigator-container .nav {
-    margin-top: 65px;
-}
-
-.navigator .config-panel-body {
-    display: block;
-    position: absolute;
-    top: 50px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding: 0 10px;
-}
-
-.navigator .config-panel-body.with-nav {
-    top: 130px;
-}
-
 .navigator .btn-navigator-toggle {
     padding: 2px 5px;
     font-size: 12px;
