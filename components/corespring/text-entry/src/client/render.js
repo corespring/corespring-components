@@ -84,10 +84,10 @@ main = [
       link: link(),
       template: [
         '<div class="cs-text-entry">',
-        '  <div class="cs-text-entry__text-input-holder" ng-class="response.correctness">',
+        '  <div class="cs-text-entry__text-input-holder" ng-class="response.correctness" feedback-popover="response">',
         '    <input type="text" ng-model="answer" ng-readonly="!editable" ng-class="response.correctness"',
         '           class="input-sm form-control" ',
-        '           feedback-popover="response"',
+        '           ',
         '           size="{{question.answerBlankSize}}"',
         '           style="text-align: {{question.answerAlignment}}"/>',
         '    <i ng-show="feedback" class="fa result-icon" ng-class="response.correctness" style="display: inline;"></i>',
