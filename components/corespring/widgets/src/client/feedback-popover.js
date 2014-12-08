@@ -46,7 +46,7 @@ var def = ['MathJaxService', function(MathJaxService) {
             }
           );
 
-          $(element).parents('.corespring-player').click(function(e) {
+          $('html').click(function(e) {
             if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {
               $(element).popover('hide');
             }
