@@ -41,6 +41,10 @@
   position: relative;
   &.warning, &.correct, &.incorrect, &.partial {
     margin-right: 30px;
+    cursor: pointer;
+  }
+  .form-control[disabled], .form-control[readonly] {
+    cursor: pointer;
   }
   .popover {
     visibility: hidden;
