@@ -40,6 +40,7 @@
   .incorrect,
   .warning {
     position: relative;
+    cursor: pointer;
   }
 
   .correct:after,
@@ -65,6 +66,10 @@
   .warning:after {
     color: @warning-color;
     content: '\f071';
+  }
+
+  .form-control[disabled], .form-control[readonly] {
+    cursor: pointer;
   }
 
   .hidden-math {
