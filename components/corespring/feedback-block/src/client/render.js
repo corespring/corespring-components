@@ -49,7 +49,16 @@ var main = [
       replace: true,
       link: link,
       template: [
-        '<div class="view-feedback-container" ng-show="isVisible" ><div class="view-feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div></div>'
+        '<div class="view-feedback-container" ng-show="isVisible" >',
+        '  <div class="panel panel-default feedback-panel {{correctClass}}">',
+        '    <div class="panel-heading">&nbsp;</div>',
+        '    <div class="panel-body">',
+        '      <span type="success" ng-bind-html-unsafe="feedback"></span>',
+        '    </div>',
+        '  </div>',
+
+        '  <div class="view-feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
+        '</div>'
       ].join("")
     };
 
