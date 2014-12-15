@@ -51,7 +51,7 @@ var correctResponseFeedback = function(fbArray, q, userGotItRight, answer) {
       delete fb.notChosenFeedback;
     } else {
       if (_.indexOf(answer, correctKey) === -1) {
-        nc = fb.notChosenFeedback;
+        nc = fb.notChosenFeedback || exports.keys.DEFAULT_NOT_CHOSEN_FEEDBACK;
         fb.feedback = nc;
         delete fb.notChosenFeedback;
       } else {

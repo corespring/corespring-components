@@ -331,7 +331,7 @@ var main = [
       '       <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '     </div>',
       '    </div>',
-      '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value]">',
+      '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value] || (o.correct && question.config.showCorrectAnswer !== \'separately\')">',
       '      <div class="panel panel-default feedback-panel {{o.correct ? \'correct\' : \'incorrect\'}}" ng-class="{visible: o.feedback}" style="display: none">',
       '        <div class="panel-heading">&nbsp;</div>',
       '        <div class="panel-body">',
