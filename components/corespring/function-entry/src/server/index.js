@@ -28,7 +28,7 @@ exports.respond = function(question, answer, settings) {
       comments: settings.showFeedback ? question.comments : null
     };
   }
-  
+
   var answerIsCorrect, response;
 
   if (question && answer && question._uid !== answer._uid) {
@@ -60,7 +60,7 @@ exports.respond = function(question, answer, settings) {
       response.outcome.push("lineEquationMatch");
     }
     var defaults = _.extend(fb.defaults, {incorrect: "Good try!"});
-    response.feedback = fb.makeFeedback(question, response.correctness, defaults);
+    response.feedback = fb.makeFeedback(question.feedback, response.correctness, defaults);
     response.comments = question.comments;
   }
 

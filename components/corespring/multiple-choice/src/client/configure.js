@@ -152,6 +152,7 @@ var main = [
             scope.fullModel = model;
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
+            scope.model.config.showCorrectAnswer = scope.model.config.showCorrectAnswer || "separately";
             scope.feedback = {};
             scope.correctMap = {};
             scope.scoreMapping = {};

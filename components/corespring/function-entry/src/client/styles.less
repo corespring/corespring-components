@@ -12,6 +12,16 @@
   display: inline-block;
   margin: 0 8px 0 3px;
 
+  &.popupFeedback {
+    .correct,.incorrect,.warning {
+      cursor: pointer;
+    }
+
+    .form-control[disabled], .form-control[readonly] {
+      cursor: pointer;
+    }
+  }
+
   .text-input {
     width: auto;
     display: inline-block;
@@ -40,7 +50,6 @@
   .incorrect,
   .warning {
     position: relative;
-    cursor: pointer;
   }
 
   .correct:after,
@@ -66,10 +75,6 @@
   .warning:after {
     color: @warning-color;
     content: '\f071';
-  }
-
-  .form-control[disabled], .form-control[readonly] {
-    cursor: pointer;
   }
 
   .hidden-math {
