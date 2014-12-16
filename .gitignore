@@ -7,3 +7,4 @@ bower_components
 *.iml
 *.less.css
 *.less.min.css
+*-wrapped.js

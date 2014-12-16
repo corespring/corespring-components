@@ -1,4 +1,4 @@
-var def = function() {
+var def = ['MathJaxService', function(MathJaxService) {
   return {
     restrict: "A",
     scope: {
@@ -33,20 +33,30 @@ var def = function() {
               title: title,
               template: '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
               content: content,
-              placement: 'top',
-              viewport: '.corespring-player',
+              placement: function(popover, sender) {
+                var playerElement = $(element).parents('.corespring-player');
+                var playerTop = playerElement.offset().top;
+                var elementTop = $(element).offset().top;
+                return (elementTop - playerTop > 100) ? "top" : "bottom";
+              },
+              viewport: ".player-body",
               html: true}
-          ).popover('show');
+          ).on('shown.bs.popover', function() {
+              MathJaxService.parseDomForMath(0);
+            }
+          );
 
-          $(element).parent().find('.popover').click(function() {
-            $(element).popover('hide');
+          $('html').click(function(e) {
+            if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {
+              $(element).popover('hide');
+            }
           });
 
         }
       });
     }
   };
-};
+}];
 
 
 exports.framework = "angular";

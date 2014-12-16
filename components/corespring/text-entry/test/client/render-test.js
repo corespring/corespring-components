@@ -41,6 +41,7 @@ describe('corespring', function() {
   beforeEach(function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
+      $provide.value('MathJaxService', function() {});
     });
   });
 

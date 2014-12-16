@@ -43,6 +43,8 @@ describe('corespring', function() {
       var mockPopover = function(){ return {on: function(){}, popover: mockPopover }; };
       $.fn.extend({popover: mockPopover});
       testModel = _.cloneDeep(testModelTemplate);
+
+      $provide.value('MathJaxService', function() {});
     });
 
   });
