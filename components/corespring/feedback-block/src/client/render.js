@@ -56,8 +56,6 @@ var main = [
         '      <span type="success" ng-bind-html-unsafe="feedback"></span>',
         '    </div>',
         '  </div>',
-
-        '  <div class="view-feedback {{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '</div>'
       ].join("")
     };
