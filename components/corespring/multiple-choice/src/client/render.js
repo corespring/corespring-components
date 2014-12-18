@@ -318,7 +318,7 @@ var main = [
       '    <div class="choice-holder" >',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div class="checkbox-button" " />',
+      '          <div class="checkbox-button" />',
       '        </div>',
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
       '          <div class="radio-button"  />',
