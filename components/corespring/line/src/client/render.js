@@ -46,7 +46,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
         "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See Solution</a></div>",
         "</div>",
-        "<div ng-show='feedback' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
+        '<div feedback="feedback" correct-class="{{correctClass}}"></div>',
         '<div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         "</div>"
       ].join(""),

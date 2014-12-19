@@ -2,6 +2,8 @@ var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
 var fb = require('corespring.server-shared.server.feedback-utils');
 
+exports.keys = fb.keys;
+
 exports.isCorrect = function(answer, correctEquation, options) {
   var correctFunction = correctEquation;
   if (correctEquation.indexOf('=') >= 0) {
