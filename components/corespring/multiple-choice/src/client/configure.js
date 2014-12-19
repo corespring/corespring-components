@@ -126,7 +126,7 @@ var main = [
       '    </div>',
       '    <div class="row">',
       '      <div class="col-xs-12">',
-      '        <checkbox ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
+      '        <checkbox class="shuffle-choices" ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
       '      </div>',
       '    </div>',
       '  </div>',
