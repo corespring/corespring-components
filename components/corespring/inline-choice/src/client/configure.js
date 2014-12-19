@@ -40,6 +40,15 @@ var main = [
           action: undefined
         }];
 
+        function cleanLabel(label){
+          if(!label){
+            return label;
+          }
+
+          var re = new RegExp('<span>' + String.fromCharCode(8203) + '<\/span>', 'gi');
+          return label.replace(re, '');
+        }
+
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
@@ -61,7 +70,6 @@ var main = [
                 return choice.value === feedback.value;
               });
 
-
               if (choice) {
                 scope.feedback[choice.value] = {
                   feedback: feedback.feedback,
@@ -71,7 +79,6 @@ var main = [
             });
 
           },
-
           getModel: function() {
             var model = _.cloneDeep(scope.fullModel);
 
@@ -84,6 +91,8 @@ var main = [
                 feedback.feedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
                 feedback.feedbackType = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0);
               }
+
+              choice.label = cleanLabel(choice.label);
             });
             return model;
           }
