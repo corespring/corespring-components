@@ -2,6 +2,8 @@ var main = [
   '$log', 'ChoiceTemplates',
   function($log, ChoiceTemplates) {
 
+    "use strict";
+
     var choices = [
       '<div class="choice-config-panel" >',
       '  <p class="info">',
