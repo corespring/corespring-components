@@ -55,7 +55,7 @@ var main = [
     ].join("");
 
     var feedback = [
-      '<div class="well">',
+      '<div feedback-panel>',
       '  <div feedback-selector',
       '       fb-sel-label="If correct, show"',
       '       fb-sel-class="correct"',
@@ -63,8 +63,6 @@ var main = [
       '       fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
       '       fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
       '  ></div>',
-      '</div>',
-      '<div class="well">',
       '  <div feedback-selector',
       '       fb-sel-label="If partially correct, show"',
       '       fb-sel-class="partial"',
@@ -72,8 +70,6 @@ var main = [
       '       fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
       '       fb-sel-default-feedback="{{defaultPartialFeedback}}"',
       '  ></div>',
-      '</div>',
-      '<div class="well">',
       '  <div feedback-selector',
       '       fb-sel-label="If incorrect, show"',
       '       fb-sel-class="incorrect"',

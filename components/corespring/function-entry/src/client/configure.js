@@ -59,25 +59,21 @@ var main = [
       '           class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i><span',
       '           style="margin-left: 3px">Feedback</span>',
       '         </div>',
-      '         <div ng-show="feedbackOn">',
-      '           <div class="well">',
-      '             <div feedback-selector',
-      '                  fb-sel-label="If correct, show"',
-      '                  fb-sel-class="correct"',
-      '                  fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-      '                  fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-      '                  fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
-      '               ></div>',
-      '           </div>',
-      '           <div class="well">',
-      '             <div feedback-selector',
-      '                  fb-sel-label="If incorrect, show"',
-      '                  fb-sel-class="incorrect"',
-      '                  fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-      '                  fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-      '                  fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
-      '               ></div>',
-      '           </div>',
+      '         <div feedback-panel>',
+      '           <div feedback-selector',
+      '                fb-sel-label="If correct, show"',
+      '                fb-sel-class="correct"',
+      '                fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+      '                fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+      '                fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
+      '             ></div>',
+      '           <div feedback-selector',
+      '                fb-sel-label="If incorrect, show"',
+      '                fb-sel-class="incorrect"',
+      '                fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+      '                fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+      '                fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
+      '             ></div>',
       '         </div>',
       '        <div summary-feedback-input ng-model="fullModel.comments"></div>',
       '       </div>',
@@ -113,8 +109,8 @@ var main = [
       link: function(scope, element, attrs) {
 
         var server = ServerLogic.load('corespring-function-entry');
-        scope.defaultCorrectFeedback = server.DEFAULT_CORRECT_FEEDBACK;
-        scope.defaultIncorrectFeedback = server.DEFAULT_INCORRECT_FEEDBACK;
+        scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
+        scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
 
         scope.containerBridge = {
           setModel: function(fullModel) {
