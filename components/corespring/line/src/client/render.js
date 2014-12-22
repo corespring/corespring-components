@@ -348,7 +348,9 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           },
 
           setResponse: function(response) {
-            if (!response) return;
+            if (!response) {
+              return;
+            }
             scope.feedback = response && response.feedback;
             scope.response = response;
             scope.correctClass = response.correctness;
