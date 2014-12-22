@@ -1,0 +1,109 @@
+.choice-template-choice {
+  width: 100%;
+  vertical-align: bottom;
+
+  .choice-remove-button {
+    position: absolute;
+    right: -7px;
+    top: -8px;
+    cursor: pointer;
+    cursor: hand;
+    i {
+      font-size: 20px;
+      color: #76a720;
+    }
+  }
+
+  .choice-remove-button:hover {
+    i {
+      color: #466213;
+    }
+  }
+  .choice-checkbox {
+    cursor: pointer;
+    cursor: hand;
+  }
+
+  .choice-checkbox.checked {
+    color: limegreen;
+  }
+
+  td {
+    vertical-align: top;
+  }
+
+  .selector {
+    padding-bottom: 0;
+    select {
+      width: 205px;
+    }
+  }
+
+  .shuffle {
+    visibility: hidden;
+  }
+
+  .shuffle.shown {
+    visibility: visible;
+  }
+
+  .feedback-preview {
+    .mini-wiggi-wiz {
+      background-color: white;
+    }
+  }
+
+  .feedback-preview.nofeedback {
+    background: none;
+    border-color: white;
+    padding-left: 16px;
+  }
+
+  .feedback-preview.custom {
+    background-color: #ffffff;
+  }
+
+  .choice-wrapper {
+    position: relative;
+    .choice-remove-button {
+      z-index: 2;
+    }
+  }
+}
+
+.choice-template-scoring-section {
+  .scoring-well {
+    min-width: 490px;
+    padding-left: 5px;
+  }
+
+  .score-row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+
+    .remove-button {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      display: none;
+      background-color: rgb(245, 244, 253);
+    }
+  }
+
+  .score-row:hover {
+    background-color: #eeeeff;
+
+    .remove-button {
+      display: block;
+    }
+  }
+
+  .invalid {
+    background-color: #ffdcdc;
+  }
+}
+
+.scoring-header-text {
+  margin-bottom: 10px;
+}
