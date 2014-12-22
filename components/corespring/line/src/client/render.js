@@ -53,54 +53,57 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
       restrict: 'AE',
       scope: true,
       controller: function($scope) {
-        $scope.submissions = 0;
-        $scope.points = {};
-        this.setInitialParams = function(initialParams) {
-          $scope.initialParams = initialParams;
+      },
+
+      link: function(scope, element, attrs) {
+
+        scope.points = {};
+        scope.submissions = 0;
+        scope.setInitialParams = function(initialParams) {
+          scope.initialParams = initialParams;
         };
 
-        this.getInitialParams = function() {
-          return $scope.initialParams;
+        scope.getInitialParams = function() {
+          return scope.initialParams;
         };
 
-        $scope.$watch('graphCallback', function(n) {
-          if ($scope.graphCallback) {
-            if ($scope.initialParams) {
-              $scope.graphCallback($scope.initialParams);
+        scope.$watch('graphCallback', function(n) {
+          if (scope.graphCallback) {
+            if (scope.initialParams) {
+              scope.graphCallback(scope.initialParams);
             }
-            if ($scope.locked) {
-              $scope.graphCallback({
+            if (scope.locked) {
+              scope.graphCallback({
                 lockGraph: true
               });
             }
-            if ($scope.points) {
-              $scope.renewResponse($scope.points);
+            if (scope.points) {
+              scope.renewResponse(scope.points);
             }
           }
         });
 
-        $scope.interactionCallback = function(params) {
-
+        scope.interactionCallback = function(params) {
           function setPoint(name) {
             if (params.points[name]) {
               var px = params.points[name].x;
               var py = params.points[name].y;
-              if (px > $scope.domain) {
-                px = $scope.domain;
-              } else if (px < (0 - $scope.domain)) {
-                px = 0 - $scope.domain;
+              if (px > scope.domain) {
+                px = scope.domain;
+              } else if (px < (0 - scope.domain)) {
+                px = 0 - scope.domain;
               }
-              if (py > $scope.range) {
-                py = $scope.range;
-              } else if (py < (0 - $scope.range)) {
-                py = 0 - $scope.range;
+              if (py > scope.range) {
+                py = scope.range;
+              } else if (py < (0 - scope.range)) {
+                py = 0 - scope.range;
               }
-              if ($scope.sigfigs > -1) {
-                var multiplier = Math.pow(10, $scope.sigfigs);
+              if (scope.sigfigs > -1) {
+                var multiplier = Math.pow(10, scope.sigfigs);
                 px = Math.round(px * multiplier) / multiplier;
                 py = Math.round(py * multiplier) / multiplier;
               }
-              $scope.points[name] = {
+              scope.points[name] = {
                 x: px,
                 y: py,
                 isSet: true
@@ -115,39 +118,39 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
             //if both points are created, draw line and set response
             if (params.points.A && params.points.B) {
-              $scope.graphCoords = [params.points.A.x + "," + params.points.A.y, params.points.B.x + "," + params.points.B.y];
+              scope.graphCoords = [params.points.A.x + "," + params.points.A.y, params.points.B.x + "," + params.points.B.y];
               var slope = (params.points.A.y - params.points.B.y) / (params.points.A.x - params.points.B.x);
               var yintercept = params.points.A.y - (params.points.A.x * slope);
-              $scope.equation = "y=" + slope + "x+" + yintercept;
-              $scope.graphCallback({
+              scope.equation = "y=" + slope + "x+" + yintercept;
+              scope.graphCallback({
                 graphStyle: {},
                 drawShape: {
                   line: ["A", "B"]
                 }
               });
             } else {
-              $scope.graphCoords = null;
+              scope.graphCoords = null;
             }
 
-            var phase = $scope.$root.$$phase;
+            var phase = scope.$root.$$phase;
             if (phase !== '$apply' && phase !== '$digest') {
-              $scope.$apply();
+              scope.$apply();
             }
           }
         };
 
-        $scope.lockGraph = function() {
-          $scope.locked = true;
-          $scope.graphCallback({
+        scope.lockGraph = function() {
+          scope.locked = true;
+          scope.graphCallback({
             lockGraph: true
           });
         };
 
-        $scope.renewResponse = function(response) {
+        scope.renewResponse = function(response) {
           if (response && response.A && response.B) {
             var A = response.A;
             var B = response.B;
-            $scope.points = {
+            scope.points = {
               A: {
                 x: A.x,
                 y: A.y
@@ -161,7 +164,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           return response;
         };
 
-        $scope.$watch('points', function(points) {
+        scope.$watch('points', function(points) {
           function checkCoords(coords) {
             return coords && !isNaN(coords.x) && !isNaN(coords.y);
           }
@@ -173,30 +176,27 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
             }
           });
 
-          if ($scope.graphCallback) {
-            $scope.graphCallback({
+          if (scope.graphCallback) {
+            scope.graphCallback({
               points: graphPoints
             });
           }
         }, true);
 
-        $scope.undo = function() {
-          if (!$scope.locked && $scope.points.B && $scope.points.B.isSet) {
-            $scope.points.B = {};
-          } else if (!$scope.locked && $scope.points.A && $scope.points.A.isSet) {
-            $scope.points.A = {};
+        scope.undo = function() {
+          if (!scope.locked && scope.points.B && scope.points.B.isSet) {
+            scope.points.B = {};
+          } else if (!scope.locked && scope.points.A && scope.points.A.isSet) {
+            scope.points.A = {};
           }
         };
 
-        $scope.startOver = function() {
-          if (!$scope.locked) {
-            $scope.points.B = {};
-            $scope.points.A = {};
+        scope.startOver = function() {
+          if (!scope.locked) {
+            scope.points.B = {};
+            scope.points.A = {};
           }
         };
-      },
-
-      link: function(scope, element, attrs) {
 
         scope.inputStyle = {
           width: "40px"
@@ -308,6 +308,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
             }
 
             var graphAttrs = createGraphAttributes(config);
+            scope.showInputs = config.showInputs;
 
             graphContainer.attr(graphAttrs);
             graphContainer.css({
@@ -316,7 +317,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
             });
             $compile(graphContainer)(scope);
 
-            if (dataAndSession.session) {
+            if (dataAndSession.session && dataAndSession.session.answers) {
               scope.points = dataAndSession.session.answers;
             }
 
@@ -347,6 +348,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           },
 
           setResponse: function(response) {
+            if (!response) return;
             scope.feedback = response && response.feedback;
             scope.response = response;
             scope.correctClass = response.correctness;
