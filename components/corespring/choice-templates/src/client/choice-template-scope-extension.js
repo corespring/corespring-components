@@ -37,7 +37,15 @@ exports.factory = [
         };
 
         scope.togglePartialScoring = function() {
-          scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
+          if (!_.isFunction(scope.isSingleChoice) || !scope.isSingleChoice()) {
+            scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
+          }
+        };
+
+        scope.partialScoring = function() {
+          return (_.isFunction(scope.isSingleChoice))
+            ? (!scope.isSingleChoice() && scope.fullModel.allowPartialScoring)
+            : scope.fullModel.allowPartialScoring;
         };
 
         scope.removeScoringScenario = function(scoringScenario) {
