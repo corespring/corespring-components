@@ -147,7 +147,7 @@ var main = [
       '    </div>',
            ChoiceTemplates.inputHolder('Problem Area', answerArea),
            ChoiceTemplates.inputHolder('Choices', choiceArea),
-           ChoiceTemplates.inputHolder('Feedback', feedback),
+           ChoiceTemplates.inputHolder('', feedback),
       '  </div>',
       '  <div navigator-panel="Scoring">',
       '    <div>',

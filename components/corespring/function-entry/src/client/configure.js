@@ -55,10 +55,6 @@ var main = [
       '           <checkbox id="showHelp" ng-model="fullModel.model.config.showFormattingHelp">Show student formatting help</checkbox>',
       '         </div>',
 
-      '         <div ng-click="feedbackOn = !feedbackOn" style="margin-top: 10px"><i',
-      '           class="fa fa-{{feedbackOn ? \'minus\' : \'plus\'}}-square-o"></i><span',
-      '           style="margin-left: 3px">Feedback</span>',
-      '         </div>',
       '         <div feedback-panel>',
       '           <div feedback-selector',
       '                fb-sel-label="If correct, show"',

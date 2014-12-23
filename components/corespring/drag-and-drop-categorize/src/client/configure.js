@@ -155,7 +155,7 @@ var main = [
       '    </div>',
            ChoiceTemplates.inputHolder('Categories', categories),
            ChoiceTemplates.inputHolder('Choices', choiceArea),
-           ChoiceTemplates.inputHolder('Feedback', feedback),
+           ChoiceTemplates.inputHolder('', feedback),
       '  </div>',
       '  <div navigator-panel="Scoring">',
       '    <div>',
