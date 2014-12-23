@@ -96,7 +96,10 @@ var main = ['$compile', '$modal', '$rootScope',
             $scope.graphCallback({
               graphStyle: {}
             });
-            $scope.$apply();
+            var phase = $scope.$root.$$phase;
+            if (phase !== '$apply' && phase !== '$digest') {
+              $scope.$apply();
+            }
           } else {
             $scope.pointResponse = null;
           }
@@ -235,8 +238,8 @@ var main = ['$compile', '$modal', '$rootScope',
 
         };
 
-        function updateFeedbackVisiblity(){
-            scope.isFeedbackVisible = scope.feedback && scope.model.config.showFeedback;
+        function updateFeedbackVisiblity() {
+          scope.isFeedbackVisible = scope.feedback && scope.model.config.showFeedback;
         }
 
         scope.containerBridge = {
@@ -314,11 +317,10 @@ var main = ['$compile', '$modal', '$rootScope',
               });
               scope.correctResponse = response.correctResponse;
             }
-
-            scope.lockGraph();
           },
 
-          setMode: function(newMode) {},
+          setMode: function(newMode) {
+          },
 
           reset: function() {
             scope.unlockGraph();
@@ -352,6 +354,13 @@ var main = ['$compile', '$modal', '$rootScope',
 
         };
 
+        scope.$watch('editable', function(e) {
+          if (!_.isUndefined(e) && e === false) {
+            scope.graphCallback({
+              lockGraph: true
+            });
+          }
+        });
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
       }
