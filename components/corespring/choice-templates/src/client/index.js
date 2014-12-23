@@ -6,8 +6,7 @@ exports.service = ['$log',
   'ChoiceTemplateScopeExtension',
   'MiniWiggiScopeExtension',
   'ServerLogic',
-  '$timeout',
-  function($log, ChoiceTemplateScopeExtension, MiniWiggiScopeExtension, ServerLogic, $timeout) {
+  function($log, ChoiceTemplateScopeExtension, MiniWiggiScopeExtension, ServerLogic) {
 
 
     function ChoiceTemplates() {
