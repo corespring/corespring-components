@@ -205,6 +205,10 @@ var main = [
             $scope.choicesSortableOptions.disabled = true;
           };
 
+          $scope.isSingleChoice = function() {
+            return $scope.fullModel.correctResponse.length < 2;
+          };
+
           $scope.itemClick = function($event) {
             function isField($event) {
               return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
