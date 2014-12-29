@@ -79,7 +79,6 @@ var main = [
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
-        MathJaxService.parseDomForMath();
       }
     };
   }
@@ -96,7 +95,6 @@ var helpPopover = [
       link: function(scope, element, attrs) {
 
         var equationGuide = [
-          '<div class="mathjax-cache" style="visibility: hidden; position: absolute">',
           '<ul>',
           '    <li>For \\(2 \\cdot 2\\), enter \\( 2*2 \\)</li>',
           '    <li>For \\( 3y \\), enter \\( 3y \\) or \\( 3*y \\)</li>',
@@ -104,17 +102,15 @@ var helpPopover = [
           '    <li>For \\( \\frac{1}{xy} \\), enter \\( 1 / (x*y) \\)</li>',
           '    <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
           '    <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
-          '</ul>',
-          '</div>'
+          '</ul>'
         ].join('');
-
-        $(element).append(equationGuide);
-        MathJaxService.parseDomForMath(0, element[0]);
 
         scope.popover = $(element)
           .popover({title: "Hints", content: function() {
-            return $(element).find('.mathjax-cache').html();
-          }, placement: "bottom", html: true});
+            return equationGuide;
+          }, placement: "bottom", html: true}).on('shown.bs.popover', function () {
+            MathJaxService.parseDomForMath(0);
+          });
 
 
         scope.$watch('helpPopoverVisible', function(n, prev) {
