@@ -50,7 +50,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
           this.paper.remove();
         }
 
-        this.paper = RaphaelDecorator.decoratePaper(Raphael(element));
+        this.paper = RaphaelDecorator.decoratePaper(Raphael(element, options.width, options.height));
         this.paper.rect(0, 0, options.width, options.height);
 
         this.width = options.width;
