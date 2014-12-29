@@ -2,6 +2,8 @@ var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
 var fb = require('corespring.server-shared.server.feedback-utils');
 
+fb.defaults.incorrect = "Good try!";
+fb.keys.DEFAULT_INCORRECT_FEEDBACK = fb.defaults.incorrect;
 exports.keys = fb.keys;
 
 exports.isCorrect = function(answer, correctEquation, options) {

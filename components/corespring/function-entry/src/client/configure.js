@@ -16,7 +16,7 @@ var main = [
       '           <span class="">y = </span>',
       '           <span>',
       '           <input type="text" class="form-control equation-input" ng-model="fullModel.correctResponse.equation" placeholder="Enter the equation here."',
-      '                help-popover=""  />',
+      '                 />',
       '           </span>',
       '         </div>',
       '         <p>When the student submits an answer the answer will be evaluated against the expression by generating test points. ',
