@@ -57,7 +57,8 @@
       "orientation": "vertical",
       "shuffle": false,
       "choiceType": "radio",
-      "choiceLabels": "letters"
+      "choiceLabels": "letters",
+      "showCorrectAnswer": "separately"
     }
   }
 }

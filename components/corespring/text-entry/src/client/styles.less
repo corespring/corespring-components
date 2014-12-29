@@ -35,16 +35,23 @@
     max-width: 400px;
     white-space: nowrap;
   }
+
+  &.popupFeedback {
+    .cs-text-entry__text-input-holder {
+      &.warning, &.correct, &.incorrect, &.partial {
+        cursor: pointer;
+      }
+      .form-control[disabled], .form-control[readonly] {
+        cursor: pointer;
+      }
+    }
+  }
 }
 
 .cs-text-entry__text-input-holder {
   position: relative;
   &.warning, &.correct, &.incorrect, &.partial {
     margin-right: 30px;
-    cursor: pointer;
-  }
-  .form-control[disabled], .form-control[readonly] {
-    cursor: pointer;
   }
   .popover {
     visibility: hidden;

@@ -260,11 +260,18 @@ var main = [
       });
 
       scope.choiceClass = function(o) {
+        var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+        var res = isSelected ? "selected " : "";
+
         if (_.isUndefined(o.correct)) {
-          return "default";
+          return res + "default";
         }
 
-        return (o.correct && (scope.answer.choice === o.value || scope.answer.choices[o.value])) ? 'correct' : 'incorrect';
+        if (o.correct && scope.question.config.showCorrectAnswer === "inline") {
+          res = "selected ";
+        }
+
+        return res + (o.correct ? 'correct' : 'incorrect');
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -272,7 +279,7 @@ var main = [
 
 
     var seeAnswer = [
-      '  <div class="answer-holder" ng-show="response && response.correctness != \'correct\'">',
+      '  <div class="answer-holder" ng-show="response && response.correctness != \'correct\' && question.config.showCorrectAnswer === \'separately\'">',
       '    <div class="panel panel-default">',
       '      <div class="panel-heading">',
       '        <h4 class="panel-title" ng-click="bridge.answerVisible = !bridge.answerVisible"><i class="answerIcon fa fa-eye{{bridge.answerVisible ? \'-slash\' : \'\'}}"></i>{{bridge.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
@@ -307,14 +314,14 @@ var main = [
     var verticalTemplate = [
       '<div class="choices-container" ng-class="question.config.orientation">',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
-      '       ng-click="onClickChoice(o)" ng-class="{selected: answer.choice == o.value || answer.choices[o.value], correct: o.correct, incorrect: o.correct == false}">',
-      '    <div class="choice-holder" ng-class="choiceClass(o)">',
+      '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
+      '    <div class="choice-holder" >',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div class="checkbox-button" ng-class="{selected: answer.choices[o.value]}" />',
+      '          <div class="checkbox-button" />',
       '        </div>',
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
-      '          <div class="radio-button" ng-class="{selected: answer.choice == o.value}" />',
+      '          <div class="radio-button"  />',
       '        </div>',
       '      </span>',
       '     <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
@@ -324,7 +331,7 @@ var main = [
       '       <span ng-switch-default ng-bind-html-unsafe="o.label"></span>',
       '     </div>',
       '    </div>',
-      '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value]">',
+      '    <div class="choice-feedback-holder" ng-show="answer.choice == o.value || answer.choices[o.value] || (o.correct && question.config.showCorrectAnswer !== \'separately\')">',
       '      <div class="panel panel-default feedback-panel {{o.correct ? \'correct\' : \'incorrect\'}}" ng-class="{visible: o.feedback}" style="display: none">',
       '        <div class="panel-heading">&nbsp;</div>',
       '        <div class="panel-body">',
