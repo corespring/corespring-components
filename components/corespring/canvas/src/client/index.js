@@ -138,20 +138,20 @@ exports.service = ['$log',
         var origin = new JXG.Coords(JXG.COORDS_BY_USER, [0, 0], this.board);
         var offset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [origin.scrCoords[1] - 22, origin.scrCoords[2] - 15], this.board);
         var that = this;
-          var text = this.board.create('text', [
-            function() {
-              return point.X() + offset.usrCoords[1];
-            },
-            function() {
-              return point.Y() + offset.usrCoords[2];
-            },
-            function() {
-              return name + (that.showCoordinates ? (' (' + point.X() + ',' + point.Y() + ')') : '');
-            }], {
-            fixed: true
-          });
-          this.texts.push(text);
-        }
+        var text = this.board.create('text', [
+          function() {
+            return point.X() + offset.usrCoords[1];
+          },
+          function() {
+            return point.Y() + offset.usrCoords[2];
+          },
+          function() {
+            return name + (that.showCoordinates ? (' (' + point.X() + ',' + point.Y() + ')') : '');
+          }], {
+          fixed: true
+        });
+        this.texts.push(text);
+      }
       return point;
     };
 
