@@ -34,6 +34,9 @@ var def = ['Canvas',
         var canvas = new Canvas(generateCanvasId(), canvasAttrs);
         //define callbacks
         canvas.on('up', function(e) {
+          if (lockGraph) {
+            return;
+          }
           var coords = canvas.getMouseCoords(e);
           if ((!canvasAttrs.maxPoints || canvas.points.length < canvasAttrs.maxPoints) && !canvas.pointCollision(coords)) {
             addPoint(coords);
@@ -42,30 +45,30 @@ var def = ['Canvas',
         var lockGraph = false;
         var points = {};
         var onPointMove = function(point, coords) {
+          if (coords) {
+            point.moveTo([coords.x, coords.y]);
+          }
+          points[point.name] = {
+            x: point.X(),
+            y: point.Y(),
+            index: point.canvasIndex
+          };
           if (!lockGraph) {
-            if (coords) {
-              point.moveTo([coords.x, coords.y]);
-            }
-            points[point.name] = {
-              x: point.X(),
-              y: point.Y(),
-              index: point.canvasIndex
-            };
             scope.interactionCallback({
               points: points
             });
           }
         };
-        var addPoint = function(coords, ptName) {
-          if (!lockGraph) {
-            var point = canvas.addPoint(coords, ptName);
-            point.on('up', function(e) {
-              onPointMove(point);
-            });
+
+        var addPoint = function(coords, ptName, ptOptions) {
+          var point = canvas.addPoint(coords, ptName, ptOptions);
+          point.on('up', function(e) {
             onPointMove(point);
-            return point;
-          }
+          });
+          onPointMove(point);
+          return point;
         };
+
         var clearBoard = function() {
           while (canvas.points.length > 0) {
             canvas.popPoint();
@@ -104,7 +107,7 @@ var def = ['Canvas',
                     onPointMove(canvasPoint, coords);
                   }
                 } else if (!canvasAttrs.maxPoints || canvas.points.length < canvasAttrs.maxPoints) {
-                  canvasPoint = addPoint(coords);
+                  canvasPoint = addPoint(coords, undefined, {fixed: lockGraph});
                 }
                 if (point.color) {
                   canvas.changePointColor(canvasPoint, point.color);
@@ -133,13 +136,13 @@ var def = ['Canvas',
         }
 
         function drawShapeCallback(drawShape) {
-          if (drawShape.line && !lockGraph) {
+          if (drawShape.line) {
             var pt1 = canvas.getPoint(drawShape.line[0]);
             var pt2 = canvas.getPoint(drawShape.line[1]);
             if (pt1 && pt2) {
               canvas.makeLine([pt1, pt2]);
             }
-          } else if (drawShape.curve && !lockGraph) {
+          } else if (drawShape.curve) {
             canvas.makeCurve(drawShape.curve);
           }
         }

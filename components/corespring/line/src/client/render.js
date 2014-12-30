@@ -123,7 +123,6 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
               var yintercept = params.points.A.y - (params.points.A.x * slope);
               scope.equation = "y=" + slope + "x+" + yintercept;
               scope.graphCallback({
-                graphStyle: {},
                 drawShape: {
                   line: ["A", "B"]
                 }
@@ -141,9 +140,9 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
         scope.lockGraph = function() {
           scope.locked = true;
-          scope.graphCallback({
-            lockGraph: true
-          });
+          if (scope.graphCallback) {
+            scope.graphCallback({lockGraph: true});
+          }
         };
 
         scope.renewResponse = function(response) {
@@ -193,8 +192,27 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
         scope.startOver = function() {
           if (!scope.locked) {
-            scope.points.B = {};
-            scope.points.A = {};
+            var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
+            scope.points = {};
+
+            if (_.isArray(initialValues)) {
+              var pointA = initialValues[0];
+              var pointB = initialValues[1];
+              scope.points = {
+                A: {
+                  x: pointA[0],
+                  y: pointA[1],
+                  isSet: true,
+                  isVisible: false
+                },
+                B: {
+                  x: pointB[0],
+                  y: pointB[1],
+                  isSet: true
+                }
+              };
+            }
+
           }
         };
 
@@ -279,15 +297,17 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
         scope.unlockGraph = function() {
           scope.locked = false;
-          scope.graphCallback({
-            unlockGraph: true
-          });
-          scope.graphCallback({
-            graphStyle: {
-              borderWidth: "0px"
-            },
-            pointsStyle: "blue"
-          });
+          if (_.isFunction(scope.graphCallback)) {
+            scope.graphCallback({
+              unlockGraph: true
+            });
+            scope.graphCallback({
+              graphStyle: {
+                borderWidth: "0px"
+              },
+              pointsStyle: "blue"
+            });
+          }
         };
 
 
@@ -321,23 +341,12 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
               scope.points = dataAndSession.session.answers;
             }
 
-            var initialValues = lineUtils.pointsFromEquation(config.initialCurve);
+            scope.startOver();
 
-            if (_.isArray(initialValues)) {
-              var pointA = initialValues[0];
-              var pointB = initialValues[1];
-              scope.points = {
-                A: {
-                  x: pointA[0],
-                  y: pointA[1],
-                  isSet: true
-                },
-                B: {
-                  x: pointB[0],
-                  y: pointB[1],
-                  isSet: true
-                }
-              };
+            if (config.exhibitOnly) {
+              scope.lockGraph();
+            } else {
+              scope.unlockGraph();
             }
           },
 
@@ -388,6 +397,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           reset: function() {
             scope.feedback = undefined;
             scope.response = undefined;
+            scope.graphCallback({graphStyle: {}});
             scope.unlockGraph();
 
             scope.inputStyle = {
@@ -397,23 +407,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
             scope.correctResponse = undefined;
             scope.points.B = scope.points.A = {};
 
-            var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
-            if (_.isArray(initialValues)) {
-              var pointA = initialValues[0];
-              var pointB = initialValues[1];
-              scope.points = {
-                A: {
-                  x: pointA[0],
-                  y: pointA[1],
-                  isSet: true
-                },
-                B: {
-                  x: pointB[0],
-                  y: pointB[1],
-                  isSet: true
-                }
-              };
-            }
+            scope.startOver();
 
           },
 

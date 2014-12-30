@@ -1,5 +1,5 @@
 /* JSX */
-.jxgbox {
+.line-interaction-view .jxgbox {
     position: relative; /* for IE 7 */
     overflow: hidden;
     background-color: #ffffff;
@@ -16,7 +16,7 @@
         */
 }
 
-.JXGtext {
+.line-interaction-view .JXGtext {
     background-color: transparent; /* May produce artefacts in IE. Solution: setting a color explicitly. */
     font-family: Arial, Helvetica, Geneva;
     padding: 0px;
@@ -27,17 +27,17 @@
     /*border-width:0.4px;*/
 }
 
-.JXGinfobox {
+.line-interaction-view .JXGinfobox {
     border-style: none;
     border-width: 1px;
     border-color: black;
 }
 
-.JXGimage {
+.line-interaction-view .JXGimage {
     opacity: 1.0;
 }
 
-.JXGimageHighlight {
+.line-interaction-view .JXGimageHighlight {
     opacity: 0.6;
     /*
     border-style:solid;
