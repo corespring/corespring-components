@@ -1,5 +1,5 @@
 /* JSX */
-.jxgbox {
+.point-interaction-view .jxgbox {
     position:relative; /* for IE 7 */
     overflow:hidden;
     background-color:#ffffff;
@@ -16,7 +16,7 @@
         */
 }
 
-.JXGtext {
+.point-interaction-view .JXGtext {
     background-color: transparent; /* May produce artefacts in IE. Solution: setting a color explicitly. */
     font-family: Arial, Helvetica, Geneva;
     padding: 0px;
@@ -26,17 +26,17 @@
     /*border-width:0.4px;*/
 }
 
-.JXGinfobox {
+.point-interaction-view .JXGinfobox {
     border-style:none;
     border-width:1px;
     border-color:black;
 }
 
-.JXGimage {
+.point-interaction-view .JXGimage {
     opacity:1.0;
 }
 
-.JXGimageHighlight {
+.point-interaction-view .JXGimageHighlight {
     opacity:0.6;
     /*
     border-style:solid;
@@ -102,6 +102,7 @@
 .point-interaction-view {
 
 }
+
 .point-interaction-view .additional-text p {
   font-family: 'Ubuntu' !important;
   font-style: normal;
