@@ -21,17 +21,20 @@
             {
               "label": "Apple",
               "labelType": "text",
-              "id": "c1"
+              "id": "c1",
+              "moveOnDrag": true
             },
             {
               "label": "Pear",
               "labelType": "text",
-              "id": "c2"
+              "id": "c2",
+              "moveOnDrag": true
             },
             {
               "label": "Banana",
               "labelType": "text",
-              "id": "c3"
+              "id": "c3",
+              "moveOnDrag": true
             }
           ],
           "config": {
