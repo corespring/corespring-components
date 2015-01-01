@@ -15,7 +15,9 @@ var def = function() {
           $(element).find('.answer-collapse').css('display', 'none');
           $(element).find('.answer-collapse').slideDown(400);
         } else {
-          $(element).find('.answer-collapse').slideUp(400);
+          $(element).find('.answer-collapse').slideUp(400, 'swing', function() {
+            $(element).find('.answer-collapse').attr('style','');
+          });
         }
       });
     },
