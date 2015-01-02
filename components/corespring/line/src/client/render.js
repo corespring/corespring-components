@@ -333,7 +333,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
             if (!response) {
               return;
             }
-            console.log('line resp: ', response);
             scope.feedback = response && response.feedback;
             scope.response = response;
             scope.correctClass = response.correctness;
