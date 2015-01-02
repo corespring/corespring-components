@@ -29,7 +29,7 @@ var main = [
           '    fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
           '    fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
           '  </div>',
-          '</div>',
+          '</div>'
         ].join("");
 
         return [

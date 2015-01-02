@@ -46,7 +46,7 @@ var main = [
       '         </div>',
       '       </div>',
       '     </div>',
-      '  </div>',
+      '  </div>'
     ].join("\n");
 
 

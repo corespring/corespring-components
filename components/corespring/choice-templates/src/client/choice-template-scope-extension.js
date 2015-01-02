@@ -43,8 +43,7 @@ exports.factory = [
         };
 
         scope.partialScoring = function() {
-          return (_.isFunction(scope.isSingleChoice))
-            ? (!scope.isSingleChoice() && scope.fullModel.allowPartialScoring)
+          return (_.isFunction(scope.isSingleChoice)) ? (!scope.isSingleChoice() && scope.fullModel.allowPartialScoring)
             : scope.fullModel.allowPartialScoring;
         };
 
