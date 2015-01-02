@@ -53,7 +53,7 @@ component = {
   ]
 };
 
-describe.only('inline-choice server logic', function() {
+describe('inline-choice server logic', function() {
 
   helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'respond', server.DEFAULT_INCORRECT_FEEDBACK);
 
