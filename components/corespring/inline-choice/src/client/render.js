@@ -1,9 +1,3 @@
-var fb = require('corespring.server-shared.server.feedback-utils');
-
-fb.defaults.incorrect = "Good try, but <correct answer> is the correct answer.";
-fb.keys.DEFAULT_INCORRECT_FEEDBACK = fb.defaults.incorrect;
-exports.keys = fb.keys;
-
 var link, main;
 
 link = function($sce, $timeout) {

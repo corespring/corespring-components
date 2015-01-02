@@ -129,7 +129,7 @@ describe('inline-choice server logic', function() {
           correct: false
         }
       };
-      response.should.eql(expected);
+      response.should.eql(server.defaults.incorrect);
     });
 
   });
