@@ -19,7 +19,8 @@ var main = [
       '               fb-sel-custom-feedback="fullModel.feedback.feedback"',
       '               fb-sel-default-feedback="{{defaultIsAnswerFeedback}}"',
       '          ></div>',
-      '    </div>',      '  </div>',
+      '    </div>',
+      '  </div>',
       '</div>'].join('\n');
 
     var scoring = [
