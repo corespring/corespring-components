@@ -11,6 +11,18 @@ var feedbackByValue = function(q, v) {
 };
 
 var userResponseFeedback = function(q, answer) {
+
+  function correctResponse(question) {
+    var maybeAnswer = _.find(question.model.choices, function(choice) {
+      return choice.value === question.correctResponse;
+    });
+    return maybeAnswer ? maybeAnswer.label : undefined;
+  }
+
+  function replaceVariables(question, string) {
+    return string.replace("<correct answer>", correctResponse(question));
+  }
+
   var fb, userChoice;
   userChoice = answer;
   fb = feedbackByValue(q, userChoice);
@@ -18,7 +30,7 @@ var userResponseFeedback = function(q, answer) {
     fb.correct = isCorrectChoice(q, userChoice);
 
     if (fb.feedbackType === 'default') {
-      fb.feedback = fb.correct ? exports.keys.DEFAULT_CORRECT_FEEDBACK : exports.keys.DEFAULT_INCORRECT_FEEDBACK;
+      fb.feedback = replaceVariables(q, fb.correct ? exports.keys.DEFAULT_CORRECT_FEEDBACK : exports.keys.DEFAULT_INCORRECT_FEEDBACK);
     } else if (fb.feedbackType === 'none') {
       delete fb.feedback;
     }
