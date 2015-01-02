@@ -209,6 +209,38 @@ var main = ['$compile', '$modal', '$rootScope',
           $compile(graphContainer)(scope);
         }
 
+        function renderSolution() {
+          var solutionScope = scope.$new();
+          var solutionContainer = element.find('.solution-container');
+          var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
+          solutionContainer.attr(solutionGraphAttrs);
+          solutionContainer.css({
+            width: Math.min(scope.containerWidth, 500),
+            height: Math.min(scope.containerHeight, 500)
+          });
+          solutionScope.interactionCallback = function() {
+          };
+          solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
+            if (solutionGraphCallback) {
+              var response = scope.correctResponse;
+              var points = [];
+              for (var i = 0; i < response.length; i++) {
+                var point = response[i].split(",");
+                points.push({
+                  x: point[0],
+                  y: point[1]
+                });
+              }
+              solutionGraphCallback({
+                points: points,
+                lockGraph: true
+              });
+            }
+          });
+
+          $compile(solutionContainer)(solutionScope);
+        }
+
         scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
@@ -284,36 +316,7 @@ var main = ['$compile', '$modal', '$rootScope',
               scope.correctResponse = response.correctResponse;
 
               if (response.correctResponse) {
-
-                var solutionScope = scope.$new();
-                var solutionContainer = element.find('.solution-container');
-                var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
-                solutionContainer.attr(solutionGraphAttrs);
-                solutionContainer.css({
-                  width: Math.min(scope.containerWidth, 500),
-                  height: Math.min(scope.containerHeight, 500)
-                });
-                solutionScope.interactionCallback = function() {
-                };
-                solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
-                  if (solutionGraphCallback) {
-                    var response = scope.correctResponse;
-                    var points = [];
-                    for (var i = 0; i < response.length; i++) {
-                      var point = response[i].split(",");
-                      points.push({
-                        x: point[0],
-                        y: point[1]
-                      });
-                    }
-                    solutionGraphCallback({
-                      points: points,
-                      lockGraph: true
-                    });
-                  }
-                });
-
-                $compile(solutionContainer)(solutionScope);
+                renderSolution();
               }
             }
           },

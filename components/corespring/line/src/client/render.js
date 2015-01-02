@@ -288,6 +288,33 @@ var main = ['$compile', '$rootScope', "LineUtils",
           }
         }
 
+        function renderSolution(response) {
+          var solutionScope = scope.$new();
+          var solutionContainer = element.find('.solution-graph');
+          var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
+          solutionContainer.attr(solutionGraphAttrs);
+          solutionContainer.css({
+            width: Math.min(scope.containerWidth, 500),
+            height: Math.min(scope.containerHeight, 500)
+          });
+          solutionScope.interactionCallback = function() {
+          };
+          solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
+            if (solutionGraphCallback) {
+              solutionGraphCallback({
+                drawShape: {
+                  curve: function(x) {
+                    return eval(response.correctResponse.expression);
+                  }
+                },
+                lockGraph: true
+              });
+            }
+          });
+
+          $compile(solutionContainer)(solutionScope);
+        }
+
         scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
@@ -361,31 +388,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
               scope.correctResponse = response.correctResponse;
 
               if (response.correctResponse) {
-
-                var solutionScope = scope.$new();
-                var solutionContainer = element.find('.solution-graph');
-                var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
-                solutionContainer.attr(solutionGraphAttrs);
-                solutionContainer.css({
-                  width: Math.min(scope.containerWidth, 500),
-                  height: Math.min(scope.containerHeight, 500)
-                });
-                solutionScope.interactionCallback = function() {
-                };
-                solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
-                  if (solutionGraphCallback) {
-                    solutionGraphCallback({
-                      drawShape: {
-                        curve: function(x) {
-                          return eval(response.correctResponse.expression);
-                        }
-                      },
-                      lockGraph: true
-                    });
-                  }
-                });
-
-                $compile(solutionContainer)(solutionScope);
+                renderSolution(response);
               }
             }
 
