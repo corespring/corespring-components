@@ -130,12 +130,6 @@ var main = [
       '      </div>',
       '    </div>',
       '  </div>',
-
-      '  <div class="row">',
-      '    <div class="col-xs-12">',
-      '      <div summary-feedback-input ng-model="fullModel.comments"></div>',
-      '    </div>',
-      '  </div>',
       '</div>'
     ].join('\n');
 
