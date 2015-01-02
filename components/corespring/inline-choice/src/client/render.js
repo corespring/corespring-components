@@ -77,7 +77,6 @@ link = function($sce, $timeout) {
       Tooltip.hide();
     }
 
-
     function setFeedback(choices, response) {
       _(choices).each(function (c) {
         if (response.feedback && response.feedback[c.value]) {
