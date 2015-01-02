@@ -30,7 +30,6 @@ var main = [
           '    fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
           '  </div>',
           '</div>',
-          '<div summary-feedback-input ng-model="fullModel.comments"></div>'
         ].join("");
 
         return [
