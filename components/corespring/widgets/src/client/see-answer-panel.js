@@ -15,17 +15,19 @@ var def = function() {
           $(element).find('.answer-collapse').css('display', 'none');
           $(element).find('.answer-collapse').slideDown(400);
         } else {
-          $(element).find('.answer-collapse').slideUp(400);
+          $(element).find('.answer-collapse').slideUp(400, 'swing', function() {
+            $(element).find('.answer-collapse').attr('style','');
+          });
         }
       });
     },
     template: [
       '  <div class="answer-holder">',
       '    <div class="panel panel-default">',
-      '      <div class="panel-heading">',
-      '        <h4 class="panel-title" ng-click="answerVisible = !answerVisible"><i class="answerIcon fa fa-eye{{answerVisible ? \'-slash\' : \'\'}}"></i>{{answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
+      '      <div class="panel-heading" ng-click="answerVisible = !answerVisible">',
+      '        <h4 class="panel-title" ><i class="answerIcon fa fa-eye{{answerVisible ? \'-slash\' : \'\'}}"></i>{{answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
       '      </div>',
-      '      <div class="answer-collapse" style="height: 0px">',
+      '      <div class="answer-collapse" ng-class="{answerVisible: answerVisible}">',
       '        <div class="panel-body" ng-transclude>',
       '        </div>',
       '      </div>',

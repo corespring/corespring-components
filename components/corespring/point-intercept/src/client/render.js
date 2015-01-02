@@ -3,33 +3,33 @@ var main = ['$compile', '$modal', '$rootScope',
     return {
       template: [
         "<div class='point-interaction-view'>",
-        "<div class='graph-interaction'>",
-        "   <div class='additional-text' ng-show='additionalText'>",
-        "       <p ng-bind-html-unsafe='additionalText'></p>",
-        "   </div>",
-        "   <div class='graph-controls' ng-show='showInputs' ng-hide='response'>",
-        "      <div class='scale-display'>",
-        "        <span>scale={{scale}}</span>",
-        "         <div class='action undo'>",
-        "           <a title='Undo' ng-click='undo()'>",
-        "             <i class='fa fa-undo'/>",
-        "           </a>",
-        "         </div>",
-        "         <div class='action start-over'>",
-        "           <a title='Start Over' ng-click='startOver()'>",
-        "             <i class='fa fa-refresh'/>",
-        "           </a>",
-        "         </div>",
-        "      </div>",
-        "   </div>",
-        "   <div class='graph-container'></div>",
-        "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See Solution</a></div>",
-        "   <div id='initialParams' ng-transclude></div>",
-        "</div>",
-        '<div ng-show="isFeedbackVisible">',
-        '  <div feedback="feedback" correct-class="{{correctClass}}"></div>',
-        '</div>',
-        '<div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
+        "  <div class='graph-interaction'>",
+        "     <div class='additional-text' ng-show='additionalText'>",
+        "         <p ng-bind-html-unsafe='additionalText'></p>",
+        "     </div>",
+        "     <div class='graph-controls' ng-show='showInputs' ng-hide='response'>",
+        "        <div class='scale-display'>",
+        "          <span>scale={{scale}}</span>",
+        "           <div class='action undo'>",
+        "             <a title='Undo' ng-click='undo()'>",
+        "               <i class='fa fa-undo'/>",
+        "             </a>",
+        "           </div>",
+        "           <div class='action start-over'>",
+        "             <a title='Start Over' ng-click='startOver()'>",
+        "               <i class='fa fa-refresh'/>",
+        "             </a>",
+        "           </div>",
+        "        </div>",
+        "     </div>",
+        "     <div class='graph-container'></div>",
+        "     <div id='initialParams' ng-transclude></div>",
+        "  </div>",
+        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '  <div see-answer-panel class="solution-panel" ng-class="{panelVisible: correctResponse}">',
+        "    <div class='solution-container'></div>",
+        "  </div>",
+        '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         "</div>"
       ].join("\n"),
       restrict: 'AE',
@@ -38,6 +38,7 @@ var main = ['$compile', '$modal', '$rootScope',
       controller: function($scope) {
         $scope.submissions = 0;
         $scope.points = {};
+        $scope.solutionView = false;
         this.setInitialParams = function(initialParams) {
           $scope.initialParams = initialParams;
         };
@@ -118,9 +119,7 @@ var main = ['$compile', '$modal', '$rootScope',
             unlockGraph: true
           });
           $scope.graphCallback({
-            graphStyle: {
-              borderWidth: "0px"
-            },
+            graphStyle: {},
             pointsStyle: "blue"
           });
         };
@@ -177,10 +176,10 @@ var main = ['$compile', '$modal', '$rootScope',
 
       link: function(scope, element, attrs) {
 
-        var createGraphAttributes = function(config) {
+        var createGraphAttributes = function(config, graphCallback) {
           return {
             "jsx-graph": "",
-            "graph-callback": "graphCallback",
+            "graph-callback": graphCallback || "graphCallback",
             "interaction-callback": "interactionCallback",
             domain: parseInt(config.domain ? config.domain : 10, 10),
             range: parseInt(config.range ? config.range : 10, 10),
@@ -210,36 +209,36 @@ var main = ['$compile', '$modal', '$rootScope',
           $compile(graphContainer)(scope);
         }
 
-        scope.seeSolution = function() {
-          scope.solutionScope = $rootScope.$new();
-          scope.solutionScope.answers = scope.correctResponse;
-          scope.solutionScope.config = scope.config;
-
-          $modal.open({
-            controller: function($scope, $modalInstance) {
-              $scope.ok = function() {
-                $modalInstance.dismiss('cancel');
-              };
-            },
-            template: [
-              '   <div class="modal-header">',
-              '     <h3>Solution</h3>',
-              '   </div>',
-              '   <div class="modal-body">',
-              '     <span corespring-point-intercept="" solution-view="true" id="solution"></span>',
-              '   </div>',
-              '   <div class="modal-footer">',
-              '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-              '   </div>'
-            ].join(""),
-            backdrop: true,
-            scope: scope.solutionScope
+        function renderSolution() {
+          var solutionScope = scope.$new();
+          var solutionContainer = element.find('.solution-container');
+          var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
+          solutionContainer.attr(solutionGraphAttrs);
+          solutionContainer.css({
+            width: Math.min(scope.containerWidth, 500),
+            height: Math.min(scope.containerHeight, 500)
+          });
+          solutionScope.interactionCallback = function() {
+          };
+          solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
+            if (solutionGraphCallback) {
+              var response = scope.correctResponse;
+              var points = [];
+              for (var i = 0; i < response.length; i++) {
+                var point = response[i].split(",");
+                points.push({
+                  x: point[0],
+                  y: point[1]
+                });
+              }
+              solutionGraphCallback({
+                points: points,
+                lockGraph: true
+              });
+            }
           });
 
-        };
-
-        function updateFeedbackVisiblity() {
-          scope.isFeedbackVisible = scope.feedback && scope.model.config.showFeedback;
+          $compile(solutionContainer)(solutionScope);
         }
 
         scope.containerBridge = {
@@ -262,7 +261,6 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.maxPoints = config.maxPoints;
             scope.showInputs = true;//(config.showInputs ? config.showInputs : 'true') === 'true';
 
-
             var containerWidth, containerHeight;
             var graphContainer = element.find('.graph-container');
             if (config.graphWidth && config.graphHeight) {
@@ -271,6 +269,8 @@ var main = ['$compile', '$modal', '$rootScope',
             } else {
               containerHeight = containerWidth = graphContainer.width();
             }
+            scope.containerWidth = containerWidth;
+            scope.containerHeight = containerHeight;
 
             var graphAttrs = createGraphAttributes(config);
 
@@ -280,6 +280,7 @@ var main = ['$compile', '$modal', '$rootScope',
               height: containerHeight
             });
             $compile(graphContainer)(scope);
+
 
             if (dataAndSession.session) {
               scope.answers = dataAndSession.session.answers;
@@ -295,9 +296,6 @@ var main = ['$compile', '$modal', '$rootScope',
           setResponse: function(response) {
             scope.feedback = response && response.feedback;
             scope.response = response;
-
-            updateFeedbackVisiblity();
-
             scope.correctClass = response.correctness;
             if (response && response.correctness === "correct") {
               scope.graphCallback({
@@ -316,6 +314,10 @@ var main = ['$compile', '$modal', '$rootScope',
                 pointsStyle: "red"
               });
               scope.correctResponse = response.correctResponse;
+
+              if (response.correctResponse) {
+                renderSolution();
+              }
             }
           },
 
@@ -328,6 +330,9 @@ var main = ['$compile', '$modal', '$rootScope',
             scope.graphCallback({
               points: {}
             });
+
+            var solutionContainer = element.find('.solution-container');
+            solutionContainer.empty();
 
             scope.response = undefined;
             scope.feedback = undefined;

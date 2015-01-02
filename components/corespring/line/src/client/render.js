@@ -1,6 +1,6 @@
 /* jshint evil: true */
-var main = ['$compile', '$modal', '$rootScope', "LineUtils",
-  function($compile, $modal, $rootScope, LineUtils) {
+var main = ['$compile', '$rootScope', "LineUtils",
+  function($compile, $rootScope, LineUtils) {
     var lineUtils = new LineUtils();
     return {
       template: [
@@ -44,9 +44,14 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
         "      <div class='clearfix'> </div>",
         "   </div>",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
-        "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See Solution</a></div>",
         "</div>",
-        '<div feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '<div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '<div see-answer-panel class="solution-panel" ng-class="{panelVisible: correctResponse}">',
+        "  <div class='solution-container'>",
+        "     <span>The correct equation is {{correctResponse.equation}}</span>",
+        "     <div class='solution-graph'></div>",
+        "  </div>",
+        "</div>",
         '<div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         "</div>"
       ].join(""),
@@ -202,10 +207,10 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           width: "40px"
         };
 
-        var createGraphAttributes = function(config) {
+        var createGraphAttributes = function(config, graphCallback) {
           return {
             "jsx-graph": "",
-            "graph-callback": "graphCallback",
+            "graph-callback": graphCallback || "graphCallback",
             "interaction-callback": "interactionCallback",
             maxPoints: 2,
             domain: parseInt(config.domain ? config.domain : 10, 10),
@@ -249,34 +254,6 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
         }
 
-        scope.seeSolution = function() {
-          scope.solutionScope = $rootScope.$new();
-          scope.solutionScope.answer = scope.correctResponse;
-          scope.solutionScope.config = scope.config;
-
-          $modal.open({
-            controller: function($scope, $modalInstance) {
-              $scope.ok = function() {
-                $modalInstance.dismiss('cancel');
-              };
-            },
-            template: [
-              '   <div class="modal-header">',
-              '     <h3>Solution</h3>',
-              '   </div>',
-              '   <div class="modal-body">',
-              '     <span corespring-line="" solution-view="true" id="solution"></span>',
-              '   </div>',
-              '   <div class="modal-footer">',
-              '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-              '   </div>'
-            ].join(""),
-            backdrop: true,
-            scope: scope.solutionScope
-          });
-
-        };
-
         scope.unlockGraph = function() {
           scope.locked = false;
           scope.graphCallback({
@@ -284,12 +261,59 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           });
           scope.graphCallback({
             graphStyle: {
-              borderWidth: "0px"
             },
             pointsStyle: "blue"
           });
         };
 
+
+        function drawInitialLine(config) {
+          var initialValues = lineUtils.pointsFromEquation(config.initialCurve);
+
+          if (_.isArray(initialValues)) {
+            var pointA = initialValues[0];
+            var pointB = initialValues[1];
+            scope.points = {
+              A: {
+                x: pointA[0],
+                y: pointA[1],
+                isSet: true
+              },
+              B: {
+                x: pointB[0],
+                y: pointB[1],
+                isSet: true
+              }
+            };
+          }
+        }
+
+        function renderSolution(response) {
+          var solutionScope = scope.$new();
+          var solutionContainer = element.find('.solution-graph');
+          var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
+          solutionContainer.attr(solutionGraphAttrs);
+          solutionContainer.css({
+            width: Math.min(scope.containerWidth, 500),
+            height: Math.min(scope.containerHeight, 500)
+          });
+          solutionScope.interactionCallback = function() {
+          };
+          solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
+            if (solutionGraphCallback) {
+              solutionGraphCallback({
+                drawShape: {
+                  curve: function(x) {
+                    return eval(response.correctResponse.expression);
+                  }
+                },
+                lockGraph: true
+              });
+            }
+          });
+
+          $compile(solutionContainer)(solutionScope);
+        }
 
         scope.containerBridge = {
 
@@ -315,30 +339,15 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
               width: containerWidth,
               height: containerHeight
             });
+            scope.containerWidth = containerWidth;
+            scope.containerHeight = containerHeight;
+
             $compile(graphContainer)(scope);
 
             if (dataAndSession.session && dataAndSession.session.answers) {
               scope.points = dataAndSession.session.answers;
             }
-
-            var initialValues = lineUtils.pointsFromEquation(config.initialCurve);
-
-            if (_.isArray(initialValues)) {
-              var pointA = initialValues[0];
-              var pointB = initialValues[1];
-              scope.points = {
-                A: {
-                  x: pointA[0],
-                  y: pointA[1],
-                  isSet: true
-                },
-                B: {
-                  x: pointB[0],
-                  y: pointB[1],
-                  isSet: true
-                }
-              };
-            }
+            drawInitialLine(config);
           },
 
           getSession: function() {
@@ -377,6 +386,10 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
                 border: 'thin solid red'
               });
               scope.correctResponse = response.correctResponse;
+
+              if (response.correctResponse) {
+                renderSolution(response);
+              }
             }
 
             scope.lockGraph();
@@ -389,32 +402,21 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
             scope.feedback = undefined;
             scope.response = undefined;
             scope.unlockGraph();
+            scope.graphCallback({
+              shapesStyle: "blue"
+            });
 
             scope.inputStyle = {
               width: "40px"
             };
 
+            var solutionContainer = element.find('.solution-graph');
+            solutionContainer.empty();
+
             scope.correctResponse = undefined;
             scope.points.B = scope.points.A = {};
 
-            var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
-            if (_.isArray(initialValues)) {
-              var pointA = initialValues[0];
-              var pointB = initialValues[1];
-              scope.points = {
-                A: {
-                  x: pointA[0],
-                  y: pointA[1],
-                  isSet: true
-                },
-                B: {
-                  x: pointB[0],
-                  y: pointB[1],
-                  isSet: true
-                }
-              };
-            }
-
+            drawInitialLine(scope.config);
           },
 
           isAnswerEmpty: function() {
