@@ -61,7 +61,7 @@ var correctAnswer = [
 ];
 
 
-describe.only('number line', function() {
+describe('number line', function() {
 
   describe('correctness', function() {
 
