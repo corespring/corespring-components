@@ -3,37 +3,40 @@ var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 
 exports.keys = feedbackUtils.keys;
 exports.defaults = feedbackUtils.defaults;
-exports.defaults.incorrect = "Good try, but <correct answer> is the correct answer.";
-exports.keys.DEFAULT_INCORRECT_FEEDBACK = feedbackUtils.defaults.incorrect;
 
-var feedbackByValue = function(q, v) {
-  return _.find(q.feedback, function(f) {
-    return f.value === v;
+var CORRECT_ANSWER_PLACEHOLDER = "<correct answer>";
+var DEFAULT_INCORRECT_FEEDBACK = "Good try, but " + CORRECT_ANSWER_PLACEHOLDER + " is the correct answer.";
+
+var feedbackByValue = function(question, userChoice) {
+
+  var feedbackValue =  _.find(question.feedback, function(f) {
+    return f.value === userChoice;
   });
+
+  var correctResponse = (function() {
+    var maybeAnswer = (question.model && question.model.choices) ? _.find(question.model.choices, function(choice) {
+      return choice.value === question.correctResponse;
+    }) : undefined;
+    return maybeAnswer ? maybeAnswer.label : undefined;
+  })();
+
+  var hasDefaultFeedback = feedbackValue && feedbackValue.feedbackType && feedbackValue.feedbackType === 'default';
+
+  function setDefaults(feedbackValue) {
+    feedbackValue["feedback"] = isCorrectChoice(question, userChoice) ? exports.keys.DEFAULT_CORRECT_FEEDBACK :
+      DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, correctResponse);
+    return feedbackValue;
+  }
+
+  return hasDefaultFeedback ? setDefaults(feedbackValue) : feedbackValue;
 };
 
-var userResponseFeedback = function(q, answer) {
+var userResponseFeedback = function(question, userChoice) {
+  var fb = feedbackByValue(question, userChoice);
 
-  function correctResponse(question) {
-    var maybeAnswer = _.find(question.model.choices, function(choice) {
-      return choice.value === question.correctResponse;
-    });
-    return maybeAnswer ? maybeAnswer.label : undefined;
-  }
-
-  function replaceVariables(question, string) {
-    return string.replace("<correct answer>", correctResponse(question));
-  }
-
-  var fb, userChoice;
-  userChoice = answer;
-  fb = feedbackByValue(q, userChoice);
   if (fb) {
-    fb.correct = isCorrectChoice(q, userChoice);
-
-    if (fb.feedbackType === 'default') {
-      fb.feedback = replaceVariables(q, fb.correct ? exports.keys.DEFAULT_CORRECT_FEEDBACK : exports.keys.DEFAULT_INCORRECT_FEEDBACK);
-    } else if (fb.feedbackType === 'none') {
+    fb.correct = isCorrectChoice(question, userChoice);
+    if (fb.feedbackType === 'none') {
       delete fb.feedback;
     }
     delete fb.value;
@@ -56,7 +59,7 @@ var isCorrectChoice = function(q, choice) {
   return q.correctResponse === choice;
 };
 
-var buildFeedback = function(question, answer, settings, isCorrect) {
+var buildFeedback = function(question, answer, settings) {
   var out;
   if (settings.highlightUserResponse) {
     out = userResponseFeedback(question, answer);

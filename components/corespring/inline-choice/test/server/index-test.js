@@ -53,7 +53,7 @@ component = {
   ]
 };
 
-describe('inline-choice server logic', function() {
+describe.only('inline-choice server logic', function() {
 
   helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'respond', server.DEFAULT_INCORRECT_FEEDBACK);
 
@@ -126,7 +126,7 @@ describe('inline-choice server logic', function() {
           score: 0,
           feedback: {
             feedbackType: "default",
-            feedback: server.defaults.incorrect.replace("<correct answer>", "carrot"),
+            feedback: "Good try, but carrot is the correct answer.",
             correct: false
           }
         };
