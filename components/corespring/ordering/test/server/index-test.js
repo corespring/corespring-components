@@ -17,7 +17,7 @@ should = require('should');
 _ = require('lodash');
 
 component = {
-  "componentType": "corespring-combined-ordering",
+  "componentType": "corespring-ordering",
   "title": "Butterfly Ordering",
   "model": {
     "choices": [

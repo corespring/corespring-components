@@ -2,9 +2,9 @@ var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
 var fb = require('corespring.server-shared.server.feedback-utils');
 
-fb.defaults.incorrect = "Good try!";
-fb.keys.DEFAULT_INCORRECT_FEEDBACK = fb.defaults.incorrect;
-exports.keys = fb.keys;
+var DEFAULT_INCORRECT_FEEDBACK = "Good try!";
+exports.keys = _.cloneDeep(fb.keys);
+exports.keys.DEFAULT_INCORRECT_FEEDBACK = DEFAULT_INCORRECT_FEEDBACK;
 
 exports.isCorrect = function(answer, correctEquation, options) {
   var correctFunction = correctEquation;
@@ -63,7 +63,7 @@ exports.respond = function(question, answer, settings) {
     if (!isCorrectForm) {
       response.outcome.push("lineEquationMatch");
     }
-    var defaults = _.extend(fb.defaults, {incorrect: "Good try!"});
+    var defaults = _.extend(fb.defaults, {incorrect: DEFAULT_INCORRECT_FEEDBACK});
     response.feedback = fb.makeFeedback(question.feedback, response.correctness, defaults);
     response.comments = question.comments;
   }
