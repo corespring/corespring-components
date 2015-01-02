@@ -23,7 +23,7 @@ var feedbackByValue = function(question, userChoice) {
   var hasDefaultFeedback = feedbackValue && feedbackValue.feedbackType && feedbackValue.feedbackType === 'default';
 
   function setDefaults(feedbackValue) {
-    feedbackValue["feedback"] = isCorrectChoice(question, userChoice) ? exports.keys.DEFAULT_CORRECT_FEEDBACK :
+    feedbackValue.feedback = isCorrectChoice(question, userChoice) ? exports.keys.DEFAULT_CORRECT_FEEDBACK :
       DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, correctResponse);
     return feedbackValue;
   }
