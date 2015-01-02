@@ -369,7 +369,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
                 solutionContainer.attr(solutionGraphAttrs);
                 solutionContainer.css({
                   width: Math.min(scope.containerWidth, 500),
-                  height: Math.min(scope.containerHeight)
+                  height: Math.min(scope.containerHeight, 500)
                 });
                 solutionScope.interactionCallback = function() {
                 };
