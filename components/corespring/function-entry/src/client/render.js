@@ -63,9 +63,6 @@ main = [
 
           // sets the server's response
           setResponse: function(response) {
-            console.log("Setting Response for function entry:");
-            console.log(response);
-
             $(element).find('.text-input').popover('destroy');
 
             scope.correctClass = response.correctness;
