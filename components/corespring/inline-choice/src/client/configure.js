@@ -129,7 +129,7 @@ var main = [
 
             scope.defaultIncorrect = function(choice) {
               return server.feedbackByValue(scope.fullModel, choice.value).feedback;
-            }
+            };
 
             _.each(model.scoreMapping, function(v, k) {
               scope.scoreMapping[k] = String(v);
