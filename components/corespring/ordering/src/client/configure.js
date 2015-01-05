@@ -1,8 +1,10 @@
 var main = [
   'ChoiceTemplates',
   'ComponentImageService',
+  '$timeout',
     function(ChoiceTemplates,
-             ComponentImageService) {
+             ComponentImageService,
+             $timeout) {
 
       function designTemplate() {
 
@@ -202,6 +204,11 @@ var main = [
             $event.stopPropagation();
             $scope.active[$index] = true;
             $scope.choicesSortableOptions.disabled = true;
+            $timeout(function() {
+              var $editable = $($event.target).closest('.sortable-choice').find('.wiggi-wiz-editable');
+              $editable.click();
+              angular.element($editable).scope().focusCaretAtEnd();
+            });
           };
 
           $scope.isSingleChoice = function() {
