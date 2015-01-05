@@ -274,14 +274,14 @@ var main = ['$compile', '$rootScope', "LineUtils",
 
         scope.unlockGraph = function() {
           scope.locked = false;
-          scope.graphCallback({
-            unlockGraph: true
-          });
-          scope.graphCallback({
-            graphStyle: {
-            },
-            pointsStyle: "blue"
-          });
+          if (_.isFunction(scope.graphCallback)) {
+            scope.graphCallback({
+              graphStyle: {
+              },
+              pointsStyle: "blue",
+              unlockGraph: true
+            });
+          }
         };
 
 
