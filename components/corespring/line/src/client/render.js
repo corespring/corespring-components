@@ -128,7 +128,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
               var yintercept = params.points.A.y - (params.points.A.x * slope);
               scope.equation = "y=" + slope + "x+" + yintercept;
               scope.graphCallback({
-                graphStyle: {},
                 drawShape: {
                   line: ["A", "B"]
                 }
@@ -146,9 +145,9 @@ var main = ['$compile', '$rootScope', "LineUtils",
 
         scope.lockGraph = function() {
           scope.locked = true;
-          scope.graphCallback({
-            lockGraph: true
-          });
+          if (scope.graphCallback) {
+            scope.graphCallback({lockGraph: true});
+          }
         };
 
         scope.renewResponse = function(response) {
@@ -198,8 +197,27 @@ var main = ['$compile', '$rootScope', "LineUtils",
 
         scope.startOver = function() {
           if (!scope.locked) {
-            scope.points.B = {};
-            scope.points.A = {};
+            var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
+            scope.points = {};
+
+            if (_.isArray(initialValues)) {
+              var pointA = initialValues[0];
+              var pointB = initialValues[1];
+              scope.points = {
+                A: {
+                  x: pointA[0],
+                  y: pointA[1],
+                  isSet: true,
+                  isVisible: false
+                },
+                B: {
+                  x: pointB[0],
+                  y: pointB[1],
+                  isSet: true
+                }
+              };
+            }
+
           }
         };
 
@@ -267,27 +285,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
         };
 
 
-        function drawInitialLine(config) {
-          var initialValues = lineUtils.pointsFromEquation(config.initialCurve);
-
-          if (_.isArray(initialValues)) {
-            var pointA = initialValues[0];
-            var pointB = initialValues[1];
-            scope.points = {
-              A: {
-                x: pointA[0],
-                y: pointA[1],
-                isSet: true
-              },
-              B: {
-                x: pointB[0],
-                y: pointB[1],
-                isSet: true
-              }
-            };
-          }
-        }
-
         function renderSolution(response) {
           var solutionScope = scope.$new();
           var solutionContainer = element.find('.solution-graph');
@@ -347,7 +344,14 @@ var main = ['$compile', '$rootScope', "LineUtils",
             if (dataAndSession.session && dataAndSession.session.answers) {
               scope.points = dataAndSession.session.answers;
             }
-            drawInitialLine(config);
+
+            scope.startOver();
+
+            if (config.exhibitOnly) {
+              scope.lockGraph();
+            } else {
+              scope.unlockGraph();
+            }
           },
 
           getSession: function() {
@@ -401,6 +405,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
           reset: function() {
             scope.feedback = undefined;
             scope.response = undefined;
+            scope.graphCallback({graphStyle: {}});
             scope.unlockGraph();
             scope.graphCallback({
               shapesStyle: "blue"
@@ -416,7 +421,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
             scope.correctResponse = undefined;
             scope.points.B = scope.points.A = {};
 
-            drawInitialLine(scope.config);
+            scope.startOver();
           },
 
           isAnswerEmpty: function() {

@@ -103,8 +103,8 @@ exports.service = ['$log',
       return null;
     };
 
-    Canvas.prototype.addPoint = function(coords, ptName) {
-      var pointAttrs = {
+    Canvas.prototype.addPoint = function(coords, ptName, ptOptions) {
+      var pointAttrs = _.defaults({
         strokeColor: this.showPoints ? "blue" : "transparent",
         fillColor: this.showPoints ? "blue" : "transparent",
         snapToGrid: true,
@@ -112,7 +112,7 @@ exports.service = ['$log',
         snapSizeY: this.scale,
         showInfobox: false,
         withLabel: false
-      };
+      }, ptOptions);
       var point = this.board.create('point', [coords.x, coords.y], pointAttrs);
       point.canvasIndex = this.points.length;
       this.points.push(point);
@@ -141,10 +141,10 @@ exports.service = ['$log',
         var text = this.board.create('text', [
           function() {
             return point.X() + offset.usrCoords[1];
-        },
+          },
           function() {
             return point.Y() + offset.usrCoords[2];
-        },
+          },
           function() {
             return name + (that.showCoordinates ? (' (' + point.X() + ',' + point.Y() + ')') : '');
           }], {
