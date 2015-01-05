@@ -26,7 +26,9 @@ main = [
           clickBound = false;
           if (shouldShowFormattingHelp()) {
             $(element).find('.text-input').popover({
-              content: rawHintHtml,
+              content: function() {
+                return $(element).find('.hidden-math').html();
+              },
               title: 'Hints',
               html: true,
               placement: 'bottom'
@@ -61,8 +63,7 @@ main = [
 
           // sets the server's response
           setResponse: function(response) {
-            console.log("Setting Response for function entry:");
-            console.log(response);
+            $(element).find('.text-input').popover('destroy');
 
             scope.correctClass = response.correctness;
             if (_.isEmpty(scope.answer)) {
@@ -99,12 +100,13 @@ main = [
           }
         };
 
-        MathJaxService.onEndProcess(function() {
-          if (!rawHintHtml) {
-            rawHintHtml = $(element).find('.hidden-math').html();
-            resetHintPopover();
+        $('html').click(function(e) {
+          if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {
+            $(element).find('.text-input').popover('hide');
           }
         });
+
+        MathJaxService.parseDomForMath(0, element[0]);
 
         scope.$emit('registerComponent', attrs.id, scope.containerBridge);
       };
@@ -118,9 +120,11 @@ main = [
       link: link(),
       template: [
         '<div class="view-function-entry">',
-        '  <span class="text-input {{correctClass}}" feedback-popover="response">',
-        '    <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
-        '  </span>',
+        '  <div feedback-popover="response">',
+        '    <span class="text-input {{correctClass}}">',
+        '      <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
+        '    </span>',
+        '  </div>',
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '  <div class="hidden-math">',
         '    <ul style=\'text-align: left; padding-left: 10px\'>',
