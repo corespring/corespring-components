@@ -55,6 +55,8 @@ exports.isCorrect = function(answer, correctAnswer) {
   return answer === correctAnswer;
 };
 
+exports.feedbackByValue = feedbackByValue;
+
 var isCorrectChoice = function(q, choice) {
   return q.correctResponse === choice;
 };

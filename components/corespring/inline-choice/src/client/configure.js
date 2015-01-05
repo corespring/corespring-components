@@ -1,6 +1,6 @@
 var main = [
-  '$log', 'ChoiceTemplates',
-  function($log, ChoiceTemplates) {
+  '$log', 'ChoiceTemplates', 'ServerLogic',
+  function($log, ChoiceTemplates, ServerLogic) {
 
     "use strict";
 
@@ -58,6 +58,7 @@ var main = [
       '                    fb-sel-label="If this choice is selected, show"',
       '                    fb-sel-class="correct"',
       '                    fb-sel-hide-feedback-options=""',
+      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultCorrect}}\'/>"',
       '                    fb-sel-feedback-type="feedback[choice.value].feedbackType"',
       '                    fb-sel-custom-feedback="feedback[choice.value].feedback">',
       '                </div>',
@@ -65,6 +66,8 @@ var main = [
       '                    fb-sel-label="If this choice is selected, show"',
       '                    fb-sel-class="incorrect"',
       '                    fb-sel-hide-feedback-options=""',
+      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultIncorrect(choice)}}\'/>"',
+      '                    fb-sel-hide-feedback-options="none"',
       '                    fb-sel-feedback-type="feedback[choice.value].feedbackType"',
       '                    fb-sel-custom-feedback="feedback[choice.value].feedback">',
       '                </div>',
@@ -95,8 +98,10 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-
+        var server = ServerLogic.load('corespring-inline-choice');
         ChoiceTemplates.extendScope(scope, 'corespring-inline-choice');
+
+        scope.defaultCorrect = server.keys.DEFAULT_CORRECT_FEEDBACK;
 
         scope.correctMap = [];
 
@@ -121,6 +126,10 @@ var main = [
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
             scope.model.scoringType = scope.model.scoringType || "standard";
             scope.feedback = {};
+
+            scope.defaultIncorrect = function(choice) {
+              return server.feedbackByValue(scope.fullModel, choice.value).feedback;
+            }
 
             _.each(model.scoreMapping, function(v, k) {
               scope.scoreMapping[k] = String(v);
@@ -168,6 +177,7 @@ var main = [
 
           var out = _.makeArray(newFeedback, "value");
           scope.fullModel.feedback = out;
+
         }, true);
 
         scope.removeQuestion = function(q) {
