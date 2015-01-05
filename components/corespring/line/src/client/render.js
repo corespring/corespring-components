@@ -370,24 +370,24 @@ var main = ['$compile', '$rootScope', "LineUtils",
             if (response && response.correctness === "correct") {
               scope.graphCallback({
                 graphStyle: {
-                  borderColor: "green",
+                  borderColor: "#3C763D",
                   borderWidth: "2px"
                 },
-                shapesStyle: "green"
+                shapesStyle: "#3C763D"
               });
               scope.inputStyle = _.extend(scope.inputStyle, {
-                border: 'thin solid green'
+                border: 'thin solid #3C763D'
               });
             } else if (response.correctness === "incorrect") {
               scope.graphCallback({
                 graphStyle: {
-                  borderColor: "red",
+                  borderColor: "#EEA236",
                   borderWidth: "2px"
                 },
-                shapesStyle: "red"
+                shapesStyle: "#EEA236"
               });
               scope.inputStyle = _.extend(scope.inputStyle, {
-                border: 'thin solid red'
+                border: 'thin solid #EEA236'
               });
               scope.correctResponse = response.correctResponse;
 
