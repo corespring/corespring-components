@@ -53,11 +53,9 @@ var def = ['Canvas',
             y: point.Y(),
             index: point.canvasIndex
           };
-          if (!lockGraph) {
-            scope.interactionCallback({
-              points: points
-            });
-          }
+          scope.interactionCallback({
+            points: points
+          });
         };
 
         var addPoint = function(coords, ptName, ptOptions) {
@@ -197,7 +195,7 @@ var def = ['Canvas',
         };
       }
     };
-}];
+  }];
 
 exports.framework = "angular";
 exports.directive = {

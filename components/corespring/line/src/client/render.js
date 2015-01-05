@@ -199,7 +199,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
           if (!scope.locked) {
             var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
             scope.points = {};
-
             if (_.isArray(initialValues)) {
               var pointA = initialValues[0];
               var pointB = initialValues[1];
