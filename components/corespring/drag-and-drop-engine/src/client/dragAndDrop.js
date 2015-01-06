@@ -6,7 +6,6 @@ var dragAndDropController = [
       scope: true,
       restrict: 'AE',
       link: function(scope, element, attrs) {
-
         scope.dragging = {};
         scope.maxWidth = 50;
         scope.maxHeight = 20;
@@ -129,6 +128,7 @@ var dragAndDropController = [
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = [];
           });
+          scope.$emit('rerender-math', {delay: 1});
         };
 
         scope.undo = function() {
