@@ -303,7 +303,9 @@ var main = ['$compile', '$rootScope', "LineUtils",
                     return eval(response.correctResponse.expression);
                   }
                 },
-                lockGraph: true
+                lockGraph: true,
+                pointsStyle: "#3C763D",
+                shapesStyle: "#3C763D"
               });
             }
           });
@@ -372,6 +374,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
                   borderColor: "#3C763D",
                   borderWidth: "2px"
                 },
+                pointsStyle: "#3C763D",
                 shapesStyle: "#3C763D"
               });
               scope.inputStyle = _.extend(scope.inputStyle, {
@@ -383,6 +386,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
                   borderColor: "#EEA236",
                   borderWidth: "2px"
                 },
+                pointsStyle: "#EEA236",
                 shapesStyle: "#EEA236"
               });
               scope.inputStyle = _.extend(scope.inputStyle, {
