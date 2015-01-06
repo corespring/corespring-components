@@ -34,6 +34,11 @@ var main = [
           this.updateVisibility();
         },
 
+        getSession: function() {
+          return {
+          };
+        },
+
         updateVisibility : function(){
           scope.isVisible = angular.isString(scope.feedback) && scope.feedback.length > 0 && !scope.isEditable;
         }
