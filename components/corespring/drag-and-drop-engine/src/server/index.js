@@ -53,7 +53,7 @@ exports.createResponse = function(question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    res.feedback = fb.makeFeedback(question, fb.correctness(isCorrect, isPartiallyCorrect));
+    res.feedback = fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect));
   }
 
   return res;

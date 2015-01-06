@@ -166,31 +166,39 @@
 }
 
 .config-inline-choice {
-  top: 30px;
-  bottom: 0px;
+  .choice-checkbox {
+    cursor: pointer;
 
-  button {
-    margin: 20px 0;
+    &.checked {
+      color: #3fd04a;
+    }
   }
 
-  .wiggi-wiz-toolbar button {
-    margin: 0;
+  input[type=text],
+  .mini-wiggi-wiz {
+    @border-radius: 4px;
+    width: 100%;
+    min-height: 28px;
+    border-radius: @border-radius;
+    border: 1px solid #cccccc;
+    box-shadow: inset 0px 1px 0px 0px #ececec;
+    margin-bottom: 5px;
+
+    &[disabled] {
+      background-color: #eeeeee;
+    }
+
+    .wiggi-wiz-editable {
+      padding: 6px 12px !important;
+      background-color: transparent;
+    }
+
+    .toolbar {
+      border-radius: 0 0 @border-radius @border-radius;
+    }
   }
 
-  .shuffle {
-    display: block;
-  }
-
-  .check-correct-label {
-    text-align: right;
-    margin-bottom: 10px;
-  }
-
-  .correct {
-    padding-left: 10px;
-  }
-
-  .choice-template-choice {
-    margin-bottom: 15px;
+  input[type=text] {
+    padding: 6px 12px;
   }
 }

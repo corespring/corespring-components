@@ -117,20 +117,21 @@ describe('inline-choice server logic', function() {
       response.should.eql(expected);
     });
 
-    it('should respond to an incorrect response with default feedback if feedbackType is default', function() {
-      var expected, response;
-      response = server.respond(_.cloneDeep(component), "banana", helper.settings(true, true, false));
-      expected = {
-        correctness: "incorrect",
-        score: 0,
-        feedback: {
-          feedbackType: "default",
-          feedback: server.defaults.incorrect,
-          correct: false
-        }
-      };
-      response.should.eql(expected);
-    });
-
+    it('should respond to an incorrect response with correct answer in default feedback if feedbackType is default',
+      function() {
+        var expected, response;
+        response = server.respond(_.cloneDeep(component), "banana", helper.settings(true, true, false));
+        expected = {
+          correctness: "incorrect",
+          score: 0,
+          feedback: {
+            feedbackType: "default",
+            feedback: "Good try, but carrot is the correct answer.",
+            correct: false
+          }
+        };
+        response.should.eql(expected);
+      }
+    );
   });
 });

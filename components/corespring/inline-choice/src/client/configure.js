@@ -1,26 +1,94 @@
 var main = [
-  '$log', 'ChoiceTemplates',
-  function($log, ChoiceTemplates) {
+  '$log', 'ChoiceTemplates', 'ServerLogic',
+  function($log, ChoiceTemplates, ServerLogic) {
 
     "use strict";
 
     var choices = [
-      '<div class="choice-config-panel" >',
-      '  <p class="info">',
-      '    In Drop Down Choice, students select the best response from a list of options presented. This interaction ',
-      '    type may be embedded inline with other content such as text.',
-      '  </p>',
-      '  <div class="check-correct-label">Check Correct Answer(s)</div>',
-      '  <div class="choice" ng-repeat="q in model.choices">',
-      ChoiceTemplates.choice({
-        correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: fullModel.correctResponse == q.value}" ng-click="fullModel.correctResponse = q.value"></i>',
-        correctnessPredicate: 'fullModel.correctResponse == q.value',
-        selectType: false,
-        showLabel: false
-      }),
+      '<div class="form-horizontal choice-config-panel" role="form">',
+      '  <div class="container-fluid">',
+      '    <div class="row">',
+      '      <div class="col-xs-12">',
+      '        <p>In Short Answer &mdash; Select Text, students select the best response from a list of options ',
+      '           presented. This interaction type may be embedded inline with other content such as text.',
+      '        </p>',
+      '      </div>',
+      '    </div>',
       '  </div>',
-      '  <button class=\"btn\" ng-click=\"addQuestion()\">Add a Choice</button>',
-      '  <checkbox class="shuffle" id="shuffle" ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
+      '  <div class="container-fluid container-choices">',
+      '    <div class="row">',
+      '      <div class="text-right v-offset-2 col-xs-offset-9 col-xs-3">',
+      '        Check correct<br/>answer',
+      '      </div>',
+      '    </div>',
+      '    <div class="choice-row" ng-repeat="choice in model.choices">',
+      '      <div class="row">',
+      '        <div class="col-md-1 col-xs-1 text-center">',
+      '          <i class="fa fa-trash-o fa-lg" title="Delete" data-tggle="tooltip" ng-click="removeQuestion(choice)">',
+      '          </i>',
+      '        </div>',
+      '        <div class="col-md-9 col-xs-8 text-center">',
+      '          <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
+      '              image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
+      '              parent-selector=".wiggi-wiz-overlay">',
+      '            <edit-pane-toolbar alignment="bottom">',
+      '              <div class="btn-group pull-right">',
+      '                <button ng-click="closePane()" class="btn btn-sm btn-success">Done</button>',
+      '              </div>',
+      '            </edit-pane-toolbar>',
+      '          </div>',
+      '        </div>',
+      '        <div class="col-md-1 col-xs-1 text-center">',
+      '          <i class="fa fa-check fa-lg choice-checkbox" ',
+      '              ng-class="{checked: fullModel.correctResponse == choice.value}"',
+      '              ng-click="fullModel.correctResponse = choice.value"></i>',
+      '        </div>',
+      '      </div>',
+      '      <div class="row feedback">',
+      '        <div class="bol-md-offset-1 col-xs-offset-1 col-md-9 col-xs-8">',
+      '          <div class="panel panel-default">',
+      '            <div class="panel-heading">',
+      '              <h4 class="panel-title">',
+      '                <a data-toggle="collapse" href="#feedback-{{toChar($index)}}">Feedback</a>',
+      '              </h4>',
+      '            </div>',
+      '            <div id="feedback-{{toChar($index)}}" class="panel-collapse collapse">',
+      '              <div class="panel-body">',
+      '                <div feedback-selector ng-show="fullModel.correctResponse == choice.value"',
+      '                    fb-sel-label="If this choice is selected, show"',
+      '                    fb-sel-class="correct"',
+      '                    fb-sel-hide-feedback-options=""',
+      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultCorrect}}\'/>"',
+      '                    fb-sel-feedback-type="feedback[choice.value].feedbackType"',
+      '                    fb-sel-custom-feedback="feedback[choice.value].feedback">',
+      '                </div>',
+      '                <div feedback-selector ng-show="fullModel.correctResponse != choice.value"',
+      '                    fb-sel-label="If this choice is selected, show"',
+      '                    fb-sel-class="incorrect"',
+      '                    fb-sel-hide-feedback-options=""',
+      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultIncorrect(choice)}}\'/>"',
+      '                    fb-sel-hide-feedback-options="none"',
+      '                    fb-sel-feedback-type="feedback[choice.value].feedbackType"',
+      '                    fb-sel-custom-feedback="feedback[choice.value].feedback">',
+      '                </div>',
+      '              </div>',
+      '            </div>',
+      '          </div>',
+      '        </div>',
+      '     </div>',
+      '    </div>',
+      '    <div class="row">',
+      '      <div class="col-xs-12">',
+      '        <button type="button" id="add-choice" class="btn btn-default" ',
+      '            ng-click="addQuestion()">Add a Choice</button>',
+      '      </div>',
+      '    </div>',
+      '    <div class="row">',
+      '      <div class="col-xs-12">',
+      '        <checkbox class="shuffle-choices" ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
       '</div>'
     ].join('\n');
 
@@ -30,8 +98,10 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-
+        var server = ServerLogic.load('corespring-inline-choice');
         ChoiceTemplates.extendScope(scope, 'corespring-inline-choice');
+
+        scope.defaultCorrect = server.keys.DEFAULT_CORRECT_FEEDBACK;
 
         scope.correctMap = [];
 
@@ -40,6 +110,15 @@ var main = [
           action: undefined
         }];
 
+        function cleanLabel(label){
+          if(!label){
+            return label;
+          }
+
+          var re = new RegExp('<span>' + String.fromCharCode(8203) + '<\/span>', 'gi');
+          return label.replace(re, '');
+        }
+
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
@@ -47,6 +126,10 @@ var main = [
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
             scope.model.scoringType = scope.model.scoringType || "standard";
             scope.feedback = {};
+
+            scope.defaultIncorrect = function(choice) {
+              return server.feedbackByValue(scope.fullModel, choice.value).feedback;
+            };
 
             _.each(model.scoreMapping, function(v, k) {
               scope.scoreMapping[k] = String(v);
@@ -61,7 +144,6 @@ var main = [
                 return choice.value === feedback.value;
               });
 
-
               if (choice) {
                 scope.feedback[choice.value] = {
                   feedback: feedback.feedback,
@@ -71,7 +153,6 @@ var main = [
             });
 
           },
-
           getModel: function() {
             var model = _.cloneDeep(scope.fullModel);
 
@@ -84,6 +165,8 @@ var main = [
                 feedback.feedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
                 feedback.feedbackType = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0);
               }
+
+              choice.label = cleanLabel(choice.label);
             });
             return model;
           }
@@ -94,6 +177,7 @@ var main = [
 
           var out = _.makeArray(newFeedback, "value");
           scope.fullModel.feedback = out;
+
         }, true);
 
         scope.removeQuestion = function(q) {
@@ -147,7 +231,7 @@ var main = [
       //templateUrl: 'configure.html',
       template: [
         '<div class="config-inline-choice" choice-template-controller="">',
-        ChoiceTemplates.inputHolder(undefined, choices),
+          choices,
         '</div>'
       ].join("")
     };

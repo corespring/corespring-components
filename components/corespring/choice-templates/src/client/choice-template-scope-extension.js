@@ -36,6 +36,17 @@ exports.factory = [
           });
         };
 
+        scope.togglePartialScoring = function() {
+          if (!_.isFunction(scope.isSingleChoice) || !scope.isSingleChoice()) {
+            scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
+          }
+        };
+
+        scope.partialScoring = function() {
+          return (_.isFunction(scope.isSingleChoice)) ? (!scope.isSingleChoice() && scope.fullModel.allowPartialScoring)
+            : scope.fullModel.allowPartialScoring;
+        };
+
         scope.removeScoringScenario = function(scoringScenario) {
           scope.fullModel.partialScoring = _.filter(scope.fullModel.partialScoring, function(ps) {
             return ps !== scoringScenario;

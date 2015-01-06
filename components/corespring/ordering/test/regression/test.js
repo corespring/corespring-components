@@ -28,7 +28,7 @@ describe('ordering', function() {
         .dragAndDrop('//div[text()="Apple"]', '.landing-place')
         .dragAndDrop('//div[text()="Pear"]', '.landing-place')
         .submitItem()
-        .waitFor('.feedback-correct', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
 
@@ -37,7 +37,7 @@ describe('ordering', function() {
         .dragAndDrop('//div[text()="Banana"]', '.landing-place')
         .dragAndDrop('//div[text()="Apple"]', '.landing-place')
         .submitItem()
-        .waitFor('.feedback-incorrect', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.feedback.incorrect', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
 
@@ -46,7 +46,7 @@ describe('ordering', function() {
         .dragAndDrop('//div[text()="Apple"]', '.landing-place')
         .dragAndDrop('//div[text()="Banana"]', '.landing-place')
         .submitItem()
-        .waitFor('.feedback-partial', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.feedback.partial', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
   });

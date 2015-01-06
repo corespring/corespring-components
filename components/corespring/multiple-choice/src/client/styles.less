@@ -3,17 +3,180 @@
 .view-multiple-choice {
   padding-top: 14px;
   margin-bottom: 20px;
-  .correct-label {
-    color: #008000;
-  }
+
   td {
     vertical-align: top;
   }
-  .choice-holder:not(.incorrect):not(.correct) {
+
+  .choices-container {
+    display: table;
+    width: 95%;
+  }
+
+  .choice-holder-background {
+    padding-top: 5px;
+    margin-bottom: 10px;
+    &.selected {
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      padding-top: 10px;
+      border-radius: 4px;
+      &.correct {
+        margin-right: 10px;
+        background-color: #dff0d8;
+        border: 1px solid #d6e9c6;
+        border-radius: 4px;
+        padding-bottom: 15px;
+        padding-top: 20px;
+        -webkit-box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
+        box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+  .selected {
+    .choice-holder {
+      .choice-letter {
+        font-size: 18px;
+      }
+      .radio-choice {
+        .radio-button {
+          display: inline-block;
+          width: 27px;
+          height: 27px;
+          left: 0px;
+          top: -1px;
+          margin-left: 3px;
+          margin-top: 3px;
+          border-radius: 50%;
+          background-color: #555555;
+          -webkit-transform: scale(1, 1);
+          -ms-transform: scale(1, 1);
+          -o-transform: scale(1, 1);
+          transform: scale(1, 1);
+        }
+      }
+      .checkbox-choice {
+        .checkbox-button {
+          -webkit-transform: scale(1, 1);
+          -ms-transform: scale(1, 1);
+          -o-transform: scale(1, 1);
+          transform: scale(1, 1);
+
+          &:before {
+          font-family: 'FontAwesome';
+          content: "\f00c";
+          width: 30px;
+          height: 30px;
+          font-size: 28px;
+          color: #555555;
+          left: 0px;
+          top: -5px;
+          position: absolute;
+        }
+        }
+      }
+
+    }
+
+    &.correct {
+      .choice-holder {
+        .choice-input {
+          padding-left: 15px;
+          padding-right: 20px;
+        }
+        .choice-label {
+          font-size: 18px;
+        }
+        .choice-letter {
+          font-size: 20px;
+          font-size: 30px;
+        }
+        .radio-choice {
+          opacity: 1;
+          border: none;
+          .radio-button {
+            background: none;
+            &:after {
+              font-size: 51px;
+              font-family: FontAwesome;
+              content: @correct-character;
+              color: @correct-color;
+              border: 0;
+              position: absolute;
+              top: -18px;
+              left: -5px;
+            }
+          }
+        }
+        .checkbox-choice {
+          background-color: @correct-color;
+          opacity: 1;
+          border: none;
+          width: 40px;
+          height: 40px;
+          .checkbox-button {
+            &:before {
+              color: #ffffff;
+              font-size: 38px;
+            }
+          }
+        }
+      }
+    }
+
+    &.incorrect {
+      .choice-holder {
+        .radio-choice {
+          opacity: 1;
+          border: none;
+          .radio-button {
+            background: none;
+            &:after {
+              font-size: 35px;
+              font-family: FontAwesome;
+              content: "\f05c";
+              color: #ec971f;
+              border: 0;
+              position: absolute;
+              top: -10px;
+              left: -1px;
+            }
+          }
+        }
+        .checkbox-choice {
+          border: none;
+          background-color: @incorrect-color;
+          opacity: 1;
+          .checkbox-button {
+            &:before {
+              color: #ffffff;
+              content: "\f00d";
+              left: 4px;
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  .choice-holder {
     .checkbox-choice[disabled] {
       opacity: 0.65;
     }
     .checkbox-choice {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      left: 0px;
+      border: 1px solid #cccccc;
+      border-radius: 3px;
+      background-color: #fff;
+      -webkit-transition: border 0.15s ease-in-out;
+      -o-transition: border 0.15s ease-in-out;
+      transition: border 0.15s ease-in-out;
       .checkbox-button {
         -webkit-transform: scale(0, 0);
         -ms-transform: scale(0, 0);
@@ -23,12 +186,24 @@
         -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
         -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
         transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+        position: relative;
       }
     }
     .radio-choice[disabled] {
       opacity: 0.65;
     }
     .radio-choice {
+      display: inline-block;
+      width: 35px;
+      height: 35px;
+      border: 1px solid #cccccc;
+      border-radius: 50%;
+      background-color: #fff;
+      -webkit-transition: border 0.15s ease-in-out;
+      -o-transition: border 0.15s ease-in-out;
+      transition: border 0.15s ease-in-out;
+      position: relative;
+
       .radio-button {
         -webkit-transform: scale(0, 0);
         -ms-transform: scale(0, 0);
@@ -40,179 +215,34 @@
         transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
       }
     }
-  }
-  .choice-holder:hover {
-    cursor: pointer;
-  }
-  .checkbox-choice {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    left: 0px;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-    background-color: #fff;
-    -webkit-transition: border 0.15s ease-in-out;
-    -o-transition: border 0.15s ease-in-out;
-    transition: border 0.15s ease-in-out;
-  }
-  .correct.selected {
-    .checkbox-choice {
-      width: 40px;
-      height: 40px;
-      margin-left: 10px;
-      margin-right: 10px;
-    }
-    .choice-letter {
-      font-size: 20px;
-      font-size: 30px;
+    &:hover {
+      cursor: pointer;
     }
   }
-  .selected {
-    .choice-holder.incorrect {
-      .checkbox-choice {
-        background-color: #EC971F;
-        border-color: #EC971F;
-        .checkbox-button {
-          margin-left: 3px;
-          margin-top: -5px;
-        }
-        .checkbox-button:before {
-          font-family: 'FontAwesome';
-          width: 30px;
-          height: 30px;
-          font-size: 28px;
-          content: "\f00d";
-          color: #fff;
-          left: -5px;
-        }
-      }
-    }
-    .incorrect {
-      .radio-choice {
-        border: none;
-        position: relative;
-      }
-    }
-  }
-  .choice-holder {
-    display: table-row;
-    .checkbox-choice {
-      .checkbox-button.selected:before {
-        font-family: 'FontAwesome';
-        content: "\f00c";
-        width: 30px;
-        height: 30px;
-        font-size: 28px;
-        color: #555555;
-        left: -5px;
-        position: absolute;
-      }
-    }
-  }
+
   .correct {
-    .checkbox-button {
-    }
-    .radio-choice {
-      .radio-button {
-        margin-top: 0px;
-        position: absolute;
-        top: -16px;
-        left: 0.5px;
-      }
-    }
     .choice-feedback-holder {
       padding-left: 75px;
       width: 90%;
     }
   }
-  .radio-choice {
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    border: 1px solid #cccccc;
-    border-radius: 50%;
-    background-color: #fff;
-    -webkit-transition: border 0.15s ease-in-out;
-    -o-transition: border 0.15s ease-in-out;
-    transition: border 0.15s ease-in-out;
-  }
-  .choice-holder.default {
-    .radio-choice {
-      .radio-button.selected {
-        display: inline-block;
-        width: 27px;
-        height: 27px;
-        left: 3px;
-        top: -1px;
-        margin-left: 3px;
-        margin-top: 3px;
-        border-radius: 50%;
-        background-color: #555555;
-        -webkit-transform: scale(1, 1);
-        -ms-transform: scale(1, 1);
-        -o-transform: scale(1, 1);
-        transform: scale(1, 1);
-      }
-    }
-  }
+
   .incorrect {
-    .radio-choice {
-      .radio-button {
-        margin-top: 0px;
-        position: absolute;
-        top: -7px;
-        left: -0.5px;
-      }
-      .selected:after {
-        padding-left: 3px;
-        font-size: 35px;
-        text-indent: 3px;
-        font-family: "FontAwesome";
-        content: "\f05c";
-        color: #EC971F;
-        border: none;
-      }
-    }
     .choice-feedback-holder {
       padding-left: 45px;
       width: 90%;
     }
   }
-  .correct-block {
-    display: inline-block;
-    text-align: center;
-  }
-  .remove-button {
-    position: relative;
-    right: 0px;
-    top: 5px;
-  }
-  .choices-container {
-    display: table;
-    width: 95%;
-  }
-  .choice-holder-background {
+
+  .choice-input, .choice-letter, .choice-currency-symbol, .choice-label {
+    display: table-cell;
     padding-top: 5px;
-    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 10px;
+    vertical-align: middle;
   }
-  .choice-holder-background.selected {
-    border: 1px solid #ddd;
-    background: #f5f5f5;
-    padding-top: 10px;
-    border-radius: 4px;
-  }
-  .choice-holder-background.correct.selected {
-    margin-right: 10px;
-    background-color: #dff0d8;
-    border: 1px solid #d6e9c6;
-    border-radius: 4px;
-    padding-bottom: 15px;
-    padding-top: 20px;
-    -webkit-box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
-    box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
-  }
+
   .show-correct-answer {
     color: #428bca;
     cursor: pointer;
@@ -220,11 +250,17 @@
   .choice-input {
     padding-top: 0px;
   }
+  .choice-label {
+    img {
+      vertical-align: bottom;
+      max-width: 280px;
+    }
+  }
   .choice-letter {
     font-weight: bold;
-  }
-  .choice-letter.none {
-    display: none;
+    &.none {
+      display: none;
+    }
   }
   .choice {
     background-color: #fff;
@@ -326,86 +362,14 @@
   .learn-more-link {
     cursor: pointer;
   }
-}
-
-.view-multiple-choice .selected .choice-holder.correct .checkbox-choice, .view-multiple-choice .answer .choice-holder.correct .checkbox-choice {
-  background-color: #3c763d;
-  border-color: #3c763d;
-}
-
-.view-multiple-choice .choice-holder.default .checkbox-choice .checkbox-button.selected, .view-multiple-choice .choice-holder.correct .checkbox-choice .checkbox-button.selected, .view-multiple-choice .choice-holder .checkbox-choice .checkbox-button {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  left: 5px;
-  top: 0px;
-  margin-top: -4px;
-  position: relative;
-  -webkit-transform: scale(1, 1);
-  -ms-transform: scale(1, 1);
-  -o-transform: scale(1, 1);
-  transform: scale(1, 1);
-}
-
-.view-multiple-choice .selected .choice-holder.correct .checkbox-choice .checkbox-button:before, .view-multiple-choice .answer .choice-holder.correct .checkbox-choice .checkbox-button:before {
-  font-family: 'FontAwesome';
-  width: 30px;
-  height: 30px;
-  font-size: 3em;
-  position: absolute;
-  left: -7px;
-  top: -5px;
-  content: "\f00c";
-  color: #fff !important;
-}
-
-.view-multiple-choice .selected .correct .radio-choice, .view-multiple-choice .answer .correct .radio-choice {
-  border-color: #5cb85c;
-  position: relative;
-  margin-left: 20px;
-  margin-right: 10px;
-}
-
-.view-multiple-choice .correct.selected .choice-input, .view-multiple-choice .correct.selected .choice-letter, .view-multiple-choice .correct.selected .choice-currency-symbol, .view-multiple-choice .correct.selected .choice-label, .view-multiple-choice .incorrect.selected .choice-input, .view-multiple-choice .incorrect.selected .choice-letter, .view-multiple-choice .incorrect.selected .choice-currency-symbol, .view-multiple-choice .incorrect.selected .choice-label {
-  vertical-align: middle;
-}
-
-.view-multiple-choice .correct.selected .choice-label, .view-multiple-choice .selected .choice-label, .view-multiple-choice .selected .choice-letter {
-  font-size: 18px;
-}
-
-.view-multiple-choice .answer .correct .radio-choice .radio-button:after, .view-multiple-choice .selected .correct .radio-choice .radio-button:after {
-  padding-left: 3px;
-  font-size: 51px;
-  text-indent: 3px;
-  font-family: "FontAwesome";
-  content: "\f058";
-  color: #3C763D;
-  border: none;
-  margin-left: -10px;
-  width: 35px;
-  height: 35px;
-}
-
-.view-multiple-choice .choice-input, .view-multiple-choice .choice-letter, .view-multiple-choice .choice-currency-symbol, .view-multiple-choice .choice-label {
-  display: table-cell;
-  padding-top: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-bottom: 10px;
-  vertical-align: middle;
-}
-
-.choice-label {
-  img {
-    vertical-align: bottom;
-    max-width: 280px;
+  .answerIcon, .learnMoreIcon {
+    font-size: 30px;
+    margin-right: 2%;
   }
 }
 
-.cell-wrapper {
-  display: table-cell;
-}
+
+
 
 .panel.feedback-panel {
   border-width: 3px;
@@ -442,41 +406,39 @@
   }
 }
 
-.view-multiple-choice .answerIcon, .view-multiple-choice .learnMoreIcon {
-  font-size: 30px;
-  margin-right: 2%;
-}
-
-.choice-config-panel {
-  padding-top: 30px;
-}
-
-.config-panel-body {
-  .check-correct-label {
-    text-align: right;
-    margin-bottom: 10px;
-  }
-}
-
-.score-table {
-  td {
-    padding-right: 80px;
-  }
-}
-
 .config-multiple-choice table, .config-multiple-choice tr, .config-multiple-choice td {
   padding: 0 10px 10px 0;
   vertical-align: bottom;
 }
 
 .config-multiple-choice {
+  .remove-button {
+    position: relative;
+    right: 0px;
+    top: 5px;
+  }
+
+  .score-table {
+    td {
+      padding-right: 80px;
+    }
+  }
+
+  .config-panel-body {
+    .check-correct-label {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+  }
+
   .choice-config-panel {
+    padding-top: 30px;
     margin-bottom: 40px;
   }
   .choice-checkbox {
     cursor: pointer;
     &.checked {
-      color: limegreen;
+      color: #3fd04a;
     }
   }
 

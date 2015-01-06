@@ -1,45 +1,37 @@
 var main = [
   'ChoiceTemplates',
   'ComponentImageService',
+  '$timeout',
     function(ChoiceTemplates,
-             ComponentImageService) {
+             ComponentImageService,
+             $timeout) {
 
       function designTemplate() {
 
         var feedback = [
-          '<div class="input-holder">',
-          '  <div class="header">Feedback</div>',
-          '  <div class="body">',
-          '    <div class="well">',
-          '      <div feedback-selector',
-          '        fb-sel-label="If correct, show"',
-          '        fb-sel-class="correct"',
-          '        fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-          '        fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-          '        fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
-          '      </div>',
-          '    </div>',
-          '    <div class="well">',
-          '      <div feedback-selector',
-          '        fb-sel-label="If partially correct, show"',
-          '        fb-sel-class="partial"',
-          '        fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-          '        fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-          '        fb-sel-default-feedback="{{defaultPartialFeedback}}">',
-          '      </div>',
-          '    </div>',
-          '    <div class="well">',
-          '      <div feedback-selector',
-          '        fb-sel-label="If incorrect, show"',
-          '        fb-sel-class="incorrect"',
-          '        fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-          '        fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-          '        fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
-          '      </div>',
-          '    </div>',
+          '<div feedback-panel>',
+          '  <div feedback-selector',
+          '    fb-sel-label="If correct, show"',
+          '    fb-sel-class="correct"',
+          '    fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+          '    fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+          '    fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
           '  </div>',
-          '</div>',
-          '<div summary-feedback-input ng-model="fullModel.comments"></div>'
+          '  <div feedback-selector',
+          '    fb-sel-label="If partially correct, show"',
+          '    fb-sel-class="partial"',
+          '    fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+          '    fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+          '    fb-sel-default-feedback="{{defaultPartialFeedback}}">',
+          '  </div>',
+          '  <div feedback-selector',
+          '    fb-sel-label="If incorrect, show"',
+          '    fb-sel-class="incorrect"',
+          '    fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+          '    fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+          '    fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
+          '  </div>',
+          '</div>'
         ].join("");
 
         return [
@@ -212,6 +204,15 @@ var main = [
             $event.stopPropagation();
             $scope.active[$index] = true;
             $scope.choicesSortableOptions.disabled = true;
+            $timeout(function() {
+              var $editable = $($event.target).closest('.sortable-choice').find('.wiggi-wiz-editable');
+              $editable.click();
+              angular.element($editable).scope().focusCaretAtEnd();
+            });
+          };
+
+          $scope.isSingleChoice = function() {
+            return $scope.fullModel.correctResponse.length < 2;
           };
 
           $scope.itemClick = function($event) {

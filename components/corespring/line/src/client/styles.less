@@ -1,0 +1,113 @@
+.line-interaction-view {
+
+  .jxgbox {
+    position: relative;
+    overflow: hidden;
+    background-color: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #356AA0;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -ms-touch-action: none;
+  }
+  .JXGtext {
+    background-color: transparent;
+    font-family: Arial, Helvetica, Geneva;
+    padding: 0px;
+    margin: 0px;
+  }
+  .JXGinfobox {
+    border-style: none;
+    border-width: 1px;
+    border-color: black;
+  }
+  .JXGimage {
+    opacity: 1.0;
+  }
+  .JXGimageHighlight {
+    opacity: 0.6;
+  }
+  .solution-panel {
+    visibility: hidden;
+    height: 0;
+  }
+  .solution-panel.panelVisible {
+    visibility: visible;
+    height: auto;
+  }
+
+  .correct-answer {
+    margin-top: 5px;
+    float: right;
+  }
+
+  .additional-text {
+    p {
+      font-family: 'Ubuntu' !important;
+      font-style: normal;
+      font-size: 13px;
+      padding-bottom: 17px;
+    }
+  }
+  .graph-container {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .graph-controls {
+    background-color: #cccccc;
+    border-radius: 4px;
+    padding: 5px;
+    position: relative;
+  }
+  .scale-display {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+  }
+  .point-display-break {
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 8px;
+    border-color: #999999;
+  }
+  .action {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .graph-interaction {
+    margin-top: 10px;
+    padding: 10px 10px 30px 10px;
+    max-width: 600px;
+  }
+}
+.line-interaction-view .point-display p,.line-interaction-view .point-display input {
+  display: inline;
+}
+
+.line-interaction-configuration {
+  .navigator-toggle-button-row {
+    display: none;
+  }
+  .intro-text {
+    padding: 10px;
+  }
+  .informative-label {
+    font-size: small;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+  .default-input {
+    max-width: 120px;
+  }
+  .reset-defaults {
+    display: inline-block;
+    margin: 0 0 20px 25px;
+    font-style: italic;
+    cursor: pointer;
+  }
+}

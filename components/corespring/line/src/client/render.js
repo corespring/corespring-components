@@ -1,6 +1,6 @@
 /* jshint evil: true */
-var main = ['$compile', '$modal', '$rootScope', "LineUtils",
-  function($compile, $modal, $rootScope, LineUtils) {
+var main = ['$compile', '$rootScope', "LineUtils",
+  function($compile, $rootScope, LineUtils) {
     var lineUtils = new LineUtils();
     return {
       template: [
@@ -44,63 +44,71 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
         "      <div class='clearfix'> </div>",
         "   </div>",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
-        "   <div ng-show='correctResponse' style='padding-top: 20px'><a ng-click='seeSolution()' class='pull-right'>See Solution</a></div>",
         "</div>",
-        "<div ng-show='feedback' class='feedback' ng-class='correctClass' ng-bind-html-unsafe='feedback'></div>",
+        '<div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '<div see-answer-panel class="solution-panel" ng-class="{panelVisible: correctResponse}">',
+        "  <div class='solution-container'>",
+        "     <span>The correct equation is {{correctResponse.equation}}</span>",
+        "     <div class='solution-graph'></div>",
+        "  </div>",
+        "</div>",
         '<div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         "</div>"
       ].join(""),
       restrict: 'AE',
       scope: true,
       controller: function($scope) {
-        $scope.submissions = 0;
-        $scope.points = {};
-        this.setInitialParams = function(initialParams) {
-          $scope.initialParams = initialParams;
+      },
+
+      link: function(scope, element, attrs) {
+
+        scope.points = {};
+        scope.submissions = 0;
+        scope.setInitialParams = function(initialParams) {
+          scope.initialParams = initialParams;
         };
 
-        this.getInitialParams = function() {
-          return $scope.initialParams;
+        scope.getInitialParams = function() {
+          return scope.initialParams;
         };
 
-        $scope.$watch('graphCallback', function(n) {
-          if ($scope.graphCallback) {
-            if ($scope.initialParams) {
-              $scope.graphCallback($scope.initialParams);
+        scope.$watch('graphCallback', function(n) {
+          if (scope.graphCallback) {
+            if (scope.initialParams) {
+              scope.graphCallback(scope.initialParams);
             }
-            if ($scope.locked) {
-              $scope.graphCallback({
+            if (scope.locked) {
+              scope.graphCallback({
                 lockGraph: true
               });
             }
-            if ($scope.points) {
-              $scope.renewResponse($scope.points);
+            if (scope.points) {
+              scope.renewResponse(scope.points);
             }
           }
         });
 
-        $scope.interactionCallback = function(params) {
-
+        scope.interactionCallback = function(params) {
           function setPoint(name) {
             if (params.points[name]) {
               var px = params.points[name].x;
               var py = params.points[name].y;
-              if (px > $scope.domain) {
-                px = $scope.domain;
-              } else if (px < (0 - $scope.domain)) {
-                px = 0 - $scope.domain;
+              if (px > scope.domain) {
+                px = scope.domain;
+              } else if (px < (0 - scope.domain)) {
+                px = 0 - scope.domain;
               }
-              if (py > $scope.range) {
-                py = $scope.range;
-              } else if (py < (0 - $scope.range)) {
-                py = 0 - $scope.range;
+              if (py > scope.range) {
+                py = scope.range;
+              } else if (py < (0 - scope.range)) {
+                py = 0 - scope.range;
               }
-              if ($scope.sigfigs > -1) {
-                var multiplier = Math.pow(10, $scope.sigfigs);
+              if (scope.sigfigs > -1) {
+                var multiplier = Math.pow(10, scope.sigfigs);
                 px = Math.round(px * multiplier) / multiplier;
                 py = Math.round(py * multiplier) / multiplier;
               }
-              $scope.points[name] = {
+              scope.points[name] = {
                 x: px,
                 y: py,
                 isSet: true
@@ -115,39 +123,38 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
             //if both points are created, draw line and set response
             if (params.points.A && params.points.B) {
-              $scope.graphCoords = [params.points.A.x + "," + params.points.A.y, params.points.B.x + "," + params.points.B.y];
+              scope.graphCoords = [params.points.A.x + "," + params.points.A.y, params.points.B.x + "," + params.points.B.y];
               var slope = (params.points.A.y - params.points.B.y) / (params.points.A.x - params.points.B.x);
               var yintercept = params.points.A.y - (params.points.A.x * slope);
-              $scope.equation = "y=" + slope + "x+" + yintercept;
-              $scope.graphCallback({
-                graphStyle: {},
+              scope.equation = "y=" + slope + "x+" + yintercept;
+              scope.graphCallback({
                 drawShape: {
                   line: ["A", "B"]
                 }
               });
             } else {
-              $scope.graphCoords = null;
+              scope.graphCoords = null;
             }
 
-            var phase = $scope.$root.$$phase;
+            var phase = scope.$root.$$phase;
             if (phase !== '$apply' && phase !== '$digest') {
-              $scope.$apply();
+              scope.$apply();
             }
           }
         };
 
-        $scope.lockGraph = function() {
-          $scope.locked = true;
-          $scope.graphCallback({
-            lockGraph: true
-          });
+        scope.lockGraph = function() {
+          scope.locked = true;
+          if (scope.graphCallback) {
+            scope.graphCallback({lockGraph: true});
+          }
         };
 
-        $scope.renewResponse = function(response) {
+        scope.renewResponse = function(response) {
           if (response && response.A && response.B) {
             var A = response.A;
             var B = response.B;
-            $scope.points = {
+            scope.points = {
               A: {
                 x: A.x,
                 y: A.y
@@ -161,7 +168,7 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           return response;
         };
 
-        $scope.$watch('points', function(points) {
+        scope.$watch('points', function(points) {
           function checkCoords(coords) {
             return coords && !isNaN(coords.x) && !isNaN(coords.y);
           }
@@ -173,39 +180,54 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
             }
           });
 
-          if ($scope.graphCallback) {
-            $scope.graphCallback({
+          if (scope.graphCallback) {
+            scope.graphCallback({
               points: graphPoints
             });
           }
         }, true);
 
-        $scope.undo = function() {
-          if (!$scope.locked && $scope.points.B && $scope.points.B.isSet) {
-            $scope.points.B = {};
-          } else if (!$scope.locked && $scope.points.A && $scope.points.A.isSet) {
-            $scope.points.A = {};
+        scope.undo = function() {
+          if (!scope.locked && scope.points.B && scope.points.B.isSet) {
+            scope.points.B = {};
+          } else if (!scope.locked && scope.points.A && scope.points.A.isSet) {
+            scope.points.A = {};
           }
         };
 
-        $scope.startOver = function() {
-          if (!$scope.locked) {
-            $scope.points.B = {};
-            $scope.points.A = {};
+        scope.startOver = function() {
+          if (!scope.locked) {
+            var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
+            scope.points = {};
+            if (_.isArray(initialValues)) {
+              var pointA = initialValues[0];
+              var pointB = initialValues[1];
+              scope.points = {
+                A: {
+                  x: pointA[0],
+                  y: pointA[1],
+                  isSet: true,
+                  isVisible: false
+                },
+                B: {
+                  x: pointB[0],
+                  y: pointB[1],
+                  isSet: true
+                }
+              };
+            }
+
           }
         };
-      },
-
-      link: function(scope, element, attrs) {
 
         scope.inputStyle = {
           width: "40px"
         };
 
-        var createGraphAttributes = function(config) {
+        var createGraphAttributes = function(config, graphCallback) {
           return {
             "jsx-graph": "",
-            "graph-callback": "graphCallback",
+            "graph-callback": graphCallback || "graphCallback",
             "interaction-callback": "interactionCallback",
             maxPoints: 2,
             domain: parseInt(config.domain ? config.domain : 10, 10),
@@ -249,47 +271,45 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
 
         }
 
-        scope.seeSolution = function() {
-          scope.solutionScope = $rootScope.$new();
-          scope.solutionScope.answer = scope.correctResponse;
-          scope.solutionScope.config = scope.config;
-
-          $modal.open({
-            controller: function($scope, $modalInstance) {
-              $scope.ok = function() {
-                $modalInstance.dismiss('cancel');
-              };
-            },
-            template: [
-              '   <div class="modal-header">',
-              '     <h3>Solution</h3>',
-              '   </div>',
-              '   <div class="modal-body">',
-              '     <span corespring-line="" solution-view="true" id="solution"></span>',
-              '   </div>',
-              '   <div class="modal-footer">',
-              '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-              '   </div>'
-            ].join(""),
-            backdrop: true,
-            scope: scope.solutionScope
-          });
-
-        };
-
         scope.unlockGraph = function() {
           scope.locked = false;
-          scope.graphCallback({
-            unlockGraph: true
-          });
-          scope.graphCallback({
-            graphStyle: {
-              borderWidth: "0px"
-            },
-            pointsStyle: "blue"
-          });
+          if (_.isFunction(scope.graphCallback)) {
+            scope.graphCallback({
+              graphStyle: {
+              },
+              pointsStyle: "blue",
+              unlockGraph: true
+            });
+          }
         };
 
+
+        function renderSolution(response) {
+          var solutionScope = scope.$new();
+          var solutionContainer = element.find('.solution-graph');
+          var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
+          solutionContainer.attr(solutionGraphAttrs);
+          solutionContainer.css({
+            width: Math.min(scope.containerWidth, 500),
+            height: Math.min(scope.containerHeight, 500)
+          });
+          solutionScope.interactionCallback = function() {
+          };
+          solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
+            if (solutionGraphCallback) {
+              solutionGraphCallback({
+                drawShape: {
+                  curve: function(x) {
+                    return eval(response.correctResponse.expression);
+                  }
+                },
+                lockGraph: true
+              });
+            }
+          });
+
+          $compile(solutionContainer)(solutionScope);
+        }
 
         scope.containerBridge = {
 
@@ -308,35 +328,28 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
             }
 
             var graphAttrs = createGraphAttributes(config);
+            scope.showInputs = config.showInputs;
 
             graphContainer.attr(graphAttrs);
             graphContainer.css({
               width: containerWidth,
               height: containerHeight
             });
+            scope.containerWidth = containerWidth;
+            scope.containerHeight = containerHeight;
+
             $compile(graphContainer)(scope);
 
-            if (dataAndSession.session) {
+            if (dataAndSession.session && dataAndSession.session.answers) {
               scope.points = dataAndSession.session.answers;
             }
 
-            var initialValues = lineUtils.pointsFromEquation(config.initialCurve);
+            scope.startOver();
 
-            if (_.isArray(initialValues)) {
-              var pointA = initialValues[0];
-              var pointB = initialValues[1];
-              scope.points = {
-                A: {
-                  x: pointA[0],
-                  y: pointA[1],
-                  isSet: true
-                },
-                B: {
-                  x: pointB[0],
-                  y: pointB[1],
-                  isSet: true
-                }
-              };
+            if (config.exhibitOnly) {
+              scope.lockGraph();
+            } else {
+              scope.unlockGraph();
             }
           },
 
@@ -347,32 +360,39 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           },
 
           setResponse: function(response) {
+            if (!response) {
+              return;
+            }
             scope.feedback = response && response.feedback;
             scope.response = response;
             scope.correctClass = response.correctness;
             if (response && response.correctness === "correct") {
               scope.graphCallback({
                 graphStyle: {
-                  borderColor: "green",
+                  borderColor: "#3C763D",
                   borderWidth: "2px"
                 },
-                shapesStyle: "green"
+                shapesStyle: "#3C763D"
               });
               scope.inputStyle = _.extend(scope.inputStyle, {
-                border: 'thin solid green'
+                border: 'thin solid #3C763D'
               });
             } else if (response.correctness === "incorrect") {
               scope.graphCallback({
                 graphStyle: {
-                  borderColor: "red",
+                  borderColor: "#EEA236",
                   borderWidth: "2px"
                 },
-                shapesStyle: "red"
+                shapesStyle: "#EEA236"
               });
               scope.inputStyle = _.extend(scope.inputStyle, {
-                border: 'thin solid red'
+                border: 'thin solid #EEA236'
               });
               scope.correctResponse = response.correctResponse;
+
+              if (response.correctResponse) {
+                renderSolution(response);
+              }
             }
 
             scope.lockGraph();
@@ -384,33 +404,23 @@ var main = ['$compile', '$modal', '$rootScope', "LineUtils",
           reset: function() {
             scope.feedback = undefined;
             scope.response = undefined;
+            scope.graphCallback({graphStyle: {}});
             scope.unlockGraph();
+            scope.graphCallback({
+              shapesStyle: "blue"
+            });
 
             scope.inputStyle = {
               width: "40px"
             };
 
+            var solutionContainer = element.find('.solution-graph');
+            solutionContainer.empty();
+
             scope.correctResponse = undefined;
             scope.points.B = scope.points.A = {};
 
-            var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
-            if (_.isArray(initialValues)) {
-              var pointA = initialValues[0];
-              var pointB = initialValues[1];
-              scope.points = {
-                A: {
-                  x: pointA[0],
-                  y: pointA[1],
-                  isSet: true
-                },
-                B: {
-                  x: pointB[0],
-                  y: pointB[1],
-                  isSet: true
-                }
-              };
-            }
-
+            scope.startOver();
           },
 
           isAnswerEmpty: function() {

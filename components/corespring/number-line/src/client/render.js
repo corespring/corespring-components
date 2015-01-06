@@ -24,6 +24,7 @@ var main = [
 
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.response = dataAndSession.session.answers;
+            scope.model.config.initialElements = _.cloneDeep(dataAndSession.session.answers);
           }
 
         },

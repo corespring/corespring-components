@@ -19,6 +19,7 @@
         vertical-align: middle;
       }
     }
+    margin: 0;
   }
 
   .correct-indicator{
@@ -96,6 +97,8 @@
 
   .radio-size(@size) {
     .radio-toggle {
+      cursor: pointer;
+      
       font-size: @size;
       &:after {
         min-width: @size;

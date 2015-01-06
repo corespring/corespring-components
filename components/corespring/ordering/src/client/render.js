@@ -143,7 +143,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
       '  </div>',
 
       '  <div class="clearfix"></div>',
-      '  <div ng-show="feedback" class="feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
+      '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
       '</div>'
 

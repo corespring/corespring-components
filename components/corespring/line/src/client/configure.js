@@ -96,25 +96,21 @@ var main = [
 
     var feedback = [
       '<div ng-hide="fullModel.model.config.exhibitOnly" class="input-holder">',
-      '  <div class="header">Feedback</div>',
-      '  <div class="body">',
-      '        <div class="well">',
-      '          <div feedback-selector',
-      '               fb-sel-label="If answered correctly, show"',
-      '               fb-sel-class="correct"',
-      '               fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-      '               fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-      '               fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
-      '          ></div>',
-      '        </div>',
-      '        <div class="well">',
-      '          <div feedback-selector',
-      '               fb-sel-label="If answered incorrectly, show"',
-      '               fb-sel-class="incorrect"',
-      '               fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-      '               fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-      '               fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
-      '          ></div>',
+      '  <div feedback-panel>',
+      '     <div feedback-selector',
+      '          fb-sel-label="If answered correctly, show"',
+      '          fb-sel-class="correct"',
+      '          fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+      '          fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+      '          fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
+      '     ></div>',
+      '     <div feedback-selector',
+      '          fb-sel-label="If answered incorrectly, show"',
+      '          fb-sel-class="incorrect"',
+      '          fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+      '          fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+      '          fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
+      '     ></div>',
       '  </div>',
       '</div>'].join('\n');
 
@@ -181,7 +177,6 @@ var main = [
            graphAttributes,
         '  <a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
            feedback,
-        '  <div summary-feedback-input ng-model="fullModel.comments"></div>',
         '</div>'
       ].join('\n')
     };
