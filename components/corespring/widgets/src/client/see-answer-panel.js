@@ -22,7 +22,7 @@ var def = function() {
       });
     },
     template: [
-      '  <div class="answer-holder">',
+      '  <div class="see-answer-panel answer-holder">',
       '    <div class="panel panel-default">',
       '      <div class="panel-heading" ng-click="answerVisible = !answerVisible">',
       '        <h4 class="panel-title" ><i class="answerIcon fa fa-eye{{answerVisible ? \'-slash\' : \'\'}}"></i>{{answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
