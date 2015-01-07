@@ -12,8 +12,14 @@ describe('dragAndDropController', function() {
 
   beforeEach(inject(function($rootScope, $compile) {
     scope = $rootScope.$new();
-    scope.local = {
-      choices: []
+    scope.local = { choices: [] };
+    scope.session = {
+      stash: {}
+    };
+    scope.rawModel = {
+      config: {
+        shuffle: false
+      }
     };
     element = $compile('<div drag-and-drop-controller=""></div>')(scope);
     scope = element.scope();
@@ -32,4 +38,27 @@ describe('dragAndDropController', function() {
     });
 
   });
+
+
+  describe('containerBridge', function() {
+
+    it('should be defined', function() {
+      expect(scope.containerBridge).toBeDefined();
+    });
+
+    describe('reset', function() {
+      it('should be defined', function() {
+        expect(scope.containerBridge.reset).toBeDefined();
+      });
+
+      it('should $emit a rerender-math event', function() {
+        spyOn(scope, "$emit");
+        scope.containerBridge.reset();
+        expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: 1});
+      });
+
+    });
+
+  });
+
 });
