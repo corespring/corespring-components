@@ -101,43 +101,32 @@ var main = [
       '</div>'
     ].join("");
 
-    var choiceAreaDisplayOptions = [
-      '     <form class="form-horizontal" role="form">',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-5" ng-show="fullModel.model.config.choiceAreaHasLabel">',
-      '           <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" />',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row">Layout',
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-2 fixed-100">',
-      '           <radio id="vertical" value="vertical" ng-model="fullModel.model.config.choiceAreaLayout">Vertical</radio>',
-      '         </div>',
-      '         <div class="col-sm-2 fixed-120">',
-      '           <radio id="horizontal" value="horizontal" ng-model="fullModel.model.config.choiceAreaLayout">Horizontal</radio>',
-      '         </div>',
-      '         <div class="col-sm-2 fixed-150">',
-      '           <radio id="tile" value="tile" ng-model="fullModel.model.config.choiceAreaLayout">Tile</radio>',
-      '         </div>',
-      '       </div>',
-      '     </form>'
-    ].join('');
-
-    var answerAreaDisplayOptions = [
-      '<div class="config-form-row">',
-      '    <label style="margin-right: 5px">Choice area is </label>',
-      '    <select ng-model="fullModel.model.config.choiceAreaPosition" ng-options="c for c in [\'above\', \'below\']">',
-      '    </select>',
-      '    <label>answer blanks</label>',
-      '</div>'
-    ].join('');
 
     var displayOptions = [
-      ChoiceTemplates.inputHolder('Choice Area', choiceAreaDisplayOptions),
-      ChoiceTemplates.inputHolder('', answerAreaDisplayOptions)
-
-    ].join("");
+      '<form class="form-horizontal" role="form">',
+      '  <div class="config-form-row">',
+      '    <div class="col-sm-5" ng-show="fullModel.model.config.choiceAreaHasLabel">',
+      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" />',
+      '    </div>',
+      '  </div>',
+      '  <div class="config-form-row"><label>Layout</label></div>',
+      '  <div class="config-form-row layout-config">',
+      '    <div class="col-sm-2">',
+      '      <radio id="vertical" value="vertical" ng-model="fullModel.model.config.choiceAreaLayout">Vertical</radio>',
+      '    </div>',
+      '    <div class="col-sm-2">',
+      '      <radio id="horizontal" value="horizontal" ng-model="fullModel.model.config.choiceAreaLayout">Horizontal</radio>',
+      '    </div>',
+      '  </div>',
+      '  <div class="config-form-row">',
+      '    <label>Choice area is </label>',
+      '    <select class="form-control choice-area" ng-model="fullModel.model.config.choiceAreaPosition"',
+      '        ng-options="c for c in [\'above\', \'below\']">',
+      '    </select>',
+      '    <label>answer blanks</label>',
+      '  </div>',
+      '</form>'
+    ].join('\n');
 
     var template = [
       '<div class="drag-and-drop-config-panel drag-and-drop-inline-config-panel" choice-template-controller="">',
