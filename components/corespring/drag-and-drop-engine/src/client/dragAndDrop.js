@@ -198,6 +198,7 @@ var dragAndDropController = [
             scope.correctResponse = undefined;
             scope.feedback = undefined;
             scope.response = undefined;
+            scope.$emit('rerender-math', {delay: 1});
           },
 
           isAnswerEmpty: function() {
