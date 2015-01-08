@@ -118,7 +118,7 @@ var main = [
       '        </div>',
       '      </div>',
       '    </div>',
-      '    <div class="row">',
+      '    <div class="row add-choice-row">',
       '      <div class="col-xs-12">',
       '        <button type="button" id="add-choice" class="btn btn-default" ',
       '            ng-click="addQuestion()">Add a Choice</button>',
