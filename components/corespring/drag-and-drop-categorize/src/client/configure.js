@@ -182,30 +182,27 @@ var main = [
 
     ].join('\n');
 
-
-    template = [
-      '<div class="drag-and-drop-config-panel drag-and-drop-categorize-config-panel" choice-template-controller="">',
-      '  <div navigator-panel="Design">',
-          designPanel,
-      '  </div>',
-      '  <div navigator-panel="Scoring">',
-      '    <div class="container-fluid">',
-      '      <div class="row">',
-      '        <div class="col-xs-12">',
-                 ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '  <div navigator-panel="Display">',
-           displayPanel,
-      '  </div>',
-      '</div>'].join('\n');
-
     return {
       restrict: "E",
       scope: "isolate",
-      template: template,
+      template: [
+        '<div class="drag-and-drop-config-panel drag-and-drop-categorize-config-panel" choice-template-controller="">',
+        '  <div navigator-panel="Design">',
+        designPanel,
+        '  </div>',
+        '  <div navigator-panel="Scoring">',
+        '    <div class="container-fluid">',
+        '      <div class="row">',
+        '        <div class="col-xs-12">',
+        ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
+        '        </div>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '  <div navigator-panel="Display">',
+        displayPanel,
+        '  </div>',
+        '</div>'].join('\n'),
       controller: ['$scope',
         function($scope) {
           $scope.imageService = function() {
