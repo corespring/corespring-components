@@ -166,6 +166,9 @@
 }
 
 .config-inline-choice {
+
+  .rounded-inputs;
+
   .choice-checkbox {
     cursor: pointer;
 
@@ -174,31 +177,4 @@
     }
   }
 
-  input[type=text],
-  .mini-wiggi-wiz {
-    @border-radius: 4px;
-    width: 100%;
-    min-height: 28px;
-    border-radius: @border-radius;
-    border: 1px solid #cccccc;
-    box-shadow: inset 0px 1px 0px 0px #ececec;
-    margin-bottom: 5px;
-
-    &[disabled] {
-      background-color: #eeeeee;
-    }
-
-    .wiggi-wiz-editable {
-      padding: 6px 12px !important;
-      background-color: transparent;
-    }
-
-    .toolbar {
-      border-radius: 0 0 @border-radius @border-radius;
-    }
-  }
-
-  input[type=text] {
-    padding: 6px 12px;
-  }
 }

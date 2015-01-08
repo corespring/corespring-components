@@ -25,7 +25,7 @@
     }
   },
   "name": "text-entry",
-  "title": "Short Answer - Enter Text",
+  "title": "Short Answer &mdash; Enter Text",
   "titleGroup": "Text Entry",
   "organization": "corespring",
   "released": true
