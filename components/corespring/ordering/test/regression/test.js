@@ -56,7 +56,7 @@ describe('ordering', function() {
         .call(done);
     });
 
-    it.only('choices dont have correctness indication after reset', function(done) {
+    it('choices dont have correctness indication after reset', function(done) {
       browser
         .dragAndDrop('//div[text()="Apple"]', '.landing-place')
         .dragAndDrop('//div[text()="Banana"]', '.landing-place')
