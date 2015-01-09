@@ -8,3 +8,5 @@ bower_components
 *.less.css
 *.less.min.css
 *-wrapped.js
+.DS_Store
+components/.DS_Store

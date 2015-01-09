@@ -136,10 +136,72 @@ function calculateScore(question, answer) {
     return countWhenTrue(acc, answer && correct);
   }
 
+  function getPartialScores(){
+
+    function validateScoreDefinition(){
+      var result = {
+        valid: false,
+        errors:[]
+      };
+
+      var validation = _.reduce(question.correctResponse, function(acc, row) {
+        if (_.isNumber(question.partialScores[row.id])){
+          acc.hasAllDefs = acc.hasAllDefs && true;
+          acc.scoreSumm = acc.scoreSumm + question.partialScores[row.id];
+        }else{
+          acc.hasAllDefs = false;
+        }
+        return acc;
+      },{ hasAllDefs :true, scoreSumm : 0 });
+
+      if (validation.hasAllDefs && validation.scoreSumm == 100){
+        result.valid = true;
+      }
+
+      if (!validation.hasAllDefs){
+        result.valid = false;
+        result.errors.push("number partialScores in match component should be the same as number of rows");
+      }
+
+      if (validation.scoreSumm != 100){
+        result.valid = false;
+        result.errors.push("The summary of all partial scores should be equal to 100");
+      }
+
+      return result;
+    }
+
+    // Either return scores from the question or create evenly distributed scores
+    if (question.partialScores){
+      var validationResult = validateScoreDefinition(question);
+
+      if (validationResult.valid){
+        return question.partialScores;
+      } else {
+        if (console){
+          _.forEach(validationResult.errors,function(error) { console.error(error); });
+        }
+        return null;
+      }
+    }else{
+      var evenScoreDistribution = 100/question.correctResponse.length;
+      var scoreDefinitions = _.reduce(question.correctResponse, function(acc, row) {
+        acc[row.id] = evenScoreDistribution;
+        return acc;
+      },{});
+      return scoreDefinitions;
+    }
+  }
+
   var calculatePartialScore = function(){
+
+    var partialScores = getPartialScores(question);
+
+    if (!partialScores) return undefined;
+
     var partialScore = _.reduce(answer,function(acc, answerRow) {
 
-      var rowScore = question.partialScores[answerRow.id];
+      var rowScore = partialScores[answerRow.id];
       var correctMatchSet = _.find(question.correctResponse,whereIdIsEqual(answerRow.id)).matchSet;
       var zippedMatchSet = _.zip(correctMatchSet,answerRow.matchSet);
 
@@ -158,7 +220,7 @@ function calculateScore(question, answer) {
     return partialScore;
   };
 
-  var maxCorrect = question.correctResponse.length;
+  var maxCorrect = countCorrectAnswers(question.correctResponse,question.correctResponse);
   var correctCount = countCorrectAnswers(answer,question.correctResponse);
 
   if (correctCount === 0) {
@@ -170,7 +232,7 @@ function calculateScore(question, answer) {
   }
 
   if (maxCorrect > 1 && question.allowPartialScoring) {
-    return calculatePartialScore(correctCount) / 100;
+    return calculatePartialScore() / 100;
   }
   else if (correctCount < maxCorrect){
     return 0;

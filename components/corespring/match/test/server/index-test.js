@@ -43,10 +43,10 @@ var componentTemplate = {
   ],
   "allowPartialScoring":true,
   "partialScores": {
-    "1": 50,
-    "2": 20,
-    "3": 10,
-    "4": 5
+    "1": 25,
+    "2": 25,
+    "3": 25,
+    "4": 25
   },
   "feedback": {
     "all_correct": {
@@ -424,7 +424,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "some_correct",
-        "score": 0.6,
+        "score": 0.5,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
         "feedback": {
@@ -483,7 +483,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "some_correct",
-        "score": 0.25,
+        "score": 0.125,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
         "feedback": {
@@ -543,7 +543,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "some_correct",
-        "score": 0.6,
+        "score": 0.5,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
         "feedback": {
