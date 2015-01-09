@@ -154,7 +154,7 @@ function calculateScore(question, answer) {
         return acc;
       },{ hasAllDefs :true, scoreSumm : 0 });
 
-      if (validation.hasAllDefs && validation.scoreSumm == 100){
+      if (validation.hasAllDefs && validation.scoreSumm === 100){
         result.valid = true;
       }
 
@@ -163,7 +163,7 @@ function calculateScore(question, answer) {
         result.errors.push("number partialScores in match component should be the same as number of rows");
       }
 
-      if (validation.scoreSumm != 100){
+      if (validation.scoreSumm !== 100){
         result.valid = false;
         result.errors.push("The summary of all partial scores should be equal to 100");
       }
@@ -197,7 +197,9 @@ function calculateScore(question, answer) {
 
     var partialScores = getPartialScores(question);
 
-    if (!partialScores) return undefined;
+    if (!partialScores) {
+      return undefined;
+    }
 
     var partialScore = _.reduce(answer,function(acc, answerRow) {
 
