@@ -77,8 +77,6 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
           });
 
         }
-
-
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -94,7 +92,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
       answerArea,
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
+      '  <div class="pull-right" ng-show="!correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '</div>'
