@@ -65,9 +65,10 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
 
         setResponse: function(response) {
           $log.debug("[DnD-inline] setResponse: ", response);
-          scope.correctResponse = response.correctResponse;
           scope.feedback = response.feedback;
+          scope.correctness = response.correctness;
           scope.correctClass = response.correctClass;
+          scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
@@ -95,7 +96,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
       answerArea,
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="!correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
+      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '</div>'

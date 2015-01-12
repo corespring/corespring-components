@@ -126,27 +126,39 @@ describe('corespring:drag-and-drop-inline', function() {
 
     it('setting response shows correctness', function() {
       setAnswer('choice_1');
-      setResponse({correctClass: "incorrect", feedback:{}});
+      setResponse({correctness: 'incorrect', correctClass: "incorrectClass", feedback:{}});
       wrapper = wrapElement();
-      expect(wrapper.find(".incorrect").length).toBe(1);
+      expect(wrapper.find(".incorrectClass").length).toBe(1);
     });
 
     describe("see-solution button",function(){
 
-      function setCorrectResponse(correctResponse){
+      function setCorrectness(correctness){
         setAnswer('choice_1');
-        setResponse({"correctResponse": correctResponse});
+        setResponse({correctness: correctness, correctResponse: {}});
         wrapper = wrapElement();
       }
 
+      it('should populate correctResponse when answer is incorrect', function() {
+        setCorrectness('incorrect');
+
+        expect(scope.correctResponse).toBeTruthy();
+      });
+
+      it('should not populatecorrectResponse if answer is correct', function() {
+        setCorrectness('correct');
+
+        expect(scope.correctResponse).toBeFalsy();
+      });
+
       it('should show the button when answer is incorrect', function() {
-        setCorrectResponse(null);
+        setCorrectness('incorrect');
 
         expect(wrapper.find("a[ngClick='_seeSolution()']").length).toBe(0);
       });
 
       it('should hide the button if answer is correct', function() {
-        setCorrectResponse({});
+        setCorrectness('correct');
 
         expect(wrapper.find("a[ng-click='_seeSolution()']").length).toBe(1);
       });
