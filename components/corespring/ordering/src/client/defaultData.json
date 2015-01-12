@@ -31,7 +31,7 @@
       "choiceAreaLayout": "vertical",
       "choiceAreaLabel": "Choice Label",
       "answerAreaLabel": "Answer Label",
-      "placementType": "placement"
+      "placementType": "inPlace"
     }
   },
   "weight": 1

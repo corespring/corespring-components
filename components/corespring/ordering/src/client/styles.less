@@ -1,0 +1,105 @@
+@import '../../../../../less/common';
+
+.view-placement-ordering {
+  .main-table {
+    &.vertical {
+      display: table;
+      width: 100%;
+
+      .main-row {
+        display: table-row;
+        width: 100%;
+      }
+
+      .choice-area {
+        display: table-cell;
+        width: 50%;
+        vertical-align: top;
+      }
+
+      .answer-area {
+        display: table-cell;
+        width: 50%;
+        vertical-align: top;
+      }
+    }
+
+    &.horizontal {
+      .choice-area {
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+.view-ordering {
+  ul {
+    padding-left: 0px;
+    margin-left: 0px;
+  }
+
+  li {
+    list-style: none;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-top: 5px;
+  }
+
+  .choice {
+    border: 1px #000000 solid;
+    background: #efefef;
+    border-radius: 6px;
+    display: inline-block;
+    padding: 8px;
+
+    &.correct {
+      border: 2px solid #80b312;
+      box-shadow: none;
+    }
+
+    &.incorrect {
+      border: 2px solid #F8A31A;
+      box-shadow: none;
+    }
+  }
+
+  .feedback {
+    margin: 10px 0;
+  }
+
+  .feedback-correct {
+    background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 5px;
+    border: solid 2px #80b312;
+    border-radius: 5px;
+    padding: 5px 5px 5px 35px;
+  }
+
+  .feedback-incorrect {
+    border: solid 2px #F8A31A;
+    padding: 5px 5px 5px 35px;
+    border-radius: 5px;
+    background: transparent url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 5px;
+  }
+
+  .feedback-partial {
+    border: solid 2px #843ABC;
+    padding: 5px 5px 5px 35px;
+    border-radius: 5px;
+    background: transparent url("../../images/feedback/partial-icon.png") no-repeat scroll 0px 5px;
+  }
+
+  .config-panel-body {
+    margin: 20px;
+  }
+
+}
+
+.ordering-config {
+
+  .rounded-inputs;
+
+  .placement-row {
+    margin-bottom: 20px;
+  }
+
+}
