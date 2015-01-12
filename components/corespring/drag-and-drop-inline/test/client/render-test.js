@@ -4,7 +4,7 @@ describe('corespring:drag-and-drop-inline', function() {
 
   "use strict";
 
-  var testModel, container, element, scope, rootScope;
+  var testModel, container, element, scope, rootScope, wrapper;
 
   function MockComponentRegister() {
     this.elements = {};
@@ -125,19 +125,16 @@ describe('corespring:drag-and-drop-inline', function() {
     });
 
     it('setting response shows correctness', function() {
-      setAnswer('choice_1')
+      setAnswer('choice_1');
       setResponse({correctClass: "incorrect", feedback:{}});
-      var wrapper = wrapElement();
-
+      wrapper = wrapElement();
       expect(wrapper.find(".incorrect").length).toBe(1);
     });
 
     describe("see-solution button",function(){
 
-      var wrapper;
-
       function setCorrectResponse(correctResponse){
-        setAnswer('choice_1')
+        setAnswer('choice_1');
         setResponse({"correctResponse": correctResponse});
         wrapper = wrapElement();
       }
