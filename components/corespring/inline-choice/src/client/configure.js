@@ -27,7 +27,7 @@ var main = [
       '          <i class="fa fa-trash-o fa-lg" title="Delete" data-tggle="tooltip" ng-click="removeQuestion(choice)">',
       '          </i>',
       '        </div>',
-      '        <div class="col-md-9 col-xs-8 text-center">',
+      '        <div class="col-md-9 col-xs-8">',
       '          <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
       '              image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
       '              parent-selector=".wiggi-wiz-overlay">',
