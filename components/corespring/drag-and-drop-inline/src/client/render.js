@@ -1,5 +1,8 @@
-var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
+/* global exports */
+var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
+  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope) {
+
+    "use strict";
 
     var answerArea = [
       '<h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
@@ -21,7 +24,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
       _.extend(scope.containerBridge, {
         setDataAndSession: function(dataAndSession) {
-          $log.debug("DnD setting session: ", dataAndSession);
+          $log.debug("[DnD-inline] setDataAndSession: ", dataAndSession);
 
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
@@ -30,7 +33,6 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.resetChoices(scope.rawModel);
-          scope.originalChoices = _.cloneDeep(scope.local.choices);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
 
@@ -62,7 +64,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
         },
 
         setResponse: function(response) {
-          console.log("set response for DnD", response);
+          $log.debug("[DnD-inline] setResponse: ", response);
           scope.correctResponse = response.correctResponse;
           scope.feedback = response.feedback;
           scope.correctClass = response.correctClass;
@@ -78,8 +80,6 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
           });
 
         }
-
-
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -95,7 +95,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
       answerArea,
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
+      '  <div class="pull-right" ng-show="!correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '</div>'

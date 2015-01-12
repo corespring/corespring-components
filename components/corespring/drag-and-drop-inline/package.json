@@ -5,6 +5,7 @@
   "organization": "corespring",
   "corespring-container-version": "0.0.1",
   "version": "0.0.1",
+  "released": true,
   "dependencies": {
     "client": {
       "bootstrap-multiselect": {
@@ -40,6 +41,5 @@
       "organization": "corespring",
       "scope" : "editor"
     }
-  ],
-  "released": true
+  ]
 }
