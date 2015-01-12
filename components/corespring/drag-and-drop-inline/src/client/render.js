@@ -1,5 +1,8 @@
-var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
+/* global exports */
+var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
+  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope) {
+
+    "use strict";
 
     var answerArea = [
       '<h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
@@ -21,7 +24,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
       _.extend(scope.containerBridge, {
         setDataAndSession: function(dataAndSession) {
-          $log.debug("DnD setting session: ", dataAndSession);
+          $log.debug("[DnD-inline] setDataAndSession: ", dataAndSession);
 
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
@@ -61,7 +64,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
         },
 
         setResponse: function(response) {
-          console.log("set response for DnD", response);
+          $log.debug("[DnD-inline] setResponse: ", response);
           scope.correctResponse = response.correctResponse;
           scope.feedback = response.feedback;
           scope.correctClass = response.correctClass;

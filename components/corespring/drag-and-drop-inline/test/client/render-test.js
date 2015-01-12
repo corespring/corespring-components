@@ -116,6 +116,14 @@ describe('corespring:drag-and-drop-inline', function() {
       });
     });
 
+    it('removes selected choices from available choices', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(_.find(scope.local.choices, {'id':'choice_1'})).toBeDefined();
+      setAnswer('choice_1');
+      expect(_.find(scope.local.choices, {'id':'choice_1'})).not.toBeDefined();
+    });
+
     it('setting response shows correctness', function() {
       setAnswer('choice_1')
       setResponse({correctClass: "incorrect", feedback:{}});
