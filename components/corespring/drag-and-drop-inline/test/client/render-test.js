@@ -85,23 +85,30 @@ describe('corespring:drag-and-drop-inline', function() {
     rootScope = $rootScope;
   }));
 
-  it('element', function() {
-    expect(element).toBeDefined();
-  });
+  function setAnswer(answer){
+    testModel.session = {
+      answers: [[answer]]
+    };
+    container.elements['1'].setDataAndSession(testModel);
+    rootScope.$digest();
+  }
 
-  it('scope', function() {
-    expect(scope).toBeDefined();
-  });
+  function setResponse(response){
+    container.elements['1'].setResponse(response);
+    rootScope.$digest();
+  }
+
+  function wrapElement(){
+    var wrapper = $("<div/>");
+    wrapper.append($(element));
+    return wrapper;
+  }
 
   describe('render', function() {
 
     it('sets the session choice correctly', function() {
 
-      testModel.session = {
-        answers: [['choice_1']]
-      };
-      container.elements['1'].setDataAndSession(testModel);
-      rootScope.$digest();
+      setAnswer('choice_1');
 
       expect(_.pick(scope.landingPlaceChoices[0][0], 'label', 'id')).toEqual({
         label: 'ham',
@@ -110,27 +117,10 @@ describe('corespring:drag-and-drop-inline', function() {
     });
 
     it('setting response shows correctness', function() {
-      testModel.session = {
-        answers: [['choice_1']]
-      };
-      container.elements['1'].setDataAndSession(testModel);
-      rootScope.$digest();
+      setAnswer('choice_1')
+      setResponse({correctClass: "incorrect", feedback:{}});
+      var wrapper = wrapElement();
 
-      var response = {
-        "correctClass": "incorrect",
-        "score": 0,
-        "feedback": {
-          "1": {
-            correct: false,
-            feedback: "cccc"
-          }
-        }
-      };
-      container.elements['1'].setResponse(response);
-      rootScope.$digest();
-
-      var wrapper = $("<div/>");
-      wrapper.append($(element));
       expect(wrapper.find(".incorrect").length).toBe(1);
     });
 
@@ -139,28 +129,9 @@ describe('corespring:drag-and-drop-inline', function() {
       var wrapper;
 
       function setCorrectResponse(correctResponse){
-        testModel.session = {
-          answers: [['choice_1']]
-        };
-        container.elements['1'].setDataAndSession(testModel);
-        rootScope.$digest();
-
-        var response = {
-          "correctClass": "incorrect",
-          "correctResponse": correctResponse,
-          "score": 0,
-          "feedback": {
-            "1": {
-              correct: false,
-              feedback: "cccc"
-            }
-          }
-        };
-        container.elements['1'].setResponse(response);
-        rootScope.$digest();
-
-        wrapper = $("<div/>");
-        wrapper.append($(element));
+        setAnswer('choice_1')
+        setResponse({"correctResponse": correctResponse});
+        wrapper = wrapElement();
       }
 
       it('should show the button when answer is incorrect', function() {
