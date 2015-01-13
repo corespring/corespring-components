@@ -83,7 +83,7 @@ main = [
       replace: true,
       link: link(),
       template: [
-        '<div class="cs-text-entry">',
+        '<div class="cs-text-entry" ng-class="{popupFeedback: feedback}">',
         '  <div class="cs-text-entry__text-input-holder" ng-class="response.correctness" feedback-popover="response">',
         '    <input type="text" ng-model="answer" ng-readonly="!editable" ng-class="response.correctness"',
         '           class="input-sm form-control" ',
