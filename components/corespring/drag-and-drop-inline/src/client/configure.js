@@ -87,7 +87,7 @@ var main = [
       '        </div>',
       '        <div class="row" style="margin-bottom: 20px;">',
       '          <div class="col-xs-offset-1 col-xs-10">',
-      '            <checkbox ng-model="q.moveOnDrag">Remove tile after placing</checkbox>',
+      '            <checkbox ng-model="choice.moveOnDrag">Remove tile after placing</checkbox>',
       '          </div>',
       '        </div>',
       '      </div>',

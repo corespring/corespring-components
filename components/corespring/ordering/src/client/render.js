@@ -69,6 +69,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
         reset: function() {
           scope.resetChoices(scope.rawModel);
+          scope.correctResponse = undefined;
           scope.comments = undefined;
           scope.feedback = undefined;
         },

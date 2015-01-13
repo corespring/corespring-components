@@ -119,7 +119,7 @@ main = [
       replace: true,
       link: link(),
       template: [
-        '<div class="view-function-entry">',
+        '<div class="view-function-entry" ng-class="{popupFeedback: response.feedback}">',
         '  <div feedback-popover="response">',
         '    <span class="text-input {{correctClass}}">',
         '      <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',

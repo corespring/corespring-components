@@ -1,5 +1,8 @@
-var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
+/* global exports */
+var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
+  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope) {
+
+    "use strict";
 
     var answerArea = [
       '<h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
@@ -21,7 +24,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
       _.extend(scope.containerBridge, {
         setDataAndSession: function(dataAndSession) {
-          $log.debug("DnD setting session: ", dataAndSession);
+          $log.debug("[DnD-inline] setDataAndSession: ", dataAndSession);
 
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
@@ -30,7 +33,6 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.resetChoices(scope.rawModel);
-          scope.originalChoices = _.cloneDeep(scope.local.choices);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
 
@@ -62,10 +64,11 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
         },
 
         setResponse: function(response) {
-          console.log("set response for DnD", response);
-          scope.correctResponse = response.correctResponse;
+          $log.debug("[DnD-inline] setResponse: ", response);
           scope.feedback = response.feedback;
+          scope.correctness = response.correctness;
           scope.correctClass = response.correctClass;
+          scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
@@ -78,8 +81,6 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
           });
 
         }
-
-
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
