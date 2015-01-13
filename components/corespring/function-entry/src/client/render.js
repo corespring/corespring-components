@@ -79,7 +79,7 @@ main = [
           reset: function() {
             scope.answer = undefined;
             scope.correctClass = undefined;
-            scope.resonse = undefined;
+            scope.response = undefined;
             resetHintPopover();
           },
 
