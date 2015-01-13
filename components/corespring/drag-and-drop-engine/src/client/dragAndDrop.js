@@ -173,6 +173,7 @@ var dragAndDropController = [
               };
             },
             template: [
+              ' <div class="see-solution">',
               '   <div class="modal-header">',
               '     <h3>Correct Answer</h3>',
               '   </div>',
@@ -181,7 +182,8 @@ var dragAndDropController = [
               '   </div>',
               '   <div class="modal-footer">',
               '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-              '   </div>'
+              '   </div>',
+              ' </div>'
             ].join(""),
             backdrop: true,
             scope: scope.solutionScope
