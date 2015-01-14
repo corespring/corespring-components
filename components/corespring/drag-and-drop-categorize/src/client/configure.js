@@ -121,7 +121,7 @@ var main = [
       '      <div class="col-md-7 col-xs-6">',
       '        <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
       '            image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
-      '            parent-selector=".wiggi-wiz-overlay">',
+      '            parent-selector=".modal-body">',
       '          <edit-pane-toolbar alignment="bottom">',
       '            <div class="btn-group pull-right">',
       '              <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">Done</button>',
