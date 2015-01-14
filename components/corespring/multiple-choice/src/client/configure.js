@@ -227,8 +227,6 @@ var main = [
             }
           });
           scope.fullModel.correctResponse.value = res;
-          console.log(scope.fullModel.correctResponse.value);
-          return console.log(scope.model);
         }, true);
 
 

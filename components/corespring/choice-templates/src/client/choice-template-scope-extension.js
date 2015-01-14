@@ -23,7 +23,7 @@ exports.factory = [
           $rootScope.$broadcast('resetStash');
         };
 
-        $scope.numToString = function(num) {
+        scope.numToString = function(num) {
           //TODO Works for single digits only
           return String.fromCharCode(65 + num);
         };
