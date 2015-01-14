@@ -1,3 +1,5 @@
+/* global console, exports */
+
 var main = [
   '$log',
   '$timeout',
@@ -9,6 +11,8 @@ var main = [
     $http,
     ChoiceTemplates
     ) {
+
+    "use strict";
 
     var choiceTypeDescriptions = {
       radio: 'This option allows students to select one correct answer. You may, however, set more than one answer as correct if you choose.',
@@ -62,7 +66,7 @@ var main = [
       '    <div class="choice-row" ng-repeat="choice in model.choices">',
       '      <div class="row">',
       '        <div class="col-md-2 col-xs-3 text-center choice-letter">',
-      '          <label class="control-label">{{toChar($index)}}</label>',
+      '          <label class="control-label">{{numToString($index)}}</label>',
       '          <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
       '              ng-click="removeQuestion(choice)"></i>',
       '        </div>',
@@ -93,10 +97,10 @@ var main = [
       '          <div class="panel panel-default">',
       '            <div class="panel-heading">',
       '              <h4 class="panel-title">',
-      '                <a data-toggle="collapse" href="#feedback-{{toChar($index)}}">Feedback</a>',
+      '                <a data-toggle="collapse" href="#feedback-{{numToString($index)}}">Feedback</a>',
       '              </h4>',
       '            </div>',
-      '            <div id="feedback-{{toChar($index)}}" class="panel-collapse collapse">',
+      '            <div id="feedback-{{numToString($index)}}" class="panel-collapse collapse">',
       '              <div class="panel-body">',
       '                <div feedback-selector ng-show="correctMap[choice.value]"',
       '                    fb-sel-label="If this choice is selected, show"',
@@ -276,10 +280,6 @@ var main = [
           return (_(scope.correctMap).keys().filter(function(ck) {
             return scope.correctMap[ck];
           }).size() <= 1);
-        };
-
-        scope.toChar = function(num) {
-          return String.fromCharCode(65 + num);
         };
 
         scope.updateMathJax = function() {

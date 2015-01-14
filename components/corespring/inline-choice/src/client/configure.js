@@ -1,3 +1,4 @@
+/* global exports */
 var main = [
   '$log', 'ChoiceTemplates', 'ServerLogic',
   function($log, ChoiceTemplates, ServerLogic) {
@@ -49,10 +50,10 @@ var main = [
       '          <div class="panel panel-default">',
       '            <div class="panel-heading">',
       '              <h4 class="panel-title">',
-      '                <a data-toggle="collapse" href="#feedback-{{toChar($index)}}">Feedback</a>',
+      '                <a data-toggle="collapse" href="#feedback-{{numToString($index)}}">Feedback</a>',
       '              </h4>',
       '            </div>',
-      '            <div id="feedback-{{toChar($index)}}" class="panel-collapse collapse">',
+      '            <div id="feedback-{{numToString($index)}}" class="panel-collapse collapse">',
       '              <div class="panel-body">',
       '                <div feedback-selector ng-show="fullModel.correctResponse == choice.value"',
       '                    fb-sel-label="If this choice is selected, show"',
@@ -210,10 +211,6 @@ var main = [
           };
 
           scope.fullModel.feedback.push(scope.feedback[uid]);
-        };
-
-        scope.toChar = function(num) {
-          return String.fromCharCode(65 + num);
         };
 
         scope.updateMathJax = function() {

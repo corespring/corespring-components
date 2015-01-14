@@ -216,11 +216,7 @@ var main = [
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
-          return $scope.toChar(idx);
-        };
-
-        $scope.toChar = function(num) {
-          return String.fromCharCode(65 + num);
+          return $scope.numToString(idx);
         };
 
         $scope.sumCorrectResponses = function() {

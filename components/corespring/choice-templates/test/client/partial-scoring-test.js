@@ -87,24 +87,6 @@ describe('choice-template-scope-extension partial-scoring', function(){
       expect(scope.fullModel.partialScoring.length).toEqual(0);
     });
   });
-  describe('validClass', function(){
-    it('should exist', function(){
-      expect(scope.validClass).not.toBeUndefined();
-    });
-    it('should return "invalid", if other scenario has same numberOfCorrect', function(){
-      var scoringScenario1 = {numberOfCorrect:2};
-      var scoringScenario2 = {numberOfCorrect:2};
-      scope.fullModel.partialScoring.push(scoringScenario1, scoringScenario2);
-      expect(scope.validClass(scoringScenario2)).toEqual('invalid');
-    });
-    it('should return "", if no other scenario has same numberOfCorrect', function(){
-      var scoringScenario1 = {numberOfCorrect:1};
-      var scoringScenario2 = {numberOfCorrect:2};
-      scope.fullModel.partialScoring.push(scoringScenario1, scoringScenario2);
-      expect(scope.validClass(scoringScenario2)).toEqual('');
-    });
-  });
-
 
 
 });

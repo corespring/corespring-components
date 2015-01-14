@@ -1,13 +1,15 @@
 // module: corespring.choice-templates
-// service: ChoiceTemplates 
-
+// service: ChoiceTemplates
+/* global exports */
 exports.framework = "angular";
 exports.service = ['$log',
   'ChoiceTemplateScopeExtension',
   'MiniWiggiScopeExtension',
+  'PartialScoringScopeExtension',
   'ServerLogic',
-  function($log, ChoiceTemplateScopeExtension, MiniWiggiScopeExtension, ServerLogic) {
+  function($log, ChoiceTemplateScopeExtension, MiniWiggiScopeExtension, PartialScoringScopeExtension, ServerLogic) {
 
+    "use strict";
 
     function ChoiceTemplates() {
 
@@ -19,6 +21,7 @@ exports.service = ['$log',
 
       this.extendScope = function(scope, componentType) {
         new ChoiceTemplateScopeExtension().postLink(scope);
+        new PartialScoringScopeExtension().postLink(scope);
         new MiniWiggiScopeExtension().postLink(scope);
 
         var server = ServerLogic.load(componentType);
@@ -38,7 +41,7 @@ exports.service = ['$log',
 
       this.choice = function(opts) {
         var defaults = {
-          choice: "<b>Choice {{toChar($index)}}</b>",
+          choice: "<b>Choice {{numToString($index)}}</b>",
           correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>',
           correctnessPredicate: "correctMap[q.value]",
           feedback: true,
@@ -188,8 +191,6 @@ exports.service = ['$log',
           '    </div>',
           '  </div>',
           '</div>',
-          '<div>{{model.partialScoring}}</div>'
-
         ].join('\n');
       };
     }
