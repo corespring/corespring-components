@@ -1,12 +1,16 @@
+/* global exports */
+
 var main = [
   '$log',
+  '$timeout',
   'ChoiceTemplates',
   'ServerLogic',
   'TextProcessing',
-  function ($log, ChoiceTemplates, ServerLogic, TextProcessing) {
+  function ($log, $timeout, ChoiceTemplates, ServerLogic, TextProcessing) {
+
+    "use strict";
 
     var designPanel = [
-      '<div navigator-panel="Design">',
       '  <div class="input-holder root">',
       '    <div class="body">',
       '      <p class="info">',
@@ -102,14 +106,7 @@ var main = [
       '          ></div>',
       '      </div>',
       '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('');
-
-    var scorePanel = [
-      '<div navigator-panel="Scoring">',
-      ChoiceTemplates.scoring({maxNumberOfPartialScores: "correctChoices() - 1"}),
-      '</div>'
+      '  </div>'
     ].join('');
 
     return {
@@ -145,12 +142,15 @@ var main = [
         $scope.$watch('content.xhtml', setBoundaries, true);
         $scope.$watch('model.config.selectionUnit', setBoundaries, true);
 
+        function getNumberOfCorrectChoices() {
+          return ($scope.model && $scope.model.choices) ? _.filter($scope.model.choices, function (choice) {
+            return choice.correct === true;
+          }).length : 0;
+        }
+
         $scope.selectItem = function (index) {
           $scope.model.choices[index].correct = !$scope.model.choices[index].correct;
-        };
-
-        $scope.isSingleChoice = function () {
-          return $scope.correctChoices() < 2;
+          $scope.updatePartialScoringModel(getNumberOfCorrectChoices());
         };
 
         $scope.safeApply = function (fn) {
@@ -166,10 +166,11 @@ var main = [
 
         $scope.toggleChoice = function ($event) {
           $event.stopPropagation();
+
           if ($scope.mode === 'editor') {
             $scope.mode = 'selection';
             $scope.safeApply(function () {
-              setTimeout(function () {
+              $timeout(function () {
                 $('.select-text-editor-container', $element).trigger('show');
               }, 200);
             });
@@ -179,14 +180,8 @@ var main = [
           }
         };
 
-        $scope.correctChoices = function () {
-          return ($scope.model && $scope.model.choices) ? _.filter($scope.model.choices, function (choice) {
-            return choice.correct === true;
-          }).length : 0;
-        };
-
         $scope.hidePopover = function () {
-          setTimeout(function () {
+          $timeout(function () {
             if ($('.popover-inner', $element).length !== 0) {
               $('.select-text-editor-container', $element).trigger('show');
             }
@@ -200,7 +195,7 @@ var main = [
             $scope.model.choices = $scope.model.choices || [];
             $scope.content = {};
             $scope.content.xhtml = _.pluck($scope.model.choices, 'data').join(' ');
-            $scope.fullModel.partialScoring = $scope.fullModel.partialScoring || [];
+            $scope.updatePartialScoringModel(getNumberOfCorrectChoices());
           },
           getModel: function () {
             var model = _.cloneDeep($scope.fullModel);
@@ -219,8 +214,12 @@ var main = [
       },
       template: [
         '<div class="select-text-configuration">',
-          designPanel,
-          scorePanel,
+        '  <div navigator-panel="Design">',
+        designPanel,
+        '  </div>',
+        '  <div navigator-panel="Scoring">',
+        ChoiceTemplates.scoring(),
+        '  </div>',
         '</div>'
       ].join("")
     };

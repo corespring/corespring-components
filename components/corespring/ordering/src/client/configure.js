@@ -1,10 +1,15 @@
+/* global exports */
+
 var main = [
+  '$timeout',
   'ChoiceTemplates',
   'ComponentImageService',
-  '$timeout',
-    function(ChoiceTemplates,
-             ComponentImageService,
-             $timeout) {
+   function($timeout,
+            ChoiceTemplates,
+            ComponentImageService
+   ) {
+
+     "use strict";
 
       var designPanel = [
         '<div class="container-fluid">',
@@ -178,6 +183,10 @@ var main = [
             });
           }
 
+          function getNumberOfCorrectResponses() {
+            return $scope.fullModel && $scope.fullModel.correctResponse ? $scope.fullModel.correctResponse.length : 0;
+          }
+
           $scope.containerBridge = {
             setModel: function(model) {
               $scope.fullModel = model;
@@ -233,10 +242,6 @@ var main = [
             });
           };
 
-          $scope.isSingleChoice = function() {
-            return $scope.fullModel.correctResponse.length < 2;
-          };
-
           $scope.itemClick = function($event) {
             function isField($event) {
               return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
@@ -258,19 +263,22 @@ var main = [
             $scope.$emit('mathJaxUpdateRequest');
           };
 
-          $scope.addChoice = function() {
-            function getNextId() {
-              var prefix = 'id_';
-              var id = 1;
-              function isTaken(choice) {
-                return choice.id === (prefix + id);
-              }
-              while(_.find($scope.model.choices, isTaken)) {
-                id++;
-              }
-              return prefix + id;
+          function findFreeChoiceSlot(){
+            var slot = 1;
+            var ids = _.pluck($scope.model.choices, 'id');
+            while(_.contains(ids, "id_" + slot)){
+              slot++;
             }
-            $scope.model.choices.push({content: "", label: "", id: getNextId(), moveOnDrag: true});
+            return slot;
+          }
+
+          $scope.addChoice = function() {
+
+            $scope.model.choices.push({
+              content: "",
+              label: "",
+              id: "id_" + findFreeChoiceSlot(),
+              moveOnDrag: true});
           };
 
           $scope.deleteChoice = function(index) {
@@ -288,20 +296,16 @@ var main = [
             });
           };
 
+          $scope.$watchCollection('targets', function() {
+            var newOrder = _.pluck($scope.targets, 'id');
+            $scope.fullModel.correctResponse = newOrder;
+            $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+          });
+
           $scope.init = function() {
             $scope.active = [];
             $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
           };
-
-          $scope.$watchCollection('targets', function() {
-            var newOrder = _.pluck($scope.targets, 'id');
-            $scope.fullModel.correctResponse = newOrder;
-          });
-
-          $scope.sumCorrectResponses = function() {
-            return $scope.fullModel.correctResponse.length;
-          };
-
 
           $scope.init();
         },
@@ -314,7 +318,7 @@ var main = [
           '    <div class="container-fluid">',
           '      <div class="row">',
           '        <div class="col-xs-12">',
-                     ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
+                     ChoiceTemplates.scoring(),
           '        </div>',
           '      </div>',
           '    </div>',

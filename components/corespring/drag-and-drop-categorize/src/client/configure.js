@@ -1,3 +1,5 @@
+/* global exports, console */
+
 var main = [
   'ChoiceTemplates',
   'MathJaxService',
@@ -5,6 +7,8 @@ var main = [
   function(ChoiceTemplates,
            MathJaxService,
            ComponentImageService) {
+
+    "use strict";
 
     var displayPanel = [
       '<form class="form-horizontal" role="form">',
@@ -16,21 +20,21 @@ var main = [
       '          <div class="row"><div class="col-xs-12"><label class="control-label">Layout</label></div></div>',
       '          <div class="row">',
       '            <div class="col-xs-2">',
-      '              <radio value="vertical" ng-model="fullModel.model.config.choiceAreaLayout">Vertical</radio>',
+      '              <radio value="vertical" ng-model="model.config.choiceAreaLayout">Vertical</radio>',
       '            </div>',
       '            <div class="col-xs-2">',
-      '              <radio value="horizontal" ng-model="fullModel.model.config.choiceAreaLayout">Horizontal</radio>',
+      '              <radio value="horizontal" ng-model="model.config.choiceAreaLayout">Horizontal</radio>',
       '            </div>',
       '            <div class="col-xs-2">',
-      '              <radio value="tile" ng-model="fullModel.model.config.choiceAreaLayout">Tile</radio>',
+      '              <radio value="tile" ng-model="model.config.choiceAreaLayout">Tile</radio>',
       '            </div>',
       '          </div>',
-      '          <div class="row" ng-show="fullModel.model.config.choiceAreaLayout == \'tile\'">',
+      '          <div class="row" ng-show="model.config.choiceAreaLayout == \'tile\'">',
       '            <div class="col-xs-offset-4 col-xs-2">',
       '              <label class="control-label">Items Per Row</label>',
       '            </div>',
       '            <div class="col-xs-2">',
-      '              <input type="text" class="form-control" ng-model="fullModel.model.config.itemsPerRow" />',
+      '              <input type="text" class="form-control" ng-model="model.config.itemsPerRow" />',
       '            </div>',
       '          </div>',
       '        </div>',
@@ -43,7 +47,7 @@ var main = [
       '          <div class="row answer-area-position-row">',
       '            <div class="col-xs-12">',
       '              Answer area is',
-      '              <select ng-model="fullModel.model.config.answerAreaPosition" class="form-control">',
+      '              <select ng-model="model.config.answerAreaPosition" class="form-control">',
       '                <option value="above">above</option>',
       '                <option value="below">below</option>',
       '              </select>',
@@ -102,7 +106,7 @@ var main = [
       '  <div class="row"> <div class="col-xs-12"><label class="control-label">Choices</label></div></div>',
       '  <div class="row">',
       '    <div class="col-xs-12">',
-      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" ',
+      '      <input type="text" class="form-control" ng-model="model.config.choiceAreaLabel" ',
       '        placeholder="Enter choice area label or leave blank"/>',
       '    </div>',
       '  </div>',
@@ -114,9 +118,9 @@ var main = [
       '  <div class="choice-row-group" ng-repeat="choice in model.choices">',
       '    <div class="row choice-row">',
       '      <div class="col-md-2 col-xs-3 text-center choice-letter">',
-      '        <label class="control-label">Choice {{toChar($index)}}</label>',
+      '        <label class="control-label">Choice {{numToString($index)}}</label>',
       '        <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
-      '            ng-click="removeQuestion(choice)"></i>',
+      '            ng-click="removeChoice(choice)"></i>',
       '      </div>',
       '      <div class="col-md-7 col-xs-6">',
       '        <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
@@ -148,7 +152,7 @@ var main = [
       '  </div>',
       '  <div class="row">',
       '    <div class="col-xs-12">',
-      '      <checkbox ng-model="fullModel.model.config.shuffle" class="control-label">Shuffle Tiles</checkbox>',
+      '      <checkbox ng-model="model.config.shuffle" class="control-label">Shuffle Tiles</checkbox>',
       '    </div>',
       '  </div>',
       '  <div class="row feedback-row">',
@@ -194,7 +198,7 @@ var main = [
         '    <div class="container-fluid">',
         '      <div class="row">',
         '        <div class="col-xs-12">',
-        ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
+        ChoiceTemplates.scoring(),
         '        </div>',
         '      </div>',
         '    </div>',
@@ -219,18 +223,14 @@ var main = [
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
-          return $scope.toChar(idx);
+          return $scope.numToString(idx);
         };
 
-        $scope.toChar = function(num) {
-          return String.fromCharCode(65 + num);
-        };
-
-        $scope.sumCorrectResponses = function() {
+        function sumCorrectResponses() {
           return _.reduce($scope.correctMap, function(memo, ca) {
             return ca.length + memo;
           }, 0);
-        };
+        }
 
         $scope.containerBridge = {
           setModel: function(model) {
@@ -244,7 +244,7 @@ var main = [
             };
 
             $scope.correctMap = {};
-            console.log("Correct repsonse is ", model.correctResponse);
+            console.log("Correct response is ", model.correctResponse);
             _.each(model.correctResponse, function(val, catId) {
               _.each(val, function(cr) {
                 $scope.correctMap[cr] = $scope.correctMap[cr] || [];
@@ -252,6 +252,8 @@ var main = [
               });
             });
             console.log("Correct map  is ", $scope.correctMap);
+
+            $scope.updatePartialScoringModel(sumCorrectResponses());
 
             $scope.componentState = "initialized";
             console.log(model);
@@ -277,20 +279,28 @@ var main = [
               });
             });
             $scope.fullModel.correctResponse = res;
+            $scope.updatePartialScoringModel(sumCorrectResponses());
           }
         }, true);
 
-        $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
-
-        $scope.removeQuestion = function(c) {
+        $scope.removeChoice = function(c) {
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
             return existing !== c;
           });
         };
 
+        function findFreeChoiceSlot(){
+          var slot = 0;
+          var ids = _.pluck($scope.model.choices, 'id');
+          while(_.contains(ids, "choice_" + slot)){
+            slot++;
+          }
+          return slot;
+        }
+
         $scope.addChoice = function() {
           $scope.model.choices.push({
-            id: "choice_" + $scope.model.choices.length,
+            id: "choice_" + findFreeChoiceSlot(),
             labelType: "text",
             label: "",
             moveOnDrag: false
@@ -307,15 +317,23 @@ var main = [
             });
           });
           delete $scope.fullModel.correctResponse[category.id];
-
         };
 
         $scope.$watch('model', function() {
-          MathJaxService.parseDomForMath(0);
+          MathJaxService.parseDomForMath(0); //TODO on every model change?
         }, true);
 
+        function findFreeCategorySlot(){
+          var slot = 0;
+          var ids = _.pluck($scope.model.categories, 'id');
+          while(_.contains(ids, "cat_" + slot)){
+            slot++;
+          }
+          return slot;
+        }
+
         $scope.addCategory = function() {
-          var idx = $scope.model.categories.length + 1;
+          var idx = findFreeCategorySlot();
           $scope.model.categories.push({
             id: "cat_" + idx,
             hasLabel: true,
@@ -323,7 +341,9 @@ var main = [
             layout: "vertical"
           });
         };
+
         $scope.leftPanelClosed = false;
+        $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
       }
   };
   }
@@ -331,6 +351,7 @@ var main = [
 
 var bootstrapMultiselect = [
   function() {
+    "use strict";
     return function(scope, element, attrs) {
         element.multiselect();
         var btn = element.next().find('button');

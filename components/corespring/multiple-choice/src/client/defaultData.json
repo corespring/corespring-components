@@ -16,41 +16,41 @@
     {
       "feedbackType": "none",
       "notChosenFeedbackType": "none",
-      "value": "1"
+      "value": "mc_1"
     },
     {
       "feedbackType": "none",
       "notChosenFeedbackType": "none",
-      "value": "2"
+      "value": "mc_2"
     },
     {
       "feedbackType": "none",
       "notChosenFeedbackType": "none",
-      "value": "3"
+      "value": "mc_3"
     },
     {
       "feedbackType": "none",
       "notChosenFeedbackType": "none",
-      "value": "4"
+      "value": "mc_4"
     }
   ],
   "model": {
     "choices": [
       {
         "label": "",
-        "value": "1"
+        "value": "mc_1"
       },
       {
         "label": "",
-        "value": "2"
+        "value": "mc_2"
       },
       {
         "label": "",
-        "value": "3"
+        "value": "mc_3"
       },
       {
         "label": "",
-        "value": "4"
+        "value": "mc_4"
       }
     ],
     "config": {
