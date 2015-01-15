@@ -52,9 +52,9 @@ exports.factory = [
 
         scope.updatePartialScoringModel = function(numberOfCorrectResponses){
           if(!scope.fullModel.partialScoring){
-            scope.fullModel.partialScoring = [];
+            scope.fullModel.partialScoring = [{"numberOfCorrect": 1, "scorePercentage": 25}];
           }
-          scope.numberOfCorrectResponses = Math.max(0,numberOfCorrectResponses);
+          scope.numberOfCorrectResponses = Math.max(0,isNaN(numberOfCorrectResponses) ? 0 : numberOfCorrectResponses);
           scope.maxNumberOfScoringScenarios = Math.max( 1, scope.numberOfCorrectResponses-1);
           scope.canAddScoringScenario = scope.fullModel.partialScoring.length < scope.maxNumberOfScoringScenarios;
           scope.canRemoveScoringScenario = scope.fullModel.partialScoring.length > 1;
