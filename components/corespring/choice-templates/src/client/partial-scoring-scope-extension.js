@@ -34,7 +34,9 @@ exports.factory = [
         };
 
         scope.togglePartialScoring = function() {
-          scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
+          if( scope.numberOfCorrectResponses > 1 ) {
+            scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
+          }
         };
 
         scope.removeScoringScenario = function(scoringScenario) {

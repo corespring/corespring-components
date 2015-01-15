@@ -35,9 +35,16 @@ describe('choice-template-scope-extension partial-scoring', function(){
       expect(scope.togglePartialScoring).not.toBeUndefined();
     });
     it('should toggle allowPartialScoring', function(){
+      scope.numberOfCorrectResponses = 2;
       scope.fullModel.allowPartialScoring = true;
       scope.togglePartialScoring();
       expect(scope.fullModel.allowPartialScoring).toBe(false);
+    });
+    it('should not toggle allowPartialScoring, if numberOfCorrectResponses is 1 or less', function(){
+      scope.numberOfCorrectResponses = 1;
+      scope.fullModel.allowPartialScoring = true;
+      scope.togglePartialScoring();
+      expect(scope.fullModel.allowPartialScoring).toBe(true);
     });
   });
 
