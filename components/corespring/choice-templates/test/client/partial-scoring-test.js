@@ -7,10 +7,10 @@ describe('choice-template-scope-extension partial-scoring', function(){
 
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(inject(function($rootScope, ChoiceTemplateScopeExtension) {
+  beforeEach(inject(function($rootScope, PartialScoringScopeExtension) {
     scope = $rootScope.$new();
     scope.fullModel = {allowPartialScoring:true, partialScoring:[]};
-    new ChoiceTemplateScopeExtension().postLink(scope);
+    new PartialScoringScopeExtension().postLink(scope);
   }));
 
   it('scope', function() {
@@ -39,43 +39,8 @@ describe('choice-template-scope-extension partial-scoring', function(){
       scope.togglePartialScoring();
       expect(scope.fullModel.allowPartialScoring).toBe(false);
     });
-    it('should not toggle allowPartialScoring if isSingleChoice returns true', function(){
-      scope.fullModel.allowPartialScoring = true;
-      scope.isSingleChoice = function(){return true;};
-      scope.togglePartialScoring();
-      expect(scope.fullModel.allowPartialScoring).toBe(true);
-    });
-    it('should toggle allowPartialScoring if isSingleChoice returns false', function(){
-      scope.fullModel.allowPartialScoring = true;
-      scope.isSingleChoice = function(){return false;};
-      scope.togglePartialScoring();
-      expect(scope.fullModel.allowPartialScoring).toBe(false);
-    });
   });
 
-  describe('partialScoring', function(){
-    it('should exist', function(){
-      expect(scope.partialScoring).not.toBeUndefined();
-    });
-    it('should return allowPartialScoring', function(){
-      scope.fullModel.allowPartialScoring = true;
-      expect(scope.partialScoring()).toBe(true);
-      scope.fullModel.allowPartialScoring = false;
-      expect(scope.partialScoring()).toBe(false);
-    });
-    it('should return false, if singleChoice is true', function(){
-      scope.isSingleChoice = function(){return true;};
-      scope.fullModel.allowPartialScoring = true;
-      expect(scope.partialScoring()).toBe(false);
-    });
-    it('should return allowPartialScoring, if singleChoice is false', function(){
-      scope.isSingleChoice = function(){return false;};
-      scope.fullModel.allowPartialScoring = true;
-      expect(scope.partialScoring()).toBe(true);
-      scope.fullModel.allowPartialScoring = false;
-      expect(scope.partialScoring()).toBe(false);
-    });
-  });
   describe('removeScoringScenario', function(){
     it('should exist', function(){
       expect(scope.removeScoringScenario).not.toBeUndefined();
@@ -86,6 +51,13 @@ describe('choice-template-scope-extension partial-scoring', function(){
       scope.removeScoringScenario(scoringScenario);
       expect(scope.fullModel.partialScoring.length).toEqual(0);
     });
+  });
+
+  describe('updatePartialScoringModel', function(){
+    it('should exist', function(){
+      expect(scope.updatePartialScoringModel).not.toBeUndefined();
+    });
+    it('should create')
   });
 
 

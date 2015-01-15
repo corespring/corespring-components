@@ -1,4 +1,4 @@
-/* global browser, regressionTestRunnerGlobals */
+/* global browser, regressionTestRunnerGlobals, require, describe, console, beforeEach, it */
 
 var should = require('should');
 var fs = require('fs');
@@ -11,17 +11,33 @@ var RegressionHelper = (function() {
 
 describe('multiple-choice', function() {
 
+  "use strict";
+
   var itemJsonFilename = 'one.json';
   var itemJson = RegressionHelper.getItemJson('multiple-choice', itemJsonFilename);
+
+  function findChoice(id){
+    return _.find(itemJson.item.components['1'].model.choices, function(choice) {
+      return choice.value === id;
+    });
+  }
+
+  function findOtherChoice(notThisOne){
+    return _.find(itemJson.item.components['1'].model.choices, function(choice) {
+      return choice.value !== notThisOne;
+    });
+  }
+
+  function findFeedback(id){
+    return _.find(itemJson.item.components['1'].feedback, function(feedback) {
+      return feedback.value === id;
+    });
+  }
+
   var correctAnswer = itemJson.item.components['1'].correctResponse.value[0];
-
-  var incorrectAnswer = _.find(itemJson.item.components['1'].model.choices, function(choice) {
-    return choice.value !== correctAnswer;
-  }).value;
-
-  var notChosenFeedback = _.find(itemJson.item.components['1'].feedback, function(feedback) {
-    return feedback.value === correctAnswer;
-  }).notChosenFeedback;
+  var correctAnswerLabel = findChoice(correctAnswer).label;
+  var incorrectAnswer = findOtherChoice(correctAnswer).value;
+  var notChosenFeedback = findFeedback(correctAnswer).notChosenFeedback;
 
   browser.selectAnswer = function(answer) {
 
@@ -91,8 +107,9 @@ describe('multiple-choice', function() {
       .selectAnswer(incorrectAnswer)
       .submitItem()
       .showAnswer()
+      .pause(500)
       .getText('.answer-holder .choice-holder.correct .choice-label', function(err, message) {
-        message.should.eql(correctAnswer);
+        message.should.eql(correctAnswerLabel);
       })
       .call(done);
   });
