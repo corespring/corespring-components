@@ -68,7 +68,7 @@ var main = [
       '        <div class="col-md-2 col-xs-3 text-center choice-letter">',
       '          <label class="control-label">{{numToString($index)}}</label>',
       '          <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
-      '              ng-click="removeQuestion(choice)"></i>',
+      '              ng-click="removeChoice(choice)"></i>',
       '        </div>',
       '        <div class="col-md-9 col-xs-8">',
       '          <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
@@ -125,7 +125,7 @@ var main = [
       '    <div class="row add-choice-row">',
       '      <div class="col-xs-12">',
       '        <button type="button" id="add-choice" class="btn btn-default" ',
-      '            ng-click="addQuestion()">Add a Choice</button>',
+      '            ng-click="addChoice()">Add a Choice</button>',
       '      </div>',
       '    </div>',
       '    <div class="row">',
@@ -246,7 +246,7 @@ var main = [
           scope.fullModel.feedback = out;
         }, true);
 
-        scope.removeQuestion = function(q) {
+        scope.removeChoice = function(q) {
 
           scope.correctMap[q.value] = false;
           delete scope.feedback[q.value];
@@ -262,16 +262,17 @@ var main = [
           return null;
         };
 
-        function findFirstFreeSlot(){
-          var slot = 1;
-          while(scope.feedback['mc_' + slot]){
+        function findFreeChoiceSlot(){
+          var slot = 0;
+          var ids = _.pluck(scope.model.choices, 'value');
+          while(_.contains(ids, "mc_" + slot)){
             slot++;
           }
-          return "mc_" + slot;
+          return slot;
         }
 
-        scope.addQuestion = function() {
-          var uid = findFirstFreeSlot();
+        scope.addChoice = function() {
+          var uid = 'mc_' + findFreeChoiceSlot();
 
           scope.model.choices.push({
             label: "",
