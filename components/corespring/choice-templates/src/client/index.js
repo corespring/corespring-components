@@ -178,7 +178,7 @@ exports.service = ['$log',
           '      </div>',
           '    </div>',
           '  </div>',
-          '</div>',
+          '</div>'
         ].join('\n'));
       };
     }

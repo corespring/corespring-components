@@ -278,7 +278,7 @@ var main = [
             $scope.correctAnswers[key] = _.filter(val, function(choice){
               return choice !== c;
             });
-          })
+          });
         };
 
         function findFreeChoiceSlot(){
