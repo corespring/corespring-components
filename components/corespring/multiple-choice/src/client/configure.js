@@ -183,7 +183,7 @@ var main = [
               c.labelType = c.labelType || "text";
             });
 
-            scope.updatePartialScoringModel(scope.fullModel.correctResponse.value);
+            scope.updatePartialScoringModel(scope.fullModel.correctResponse.value.length);
           },
 
           getModel: function() {

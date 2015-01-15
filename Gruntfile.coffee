@@ -39,6 +39,7 @@ module.exports = (grunt) ->
           keepRunner: true
           vendor: [
             '<%= common.app %>/bower_components/lodash/dist/lodash.js',
+            '../modules/container-client/src/js/corespring/lodash-mixins.js',
             '<%= common.app %>/bower_components/headjs/dist/1.0.0/head.js',
             '<%= common.app %>/bower_components/jquery/dist/jquery.js',
             '<%= common.app %>/bower_components/angular/angular.js',
