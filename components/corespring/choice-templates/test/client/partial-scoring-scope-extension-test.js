@@ -1,6 +1,6 @@
 /* global describe, beforeEach, inject, module, it, expect */
 
-describe('choice-template-scope-extension partial-scoring', function(){
+describe('partial-scoring-scope-extension', function(){
   'use strict';
 
   var scope;
@@ -15,12 +15,12 @@ describe('choice-template-scope-extension partial-scoring', function(){
   }));
 
   it('scope', function() {
-    expect(scope).not.toBeUndefined();
+    expect(scope).toBeDefined();
   });
 
   describe('addScoringScenario', function(){
     it('should exist', function() {
-      expect(scope.addScoringScenario).not.toBeUndefined();
+      expect(scope.addScoringScenario).toBeDefined();
     });
 
     it('should add a scenario', function(){
@@ -34,7 +34,7 @@ describe('choice-template-scope-extension partial-scoring', function(){
 
   describe('togglePartialScoring', function(){
     it('should exist', function(){
-      expect(scope.togglePartialScoring).not.toBeUndefined();
+      expect(scope.togglePartialScoring).toBeDefined();
     });
     it('should toggle allowPartialScoring', function(){
       scope.numberOfCorrectResponses = 2;
@@ -54,7 +54,7 @@ describe('choice-template-scope-extension partial-scoring', function(){
 
   describe('removeScoringScenario', function(){
     it('should exist', function(){
-      expect(scope.removeScoringScenario).not.toBeUndefined();
+      expect(scope.removeScoringScenario).toBeDefined();
     });
     it('should remove scoringScenario', function(){
       var scoringScenario = {};
@@ -66,7 +66,7 @@ describe('choice-template-scope-extension partial-scoring', function(){
 
   describe('updatePartialScoringModel', function() {
     it('should exist', function () {
-      expect(scope.updatePartialScoringModel).not.toBeUndefined();
+      expect(scope.updatePartialScoringModel).toBeDefined();
     });
 
     describe('numberOfCorrectResponses', function () {

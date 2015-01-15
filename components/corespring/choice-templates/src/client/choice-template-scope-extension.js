@@ -28,8 +28,7 @@ exports.factory = [
         };
 
         scope.numToString = function(num) {
-          //TODO Works for single digits only
-          return String.fromCharCode(65 + num);
+          return (!num || isNaN(num) ? 0 : num).toString(10);
         };
 
       };
