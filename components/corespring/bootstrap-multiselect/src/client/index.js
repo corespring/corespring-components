@@ -1,3 +1,5 @@
+/* global exports, console */
+
 var directive = function() {
   "use strict";
 
@@ -27,7 +29,7 @@ var directive = function() {
         }, true);
       }
     } else {
-      console.warn("element.multiselect is not defined");
+      console.warn("warning: element.multiselect is not defined");
     }
   };
 };
@@ -37,5 +39,5 @@ exports.framework = 'angular';
 exports.directive = {
     name: 'bootstrapMultiselect',
     directive: directive
-}
+};
 
