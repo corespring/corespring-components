@@ -287,6 +287,7 @@ var main = [
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
             return existing !== c;
           });
+          delete $scope.correctMap[c.id];
         };
 
         function findFreeChoiceSlot(){
