@@ -20,21 +20,21 @@ var main = [
       '          <div class="row"><div class="col-xs-12"><label class="control-label">Layout</label></div></div>',
       '          <div class="row">',
       '            <div class="col-xs-2">',
-      '              <radio value="vertical" ng-model="fullModel.model.config.choiceAreaLayout">Vertical</radio>',
+      '              <radio value="vertical" ng-model="model.config.choiceAreaLayout">Vertical</radio>',
       '            </div>',
       '            <div class="col-xs-2">',
-      '              <radio value="horizontal" ng-model="fullModel.model.config.choiceAreaLayout">Horizontal</radio>',
+      '              <radio value="horizontal" ng-model="model.config.choiceAreaLayout">Horizontal</radio>',
       '            </div>',
       '            <div class="col-xs-2">',
-      '              <radio value="tile" ng-model="fullModel.model.config.choiceAreaLayout">Tile</radio>',
+      '              <radio value="tile" ng-model="model.config.choiceAreaLayout">Tile</radio>',
       '            </div>',
       '          </div>',
-      '          <div class="row" ng-show="fullModel.model.config.choiceAreaLayout == \'tile\'">',
+      '          <div class="row" ng-show="model.config.choiceAreaLayout == \'tile\'">',
       '            <div class="col-xs-offset-4 col-xs-2">',
       '              <label class="control-label">Items Per Row</label>',
       '            </div>',
       '            <div class="col-xs-2">',
-      '              <input type="text" class="form-control" ng-model="fullModel.model.config.itemsPerRow" />',
+      '              <input type="text" class="form-control" ng-model="model.config.itemsPerRow" />',
       '            </div>',
       '          </div>',
       '        </div>',
@@ -47,7 +47,7 @@ var main = [
       '          <div class="row answer-area-position-row">',
       '            <div class="col-xs-12">',
       '              Answer area is',
-      '              <select ng-model="fullModel.model.config.answerAreaPosition" class="form-control">',
+      '              <select ng-model="model.config.answerAreaPosition" class="form-control">',
       '                <option value="above">above</option>',
       '                <option value="below">below</option>',
       '              </select>',
@@ -106,7 +106,7 @@ var main = [
       '  <div class="row"> <div class="col-xs-12"><label class="control-label">Choices</label></div></div>',
       '  <div class="row">',
       '    <div class="col-xs-12">',
-      '      <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" ',
+      '      <input type="text" class="form-control" ng-model="model.config.choiceAreaLabel" ',
       '        placeholder="Enter choice area label or leave blank"/>',
       '    </div>',
       '  </div>',
@@ -152,7 +152,7 @@ var main = [
       '  </div>',
       '  <div class="row">',
       '    <div class="col-xs-12">',
-      '      <checkbox ng-model="fullModel.model.config.shuffle" class="control-label">Shuffle Tiles</checkbox>',
+      '      <checkbox ng-model="model.config.shuffle" class="control-label">Shuffle Tiles</checkbox>',
       '    </div>',
       '  </div>',
       '  <div class="row feedback-row">',
@@ -283,8 +283,6 @@ var main = [
           }
         }, true);
 
-        $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
-
         $scope.removeChoice = function(c) {
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
             return existing !== c;
@@ -343,7 +341,9 @@ var main = [
             layout: "vertical"
           });
         };
+
         $scope.leftPanelClosed = false;
+        $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
       }
   };
   }
