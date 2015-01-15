@@ -9,10 +9,6 @@ var main = [
       scope.inputType = 'checkbox';
       scope.editable = true;
       scope.bridge = {answerVisible: false};
-      scope.answer = {
-        choices: {},
-        choice: ""
-      };
 
       var getAnswers = function() {
         if (scope.answer.choice) {
@@ -143,6 +139,10 @@ var main = [
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
           scope.session = dataAndSession.session || {};
+          scope.answer = {
+            choices: {},
+            choice: ""
+          };
           updateUi();
         },
 
@@ -178,7 +178,8 @@ var main = [
             $(element).find(".feedback-panel.visible").slideDown(400);
           }, 10);
         },
-        setMode: function(newMode) {},
+        setMode: function(newMode) {
+        },
         /**
          * Reset the ui back to an unanswered state
          */
@@ -209,8 +210,10 @@ var main = [
       scope.letter = function(idx) {
         var type = scope.question && scope.question.config ? scope.question.config.choiceLabels : "none";
         switch (type) {
-          case "none": return "";
-          case "numbers": return (idx+1)+"";
+          case "none":
+            return "";
+          case "numbers":
+            return (idx + 1) + "";
         }
 
         // default to letters
@@ -230,12 +233,12 @@ var main = [
         return orientation() === 'tile';
       };
 
-      function orientation(){
+      function orientation() {
         return scope.question && scope.question.config ? scope.question.config.orientation : '';
       }
 
-      scope.onClickChoice = function(choice){
-        if(scope.editable) {
+      scope.onClickChoice = function(choice) {
+        if (scope.editable) {
           if (scope.inputType === 'radio') {
             scope.answer.choice = choice.value;
           } else {
@@ -245,19 +248,19 @@ var main = [
       };
 
       scope.$watch('panelOpen', function(n) {
-         if (n) {
-           $(element).find('.panel-collapse').slideDown(400);
-         } else {
-           $(element).find('.panel-collapse').slideUp(400);
-         }
+        if (n) {
+          $(element).find('.panel-collapse').slideDown(400);
+        } else {
+          $(element).find('.panel-collapse').slideUp(400);
+        }
       });
 
       scope.$watch('bridge.answerVisible', function(n) {
-         if (n) {
-           $(element).find('.answer-collapse').slideDown(400);
-         } else {
-           $(element).find('.answer-collapse').slideUp(400);
-         }
+        if (n) {
+          $(element).find('.answer-collapse').slideDown(400);
+        } else {
+          $(element).find('.answer-collapse').slideUp(400);
+        }
       });
 
       scope.choiceClass = function(o) {
@@ -399,9 +402,9 @@ var main = [
       link: link,
       template: [
         '<div class="view-multiple-choice">',
-        '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
-        '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
-        '  <div ng-if="isTile()">' + tileTemplate + '</div>',
+          '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
+          '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
+          '  <div ng-if="isTile()">' + tileTemplate + '</div>',
         '  <div class="summaryFeedbackPanel fade in ng-hide" ng-show="response.comments">',
         '    <div class="">',
         '      <div class="panel-group">',

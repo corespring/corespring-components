@@ -7,6 +7,6 @@
   },
   "name": "numbered-lines",
   "organization": "corespring",
-  "released" : false,
+  "released" : true,
   "purpose" : "widget"
 }
