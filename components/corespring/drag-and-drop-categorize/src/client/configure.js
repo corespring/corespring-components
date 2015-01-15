@@ -1,3 +1,5 @@
+/* global exports, console */
+
 var main = [
   'ChoiceTemplates',
   'MathJaxService',
@@ -5,6 +7,8 @@ var main = [
   function(ChoiceTemplates,
            MathJaxService,
            ComponentImageService) {
+
+    "use strict";
 
     var displayPanel = [
       '<form class="form-horizontal" role="form">',
@@ -116,7 +120,7 @@ var main = [
       '      <div class="col-md-2 col-xs-3 text-center choice-letter">',
       '        <label class="control-label">Choice {{numToString($index)}}</label>',
       '        <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
-      '            ng-click="removeQuestion(choice)"></i>',
+      '            ng-click="removeChoice(choice)"></i>',
       '      </div>',
       '      <div class="col-md-7 col-xs-6">',
       '        <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
@@ -194,7 +198,7 @@ var main = [
         '    <div class="container-fluid">',
         '      <div class="row">',
         '        <div class="col-xs-12">',
-        ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
+        ChoiceTemplates.scoring(),
         '        </div>',
         '      </div>',
         '    </div>',
@@ -222,11 +226,11 @@ var main = [
           return $scope.numToString(idx);
         };
 
-        $scope.sumCorrectResponses = function() {
+        function sumCorrectResponses() {
           return _.reduce($scope.correctMap, function(memo, ca) {
             return ca.length + memo;
           }, 0);
-        };
+        }
 
         $scope.containerBridge = {
           setModel: function(model) {
@@ -240,7 +244,7 @@ var main = [
             };
 
             $scope.correctMap = {};
-            console.log("Correct repsonse is ", model.correctResponse);
+            console.log("Correct response is ", model.correctResponse);
             _.each(model.correctResponse, function(val, catId) {
               _.each(val, function(cr) {
                 $scope.correctMap[cr] = $scope.correctMap[cr] || [];
@@ -248,6 +252,8 @@ var main = [
               });
             });
             console.log("Correct map  is ", $scope.correctMap);
+
+            $scope.updatePartialScoringModel(sumCorrectResponses());
 
             $scope.componentState = "initialized";
             console.log(model);
@@ -273,20 +279,30 @@ var main = [
               });
             });
             $scope.fullModel.correctResponse = res;
+            $scope.updatePartialScoringModel(sumCorrectResponses());
           }
         }, true);
 
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
 
-        $scope.removeQuestion = function(c) {
+        $scope.removeChoice = function(c) {
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
             return existing !== c;
           });
         };
 
+        function findFreeChoiceSlot(){
+          var slot = 0;
+          var ids = _.pluck($scope.model.choices, 'id');
+          while(_.contains(ids, "choice_" + slot)){
+            slot++;
+          }
+          return slot;
+        }
+
         $scope.addChoice = function() {
           $scope.model.choices.push({
-            id: "choice_" + $scope.model.choices.length,
+            id: "choice_" + findFreeChoiceSlot(),
             labelType: "text",
             label: "",
             moveOnDrag: false
@@ -303,15 +319,23 @@ var main = [
             });
           });
           delete $scope.fullModel.correctResponse[category.id];
-
         };
 
         $scope.$watch('model', function() {
-          MathJaxService.parseDomForMath(0);
+          MathJaxService.parseDomForMath(0); //TODO on every model change?
         }, true);
 
+        function findFreeCategorySlot(){
+          var slot = 0;
+          var ids = _.pluck($scope.model.categories, 'id');
+          while(_.contains(ids, "cat_" + slot)){
+            slot++;
+          }
+          return slot;
+        }
+
         $scope.addCategory = function() {
-          var idx = $scope.model.categories.length + 1;
+          var idx = findFreeCategorySlot();
           $scope.model.categories.push({
             id: "cat_" + idx,
             hasLabel: true,
@@ -327,6 +351,7 @@ var main = [
 
 var bootstrapMultiselect = [
   function() {
+    "use strict";
     return function(scope, element, attrs) {
         element.multiselect();
         var btn = element.next().find('button');
