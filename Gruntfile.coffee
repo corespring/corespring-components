@@ -7,7 +7,7 @@ testClient = require "./lib/test-client"
 
 module.exports = (grunt) ->
 
-  corespringCore = grunt.option("corespringCore") ?  "../modules/container-client/src/js/corespring/core.js"
+  corespringCore = grunt.option("corespringCore") ?  "../modules/container-client/src/js/corespring"
 
   commonConfig =
     app: "."
@@ -39,7 +39,6 @@ module.exports = (grunt) ->
           keepRunner: true
           vendor: [
             '<%= common.app %>/bower_components/lodash/dist/lodash.js',
-            '../modules/container-client/src/js/corespring/lodash-mixins.js',
             '<%= common.app %>/bower_components/headjs/dist/1.0.0/head.js',
             '<%= common.app %>/bower_components/jquery/dist/jquery.js',
             '<%= common.app %>/bower_components/angular/angular.js',
@@ -47,7 +46,8 @@ module.exports = (grunt) ->
             # TODO : how to build out packages like this..
             '<%= common.app %>/bower_components/ckeditor/ckeditor.js',
             '<%= common.app %>/bower_components/saxjs/lib/sax.js',
-            '<%= common.corespringCore %>',
+            '<%= common.corespringCore %>/core.js',
+            '<%= common.corespringCore %>/lodash-mixins.js',
             '<%= grunt.config("testClient.appDeclaration") %>'
           ]
           specs: '<%= grunt.config("testClient.specPath") %>'
