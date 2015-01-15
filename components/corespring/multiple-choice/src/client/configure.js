@@ -155,7 +155,6 @@ var main = [
             scope.correctMap = {};
             scope.scoreMapping = {};
             scope.model.scoringType = scope.model.scoringType || "standard";
-            scope.fullModel.partialScoring = scope.fullModel.partialScoring || [];
 
             _.each(model.scoreMapping, function(v, k) {
               scope.scoreMapping[k] = String(v);
@@ -183,34 +182,38 @@ var main = [
             _.each(scope.model.choices, function(c) {
               c.labelType = c.labelType || "text";
             });
+
+            scope.updatePartialScoringModel(scope.fullModel.correctResponse.value);
           },
 
           getModel: function() {
             var model = _.cloneDeep(scope.fullModel);
-            var correctAnswers = [];
 
+            var correctAnswers = [];
             _.each(scope.correctMap, function(v, k) {
               if (v) {
                 correctAnswers.push(k);
               }
             });
-            model.scoreMapping = {};
-
-            _.each(scope.scoreMapping, function(v, k) {
-              model.scoreMapping[k] = Number(v);
-            });
             model.correctResponse.value = correctAnswers;
 
+            var scoreMapping = {};
+            _.each(scope.scoreMapping, function(v, k) {
+              scoreMapping[k] = Number(v);
+            });
+            model.scoreMapping = scoreMapping;
+
             _.each(model.model.choices, function(choice) {
-              var feedback, _ref, _ref1;
+              var feedback, _ref;
               feedback = _.find(model.feedback, function(fb) {
                 return fb.value === choice.value;
               });
               if (feedback) {
-                feedback.feedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
-                feedback.feedbackType = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0);
-                feedback.notChosenFeedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
-                feedback.notChosenFeedbackType = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0);
+                _ref = scope.feedback[choice.value];
+                feedback.feedback = _ref ? _ref.feedback : undefined;
+                feedback.feedbackType = _ref ? _ref.feedbackType : undefined;
+                feedback.notChosenFeedback = _ref ? _ref.feedback : undefined;
+                feedback.notChosenFeedbackType = _ref ? _ref.feedbackType : undefined;
               }
             });
 
@@ -227,6 +230,7 @@ var main = [
             }
           });
           scope.fullModel.correctResponse.value = res;
+          scope.updatePartialScoringModel(res.length);
         }, true);
 
 
@@ -245,6 +249,7 @@ var main = [
         scope.removeQuestion = function(q) {
 
           scope.correctMap[q.value] = false;
+          delete scope.feedback[q.value];
 
           scope.model.choices = _.filter(scope.model.choices, function(cq) {
             return cq !== q;
@@ -257,8 +262,16 @@ var main = [
           return null;
         };
 
+        function findFirstFreeSlot(){
+          var slot = 1;
+          while(scope.feedback['mc_' + slot]){
+            slot++;
+          }
+          return "mc_" + slot;
+        }
+
         scope.addQuestion = function() {
-          var uid = _.uniqueId("mc_");
+          var uid = findFirstFreeSlot();
 
           scope.model.choices.push({
             label: "",
@@ -272,12 +285,6 @@ var main = [
           };
 
           scope.fullModel.feedback.push(scope.feedback[uid]);
-        };
-
-        scope.isSingleChoice = function() {
-          return (_(scope.correctMap).keys().filter(function(ck) {
-            return scope.correctMap[ck];
-          }).size() <= 1);
         };
 
         scope.updateMathJax = function() {

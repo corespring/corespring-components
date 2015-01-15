@@ -34,14 +34,9 @@ exports.factory = [
         };
 
         scope.togglePartialScoring = function() {
-          if (!_.isFunction(scope.isSingleChoice) || !scope.isSingleChoice()) {
+          if (scope.numberOfCorrectResponses > 1) {
             scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
           }
-        };
-
-        scope.partialScoring = function() {
-          return (_.isFunction(scope.isSingleChoice)) ? (!scope.isSingleChoice() && scope.fullModel.allowPartialScoring)
-            : scope.fullModel.allowPartialScoring;
         };
 
         scope.removeScoringScenario = function(scoringScenario) {
@@ -55,43 +50,25 @@ exports.factory = [
         scope.canAddScoringScenario = false;
         scope.canRemoveScoringScenario = false;
 
-        function updateNumberOfCorrectResponses(){
-          scope.numberOfCorrectResponses = scope.fullModel && scope.fullModel.correctResponse &&
-          _.isArray(scope.fullModel.correctResponse.value) ? scope.fullModel.correctResponse.value.length : 0;
-        }
-
-        function updateMaxNumberOfScoringScenarios(){
+        scope.updatePartialScoringModel = function(numberOfCorrectResponses){
+          if(!scope.fullModel.partialScoring){
+            scope.fullModel.partialScoring = [];
+          }
+          scope.numberOfCorrectResponses = Math.max(0,numberOfCorrectResponses);
           scope.maxNumberOfScoringScenarios = Math.max( 1, scope.numberOfCorrectResponses-1);
-        }
-
-        function updateCanAddScoringScenario(){
           scope.canAddScoringScenario = scope.fullModel.partialScoring.length < scope.maxNumberOfScoringScenarios;
-        }
-
-        function updateCanRemoveScoringScenario(){
           scope.canRemoveScoringScenario = scope.fullModel.partialScoring.length > 1;
-        }
 
-        function removeAdditionalScoringScenarios(){
           if(scope.fullModel.partialScoring.length > scope.maxNumberOfScoringScenarios){
             scope.fullModel.partialScoring = _.filter(scope.fullModel.partialScoring, function(ps){
-              return ps.numberOfCorrect === 1 || ps.numberOfCorrect < scope.numberOfCorrectResponses;
+              return ps.numberOfCorrect <= 1 || ps.numberOfCorrect < scope.numberOfCorrectResponses;
             });
           }
-        }
+        };
 
-        function updatePartialScoringUiModel(){
-          updateNumberOfCorrectResponses();
-          updateMaxNumberOfScoringScenarios();
-          updateCanAddScoringScenario();
-          updateCanRemoveScoringScenario();
-
-          removeAdditionalScoringScenarios();
-        }
-
-        scope.$watch('fullModel.partialScoring.length', updatePartialScoringUiModel);
-
-        scope.$watch('fullModel.correctResponse.value.length', updatePartialScoringUiModel);
+        scope.$watch('fullModel.partialScoring.length', function(){
+          scope.updatePartialScoringModel(scope.numberOfCorrectResponses);
+        });
 
       };
     }

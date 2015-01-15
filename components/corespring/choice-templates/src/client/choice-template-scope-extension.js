@@ -1,9 +1,13 @@
+/*global exports */
+
 exports.framework = "angular";
 exports.factory = [
   '$rootScope',
   '$log',
 
   function($rootScope, $log) {
+
+    "use strict";
 
     function ChoiceTemplateScopeExtension() {
 

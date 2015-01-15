@@ -95,11 +95,7 @@ exports.service = ['$log',
         ].join('') : '';
 
         var optWidth = function(w) {
-          if (!_.isEmpty(w)) {
-            return 'style="min-width:' + w + '; width: ' + w + ';"';
-          } else {
-            return '';
-          }
+          return _.isEmpty(w) ? '' : 'style="min-width:' + w + '; width: ' + w + ';"';
         };
 
         return [
@@ -146,20 +142,12 @@ exports.service = ['$log',
         ].join('\n');
       };
 
-      this.scoring = function(opts) {
-        return this.inputHolder(undefined, this.unwrappedScoring(opts));
-      };
-
-      this.unwrappedScoring = function(opts) {
-        var o = _.extend({
-          maxNumberOfPartialScores: "model.choices.length - 1"
-        }, opts);
-
-        return [
+      this.scoring = function() {
+        return this.inputHolder(undefined, [
           '<div class="scoring-header-text">',
           '  If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted. This is optional.',
           '</div>',
-          '<div class="panel panel-default" ng-class="{\'disabled\': isSingleChoice()}">',
+          '<div class="panel panel-default" ng-class="{\'disabled\': numberOfCorrectResponses <= 1}">',
           '  <div class="panel-heading">',
           '    <h4 class="panel-title">',
           '      <a ng-click="togglePartialScoring()">',
@@ -171,11 +159,11 @@ exports.service = ['$log',
           '    </h4>',
           '  </div>',
           '  <div class="partial-scoring">',
-          '    <div class="panel-body" collapse="!partialScoring()">',
+          '    <div class="panel-body" collapse="numberOfCorrectResponses <= 1 || !fullModel.allowPartialScoring">',
           '      <ul class="list-unstyled">',
           '        <li class="scoring-item" ng-repeat="scenario in fullModel.partialScoring">',
           '          If',
-          '          <input class="form-control" type="number" min="1" max="{{model.choices.length - 1}}" ng-model="scenario.numberOfCorrect"/>',
+          '          <input class="form-control" type="number" min="1" max="{{maxNumberOfScoringScenarios}}" ng-model="scenario.numberOfCorrect"/>',
           '          of correct answers is selected, award',
           '          <input class="form-control" type="number" min="1" max="99" ng-model="scenario.scorePercentage"/>',
           '          % of full credit.',
@@ -191,7 +179,7 @@ exports.service = ['$log',
           '    </div>',
           '  </div>',
           '</div>',
-        ].join('\n');
+        ].join('\n'));
       };
     }
 
