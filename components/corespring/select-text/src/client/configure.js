@@ -136,6 +136,7 @@ var main = [
             } else {
               $scope.model.choices = [$scope.content.xhtml];
             }
+            $scope.updatePartialScoringModel(getNumberOfCorrectChoices());
           }
         }
 

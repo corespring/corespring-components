@@ -17,27 +17,27 @@ describe('choice-template-scope-extension', function(){
     expect(scope).toBeDefined();
   });
 
-  describe('numToString', function(){
+  describe('toChar', function(){
     it('should exist', function() {
-      expect(scope.numToString).toBeDefined();
+      expect(scope.toChar).toBeDefined();
     });
 
     it('should convert a number', function(){
-      var result = scope.numToString(3);
-      expect(result).toEqual('3');
+      var result = scope.toChar(3);
+      expect(result).toEqual('D');
     });
 
     it('should accept a Nan', function(){
-      var result = scope.numToString(NaN);
-      expect(result).toEqual('0');
+      var result = scope.toChar(NaN);
+      expect(result).toEqual('A');
     });
     it('should accept a null', function(){
-      var result = scope.numToString(null);
-      expect(result).toEqual('0');
+      var result = scope.toChar(null);
+      expect(result).toEqual('A');
     });
     it('should accept a undefined', function(){
-      var result = scope.numToString(undefined);
-      expect(result).toEqual('0');
+      var result = scope.toChar(undefined);
+      expect(result).toEqual('A');
     });
   });
 });

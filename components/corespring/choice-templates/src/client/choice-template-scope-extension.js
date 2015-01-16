@@ -27,8 +27,9 @@ exports.factory = [
           $rootScope.$broadcast('resetStash');
         };
 
-        scope.numToString = function(num) {
-          return (!num || isNaN(num) ? 0 : num).toString(10);
+        //idx to a...z
+        scope.toChar = function(idx) {
+          return String.fromCharCode(65 + (!idx || isNaN(idx) ? 0 : idx));
         };
 
       };

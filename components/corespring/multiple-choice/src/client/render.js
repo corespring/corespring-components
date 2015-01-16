@@ -216,7 +216,7 @@ var main = [
             return (idx + 1) + "";
         }
 
-        // default to letters
+        // default to a...z
         return String.fromCharCode(65 + idx);
       };
 

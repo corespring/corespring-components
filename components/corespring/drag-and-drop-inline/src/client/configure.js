@@ -220,7 +220,7 @@ var main = [
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
-          return $scope.numToString(idx);
+          return $scope.toChar(idx);
         };
 
         function sumCorrectAnswers() {

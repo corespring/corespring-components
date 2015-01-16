@@ -89,6 +89,7 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
     it('should automatically remove additional partial scoring scenarios after removing a correct choice', function(){
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
+      expect(scope.numberOfCorrectResponses).toEqual(3);
       expect(scope.maxNumberOfScoringScenarios).toEqual(2);
       scope.addScoringScenario();
       expect(scope.fullModel.partialScoring.length).toEqual(2);

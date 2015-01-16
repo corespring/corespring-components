@@ -118,7 +118,7 @@ var main = [
       '  <div class="choice-row-group" ng-repeat="choice in model.choices">',
       '    <div class="row choice-row">',
       '      <div class="col-md-2 col-xs-3 text-center choice-letter">',
-      '        <label class="control-label">Choice {{numToString($index)}}</label>',
+      '        <label class="control-label">Choice {{toChar($index)}}</label>',
       '        <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
       '            ng-click="removeChoice(choice)"></i>',
       '      </div>',
@@ -223,7 +223,7 @@ var main = [
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
-          return $scope.numToString(idx);
+          return $scope.toChar(idx);
         };
 
         function sumCorrectResponses() {

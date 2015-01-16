@@ -68,7 +68,7 @@ var main = [
         '                </li>',
         '                <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"',
         '                    tooltip-placement="bottom">',
-        '                  <i ng-click="deleteChoice($index)" class="fa fa-trash-o"></i>',
+        '                  <i ng-click="removeChoice($index)" class="fa fa-trash-o"></i>',
         '                </li>',
         '              </ul>',
         '            </div>',
@@ -99,7 +99,7 @@ var main = [
         '          data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets">',
         '          <div class="delete-icon">',
-        '            <i ng-click="deleteTarget(choice)" class="fa fa-times-circle"></i>',
+        '            <i ng-click="removeTarget(choice)" class="fa fa-times-circle"></i>',
         '          </div>',
         '          <span ng-bind-html-unsafe="choice.label"></span>',
         '        </li>',
@@ -281,16 +281,16 @@ var main = [
               moveOnDrag: true});
           };
 
-          $scope.deleteChoice = function(index) {
+          $scope.removeChoice = function(index) {
             var choice = $scope.model.choices.splice(index, 1);
-            var deletedChoiceId = choice[0].id;
+            var choiceId = choice[0].id;
             $scope.fullModel.correctResponse = _.filter($scope.fullModel.correctResponse, function(responseId) {
-              return responseId !== deletedChoiceId;
+              return responseId !== choiceId;
             });
             initTargets();
           };
 
-          $scope.deleteTarget = function(choice) {
+          $scope.removeTarget = function(choice) {
             $scope.targets = _.filter($scope.targets, function(c) {
               return c !== choice;
             });

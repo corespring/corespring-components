@@ -41,7 +41,7 @@ exports.service = ['$log',
 
       this.choice = function(opts) {
         var defaults = {
-          choice: "<b>Choice {{numToString($index)}}</b>",
+          choice: "<b>Choice {{toChar($index)}}</b>",
           correct: '<i class="fa fa-check fa-lg choice-checkbox" ng-class="{checked: correctMap[q.value]}" ng-click="correctMap[q.value] = !correctMap[q.value]"></i>',
           correctnessPredicate: "correctMap[q.value]",
           feedback: true,

@@ -1,5 +1,5 @@
 /*global describe,inject,beforeEach,it,expect,module*/
-describe('corespring:select-text:configure', function () {
+describe('corespring:ordering:configure', function () {
 
   "use strict";
 
@@ -14,41 +14,48 @@ describe('corespring:select-text:configure', function () {
 
   function createTestModel() {
     return {
-      "componentType" : "corespring-select-text",
-      "correctResponse" : "",
-      "title": "Select Evidence in Text",
-      "feedback" : {
-        "correctFeedbackType" : "default",
-        "partialFeedbackType" : "default",
-        "incorrectFeedbackType" : "default",
-        "feedbackType" : "default"
-      },
-      "allowPartialScoring": false,
-      "partialScoring" : [
-        {"numberOfCorrect": 1, "scorePercentage": 25}
+      "componentType": "corespring-ordering",
+      "correctResponse": [
+        "c",
+        "a",
+        "b"
       ],
+      "feedback": {
+        "correctFeedbackType": "default",
+        "partialFeedbackType": "default",
+        "incorrectFeedbackType": "default"
+      },
       "model": {
-        "config" : {
-          "selectionUnit" : "word",
-          "checkIfCorrect" : true,
-          "showFeedback": true
+        "config": {
+          "shuffle": false,
+          "choiceAreaLayout": "horizontal",
+          "answerAreaLabel": "Place answers here",
+          "placementType": "placement"
         },
-        "choices" : [
+        "choices": [
           {
-            "data": "Please",
-            "correct": true
+            "label": "2",
+            "value": "a",
+            "id": "a",
+            "moveOnDrag": true
           },
           {
-            "data": "enter",
-            "correct": true
+            "label": "3",
+            "value": "b",
+            "id": "b",
+            "moveOnDrag": true
           },
           {
-            "data": "some",
-            "correct": true
-          },
-          {
-            "data": "text."
+            "label": "1",
+            "value": "c",
+            "id": "c",
+            "moveOnDrag": true
           }
+        ],
+        "correctResponse": [
+          "c",
+          "a",
+          "b"
         ]
       }
     };
@@ -89,7 +96,7 @@ describe('corespring:select-text:configure', function () {
     $rootScope.registerConfigPanel = function (id, b) {
       container.registerConfigPanel(id, b);
     };
-    element = $compile("<div navigator=''><corespring-select-text-configure id='1'></corespring-select-text-configure></div>")(scope);
+    element = $compile("<div navigator=''><corespring-ordering-configure id='1'></corespring-ordering-configure></div>")(scope);
     scope = element.scope().$$childHead;
     rootScope = $rootScope;
   }));
@@ -104,10 +111,6 @@ describe('corespring:select-text:configure', function () {
   });
 
   describe('partialScoring', function () {
-    function removeChoice(){
-      scope.content.xhtml = scope.model.choices.slice(1).join(' ');
-    }
-
     it('should automatically remove additional partial scoring scenarios after removing a correct choice', function () {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
@@ -116,7 +119,7 @@ describe('corespring:select-text:configure', function () {
       expect(scope.maxNumberOfScoringScenarios).toEqual(2);
       scope.addScoringScenario();
       expect(scope.fullModel.partialScoring.length).toEqual(2);
-      removeChoice();
+      scope.removeChoice(scope.model.choices[0]);
       rootScope.$digest();
       expect(scope.fullModel.partialScoring.length).toEqual(1);
     });
