@@ -1,5 +1,5 @@
-/*global describe,inject,beforeEach,it,expect,module*/
-describe('corespring:multiple-choice:configure', function() {
+/* global describe, it, beforeEach, inject, module, expect */
+describe('corespring:drag-and-drop-categorize:configure', function() {
 
   "use strict";
 
@@ -14,52 +14,26 @@ describe('corespring:multiple-choice:configure', function() {
 
   function createTestModel() {
     return {
-      "componentType": "corespring-multiple-choice",
-      "correctResponse": {
-        "value": [
-          "1","2","3"
-        ]
+      "componentType": "corespring-drag-and-drop-categorize",
+      "correctResponse": {"cat_1": ["choice_1", "choice_2", "choice_3"]},
+      "feedback": {
+        "correctFeedbackType": "default",
+        "partialFeedbackType": "default",
+        "incorrectFeedbackType": "default"
       },
-      "feedback": [
-        {
-          "feedback": "Huh?",
-          "feedbackType": "custom",
-          "value": "1"
-        },
-        {
-          "feedback": "4 to the floor",
-          "feedbackType": "custom",
-          "value": "2"
-        },
-        {
-          "feedbackType": "default",
-          "value": "3"
-        }
-      ],
-      "scoreMapping": {
-        "1": 0,
-        "2": 1,
-        "3": -1
-      },
+      "allowPartialScoring": true,
+      "partialScoring": [{"numberOfCorrect": 1, "scorePercentage": 25}],
       "model": {
+        "categories": [{"id": "cat_1", "hasLabel": true, "label": "Category 1", "layout": "vertical"}],
         "choices": [
-          {
-            "label": "1",
-            "value": "1"
-          },
-          {
-            "label": "2",
-            "value": "2"
-          },
-          {
-            "label": "3",
-            "value": "3"
-          }
-        ],
+          {"label": "b", "labelType": "text", "id": "choice_1"},
+          {"label": "c", "labelType": "text", "id": "choice_2"},
+          {"label": "d", "labelType": "text", "id": "choice_3"}],
         "config": {
-          "orientation": "vertical",
-          "shuffle": true,
-          "singleChoice": false
+          "shuffle": false,
+          "removeTilesOnDrop": true,
+          "choiceAreaLayout": "vertical",
+          "answerAreaPosition": "below"
         }
       }
     };
@@ -79,6 +53,7 @@ describe('corespring:multiple-choice:configure', function() {
     module(function($provide) {
       $provide.value('ServerLogic', MockServerLogic);
       $provide.value('ImageUtils', MockImageUtils);
+      $provide.value('MathJaxService', {parseDomForMath:function(){}});
       $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
       $provide.value('WiggiLinkFeatureDef', function(){});
     });
@@ -95,32 +70,19 @@ describe('corespring:multiple-choice:configure', function() {
     $rootScope.registerConfigPanel = function(id, b) {
       container.registerConfigPanel(id, b);
     };
-    element = $compile("<div navigator=''><corespring-multiple-choice-configure id='1'></corespring-multiple-choice-configure></div>")(scope);
+    element = $compile("<div navigator=''><corespring-drag-and-drop-categorize-configure id='1'></corespring-drag-and-drop-categorize-configure></div>")(scope);
     scope = element.scope().$$childHead;
     rootScope = $rootScope;
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).toBeDefined();
   });
+
 
   it('component is being registered by the container', function() {
     expect(container.elements['1']).toNotBe(undefined);
     expect(container.elements['2']).toBeUndefined();
-  });
-
-  it('component serializes model backwards', function() {
-    container.elements['1'].setModel(createTestModel());
-    var model = container.elements['1'].getModel();
-    expect(model).not.toBe(null);
-    expect(model.scoreMapping).not.toBe(null);
-    expect(model.scoreMapping).toEqual({
-      '1': 0,
-      '2': 1,
-      '3': -1
-    });
-    expect(model.feedback).not.toBe(null);
-    expect(model.model).not.toBe(null);
   });
 
   describe('partialScoring', function(){
@@ -136,6 +98,5 @@ describe('corespring:multiple-choice:configure', function() {
       expect(scope.fullModel.partialScoring.length).toEqual(1);
     });
   });
-
 
 });

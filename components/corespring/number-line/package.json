@@ -9,7 +9,7 @@
       "organization": "corespring"
     }
   ],
-  "released": true,
+  "released": false,
   "title": "Number Line",
   "titleGroup": "Mathematics",
   "name": "number-line",

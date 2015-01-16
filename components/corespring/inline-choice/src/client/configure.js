@@ -1,3 +1,4 @@
+/* global exports */
 var main = [
   '$log', 'ChoiceTemplates', 'ServerLogic',
   function($log, ChoiceTemplates, ServerLogic) {
@@ -30,7 +31,7 @@ var main = [
       '        <div class="col-md-9 col-xs-8">',
       '          <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
       '              image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
-      '              parent-selector=".wiggi-wiz-overlay">',
+      '              parent-selector=".modal-body">',
       '            <edit-pane-toolbar alignment="bottom">',
       '              <div class="btn-group pull-right">',
       '                <button ng-click="closePane()" class="btn btn-sm btn-success">Done</button>',
@@ -210,10 +211,6 @@ var main = [
           };
 
           scope.fullModel.feedback.push(scope.feedback[uid]);
-        };
-
-        scope.toChar = function(num) {
-          return String.fromCharCode(65 + num);
         };
 
         scope.updateMathJax = function() {

@@ -1,6 +1,11 @@
+/* globals console, exports */
+
 var main = [
   "ChoiceTemplates",
   function(ChoiceTemplates) {
+
+    "use strict";
+
     var input = function(attrs, label) {
       return "<div style=\"margin-bottom: 20px\"> <input type=\"text\" class=\"form-control\" style=\"width: 80%; display: inline-block \"" + attrs + " />" + label + "</div>";
     };
@@ -70,13 +75,13 @@ var main = [
       '      <div class="choice-row" ng-repeat="choice in model.choices">',
       '        <div class="row">',
       '          <div class="col-xs-1 text-center">',
-      '            <i class="fa fa-trash-o fa-lg" title="Delete" data-tggle="tooltip" ng-click="removeQuestion(choice)">',
+      '            <i class="fa fa-trash-o fa-lg" title="Delete" data-tggle="tooltip" ng-click="removeChoice(choice)">',
       '            </i>',
       '          </div>',
       '          <div class="col-xs-10">',
       '            <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
       '                image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
-      '                parent-selector=".wiggi-wiz-overlay">',
+      '                parent-selector=".modal-body">',
       '              <edit-pane-toolbar alignment="bottom">',
       '                <div class="btn-group pull-right">',
       '                  <button ng-click="closePane()" class="btn btn-sm btn-success">Done</button>',
@@ -87,14 +92,14 @@ var main = [
       '        </div>',
       '        <div class="row" style="margin-bottom: 20px;">',
       '          <div class="col-xs-offset-1 col-xs-10">',
-      '            <checkbox ng-model="q.moveOnDrag">Remove tile after placing</checkbox>',
+      '            <checkbox ng-model="choice.moveOnDrag">Remove tile after placing</checkbox>',
       '          </div>',
       '        </div>',
       '      </div>',
       '      <div class="row">',
       '        <div class="col-xs-12">',
       '          <button type="button" class="btn btn-default add-choice"',
-      '              ng-click="addQuestion()">Add a Choice</button>',
+      '              ng-click="addChoice()">Add a Choice</button>',
       '        </div>',
       '      </div>',
       '      <div class="row">',
@@ -138,7 +143,7 @@ var main = [
       '    <div class="container-fluid">',
       '      <div class="row">',
       '        <div class="col-xs-12">',
-                 ChoiceTemplates.scoring({maxNumberOfPartialScores: "sumCorrectResponses() - 1"}),
+                 ChoiceTemplates.scoring(),
       '        </div>',
       '      </div>',
       '    </div>'
@@ -150,24 +155,24 @@ var main = [
       '        <div class="col-xs-12">',
       '          <form class="form-horizontal" role="form">',
       '            <div class="config-form-row">',
-      '              <div class="col-sm-5" ng-show="fullModel.model.config.choiceAreaHasLabel">',
-      '                <input type="text" class="form-control" ng-model="fullModel.model.config.choiceAreaLabel" />',
+      '              <div class="col-sm-5" ng-show="model.config.choiceAreaHasLabel">',
+      '                <input type="text" class="form-control" ng-model="model.config.choiceAreaLabel" />',
       '              </div>',
       '            </div>',
       '            <div class="config-form-row"><label>Layout</label></div>',
       '            <div class="config-form-row layout-config">',
       '              <div class="col-sm-2">',
       '                <radio id="vertical" value="vertical"',
-      '                    ng-model="fullModel.model.config.choiceAreaLayout">Vertical</radio>',
+      '                    ng-model="model.config.choiceAreaLayout">Vertical</radio>',
       '              </div>',
       '              <div class="col-sm-2">',
       '                <radio id="horizontal" value="horizontal"',
-      '                    ng-model="fullModel.model.config.choiceAreaLayout">Horizontal</radio>',
+      '                    ng-model="model.config.choiceAreaLayout">Horizontal</radio>',
       '              </div>',
       '            </div>',
       '            <div class="config-form-row">',
       '              <label>Choice area is </label>',
-      '              <select class="form-control choice-area" ng-model="fullModel.model.config.choiceAreaPosition"',
+      '              <select class="form-control choice-area" ng-model="model.config.choiceAreaPosition"',
       '                  ng-options="c for c in [\'above\', \'below\']">',
       '              </select>',
       '              <label>answer blanks</label>',
@@ -202,7 +207,6 @@ var main = [
         ChoiceTemplates.extendScope($scope, 'corespring-drag-and-drop-inline');
 
         $scope.correctAnswers = {};
-        $scope.correctMap = {};
 
         $scope.choiceToDropDownItem = function(c) {
           if (!c) {
@@ -219,37 +223,30 @@ var main = [
           return $scope.toChar(idx);
         };
 
-        $scope.toChar = function(num) {
-          return String.fromCharCode(65 + num);
-        };
-
-        $scope.sumCorrectResponses = function() {
+        function sumCorrectAnswers() {
           return _.reduce($scope.correctAnswers, function(memo, ca) {
             return ca.length + memo;
           }, 0);
-        };
+        }
 
         $scope.containerBridge = {
           setModel: function(model) {
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
 
-            var choiceById = function(cid) {
+            function choiceById(cid) {
               return _.find(model.model.choices, function(c) {
                 return c.id === cid;
               });
-            };
+            }
 
             _.each(model.correctResponse, function(val, key) {
-              if (key === 'cat_1') {
-                _.each(val, function(cid) {
-                  $scope.correctMap[cid] = true;
-                });
-              }
               $scope.correctAnswers[key] = _.map(val, function(choiceId) {
                 return choiceById(choiceId);
               });
             });
+
+            $scope.updatePartialScoringModel(sumCorrectAnswers());
 
             $scope.componentState = "initialized";
             console.log(model);
@@ -258,46 +255,44 @@ var main = [
             var model = _.cloneDeep($scope.fullModel);
             return model;
           },
-
           getAnswer: function() {
-            console.log("returning answer for: Drag and drop");
+            console.log("returning empty answer for: Drag and drop inline");
             return {};
           }
         };
 
-        $scope.$watch('correctMap', function(n) {
-          if (n) {
-            var res = [];
-            for (var key in $scope.correctMap) {
-              if ($scope.correctMap[key]) {
-                res.push(key);
-              }
-            }
-            $scope.fullModel.correctResponse.cat_1 = res;
-          }
-        }, true);
-
         $scope.$watch('correctAnswers', function(n) {
           if (n) {
             _.each($scope.correctAnswers, function(val, key) {
-              if (key !== 'cat_1') {
-                $scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
-              }
+              $scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
             });
+            $scope.updatePartialScoringModel(sumCorrectAnswers());
           }
         }, true);
 
-        $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
-
-        $scope.removeQuestion = function(c) {
+        $scope.removeChoice = function(c) {
           $scope.model.choices = _.filter($scope.model.choices, function(existing) {
             return existing !== c;
           });
+          _.each($scope.correctAnswers, function(val, key) {
+            $scope.correctAnswers[key] = _.filter(val, function(choice){
+              return choice !== c;
+            });
+          });
         };
+
+        function findFreeChoiceSlot(){
+          var slot = 0;
+          var ids = _.pluck($scope.model.choices, 'id');
+          while(_.contains(ids, "choice_" + slot)){
+            slot++;
+          }
+          return slot;
+        }
 
         $scope.addChoice = function() {
           $scope.model.choices.push({
-            id: "choice_" + $scope.model.choices.length,
+            id: "choice_" + findFreeChoiceSlot(),
             labelType: "text",
             label: "",
             moveOnDrag: false
@@ -309,12 +304,19 @@ var main = [
             return existing !== answerArea;
           });
           delete $scope.correctAnswers[answerArea.id];
-          delete $scope.fullModel.correctResponse[answerArea.id];
-
         };
 
+        function findFreeAnswerAreaSlot(){
+          var slot = 0;
+          var ids = _.pluck($scope.model.categories, 'id');
+          while(_.contains(ids, "aa_" + slot)){
+            slot++;
+          }
+          return slot;
+        }
+
         $scope.addAnswerArea = function() {
-          var idx = $scope.model.answerAreas.length + 1;
+          var idx = findFreeAnswerAreaSlot();
           $scope.model.answerAreas.push({
             id: "aa_" + idx,
             textBefore: "",
@@ -322,46 +324,15 @@ var main = [
           });
         };
 
+        $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
       }
     };
   }
 ];
 
-var bootstrapMultiselect = [
-  function() {
-    return function(scope, element, attrs) {
-      element.multiselect();
-      var btn = element.next().find('button');
-      btn.dropdown();
 
-      scope.$watch(function () {
-        return element[0].length;
-      }, function () {
-        element.multiselect('rebuild');
-      });
-
-      scope.$watch(attrs.ngModel, function () {
-        element.multiselect('refresh');
-      });
-
-      if (attrs.ngOptions && _.isString(attrs.ngOptions)) {
-        var model = attrs.ngOptions.split("in ")[1];
-        scope.$watch(model, function(n) {
-          element.multiselect('rebuild');
-        }, true);
-      }
-    };
-  }
-];
 
 exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  },
-  {
-    name: 'bootstrapMultiselect',
-    directive: bootstrapMultiselect
-  }
-
-];
+exports.directives = [{
+  directive: main
+}];

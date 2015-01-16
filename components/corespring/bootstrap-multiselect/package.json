@@ -1,0 +1,13 @@
+{
+  "name": "bootstrap-multiselect",
+  "organization": "corespring",
+  "purpose": "library",
+  "dependencies": {
+    "client": {
+      "bootstrap-multiselect": {
+        "version": "*",
+        "file": "js/bootstrap-multiselect.js"
+      }
+    }
+  }
+}

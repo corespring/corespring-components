@@ -1,9 +1,13 @@
+/*global exports */
+
 exports.framework = "angular";
 exports.factory = [
   '$rootScope',
   '$log',
 
   function($rootScope, $log) {
+
+    "use strict";
 
     function ChoiceTemplateScopeExtension() {
 
@@ -23,42 +27,9 @@ exports.factory = [
           $rootScope.$broadcast('resetStash');
         };
 
-        scope.addScoringScenario = function() {
-          var maxNumberOfCorrect = 0;
-          _.each(scope.fullModel.partialScoring, function(ps) {
-            if (ps.numberOfCorrect > maxNumberOfCorrect) {
-              maxNumberOfCorrect = ps.numberOfCorrect;
-            }
-          });
-          scope.fullModel.partialScoring.push({
-            numberOfCorrect: maxNumberOfCorrect + 1,
-            scorePercentage: 20
-          });
-        };
-
-        scope.togglePartialScoring = function() {
-          if (!_.isFunction(scope.isSingleChoice) || !scope.isSingleChoice()) {
-            scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
-          }
-        };
-
-        scope.partialScoring = function() {
-          return (_.isFunction(scope.isSingleChoice)) ? (!scope.isSingleChoice() && scope.fullModel.allowPartialScoring)
-            : scope.fullModel.allowPartialScoring;
-        };
-
-        scope.removeScoringScenario = function(scoringScenario) {
-          scope.fullModel.partialScoring = _.filter(scope.fullModel.partialScoring, function(ps) {
-            return ps !== scoringScenario;
-          });
-        };
-
-        scope.validClass = function(scoringScenario) {
-          var sameScore = _.find(scope.fullModel.partialScoring, function(ps) {
-            return ps !== scoringScenario && ps.numberOfCorrect === scoringScenario.numberOfCorrect;
-          });
-
-          return sameScore ? "invalid" : "";
+        //idx to a...z
+        scope.toChar = function(idx) {
+          return String.fromCharCode(65 + (!idx || isNaN(idx) ? 0 : idx));
         };
 
       };

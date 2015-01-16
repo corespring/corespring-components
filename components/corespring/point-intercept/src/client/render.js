@@ -233,7 +233,8 @@ var main = ['$compile', '$modal', '$rootScope',
               }
               solutionGraphCallback({
                 points: points,
-                lockGraph: true
+                lockGraph: true,
+                pointsStyle: "#3C763D"
               });
             }
           });
@@ -300,18 +301,18 @@ var main = ['$compile', '$modal', '$rootScope',
             if (response && response.correctness === "correct") {
               scope.graphCallback({
                 graphStyle: {
-                  borderColor: "green",
+                  borderColor: "#3C763D",
                   borderWidth: "2px"
                 },
-                pointsStyle: "green"
+                pointsStyle: "#3C763D"
               });
             } else {
               scope.graphCallback({
                 graphStyle: {
-                  borderColor: "red",
+                  borderColor: "#EEA236",
                   borderWidth: "2px"
                 },
-                pointsStyle: "red"
+                pointsStyle: "#EEA236"
               });
               scope.correctResponse = response.correctResponse;
 

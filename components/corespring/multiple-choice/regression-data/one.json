@@ -7,7 +7,7 @@
         "weight": 4,
         "correctResponse": {
           "value": [
-            "2"
+            "mc_2"
           ]
         },
         "scoreMapping": {
@@ -18,20 +18,20 @@
         },
         "feedback": [
           {
-            "value": "1",
+            "value": "mc_1",
             "feedback": "Incorrect"
           },
           {
-            "value": "2",
+            "value": "mc_2",
             "feedback": "Correct",
             "notChosenFeedback": "This would have been the correct one."
           },
           {
-            "value": "3",
+            "value": "mc_3",
             "feedback": "Incorrect"
           },
           {
-            "value": "4",
+            "value": "mc_4",
             "feedback": "Incorrect"
           }
         ],
@@ -44,19 +44,19 @@
           "choices": [
             {
               "label": "1",
-              "value": "1"
+              "value": "mc_1"
             },
             {
               "label": "2",
-              "value": "2"
+              "value": "mc_2"
             },
             {
               "label": "3",
-              "value": "3"
+              "value": "mc_3"
             },
             {
               "label": "4",
-              "value": "4"
+              "value": "mc_4"
             }
           ]
         }

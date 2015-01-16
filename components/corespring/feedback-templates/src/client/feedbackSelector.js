@@ -58,7 +58,7 @@ exports.directive = {
           '        image-service="imageService()"',
           '        features="extraFeatures"',
           '        placeholder="Enter customized feedback to be presented to the student"',
-          '        parent-selector=".wiggi-wiz-overlay">',
+          '        parent-selector=".modal-body">',
           '    </div>',
           '    <div ng-show="fbSelFeedbackType == \'default\'" ng-bind-html-unsafe="fbSelDefaultFeedback" class="default-feedback" ',
           '    </div>',
