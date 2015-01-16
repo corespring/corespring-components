@@ -80,7 +80,7 @@ var main = [
         '          </div>',
         '          <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
         '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
-        '              parent-selector=".editor-container"',
+        '              parent-selector=".modal-body"',
         '              image-service="imageService()">',
         '            <edit-pane-toolbar alignment="bottom">',
         '              <div class="btn-group pull-right">',
