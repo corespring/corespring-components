@@ -1,3 +1,5 @@
+/* global console, exports */
+
 var main = [
   '$log',
   '$timeout',
@@ -7,7 +9,6 @@ var main = [
     "use strict";
 
     var designPanel = [
-      '<div navigator-panel="Design">',
       '  <div class="container-fluid">',
       '    <div class="row">',
       '      <div class="col-xs-12">',
@@ -82,12 +83,10 @@ var main = [
       '        </div>',
       '      </div>',
       '    </div>',
-      '  </div>',
-      '</div>'
+      '  </div>'
     ].join("\n");
 
     var displayPanel = [
-      '<div navigator-panel="Display">',
       '  <div class="container-fluid">',
       '    <div class="row text-field-size-row">',
       '      <div class="col-xs-12">',
@@ -109,8 +108,7 @@ var main = [
       '        </select>',
       '      </div>',
       '    </div>',
-      '  </div>',
-      '</div>'
+      '  </div>'
     ].join("\n");
 
     function createResponsesModel(award) {
@@ -133,8 +131,12 @@ var main = [
       template: [
         '<div class="config-text-entry">',
         '  <div navigator="">',
-             designPanel,
-             displayPanel,
+        '    <div navigator-panel="Design">',
+        designPanel,
+        '    </div>',
+        '    <div navigator-panel="Display">',
+        displayPanel,
+        '    </div>',
         '  </div>',
         '</div>'
       ].join('\n'),
@@ -280,14 +282,36 @@ var csTextEntryResponseInput = [
         //it is important to set the options in the controller
         //because the link function is executed too late
         $scope.select2Options = {
-          tags: [],
+          tags: true,
           simple_tags: true,
           multiple: true,
           dropdownCssClass: 'cs-text-entry-cfg__responses-input--dropdown-noshow',
-          tokenSeparators: [',']
+          tokenSeparators: [],
+          separator: '°' //anything that is not used normally, it is used internally and not visible to the world
+        };
+
+        $scope.addItem = function(val){
+          $scope.$apply(function(){$scope.response.values.push(val);});
         };
       },
-      link: function(scope, element, attrs) {}
+      link: function(scope, element, attrs) {
+
+        function setupEnterKeyListener(){
+          var $input = $(element).find('.select2-input');
+          if( $input.length) {
+            $input.keydown(function (e) {
+              if (13 === e.keyCode) {
+                var newItem = $(this).val();
+                scope.addItem(newItem);
+              }
+            });
+          } else {
+            setTimeout(setupEnterKeyListener, 100);
+          }
+        }
+
+        setupEnterKeyListener();
+      }
     };
   }
 ];
