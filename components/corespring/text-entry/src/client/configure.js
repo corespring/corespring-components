@@ -253,18 +253,19 @@ var csTextEntryResponseInput = [
 
     var template = [
       '<div class="response-input">',
-      '  <input style="width:100%;" type="text" ng-model="response.values"',
-      '         ui-select2="select2Options"',
-      '         data-placeholder="{{prompt}}"',
-      '    />',
+      '  <ui-select multiple tagging tagging-label="false" ng-model="model.values" theme="bootstrap"',
+      '     ng-disabled="disabled" title="prompt" tagging-tokens="ENTER">',
+      '    <ui-select-match placeholder="{{prompt}}">{{$item}}</ui-select-match>',
+      '    <ui-select-choices repeat="c in model.values">{{c}}</ui-select-choices>',
+      ' </ui-select>',
       '  <div class="pull-right">',
-      '    <checkbox value="ignore-case" ng-init="response.caseSensitive = !response.ignoreCase"',
-      '             ng-model="response.caseSensitive" ng-change="response.ignoreCase = !response.caseSensitive">',
+      '    <checkbox value="ignore-case" ng-init="model.caseSensitive = !model.ignoreCase"',
+      '             ng-model="model.caseSensitive" ng-change="model.ignoreCase = !model.caseSensitive">',
       '      Case sensitive?',
       '    </checkbox>',
       '  </div>',
       '  <div class="pull-right">',
-      '    <checkbox value="ignore-whitespace" ng-model="response.ignoreWhitespace">Ignore spacing?</checkbox>',
+      '    <checkbox value="ignore-whitespace" ng-model="model.ignoreWhitespace">Ignore spacing?</checkbox>',
       '  </div>',
       '  <div class="clearfix"></div>',
       '</div>'
@@ -272,46 +273,12 @@ var csTextEntryResponseInput = [
 
     return {
       scope: {
-        response: '=model',
+        model: '=model',
         prompt: '=prompt'
       },
       restrict: 'A',
       replace: true,
-      template: template,
-      controller: function($scope) {
-        //it is important to set the options in the controller
-        //because the link function is executed too late
-        $scope.select2Options = {
-          tags: true,
-          simple_tags: true,
-          multiple: true,
-          dropdownCssClass: 'cs-text-entry-cfg__responses-input--dropdown-noshow',
-          tokenSeparators: [],
-          separator: '°' //anything that is not used normally, it is used internally and not visible to the world
-        };
-
-        $scope.addItem = function(val){
-          $scope.$apply(function(){$scope.response.values.push(val);});
-        };
-      },
-      link: function(scope, element, attrs) {
-
-        function setupEnterKeyListener(){
-          var $input = $(element).find('.select2-input');
-          if( $input.length) {
-            $input.keydown(function (e) {
-              if (13 === e.keyCode) {
-                var newItem = $(this).val();
-                scope.addItem(newItem);
-              }
-            });
-          } else {
-            setTimeout(setupEnterKeyListener, 100);
-          }
-        }
-
-        setupEnterKeyListener();
-      }
+      template: template
     };
   }
 ];
