@@ -47,12 +47,12 @@ var dragAndDropController = [
             var w = 0,
               h = 0;
 
-            $(element).find('.sizerHolder').each(function(idx, e) {
+            $(element).find('.html-holder').each(function(idx, e) {
               if ($(e).width() > w) {
                 w = $(e).width();
               }
             });
-            $(element).find('.sizerHolder').each(function(idx, e) {
+            $(element).find('.html-holder').each(function(idx, e) {
               if ($(e).height() > h) {
                 h = $(e).height();
               }
