@@ -16,6 +16,16 @@
         "version": "~0.10.0",
         "file": "ui-bootstrap-tpls.min.js",
         "angular-module": "ui.bootstrap"
+      },
+      "angular-sanitize": {
+        "version": "~1.3.9",
+        "file": "angular-sanitize.js",
+        "angular-module": "ngSanitize"
+      },
+      "angular-ui-select": {
+        "version": "~0.9.6",
+        "file": "dist/select.js",
+        "angular-module": "ui.select"
       }
     }
   },
