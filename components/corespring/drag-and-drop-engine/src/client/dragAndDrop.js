@@ -1,7 +1,6 @@
 var dragAndDropController = [
   '$modal',
-  '$timeout',
-  function($modal, $timeout) {
+  function($modal) {
 
     var def = {
       scope: true,
