@@ -130,7 +130,6 @@ var main = [
         }
 
         applyChoices();
-        scope.$emit('rerender-math', {delay: 100});
       };
 
       scope.containerBridge = {
@@ -278,7 +277,7 @@ var main = [
         return res + (o.correct ? 'correct' : 'incorrect');
       };
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     };
 
 

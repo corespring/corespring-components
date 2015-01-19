@@ -177,7 +177,7 @@ link = function($sce, $timeout) {
       scope.$emit('rerender-math', {delay: 1});
     };
 
-    scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+    scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
   };
 };

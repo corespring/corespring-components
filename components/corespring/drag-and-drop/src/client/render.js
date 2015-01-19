@@ -253,7 +253,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         return scope.model.choices.slice(row * scope.itemsPerRow, row * scope.itemsPerRow + scope.itemsPerRow);
       };
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     };
 
