@@ -5,21 +5,46 @@ describe('corespring:drag-and-drop-inline:configure', function () {
 
   var MockComponentRegister = function () {
     this.elements = {};
-    this.registerConfigPanel = function (id, bridge) {
+    this.registerConfigPanel = function(id, bridge) {
       this.elements[id] = bridge;
     };
   };
 
   var element = null, scope, container = null, rootScope;
 
-  function createTestModel() {
+  function createTestModel(options) {
+    var choices = (options && options.choices) || [
+      {
+        "label": "turkey",
+        "labelType": "text",
+        "id": "choice_0"
+      },
+      {
+        "label": "ham",
+        "labelType": "text",
+        "id": "choice_1"
+      },
+      {
+        "label": "lamb",
+        "labelType": "text",
+        "id": "choice_2"
+      },
+      {
+        "label": "bologna",
+        "labelType": "text",
+        "id": "choice_3"
+      }
+    ];
+
+    var correctResponse = (options && options.correctResponse) || {
+      "aa_1": [
+        "choice_0","choice_1","choice_2"
+      ]
+    };
+
     return {
       "componentType": "corespring-drag-and-drop-inline",
-      "correctResponse": {
-        "aa_1": [
-          "choice_0","choice_1","choice_2"
-        ]
-      },
+      "correctResponse": correctResponse,
       "feedback": {
         "correctFeedbackType": "default",
         "partialFeedbackType": "default",
@@ -40,28 +65,7 @@ describe('corespring:drag-and-drop-inline:configure', function () {
             "textAfter": "for Thanksgiving dinner."
           }
         ],
-        "choices": [
-          {
-            "label": "turkey",
-            "labelType": "text",
-            "id": "choice_0"
-          },
-          {
-            "label": "ham",
-            "labelType": "text",
-            "id": "choice_1"
-          },
-          {
-            "label": "lamb",
-            "labelType": "text",
-            "id": "choice_2"
-          },
-          {
-            "label": "bologna",
-            "labelType": "text",
-            "id": "choice_3"
-          }
-        ],
+        "choices": choices,
         "config": {
           "shuffle": false,
           "choiceAreaLabel": "Choices",
@@ -130,6 +134,52 @@ describe('corespring:drag-and-drop-inline:configure', function () {
       rootScope.$digest();
       expect(scope.fullModel.partialScoring.length).toEqual(1);
     });
+  });
+
+  describe('add choice button', function() {
+    it('should add a choice to the model', function() {
+      var testModel = createTestModel();
+      var initialLength = testModel.model.choices.length;
+      container.elements['1'].setModel(testModel);
+      expect($('.add-choice', element).length).not.toBe(0);
+      $('.add-choice', element).click();
+      scope.$digest();
+      expect(testModel.model.choices.length).toBe(initialLength + 1);
+    });
+  });
+
+  describe('remove choice button', function() {
+    it('should be visible with more than one choice', function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      scope.$digest();
+      $('.remove-choice', element).each(function(i, el) {
+        expect($(el).hasClass('ng-hide')).toBe(false);
+      });
+    });
+
+    it('should be hidden with one choice', function() {
+      var testModel = createTestModel({
+        choices: [
+          {
+            "label": "turkey",
+            "labelType": "text",
+            "id": "choice_0"
+          }
+        ],
+        correctResponse: {
+          "aa_1": [
+            "choice_0"
+          ]
+        }
+      });
+      container.elements['1'].setModel(testModel);
+      scope.$digest();
+      $('.remove-choice', element).each(function(i, el) {
+        expect($(el).hasClass('ng-hide')).toBe(true);
+      });
+    });
+
   });
 
 });
