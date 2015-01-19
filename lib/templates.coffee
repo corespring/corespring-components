@@ -13,7 +13,7 @@ exports.wrapAngular = (moduleName, name, contents) ->
 exports.preroll = ->
   """
   console.log('init');
-  angular.module('test-app', []);
+  angular.module('test-app', ['ngSanitize', 'ui.select']);
 
   //Mock dependencies
   angular.module('test-app').factory('WiggiMathJaxFeatureDef', [function(){
