@@ -31,8 +31,6 @@ var main = [
 
         var answers = scope.session.answers;
 
-        console.log('answers are', scope.session);
-
         if (scope.inputType === "radio" && _.isArray(answers) && answers.length > 0) {
           scope.answer.choice = answers[0];
         }
