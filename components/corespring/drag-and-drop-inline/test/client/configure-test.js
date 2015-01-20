@@ -13,6 +13,13 @@ describe('corespring:drag-and-drop-inline:configure', function () {
   var element = null, scope, container = null, rootScope;
 
   function createTestModel(options) {
+    var answerAreas = (options && options.answerAreas) || [
+      {
+        "id": "aa_1",
+        "textBefore": "Americans eat",
+        "textAfter": "for Thanksgiving dinner."
+      }
+    ];
     var choices = (options && options.choices) || [
       {
         "label": "turkey",
@@ -58,13 +65,7 @@ describe('corespring:drag-and-drop-inline:configure', function () {
         }
       ],
       "model": {
-        "answerAreas": [
-          {
-            "id": "aa_1",
-            "textBefore": "Americans eat",
-            "textAfter": "for Thanksgiving dinner."
-          }
-        ],
+        "answerAreas": answerAreas,
         "choices": choices,
         "config": {
           "shuffle": false,
@@ -180,6 +181,25 @@ describe('corespring:drag-and-drop-inline:configure', function () {
       });
     });
 
+  });
+
+  describe('addAnswerArea', function() {
+    it('should add unique answer area ids', function() {
+      var ids, testModel = createTestModel({
+        answerAreas: [
+          {
+            "id": "aa_1",
+            "textBefore": "Americans eat",
+            "textAfter": "for Thanksgiving dinner."
+          }
+        ]
+      });
+      container.elements['1'].setModel(testModel);
+      scope.addAnswerArea();
+      scope.addAnswerArea();
+      ids = _.pluck(testModel.model.answerAreas, "id");
+      expect(ids).toEqual(_.uniq(ids));
+    });
   });
 
 });
