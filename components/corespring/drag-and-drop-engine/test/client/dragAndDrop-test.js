@@ -34,7 +34,7 @@ describe('dragAndDropController', function() {
     it('should $emit a rerender-math event', function() {
       spyOn(scope, "$emit");
       scope.startOver();
-      expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: 1});
+      expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: jasmine.any(Number), element: jasmine.any(Object)});
     });
 
   });
@@ -54,7 +54,7 @@ describe('dragAndDropController', function() {
       it('should $emit a rerender-math event', function() {
         spyOn(scope, "$emit");
         scope.containerBridge.reset();
-        expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: 1});
+        expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: jasmine.any(Number), element: jasmine.any(Object)});
       });
 
     });
