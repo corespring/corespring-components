@@ -194,7 +194,7 @@ var answerArea = [
         '           <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
         '           <div class="sizerHolder" ng-switch="choice.labelType">',
         '             <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
-        '             <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
+        '             <div ng-switch-default="" class="html-holder" ng-bind-html-unsafe="choice.label" />',
         '           </div>',
 
         '        </div>',
