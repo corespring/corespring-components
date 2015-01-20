@@ -309,7 +309,7 @@ var main = [
 
         function findFreeAnswerAreaSlot(){
           var slot = 0;
-          var ids = _.pluck($scope.model.categories, 'id');
+          var ids = _.pluck($scope.model.answerAreas, 'id');
           while(_.contains(ids, "aa_" + slot)){
             slot++;
           }
