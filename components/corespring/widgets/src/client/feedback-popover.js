@@ -31,14 +31,15 @@ var def = ['MathJaxService', function(MathJaxService) {
           $(element).popover('destroy');
           $(element).popover({
               title: title,
-              template: '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+              template: [
+                '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip">',
+                '  <div class="arrow"></div>',
+                '  <h3 class="popover-title"></h3>',
+                '  <div class="popover-content"></div>',
+                '</div>'
+              ].join('\n'),
               content: content,
-              placement: function(popover, sender) {
-                var playerElement = $(element).parents('.corespring-player');
-                var playerTop = playerElement.offset().top;
-                var elementTop = $(element).offset().top;
-                return (elementTop - playerTop > 100) ? "top" : "bottom";
-              },
+              placement: 'bottom',
               viewport: ".player-body",
               html: true}
           ).on('shown.bs.popover', function() {
@@ -47,7 +48,8 @@ var def = ['MathJaxService', function(MathJaxService) {
           );
 
           $('html').click(function(e) {
-            if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {
+            if ($(e.target).parents('[feedback-popover]').length === 0
+                && _.isEmpty($(e.target).attr('feedback-popover'))) {
               $(element).popover('hide');
             }
           });
