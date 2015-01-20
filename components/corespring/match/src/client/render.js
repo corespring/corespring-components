@@ -189,7 +189,7 @@ var main = [
         return inputType === 'radiobutton';
       };
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     };
 
     def = {

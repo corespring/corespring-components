@@ -114,4 +114,14 @@ describe('multiple-choice', function() {
       .call(done);
   });
 
+  it('MathJax renders', function(done) {
+    browser
+      .getHTML('.choice-label', function(err, message) {
+        message[0].should.match(/MathJax_Preview/);
+        message[2].should.match(/MathJax_Preview/);
+        message[3].should.match(/MathJax_Preview/);
+      })
+      .call(done);
+  });
+
 });

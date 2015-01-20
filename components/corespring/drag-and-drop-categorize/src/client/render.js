@@ -80,7 +80,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
         }
       });
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     };
 
