@@ -1,0 +1,28 @@
+{
+  "item": {
+    "components" : {
+      "1" : {
+        "componentType" : "corespring-inline-choice",
+        "title": "Less Fruits",
+        "weight" : 1,
+        "correctResponse" : "carrot",
+        "feedback" : [
+          { "value" : "banana", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
+          { "value" : "carrot", "feedback" : "Looking good buddy", "feedbackType": "custom"},
+          { "value" : "apple", "feedback" : "Looking bad buddy", "feedbackType": "custom"}
+        ],
+        "model" : {
+          "config": {
+            "shuffle": true
+          },
+          "choices": [
+            {"label": "Banana", "value": "banana"},
+            {"label": "Carrot", "value": "carrot"},
+            {"label": "Apple", "value": "apple"}
+          ]
+        }
+      }
+    },
+    "xhtml": "<corespring-inline-choice id=\"1\"></corespring-inline-choice>"
+  }
+}
