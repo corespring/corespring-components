@@ -113,6 +113,7 @@ var dragAndDropController = [
           }
 
           scope.originalChoices = _.cloneDeep(model.choices);
+          scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
         scope.choiceForId = function(id) {
@@ -128,7 +129,7 @@ var dragAndDropController = [
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = [];
           });
-          scope.$emit('rerender-math', {delay: 1});
+          scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
         scope.undo = function() {
@@ -139,7 +140,7 @@ var dragAndDropController = [
           var state = _.last(scope.stack);
           scope.local.choices = _.cloneDeep(state.choices);
           scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
-          scope.$emit('rerender-math', {delay: 1});
+          scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
         scope.itemsPerRow = function() {
@@ -188,6 +189,7 @@ var dragAndDropController = [
             backdrop: true,
             scope: scope.solutionScope
           });
+          scope.$emit('rerender-math', {delay: 100});
         };
 
         /* Common container bridge implementations */
@@ -200,7 +202,6 @@ var dragAndDropController = [
             scope.correctResponse = undefined;
             scope.feedback = undefined;
             scope.response = undefined;
-            scope.$emit('rerender-math', {delay: 1});
           },
 
           isAnswerEmpty: function() {

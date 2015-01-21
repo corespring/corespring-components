@@ -42,6 +42,8 @@ module.exports = (grunt) ->
             '<%= common.app %>/bower_components/headjs/dist/1.0.0/head.js',
             '<%= common.app %>/bower_components/jquery/dist/jquery.js',
             '<%= common.app %>/bower_components/angular/angular.js',
+            '<%= common.app %>/bower_components/angular-sanitize/angular-sanitize.js',
+            '<%= common.app %>/bower_components/angular-ui-select/dist/select.js',
             '<%= common.app %>/bower_components/angular-mocks/angular-mocks.js',
             # TODO : how to build out packages like this..
             '<%= common.app %>/bower_components/ckeditor/ckeditor.js',

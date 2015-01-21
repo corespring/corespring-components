@@ -19,7 +19,7 @@
         "model": {
           "choices": [
             {
-              "label": "Apple",
+              "label": "Apple \\( 3x\\ne4 \\)",
               "labelType": "text",
               "id": "c1",
               "moveOnDrag": true

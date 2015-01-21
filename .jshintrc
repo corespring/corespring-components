@@ -20,6 +20,7 @@
     "exports" : true,
     "module" : true,
     "spyOn" : true,
-    "inject" : true
+    "inject" : true,
+    "jasmine" : true
   }
 }

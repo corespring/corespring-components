@@ -118,7 +118,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
         disabled: false
       };
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     };
 

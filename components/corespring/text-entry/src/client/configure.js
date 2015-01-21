@@ -1,3 +1,5 @@
+/* global console, exports */
+
 var main = [
   '$log',
   '$timeout',
@@ -7,7 +9,6 @@ var main = [
     "use strict";
 
     var designPanel = [
-      '<div navigator-panel="Design">',
       '  <div class="container-fluid">',
       '    <div class="row">',
       '      <div class="col-xs-12">',
@@ -82,12 +83,10 @@ var main = [
       '        </div>',
       '      </div>',
       '    </div>',
-      '  </div>',
-      '</div>'
+      '  </div>'
     ].join("\n");
 
     var displayPanel = [
-      '<div navigator-panel="Display">',
       '  <div class="container-fluid">',
       '    <div class="row text-field-size-row">',
       '      <div class="col-xs-12">',
@@ -109,8 +108,7 @@ var main = [
       '        </select>',
       '      </div>',
       '    </div>',
-      '  </div>',
-      '</div>'
+      '  </div>'
     ].join("\n");
 
     function createResponsesModel(award) {
@@ -133,8 +131,12 @@ var main = [
       template: [
         '<div class="config-text-entry">',
         '  <div navigator="">',
-             designPanel,
-             displayPanel,
+        '    <div navigator-panel="Design">',
+        designPanel,
+        '    </div>',
+        '    <div navigator-panel="Display">',
+        displayPanel,
+        '    </div>',
         '  </div>',
         '</div>'
       ].join('\n'),
@@ -251,18 +253,19 @@ var csTextEntryResponseInput = [
 
     var template = [
       '<div class="response-input">',
-      '  <input style="width:100%;" type="text" ng-model="response.values"',
-      '         ui-select2="select2Options"',
-      '         data-placeholder="{{prompt}}"',
-      '    />',
+      '  <ui-select multiple tagging tagging-label="false" ng-model="model.values" theme="bootstrap"',
+      '     ng-disabled="disabled" title="prompt" tagging-tokens="ENTER">',
+      '    <ui-select-match placeholder="{{prompt}}">{{$item}}</ui-select-match>',
+      '    <ui-select-choices repeat="c in model.values">{{c}}</ui-select-choices>',
+      ' </ui-select>',
       '  <div class="pull-right">',
-      '    <checkbox value="ignore-case" ng-init="response.caseSensitive = !response.ignoreCase"',
-      '             ng-model="response.caseSensitive" ng-change="response.ignoreCase = !response.caseSensitive">',
+      '    <checkbox value="ignore-case" ng-init="model.caseSensitive = !model.ignoreCase"',
+      '             ng-model="model.caseSensitive" ng-change="model.ignoreCase = !model.caseSensitive">',
       '      Case sensitive?',
       '    </checkbox>',
       '  </div>',
       '  <div class="pull-right">',
-      '    <checkbox value="ignore-whitespace" ng-model="response.ignoreWhitespace">Ignore spacing?</checkbox>',
+      '    <checkbox value="ignore-whitespace" ng-model="model.ignoreWhitespace">Ignore spacing?</checkbox>',
       '  </div>',
       '  <div class="clearfix"></div>',
       '</div>'
@@ -270,24 +273,12 @@ var csTextEntryResponseInput = [
 
     return {
       scope: {
-        response: '=model',
+        model: '=model',
         prompt: '=prompt'
       },
       restrict: 'A',
       replace: true,
-      template: template,
-      controller: function($scope) {
-        //it is important to set the options in the controller
-        //because the link function is executed too late
-        $scope.select2Options = {
-          tags: [],
-          simple_tags: true,
-          multiple: true,
-          dropdownCssClass: 'cs-text-entry-cfg__responses-input--dropdown-noshow',
-          tokenSeparators: [',']
-        };
-      },
-      link: function(scope, element, attrs) {}
+      template: template
     };
   }
 ];

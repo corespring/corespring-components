@@ -57,7 +57,7 @@ link = function() {
       }
     };
 
-    scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+    scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
   };
 };
