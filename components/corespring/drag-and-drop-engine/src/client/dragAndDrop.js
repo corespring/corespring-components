@@ -33,13 +33,17 @@ var dragAndDropController = [
               scope.maxHeight = h;
             }
             scope.choiceStyle = {
-              width: (scope.maxWidth) + 'px',
-              height: (scope.maxHeight + 16) + 'px'
+              minWidth: (scope.maxWidth) + 'px',
+              minHeight: (scope.maxHeight) + 'px'
+            };
+            scope.resizeStopperStyle = {
+              minWidth: (scope.maxWidth) + 'px'
             };
           });
         };
 
         var lastW, lastH, freq = 100;
+
 
         setInterval(function() {
 
@@ -47,18 +51,18 @@ var dragAndDropController = [
             var w = 0,
               h = 0;
 
-            $(element).find('.html-holder').each(function(idx, e) {
-              if ($(e).width() > w) {
-                w = $(e).width();
+            $(element).find('.choice.same-size').each(function(idx, e) {
+              if ($(e).outerWidth() > w) {
+                w = $(e).outerWidth();
               }
             });
-            $(element).find('.html-holder').each(function(idx, e) {
-              if ($(e).height() > h) {
-                h = $(e).height();
+            $(element).find('.choice.same-size').each(function(idx, e) {
+              if ($(e).outerHeight() > h) {
+                h = $(e).outerHeight();
               }
             });
-            if (lastW !== w || lastH !== h) {
-              scope.propagateDimension(w + 8, h);
+            if (w && lastW !== w || h && lastH !== h) {
+              scope.propagateDimension(w, h);
             }
             lastW = w;
             lastH = h;
@@ -68,6 +72,7 @@ var dragAndDropController = [
             }
           }
         }, freq);
+
 
         var layoutChoices = function(choices, order) {
           if (!order) {

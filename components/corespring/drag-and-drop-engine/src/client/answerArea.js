@@ -1,5 +1,9 @@
+/* global console, exports */
+
 var answerArea = [
   function() {
+
+    "use strict";
 
     var def = {
       scope: true,
@@ -10,7 +14,7 @@ var answerArea = [
         scope['class'] = attrs['class'];
 
         var updateLayout = function(newLayout) {
-          var maxWidth = Math.max(Math.min(scope.maxWidth + 25, 550), 120);
+          var maxWidth = Math.max(Math.min(scope.maxWidth + 15, 550), 120);
           if (newLayout === 'inline') {
             scope.elementStyle = {
               height: (scope.maxHeight + 30) + "px",
