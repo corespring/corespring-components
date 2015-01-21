@@ -8,12 +8,17 @@ var def = [
 
     function ComponentImageService() {
 
+      function addQueryParamsIfPresent(path) {
+        var href = document.location.href;
+        return  path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
+      }
+
       this.deleteFile = function(url) {
-        $http['delete'](url);
+        $http['delete'](addQueryParamsIfPresent(url));
       };
 
       this.addFile = function(file, onComplete, onProgress) {
-        var url = '' + file.name;
+        var url = addQueryParamsIfPresent('' + file.name);
 
         if (ImageUtils.bytesToKb(file.size) > 500) {
           $timeout(function() {
