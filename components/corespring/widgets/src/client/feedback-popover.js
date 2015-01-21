@@ -1,8 +1,9 @@
-var def = ['MathJaxService', function(MathJaxService) {
+var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
   return {
     restrict: "A",
     scope: {
-      response: "=feedbackPopover"
+      response: "=feedbackPopover",
+      viewport: '@'
     },
     link: function(scope, element, attrs) {
       scope.$watch('response', function(response) {
@@ -40,12 +41,26 @@ var def = ['MathJaxService', function(MathJaxService) {
               ].join('\n'),
               content: content,
               placement: 'bottom',
-              viewport: ".player-body",
               html: true}
-          ).on('shown.bs.popover', function() {
-              MathJaxService.parseDomForMath(0);
-            }
-          );
+          ).on('show.bs.popover', function(event) {
+            $timeout(function() {
+              if (scope.viewport && $(scope.viewport).length > 0) {
+                var $popover = $(event.target).siblings('.popover');
+                var $viewport = $(scope.viewport);
+
+                while ($popover.offset().left < $viewport.offset().left) {
+                  $popover.css('left', '+=1px');
+                  $('.arrow', $popover).css('left', '-=1px');
+                }
+                while ($popover.offset().left + $popover.width() >  $viewport.offset().left + $viewport.width()) {
+                  $popover.css('left', '-=1px');
+                  $('.arrow', $popover).css('left', '+=1px');
+                }
+              }
+            });
+          }).on('shown.bs.popover', function() {
+            MathJaxService.parseDomForMath(0);
+          });
 
           $('html').click(function(e) {
             if ($(e.target).parents('[feedback-popover]').length === 0
