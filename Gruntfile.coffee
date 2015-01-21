@@ -4,6 +4,8 @@ components = require "./lib/components"
 _ = require "lodash"
 utils = require "./lib/utils"
 testClient = require "./lib/test-client"
+writeVersionInfo = require('./lib/version-info')
+
 
 module.exports = (grunt) ->
 
@@ -140,3 +142,5 @@ module.exports = (grunt) ->
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
+  grunt.registerTask('version-info', writeVersionInfo(grunt))
+  grunt.registerTask('build', ['less', 'version-info', 'clean:production'])
