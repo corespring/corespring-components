@@ -41,7 +41,12 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
                 '</div>'
               ].join('\n'),
               content: content,
-              placement: 'bottom',
+              placement: function(popover, sender) {
+                var playerElement = $(element).parents('.corespring-player');
+                var playerTop = playerElement.offset().top;
+                var elementTop = $(element).offset().top;
+                return (elementTop - playerTop > 100) ? "top" : "bottom";
+              },
               html: true}
           ).on('show.bs.popover', function(event) {
               $timeout(function() {
