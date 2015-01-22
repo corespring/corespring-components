@@ -50,7 +50,7 @@ describe('drag-and-drop-categorize', function() {
         }
       }
     };
-  };
+  }
 
   function MockComponentRegister() {
     this.elements = {};
