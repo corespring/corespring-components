@@ -1,8 +1,5 @@
-/* global console,exports */
 var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', '$timeout',
   function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
-
-    "use strict";
 
     var answerArea = [
       '<div>',
@@ -27,7 +24,9 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           }
 
           return 'incorrect';
+
         }
+
       };
 
       _.extend(scope.containerBridge, {
