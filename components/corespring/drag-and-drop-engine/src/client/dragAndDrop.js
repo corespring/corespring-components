@@ -1,44 +1,31 @@
-/* global console,exports */
 var dragAndDropController = [
   '$modal',
-  '$timeout',
-  function($modal,$timeout) {
-
-    "use strict";
+  function($modal) {
 
     var def = {
       scope: true,
       restrict: 'AE',
       link: function(scope, element, attrs) {
         scope.dragging = {};
-        scope.playerWidth = 550;
         scope.maxWidth = 50;
         scope.maxHeight = 20;
         scope.stack = [];
 
         scope.onStart = function(event) {
-          scope.isDragging = true;
           scope.dragging.id = $(event.currentTarget).attr('data-id');
           scope.dragging.fromTarget = undefined;
-        };
-
-        scope.onStop = function(event) {
-          scope.isDragging = false;
         };
 
         scope.draggableOptions = function(choice) {
           return {
             revert: 'invalid',
             placeholder: (!choice || choice.moveOnDrag) ? false : 'keep',
-            index: _.indexOf(scope.local.choices, choice),
-            onStart: 'onStart',
-            onStop: 'onStop'
+            onStart: 'onStart'
           };
         };
 
         scope.propagateDimension = function(w, h) {
           scope.$apply(function() {
-
             if (w !== scope.maxWidth) {
               scope.maxWidth = w;
             }
@@ -54,47 +41,35 @@ var dragAndDropController = [
 
         var lastW, lastH, freq = 100;
 
-        function updateLayout() {
-          if(freq < 1000){
-            freq += 100;
-          }
-          $timeout(updateLayout, freq);
+        setInterval(function() {
 
-          if (scope.$$phase || scope.isDragging) {
-            return;
-          }
+          if (!scope.$$phase) {
+            var w = 0,
+              h = 0;
 
-          var w = 0, h = 0;
-
-          var htmlHolders = $(element).find('.html-holder');
-          htmlHolders.each(function(idx, e) {
-            var $e = $(e);
-            if ($e.width() > w) {
-              w = $e.width();
+            $(element).find('.html-holder').each(function(idx, e) {
+              if ($(e).width() > w) {
+                w = $(e).width();
+              }
+            });
+            $(element).find('.html-holder').each(function(idx, e) {
+              if ($(e).height() > h) {
+                h = $(e).height();
+              }
+            });
+            if (lastW !== w || lastH !== h) {
+              scope.propagateDimension(w + 8, h);
             }
-            if ($e.height() > h) {
-              h = $e.height();
+            lastW = w;
+            lastH = h;
+
+            if (freq < 1000) {
+              freq += 100;
             }
-          });
-
-          //CO-83 make sure the change applies to vertical placement only
-          if(scope.model.config.placementType === 'placement' && scope.model.config.choiceAreaLayout === 'vertical'){
-            w = Math.min( w + 8, (scope.playerWidth - 50) / 2);
           }
+        }, freq);
 
-          if (lastW !== w || lastH !== h) {
-            scope.propagateDimension(w, h);
-            freq = 100;
-          }
-
-          lastW = w;
-          lastH = h;
-        }
-
-        $timeout(updateLayout, freq);
-
-
-        function layoutChoices(choices, order) {
+        var layoutChoices = function(choices, order) {
           if (!order) {
             var shuffled = _.shuffle(_.cloneDeep(choices));
             return shuffled;
@@ -110,13 +85,13 @@ var dragAndDropController = [
             var missing = _.difference(choices, ordered);
             return _.union(ordered, missing);
           }
-        }
+        };
 
-        function stashOrder(choices) {
+        var stashOrder = function(choices) {
           return _.map(choices, function(c) {
             return c.id;
           });
-        }
+        };
 
         scope.resetChoices = function(model) {
           scope.stack = [];
@@ -169,13 +144,12 @@ var dragAndDropController = [
         };
 
         scope.itemsPerRow = function() {
-          var layout = scope.model.config.choiceAreaLayout;
-          if (layout === 'vertical') {
+          if (scope.model.config.choiceAreaLayout === 'vertical') {
             return 1;
-          } else if (layout === 'tile') {
-            return Number(scope.model.config.itemsPerRow) || (scope.playerWidth / scope.maxWidth);
+          } else if (scope.model.config.choiceAreaLayout === 'tile') {
+            return Number(scope.model.config.itemsPerRow) || (550 / scope.maxWidth);
           } else {
-            return scope.playerWidth / scope.maxWidth;
+            return 550 / scope.maxWidth;
           }
         };
 
