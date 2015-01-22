@@ -1,5 +1,9 @@
+/* global console, exports */
+
 var answerArea = [
   function() {
+
+    "use strict";
 
     var def = {
       scope: true,
@@ -106,7 +110,7 @@ var answerArea = [
         };
 
         scope.droppableOptions = {
-          accept: function(a, b) {
+          accept: function(element) {
             if (scope.cardinality === 'single' && scope.landingPlaceChoices[scope.id].length > 0) {
               return false;
             }
@@ -172,6 +176,9 @@ var answerArea = [
           return isCorrect ? "correct" : "incorrect";
         };
 
+        scope.draggableOptions = function(index){
+          return {index: index, placeholder: true};
+        };
 
       },
       template: [
@@ -184,14 +191,14 @@ var answerArea = [
         '      >',
         '        <div ng-repeat="choice in landingPlaceChoices[id]"',
         '             ng-style="choiceStyle" ',
-        '             jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
-        '             data-jqyoui-options=""',
+        '             jqyoui-draggable="draggableOptions($index)"',
+        '             data-jqyoui-options="draggableOptions($index)"',
         '             ng-model="landingPlaceChoices[id][$index]"',
         '             data-id="{{choice.id}}"',
         '             class="choice {{classForChoice(choice, $index)}}"',
         '             ng-switch="choice.labelType">',
         '           <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
-        '           <div ng-switch-default="" ng-bind-html-unsafe="choice.label" />',
+        '           <div ng-switch-default="" class="html-holder" ng-bind-html-unsafe="choice.label" />',
         '           <div class="sizerHolder" ng-switch="choice.labelType">',
         '             <img class="choice-image" ng-switch-when="image" ng-src="{{choice.imageName}}" />',
         '             <div ng-switch-default="" class="html-holder" ng-bind-html-unsafe="choice.label" />',

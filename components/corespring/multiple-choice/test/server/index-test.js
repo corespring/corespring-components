@@ -113,6 +113,7 @@ describe('multiple-choice server logic', function() {
       response.score.should.eql(expected.score);
     });
 
+
     it('should respond to a correct answer', function() {
       var expected, response;
       response = server.respond(_.cloneDeep(component), ["carrot", "turnip", "pear"], helper.settings(true, true, true));
@@ -244,35 +245,6 @@ describe('multiple-choice server logic', function() {
       response.should.eql(expected);
     });
 
-    it('in partially correct case', function() {
-      var expected, response;
-      response = server.respond(_.cloneDeep(component), ["carrot", "turnip", "pear"], helper.settings(true, true, true));
-      expected = {
-        correctness: "correct",
-        score: 1,
-        feedback: [
-          {
-            value: "carrot",
-            feedback: "Yes",
-            correct: true
-          },
-          {
-            value: "turnip",
-            feedback: "Yes",
-            correct: true
-          },
-          {
-            value: "pear",
-            feedback: "pear",
-            correct: true
-          }
-        ]
-      };
-      response.correctness.should.eql(expected.correctness);
-      response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
-    });
-
   });
 
   describe('Preprocessing', function() {
@@ -314,118 +286,12 @@ describe('multiple-choice server logic', function() {
   });
 
   describe('Scoring', function() {
-    describe('if no partial scoring is allowed', function() {
+    it('if no partial scoring is allowed score should be proportionate to number of correctly chosen answers', function() {
+      var response = server.respond(component, ["carrot"], helper.settings(true, true, false));
+      response.score.should.eql(0.33);
 
-      it('For any incorrect answer the score should be 0', function() {
-        var response = server.respond(component, ["carrot"], helper.settings(true, true, false));
-        response.score.should.eql(0);
-
-        response = server.respond(component, ["turnip", "pear"], helper.settings(true, true, false));
-        response.score.should.eql(0);
-
-        response = server.respond(component, ["apple"], helper.settings(true, true, false));
-        response.score.should.eql(0);
-      });
-
-      it('If all correct answers were checked the score should be 1 ', function() {
-        var response = server.respond(component, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
-        response.score.should.eql(1);
-      });
-
-      it('If all correct answers were checked and some incorrect ones the score should be 1', function() {
-        var response = server.respond(component, ["carrot", "turnip", "pear", "apple"], helper.settings(true, true, false));
-        response.score.should.eql(1);
-      });
-
-    });
-
-
-    it('PE_141', function() {
-      var comp = {
-            "weight" : 1,
-            "componentType" : "corespring-multiple-choice",
-            "title" : "Multiple Choice",
-            "correctResponse" : {
-              "value" : [
-                "mc_1",
-                "mc_2",
-                "mc_4"
-              ]
-            },
-            "allowPartialScoring" : false,
-            "partialScoring" : [
-              {
-                "numberOfCorrect" : 1,
-                "scorePercentage" : 25
-              }
-            ],
-            "feedback" : [
-              {
-                "value" : "mc_1",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_2",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_3",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_4",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_0",
-                "feedbackType" : "default",
-                "notChosenFeedbackType" : "default"
-              }
-            ],
-            "model" : {
-              "choices" : [
-                {
-                  "label" : "one&nbsp;",
-                  "value" : "mc_1",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "two",
-                  "value" : "mc_2",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "three",
-                  "value" : "mc_3",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "four",
-                  "value" : "mc_4",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "five",
-                  "value" : "mc_0",
-                  "labelType" : "text"
-                }
-              ],
-              "config" : {
-                "orientation" : "vertical",
-                "shuffle" : false,
-                "choiceType" : "checkbox",
-                "choiceLabels" : "letters",
-                "showCorrectAnswer" : "separately"
-              },
-              "scoringType" : "standard"
-            }};
-
-      var response = server.respond(comp, ["mc_0","mc_1","mc_3"], helper.settings(true, true, false));
-      response.score.should.eql(0);
+      response = server.respond(component, ["turnip", "pear"], helper.settings(true, true, false));
+      response.score.should.eql(0.67);
     });
 
     it('if partial scoring is allowed score should be calculated using it', function() {
