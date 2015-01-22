@@ -25,48 +25,6 @@ link = function($sce, $timeout) {
       });
     };
 
-
-    var Tooltip = {
-      show: function() {
-        // Timeout for trying to move tooltip inside CoreSpring player. We don't want to freeze the browser.
-        var timeout = 2000;
-
-        var $tooltip = $('.tooltip', element);
-        var $tooltipInner = $('.tooltip-inner', $tooltip);
-
-        function tooltipOutsideViewport() {
-          var tooltipRight = $tooltipInner[0].getBoundingClientRect().right;
-          var playerRight = $('.corespring-player')[0].getBoundingClientRect().right;
-          return (playerRight - tooltipRight) < 0;
-        }
-
-        $tooltip.css({'visibility': 'hidden'});
-        $tooltip.removeClass('hidden');
-        $tooltipInner.css({'left': '0px'});
-
-        $timeout(function() {
-          var count = 0;
-          try {
-            while(tooltipOutsideViewport() && count < timeout) {
-              count += 1;
-              var tooltipLeft = parseInt($('.tooltip-inner', element).css('left').match(/(-?\d+)px/)[1], 10);
-              if (_.isNaN(tooltipLeft)) { // don't keep looping if we don't get a number
-                throw "NaN";
-              }
-              $tooltipInner.css({'left': (tooltipLeft - 1) + 'px'});
-            }
-          } finally {
-            // If there are any errors, we want to just display the tooltip
-            $tooltip.css({'visibility': 'visible'});
-          }
-        });
-      },
-
-      hide: function() {
-        $('.tooltip', element).addClass('hidden');
-      }
-    };
-
     scope.editable = true;
 
     function clearFeedback(choices) {
@@ -74,7 +32,6 @@ link = function($sce, $timeout) {
         delete c.feedback;
         delete c.correct;
       });
-      Tooltip.hide();
     }
 
     function setFeedback(choices, response) {
@@ -82,7 +39,6 @@ link = function($sce, $timeout) {
         if (response.feedback && response.feedback[c.value]) {
           c.feedback = response.feedback[c.value].feedback;
           c.correct = response.feedback[c.value].correct;
-          Tooltip.show();
         }
       });
     }
@@ -179,6 +135,10 @@ link = function($sce, $timeout) {
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
+    scope.playerId = (function() {
+      return element.closest('.player-body').attr('id');
+    })();
+
   };
 };
 
@@ -194,7 +154,7 @@ main = [
       link: link($sce, $timeout),
       template: [
         '<div class="view-inline-choice" ng-class="response.correctness">',
-        '  <div feedback-popover="response">',
+        '  <div feedback-popover="response" viewport="#{{playerId}}">',
         '    <div class="dropdown" dropdown>',
         '      <span class="btn dropdown-toggle" dropdown-toggle ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
         '        <span ng-switch="selected.labelType">',

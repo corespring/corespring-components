@@ -5,7 +5,7 @@ describe('corespring:drag-and-drop-inline:configure', function () {
 
   var MockComponentRegister = function () {
     this.elements = {};
-    this.registerConfigPanel = function (id, bridge) {
+    this.registerConfigPanel = function(id, bridge) {
       this.elements[id] = bridge;
     };
   };
