@@ -1,6 +1,6 @@
 describe('drag-and-drop-categorize', function() {
 
-  var element, scope, rootScope;
+  var element, scope, rootScope, container;
 
   beforeEach(angular.mock.module('test-app'));
 
