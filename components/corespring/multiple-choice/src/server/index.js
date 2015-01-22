@@ -81,11 +81,12 @@ exports.isCorrect = function(answer, correctAnswer, isSingleChoice) {
   return diff.length === 0 && (diff2.length === 0 || isSingleChoice);
 };
 
-exports.isPartiallyCorrect = function(answer, correctAnswer) {
-  var notInCorrect = _.find(answer, function(a) {
-    return !_.contains(correctAnswer, a);
-  });
-  return answer.length > 0 && _.isUndefined(notInCorrect);
+exports.isPartiallyCorrect = function(answers, correctAnswers) {
+  var countAnsweredCorrectly = _.reduce(answers, function(sum,answer) {
+    var increment = _.contains(correctAnswers, answer) ? 1 : 0;
+    return sum + increment;
+  },0);
+  return countAnsweredCorrectly < correctAnswers.length;
 };
 
 var isCorrectChoice = function(q, choice) {
@@ -132,7 +133,7 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
 
 var calculateScore = function(question, answer, isSingleChoice) {
 
-  var countCorrectAnswers = function() {
+  var countAnsweredCorrectly = function() {
     var sum = _.reduce(answer, function(sum, a) {
       var contains = _.contains(question.correctResponse.value, a);
       var newsum = sum + (contains ? 1 : 0);
@@ -149,26 +150,26 @@ var calculateScore = function(question, answer, isSingleChoice) {
     return _.isUndefined(partialScore) ? 0 : partialScore.scorePercentage;
   };
 
-  var maxCorrect = question.correctResponse.value.length;
-  var correctCount = countCorrectAnswers();
+  var definedAsCorrect = question.correctResponse.value.length;
+  var answeredCorrectly = countAnsweredCorrectly();
 
-  if (correctCount === 0) {
+  if (answeredCorrectly === 0) {
     return 0;
   }
 
-  if (correctCount === maxCorrect) {
+  if (answeredCorrectly === definedAsCorrect) {
     return 1;
   }
 
   if (isSingleChoice) {
-    return correctCount > 0;
+    return answeredCorrectly > 0;
   }
 
-  var incorrectCount = answer.length - correctCount;
-  var finalIncorrect = correctCount - incorrectCount;
-  var rawScore = finalIncorrect / maxCorrect;
-
-  return (maxCorrect > 1 && question.allowPartialScoring) ? (calculatePartialScore(correctCount) / 100) : Math.round(rawScore * 100) / 100;
+  if (definedAsCorrect > 1 && question.allowPartialScoring){
+    return calculatePartialScore(answeredCorrectly) / 100;
+  }else{
+    return (answeredCorrectly === definedAsCorrect) ? 1 : 0;
+  }
 };
 
 
@@ -190,7 +191,6 @@ exports.respond = function(question, answer, settings) {
 
   var isSingleChoice = question.model.config.choiceType === "radio";
   var answerIsCorrect = this.isCorrect(answer, question.correctResponse.value, isSingleChoice);
-  var answerIsPartiallyCorrect = !answerIsCorrect && this.isPartiallyCorrect(answer, question.correctResponse.value);
 
   var response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
