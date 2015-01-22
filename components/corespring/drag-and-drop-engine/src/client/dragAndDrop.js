@@ -1,31 +1,43 @@
+/* global console,exports */
 var dragAndDropController = [
   '$modal',
   function($modal) {
+
+    "use strict";
 
     var def = {
       scope: true,
       restrict: 'AE',
       link: function(scope, element, attrs) {
         scope.dragging = {};
+        scope.playerWidth = 550;
         scope.maxWidth = 50;
         scope.maxHeight = 20;
         scope.stack = [];
 
         scope.onStart = function(event) {
+          scope.isDragging = true;
           scope.dragging.id = $(event.currentTarget).attr('data-id');
           scope.dragging.fromTarget = undefined;
+        };
+
+        scope.onStop = function(event) {
+          scope.isDragging = false;
         };
 
         scope.draggableOptions = function(choice) {
           return {
             revert: 'invalid',
             placeholder: (!choice || choice.moveOnDrag) ? false : 'keep',
-            onStart: 'onStart'
+            index: _.indexOf(scope.local.choices, choice),
+            onStart: 'onStart',
+            onStop: 'onStop'
           };
         };
 
         scope.propagateDimension = function(w, h) {
           scope.$apply(function() {
+
             if (w !== scope.maxWidth) {
               scope.maxWidth = w;
             }
@@ -33,46 +45,43 @@ var dragAndDropController = [
               scope.maxHeight = h;
             }
             scope.choiceStyle = {
-              minWidth: (scope.maxWidth) + 'px',
-              minHeight: (scope.maxHeight) + 'px'
-            };
-            scope.resizeStopperStyle = {
-              minWidth: (scope.maxWidth) + 'px'
+              width: (scope.maxWidth) + 'px',
+              height: (scope.maxHeight + 16) + 'px'
             };
           });
         };
 
-        var lastW, lastH, freq = 100;
-
+        var lastW, lastH;
 
         setInterval(function() {
 
-          if (!scope.$$phase) {
-            var w = 0,
-              h = 0;
+          if (!scope.$$phase && !scope.isDragging) {
+            var w = 0, h = 0;
 
-            $(element).find('.choice.same-size').each(function(idx, e) {
-              if ($(e).outerWidth() > w) {
-                w = $(e).outerWidth();
+            var htmlHolders = $(element).find('.html-holder');
+            htmlHolders.each(function(idx, e) {
+              var $e = $(e);
+              if ($e.width() > w) {
+                w = $e.width();
+              }
+              if ($e.height() > h) {
+                h = $e.height();
               }
             });
-            $(element).find('.choice.same-size').each(function(idx, e) {
-              if ($(e).outerHeight() > h) {
-                h = $(e).outerHeight();
-              }
-            });
-            if (w && lastW !== w || h && lastH !== h) {
+
+            //make sure the change applies to vertical placement only
+            if(scope.model.config.placementType === 'placement' && scope.model.config.choiceAreaLayout === 'vertical'){
+              w = Math.min( w + 8, (scope.playerWidth - 50) / 2);
+            }
+
+            if (lastW !== w || lastH !== h) {
               scope.propagateDimension(w, h);
             }
+
             lastW = w;
             lastH = h;
-
-            if (freq < 1000) {
-              freq += 100;
-            }
           }
         }, freq);
-
 
         var layoutChoices = function(choices, order) {
           if (!order) {
@@ -149,12 +158,13 @@ var dragAndDropController = [
         };
 
         scope.itemsPerRow = function() {
-          if (scope.model.config.choiceAreaLayout === 'vertical') {
+          var layout = scope.model.config.choiceAreaLayout;
+          if (layout === 'vertical') {
             return 1;
-          } else if (scope.model.config.choiceAreaLayout === 'tile') {
-            return Number(scope.model.config.itemsPerRow) || (550 / scope.maxWidth);
+          } else if (layout === 'tile') {
+            return Number(scope.model.config.itemsPerRow) || (scope.playerWidth / scope.maxWidth);
           } else {
-            return 550 / scope.maxWidth;
+            return scope.playerWidth / scope.maxWidth;
           }
         };
 

@@ -1,4 +1,4 @@
-/* global console, exports */
+/* global console,exports */
 var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', '$timeout',
   function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
 
@@ -28,7 +28,6 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
           return 'incorrect';
         }
-
       };
 
       _.extend(scope.containerBridge, {
@@ -113,6 +112,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           scope.sortableOptions.disabled = !e;
         }
 
+
       });
 
       scope.sortableOptions = {
@@ -120,6 +120,7 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
     };
 
     var tmpl = [
