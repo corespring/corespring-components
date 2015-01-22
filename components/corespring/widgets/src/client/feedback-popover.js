@@ -1,8 +1,9 @@
-var def = ['MathJaxService', function(MathJaxService) {
+var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
   return {
     restrict: "A",
     scope: {
-      response: "=feedbackPopover"
+      response: "=feedbackPopover",
+      viewport: '@'
     },
     link: function(scope, element, attrs) {
       scope.$watch('response', function(response) {
@@ -15,7 +16,6 @@ var def = ['MathJaxService', function(MathJaxService) {
           if (_.isEmpty(content) && response.correctness !== "warning") {
             return;
           }
-
           if (response.correctness === 'warning') {
             title = '&nbsp;';
             content = content || "Please select your answer and press submit.";
@@ -28,10 +28,18 @@ var def = ['MathJaxService', function(MathJaxService) {
             popoverClass = 'correct';
           }
 
+          var firstShow = true;
+
           $(element).popover('destroy');
           $(element).popover({
               title: title,
-              template: '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+              template: [
+                  '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip">',
+                '  <div class="arrow"></div>',
+                '  <h3 class="popover-title"></h3>',
+                '  <div class="popover-content"></div>',
+                '</div>'
+              ].join('\n'),
               content: content,
               placement: function(popover, sender) {
                 var playerElement = $(element).parents('.corespring-player');
@@ -39,12 +47,35 @@ var def = ['MathJaxService', function(MathJaxService) {
                 var elementTop = $(element).offset().top;
                 return (elementTop - playerTop > 100) ? "top" : "bottom";
               },
-              viewport: ".player-body",
               html: true}
-          ).on('shown.bs.popover', function() {
+          ).on('show.bs.popover', function(event) {
+              $timeout(function() {
+                scope.viewport = scope.viewport || $(element).parents('.player-body');
+                if (scope.viewport && $(scope.viewport).length > 0) {
+                  var $popover = $(event.target).siblings('.popover');
+                  var $viewport = $(scope.viewport);
+
+                  if ($popover.offset().left < $viewport.offset().left) {
+                    var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left);
+                    $popover.css('left', '+=' + deltaLeft + 'px');
+                    if (firstShow) {
+                      $('.arrow', $popover).css('left', "-=" + deltaLeft + 'px');
+                    }
+                  }
+                  if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width()) {
+                    var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width());
+                    $popover.css('left', '-=' + deltaRight + 'px');
+                    if (firstShow) {
+                      $('.arrow', $popover).css('left', "+=" + deltaRight + 'px');
+                    }
+                  }
+                  firstShow = false;
+                }
+              });
+
+            }).on('shown.bs.popover', function() {
               MathJaxService.parseDomForMath(0);
-            }
-          );
+            });
 
           $('html').click(function(e) {
             if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {

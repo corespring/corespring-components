@@ -189,6 +189,7 @@ var dragAndDropController = [
             backdrop: true,
             scope: scope.solutionScope
           });
+          scope.$emit('rerender-math', {delay: 100});
         };
 
         /* Common container bridge implementations */
