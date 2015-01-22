@@ -25,17 +25,6 @@
     display: inline-block;
 }
 
-.view-drag-and-drop .vertical .same-size.resize-stopper {
-    background-color: #ff0000;
-    min-height:0px;
-    max-height:0px;
-    margin: 3px 3px 1px 1px;
-}
-
-.view-drag-and-drop .horizontal .same-size.resize-stopper {
-    display:none;
-}
-
 .modal .choice,
 .view-drag-and-drop .choice {
     vertical-align: top;
@@ -47,6 +36,7 @@
     min-width: 60px;
     min-height: 40px;
     max-width: 500px;
+    overflow: hidden;
 }
 
 .view-drag-and-drop .choice:hover {
@@ -60,10 +50,10 @@
     min-height: 30px;
     background-color: #fff;
     border-radius: 4px;
-    padding: 25px 3px 10px 2px;
+    padding: 8px 8px 8px 8px;
     border: 1px solid #999;
     position: relative;
-    margin: 10px 5px 20px;
+    margin: 5px 5px 20px;
     min-width: 120px;
     min-height: 68px;
 }

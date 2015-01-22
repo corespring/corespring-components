@@ -53,37 +53,41 @@ var dragAndDropController = [
 
         var lastW, lastH;
 
-        setInterval(function() {
-
-          if (!scope.$$phase && !scope.isDragging) {
-            var w = 0, h = 0;
-
-            var htmlHolders = $(element).find('.html-holder');
-            htmlHolders.each(function(idx, e) {
-              var $e = $(e);
-              if ($e.width() > w) {
-                w = $e.width();
-              }
-              if ($e.height() > h) {
-                h = $e.height();
-              }
-            });
-
-            //make sure the change applies to vertical placement only
-            if(scope.model.config.placementType === 'placement' && scope.model.config.choiceAreaLayout === 'vertical'){
-              w = Math.min( w + 8, (scope.playerWidth - 50) / 2);
-            }
-
-            if (lastW !== w || lastH !== h) {
-              scope.propagateDimension(w, h);
-            }
-
-            lastW = w;
-            lastH = h;
+        function updateLayout() {
+          if (scope.$$phase || scope.isDragging) {
+            return;
           }
-        }, freq);
 
-        var layoutChoices = function(choices, order) {
+          var w = 0, h = 0;
+
+          var htmlHolders = $(element).find('.html-holder');
+          htmlHolders.each(function(idx, e) {
+            var $e = $(e);
+            if ($e.width() > w) {
+              w = $e.width();
+            }
+            if ($e.height() > h) {
+              h = $e.height();
+            }
+          });
+
+          //CO-83 make sure the change applies to vertical placement only
+          if(scope.model.config.placementType === 'placement' && scope.model.config.choiceAreaLayout === 'vertical'){
+            w = Math.min( w + 8, (scope.playerWidth - 50) / 2);
+          }
+
+          if (lastW !== w || lastH !== h) {
+            scope.propagateDimension(w, h);
+          }
+
+          lastW = w;
+          lastH = h;
+        }
+
+        setInterval(updateLayout, 200);
+
+
+        function layoutChoices(choices, order) {
           if (!order) {
             var shuffled = _.shuffle(_.cloneDeep(choices));
             return shuffled;
@@ -99,13 +103,13 @@ var dragAndDropController = [
             var missing = _.difference(choices, ordered);
             return _.union(ordered, missing);
           }
-        };
+        }
 
-        var stashOrder = function(choices) {
+        function stashOrder(choices) {
           return _.map(choices, function(c) {
             return c.id;
           });
-        };
+        }
 
         scope.resetChoices = function(model) {
           scope.stack = [];

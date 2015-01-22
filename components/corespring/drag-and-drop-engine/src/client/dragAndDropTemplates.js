@@ -13,10 +13,10 @@ exports.service = [ '$log', function($log) {
         '    <div class="label-holder" ng-show="model.config.choiceAreaLabel"><div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div></div>',
         '    <div class="label-sizer-holder" style="position: static; visibility: hidden">{{model.config.choiceAreaLabel}}</div>',
         '    <div ng-repeat="row in getChoiceRows()" class="choices-table-row">',
-        '      <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell same-size" ',
+          '      <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
         '           ng-style="choiceStyle"',
         '           data-drag="editable"',
-        '           ng-disabled="true"',
+        '           ng-disabled="!editable"',
         '           data-jqyoui-options="draggableOptions(o)"',
         '           ng-model="local.choices"',
         '           jqyoui-draggable="draggableOptions(o)"',
@@ -31,7 +31,6 @@ exports.service = [ '$log', function($log) {
         '       </div>',
         '      </div>',
         '    </div>',
-        '    <div class="same-size resize-stopper" ng-style="resizeStopperStyle"/>',
         '  </div>',
         '</div>'
       ].join('');
