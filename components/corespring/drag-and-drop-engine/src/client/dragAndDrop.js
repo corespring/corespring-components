@@ -1,7 +1,8 @@
 /* global console,exports */
 var dragAndDropController = [
   '$modal',
-  function($modal) {
+  '$timeout',
+  function($modal,$timeout) {
 
     "use strict";
 
@@ -51,9 +52,14 @@ var dragAndDropController = [
           });
         };
 
-        var lastW, lastH;
+        var lastW, lastH, freq = 100;
 
         function updateLayout() {
+          if(freq < 1000){
+            freq += 100;
+          }
+          $timeout(updateLayout, freq);
+
           if (scope.$$phase || scope.isDragging) {
             return;
           }
@@ -78,13 +84,14 @@ var dragAndDropController = [
 
           if (lastW !== w || lastH !== h) {
             scope.propagateDimension(w, h);
+            freq = 100;
           }
 
           lastW = w;
           lastH = h;
         }
 
-        setInterval(updateLayout, 200);
+        $timeout(updateLayout, freq);
 
 
         function layoutChoices(choices, order) {
