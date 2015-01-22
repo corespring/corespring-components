@@ -119,6 +119,7 @@ module.exports = (grunt) ->
           unescapeStrings: false
           wrapLineLength: 0
 
+
   grunt.initConfig(config)
 
   npmTasks = [
@@ -136,11 +137,10 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks(t) for t in npmTasks
   grunt.loadTasks('tasks')
-  grunt.registerTask('buildcomponents', ['less:production', 'clean:test', 'clean:production'])
   grunt.registerTask('regression', ['regressionTestRunner:dev'])
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
   grunt.registerTask('version-info', writeVersionInfo(grunt))
-  grunt.registerTask('build', ['less', 'version-info', 'clean:production'])
+  grunt.registerTask('build', ['less', 'clean:test', 'version-info', 'clean:production'])
