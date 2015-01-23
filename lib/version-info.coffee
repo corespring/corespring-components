@@ -7,7 +7,7 @@ exec = require("child_process").exec
 
 
 
-module.exports = (grunt) ->
+module.exports = (path, grunt) ->
 
   run = (cmd, done) ->
     exec cmd, (err, stdout, stderr) ->
@@ -33,5 +33,5 @@ module.exports = (grunt) ->
 
         json = JSON.stringify(out, null, '  ')
         grunt.log.debug(json)
-        grunt.file.write('version-info.json', json)
+        grunt.file.write(path, json)
         done()

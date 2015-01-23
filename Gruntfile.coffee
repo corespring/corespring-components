@@ -142,5 +142,5 @@ module.exports = (grunt) ->
   grunt.registerTask('testclient', 'test client side js', testClient(grunt))
   grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
-  grunt.registerTask('version-info', writeVersionInfo(grunt))
+  grunt.registerTask('version-info', writeVersionInfo('components/version-info.json', grunt))
   grunt.registerTask('build', ['less', 'clean:test', 'version-info', 'clean:production'])
