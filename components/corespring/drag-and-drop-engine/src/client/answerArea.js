@@ -17,7 +17,7 @@ var answerArea = [
           var maxWidth = Math.max(Math.min(scope.maxWidth + 25, 550), 120);
           if (newLayout === 'inline') {
             scope.elementStyle = {
-              height: (scope.maxHeight + 30) + "px",
+              "min-height": (scope.maxHeight + 30) + "px",
               "min-width": maxWidth + "px"
             };
           } else if (newLayout === 'horizontal') {
