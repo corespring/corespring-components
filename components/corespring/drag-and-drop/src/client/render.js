@@ -292,7 +292,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var tmpl = [
     '<div class="view-drag-and-drop-legacy">',
     '  <div ng-show="!correctResponse" class="pull-right">',
-    '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
+    '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
     '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
     '  </div> <div class="clearfix" />',
     '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',

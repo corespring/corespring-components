@@ -88,7 +88,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
     var tmpl = [
       '<div class="view-drag-and-drop-categorize view-drag-and-drop" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
-      '    <button type="button" class="btn btn-default" ng-click="undo()">Undo</button>',
+      '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
       '  </div> <div class="clearfix" />',
       '  <div ng-if="model.config.answerAreaPosition != \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',

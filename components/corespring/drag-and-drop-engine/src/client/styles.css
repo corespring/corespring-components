@@ -1,8 +1,9 @@
+
+
 .view-drag-and-drop {
 }
 
 .view-drag-and-drop .choices {
-    margin: 5px;
     padding-top: 5px;
 }
 
@@ -10,10 +11,10 @@
     position: relative;
     display: table;
     border-spacing: 3px;
-    border: 1px solid black;
-    border-radius: 3px;
+    border: 1px solid #9b9b9b;
+    border-radius: 4px;
     margin: 0 auto;
-    min-width: 50px;
+    min-width: 50%;
     min-height: 50px;
 }
 
@@ -40,8 +41,8 @@
 }
 
 .view-drag-and-drop .choice:hover {
-    box-shadow: 0px 0px 5px #000;
-    border: 1px solid #333;
+    border: 1px solid #eee;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);
     cursor: hand; cursor: pointer;
 }
 
@@ -63,9 +64,6 @@
 }
 
 .view-drag-and-drop .label-holder {
-    position: absolute;
-    top: -10px;
-    width: 100%;
     text-align: center;
 }
 
@@ -88,6 +86,7 @@
     padding-right: 3px;
     background-color: #fff;
     color: #000;
+    font-weight: bold;
 }
 
 .view-drag-and-drop .landing-place .choice {
@@ -95,36 +94,37 @@
 }
 
 .view-drag-and-drop .correct {
-    box-shadow: 0px 0px 5px #95C444;
-    border: 1px solid #95C444;
+    box-shadow: 0px 0px 5px #3C763D;
+    border: 1px solid #3C763D;
 }
 
 .view-drag-and-drop .incorrect {
-    box-shadow: 0px 0px 5px #F8A31A;
-    border: 1px solid #F8A31A;
+    border: 1px solid #EEA236;
+    box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ECECEC;
+    border-radius: 4px;
 }
 
 .view-drag-and-drop .partial {
-  box-shadow: 0px 0px 5px #843ABC;
-  border: 1px solid #843ABC;
+  box-shadow: 0px 0px 5px #3A87AD;
+  border: 1px solid #3A87AD;
 }
 
 .view-drag-and-drop .feedback-correct {
     background: url("../../images/feedback/correct-icon.png") no-repeat scroll 0px 5px;
-    border: solid 2px #80b312;
+    border: solid 2px #EEA236;
     border-radius: 5px;
     padding: 5px 5px 5px 35px;
 }
 
 .view-drag-and-drop .feedback-incorrect {
-    border: solid 2px #F8A31A;
+    border: solid 2px #EEA236;
     padding: 5px 5px 5px 35px;
     border-radius: 5px;
     background: transparent url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 5px;
 }
 
 .view-drag-and-drop .feedback-partial {
-  border: solid 2px #843ABC;
+  border: solid 2px #3A87AD;
   padding: 5px 5px 5px 35px;
   border-radius: 5px;
   background: transparent url("../../images/feedback/partial-icon.png") no-repeat scroll 0px 5px;
