@@ -139,7 +139,7 @@ var main = [
           return _.isEmpty(this.getSession().answers);
         },
         answerChangedHandler: function(callback) {
-          scope.$watch("answer", function(newValue, oldValue) {
+          scope.$watch("matchModel", function(newValue, oldValue) {
             if (newValue !== oldValue) {
               callback();
             }
