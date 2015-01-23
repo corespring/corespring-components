@@ -175,14 +175,16 @@ var dragAndDropController = [
           } else if (layout === 'tile') {
             return Number(scope.model.config.itemsPerRow) || (scope.playerWidth / scope.maxWidth);
           } else {
-            return scope.playerWidth / scope.maxWidth;
+            //we need to reduce the playerWidth a bit due to paddings, margins, etc.
+            return (scope.playerWidth - 50) / scope.maxWidth;
           }
         };
 
         scope.getChoiceRows = function() {
           var choices = scope.local.choices;
           if (choices) {
-            return _.range(choices.length / scope.itemsPerRow());
+            var rows = _.range(choices.length / scope.itemsPerRow());
+            return rows;
           }
         };
 
