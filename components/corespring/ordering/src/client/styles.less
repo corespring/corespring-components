@@ -46,20 +46,18 @@
   }
 
   .choice {
-    border: 1px #000000 solid;
+    border: 1px #9b9b9b solid;
     background: #efefef;
     border-radius: 6px;
     display: inline-block;
     padding: 8px;
 
     &.correct {
-      border: 2px solid #80b312;
-      box-shadow: none;
+      border: 2px solid #3C763D;
     }
 
     &.incorrect {
-      border: 2px solid #F8A31A;
-      box-shadow: none;
+      border: 2px solid #EEA236;
     }
   }
 
@@ -75,14 +73,14 @@
   }
 
   .feedback-incorrect {
-    border: solid 2px #F8A31A;
+    border: solid 2px #EEA236;
     padding: 5px 5px 5px 35px;
     border-radius: 5px;
     background: transparent url("../../images/feedback/wrong-icon.png") no-repeat scroll 0px 5px;
   }
 
   .feedback-partial {
-    border: solid 2px #843ABC;
+    border: solid 2px #3A87AD;
     padding: 5px 5px 5px 35px;
     border-radius: 5px;
     background: transparent url("../../images/feedback/partial-icon.png") no-repeat scroll 0px 5px;
@@ -93,7 +91,9 @@
   }
 
 }
-
+.ordering-config .mini-wiggi-wiz .wiggi-wiz-editable{
+  background-color: #fff !important;
+}
 .ordering-config {
 
   .rounded-inputs;
@@ -114,12 +114,12 @@
   .sortable-choice {
     position: relative;
     display: block;
-    border: 1px solid #000000;
-    border-radius: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     margin: 5px 0 45px 0;
-    max-width: 200px;
+    max-width: 100%;
     min-height: 47px;
-    padding: 4px;
+    padding: 1em;
     background: #efefef;
 
     .blocker {
