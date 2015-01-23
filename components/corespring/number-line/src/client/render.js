@@ -61,7 +61,7 @@ var main = [
         },
 
         answerChangedHandler: function(callback) {
-          scope.$watch("answer", function(newValue, oldValue) {
+          scope.$watch("response", function(newValue, oldValue) {
             if (newValue !== oldValue) {
               callback();
             }
