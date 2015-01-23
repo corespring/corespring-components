@@ -12,7 +12,7 @@
   },
   "allowPartialScoring": false,
   "partialScoring" : [
-    {"numberOfCorrect": 1, "scorePercentage": 25}
+    {}
   ],
   "model": {
     "categories": [

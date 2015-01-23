@@ -9,7 +9,7 @@
   },
   "allowPartialScoring": true,
   "partialScoring" : [
-    {"numberOfCorrect": 1, "scorePercentage": 25}
+    {}
   ],
   "model": {
     "choices": [
