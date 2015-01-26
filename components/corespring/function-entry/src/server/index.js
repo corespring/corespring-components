@@ -7,14 +7,7 @@ exports.keys = _.cloneDeep(fb.keys);
 exports.keys.DEFAULT_INCORRECT_FEEDBACK = DEFAULT_INCORRECT_FEEDBACK;
 
 exports.isCorrect = function(answer, correctEquation, options) {
-  var correctFunction = correctEquation;
-  if (correctEquation.indexOf('=') >= 0) {
-    correctFunction = correctEquation.split("=")[1];
-  }
-  if (answer.indexOf('=') >= 0) {
-    answer = answer.split("=")[1];
-  }
-  return functionUtils.isFunctionEqual(answer, correctFunction, options);
+  return functionUtils.isEquationCorrect(correctEquation, answer, options);
 };
 
 exports.respond = function(question, answer, settings) {

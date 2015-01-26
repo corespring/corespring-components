@@ -114,7 +114,7 @@ link = function($sce, $timeout) {
       },
 
       answerChangedHandler: function(callback) {
-        scope.$watch("answer", function(newValue, oldValue) {
+        scope.$watch("selected", function(newValue, oldValue) {
           if (newValue !== oldValue) {
             callback();
           }

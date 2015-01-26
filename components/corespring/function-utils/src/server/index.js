@@ -106,3 +106,41 @@ exports.isFunctionEqual = function(eq1, eq2, options) {
 
   return _.isUndefined(notMatching);
 };
+
+exports.isEquationCorrect = function(correctEquation, testEquation, options) {
+  options = options || {};
+  var variable = options.variable || 'x';
+  var domain = options.domain || {
+    include: ["-10,10"]
+  };
+  var sigfigs = options.sigfigs || 3;
+  var numberOfTestPoints = options.numberOfTestPoints || 50;
+
+  var expr1 = exports.expressionize(correctEquation, variable);
+  if (/=/.test(expr1)) {
+    expr1 = expr1.split("=")[1];
+  }
+
+  var expr2 = exports.expressionize(testEquation, variable);
+
+  var leftSideExpression = /=/.test(expr2) ? expr2.split("=")[0] : 'y';
+  var rightSideExpression = /=/.test(expr2) ? expr2.split("=")[1] : expr2;
+
+  var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
+    try {
+      var correctY = mathjs['eval'](expr1, {x: x});
+      var leftValue = mathjs['eval'](leftSideExpression, {x: x, y: correctY});
+      var rightValue = mathjs['eval'](rightSideExpression, {x: x, y: correctY});
+
+      if (!closeEnough(sigfigs)(leftValue, rightValue)) {
+        return true;
+      }
+    } catch (e) {
+      console.log('error: ' + e);
+      return true;
+    }
+    return false;
+  });
+
+  return _.isUndefined(notMatching);
+};
