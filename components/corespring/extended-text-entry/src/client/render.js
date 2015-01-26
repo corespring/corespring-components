@@ -10,7 +10,7 @@ link = function() {
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
-
+        scope.answer = scope.session.answers;
         scope.rows = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLines) || 4;
         scope.cols = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLength) || 60;
       },
