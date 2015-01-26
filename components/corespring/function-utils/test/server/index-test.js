@@ -134,3 +134,61 @@ describe('linear function equal logic', function() {
     server.isFunctionEqual(eq1, eq2).should.eql(false);
   });
 });
+
+describe.only('equation correctness logic', function() {
+
+  it('identical equation is correct', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y=3x+5";
+    server.isEquationCorrect(correctEq, testEq).should.be.true;
+  });
+
+  it('omitted left side is correct', function() {
+    var correctEq = "3x+5";
+    var testEq = "3x+5";
+    server.isEquationCorrect(correctEq, testEq).should.be.true;
+  });
+
+  it('omitted left side of test eq is correct', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "3x+5";
+    server.isEquationCorrect(correctEq, testEq).should.be.true;
+  });
+
+  it('reshuffled equation is correct', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y-5=3x";
+    server.isEquationCorrect(correctEq, testEq).should.be.true;
+  });
+
+  it('decimal slope in fraction form is correct', function() {
+    var correctEq = "y=0.5x+5";
+    var testEq = "y=(1/2)x+5";
+    server.isEquationCorrect(correctEq, testEq).should.be.true;
+  });
+
+  it('fraction slope in decimal form is correct', function() {
+    var correctEq = "y=(1/2)x+5";
+    var testEq = "y=0.5x+5";
+    server.isEquationCorrect(correctEq, testEq).should.be.true;
+  });
+
+  it('equal equation in different form is correct', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y=(1+2)x+2+3";
+    server.isEquationCorrect(correctEq, testEq).should.be.true;
+  });
+
+  it('different coefficient is incorrect', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y=2x+5";
+    server.isEquationCorrect(correctEq, testEq).should.be.false;
+  });
+
+  it('different addition is incorrect', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y=3x+4";
+    server.isEquationCorrect(correctEq, testEq).should.be.false;
+  });
+
+});
