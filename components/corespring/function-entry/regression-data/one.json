@@ -1,0 +1,27 @@
+{
+  "item": {
+    "components": {
+      "1" : {
+        "componentType" : "corespring-function-entry",
+        "title": "Function Entry",
+        "weight" : 1,
+        "feedback" :  {
+          "correctFeedbackType": "default",
+          "incorrectFeedbackType": "default"
+        },
+        "correctResponse" : {
+          "equation": "y=2x+4",
+          "domain": {
+            "include": ["-10,10"]
+          }
+        },
+        "model" : {
+          "config": {
+            "ignoreSpacing": true
+          }
+        }
+      }
+    },
+    "xhtml": "Enter equation: <corespring-function-entry id=\"1\"></corespring-function-entry>"
+  }
+}
