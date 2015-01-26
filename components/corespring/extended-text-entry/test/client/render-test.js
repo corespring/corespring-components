@@ -5,7 +5,6 @@ describe('corespring', function() {
   var MockComponentRegister = function() {
     this.elements = {};
     this.registerComponent = function(id, bridge) {
-      console.log("REGISTERING ", id);
       this.elements[id] = bridge;
     };
   };
