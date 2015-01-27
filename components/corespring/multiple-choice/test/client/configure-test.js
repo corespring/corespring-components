@@ -137,5 +137,38 @@ describe('corespring:multiple-choice:configure', function() {
     });
   });
 
+  describe('addChoice', function(){
+    beforeEach(function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+
+    it('should have three choices initially', function(){
+      expect(scope.model.choices.length).toEqual(3);
+    });
+
+    it('should have four choices after addChoice', function(){
+      scope.addChoice();
+      expect(scope.model.choices.length).toEqual(4);
+    });
+
+    it('the new choice should have feedback=none', function(){
+      scope.addChoice();
+      var uid = scope.model.choices[3].value;
+      expect(scope.feedback[uid].feedbackType).toEqual('none');
+      expect(scope.feedback[uid].notChosenFeedbackType).toEqual('none');
+    });
+
+    it('the new feedback should also be in the fullModel', function(){
+      scope.addChoice();
+      var uid = scope.model.choices[3].value;
+      var newFeedback = scope.feedback[uid];
+      expect(scope.fullModel.feedback).toContain(newFeedback);
+    });
+
+  });
+
+
+
 
 });
