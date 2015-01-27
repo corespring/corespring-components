@@ -300,6 +300,9 @@ var interactiveGraph = [
         };
 
         scope.isGroupActive = function(group) {
+          if(!scope.model || !scope.model.config){
+            return true;
+          }
           if (!scope.model.config.groupingEnabled) {
             return true;
           }
