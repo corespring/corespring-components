@@ -79,12 +79,6 @@ var main = ['ServerLogic',
         inputType: "number",
         placeholder: '{{defaults.tickLabelFrequency}}'
       }),
-      labelWithInput({
-        label: 'Significant Figures:',
-        modelKey: 'sigfigs',
-        inputType: "number",
-        placeholder: '{{defaults.sigfigs}}'
-      }),
       '       </div>',
       '     </form>',
       '  </div>',
