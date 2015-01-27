@@ -291,7 +291,7 @@ var main = [
             labelType: "text"
           });
 
-          scope.feedback[uid] = createFeedbackObject(uid, "","","","");
+          scope.feedback[uid] = createFeedbackObject(uid);
           scope.fullModel.feedback.push(scope.feedback[uid]);
         };
 
