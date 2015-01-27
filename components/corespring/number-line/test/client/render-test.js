@@ -104,6 +104,10 @@ describe('corespring:number-line', function () {
     expect(element).toNotBe(null);
   });
 
+  it('should not crash when digest is called before model has been set',function(){
+    scope.$digest();
+  });
+
   it('sets model', function () {
     container.setDataAndSession('1', testModel);
     expect(scope.model.config).toBeDefined();
