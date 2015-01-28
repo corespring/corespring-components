@@ -15,20 +15,20 @@ describe('corespring', function() {
   var testModelTemplate = {
     data: {
       model: {
-        "choices": [{
-          "label": "1",
-          "value": "1"
+        choices: [{
+          label: "1",
+          value: "1"
         }, {
-          "label": "2",
-          "value": "2"
+          label: "2",
+          value: "2"
         }, {
-          "label": "3",
-          "value": "3"
+          label: "3",
+          value: "3"
         }],
-        "config": {
-          "orientation": "vertical",
-          "shuffle": true,
-          "singleChoice": true
+        config: {
+          orientation: "vertical",
+          shuffle: true,
+          singleChoice: true
         }
       }
     }
@@ -72,13 +72,13 @@ describe('corespring', function() {
   });
 
   describe('inline-choice correctResponse', function() {
-    it("can deal with a string as correctResponse", function(){
+    it("can deal with a string as correctResponse", function() {
       testModel.data.model.correctResponse = "2";
       container.setDataAndSession("1", testModel);
       rootScope.$digest();
       expect(scope.question.correctResponse).toEqual(["2"]);
     });
-    it("can deal with an array as correctResponse", function(){
+    it("can deal with an array as correctResponse", function() {
       testModel.data.model.correctResponse = ["1"];
       container.setDataAndSession("1", testModel);
       rootScope.$digest();

@@ -44,17 +44,17 @@ link = function($sce, $timeout) {
       });
     }
 
-    function renderMath(delay){
+    function renderMath(delay) {
       scope.$emit('rerender-math', {
-        delay: 100
+        delay: delay
       });
     }
 
-    function ensureCorrectResponseIsArray(question){
-      if(_.isArray(question.correctResponse)){
+    function ensureCorrectResponseIsArray(question) {
+      if (_.isArray(question.correctResponse)) {
         return;
       }
-      if(_.isString(question.correctResponse) && question.correctResponse.trim().length > 0){
+      if (_.isString(question.correctResponse) && question.correctResponse.trim().length > 0) {
         question.correctResponse = [question.correctResponse];
         return;
       }
