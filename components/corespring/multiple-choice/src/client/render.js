@@ -130,9 +130,18 @@ var main = [
         applyChoices();
       };
 
+      /*
+       For testing/debugging PE-9 we need a way to check the number of calls to setDataAndSession
+       This applies to components with links (a href) in the template. Multiple choice has one
+       For regression testing this value is bound to an attribute of the component
+       */
+
+      scope.numberOfSetDataAndSessionCalls = 0;
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
+          scope.numberOfSetDataAndSessionCalls++;
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
           scope.session = dataAndSession.session || {};
@@ -398,7 +407,7 @@ var main = [
       replace: true,
       link: link,
       template: [
-        '<div class="view-multiple-choice">',
+          '<div class="view-multiple-choice" data-numberOfSetDataAndSessionCalls="{{numberOfSetDataAndSessionCalls}}">',
           '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
           '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
           '  <div ng-if="isTile()">' + tileTemplate + '</div>',
