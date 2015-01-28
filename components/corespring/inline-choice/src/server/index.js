@@ -7,12 +7,26 @@ exports.defaults = feedbackUtils.defaults;
 var CORRECT_ANSWER_PLACEHOLDER = "<correct answer>";
 var DEFAULT_INCORRECT_FEEDBACK = "Good try, but " + CORRECT_ANSWER_PLACEHOLDER + " is the correct answer.";
 
+/**
+ * This makes sure that old items with a string as correctResponse are still working
+ * @param question
+ */
+function ensureCorrectResponseIsArray(question){
+  if(_.isArray(question.correctResponse)){
+    return;
+  }
+  if(_.isString(question.correctResponse) && question.correctResponse.trim().length > 0){
+    question.correctResponse = [question.correctResponse];
+    return;
+  }
+  question.correctResponse = [];
+}
+
 function isCorrectResponse(question, answer){
   return _.contains(question.correctResponse, answer);
 }
 
 function feedbackByValue(question, answer) {
-
   var feedbackValue =  _.find(question.feedback, function(f) {
     return f.value === answer;
   });
@@ -36,8 +50,6 @@ function feedbackByValue(question, answer) {
   return hasDefaultFeedback ? setDefaults(feedbackValue) : feedbackValue;
 }
 
-exports.feedbackByValue = feedbackByValue;
-
 function userResponseFeedback(question, answer) {
   var fb = feedbackByValue(question, answer);
 
@@ -51,6 +63,24 @@ function userResponseFeedback(question, answer) {
   }
 }
 
+function buildFeedback(question, answer, settings) {
+  var out;
+  if (settings.highlightUserResponse) {
+    out = userResponseFeedback(question, answer);
+  }
+  return out;
+}
+
+function calculateScore(question, answer) {
+  return _.contains(question.correctResponse, answer) ? 1.0 : 0.0;
+}
+
+//used by configure
+exports.feedbackByValue = feedbackByValue;
+
+//exposed to make testing easier
+exports.isCorrect = isCorrectResponse;
+
 exports.preprocess = function(json) {
   _.forEach(json.model.choices, function(choice) {
     delete choice.rationale;
@@ -58,28 +88,10 @@ exports.preprocess = function(json) {
   return json;
 };
 
-exports.isCorrect = function(answer, correctAnswer) {
-  return _.contains(correctAnswer, answer);
-};
-
-var buildFeedback = function(question, answer, settings) {
-  var out;
-  if (settings.highlightUserResponse) {
-    out = userResponseFeedback(question, answer);
-  }
-  return out;
-};
-
-var calculateScore = function(question, answer) {
-  return _.contains(question.correctResponse, answer) ? 1.0 : 0.0;
-};
-
-/*
- Create a response to the answer based on the question, the answer and the respond settings
+/**
+ * Create a response to the answer based on the question, the answer and the respond settings
  */
-
-
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
   var answerIsCorrect, response;
 
   if(!answer){
@@ -95,7 +107,8 @@ exports.respond = function(question, answer, settings) {
   if (question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
-  answerIsCorrect = this.isCorrect(answer, question.correctResponse);
+  ensureCorrectResponseIsArray(question);
+  answerIsCorrect = isCorrectResponse(question, answer);
 
   response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",

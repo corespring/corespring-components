@@ -7,25 +7,24 @@ describe('corespring', function() {
     this.registerComponent = function(id, bridge) {
       this.elements[id] = bridge;
     };
+    this.setDataAndSession = function(id, dataAndSession) {
+      this.elements[id].setDataAndSession(dataAndSession);
+    };
   };
 
   var testModelTemplate = {
     data: {
       model: {
-        "choices": [
-          {
-            "label": "1",
-            "value": "1"
-          },
-          {
-            "label": "2",
-            "value": "2"
-          },
-          {
-            "label": "3",
-            "value": "3"
-          }
-        ],
+        "choices": [{
+          "label": "1",
+          "value": "1"
+        }, {
+          "label": "2",
+          "value": "2"
+        }, {
+          "label": "3",
+          "value": "3"
+        }],
         "config": {
           "orientation": "vertical",
           "shuffle": true,
@@ -40,8 +39,15 @@ describe('corespring', function() {
 
   beforeEach(function() {
     module(function($provide) {
-      var mockPopover = function(){ return {on: function(){}, popover: mockPopover }; };
-      $.fn.extend({popover: mockPopover});
+      var mockPopover = function() {
+        return {
+          on: function() {},
+          popover: mockPopover
+        };
+      };
+      $.fn.extend({
+        popover: mockPopover
+      });
       testModel = _.cloneDeep(testModelTemplate);
 
       $provide.value('MathJaxService', function() {});
@@ -65,6 +71,21 @@ describe('corespring', function() {
     expect(element).toNotBe(null);
   });
 
+  describe('inline-choice correctResponse', function() {
+    it("can deal with a string as correctResponse", function(){
+      testModel.data.model.correctResponse = "2";
+      container.setDataAndSession("1", testModel);
+      rootScope.$digest();
+      expect(scope.question.correctResponse).toEqual(["2"]);
+    });
+    it("can deal with an array as correctResponse", function(){
+      testModel.data.model.correctResponse = ["1"];
+      container.setDataAndSession("1", testModel);
+      rootScope.$digest();
+      expect(scope.question.correctResponse).toEqual(["1"]);
+    });
+  });
+
 
   describe('inline-choice render', function() {
 
@@ -74,7 +95,7 @@ describe('corespring', function() {
         answers: '1'
       };
 
-      container.elements['1'].setDataAndSession(testModel);
+      container.setDataAndSession("1", testModel);
       rootScope.$digest();
       expect(_.pick(scope.selected, 'label', 'value')).toEqual({
         label: '1',
@@ -83,8 +104,10 @@ describe('corespring', function() {
     });
 
     it('setting response shows correctness', function() {
-      testModel.session = {answers: "1"};
-      container.elements['1'].setDataAndSession(testModel);
+      testModel.session = {
+        answers: "1"
+      };
+      container.setDataAndSession("1", testModel);
       rootScope.$digest();
 
       var response = {

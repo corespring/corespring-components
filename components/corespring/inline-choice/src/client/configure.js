@@ -144,20 +144,21 @@ var main = [
           return label.replace(re, '');
         }
 
-        function correctResponseToArray(correctResponse){
-          if(_.isArray(correctResponse)){
-            return correctResponse;
+        function ensureCorrectResponseIsArray(question){
+          if(_.isArray(question.correctResponse)){
+            return;
           }
-          if(_.isString(correctResponse)){
-            return [correctResponse];
+          if(_.isString(question.correctResponse) && question.correctResponse.trim().length > 0){
+            question.correctResponse = [question.correctResponse];
+            return;
           }
-          return [];
+          question.correctResponse = [];
         }
 
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
-            scope.fullModel.correctResponse = correctResponseToArray(model.correctResponse);
+            ensureCorrectResponseIsArray(scope.fullModel);
 
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";

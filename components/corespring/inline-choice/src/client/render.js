@@ -50,21 +50,22 @@ link = function($sce, $timeout) {
       });
     }
 
-    function correctResponseToArray(correctResponse){
-      if(_.isArray(correctResponse)){
-        return correctResponse;
+    function ensureCorrectResponseIsArray(question){
+      if(_.isArray(question.correctResponse)){
+        return;
       }
-      if(_.isString(correctResponse)){
-        return [correctResponse];
+      if(_.isString(question.correctResponse) && question.correctResponse.trim().length > 0){
+        question.correctResponse = [question.correctResponse];
+        return;
       }
-      return [];
+      question.correctResponse = [];
     }
 
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
-        scope.question.correctResponse = correctResponseToArray(scope.question.correctResponse);
+        ensureCorrectResponseIsArray(scope.question);
         scope.session = dataAndSession.session || {};
 
         var stash = scope.session.stash = scope.session.stash || {};
