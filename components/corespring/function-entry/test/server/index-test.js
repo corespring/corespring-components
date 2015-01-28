@@ -8,7 +8,7 @@ var fbu = require('../../../server-shared/src/server/feedback-utils');
 
 var mockFnUtils = {
   expressionize: _.identity,
-  isFunctionEqual: function(e1, e2, options) {
+  isEquationCorrect: function(e1, e2, options) {
     return e1 === e2;
   }
 };
