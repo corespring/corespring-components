@@ -79,7 +79,7 @@ var main = [
         '            </checkbox>',
         '          </div>',
         '          <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
-        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" features="extraFeatures"',
+        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external" features="extraFeatures"',
         '              parent-selector=".modal-body"',
         '              image-service="imageService()">',
         '            <edit-pane-toolbar alignment="bottom">',
