@@ -135,7 +135,7 @@ describe('linear function equal logic', function() {
   });
 });
 
-describe.only('equation correctness logic', function() {
+describe('equation correctness logic', function() {
 
   it('identical equation is correct', function() {
     var correctEq = "y=3x+5";
