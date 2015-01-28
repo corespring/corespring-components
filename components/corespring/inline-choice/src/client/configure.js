@@ -29,7 +29,7 @@ var main = [
       '          </i>',
       '        </div>',
       '        <div class="col-md-9 col-xs-8">',
-      '          <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
+      '          <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
       '              image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
       '              parent-selector=".modal-body">',
       '            <edit-pane-toolbar alignment="bottom">',
