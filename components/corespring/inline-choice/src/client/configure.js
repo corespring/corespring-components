@@ -25,7 +25,7 @@ var main = [
       '    <div class="choice-row" ng-repeat="choice in model.choices">',
       '      <div class="row">',
       '        <div class="col-md-1 col-xs-1 text-center">',
-      '          <i class="fa fa-trash-o fa-lg" title="Delete" data-tggle="tooltip" ng-click="removeQuestion(choice)">',
+      '          <i class="fa fa-trash-o fa-lg" title="Delete" data-tggle="tooltip" ng-click="removeChoice(choice)">',
       '          </i>',
       '        </div>',
       '        <div class="col-md-9 col-xs-8">',
@@ -81,7 +81,7 @@ var main = [
       '    <div class="row">',
       '      <div class="col-xs-12">',
       '        <button type="button" id="add-choice" class="btn btn-default" ',
-      '            ng-click="addQuestion()">Add a Choice</button>',
+      '            ng-click="addChoice()">Add a Choice</button>',
       '      </div>',
       '    </div>',
       '    <div class="row">',
@@ -220,7 +220,7 @@ var main = [
         }, true);
 
         scope.removeChoice = function(choice) {
-          _.remove(scope.fullModel.correctResponse, choice.value);
+          removeCorrectResponse(choice);
 
           scope.model.choices = _.filter(scope.model.choices, function(cq) {
             return cq.value !== choice.value;
