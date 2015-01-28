@@ -99,6 +99,7 @@ describe('corespring', function() {
       };
       container.elements['1'].setResponse(response);
       rootScope.$digest();
+
       var wrapper = $("<div/>");
       wrapper.append($(element));
       expect(wrapper.find(".incorrect").length).toBe(1);

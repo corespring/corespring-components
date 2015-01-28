@@ -7,42 +7,49 @@ exports.defaults = feedbackUtils.defaults;
 var CORRECT_ANSWER_PLACEHOLDER = "<correct answer>";
 var DEFAULT_INCORRECT_FEEDBACK = "Good try, but " + CORRECT_ANSWER_PLACEHOLDER + " is the correct answer.";
 
-var feedbackByValue = function(question, userChoice) {
+function isCorrectResponse(question, answer){
+  return _.contains(question.correctResponse, answer);
+}
+
+function feedbackByValue(question, answer) {
 
   var feedbackValue =  _.find(question.feedback, function(f) {
-    return f.value === userChoice;
+    return f.value === answer;
   });
 
-  var correctResponse = (function() {
+  function getRandomCorrectResponse() {
+    var uid = _.sample(question.correctResponse);
     var maybeAnswer = (question.model && question.model.choices) ? _.find(question.model.choices, function(choice) {
-      return choice.value === question.correctResponse;
+      return choice.value === uid;
     }) : undefined;
     return maybeAnswer ? maybeAnswer.label : undefined;
-  })();
+  }
 
-  var hasDefaultFeedback = feedbackValue && feedbackValue.feedbackType && feedbackValue.feedbackType === 'default';
+  var hasDefaultFeedback = feedbackValue && feedbackValue.feedbackType === 'default';
 
   function setDefaults(feedbackValue) {
-    feedbackValue.feedback = isCorrectChoice(question, userChoice) ? exports.keys.DEFAULT_CORRECT_FEEDBACK :
-      DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, correctResponse);
+    feedbackValue.feedback = isCorrectResponse(question, answer) ? exports.keys.DEFAULT_CORRECT_FEEDBACK :
+      DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, getRandomCorrectResponse());
     return feedbackValue;
   }
 
   return hasDefaultFeedback ? setDefaults(feedbackValue) : feedbackValue;
-};
+}
 
-var userResponseFeedback = function(question, userChoice) {
-  var fb = feedbackByValue(question, userChoice);
+exports.feedbackByValue = feedbackByValue;
+
+function userResponseFeedback(question, answer) {
+  var fb = feedbackByValue(question, answer);
 
   if (fb) {
-    fb.correct = isCorrectChoice(question, userChoice);
+    fb.correct = isCorrectResponse(question, answer);
     if (fb.feedbackType === 'none') {
       delete fb.feedback;
     }
     delete fb.value;
     return fb;
   }
-};
+}
 
 exports.preprocess = function(json) {
   _.forEach(json.model.choices, function(choice) {
@@ -52,13 +59,7 @@ exports.preprocess = function(json) {
 };
 
 exports.isCorrect = function(answer, correctAnswer) {
-  return answer === correctAnswer;
-};
-
-exports.feedbackByValue = feedbackByValue;
-
-var isCorrectChoice = function(q, choice) {
-  return q.correctResponse === choice;
+  return _.contains(correctAnswer, answer);
 };
 
 var buildFeedback = function(question, answer, settings) {
@@ -70,7 +71,7 @@ var buildFeedback = function(question, answer, settings) {
 };
 
 var calculateScore = function(question, answer) {
-  return question.correctResponse === answer ? 1.0 : 0.0;
+  return _.contains(question.correctResponse, answer) ? 1.0 : 0.0;
 };
 
 /*
@@ -85,19 +86,23 @@ exports.respond = function(question, answer, settings) {
     return {
       correctness: 'incorrect',
       score: 0,
-      feedback: settings.showFeedback ? buildFeedback(question, answer, settings, false) : null
+      feedback: settings.showFeedback ? buildFeedback(question, answer, settings) : null
     };
   }
-  if (question && answer && question._uid !== answer._uid) {
+  if(!question){
+    throw "question is undefined";
+  }
+  if (question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
   answerIsCorrect = this.isCorrect(answer, question.correctResponse);
+
   response = {
     correctness: answerIsCorrect ? "correct" : "incorrect",
     score: calculateScore(question, answer)
   };
   if (settings.showFeedback) {
-    response.feedback = buildFeedback(question, answer, settings, answerIsCorrect);
+    response.feedback = buildFeedback(question, answer, settings);
   }
   return response;
 };

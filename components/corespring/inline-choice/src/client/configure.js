@@ -41,8 +41,8 @@ var main = [
       '        </div>',
       '        <div class="col-md-1 col-xs-1 text-center">',
       '          <i class="fa fa-check fa-lg choice-checkbox" ',
-      '              ng-class="{checked: fullModel.correctResponse == choice.value}"',
-      '              ng-click="fullModel.correctResponse = choice.value"></i>',
+      '              ng-class="{checked: isCorrectResponse(choice)}"',
+      '              ng-click="toggleCorrectResponse(choice)"></i>',
       '        </div>',
       '      </div>',
       '      <div class="row feedback">',
@@ -55,7 +55,7 @@ var main = [
       '            </div>',
       '            <div id="feedback-{{toChar($index)}}" class="panel-collapse collapse">',
       '              <div class="panel-body">',
-      '                <div feedback-selector ng-show="fullModel.correctResponse == choice.value"',
+      '                <div feedback-selector ng-show="isCorrectResponse(choice)"',
       '                    fb-sel-label="If this choice is selected, show"',
       '                    fb-sel-class="correct"',
       '                    fb-sel-hide-feedback-options=""',
@@ -63,7 +63,7 @@ var main = [
       '                    fb-sel-feedback-type="feedback[choice.value].feedbackType"',
       '                    fb-sel-custom-feedback="feedback[choice.value].feedback">',
       '                </div>',
-      '                <div feedback-selector ng-show="fullModel.correctResponse != choice.value"',
+      '                <div feedback-selector ng-show="!isCorrectResponse(choice)"',
       '                    fb-sel-label="If this choice is selected, show"',
       '                    fb-sel-class="incorrect"',
       '                    fb-sel-hide-feedback-options=""',
@@ -104,15 +104,39 @@ var main = [
 
         scope.defaultCorrect = server.keys.DEFAULT_CORRECT_FEEDBACK;
 
-        scope.correctMap = [];
-
         scope.overrideFeatures = [{
           name: 'image',
           action: undefined
         }];
 
-        function cleanLabel(label){
-          if(!label){
+        function isCorrectResponse(choice){
+          return scope.fullModel && _.contains(scope.fullModel.correctResponse, choice.value);
+        }
+
+        function addCorrectResponse(choice) {
+          if(!isCorrectResponse(choice)){
+            scope.fullModel.correctResponse.push(choice.value);
+          }
+        }
+
+        function removeCorrectResponse(choice) {
+          _.remove(scope.fullModel.correctResponse, function(n) {
+            return n === choice.value;
+          });
+        }
+
+        scope.isCorrectResponse = isCorrectResponse;
+
+        scope.toggleCorrectResponse = function(choice) {
+          if (isCorrectResponse(choice)) {
+            removeCorrectResponse(choice);
+          } else {
+            addCorrectResponse(choice);
+          }
+        };
+
+        function cleanLabel(label) {
+          if (!label) {
             return label;
           }
 
@@ -120,12 +144,25 @@ var main = [
           return label.replace(re, '');
         }
 
+        function correctResponseToArray(correctResponse){
+          if(_.isArray(correctResponse)){
+            return correctResponse;
+          }
+          if(_.isString(correctResponse)){
+            return [correctResponse];
+          }
+          return [];
+        }
+
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
+            scope.fullModel.correctResponse = correctResponseToArray(model.correctResponse);
+
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
             scope.model.scoringType = scope.model.scoringType || "standard";
+
             scope.feedback = {};
 
             scope.defaultIncorrect = function(choice) {
@@ -181,22 +218,21 @@ var main = [
 
         }, true);
 
-        scope.removeQuestion = function(q) {
-
-          scope.correctMap[q.value] = false;
+        scope.removeChoice = function(choice) {
+          _.remove(scope.fullModel.correctResponse, choice.value);
 
           scope.model.choices = _.filter(scope.model.choices, function(cq) {
-            return cq !== q;
+            return cq.value !== choice.value;
           });
 
           scope.fullModel.feedback = _.filter(scope.fullModel.feedback, function(fb) {
-            return fb.value !== q.value;
+            return fb.value !== choice.value;
           });
 
           return null;
         };
 
-        scope.addQuestion = function() {
+        scope.addChoice = function() {
           var uid = _.uniqueId("mc_");
 
           scope.model.choices.push({
@@ -228,7 +264,7 @@ var main = [
       //templateUrl: 'configure.html',
       template: [
         '<div class="config-inline-choice" choice-template-controller="">',
-          choices,
+        choices,
         '</div>'
       ].join("")
     };

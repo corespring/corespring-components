@@ -33,10 +33,14 @@ component = {
       {
         label: "banana",
         value: "banana"
+      },
+      {
+        label: "lemon",
+        value: "lemon"
       }
     ]
   },
-  correctResponse: "carrot",
+  correctResponse: ["carrot","banana"],
   feedback: [
     {
       value: "apple",
@@ -50,6 +54,11 @@ component = {
       value: "banana",
       feedbackType: "default"
     }
+    ,
+    {
+      value: "lemon",
+      feedbackType: "default"
+    }
   ]
 };
 
@@ -58,8 +67,9 @@ describe('inline-choice server logic', function() {
   helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'respond', server.DEFAULT_INCORRECT_FEEDBACK);
 
   describe('is correct', function() {
-    server.isCorrect("1", "1").should.eql(true);
-    server.isCorrect("1", "2").should.eql(false);
+    server.isCorrect("1", ["1"]).should.eql(true);
+    server.isCorrect("2", ["1","2"]).should.eql(true);
+    server.isCorrect("3", ["1","2"]).should.eql(false);
   });
 
   describe('respond', function() {
@@ -77,6 +87,21 @@ describe('inline-choice server logic', function() {
     it('should respond to a correct answer', function() {
       var expected, response;
       response = server.respond(_.cloneDeep(component), "carrot", helper.settings(true, true, true));
+      expected = {
+        correctness: "correct",
+        score: 1,
+        feedback: {
+          feedbackType: "default",
+          feedback: server.defaults.correct,
+          correct: true
+        }
+      };
+      response.should.eql(expected);
+    });
+
+    it('should respond to a second correct answer', function() {
+      var expected, response;
+      response = server.respond(_.cloneDeep(component), "banana", helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -120,16 +145,18 @@ describe('inline-choice server logic', function() {
     it('should respond to an incorrect response with correct answer in default feedback if feedbackType is default',
       function() {
         var expected, response;
-        response = server.respond(_.cloneDeep(component), "banana", helper.settings(true, true, false));
+        response = server.respond(_.cloneDeep(component), "lemon", helper.settings(true, true, false));
         expected = {
           correctness: "incorrect",
           score: 0,
           feedback: {
             feedbackType: "default",
-            feedback: "Good try, but carrot is the correct answer.",
             correct: false
           }
         };
+        response.feedback.feedback.should.match(/Good try, but (carrot|banana) is the correct answer./);
+        delete response.feedback.feedback;
+
         response.should.eql(expected);
       }
     );
