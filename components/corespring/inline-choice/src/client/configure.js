@@ -133,7 +133,7 @@ var main = [
           }
         };
 
-        function cleanLabel(label) {
+        function removeWiggiArtifacts(label) {
           if (!label) {
             return label;
           }
@@ -184,16 +184,16 @@ var main = [
             var model = _.cloneDeep(scope.fullModel);
 
             _.each(model.model.choices, function(choice) {
-              var feedback, _ref, _ref1;
-              feedback = _.find(model.feedback, function(fb) {
+              var feedback = _.find(model.feedback, function(fb) {
                 return fb.value === choice.value;
               });
               if (feedback) {
-                feedback.feedback = (_ref = scope.feedback[choice.value]) !== null ? _ref.feedback : void 0;
-                feedback.feedbackType = ((_ref1 = scope.feedback[choice.value]) !== null ? _ref1.feedbackType : void 0);
+                var _ref = scope.feedback[choice.value];
+                feedback.feedback = _ref !== null ? _ref.feedback : undefined;
+                feedback.feedbackType = _ref !== null ? _ref.feedbackType : undefined;
               }
 
-              choice.label = cleanLabel(choice.label);
+              choice.label = removeWiggiArtifacts(choice.label);
             });
             return model;
           }
@@ -221,8 +221,17 @@ var main = [
           return null;
         };
 
+        function findFreeChoiceSlot() {
+          var slot = 1;
+          var ids = _.pluck(scope.model.choices, 'value');
+          while (_.contains(ids, "mc_" + slot)) {
+            slot++;
+          }
+          return slot;
+        }
+
         scope.addChoice = function() {
-          var uid = _.uniqueId("mc_");
+          var uid = "mc_" + findFreeChoiceSlot();
 
           scope.model.choices.push({
             label: "",

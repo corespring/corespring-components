@@ -4,19 +4,19 @@
   "title": "Inline Choice",
   "feedback" :  [
     {
-      "value": "1",
+      "value": "mc_1",
       "feedbackType" : "default"
     },
     {
-      "value": "2",
+      "value": "mc_2",
       "feedbackType" : "default"
     },
     {
-      "value": "3",
+      "value": "mc_3",
       "feedbackType" : "default"
     },
     {
-      "value": "4",
+      "value": "mc_4",
       "feedbackType" : "default"
     }
   ],
@@ -24,19 +24,19 @@
     "choices": [
       {
         "label": "",
-        "value": "1"
+        "value": "mc_1"
       },
       {
         "label": "",
-        "value": "2"
+        "value": "mc_2"
       },
       {
         "label": "",
-        "value": "3"
+        "value": "mc_3"
       },
       {
         "label": "",
-        "value": "4"
+        "value": "mc_4"
       }
     ],
     "config": {

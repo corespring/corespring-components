@@ -25,38 +25,38 @@ function createModel() {
       choices: [
         {
           label: "apple",
-          value: "apple"
+          value: "mc_1"
         },
         {
           label: "carrot",
-          value: "carrot"
+          value: "mc_2"
         },
         {
           label: "banana",
-          value: "banana"
+          value: "mc_3"
         },
         {
           label: "lemon",
-          value: "lemon"
+          value: "mc_4"
         }
       ]
     },
-    correctResponse: ["carrot", "banana"],
+    correctResponse: ["mc_2", "mc_3"],
     feedback: [
       {
-        value: "apple",
+        value: "mc_1",
         feedback: "Huh?"
       },
       {
-        value: "carrot",
+        value: "mc_2",
         feedbackType: "default"
       },
       {
-        value: "banana",
+        value: "mc_3",
         feedbackType: "default"
       },
       {
-        value: "lemon",
+        value: "mc_4",
         feedbackType: "default"
       }
     ]
@@ -83,11 +83,11 @@ describe('inline-choice server logic', function() {
       var model = createModel();
       model.feedback[1].feedbackType = "some feedback type";
       model.feedback[1].feedback = "some feedback";
-      var fb = server.defaultFeedback(  model, 'carrot');
+      var fb = server.defaultFeedback( model, 'mc_2');
       fb.should.eql("Correct!");
     });
     it('should return default feedback for incorrect answer', function(){
-      var fb = server.defaultFeedback(createModel(), 'apple');
+      var fb = server.defaultFeedback(createModel(), 'mc_1');
       fb.should.eql("Good try, but carrot is the correct answer.");
     });
   });
@@ -96,7 +96,7 @@ describe('inline-choice server logic', function() {
 
     it('should not show any feedback', function() {
       var expected, response;
-      response = server.createOutcome(createModel(), "apple", helper.settings(false, true, true));
+      response = server.createOutcome(createModel(), "mc_1", helper.settings(false, true, true));
       expected = {
         correctness: "incorrect",
         score: 0
@@ -106,7 +106,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to a correct answer', function() {
       var expected, response;
-      response = server.createOutcome(createModel(), "carrot", helper.settings(true, true, true));
+      response = server.createOutcome(createModel(), "mc_2", helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -121,7 +121,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to a second correct answer', function() {
       var expected, response;
-      response = server.createOutcome(createModel(), "banana", helper.settings(true, true, true));
+      response = server.createOutcome(createModel(), "mc_3", helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -135,7 +135,7 @@ describe('inline-choice server logic', function() {
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
-      var response = server.createOutcome(createModel(), "apple", helper.settings(true, true, true));
+      var response = server.createOutcome(createModel(), "mc_1", helper.settings(true, true, true));
       var expected = {
         correctness: "incorrect",
         score: 0,
@@ -150,7 +150,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to an incorrect response (do not show correct too)', function() {
       var expected, response;
-      response = server.createOutcome(createModel(), "apple", helper.settings(true, true, false));
+      response = server.createOutcome(createModel(), "mc_1", helper.settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -165,7 +165,7 @@ describe('inline-choice server logic', function() {
     it('should respond to an incorrect response with random correct answer in default feedback if feedbackType is default',
       function() {
         var expected, response;
-        response = server.createOutcome(createModel(), "lemon", helper.settings(true, true, false));
+        response = server.createOutcome(createModel(), "mc_4", helper.settings(true, true, false));
         expected = {
           correctness: "incorrect",
           score: 0,

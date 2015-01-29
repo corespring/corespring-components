@@ -18,15 +18,15 @@ describe('corespring', function() {
         choices: [
           {
             label: "1",
-            value: "1"
+            value: "mc_1"
           },
           {
             label: "2",
-            value: "2"
+            value: "mc_2"
           },
           {
             label: "3",
-            value: "3"
+            value: "mc_3"
           }
         ],
         config: {
@@ -79,20 +79,20 @@ describe('corespring', function() {
     it('sets the session choice correctly', function() {
 
       testModel.session = {
-        answers: '1'
+        answers: 'mc_1'
       };
 
       container.setDataAndSession("1", testModel);
       rootScope.$digest();
       expect(_.pick(scope.selected, 'label', 'value')).toEqual({
         label: '1',
-        value: '1'
+        value: 'mc_1'
       });
     });
 
     it('setting response shows correctness', function() {
       testModel.session = {
-        answers: "1"
+        answers: "mc_1"
       };
       container.setDataAndSession("1", testModel);
       rootScope.$digest();
@@ -101,7 +101,7 @@ describe('corespring', function() {
         "correctness": "incorrect",
         "score": 0,
         "feedback": {
-          "1": {
+          "mc_1": {
             correct: false,
             feedback: "cccc"
           }
