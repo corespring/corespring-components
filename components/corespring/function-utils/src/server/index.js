@@ -3,11 +3,11 @@
 var _ = require('lodash');
 var mathjs = require('mathjs')();
 
-var trimSpaces = function(s) {
+function trimSpaces(s) {
   return s.replace(/\s+/g, "");
-};
+}
 
-var replaceVar = function(expression, variable) {
+function replaceVar(expression, variable) {
   var m;
 
   var patternMatch = function(pattern) {
@@ -24,17 +24,22 @@ var replaceVar = function(expression, variable) {
     return replaceVar(expression.replace(new RegExp("[0-9)]" + variable), m[1] + "*(x)"), variable);
   }
 
-  m = patternMatch(new RegExp(".*?" + variable + "([(0-9]).*"));
+  m = patternMatch(new RegExp(".*?" + variable + "([(0-9])"));
   if (m) {
-    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]), variable);
+    return replaceVar(expression.replace(new RegExp(variable + "[(0-9]"), "(x)*" + m[1])  , variable);
   }
 
   return expression;
-};
+}
+
+function makeMultiplicationExplicit(eq){
+  return eq.replace(/\)\(/g, ")*(");
+}
 
 exports.expressionize = function(eq, varname) {
   eq = trimSpaces(eq);
   eq = replaceVar(eq, varname);
+  eq = makeMultiplicationExplicit(eq);
   return eq;
 };
 
