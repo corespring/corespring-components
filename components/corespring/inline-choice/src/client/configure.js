@@ -210,6 +210,8 @@ var main = [
         scope.removeChoice = function(choice) {
           removeCorrectResponse(choice);
 
+          delete(scope.feedback[choice.value]);
+
           scope.model.choices = _.filter(scope.model.choices, function(cq) {
             return cq.value !== choice.value;
           });

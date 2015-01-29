@@ -123,10 +123,68 @@ describe('corespring:inline-choice:configure', function() {
       expect(fb).toBeDefined();
       expect(fb.feedbackType).toEqual('default');
     });
-
   });
 
+  describe('removeChoice', function(){
+    beforeEach(function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
 
+    it('should have three choices initially', function() {
+      expect(scope.model.choices.length).toEqual(4);
+    });
 
+    it('should have two choices after removeChoice', function() {
+      scope.removeChoice(scope.model.choices[1]);
+      expect(scope.model.choices.length).toEqual(3);
+    });
+
+    it('should remove the choice from correctAnswers', function(){
+      var uid = scope.model.choices[1].value;
+      expect(scope.fullModel.correctResponse.length).toEqual(2);
+      scope.removeChoice(scope.model.choices[1]);
+      expect(scope.fullModel.correctResponse.length).toEqual(1);
+    });
+
+    it('should remove the feedback too', function(){
+      var uid = scope.model.choices[1].value;
+      scope.removeChoice(scope.model.choices[1]);
+      var fb = scope.feedback[uid];
+      expect(fb).toBeUndefined();
+    });
+
+    it('should remove the feedback from fullModel too', function(){
+      var uid = scope.model.choices[1].value;
+      scope.removeChoice(scope.model.choices[1]);
+      var fb = _.find(scope.fullModel.feedback, function(fb){
+        return fb.value === uid;
+      });
+      expect(fb).toBeUndefined();
+    });
+  });
+
+  describe('toggleCorrect', function(){
+    beforeEach(function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+
+    it('should remove a correct answer', function(){
+      var correctChoice = scope.model.choices[1];
+      var uid = correctChoice.value;
+      expect(scope.fullModel.correctResponse).toContain(uid);
+      scope.toggleCorrectResponse(correctChoice);
+      expect(scope.fullModel.correctResponse  ).not.toContain(uid);
+    });
+
+    it('should add an incorrect answer', function(){
+      var incorrectChoice = scope.model.choices[0];
+      var uid = incorrectChoice.value
+      expect(scope.fullModel.correctResponse).not.toContain(uid);
+      scope.toggleCorrectResponse(incorrectChoice);
+      expect(scope.fullModel.correctResponse).toContain(uid);
+    });
+  });
 
 });
