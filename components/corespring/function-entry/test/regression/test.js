@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
 })();
 
 
-describe('evaluate expression', function() {
+describe.only('evaluate expression', function() {
 
   "use strict";
 
