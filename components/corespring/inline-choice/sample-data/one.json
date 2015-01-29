@@ -7,11 +7,11 @@
           "choices": [
             {
               "label": "kennedy",
-              "value": "Kennedy"
+              "value": "mc_1"
             },
             {
               "label": "obama",
-              "value": "Obama"
+              "value": "mc_2"
             }
           ],
           "config": {
@@ -29,7 +29,7 @@
         {
           "correct": false,
           "feedback": "No that is incorrect",
-          "value": "kennedy"
+          "value": "mc_1"
         }
       ],
       "score": 0
@@ -37,7 +37,7 @@
   },
   "session": {
     "answers": {
-      "1": "kennedy"
+      "mc_1": "kennedy"
     },
     "isFinished": true,
     "remainingAttempts": 0,

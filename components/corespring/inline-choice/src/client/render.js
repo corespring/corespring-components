@@ -3,50 +3,56 @@ var link, main;
 link = function($sce, $timeout) {
   return function(scope, element, attrs) {
 
-    var layoutChoices = function(choices, order) {
+    scope.editable = true;
+
+    function layoutChoices(choices, order) {
       if (!order) {
         var shuffled = _.shuffle(_.cloneDeep(choices));
         return shuffled;
-      } else {
-        var ordered = _.map(order, function(v) {
-          return _.find(choices, function(c) {
-            return c.value === v;
-          });
-        });
-
-        var missing = _.difference(choices, ordered);
-        return _.union(ordered, missing);
       }
-    };
+      var ordered = _.map(order, function(v) {
+        return _.find(choices, function(c) {
+          return c.value === v;
+        });
+      });
+      var missing = _.difference(choices, ordered);
+      return _.union(ordered, missing);
+    }
 
-    var stashOrder = function(choices) {
+    function stashOrder(choices) {
       return _.map(choices, function(c) {
         return c.value;
       });
-    };
-
-    scope.editable = true;
+    }
 
     function clearFeedback(choices) {
-      _(choices).each(function (c) {
+      _(choices).each(function(c) {
         delete c.feedback;
         delete c.correct;
       });
     }
 
     function setFeedback(choices, response) {
-      _(choices).each(function (c) {
-        if (response.feedback && response.feedback[c.value]) {
-          c.feedback = response.feedback[c.value].feedback;
-          c.correct = response.feedback[c.value].correct;
+      _(choices).each(function(c) {
+        if (response.feedback) {
+          var fb = response.feedback[c.value];
+          if (fb) {
+            c.feedback = fb.feedback;
+            c.correct = fb.correct;
+          }
         }
+      });
+    }
+
+    function renderMath(delay) {
+      scope.$emit('rerender-math', {
+        delay: delay
       });
     }
 
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
-        console.log("Inline Choice setDataAndSession: ", dataAndSession);
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
@@ -71,8 +77,7 @@ link = function($sce, $timeout) {
           scope.select(selectedChoice);
         }
 
-        scope.$emit('rerender-math', {delay: 100});
-
+        renderMath(100);
       },
 
       getSession: function() {
@@ -86,8 +91,6 @@ link = function($sce, $timeout) {
 
       // sets the server's response
       setResponse: function(response) {
-        console.log("Setting Response for inline choice:");
-        console.log(response);
         clearFeedback(scope.choices);
         setFeedback(scope.choices, response);
         var r = _.cloneDeep(response);
@@ -100,8 +103,7 @@ link = function($sce, $timeout) {
         scope.response = r;
       },
 
-      setMode: function(newMode) {
-      },
+      setMode: function(newMode) {},
 
       reset: function() {
         scope.selected = undefined;
@@ -124,21 +126,18 @@ link = function($sce, $timeout) {
       editable: function(e) {
         scope.editable = e;
       }
-
-
     };
 
     scope.select = function(choice) {
       scope.selected = choice;
-      scope.$emit('rerender-math', {delay: 1});
+      renderMath(1);
     };
-
-    scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     scope.playerId = (function() {
       return element.closest('.player-body').attr('id');
     })();
 
+    scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
   };
 };
 
@@ -171,7 +170,8 @@ main = [
         '    </div>',
         '    <span class="result-icon"></span>',
         '  </div>',
-        '</div>'].join("\n")
+        '</div>'
+      ].join("\n")
     };
 
     return def;

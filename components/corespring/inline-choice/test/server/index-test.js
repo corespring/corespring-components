@@ -15,58 +15,88 @@ should = require('should');
 
 _ = require('lodash');
 
-component = {
-  componentType: "corespring-inline-choice",
-  model: {
-    config: {
-      shuffle: true
+function createModel() {
+  return {
+    componentType: "corespring-inline-choice",
+    model: {
+      config: {
+        shuffle: true
+      },
+      choices: [
+        {
+          label: "apple",
+          value: "mc_1"
+        },
+        {
+          label: "carrot",
+          value: "mc_2"
+        },
+        {
+          label: "banana",
+          value: "mc_3"
+        },
+        {
+          label: "lemon",
+          value: "mc_4"
+        }
+      ]
     },
-    choices: [
+    correctResponse: ["mc_2", "mc_3"],
+    feedback: [
       {
-        label: "apple",
-        value: "apple"
+        value: "mc_1",
+        feedback: "Huh?"
       },
       {
-        label: "carrot",
-        value: "carrot"
+        value: "mc_2",
+        feedbackType: "default"
       },
       {
-        label: "banana",
-        value: "banana"
+        value: "mc_3",
+        feedbackType: "default"
+      },
+      {
+        value: "mc_4",
+        feedbackType: "default"
       }
     ]
-  },
-  correctResponse: "carrot",
-  feedback: [
-    {
-      value: "apple",
-      feedback: "Huh?"
-    },
-    {
-      value: "carrot",
-      feedbackType: "default"
-    },
-    {
-      value: "banana",
-      feedbackType: "default"
-    }
-  ]
-};
+  };
+}
+
+
 
 describe('inline-choice server logic', function() {
 
-  helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'respond', server.DEFAULT_INCORRECT_FEEDBACK);
+  helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'createOutcome', server.DEFAULT_INCORRECT_FEEDBACK);
 
-  describe('is correct', function() {
-    server.isCorrect("1", "1").should.eql(true);
-    server.isCorrect("1", "2").should.eql(false);
+  describe('isCorrect', function() {
+    function questionWithCorrectResponse(correctResponse){
+      return {correctResponse:correctResponse};
+    }
+    server.isCorrect(questionWithCorrectResponse(["1"]), "1").should.eql(true);
+    server.isCorrect(questionWithCorrectResponse(["1","2"]), "2").should.eql(true);
+    server.isCorrect(questionWithCorrectResponse(["1","2"]), "3").should.eql(false);
   });
 
-  describe('respond', function() {
+  describe('defaultFeedback', function(){
+    it('should return default feedback for correct answer', function(){
+      var model = createModel();
+      model.feedback[1].feedbackType = "some feedback type";
+      model.feedback[1].feedback = "some feedback";
+      var fb = server.defaultFeedback( model, 'mc_2');
+      fb.should.eql("Correct!");
+    });
+    it('should return default feedback for incorrect answer', function(){
+      var fb = server.defaultFeedback(createModel(), 'mc_1');
+      fb.should.eql("Good try, but carrot is the correct answer.");
+    });
+  });
+
+  describe('createOutcome', function() {
 
     it('should not show any feedback', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), "apple", helper.settings(false, true, true));
+      response = server.createOutcome(createModel(), "mc_1", helper.settings(false, true, true));
       expected = {
         correctness: "incorrect",
         score: 0
@@ -76,7 +106,22 @@ describe('inline-choice server logic', function() {
 
     it('should respond to a correct answer', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), "carrot", helper.settings(true, true, true));
+      response = server.createOutcome(createModel(), "mc_2", helper.settings(true, true, true));
+      expected = {
+        correctness: "correct",
+        score: 1,
+        feedback: {
+          feedbackType: "default",
+          feedback: server.defaults.correct,
+          correct: true
+        }
+      };
+      response.should.eql(expected);
+    });
+
+    it('should respond to a second correct answer', function() {
+      var expected, response;
+      response = server.createOutcome(createModel(), "mc_3", helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -90,7 +135,7 @@ describe('inline-choice server logic', function() {
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
-      var response = server.respond(_.cloneDeep(component), "apple", helper.settings(true, true, true));
+      var response = server.createOutcome(createModel(), "mc_1", helper.settings(true, true, true));
       var expected = {
         correctness: "incorrect",
         score: 0,
@@ -105,7 +150,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to an incorrect response (do not show correct too)', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), "apple", helper.settings(true, true, false));
+      response = server.createOutcome(createModel(), "mc_1", helper.settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -117,19 +162,21 @@ describe('inline-choice server logic', function() {
       response.should.eql(expected);
     });
 
-    it('should respond to an incorrect response with correct answer in default feedback if feedbackType is default',
+    it('should respond to an incorrect response with random correct answer in default feedback if feedbackType is default',
       function() {
         var expected, response;
-        response = server.respond(_.cloneDeep(component), "banana", helper.settings(true, true, false));
+        response = server.createOutcome(createModel(), "mc_4", helper.settings(true, true, false));
         expected = {
           correctness: "incorrect",
           score: 0,
           feedback: {
             feedbackType: "default",
-            feedback: "Good try, but carrot is the correct answer.",
             correct: false
           }
         };
+        response.feedback.feedback.should.match(/Good try, but (carrot|banana) is the correct answer./);
+        delete response.feedback.feedback;
+
         response.should.eql(expected);
       }
     );

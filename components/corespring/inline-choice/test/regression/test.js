@@ -64,7 +64,29 @@ describe('inline-choice', function() {
         });
       })
       .call(done);
+  });
 
+  describe('multiple correct', function(){
+    function assertChoice(choiceLabel, expectedCorrectness){
+      return browser
+        .selectInlineChoice("1", choiceLabel)
+        .submitItem()
+        .getAttribute(inlineChoiceWithId('1'), 'class', function(err,res){
+          res.split(' ').indexOf(expectedCorrectness).should.be.above(-1);
+        });
+    }
+    it("should accept carrot as correct", function(done){
+      assertChoice("Carrot", 'correct').done(done);
+    });
+    it("should accept lemon as correct", function(done){
+      assertChoice("Lemon", 'correct').done(done);
+    });
+    it("should accept apple as incorrect", function(done){
+      assertChoice("Apple", 'incorrect').done(done);
+    });
+    it("should accept banana as incorrect", function(done){
+      assertChoice("Banana", 'incorrect').done(done);
+    });
   });
 
 });
