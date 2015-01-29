@@ -7,29 +7,8 @@ function trimSpaces(s) {
   return s.replace(/\s+/g, "");
 }
 
-function replaceVar(expression, variable) {
-  var m;
-
-  var patternMatch = function(pattern) {
-    return pattern.exec(expression);
-  };
-
-  m = patternMatch(new RegExp(".*?([0-9)])" + variable + "([(0-9]).*"));
-  if (m) {
-    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable + "[(0-9]"), m[1] + "*(x)*" + m[2]), variable);
-  }
-
-  m = patternMatch(new RegExp(".*?([0-9)])" + variable + ".*"));
-  if (m) {
-    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable), m[1] + "*(x)"), variable);
-  }
-
-  m = patternMatch(new RegExp(".*?" + variable + "([(0-9])"));
-  if (m) {
-    return replaceVar(expression.replace(new RegExp(variable + "[(0-9]"), "(x)*" + m[1])  , variable);
-  }
-
-  return expression;
+function replaceVarWithX(expression, variable) {
+  return expression.replace(new RegExp(variable, "g"), "(x)");
 }
 
 function makeMultiplicationExplicit(eq){
@@ -40,7 +19,7 @@ function makeMultiplicationExplicit(eq){
 
 exports.expressionize = function(eq, varname) {
   eq = trimSpaces(eq);
-  eq = replaceVar(eq, varname);
+  eq = replaceVarWithX(eq, varname);
   eq = makeMultiplicationExplicit(eq);
   return eq;
 };
@@ -94,12 +73,8 @@ exports.isFunctionEqual = function(eq1, eq2, options) {
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var y1 = mathjs['eval'](eq1r, {
-        x: x
-      });
-      var y2 = mathjs['eval'](eq2r, {
-        x: x
-      });
+      var y1 = mathjs['eval'](eq1r, {x:x});
+      var y2 = mathjs['eval'](eq2r, {x:x});
       if (!closeEnough(sigfigs)(y1, y2)) {
         return true;
       }

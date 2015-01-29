@@ -73,7 +73,7 @@ describe('expressionize', function() {
   it('inserts * after (x-5)', function() {
     var eq = "(x-5)(x+5)";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("(x-5)*(x+5)");
+    result.should.eql("((x)-5)*((x)+5)");
   });
 
   it('inserts * after 3', function() {
