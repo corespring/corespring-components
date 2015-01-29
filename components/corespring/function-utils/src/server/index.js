@@ -11,7 +11,7 @@ function replaceVarWithX(expression, variable) {
   return expression.replace(new RegExp(variable, "g"), "(x)");
 }
 
-function makeMultiplicationExplicit(eq){
+function makeMultiplicationExplicit(eq) {
   return eq
     .replace(/([0-9)])\(/g, "$1*(")
     .replace(/\)([0-9(])/g, ")*$1");
@@ -73,8 +73,12 @@ exports.isFunctionEqual = function(eq1, eq2, options) {
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var y1 = mathjs['eval'](eq1r, {x:x});
-      var y2 = mathjs['eval'](eq2r, {x:x});
+      var y1 = mathjs['eval'](eq1r, {
+        x: x
+      });
+      var y2 = mathjs['eval'](eq2r, {
+        x: x
+      });
       if (!closeEnough(sigfigs)(y1, y2)) {
         return true;
       }
@@ -110,9 +114,17 @@ exports.isEquationCorrect = function(correctEquation, testEquation, options) {
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var correctY = mathjs['eval'](expr1, {x: x});
-      var leftValue = mathjs['eval'](leftSideExpression, {x: x, y: correctY});
-      var rightValue = mathjs['eval'](rightSideExpression, {x: x, y: correctY});
+      var correctY = mathjs['eval'](expr1, {
+        x: x
+      });
+      var leftValue = mathjs['eval'](leftSideExpression, {
+        x: x,
+        y: correctY
+      });
+      var rightValue = mathjs['eval'](rightSideExpression, {
+        x: x,
+        y: correctY
+      });
 
       if (!closeEnough(sigfigs)(leftValue, rightValue)) {
         return true;
