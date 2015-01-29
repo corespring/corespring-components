@@ -33,7 +33,9 @@ function replaceVar(expression, variable) {
 }
 
 function makeMultiplicationExplicit(eq){
-  return eq.replace(/\)\(/g, ")*(");
+  return eq
+    .replace(/([0-9)])\(/g, "$1*(")
+    .replace(/\)([0-9(])/g, ")*$1");
 }
 
 exports.expressionize = function(eq, varname) {

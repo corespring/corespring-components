@@ -75,6 +75,18 @@ describe('expressionize', function() {
     var result = server.expressionize(eq, 'x');
     result.should.eql("(x-5)*(x+5)");
   });
+
+  it('inserts * after 3', function() {
+    var eq = "3(2+1)";
+    var result = server.expressionize(eq, 'x');
+    result.should.eql("3*(2+1)");
+  });
+
+  it('inserts * before 3', function() {
+    var eq = "(2+1)3";
+    var result = server.expressionize(eq, 'x');
+    result.should.eql("(2+1)*3");
+  });
 });
 
 describe('linear function equal logic', function() {
