@@ -21,8 +21,8 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
       };
 
       scope.classForChoice = function(id, idx) {
-        if (scope.correctResponse) {
-          if (scope.correctResponse.length > idx && scope.correctResponse[idx] === id) {
+        if (scope.response && scope.response.correctResponse) {
+          if (scope.response.correctResponse.length > idx && scope.response.correctResponse[idx] === id) {
             return 'correct';
           }
 
@@ -36,15 +36,15 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
+          scope.rawModel.config = _.defaults(scope.rawModel.config || {}, {choiceAreaLayout: 'vertical'});
           scope.editable = true;
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.cardinality = 'ordered';
           scope.local = {};
           scope.resetChoices(scope.rawModel);
 
-          scope.originalChoices = _.cloneDeep(scope.model.choices);
 
-          if (dataAndSession.session && dataAndSession.session.answers) {
+          if (dataAndSession.session && dataAndSession.session.answers && scope.model.config.placementType === 'placement') {
 
             // Build up the landing places with the selected choices
             _.each(dataAndSession.session.answers, function(v, k) {
@@ -77,20 +77,18 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
         setResponse: function(response) {
           console.log("set response for DnD", response);
-          scope.correctResponse = response.correctResponse;
+          scope.response = response;
+          if (response.correctness !== 'correct') {
+            scope.correctResponse = response.correctResponse;
+          }
+          scope.correctChoices = _.map(response.correctResponse, function(c) {
+            return _.find(scope.local.choices, function(lc) {
+              return lc.id === c;
+            });
+          });
           scope.feedback = response.feedback;
           scope.correctClass = response.correctClass;
           scope.comments = response.comments;
-
-          // Populate solutionScope with the correct response
-          scope.solutionScope = $rootScope.$new();
-          scope.solutionScope.landingPlaceChoices = {};
-          scope.solutionScope.model = scope.model;
-          _.each(scope.correctResponse, function(v, k) {
-            scope.solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
-              return scope.choiceForId(r);
-            });
-          });
         },
 
         answerChangedHandler: function(callback) {
@@ -111,41 +109,86 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           scope.editable = e;
           scope.sortableOptions.disabled = !e;
         }
-
-
       });
 
       scope.sortableOptions = {
-        disabled: false
+        disabled: false,
+        start: function(e, ui) {
+          if (scope.model.config.choiceAreaLayout === "horizontal") {
+            $(e.target).data("ui-sortable").floating = true;
+          }
+        },
+        stop: function(e, ui) {
+          scope.stack.push({choices: _.cloneDeep(scope.local.choices), landingPlaces: []});
+          scope.$apply();
+        }
       };
-
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     };
 
-    var tmpl = [
-      '<div class="view-placement-ordering view-drag-and-drop" drag-and-drop-controller>',
-      '  <div ng-show="!correctResponse && model.config.placementType == \'placement\'" class="pull-right">',
-      '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
-      '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
-      '  </div> <div class="clearfix" />',
-      '  <div ng-if="model.config.placementType == \'placement\'" class="main-table {{model.config.choiceAreaLayout}}">',
+    var inplaceTemplate = [
+      '  <div ng-if="model.config.placementType != \'placement\'" class="view-ordering {{model.config.choiceAreaLayout}}">',
+
+      '    <div class="button-row {{model.config.choiceAreaLayout}}">',
+      '      <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
+      '      <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="startOver()">Start over</button>',
+      '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" class="pull-right show-correct-button" ng-click="$parent.correctAnswerVisible = !!!$parent.correctAnswerVisible">',
+      '        <h5><i class="fa fa-eye-slash"></i>&nbsp;{{$parent.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer</h5>',
+      '      </div>',
+      '    </div>',
+
+      '    <div class="clearfix" />',
+
+      '    <div ng-bind-html-unsafe="model.config.choiceAreaLabel" class="choice-area-label"></div>',
+      '    <div class="answer-area-container">',
+      '      <div class="container-border">',
+      '        <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
+      '          <li ng-repeat="choice in local.choices">',
+      '            <div class="choice {{classForChoice(choice.id, $index)}}" ',
+      '              ng-bind-html-unsafe="choice.label">',
+      '          </li>',
+      '        </ul>',
+      '      </div>',
+
+      '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse && $parent.correctAnswerVisible" class="correct-answer">',
+      '        <ul class="clearfix">',
+      '          <li ng-repeat="choice in correctChoices">',
+      '            <div class="choice {{classForChoice(choice.id, $index)}}" ',
+      '              ng-bind-html-unsafe="choice.label">',
+      '          </li>',
+      '        </ul>',
+      '      </div>',
+      '    </div>',
+
+      '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '    <div see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
+      '      <ul class="clearfix">',
+      '        <li ng-repeat="choice in correctChoices">',
+      '          <div class="choice correct" ',
+      '            ng-bind-html-unsafe="choice.label">',
+      '        </li>',
+      '      </ul>',
+      '    </div>',
+      '  </div>'
+    ].join('\n');
+
+    var dragAndDropTemplate = [
+      '  <div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
       '    <div class="main-row">',
       '      <div class="choice-area">', DragAndDropTemplates.choiceArea(), '</div>',
-      '      <div class="answer-area">' + answerArea + '</div>',
+        '      <div class="answer-area">' + answerArea + '</div>',
       '    </div>',
-      '  </div>',
-      '  <div ng-if="model.config.placementType != \'placement\'" class="view-ordering">',
-      '    <ul class="choices" ng-model="local.choices" ui-sortable="sortableOptions">',
-      '      <li ng-repeat="choice in local.choices">',
-      '        <div class="choice {{classForChoice(choice.id, $index)}}" ',
-      '          ng-bind-html-unsafe="choice.label"> </div>',
-      '      </li>',
-      '    </ul>',
-      '  </div>',
+      '  </div>'
+    ].join('\n');
+
+    var tmpl = [
+      '<div class="view-drag-and-drop" drag-and-drop-controller>',
+
+      dragAndDropTemplate,
+      inplaceTemplate,
 
       '  <div class="clearfix"></div>',
-      '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
       '</div>'
 
