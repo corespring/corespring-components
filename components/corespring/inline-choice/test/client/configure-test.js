@@ -208,7 +208,7 @@ describe('corespring:inline-choice:configure', function() {
 
     it('should add an incorrect answer', function() {
       var incorrectChoice = scope.model.choices[0];
-      var uid = incorrectChoice.value
+      var uid = incorrectChoice.value;
       expect(scope.fullModel.correctResponse).not.toContain(uid);
       scope.toggleCorrectResponse(incorrectChoice);
       expect(scope.fullModel.correctResponse).toContain(uid);
