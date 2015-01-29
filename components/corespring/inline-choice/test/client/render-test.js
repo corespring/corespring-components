@@ -75,24 +75,7 @@ describe('corespring', function() {
     expect(element).toNotBe(null);
   });
 
-  describe('inline-choice correctResponse', function() {
-    it("can deal with a string as correctResponse", function() {
-      testModel.data.model.correctResponse = "2";
-      container.setDataAndSession("1", testModel);
-      rootScope.$digest();
-      expect(scope.question.correctResponse).toEqual(["2"]);
-    });
-    it("can deal with an array as correctResponse", function() {
-      testModel.data.model.correctResponse = ["1"];
-      container.setDataAndSession("1", testModel);
-      rootScope.$digest();
-      expect(scope.question.correctResponse).toEqual(["1"]);
-    });
-  });
-
-
   describe('inline-choice render', function() {
-
     it('sets the session choice correctly', function() {
 
       testModel.session = {

@@ -59,7 +59,7 @@ var main = [
       '                    fb-sel-label="If this choice is selected, show"',
       '                    fb-sel-class="correct"',
       '                    fb-sel-hide-feedback-options=""',
-      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultCorrect}}\'/>"',
+      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultFeedback(choice)}}\'/>"',
       '                    fb-sel-feedback-type="feedback[choice.value].feedbackType"',
       '                    fb-sel-custom-feedback="feedback[choice.value].feedback">',
       '                </div>',
@@ -67,7 +67,7 @@ var main = [
       '                    fb-sel-label="If this choice is selected, show"',
       '                    fb-sel-class="incorrect"',
       '                    fb-sel-hide-feedback-options=""',
-      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultIncorrect(choice)}}\'/>"',
+      '                    fb-sel-default-feedback="<input type=\'text\' disabled=\'\' value=\'{{defaultFeedback(choice)}}\'/>"',
       '                    fb-sel-hide-feedback-options="none"',
       '                    fb-sel-feedback-type="feedback[choice.value].feedbackType"',
       '                    fb-sel-custom-feedback="feedback[choice.value].feedback">',
@@ -101,8 +101,6 @@ var main = [
       link: function(scope, element, attrs) {
         var server = ServerLogic.load('corespring-inline-choice');
         ChoiceTemplates.extendScope(scope, 'corespring-inline-choice');
-
-        scope.defaultCorrect = server.keys.DEFAULT_CORRECT_FEEDBACK;
 
         scope.overrideFeatures = [{
           name: 'image',
@@ -144,31 +142,21 @@ var main = [
           return label.replace(re, '');
         }
 
-        function ensureCorrectResponseIsArray(question){
-          if(_.isArray(question.correctResponse)){
-            return;
-          }
-          if(_.isString(question.correctResponse) && question.correctResponse.trim().length > 0){
-            question.correctResponse = [question.correctResponse];
-            return;
-          }
-          question.correctResponse = [];
-        }
+        scope.defaultFeedback = function(choice) {
+          return server.defaultFeedback(scope.fullModel, choice.value);
+        };
 
         scope.containerBridge = {
           setModel: function(model) {
+            server.ensureCorrectResponseIsArray(model);
+
             scope.fullModel = model;
-            ensureCorrectResponseIsArray(scope.fullModel);
 
             scope.model = scope.fullModel.model;
             scope.model.config.orientation = scope.model.config.orientation || "vertical";
             scope.model.scoringType = scope.model.scoringType || "standard";
 
             scope.feedback = {};
-
-            scope.defaultIncorrect = function(choice) {
-              return server.feedbackByValue(scope.fullModel, choice.value).feedback;
-            };
 
             _.each(model.scoreMapping, function(v, k) {
               scope.scoreMapping[k] = String(v);

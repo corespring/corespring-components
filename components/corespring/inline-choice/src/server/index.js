@@ -9,7 +9,6 @@ var DEFAULT_INCORRECT_FEEDBACK = "Good try, but " + CORRECT_ANSWER_PLACEHOLDER +
 
 /**
  * This makes sure that old items with a string as correctResponse are still working
- * @param question
  */
 function ensureCorrectResponseIsArray(question){
   if(_.isArray(question.correctResponse)){
@@ -26,34 +25,54 @@ function isCorrectResponse(question, answer){
   return _.contains(question.correctResponse, answer);
 }
 
-function feedbackByValue(question, answer) {
-  var feedbackValue =  _.find(question.feedback, function(f) {
-    return f.value === answer;
-  });
-
-  function getRandomCorrectResponse() {
-    var uid = _.sample(question.correctResponse);
-    var maybeAnswer = (question.model && question.model.choices) ? _.find(question.model.choices, function(choice) {
-      return choice.value === uid;
-    }) : undefined;
-    return maybeAnswer ? maybeAnswer.label : undefined;
+function findChoice(question, value) {
+  if (question.model && question.model.choices) {
+    return _.find(question.model.choices, function (choice) {
+      return choice.value === value;
+    });
   }
+  return undefined;
+}
 
-  var hasDefaultFeedback = feedbackValue && feedbackValue.feedbackType === 'default';
-
-  function setDefaults(feedbackValue) {
-    feedbackValue.feedback = isCorrectResponse(question, answer) ? exports.keys.DEFAULT_CORRECT_FEEDBACK :
-      DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, getRandomCorrectResponse());
-    return feedbackValue;
+function findFeedback(question, value) {
+  if (question.feedback) {
+    return _.find(question.feedback, function (fb) {
+      return fb.value === value;
+    });
   }
+  return undefined;
+}
 
-  return hasDefaultFeedback ? setDefaults(feedbackValue) : feedbackValue;
+function getResponseLabel(question, uid){
+  var maybeAnswer = findChoice(question, uid);
+  return maybeAnswer ? maybeAnswer.label : undefined;
+}
+
+function getRandomCorrectResponse(question) {
+  return getResponseLabel(question, _.sample(question.correctResponse));
+}
+
+function getFirstCorrectResponse(question) {
+  return getResponseLabel(question, question.correctResponse[0]);
+}
+
+function getDefaultFeedback(question, answer, getPlaceHolderReplacement) {
+  return isCorrectResponse(question, answer) ?
+    exports.keys.DEFAULT_CORRECT_FEEDBACK :
+    DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, getPlaceHolderReplacement(question));
+}
+
+function defaultFeedback(question, answer){
+  //in the editor we cannot use random bc. it results into a digest loop
+  return getDefaultFeedback(question, answer, getFirstCorrectResponse);
 }
 
 function userResponseFeedback(question, answer) {
-  var fb = feedbackByValue(question, answer);
-
+  var fb = findFeedback(question, answer);
   if (fb) {
+    if(fb.feedbackType === 'default'){
+      fb.feedback = getDefaultFeedback(question, answer, getRandomCorrectResponse);
+    }
     fb.correct = isCorrectResponse(question, answer);
     if (fb.feedbackType === 'none') {
       delete fb.feedback;
@@ -76,10 +95,15 @@ function calculateScore(question, answer) {
 }
 
 //used by configure
-exports.feedbackByValue = feedbackByValue;
+exports.defaultFeedback = defaultFeedback;
+
+//use by configure;
+exports.ensureCorrectResponseIsArray = ensureCorrectResponseIsArray;
 
 //exposed to make testing easier
 exports.isCorrect = isCorrectResponse;
+
+
 
 exports.preprocess = function(json) {
   _.forEach(json.model.choices, function(choice) {
@@ -119,3 +143,6 @@ exports.createOutcome = function(question, answer, settings) {
   }
   return response;
 };
+
+//@deprecated
+exports.respond = exports.createOutcome;

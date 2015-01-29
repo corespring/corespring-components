@@ -15,71 +15,88 @@ should = require('should');
 
 _ = require('lodash');
 
-component = {
-  componentType: "corespring-inline-choice",
-  model: {
-    config: {
-      shuffle: true
+function createModel() {
+  return {
+    componentType: "corespring-inline-choice",
+    model: {
+      config: {
+        shuffle: true
+      },
+      choices: [
+        {
+          label: "apple",
+          value: "apple"
+        },
+        {
+          label: "carrot",
+          value: "carrot"
+        },
+        {
+          label: "banana",
+          value: "banana"
+        },
+        {
+          label: "lemon",
+          value: "lemon"
+        }
+      ]
     },
-    choices: [
+    correctResponse: ["carrot", "banana"],
+    feedback: [
       {
-        label: "apple",
-        value: "apple"
+        value: "apple",
+        feedback: "Huh?"
       },
       {
-        label: "carrot",
-        value: "carrot"
+        value: "carrot",
+        feedbackType: "default"
       },
       {
-        label: "banana",
-        value: "banana"
+        value: "banana",
+        feedbackType: "default"
       },
       {
-        label: "lemon",
-        value: "lemon"
+        value: "lemon",
+        feedbackType: "default"
       }
     ]
-  },
-  correctResponse: ["carrot","banana"],
-  feedback: [
-    {
-      value: "apple",
-      feedback: "Huh?"
-    },
-    {
-      value: "carrot",
-      feedbackType: "default"
-    },
-    {
-      value: "banana",
-      feedbackType: "default"
-    }
-    ,
-    {
-      value: "lemon",
-      feedbackType: "default"
-    }
-  ]
-};
+  };
+}
+
+
 
 describe('inline-choice server logic', function() {
 
   helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'createOutcome', server.DEFAULT_INCORRECT_FEEDBACK);
 
   describe('isCorrect', function() {
-    function question(correctResponse){
+    function questionWithCorrectResponse(correctResponse){
       return {correctResponse:correctResponse};
     }
-    server.isCorrect(question(["1"]), "1").should.eql(true);
-    server.isCorrect(question(["1","2"]), "2").should.eql(true);
-    server.isCorrect(question(["1","2"]), "3").should.eql(false);
+    server.isCorrect(questionWithCorrectResponse(["1"]), "1").should.eql(true);
+    server.isCorrect(questionWithCorrectResponse(["1","2"]), "2").should.eql(true);
+    server.isCorrect(questionWithCorrectResponse(["1","2"]), "3").should.eql(false);
+  });
+
+  describe('defaultFeedback', function(){
+    it('should return default feedback for correct answer', function(){
+      var model = createModel();
+      model.feedback[1].feedbackType = "some feedback type";
+      model.feedback[1].feedback = "some feedback";
+      var fb = server.defaultFeedback(  model, 'carrot');
+      fb.should.eql("Correct!");
+    });
+    it('should return default feedback for incorrect answer', function(){
+      var fb = server.defaultFeedback(createModel(), 'apple');
+      fb.should.eql("Good try, but carrot is the correct answer.");
+    });
   });
 
   describe('createOutcome', function() {
 
     it('should not show any feedback', function() {
       var expected, response;
-      response = server.createOutcome(_.cloneDeep(component), "apple", helper.settings(false, true, true));
+      response = server.createOutcome(createModel(), "apple", helper.settings(false, true, true));
       expected = {
         correctness: "incorrect",
         score: 0
@@ -89,7 +106,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to a correct answer', function() {
       var expected, response;
-      response = server.createOutcome(_.cloneDeep(component), "carrot", helper.settings(true, true, true));
+      response = server.createOutcome(createModel(), "carrot", helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -104,7 +121,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to a second correct answer', function() {
       var expected, response;
-      response = server.createOutcome(_.cloneDeep(component), "banana", helper.settings(true, true, true));
+      response = server.createOutcome(createModel(), "banana", helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -118,7 +135,7 @@ describe('inline-choice server logic', function() {
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
-      var response = server.createOutcome(_.cloneDeep(component), "apple", helper.settings(true, true, true));
+      var response = server.createOutcome(createModel(), "apple", helper.settings(true, true, true));
       var expected = {
         correctness: "incorrect",
         score: 0,
@@ -133,7 +150,7 @@ describe('inline-choice server logic', function() {
 
     it('should respond to an incorrect response (do not show correct too)', function() {
       var expected, response;
-      response = server.createOutcome(_.cloneDeep(component), "apple", helper.settings(true, true, false));
+      response = server.createOutcome(createModel(), "apple", helper.settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -145,10 +162,10 @@ describe('inline-choice server logic', function() {
       response.should.eql(expected);
     });
 
-    it('should respond to an incorrect response with correct answer in default feedback if feedbackType is default',
+    it('should respond to an incorrect response with random correct answer in default feedback if feedbackType is default',
       function() {
         var expected, response;
-        response = server.createOutcome(_.cloneDeep(component), "lemon", helper.settings(true, true, false));
+        response = server.createOutcome(createModel(), "lemon", helper.settings(true, true, false));
         expected = {
           correctness: "incorrect",
           score: 0,

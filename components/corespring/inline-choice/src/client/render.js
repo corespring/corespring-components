@@ -50,22 +50,10 @@ link = function($sce, $timeout) {
       });
     }
 
-    function ensureCorrectResponseIsArray(question) {
-      if (_.isArray(question.correctResponse)) {
-        return;
-      }
-      if (_.isString(question.correctResponse) && question.correctResponse.trim().length > 0) {
-        question.correctResponse = [question.correctResponse];
-        return;
-      }
-      question.correctResponse = [];
-    }
-
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
-        ensureCorrectResponseIsArray(scope.question);
         scope.session = dataAndSession.session || {};
 
         var stash = scope.session.stash = scope.session.stash || {};
