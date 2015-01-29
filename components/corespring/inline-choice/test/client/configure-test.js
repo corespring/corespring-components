@@ -16,25 +16,53 @@ describe('corespring:inline-choice:configure', function() {
 
   function createTestModel() {
     return {
-      "componentType" : "corespring-inline-choice",
+      "componentType": "corespring-inline-choice",
       "title": "Less Fruits",
-      "weight" : 1,
-      "correctResponse" : ["mc_2", "mc_4"],
-      "feedback" : [
-        { "value" : "mc_1", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
-        { "value" : "mc_2", "feedback" : "Looking good buddy", "feedbackType": "custom"},
-        { "value" : "mc_3", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
-        { "value" : "mc_4", "feedback" : "Looking good buddy", "feedbackType": "default"}
+      "weight": 1,
+      "correctResponse": ["mc_2", "mc_4"],
+      "feedback": [
+        {
+          "value": "mc_1",
+          "feedback": "Looking bad buddy",
+          "feedbackType": "custom"
+        },
+        {
+          "value": "mc_2",
+          "feedback": "Looking good buddy",
+          "feedbackType": "custom"
+        },
+        {
+          "value": "mc_3",
+          "feedback": "Looking bad buddy",
+          "feedbackType": "custom"
+        },
+        {
+          "value": "mc_4",
+          "feedback": "Looking good buddy",
+          "feedbackType": "default"
+        }
       ],
-      "model" : {
+      "model": {
         "config": {
           "shuffle": true
         },
         "choices": [
-          {"label": "Banana", "value": "mc_1"},
-          {"label": "Carrot", "value": "mc_2"},
-          {"label": "Apple", "value": "mc_3"},
-          {"label": "Lemon", "value": "mc_4"}
+          {
+            "label": "Banana",
+            "value": "mc_1"
+          },
+          {
+            "label": "Carrot",
+            "value": "mc_2"
+          },
+          {
+            "label": "Apple",
+            "value": "mc_3"
+          },
+          {
+            "label": "Lemon",
+            "value": "mc_4"
+          }
         ]
       }
     };
@@ -117,7 +145,7 @@ describe('corespring:inline-choice:configure', function() {
     it('the new feedback should also be in the fullModel', function() {
       scope.addChoice();
       var uid = scope.model.choices[3].value;
-      var fb = _.find(scope.fullModel.feedback, function(fb){
+      var fb = _.find(scope.fullModel.feedback, function(fb) {
         return fb.value === uid;
       });
       expect(fb).toBeDefined();
@@ -125,7 +153,7 @@ describe('corespring:inline-choice:configure', function() {
     });
   });
 
-  describe('removeChoice', function(){
+  describe('removeChoice', function() {
     beforeEach(function() {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
@@ -140,45 +168,45 @@ describe('corespring:inline-choice:configure', function() {
       expect(scope.model.choices.length).toEqual(3);
     });
 
-    it('should remove the choice from correctAnswers', function(){
+    it('should remove the choice from correctAnswers', function() {
       var uid = scope.model.choices[1].value;
       expect(scope.fullModel.correctResponse.length).toEqual(2);
       scope.removeChoice(scope.model.choices[1]);
       expect(scope.fullModel.correctResponse.length).toEqual(1);
     });
 
-    it('should remove the feedback too', function(){
+    it('should remove the feedback too', function() {
       var uid = scope.model.choices[1].value;
       scope.removeChoice(scope.model.choices[1]);
       var fb = scope.feedback[uid];
       expect(fb).toBeUndefined();
     });
 
-    it('should remove the feedback from fullModel too', function(){
+    it('should remove the feedback from fullModel too', function() {
       var uid = scope.model.choices[1].value;
       scope.removeChoice(scope.model.choices[1]);
-      var fb = _.find(scope.fullModel.feedback, function(fb){
+      var fb = _.find(scope.fullModel.feedback, function(fb) {
         return fb.value === uid;
       });
       expect(fb).toBeUndefined();
     });
   });
 
-  describe('toggleCorrect', function(){
+  describe('toggleCorrect', function() {
     beforeEach(function() {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
     });
 
-    it('should remove a correct answer', function(){
+    it('should remove a correct answer', function() {
       var correctChoice = scope.model.choices[1];
       var uid = correctChoice.value;
       expect(scope.fullModel.correctResponse).toContain(uid);
       scope.toggleCorrectResponse(correctChoice);
-      expect(scope.fullModel.correctResponse  ).not.toContain(uid);
+      expect(scope.fullModel.correctResponse).not.toContain(uid);
     });
 
-    it('should add an incorrect answer', function(){
+    it('should add an incorrect answer', function() {
       var incorrectChoice = scope.model.choices[0];
       var uid = incorrectChoice.value
       expect(scope.fullModel.correctResponse).not.toContain(uid);
