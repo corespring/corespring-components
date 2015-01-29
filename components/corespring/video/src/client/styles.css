@@ -48,8 +48,16 @@
     padding-right: 5px;
     border-spacing: 5px;
     border-collapse: separate;
-    font-size: 10px;
-    cursor: pointer; cursor: hand;
+    font-size: 12px;
+    cursor: pointer; 
+    margin: 0;
+}
+
+.sizing-table .btn-default{
+    padding:10px 5px;
+}
+.cs-video-config .sizing-table tr{
+    margin-top:0.25em;
 }
 
 .cs-video-config .sizing-table .selected {
@@ -61,12 +69,16 @@
 }
 
 .cs-video-config .video-icon-td {
-    padding: 5px;
-    border: 1px solid #000000;
     vertical-align: middle;
-    text-align: center;
-    width: 40px;
-    height: 40px;
+}
+
+.cs-video-config .video-label-td {
+    border: none;
+    padding: 0;
+}
+
+.cs-video-config td.video-label-td:hover {
+    cursor: auto;
 }
 
 .cs-video-config .preview-video {
