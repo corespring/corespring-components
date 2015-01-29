@@ -66,7 +66,7 @@ describe('inline-choice', function() {
       .call(done);
   });
 
-  describe.only('multiple correct', function(){
+  describe('multiple correct', function(){
     function assertChoice(choiceLabel, expectedCorrectness){
       return browser
         .selectInlineChoice("1", choiceLabel)
