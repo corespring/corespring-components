@@ -46,16 +46,46 @@ describe('expressionize', function() {
     result.should.eql("12*(x)+3");
   });
 
-  it('inserts * where adequate in a simple expression', function() {
+  it('inserts * after 12', function() {
     var eq = "12x+3";
     var result = server.expressionize(eq, 'x');
     result.should.eql("12*(x)+3");
   });
 
-  it('inserts * where adequate in a complex expression', function() {
+  it('inserts * before 12', function() {
+    var eq = "x12+3";
+    var result = server.expressionize(eq, 'x');
+    result.should.eql("(x)*12+3");
+  });
+
+  it('inserts * after 5 and before 12', function() {
+    var eq = "5x12+3";
+    var result = server.expressionize(eq, 'x');
+    result.should.eql("5*(x)*12+3");
+  });
+
+  it('inserts * after (10-5)', function() {
     var eq = "(10-5)x+(32/4)";
     var result = server.expressionize(eq, 'x');
     result.should.eql("(10-5)*(x)+(32/4)");
+  });
+
+  it('inserts * after (x-5)', function() {
+    var eq = "(x-5)(x+5)";
+    var result = server.expressionize(eq, 'x');
+    result.should.eql("((x)-5)*((x)+5)");
+  });
+
+  it('inserts * after 3', function() {
+    var eq = "3(2+1)";
+    var result = server.expressionize(eq, 'x');
+    result.should.eql("3*(2+1)");
+  });
+
+  it('inserts * before 3', function() {
+    var eq = "(2+1)3";
+    var result = server.expressionize(eq, 'x');
+    result.should.eql("(2+1)*3");
   });
 });
 

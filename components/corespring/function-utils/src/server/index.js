@@ -3,38 +3,24 @@
 var _ = require('lodash');
 var mathjs = require('mathjs')();
 
-var trimSpaces = function(s) {
+function trimSpaces(s) {
   return s.replace(/\s+/g, "");
-};
+}
 
-var replaceVar = function(expression, variable) {
-  var m;
+function replaceVarWithX(expression, variable) {
+  return expression.replace(new RegExp(variable, "g"), "(x)");
+}
 
-  var patternMatch = function(pattern) {
-    return pattern.exec(expression);
-  };
-
-  m = patternMatch(new RegExp(".*?([0-9)])" + variable + "([(0-9]).*"));
-  if (m) {
-    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable + "[(0-9]"), m[1] + "*(x)*" + m[2]), variable);
-  }
-
-  m = patternMatch(new RegExp(".*?([0-9)])" + variable + ".*"));
-  if (m) {
-    return replaceVar(expression.replace(new RegExp("[0-9)]" + variable), m[1] + "*(x)"), variable);
-  }
-
-  m = patternMatch(new RegExp(".*?" + variable + "([(0-9]).*"));
-  if (m) {
-    return replaceVar(expression.replace(variable + "[(0-9]", "(x)*" + m[2]), variable);
-  }
-
-  return expression;
-};
+function makeMultiplicationExplicit(eq) {
+  return eq
+    .replace(/([0-9)])\(/g, "$1*(")
+    .replace(/\)([0-9(])/g, ")*$1");
+}
 
 exports.expressionize = function(eq, varname) {
   eq = trimSpaces(eq);
-  eq = replaceVar(eq, varname);
+  eq = replaceVarWithX(eq, varname);
+  eq = makeMultiplicationExplicit(eq);
   return eq;
 };
 
@@ -128,9 +114,17 @@ exports.isEquationCorrect = function(correctEquation, testEquation, options) {
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var correctY = mathjs['eval'](expr1, {x: x});
-      var leftValue = mathjs['eval'](leftSideExpression, {x: x, y: correctY});
-      var rightValue = mathjs['eval'](rightSideExpression, {x: x, y: correctY});
+      var correctY = mathjs['eval'](expr1, {
+        x: x
+      });
+      var leftValue = mathjs['eval'](leftSideExpression, {
+        x: x,
+        y: correctY
+      });
+      var rightValue = mathjs['eval'](rightSideExpression, {
+        x: x,
+        y: correctY
+      });
 
       if (!closeEnough(sigfigs)(leftValue, rightValue)) {
         return true;
