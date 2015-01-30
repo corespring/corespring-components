@@ -27,7 +27,7 @@ module.exports = (grunt) ->
         baseUrl: "http://localhost:9000"
         defaultTimeout: 2000
       saucelabs:
-        defaultTimeout: 4000
+        defaultTimeout: grunt.option('defaultTimeout') || 5000
         local: false
         #If local is false we have to provide the user/key for saucelabs
         user: process.env.SAUCE_USERNAME
