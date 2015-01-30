@@ -86,6 +86,28 @@ describe('corespring', function() {
         expect($(element).find('.panel.feedback').length).toBe(0);
       });
 
+      it('order of choices are restored from existing session', function() {
+        var modelWithSession = _.cloneDeep(verticalModel);
+        modelWithSession.session = {
+          answers: ['c','a','b','d']
+        };
+        setModelAndDigest(modelWithSession);
+        expect(_.pluck(element.scope().local.choices, 'id')).toEqual(modelWithSession.session.answers);
+      });
+
+      it('change handler is called when answer changes', function() {
+        var mock = {handler: function() {} };
+        spyOn(mock, 'handler');
+
+        container.elements['1'].answerChangedHandler(mock.handler);
+
+        setModelAndDigest(verticalModel);
+        scope.local.choices = ['c','a','b','d'];
+        scope.$apply();
+        expect(mock.handler).toHaveBeenCalled();
+      });
+
+
       describe('vertical layout', function() {
         it('renders by default', function() {
           setModelAndDigest(verticalModel);

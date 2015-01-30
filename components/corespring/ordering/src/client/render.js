@@ -44,20 +44,33 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           scope.resetChoices(scope.rawModel);
 
 
-          if (dataAndSession.session && dataAndSession.session.answers && scope.model.config.placementType === 'placement') {
-
-            // Build up the landing places with the selected choices
-            _.each(dataAndSession.session.answers, function(v, k) {
-              scope.landingPlaceChoices[k] = _.map(v, scope.choiceForId);
-            });
-
-            // Remove choices that are in landing place area
-            scope.local.choices = _.filter(scope.local.choices, function(choice) {
-              var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
-                return _.pluck(c, 'id').indexOf(choice.id) >= 0;
+          if (dataAndSession.session && dataAndSession.session.answers) {
+            if (scope.model.config.placementType === 'placement') {
+              // Build up the landing places with the selected choices
+              _.each(dataAndSession.session.answers, function(v, k) {
+                scope.landingPlaceChoices[k] = _.map(v, scope.choiceForId);
               });
-              return _.isUndefined(landingPlaceWithChoice);
-            });
+
+              // Remove choices that are in landing place area
+              scope.local.choices = _.filter(scope.local.choices, function(choice) {
+                var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
+                  return _.pluck(c, 'id').indexOf(choice.id) >= 0;
+                });
+                return _.isUndefined(landingPlaceWithChoice);
+              });
+            } else {
+              var choices = [];
+              _.each(dataAndSession.session.answers, function(a) {
+                var choice = _.find(scope.local.choices, function(c) {
+                  return c.id === a;
+                });
+                if (choice) {
+                  choices.push(choice);
+                }
+              });
+              scope.local.choices = choices;
+            }
+
           }
         },
 
