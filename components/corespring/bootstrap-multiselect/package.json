@@ -5,7 +5,7 @@
   "dependencies": {
     "client": {
       "bootstrap-multiselect": {
-        "version": "*",
+        "version": "0.9.9",
         "file": "js/bootstrap-multiselect.js"
       }
     }
