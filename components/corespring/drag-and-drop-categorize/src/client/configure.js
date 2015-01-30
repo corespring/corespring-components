@@ -1,14 +1,10 @@
-/* global exports, console */
-
 var main = [
   'ChoiceTemplates',
   'MathJaxService',
   'ComponentImageService',
   function(ChoiceTemplates,
-           MathJaxService,
-           ComponentImageService) {
-
-    "use strict";
+    MathJaxService,
+    ComponentImageService) {
 
     var displayPanel = [
       '<form class="form-horizontal" role="form">',
@@ -237,26 +233,23 @@ var main = [
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
 
-            var categoryById = function(cid) {
+            function categoryById(cid) {
               return _.find(model.model.categories, function(c) {
                 return c.id === cid;
               });
-            };
+            }
 
             $scope.correctMap = {};
-            console.log("Correct response is ", model.correctResponse);
             _.each(model.correctResponse, function(val, catId) {
               _.each(val, function(cr) {
                 $scope.correctMap[cr] = $scope.correctMap[cr] || [];
                 $scope.correctMap[cr].push(categoryById(catId));
               });
             });
-            console.log("Correct map  is ", $scope.correctMap);
 
             $scope.updatePartialScoringModel(sumCorrectResponses());
 
             $scope.componentState = "initialized";
-            console.log(model);
           },
           getModel: function() {
             var model = _.cloneDeep($scope.fullModel);
@@ -264,7 +257,6 @@ var main = [
           },
 
           getAnswer: function() {
-            console.log("returning answer for: Drag and drop");
             return {};
           }
         };
@@ -290,10 +282,10 @@ var main = [
           delete $scope.correctMap[c.id];
         };
 
-        function findFreeChoiceSlot(){
+        function findFreeChoiceSlot() {
           var slot = 0;
-          var ids = _.pluck($scope.model.choices, 'id');
-          while(_.contains(ids, "choice_" + slot)){
+          var usedSlots = _.pluck($scope.model.choices, 'id');
+          while (_.contains(usedSlots, "choice_" + slot)) {
             slot++;
           }
           return slot;
@@ -324,10 +316,10 @@ var main = [
           MathJaxService.parseDomForMath(0); //TODO on every model change?
         }, true);
 
-        function findFreeCategorySlot(){
-          var slot = 0;
-          var ids = _.pluck($scope.model.categories, 'id');
-          while(_.contains(ids, "cat_" + slot)){
+        function findFreeCategorySlot() {
+          var slot = 1; //categories start at 1
+          var usedSlots = _.pluck($scope.model.categories, 'id');
+          while (_.contains(usedSlots, "cat_" + slot)) {
             slot++;
           }
           return slot;
@@ -346,7 +338,7 @@ var main = [
         $scope.leftPanelClosed = false;
         $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
       }
-  };
+    };
   }
 ];
 
