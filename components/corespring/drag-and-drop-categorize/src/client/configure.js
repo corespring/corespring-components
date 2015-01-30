@@ -292,8 +292,8 @@ var main = [
 
         function findFreeChoiceSlot(){
           var slot = 0;
-          var ids = _.pluck($scope.model.choices, 'id');
-          while(_.contains(ids, "choice_" + slot)){
+          var usedSlots = _.pluck($scope.model.choices, 'id');
+          while(_.contains(usedSlots, "choice_" + slot)){
             slot++;
           }
           return slot;
@@ -325,9 +325,9 @@ var main = [
         }, true);
 
         function findFreeCategorySlot(){
-          var slot = 0;
-          var ids = _.pluck($scope.model.categories, 'id');
-          while(_.contains(ids, "cat_" + slot)){
+          var slot = 1; //categories start at 1
+          var usedSlots = _.pluck($scope.model.categories, 'id');
+          while(_.contains(usedSlots, "cat_" + slot)){
             slot++;
           }
           return slot;

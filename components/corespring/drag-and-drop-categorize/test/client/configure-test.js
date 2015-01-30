@@ -99,4 +99,52 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
     });
   });
 
+  describe('removeCategory', function(){
+    beforeEach(function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+    });
+    it('should have a category in the beginning', function(){
+      expect(scope.model.categories.length).toEqual(1);
+    });
+    it('should remove a category', function(){
+      scope.removeCategory(scope.model.categories[0]);
+      expect(scope.model.categories.length).toEqual(0);
+    });
+    it('should remove the category from the correctResponse', function(){
+      var cat = scope.model.categories[0];
+      expect(scope.fullModel.correctResponse[cat.id]).toBeDefined();
+      scope.removeCategory(cat);
+      expect(scope.fullModel.correctResponse[cat.id]).toBeUndefined();
+    });
+  });
+
+  describe('addCategory', function(){
+    beforeEach(function(){
+      var testModel = createTestModel();
+      testModel.correctResponse = {};
+      testModel.model.categories = [];
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+    });
+    it('should not have a category in the beginning', function(){
+      expect(scope.model.categories.length).toEqual(0);
+    });
+    it('should add a category', function(){
+      scope.addCategory();
+      expect(scope.model.categories.length).toEqual(1);
+    });
+    it('the new category should have default label Category 1', function(){
+      scope.addCategory();
+      expect(scope.model.categories[0].label).toEqual('Category 1');
+    });
+    it('a second new category should have label Category 2', function(){
+      scope.addCategory();
+      scope.addCategory();
+      expect(scope.model.categories[1].label).toEqual('Category 2');
+    });
+
+  });
+
 });
