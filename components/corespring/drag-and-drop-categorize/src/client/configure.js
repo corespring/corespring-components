@@ -1,5 +1,3 @@
-/* global exports, console */
-
 var main = [
   'ChoiceTemplates',
   'MathJaxService',
@@ -7,8 +5,6 @@ var main = [
   function(ChoiceTemplates,
     MathJaxService,
     ComponentImageService) {
-
-    "use strict";
 
     var displayPanel = [
       '<form class="form-horizontal" role="form">',
