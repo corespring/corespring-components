@@ -1,0 +1,49 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "corespring-ordering",
+        "title": "",
+        "feedback": {
+          "correctFeedbackType": "default",
+          "partialFeedbackType": "default",
+          "incorrectFeedbackType": "default"
+        },
+        "allowPartialScoring": true,
+        "partialScoring" : [
+          {"numberOfCorrect": 1, "scorePercentage": 25},
+          {"numberOfCorrect": 2, "scorePercentage": 50},
+          {"numberOfCorrect": 3, "scorePercentage": 75}
+        ],
+        "model": {
+          "choices": [
+            {
+              "label": "First",
+              "labelType": "text",
+              "id": "c1"
+            },
+            {
+              "label": "Second",
+              "labelType": "text",
+              "id": "c2"
+            },
+            {
+              "label": "Third \\( 3x\\ne4 \\)",
+              "labelType": "text",
+              "id": "c3"
+            }
+          ],
+          "config": {
+            "shuffle": false,
+            "choiceAreaLayout": "vertical",
+            "choiceAreaLabel": "Choice Label",
+            "answerAreaLabel": "Answer Label",
+            "placementType": "inPlace"
+          }
+        },
+        "weight": 1
+      }
+    },
+    "xhtml": "<corespring-ordering id=\"1\"></corespring-ordering>"
+  }
+}
