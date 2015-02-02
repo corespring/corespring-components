@@ -40,7 +40,7 @@
 }
 
 .cs-video-config .description {
-    text-align: center;
+    padding: 15px;
     margin-bottom: 10px;
 }
 
@@ -91,6 +91,16 @@
     border: 1px solid #000000;
 }
 
+.cs-video-config .preview-thumbnail-view,
+.cs-video-config .preview-thumbnails{
+    display: inline-block;
+    margin-top: 1em;
+
+}
+
+.cs-video-config .preview-thumbnails{
+    vertical-align: top
+}
 .cs-video-config .blank-video {
     border: 1px solid #000000;
     text-align: center;
