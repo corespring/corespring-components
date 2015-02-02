@@ -99,7 +99,7 @@ var main = [
         '          data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets">',
         '          <div class="delete-icon">',
-        '            <i ng-click="removeTarget(choice)" class="fa fa-times-circle"></i>',
+        '            <i ng-click="removeTarget(choice)" class="fa fa-trash-o"></i>',
         '          </div>',
         '          <span ng-bind-html-unsafe="choice.label"></span>',
         '        </li>',
