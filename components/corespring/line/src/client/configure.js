@@ -175,7 +175,7 @@ var main = [
         '  </div>',
            linesBlock,
            graphAttributes,
-        '  <a class="reset-defaults" ng-click="resetDefaults()">Reset to default values</a>',
+        '  <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
            feedback,
         '</div>'
       ].join('\n')
