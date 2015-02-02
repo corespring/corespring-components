@@ -18,7 +18,7 @@ var main = [
       '  </div>',
       '  <div class="container-fluid container-choices">',
       '    <div class="row">',
-      '      <div class="text-right v-offset-2 col-xs-offset-9 col-xs-3">',
+      '      <div class="text-center v-offset-2 col-xs-offset-9 col-xs-3">',
       '        Check correct<br/>answer',
       '      </div>',
       '    </div>',
