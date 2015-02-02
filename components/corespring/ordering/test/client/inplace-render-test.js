@@ -22,7 +22,7 @@ describe('corespring', function() {
           "prompt": "What is the correct order of the letters below?",
           "config": {
             "choiceAreaLabel": "Label",
-            "shuffle": true
+            "shuffle": false
           },
           "choices": [
             {"label": "A", "id": "a"},
@@ -89,20 +89,21 @@ describe('corespring', function() {
       it('order of choices are restored from existing session', function() {
         var modelWithSession = _.cloneDeep(verticalModel);
         modelWithSession.session = {
-          answers: ['c','a','b','d']
+          answers: ['c', 'a', 'b', 'd']
         };
         setModelAndDigest(modelWithSession);
         expect(_.pluck(element.scope().local.choices, 'id')).toEqual(modelWithSession.session.answers);
       });
 
       it('change handler is called when answer changes', function() {
-        var mock = {handler: function() {} };
+        var mock = {handler: function() {
+        } };
         spyOn(mock, 'handler');
 
         container.elements['1'].answerChangedHandler(mock.handler);
 
         setModelAndDigest(verticalModel);
-        scope.local.choices = ['c','a','b','d'];
+        scope.local.choices = ['c', 'a', 'b', 'd'];
         scope.$apply();
         expect(mock.handler).toHaveBeenCalled();
       });
@@ -131,7 +132,7 @@ describe('corespring', function() {
 
         it('correct answer is visible after submitting an incorrect answer', function() {
           setModelAndDigest(horizontalModel);
-          setResponseAndDigest({correctness: 'incorrect', correctClass: 'incorrect', correctResponse: ['a','b','c','d']});
+          setResponseAndDigest({correctness: 'incorrect', correctClass: 'incorrect', correctResponse: ['a', 'b', 'c', 'd']});
           expect(element.scope().correctChoices.length).toBe(4);
         });
 
@@ -163,13 +164,13 @@ describe('corespring', function() {
 
         it('correct answer is visible after submitting an incorrect answer', function() {
           setModelAndDigest(horizontalModel);
-          setResponseAndDigest({correctness: 'incorrect', correctClass: 'incorrect', correctResponse: ['a','b','c','d']});
+          setResponseAndDigest({correctness: 'incorrect', correctClass: 'incorrect', correctResponse: ['a', 'b', 'c', 'd']});
           expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(false);
         });
 
         it('correct answer is not visible after submitting a correct answer', function() {
           setModelAndDigest(horizontalModel);
-          setResponseAndDigest({correctness: 'correct', correctClass: 'correct', correctResponse: ['a','b','c','d']});
+          setResponseAndDigest({correctness: 'correct', correctClass: 'correct', correctResponse: ['a', 'b', 'c', 'd']});
           expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(true);
         });
 
@@ -219,6 +220,73 @@ describe('corespring', function() {
           setResponseAndDigest({correctness: 'incorrect', correctClass: 'partial', feedback: "Partial", correctResponse: ['a', 'c', 'b', 'd']});
           expect(element.find('.container-border .correct').length).toBe(2);
         });
+      });
+
+      describe('undo / start over', function() {
+
+        it('undo undoes the last step', function() {
+          setModelAndDigest(verticalModel);
+          scope.local.choices = ['c', 'a', 'b', 'd'];
+          scope.$digest();
+          scope.local.choices = ['a', 'c', 'b', 'd'];
+          scope.$digest();
+          scope.undo();
+          scope.$digest();
+          expect(scope.local.choices).toEqual(['c', 'a', 'b', 'd']);
+        });
+
+        it('undo undoes multiple steps', function() {
+          setModelAndDigest(verticalModel);
+          scope.local.choices = ['c', 'a', 'b', 'd'];
+          scope.$digest();
+          scope.local.choices = ['a', 'c', 'b', 'd'];
+          scope.$digest();
+          scope.local.choices = ['a', 'b', 'c', 'd'];
+          scope.$digest();
+          scope.local.choices = ['a', 'b', 'd', 'c'];
+          scope.$digest();
+
+          scope.undo();
+          scope.$digest();
+          expect(scope.local.choices).toEqual(['a', 'b', 'c', 'd']);
+
+          scope.undo();
+          scope.$digest();
+          expect(scope.local.choices).toEqual(['a', 'c', 'b', 'd']);
+
+          scope.undo();
+          scope.$digest();
+          expect(scope.local.choices).toEqual(['c', 'a', 'b', 'd']);
+        });
+
+        it('undo has no effect if there has been no choice swapping', function() {
+          setModelAndDigest(verticalModel);
+          scope.$digest();
+          var originalChoices = scope.local.choices;
+          scope.undo();
+          scope.$digest();
+          expect(_.pluck(scope.local.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
+        });
+
+        it('start over restores original state', function() {
+          setModelAndDigest(verticalModel);
+          scope.$digest();
+          var originalChoices = scope.local.choices;
+          scope.local.choices = ['c', 'a', 'b', 'd'];
+          scope.$digest();
+          scope.local.choices = ['a', 'c', 'b', 'd'];
+          scope.$digest();
+          scope.local.choices = ['a', 'b', 'c', 'd'];
+          scope.$digest();
+          scope.local.choices = ['a', 'b', 'd', 'c'];
+          scope.$digest();
+
+          scope.startOver();
+          scope.$digest();
+          expect(_.pluck(scope.local.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
+        });
+
+
       });
 
     });

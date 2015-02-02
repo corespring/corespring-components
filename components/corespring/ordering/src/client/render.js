@@ -124,16 +124,21 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
         }
       });
 
+      scope.$watch('local.choices', function(n, o) {
+        var state = { choices: _.cloneDeep(scope.local.choices),
+          landingPlaces: []
+        };
+        if (n && !_.isEqual(state, _.last(scope.stack))) {
+          scope.stack.push(state);
+        }
+      }, true);
+
       scope.sortableOptions = {
         disabled: false,
         start: function(e, ui) {
           if (scope.model.config.choiceAreaLayout === "horizontal") {
             $(e.target).data("ui-sortable").floating = true;
           }
-        },
-        stop: function(e, ui) {
-          scope.stack.push({choices: _.cloneDeep(scope.local.choices), landingPlaces: []});
-          scope.$apply();
         }
       };
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
