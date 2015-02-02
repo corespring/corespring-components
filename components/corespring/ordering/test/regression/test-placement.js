@@ -8,9 +8,9 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('ordering', function() {
+describe('placement ordering', function() {
 
-  var itemJsonFilename = 'one.json';
+  var itemJsonFilename = 'placement.json';
   var divContaining = function(s) {
     return "//div[text()[contains(., '" + s + "')]]";
   };
