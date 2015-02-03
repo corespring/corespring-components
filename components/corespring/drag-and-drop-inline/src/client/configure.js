@@ -5,8 +5,8 @@ var main = [
   'ChoiceTemplates',
   'ComponentImageService',
   function($timeout,
-           ChoiceTemplates,
-           ComponentImageService
+    ChoiceTemplates,
+    ComponentImageService
   ) {
 
     "use strict";
@@ -63,18 +63,30 @@ var main = [
     ].join("\n");
 
     var answerAreas = [
-      '<ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets"',
-      '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
-      '  <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets">',
-      '    <div class="delete-icon">',
-      '      <i ng-click="removeTarget(choice)" class="fa fa-times-circle"></i>',
+      '<div class="row" ng-repeat="answerArea in model.answerAreas">',
+      '  <div class="col-xs-12 answer-area">',
+      '    <div class="remove-button" ng-click="removeAnswerArea(answerArea)"><i class="fa fa-times-circle"></i></div>',
+      '    <div><label class="control-label">Problem {{($index+1)}}</label></div>',
+      '    <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets[answerArea.id]"',
+      '        data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
+      '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets[answerArea.id]">',
+      '        <div class="delete-icon">',
+      '          <i ng-click="removeTarget(answerArea.id, $index)" class="fa fa-times-circle"></i>',
+      '        </div>',
+      '        <span ng-bind-html-unsafe="choice.label"></span>',
+      '      </li>',
+      '    </ul>',
+      '    <div class="zero-state" ng-show="targets[answerArea.id].length == 0">',
+      '      Drag and order correct answers here.',
       '    </div>',
-      '    <span ng-bind-html-unsafe="choice.label"></span>',
-      '  </li>',
-      '</ul>',
-      '<div class="zero-state" ng-show="targets.length == 0">',
-      '  Drag and order correct answers here.',
-      '</div>'
+      '  </div>',
+      '</div>',
+      '<div class="row">',
+      ' <div class="col-xs-12">',
+      '   <button id="add-choice" class="btn btn-default" ',
+      '     ng-click="addAnswerArea()">Add Problem Area</button>',
+      '   </div>',
+      ' </div>'
     ].join("\n");
 
     var designOptions = [
@@ -172,22 +184,67 @@ var main = [
         ChoiceTemplates.extendScope($scope, 'corespring-drag-and-drop-inline');
 
         $scope.layouts = [
-          {name: "Horizontal", value: "horizontal"},
-          {name: "Vertical", value: "vertical"}
+          {
+            name: "Horizontal",
+            value: "horizontal"
+          },
+          {
+            name: "Vertical",
+            value: "vertical"
+          }
         ];
 
         $scope.targetDragging = false;
 
-        function initTargets() {
-          $scope.targets = _.map($scope.fullModel.correctResponse, function() {
-            return _.find($scope.model.choices, function(choice) {
-              return choice.id === id;
+        function findChoice(id) {
+          var result = _.find($scope.model.choices, function(choice) {
+            return choice.id === id;
+          });
+          return result;
+        }
+
+        function isChoiceInTargets(id){
+          var result = false;
+          _.forEach($scope.targets, function(choiceIds, answerAreaId){
+            if(_.contains(choiceIds, id)){
+              result = true;
+            }
+          });
+          return result;
+        }
+
+        function fromCorrectResponseToTargets(correctResponse){
+          var targets = {};
+          _.forEach(correctResponse, function(choiceIds, answerAreaId) {
+            targets[answerAreaId] = _.map(choiceIds, function(id){
+              //clone to be able to add a choice multiple times
+              return _.clone(findChoice(id));
             });
           });
+          return targets;
+        }
+
+        function fromTargetsToCorrectResponse(targets){
+          var correctResponse = {};
+          _.forEach(targets, function(choices, answerAreaId) {
+            correctResponse[answerAreaId] = _.pluck(choices, 'id');
+          });
+          return correctResponse;
+        }
+
+        function initTargets() {
+          var targets = fromCorrectResponseToTargets($scope.fullModel.correctResponse);
+          $scope.targets = targets;
         }
 
         function getNumberOfCorrectResponses() {
-          return $scope.fullModel && $scope.fullModel.correctResponse ? $scope.fullModel.correctResponse.length : 0;
+          var result = 0;
+          if($scope.fullModel && $scope.fullModel.correctResponse){
+            _.forEach($scope.fullModel.correctResponse, function(choiceIds, answerAreaId){
+              result += choiceIds.length;
+            });
+          }
+          return result;
         }
 
         $scope.containerBridge = {
@@ -204,12 +261,12 @@ var main = [
 
         $scope.droppableOptions = {
           accept: function() {
-            var contains = _($scope.targets).pluck('id').contains($scope.draggging);
-            return !$scope.targetDragging && !contains;
+            var choiceIsInTargets = isChoiceInTargets($scope.draggging);
+            return !$scope.targetDragging && !choiceIsInTargets;
           }
         };
 
-        function setRemoveAfterPlacingVisibility(ui, visibility){
+        function setRemoveAfterPlacingVisibility(ui, visibility) {
           ui.item.find('.remove-after-placing').css('visibility', visibility);
         }
 
@@ -220,7 +277,8 @@ var main = [
             $scope.draggging = li.data('choice-id');
             setRemoveAfterPlacingVisibility(ui, 'hidden');
           },
-          stop: function(event,ui) {
+          stop: function(event, ui) {
+            $scope.dragging = '';
             setRemoveAfterPlacingVisibility(ui, 'visible');
           }
         };
@@ -235,14 +293,15 @@ var main = [
         };
 
         $scope.activate = function($index, $event) {
-          $event.stopPropagation();
-          $scope.active[$index] = true;
-          $scope.choicesSortableOptions.disabled = true;
-          $timeout(function() {
+          function activateWiggi(){
             var $editable = $($event.target).closest('.sortable-choice').find('.wiggi-wiz-editable');
             $editable.click();
             angular.element($editable).scope().focusCaretAtEnd();
-          });
+          }
+          $event.stopPropagation();
+          $scope.active[$index] = true;
+          $scope.choicesSortableOptions.disabled = true;
+          $timeout(activateWiggi);
         };
 
         $scope.itemClick = function($event) {
@@ -266,44 +325,75 @@ var main = [
           $scope.$emit('mathJaxUpdateRequest');
         };
 
-        function findFreeChoiceSlot(){
+        var choiceIdPrefix = "c_";
+
+        function findFreeChoiceSlot() {
           var slot = 1;
           var ids = _.pluck($scope.model.choices, 'id');
-          while(_.contains(ids, "id_" + slot)){
+          while (_.contains(ids, choiceIdPrefix + slot)) {
             slot++;
           }
           return slot;
         }
 
         $scope.addChoice = function() {
-
           $scope.model.choices.push({
             content: "",
             label: "",
-            id: "id_" + findFreeChoiceSlot(),
-            moveOnDrag: true});
+            id: choiceIdPrefix + findFreeChoiceSlot(),
+            moveOnDrag: true
+          });
         };
+
+        function removeChoiceFromCorrectResponse(choiceId){
+          _.forEach($scope.fullModel.correctResponse, function(choiceIds, answerAreaId){
+            _.remove(choiceIds, choiceId);
+          });
+        }
 
         $scope.removeChoice = function(index) {
           var choice = $scope.model.choices.splice(index, 1);
           var choiceId = choice[0].id;
-          $scope.fullModel.correctResponse = _.filter($scope.fullModel.correctResponse, function(responseId) {
-            return responseId !== choiceId;
-          });
+          removeChoiceFromCorrectResponse(choiceId);
           initTargets();
         };
 
-        $scope.removeTarget = function(choice) {
-          $scope.targets = _.filter($scope.targets, function(c) {
-            return c !== choice;
+        var answerAreaIdPrefix = "aa_";
+
+        function findFreeAnswerAreaSlot() {
+          var slot = 1;
+          var ids = _.pluck($scope.model.answerAreas, 'id');
+          while (_.contains(ids, answerAreaIdPrefix + slot)) {
+            slot++;
+          }
+          return slot;
+        }
+
+        $scope.addAnswerArea = function(){
+          var slot = findFreeAnswerAreaSlot();
+          $scope.model.answerAreas.push({
+            "id": answerAreaIdPrefix + slot,
+            "textBefore": "",
+            "textAfter": ""
           });
         };
 
-        $scope.$watchCollection('targets', function() {
-          var newOrder = _.pluck($scope.targets, 'id');
+        $scope.removeAnswerArea = function(answerArea){
+          var answerAreaId = answerArea.id;
+          _.remove($scope.model.answerAreas, answerArea);
+          delete $scope.targets[answerAreaId];
+          //fullModel.correctResponse is updated through the $watch on targets
+        };
+
+        $scope.removeTarget = function(answerAreaId, choiceIndex) {
+          $scope.targets[answerAreaId].splice(choiceIndex, 1);
+        };
+
+        $scope.$watchCollection('targets', function(newValue) {
+          var newOrder = fromTargetsToCorrectResponse(newValue);
           $scope.fullModel.correctResponse = newOrder;
           $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
-        });
+        }, true);
 
         $scope.init = function() {
           $scope.active = [];
@@ -338,4 +428,3 @@ exports.directives = [
     directive: main
   }
 ];
-

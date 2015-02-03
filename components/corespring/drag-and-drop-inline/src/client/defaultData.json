@@ -1,14 +1,23 @@
 {
   "componentType": "corespring-drag-and-drop-inline",
   "title": "",
-  "correctResponse": [],
+  "correctResponse": {
+    "aa_1": [
+      "c_1",
+      "c_2",
+      "c_2"
+    ],
+    "aa_2": [
+      "c_2"
+    ]
+  },
   "feedback": {
     "correctFeedbackType": "default",
     "partialFeedbackType": "default",
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": true,
-  "partialScoring" : [
+  "partialScoring": [
     {}
   ],
   "model": {
@@ -16,26 +25,38 @@
       {
         "label": "",
         "labelType": "text",
-        "id": "c1",
+        "id": "c_1",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c2",
+        "id": "c_2",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c3",
+        "id": "c_3",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c4",
+        "id": "c_4",
         "moveOnDrag": true
+      }
+    ],
+    "answerAreas": [
+      {
+        "id": "aa_1",
+        "textBefore": "",
+        "textAfter": ""
+      },
+      {
+        "id": "aa_2",
+        "textBefore": "",
+        "textAfter": ""
       }
     ],
     "config": {
