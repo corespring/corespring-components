@@ -1,53 +1,49 @@
 {
   "componentType": "corespring-drag-and-drop-inline",
-  "title": "[Drag and Drop Question Name]",
-  "correctResponse": {
-    "aa_1": []
-  },
+  "title": "",
+  "correctResponse": [],
   "feedback": {
     "correctFeedbackType": "default",
     "partialFeedbackType": "default",
     "incorrectFeedbackType": "default"
   },
-  "allowPartialScoring": false,
+  "allowPartialScoring": true,
   "partialScoring" : [
     {}
   ],
   "model": {
-    "answerAreas": [
-      {
-        "id": "aa_1",
-        "textBefore": "",
-        "textAfter": ""
-      }
-    ],
     "choices": [
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_0"
+        "id": "c1",
+        "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_1"
+        "id": "c2",
+        "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_2"
+        "id": "c3",
+        "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_3"
+        "id": "c4",
+        "moveOnDrag": true
       }
     ],
     "config": {
-      "shuffle": false,
-      "choiceAreaLabel": "Choices",
-      "choiceAreaLayout": "horizontal",
-      "choiceAreaPosition": "below"
+      "shuffle": true,
+      "choiceAreaLayout": "vertical",
+      "choiceAreaLabel": "Choice Label",
+      "answerAreaLabel": "Answer Label",
+      "placementType": "inPlace"
     }
   },
   "weight": 1

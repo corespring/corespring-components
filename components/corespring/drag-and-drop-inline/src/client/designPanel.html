@@ -1,0 +1,124 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <p>
+        In Short Answer &mdash; Drag and Drop, students are asked to complete a sentence, word, phrase or
+        equation using context clues presented in the text that surrounds it.
+      </p>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-xs-6">
+      <label class="control-label">Choices</label>
+    </div>
+    <div class="col-xs-6">
+      <label class="control-label">Problem Areas</label>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-xs-6">
+      <ul class="sortable-choices draggable-choices"
+          ui-sortable="choicesSortableOptions" ng-model="model.choices">
+        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"
+            ng-model="model.choices[$index]" ng-click="itemClick($event)"
+            jqyoui-draggable="{index: {{$index}}, placeholder: 'keep'}"
+            data-jqyoui-options="{revert: 'invalid'}">
+          <div class="blocker" ng-hide="active[$index]">
+            <div class="bg"></div>
+            <div class="content">
+              <ul class="edit-controls">
+                <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true"
+                    tooltip-placement="bottom">
+                  <i ng-click="activate($index, $event)" class="fa fa-pencil"></i>
+                </li>
+                <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"
+                    tooltip-placement="bottom">
+                  <i ng-click="removeChoice($index)" class="fa fa-trash-o"></i>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="remove-after-placing">
+            <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">
+              Remove tile after placing
+            </checkbox>
+          </div>
+          <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>
+
+          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external"
+               features="extraFeatures"
+               parent-selector=".modal-body"
+               image-service="imageService()">
+            <edit-pane-toolbar alignment="bottom">
+              <div class="btn-group pull-right">
+                <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">
+                  Done
+                </button>
+              </div>
+            </edit-pane-toolbar>
+          </div>
+        </li>
+      </ul>
+      <button class="btn btn-default" ng-click="addChoice()">Add a Choice</button>
+    </div>
+    <div class="col-xs-6">
+      <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets"
+          data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">
+        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets">
+          <div class="delete-icon">
+            <i ng-click="removeTarget(choice)" class="fa fa-times-circle"></i>
+          </div>
+          <span ng-bind-html-unsafe="choice.label"></span>
+        </li>
+      </ul>
+      <div class="zero-state" ng-show="targets.length == 0">
+        Drag and order correct answers here.
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-xs-12">
+      <div class="placement-row-group">
+        <div class="row">
+          <div class="col-xs-12">
+            <checkbox class="shuffle" ng-model="model.config.shuffle">Shuffle Tiles</checkbox>
+          </div>
+        </div>
+        <div class="row display-row">
+          <div class="col-xs-12">
+            <label class="control-label">Display:</label>
+            <select ng-model="model.config.choiceAreaLayout" class="form-control"
+                    ng-options="layout.value as layout.name for layout in layouts"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div feedback-panel>
+        <div feedback-selector
+             fb-sel-label="If correct, show"
+             fb-sel-class="correct"
+             fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"
+             fb-sel-custom-feedback="fullModel.feedback.correctFeedback"
+             fb-sel-default-feedback="{{defaultCorrectFeedback}}">
+        </div>
+        <div feedback-selector
+             fb-sel-label="If partially correct, show"
+             fb-sel-class="partial"
+             fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"
+             fb-sel-custom-feedback="fullModel.feedback.partialFeedback"
+             fb-sel-default-feedback="{{defaultPartialFeedback}}">
+        </div>
+        <div feedback-selector
+             fb-sel-label="If incorrect, show"
+             fb-sel-class="incorrect"
+             fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"
+             fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"
+             fb-sel-default-feedback="{{defaultIncorrectFeedback}}">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
