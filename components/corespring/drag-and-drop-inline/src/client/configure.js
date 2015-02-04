@@ -24,7 +24,7 @@ var main = [
       '  <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
       '      ng-model="model.choices[$index]" ng-click="itemClick($event)"',
       '      jqyoui-draggable="choiceDraggableOptions($index)"',
-      '      data-drag="true" data-jqyoui-options="{revert: \'invalid\'}">',
+      '      data-drag="!isActive()" data-jqyoui-options="{revert: \'invalid\'}">',
       '    <div class="blocker" ng-hide="active[$index]">',
       '      <div class="bg"></div>',
       '      <div class="content">',
@@ -49,13 +49,6 @@ var main = [
       '    <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external" features="extraFeatures"',
       '        parent-selector=".modal-body"',
       '        image-service="imageService()">',
-      '      <edit-pane-toolbar alignment="bottom">',
-      '        <div class="btn-group pull-right">',
-      '          <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">',
-      '            Done',
-      '          </button>',
-      '        </div>',
-      '      </edit-pane-toolbar>',
       '    </div>',
       '  </li>',
       '</ul>',
@@ -65,7 +58,7 @@ var main = [
     var answerAreas = [
       '<div class="row" ng-repeat="answerArea in model.answerAreas">',
       '  <div class="col-xs-12 answer-area">',
-      '    <div class="remove-button" ng-click="removeAnswerArea(answerArea)"><i class="fa fa-times-circle"></i></div>',
+      '    <div class="remove-button" ng-click="removeAnswerArea(answerArea)"><i class="fa fa-trash-o"></i></div>',
       '    <div><label class="control-label">Problem {{($index+1)}}</label></div>',
       '    <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets[answerArea.id]"',
       '        data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
@@ -76,7 +69,7 @@ var main = [
       '        <span ng-bind-html-unsafe="choice.label"></span>',
       '      </li>',
       '    </ul>',
-      '    <div class="zero-state" ng-show="targets[answerArea.id].length == 0">',
+      '    <div class="zero-state" ng-show="!targets[answerArea.id].length">',
       '      Drag and order correct answers here.',
       '    </div>',
       '  </div>',
@@ -265,45 +258,25 @@ var main = [
           }
         };
 
-        function setRemoveAfterPlacingVisibility(item, visibility) {
-          item.find('.remove-after-placing').css('visibility', visibility);
+        function setRemoveAfterPlacingVisibility(item, visible) {
+          item.find('.remove-after-placing').css('visibility', visible ? 'visible' : 'hidden');
         }
 
-        function onStartDraggingChoice(event){
-          $scope.dragging = $(event.currentTarget).attr('choice-id');
-          setRemoveAfterPlacingVisibility($(event.currentTarget), 'hidden');
-        }
+        $scope.onStartDraggingChoice = function(event){
+          setRemoveAfterPlacingVisibility($(event.currentTarget), false);
+        };
 
-        function onStopDraggingChoice(event){
-          $scope.dragging = '';
-          setRemoveAfterPlacingVisibility($(event.currentTarget), 'visible');
-        }
-
-        //seems like we have to use short names
-        //otherwise an error is thrown
-        $scope.onStart = onStartDraggingChoice;
-        $scope.onStop = onStopDraggingChoice;
+        $scope.onStopDraggingChoice = function(event){
+          setRemoveAfterPlacingVisibility($(event.currentTarget), true);
+        };
 
         $scope.choiceDraggableOptions = function(index){
           return {
             index: index,
             placeholder: 'keep',
-            onStart: 'onStart',
-            onStop: 'onStop'
+            onStart: 'onStartDraggingChoice(event)',
+            onStop: 'onStopDraggingChoice(event)'
           };
-        };
-
-        $scope.choicesSortableOptions = {
-          disabled: true,
-          start: function(event, ui) {
-            var li = ui.item;
-            $scope.draggging = li.data('choice-id');
-            setRemoveAfterPlacingVisibility(ui, 'hidden');
-          },
-          stop: function(event, ui) {
-            $scope.dragging = '';
-            setRemoveAfterPlacingVisibility(ui, 'visible');
-          }
         };
 
         $scope.targetSortableOptions = {
@@ -323,7 +296,6 @@ var main = [
           }
           $event.stopPropagation();
           $scope.active[$index] = true;
-          $scope.choicesSortableOptions.disabled = true;
           $timeout(activateWiggi);
         };
 
@@ -344,16 +316,22 @@ var main = [
           $scope.active = _.map($scope.model.choices, function() {
             return false;
           });
-          $scope.choicesSortableOptions.disabled = false;
           $scope.$emit('mathJaxUpdateRequest');
         };
 
-        var choiceIdPrefix = "c_";
+        $scope.isActive = function(){
+          return _.contains($scope.active, true);
+        };
+
+
+        function makeChoiceId(slot){
+          return "c_" + slot;
+        }
 
         function findFreeChoiceSlot() {
           var slot = 1;
           var ids = _.pluck($scope.model.choices, 'id');
-          while (_.contains(ids, choiceIdPrefix + slot)) {
+          while (_.contains(ids, makeChoiceId(slot))) {
             slot++;
           }
           return slot;
@@ -363,7 +341,7 @@ var main = [
           $scope.model.choices.push({
             content: "",
             label: "",
-            id: choiceIdPrefix + findFreeChoiceSlot(),
+            id: makeChoiceId(findFreeChoiceSlot()),
             moveOnDrag: true
           });
         };
@@ -381,12 +359,14 @@ var main = [
           initTargets();
         };
 
-        var answerAreaIdPrefix = "aa_";
+        function makeAnswerAreaId(slot){
+          return "aa_" + slot;
+        }
 
         function findFreeAnswerAreaSlot() {
           var slot = 1;
           var ids = _.pluck($scope.model.answerAreas, 'id');
-          while (_.contains(ids, answerAreaIdPrefix + slot)) {
+          while (_.contains(ids, makeAnswerAreaId(slot))) {
             slot++;
           }
           return slot;
@@ -394,11 +374,13 @@ var main = [
 
         $scope.addAnswerArea = function(){
           var slot = findFreeAnswerAreaSlot();
+          var answerAreaId = makeAnswerAreaId(slot);
           $scope.model.answerAreas.push({
-            "id": answerAreaIdPrefix + slot,
+            "id": answerAreaId,
             "textBefore": "",
             "textAfter": ""
           });
+          $scope.targets[answerAreaId] = [];
         };
 
         $scope.removeAnswerArea = function(answerArea){
@@ -409,16 +391,26 @@ var main = [
         };
 
         $scope.removeTarget = function(answerAreaId, choiceIndex) {
-          $scope.targets[answerAreaId].splice(choiceIndex, 1);
+          var targetChoices = $scope.targets[answerAreaId];
+          if(_.isArray(targetChoices)){
+            targetChoices.splice(choiceIndex, 1);
+          } else {
+            console.error("target is not an array?", answerAreaId, choiceIndex, $scope.targets);
+          }
         };
+
 
         var TARGET_ID = 100;
 
+        //to avoid the duplicate id error in the repeater of the answerArea
+        //we are using our own tracking id function, which should never return
+        //a duplicate
         $scope.targetId = function(choice){
           return TARGET_ID++;
         };
 
-        $scope.$watch('targets', function(newValue) {
+        $scope.$watch('targets', function(newValue, oldValue) {
+          console.log("watch targets", newValue, oldValue);
           var newOrder = fromTargetsToCorrectResponse(newValue);
           $scope.fullModel.correctResponse = newOrder;
           $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
