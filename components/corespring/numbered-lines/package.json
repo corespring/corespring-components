@@ -8,5 +8,6 @@
   "name": "numbered-lines",
   "organization": "corespring",
   "released" : true,
-  "purpose" : "widget"
+  "purpose" : "widget",
+  "title": "Numbered Lines"
 }

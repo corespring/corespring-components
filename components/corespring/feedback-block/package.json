@@ -7,5 +7,6 @@
   },
   "released": true,
   "name": "feedback-block",
-  "organization": "corespring"
+  "organization": "corespring",
+  "title": "Feedback block"
 }
