@@ -18,9 +18,9 @@ exports.respond = function(question, answer, settings) {
 
   if(!answer){
     return {
-      correctness: 'incorrect',
+      correctness: 'warning',
       score: 0,
-      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null,
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'warning') : null,
       outcome: settings.showFeedback ? ['incorrectEquation'] : [],
       comments: settings.showFeedback ? question.comments : null
     };
