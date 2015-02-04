@@ -10,8 +10,9 @@ var main = [
       '           <p>In Evaluate an Expression, a student submits a linear or polynomial expression to be evaluated.</p>',
       '           <h5>Expression</h5>',
       "           <p>Enter the expression against which the the student's response will be evaluated. <br>",
-      "           Note that <b><i> y </b></<i>is the dependent variable and <b><i> f(x) </b></<i> is some function where <b> <i> x </b></<i> is the independent variable. <br>",
-      "           Expressions <b> must </b> be input using <b><i> x </b></i>and/or <b><i> y </b></i>variables.",
+      "           Note that <b><i> y </i></b>is the dependent variable and <b><i> f(x) </i></b> is some function",
+      "           where <b><i> x </i></b> is the independent variable. <br>",
+      "           Expressions <b> must </b> be input using <b><i> x </i></b> and/or <b><i> y </i></b>variables.",
       '         </div>',
       '         <div class="equation-input-row">',
       '           <span class="">y = </span>',
@@ -134,6 +135,5 @@ exports.directives = [
   {
     name: "helpPopover",
     directive: helpPopover
-
   }
 ];
