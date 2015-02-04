@@ -1,6 +1,6 @@
 {
   "componentType": "corespring-drag-and-drop",
-  "title": "[Drag and Drop Question Name]",
+  "title": "Categorize",
   "correctResponse": {},
   "model": {
     "answerArea": "",
