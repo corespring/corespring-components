@@ -1,6 +1,6 @@
 {
   "componentType": "corespring-drag-and-drop-categorize",
-  "title": "[Drag and Drop Question Name]",
+  "title": "Categorize",
   "correctResponse": {
     "cat_1": [],
     "cat_2": []

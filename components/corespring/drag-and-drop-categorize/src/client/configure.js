@@ -142,7 +142,7 @@ var main = [
       '  <div class="row add-choice-row">',
       '    <div class="col-xs-12">',
       '      <button type="button" class="btn btn-default" ',
-      '          ng-click="addChoice()">Add a Choice</button>',
+      '          ng-click="addChoice()"><i class="fa fa-plus"></i>  Add a Choice</button>',
       '    </div>',
       '  </div>',
       '  <div class="row">',
