@@ -7,13 +7,25 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var answerArea = [
       '<div class="answer-area-holder clearfix">',
       '  <div class="answer-area-table">',
-      '  <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
-      '       ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
-      '    <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index]}">',
-      '      <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
-      '      <div ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
+      '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
+      '         ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
+      '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index]}">',
+      '        <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
+      '        <div ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
+      '      </div>',
       '    </div>',
       '  </div>',
+      '</div>'
+    ].join('');
+
+    var correctAnswerArea = [
+      '<div class="choices">',
+      '  <div class="choices-holder">',
+      '    <div ng-repeat="o in correctChoices" class="choice-wrapper"> ',
+      '      <div class="choice">',
+      '        <div ng-bind-html-unsafe="o.label"></div>',
+      '      </div>',
+      '    </div>',
       '  </div>',
       '</div>'
     ].join('');
@@ -72,6 +84,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
 
       scope.classForChoice = function(id, idx) {
+        if (_.isEmpty(id)) {
+          return "";
+        }
         if (scope.response && scope.response.correctResponse) {
           if (scope.response.correctResponse.length > idx && scope.response.correctResponse[idx] === id) {
             return 'correct';
@@ -101,14 +116,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
               _.each(dataAndSession.session.answers, function(k, idx) {
                 scope.landingPlaceChoices[idx] = scope.choiceForId(k);
               });
-
-//              // Remove choices that are in landing place area
-//              scope.local.choices = _.filter(scope.local.choices, function(choice) {
-//                var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
-//                  return _.pluck(c, 'id').indexOf(choice.id) >= 0;
-//                });
-//                return _.isUndefined(landingPlaceWithChoice);
-//              });
             } else {
               var choices = [];
               _.each(dataAndSession.session.answers, function(a) {
@@ -121,7 +128,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
               });
               scope.local.choices = choices;
             }
-
           }
         },
 
@@ -153,7 +159,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         setResponse: function(response) {
-          console.log("set response for DnD", response);
           scope.response = response;
           if (response.correctness !== 'correct') {
             scope.correctResponse = response.correctResponse;
@@ -259,16 +264,23 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  <div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
       '{{local.choices}}<br/>',
       '{{landingPlaceChoices}}',
+      '    <div class="button-row {{model.config.choiceAreaLayout}}">',
+      '      <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
+      '      <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="startOver()">Start over</button>',
+      '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" class="pull-right show-correct-button" ng-click="$parent.correctAnswerVisible = !!!$parent.correctAnswerVisible">',
+      '        <h5><i class="fa fa-eye-slash"></i>&nbsp;{{$parent.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer</h5>',
+      '      </div>',
+      '    </div>',
       '    <div class="main-row">',
       '      <div class="choice-area">', choices, '</div>',
       '      <div class="answer-area">' + answerArea + '</div>',
-      '      <div class="see-answer-area">Booooo' + '</div>',
+      '      <div class="see-answer-area choice-area">' + correctAnswerArea + '</div>',
       '    </div>',
       '  </div>'
     ].join('\n');
 
     var tmpl = [
-      '<div class="view-drag-and-drop" drag-and-drop-controller>',
+      '<div drag-and-drop-controller>',
 
       dragAndDropTemplate,
       inplaceTemplate,

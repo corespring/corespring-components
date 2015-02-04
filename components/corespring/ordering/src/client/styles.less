@@ -1,6 +1,18 @@
 @import '../../../../../less/common';
 
+.show-correct-button-mixin() {
+  background: @correct-color;
+  padding: 5px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
 .view-placement-ordering {
+
+  .show-correct-button {
+    .show-correct-button-mixin();
+  }
 
   .choice-area {
     .choices {
@@ -43,24 +55,48 @@
 
 
   .choice {
+    vertical-align: top;
+    background-color: #EFEFEF;
+    height: 100%;
+    margin: 3px 3px 1px 1px;
+    padding: 8px;
+    text-align: center;
+    min-width: 60px;
+    min-height: 40px;
+    max-width: 500px;
+    overflow: hidden;
+
+    &.correct {
+      .correct-input();
+    }
+
+    &.incorrect {
+      .incorrect-input();
+    }
+
     &.hiddenChoice {
       visibility: hidden;
     }
+
     &:hover {
       box-shadow: none;
       border: none;
     }
   }
+
   .choiceHolder {
     box-shadow: none;
   }
+
   .choiceHolder.choice:hover {
     border: 1px solid #979797;
-//    box-shadow: none;
   }
 
-
-
+  .sizerHolder {
+    visibility: hidden;
+    position: fixed;
+    max-width: 500px;
+  }
 
   .choice-wrapper {
     padding: 5px;
@@ -128,6 +164,13 @@
 
     .see-answer-area {
       display: table-cell;
+      min-width: 150px;
+      max-width: 180px;
+      text-align: right;
+
+      .choice {
+        .correct-input();
+      }
     }
 
   }
@@ -218,12 +261,9 @@
     }
 
     .show-correct-button {
-      background: @correct-color;
-      padding: 5px;
-      border-radius: 4px;
-      color: white;
-      cursor: pointer;
+      .show-correct-button-mixin();
     }
+
   }
 
   ul {
