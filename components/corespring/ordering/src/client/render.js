@@ -1,24 +1,75 @@
 /* global console,exports */
-var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
+var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
+  function($compile, $log, $modal, $rootScope, $timeout) {
 
     "use strict";
 
     var answerArea = [
-      '<div>',
-      '  <div answer-area landingId="answer"',
-      '                  answer-area-label="{{model.config.answerAreaLabel}}"',
-      '                  answer-area-layout="{{model.config.choiceAreaLayout}}"',
-      '  >',
+      '<div class="answer-area-holder clearfix">',
+      '  <div class="answer-area-table">',
+      '  <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
+      '       ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
+      '    <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index]}">',
+      '      <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
+      '      <div ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
+      '    </div>',
+      '  </div>',
+      '  </div>',
+      '</div>'
+    ].join('');
+
+    var choices = [
+      '<div class="choices" >',
+      '  <div class="choices-holder clearfix">',
+      '    <div ng-repeat="o in local.choices" class="choice-wrapper">',
+      '      <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
+      '           data-drag="editable"',
+      '           ng-disabled="!editable"',
+      '           data-jqyoui-options="doptions(o)"',
+      '           ng-model="local.choices"',
+      '           jqyoui-draggable="doptions(o)"',
+      '           data-id="{{o.id}}">',
+      '        <div>',
+      '          <div class="html-holder" ng-bind-html-unsafe="o.label" />',
+      '        </div>',
+      '        <div class="sizerHolder">',
+      '          <div class="html-holder" ng-bind-html-unsafe="o.label" />',
+      '        </div>',
+      '      </div>',
+      '    </div>',
       '  </div>',
       '</div>'
     ].join('');
 
     var link = function(scope, element, attrs) {
 
-      scope._seeSolution = function() {
-        scope.seeSolution(answerArea);
+      scope.choiceHidden = function(choice) {
+        return choice.moveOnDrag && !_.isUndefined(_.find(scope.landingPlaceChoices, function(lc) {
+          return lc && lc.id === choice.id;
+        }));
       };
+      scope.doptions = function(choice) {
+        return {
+          revert: 'invalid',
+          placeholder: 'keep',
+          index: _.indexOf(scope.local.choices, choice),
+          onStart: 'onStart'
+        };
+      };
+
+      scope.onDrop = function() {
+        scope.dragging.isOut = false;
+        for (var i = 0; i < scope.local.choices.length; i++) {
+          scope.local.choices[i] = scope.local.choices[i] || {};
+        }
+        scope.$emit('rerender-math', {delay: 1});
+      };
+
+      scope.droppableOptions = {
+        hoverClass: 'drop-hover',
+        onDrop: 'onDrop'
+      };
+
 
       scope.classForChoice = function(id, idx) {
         if (scope.response && scope.response.correctResponse) {
@@ -47,17 +98,17 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
           if (dataAndSession.session && dataAndSession.session.answers) {
             if (scope.model.config.placementType === 'placement') {
               // Build up the landing places with the selected choices
-              _.each(dataAndSession.session.answers, function(v, k) {
-                scope.landingPlaceChoices[k] = _.map(v, scope.choiceForId);
+              _.each(dataAndSession.session.answers, function(k, idx) {
+                scope.landingPlaceChoices[idx] = scope.choiceForId(k);
               });
 
-              // Remove choices that are in landing place area
-              scope.local.choices = _.filter(scope.local.choices, function(choice) {
-                var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
-                  return _.pluck(c, 'id').indexOf(choice.id) >= 0;
-                });
-                return _.isUndefined(landingPlaceWithChoice);
-              });
+//              // Remove choices that are in landing place area
+//              scope.local.choices = _.filter(scope.local.choices, function(choice) {
+//                var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
+//                  return _.pluck(c, 'id').indexOf(choice.id) >= 0;
+//                });
+//                return _.isUndefined(landingPlaceWithChoice);
+//              });
             } else {
               var choices = [];
               _.each(dataAndSession.session.answers, function(a) {
@@ -75,14 +126,27 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
         },
 
         getSession: function() {
-          var choices = (scope.model.config.placementType === 'placement') ? scope.landingPlaceChoices.answer : scope.local.choices;
-          return {
-            answers: _.pluck(choices, 'id')
-          };
+          if (scope.model.config.placementType === 'placement') {
+            var choices = [];
+            for (var i = 0; i < scope.originalChoices.length; i++) {
+              if (scope.landingPlaceChoices[i]) {
+                choices[i] = scope.landingPlaceChoices[i].id;
+              }
+            }
+            console.log("Answers are ", choices);
+            return {
+              answers: choices
+            };
+          } else {
+            return {
+              answers: _.pluck(scope.local.choices, 'id')
+            };
+          }
         },
 
         reset: function() {
           scope.resetChoices(scope.rawModel);
+          scope.landingPlaceChoices = {};
           scope.correctResponse = undefined;
           scope.comments = undefined;
           scope.feedback = undefined;
@@ -193,9 +257,12 @@ var main = ['DragAndDropTemplates', '$compile', '$log', '$modal', '$rootScope', 
 
     var dragAndDropTemplate = [
       '  <div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
+      '{{local.choices}}<br/>',
+      '{{landingPlaceChoices}}',
       '    <div class="main-row">',
-      '      <div class="choice-area">', DragAndDropTemplates.choiceArea(), '</div>',
-        '      <div class="answer-area">' + answerArea + '</div>',
+      '      <div class="choice-area">', choices, '</div>',
+      '      <div class="answer-area">' + answerArea + '</div>',
+      '      <div class="see-answer-area">Booooo' + '</div>',
       '    </div>',
       '  </div>'
     ].join('\n');

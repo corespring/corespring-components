@@ -1,32 +1,152 @@
 @import '../../../../../less/common';
 
 .view-placement-ordering {
-  .main-table {
-    &.vertical {
-      display: table;
+
+  .choice-area {
+    .choices {
+      .choices-holder {
+        border-radius: 4px;
+        border: 1px solid #000000;
+        background-color: #efefef;
+        .choice {
+          border: 1px solid #979797;
+          background-color: #ffffff;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+
+  .answer-area {
+    vertical-align: top;
+    display: inline-block;
+    .choiceHolder {
+      border-radius: 4px;
+      border: 1px solid #979797;
+      background-color: #d8d8d8;
+      
+      .choice {
+        cursor: auto;
+      }
+
+      &:hover {
+        box-shadow: none;
+        cursor: auto;
+      }
+    }
+  }
+
+  .drop-hover .choice {
+    background-color: #ffffff !important;
+    border: 2px dashed #9b9b9b !important;
+  }
+
+
+  .choice {
+    &.hiddenChoice {
+      visibility: hidden;
+    }
+    &:hover {
+      box-shadow: none;
+      border: none;
+    }
+  }
+  .choiceHolder {
+    box-shadow: none;
+  }
+  .choiceHolder.choice:hover {
+    border: 1px solid #979797;
+//    box-shadow: none;
+  }
+
+
+
+
+  .choice-wrapper {
+    padding: 5px;
+  }
+
+  &.main-table.vertical {
+    display: table;
+    width: 100%;
+
+    .main-row {
       width: 100%;
+      display: table;
+    }
 
-      .main-row {
-        display: table-row;
-        width: 100%;
+    .choice-area {
+      display: table-cell;
+      vertical-align: top;
+
+      .choices {
+        padding-top: 0px;
+        .choices-holder {
+          display: inline-block;
+        }
+
+        .choice {
+          width: 150px;
+        }
       }
 
-      .choice-area {
-        display: table-cell;
-        width: 50%;
-        vertical-align: top;
-      }
+      .choices-table {
+        text-align: center;
+        background-color: #efefef;
 
-      .answer-area {
-        display: table-cell;
-        width: 50%;
-        vertical-align: top;
+        .choice {
+          background-color: #ffffff;
+          border: 1px solid #eee;
+          max-width: 150px !important;
+        }
       }
     }
 
-    &.horizontal {
-      .choice-area {
-        margin-bottom: 20px;
+    .answer-area {
+      display: table-cell;
+      .choice {
+        width: 150px;
+      }
+
+      .answer-area-holder {
+        border: 1px solid #9b9b9b;
+        border-radius: 4px;
+        display: inline-block;
+        height: 100%;
+        padding: 5px;
+
+        .answer-area-table {
+          display: table;
+          height: 100%;
+
+          .choice-wrapper {
+            display: table-row;
+          }
+        }
+      }
+    }
+
+    .see-answer-area {
+      display: table-cell;
+    }
+
+  }
+
+  &.main-table.horizontal {
+    .choice-area {
+      .choices {
+        .choices-holder {
+          border: 1px solid #000000;
+          display: inline-block;
+        }
+      }
+      .choice-wrapper {
+        float: left;
+      }
+    }
+    .answer-area {
+      .choice-wrapper {
+        float: left;
       }
     }
   }
