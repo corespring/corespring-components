@@ -5,20 +5,22 @@
         "componentType" : "corespring-inline-choice",
         "title": "Less Fruits",
         "weight" : 1,
-        "correctResponse" : "carrot",
+        "correctResponse" : ["mc_2", "mc_4"],
         "feedback" : [
-          { "value" : "banana", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
-          { "value" : "carrot", "feedback" : "Looking good buddy", "feedbackType": "custom"},
-          { "value" : "apple", "feedback" : "Looking bad buddy", "feedbackType": "custom"}
+          { "value" : "mc_1", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
+          { "value" : "mc_2", "feedback" : "Looking good buddy", "feedbackType": "custom"},
+          { "value" : "mc_3", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
+          { "value" : "mc_4", "feedback" : "Looking good buddy", "feedbackType": "default"}
         ],
         "model" : {
           "config": {
             "shuffle": true
           },
           "choices": [
-            {"label": "Banana", "value": "banana"},
-            {"label": "Carrot", "value": "carrot"},
-            {"label": "Apple", "value": "apple"}
+            {"label": "Banana", "value": "mc_1"},
+            {"label": "Carrot", "value": "mc_2"},
+            {"label": "Apple", "value": "mc_3"},
+            {"label": "Lemon", "value": "mc_4"}
           ]
         }
       },
@@ -26,20 +28,20 @@
         "componentType" : "corespring-inline-choice",
         "title": "Less Fruits",
         "weight" : 1,
-        "correctResponse" : "carrot",
+        "correctResponse" : ["mc_2"],
         "feedback" : [
-          { "value" : "banana", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
-          { "value" : "carrot", "feedback" : "Looking good buddy", "feedbackType": "custom"},
-          { "value" : "apple", "feedback" : "Looking bad buddy", "feedbackType": "custom"}
+          { "value" : "mc_1", "feedback" : "Looking bad buddy", "feedbackType": "custom"},
+          { "value" : "mc_2", "feedback" : "Looking good buddy", "feedbackType": "custom"},
+          { "value" : "mc_3", "feedback" : "Looking bad buddy", "feedbackType": "custom"}
         ],
         "model" : {
           "config": {
             "shuffle": true
           },
           "choices": [
-            {"label": "Banana", "value": "banana"},
-            {"label": "Carrot", "value": "carrot"},
-            {"label": "Apple", "value": "apple"}
+            {"label": "Banana", "value": "mc_1"},
+            {"label": "Carrot", "value": "mc_2"},
+            {"label": "Apple", "value": "mc_3"}
           ]
         }
       }

@@ -1,6 +1,6 @@
 {
   "componentType" : "corespring-function-entry",
-  "title": "Function Entry",
+  "title": "Evaluate an Expression",
   "weight" : 1,
   "feedback" :  {
     "correctFeedbackType": "default",

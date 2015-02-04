@@ -1,7 +1,11 @@
+/* global console, exports */
+
 var main = [
   '$sce', '$log',
 
   function($sce, $log) {
+
+    "use strict";
 
     var def;
 
@@ -118,6 +122,8 @@ var interactiveGraph = [
   '$log', 'ScaleUtils', 'GraphHelper',
   function($log, ScaleUtils, GraphHelper) {
 
+    "use strict";
+
     var groups = {
       "Point": ["PF"],
       "Line": ["LEE", "LEF", "LFE", "LFF"],
@@ -130,7 +136,7 @@ var interactiveGraph = [
     return {
       template:[
         '<div>',
-        '  <ul ng-show="editable && model.config.groupingEnabled" class="nav nav-pills" >',
+        '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Point\')" ng-class="{active: isGroupActive(\'Point\')}"  ng-mousedown="selectGroup(\'Point\')"><a>Point</a></li>',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Line\')" ng-class="{active: isGroupActive(\'Line\')}" ng-mousedown="selectGroup(\'Line\')"><a>Line</a></li>',
         '    <li role="presentation"  ng-show="isGroupEnabled(\'Ray\')" ng-class="{active: isGroupActive(\'Ray\')}" ng-mousedown="selectGroup(\'Ray\')"><a>Ray</a></li>',
@@ -158,6 +164,10 @@ var interactiveGraph = [
         serverresponse: "=",
         editable: "="
       },
+      controller: function($scope){
+        //set default config to avoid npe
+        $scope.config = {availableTypes:{}};
+      },
       link: function(scope, elm, attr, ngModel) {
         var paperElement = $(elm).find('.paper');
 
@@ -175,7 +185,7 @@ var interactiveGraph = [
           if (!scope.editable) {
             return;
           }
-          if (scope.responsemodel.length >= (scope.model.config.maxNumberOfPoints || 3)) {
+          if (scope.responsemodel.length >= (scope.config.maxNumberOfPoints || 3)) {
             return;
           }
           var lastRange = scope.responsemodel.length + 1;
@@ -295,12 +305,12 @@ var interactiveGraph = [
 
         scope.isGroupEnabled = function(group) {
           return _.some(groups[group], function(type) {
-            return scope.model.config.availableTypes[type] === true;
+            return scope.config.availableTypes[type] === true;
           });
         };
 
         scope.isGroupActive = function(group) {
-          if (!scope.model.config.groupingEnabled) {
+          if (!scope.config.groupingEnabled) {
             return true;
           }
           return group === scope.selectedGroup;
@@ -311,7 +321,7 @@ var interactiveGraph = [
         };
 
         scope.isTypeEnabled = function(type) {
-          return scope.model.config.availableTypes[type] === true;
+          return scope.config.availableTypes[type] === true;
         };
 
         var resetGraph = function(model) {
@@ -335,6 +345,11 @@ var interactiveGraph = [
 
         scope.$watch('model', function(n) {
           if (n) {
+            //overwrite default config with real config
+            if(n.config) {
+              scope.config = n.config;
+            }
+
             resetGraph(n);
           }
         }, true);

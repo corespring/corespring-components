@@ -10,7 +10,7 @@ var main = [
     $timeout,
     $http,
     ChoiceTemplates
-    ) {
+  ) {
 
     "use strict";
 
@@ -145,6 +145,16 @@ var main = [
 
         ChoiceTemplates.extendScope(scope, 'corespring-multiple-choice');
 
+        function createFeedbackObject(uid, feedback, feedbackType, notChosenFeedback, notChosenFeedbackType) {
+          return {
+            value: uid,
+            feedback: feedback,
+            feedbackType: feedbackType || "none",
+            notChosenFeedback: notChosenFeedback,
+            notChosenFeedbackType: notChosenFeedbackType || "none"
+          };
+        }
+
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
@@ -166,12 +176,13 @@ var main = [
               });
 
               if (choice) {
-                scope.feedback[choice.value] = {
-                  feedback: feedback.feedback,
-                  feedbackType: feedback.feedbackType || "none",
-                  notChosenFeedback: feedback.notChosenFeedback,
-                  notChosenFeedbackType: feedback.notChosenFeedbackType || "none"
-                };
+                scope.feedback[choice.value] = createFeedbackObject(
+                  choice.value,
+                  feedback.feedback,
+                  feedback.feedbackType,
+                  feedback.notChosenFeedback,
+                  feedback.notChosenFeedbackType
+                );
               }
             });
 
@@ -262,10 +273,10 @@ var main = [
           return null;
         };
 
-        function findFreeChoiceSlot(){
+        function findFreeChoiceSlot() {
           var slot = 0;
           var ids = _.pluck(scope.model.choices, 'value');
-          while(_.contains(ids, "mc_" + slot)){
+          while (_.contains(ids, "mc_" + slot)) {
             slot++;
           }
           return slot;
@@ -280,11 +291,7 @@ var main = [
             labelType: "text"
           });
 
-          scope.feedback[uid] = {
-            feedbackType: "default",
-            value: uid
-          };
-
+          scope.feedback[uid] = createFeedbackObject(uid);
           scope.fullModel.feedback.push(scope.feedback[uid]);
         };
 
@@ -310,10 +317,10 @@ var main = [
       template: [
         '<div class="config-multiple-choice">',
         '  <div navigator-panel="Design">',
-              designTemplate,
+        designTemplate,
         '  </div>',
         '  <div navigator-panel="Scoring">',
-              ChoiceTemplates.scoring(),
+        ChoiceTemplates.scoring(),
         '  </div>',
         '</div>'
       ].join("")

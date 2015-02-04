@@ -202,6 +202,10 @@
     width: 200px;
 }
 
+.drag-and-drop-config-panel .multiselect-container.dropdown-menu{
+    padding-left: 1em;
+}
+
 .drag-and-drop-config-panel .fixed-100 {
     width: 100px;
 }

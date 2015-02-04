@@ -79,21 +79,47 @@
 
 
 .point-intercept-configuration {
+  h3{
+    margin: 0;
+    margin-bottom: 10px;
+    padding:0;
+  }
+  .panel {
+    margin-bottom: 0;
+  }
+  .point-comma{
+    padding-top: 8px;
+  }
+  .point-parenthesis{
+    padding-top:3px;
+  }
+
+  button.close{
+    line-height: 30px;
+  }
+  .point-comma, .point-parenthesis{
+    float:left;
+    font-weight: bold;
+  }
   .navigator-toggle-button-row {
     display: none;
   }
-  .intro-text {
-    padding: 10px;
+  .max-points{
+    max-width: 80px;
+    margin-top: 0.75em;
   }
   .coordinate-input {
     max-width: 80px;
   }
+  .point-row{
+    padding:10px;
+  }
   .point-row:hover {
     background-color: #eeeeff;
+    cursor: pointer;
   }
   .reset-defaults {
-    display: inline-block;
-    margin: 0 0 20px 25px;
+    margin: 0 0 20px 0;
     font-style: italic;
     cursor: pointer;
   }
