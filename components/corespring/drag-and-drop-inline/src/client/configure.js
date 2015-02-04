@@ -20,11 +20,11 @@ var main = [
 
     var choices = [
       '<ul class="sortable-choices draggable-choices"',
-      '    ui-sortable="choicesSortableOptions" ng-model="model.choices">',
+      '    ng-model="model.choices">',
       '  <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
       '      ng-model="model.choices[$index]" ng-click="itemClick($event)"',
-      '      jqyoui-draggable="choicesDraggableOptions"',
-      '      data-jqyoui-options="{revert: \'invalid\'}">',
+      '      jqyoui-draggable="choiceDraggableOptions($index)"',
+      '      data-drag="true" data-jqyoui-options="{revert: \'invalid\'}">',
       '    <div class="blocker" ng-hide="active[$index]">',
       '      <div class="bg"></div>',
       '      <div class="content">',
@@ -265,12 +265,36 @@ var main = [
           }
         };
 
-        function setRemoveAfterPlacingVisibility(ui, visibility) {
-          ui.item.find('.remove-after-placing').css('visibility', visibility);
+        function setRemoveAfterPlacingVisibility(item, visibility) {
+          item.find('.remove-after-placing').css('visibility', visibility);
         }
 
+        function onStartDraggingChoice(event){
+          $scope.dragging = $(event.currentTarget).attr('choice-id');
+          setRemoveAfterPlacingVisibility($(event.currentTarget), 'hidden');
+        }
+
+        function onStopDraggingChoice(event){
+          $scope.dragging = '';
+          setRemoveAfterPlacingVisibility($(event.currentTarget), 'visible');
+        }
+
+        //seems like we have to use short names
+        //otherwise an error is thrown
+        $scope.onStart = onStartDraggingChoice;
+        $scope.onStop = onStopDraggingChoice;
+
+        $scope.choiceDraggableOptions = function(index){
+          return {
+            index: index,
+            placeholder: 'keep',
+            onStart: 'onStart',
+            onStop: 'onStop'
+          };
+        };
+
         $scope.choicesSortableOptions = {
-          disabled: false,
+          disabled: true,
           start: function(event, ui) {
             var li = ui.item;
             $scope.draggging = li.data('choice-id');
