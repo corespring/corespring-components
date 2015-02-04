@@ -10,7 +10,7 @@ var main = [
       '  <div class="container-fluid">',
       '    <div class="row">',
       '      <div class="col-xs-12">',
-      '        <p>In Short Answer &mdash; Select Text, students select the best response from a list of options ',
+      '        <p>In Short Answer &mdash; Drop Down, students select the best response from a list of options ',
       '           presented. This interaction type may be embedded inline with other content such as text.',
       '        </p>',
       '      </div>',

@@ -1,7 +1,7 @@
 {
   "componentType": "corespring-inline-choice",
   "correctResponse": "",
-  "title": "Inline Choice",
+  "title": "Short Answer - Drop Down",
   "feedback" :  [
     {
       "value": "mc_1",
