@@ -6,6 +6,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var answerArea = [
       '<div class="answer-area-holder clearfix">',
+      '  <div class="answer-area-label" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
       '  <div class="answer-area-table">',
       '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
       '         ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
@@ -19,11 +20,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     ].join('');
 
     var correctAnswerArea = [
-      '<div class="choices">',
+      '<div class="choices" ng-show="correctAnswerVisible">',
       '  <div class="choices-holder">',
-      '    <div ng-repeat="o in correctChoices" class="choice-wrapper"> ',
-      '      <div class="choice">',
-      '        <div ng-bind-html-unsafe="o.label"></div>',
+      '    <div class="answer-area-label"><br/></div>',
+      '    <div class="choices-inner-holder">',
+      '      <div ng-repeat="o in correctChoices" class="choice-wrapper"> ',
+      '        <div class="choice">',
+      '          <div ng-bind-html-unsafe="o.label"></div>',
+      '        </div>',
       '      </div>',
       '    </div>',
       '  </div>',
@@ -32,14 +36,16 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var choices = [
       '<div class="choices" >',
-      '  <div class="choices-holder clearfix">',
+      '  <div class="choices-holder">',
+      '    <div class="choice-area-label" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+      '    <div class="choices-inner-holder clearfix">',
       '    <div ng-repeat="o in local.choices" class="choice-wrapper">',
       '      <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
       '           data-drag="editable"',
       '           ng-disabled="!editable"',
-      '           data-jqyoui-options="doptions(o)"',
+      '           data-jqyoui-options="dragOptions(o)"',
       '           ng-model="local.choices"',
-      '           jqyoui-draggable="doptions(o)"',
+      '           jqyoui-draggable="dragOptions(o)"',
       '           data-id="{{o.id}}">',
       '        <div>',
       '          <div class="html-holder" ng-bind-html-unsafe="o.label" />',
@@ -48,6 +54,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '          <div class="html-holder" ng-bind-html-unsafe="o.label" />',
       '        </div>',
       '      </div>',
+      '    </div>',
       '    </div>',
       '  </div>',
       '</div>'
@@ -60,7 +67,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           return lc && lc.id === choice.id;
         }));
       };
-      scope.doptions = function(choice) {
+
+      scope.dragOptions = function(choice) {
         return {
           revert: 'invalid',
           placeholder: 'keep',
@@ -74,7 +82,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         for (var i = 0; i < scope.local.choices.length; i++) {
           scope.local.choices[i] = scope.local.choices[i] || {};
         }
-        scope.$emit('rerender-math', {delay: 1});
+        scope.$emit('rerender-math', {delay: 1, element: element[0]});
       };
 
       scope.droppableOptions = {
@@ -82,6 +90,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         onDrop: 'onDrop'
       };
 
+      scope.startOverAndClear = function() {
+        scope.startOver();
+        scope.landingPlaceChoices = {};
+      };
 
       scope.classForChoice = function(id, idx) {
         if (_.isEmpty(id)) {
@@ -266,7 +278,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '{{landingPlaceChoices}}',
       '    <div class="button-row {{model.config.choiceAreaLayout}}">',
       '      <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
-      '      <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="startOver()">Start over</button>',
+      '      <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="startOverAndClear()">Start over</button>',
       '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" class="pull-right show-correct-button" ng-click="$parent.correctAnswerVisible = !!!$parent.correctAnswerVisible">',
       '        <h5><i class="fa fa-eye-slash"></i>&nbsp;{{$parent.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer</h5>',
       '      </div>',
