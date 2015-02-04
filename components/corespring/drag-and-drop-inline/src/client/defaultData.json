@@ -17,54 +17,41 @@
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": true,
-  "partialScoring": [
-    {}
-  ],
+  "partialScoring": [{}],
   "model": {
-    "choices": [
-      {
-        "label": "",
-        "labelType": "text",
-        "id": "c_1",
-        "moveOnDrag": true
-      },
-      {
-        "label": "",
-        "labelType": "text",
-        "id": "c_2",
-        "moveOnDrag": true
-      },
-      {
-        "label": "",
-        "labelType": "text",
-        "id": "c_3",
-        "moveOnDrag": true
-      },
-      {
-        "label": "",
-        "labelType": "text",
-        "id": "c_4",
-        "moveOnDrag": true
-      }
-    ],
-    "answerAreas": [
-      {
-        "id": "aa_1",
-        "textBefore": "",
-        "textAfter": ""
-      },
-      {
-        "id": "aa_2",
-        "textBefore": "",
-        "textAfter": ""
-      }
-    ],
+    "choices": [{
+      "label": "a",
+      "labelType": "text",
+      "id": "c_1",
+      "moveOnDrag": true
+    }, {
+      "label": "b",
+      "labelType": "text",
+      "id": "c_2",
+      "moveOnDrag": true
+    }, {
+      "label": "c",
+      "labelType": "text",
+      "id": "c_3",
+      "moveOnDrag": true
+    }, {
+      "label": "d",
+      "labelType": "text",
+      "id": "c_4",
+      "moveOnDrag": true
+    }],
+    "answerAreas": [{
+      "id": "aa_1",
+      "textBefore": "",
+      "textAfter": ""
+    }, {
+      "id": "aa_2",
+      "textBefore": "",
+      "textAfter": ""
+    }],
     "config": {
       "shuffle": true,
-      "choiceAreaLayout": "vertical",
-      "choiceAreaLabel": "Choice Label",
-      "answerAreaLabel": "Answer Label",
-      "placementType": "inPlace"
+      "choiceAreaLayout": "vertical"
     }
   },
   "weight": 1

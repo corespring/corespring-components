@@ -15,7 +15,7 @@ var main = [
       '<p>',
       '   In Short Answer &mdash; Drag and Drop, students are asked to complete a sentence, word, phrase or',
       '   equation using context clues presented in the text that surrounds it.',
-      '</p>',
+      '</p>'
     ].join("\n");
 
     var choices = [
@@ -23,7 +23,7 @@ var main = [
       '    ui-sortable="choicesSortableOptions" ng-model="model.choices">',
       '  <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
       '      ng-model="model.choices[$index]" ng-click="itemClick($event)"',
-      '      jqyoui-draggable="{index: {{$index}}, placeholder: \'keep\'}"',
+      '      jqyoui-draggable="choicesDraggableOptions"',
       '      data-jqyoui-options="{revert: \'invalid\'}">',
       '    <div class="blocker" ng-hide="active[$index]">',
       '      <div class="bg"></div>',
@@ -59,7 +59,7 @@ var main = [
       '    </div>',
       '  </li>',
       '</ul>',
-      '<button class="btn btn-default" ng-click="addChoice()">Add a Choice</button>',
+      '<button class="btn btn-default" ng-click="addChoice()">Add a Choice</button>'
     ].join("\n");
 
     var answerAreas = [
@@ -69,7 +69,7 @@ var main = [
       '    <div><label class="control-label">Problem {{($index+1)}}</label></div>',
       '    <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets[answerArea.id]"',
       '        data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
-      '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets[answerArea.id]">',
+      '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets[answerArea.id] track by targetId(choice)">',
       '        <div class="delete-icon">',
       '          <i ng-click="removeTarget(answerArea.id, $index)" class="fa fa-times-circle"></i>',
       '        </div>',
@@ -261,8 +261,7 @@ var main = [
 
         $scope.droppableOptions = {
           accept: function() {
-            var choiceIsInTargets = isChoiceInTargets($scope.draggging);
-            return !$scope.targetDragging && !choiceIsInTargets;
+            return !$scope.targetDragging;
           }
         };
 
@@ -389,10 +388,18 @@ var main = [
           $scope.targets[answerAreaId].splice(choiceIndex, 1);
         };
 
-        $scope.$watchCollection('targets', function(newValue) {
+        var TARGET_ID = 100;
+
+        $scope.targetId = function(choice){
+          return TARGET_ID++;
+        };
+
+        $scope.$watch('targets', function(newValue) {
           var newOrder = fromTargetsToCorrectResponse(newValue);
           $scope.fullModel.correctResponse = newOrder;
           $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+          console.log("targets", $scope.targets);
+          console.log("choices", $scope.model.choices);
         }, true);
 
         $scope.init = function() {
