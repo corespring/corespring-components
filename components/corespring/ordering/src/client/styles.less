@@ -51,6 +51,12 @@
         cursor: auto;
       }
     }
+
+    .answer-area-table {
+      display: table;
+      border: 1px solid #9b9b9b;
+      border-radius: 4px;
+    }
   }
 
   .drop-hover .choice {
@@ -173,6 +179,11 @@
   }
 
   &.main-table.horizontal {
+    .button-row {
+      float: right;
+      display: inline-block;
+    }
+
     .choice-area {
       .choices {
         .choices-holder {
@@ -191,9 +202,6 @@
         float: left;
       }
     }
-  }
-
-  .answer-area-holder {
   }
 }
 
