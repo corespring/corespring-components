@@ -26,10 +26,10 @@ var main = [
     };
 
     var graphAttributes = [
-      '<div class="input-holder">',
-      '  <div class="header">Graph Attributes</div>',
-      '  <div class="body">',
-      '     <div class="informative-label">Use this section to setup the graph area.</div>',
+      '<div class="row">',
+      '  <div class="body col-md-8">',
+      '  <h3>Graph Attributes</h3>',
+      '     <p>Use this section to setup the graph area.</p>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       labelWithInput({ label: 'Width:', modelKey: 'graphWidth', placeholder: '{{defaults.graphWidth}}' }),
@@ -50,10 +50,8 @@ var main = [
         placeholder: '{{defaults.sigfigs}}' }),
       '       </div>',
       '       <div class="config-form-row">',
-      '         <div class="col-sm-6">',
+      '         <div class="col-sm-6"><br />',
       '           <checkbox ng-model="fullModel.model.config.showCoordinates">Show Point Coordinates</checkbox>',
-      '         </div>',
-      '         <div class="col-sm-6">',
       '           <checkbox ng-model="fullModel.model.config.showInputs">Show Point Inputs on the Graph</checkbox>',
       '         </div>',
       '       </div>',
@@ -63,9 +61,9 @@ var main = [
     ].join('\n');
 
     var linesBlock = [
-      '<div class="input-holder">',
-      '  <div class="header">Lines</div>',
-      '  <div class="body">',
+      '<div class="row">',
+      '  <div class="body col-md-12">',
+      '  <h3>Lines</h3>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       '         <div class="col-sm-8">',
@@ -78,7 +76,7 @@ var main = [
       '         <div class="col-sm-2">',
       '           <label class="control-label">Correct Answer</label>',
       '         </div>',
-      '         <div class="col-sm-8">',
+      '         <div class="col-sm-5">',
       '           <input type="text" class="form-control" placeholder="Enter correct answer in y=mx+b form." ng-model="fullModel.correctResponse" />',
       '         </div>',
       '       </div>',
@@ -86,13 +84,13 @@ var main = [
       '         <div class="col-sm-2">',
       '           <label class="control-label">Initial Line (optional)</label>',
       '         </div>',
-      '         <div class="col-sm-8">',
+      '         <div class="col-sm-5">',
       '           <input type="text" class="form-control" placeholder="Enter initial line equation in y=mx+b form." ng-model="fullModel.model.config.initialCurve" />',
       '         </div>',
       '       </div>',
       '     </form>',
       '  </div>',
-      '</div>'].join('\n');
+      '</div><hr />'].join('\n');
 
     var feedback = [
       '<div ng-hide="fullModel.model.config.exhibitOnly" class="input-holder">',
@@ -168,15 +166,21 @@ var main = [
 
       },
       template: [
-        '<div class="line-interaction-configuration">',
-        '  <div class="intro-text">',
+        '<div class="line-interaction-configuration col-md-12">',
+        '  <p>',
         '    This interaction asks a student to draw a line that meets specific criteria.',
         '    The student will draw the line by clicking on two points on the graph.',
-        '  </div>',
+        '  </p>',
            linesBlock,
            graphAttributes,
-        '  <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
+        '  <div class="row">',
+        '   <div class="col-md-8">',
+        '     <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
+        '   </div>',
+        '  </div>',
+        '<div class="row"><div class="col-md-8">',
            feedback,
+        '</div></div>',
         '</div>'
       ].join('\n')
     };
