@@ -105,6 +105,7 @@ var helpPopover = [
           '    <li>For \\( \\frac{2}{x+3} \\), enter \\( 2 / (x+3) \\)</li>',
           '    <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
           '    <li>For \\( x^{2} \\), enter \\( x \\) ^ \\( 2 \\)</li>',
+          '    <li>For \\( 1 \\frac{1}{x} \\), enter \\(1 \\) \\( x/y \\)</li>',        
           '    <li>For \\( \\sqrt{x} \\), enter \sqrt(x)</li>',
           '</ul>'
         ].join('');
