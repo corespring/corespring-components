@@ -41,13 +41,7 @@ describe('function entry server logic', function() {
 
     var outcome = server.respond({feedback: {}}, null, helper.settings(true, true, true));
 
-    outcome.should.eql({
-      correctness: 'incorrect',
-      score: 0,
-      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK,
-      outcome: ['incorrectEquation'],
-      comments: undefined 
-    });
+    outcome.correctness.should.eql('warning');
   });
 
   it('should respond with correct and score 1 if the answer is correct', function() {
