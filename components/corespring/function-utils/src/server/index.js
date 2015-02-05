@@ -109,24 +109,26 @@ exports.isEquationCorrect = function(correctEquation, testEquation, options) {
 
   var expr2 = exports.expressionize(testEquation, variable);
 
-  var leftSideExpression = /=/.test(expr2) ? expr2.split("=")[0] : 'y';
-  var rightSideExpression = /=/.test(expr2) ? expr2.split("=")[1] : expr2;
+  if (!/=/.test(expr2)) {
+    expr2 = "y="+expr2;
+  }
+  var leftSideExpression = expr2.split("=")[0];
+  var rightSideExpression = expr2.split("=")[1];
+
+  if (/y/i.test(rightSideExpression)) {
+    var tmp = leftSideExpression;
+    leftSideExpression = rightSideExpression;
+    rightSideExpression = tmp;
+  }
 
   var notMatching = _.find(exports.generateRandomPointsForDomain(domain, numberOfTestPoints, sigfigs), function(x) {
     try {
-      var correctY = mathjs['eval'](expr1, {
-        x: x
-      });
-      var leftValue = mathjs['eval'](leftSideExpression, {
-        x: x,
-        y: correctY
-      });
-      var rightValue = mathjs['eval'](rightSideExpression, {
-        x: x,
-        y: correctY
-      });
+      var correctY = mathjs['eval'](expr1, {x: x});
+      var leftValue = mathjs['eval'](leftSideExpression, {x: x, y: 0});
+      var rightValue = mathjs['eval'](rightSideExpression, {x: x, y: 0});
+      var diff = rightValue - leftValue;
 
-      if (!closeEnough(sigfigs)(leftValue, rightValue)) {
+      if (!closeEnough(sigfigs)(diff, correctY)) {
         return true;
       }
     } catch (e) {
