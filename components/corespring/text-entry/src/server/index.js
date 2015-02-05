@@ -38,7 +38,7 @@ exports.respond = function(question, answer, settings) {
       score: 0,
       feedback: settings.showFeedback ? {
         correctness: 'warning',
-        message: "Please type in your answer and press submit."
+        message: "You did not enter a response."
       } : null
     };
   }
