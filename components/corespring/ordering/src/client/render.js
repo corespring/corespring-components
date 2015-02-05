@@ -16,7 +16,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       ].join('\n');
     };
     var answerArea = [
-      '<div class="answer-area-holder clearfix">',
+      '<div class="answer-area-holder">',
       '  <div class="answer-area-label" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
       '  <div class="answer-area-table">',
       '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
@@ -24,6 +24,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index]}">',
       '        <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
       '        <div ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
+      '        <i class="fa fa-close remove-choice-button" ng-show="landingPlaceChoices[$index].label" ng-click="putBackChoice($index)"></i>',
       '      </div>',
       '    </div>',
       '  </div>',
@@ -50,6 +51,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var choices = [
       '<div class="choices" >',
       '  <div class="choices-holder">',
+      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\'"'),
+      '<div class="clearfix"></div>',
+
       '    <div class="choice-area-label" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
       '    <div class="choices-inner-holder clearfix">',
       '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
@@ -70,7 +74,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      </div>',
       '    </div>',
       '  </div>',
-      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\'"'),
       '</div>'
     ].join('');
 
@@ -122,6 +125,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
           return 'incorrect';
         }
+      };
+
+      scope.putBackChoice = function(idx) {
+        scope.landingPlaceChoices[idx] = null;
       };
 
       _.extend(scope.containerBridge, {
@@ -283,15 +290,21 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var dragAndDropTemplate = [
       '<div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
-      '{{local.choices}}<br/>',
-      '{{landingPlaceChoices}}',
+//      '{{local.choices}}<br/>',
+//      '{{landingPlaceChoices}}',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'vertical\'"'),
       '    <div class="main-row">',
       '      <div class="choice-area">', choices, '</div>',
       '      <div class="answer-area">' + answerArea + '</div>',
-//    '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '      <div ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
+      '        <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '      </div>',
       '      <div class="see-answer-area choice-area">' + correctAnswerArea('ng-show="top.correctAnswerVisible"') + '</div>',
       '    </div>',
+      '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
+      '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '    </div>',
+
       '    <div class="choice-area" see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       correctAnswerArea(),
       '    </div>',

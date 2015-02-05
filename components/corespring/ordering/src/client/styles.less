@@ -14,6 +14,15 @@
     .show-correct-button-mixin();
   }
 
+  .choice {
+    img {
+      max-width: 100px;
+    }
+    border: 1px solid;
+    border-radius: 4px;
+    background-color: white;
+  }
+
   .choice-area {
     .choice-area-label {
       text-align: center;
@@ -42,10 +51,6 @@
       border: 1px solid #979797;
       background-color: #d8d8d8;
 
-      .choice {
-        cursor: auto;
-      }
-
       &:hover {
         box-shadow: none;
         cursor: auto;
@@ -56,6 +61,19 @@
       display: table;
       border: 1px solid #9b9b9b;
       border-radius: 4px;
+      .choice {
+        position: relative;
+
+        .remove-choice-button {
+          position: absolute;
+          right: 3px;
+          top: 3px;
+          color: #ccc;
+        }
+
+        cursor: auto;
+      }
+
     }
   }
 
@@ -90,7 +108,6 @@
 
     &:hover {
       box-shadow: none;
-      border: none;
     }
   }
 
@@ -109,7 +126,7 @@
   }
 
   .choice-wrapper {
-    padding: 5px;
+    padding: 10px;
   }
 
   &.main-table.vertical {
@@ -153,7 +170,7 @@
 
         .answer-area-table {
           display: table;
-          height: 100%;
+          height: 94%;
           border: 1px solid #9b9b9b;
           border-radius: 4px;
           padding: 5px;
@@ -184,8 +201,14 @@
       display: inline-block;
     }
 
+    .main-row {
+      display: table;
+    }
+
     .choice-area {
+      display: table-row;
       .choices {
+        display: table-cell;
         .choices-holder {
           display: inline-block;
           .choice-area-label {
@@ -198,8 +221,15 @@
       }
     }
     .answer-area {
+      display: table-row;
+      .answer-area-holder {
+        display: table-cell;
+      }
       .choice-wrapper {
-        float: left;
+        display: table-cell;
+      }
+      .answer-area-table {
+        width: 100%;
       }
     }
   }
