@@ -238,7 +238,18 @@ var dragAndDropController = [
 
           answerChangedHandler: function(callback) {
             scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
-              if (newValue !== oldValue) {
+              var isEmptyValue = function(value) {
+                if (_.isEmpty(value)) {
+                  return true;
+                }
+                return !_.some(value, function(v) {
+                  return v.length > 0;
+                });
+              };
+
+              var bothEmpty = isEmptyValue(newValue) && isEmptyValue(oldValue);
+
+              if (newValue !== oldValue && !bothEmpty) {
                 callback();
               }
             }, true);

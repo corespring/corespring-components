@@ -66,7 +66,8 @@ var main = [
 
         answerChangedHandler: function(callback) {
           scope.$watch("response", function(newValue, oldValue) {
-            if (newValue !== oldValue) {
+            var bothEmpty = _.isEmpty(newValue) && _.isEmpty(oldValue);
+            if (newValue !== oldValue && !bothEmpty ) {
               callback();
             }
           }, true);
