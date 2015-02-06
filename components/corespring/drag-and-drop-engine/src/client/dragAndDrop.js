@@ -237,22 +237,7 @@ var dragAndDropController = [
           },
 
           answerChangedHandler: function(callback) {
-            scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
-              var isEmptyValue = function(value) {
-                if (_.isEmpty(value)) {
-                  return true;
-                }
-                return !_.some(value, function(v) {
-                  return v.length > 0;
-                });
-              };
-
-              var bothEmpty = isEmptyValue(newValue) && isEmptyValue(oldValue);
-
-              if (newValue !== oldValue && !bothEmpty) {
-                callback();
-              }
-            }, true);
+            scope.answerChangeCallback = callback;
           },
 
           editable: function(e) {
@@ -260,11 +245,14 @@ var dragAndDropController = [
           }
         };
 
-        scope.$watch('landingPlaceChoices', function(n) {
+        scope.$watch('landingPlaceChoices', function(n, old) {
           var state = {
             choices: _.cloneDeep(scope.local.choices),
             landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
           };
+          if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
+            scope.answerChangeCallback();
+          }
           if (!_.isEqual(state, _.last(scope.stack))) {
             scope.stack.push(state);
           }
