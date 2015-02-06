@@ -102,7 +102,7 @@ describe('line interaction server logic', function() {
     });
 
     it('should return null feedback', function() {
-      (response.feedback === null).should.be.true;
+      (response.feedback === null).should.eql(true);
     });
 
   });
@@ -136,7 +136,7 @@ describe('line interaction server logic', function() {
 
     it('should return null feedback', function() {
       _.each(responses, function(response) {
-        (response.feedback === null).should.be.true;
+        (response.feedback === null).should.eql(true);
       });
     });
 
