@@ -107,6 +107,41 @@ describe('line interaction server logic', function() {
 
   });
 
+  describe('with poorly defined points', function() {
+    var noA = {B: {x: 1, y: 2}};
+    var noB = {A: {x: 1, y: 2}};
+    var AmissingX = {A: {y: 1}, B: {x: 1, y: 2}};
+    var BmissingY = {A: {x: 1, y: 2}, B: {x: 1}};
+    var responses;
+
+    beforeEach(function() {
+      responses = [];
+      responses.push(server.respond(_.cloneDeep(component), noA, helper.settings(false, true, true)));
+      responses.push(server.respond(_.cloneDeep(component), noB, helper.settings(false, true, true)));
+      responses.push(server.respond(_.cloneDeep(component), AmissingX, helper.settings(false, true, true)));
+      responses.push(server.respond(_.cloneDeep(component), BmissingY, helper.settings(false, true, true)));
+    });
+
+    it('should return incorrect', function() {
+      _.each(responses, function(response) {
+        response.correctness.should.eql('incorrect');
+      });
+    });
+
+    it('should return a score of 0', function() {
+      _.each(responses, function(response) {
+        response.score.should.eql(0);
+      });
+    });
+
+    it('should return null feedback', function() {
+      _.each(responses, function(response) {
+        (response.feedback === null).should.be.true;
+      });
+    });
+
+  });
+
   describe('feedback', function() {
 
     function evaluateCorrectAnswerWithFeedback(feedback) {
