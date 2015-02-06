@@ -470,7 +470,7 @@ var landingPlace = [
       '             class="choice {{classForChoice(choice, $index)}}"',
       '             ng-bind-html-unsafe="choice.content">',
       '        </div>',
-      '        <div ng-repeat-end="" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
+      '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
       '    </div>',
       '    </div>'].join("")
 
