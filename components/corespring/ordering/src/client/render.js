@@ -21,10 +21,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  <div class="answer-area-table">',
       '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
       '         ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
-      '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index]}">',
+      '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index].id}"',
+      '         data-drag="editable && landingPlaceChoices[$index].id" jqyoui-draggable="answerDragOptions($index)" data-jqyoui-options="answerDragOptions($index)" ng-model="landingPlaceChoices[$index]" >',
       '        <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
       '        <div ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
-      '        <i class="fa fa-close remove-choice-button" ng-show="landingPlaceChoices[$index].label" ng-click="putBackChoice($index)"></i>',
+      '        <i class="fa fa-close remove-choice-button" ng-show="editable && landingPlaceChoices[$index].label" ng-click="putBackChoice($index)"></i>',
       '      </div>',
       '    </div>',
       '  </div>',
@@ -77,7 +78,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '</div>'
     ].join('');
 
+
     var link = function(scope, element, attrs) {
+
+      function clearLandingPlaceChoices() {
+        _.each(scope.landingPlaceChoices, function(v,k) {
+          scope.landingPlaceChoices[k] = {};
+        });
+      }
 
       scope.top = {};
 
@@ -96,6 +104,16 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         };
       };
 
+      scope.answerDragOptions = function(index){
+        return {
+          revert: 'invalid',
+          index: index,
+          placeholder: true,
+          distance: 5
+        };
+      };
+
+
       scope.onDrop = function() {
         scope.dragging.isOut = false;
         for (var i = 0; i < scope.local.choices.length; i++) {
@@ -111,7 +129,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.startOverAndClear = function() {
         scope.startOver();
-        scope.landingPlaceChoices = {};
+        clearLandingPlaceChoices();
       };
 
       scope.classForChoice = function(id, idx) {
@@ -128,7 +146,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.putBackChoice = function(idx) {
-        scope.landingPlaceChoices[idx] = null;
+        scope.landingPlaceChoices[idx] = {};
       };
 
       _.extend(scope.containerBridge, {
@@ -144,12 +162,15 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.local = {};
           scope.resetChoices(scope.rawModel);
 
+          for (var i = 0; i < scope.rawModel.choices.length; i++) {
+            scope.landingPlaceChoices[i] = {};
+          }
 
           if (dataAndSession.session && dataAndSession.session.answers) {
             if (scope.model.config.placementType === 'placement') {
               // Build up the landing places with the selected choices
               _.each(dataAndSession.session.answers, function(k, idx) {
-                scope.landingPlaceChoices[idx] = scope.choiceForId(k);
+                scope.landingPlaceChoices[idx] = scope.choiceForId(k) || {};
               });
             } else {
               var choices = [];
@@ -187,7 +208,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
         reset: function() {
           scope.resetChoices(scope.rawModel);
-          scope.landingPlaceChoices = {};
+          clearLandingPlaceChoices();
           scope.correctResponse = undefined;
           scope.comments = undefined;
           scope.feedback = undefined;
@@ -291,7 +312,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var dragAndDropTemplate = [
       '<div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
 //      '{{local.choices}}<br/>',
-//      '{{landingPlaceChoices}}',
+      '{{landingPlaceChoices}}',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'vertical\'"'),
       '    <div class="main-row">',
       '      <div class="choice-area">', choices, '</div>',
