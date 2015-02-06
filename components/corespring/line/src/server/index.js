@@ -24,11 +24,21 @@ exports.isScoreable = function(question, answer, outcome) {
 
 exports.respond = function(question, answer, settings) {
 
-  if(!question || _.isEmpty(question)){
+  function validAnswer(answer) {
+    function hasPoints(answer) {
+      return (answer !== undefined && answer !== null) && answer.A !== undefined && answer.B !== undefined;
+    }
+    function hasXY(point) {
+      return point.x !== undefined && point.y !== undefined;
+    }
+    return hasPoints(answer) && hasXY(answer.A) && hasXY(answer.B);
+  }
+
+  if (!question || _.isEmpty(question)){
     throw new Error('question should never be empty or null');
   }
 
-  if(question.model && question.model.config && question.model.config.exhibitOnly){
+  if (question.model && question.model.config && question.model.config.exhibitOnly) {
     console.log('exhibit only don\'t process');
     return {
       correctness: 'n/a',
@@ -38,7 +48,7 @@ exports.respond = function(question, answer, settings) {
 
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 
-  if(!answer){
+  if (!validAnswer(answer)) {
     return {
       correctness: 'incorrect',
       score: 0,

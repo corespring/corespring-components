@@ -86,6 +86,27 @@ describe('line interaction server logic', function() {
     response.score.should.eql(1);
   });
 
+  describe('with empty answer', function() {
+    var response;
+
+    beforeEach(function() {
+      response = server.respond(_.cloneDeep(component), {}, helper.settings(false, true, true));
+    });
+
+    it('should return incorrect', function() {
+      response.correctness.should.eql('incorrect');
+    });
+
+    it('should return a score of 0', function() {
+      response.score.should.eql(0);
+    });
+
+    it('should return null feedback', function() {
+      (response.feedback === null).should.be.true;
+    });
+
+  });
+
   describe('feedback', function() {
 
     function evaluateCorrectAnswerWithFeedback(feedback) {
