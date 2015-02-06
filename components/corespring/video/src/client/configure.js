@@ -15,8 +15,8 @@ var main = [
     ].join('\n');
 
     var designPanel = [
-      '<div navigator-panel="Design">',
-      '  <div class="input-holder">',
+      '<div class="row">',
+      '  <div class="col-md-12">',
       '    <div class="body">',
       '      <div class="description">',
       '        <div>Add a video by providing the video URL and description below. Videos hosted by <i class="video-icon fa fa-youtube" /> YouTube and <i class="fa fa-vimeo-square video-icon" /> Vimeo are currently supported.</div>',
