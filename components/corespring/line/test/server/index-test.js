@@ -1,59 +1,63 @@
-var 
-_ = require('lodash'), 
-assert = require('assert'), 
-helper = require('../../../../../test-lib/test-helper'),
-sinon = require('sinon'),
-assert = require('assert'),
-should = require('should'),
-proxyquire = require('proxyquire').noCallThru(),
-fbu = require('../../../server-shared/src/server/feedback-utils'),
-serverObj = {
-  expressionize: _.identity,
-  isFunctionEqual: function(e1, e2, options) {
-    return e1 === e2;
-  }
-},
-server = proxyquire('../../src/server', {
-  'corespring.function-utils.server': serverObj,
-  'corespring.server-shared.server.feedback-utils': fbu
-}),
-component = {
-  "componentType": "corespring-line",
-  "correctResponse": "y=2x+7",
-  "model": {
-    "config": {
-      "domain": "10",
-      "range": "10",
-      "scale": "1",
-      "domainLabel": "x",
-      "rangeLabel": "y",
-      "tickLabelFrequency": "5",
-      "sigfigs": "-1"
-    }
-  }
-},
-correctAnswer = {
-  A: {
-    x: 0,
-    y: 7
-  },
-  B: {
-    x: 1,
-    y: 9
-  }
-},
-incorrectAnswer = {
-  A: {
-    x: -1,
-    y: -1
-  },
-  B: {
-    x: 1,
-    y: 1
-  }
-};
+var _ = require('lodash');
+var assert = require('assert');
+var helper = require('../../../../../test-lib/test-helper');
+var sinon = require('sinon');
+var assert = require('assert');
+var should = require('should');
+var proxyquire = require('proxyquire').noCallThru();
+var fbu = require('../../../server-shared/src/server/feedback-utils');
 
 describe('line interaction server logic', function() {
+
+  var serverObj = {
+    expressionize: _.identity,
+    isFunctionEqual: function(e1, e2, options) {
+      return e1 === e2;
+    }
+  };
+
+  var server = proxyquire('../../src/server', {
+    'corespring.function-utils.server': serverObj,
+    'corespring.server-shared.server.feedback-utils': fbu
+  });
+
+  var component = {
+    "componentType": "corespring-line",
+    "correctResponse": "y=2x+7",
+    "model": {
+      "config": {
+        "domain": "10",
+        "range": "10",
+        "scale": "1",
+        "domainLabel": "x",
+        "rangeLabel": "y",
+        "tickLabelFrequency": "5",
+        "sigfigs": "-1"
+      }
+    }
+  };
+
+  var correctAnswer = {
+    A: {
+      x: 0,
+      y: 7
+    },
+    B: {
+      x: 1,
+      y: 9
+    }
+  };
+
+  var incorrectAnswer = {
+    A: {
+      x: -1,
+      y: -1
+    },
+    B: {
+      x: 1,
+      y: 1
+    }
+  };
 
   it('returns incorrect outcome for an empty answer', function(){
       var outcome = server.respond({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
@@ -80,6 +84,62 @@ describe('line interaction server logic', function() {
     var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
+  });
+
+  describe('with empty answer', function() {
+    var response;
+
+    beforeEach(function() {
+      response = server.respond(_.cloneDeep(component), {}, helper.settings(false, true, true));
+    });
+
+    it('should return incorrect', function() {
+      response.correctness.should.eql('incorrect');
+    });
+
+    it('should return a score of 0', function() {
+      response.score.should.eql(0);
+    });
+
+    it('should return null feedback', function() {
+      (response.feedback === null).should.be.true;
+    });
+
+  });
+
+  describe('with poorly defined points', function() {
+    var noA = {B: {x: 1, y: 2}};
+    var noB = {A: {x: 1, y: 2}};
+    var AmissingX = {A: {y: 1}, B: {x: 1, y: 2}};
+    var BmissingY = {A: {x: 1, y: 2}, B: {x: 1}};
+    var responses;
+
+    beforeEach(function() {
+      responses = [];
+      responses.push(server.respond(_.cloneDeep(component), noA, helper.settings(false, true, true)));
+      responses.push(server.respond(_.cloneDeep(component), noB, helper.settings(false, true, true)));
+      responses.push(server.respond(_.cloneDeep(component), AmissingX, helper.settings(false, true, true)));
+      responses.push(server.respond(_.cloneDeep(component), BmissingY, helper.settings(false, true, true)));
+    });
+
+    it('should return incorrect', function() {
+      _.each(responses, function(response) {
+        response.correctness.should.eql('incorrect');
+      });
+    });
+
+    it('should return a score of 0', function() {
+      _.each(responses, function(response) {
+        response.score.should.eql(0);
+      });
+    });
+
+    it('should return null feedback', function() {
+      _.each(responses, function(response) {
+        (response.feedback === null).should.be.true;
+      });
+    });
+
   });
 
   describe('feedback', function() {
