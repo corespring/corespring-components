@@ -7,12 +7,9 @@ var main = [
     };
 
     var design = [
-      '<div class="input-holder">',
-      '  <div class="body">',
-
+      '<div class="form-group">',
       '        <div class="feedback-label">Feedback</div>',
       '        <div class="well">',
-
       '          <div feedback-selector',
       '               fb-sel-label="When answer submitted, show"',
       '               fb-sel-feedback-type="fullModel.feedback.feedbackType"',
@@ -20,19 +17,11 @@ var main = [
       '               fb-sel-default-feedback="{{defaultIsAnswerFeedback}}"',
       '          ></div>',
       '    </div>',
-      '  </div>',
-      '</div>'].join('\n');
-
-    var scoring = [
-      '<div class="input-holder">',
-      '  <div class="body">',
-      '    Open Ended questions are not automatically scored by the system. Please include a scoring guide or rubric in the Supporting Materials area.',
-      '  </div>',
+      '    <h3>Scoring</h3>Open Ended questions are not automatically scored by the system. Please include a scoring guide or rubric in the Supporting Materials area.',
       '</div>'].join('\n');
 
     var displayOptions = [
-      '<div class="input-holder">',
-      '  <div class="body">',
+      '<div class="form-group">',
       '     <p class="info">',
       '       In an Open Ended interaction, students respond to a prompt in short or long form. These interactions ',
       '       are not automatically scored.',
@@ -54,7 +43,6 @@ var main = [
       '         <label class="control-label">rows</label>',
       '       </div>',
       '     </form>',
-      '  </div>',
       '</div>'].join('\n');
 
     return {
@@ -81,15 +69,13 @@ var main = [
       template: [
 
         '<div class="extended-text-entry-configuration">',
-        '  <div navigator-panel="Design">',
+        '  <div class="row">',
+        '   <div class="col-md-12">',
              displayOptions,
              design,
-        '  </div>',
-        '  <div navigator-panel="Scoring">',
-             scoring,
-        '  </div>',
+        '   </div>',
+        ' </div>',
         '</div>'
-
       ].join('\n')
     };
   }
