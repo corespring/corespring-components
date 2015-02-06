@@ -4,7 +4,7 @@ exports.keys = {
   DEFAULT_INCORRECT_FEEDBACK : "Good try but that is not the correct answer.",
   DEFAULT_NOT_CHOSEN_FEEDBACK : "This answer is correct",
   DEFAULT_SUBMITTED_FEEDBACK : "Your answer has been submitted",
-  DEFAULT_WARNING_FEEDBACK:  "You did not enter a response.",
+  DEFAULT_WARNING_FEEDBACK:  "You did not enter a response."
 };
 
 exports.defaults = {
@@ -12,7 +12,7 @@ exports.defaults = {
   incorrect: exports.keys.DEFAULT_INCORRECT_FEEDBACK,
   partial: exports.keys.DEFAULT_PARTIAL_FEEDBACK,
   notChosen: exports.keys.DEFAULT_NOT_CHOSEN_FEEDBACK,
-  warning: exports.keys.DEFAULT_WARNING_FEEDBACK,
+  warning: exports.keys.DEFAULT_WARNING_FEEDBACK
 };
 
 var correctnessToFeedbackMap = {

@@ -37,14 +37,14 @@ component = {
 
 describe('function entry server logic', function() {
 
-  it('should return incorrect outcome for empty answer', function(){
+  it('should return warning outcome for empty answer', function(){
 
     var outcome = server.respond({feedback: {}}, null, helper.settings(true, true, true));
 
     outcome.should.eql({
-      correctness: 'incorrect',
+      correctness: 'warning',
       score: 0,
-      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK,
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
       outcome: ['incorrectEquation'],
       comments: undefined 
     });

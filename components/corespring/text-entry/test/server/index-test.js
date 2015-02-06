@@ -71,14 +71,14 @@ describe('text entry server logic', function() {
     }
   };
 
-  it('should return an incorrect outcome for an empty answer', function() {
+  it('should return a warning outcome for an empty answer', function() {
     var outcome = server.respond(_.cloneDeep(component), null, helper.settings(true, true, true));
     var expected = {
       correctness: "warning",
       score: 0,
       feedback: {
         correctness: "warning",
-        message: "Please type in your answer and press submit."
+        message: "You did not enter a response."
       }
     };
     outcome.should.eql(expected);

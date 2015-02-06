@@ -106,7 +106,7 @@ var helpPopover = [
           '    <li>For \\( x^{y} \\), enter \\( x \\) ^ \\( y \\)</li>',
           '    <li>For \\( x^{2} \\), enter \\( x \\) ^ \\( 2 \\)</li>',
           '    <li>For \\( 1 \\frac{x}{y} \\), enter \\(1 \\) \\( x/y \\)</li>',        
-          '    <li>For \\( \\sqrt{x} \\), enter \sqrt(x)</li>',
+          '    <li>For \\( \\sqrt{x} \\), enter \\sqrt(x)</li>',
           '</ul>'
         ].join('');
 
