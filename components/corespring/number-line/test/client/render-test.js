@@ -100,7 +100,7 @@ describe('corespring', function() {
     });
 
     element = $compile("<corespring-number-line-render id='1'></corespring-number-line-render>")($rootScope.$new());
-    scope = element.scope().$$childHead;
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 

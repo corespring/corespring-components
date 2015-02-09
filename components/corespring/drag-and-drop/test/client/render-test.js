@@ -76,7 +76,7 @@ describe('corespring', function() {
     });
 
     element = $compile("<corespring-drag-and-drop-render id='1'></corespring-drag-and-drop-render>")($rootScope.$new());
-    scope = element.scope().$$childHead;
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 
