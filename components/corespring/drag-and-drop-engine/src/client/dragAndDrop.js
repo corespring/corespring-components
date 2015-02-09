@@ -237,11 +237,7 @@ var dragAndDropController = [
           },
 
           answerChangedHandler: function(callback) {
-            scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
-              if (newValue !== oldValue) {
-                callback();
-              }
-            }, true);
+            scope.answerChangeCallback = callback;
           },
 
           editable: function(e) {
@@ -249,7 +245,10 @@ var dragAndDropController = [
           }
         };
 
-        scope.$watch('landingPlaceChoices', function(n) {
+        scope.$watch('landingPlaceChoices', function(n, old) {
+          if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
+            scope.answerChangeCallback();
+          }
           var state = {
             choices: _.cloneDeep(scope.local.choices),
             landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
