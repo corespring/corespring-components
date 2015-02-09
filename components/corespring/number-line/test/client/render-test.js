@@ -1,97 +1,101 @@
-/* global beforeEach, describe, expect, inject, it, module, spyOn */
+describe('corespring', function() {
 
-describe('corespring:number-line', function () {
+  var testModel, scope, element, container, rootScope;
 
-  "use strict";
-
-  var MockComponentRegister = function () {
+  var MockComponentRegister = function() {
     this.elements = {};
-    this.registerComponent = function (id, bridge) {
+    this.registerComponent = function(id, bridge) {
       this.elements[id] = bridge;
-    };
-    this.setDataAndSession = function(id, dataAndSession){
-      this.elements[id].setDataAndSession(dataAndSession);
     };
   };
 
-  var element, scope, rootScope, container, testModel;
-
-  function createTestModel() {
-
-    return {
-      data: {
-        model : {
-          "config" : {
-            "domain" : [
-              0,
-              1
-            ],
-            "initialType" : "PF",
-            "snapPerTick" : 1,
-            "showMinorTicks" : true,
-            "exhibitOnly" : false,
-            "maxNumberOfPoints" : 1,
-            "tickFrequency" : 8,
-            "availableTypes" : {
-              "PF" : true
+  var testModelTemplate = {
+    data: {
+        "model": {
+        "config": {
+          "domain": [0, 20],
+          "maxNumberOfPoints": 3,
+          "tickFrequency": 20,
+          "snapPerTick": 2,
+          "showMinorTicks": true,
+          "initialType": "PF",
+          "exhibitOnly": false,
+          "availableTypes": {
+            "PF": true,
+            "LEE": true,
+            "LEF": true,
+            "LFE": true,
+            "LFF": true,
+            "REP": true,
+            "REN": true,
+            "RFP": true,
+            "RFN": true
+          },
+          "initialElements": [
+            {
+              "type": "point",
+              "pointType": "full",
+              "domainPosition": 3,
+              "rangePosition": 1
             },
-            "initialElements" : [ ],
-            "ticks" : [
-              {
-                "label" : "0",
-                "value" : 0
-              },
-              {
-                "label" : "0.125",
-                "value" : 0.125
-              },
-              {
-                "label" : "0.25",
-                "value" : 0.25
-              },
-              {
-                "label" : "0.375",
-                "value" : 0.375
-              },
-              {
-                "label" : "0.5",
-                "value" : 0.5
-              },
-              {
-                "label" : "0.625",
-                "value" : 0.625
-              },
-              {
-                "label" : "0.75",
-                "value" : 0.75
-              },
-              {
-                "label" : "0.875",
-                "value" : 0.875
-              },
-              {
-                "label" : "1",
-                "value" : 1
-              }
-            ]
-          }
+            {
+              "type": "line",
+              "domainPosition": 2,
+              "rangePosition": 2,
+              "size": 2,
+              "leftPoint": "full",
+              "rightPoint": "empty"
+            },
+            {
+              "type": "ray",
+              "domainPosition": 2,
+              "rangePosition": 3,
+              "pointType": "empty",
+              "direction": "positive"
+            }
+          ]
         }
       }
+    }
+  };
+
+  window.Raphael = function() {
+    return {
+      rect: function() {
+      },
+      circle: function() {
+        return {drag: function() {}, click: function() {}, attr: function() {}};
+      },
+      clear: function() {
+      },
+      path: function() {
+        var that ={
+          attr: function() { return that; },
+          drag: function() {},
+          click: function() {},
+          mousedown: function() {}
+        };
+        return that;
+      },
+      text: function() {
+      }
     };
-  }
+  };
 
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(function () {
-    module(function ($provide) {
-      testModel = createTestModel();
+  beforeEach(function() {
+    module(function($provide) {
+      testModel = _.cloneDeep(testModelTemplate);
+      $provide.value('MathJaxService', function() {
+      });
     });
   });
 
-  beforeEach(inject(function ($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope) {
     container = new MockComponentRegister();
 
-    $rootScope.$on('registerComponent', function (event, id, obj) {
+    $rootScope.$on('registerComponent', function(event, id, obj) {
       container.registerComponent(id, obj);
     });
 
@@ -100,19 +104,47 @@ describe('corespring:number-line', function () {
     rootScope = $rootScope;
   }));
 
-  it('constructs', function () {
+  it('constructs', function() {
     expect(element).toNotBe(null);
   });
 
-  it('should not crash when digest is called before model has been set',function(){
-    scope.$digest();
-  });
 
-  it('sets model', function () {
-    container.setDataAndSession('1', testModel);
-    expect(scope.model.config).toBeDefined();
-    expect(scope.correctModel.config).toBeDefined();
-  });
+  describe('number line', function() {
 
+    it('answer change handler does not get called initially', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      var changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('answer change handler gets called when new response gets added', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      var changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      scope.$digest();
+      scope.response.push('resp');
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
+    it('answer change handler gets called when response gets removed', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      var changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      scope.$digest();
+      scope.response = _.initial(scope.response);
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+  });
 
 });
