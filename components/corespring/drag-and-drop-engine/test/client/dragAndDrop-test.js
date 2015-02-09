@@ -57,6 +57,26 @@ describe('dragAndDropController', function() {
         expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: jasmine.any(Number), element: jasmine.any(Object)});
       });
 
+      it('answer change handler does not get called initially', function() {
+        var changeHandlerCalled = false;
+        scope.containerBridge.answerChangedHandler(function(c) {
+          changeHandlerCalled = true;
+        });
+        scope.$digest();
+        expect(changeHandlerCalled).toBe(false);
+      });
+
+      it('answer change handler gets called when repsonse changes', function() {
+        var changeHandlerCalled = false;
+        scope.containerBridge.answerChangedHandler(function(c) {
+          changeHandlerCalled = true;
+        });
+        scope.landingPlaceChoices = {'choice1': 'apple'};
+        scope.$digest();
+        scope.landingPlaceChoices.choice1 = 'pear';
+        scope.$digest();
+        expect(changeHandlerCalled).toBe(true);
+      });
     });
 
   });
