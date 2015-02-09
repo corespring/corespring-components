@@ -246,13 +246,13 @@ var dragAndDropController = [
         };
 
         scope.$watch('landingPlaceChoices', function(n, old) {
+          if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
+            scope.answerChangeCallback();
+          }
           var state = {
             choices: _.cloneDeep(scope.local.choices),
             landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
           };
-          if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
-            scope.answerChangeCallback();
-          }
           if (!_.isEqual(state, _.last(scope.stack))) {
             scope.stack.push(state);
           }
