@@ -11,9 +11,6 @@ var RegressionHelper = (function() {
 describe('inplace ordering', function() {
 
   var itemJsonFilename = 'inplace.json';
-  var liContaining = function(s) {
-    return "//div[text()[contains(., '" + s + "')]]";
-  };
 
   var divContaining = function(s) {
     return "//div[text()[contains(., '" + s + "')]]";

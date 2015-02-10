@@ -210,6 +210,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.resetChoices(scope.rawModel);
           clearLandingPlaceChoices();
           scope.correctResponse = undefined;
+          scope.response = undefined;
           scope.comments = undefined;
           scope.feedback = undefined;
         },
