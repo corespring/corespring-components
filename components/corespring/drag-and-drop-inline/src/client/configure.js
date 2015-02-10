@@ -5,12 +5,11 @@ var main = [
   '$timeout',
   'ChoiceTemplates',
   'ComponentImageService',
-  'WiggiAnswerAreaFeatureDef',
-  function($log,
+  function(
+    $log,
     $timeout,
     ChoiceTemplates,
-    ComponentImageService,
-    WiggiAnswerAreaFeatureDef
+    ComponentImageService
   ) {
 
     "use strict";
@@ -21,6 +20,7 @@ var main = [
       replace: true,
       template: template(),
       controller: function($scope) {
+
         $scope.imageService = function() {
           return ComponentImageService;
         };
@@ -29,9 +29,14 @@ var main = [
           definitions: [
             {
               name: 'answer-area-inline',
-              addToEditor: '<div answer-area-inline="" class="answer-area-inline" from="addToEditor">answer area content</div>',
+              addToEditor: function(editor, addContent) {
+                var id = $scope.addAnswerArea();
+                addContent($('<answer-area-inline id="' + id +'"/>'));
+              },
               initialise: function($node, replaceWith) {
-                return replaceWith($('<div answer-area-inline="" class="answer-area-inline" from="initialise"></div>'));
+                var id = $node.attr('id');
+                console.log('initialise', id, $node);
+                return replaceWith($('<div cs-config-answer-area-inline answer-area-id="' + id + '"/>'));
               },
               compile: true,
               onDblClick: function($node, $scope, editor) {
@@ -41,7 +46,8 @@ var main = [
                 $log.debug('editInstance', $node);
               },
               getMarkUp: function($node) {
-                return '<div answer-area-inline="" class="answer-area-inline" from="getMarkUp"></div>';
+                var id = $node.attr('answer-area-id');
+                return '<answer-area-inline id="' + id +'"/>';
               }
             }]
         };
@@ -60,8 +66,6 @@ var main = [
             value: "vertical"
           }
         ];
-
-        $scope.targetDragging = false;
 
         function findChoice(id) {
           var result = _.find($scope.model.choices, function(choice) {
@@ -126,12 +130,6 @@ var main = [
           }
         };
 
-        $scope.droppableOptions = {
-          accept: function() {
-            return !$scope.targetDragging;
-          }
-        };
-
         function setRemoveAfterPlacingVisibility(item, visible) {
           item.find('.remove-after-placing').css('visibility', visible ? 'visible' : 'hidden');
         }
@@ -141,6 +139,7 @@ var main = [
         };
 
         $scope.onStopDraggingChoice = function(event) {
+          console.log('onStopDraggingChoice', arguments);
           setRemoveAfterPlacingVisibility($(event.currentTarget), true);
         };
 
@@ -151,6 +150,14 @@ var main = [
             onStart: 'onStartDraggingChoice(event)',
             onStop: 'onStopDraggingChoice(event)'
           };
+        };
+
+        $scope.targetDragging = false;
+
+        $scope.droppableOptions = {
+          accept: function() {
+            return !$scope.targetDragging;
+          }
         };
 
         $scope.targetSortableOptions = {
@@ -250,11 +257,10 @@ var main = [
           var slot = findFreeAnswerAreaSlot();
           var answerAreaId = makeAnswerAreaId(slot);
           $scope.model.answerAreas.push({
-            "id": answerAreaId,
-            "textBefore": "",
-            "textAfter": ""
+            "id": answerAreaId
           });
           $scope.targets[answerAreaId] = [];
+          return answerAreaId;
         };
 
         $scope.removeAnswerArea = function(answerArea) {
@@ -278,7 +284,7 @@ var main = [
 
         //to avoid the duplicate id error in the repeater of the answerArea
         //we are using our own tracking id function, which should never return
-        //a duplicate
+        //the same id again
         $scope.targetId = function(choice) {
           return TARGET_ID++;
         };
@@ -291,6 +297,15 @@ var main = [
           console.log("targets", $scope.targets);
           console.log("choices", $scope.model.choices);
         }, true);
+
+        $scope.$on('getConfigScope', function(event, callback){
+          console.log("on getConfigScope");
+          callback($scope);
+        });
+
+        $scope.$watch("model.answerAreasXhtml", function(newValue){
+          console.log("watch model.answerAreasXhtml", newValue);
+        });
 
         $scope.init = function() {
           $scope.active = [];
@@ -352,36 +367,12 @@ var main = [
 
       var answerAreas = [
         '<div id="answerAreasWiggi" mini-wiggi-wiz=""',
-        '    ng-model="answerAreasXhtml"',
+        '    ng-model="model.answerAreasXhtml"',
         '    dialog-launcher="external"',
         '    features="extraFeaturesForAnswerAreas"',
         '    parent-selector=".modal-body"',
         '    image-service="imageService()">',
         '</div>',
-        '<div class="row" ng-repeat="answerArea in model.answerAreas">',
-        '  <div class="col-xs-12 answer-area">',
-        '    <div class="remove-button" ng-click="removeAnswerArea(answerArea)"><i class="fa fa-trash-o"></i></div>',
-        '    <div><label class="control-label">Problem {{($index+1)}}</label></div>',
-        '    <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets[answerArea.id]"',
-        '        data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
-        '      <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets[answerArea.id] track by targetId(choice)">',
-        '        <div class="delete-icon">',
-        '          <i ng-click="removeTarget(answerArea.id, $index)" class="fa fa-times-circle"></i>',
-        '        </div>',
-        '        <span ng-bind-html-unsafe="choice.label"></span>',
-        '      </li>',
-        '    </ul>',
-        '    <div class="zero-state" ng-show="!targets[answerArea.id].length">',
-        '      Drag and order correct answers here.',
-        '    </div>',
-        '  </div>',
-        '</div>',
-        '<div class="row">',
-        ' <div class="col-xs-12">',
-        '   <button id="add-choice" class="btn btn-default" ',
-        '     ng-click="addAnswerArea()">Add Problem Area</button>',
-        '   </div>',
-        ' </div>'
       ].join("\n");
 
       var designOptions = [
@@ -484,9 +475,87 @@ var main = [
   }
 ];
 
-exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
+var csConfigAnswerAreaInline = [
+  '$log',
+  function($log) {
+
+    "use strict";
+
+    return {
+      scope:{},
+      restrict: 'A',
+      replace: true,
+      template: template(),
+      controller: function($scope){
+        $scope.logOnOver = function(){
+          console.log("onOver");
+        };
+        $scope.logOnOut = function(){
+          console.log("onOut");
+        };
+        $scope.logOnDrop = function(){
+          console.log("onDrop");
+        };
+
+        $scope.droppableOptions = {
+          accept: function() {
+            return true;
+          },
+          onDrop: "logOnDrop()",
+          onOver: "logOnOver()",
+          onOut: "logOnOut()",
+          containment: "position"
+        };
+
+      },
+      link: function(scope,el,attr){
+        scope.$emit("getConfigScope", function(configScope){
+          console.log("getConfigScope callback", configScope);
+          scope.answerArea = _.find(configScope.model.answerAreas, {id:attr.answerAreaId});
+          scope.answerAreaTargets = configScope.targets[attr.answerAreaId];
+          scope.targetId = configScope.targetId;
+          scope.removeTarget = configScope.removeTarget;
+          scope.removeAnswerArea = configScope.removeAnswerArea;
+
+          scope.targetSortableOptions = {
+            start: function() {
+              configScope.targetDragging = true;
+            },
+            stop: function() {
+              configScope.targetDragging = false;
+            }
+          };
+
+        });
+      }
+    };
+
+    function template() {
+      return [
+        '<div class="answer-area-inline">',
+        '  <div class="remove-button" ng-click="removeAnswerArea(answerArea)"><i class="fa fa-trash-o"></i></div>',
+        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="answerAreaTargets"',
+        '      data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
+        '    <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in answerAreaTargets track by targetId(choice)">',
+        '      <div class="delete-icon">',
+        '        <i ng-click="removeTarget(answerArea.id, $index)" class="fa fa-times-circle"></i>',
+        '      </div>',
+        '      <span ng-bind-html-unsafe="choice.label"></span>',
+        '    </li>',
+        '    <p>',
+        '     Drag and order correct answers here.',
+        '    </p>',
+        '  </ul>',
+        '</div>'
+      ].join("\n");
+    }
   }
 ];
+
+exports.framework = 'angular';
+exports.directives = [{
+  directive: main
+}, {
+  name: 'csConfigAnswerAreaInline',
+  directive: csConfigAnswerAreaInline
+}];

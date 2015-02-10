@@ -41,14 +41,11 @@
       "moveOnDrag": true
     }],
     "answerAreas": [{
-      "id": "aa_1",
-      "textBefore": "",
-      "textAfter": ""
+      "id": "aa_1"
     }, {
-      "id": "aa_2",
-      "textBefore": "",
-      "textAfter": ""
+      "id": "aa_2"
     }],
+    "answerAreasXhtml": "<p>Text Before <answer-area-inline id='aa_1'></answer-area-inline> text between <answer-area-inline id='aa_2'></answer-area-inline> text after.</p>",
     "config": {
       "shuffle": true,
       "choiceAreaLayout": "vertical"
