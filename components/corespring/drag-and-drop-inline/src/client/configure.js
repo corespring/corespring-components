@@ -352,12 +352,6 @@ var main = [
           };
         };
 
-        $scope.makeChoiceHelper = function(choice){
-          return function(){
-            return $('<div class="corespring-drag-and-drop-inline-drag-helper">' + choice.label + '</div>');
-          };
-        };
-
         $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
       }
     };
