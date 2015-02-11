@@ -367,7 +367,6 @@ var csConfigAnswerAreaInline = [
       scope:{},
       restrict: 'A',
       replace: true,
-      template: template(),
       link: function(scope,el,attr){
         console.log("link", attr.answerAreaId);
         scope.$emit("getConfigScope", function(configScope){
@@ -399,10 +398,8 @@ var csConfigAnswerAreaInline = [
             scope.$emit("removeCorrectAnswer", scope.answerAreaId, index);
           };
         });
-      }
-    };
-    function template() {
-      return [
+      },
+      template: [
         '<div class="answer-area-inline">',
         '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="correctAnswers[answerAreaId]"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
@@ -417,8 +414,8 @@ var csConfigAnswerAreaInline = [
         '    </p>',
         '  </ul>',
         '</div>'
-      ].join("\n");
-    }
+      ].join("\n")
+    };
   }
 ];
 exports.framework = 'angular';

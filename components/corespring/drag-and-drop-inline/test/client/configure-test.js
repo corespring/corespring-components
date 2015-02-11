@@ -15,37 +15,35 @@ describe('corespring:drag-and-drop-inline:configure', function () {
   function createTestModel(options) {
     var answerAreas = (options && options.answerAreas) || [
       {
-        "id": "aa_1",
-        "textBefore": "Americans eat",
-        "textAfter": "for Thanksgiving dinner."
+        "id": "aa_1"
       }
     ];
     var choices = (options && options.choices) || [
       {
         "label": "turkey",
         "labelType": "text",
-        "id": "choice_0"
+        "id": "c_0"
       },
       {
         "label": "ham",
         "labelType": "text",
-        "id": "choice_1"
+        "id": "c_1"
       },
       {
         "label": "lamb",
         "labelType": "text",
-        "id": "choice_2"
+        "id": "c_2"
       },
       {
         "label": "bologna",
         "labelType": "text",
-        "id": "choice_3"
+        "id": "c_3"
       }
     ];
 
     var correctResponse = (options && options.correctResponse) || {
       "aa_1": [
-        "choice_0","choice_1","choice_2"
+        "c_0","c_1","c_2"
       ]
     };
 
@@ -99,7 +97,6 @@ describe('corespring:drag-and-drop-inline:configure', function () {
   });
 
   beforeEach(inject(function ($compile, $rootScope) {
-    scope = $rootScope.$new();
     container = new MockComponentRegister();
 
     $rootScope.$on('registerConfigPanel', function (ev, id, b) {
@@ -109,8 +106,8 @@ describe('corespring:drag-and-drop-inline:configure', function () {
     $rootScope.registerConfigPanel = function (id, b) {
       container.registerConfigPanel(id, b);
     };
-    element = $compile("<div navigator=''><corespring-drag-and-drop-inline-configure id='1'></corespring-drag-and-drop-inline-configure></div>")(scope);
-    scope = element.scope().$$childHead;
+    element = $compile("<div navigator=''><corespring-drag-and-drop-inline-configure id='1'></corespring-drag-and-drop-inline-configure></div>")($rootScope.$new());
+    scope = element.scope().$$childHead.$$childHead;
     rootScope = $rootScope;
   }));
 
@@ -165,12 +162,12 @@ describe('corespring:drag-and-drop-inline:configure', function () {
           {
             "label": "turkey",
             "labelType": "text",
-            "id": "choice_0"
+            "id": "c_0"
           }
         ],
         correctResponse: {
           "aa_1": [
-            "choice_0"
+            "c_0"
           ]
         }
       });
@@ -188,9 +185,7 @@ describe('corespring:drag-and-drop-inline:configure', function () {
       var ids, testModel = createTestModel({
         answerAreas: [
           {
-            "id": "aa_1",
-            "textBefore": "Americans eat",
-            "textAfter": "for Thanksgiving dinner."
+            "id": "aa_1"
           }
         ]
       });
