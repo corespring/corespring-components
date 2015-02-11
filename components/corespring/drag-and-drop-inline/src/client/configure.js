@@ -486,28 +486,6 @@ var csConfigAnswerAreaInline = [
       restrict: 'A',
       replace: true,
       template: template(),
-      controller: function($scope){
-        $scope.logOnOver = function(){
-          console.log("onOver");
-        };
-        $scope.logOnOut = function(){
-          console.log("onOut");
-        };
-        $scope.logOnDrop = function(){
-          console.log("onDrop");
-        };
-
-        $scope.droppableOptions = {
-          accept: function() {
-            return true;
-          },
-          onDrop: "logOnDrop()",
-          onOver: "logOnOver()",
-          onOut: "logOnOut()",
-          containment: "position"
-        };
-
-      },
       link: function(scope,el,attr){
         scope.$emit("getConfigScope", function(configScope){
           console.log("getConfigScope callback", configScope);
@@ -526,6 +504,11 @@ var csConfigAnswerAreaInline = [
             }
           };
 
+          scope.droppableOptions = {
+            accept: function() {
+              return true;
+            }
+          };
         });
       }
     };

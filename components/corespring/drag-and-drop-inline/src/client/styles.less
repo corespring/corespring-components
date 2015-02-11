@@ -6,6 +6,37 @@
   border-radius: 4px;
 }
 
+.see-solution,
+.view-drag-and-drop-inline {
+  .answer-area-inline {
+    display: inline-block;
+    margin: 2px;
+    width: auto;
+    height: auto;
+    min-width: 50px;
+    min-height: 30px;
+    background-color: #cccccc;
+    vertical-align: middle;
+
+    .ui-droppable {
+      margin-bottom: 0px;
+      min-width: 50px;
+      min-height: 30px;
+      -webkit-padding-start: 0px;
+      -webkit-padding-end: 20px;
+    }
+
+    .sortable-choice {
+      display: inline-block;
+      padding: 2px 5px 2px 5px;
+      margin: 2px;
+      min-height: 20px;
+      background-color: #eeeeee;
+      list-style-type: none;
+    }
+  }
+}
+
 .drag-and-drop-inline-config {
 
   .rounded-inputs;
@@ -137,5 +168,4 @@
       margin: 2px;
     }
   }
-
 }
