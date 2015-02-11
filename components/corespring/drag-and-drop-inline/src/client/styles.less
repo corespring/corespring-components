@@ -1,5 +1,14 @@
 @import '../../../../../less/common';
 
+.corespring-drag-and-drop-inline-drag-helper {
+  position: absolute;
+  display: inline-block;
+  margin: 2px;
+  padding: 5px 5px 5px 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 .modal .choice,
 .view-drag-and-drop .choice {
   min-width: 90px;
@@ -34,5 +43,43 @@
   .answer-areas-container, .choices-container {
     margin-bottom: 30px;
   }
+
+  .answer-area-inline {
+    position: relative;
+    display: inline-block;
+    margin: 2px;
+    width: auto;
+    height: auto;
+    min-width: 50px;
+    min-height: 20px;
+    border: 3px dashed #ccc;
+    border-radius: 10px;
+
+    .sorted-choices {
+      padding: 5px 10px;
+      min-height: 20px;
+
+      .prompt {
+        padding-bottom: 0;
+      }
+
+      .sortable-choice {
+        position: relative;
+        display: inline-block;
+        margin: 2px;
+        padding: 5px 20px 5px 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+
+        .delete-icon {
+          position: absolute;
+          top: 0;
+          right: 2px;
+        }
+      }
+    }
+  }
+
+
 
 }
