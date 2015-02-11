@@ -176,7 +176,7 @@ var main = [
       scope: {},
       template: template,
       replace: true,
-      controller: function($scope){
+      controller: ['$scope', function($scope){
         $scope.imageService = function() {
           return ComponentImageService;
         };
@@ -205,14 +205,14 @@ var main = [
               }
             }]
         };
-      },
-      link: function($scope, element, attrs) {
+      }],
+      link: function(scope, element, attrs) {
 
-        ChoiceTemplates.extendScope($scope, 'corespring-drag-and-drop-inline');
+        ChoiceTemplates.extendScope(scope, 'corespring-drag-and-drop-inline');
 
-        $scope.correctAnswers = {};
+        scope.correctAnswers = {};
 
-        $scope.choiceToDropDownItem = function(c) {
+        scope.choiceToDropDownItem = function(c) {
           if (!c) {
             return;
           }
@@ -222,21 +222,21 @@ var main = [
           return c.label;
         };
 
-        $scope.choiceToLetter = function(c) {
-          var idx = $scope.model.choices.indexOf(c);
-          return $scope.toChar(idx);
+        scope.choiceToLetter = function(c) {
+          var idx = scope.model.choices.indexOf(c);
+          return scope.toChar(idx);
         };
 
         function sumCorrectAnswers() {
-          return _.reduce($scope.correctAnswers, function(memo, ca) {
+          return _.reduce(scope.correctAnswers, function(memo, ca) {
             return ca.length + memo;
           }, 0);
         }
 
-        $scope.containerBridge = {
+        scope.containerBridge = {
           setModel: function(model) {
-            $scope.fullModel = model;
-            $scope.model = $scope.fullModel.model;
+            scope.fullModel = model;
+            scope.model = scope.fullModel.model;
 
             function choiceById(cid) {
               return _.find(model.model.choices, function(c) {
@@ -245,18 +245,18 @@ var main = [
             }
 
             _.each(model.correctResponse, function(val, key) {
-              $scope.correctAnswers[key] = _.map(val, function(choiceId) {
+              scope.correctAnswers[key] = _.map(val, function(choiceId) {
                 return choiceById(choiceId);
               });
             });
 
-            $scope.updatePartialScoringModel(sumCorrectAnswers());
+            scope.updatePartialScoringModel(sumCorrectAnswers());
 
-            $scope.componentState = "initialized";
+            scope.componentState = "initialized";
             console.log(model);
           },
           getModel: function() {
-            var model = _.cloneDeep($scope.fullModel);
+            var model = _.cloneDeep(scope.fullModel);
             return model;
           },
           getAnswer: function() {
@@ -265,21 +265,21 @@ var main = [
           }
         };
 
-        $scope.$watch('correctAnswers', function(n) {
+        scope.$watch('correctAnswers', function(n) {
           if (n) {
-            _.each($scope.correctAnswers, function(val, key) {
-              $scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
+            _.each(scope.correctAnswers, function(val, key) {
+              scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
             });
-            $scope.updatePartialScoringModel(sumCorrectAnswers());
+            scope.updatePartialScoringModel(sumCorrectAnswers());
           }
         }, true);
 
-        $scope.removeChoice = function(c) {
-          $scope.model.choices = _.filter($scope.model.choices, function(existing) {
+        scope.removeChoice = function(c) {
+          scope.model.choices = _.filter(scope.model.choices, function(existing) {
             return existing !== c;
           });
-          _.each($scope.correctAnswers, function(val, key) {
-            $scope.correctAnswers[key] = _.filter(val, function(choice){
+          _.each(scope.correctAnswers, function(val, key) {
+            scope.correctAnswers[key] = _.filter(val, function(choice){
               return choice !== c;
             });
           });
@@ -287,15 +287,15 @@ var main = [
 
         function findFreeChoiceSlot(){
           var slot = 0;
-          var ids = _.pluck($scope.model.choices, 'id');
+          var ids = _.pluck(scope.model.choices, 'id');
           while(_.contains(ids, "c_" + slot)){
             slot++;
           }
           return slot;
         }
 
-        $scope.addChoice = function() {
-          $scope.model.choices.push({
+        scope.addChoice = function() {
+          scope.model.choices.push({
             id: "c_" + findFreeChoiceSlot(),
             labelType: "text",
             label: "",
@@ -303,39 +303,39 @@ var main = [
           });
         };
 
-        $scope.removeAnswerArea = function(answerArea) {
-          $scope.model.answerAreas = _.filter($scope.model.answerAreas, function(existing) {
+        scope.removeAnswerArea = function(answerArea) {
+          scope.model.answerAreas = _.filter(scope.model.answerAreas, function(existing) {
             return existing !== answerArea;
           });
-          delete $scope.correctAnswers[answerArea.id];
+          delete scope.correctAnswers[answerArea.id];
         };
 
         function findFreeAnswerAreaSlot(){
           var slot = 0;
-          var ids = _.pluck($scope.model.answerAreas, 'id');
+          var ids = _.pluck(scope.model.answerAreas, 'id');
           while(_.contains(ids, "aa_" + slot)){
             slot++;
           }
           return slot;
         }
 
-        $scope.addAnswerArea = function() {
+        scope.addAnswerArea = function() {
           var idx = findFreeAnswerAreaSlot();
-          $scope.model.answerAreas.push({
+          scope.model.answerAreas.push({
             id: "aa_" + idx
           });
         };
 
-        $scope.$on('getConfigScope', function(event, callback){
+        scope.$on('getConfigScope', function(event, callback){
           console.log("on getConfigScope");
-          callback($scope);
+          callback(scope);
         });
 
-        $scope.$on('removeCorrectAnswer', function(event, answerAreaId, index){
-          $scope.correctAnswers[answerAreaId].splice(index,1);
+        scope.$on('removeCorrectAnswer', function(event, answerAreaId, index){
+          scope.correctAnswers[answerAreaId].splice(index,1);
         });
 
-        $scope.choiceDraggableOptions = function(index) {
+        scope.choiceDraggableOptions = function(index) {
           return {
             index: index,
             placeholder: 'keep',
@@ -343,7 +343,7 @@ var main = [
           };
         };
 
-        $scope.choiceDraggableJqueryOptions = function(choice){
+        scope.choiceDraggableJqueryOptions = function(choice){
           return {
             revert: 'invalid',
             helper: function(){
@@ -352,7 +352,7 @@ var main = [
           };
         };
 
-        $scope.$emit('registerConfigPanel', attrs.id, $scope.containerBridge);
+        scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       }
     };
   }

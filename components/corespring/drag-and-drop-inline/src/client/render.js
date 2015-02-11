@@ -16,7 +16,7 @@ var main = [
 
     "use strict";
 
-    var link = function(scope, element, attrs) {
+    function link(scope, element, attrs) {
 
       function answerAreaTemplate(){
         var answerHtml = scope.model.answerAreasXhtml;
@@ -102,7 +102,7 @@ var main = [
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
-    };
+    }
 
     var tmpl = [
       '<div class="view-drag-and-drop view-drag-and-drop-inline" drag-and-drop-controller>',
@@ -120,7 +120,6 @@ var main = [
 
     ].join("");
 
-
     return {
       link: link,
       scope: false,
@@ -137,12 +136,12 @@ var scopeForwarder = [
       scope: false,
       restrict: 'A',
       replace: false,
-      controller: function($scope) {
+      controller: ['$scope', function($scope) {
         $scope.$on("getScope", function(event, callback) {
           console.log("getScope");
           callback($scope);
         });
-      }
+      }]
     };
   }
 ];
