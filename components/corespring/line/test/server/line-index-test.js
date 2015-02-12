@@ -6,7 +6,7 @@ var should = require('should');
 var proxyquire = require('proxyquire').noCallThru();
 var fbu = require('../../../server-shared/src/server/feedback-utils');
 
-describe.only('line interaction server logic', function() {
+describe('line interaction server logic', function() {
 
   var serverObj = {
     expressionize: _.identity,
