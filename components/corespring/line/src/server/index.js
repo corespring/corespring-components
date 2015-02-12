@@ -83,6 +83,7 @@ exports.respond = function(question, answer, settings) {
   }
 
   if (addFeedback) {
+    res.outcome = [isCorrect ? "correct" : "incorrect"];
     res.feedback = fbu.makeFeedback(question.feedback, res.correctness);
   }
 

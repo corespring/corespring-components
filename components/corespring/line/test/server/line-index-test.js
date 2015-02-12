@@ -2,12 +2,11 @@ var _ = require('lodash');
 var assert = require('assert');
 var helper = require('../../../../../test-lib/test-helper');
 var sinon = require('sinon');
-var assert = require('assert');
 var should = require('should');
 var proxyquire = require('proxyquire').noCallThru();
 var fbu = require('../../../server-shared/src/server/feedback-utils');
 
-describe('line interaction server logic', function() {
+describe.only('line interaction server logic', function() {
 
   var serverObj = {
     expressionize: _.identity,
@@ -59,13 +58,13 @@ describe('line interaction server logic', function() {
     }
   };
 
-  it('returns incorrect outcome for an empty answer', function(){
-      var outcome = server.respond({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
-      outcome.should.eql({
-        correctness: 'incorrect',
-        score: 0,
-        feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK 
-      });
+  it('returns incorrect outcome for an empty answer', function() {
+    var outcome = server.respond({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
+    outcome.should.eql({
+      correctness: 'incorrect',
+      score: 0,
+      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK
+    });
   });
 
   it('respond incorrect', function() {
@@ -170,23 +169,34 @@ describe('line interaction server logic', function() {
         correctFeedbackType: 'anything else but custom',
         correctFeedback: 'Custom Correct!'
       };
-      var response = evaluateCorrectAnswerWithFeedback(feedback); 
+      var response = evaluateCorrectAnswerWithFeedback(feedback);
       response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
     });
 
   });
 
-  describe('isScoreable', function(){
-    it('should be true for an incomplete model', function(){
+  describe('outcome', function() {
+    it('should be populated for incorrect answer', function() {
+      var response = server.respond(component, incorrectAnswer, helper.settings(true, true, true));
+      response.outcome.should.eql(['incorrect']);
+    });
+    it('should be populated for correct answer', function() {
+      var response = server.respond(component, correctAnswer, helper.settings(true, true, true));
+      response.outcome.should.eql(['correct']);
+    });
+  });
+
+  describe('isScoreable', function() {
+    it('should be true for an incomplete model', function() {
       server.isScoreable(null, {}, {}).should.eql(true);
       server.isScoreable({}, {}, {}).should.eql(true);
-      server.isScoreable({ model : {}}, {}, {}).should.eql(true);
-      server.isScoreable({ model : { config:{}}}, {}, {}).should.eql(true);
+      server.isScoreable({ model: {}}, {}, {}).should.eql(true);
+      server.isScoreable({ model: { config: {}}}, {}, {}).should.eql(true);
     });
-    
-    it('should be the opposite of exhibitOnly', function(){
-      server.isScoreable({ model : { config:{ exhibitOnly: false}}}, {}, {}).should.eql(true);
-      server.isScoreable({ model : { config:{ exhibitOnly: true}}}, {}, {}).should.eql(false);
+
+    it('should be the opposite of exhibitOnly', function() {
+      server.isScoreable({ model: { config: { exhibitOnly: false}}}, {}, {}).should.eql(true);
+      server.isScoreable({ model: { config: { exhibitOnly: true}}}, {}, {}).should.eql(false);
     });
   });
 
