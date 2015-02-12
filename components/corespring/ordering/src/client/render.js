@@ -214,6 +214,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.response = undefined;
           scope.comments = undefined;
           scope.feedback = undefined;
+          scope.top = {};
         },
 
         setResponse: function(response) {
