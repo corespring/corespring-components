@@ -205,7 +205,7 @@ var main = [
         '      equation using context clues presented in the text that surrounds it.',
         '    </p>',
         '  </div>',
-        '</div>',
+        '</div>'
       ].join('\n');
 
       var answerAreas = [
@@ -224,7 +224,7 @@ var main = [
         '      image-service="imageService()">',
         '    </div>',
         '  </div>',
-        '</div>',
+        '</div>'
       ].join("\n");
 
       var choices = [
