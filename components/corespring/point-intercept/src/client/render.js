@@ -25,7 +25,9 @@ var main = ['$compile', '$modal', '$rootScope',
         "     <div class='graph-container'></div>",
         "     <div id='initialParams' ng-transclude></div>",
         "  </div>",
-        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '  <div class="feedback-holder" ng-show="model.config.showFeedback">',
+        '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '  </div>',
         '  <div see-answer-panel class="solution-panel" ng-class="{panelVisible: correctResponse}">',
         "    <div class='solution-container'></div>",
         "  </div>",
@@ -245,8 +247,8 @@ var main = ['$compile', '$modal', '$rootScope',
         scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
-            var config = dataAndSession.data.model.config;
-            scope.config = config;
+            var config = dataAndSession.data.model.config || {};
+            scope.config = _.defaults(config, {showFeedback: true});
             scope.model = dataAndSession.data.model;
             scope.additionalText = config.additionalText;
             scope.scale = config.scale;

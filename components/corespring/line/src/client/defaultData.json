@@ -19,7 +19,8 @@
       "tickLabelFrequency": 5,
       "sigfigs": -1,
       "showCoordinates": true,
-      "showInputs": true
+      "showInputs": true,
+      "showFeedback": true
     }
   }
 }
