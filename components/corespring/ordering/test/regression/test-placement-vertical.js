@@ -78,7 +78,7 @@ describe('placement ordering', function() {
           .call(done);
       });
 
-      it.only('correct answer is not visible after reset and submit', function(done) {
+      it('correct answer is not visible after reset and submit', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
