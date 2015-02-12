@@ -66,6 +66,18 @@ describe('placement ordering', function() {
           .call(done);
       });
 
+      it.only('correct answer is not visible after reset', function(done) {
+        browser
+          .dragAndDrop(divContaining('Apple'), landingPlace(1))
+          .dragAndDrop(divContaining('Banana'), landingPlace(2))
+          .submitItem()
+          .click('.show-correct-button')
+          .waitForVisible('.see-answer-area .choices')
+          .resetItem()
+          .waitForVisible('.see-answer-area .choices', 500, true)
+          .call(done);
+      });
+
       it('choices dont have correctness indication after reset', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))

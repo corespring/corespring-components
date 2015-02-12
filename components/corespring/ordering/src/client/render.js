@@ -34,7 +34,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var correctAnswerArea = function(attrs) {
       return [
-          '<div class="choices" ' + attrs + '>',
+        '<div class="choices" ' + attrs + '>',
         '  <div class="choices-holder">',
         '    <div class="answer-area-label"><br/></div>',
         '    <div class="choices-inner-holder clearfix">',
@@ -210,6 +210,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.resetChoices(scope.rawModel);
           clearLandingPlaceChoices();
           scope.correctResponse = undefined;
+          scope.correctChoices = undefined;
           scope.response = undefined;
           scope.comments = undefined;
           scope.feedback = undefined;
@@ -319,7 +320,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
       '        <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '      </div>',
-      '      <div class="see-answer-area choice-area">' + correctAnswerArea('ng-show="top.correctAnswerVisible"') + '</div>',
+      '      <div class="see-answer-area choice-area">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
       '    </div>',
       '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
       '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
