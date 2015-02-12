@@ -272,6 +272,14 @@ var main = [
         '    <checkbox class="shuffle-choices" ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
         '  </div>',
         '</div>',
+        '<div class="row">',
+        '  <div class="col-xs-offset-1 col-xs-12">',
+        '    Display choices ',
+        '    <select class="form-control choice-area-position" ng-model="model.config.choiceAreaPosition"',
+        '       ng-options="c for c in [\'above\', \'below\']">',
+        '    </select>',
+        '  </div>',
+        '</div>'
       ].join("\n");
 
       var feedback = [
@@ -329,40 +337,6 @@ var main = [
         '</div>'
       ].join('\n');
 
-      var displayOptions = [
-        '<div class="container-fluid">',
-        '  <div class="row">',
-        '    <div class="col-xs-12">',
-        '      <form class="form-horizontal" role="form">',
-        '        <div class="config-form-row">',
-        '          <div class="col-sm-5" ng-show="model.config.choiceAreaHasLabel">',
-        '            <input type="text" class="form-control" ng-model="model.config.choiceAreaLabel" />',
-        '          </div>',
-        '        </div>',
-        '        <div class="config-form-row"><label>Layout</label></div>',
-        '        <div class="config-form-row layout-config">',
-        '          <div class="col-sm-2">',
-        '            <radio id="vertical" value="vertical"',
-        '                ng-model="model.config.choiceAreaLayout">Vertical</radio>',
-        '          </div>',
-        '          <div class="col-sm-2">',
-        '            <radio id="horizontal" value="horizontal"',
-        '                ng-model="model.config.choiceAreaLayout">Horizontal</radio>',
-        '          </div>',
-        '        </div>',
-        '        <div class="config-form-row">',
-        '          <label>Choice area is </label>',
-        '          <select class="form-control choice-area" ng-model="model.config.choiceAreaPosition"',
-        '              ng-options="c for c in [\'above\', \'below\']">',
-        '          </select>',
-        '          <label>answer blanks</label>',
-        '        </div>',
-        '      </form>',
-        '    </div>',
-        '  </div>',
-        '</div>'
-      ].join('\n');
-
       var result = [
         '<div class="drag-and-drop-config-panel drag-and-drop-inline-config-panel" choice-template-controller="">',
         '  <div navigator-panel="Design">',
@@ -370,9 +344,6 @@ var main = [
         '  </div>',
         '  <div navigator-panel="Scoring">',
         scoringOptions,
-        '  </div>',
-        '  <div navigator-panel="Display">',
-        displayOptions,
         '  </div>',
         '</div>'
       ].join('\n');
