@@ -18,7 +18,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var answerArea = [
       '<div class="answer-area-holder">',
       '  <div class="answer-area-label" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
-      '  <div class="answer-area-table">',
+      '  <div class="answer-area-table {{correctClass}}">',
       '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
       '         ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
       '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index].id}"',
@@ -211,6 +211,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           clearLandingPlaceChoices();
           scope.correctResponse = undefined;
           scope.correctChoices = undefined;
+          scope.correctClass = undefined;
           scope.response = undefined;
           scope.comments = undefined;
           scope.feedback = undefined;
@@ -220,7 +221,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         setResponse: function(response) {
           console.log("R: ", response);
           scope.response = response;
-          if (response.correctness !== 'correct') {
+          if (response.correctness === 'incorrect') {
             scope.correctResponse = response.correctResponse;
           }
           scope.correctChoices = _.map(response.correctResponse, function(c) {

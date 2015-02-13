@@ -222,14 +222,14 @@ describe('corespring', function() {
         scope.landingPlaceChoices[0] = {id: "c3"};
         scope.landingPlaceChoices[1] = {id: "c4"};
         setResponseAndDigest({correctness: 'incorrect', correctClass: 'incorrect', answer: ['c3', 'c4'], correctResponse: ['c1', 'c2']});
-        expect(element.find('.answer-area .incorrect').length).toBe(2);
+        expect(element.find('.answer-area-table .incorrect').length).toBe(2);
       });
       it('correct choices are marked as correct', function() {
         setModelAndDigest(verticalModel);
         scope.landingPlaceChoices[0] = {id: "c1"};
         scope.landingPlaceChoices[1] = {id: "c2"};
         setResponseAndDigest({correctness: 'incorrect', correctClass: 'incorrect', answer: ['c3', 'c4'], correctResponse: ['c1', 'c2']});
-        expect(element.find('.answer-area .correct').length).toBe(2);
+        expect(element.find('.answer-area-table .correct').length).toBe(2);
       });
     });
 
