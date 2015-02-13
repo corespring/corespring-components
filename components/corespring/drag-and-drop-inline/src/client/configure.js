@@ -1,11 +1,12 @@
 /* globals console, exports */
 
 var main = [
+  "$timeout",
   "ChoiceTemplates",
   "ComponentImageService",
   "WiggiLinkFeatureDef",
   "WiggiMathJaxFeatureDef",
-  function(ChoiceTemplates, ComponentImageService, WiggiLinkFeatureDef, WiggiMathJaxFeatureDef) {
+  function($timeout, ChoiceTemplates, ComponentImageService, WiggiLinkFeatureDef, WiggiMathJaxFeatureDef) {
 
     "use strict";
 
@@ -160,10 +161,12 @@ var main = [
         }
 
         scope.addAnswerArea = function() {
-          var idx = findFreeAnswerAreaSlot();
+          var answerAreaId = "aa_" + findFreeAnswerAreaSlot();
           scope.model.answerAreas.push({
-            id: "aa_" + idx
+            id: answerAreaId
           });
+          scope.correctAnswers[answerAreaId] = [];
+          return answerAreaId;
         };
 
         scope.$on('getConfigScope', function(event, callback){
@@ -188,9 +191,49 @@ var main = [
             revert: 'invalid',
             helper: function(){
                 return $('<div class="corespring-drag-and-drop-inline-drag-helper">' + choice.label + '</div>');
-              }
+              },
+            appendTo: ".modal",
+            cursorAt: {
+              bottom: 5,
+              right: 5
+            }
           };
         };
+
+        scope.active = [];
+
+        scope.canDragChoices = true;
+
+        scope.activate = function($index, $event) {
+          $event.stopPropagation();
+          scope.active[$index] = true;
+          scope.canDragChoices = false;
+          $timeout(function() {
+            var $editable = $($event.target).closest('.sortable-choice').find('.wiggi-wiz-editable');
+            $editable.click();
+            angular.element($editable).scope().focusCaretAtEnd();
+          });
+        };
+
+        scope.itemClick = function($event) {
+          function isField($event) {
+            return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
+          }
+
+          if (isField($event)) {
+            $event.stopPropagation();
+            $event.preventDefault();
+          } else {
+            scope.deactivate();
+          }
+        };
+
+        scope.deactivate = function() {
+          scope.active = [];
+          scope.canDragChoices = true;
+          scope.$emit('mathJaxUpdateRequest');
+        };
+
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       }
@@ -233,32 +276,47 @@ var main = [
         '    <label class="control-label" style="margin-bottom: 10px;">Choices</label>',
         '  </div>',
         '</div>',
-        '<div class="choice-row" ng-repeat="choice in model.choices">',
-        '  <div class="row">',
-        '    <div class="col-xs-1 text-center">',
-        '      <i class="fa fa-trash-o fa-lg remove-choice" ng-hide="model.choices.length == 1" title="Delete"',
-        '          data-tggle="tooltip" ng-click="removeChoice(choice)">',
-        '      </i>',
-        '    </div>',
-        '    <div class="col-xs-10" data-choice-id="choice.id" data-drag="true"',
-        '         data-jqyoui-options="choiceDraggableJqueryOptions(choice)"',
-        '         ng-model="choice"',
-        '         jqyoui-draggable="choiceDraggableOptions($index)">',
-        '      <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
-        '          image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
-        '          parent-selector=".modal-body">',
-        '        <edit-pane-toolbar alignment="bottom">',
-        '          <div class="btn-group pull-right">',
-        '            <button ng-click="closePane()" class="btn btn-sm btn-success">Done</button>',
+        '<div class="row">',
+        '  <div class="col-xs-12">',
+        '    <ul class="draggable-choices" ng-model="model.choices">',
+        '      <li class="draggable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
+        '          ng-model="choice" ng-click="itemClick($event)" data-drag="{{canDragChoices}}"',
+        '          jqyoui-draggable="choiceDraggableOptions($index)"',
+        '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
+        '        <div class="blocker" ng-hide="active[$index]">',
+        '          <div class="bg"></div>',
+        '          <div class="content">',
+        '            <ul class="edit-controls">',
+        '              <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true"',
+        '                  tooltip-placement="bottom">',
+        '                <i ng-click="activate($index, $event)" class="fa fa-pencil"></i>',
+        '              </li>',
+        '              <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"',
+        '                  tooltip-placement="bottom">',
+        '                <i ng-click="removeChoice($index)" class="fa fa-trash-o"></i>',
+        '              </li>',
+        '            </ul>',
         '          </div>',
-        '        </edit-pane-toolbar>',
-        '      </div>',
-        '    </div>',
-        '  </div>',
-        '  <div class="row" style="margin-bottom: 20px;">',
-        '    <div class="col-xs-offset-1 col-xs-12">',
-        '      <checkbox ng-model="choice.removeAfterPlacing">Remove tile after placing</checkbox>',
-        '    </div>',
+        '        </div>',
+        '        <div class="remove-after-placing">',
+        '          <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">',
+        '            Remove tile after placing',
+        '          </checkbox>',
+        '        </div>',
+        '        <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
+        '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external" features="extraFeatures"',
+        '            parent-selector=".modal-body"',
+        '            image-service="imageService()">',
+        '          <edit-pane-toolbar alignment="bottom">',
+        '            <div class="btn-group pull-right">',
+        '              <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">',
+        '                Done',
+        '              </button>',
+        '            </div>',
+        '          </edit-pane-toolbar>',
+        '        </div>',
+        '      </li>',
+        '    </ul>',
         '  </div>',
         '</div>',
         '<div class="row add-choice-row">',
@@ -268,12 +326,12 @@ var main = [
         '  </div>',
         '</div>',
         '<div class="row shuffle-choices-row">',
-        '  <div class="col-xs-offset-1 col-xs-12">',
+        '  <div class="col-xs-12">',
         '    <checkbox class="shuffle-choices" ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
         '  </div>',
         '</div>',
         '<div class="row">',
-        '  <div class="col-xs-offset-1 col-xs-12">',
+        '  <div class="col-xs-12">',
         '    <span>Display choices</span>',
         '    <select class="form-control choice-area-position" ng-model="model.config.choiceAreaPosition"',
         '       ng-options="c for c in [\'above\', \'below\']">',
@@ -404,7 +462,7 @@ var csConfigAnswerAreaInline = [
         '      </div>',
         '      <span ng-bind-html-unsafe="choice.label"></span>',
         '    </li>',
-        '    <p class="prompt">',
+        '    <p class="prompt" ng-hide="correctAnswers[answerAreaId].length">',
         '      Drag and order correct answers here.',
         '    </p>',
         '  </ul>',
