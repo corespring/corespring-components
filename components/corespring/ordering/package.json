@@ -6,6 +6,10 @@
       "organization": "corespring"
     },
     {
+      "name": "widgets",
+      "organization": "corespring"
+    },
+    {
       "name": "drag-and-drop-engine",
       "organization": "corespring"
     },

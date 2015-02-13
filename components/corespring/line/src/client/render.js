@@ -45,7 +45,9 @@ var main = ['$compile', '$rootScope', "LineUtils",
         "   </div>",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
         "</div>",
-        '<div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '<div class="feedback-holder" ng-show="config.showFeedback">',
+        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '</div>',
         '<div see-answer-panel class="solution-panel" ng-class="{panelVisible: correctResponse}">',
         "  <div class='solution-container'>",
         "     <span>The correct equation is {{correctResponse.equation}}</span>",
@@ -317,8 +319,8 @@ var main = ['$compile', '$rootScope', "LineUtils",
 
           setDataAndSession: function(dataAndSession) {
 
-            var config = dataAndSession.data.model.config;
-            scope.config = config;
+            var config = dataAndSession.data.model.config || {};
+            scope.config = _.defaults(config, {showFeedback: true});
 
             var containerWidth, containerHeight;
             var graphContainer = element.find('.graph-container');

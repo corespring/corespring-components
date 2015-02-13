@@ -35,7 +35,7 @@
     }
   },
   "name": "inline-choice",
-  "title": "Short Answer - Select Text",
+  "title": "Short Answer - Drop Down",
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
   "released": true

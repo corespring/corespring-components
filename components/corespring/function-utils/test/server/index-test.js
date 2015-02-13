@@ -191,6 +191,12 @@ describe('equation correctness logic', function() {
     server.isEquationCorrect(correctEq, testEq).should.eql(true);
   });
 
+  it('reshuffled equation is correct, case 2', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "3x=y-5";
+    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+  });
+
   it('decimal slope in fraction form is correct', function() {
     var correctEq = "y=0.5x+5";
     var testEq = "y=(1/2)x+5";
@@ -218,6 +224,30 @@ describe('equation correctness logic', function() {
   it('different addition is incorrect', function() {
     var correctEq = "y=3x+5";
     var testEq = "y=3x+4";
+    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+  });
+
+  it('inverse equation is incorrect', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y=-(3x+5)";
+    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+  });
+
+  it('simple letter equation is incorrect (CO-124)', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y";
+    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+  });
+
+  it('simple identity equation is incorrect (CO-124)', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y=y";
+    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+  });
+
+  it('simple identity equation with x is incorrect (CO-124)', function() {
+    var correctEq = "y=3x+5";
+    var testEq = "y-x=y-x";
     server.isEquationCorrect(correctEq, testEq).should.eql(false);
   });
 

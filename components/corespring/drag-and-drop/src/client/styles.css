@@ -118,7 +118,7 @@
     clear: both;
 }
 
-.remove-choice {
+.drag-and-drop-remove-choice {
     position: absolute;
     right: 38px;
     top: -7px;

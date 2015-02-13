@@ -137,7 +137,7 @@ var dragAndDropController = [
             scope.local.choices = _.cloneDeep(model.choices);
           }
 
-          scope.originalChoices = _.cloneDeep(model.choices);
+          scope.originalChoices = _.cloneDeep(scope.local.choices);
           scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
@@ -149,7 +149,7 @@ var dragAndDropController = [
         };
 
         scope.startOver = function() {
-          scope.stack = [];
+          scope.stack = [_.first(scope.stack)];
           scope.local.choices = _.cloneDeep(scope.originalChoices);
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = [];
@@ -161,7 +161,7 @@ var dragAndDropController = [
           if (scope.stack.length < 2) {
             return;
           }
-          var o = scope.stack.pop();
+          scope.stack.pop();
           var state = _.last(scope.stack);
           scope.local.choices = _.cloneDeep(state.choices);
           scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
@@ -237,11 +237,7 @@ var dragAndDropController = [
           },
 
           answerChangedHandler: function(callback) {
-            scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
-              if (newValue !== oldValue) {
-                callback();
-              }
-            }, true);
+            scope.answerChangeCallback = callback;
           },
 
           editable: function(e) {
@@ -249,7 +245,10 @@ var dragAndDropController = [
           }
         };
 
-        scope.$watch('landingPlaceChoices', function(n) {
+        scope.$watch('landingPlaceChoices', function(n, old) {
+          if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
+            scope.answerChangeCallback();
+          }
           var state = {
             choices: _.cloneDeep(scope.local.choices),
             landingPlaces: _.cloneDeep(scope.landingPlaceChoices)

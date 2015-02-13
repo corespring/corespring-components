@@ -2,7 +2,6 @@
 
 var main = [
   '$sce', '$log',
-
   function($sce, $log) {
 
     "use strict";
@@ -13,6 +12,12 @@ var main = [
 
       scope.editable = true;
       scope.response = {};
+
+      scope.changeHandler = function() {
+        if (_.isFunction(scope.answerChangeCallback)) {
+          scope.answerChangeCallback();
+        }
+      };
 
       scope.colors = {
         correct: $(element).find('.correct-element').css('color'),
@@ -65,11 +70,7 @@ var main = [
         },
 
         answerChangedHandler: function(callback) {
-          scope.$watch("response", function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              callback();
-            }
-          }, true);
+          scope.answerChangeCallback = callback;
         },
 
         editable: function(e) {
@@ -92,6 +93,7 @@ var main = [
         '       ngModel="model"',
         '       responseModel="response"',
         '       serverResponse="serverResponse"',
+        '       changeHandler="changeHandler()"',
         '       editable="editable"',
         '       colors="colors"></div>',
         '  <div ng-show="serverResponse.feedback.message" class="panel panel-default feedback-panel {{serverResponse.correctness}}">',
@@ -162,7 +164,8 @@ var interactiveGraph = [
         model: "=ngmodel",
         responsemodel: "=",
         serverresponse: "=",
-        editable: "="
+        editable: "=",
+        changehandler: "&changehandler"
       },
       controller: function($scope){
         //set default config to avoid npe
@@ -357,6 +360,12 @@ var interactiveGraph = [
         scope.$watch('editable', function(n) {
           if (!_.isUndefined(n) && !n) {
             scope.graph.updateOptions({exhibitOnly: true});
+          }
+        }, true);
+
+        scope.$watch('responsemodel', function(n, prev) {
+          if (!_.isEqual(n, prev)) {
+            scope.changehandler();
           }
         }, true);
 

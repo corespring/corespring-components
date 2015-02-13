@@ -129,9 +129,12 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         });
       };
 
-      scope.$watch('landingPlaceChoices', function(n) {
+      scope.$watch('landingPlaceChoices', function(n, old) {
         if (_.isEmpty(n)) {
             return;
+        }
+        if (!_.isEmpty(old) && !_.isEqual(n, old) && _.isFunction(scope.answerChangeCallback)) {
+          scope.answerChangeCallback();
         }
         var state = {
           choices: _.cloneDeep(scope.model.choices),
@@ -225,11 +228,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         answerChangedHandler: function(callback) {
-          scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              callback();
-            }
-          }, true);
+          scope.answerChangeCallback = callback;
         },
 
         editable: function(e) {
@@ -470,7 +469,7 @@ var landingPlace = [
       '             class="choice {{classForChoice(choice, $index)}}"',
       '             ng-bind-html-unsafe="choice.content">',
       '        </div>',
-      '        <div ng-repeat-end="" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
+      '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
       '    </div>',
       '    </div>'].join("")
 
