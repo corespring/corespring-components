@@ -1,9 +1,8 @@
 {
   "componentType": "corespring-drag-and-drop-inline",
-  "title": "Short Answer - Drag and Drop",
+  "title": "Categorize",
   "correctResponse": {
-    "aa_1": ["c_1", "c_2"],
-    "aa_2": ["c_3"]
+    "aa_1": []
   },
   "feedback": {
     "correctFeedbackType": "default",
@@ -11,45 +10,39 @@
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": false,
-  "partialScoring": [
+  "partialScoring" : [
     {}
   ],
   "model": {
     "answerAreas": [
       {
-        "id": "aa_1"
-      },
-      {
-        "id": "aa_2"
+        "id": "aa_1",
+        "textBefore": "",
+        "textAfter": ""
       }
     ],
     "choices": [
       {
-        "label": "a",
+        "label": "",
         "labelType": "text",
-        "id": "c_0",
-        "removeAfterPlacing": false
+        "id": "choice_0"
       },
       {
-        "label": "b",
+        "label": "",
         "labelType": "text",
-        "id": "c_1",
-        "removeAfterPlacing": false
+        "id": "choice_1"
       },
       {
-        "label": "c",
+        "label": "",
         "labelType": "text",
-        "id": "c_2",
-        "removeAfterPlacing": false
+        "id": "choice_2"
       },
       {
-        "label": "d",
+        "label": "",
         "labelType": "text",
-        "id": "c_3",
-        "removeAfterPlacing": false
+        "id": "choice_3"
       }
     ],
-    "answerAreasXhtml": "<p>Text Before <answer-area-inline id='aa_1'></answer-area-inline> text between <answer-area-inline id='aa_2'></answer-area-inline> text after.</p>",
     "config": {
       "shuffle": false,
       "choiceAreaLabel": "Choices",
