@@ -60,7 +60,7 @@ component = {
 
 describe('placement ordering', function() {
 
-  it('should return an incorrect outcome for an empty answer', function() {
+  it('should return a warning outcome for an empty answer', function() {
 
     var outcome = server.respond({
       feedback: {},
@@ -70,21 +70,21 @@ describe('placement ordering', function() {
         }
       }
     }, null, helper.settings(true, true, true));
-    
+
     outcome.should.eql({
-        correctness: "incorrect",
-        correctResponse: undefined,
-        answer: null,
-        score: 0,
-        correctClass: "incorrect",
-        feedback: "Good try but that is not the correct answer."
-      });
+      correctness: "warning",
+      correctResponse: undefined,
+      answer: null,
+      score: 0,
+      correctClass: "warning",
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+    });
   });
 });
 
 describe('ordering', function() {
 
-   it('respond incorrect', function() {
+  it('respond incorrect', function() {
     var response = server.respond(_.cloneDeep(component), ["1", "2", "3", "4"], helper.settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
@@ -95,5 +95,6 @@ describe('ordering', function() {
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
   });
+
 
 });

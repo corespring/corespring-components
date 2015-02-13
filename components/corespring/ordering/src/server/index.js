@@ -17,14 +17,17 @@ exports.respond = function(question, answer, settings) {
     question.correctResponse :
     _.pluck(question.model.choices, 'id');
 
-  if (!answer) {
+  var isEmptyAnswer = _.isEmpty(answer) || _.every(answer, function(a) {
+    return _.isEmpty(a);
+  });
+  if (isEmptyAnswer) {
     return {
-      correctness: 'incorrect',
+      correctness: 'warning',
       correctResponse: correctResponse,
       answer: answer,
       score: 0,
-      correctClass: 'incorrect',
-      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null
+      correctClass: 'warning',
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'warning') : null
     };
   }
 
