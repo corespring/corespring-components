@@ -255,6 +255,7 @@ var main = [
         '<div class="row">',
         '  <div class="col-xs-12">',
         '    <label class="control-label" style="margin-bottom: 10px;">Problem Area</label>',
+        '    <p class="answer-area-help-text">Begin typing and click "Add Answer Blank" to insert an answer blank. Drag the correct answer(s) to the blank(s).</p>',
         '  </div>',
         '</div>',
         '<div class="row">',
