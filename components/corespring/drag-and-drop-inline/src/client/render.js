@@ -195,7 +195,8 @@ var answerAreaInline = [
               return !renderScope.targetDragging;
             },
             activeClass: 'answer-area-inline-active',
-            hoverClass: 'answer-area-inline-hover'
+            hoverClass: 'answer-area-inline-hover',
+            tolerance: "pointer"
           };
           scope.trackId = function(choice) {
             console.log("trackId", scope.answerAreaId, choice);
