@@ -34,7 +34,7 @@ describe('placement ordering', function() {
     return this;
   };
 
-  describe.only('horizontal', function() {
+  describe('horizontal', function() {
 
     describe('correctness', function() {
       beforeEach(function() {
