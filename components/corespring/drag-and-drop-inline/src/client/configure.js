@@ -93,14 +93,12 @@ var main = [
             scope.updatePartialScoringModel(sumCorrectAnswers());
 
             scope.componentState = "initialized";
-            console.log(model);
           },
           getModel: function() {
             var model = _.cloneDeep(scope.fullModel);
             return model;
           },
           getAnswer: function() {
-            console.log("returning empty answer for: Drag and drop inline");
             return {};
           }
         };
@@ -165,7 +163,6 @@ var main = [
         };
 
         scope.$on('getConfigScope', function(event, callback){
-          console.log("on getConfigScope");
           callback(scope);
         });
 
@@ -420,10 +417,7 @@ var csConfigAnswerAreaInline = [
       restrict: 'A',
       replace: true,
       link: function(scope,el,attr){
-        console.log("link", attr.answerAreaId);
         scope.$emit("getConfigScope", function(configScope){
-
-          console.log("getConfigScope callback", configScope);
           scope.answerAreaId = attr.answerAreaId;
           scope.correctAnswers = configScope.correctAnswers;
 
@@ -439,7 +433,7 @@ var csConfigAnswerAreaInline = [
           scope.droppableOptions = {
             tolerance: "pointer",
             accept: function() {
-              return true; //!configScope.targetDragging;
+              return !configScope.targetDragging;
             }
           };
 

@@ -26,7 +26,7 @@ var main = [
       }
 
       scope._seeSolution = function() {
-        scope.seeSolution(answerAreaTemplate("class='corespring-drag-and-drop-inline-see-solution'"));
+        scope.seeSolution(answerAreaTemplate(" class='corespring-drag-and-drop-inline-see-solution'"));
       };
 
       _.extend(scope.containerBridge, {
@@ -111,7 +111,7 @@ var main = [
         }
 
         var actualIndex = correctResponse.indexOf(choice.id);
-        var isCorrect = scope.cardinality === "ordered" ? actualIndex === targetIndex : actualIndex >= 0;
+        var isCorrect = actualIndex >= 0;
         return isCorrect ? "correct" : "incorrect";
       };
 
@@ -152,7 +152,6 @@ var scopeForwarder = [
       replace: false,
       controller: ['$scope', function($scope) {
         $scope.$on("getScope", function(event, callback) {
-          console.log("getScope");
           callback($scope);
         });
       }]
@@ -167,12 +166,9 @@ var answerAreaInline = [
       restrict: 'EA',
       replace: true,
       link: function(scope, el, attr) {
-        console.log("link", attr.id);
         scope.$emit("getScope", function(renderScope) {
-          console.log("getScope", renderScope);
           scope.answerAreaId = attr.id;
           scope.landingPlaceChoices = renderScope.landingPlaceChoices;
-          console.log("getScope", scope.landingPlaceChoices[scope.answerAreaId]);
 
           scope.hasResults = function(){
             return !!renderScope.correctResponse;
@@ -199,7 +195,6 @@ var answerAreaInline = [
             tolerance: "pointer"
           };
           scope.trackId = function(choice) {
-            console.log("trackId", scope.answerAreaId, choice);
             return _.uniqueId();
           };
           scope.classForChoice = function(choice, index){
