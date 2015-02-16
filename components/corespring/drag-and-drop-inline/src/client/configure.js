@@ -26,6 +26,7 @@ var main = [
             new WiggiLinkFeatureDef(),
             {
               name: 'answer-area-inline',
+              title: 'Add Answer Blank',
               draggable: false,
               compile: true,
               addToEditor: function(editor, addContent) {
