@@ -396,7 +396,7 @@ var main = [
       ].join('\n');
 
       var result = [
-        '<div class="drag-and-drop-inline-config-panel" choice-template-controller="">',
+        '<div class="corespring-drag-and-drop-inline-config" choice-template-controller="">',
         '  <div navigator-panel="Design">',
         designOptions,
         '  </div>',

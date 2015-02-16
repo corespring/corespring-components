@@ -18,14 +18,15 @@ var main = [
 
     function link(scope, element, attrs) {
 
-      function answerAreaTemplate(){
+      function answerAreaTemplate(attributes){
+        attributes = (attributes? attributes : '')
         var answerHtml = scope.model.answerAreasXhtml;
-        var answerArea = "<div scope-forwarder=''> " + answerHtml + "</div>";
+        var answerArea = "<div scope-forwarder=''" + attributes + ">" + answerHtml + "</div>";
         return answerArea;
       }
 
       scope._seeSolution = function() {
-        scope.seeSolution(answerAreaTemplate());
+        scope.seeSolution(answerAreaTemplate("class='corespring-drag-and-drop-inline-see-solution'"));
       };
 
       _.extend(scope.containerBridge, {
@@ -105,7 +106,7 @@ var main = [
     }
 
     var tmpl = [
-      '<div class="view-drag-and-drop view-drag-and-drop-inline" drag-and-drop-controller>',
+      '<div class="view-drag-and-drop corespring-drag-and-drop-inline-render" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
