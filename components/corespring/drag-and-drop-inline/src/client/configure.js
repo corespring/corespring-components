@@ -81,9 +81,7 @@ var main = [
             scope.model = scope.fullModel.model;
 
             function choiceById(cid) {
-              return _.find(model.model.choices, function(c) {
-                return c.id === cid;
-              });
+              return _.find(model.model.choices, {id:cid});
             }
 
             _.each(model.correctResponse, function(val, key) {
@@ -116,14 +114,10 @@ var main = [
           }
         }, true);
 
-        scope.removeChoice = function(c) {
-          scope.model.choices = _.filter(scope.model.choices, function(existing) {
-            return existing !== c;
-          });
+        scope.removeChoice = function(id) {
+          _.remove(scope.model.choices, {id:id});
           _.each(scope.correctAnswers, function(val, key) {
-            scope.correctAnswers[key] = _.filter(val, function(choice){
-              return choice !== c;
-            });
+            _.remove(val, {id:id});
           });
         };
 
@@ -212,7 +206,10 @@ var main = [
           $timeout(function() {
             var $editable = $($event.target).closest('.sortable-choice').find('.wiggi-wiz-editable');
             $editable.click();
-            angular.element($editable).scope().focusCaretAtEnd();
+            var editableScope = angular.element($editable).scope();
+            if(editableScope && _.isFunction(editableScope.focusCaretAtEnd)){
+              editableScope.focusCaretAtEnd();
+            }
           });
         };
 
@@ -295,7 +292,7 @@ var main = [
         '              </li>',
         '              <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"',
         '                  tooltip-placement="bottom">',
-        '                <i ng-click="removeChoice($index)" class="fa fa-trash-o"></i>',
+        '                <i ng-click="removeChoice(choice.id)" class="fa fa-trash-o"></i>',
         '              </li>',
         '            </ul>',
         '          </div>',
@@ -440,8 +437,9 @@ var csConfigAnswerAreaInline = [
           };
 
           scope.droppableOptions = {
+            tolerance: "pointer",
             accept: function() {
-              return !configScope.targetDragging;
+              return true; //!configScope.targetDragging;
             }
           };
 
