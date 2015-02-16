@@ -77,7 +77,7 @@ var main = [
       '           <label class="control-label">Correct Answer</label>',
       '         </div>',
       '         <div class="col-sm-5 input-group">',
-      '             <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter correct answer in y=mx+b form." ng-model="fullModel.correctResponse" />',
+      '             <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter correct answer in mx+b form." ng-model="correctResponse" />',
       '         </div>',
       '       </div>',
       '       <div class="config-form-row">',
@@ -85,7 +85,7 @@ var main = [
       '           <label class="control-label">Initial Line (optional)</label>',
       '         </div>',
       '         <div class="col-sm-5 input-group">',
-      '           <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter initial line equation in y=mx+b form." ng-model="fullModel.model.config.initialCurve" />',
+      '           <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter initial line equation in mx+b form." ng-model="initialCurve" />',
       '         </div>',
       '       </div>',
       '     </form>',
@@ -126,6 +126,10 @@ var main = [
             model.model = model.model || {};
             model.model.config = model.model.config || {};
 
+            scope.correctResponse = (scope.fullModel) ? scope.noYEqualsPrefix(scope.fullModel.correctResponse) : undefined;
+            scope.initialCurve = (scope.fullModel && scope.fullModel.model && scope.fullModel.model.config) ?
+              scope.noYEqualsPrefix(scope.fullModel.model.config.initialCurve) : undefined;
+
             var labels = (model.model.config.pointLabels || []);
 
             scope.points = [];
@@ -143,6 +147,22 @@ var main = [
             return model;
           }
         };
+
+        scope.noYEqualsPrefix = function(expression) {
+          return expression.replace(/ /g,'').replace(/^y=/,'');
+        };
+
+        scope.prefixWithYEquals = function(expression) {
+          return (expression.replace(/ /g,'').indexOf('y=') === 0) ? expression : ("y=" + expression);
+        };
+
+        scope.$watch('correctResponse', function(newValue) {
+          scope.fullModel.correctResponse = scope.prefixWithYEquals(newValue);
+        });
+
+        scope.$watch('initialCurve', function(newValue) {
+          scope.fullModel.model.config.initialCurve = scope.prefixWithYEquals(newValue);
+        });
 
         scope.resetDefaults = function() {
           var defaults = scope.defaults;
@@ -162,7 +182,6 @@ var main = [
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
-
 
       },
       template: [
