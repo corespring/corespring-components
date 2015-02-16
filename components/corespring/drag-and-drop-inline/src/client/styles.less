@@ -19,14 +19,21 @@
 .corespring-drag-and-drop-inline-see-solution,
 .corespring-drag-and-drop-inline-render {
 
+  .ui-draggable-dragging {
+    opacity: 0.75;
+  }
+
   .answer-area-inline {
     display: inline-block;
     border-bottom: 1px solid black;
     min-width: 70px;
-    height: 14px;
+    min-height: 30px;
     margin-right: 5px;
+    vertical-align: middle;
 
     .ui-droppable {
+      position: relative;
+      bottom: 0;
       margin-bottom: 0px;
       min-width: 50px;
       min-height: 30px;
@@ -37,11 +44,34 @@
     .sortable-choice {
       display: inline-block;
       padding: 2px 5px 2px 5px;
-      margin: 2px;
+      margin: 2px 5px 2px 2px;
       min-height: 20px;
+      min-width: 40px;
       background-color: #eeeeee;
       list-style-type: none;
+
+      .close {
+        position: relative;
+        top: 3px;
+        right: 3px;
+        font-size: 14px;
+        font-weight: normal;
+        margin-left: 0.50em;
+      }
     }
+  }
+
+  .answer-area-inline-active {
+    z-index: 105;
+    background: #ccc;
+    padding-left: 0.25em;
+  }
+
+  .answer-area-inline-hover {
+    border: 2px dashed #9b9b9b;
+    background: #fff;
+    border-radius: 4px;
+    z-index: 99;
   }
 }
 

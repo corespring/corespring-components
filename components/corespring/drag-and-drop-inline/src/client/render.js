@@ -19,7 +19,7 @@ var main = [
     function link(scope, element, attrs) {
 
       function answerAreaTemplate(attributes){
-        attributes = (attributes? attributes : '')
+        attributes = (attributes? attributes : '');
         var answerHtml = scope.model.answerAreasXhtml;
         var answerArea = "<div scope-forwarder=''" + attributes + ">" + answerHtml + "</div>";
         return answerArea;
@@ -101,8 +101,21 @@ var main = [
         }
       });
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+      scope.classForChoice = function(answerAreaId, choice, targetIndex) {
+        if (!scope.correctResponse) {
+          return;
+        }
+        var correctResponse = scope.correctResponse[answerAreaId];
+        if (!correctResponse) {
+          return;
+        }
 
+        var actualIndex = correctResponse.indexOf(choice.id);
+        var isCorrect = scope.cardinality === "ordered" ? actualIndex === targetIndex : actualIndex >= 0;
+        return isCorrect ? "correct" : "incorrect";
+      };
+
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
     var tmpl = [
@@ -161,32 +174,52 @@ var answerAreaInline = [
           scope.landingPlaceChoices = renderScope.landingPlaceChoices;
           console.log("getScope", scope.landingPlaceChoices[scope.answerAreaId]);
 
-          scope.targetSortableOptions = {
-            start: function() {
-              renderScope.targetDragging = true;
-            },
-            stop: function() {
-              renderScope.targetDragging = false;
-            }
+          scope.hasResults = function(){
+            return !!renderScope.correctResponse;
           };
+
+          scope.targetSortableOptions = function(){
+            return {
+              disabled: scope.hasResults(),
+              start: function () {
+                renderScope.targetDragging = true;
+              },
+              stop: function () {
+                renderScope.targetDragging = false;
+              }
+            };
+          };
+
           scope.droppableOptions = {
             accept: function() {
               return !renderScope.targetDragging;
-            }
+            },
+            activeClass: 'answer-area-inline-active',
+            hoverClass: 'answer-area-inline-hover'
           };
           scope.trackId = function(choice) {
             console.log("trackId", scope.answerAreaId, choice);
             return _.uniqueId();
           };
+          scope.classForChoice = function(choice, index){
+            return renderScope.classForChoice(scope.answerAreaId, choice, index);
+          };
+          scope.choiceLabel = function(choice){
+            return choice.label + ' <span class="close"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>';
+          };
+          scope.removeChoice = function(index){
+            scope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
+          };
         });
       },
       template: [
         '<div class="answer-area-inline">',
-        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions"',
+        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions()"',
         '    ng-model="landingPlaceChoices[answerAreaId]"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
-        '    <li class="sortable-choice" data-choice-id="{{choice.id}}"',
+        '    <li class="sortable-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in landingPlaceChoices[answerAreaId] track by trackId(choice)">',
+        '      <div class="close" ng-hide="hasResults()"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
         '      <span ng-bind-html-unsafe="choice.label"></span>',
         '    </li>',
         '  </ul>',
