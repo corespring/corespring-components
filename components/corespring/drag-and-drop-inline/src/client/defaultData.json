@@ -14,33 +14,32 @@
     {}
   ],
   "model": {
+    "answerAreaXhtml": "​<answer-area-inline id='aa_1'></answer-area-inline>​",
     "answerAreas": [
       {
-        "id": "aa_1",
-        "textBefore": "",
-        "textAfter": ""
+        "id": "aa_1"
       }
     ],
     "choices": [
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_0"
+        "id": "c_1"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_1"
+        "id": "c_2"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_2"
+        "id": "c_3"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_3"
+        "id": "c_4"
       }
     ],
     "config": {

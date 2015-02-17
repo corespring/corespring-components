@@ -20,7 +20,7 @@ var main = [
           return ComponentImageService;
         };
 
-        $scope.extraFeaturesForAnswerAreas = {
+        $scope.extraFeaturesForAnswerArea = {
           definitions: [
             new WiggiMathJaxFeatureDef(),
             new WiggiLinkFeatureDef(),
@@ -32,6 +32,10 @@ var main = [
               addToEditor: function(editor, addContent) {
                 var id = $scope.addAnswerArea();
                 addContent($('<answer-area-inline id="' + id +'"/>'));
+              },
+              deleteNode: function($node, services) {
+                var id = $node.attr('answer-area-id');
+                $scope.removeAnswerArea(id);
               },
               initialise: function($node, replaceWith) {
                 var id = $node.attr('id');
@@ -105,9 +109,11 @@ var main = [
 
         scope.$watch('correctAnswers', function(n) {
           if (n) {
+            var correctResponse = {};
             _.each(scope.correctAnswers, function(val, key) {
-              scope.fullModel.correctResponse[key] = _.pluck(val, 'id');
+              correctResponse[key] = _.pluck(val, 'id');
             });
+            scope.fullModel.correctResponse = correctResponse;
             scope.updatePartialScoringModel(sumCorrectAnswers());
           }
         }, true);
@@ -120,7 +126,7 @@ var main = [
         };
 
         function findFreeChoiceSlot(){
-          var slot = 0;
+          var slot = 1;
           var ids = _.pluck(scope.model.choices, 'id');
           while(_.contains(ids, "c_" + slot)){
             slot++;
@@ -137,15 +143,8 @@ var main = [
           });
         };
 
-        scope.removeAnswerArea = function(answerArea) {
-          scope.model.answerAreas = _.filter(scope.model.answerAreas, function(existing) {
-            return existing !== answerArea;
-          });
-          delete scope.correctAnswers[answerArea.id];
-        };
-
         function findFreeAnswerAreaSlot(){
-          var slot = 0;
+          var slot = 1;
           var ids = _.pluck(scope.model.answerAreas, 'id');
           while(_.contains(ids, "aa_" + slot)){
             slot++;
@@ -160,6 +159,11 @@ var main = [
           });
           scope.correctAnswers[answerAreaId] = [];
           return answerAreaId;
+        };
+
+        scope.removeAnswerArea = function(answerAreaId) {
+          _.remove(scope.model.answerAreas, {id: answerAreaId});
+          delete scope.correctAnswers[answerAreaId];
         };
 
         scope.$on('getConfigScope', function(event, callback){
@@ -198,16 +202,22 @@ var main = [
 
         scope.activate = function($index, $event) {
           $event.stopPropagation();
+          scope.active = [];
           scope.active[$index] = true;
           scope.canDragChoices = false;
           $timeout(function() {
-            var $editable = $($event.target).closest('.sortable-choice').find('.wiggi-wiz-editable');
-            $editable.click();
-            var editableScope = angular.element($editable).scope();
-            if(editableScope && _.isFunction(editableScope.focusCaretAtEnd)){
-              editableScope.focusCaretAtEnd();
+            var $editable = $($event.target).closest('.draggable-choice').find('.wiggi-wiz-editable');
+            if($editable.length) {
+              $editable.click();
+              var editableScope = angular.element($editable).scope();
+              if (editableScope && _.isFunction(editableScope.focusCaretAtEnd)) {
+                editableScope.focusCaretAtEnd();
+              }
+            } else {
+              //should only happen in dev, when the structure/classes of the choice item are changed
+              throw "wiggiwiz editable not found";
             }
-          });
+          }, 10);
         };
 
         scope.itemClick = function($event) {
@@ -255,10 +265,12 @@ var main = [
         '</div>',
         '<div class="row">',
         '  <div class="col-xs-12">',
-        '    <div id="answerAreasWiggi" mini-wiggi-wiz=""',
-        '      ng-model="model.answerAreasXhtml"',
+        '    <div id="answerAreaWiggi"',
+        '      mini-wiggi-wiz=""',
+        '      class="active"',
+        '      ng-model="model.answerAreaXhtml"',
         '      dialog-launcher="external"',
-        '      features="extraFeaturesForAnswerAreas"',
+        '      features="extraFeaturesForAnswerArea"',
         '      parent-selector=".modal-body"',
         '      image-service="imageService()">',
         '    </div>',
@@ -300,7 +312,11 @@ var main = [
         '          </checkbox>',
         '        </div>',
         '        <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
-        '        <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external" features="extraFeatures"',
+        '        <div ng-show="active[$index]"',
+        '            mini-wiggi-wiz=""',
+        '            ng-model="choice.label"',
+        '            dialog-launcher="external"',
+        '            features="extraFeatures"',
         '            parent-selector=".modal-body"',
         '            image-service="imageService()">',
         '          <edit-pane-toolbar alignment="bottom">',
