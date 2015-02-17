@@ -75,7 +75,7 @@ describe('corespring:ordering:configure', function () {
   function MockWiggiMathJaxFeatureDef() {
   }
 
-  beforeEach(function () {
+  beforeEach(function() {
     module(function ($provide) {
       $provide.value('ServerLogic', MockServerLogic);
       $provide.value('ImageUtils', MockImageUtils);
@@ -125,5 +125,43 @@ describe('corespring:ordering:configure', function () {
     });
   });
 
+  describe('activate', function() {
+    var index = 0;
+    var event = {
+      stopPropagation: function() {}
+    };
+
+    beforeEach(function() {
+      spyOn(scope, 'deactivate');
+      spyOn(event, 'stopPropagation');
+      scope.activate(index, event);
+    });
+
+    it('should cancel event', function() {
+      expect(event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call deactivate on scope', function() {
+      expect(scope.deactivate).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('math-updated event', function() {
+    var activeIndex = 1;
+
+    beforeEach(function() {
+      spyOn(scope, 'activate');
+      scope.active = _(3).times().map(function(i) {
+        return i === activeIndex;
+      }).value();
+      scope.$emit('math-updated');
+    });
+
+    it('should activate the active index', function() {
+      expect(scope.activate).toHaveBeenCalledWith(activeIndex);
+    });
+
+  });
 
 });
