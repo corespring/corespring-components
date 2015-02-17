@@ -74,7 +74,7 @@ describe('placement ordering', function() {
           .click('.show-correct-button')
           .waitForVisible('.see-answer-area .choices')
           .resetItem()
-          .waitForVisible('.see-answer-area .choices', 500, true)
+          .waitForVisible('.see-answer-area .choices', 5000, true)
           .call(done);
       });
 
@@ -87,7 +87,7 @@ describe('placement ordering', function() {
           .waitForVisible('.see-answer-area .choices')
           .resetItem()
           .submitItem()
-          .waitForVisible('.see-answer-area .choices', 500, true)
+          .waitForVisible('.see-answer-area .choices', 5000, true)
           .call(done);
       });
 
