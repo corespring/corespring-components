@@ -198,7 +198,7 @@ var answerAreaInline = [
             return _.uniqueId();
           };
           scope.classForChoice = function(choice, index){
-            return renderScope.classForChoice(scope.answerAreaId, choice, index);
+            return renderScope && renderScope.classForChoice ? renderScope.classForChoice(scope.answerAreaId, choice, index) : undefined;
           };
           scope.choiceLabel = function(choice){
             return choice.label + ' <span class="close"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>';
