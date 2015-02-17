@@ -126,9 +126,9 @@ var main = [
             model.model = model.model || {};
             model.model.config = model.model.config || {};
 
-            scope.correctResponse = (scope.fullModel) ? scope.noYEqualsPrefix(scope.fullModel.correctResponse) : undefined;
+            scope.correctResponse = (scope.fullModel) ? scope.removeYEqualsPrefix(scope.fullModel.correctResponse) : undefined;
             scope.initialCurve = (scope.fullModel && scope.fullModel.model && scope.fullModel.model.config) ?
-              scope.noYEqualsPrefix(scope.fullModel.model.config.initialCurve) : undefined;
+              scope.removeYEqualsPrefix(scope.fullModel.model.config.initialCurve) : undefined;
 
             var labels = (model.model.config.pointLabels || []);
 
@@ -148,8 +148,8 @@ var main = [
           }
         };
 
-        scope.noYEqualsPrefix = function(expression) {
-          return expression.replace(/ /g,'').replace(/^y=/,'');
+        scope.removeYEqualsPrefix = function(expression) {
+          return expression.replace(/^y\s?=\s?/,'');
         };
 
         scope.prefixWithYEquals = function(expression) {

@@ -54,15 +54,15 @@ describe('corespring:line:configure', function() {
     expect(element).toNotBe(null);
   });
 
-  describe('noYEqualsPrefix', function() {
+  describe('removeYEqualsPrefix', function() {
 
     it('should strip y= from beginning of a string', function() {
-      expect(scope.noYEqualsPrefix("y=2x+3")).toEqual("2x+3");
-      expect(scope.noYEqualsPrefix("y = 2x+3")).toEqual("2x+3");
+      expect(scope.removeYEqualsPrefix("y=2x+3")).toEqual("2x+3");
+      expect(scope.removeYEqualsPrefix("y = 2x+3")).toEqual("2x+3");
     });
 
     it('should do nothing to a string not beginning with y=', function() {
-      expect(scope.noYEqualsPrefix("3x+2")).toEqual("3x+2");
+      expect(scope.removeYEqualsPrefix("3x+2")).toEqual("3x+2");
     });
 
   });
