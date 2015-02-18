@@ -20,7 +20,7 @@ var main = [
 
       function answerAreaTemplate(attributes){
         attributes = (attributes? attributes : '');
-        var answerHtml = scope.model.answerAreasXhtml;
+        var answerHtml = scope.model.answerAreaXhtml;
         var answerArea = "<div scope-forwarder=''" + attributes + ">" + answerHtml + "</div>";
         return answerArea;
       }

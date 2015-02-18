@@ -14,7 +14,7 @@
     {}
   ],
   "model": {
-    "answerAreaXhtml": "​<answer-area-inline id='aa_1'></answer-area-inline>​",
+    "answerAreaXhtml": "<answer-area-inline id='aa_1'></answer-area-inline>",
     "answerAreas": [
       {
         "id": "aa_1"
