@@ -44,7 +44,7 @@ exports.respond = function(question, answer, settings) {
       correctness: 'n/a',
       score: 0
     };
-  }  
+  }
 
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 

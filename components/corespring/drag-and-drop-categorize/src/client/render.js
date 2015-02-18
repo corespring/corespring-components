@@ -95,7 +95,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       answerArea,
       '  <div ng-if="model.config.answerAreaPosition == \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',
       '  <div class="pull-right see-solution" ',
-      '      ng-show="correctResponse && response.correctClass == \'incorrect\'">',
+      '      ng-show="correctResponse && response.correctClass != \'correct\'">',
       '    <a ng-click="_seeSolution()">See solution</a>',
       '  </div>',
       '  <div class="clearfix"></div>',

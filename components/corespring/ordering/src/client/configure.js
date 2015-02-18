@@ -232,11 +232,14 @@ var main = [
           };
 
           $scope.activate = function($index, $event) {
-            $event.stopPropagation();
+            $scope.deactivate();
+            if ($event) {
+              $event.stopPropagation();
+            }
             $scope.active[$index] = true;
             $scope.choicesSortableOptions.disabled = true;
             $timeout(function() {
-              var $editable = $($event.target).closest('.sortable-choice').find('.wiggi-wiz-editable');
+              var $editable = $element.find($('.sortable-choice')[$index]).find('.wiggi-wiz-editable');
               $editable.click();
               angular.element($editable).scope().focusCaretAtEnd();
             });
@@ -295,6 +298,10 @@ var main = [
               return c !== choice;
             });
           };
+
+          $scope.$on('math-updated', function() {
+            $scope.activate(_.findIndex($scope.active));
+          });
 
           $scope.$watchCollection('targets', function() {
             var newOrder = _.pluck($scope.targets, 'id');

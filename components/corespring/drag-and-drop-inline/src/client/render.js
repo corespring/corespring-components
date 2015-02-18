@@ -1,25 +1,32 @@
 /* global exports */
-var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
-  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope) {
+var main = [
+  'DragAndDropTemplates',
+  '$compile',
+  '$log',
+  '$modal',
+  '$rootScope',
+  '$timeout',
+  function(
+    DragAndDropTemplates,
+    $compile,
+    $log,
+    $modal,
+    $rootScope,
+    $timeout) {
 
     "use strict";
 
-    var answerArea = [
-      '<h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-      '<div>',
-      '<div style="display: inline; vertical-align: top" ng-repeat="c in model.answerAreas">',
-      '  <div style="display: inline-block" ng-bind-html-unsafe="c.textBefore"></div>',
-      '  <div style="display: inline-block" answer-area class="inline" landingId="{{c.id}}" answer-area-layout="inline"></div>',
-      '  <div style="display: inline-block" ng-bind-html-unsafe="c.textAfter"></div>',
-      '  <br ng-show="c.insertBr"/>',
-      '</div>',
-      '</div>'
-    ].join('');
+    function link(scope, element, attrs) {
 
-    var link = function(scope, element, attrs) {
+      function answerAreaTemplate(attributes){
+        attributes = (attributes? attributes : '');
+        var answerHtml = scope.model.answerAreasXhtml;
+        var answerArea = "<div scope-forwarder=''" + attributes + ">" + answerHtml + "</div>";
+        return answerArea;
+      }
 
       scope._seeSolution = function() {
-        scope.seeSolution(answerArea);
+        scope.seeSolution(answerAreaTemplate(" class='corespring-drag-and-drop-inline-see-solution'"));
       };
 
       _.extend(scope.containerBridge, {
@@ -32,6 +39,12 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
           scope.local = {};
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
+          _.forEach(dataAndSession.data.model.answerAreas, function(area){
+            if(!_.isArray(scope.landingPlaceChoices[area.id])){
+              scope.landingPlaceChoices[area.id] = [];
+            }
+          });
+
           scope.resetChoices(scope.rawModel);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
@@ -49,6 +62,11 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
               return _.isUndefined(landingPlaceWithChoice);
             });
           }
+
+          var $answerArea = element.find("#answer-area-holder").html(answerAreaTemplate());
+          $timeout(function() {
+            $compile($answerArea)(scope.$new());
+          });
         },
 
         getSession: function() {
@@ -83,18 +101,31 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
         }
       });
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+      scope.classForChoice = function(answerAreaId, choice, targetIndex) {
+        if (!scope.correctResponse) {
+          return;
+        }
+        var correctResponse = scope.correctResponse[answerAreaId];
+        if (!correctResponse) {
+          return;
+        }
 
-    };
+        var actualIndex = correctResponse.indexOf(choice.id);
+        var isCorrect = actualIndex >= 0;
+        return isCorrect ? "correct" : "incorrect";
+      };
+
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+    }
 
     var tmpl = [
-      '<div class="view-drag-and-drop view-drag-and-drop-inline" drag-and-drop-controller>',
+      '<div class="view-drag-and-drop corespring-drag-and-drop-inline-render" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
       '  </div> <div class="clearfix" />',
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
-      answerArea,
+      '  <div id="answer-area-holder"></div>',
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
       '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
@@ -102,7 +133,6 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
       '</div>'
 
     ].join("");
-
 
     return {
       link: link,
@@ -113,9 +143,94 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
     };
   }];
 
-exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
+var scopeForwarder = [
+  function() {
+    "use strict";
+    return {
+      scope: false,
+      restrict: 'A',
+      replace: false,
+      controller: ['$scope', function($scope) {
+        $scope.$on("getScope", function(event, callback) {
+          callback($scope);
+        });
+      }]
+    };
   }
 ];
+var answerAreaInline = [
+  function() {
+    "use strict";
+    return {
+      scope: {},
+      restrict: 'EA',
+      replace: true,
+      link: function(scope, el, attr) {
+        scope.$emit("getScope", function(renderScope) {
+          scope.answerAreaId = attr.id;
+          scope.landingPlaceChoices = renderScope.landingPlaceChoices;
+
+          scope.hasResults = function(){
+            return !!renderScope.correctResponse;
+          };
+
+          scope.targetSortableOptions = function(){
+            return {
+              disabled: scope.hasResults(),
+              start: function () {
+                renderScope.targetDragging = true;
+              },
+              stop: function () {
+                renderScope.targetDragging = false;
+              }
+            };
+          };
+
+          scope.droppableOptions = {
+            accept: function() {
+              return !renderScope.targetDragging;
+            },
+            activeClass: 'answer-area-inline-active',
+            hoverClass: 'answer-area-inline-hover',
+            tolerance: "pointer"
+          };
+          scope.trackId = function(choice) {
+            return _.uniqueId();
+          };
+          scope.classForChoice = function(choice, index){
+            return renderScope && renderScope.classForChoice ? renderScope.classForChoice(scope.answerAreaId, choice, index) : undefined;
+          };
+          scope.choiceLabel = function(choice){
+            return choice.label + ' <span class="close"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>';
+          };
+          scope.removeChoice = function(index){
+            scope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
+          };
+        });
+      },
+      template: [
+        '<div class="answer-area-inline">',
+        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions()"',
+        '    ng-model="landingPlaceChoices[answerAreaId]"',
+        '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
+        '    <li class="sortable-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
+        '      ng-repeat="choice in landingPlaceChoices[answerAreaId] track by trackId(choice)">',
+        '      <div class="close" ng-hide="hasResults()"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
+        '      <span ng-bind-html-unsafe="choice.label"></span>',
+        '    </li>',
+        '  </ul>',
+        '</div>'
+      ].join("\n")
+    };
+  }
+];
+exports.framework = 'angular';
+exports.directives = [{
+  directive: main
+}, {
+  name: 'scopeForwarder',
+  directive: scopeForwarder
+}, {
+  name: 'answerAreaInline',
+  directive: answerAreaInline
+}];
