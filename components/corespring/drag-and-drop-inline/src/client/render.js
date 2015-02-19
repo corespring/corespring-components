@@ -118,15 +118,37 @@ var main = [
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
+    function choiceArea(){
+      return [
+        '<div class="choices-wrapper" >',
+        '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
+        '    <div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div>',
+        '  </div>',
+        '  <div ng-repeat="choice in local.choices" class="new-choice" ',
+        '    data-drag="editable"',
+        '    ng-disabled="!editable"',
+        '    data-jqyoui-options="draggableOptions(choice)"',
+        '    ng-model="local.choices"',
+        '    jqyoui-draggable="draggableOptions(choice)"',
+        '    data-id="{{choice.id}}">',
+        '    <span ng-bind-html-unsafe="choice.label">',
+        '      <close></close>',
+        '    </span>',
+        '    <i class="incorrect-answer fa"></i>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    }
+
     var tmpl = [
       '<div class="view-drag-and-drop corespring-drag-and-drop-inline-render" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
       '  </div> <div class="clearfix" />',
-      '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
+      '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
       '  <div id="answer-area-holder"></div>',
-      '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', DragAndDropTemplates.choiceArea(), '</div>',
+      '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
       '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',

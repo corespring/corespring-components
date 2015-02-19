@@ -16,6 +16,47 @@
   border-radius: 4px;
 }
 
+.corespring-drag-and-drop-inline-render {
+
+  .choices-wrapper {
+    margin-top: 20px;
+    position: relative;
+    padding: 1em;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+
+    .item-selected:hover {
+      z-index: 100;
+      opacity: 0.75;
+    }
+  }
+
+  .new-choice {
+    display: inline;
+    margin: 0.25em 0;
+
+    span {
+      display: inline-block;
+      width: auto;
+      margin-right: 0.25em;
+      padding: 0.5em 0.75em;
+      background: #efefef;
+      border-radius: 4px;
+    }
+    span:hover {
+      cursor: move;
+      -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+      -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+      box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+    }
+    img {
+      max-width: 110px;
+      vertical-align: bottom;
+    }
+  }
+}
+
+
 .corespring-drag-and-drop-inline-see-solution,
 .corespring-drag-and-drop-inline-render {
 
