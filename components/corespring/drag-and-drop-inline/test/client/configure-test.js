@@ -1,51 +1,51 @@
 /* global describe, it, beforeEach, inject, module, expect */
-describe('corespring:drag-and-drop-inline:configure', function() {
+describe('corespring:drag-and-drop-inline:configure', function () {
 
   "use strict";
 
-  var MockComponentRegister = function() {
+  var MockComponentRegister = function () {
     this.elements = {};
     this.registerConfigPanel = function(id, bridge) {
       this.elements[id] = bridge;
     };
   };
 
-  var element = null,
-    scope, container = null,
-    rootScope;
+  var element = null, scope, container = null, rootScope;
 
   function createTestModel(options) {
     var answerAreas = (options && options.answerAreas) || [
       {
-        "id": "aa_1"
+        "id": "aa_1",
+        "textBefore": "Americans eat",
+        "textAfter": "for Thanksgiving dinner."
       }
     ];
     var choices = (options && options.choices) || [
       {
         "label": "turkey",
         "labelType": "text",
-        "id": "c_0"
+        "id": "choice_0"
       },
       {
         "label": "ham",
         "labelType": "text",
-        "id": "c_1"
+        "id": "choice_1"
       },
       {
         "label": "lamb",
         "labelType": "text",
-        "id": "c_2"
+        "id": "choice_2"
       },
       {
         "label": "bologna",
         "labelType": "text",
-        "id": "c_3"
+        "id": "choice_3"
       }
     ];
 
     var correctResponse = (options && options.correctResponse) || {
       "aa_1": [
-        "c_0", "c_1", "c_2"
+        "choice_0","choice_1","choice_2"
       ]
     };
 
@@ -80,59 +80,58 @@ describe('corespring:drag-and-drop-inline:configure', function() {
   beforeEach(angular.mock.module('test-app'));
 
   var MockServerLogic = {
-    load: function() {
-      return {
-        defaults: {},
-        keys: {}
-      };
+    load: function () {
+      return {defaults: {}, keys: {}};
     }
   };
 
-  beforeEach(function() {
-    module(function($provide) {
+  beforeEach(function () {
+    module(function ($provide) {
       $provide.value('ServerLogic', MockServerLogic);
       $provide.value('ImageUtils', {});
       $provide.value('MathJaxService', {
-        parseDomForMath: function() {}
+        parseDomForMath: function () {
+        }
       });
-      $provide.value('WiggiMathJaxFeatureDef', function() {});
-      $provide.value('WiggiLinkFeatureDef', function() {});
+      $provide.value('WiggiMathJaxFeatureDef', function(){});
+      $provide.value('WiggiLinkFeatureDef', function(){});
     });
   });
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function ($compile, $rootScope) {
+    scope = $rootScope.$new();
     container = new MockComponentRegister();
 
-    $rootScope.$on('registerConfigPanel', function(ev, id, b) {
+    $rootScope.$on('registerConfigPanel', function (ev, id, b) {
       container.registerConfigPanel(id, b);
     });
 
-    $rootScope.registerConfigPanel = function(id, b) {
+    $rootScope.registerConfigPanel = function (id, b) {
       container.registerConfigPanel(id, b);
     };
-    element = $compile("<div navigator=''><corespring-drag-and-drop-inline-configure id='1'></corespring-drag-and-drop-inline-configure></div>")($rootScope.$new());
-    scope = element.scope().$$childHead.$$childHead;
+    element = $compile("<div navigator=''><corespring-drag-and-drop-inline-configure id='1'></corespring-drag-and-drop-inline-configure></div>")(scope);
+    scope = element.scope().$$childHead;
     rootScope = $rootScope;
   }));
 
-  it('constructs', function() {
+  it('constructs', function () {
     expect(element).toBeDefined();
   });
 
-  it('component is being registered by the container', function() {
+  it('component is being registered by the container', function () {
     expect(container.elements['1']).toNotBe(undefined);
     expect(container.elements['2']).toBeUndefined();
   });
 
-  describe('partialScoring', function() {
-    it('should automatically remove additional partial scoring scenarios after removing a correct choice', function() {
+  describe('partialScoring', function () {
+    it('should automatically remove additional partial scoring scenarios after removing a correct choice', function () {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       expect(scope.numberOfCorrectResponses).toEqual(3);
       expect(scope.maxNumberOfScoringScenarios).toEqual(2);
       scope.addScoringScenario();
       expect(scope.fullModel.partialScoring.length).toEqual(2);
-      scope.removeChoice(scope.model.choices[0].id);
+      scope.removeChoice(scope.model.choices[0]);
       rootScope.$digest();
       expect(scope.fullModel.partialScoring.length).toEqual(1);
     });
@@ -166,12 +165,12 @@ describe('corespring:drag-and-drop-inline:configure', function() {
           {
             "label": "turkey",
             "labelType": "text",
-            "id": "c_0"
+            "id": "choice_0"
           }
         ],
         correctResponse: {
           "aa_1": [
-            "c_0"
+            "choice_0"
           ]
         }
       });
@@ -182,25 +181,18 @@ describe('corespring:drag-and-drop-inline:configure', function() {
       });
     });
 
-    it('should remove choice c_2 from the model', function() {
-      var testModel = createTestModel();
-      container.elements['1'].setModel(testModel);
-      scope.$digest();
-      var c2RemoveSelector = '*[data-choice-id="c_2"] .delete-icon-button i';
-      expect(testModel.correctResponse.aa_1).toContain("c_2");
-      $(c2RemoveSelector, element).click();
-      scope.$digest();
-      expect(testModel.correctResponse.aa_1).not.toContain("c_2");
-    });
-
   });
 
   describe('addAnswerArea', function() {
     it('should add unique answer area ids', function() {
       var ids, testModel = createTestModel({
-        answerAreas: [{
-          "id": "aa_1"
-        }]
+        answerAreas: [
+          {
+            "id": "aa_1",
+            "textBefore": "Americans eat",
+            "textAfter": "for Thanksgiving dinner."
+          }
+        ]
       });
       container.elements['1'].setModel(testModel);
       scope.addAnswerArea();
