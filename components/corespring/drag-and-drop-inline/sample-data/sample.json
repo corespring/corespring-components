@@ -4,7 +4,7 @@
     "1" : {
       "weight" : 1,
       "componentType" : "corespring-drag-and-drop-inline",
-      "title" : "Categorize",
+      "title" : "Short Answer - Drag and Drop",
       "correctResponse" : {
         "aa_1" : [ 
           "choice_0"
