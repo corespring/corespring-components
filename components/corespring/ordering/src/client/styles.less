@@ -14,19 +14,10 @@
     .show-correct-button-mixin();
   }
 
-  .choice {
-
-    img {
-      max-width: 100px;
-    }
-    border: 1px solid;
-    border-radius: 4px;
-    background-color: white;
-  }
-
   .choice-area {
     .choice-area-label {
       text-align: center;
+      min-height: 20px;
     }
     .choices {
       .choices-holder {
@@ -109,14 +100,16 @@
   }
 
   .choice {
+    border: 1px solid;
+    border-radius: 4px;
+    background-color: white;
     vertical-align: top;
-    background-color: #EFEFEF;
     height: 100%;
     margin: 3px 3px 1px 1px;
     padding: 8px;
     text-align: center;
-    min-width: 60px;
-    min-height: 40px;
+    min-width: 150px;
+    min-height: 55px;
     max-width: 500px;
     overflow: hidden;
 
@@ -130,6 +123,11 @@
 
     &.hiddenChoice {
       visibility: hidden;
+    }
+
+    img {
+      max-width: 100px;
+      max-height: 100px;
     }
   }
 
@@ -195,6 +193,7 @@
 
       .answer-area-label {
         text-align: center;
+        min-height: 20px;
       }
 
       .answer-area-holder {
@@ -296,10 +295,11 @@
 
 .view-ordering {
 
-  .choice {
-    img {
-      max-width: 100px;
-    }
+  .sizerHolder {
+
+    visibility: hidden;
+    position: fixed;
+    max-width: 500px;
   }
 
   .choice-area {
@@ -367,6 +367,7 @@
     .correct-answer {
       display: table-cell;
       text-align: right;
+      vertical-align: top;
 
       ul {
         border-color: @correct-color;
@@ -410,7 +411,7 @@
     display: inline-block;
     padding: 8px;
     margin: 0;
-    width: 150px;
+    min-width: 150px;
 
     &.correct {
       border: 1px solid @correct-color;
@@ -437,6 +438,11 @@
         font-size: 17px;
       }
 
+    }
+
+    img {
+      max-width: 100px;
+      max-height: 100px;
     }
   }
 
@@ -568,6 +574,11 @@
     font-style: italic;
     color: #a9a9a9;
     padding: 9px 20px;
+  }
+
+  img {
+    max-width: 100px;
+    max-height: 100px;
   }
 
 }

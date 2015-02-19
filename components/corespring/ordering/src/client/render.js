@@ -64,13 +64,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '             data-jqyoui-options="dragOptions(o)"',
       '             ng-model="local.choices"',
       '             jqyoui-draggable="dragOptions(o)"',
+      '             ng-bind-html-unsafe="o.label"',
       '             data-id="{{o.id}}">',
-      '          <div>',
-      '            <div class="html-holder" ng-bind-html-unsafe="o.label" />',
-      '          </div>',
-      '          <div class="sizerHolder">',
-      '            <div class="html-holder" ng-bind-html-unsafe="o.label" />',
-      '          </div>',
       '        </div>',
       '      </div>',
       '    </div>',
@@ -106,7 +101,15 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.answerDragOptions = function (index) {
         return {
-          revert: 'invalid',
+          revert: function (isValid) {
+            if (!isValid) {
+              scope.$apply(function () {
+                scope.landingPlaceChoices[index] = {};
+              });
+              return true;
+            }
+          },
+          revertDuration: 0,
           index: index,
           placeholder: true,
           distance: 5
@@ -263,6 +266,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       }, true);
 
+      scope.$watch('top.correctAnswerVisible', function (n, o) {
+        var max = n ? Math.min(scope.maxWidth, 350) : scope.maxWidth;
+        if (scope.choiceStyle) {
+          scope.choiceStyle.maxWidth = max + "px";
+        }
+      });
+
       scope.sortableOptions = {
         disabled: false,
         start: function (e, ui) {
@@ -272,6 +282,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           }
         }
       };
+
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     };
@@ -286,8 +298,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      <div class="container-border">',
       '        <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
       '          <li ng-repeat="choice in local.choices">',
-      '            <div class="choice {{classForChoice(choice.id, $index)}}" ',
-      '              ng-bind-html-unsafe="choice.label">',
+      '            <div class="choice {{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label" ng-style="choiceStyle"></div>',
+      '            <div class="sizerHolder">',
+      '              <div class="html-holder choice" ng-bind-html-unsafe="choice.label"></div>',
+      '            </div>',
       '          </li>',
       '        </ul>',
       '      </div>',
@@ -306,8 +320,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    <div see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       '      <ul class="clearfix">',
       '        <li ng-repeat="choice in correctChoices">',
-      '          <div class="choice correct" ',
-      '            ng-bind-html-unsafe="choice.label">',
+      '          <div class="choice correct" ng-bind-html-unsafe="choice.label"></div>',
       '        </li>',
       '      </ul>',
       '    </div>',
@@ -319,11 +332,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'vertical\'"'),
       '    <div class="main-row">',
       '      <div class="choice-area">', choices, '</div>',
-      '      <div class="answer-area">' + answerArea + '</div>',
+        '      <div class="answer-area">' + answerArea + '</div>',
       '      <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
       '        <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '      </div>',
-      '      <div class="see-answer-area choice-area">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
+        '      <div class="see-answer-area choice-area">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
       '    </div>',
       '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
       '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
