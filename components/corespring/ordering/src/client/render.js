@@ -266,13 +266,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       }, true);
 
-      scope.$watch('top.correctAnswerVisible', function (n, o) {
-        var max = n ? Math.min(scope.maxWidth, 350) : scope.maxWidth;
-        if (scope.choiceStyle) {
-          scope.choiceStyle.maxWidth = max + "px";
-        }
-      });
-
       scope.sortableOptions = {
         disabled: false,
         start: function (e, ui) {
@@ -298,7 +291,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      <div class="container-border">',
       '        <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
       '          <li ng-repeat="choice in local.choices">',
-      '            <div class="choice {{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label" ng-style="choiceStyle"></div>',
+      '            <div class="choice {{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label"></div>',
       '            <div class="sizerHolder">',
       '              <div class="html-holder choice" ng-bind-html-unsafe="choice.label"></div>',
       '            </div>',
