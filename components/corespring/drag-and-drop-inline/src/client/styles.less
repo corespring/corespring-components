@@ -25,33 +25,30 @@
     border: 1px solid #cccccc;
     border-radius: 4px;
 
-    .item-selected:hover {
-      z-index: 100;
-      opacity: 0.75;
-    }
-  }
+    .new-choice {
+      display: inline;
+      margin: 0.25em 0;
 
-  .new-choice {
-    display: inline;
-    margin: 0.25em 0;
+      .new-choice-content {
+        display: inline-block;
+        width: auto;
+        margin-right: 0.25em;
+        padding: 0.5em 0.75em;
+        background: #efefef;
+        border-radius: 4px;
+      }
 
-    span {
-      display: inline-block;
-      width: auto;
-      margin-right: 0.25em;
-      padding: 0.5em 0.75em;
-      background: #efefef;
-      border-radius: 4px;
-    }
-    span:hover {
-      cursor: move;
-      -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-      -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-      box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-    }
-    img {
-      max-width: 110px;
-      vertical-align: bottom;
+      .new-choice-content:hover {
+        cursor: move;
+        -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+        -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+        box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+      }
+
+      img {
+        max-width: 110px;
+        vertical-align: bottom;
+      }
     }
   }
 }
@@ -72,6 +69,73 @@
     margin-right: 5px;
     vertical-align: middle;
 
+    .selected-choice {
+      display: inline-block;
+      margin: 0.25em 0;
+      white-space: nowrap;
+
+      .selected-choice-content {
+        display: inline-block;
+        margin-right: 0.25em;
+        padding: 0.5em 0.75em;
+        background: #efefef;
+        border-radius: 4px;
+
+        .html-wrapper {
+          list-style-type: none;
+          display: inline-block;
+          padding-right: 10px;
+        }
+
+        .remove-choice {
+          float: right;
+          list-style-type: none;
+          display: inline-block;
+          opacity: 0.3;
+        }
+      }
+
+      .selected-choice-content:hover {
+        cursor: move;
+        -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+        -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+        box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+
+        .remove-choice {
+          opacity: 0.8;
+        }
+      }
+
+      img {
+        max-width: 110px;
+        vertical-align: bottom;
+      }
+
+    }
+
+    .selected-choice.incorrect {
+      .selected-choice-content {
+        border: 1px solid #ec971f;
+        -moz-box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
+        box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
+      }
+      .circle {
+        font-size: 24px;
+        color: #ec971f;
+      }
+    }
+    .selected-choice.correct {
+      .selected-choice-content {
+        border: 1px solid #3c763d;
+        -moz-box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
+        box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
+      }
+      .circle {
+        font-size: 24px;
+        color: #3c763d;
+      }
+    }
+
     .ui-droppable {
       position: relative;
       bottom: 0;
@@ -82,7 +146,8 @@
       -webkit-padding-end: 20px;
     }
 
-    .sortable-choice {
+
+    .xsortable-choice {
       display: inline-block;
       padding: 2px 5px 2px 5px;
       margin: 2px 5px 2px 2px;

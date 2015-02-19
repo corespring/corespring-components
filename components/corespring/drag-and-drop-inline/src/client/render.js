@@ -131,21 +131,19 @@ var main = [
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptions(choice)"',
         '    data-id="{{choice.id}}">',
-        '    <span ng-bind-html-unsafe="choice.label">',
-        '      <close></close>',
-        '    </span>',
-        '    <i class="incorrect-answer fa"></i>',
+        '    <span class="new-choice-content" ng-bind-html-unsafe="choice.label"></span>',
         '  </div>',
         '</div>'
       ].join('');
     }
 
     var tmpl = [
-      '<div class="view-drag-and-drop corespring-drag-and-drop-inline-render" drag-and-drop-controller>',
+      '<div class="corespring-drag-and-drop-inline-render" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
-      '  </div> <div class="clearfix" />',
+      '  </div>',
+      '  <div class="clearfix"></div>',
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
       '  <div id="answer-area-holder"></div>',
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
@@ -192,13 +190,13 @@ var answerAreaInline = [
           scope.answerAreaId = attr.id;
           scope.landingPlaceChoices = renderScope.landingPlaceChoices;
 
-          scope.hasResults = function(){
-            return !!renderScope.correctResponse;
+          scope.canEdit = function(){
+            return !renderScope.correctResponse && renderScope.editable;
           };
 
           scope.targetSortableOptions = function(){
             return {
-              disabled: scope.hasResults(),
+              disabled: !scope.canEdit(),
               start: function () {
                 renderScope.targetDragging = true;
               },
@@ -222,6 +220,13 @@ var answerAreaInline = [
           scope.classForChoice = function(choice, index){
             return renderScope && renderScope.classForChoice ? renderScope.classForChoice(scope.answerAreaId, choice, index) : undefined;
           };
+          scope.classForCorrectness = function(choice, index){
+            var choiceClass = scope.classForChoice(choice, index);
+            if(!choiceClass){
+              return;
+            }
+            return choiceClass === 'correct' ? 'fa-check-circle' : 'fa-times-circle';
+          };
           scope.choiceLabel = function(choice){
             return choice.label + ' <span class="close"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>';
           };
@@ -232,17 +237,26 @@ var answerAreaInline = [
       },
       template: [
         '<div class="answer-area-inline">',
-        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions()"',
+        '  <div class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions()"',
         '    ng-model="landingPlaceChoices[answerAreaId]"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
-        '    <li class="sortable-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
+        '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in landingPlaceChoices[answerAreaId] track by trackId(choice)">',
-        '      <div class="close" ng-hide="hasResults()"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
-        '      <span ng-bind-html-unsafe="choice.label"></span>',
-        '    </li>',
-        '  </ul>',
+        '      <div class="selected-choice-content">',
+        '        <span class="html-wrapper" ng-bind-html-unsafe="choice.label"></span>',
+        '        <span class="remove-choice" ng-hide="!canEdit()"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>',
+        '      </div>',
+        '      <i class="circle fa" ng-class="classForCorrectness(choice)"></i>',
+        '    </div>',
+        '  </div>',
         '</div>'
       ].join("\n")
+      /*
+       '      <close></close>',
+       '    </span>',
+       '    <i class="fa"></i>',
+
+       */
     };
   }
 ];

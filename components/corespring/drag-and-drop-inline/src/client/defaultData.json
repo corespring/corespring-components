@@ -44,7 +44,7 @@
     ],
     "config": {
       "shuffle": false,
-      "choiceAreaLabel": "Choices",
+      "choiceAreaLabel": "",
       "choiceAreaLayout": "horizontal",
       "choiceAreaPosition": "below"
     }
