@@ -43,7 +43,7 @@
   },
   "name": "match",
   "organization": "corespring",
-  "title": "Choice Matrix",
+  "title": "",
   "titleGroup": "Fixed Choice",
-  "released": false
+  "released": true
 }

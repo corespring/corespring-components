@@ -30,8 +30,8 @@
     }
   },
   "name": "select-text",
-  "title": "Select Evidence in Text",
+  "title": "",
   "titleGroup": "English Language Arts",
   "organization": "corespring",
-  "released": false
+  "released": true
 }
