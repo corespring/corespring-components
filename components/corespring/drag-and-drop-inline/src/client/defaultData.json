@@ -1,6 +1,6 @@
 {
   "componentType": "corespring-drag-and-drop-inline",
-  "title": "Short Answer - Drag and Drop",
+  "title": "Categorize",
   "correctResponse": {
     "aa_1": []
   },
@@ -14,32 +14,33 @@
     {}
   ],
   "model": {
-    "answerAreaXhtml": "<answer-area-inline id='aa_1'></answer-area-inline>",
     "answerAreas": [
       {
-        "id": "aa_1"
+        "id": "aa_1",
+        "textBefore": "",
+        "textAfter": ""
       }
     ],
     "choices": [
       {
         "label": "",
         "labelType": "text",
-        "id": "c_1"
+        "id": "choice_0"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c_2"
+        "id": "choice_1"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c_3"
+        "id": "choice_2"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c_4"
+        "id": "choice_3"
       }
     ],
     "config": {
