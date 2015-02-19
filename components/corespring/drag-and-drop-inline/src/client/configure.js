@@ -281,7 +281,8 @@ var main = [
       var choices = [
         '<div class="row">',
         '  <div class="col-xs-12">',
-        '    <label class="control-label" style="margin-bottom: 10px;">Choices</label>',
+        '      <input class="prompt" type="text"',
+        '          ng-model="model.config.choiceAreaLabel" placeholder="Choice Label"/>',
         '  </div>',
         '</div>',
         '<div class="row">',
