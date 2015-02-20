@@ -1,16 +1,73 @@
 var _ = require('lodash');
-var dragAndDropEngine = require("corespring.drag-and-drop-engine.server");
-var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
+var fb = require('corespring.server-shared.server.feedback-utils');
 
-exports.keys = feedbackUtils.keys;
+exports.createResponse = function(question, answer, settings) {
 
-exports.respond = function(question, answer, settings) {
+  if(!question || _.isEmpty(question)){
+    throw new Error('the question should never be null or empty');
+  }
 
-  var defaults = {
-    correct: exports.DEFAULT_CORRECT_FEEDBACK,
-    incorrect: exports.DEFAULT_INCORRECT_FEEDBACK,
-    partial: exports.DEFAULT_PARTIAL_FEEDBACK
+  if(!answer){
+    return {
+      correctness: 'incorrect',
+      score: 0,
+      correctResponse: question.correctResponse,
+      answer: answer,
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null
+    };
+  }
+
+  var isCorrect = true;
+  var isPartiallyCorrect = false;
+  var numberOfCorrectAnswers = 0;
+
+  function countCorrectAnswers(correctResponses, answers){
+    var count = 0;
+    var maxLength = Math.min(correctResponses.length, answers.length);
+    for(var i = 0; i < maxLength; i++){
+      if(correctResponses[i] === answers[i]){
+        count++;
+      }
+    }
+    return count;
+  }
+
+  for (var k in answer) {
+    var correctResponsesForId = question.correctResponse[k];
+    if (correctResponsesForId && answer[k]) {
+      var correctAnswersCount = countCorrectAnswers(correctResponsesForId, answer[k]);
+      var hasSuperfluousAnswers = answer[k].length > correctResponsesForId.length;
+      isCorrect &= correctAnswersCount == correctResponsesForId.length && !hasSuperfluousAnswers;
+      isPartiallyCorrect |= correctAnswersCount > 0 && (correctAnswersCount < correctResponsesForId.length || hasSuperfluousAnswers );
+      numberOfCorrectAnswers += correctAnswersCount;
+    }
+  }
+
+  var score = 0;
+
+  if (isCorrect) {
+    score = 1;
+  } else if (question.allowPartialScoring) {
+    var partialScore = _.find(question.partialScoring, function(ps) {
+      return ps.numberOfCorrect === numberOfCorrectAnswers;
+    });
+    if (partialScore) {
+      score = partialScore.scorePercentage / 100;
+    }
+  }
+
+  var res = {
+    correctness: isCorrect ? "correct" : "incorrect",
+    correctResponse: question.correctResponse,
+    answer: answer,
+    score: score,
+    correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
+    comments: question.comments
   };
 
-  return dragAndDropEngine.createResponse(question, answer, settings, defaults);
+  if (settings.showFeedback) {
+    res.feedback = fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect));
+  }
+
+  return res;
 };
