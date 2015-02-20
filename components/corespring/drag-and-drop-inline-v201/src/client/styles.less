@@ -28,11 +28,11 @@
     border: 1px solid #cccccc;
     border-radius: 4px;
 
-    .new-choice {
+    .choice {
       display: inline;
       margin: 0.25em 0;
 
-      .new-choice-content {
+      .choice-content {
         display: inline-block;
         width: auto;
         margin-right: 0.25em;
@@ -41,10 +41,8 @@
         border-radius: 4px;
       }
 
-      .new-choice-content:hover {
+      .choice-content:hover {
         cursor: move;
-        -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-        -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
         box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
       }
 
@@ -74,6 +72,13 @@
     -webkit-padding-end: 0;
   }
 
+  .choice.ui-draggable-disabled {
+    .choice-content:hover {
+      cursor: default;
+      box-shadow: none;
+    }
+  }
+
   .answer-area-inline {
     display: inline-block;
     border-bottom: 1px solid black;
@@ -81,6 +86,15 @@
     min-height: 30px;
     margin-right: 5px;
     vertical-align: middle;
+
+    .ui-sortable-disabled {
+      .selected-choice {
+        .selected-choice-content:hover {
+          cursor: default;
+          box-shadow: none;
+        }
+      }
+    }
 
     .selected-choice {
       display: inline-block;
@@ -110,8 +124,6 @@
 
       .selected-choice-content:hover {
         cursor: move;
-        -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-        -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
         box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
 
         .remove-choice {
@@ -129,7 +141,6 @@
     .selected-choice.incorrect {
       .selected-choice-content {
         border: 1px solid #ec971f;
-        -moz-box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
         box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
       }
       .circle {
@@ -140,7 +151,6 @@
     .selected-choice.correct {
       .selected-choice-content {
         border: 1px solid #3c763d;
-        -moz-box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
         box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
       }
       .circle {

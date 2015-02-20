@@ -125,14 +125,14 @@ var main = [
         '    <div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div>',
         '  </div>',
         '  <div ng-repeat="choice in local.choices"',
-        '    class="new-choice" ',
+        '    class="choice" ',
         '    data-drag="editable"',
         '    ng-disabled="!editable"',
         '    data-jqyoui-options="draggableOptions(choice)"',
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptions(choice)"',
         '    data-id="{{choice.id}}">',
-        '    <span class="new-choice-content" ng-bind-html-unsafe="choice.label"></span>',
+        '    <span class="choice-content" ng-bind-html-unsafe="choice.label"></span>',
         '  </div>',
         '</div>'
       ].join('');
