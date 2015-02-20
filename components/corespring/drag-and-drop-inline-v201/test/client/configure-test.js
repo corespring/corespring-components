@@ -1,5 +1,5 @@
 /* global describe, it, beforeEach, inject, module, expect */
-describe('corespring:drag-and-drop-inline:configure', function() {
+describe('corespring:drag-and-drop-inline-v201:configure', function() {
 
   "use strict";
 
@@ -50,7 +50,7 @@ describe('corespring:drag-and-drop-inline:configure', function() {
     };
 
     return {
-      "componentType": "corespring-drag-and-drop-inline",
+      "componentType": "corespring-drag-and-drop-inline-v201",
       "correctResponse": correctResponse,
       "feedback": {
         "correctFeedbackType": "default",
@@ -110,7 +110,7 @@ describe('corespring:drag-and-drop-inline:configure', function() {
     $rootScope.registerConfigPanel = function(id, b) {
       container.registerConfigPanel(id, b);
     };
-    element = $compile("<div navigator=''><corespring-drag-and-drop-inline-configure id='1'></corespring-drag-and-drop-inline-configure></div>")($rootScope.$new());
+    element = $compile("<div navigator=''><corespring-drag-and-drop-inline-v201-configure id='1'></corespring-drag-and-drop-inline-v201-configure></div>")($rootScope.$new());
     scope = element.scope().$$childHead.$$childHead;
     rootScope = $rootScope;
   }));

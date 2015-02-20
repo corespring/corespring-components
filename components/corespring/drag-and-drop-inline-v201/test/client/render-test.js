@@ -1,6 +1,6 @@
 /* global describe, beforeEach, module, inject, it, expect */
 
-describe('corespring:drag-and-drop-inline:2.0.', function() {
+describe('corespring:drag-and-drop-inline-v201', function() {
 
   "use strict";
 
@@ -22,7 +22,7 @@ describe('corespring:drag-and-drop-inline:2.0.', function() {
               "id": "aa_1"
             }
           ],
-          "answerAreaXhtml": "text before <answer-area-inline id=\"aa_1\"></answer-area-inline> text after",
+          "answerAreaXhtml": "text before <answer-area-inline-v201 id=\"aa_1\"></answer-area-inline-v201> text after",
           "choices": [
             {
               "label": "turkey",
@@ -79,7 +79,7 @@ describe('corespring:drag-and-drop-inline:2.0.', function() {
       container.registerComponent(id, obj);
     });
 
-    element = $compile("<corespring-drag-and-drop-inline-render id='1'></corespring-drag-and-drop-inline-render>")($rootScope.$new());
+    element = $compile("<corespring-drag-and-drop-inline-v201-render id='1'></corespring-drag-and-drop-inline-v201-render>")($rootScope.$new());
     scope = element.scope();
     rootScope = $rootScope;
   }));
