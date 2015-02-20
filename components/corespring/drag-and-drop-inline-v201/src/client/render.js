@@ -228,9 +228,6 @@ var answerAreaInline = [
             }
             return choiceClass === 'correct' ? 'fa-check-circle' : 'fa-times-circle';
           };
-          scope.choiceLabel = function(choice){
-            return choice.label + ' <span class="close"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>';
-          };
           scope.removeChoice = function(index){
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
           };
