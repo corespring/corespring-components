@@ -132,7 +132,7 @@ var main = [
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptions(choice)"',
         '    data-id="{{choice.id}}">',
-        '    <span class="choice-content" ng-bind-html-unsafe="choice.label"></span>',
+        '    <span class="choice-content" ng-class="{disabled:!editable}" ng-bind-html-unsafe="choice.label"></span>',
         '  </div>',
         '</div>'
       ].join('');
@@ -148,7 +148,7 @@ var main = [
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
       '  <div id="answer-area-holder"></div>',
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
+      '  <div class="see-solution-button pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '</div>'
@@ -243,9 +243,9 @@ var answerAreaInline = [
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
-        '      <div class="selected-choice-content">',
+        '      <div class="selected-choice-content" ng-class="{disabled:!canEdit()}">',
         '        <span class="html-wrapper" ng-bind-html-unsafe="choice.label"></span>',
-        '        <span class="remove-choice" ng-hide="!canEdit()"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>',
+        '        <span class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>',
         '      </div>',
         '      <i class="circle fa" ng-class="classForCorrectness(choice)"></i>',
         '    </div>',
