@@ -11,7 +11,10 @@
 .component-placeholder {
   .corespring-drag-and-drop-inline-render-v201 {
     .undo-start-over {
-      visibility: hidden; //hide, but keep the space
+      //hide, but block the space, so that the
+      //content is not hidden behind the edit/delete
+      //buttons of the placeholder
+      visibility: hidden;
     }
   }
 }
