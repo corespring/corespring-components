@@ -12,7 +12,7 @@ describe('drag-and-drop-inline-v201', function() {
   var utils = null;
 
   it('should return incorrect + feedback for an empty answer', function() {
-    var outcome = server.createResponse({
+    var outcome = server.respond({
         feedback: {}
       },
       null, {
@@ -30,7 +30,7 @@ describe('drag-and-drop-inline-v201', function() {
 
 
   it('should return incorrect + feedback for an empty answer when using custom feedback', function() {
-    var outcome = server.createResponse({
+    var outcome = server.respond({
       feedback: {
         incorrectFeedbackType: 'custom',
         incorrectFeedback: 'custom no'
@@ -57,7 +57,7 @@ describe('drag-and-drop-inline-v201', function() {
       aa_1: ['c_1', 'c_2', 'c_1']
     };
     var settings = {};
-    var outcome = server.createResponse(question, answer, settings);
+    var outcome = server.respond(question, answer, settings);
     outcome.should.eql({
       correctness: "incorrect",
       correctResponse: {
