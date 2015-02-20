@@ -140,7 +140,7 @@ var main = [
 
     var tmpl = [
       '<div class="corespring-drag-and-drop-inline-render-v201" drag-and-drop-controller>',
-      '  <div ng-show="!correctResponse" class="pull-right">',
+      '  <div ng-show="!correctResponse" class="undo-start-over pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i> Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
       '  </div>',
