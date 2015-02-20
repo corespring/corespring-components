@@ -1,275 +1,29 @@
 @import '../../../../../less/common';
 
-.corespring-drag-and-drop-inline-drag-helper {
-  position: absolute;
-  display: inline-block;
-  margin: 2px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-}
-
 .modal .choice,
 .view-drag-and-drop .choice {
   min-width: 90px;
   border-radius: 4px;
 }
 
-.corespring-drag-and-drop-inline-render {
-
-  .choices-wrapper {
-    margin-top: 20px;
-    position: relative;
-    padding: 1em;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-
-    .new-choice {
-      display: inline;
-      margin: 0.25em 0;
-
-      .new-choice-content {
-        display: inline-block;
-        width: auto;
-        margin-right: 0.25em;
-        padding: 0.5em 0.75em;
-        background: #efefef;
-        border-radius: 4px;
-      }
-
-      .new-choice-content:hover {
-        cursor: move;
-        -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-        -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-        box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-      }
-
-      img {
-        max-width: 110px;
-        vertical-align: bottom;
-      }
-    }
-  }
-}
-
-
-.corespring-drag-and-drop-inline-see-solution,
-.corespring-drag-and-drop-inline-render {
-
-  .ui-draggable-dragging {
-    opacity: 0.75;
-  }
-
-  .answer-area-inline {
-    display: inline-block;
-    border-bottom: 1px solid black;
-    min-width: 70px;
-    min-height: 30px;
-    margin-right: 5px;
-    vertical-align: middle;
-
-    .selected-choice {
-      display: inline-block;
-      margin: 0.25em 0;
-      white-space: nowrap;
-
-      .selected-choice-content {
-        display: inline-block;
-        margin-right: 0.25em;
-        padding: 0.5em 0.75em;
-        background: #efefef;
-        border-radius: 4px;
-
-        .html-wrapper {
-          list-style-type: none;
-          display: inline-block;
-          padding-right: 10px;
-        }
-
-        .remove-choice {
-          float: right;
-          list-style-type: none;
-          display: inline-block;
-          opacity: 0.3;
-        }
-      }
-
-      .selected-choice-content:hover {
-        cursor: move;
-        -webkit-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-        -moz-box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-        box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-
-        .remove-choice {
-          opacity: 0.8;
-        }
-      }
-
-      img {
-        max-width: 110px;
-        vertical-align: bottom;
-      }
-
-    }
-
-    .selected-choice.incorrect {
-      .selected-choice-content {
-        border: 1px solid #ec971f;
-        -moz-box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
-        box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
-      }
-      .circle {
-        font-size: 24px;
-        color: #ec971f;
-      }
-    }
-    .selected-choice.correct {
-      .selected-choice-content {
-        border: 1px solid #3c763d;
-        -moz-box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
-        box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
-      }
-      .circle {
-        font-size: 24px;
-        color: #3c763d;
-      }
-    }
-
-    .ui-droppable {
-      position: relative;
-      bottom: 0;
-      margin-bottom: 0px;
-      min-width: 50px;
-      min-height: 30px;
-      -webkit-padding-start: 0px;
-      -webkit-padding-end: 20px;
-    }
-
-
-    .xsortable-choice {
-      display: inline-block;
-      padding: 2px 5px 2px 5px;
-      margin: 2px 5px 2px 2px;
-      min-height: 20px;
-      min-width: 40px;
-      background-color: #eeeeee;
-      list-style-type: none;
-
-      .close {
-        position: relative;
-        top: 3px;
-        right: 3px;
-        font-size: 14px;
-        font-weight: normal;
-        margin-left: 0.50em;
-      }
-    }
-  }
-
-  .answer-area-inline-active {
-    z-index: 105;
-    background: #ccc;
-    padding-left: 0.25em;
-  }
-
-  .answer-area-inline-hover {
-    border: 2px dashed #9b9b9b;
-    background: #fff;
-    border-radius: 4px;
-    z-index: 99;
-  }
-}
-
-.corespring-drag-and-drop-inline-config {
+.drag-and-drop-inline-config-panel {
 
   .rounded-inputs;
 
-  .mini-wiggi-wiz {
-    background-color: white;
-
-    .wiggi-wiz-editable {
-      min-height: 35px;
-    }
+  .shuffle {
+    display: none;
   }
 
-  ul.draggable-choices {
-    padding: 0;
-    list-style-type: none;
+  .choice {
+    margin-bottom: 20px;
   }
 
-  .draggable-choice {
-    position: relative;
-    display: block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 5px 0 45px 0;
-    max-width: 400px;
-    min-height: 47px;
-    padding: 1em;
-    background: #efefef;
-
-    .blocker {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      left: 0;
-      top: 0;
-      z-index: 10;
-      border-radius: 4px;
-      user-select: none;
-
-      .bg {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-
-      .content {
-        display: inline-flex;
-        align-items: center;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        overflow: visible;
-
-        .edit-controls {
-          position: absolute;
-          padding: 5px 5px 5px 20px;
-          top: 2px;
-          right: 2px;
-
-          .edit-icon-button,
-          .delete-icon-button {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-left: 5px;
-            font-size: 24px;
-          }
-        }
-
-      }
-    }
-
-    .remove-after-placing {
-      position: absolute;
-      bottom: -35px;
-    }
+  .choice-area {
+    width: inherit;
+    display: inline-block;
   }
 
   .add-choice {
-    //don't remove
-    //used to identify the button for ui testing
-  }
-
-  .add-choice-row {
-    margin-bottom: 30px;
-  }
-
-  .shuffle-choices-row {
     margin-bottom: 10px;
   }
 
@@ -277,58 +31,8 @@
     margin-bottom: 30px;
   }
 
-  .choices-and-answers {
+  .answer-areas-container, .choices-container {
     margin-bottom: 30px;
-  }
-
-  .answer-area-inline {
-    position: relative;
-    display: inline-block;
-    margin: 2px;
-    width: auto;
-    height: auto;
-    min-width: 50px;
-    min-height: 20px;
-    border: 3px dashed #ccc;
-    border-radius: 10px;
-
-    ul {
-      margin-bottom: 0;
-    }
-
-    .sorted-choices {
-      padding: 5px 10px;
-      min-height: 20px;
-
-      .prompt {
-        padding-bottom: 0;
-      }
-
-      .sortable-choice {
-        position: relative;
-        display: inline-block;
-        margin: 2px;
-        padding: 5px 20px 5px 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-
-        .delete-icon {
-          position: absolute;
-          top: 0;
-          right: 2px;
-        }
-      }
-    }
-  }
-
-  .answer-area-help-text {
-    color: #999;
-    font-style: italic;
-  }
-
-  .choice-area-position {
-    display: inline-block;
-    width: auto;
   }
 
 }

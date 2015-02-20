@@ -1,6 +1,6 @@
 /* global describe, beforeEach, module, inject, it, expect */
 
-describe('corespring:drag-and-drop-inline', function() {
+describe('corespring:drag-and-drop-inline:2.0.', function() {
 
   "use strict";
 
@@ -19,31 +19,30 @@ describe('corespring:drag-and-drop-inline', function() {
         "model": {
           "answerAreas": [
             {
-              "id": "aa_1",
-              "textBefore": "Americans eat",
-              "textAfter": "for Thanksgiving dinner."
+              "id": "aa_1"
             }
           ],
+          "answerAreaXhtml": "text before <answer-area-inline id=\"aa_1\"></answer-area-inline> text after",
           "choices": [
             {
               "label": "turkey",
               "labelType": "text",
-              "id": "choice_0"
+              "id": "c_0"
             },
             {
               "label": "ham",
               "labelType": "text",
-              "id": "choice_1"
+              "id": "c_1"
             },
             {
               "label": "lamb",
               "labelType": "text",
-              "id": "choice_2"
+              "id": "c_2"
             },
             {
               "label": "bologna",
               "labelType": "text",
-              "id": "choice_3"
+              "id": "c_3"
             }
           ],
           "config": {
@@ -108,24 +107,36 @@ describe('corespring:drag-and-drop-inline', function() {
 
     it('sets the session choice correctly', function() {
 
-      setAnswer('choice_1');
+      setAnswer('c_1');
 
       expect(_.pick(scope.landingPlaceChoices[0][0], 'label', 'id')).toEqual({
         label: 'ham',
-        id: 'choice_1'
+        id: 'c_1'
       });
+    });
+    
+    it('shows the text in the answerArea', function(){
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      wrapper = wrapElement();
+      var $answerArea = wrapper.find("#answer-area-holder");
+      expect($answerArea.length).toBe(1);
+
+      var text = $answerArea.text();
+      expect(text).toContain('text before');
+      expect(text).toContain('text after');
     });
 
     it('removes selected choices from available choices', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect(_.find(scope.local.choices, {'id':'choice_1'})).toBeDefined();
-      setAnswer('choice_1');
-      expect(_.find(scope.local.choices, {'id':'choice_1'})).not.toBeDefined();
+      expect(_.find(scope.local.choices, {'id':'c_1'})).toBeDefined();
+      setAnswer('c_1');
+      expect(_.find(scope.local.choices, {'id':'c_1'})).not.toBeDefined();
     });
 
     it('setting response shows correctness', function() {
-      setAnswer('choice_1');
+      setAnswer('c_1');
       setResponse({correctness: 'incorrect', correctClass: "incorrectClass", feedback:{}});
       wrapper = wrapElement();
       expect(wrapper.find(".incorrectClass").length).toBe(1);
@@ -134,7 +145,7 @@ describe('corespring:drag-and-drop-inline', function() {
     describe("see-solution button",function(){
 
       function setCorrectness(correctness){
-        setAnswer('choice_1');
+        setAnswer('c_1');
         setResponse({correctness: correctness, correctResponse: {}});
         wrapper = wrapElement();
       }
