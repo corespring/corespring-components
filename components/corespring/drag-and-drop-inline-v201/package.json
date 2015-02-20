@@ -1,0 +1,45 @@
+{
+  "name": "drag-and-drop-inline-v201",
+  "title": "Short Answer - Drag and Drop (v201)",
+  "titleGroup": "Fixed Choice",
+  "organization": "corespring",
+  "version": "2.0.1",
+  "released": false,
+  "dependencies": {
+    "client": {
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.5",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      },
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
+      }
+    }
+  },
+  "libraries": [
+    {
+      "name": "drag-and-drop-engine",
+      "organization": "corespring"
+    },
+    {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    },
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "bootstrap-multiselect",
+      "organization": "corespring",
+      "scope": "editor"
+    }
+
+  ]
+}

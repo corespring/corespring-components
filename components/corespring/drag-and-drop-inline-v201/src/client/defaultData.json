@@ -1,0 +1,53 @@
+{
+  "componentType": "corespring-drag-and-drop-inline-v201",
+  "title": "Short Answer - Drag and Drop (v201)",
+  "correctResponse": {
+    "aa_1": ["c_1"]
+  },
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": false,
+  "partialScoring" : [
+    {}
+  ],
+  "model": {
+    "answerAreaXhtml": "text before <answer-area-inline-v201 id='aa_1'></answer-area-inline-v201> and after.",
+    "answerAreas": [
+      {
+        "id": "aa_1"
+      }
+    ],
+    "choices": [
+      {
+        "label": "one",
+        "labelType": "text",
+        "id": "c_1"
+      },
+      {
+        "label": "two",
+        "labelType": "text",
+        "id": "c_2"
+      },
+      {
+        "label": "three",
+        "labelType": "text",
+        "id": "c_3"
+      },
+      {
+        "label": "four",
+        "labelType": "text",
+        "id": "c_4"
+      }
+    ],
+    "config": {
+      "shuffle": false,
+      "choiceAreaLabel": "",
+      "choiceAreaLayout": "horizontal",
+      "choiceAreaPosition": "below"
+    }
+  },
+  "weight": 1
+}

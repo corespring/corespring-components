@@ -1,0 +1,132 @@
+{
+  "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For drag and drop inline, this must be 'corespring-drag-and-drop-inline'.",
+      "type" : "string"
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    },
+    "correctResponse" : {
+      "description" : "An object mapping the answer area id to an array of ids for the correct choices."
+    },
+    "feedback" : {
+      "description" : "Describes feedback which should be presented to the user when the component is submitted.",
+      "type" : "object",
+      "correctFeedback" : {
+        "description" : "A feedback string that will be shown for a correct response if correctFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "correctFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if all of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "incorrectFeedback" : {
+        "description" : "A feedback string that will be shown for a incorrect response if incorrectFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "incorrectFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if no correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "partialFeedback" : {
+        "description" : "A feedback string that will be shown for a partially correct response if partialFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "partialFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if some of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      }
+    },
+    "partialScoring" : {
+      "description": "A description of the partial scoring to be used by the interaction.",
+      "type": "array",
+      "items": {
+        "description": "A configuration object which maps the number of correct responses to the percentage to be awarded.",
+        "type": "object",
+        "properties": {
+          "numberOfCorrect": {
+            "description": "The number of correct responses.",
+            "type": "number"
+          },
+          "scorePercentage": {
+            "description": "The percentage of the score to be awarded for the number of correct responses.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "required": ["numberOfCorrect", "scorePercentage"]
+      }
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "answerAreas" : {
+          "type" : "array",
+          "description" : "An array of objects describing the areas into which answers can be dropped.",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "id" : {
+                "type" : "string",
+                "description" : "The id for the particular answer area."
+              },
+              "textBefore" : {
+                "type" : "string",
+                "description" : "The text which comes before the answer area."
+              },
+              "textAfter" : {
+                "type" : "string",
+                "description" : "The text which comes after the answer area."
+              }
+            },
+            "required" : ["id"]
+          }
+        },
+        "choices" : {
+          "type" : "array",
+          "description" : "An array of objects describing the choices which can be dragged into the answer areas.",
+          "items" : {
+            "properties" : {
+              "label" : {
+                "type" : "string",
+                "description" : "Text label displayed on the choice."
+              },
+              "labelType" : {
+                "enum" : ["text"],
+                "description" : "The content type of the choice (at present, only text is supported)."
+              },
+              "id" : {
+                "type" : "string",
+                "description" : "The id for the choice. Used to specify correctness."
+              }
+            },
+            "required" : ["id", "label"]
+          }
+        },
+        "config" : {
+          "type" : "object",
+          "description" : "An object describing the configuration of the interaction.",
+          "properties" : {
+            "shuffle" : {
+              "type" : "boolean",
+              "description" : "If true, shuffle the ordering of the displayed choices."
+            },
+            "choiceAreaLabel" : {
+              "type" : "string",
+              "description" : "Text which is used to label the choice area."
+            },
+            "choiceAreaLayout" : {
+              "enum" : ["vertical", "horizontal", "tile"],
+              "description" : "Describes the orientation in which the choices are to be displayed."
+            }
+          },
+          "required" : ["shuffle", "choiceAreaLabel", "choiceAreaLayout"]
+        }
+      },
+      "required" : ["answerAreas", "choices", "config"]
+    }
+  }
+}
