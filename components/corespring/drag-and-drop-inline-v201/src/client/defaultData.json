@@ -2,7 +2,7 @@
   "componentType": "corespring-drag-and-drop-inline-v201",
   "title": "Short Answer - Drag and Drop (v201)",
   "correctResponse": {
-    "aa_1": ["c_1"]
+    "aa_1": []
   },
   "feedback": {
     "correctFeedbackType": "default",
@@ -14,7 +14,7 @@
     {}
   ],
   "model": {
-    "answerAreaXhtml": "text before <answer-area-inline-v201 id='aa_1'></answer-area-inline-v201> and after.",
+    "answerAreaXhtml": "<answer-area-inline-v201 id='aa_1'></answer-area-inline-v201>",
     "answerAreas": [
       {
         "id": "aa_1"
@@ -22,22 +22,22 @@
     ],
     "choices": [
       {
-        "label": "one",
+        "label": "",
         "labelType": "text",
         "id": "c_1"
       },
       {
-        "label": "two",
+        "label": "",
         "labelType": "text",
         "id": "c_2"
       },
       {
-        "label": "three",
+        "label": "",
         "labelType": "text",
         "id": "c_3"
       },
       {
-        "label": "four",
+        "label": "",
         "labelType": "text",
         "id": "c_4"
       }

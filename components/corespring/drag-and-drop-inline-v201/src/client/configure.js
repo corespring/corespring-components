@@ -479,7 +479,7 @@ var csConfigAnswerAreaInline = [
         '      <span ng-bind-html-unsafe="choice.label"></span>',
         '    </li>',
         '    <p class="prompt" ng-hide="correctAnswers[answerAreaId].length">',
-        '      Drag and order correct answers here.',
+        '      Drag correct answers here.',
         '    </p>',
         '  </ul>',
         '</div>'
