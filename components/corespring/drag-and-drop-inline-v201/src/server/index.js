@@ -37,7 +37,7 @@ exports.createResponse = function(question, answer, settings) {
     if (correctResponsesForId && answer[k]) {
       var correctAnswersCount = countCorrectAnswers(correctResponsesForId, answer[k]);
       var hasSuperfluousAnswers = answer[k].length > correctResponsesForId.length;
-      isCorrect &= correctAnswersCount == correctResponsesForId.length && !hasSuperfluousAnswers;
+      isCorrect &= correctAnswersCount === correctResponsesForId.length && !hasSuperfluousAnswers;
       isPartiallyCorrect |= correctAnswersCount > 0 && (correctAnswersCount < correctResponsesForId.length || hasSuperfluousAnswers );
       numberOfCorrectAnswers += correctAnswersCount;
     }
