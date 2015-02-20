@@ -4,7 +4,7 @@
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
   "version": "2.0.1",
-  "released": false,
+  "released": true,
   "dependencies": {
     "client": {
       "corespring-checkbox": {
@@ -32,11 +32,6 @@
     },
     {
       "name": "choice-templates",
-      "organization": "corespring",
-      "scope": "editor"
-    },
-    {
-      "name": "bootstrap-multiselect",
       "organization": "corespring",
       "scope": "editor"
     }
