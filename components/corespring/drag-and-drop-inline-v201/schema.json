@@ -1,7 +1,7 @@
 {
   "properties" : {
     "componentType" : {
-      "description" : "A required value to indicate the component type. For drag and drop inline, this must be 'corespring-drag-and-drop-inline'.",
+      "description" : "A required value to indicate the component type. For drag and drop inline v201, this must be 'corespring-drag-and-drop-inline-v201'.",
       "type" : "string"
     },
     "title" : {
@@ -72,18 +72,14 @@
               "id" : {
                 "type" : "string",
                 "description" : "The id for the particular answer area."
-              },
-              "textBefore" : {
-                "type" : "string",
-                "description" : "The text which comes before the answer area."
-              },
-              "textAfter" : {
-                "type" : "string",
-                "description" : "The text which comes after the answer area."
               }
             },
             "required" : ["id"]
           }
+        },
+        "answerAreaXhtml" : {
+          "type" : "string",
+          "description" : "The xhtml text which defines the answer area."
         },
         "choices" : {
           "type" : "array",
@@ -118,15 +114,15 @@
               "type" : "string",
               "description" : "Text which is used to label the choice area."
             },
-            "choiceAreaLayout" : {
-              "enum" : ["vertical", "horizontal", "tile"],
-              "description" : "Describes the orientation in which the choices are to be displayed."
+            "choiceAreaPosition" : {
+              "enum" : ["above", "below"],
+              "description" : "Describes where the choices are shown."
             }
           },
-          "required" : ["shuffle", "choiceAreaLabel", "choiceAreaLayout"]
+          "required" : ["shuffle", "choiceAreaLabel", "choiceAreaPosition"]
         }
       },
-      "required" : ["answerAreas", "choices", "config"]
+      "required" : ["answerAreas", "answerAreaXhtml", "choices", "config"]
     }
   }
 }
