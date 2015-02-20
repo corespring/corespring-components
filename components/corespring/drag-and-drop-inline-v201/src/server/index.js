@@ -1,6 +1,9 @@
 var _ = require('lodash');
 var fb = require('corespring.server-shared.server.feedback-utils');
 
+
+exports.keys = fb.keys;
+
 exports.createResponse = function(question, answer, settings) {
 
   if(!question || _.isEmpty(question)){
