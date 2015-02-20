@@ -188,8 +188,8 @@ var answerAreaInline = [
       replace: true,
       link: function(scope, el, attr) {
         scope.$emit("getScope", function(renderScope) {
+          scope.renderScope = renderScope;
           scope.answerAreaId = attr.id;
-          scope.landingPlaceChoices = renderScope.landingPlaceChoices;
 
           scope.canEdit = function(){
             return !renderScope.correctResponse && renderScope.editable;
@@ -232,17 +232,17 @@ var answerAreaInline = [
             return choice.label + ' <span class="close"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>';
           };
           scope.removeChoice = function(index){
-            scope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
+            scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
           };
         });
       },
       template: [
         '<div class="answer-area-inline">',
         '  <div ui-sortable="targetSortableOptions()"',
-        '    ng-model="landingPlaceChoices[answerAreaId]"',
+        '    ng-model="renderScope.landingPlaceChoices[answerAreaId]"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
-        '      ng-repeat="choice in landingPlaceChoices[answerAreaId] track by trackId(choice)">',
+        '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
         '      <div class="selected-choice-content">',
         '        <span class="html-wrapper" ng-bind-html-unsafe="choice.label"></span>',
         '        <span class="remove-choice" ng-hide="!canEdit()"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>',
