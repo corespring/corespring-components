@@ -454,6 +454,7 @@ var csConfigAnswerAreaInline = [
             accept: function() {
               return !configScope.targetDragging;
             },
+            distance: 5,
             hoverClass: 'answer-area-inline-hover',
             tolerance: "touch"
           };

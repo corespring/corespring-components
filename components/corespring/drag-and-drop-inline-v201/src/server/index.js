@@ -9,13 +9,18 @@ exports.respond = function(question, answer, settings) {
     throw new Error('the question should never be null or empty');
   }
 
-  if(!answer){
+  var isEmptyAnswer = _.isEmpty(answer) || _.every(answer, function(a) {
+      return _.isEmpty(a);
+    });
+
+  if (isEmptyAnswer) {
     return {
-      correctness: 'incorrect',
-      score: 0,
+      correctness: 'warning',
       correctResponse: question.correctResponse,
       answer: answer,
-      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null
+      score: 0,
+      correctClass: 'warning',
+      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'warning') : null
     };
   }
 

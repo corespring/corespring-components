@@ -1,3 +1,6 @@
+//needed for the rounded inputs
+@import '../../../../../less/common';
+
 .component-placeholder {
   .corespring-drag-and-drop-inline-render-v201 {
     //the component takes the full width of the player
@@ -26,9 +29,33 @@
 
 .corespring-drag-and-drop-inline-render-v201 {
 
+  .undo-start-over {
+    margin-bottom: 10px;
+  }
+
+  .answer-area-holder.warning {
+    border: 1px solid @warning-color;
+    -moz-box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
+    box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
+  }
+
   .feedback.panel {
+    margin-top: 10px;
+
     .panel-heading {
       cursor: default;
+    }
+
+    &.warning {
+      .panel-heading {
+        display: none;
+      }
+      .panel-body {
+        color: #a94442;
+        background-color: #f2dede;
+        border: 1px solid #ebccd1;
+        border-radius: 4px;
+      }
     }
   }
 
@@ -90,7 +117,6 @@
     }
   }
 }
-
 
 .corespring-drag-and-drop-inline-see-solution-v201,
 .corespring-drag-and-drop-inline-render-v201 {
@@ -168,26 +194,26 @@
         vertical-align: bottom;
       }
 
-    }
+      &.incorrect {
+        .selected-choice-content {
+          border: 1px solid #ec971f;
+          box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
+        }
+        .circle {
+          font-size: 24px;
+          color: #ec971f;
+        }
+      }
 
-    .selected-choice.incorrect {
-      .selected-choice-content {
-        border: 1px solid #ec971f;
-        box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ececec;
-      }
-      .circle {
-        font-size: 24px;
-        color: #ec971f;
-      }
-    }
-    .selected-choice.correct {
-      .selected-choice-content {
-        border: 1px solid #3c763d;
-        box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
-      }
-      .circle {
-        font-size: 24px;
-        color: #3c763d;
+      &.correct {
+        .selected-choice-content {
+          border: 1px solid #3c763d;
+          box-shadow: 0px 0px 6px 0px #3c763d, inset 0px 1px 0px 0px #ececec;
+        }
+        .circle {
+          font-size: 24px;
+          color: #3c763d;
+        }
       }
     }
   }
@@ -207,9 +233,6 @@
 }
 
 .corespring-drag-and-drop-inline-config-v201 {
-
-  //needed for the rounded inputs
-  @import '../../../../../less/common';
 
   .rounded-inputs;
 
@@ -315,6 +338,7 @@
     border-radius: 10px;
   }
 
+
   .answer-area-inline {
     position: relative;
     display: inline-block;
@@ -323,7 +347,6 @@
     height: auto;
     min-width: 50px;
     min-height: 20px;
-
     border-bottom: 1px solid black;
 
     ul {

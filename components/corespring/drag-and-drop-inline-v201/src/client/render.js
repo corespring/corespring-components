@@ -60,7 +60,7 @@ var main = [
             });
           }
 
-          var $answerArea = element.find("#answer-area-holder").html(answerAreaTemplate());
+          var $answerArea = element.find(".answer-area-holder").html(answerAreaTemplate());
           $timeout(function() {
             $compile($answerArea)(scope.$new());
           });
@@ -80,9 +80,9 @@ var main = [
 
         setResponse: function(response) {
           $log.debug("[DnD-inline] setResponse: ", response);
+          scope.response = response;
           scope.feedback = response.feedback;
           scope.correctness = response.correctness;
-          scope.correctClass = response.correctClass;
           scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
           // Populate solutionScope with the correct response
@@ -172,10 +172,10 @@ var main = [
       '  </div>',
       '  <div class="clearfix"></div>',
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
-      '  <div id="answer-area-holder"></div>',
+      '  <div class="answer-area-holder" ng-class="response.correctClass"></div>',
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
       '  <div class="clearfix"></div>',
-      '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '  <div ng-show="feedback" feedback="feedback" correct-class="{{response.correctClass}}"></div>',
       seeSolution,
       '</div>'
 
@@ -239,6 +239,7 @@ var answerAreaInline = [
               return !renderScope.targetDragging;
             },
             activeClass: 'answer-area-inline-active',
+            distance: 5,
             hoverClass: 'answer-area-inline-hover',
             tolerance: "touch"
           };
