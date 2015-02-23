@@ -25,10 +25,6 @@ var main = [
         return answerArea;
       }
 
-      scope._seeSolution = function() {
-        scope.seeSolution(answerAreaTemplate("class='corespring-drag-and-drop-inline-see-solution-v201'"));
-      };
-
       _.extend(scope.containerBridge, {
         setDataAndSession: function(dataAndSession) {
           $log.debug("[DnD-inline] setDataAndSession: ", dataAndSession);
@@ -36,6 +32,7 @@ var main = [
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
+          scope.bridge = {answerVisible: false};
           scope.local = {};
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
@@ -63,7 +60,7 @@ var main = [
             });
           }
 
-          var $answerArea = element.find("#answer-area-holder").html(answerAreaTemplate());
+          var $answerArea = element.find(".answer-area-holder").html(answerAreaTemplate());
           $timeout(function() {
             $compile($answerArea)(scope.$new());
           });
@@ -83,9 +80,9 @@ var main = [
 
         setResponse: function(response) {
           $log.debug("[DnD-inline] setResponse: ", response);
+          scope.response = response;
           scope.feedback = response.feedback;
           scope.correctness = response.correctness;
-          scope.correctClass = response.correctClass;
           scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
           // Populate solutionScope with the correct response
@@ -98,8 +95,23 @@ var main = [
             });
           });
 
+          var $answerArea = element.find(".correct-answer-area-holder").html(answerAreaTemplate());
+          $timeout(function() {
+            $compile($answerArea)(scope.solutionScope);
+          });
         }
       });
+
+      scope.toggleAnswerVisible = function(){
+        scope.bridge.answerVisible = !scope.bridge.answerVisible;
+        if (scope.bridge.answerVisible) {
+          $(element).find('.answer-collapse').slideDown(400);
+        } else {
+          $(element).find('.answer-collapse').slideUp(400);
+        }
+      };
+
+      $(element).find('.answer-collapse').slideUp(400);
 
       scope.classForChoice = function(answerAreaId, choice, targetIndex) {
         if (!scope.correctResponse) {
@@ -138,6 +150,20 @@ var main = [
       ].join('');
     }
 
+    var seeSolution = [
+      '<div class="corespring-drag-and-drop-inline-see-solution-v201" ng-show="correctResponse">',
+      '  <div class="panel panel-default">',
+      '    <div class="panel-heading">',
+      '      <h4 class="panel-title" ng-click="toggleAnswerVisible()"><i class="answerIcon fa fa-eye{{bridge.answerVisible ? \'-slash\' : \'\'}}"></i>&nbsp;{{bridge.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
+      '    </div>',
+      '    <div class="answer-collapse">',
+      '      <div class="panel-body correct-answer-area-holder">',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join("\n");
+
     var tmpl = [
       '<div class="corespring-drag-and-drop-inline-render-v201" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="undo-start-over pull-right">',
@@ -146,11 +172,11 @@ var main = [
       '  </div>',
       '  <div class="clearfix"></div>',
       '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
-      '  <div id="answer-area-holder"></div>',
+      '  <div class="answer-area-holder" ng-class="response.correctClass"></div>',
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
-      '  <div class="see-solution-button pull-right" ng-show="correctResponse"><a ng-click="_seeSolution()">See solution</a></div>',
       '  <div class="clearfix"></div>',
-      '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '  <div ng-show="feedback" feedback="feedback" correct-class="{{response.correctClass}}"></div>',
+      seeSolution,
       '</div>'
 
     ].join("");
@@ -179,6 +205,7 @@ var scopeForwarder = [
     };
   }
 ];
+
 var answerAreaInline = [
   function() {
     "use strict";
@@ -212,6 +239,7 @@ var answerAreaInline = [
               return !renderScope.targetDragging;
             },
             activeClass: 'answer-area-inline-active',
+            distance: 5,
             hoverClass: 'answer-area-inline-hover',
             tolerance: "touch"
           };

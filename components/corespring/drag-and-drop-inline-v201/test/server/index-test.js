@@ -23,8 +23,9 @@ describe('drag-and-drop-inline-v201', function() {
       correctness: 'incorrect',
       score: 0,
       correctResponse: null,
+      correctClass: 'warning',
       answer: null,
-      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
     });
   });
 
@@ -42,8 +43,9 @@ describe('drag-and-drop-inline-v201', function() {
       correctness: 'incorrect',
       score: 0,
       correctResponse: null,
+      correctClass: 'warning',
       answer: null,
-      feedback: 'custom no'
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
     });
   });
 

@@ -292,7 +292,7 @@ var main = [
         '  <div class="col-xs-12">',
         '    <ul class="draggable-choices" ng-model="model.choices">',
         '      <li class="draggable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
-        '          ng-model="choice" ng-click="itemClick($event)" data-drag="{{canDragChoices}}"',
+        '          ng-model="choice" ng-click="itemClick($event)" data-drag="{{!active[$index]}}"',
         '          jqyoui-draggable="choiceDraggableOptions($index)"',
         '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
         '        <div class="blocker" ng-hide="active[$index]">',
@@ -454,6 +454,7 @@ var csConfigAnswerAreaInline = [
             accept: function() {
               return !configScope.targetDragging;
             },
+            distance: 5,
             hoverClass: 'answer-area-inline-hover',
             tolerance: "touch"
           };
