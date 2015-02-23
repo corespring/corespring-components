@@ -317,7 +317,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    </div>',
 
       '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-      '    <div see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
+      '    <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       '      <ul class="clearfix">',
       '        <li ng-repeat="choice in correctChoices">',
       '          <div class="choice correct" ng-bind-html-unsafe="choice.label"></div>',
@@ -347,7 +347,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    </div>',
 
 
-      '    <div class="choice-area" see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
+      '    <div class="choice-area" see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       correctAnswerArea(),
       '    </div>',
       '</div>'
