@@ -118,7 +118,7 @@ describe('corespring:drag-and-drop-inline-v201', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       wrapper = wrapElement();
-      var $answerArea = wrapper.find("#answer-area-holder");
+      var $answerArea = wrapper.find(".answer-area-holder");
       expect($answerArea.length).toBe(1);
 
       var text = $answerArea.text();
@@ -138,7 +138,7 @@ describe('corespring:drag-and-drop-inline-v201', function() {
       setAnswer('c_1');
       setResponse({correctness: 'incorrect', correctClass: "incorrectClass", feedback:{}});
       wrapper = wrapElement();
-      expect(wrapper.find(".incorrectClass").length).toBe(1);
+      expect(wrapper.find(".incorrectClass").length > 0).toBe(true);
     });
 
     describe("see-solution button",function(){
@@ -164,13 +164,13 @@ describe('corespring:drag-and-drop-inline-v201', function() {
       it('should show the button when answer is incorrect', function() {
         setCorrectness('incorrect');
 
-        expect($(wrapper.find(".see-solution-button")).attr('class')).not.toContain('ng-hide');
+        expect($(wrapper.find(".corespring-drag-and-drop-inline-see-solution-v201")).attr('class')).not.toContain('ng-hide');
       });
 
       it('should hide the button if answer is correct', function() {
         setCorrectness('correct');
 
-        expect($(wrapper.find(".see-solution-button")).attr('class')).toContain('ng-hide');
+        expect($(wrapper.find(".corespring-drag-and-drop-inline-see-solution-v201")).attr('class')).toContain('ng-hide');
       });
 
     });

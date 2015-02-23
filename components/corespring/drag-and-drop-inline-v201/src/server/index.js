@@ -15,7 +15,7 @@ exports.respond = function(question, answer, settings) {
 
   if (isEmptyAnswer) {
     return {
-      correctness: 'warning',
+      correctness: 'incorrect',
       correctResponse: question.correctResponse,
       answer: answer,
       score: 0,
