@@ -202,6 +202,7 @@
 
     .wiggi-wiz-editable {
       min-height: 35px;
+      line-height: 250%;
     }
   }
 
@@ -257,9 +258,8 @@
           .delete-icon-button {
             cursor: pointer;
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
             font-size: 24px;
           }
         }
@@ -294,6 +294,11 @@
     margin-bottom: 30px;
   }
 
+  .answer-area-inline-hover {
+    border: 3px dashed #ccc;
+    border-radius: 10px;
+  }
+
   .answer-area-inline {
     position: relative;
     display: inline-block;
@@ -302,8 +307,8 @@
     height: auto;
     min-width: 50px;
     min-height: 20px;
-    border: 3px dashed #ccc;
-    border-radius: 10px;
+
+    border-bottom: 1px solid black;
 
     ul {
       margin-bottom: 0;

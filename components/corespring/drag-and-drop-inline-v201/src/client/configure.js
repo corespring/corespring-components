@@ -204,7 +204,6 @@ var main = [
           $event.stopPropagation();
           scope.active = [];
           scope.active[$index] = true;
-          scope.canDragChoices = false;
           $timeout(function() {
             var $editable = $($event.target).closest('.draggable-choice').find('.wiggi-wiz-editable');
             if($editable.length) {
@@ -235,7 +234,6 @@ var main = [
 
         scope.deactivate = function() {
           scope.active = [];
-          scope.canDragChoices = true;
           scope.$emit('mathJaxUpdateRequest');
         };
 
@@ -302,12 +300,12 @@ var main = [
         '          <div class="content">',
         '            <ul class="edit-controls">',
         '              <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true"',
-        '                  tooltip-placement="bottom">',
-        '                <i ng-click="activate($index, $event)" class="fa fa-pencil"></i>',
+        '                  tooltip-placement="bottom" ng-click="activate($index, $event)">',
+        '                <i class="fa fa-pencil"></i>',
         '              </li>',
         '              <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"',
-        '                  tooltip-placement="bottom">',
-        '                <i ng-click="removeChoice(choice.id)" class="fa fa-trash-o"></i>',
+        '                  tooltip-placement="bottom" ng-click="removeChoice(choice.id)">',
+        '                <i class="fa fa-trash-o"></i>',
         '              </li>',
         '            </ul>',
         '          </div>',
@@ -389,7 +387,7 @@ var main = [
       ].join("\n");
 
       var designOptions = [
-        '<div class="container-fluid">',
+        '<div class="container-fluid" ng-click="deactivate()">',
           introduction,
         '  <div class="row choices-and-answers">',
         '    <div class="col-xs-6">',
@@ -453,10 +451,11 @@ var csConfigAnswerAreaInline = [
           };
 
           scope.droppableOptions = {
-            tolerance: "pointer",
             accept: function() {
               return !configScope.targetDragging;
-            }
+            },
+            hoverClass: 'answer-area-inline-hover',
+            tolerance: "touch"
           };
 
           scope.trackId = function(choice){
