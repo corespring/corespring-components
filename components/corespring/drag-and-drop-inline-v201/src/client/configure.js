@@ -451,10 +451,11 @@ var csConfigAnswerAreaInline = [
           };
 
           scope.droppableOptions = {
-            tolerance: "pointer",
             accept: function() {
               return !configScope.targetDragging;
-            }
+            },
+            hoverClass: 'answer-area-inline-hover',
+            tolerance: "touch"
           };
 
           scope.trackId = function(choice){
