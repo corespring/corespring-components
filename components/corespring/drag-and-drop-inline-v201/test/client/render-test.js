@@ -1,6 +1,6 @@
 /* global describe, beforeEach, module, inject, it, expect */
 
-describe('corespring:drag-and-drop-inline', function() {
+describe('corespring:drag-and-drop-inline-v201', function() {
 
   "use strict";
 
@@ -19,31 +19,30 @@ describe('corespring:drag-and-drop-inline', function() {
         "model": {
           "answerAreas": [
             {
-              "id": "aa_1",
-              "textBefore": "Americans eat",
-              "textAfter": "for Thanksgiving dinner."
+              "id": "aa_1"
             }
           ],
+          "answerAreaXhtml": "text before <answer-area-inline-v201 id=\"aa_1\"></answer-area-inline-v201> text after",
           "choices": [
             {
               "label": "turkey",
               "labelType": "text",
-              "id": "choice_0"
+              "id": "c_0"
             },
             {
               "label": "ham",
               "labelType": "text",
-              "id": "choice_1"
+              "id": "c_1"
             },
             {
               "label": "lamb",
               "labelType": "text",
-              "id": "choice_2"
+              "id": "c_2"
             },
             {
               "label": "bologna",
               "labelType": "text",
-              "id": "choice_3"
+              "id": "c_3"
             }
           ],
           "config": {
@@ -80,14 +79,14 @@ describe('corespring:drag-and-drop-inline', function() {
       container.registerComponent(id, obj);
     });
 
-    element = $compile("<corespring-drag-and-drop-inline-render id='1'></corespring-drag-and-drop-inline-render>")($rootScope.$new());
+    element = $compile("<corespring-drag-and-drop-inline-v201-render id='1'></corespring-drag-and-drop-inline-v201-render>")($rootScope.$new());
     scope = element.scope();
     rootScope = $rootScope;
   }));
 
   function setAnswer(answer){
     testModel.session = {
-      answers: [[answer]]
+      answers: {'aa_1':[answer]}
     };
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
@@ -107,25 +106,36 @@ describe('corespring:drag-and-drop-inline', function() {
   describe('render', function() {
 
     it('sets the session choice correctly', function() {
+      setAnswer('c_1');
 
-      setAnswer('choice_1');
-
-      expect(_.pick(scope.landingPlaceChoices[0][0], 'label', 'id')).toEqual({
+      expect(_.pick(scope.landingPlaceChoices.aa_1[0], 'label', 'id')).toEqual({
         label: 'ham',
-        id: 'choice_1'
+        id: 'c_1'
       });
+    });
+    
+    it('shows the text in the answerArea', function(){
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      wrapper = wrapElement();
+      var $answerArea = wrapper.find("#answer-area-holder");
+      expect($answerArea.length).toBe(1);
+
+      var text = $answerArea.text();
+      expect(text).toContain('text before');
+      expect(text).toContain('text after');
     });
 
     it('removes selected choices from available choices', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect(_.find(scope.local.choices, {'id':'choice_1'})).toBeDefined();
-      setAnswer('choice_1');
-      expect(_.find(scope.local.choices, {'id':'choice_1'})).not.toBeDefined();
+      expect(_.find(scope.local.choices, {'id':'c_1'})).toBeDefined();
+      setAnswer('c_1');
+      expect(_.find(scope.local.choices, {'id':'c_1'})).not.toBeDefined();
     });
 
     it('setting response shows correctness', function() {
-      setAnswer('choice_1');
+      setAnswer('c_1');
       setResponse({correctness: 'incorrect', correctClass: "incorrectClass", feedback:{}});
       wrapper = wrapElement();
       expect(wrapper.find(".incorrectClass").length).toBe(1);
@@ -134,7 +144,7 @@ describe('corespring:drag-and-drop-inline', function() {
     describe("see-solution button",function(){
 
       function setCorrectness(correctness){
-        setAnswer('choice_1');
+        setAnswer('c_1');
         setResponse({correctness: correctness, correctResponse: {}});
         wrapper = wrapElement();
       }
@@ -145,7 +155,7 @@ describe('corespring:drag-and-drop-inline', function() {
         expect(scope.correctResponse).toBeTruthy();
       });
 
-      it('should not populatecorrectResponse if answer is correct', function() {
+      it('should not populate correctResponse if answer is correct', function() {
         setCorrectness('correct');
 
         expect(scope.correctResponse).toBeFalsy();
@@ -154,13 +164,13 @@ describe('corespring:drag-and-drop-inline', function() {
       it('should show the button when answer is incorrect', function() {
         setCorrectness('incorrect');
 
-        expect(wrapper.find("a[ngClick='_seeSolution()']").length).toBe(0);
+        expect($(wrapper.find(".see-solution-button")).attr('class')).not.toContain('ng-hide');
       });
 
       it('should hide the button if answer is correct', function() {
         setCorrectness('correct');
 
-        expect(wrapper.find("a[ng-click='_seeSolution()']").length).toBe(1);
+        expect($(wrapper.find(".see-solution-button")).attr('class')).toContain('ng-hide');
       });
 
     });

@@ -1,6 +1,6 @@
 {
-  "componentType": "corespring-drag-and-drop-inline",
-  "title": "Categorize",
+  "componentType": "corespring-drag-and-drop-inline-v201",
+  "title": "Short Answer - Drag and Drop (v201)",
   "correctResponse": {
     "aa_1": []
   },
@@ -10,42 +10,41 @@
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": false,
-  "partialScoring" : [
+  "partialScoring": [
     {}
   ],
   "model": {
+    "answerAreaXhtml": "<answer-area-inline-v201 id='aa_1'></answer-area-inline-v201>",
     "answerAreas": [
       {
-        "id": "aa_1",
-        "textBefore": "",
-        "textAfter": ""
+        "id": "aa_1"
       }
     ],
     "choices": [
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_0"
+        "id": "c_1"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_1"
+        "id": "c_2"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_2"
+        "id": "c_3"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_3"
+        "id": "c_4"
       }
     ],
     "config": {
       "shuffle": false,
-      "choiceAreaLabel": "Choices",
+      "choiceAreaLabel": "",
       "choiceAreaLayout": "horizontal",
       "choiceAreaPosition": "below"
     }
