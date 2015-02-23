@@ -204,7 +204,6 @@ var main = [
           $event.stopPropagation();
           scope.active = [];
           scope.active[$index] = true;
-          scope.canDragChoices = false;
           $timeout(function() {
             var $editable = $($event.target).closest('.draggable-choice').find('.wiggi-wiz-editable');
             if($editable.length) {
@@ -235,7 +234,6 @@ var main = [
 
         scope.deactivate = function() {
           scope.active = [];
-          scope.canDragChoices = true;
           scope.$emit('mathJaxUpdateRequest');
         };
 
@@ -389,7 +387,7 @@ var main = [
       ].join("\n");
 
       var designOptions = [
-        '<div class="container-fluid">',
+        '<div class="container-fluid" ng-click="deactivate()">',
           introduction,
         '  <div class="row choices-and-answers">',
         '    <div class="col-xs-6">',
