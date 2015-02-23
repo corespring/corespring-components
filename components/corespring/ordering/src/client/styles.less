@@ -357,6 +357,7 @@
   &.vertical {
 
     .answer-area-container {
+      display: table;
       width: 100%;
       margin-bottom: 5px;
     }
@@ -364,14 +365,23 @@
     .container-border {
       margin-bottom: 10px;
       max-width: 595px;
+      display: table-cell;
     }
 
     .correct-answer {
+      display: table-cell;
       vertical-align: top;
+      position: absolute;
+      right: 5px;
 
       ul {
         border-color: @correct-color;
       }
+    }
+
+    .choice-area-label {
+      margin-bottom: 5px;
+      margin-top: 5px;
     }
 
     ul {
@@ -397,6 +407,8 @@
     }
 
   }
+
+
 
   ul {
     padding: 5px 5px;
