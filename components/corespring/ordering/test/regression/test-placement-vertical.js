@@ -66,31 +66,36 @@ describe('placement ordering', function() {
           .call(done);
       });
 
-      //TODO fails currently
-      xit('correct answer is not visible after reset', function(done) {
+      it('correct answer is not visible after reset', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .click('.show-correct-button')
-          .waitForVisible('.see-answer-area .choices')
+          .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
+            attr.should.not.match(/ng-hide/);
+          })
           .resetItem()
-          .waitForVisible('.see-answer-area .choices', 500, true)
+          .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
+            attr.should.match(/ng-hide/);
+          })
           .call(done);
       });
 
-      //TODO fails currently
-      xit('correct answer is not visible after reset and submit', function(done) {
+      it('correct answer is not visible after reset and submit', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .click('.show-correct-button')
-
-          .waitForVisible('.see-answer-area .choices')
+          .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
+            attr.should.not.match(/ng-hide/);
+          })
           .resetItem()
           .submitItem()
-          .waitForVisible('.see-answer-area .choices', 500, true)
+          .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
+            attr.should.match(/ng-hide/);
+          })
           .call(done);
       });
 
