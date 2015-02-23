@@ -1,5 +1,20 @@
 @import '../../../../../less/common';
 
+.choice {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.feedback {
+  display: block;
+  clear: both;
+}
+
+.choice-area-label, .answer-area-label {
+  height: 50px;
+  overflow: hidden;
+}
 
 .show-correct-button-mixin() {
   background: @correct-color;
@@ -16,13 +31,9 @@
   }
 
   .choice-area {
-    .choice-area-label {
-      text-align: center;
-      min-height: 20px;
-    }
+    margin-right: 20px;
     .choices {
       .choices-holder {
-        max-width: 580px;
         .choices-inner-holder {
           border-radius: 4px;
           border: 2px solid #9B9B9B;
@@ -38,8 +49,6 @@
   }
 
   .answer-area {
-    vertical-align: top;
-    display: inline-block;
     .choiceHolder {
       border-radius: 4px;
       border: 1px solid #979797;
@@ -47,13 +56,9 @@
       font-size: 38px;
       line-height: 38px;
 
-      &:hover {
-        cursor: auto;
-      }
     }
 
     .answer-area-table {
-      display: table;
       border: 1px solid #9b9b9b;
       border-radius: 4px;
       .choice {
@@ -106,7 +111,6 @@
     border: 1px solid;
     border-radius: 4px;
     background-color: white;
-    vertical-align: top;
     height: 100%;
     margin: 3px 3px 1px 1px;
     padding: 8px;
@@ -114,10 +118,6 @@
     min-height: 55px;
     max-width: 500px;
     overflow: hidden;
-
-    &:hover{
-      cursor: pointer;
-    }
 
     &.correct {
       .correct-input();
@@ -153,67 +153,54 @@
 
   .choice-wrapper {
     padding: 10px;
-    position:relative;
+    position: relative;
   }
 
   &.main-table.vertical {
-    display: table;
     width: 100%;
 
+    .choice-area-label, .answer-area-label {
+      text-align: center;
+    }
+
     .main-row {
-      max-width: 100%;
-      display: table;
-      margin-top: 5px;
+      margin-top: 20px;
       margin-bottom: 10px;
+      overflow: hidden;
     }
 
     .choice-area {
-      display: table-cell;
-      vertical-align: top;
-      padding-right: 20px;
+      width: 180px;
+      float: left;
 
       .choices {
         padding-top: 0px;
         .choices-holder {
-          display: inline-block;
         }
 
         .choice {
           width: 150px;
 
-          &:hover{
-            cursor: pointer;
-          }
         }
       }
     }
 
     .answer-area {
-      display: table-cell;
+      width: 180px;
+      float: left;
+
       .choice {
         width: 150px;
-
-        &:hover{
-          cursor: pointer;
-        }
-      }
-
-      .answer-area-label {
-        text-align: center;
-        min-height: 20px;
+        min-height: 55px;
       }
 
       .answer-area-holder {
         display: inline-block;
-        height: 95%;
-
         .answer-area-table {
-          display: table;
-          height: 100%;
           border: 1px solid #9b9b9b;
           border-radius: 4px;
-          padding: 5px;
-
+          display: table;
+          padding: 10px;
           .choice-wrapper {
             display: table-row;
           }
@@ -222,32 +209,27 @@
     }
 
     .see-answer-area {
-      min-width: 150px;
-      max-width: 180px;
-      padding-left:45px;
-
-
+      width: 180px;
+      float: left;
+      margin: 0;
       .choice {
         .correct-input();
       }
 
-      .correct{
-        div{
+      .correct {
+        div {
           width: 94%;
         }
       }
       .correct:after {
-      font-family: 'FontAwesome';
-      content: @correct-character;
-      color: @correct-color;
-      position: absolute;
-      right: 17px;
-      top: 12px;
-      font-size: 17px;
-    }
-
-
-
+        font-family: 'FontAwesome';
+        content: @correct-character;
+        color: @correct-color;
+        position: absolute;
+        right: 17px;
+        top: 12px;
+        font-size: 17px;
+      }
     }
 
   }
@@ -278,14 +260,16 @@
       }
     }
     .answer-area {
-      max-width: 585px;
+      display: table-row;
       .answer-area-label {
         margin-top: 10px;
       }
       .answer-area-holder {
+        display: table-cell;
       }
       .choice-wrapper {
-        display: inline-block;
+        display: table-cell;
+        vertical-align: top;
       }
       .answer-area-table {
         width: 100%;
@@ -318,19 +302,13 @@
 }
 
 .view-ordering {
-
-
   .sizerHolder {
-
     visibility: hidden;
     position: fixed;
     max-width: 500px;
   }
 
   .choice-area {
-    .choice-area-label {
-      text-align: center;
-    }
     .choices {
       .choices-holder {
         .choices-inner-holder {
@@ -346,7 +324,7 @@
         }
       }
     }
-  }  
+  }
 
   .btn-default {
     border-radius: 4px;
@@ -379,7 +357,6 @@
   &.vertical {
 
     .answer-area-container {
-      display: table;
       width: 100%;
       margin-bottom: 5px;
     }
@@ -387,23 +364,14 @@
     .container-border {
       margin-bottom: 10px;
       max-width: 595px;
-      display: table-cell;
     }
 
     .correct-answer {
-      display: table-cell;
       vertical-align: top;
-      position: absolute;
-      right: 5px;
 
       ul {
         border-color: @correct-color;
       }
-    }
-
-    .choice-area-label {
-      margin-bottom: 5px;
-      margin-top: 5px;
     }
 
     ul {
@@ -442,28 +410,22 @@
     margin: 0 0 10px;
   }
 
+  .ui-sortable-helper .choice {
+    background-color: #ffffff !important;
+    border: 2px dashed #9b9b9b !important;
+  }
   .choice {
     border: 1px #9b9b9b solid;
     background: #efefef;
     border-radius: 4px;
     display: inline-block;
     padding: 8px;
-    margin: 1px;
+    margin: 0;
     min-width: 150px;
     width: 100%;
 
-    div{
+    div {
       width: 96%;
-    }
-
-    &:hover{
-      cursor: pointer;
-    }
-
-    &:active{
-      background-color: #ffffff !important;
-      border: 2px dashed #9b9b9b !important;
-      margin: 0px;
     }
 
     &.correct {
@@ -554,7 +516,7 @@
     padding: 1.13em;
     background: #efefef;
 
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
 

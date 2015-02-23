@@ -36,7 +36,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       return [
           '<div class="choices" ' + attrs + '>',
         '  <div class="choices-holder">',
-        '    <div class="answer-area-label"><br/></div>',
+        '    <div class="answer-area-label"></div>',
         '    <div class="choices-inner-holder clearfix">',
         '      <div ng-repeat="o in correctChoices" class="choice-wrapper"> ',
         '        <div class="choice correct">',
@@ -277,6 +277,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
 
+      scope.$watch(function () {
+        var h = element.find('.vertical .choices-inner-holder').outerHeight();
+        if (h && scope.lastChoiceAreaHeight !== h) {
+          element.find('.vertical .answer-area-table').outerHeight(h);
+          scope.lastChoiceAreaHeight = h;
+        }
+      });
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     };
@@ -285,13 +293,12 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  <div ng-if="model.config.placementType != \'placement\'" class="view-ordering {{model.config.choiceAreaLayout}}">',
       buttonRow(),
       '    <div class="clearfix" />',
-
       '    <div ng-bind-html-unsafe="model.config.choiceAreaLabel" class="choice-area-label"></div>',
       '    <div class="answer-area-container">',
       '      <div class="container-border">',
       '        <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
       '          <li ng-repeat="choice in local.choices">',
-      '            <div class="choice {{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label"></div>',
+      '            <div class="choice{{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label"></div>',
       '            <div class="sizerHolder">',
       '              <div class="html-holder choice" ng-bind-html-unsafe="choice.label"></div>',
       '            </div>',
@@ -310,7 +317,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    </div>',
 
       '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-      '    <div see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
+      '    <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       '      <ul class="clearfix">',
       '        <li ng-repeat="choice in correctChoices">',
       '          <div class="choice correct" ng-bind-html-unsafe="choice.label"></div>',
@@ -326,19 +333,24 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    <div class="main-row">',
       '      <div class="choice-area">', choices, '</div>',
         '      <div class="answer-area">' + answerArea + '</div>',
-      '      <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
+        '      <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
+
+
+      '   <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
       '        <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '      </div>',
-        '      <div class="see-answer-area choice-area">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
       '    </div>',
+
+
       '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
       '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '    </div>',
 
-      '    <div class="choice-area" see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
+
+      '    <div class="choice-area" see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       correctAnswerArea(),
       '    </div>',
-      '  </div>'
+      '</div>'
     ].join('\n');
 
     var tmpl = [
