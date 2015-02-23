@@ -86,7 +86,7 @@ describe('corespring:drag-and-drop-inline-v201', function() {
 
   function setAnswer(answer){
     testModel.session = {
-      answers: [[answer]]
+      answers: {'aa_1':[answer]}
     };
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
@@ -106,10 +106,9 @@ describe('corespring:drag-and-drop-inline-v201', function() {
   describe('render', function() {
 
     it('sets the session choice correctly', function() {
-
       setAnswer('c_1');
 
-      expect(_.pick(scope.landingPlaceChoices[0][0], 'label', 'id')).toEqual({
+      expect(_.pick(scope.landingPlaceChoices.aa_1[0], 'label', 'id')).toEqual({
         label: 'ham',
         id: 'c_1'
       });
@@ -156,7 +155,7 @@ describe('corespring:drag-and-drop-inline-v201', function() {
         expect(scope.correctResponse).toBeTruthy();
       });
 
-      it('should not populatecorrectResponse if answer is correct', function() {
+      it('should not populate correctResponse if answer is correct', function() {
         setCorrectness('correct');
 
         expect(scope.correctResponse).toBeFalsy();
@@ -165,13 +164,13 @@ describe('corespring:drag-and-drop-inline-v201', function() {
       it('should show the button when answer is incorrect', function() {
         setCorrectness('incorrect');
 
-        expect(wrapper.find("a[ngClick='_seeSolution()']").length).toBe(0);
+        expect($(wrapper.find(".see-solution-button")).attr('class')).not.toContain('ng-hide');
       });
 
       it('should hide the button if answer is correct', function() {
         setCorrectness('correct');
 
-        expect(wrapper.find("a[ng-click='_seeSolution()']").length).toBe(1);
+        expect($(wrapper.find(".see-solution-button")).attr('class')).toContain('ng-hide');
       });
 
     });

@@ -1,0 +1,62 @@
+{
+  "item": {
+    "components": {
+      "1": {
+        "componentType": "corespring-drag-and-drop-inline-v201",
+        "title": "Get a Job",
+        "weight": 4,
+        "correctResponse": {
+          "aa_1": ["c_2"]
+        },
+        "feedback": [
+          {
+            "value": "c_1",
+            "feedback": "Incorrect"
+          },
+          {
+            "value": "c_2",
+            "feedback": "Correct",
+            "notChosenFeedback": "This would have been the correct one."
+          },
+          {
+            "value": "c_3",
+            "feedback": "Incorrect"
+          },
+          {
+            "value": "c_4",
+            "feedback": "Incorrect"
+          }
+        ],
+        "model": {
+          "answerAreas": [
+            {"id": "aa_1"}
+          ],
+          "answerAreaXhtml": "<answer-area-inline-v201 id='aa_1'></answer-area-inline-v201>",
+          "config": {
+            "orientation": "vertical",
+            "shuffle": false
+          },
+          "choices": [
+            {
+              "label": "first",
+              "id": "c_1"
+            },
+            {
+              "label": "second is correct",
+              "id": "c_2"
+            },
+            {
+              "label": "third",
+              "id": "c_3"
+            },
+            {
+              "label": "fourth",
+              "id": "c_4"
+            }
+          ]
+        }
+      }
+    },
+    "xhtml": "<corespring-drag-and-drop-inline-v201 id=\"1\"></corespring-drag-and-drop-inline-v201>"
+  }
+}

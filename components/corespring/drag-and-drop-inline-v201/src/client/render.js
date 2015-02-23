@@ -111,7 +111,7 @@ var main = [
         }
 
         var actualIndex = correctResponse.indexOf(choice.id);
-        var isCorrect = actualIndex >= 0;
+        var isCorrect = actualIndex === targetIndex;
         return isCorrect ? "correct" : "incorrect";
       };
 
@@ -213,7 +213,7 @@ var answerAreaInline = [
             },
             activeClass: 'answer-area-inline-active',
             hoverClass: 'answer-area-inline-hover',
-            tolerance: "pointer"
+            tolerance: "touch"
           };
           scope.trackId = function(choice) {
             return _.uniqueId();
