@@ -95,7 +95,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           revert: 'invalid',
           placeholder: 'keep',
           index: _.indexOf(scope.local.choices, choice),
-          onStart: 'onStart'
+          onStart: 'onStart',
+          containment: element,
+          distance: 5
         };
       };
 
@@ -112,7 +114,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           revertDuration: 0,
           index: index,
           placeholder: true,
-          distance: 5
+          distance: 5,
+          containment: element
         };
       };
 
