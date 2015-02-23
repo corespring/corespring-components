@@ -9,7 +9,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('drag and drop inline v201', function() {
+describe('drag and drop inline v201', function() {
 
   "use strict";
 
