@@ -6,7 +6,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var buttonRow = function (attrs) {
       return [
-        '  <div class="button-row {{model.config.choiceAreaLayout}}" ' + attrs + '>',
+          '  <div class="button-row {{model.config.choiceAreaLayout}}" ' + attrs + '>',
         '    <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
         '    <button type="button" ng-disabled="correctResponse" class="btn btn-default" ng-click="startOverAndClear()">Start over</button>',
         '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" class="pull-right show-correct-button" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
@@ -277,6 +277,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
 
+      scope.$watch(function () {
+        var h = element.find('.vertical .choices-inner-holder').outerHeight();
+        if (h && scope.lastChoiceAreaHeight !== h) {
+          element.find('.vertical .answer-area-table').outerHeight(h);
+          scope.lastChoiceAreaHeight = h;
+        }
+      });
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
     };
@@ -324,9 +332,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'vertical\'"'),
       '    <div class="main-row">',
       '      <div class="choice-area">', choices, '</div>',
-      '      <div class="answer-area">' + answerArea + '</div>',
-      '      <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
-
+        '      <div class="answer-area">' + answerArea + '</div>',
+        '      <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
 
 
       '   <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
@@ -338,7 +345,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
       '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '    </div>',
-
 
 
       '    <div class="choice-area" see-answer-panel ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',

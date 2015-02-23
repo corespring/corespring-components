@@ -18,12 +18,6 @@
   text-align: center;
 }
 
-.main-row{
-}
-
-
-.choice-area, .answer-area, .see-answer-area{
-}
 
 .show-correct-button-mixin() {
   background: @correct-color;
@@ -202,16 +196,13 @@
 
       .answer-area-holder {
         display: inline-block;
-        height: 100%;
-
         .answer-area-table {
-          display: table;
-          height: 100%;
           border: 1px solid #9b9b9b;
           border-radius: 4px;
-          padding: 5px;
-
+          display: table;
+          padding: 10px;
           .choice-wrapper {
+            display: table-row;
           }
         }
       }
@@ -246,15 +237,19 @@
   &.main-table.horizontal {
     .button-row {
       float: right;
+      display: inline-block;
     }
 
     .main-row {
-      overflow: hidden;
+      display: table;
     }
 
     .choice-area {
+      display: table-row;
       .choices {
+        display: table-cell;
         .choices-holder {
+          display: inline-block;
           .choice-area-label {
             text-align: left;
           }
@@ -265,12 +260,16 @@
       }
     }
     .answer-area {
+      display: table-row;
       .answer-area-label {
         margin-top: 10px;
       }
       .answer-area-holder {
+        display: table-cell;
       }
       .choice-wrapper {
+        display: table-cell;
+        vertical-align: top;
       }
       .answer-area-table {
         width: 100%;
