@@ -24,6 +24,14 @@
   cursor: pointer;
 }
 
+.answer-area-table{
+  border: 2px dashed #9b9b9b;
+}
+
+.choice{
+  min-height: 55px;
+}
+
 .view-placement-ordering {
 
   .show-correct-button {
@@ -59,7 +67,6 @@
     }
 
     .answer-area-table {
-      border: 1px solid #9b9b9b;
       border-radius: 4px;
       .choice {
         position: relative;
@@ -115,7 +122,6 @@
     margin: 3px 3px 1px 1px;
     padding: 8px;
     min-width: 150px;
-    min-height: 55px;
     max-width: 500px;
     overflow: hidden;
 
@@ -191,13 +197,11 @@
 
       .choice {
         width: 150px;
-        min-height: 55px;
       }
 
       .answer-area-holder {
         display: inline-block;
         .answer-area-table {
-          border: 1px solid #9b9b9b;
           border-radius: 4px;
           display: table;
           padding: 10px;
@@ -286,6 +290,13 @@
       .choice {
         .correct-input();
       }
+      .answer-area-label{
+        display: none;
+      }
+      .choices-inner-holder{
+        border: none;
+        background: #fff;
+      }
     }
   }
 
@@ -304,6 +315,15 @@
 }
 
 .view-ordering {
+
+  ul{
+    border: 2px solid #9B9B9B;
+    background: #efefef;
+
+    .choice{
+      background: #fff;
+    }
+  }
   .sizerHolder {
     visibility: hidden;
     position: fixed;
@@ -334,6 +354,10 @@
 
   &.horizontal {
 
+    .choice{
+      max-width: 150px;
+      min-width: auto;
+    }
     .button-row {
       float: right;
     }
@@ -387,11 +411,17 @@
     }
 
     ul {
-      border: 1px solid #9B9B9B;
+      border: 2px solid #9B9B9B;
+      background: #efefef;
       border-radius: 4px;
       display: inline-block;
       padding-bottom: 0px;
-      width: 275px;
+      max-width: 275px;
+
+        .choice{
+          background: #fff;
+          min-width: auto;
+        }
     }
 
     &.correct:after {
@@ -435,7 +465,7 @@
     display: inline-block;
     padding: 8px;
     margin: 0;
-    min-width: 150px;
+    // min-width: 150px;
     width: 100%;
 
     div {
@@ -489,6 +519,8 @@
 
       ul {
         padding: 1px;
+        background: #fff;
+        border: none;
       }
 
       .choice.correct:after {
