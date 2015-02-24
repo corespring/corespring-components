@@ -450,7 +450,7 @@ var csConfigAnswerAreaInline = [
               stop: function () {
                 configScope.targetDragging = false;
               }
-            }
+            };
           };
 
           scope.droppableOptions = {
