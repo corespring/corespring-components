@@ -203,7 +203,9 @@
       }
 
       &.incorrect {
-        .incorrect-input();
+        .selected-choice-content {
+          .incorrect-input();
+        }
         .circle {
           font-size: 24px;
           color: @incorrect-color;
@@ -211,7 +213,9 @@
       }
 
       &.correct {
-        .correct-input();
+        .selected-choice-content {
+          .correct-input();
+        }
         .circle {
           font-size: 24px;
           color: @correct-color;
