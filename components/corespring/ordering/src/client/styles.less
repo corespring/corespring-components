@@ -1,34 +1,5 @@
 @import '../../../../../less/common';
 
-.choice {
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.feedback {
-  display: block;
-  clear: both;
-}
-
-.choice-area-label, .answer-area-label {
-  height: 50px;
-  overflow: hidden;
-}
-
-.answer-area-table{
-  border: 2px dashed #9b9b9b;
-}
-
-.choice{
-  min-height: 55px;
-}
-
-.button-row {
-  .btn-success{
-    background: @correct-color;
-  }
-}
 .view-placement-ordering {
 
   .choice-area {
@@ -61,6 +32,8 @@
 
     .answer-area-table {
       border-radius: 4px;
+      border: 2px dashed #9b9b9b;
+
       .choice {
         position: relative;
         background-color: #ffffff;
@@ -98,7 +71,6 @@
       &.warning {
         .warning-input();
       }
-
     }
   }
 
@@ -117,6 +89,7 @@
     min-width: 150px;
     max-width: 500px;
     overflow: hidden;
+    min-height: 55px;
 
     &.correct {
       .correct-input();
@@ -134,6 +107,11 @@
       max-width: 100px;
       max-height: 100px;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
+
   }
 
   .choiceHolder {
@@ -155,6 +133,11 @@
     position: relative;
   }
 
+  .choice-area-label, .answer-area-label {
+    height: 50px;
+    overflow: hidden;
+  }
+
   &.main-table.vertical {
     width: 100%;
 
@@ -166,7 +149,7 @@
       margin-top: 20px;
       margin-bottom: 10px;
       overflow: hidden;
-      clear:both;
+      clear: both;
     }
 
     .choice-area {
@@ -268,40 +251,48 @@
       .choice {
         .correct-input();
       }
-      .answer-area-label{
+      .answer-area-label {
         display: none;
       }
-      .choices-inner-holder{
+      .choices-inner-holder {
         border: none;
         background: #fff;
       }
     }
   }
 
-  .panel.feedback.warning {
-    .panel-heading {
-      display: none;
-    }
-    .panel-body {
-      color: #a94442;
-      background-color: #f2dede;
-      border: 1px solid #ebccd1;
-      border-radius: 4px;
-    }
+  .feedback {
+    display: block;
+    clear: both;
   }
 
+  .button-row {
+    .btn-success {
+      background: @correct-color;
+    }
+  }
 }
 
 .view-ordering {
 
-  ul{
+  ul {
     border: 2px solid #9B9B9B;
     background: #efefef;
+    padding: 5px 5px;
+    margin-left: 0px;
+    margin-bottom: 0px;
 
-    .choice{
+    .choice {
       background: #fff;
     }
   }
+
+  li {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0 0 10px;
+  }
+
   .sizerHolder {
     visibility: hidden;
     position: fixed;
@@ -332,7 +323,7 @@
 
   &.horizontal {
 
-    .choice{
+    .choice {
       max-width: 150px;
       min-width: auto;
     }
@@ -396,32 +387,19 @@
       padding-bottom: 0px;
       max-width: 275px;
 
-        .choice{
-          background: #fff;
-          width: auto;
-        }
+      .choice {
+        background: #fff;
+        width: auto;
+      }
     }
 
-  }
-
-
-
-  ul {
-    padding: 5px 5px;
-    margin-left: 0px;
-    margin-bottom: 0px;
-  }
-
-  li {
-    list-style: none;
-    padding-left: 0px;
-    margin: 0 0 10px;
   }
 
   .ui-sortable-helper .choice {
     background-color: #ffffff !important;
     border: 2px dashed #9b9b9b !important;
   }
+
   .choice {
     border: 1px #9b9b9b solid;
     background: #efefef;
@@ -430,6 +408,7 @@
     padding: 8px;
     margin: 0;
     width: 100%;
+    min-height: 55px;
 
     div {
       width: 96%;
@@ -464,6 +443,10 @@
       max-width: 100px;
       max-height: 100px;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .see-answer-panel {
@@ -479,6 +462,22 @@
       .choice.correct:after {
         content: "";
       }
+    }
+  }
+
+  .choice-area-label, .answer-area-label {
+    height: 50px;
+    overflow: hidden;
+  }
+
+  .feedback {
+    display: block;
+    clear: both;
+  }
+
+  .button-row {
+    .btn-success {
+      background: @correct-color;
     }
   }
 
