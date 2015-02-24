@@ -1,9 +1,6 @@
 @import '../../../../../less/common';
 
-.choice-area-label, .answer-area-label{
-  display: table-cell;
-  vertical-align: middle;
-}
+
 .view-placement-ordering {
 
   .choice-area {
@@ -141,7 +138,9 @@
     height: 50px;
     overflow: hidden;
     text-align: center;
-  }
+    display: table-cell;
+    vertical-align: middle;
+    }
 
   &.main-table.vertical {
     width: 100%;
@@ -474,6 +473,8 @@
   .choice-area-label, .answer-area-label {
     height: 50px;
     overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
   }
 
   .feedback {
