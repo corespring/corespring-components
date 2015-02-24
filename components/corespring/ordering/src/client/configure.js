@@ -51,7 +51,7 @@ var main = [
         '    </div>',
         '  </div>',
         '  <div class="row choices-row">',
-        '    <div ng-class="{\'col-xs-6\': model.config.placementType == \'placement\', \'col-xs-12\': model.config.placementType == \'inPlace\'}">',
+        '    <div class="col-xs-6">',
         '      <ul class="sortable-choices draggable-choices"',
         '          ui-sortable="choicesSortableOptions" ng-model="model.choices">',
         '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
