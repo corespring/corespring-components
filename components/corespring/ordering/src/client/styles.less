@@ -416,7 +416,7 @@
     min-height: 55px;
 
     div {
-      width: 96%;
+      // width: 96%;
     }
 
     &.correct {
@@ -424,6 +424,16 @@
       -moz-box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
       box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
       position: relative;
+
+      &:after {
+        font-family: 'FontAwesome';
+        content: @correct-character;
+        color: @correct-color;
+        position: absolute;
+        right: 2px;
+        top: -2px;
+        font-size: 17px;
+      }
     }
 
     &.incorrect {
