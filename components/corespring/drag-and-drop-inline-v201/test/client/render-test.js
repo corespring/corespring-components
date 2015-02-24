@@ -27,22 +27,26 @@ describe('corespring:drag-and-drop-inline-v201', function() {
             {
               "label": "turkey",
               "labelType": "text",
-              "id": "c_0"
+              "id": "c_0",
+              "removeAfterPlacing": true
             },
             {
               "label": "ham",
               "labelType": "text",
-              "id": "c_1"
+              "id": "c_1",
+              "removeAfterPlacing": true
             },
             {
               "label": "lamb",
               "labelType": "text",
-              "id": "c_2"
+              "id": "c_2",
+              "removeAfterPlacing": true
             },
             {
               "label": "bologna",
               "labelType": "text",
-              "id": "c_3"
+              "id": "c_3",
+              "removeAfterPlacing": true
             }
           ],
           "config": {
