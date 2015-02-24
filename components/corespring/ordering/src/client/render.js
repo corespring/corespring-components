@@ -325,7 +325,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '        </ul>',
       '      </div>',
 
-      '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse && top.correctAnswerVisible" class="correct-answer">',
+      '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse && top.correctAnswerVisible" class="see-correct-answer correct-answer">',
       '        <ul class="clearfix">',
       '          <li ng-repeat="choice in correctChoices">',
       '            <div class="choice {{classForChoice(choice.id, $index)}}" ',
