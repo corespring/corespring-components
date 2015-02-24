@@ -362,7 +362,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       dragAndDropTemplate,
       inplaceTemplate,
 
-      '  <div class="clearfix"></div>',
       '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
       '</div>'
 
