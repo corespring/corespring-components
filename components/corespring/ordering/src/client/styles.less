@@ -145,6 +145,10 @@
   &.main-table.vertical {
     width: 100%;
 
+    .button-row{
+      margin-bottom: 10px;
+    }
+    
     .choice-area-label, .answer-area-label {
       text-align: center;
     }
@@ -209,6 +213,7 @@
       display: inline-block;
     }
 
+
     .main-row {
       display: table;
     }
@@ -222,6 +227,7 @@
           max-width: 585px;
           .choice-area-label {
             text-align: left;
+            height: auto;
           }
         }
       }
@@ -233,6 +239,9 @@
       display: table-row;
       .answer-area-label {
         margin-top: 10px;
+        height: auto;
+        display: block;
+        text-align: left;
       }
       .answer-area-holder {
         display: table-cell;
@@ -329,13 +338,17 @@
   &.horizontal {
 
     .choice {
-      max-width: 150px;
-      min-width: auto;
+      // max-width: 150px;
+      // min-width: auto;
     }
     .button-row {
       float: right;
     }
-
+    .answer-area-container{
+      display: table-cell;
+      max-width: 595px;
+      float:left;
+    }
     .container-border {
       border: 1px solid #9B9B9B;
       border-radius: 4px;

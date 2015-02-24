@@ -36,7 +36,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       return [
           '<div class="choices" ' + attrs + '>',
         '  <div class="choices-holder">',
-        '    <div class="answer-area-label"></div>',
+        '    <div class="answer-area-label" ng-show="answerLabelVisible()"></div>',
         '    <div class="choices-inner-holder clearfix">',
         '      <div ng-repeat="o in correctChoices" class="choice-wrapper"> ',
         '        <div class="choice correct">',
