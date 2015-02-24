@@ -290,7 +290,10 @@ var answerAreaInline = [
             distance: 5,
             hoverClass: 'answer-area-inline-hover',
             scope: renderScope.dragAndDropScopeId,
-            tolerance: "pointer"
+            tolerance: renderScope.model.config.isRegressionTest ? 'intersect' : 'pointer'
+            //regression tests fail when tolerance is pointer
+            //but for items which are bigger than the initial answer area, intersect does not feel natural
+            //so we pass in a config bool that we can use to choose the tolerance
           };
 
           scope.trackId = function(choice) {

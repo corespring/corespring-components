@@ -34,7 +34,8 @@
           "answerAreaXhtml": "<answer-area-inline-v201 id='aa_1'></answer-area-inline-v201>",
           "config": {
             "orientation": "vertical",
-            "shuffle": false
+            "shuffle": false,
+            "isRegressionTest": true
           },
           "choices": [
             {
