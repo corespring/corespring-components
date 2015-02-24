@@ -22,8 +22,23 @@
   border-radius: 4px;
   color: white;
   cursor: pointer;
+  clear:both;
+  margin-top: 10px;
 }
 
+.answer-area-table{
+  border: 2px dashed #9b9b9b;
+}
+
+.choice{
+  min-height: 55px;
+}
+
+.button-row {
+  .btn-success{
+    background: @correct-color;
+  }
+}
 .view-placement-ordering {
 
   .show-correct-button {
@@ -59,7 +74,6 @@
     }
 
     .answer-area-table {
-      border: 1px solid #9b9b9b;
       border-radius: 4px;
       .choice {
         position: relative;
@@ -115,7 +129,6 @@
     margin: 3px 3px 1px 1px;
     padding: 8px;
     min-width: 150px;
-    min-height: 55px;
     max-width: 500px;
     overflow: hidden;
 
@@ -167,6 +180,7 @@
       margin-top: 20px;
       margin-bottom: 10px;
       overflow: hidden;
+      clear:both;
     }
 
     .choice-area {
@@ -191,13 +205,11 @@
 
       .choice {
         width: 150px;
-        min-height: 55px;
       }
 
       .answer-area-holder {
         display: inline-block;
         .answer-area-table {
-          border: 1px solid #9b9b9b;
           border-radius: 4px;
           display: table;
           padding: 10px;
@@ -215,23 +227,7 @@
       .choice {
         .correct-input();
       }
-
-      .correct {
-        div {
-          width: 94%;
-        }
-      }
-      .correct:after {
-        font-family: 'FontAwesome';
-        content: @correct-character;
-        color: @correct-color;
-        position: absolute;
-        right: 17px;
-        top: 12px;
-        font-size: 17px;
-      }
     }
-
   }
 
   &.main-table.horizontal {
@@ -286,6 +282,13 @@
       .choice {
         .correct-input();
       }
+      .answer-area-label{
+        display: none;
+      }
+      .choices-inner-holder{
+        border: none;
+        background: #fff;
+      }
     }
   }
 
@@ -304,6 +307,15 @@
 }
 
 .view-ordering {
+
+  ul{
+    border: 2px solid #9B9B9B;
+    background: #efefef;
+
+    .choice{
+      background: #fff;
+    }
+  }
   .sizerHolder {
     visibility: hidden;
     position: fixed;
@@ -334,6 +346,10 @@
 
   &.horizontal {
 
+    .choice{
+      max-width: 150px;
+      min-width: auto;
+    }
     .button-row {
       float: right;
     }
@@ -368,13 +384,13 @@
       margin-bottom: 10px;
       max-width: 595px;
       display: table-cell;
+      float: left;
     }
 
     .correct-answer {
       display: table-cell;
       vertical-align: top;
-      position: absolute;
-      right: 5px;
+      float: right;
 
       ul {
         border-color: @correct-color;
@@ -387,21 +403,17 @@
     }
 
     ul {
-      border: 1px solid #9B9B9B;
+      border: 2px solid #9B9B9B;
+      background: #efefef;
       border-radius: 4px;
       display: inline-block;
       padding-bottom: 0px;
-      width: 275px;
-    }
+      max-width: 275px;
 
-    &.correct:after {
-      font-family: 'FontAwesome';
-      content: @correct-character;
-      color: @correct-color;
-      position: absolute;
-      right: 2px;
-      top: -2px;
-      font-size: 17px;
+        .choice{
+          background: #fff;
+          width: auto;
+        }
     }
 
     .show-correct-button {
@@ -435,7 +447,6 @@
     display: inline-block;
     padding: 8px;
     margin: 0;
-    min-width: 150px;
     width: 100%;
 
     div {
@@ -447,16 +458,6 @@
       -moz-box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
       box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
       position: relative;
-
-      &:after {
-        font-family: 'FontAwesome';
-        content: @correct-character;
-        color: @correct-color;
-        position: absolute;
-        right: 2px;
-        top: -2px;
-        font-size: 17px;
-      }
     }
 
     &.incorrect {
@@ -489,6 +490,8 @@
 
       ul {
         padding: 1px;
+        background: #fff;
+        border: none;
       }
 
       .choice.correct:after {
@@ -526,7 +529,6 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 5px 0 45px 0;
-    max-width: 400px;
     min-height: 47px;
     padding: 1.13em;
     background: #efefef;
