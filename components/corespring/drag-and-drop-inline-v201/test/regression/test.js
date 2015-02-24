@@ -4,12 +4,13 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
+
 var RegressionHelper = (function() {
   var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('drag and drop inline v201', function() {
+describe('drag and drop inline v201', function() {
 
   "use strict";
 
