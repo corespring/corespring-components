@@ -22,6 +22,8 @@
   border-radius: 4px;
   color: white;
   cursor: pointer;
+  clear:both;
+  margin-top: 10px;
 }
 
 .answer-area-table{
@@ -173,6 +175,7 @@
       margin-top: 20px;
       margin-bottom: 10px;
       overflow: hidden;
+      clear:both;
     }
 
     .choice-area {
@@ -222,17 +225,17 @@
 
       .correct {
         div {
-          width: 94%;
+          // width: 94%;
         }
       }
       .correct:after {
-        font-family: 'FontAwesome';
-        content: @correct-character;
-        color: @correct-color;
-        position: absolute;
-        right: 17px;
-        top: 12px;
-        font-size: 17px;
+        // font-family: 'FontAwesome';
+        // content: @correct-character;
+        // color: @correct-color;
+        // position: absolute;
+        // right: 17px;
+        // top: 12px;
+        // font-size: 17px;
       }
     }
 
@@ -392,13 +395,13 @@
       margin-bottom: 10px;
       max-width: 595px;
       display: table-cell;
+      float: left;
     }
 
     .correct-answer {
       display: table-cell;
       vertical-align: top;
-      position: absolute;
-      right: 5px;
+      float: right;
 
       ul {
         border-color: @correct-color;
@@ -425,13 +428,13 @@
     }
 
     &.correct:after {
-      font-family: 'FontAwesome';
-      content: @correct-character;
-      color: @correct-color;
-      position: absolute;
-      right: 2px;
-      top: -2px;
-      font-size: 17px;
+      // font-family: 'FontAwesome';
+      // content: @correct-character;
+      // color: @correct-color;
+      // position: absolute;
+      // right: 2px;
+      // top: -2px;
+      // font-size: 17px;
     }
 
     .show-correct-button {
@@ -479,13 +482,13 @@
       position: relative;
 
       &:after {
-        font-family: 'FontAwesome';
-        content: @correct-character;
-        color: @correct-color;
-        position: absolute;
-        right: 2px;
-        top: -2px;
-        font-size: 17px;
+        // font-family: 'FontAwesome';
+        // content: @correct-character;
+        // color: @correct-color;
+        // position: absolute;
+        // right: 2px;
+        // top: -2px;
+        // font-size: 17px;
       }
     }
 
