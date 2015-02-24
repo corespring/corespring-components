@@ -17,7 +17,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     };
     var answerArea = [
       '<div class="answer-area-holder">',
-      '  <div class="answer-area-label" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
+      '  <div class="answer-area-label" ng-show="answerLabelVisible()" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
       '  <div class="answer-area-table {{correctClass}}">',
       '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
       '         ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
@@ -55,7 +55,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\'"'),
       '<div class="clearfix"></div>',
 
-      '    <div class="choice-area-label" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+      '    <div class="choice-area-label" ng-show="choiceLabelVisible()" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
       '    <div class="choices-inner-holder clearfix">',
       '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
       '        <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
@@ -148,6 +148,22 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           }
 
           return 'incorrect';
+        }
+      };
+
+      scope.choiceLabelVisible = function() {
+        if (scope.model.config.choiceAreaLayout == 'vertical') {
+          return !_.isEmpty(scope.model.config.choiceAreaLabel) || !_.isEmpty(scope.model.config.answerAreaLabel);
+        } else {
+          return !_.isEmpty(scope.model.config.choiceAreaLabel);
+        }
+      };
+
+      scope.answerLabelVisible = function() {
+        if (scope.model.config.choiceAreaLayout == 'vertical') {
+          return !_.isEmpty(scope.model.config.choiceAreaLabel) || !_.isEmpty(scope.model.config.answerAreaLabel);
+        } else {
+          return !_.isEmpty(scope.model.config.answerAreaLabel);
         }
       };
 
@@ -296,7 +312,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  <div ng-if="model.config.placementType != \'placement\'" class="view-ordering {{model.config.choiceAreaLayout}}">',
       buttonRow(),
       '    <div class="clearfix" />',
-      '    <div ng-bind-html-unsafe="model.config.choiceAreaLabel" class="choice-area-label"></div>',
+      '    <div ng-show="model.config.choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel" class="choice-area-label"></div>',
       '    <div class="answer-area-container">',
       '      <div class="container-border">',
       '        <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
