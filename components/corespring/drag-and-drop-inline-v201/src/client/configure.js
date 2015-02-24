@@ -311,7 +311,7 @@ var main = [
         '          </div>',
         '        </div>',
         '        <div class="remove-after-placing">',
-        '          <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">',
+        '          <checkbox id="removeAfterPlacing{{$index}}" ng-model="choice.removeAfterPlacing">',
         '            Remove tile after placing',
         '          </checkbox>',
         '        </div>',
@@ -456,7 +456,7 @@ var csConfigAnswerAreaInline = [
             },
             distance: 5,
             hoverClass: 'answer-area-inline-hover',
-            tolerance: "touch"
+            tolerance: "pointer"
           };
 
           scope.trackId = function(choice){

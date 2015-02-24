@@ -9,7 +9,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('drag and drop inline v201', function() {
+describe.only('drag and drop inline v201', function() {
 
   "use strict";
 
@@ -96,6 +96,15 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
+  it('selected choices are marked correctly', function(done) {
+    browser
+      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
+      .submitItem()
+      .waitFor('.selected-choice.correct .fa-check-circle', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.selected-choice.incorrect .fa-times-circle', regressionTestRunnerGlobals.defaultTimeout)
+      .call(done);
+  });
 
 
 });

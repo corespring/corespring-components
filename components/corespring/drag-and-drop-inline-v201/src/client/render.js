@@ -18,11 +18,25 @@ var main = [
 
     function link(scope, element, attrs) {
 
+      scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
+
       function answerAreaTemplate(attributes){
         attributes = (attributes? ' ' + attributes : '');
         var answerHtml = scope.model.answerAreaXhtml;
         var answerArea = "<div scope-forwarder-v201=''" + attributes + ">" + answerHtml + "</div>";
         return answerArea;
+      }
+
+      function withoutPlacedChoices(originalChoices){
+        return _.filter(originalChoices, function(choice) {
+          if(!choice.removeAfterPlacing){
+            return true;
+          }
+          var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
+            return _.pluck(c, 'id').indexOf(choice.id) >= 0;
+          });
+          return _.isUndefined(landingPlaceWithChoice);
+        });
       }
 
       _.extend(scope.containerBridge, {
@@ -32,7 +46,6 @@ var main = [
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
-          scope.bridge = {answerVisible: false};
           scope.local = {};
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
@@ -52,12 +65,7 @@ var main = [
             });
 
             // Remove choices that are in landing place area
-            scope.local.choices = _.filter(scope.local.choices, function(choice) {
-              var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
-                return _.pluck(c, 'id').indexOf(choice.id) >= 0;
-              });
-              return _.isUndefined(landingPlaceWithChoice);
-            });
+            scope.local.choices = withoutPlacedChoices(scope.originalChoices);
           }
 
           var $answerArea = element.find(".answer-area-holder").html(answerAreaTemplate());
@@ -81,8 +89,6 @@ var main = [
         setResponse: function(response) {
           $log.debug("[DnD-inline] setResponse: ", response);
           scope.response = response;
-          scope.feedback = response.feedback;
-          scope.correctness = response.correctness;
           scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
           // Populate solutionScope with the correct response
@@ -99,19 +105,27 @@ var main = [
           $timeout(function() {
             $compile($answerArea)(scope.solutionScope);
           });
+        },
+
+        reset: function() {
+          scope.resetChoices(scope.rawModel);
+
+          scope.correctResponse = undefined;
+          scope.response = undefined;
         }
       });
 
       scope.toggleAnswerVisible = function(){
-        scope.bridge.answerVisible = !scope.bridge.answerVisible;
-        if (scope.bridge.answerVisible) {
+        scope.correctResponse.answerVisible = !scope.correctResponse.answerVisible;
+      };
+
+      scope.$watch('correctResponse.answerVisible', function(answerVisible){
+        if (answerVisible) {
           $(element).find('.answer-collapse').slideDown(400);
         } else {
           $(element).find('.answer-collapse').slideUp(400);
         }
-      };
-
-      $(element).find('.answer-collapse').slideUp(400);
+      });
 
       scope.classForChoice = function(answerAreaId, choice, targetIndex) {
         if (!scope.correctResponse) {
@@ -127,6 +141,16 @@ var main = [
         return isCorrect ? "correct" : "incorrect";
       };
 
+      scope.draggableOptionsWithScope = function(choice){
+        var options = scope.draggableOptions(choice);
+        options.scope = scope.dragAndDropScopeId;
+        return options;
+      };
+
+      scope.$on("choice-removed-from-answers", function(evt, choice){
+        scope.local.choices = withoutPlacedChoices(scope.originalChoices);
+      });
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
@@ -140,9 +164,9 @@ var main = [
         '    class="choice" ',
         '    data-drag="editable"',
         '    ng-disabled="!editable"',
-        '    data-jqyoui-options="draggableOptions(choice)"',
+        '    data-jqyoui-options="draggableOptionsWithScope(choice)"',
         '    ng-model="local.choices"',
-        '    jqyoui-draggable="draggableOptions(choice)"',
+        '    jqyoui-draggable="draggableOptionsWithScope(choice)"',
         '    data-id="{{choice.id}}">',
         '    <span class="choice-content" ng-class="{disabled:!editable}" ng-bind-html-unsafe="choice.label"></span>',
         '  </div>',
@@ -154,7 +178,10 @@ var main = [
       '<div class="corespring-drag-and-drop-inline-see-solution-v201" ng-show="correctResponse">',
       '  <div class="panel panel-default">',
       '    <div class="panel-heading">',
-      '      <h4 class="panel-title" ng-click="toggleAnswerVisible()"><i class="answerIcon fa fa-eye{{bridge.answerVisible ? \'-slash\' : \'\'}}"></i>&nbsp;{{bridge.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
+      '      <h4 class="panel-title" ng-click="toggleAnswerVisible()">',
+      '        <i class="answerIcon fa fa-eye{{correctResponse.answerVisible ? \'-slash\' : \'\'}}"></i>',
+      '        {{correctResponse.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}',
+      '      </h4>',
       '    </div>',
       '    <div class="answer-collapse">',
       '      <div class="panel-body correct-answer-area-holder">',
@@ -175,7 +202,7 @@ var main = [
       '  <div class="answer-area-holder" ng-class="response.correctClass"></div>',
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
       '  <div class="clearfix"></div>',
-      '  <div ng-show="feedback" feedback="feedback" correct-class="{{response.correctClass}}"></div>',
+      '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
       seeSolution,
       '</div>'
 
@@ -198,7 +225,7 @@ var scopeForwarder = [
       restrict: 'A',
       replace: false,
       controller: ['$scope', function($scope) {
-        $scope.$on("getScope", function(event, callback) {
+        $scope.$on("get-scope", function(event, callback) {
           callback($scope);
         });
       }]
@@ -214,13 +241,15 @@ var answerAreaInline = [
       restrict: 'EA',
       replace: true,
       link: function(scope, el, attr) {
-        scope.$emit("getScope", function(renderScope) {
+        scope.$emit("get-scope", function(renderScope) {
           scope.renderScope = renderScope;
           scope.answerAreaId = attr.id;
 
           scope.canEdit = function(){
             return !renderScope.correctResponse && renderScope.editable;
           };
+
+          var isOut = false;
 
           scope.targetSortableOptions = function(){
             return {
@@ -230,6 +259,25 @@ var answerAreaInline = [
               },
               stop: function () {
                 renderScope.targetDragging = false;
+              },
+              beforeStop: function( event, ui ){
+                if(isOut){
+                  isOut = false;
+                  var index = ui.item.sortable.index;
+                  ui.item.sortable.cancel();
+                  scope.removeChoice(index);
+                }
+              },
+              out: function( event, ui ){
+                console.log("out", ui);
+                isOut = true;
+              },
+              over: function( event, ui ){
+                console.log("over", ui);
+                isOut = false;
+              },
+              receive: function( event, ui ){
+                console.log("receive", ui);
               }
             };
           };
@@ -241,8 +289,10 @@ var answerAreaInline = [
             activeClass: 'answer-area-inline-active',
             distance: 5,
             hoverClass: 'answer-area-inline-hover',
-            tolerance: "touch"
+            scope: renderScope.dragAndDropScopeId,
+            tolerance: "pointer"
           };
+
           scope.trackId = function(choice) {
             return _.uniqueId();
           };
@@ -257,7 +307,9 @@ var answerAreaInline = [
             return choiceClass === 'correct' ? 'fa-check-circle' : 'fa-times-circle';
           };
           scope.removeChoice = function(index){
+            var choice = scope.renderScope.landingPlaceChoices[scope.answerAreaId][index];
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
+            scope.$emit("choice-removed-from-answers", choice);
           };
         });
       },
@@ -272,7 +324,7 @@ var answerAreaInline = [
         '        <span class="html-wrapper" ng-bind-html-unsafe="choice.label"></span>',
         '        <span class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>',
         '      </div>',
-        '      <i class="circle fa" ng-class="classForCorrectness(choice)"></i>',
+        '      <i class="circle fa" ng-class="classForCorrectness(choice, $index)"></i>',
         '    </div>',
         '  </div>',
         '</div>'

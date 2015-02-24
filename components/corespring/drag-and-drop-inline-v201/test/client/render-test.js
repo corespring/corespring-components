@@ -86,7 +86,7 @@ describe('corespring:drag-and-drop-inline-v201', function() {
 
   function setAnswer(answer){
     testModel.session = {
-      answers: {'aa_1':[answer]}
+      answers: {'aa_1': _.isArray(answer) ? answer : [answer]}
     };
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
