@@ -441,12 +441,15 @@ var csConfigAnswerAreaInline = [
           scope.answerAreaId = attr.answerAreaId;
           scope.correctAnswers = configScope.correctAnswers;
 
-          scope.targetSortableOptions = {
-            start: function() {
-              configScope.targetDragging = true;
-            },
-            stop: function() {
-              configScope.targetDragging = false;
+          scope.targetSortableOptions = function(){
+            return {
+              disabled: configScope.correctAnswers[scope.answerAreaId].length === 0,
+              start: function () {
+                configScope.targetDragging = true;
+              },
+              stop: function () {
+                configScope.targetDragging = false;
+              }
             }
           };
 
@@ -470,7 +473,7 @@ var csConfigAnswerAreaInline = [
       },
       template: [
         '<div class="answer-area-inline">',
-        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="correctAnswers[answerAreaId]"',
+        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions()" ng-model="correctAnswers[answerAreaId]"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <li class="sortable-choice" data-choice-id="{{choiceId}}" ng-repeat="choice in correctAnswers[answerAreaId] track by trackId(choice)">',
         '      <div class="delete-icon">',
