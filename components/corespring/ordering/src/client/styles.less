@@ -16,16 +16,6 @@
   overflow: hidden;
 }
 
-.show-correct-button-mixin() {
-  background: @correct-color;
-  padding: 5px;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  clear:both;
-  margin-top: 10px;
-}
-
 .answer-area-table{
   border: 2px dashed #9b9b9b;
 }
@@ -40,10 +30,6 @@
   }
 }
 .view-placement-ordering {
-
-  .show-correct-button {
-    .show-correct-button-mixin();
-  }
 
   .choice-area {
     margin-right: 20px;
@@ -414,10 +400,6 @@
           background: #fff;
           width: auto;
         }
-    }
-
-    .show-correct-button {
-      .show-correct-button-mixin();
     }
 
   }
