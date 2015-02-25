@@ -269,15 +269,10 @@ var answerAreaInline = [
                 }
               },
               out: function( event, ui ){
-                console.log("out", ui);
                 isOut = true;
               },
               over: function( event, ui ){
-                console.log("over", ui);
                 isOut = false;
-              },
-              receive: function( event, ui ){
-                console.log("receive", ui);
               }
             };
           };

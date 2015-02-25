@@ -15,6 +15,7 @@ var main = [
       scope: {},
       replace: true,
       template: template(),
+
       controller: ['$scope', function($scope){
         $scope.imageService = function() {
           return ComponentImageService;
@@ -52,26 +53,12 @@ var main = [
             }]
         };
       }],
+
       link: function(scope, element, attrs) {
 
         ChoiceTemplates.extendScope(scope, 'corespring-drag-and-drop-inline-v201');
 
         scope.correctAnswers = {};
-
-        scope.choiceToDropDownItem = function(c) {
-          if (!c) {
-            return;
-          }
-          if (c.labelType === 'image') {
-            return c.imageName;
-          }
-          return c.label;
-        };
-
-        scope.choiceToLetter = function(c) {
-          var idx = scope.model.choices.indexOf(c);
-          return scope.toChar(idx);
-        };
 
         function sumCorrectAnswers() {
           return _.reduce(scope.correctAnswers, function(memo, ca) {
@@ -79,23 +66,51 @@ var main = [
           }, 0);
         }
 
+        function choiceById(choices, cid) {
+          return _.find(choices, {id:cid});
+        }
+
+        function removeChoice(choices, id) {
+          _.remove(choices, {id: id});
+        }
+
+        function idsToChoices(ids){
+          return _.map(ids, function(choiceId) {
+            return choiceById(scope.model.choices, choiceId);
+          });
+        }
+
+        function isPlaced(choice){
+          return _.some(scope.correctAnswers, function(val, key){
+            return !_.isUndefined(_.find(val, {id:choice.id}));
+          });
+        }
+
+        function initCorrectAnswers(answerAreas, correctResponse){
+          var correctAnswers = {};
+          _.each(answerAreas, function(area){
+            correctAnswers[area.id] = [];
+          });
+          _.each(correctResponse, function(correctChoices, areaId) {
+            correctAnswers[areaId] = idsToChoices(correctChoices);
+          });
+          return correctAnswers;
+        }
+
+        function correctAnswersToCorrectResponse(correctAnswers){
+          var correctResponse = {};
+          _.each(correctAnswers, function(val, key) {
+            correctResponse[key] = _.pluck(val, 'id');
+          });
+          return correctResponse;
+        }
+
         scope.containerBridge = {
-          setModel: function(model) {
-            scope.fullModel = model;
-            scope.model = scope.fullModel.model;
-
-            function choiceById(cid) {
-              return _.find(model.model.choices, {id:cid});
-            }
-
-            _.each(model.correctResponse, function(val, key) {
-              scope.correctAnswers[key] = _.map(val, function(choiceId) {
-                return choiceById(choiceId);
-              });
-            });
-
+          setModel: function(fullModel) {
+            scope.fullModel = fullModel;
+            scope.model = fullModel.model;
+            scope.correctAnswers = initCorrectAnswers(fullModel.model.answerAreas, fullModel.correctResponse);
             scope.updatePartialScoringModel(sumCorrectAnswers());
-
             scope.componentState = "initialized";
           },
           getModel: function() {
@@ -107,36 +122,35 @@ var main = [
           }
         };
 
-        scope.$watch('correctAnswers', function(n) {
-          if (n) {
-            var correctResponse = {};
-            _.each(scope.correctAnswers, function(val, key) {
-              correctResponse[key] = _.pluck(val, 'id');
-            });
-            scope.fullModel.correctResponse = correctResponse;
+        scope.$watch('correctAnswers', function(newCorrectAnswers) {
+          if (newCorrectAnswers) {
+            scope.fullModel.correctResponse = correctAnswersToCorrectResponse(newCorrectAnswers);
             scope.updatePartialScoringModel(sumCorrectAnswers());
           }
         }, true);
 
         scope.removeChoice = function(id) {
-          _.remove(scope.model.choices, {id:id});
-          _.each(scope.correctAnswers, function(val, key) {
-            _.remove(val, {id:id});
+          removeChoice(scope.model.choices, id);
+          _.each(scope.correctAnswers, function(choices, key) {
+            removeChoice(choices, id);
           });
         };
 
-        function findFreeChoiceSlot(){
+        function findFreeSlot(ids, prefix){
           var slot = 1;
-          var ids = _.pluck(scope.model.choices, 'id');
-          while(_.contains(ids, "c_" + slot)){
+          while(_.contains(ids, prefix + slot)){
             slot++;
           }
-          return slot;
+          return prefix + slot;
+        }
+
+        function findFreeChoiceSlot(){
+          return findFreeSlot(_.pluck(scope.model.choices, 'id'), 'c_');
         }
 
         scope.addChoice = function() {
           scope.model.choices.push({
-            id: "c_" + findFreeChoiceSlot(),
+            id: findFreeChoiceSlot(),
             labelType: "text",
             label: "",
             removeAfterPlacing: false
@@ -144,16 +158,11 @@ var main = [
         };
 
         function findFreeAnswerAreaSlot(){
-          var slot = 1;
-          var ids = _.pluck(scope.model.answerAreas, 'id');
-          while(_.contains(ids, "aa_" + slot)){
-            slot++;
-          }
-          return slot;
+          return findFreeSlot(_.pluck(scope.model.answerAreas, 'id'), "aa_");
         }
 
         scope.addAnswerArea = function() {
-          var answerAreaId = "aa_" + findFreeAnswerAreaSlot();
+          var answerAreaId = findFreeAnswerAreaSlot();
           scope.model.answerAreas.push({
             id: answerAreaId
           });
@@ -166,47 +175,50 @@ var main = [
           delete scope.correctAnswers[answerAreaId];
         };
 
-        scope.$on('getConfigScope', function(event, callback){
+        scope.$on('get-config-scope', function(event, callback){
           callback(scope);
         });
 
-        scope.$on('removeCorrectAnswer', function(event, answerAreaId, index){
+        scope.$on('remove-correct-answer', function(event, answerAreaId, index){
           scope.correctAnswers[answerAreaId].splice(index,1);
         });
 
         scope.choiceDraggableOptions = function(index) {
           return {
             index: index,
-            placeholder: 'keep',
-            deepCopy: true
+            placeholder: 'keep'
           };
         };
+
+        function dragHelperTemplate(choice){
+          return [
+            '<div class="corespring-drag-and-drop-inline-drag-helper-v201">',
+            choice.label,
+            '</div>'].join('');
+        }
 
         scope.choiceDraggableJqueryOptions = function(choice){
           return {
             revert: 'invalid',
             helper: function(){
-                return $('<div class="corespring-drag-and-drop-inline-drag-helper-v201">' + choice.label + '</div>');
+                return $(dragHelperTemplate(choice));
               },
             appendTo: ".modal",
             cursorAt: {
               bottom: 5,
               right: 5
-            }
+            },
+            distance: 15
+
           };
         };
 
         scope.active = [];
 
-        scope.canDragChoices = true;
-
         scope.activate = function($index, $event) {
-          $event.stopPropagation();
-          scope.active = [];
-          scope.active[$index] = true;
-          $timeout(function() {
+          function activateChoiceEditor() {
             var $editable = $($event.target).closest('.draggable-choice').find('.wiggi-wiz-editable');
-            if($editable.length) {
+            if ($editable.length) {
               $editable.click();
               var editableScope = angular.element($editable).scope();
               if (editableScope && _.isFunction(editableScope.focusCaretAtEnd)) {
@@ -216,15 +228,19 @@ var main = [
               //should only happen in dev, when the structure/classes of the choice item are changed
               throw "wiggiwiz editable not found";
             }
-          }, 10);
+          }
+          $event.stopPropagation();
+          scope.active = [];
+          scope.active[$index] = true;
+          $timeout(activateChoiceEditor, 10);
         };
 
         scope.itemClick = function($event) {
-          function isField($event) {
+          function isChoiceEditor($event) {
             return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
           }
 
-          if (isField($event)) {
+          if (isChoiceEditor($event)) {
             $event.stopPropagation();
             $event.preventDefault();
           } else {
@@ -237,6 +253,9 @@ var main = [
           scope.$emit('mathJaxUpdateRequest');
         };
 
+        scope.canDragChoice = function(choice, index){
+          return !(scope.active[index] || choice.removeAfterPlacing === true && isPlaced(choice));
+        };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       }
@@ -292,10 +311,10 @@ var main = [
         '  <div class="col-xs-12">',
         '    <ul class="draggable-choices" ng-model="model.choices">',
         '      <li class="draggable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
-        '          ng-model="choice" ng-click="itemClick($event)" data-drag="{{!active[$index]}}"',
+        '          ng-model="choice" ng-click="itemClick($event)" data-drag="{{canDragChoice(choice, $index)}}"',
         '          jqyoui-draggable="choiceDraggableOptions($index)"',
         '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
-        '        <div class="blocker" ng-hide="active[$index]">',
+        '        <div class="blocker" ng-click="activate($index, $event)" ng-hide="active[$index]">',
         '          <div class="bg"></div>',
         '          <div class="content">',
         '            <ul class="edit-controls">',
@@ -437,13 +456,14 @@ var csConfigAnswerAreaInline = [
       restrict: 'A',
       replace: true,
       link: function(scope,el,attr){
-        scope.$emit("getConfigScope", function(configScope){
+        scope.$emit("get-config-scope", function(configScope){
           scope.answerAreaId = attr.answerAreaId;
           scope.correctAnswers = configScope.correctAnswers;
 
           scope.targetSortableOptions = function(){
             return {
               disabled: configScope.correctAnswers[scope.answerAreaId].length === 0,
+              distance: 5,
               start: function () {
                 configScope.targetDragging = true;
               },
@@ -458,6 +478,7 @@ var csConfigAnswerAreaInline = [
               return !configScope.targetDragging;
             },
             distance: 5,
+            activeClass: 'answer-area-inline-active',
             hoverClass: 'answer-area-inline-hover',
             tolerance: "pointer"
           };
@@ -467,7 +488,7 @@ var csConfigAnswerAreaInline = [
           };
 
           scope.removeCorrectAnswer = function(index){
-            scope.$emit("removeCorrectAnswer", scope.answerAreaId, index);
+            scope.$emit("remove-correct-answer", scope.answerAreaId, index);
           };
         });
       },
@@ -475,7 +496,7 @@ var csConfigAnswerAreaInline = [
         '<div class="answer-area-inline">',
         '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions()" ng-model="correctAnswers[answerAreaId]"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
-        '    <li class="sortable-choice" data-choice-id="{{choiceId}}" ng-repeat="choice in correctAnswers[answerAreaId] track by trackId(choice)">',
+        '    <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in correctAnswers[answerAreaId] track by trackId(choice)">',
         '      <div class="delete-icon">',
         '        <i ng-click="removeCorrectAnswer($index)" class="fa fa-times-circle"></i>',
         '      </div>',
