@@ -139,7 +139,7 @@
     overflow: hidden;
     text-align: center;
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: bottom;
     }
 
   &.main-table.vertical {
@@ -153,6 +153,9 @@
       text-align: center;
     }
 
+    .choice-area .choices-inner-holder, .answer-area-table, .see-answer-area .choices-inner-holder{
+      margin-top: 5px;
+    }
     .main-row {
       margin-top: 20px;
       margin-bottom: 10px;
@@ -190,6 +193,7 @@
           border-radius: 4px;
           display: table;
           padding: 10px;
+
           .choice-wrapper {
             display: table-row;
           }
@@ -517,7 +521,7 @@
     height: 50px;
     overflow: hidden;
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: bottom;
   }
 
   .feedback {
