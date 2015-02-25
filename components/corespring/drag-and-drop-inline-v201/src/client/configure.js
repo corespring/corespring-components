@@ -269,6 +269,11 @@ var main = [
         '      In Short Answer &mdash; Drag and Drop, students are asked to complete a sentence, word, phrase or',
         '      equation using context clues presented in the text that surrounds it.',
         '    </p>',
+        '    <p><i>',
+        '      The “Remove after placing” option removes the answer from the choice area after a student places ',
+        '      it in an answer area. <br>If you select this option on a choice, you may not add it to more than one ',
+        '      answer blank.',
+        '    </i></p>',
         '  </div>',
         '</div>'
       ].join('\n');

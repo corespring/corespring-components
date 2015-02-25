@@ -147,9 +147,9 @@ var main = [
         return options;
       };
 
-      scope.$on("choice-removed-from-answers", function(evt, choice){
+      scope.answerChangeCallback = function(){
         scope.local.choices = withoutPlacedChoices(scope.originalChoices);
-      });
+      };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
@@ -163,7 +163,6 @@ var main = [
         '  <div ng-repeat="choice in local.choices"',
         '    class="choice" ',
         '    data-drag="editable"',
-        '    ng-disabled="!editable"',
         '    data-jqyoui-options="draggableOptionsWithScope(choice)"',
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptionsWithScope(choice)"',
@@ -305,9 +304,11 @@ var answerAreaInline = [
             return choiceClass === 'correct' ? 'fa-check-circle' : 'fa-times-circle';
           };
           scope.removeChoice = function(index){
-            var choice = scope.renderScope.landingPlaceChoices[scope.answerAreaId][index];
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
-            scope.$emit("choice-removed-from-answers", choice);
+          };
+
+          scope.showWarningIfEmpty = function(){
+            return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
 
           scope.showWarningIfEmpty = function(){
@@ -322,7 +323,7 @@ var answerAreaInline = [
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
-        '      <div class="selected-choice-content" ng-class="{disabled:!canEdit()}">',
+        '      <div class="selected-choice-content">',
         '        <span class="html-wrapper" ng-bind-html-unsafe="choice.label"></span>',
         '        <span class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>',
         '      </div>',

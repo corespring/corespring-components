@@ -28,99 +28,6 @@
   cursor: move;
 }
 
-.corespring-drag-and-drop-inline-render-v201 {
-
-  .undo-start-over {
-    margin-bottom: 10px;
-  }
-
-  .answer-area-holder.warning {
-    .warning-input();
-  }
-
-  .feedback.panel {
-    margin-top: 10px;
-
-    .panel-heading {
-      cursor: default;
-    }
-
-    &.warning {
-      .panel-heading {
-        display: none;
-      }
-      .panel-body {
-        color: #a94442;
-        background-color: #f2dede;
-        border: 1px solid #ebccd1;
-        border-radius: 4px;
-      }
-    }
-  }
-
-  .choices-wrapper {
-    margin-top: 20px;
-    position: relative;
-    padding: 1em;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-
-    .choice {
-      display: inline;
-      margin: 0.25em 0;
-
-      .choice-content {
-        display: inline-block;
-        width: auto;
-        margin-right: 0.25em;
-        padding: 0.5em 0.75em;
-        background: #efefef;
-        border-radius: 4px;
-      }
-
-      .choice-content:hover {
-        box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-      }
-
-      .choice-content.disabled:hover {
-        cursor: default;
-        box-shadow: none;
-      }
-
-      img {
-        max-width: 110px;
-        vertical-align: bottom;
-      }
-
-      &:active {
-        cursor:move;
-      }
-
-    }
-  }
-}
-
-.corespring-drag-and-drop-inline-see-solution-v201 {
-  background: #fff;
-  overflow: hidden;
-  width: 100%;
-
-  .panel {
-    border: 4px solid @correct-color;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: normal;
-  }
-  .panel-default {
-    & > .panel-heading {
-      color: #fff;
-      background-color: #3C763D;
-      border-color: #3C763D;
-      border-radius: 0px;
-      cursor: pointer;
-    }
-  }
-}
-
 .corespring-drag-and-drop-inline-see-solution-v201,
 .corespring-drag-and-drop-inline-render-v201 {
 
@@ -193,15 +100,6 @@
           cursor: move;
         }
 
-        &.disabled,
-        &.disabled:hover {
-          cursor: default;
-          box-shadow: none !important;
-
-          .remove-choice {
-            display: none;
-          }
-        }
       }
 
       img {
@@ -210,8 +108,15 @@
       }
 
       &.incorrect {
+        cursor: default;
+
         .selected-choice-content {
           .incorrect-input();
+          box-shadow: none !important;
+
+          .remove-choice {
+            display: none;
+          }
         }
         .circle {
           font-size: 24px;
@@ -220,8 +125,15 @@
       }
 
       &.correct {
+        cursor: default;
+
         .selected-choice-content {
           .correct-input();
+          box-shadow: none !important;
+
+          .remove-choice {
+            display: none;
+          }
         }
         .circle {
           font-size: 24px;
@@ -243,6 +155,116 @@
     border-radius: 4px;
     z-index: 99;
   }
+}
+
+
+.corespring-drag-and-drop-inline-render-v201 {
+
+  .undo-start-over {
+    margin-bottom: 10px;
+  }
+
+  .answer-area-holder.warning {
+    .warning-input();
+  }
+
+  .feedback.panel {
+    margin-top: 10px;
+
+    .panel-heading {
+      cursor: default;
+    }
+
+    &.warning {
+      .panel-heading {
+        display: none;
+      }
+      .panel-body {
+        color: #a94442;
+        background-color: #f2dede;
+        border: 1px solid #ebccd1;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .choices-wrapper {
+    margin-top: 20px;
+    position: relative;
+    padding: 1em;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+
+    .choice {
+      display: inline;
+      margin: 0.25em 0;
+      cursor: pointer;
+
+      .choice-content {
+        display: inline-block;
+        width: auto;
+        margin-right: 0.25em;
+        padding: 0.5em 0.75em;
+        background: #efefef;
+        border-radius: 4px;
+      }
+
+      .choice-content:hover {
+        box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+      }
+
+      .choice-content.disabled:hover {
+        cursor: default;
+        box-shadow: none;
+      }
+
+      img {
+        max-width: 110px;
+        vertical-align: bottom;
+      }
+
+      &:active {
+        cursor: move;
+      }
+    }
+  }
+}
+
+.corespring-drag-and-drop-inline-see-solution-v201 {
+  background: #fff;
+  overflow: hidden;
+  width: 100%;
+
+  .panel {
+    border: 4px solid @correct-color;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+  }
+  .panel-default {
+    & > .panel-heading {
+      color: #fff;
+      background-color: #3C763D;
+      border-color: #3C763D;
+      border-radius: 0px;
+      cursor: pointer;
+    }
+  }
+
+  .selected-choice {
+    cursor: default !important;
+  }
+
+  .selected-choice-content,
+  .selected-choice-content:hover {
+    .correct-input();
+
+    box-shadow: none !important;
+  }
+
+  .remove-choice {
+    display: none !important;
+  }
+
 }
 
 .corespring-drag-and-drop-inline-config-v201 {
@@ -399,7 +421,6 @@
           i {
             vertical-align: top;
           }
-
 
         }
       }
