@@ -152,7 +152,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.choiceLabelVisible = function() {
-        if (scope.model.config.choiceAreaLayout == 'vertical') {
+        if (scope.model.config.choiceAreaLayout === 'vertical') {
           return !_.isEmpty(scope.model.config.choiceAreaLabel) || !_.isEmpty(scope.model.config.answerAreaLabel);
         } else {
           return !_.isEmpty(scope.model.config.choiceAreaLabel);
@@ -160,7 +160,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.answerLabelVisible = function() {
-        if (scope.model.config.choiceAreaLayout == 'vertical') {
+        if (scope.model.config.choiceAreaLayout === 'vertical') {
           return !_.isEmpty(scope.model.config.choiceAreaLabel) || !_.isEmpty(scope.model.config.answerAreaLabel);
         } else {
           return !_.isEmpty(scope.model.config.answerAreaLabel);
@@ -324,7 +324,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '          </li>',
       '        </ul>',
       '      </div>',
-
       '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse && top.correctAnswerVisible" class="see-correct-answer correct-answer">',
       '        <ul class="clearfix">',
       '          <li ng-repeat="choice in correctChoices">',
@@ -334,7 +333,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '        </ul>',
       '      </div>',
       '    </div>',
-
+      '    <div class="clearfix" />',
       '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '    <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       '      <ul class="clearfix">',
