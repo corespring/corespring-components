@@ -104,6 +104,7 @@ var main = [
           var $answerArea = element.find(".correct-answer-area-holder").html(answerAreaTemplate());
           $timeout(function() {
             $compile($answerArea)(scope.solutionScope);
+            scope.$emit('rerender-math', {delay: 100, element: $answerArea[0]});
           });
         },
 
