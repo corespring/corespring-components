@@ -1,6 +1,7 @@
 /* global exports */
 var main = [
   'DragAndDropTemplates',
+  'MathJaxService',
   '$compile',
   '$log',
   '$modal',
@@ -8,6 +9,7 @@ var main = [
   '$timeout',
   function(
     DragAndDropTemplates,
+    MathJaxService,
     $compile,
     $log,
     $modal,
@@ -21,7 +23,7 @@ var main = [
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
 
       function renderMath(){
-        scope.$emit('rerender-math', {delay: 10, element: element[0]});
+        MathJaxService.parseDomForMath(10, element[0]);
       }
 
       function answerAreaTemplate(attributes){
@@ -47,8 +49,8 @@ var main = [
         var $answerArea = element.find(targetSelector).html(answerAreaTemplate());
         $timeout(function () {
           $compile($answerArea)(scope);
+          renderMath();
         });
-        renderMath();
       }
 
       _.extend(scope.containerBridge, {
