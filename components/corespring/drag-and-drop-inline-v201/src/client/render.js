@@ -20,6 +20,10 @@ var main = [
 
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
 
+      function renderMath(){
+        scope.$emit('rerender-math', {delay: 10, element: element[0]});
+      }
+
       function answerAreaTemplate(attributes){
         attributes = (attributes? ' ' + attributes : '');
         var answerHtml = scope.model.answerAreaXhtml;
@@ -37,6 +41,14 @@ var main = [
           });
           return _.isUndefined(landingPlaceWithChoice);
         });
+      }
+
+      function renderAnswerArea(targetSelector, scope) {
+        var $answerArea = element.find(targetSelector).html(answerAreaTemplate());
+        $timeout(function () {
+          $compile($answerArea)(scope);
+        });
+        renderMath();
       }
 
       _.extend(scope.containerBridge, {
@@ -68,10 +80,7 @@ var main = [
             scope.local.choices = withoutPlacedChoices(scope.originalChoices);
           }
 
-          var $answerArea = element.find(".answer-area-holder").html(answerAreaTemplate());
-          $timeout(function() {
-            $compile($answerArea)(scope.$new());
-          });
+          renderAnswerArea(".answer-area-holder", scope.$new());
         },
 
         getSession: function() {
@@ -92,20 +101,16 @@ var main = [
           scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
           // Populate solutionScope with the correct response
-          scope.solutionScope = $rootScope.$new();
-          scope.solutionScope.landingPlaceChoices = {};
-          scope.solutionScope.model = scope.model;
+          var solutionScope = $rootScope.$new();
+          solutionScope.landingPlaceChoices = {};
+          solutionScope.model = scope.model;
           _.each(scope.correctResponse, function(v, k) {
-            scope.solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
+            solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
               return scope.choiceForId(r);
             });
           });
 
-          var $answerArea = element.find(".correct-answer-area-holder").html(answerAreaTemplate());
-          $timeout(function() {
-            $compile($answerArea)(scope.solutionScope);
-            scope.$emit('rerender-math', {delay: 100, element: $answerArea[0]});
-          });
+          renderAnswerArea(".correct-answer-area-holder", solutionScope);
         },
 
         reset: function() {
@@ -118,6 +123,7 @@ var main = [
 
       scope.toggleAnswerVisible = function(){
         scope.correctResponse.answerVisible = !scope.correctResponse.answerVisible;
+        renderMath();
       };
 
       scope.$watch('correctResponse.answerVisible', function(answerVisible){
