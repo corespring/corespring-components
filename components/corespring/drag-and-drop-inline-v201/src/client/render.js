@@ -20,6 +20,10 @@ var main = [
 
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
 
+      function renderMath(){
+        scope.$emit('rerender-math', {delay: 10, element: element[0]});
+      }
+
       function answerAreaTemplate(attributes){
         attributes = (attributes? ' ' + attributes : '');
         var answerHtml = scope.model.answerAreaXhtml;
@@ -44,6 +48,7 @@ var main = [
         $timeout(function () {
           $compile($answerArea)(scope);
         });
+        renderMath();
       }
 
       _.extend(scope.containerBridge, {
@@ -118,6 +123,7 @@ var main = [
 
       scope.toggleAnswerVisible = function(){
         scope.correctResponse.answerVisible = !scope.correctResponse.answerVisible;
+        renderMath();
       };
 
       scope.$watch('correctResponse.answerVisible', function(answerVisible){

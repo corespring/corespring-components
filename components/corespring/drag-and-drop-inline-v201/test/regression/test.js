@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('drag and drop inline v201', function() {
+describe('drag and drop inline v201', function() {
 
   "use strict";
 
@@ -147,25 +147,26 @@ describe.only('drag and drop inline v201', function() {
   describe("math", function(){
     it("renders math in choice", function(done){
       browser
-        .waitFor(choice('c_4') + ' ' + elementWithClass('MathJax_Preview'), regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting(choice('c_4') + ' ' + elementWithClass('MathJax_Preview'), regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
     it("renders math in answer area text", function(done){
       browser
-        .waitFor('.answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting('.answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
     it("renders math in selected choice", function(done){
       browser
         .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
-        .waitFor('.answer-area-holder .selected-choice .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting('.answer-area-holder .selected-choice .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
     it("renders math in correct answer area", function(done){
       browser
         .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .waitFor('.correct-answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .click('h4.panel-title')
+        .isExisting('.correct-answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
 
