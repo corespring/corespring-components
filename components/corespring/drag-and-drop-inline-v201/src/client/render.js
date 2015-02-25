@@ -309,6 +309,10 @@ var answerAreaInline = [
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
             scope.$emit("choice-removed-from-answers", choice);
           };
+
+          scope.showWarningIfEmpty = function(){
+            return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
+          };
         });
       },
       template: [
@@ -325,6 +329,7 @@ var answerAreaInline = [
         '      <i class="circle fa" ng-class="classForCorrectness(choice, $index)"></i>',
         '    </div>',
         '  </div>',
+        '  <div class="empty-answer-area-warning" ng-if="showWarningIfEmpty()"><i class="fa fa-exclamation-triangle"></i></div>',
         '</div>'
       ].join("\n")
     };
