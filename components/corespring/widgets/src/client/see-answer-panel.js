@@ -13,10 +13,12 @@ var def = function() {
         if (n) {
           $(element).find('.answer-collapse').css('height', 'auto');
           $(element).find('.answer-collapse').css('display', 'none');
+          $(element).find('.answer-collapse').addClass('answerVisible');
           $(element).find('.answer-collapse').slideDown(400);
         } else {
           $(element).find('.answer-collapse').slideUp(400, 'swing', function() {
             $(element).find('.answer-collapse').attr('style','');
+            $(element).find('.answer-collapse').removeClass('answerVisible');
           });
         }
       });
@@ -27,7 +29,7 @@ var def = function() {
       '      <div class="panel-heading" ng-click="answerVisible = !answerVisible">',
       '        <h4 class="panel-title" ><i class="answerIcon fa fa-eye{{answerVisible ? \'-slash\' : \'\'}}"></i>{{answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
       '      </div>',
-      '      <div class="answer-collapse" ng-class="{answerVisible: answerVisible}">',
+      '      <div class="answer-collapse">',
       '        <div class="panel-body" ng-transclude>',
       '        </div>',
       '      </div>',

@@ -19,11 +19,10 @@ exports.respond = function(question, answer, settings) {
 
   if(!answer){
     return {
-      correctness: 'incorrect', 
+      correctness: 'warning',
       score: 0, 
-      correctResponse: question.correctResponse,
-      feedback: settings.showFeedback ? fbu.makeFeedback(question.feedback, 'incorrect') : null,
-      outcome: settings.showFeedback ? 'incorrect' : null
+      feedback: settings.showFeedback ? fbu.makeFeedback(question.feedback, 'warning') : null,
+      outcome: settings.showFeedback ? 'warning' : null
     };
   }
 

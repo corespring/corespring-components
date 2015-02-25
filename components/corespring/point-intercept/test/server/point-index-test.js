@@ -45,15 +45,14 @@ describe('correctness logic', function() {
 
 describe('server logic', function() {
 
-  it('should return an incorrect outcome if the answer is empty', function() {
+  it('should return a warning outcome if the answer is empty', function() {
 
     var outcome = server.respond({}, null, helper.settings(true, true, true));
     outcome.should.eql({
-      correctness: "incorrect",
+      correctness: "warning",
       score: 0,
-      correctResponse: null,
-      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK,
-      outcome: "incorrect"
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
+      outcome: "warning"
     });
   });
 

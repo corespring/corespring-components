@@ -311,6 +311,10 @@ var answerAreaInline = [
           scope.showWarningIfEmpty = function(){
             return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
+
+          scope.showWarningIfEmpty = function(){
+            return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
+          };
         });
       },
       template: [

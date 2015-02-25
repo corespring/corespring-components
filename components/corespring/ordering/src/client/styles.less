@@ -1,28 +1,12 @@
 @import '../../../../../less/common';
 
 
-.show-correct-button-mixin() {
-  background: @correct-color;
-  padding: 5px;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-}
-
 .view-placement-ordering {
 
-  .show-correct-button {
-    .show-correct-button-mixin();
-  }
-
   .choice-area {
-    .choice-area-label {
-      text-align: center;
-      min-height: 20px;
-    }
+    margin-right: 20px;
     .choices {
       .choices-holder {
-        max-width: 580px;
         .choices-inner-holder {
           border-radius: 4px;
           border: 2px solid #9B9B9B;
@@ -38,8 +22,6 @@
   }
 
   .answer-area {
-    vertical-align: top;
-    display: inline-block;
     .choiceHolder {
       border-radius: 4px;
       border: 1px solid #979797;
@@ -47,15 +29,12 @@
       font-size: 38px;
       line-height: 38px;
 
-      &:hover {
-        cursor: auto;
-      }
     }
 
     .answer-area-table {
-      display: table;
-      border: 1px solid #9b9b9b;
       border-radius: 4px;
+      border: 2px dashed #9b9b9b;
+
       .choice {
         position: relative;
         background-color: #ffffff;
@@ -93,7 +72,6 @@
       &.warning {
         .warning-input();
       }
-
     }
   }
 
@@ -106,18 +84,13 @@
     border: 1px solid;
     border-radius: 4px;
     background-color: white;
-    vertical-align: top;
     height: 100%;
     margin: 3px 3px 1px 1px;
     padding: 8px;
     min-width: 150px;
-    min-height: 55px;
     max-width: 500px;
     overflow: hidden;
-
-    &:hover{
-      cursor: pointer;
-    }
+    min-height: 55px;
 
     &.correct {
       .correct-input();
@@ -135,6 +108,11 @@
       max-width: 100px;
       max-height: 100px;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
+
   }
 
   .choiceHolder {
@@ -153,67 +131,65 @@
 
   .choice-wrapper {
     padding: 10px;
-    position:relative;
+    position: relative;
   }
 
+  .choice-area-label, .answer-area-label {
+    height: 50px;
+    overflow: hidden;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    }
+
   &.main-table.vertical {
-    display: table;
     width: 100%;
 
-    .main-row {
-      max-width: 100%;
-      display: table;
-      margin-top: 5px;
+    .button-row{
       margin-bottom: 10px;
+    }
+    
+    .choice-area-label, .answer-area-label {
+      text-align: center;
+    }
+
+    .main-row {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      clear: both;
     }
 
     .choice-area {
-      display: table-cell;
-      vertical-align: top;
-      padding-right: 20px;
+      width: 180px;
+      float: left;
 
       .choices {
         padding-top: 0px;
         .choices-holder {
-          display: inline-block;
         }
 
         .choice {
           width: 150px;
 
-          &:hover{
-            cursor: pointer;
-          }
         }
       }
     }
 
     .answer-area {
-      display: table-cell;
+      width: 180px;
+      float: left;
+
       .choice {
         width: 150px;
-
-        &:hover{
-          cursor: pointer;
-        }
-      }
-
-      .answer-area-label {
-        text-align: center;
-        min-height: 20px;
       }
 
       .answer-area-holder {
         display: inline-block;
-        height: 95%;
-
         .answer-area-table {
-          display: table;
-          height: 100%;
-          border: 1px solid #9b9b9b;
           border-radius: 4px;
-          padding: 5px;
-
+          display: table;
+          padding: 10px;
           .choice-wrapper {
             display: table-row;
           }
@@ -222,34 +198,13 @@
     }
 
     .see-answer-area {
-      min-width: 150px;
-      max-width: 180px;
-      padding-left:45px;
-
-
+      width: 180px;
+      float: left;
+      margin: 0;
       .choice {
         .correct-input();
       }
-
-      .correct{
-        div{
-          width: 94%;
-        }
-      }
-      .correct:after {
-      font-family: 'FontAwesome';
-      content: @correct-character;
-      color: @correct-color;
-      position: absolute;
-      right: 17px;
-      top: 12px;
-      font-size: 17px;
     }
-
-
-
-    }
-
   }
 
   &.main-table.horizontal {
@@ -257,6 +212,7 @@
       float: right;
       display: inline-block;
     }
+
 
     .main-row {
       display: table;
@@ -268,8 +224,10 @@
         display: table-cell;
         .choices-holder {
           display: inline-block;
+          max-width: 585px;
           .choice-area-label {
             text-align: left;
+            height: auto;
           }
         }
       }
@@ -278,17 +236,24 @@
       }
     }
     .answer-area {
-      max-width: 585px;
+      display: table-row;
       .answer-area-label {
         margin-top: 10px;
+        height: auto;
+        display: block;
+        text-align: left;
       }
       .answer-area-holder {
+        display: table-cell;
       }
       .choice-wrapper {
         display: inline-block;
+        vertical-align: top;
       }
       .answer-area-table {
         width: 100%;
+        height: 100% !important;
+        max-width: 585px;
       }
     }
     .feedback-holder {
@@ -300,37 +265,55 @@
       .choice {
         .correct-input();
       }
+      .answer-area-label {
+        display: none;
+      }
+      .choices-inner-holder {
+        border: none;
+        background: #fff;
+      }
     }
   }
 
-  .panel.feedback.warning {
-    .panel-heading {
-      display: none;
-    }
-    .panel-body {
-      color: #a94442;
-      background-color: #f2dede;
-      border: 1px solid #ebccd1;
-      border-radius: 4px;
-    }
+  .feedback {
+    display: block;
+    clear: both;
   }
 
+  .button-row {
+    .btn-success {
+      background: @correct-color;
+    }
+  }
 }
 
 .view-ordering {
 
+  ul {
+    border: 2px solid #9B9B9B;
+    background: #efefef;
+    padding: 5px 5px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+
+    .choice {
+      background: #fff;
+    }
+  }
+
+  li {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0 0 10px;
+  }
 
   .sizerHolder {
-
     visibility: hidden;
     position: fixed;
     max-width: 500px;
   }
 
   .choice-area {
-    .choice-area-label {
-      text-align: center;
-    }
     .choices {
       .choices-holder {
         .choices-inner-holder {
@@ -346,7 +329,7 @@
         }
       }
     }
-  }  
+  }
 
   .btn-default {
     border-radius: 4px;
@@ -354,10 +337,18 @@
 
   &.horizontal {
 
+    .choice {
+      // max-width: 150px;
+      // min-width: auto;
+    }
     .button-row {
       float: right;
     }
-
+    .answer-area-container{
+      display: table-cell;
+      max-width: 595px;
+      float:left;
+    }
     .container-border {
       border: 1px solid #9B9B9B;
       border-radius: 4px;
@@ -388,13 +379,13 @@
       margin-bottom: 10px;
       max-width: 595px;
       display: table-cell;
+      float: left;
     }
 
     .correct-answer {
       display: table-cell;
       vertical-align: top;
-      position: absolute;
-      right: 5px;
+      float: right;
 
       ul {
         border-color: @correct-color;
@@ -407,63 +398,54 @@
     }
 
     ul {
-      border: 1px solid #9B9B9B;
+      border: 2px solid #9B9B9B;
+      background: #efefef;
       border-radius: 4px;
       display: inline-block;
       padding-bottom: 0px;
-      width: 275px;
-    }
+      max-width: 275px;
 
-    &.correct:after {
-      font-family: 'FontAwesome';
-      content: @correct-character;
-      color: @correct-color;
-      position: absolute;
-      right: 2px;
-      top: -2px;
-      font-size: 17px;
-    }
-
-    .show-correct-button {
-      .show-correct-button-mixin();
+      .choice {
+        background: #fff;
+        width: auto;
+      }
     }
 
   }
 
-  ul {
-    padding: 5px 5px;
-    margin-left: 0px;
-    margin-bottom: 0px;
+  .ui-sortable-helper .choice {
+    background-color: #ffffff !important;
+    border: 2px dashed #9b9b9b !important;
   }
 
-  li {
-    list-style: none;
-    padding-left: 0px;
-    margin: 0 0 10px;
-  }
+  .see-correct-answer .choice.correct {
+      border: 1px solid @correct-color;
+      -moz-box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
+      box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
+      position: relative;
 
+      &:after {
+        font-family: 'FontAwesome';
+        content: '';
+        color: @correct-color;
+        position: absolute;
+        right: 2px;
+        top: -2px;
+        font-size: 17px;
+      }
+    }
   .choice {
     border: 1px #9b9b9b solid;
     background: #efefef;
     border-radius: 4px;
     display: inline-block;
     padding: 8px;
-    margin: 1px;
-    min-width: 150px;
+    margin: 0;
     width: 100%;
+    min-height: 55px;
 
-    div{
-      width: 96%;
-    }
-
-    &:hover{
-      cursor: pointer;
-    }
-
-    &:active{
-      background-color: #ffffff !important;
-      border: 2px dashed #9b9b9b !important;
-      margin: 0px;
+    div {
+      // width: 96%;
     }
 
     &.correct {
@@ -505,6 +487,10 @@
       max-width: 100px;
       max-height: 100px;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .see-answer-panel {
@@ -513,6 +499,8 @@
 
       ul {
         padding: 1px;
+        background: #fff;
+        border: none;
       }
 
       .choice.correct:after {
@@ -521,11 +509,30 @@
     }
   }
 
+  .choice-area-label, .answer-area-label {
+    height: 50px;
+    overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .feedback {
+    display: block;
+    clear: both;
+  }
+
+  .button-row {
+    .btn-success {
+      background: @correct-color;
+    }
+  }
+
 }
 
 .ordering-config {
   .mini-wiggi-wiz .wiggi-wiz-editable {
     background-color: #fff !important;
+    min-height: 30px;
   }
 
   .rounded-inputs;
@@ -549,12 +556,11 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 5px 0 45px 0;
-    max-width: 400px;
     min-height: 47px;
     padding: 1.13em;
     background: #efefef;
 
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
 

@@ -94,6 +94,33 @@ describe('corespring', function() {
       expect(scope.feedback).toEqual('not good');
       expect(element.find('.feedback-holder').hasClass('ng-hide')).toBe(true);
     });
+
+    it('graph outline has incorrect color if incorrect answer is submitted', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'incorrect', feedback: 'not good'});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#EC971F', borderWidth : '2px' }, pointsStyle : '#EC971F' });
+    });
+
+    it('graph outline has correct color if correct answer is submitted', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'correct', feedback: 'good'});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#3c763d', borderWidth : '2px' }, pointsStyle : '#3c763d' });
+    });
+
+    it('graph outline has warning color if no answer is submitted', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good'});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#a94442', borderWidth : '2px' }, pointsStyle : '#a94442' });
+    });
   });
 
 

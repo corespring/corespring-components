@@ -1,6 +1,6 @@
 /* global browser, regressionTestRunnerGlobals, require, describe, console, beforeEach, it */
 
-var should = require('should');
+var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('drag and drop inline v201', function() {
+describe.only('drag and drop inline v201', function() {
 
   "use strict";
 
@@ -18,13 +18,18 @@ describe('drag and drop inline v201', function() {
   var componentName = 'drag-and-drop-inline-v201';
   var itemJson = RegressionHelper.getItemJson(componentName, itemJsonFilename);
 
-  var landingPlace = function(id) {
+  function landingPlace(id) {
     return "//div[@id='" + id  + "']/div[1]";
-  };
+  }
 
-  var choice = function(id) {
+  function choice(id) {
     return "//div[@data-id='" + id + "']";
-  };
+  }
+
+  function elementWithClass(s) {
+    return "//*[@class[contains(., '" + s + "')]]";
+  }
+
 
   browser.submitItem = function() {
     this.execute('window.submit()');
@@ -105,6 +110,65 @@ describe('drag and drop inline v201', function() {
       .waitFor('.selected-choice.correct .fa-check-circle', regressionTestRunnerGlobals.defaultTimeout)
       .waitFor('.selected-choice.incorrect .fa-times-circle', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
+  });
+
+  it('shows warning when no item is selected', function(done) {
+    browser
+      .submitItem()
+      .waitFor('.feedback.warning', regressionTestRunnerGlobals.defaultTimeout)
+      .getText('.feedback.warning', function(err,res){
+        expect(res).toEqual('You did not enter a response.');
+      })
+      .waitFor('.empty-answer-area-warning', regressionTestRunnerGlobals.defaultTimeout)
+      .call(done);
+  });
+
+  it("removes choice when removeAfterPlacing is true and choice has been placed", function(done){
+    browser
+      .isExisting(choice('c_4'), function(err,res){
+        expect(res).toBe(true);
+      })
+      .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+      .submitItem()
+      .isExisting(choice('c_4'), function(err,res){
+        expect(res).toBe(false);
+      })
+      .call(done);
+  });
+
+  it("shows correct answer area if answer is incorrect", function(done){
+    browser
+      .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+      .submitItem()
+      .waitFor('.correct-answer-area-holder', regressionTestRunnerGlobals.defaultTimeout)
+      .call(done);
+  });
+
+  describe("math", function(){
+    it("renders math in choice", function(done){
+      browser
+        .waitFor(choice('c_4') + ' ' + elementWithClass('MathJax_Preview'), regressionTestRunnerGlobals.defaultTimeout)
+        .call(done);
+    });
+    it("renders math in answer area text", function(done){
+      browser
+        .waitFor('.answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .call(done);
+    });
+    it("renders math in selected choice", function(done){
+      browser
+        .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+        .waitFor('.answer-area-holder .selected-choice .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .call(done);
+    });
+    it("renders math in correct answer area", function(done){
+      browser
+        .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+        .submitItem()
+        .waitFor('.correct-answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .call(done);
+    });
+
   });
 
 
