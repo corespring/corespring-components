@@ -309,6 +309,10 @@ var answerAreaInline = [
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
             scope.$emit("choice-removed-from-answers", choice);
           };
+
+          scope.showWarningIfEmpty = function(){
+            return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
+          };
         });
       },
       template: [
@@ -318,13 +322,14 @@ var answerAreaInline = [
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
-        '      <div class="selected-choice-content" ng-class="{disabled:!canEdit()}">',
+        '      <div class="selected-choice-content">',
         '        <span class="html-wrapper" ng-bind-html-unsafe="choice.label"></span>',
         '        <span class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></span>',
         '      </div>',
         '      <i class="circle fa" ng-class="classForCorrectness(choice, $index)"></i>',
         '    </div>',
         '  </div>',
+        '  <div class="empty-answer-area-warning" ng-if="showWarningIfEmpty()"><i class="fa fa-exclamation-triangle"></i></div>',
         '</div>'
       ].join("\n")
     };

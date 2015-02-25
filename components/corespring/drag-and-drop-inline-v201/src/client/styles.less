@@ -28,6 +28,136 @@
   cursor: move;
 }
 
+.corespring-drag-and-drop-inline-see-solution-v201,
+.corespring-drag-and-drop-inline-render-v201 {
+
+  .ui-draggable-dragging,
+  .ui-sortable-helper {
+    opacity: 0.75;
+    cursor: move;
+  }
+
+  .ui-droppable {
+    position: relative;
+    bottom: 0;
+    margin-bottom: 0px;
+    min-width: 50px;
+    min-height: 30px;
+    -webkit-padding-start: 0;
+    -webkit-padding-end: 0;
+  }
+
+  .answer-area-inline {
+    display: inline-block;
+    border-bottom: 1px solid black;
+    min-width: 70px;
+    min-height: 30px;
+    margin-right: 5px;
+    vertical-align: middle;
+
+    .empty-answer-area-warning {
+      margin-right: 5px;
+      color: @warning-color;
+      float: right;
+    }
+
+    .selected-choice {
+      display: inline-block;
+      margin: 0.25em 10px 0.25em 0;
+      white-space: nowrap;
+      cursor: pointer;
+
+      .selected-choice-content {
+        display: inline-block;
+        margin-right: 0;
+        padding: 0.5em 0.5em 0.5em 0.75em;
+        background: #efefef;
+        border-radius: 4px;
+
+        .html-wrapper {
+          list-style-type: none;
+          display: inline-block;
+          padding-right: 5px;
+        }
+
+        .remove-choice {
+          float: right;
+          list-style-type: none;
+          display: inline-block;
+          opacity: 0.3;
+          margin-left: 5px;
+        }
+
+        &:hover {
+          box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+
+          .remove-choice {
+            opacity: 0.8;
+          }
+        }
+
+        &:active {
+          cursor: move;
+        }
+
+      }
+
+      img {
+        max-width: 110px;
+        vertical-align: bottom;
+      }
+
+      &.incorrect {
+        cursor: default;
+
+        .selected-choice-content {
+          .incorrect-input();
+          box-shadow: none !important;
+
+          .remove-choice {
+            display: none;
+          }
+        }
+        .circle {
+          font-size: 24px;
+          color: @incorrect-color;
+        }
+      }
+
+      &.correct {
+        cursor: default;
+
+        .selected-choice-content {
+          .correct-input();
+          box-shadow: none !important;
+
+          .remove-choice {
+            display: none;
+          }
+        }
+        .circle {
+          font-size: 24px;
+          color: @correct-color;
+        }
+      }
+    }
+  }
+
+  .answer-area-inline-active {
+    z-index: 105;
+    background: #ccc;
+    padding-left: 0.25em;
+  }
+
+  .answer-area-inline-hover {
+    border: 2px dashed #9b9b9b;
+    background: #fff;
+    border-radius: 4px;
+    z-index: 99;
+  }
+}
+
+
 .corespring-drag-and-drop-inline-render-v201 {
 
   .undo-start-over {
@@ -93,7 +223,7 @@
       }
 
       &:active {
-        cursor:move;
+        cursor: move;
       }
 
     }
@@ -119,124 +249,22 @@
       cursor: pointer;
     }
   }
-}
 
-.corespring-drag-and-drop-inline-see-solution-v201,
-.corespring-drag-and-drop-inline-render-v201 {
-
-  .ui-draggable-dragging,
-  .ui-sortable-helper {
-    opacity: 0.75;
-    cursor: move;
+  .selected-choice {
+    cursor: default !important;
   }
 
-  .ui-droppable {
-    position: relative;
-    bottom: 0;
-    margin-bottom: 0px;
-    min-width: 50px;
-    min-height: 30px;
-    -webkit-padding-start: 0;
-    -webkit-padding-end: 0;
+  .selected-choice-content,
+  .selected-choice-content:hover {
+    .correct-input();
+
+    box-shadow: none !important;
   }
 
-  .answer-area-inline {
-    display: inline-block;
-    border-bottom: 1px solid black;
-    min-width: 70px;
-    min-height: 30px;
-    margin-right: 5px;
-    vertical-align: middle;
-
-    .selected-choice {
-      display: inline-block;
-      margin: 0.25em 10px 0.25em 0;
-      white-space: nowrap;
-      cursor: pointer;
-
-      .selected-choice-content {
-        display: inline-block;
-        margin-right: 0;
-        padding: 0.5em 0.5em 0.5em 0.75em;
-        background: #efefef;
-        border-radius: 4px;
-
-        .html-wrapper {
-          list-style-type: none;
-          display: inline-block;
-          padding-right: 5px;
-        }
-
-        .remove-choice {
-          float: right;
-          list-style-type: none;
-          display: inline-block;
-          opacity: 0.3;
-          margin-left: 5px;
-        }
-
-        &:hover {
-          box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-
-          .remove-choice {
-            opacity: 0.8;
-          }
-        }
-
-        &:active {
-          cursor: move;
-        }
-
-        &.disabled,
-        &.disabled:hover {
-          cursor: default;
-          box-shadow: none !important;
-
-          .remove-choice {
-            display: none;
-          }
-        }
-      }
-
-      img {
-        max-width: 110px;
-        vertical-align: bottom;
-      }
-
-      &.incorrect {
-        .selected-choice-content {
-          .incorrect-input();
-        }
-        .circle {
-          font-size: 24px;
-          color: @incorrect-color;
-        }
-      }
-
-      &.correct {
-        .selected-choice-content {
-          .correct-input();
-        }
-        .circle {
-          font-size: 24px;
-          color: @correct-color;
-        }
-      }
-    }
+  .remove-choice {
+    display: none !important;
   }
 
-  .answer-area-inline-active {
-    z-index: 105;
-    background: #ccc;
-    padding-left: 0.25em;
-  }
-
-  .answer-area-inline-hover {
-    border: 2px dashed #9b9b9b;
-    background: #fff;
-    border-radius: 4px;
-    z-index: 99;
-  }
 }
 
 .corespring-drag-and-drop-inline-config-v201 {
@@ -393,7 +421,6 @@
           i {
             vertical-align: top;
           }
-
 
         }
       }
