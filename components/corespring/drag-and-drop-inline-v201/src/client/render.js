@@ -39,6 +39,13 @@ var main = [
         });
       }
 
+      function renderAnswerArea(targetSelector, scope) {
+        var $answerArea = element.find(targetSelector).html(answerAreaTemplate());
+        $timeout(function () {
+          $compile($answerArea)(scope);
+        });
+      }
+
       _.extend(scope.containerBridge, {
         setDataAndSession: function(dataAndSession) {
           $log.debug("[DnD-inline] setDataAndSession: ", dataAndSession);
@@ -68,10 +75,7 @@ var main = [
             scope.local.choices = withoutPlacedChoices(scope.originalChoices);
           }
 
-          var $answerArea = element.find(".answer-area-holder").html(answerAreaTemplate());
-          $timeout(function() {
-            $compile($answerArea)(scope.$new());
-          });
+          renderAnswerArea(".answer-area-holder", scope.$new());
         },
 
         getSession: function() {
@@ -92,19 +96,16 @@ var main = [
           scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
           // Populate solutionScope with the correct response
-          scope.solutionScope = $rootScope.$new();
-          scope.solutionScope.landingPlaceChoices = {};
-          scope.solutionScope.model = scope.model;
+          var solutionScope = $rootScope.$new();
+          solutionScope.landingPlaceChoices = {};
+          solutionScope.model = scope.model;
           _.each(scope.correctResponse, function(v, k) {
-            scope.solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
+            solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
               return scope.choiceForId(r);
             });
           });
 
-          var $answerArea = element.find(".correct-answer-area-holder").html(answerAreaTemplate());
-          $timeout(function() {
-            $compile($answerArea)(scope.solutionScope);
-          });
+          renderAnswerArea(".correct-answer-area-holder", solutionScope);
         },
 
         reset: function() {
