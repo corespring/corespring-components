@@ -165,7 +165,7 @@ var main = [
 
     function choiceArea(){
       return [
-        '<div class="choices-wrapper" >',
+        '<div class="choices-holder" >',
         '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
         '    <div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div>',
         '  </div>',
@@ -182,23 +182,6 @@ var main = [
       ].join('');
     }
 
-    var seeSolution = [
-      '<div class="corespring-drag-and-drop-inline-see-solution-v201" ng-show="correctResponse">',
-      '  <div class="panel panel-default">',
-      '    <div class="panel-heading">',
-      '      <h4 class="panel-title" ng-click="toggleAnswerVisible()">',
-      '        <i class="answerIcon fa fa-eye{{correctResponse.answerVisible ? \'-slash\' : \'\'}}"></i>',
-      '        {{correctResponse.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}',
-      '      </h4>',
-      '    </div>',
-      '    <div class="answer-collapse">',
-      '      <div class="panel-body correct-answer-area-holder">',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join("\n");
-
     var tmpl = [
       '<div class="corespring-drag-and-drop-inline-render-v201" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="undo-start-over pull-right">',
@@ -211,7 +194,20 @@ var main = [
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-      seeSolution,
+      '  <div class="see-solution" ng-show="correctResponse">',
+      '    <div class="panel panel-default">',
+      '      <div class="panel-heading">',
+      '        <h4 class="panel-title" ng-click="toggleAnswerVisible()">',
+      '          <i class="answerIcon fa fa-eye{{correctResponse.answerVisible ? \'-slash\' : \'\'}}"></i>',
+      '          {{correctResponse.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}',
+      '        </h4>',
+      '      </div>',
+      '      <div class="answer-collapse">',
+      '        <div class="panel-body correct-answer-area-holder">',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
       '</div>'
 
     ].join("");

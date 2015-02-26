@@ -168,13 +168,13 @@ describe('corespring:drag-and-drop-inline-v201', function() {
       it('should show the button when answer is incorrect', function() {
         setCorrectness('incorrect');
 
-        expect($(wrapper.find(".corespring-drag-and-drop-inline-see-solution-v201")).attr('class')).not.toContain('ng-hide');
+        expect($(wrapper.find(".see-solution")).attr('class')).not.toContain('ng-hide');
       });
 
       it('should hide the button if answer is correct', function() {
         setCorrectness('correct');
 
-        expect($(wrapper.find(".corespring-drag-and-drop-inline-see-solution-v201")).attr('class')).toContain('ng-hide');
+        expect($(wrapper.find(".see-solution")).attr('class')).toContain('ng-hide');
       });
 
     });
