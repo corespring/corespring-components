@@ -299,10 +299,12 @@ var main = [
             $scope.activate(_.findIndex($scope.active));
           });
 
-          $scope.$watchCollection('targets', function() {
-            var newOrder = _.pluck($scope.targets, 'id');
-            $scope.fullModel.correctResponse = newOrder;
-            $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+          $scope.$watchCollection('targets', function(n) {
+            if (!_.isEmpty(n)) {
+              var newOrder = _.pluck($scope.targets, 'id');
+              $scope.fullModel.correctResponse = newOrder;
+              $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+            }
           });
 
           $scope.init = function() {
