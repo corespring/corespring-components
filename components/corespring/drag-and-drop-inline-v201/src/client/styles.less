@@ -28,7 +28,6 @@
   cursor: move;
 }
 
-.corespring-drag-and-drop-inline-see-solution-v201,
 .corespring-drag-and-drop-inline-render-v201 {
 
   .ui-draggable-dragging,
@@ -155,10 +154,6 @@
     border-radius: 4px;
     z-index: 99;
   }
-}
-
-
-.corespring-drag-and-drop-inline-render-v201 {
 
   .undo-start-over {
     margin-bottom: 10px;
@@ -188,7 +183,7 @@
     }
   }
 
-  .choices-wrapper {
+  .choices-holder {
     margin-top: 20px;
     position: relative;
     padding: 1em;
@@ -228,43 +223,42 @@
       }
     }
   }
-}
 
-.corespring-drag-and-drop-inline-see-solution-v201 {
-  background: #fff;
-  overflow: hidden;
-  width: 100%;
+  .see-solution {
+    background: #fff;
+    overflow: hidden;
+    width: 100%;
 
-  .panel {
-    border: 4px solid @correct-color;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: normal;
-  }
-  .panel-default {
-    & > .panel-heading {
-      color: #fff;
-      background-color: #3C763D;
-      border-color: #3C763D;
-      border-radius: 0px;
-      cursor: pointer;
+    .panel {
+      border: 4px solid @correct-color;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: normal;
+    }
+    .panel-default {
+      & > .panel-heading {
+        color: #fff;
+        background-color: #3C763D;
+        border-color: #3C763D;
+        border-radius: 0px;
+        cursor: pointer;
+      }
+    }
+
+    .selected-choice {
+      cursor: default !important;
+    }
+
+    .selected-choice-content,
+    .selected-choice-content:hover {
+      .correct-input();
+
+      box-shadow: none !important;
+    }
+
+    .remove-choice {
+      display: none !important;
     }
   }
-
-  .selected-choice {
-    cursor: default !important;
-  }
-
-  .selected-choice-content,
-  .selected-choice-content:hover {
-    .correct-input();
-
-    box-shadow: none !important;
-  }
-
-  .remove-choice {
-    display: none !important;
-  }
-
 }
 
 .corespring-drag-and-drop-inline-config-v201 {
@@ -395,7 +389,7 @@
       right:0;
       bottom:0;
       width: 20px;
-      font-size: 24px;
+      font-size: 18px;
       cursor: pointer;
     }
 
