@@ -159,8 +159,15 @@
     margin-bottom: 10px;
   }
 
-  .answer-area-holder.warning {
-    .warning-input();
+  .answer-area-holder {
+
+    &.warning {
+      .warning-input();
+    }
+
+    div {
+      vertical-align: bottom;
+    }
   }
 
   .feedback.panel {
