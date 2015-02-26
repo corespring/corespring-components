@@ -454,7 +454,8 @@ var main = [
 
 var csConfigAnswerAreaInline = [
   '$log',
-  function($log) {
+  'WIGGI_EVENTS',
+  function($log, WIGGI_EVENTS) {
     "use strict";
     return {
       scope:{},
@@ -495,15 +496,27 @@ var csConfigAnswerAreaInline = [
           scope.removeCorrectAnswer = function(index){
             scope.$emit("remove-correct-answer", scope.answerAreaId, index);
           };
+
+          function removeTooltip(){
+            scope.$broadcast("$destroy");
+          }
+
+          scope.removeAnswerArea = function(){
+            removeTooltip();
+            scope.$emit(WIGGI_EVENTS.DELETE_NODE, el);
+            scope.$destroy();
+          };
         });
       },
       template: [
         '<div class="answer-area-inline">',
-        '  <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions()" ng-model="correctAnswers[answerAreaId]"',
+        '  <ul class="sortable-choices" ui-sortable="targetSortableOptions()" ng-model="correctAnswers[answerAreaId]"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in correctAnswers[answerAreaId] track by trackId(choice)">',
-        '      <div class="delete-icon">',
-        '        <i ng-click="removeCorrectAnswer($index)" class="fa fa-times-circle"></i>',
+        '      <div class="delete-icon"',
+        '        tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom"' +
+        '        ng-click="removeCorrectAnswer($index)">',
+        '        <i class="fa fa-times-circle"></i>',
         '      </div>',
         '      <span ng-bind-html-unsafe="choice.label"></span>',
         '    </li>',
@@ -511,6 +524,12 @@ var csConfigAnswerAreaInline = [
         '      Drag correct answers here.',
         '    </p>',
         '  </ul>',
+        '  <div class="delete-answer-area-button"',
+        '      ng-click="removeAnswerArea()">',
+        '    <i class="fa fa-trash-o"',
+        '      tooltip="delete answer blank" tooltip-append-to-body="true" tooltip-placement="bottom">',
+        '    </i>',
+        '  </div>',
         '</div>'
       ].join("\n")
     };
