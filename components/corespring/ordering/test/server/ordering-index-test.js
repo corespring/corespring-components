@@ -73,7 +73,7 @@ describe('placement ordering', function() {
 
     outcome.should.eql({
       correctness: "warning",
-      correctResponse: undefined,
+      correctResponse: [],
       answer: null,
       score: 0,
       correctClass: "warning",
