@@ -1,12 +1,13 @@
 /* globals console, exports */
 
 var main = [
+  "$compile",
   "$timeout",
   "ChoiceTemplates",
   "ComponentImageService",
   "WiggiLinkFeatureDef",
   "WiggiMathJaxFeatureDef",
-  function($timeout, ChoiceTemplates, ComponentImageService, WiggiLinkFeatureDef, WiggiMathJaxFeatureDef) {
+  function($compile, $timeout, ChoiceTemplates, ComponentImageService, WiggiLinkFeatureDef, WiggiMathJaxFeatureDef) {
 
     "use strict";
 
@@ -191,10 +192,13 @@ var main = [
         };
 
         function dragHelperTemplate(choice){
+          var $choice = $('li.draggable-choice[data-choice-id="' + choice.id +  '"]');
+          var $content = $choice.find(".content-holder");
           return [
             '<div class="corespring-drag-and-drop-inline-drag-helper-v201">',
-            choice.label,
-            '</div>'].join('');
+            $content[0].innerHTML,
+            '</div>'
+          ].join('');
         }
 
         scope.choiceDraggableJqueryOptions = function(choice){
@@ -205,8 +209,8 @@ var main = [
               },
             appendTo: ".modal",
             cursorAt: {
-              bottom: 5,
-              right: 5
+              bottom: 2,
+              right: 2
             },
             distance: 15
 
@@ -338,7 +342,7 @@ var main = [
         '            Remove tile after placing',
         '          </checkbox>',
         '        </div>',
-        '        <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
+        '        <span class="content-holder" ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
         '        <div ng-show="active[$index]"',
         '            mini-wiggi-wiz=""',
         '            ng-model="choice.label"',

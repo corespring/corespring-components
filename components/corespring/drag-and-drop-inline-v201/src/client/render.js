@@ -29,7 +29,7 @@ var main = [
       function answerAreaTemplate(attributes){
         attributes = (attributes? ' ' + attributes : '');
         var answerHtml = scope.model.answerAreaXhtml;
-        var answerArea = "<div scope-forwarder-v201=''" + attributes + ">" + answerHtml + "</div>";
+        var answerArea = '<div scope-forwarder-v201=""' + attributes + '>' + answerHtml + '</div>';
         return answerArea;
       }
 
@@ -227,7 +227,7 @@ var scopeForwarder = [
     return {
       scope: false,
       restrict: 'A',
-      replace: false,
+      replace: true,
       controller: ['$scope', function($scope) {
         $scope.$on("get-scope", function(event, callback) {
           callback($scope);
