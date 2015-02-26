@@ -4,7 +4,7 @@
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
   "version": "2.0.1",
-  "released": true,
+  "released": false,
   "dependencies": {
     "client": {
       "corespring-checkbox": {
