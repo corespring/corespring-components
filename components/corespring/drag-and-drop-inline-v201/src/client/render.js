@@ -23,7 +23,7 @@ var main = [
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
 
       function renderMath(){
-        //MathJaxService.parseDomForMath(10, element[0]);
+        MathJaxService.parseDomForMath(10, element[0]);
       }
 
       function answerAreaTemplate(attributes){
@@ -34,17 +34,13 @@ var main = [
       }
 
       function withoutPlacedChoices(originalChoices){
-        console.debug("withoutPlacedChoices", originalChoices);
         return _.filter(originalChoices, function(choice) {
-          console.debug("withoutPlacedChoices choice", choice);
-          console.debug("withoutPlacedChoices moveOnDrag", choice.moveOnDrag);
           if(!choice.moveOnDrag){
             return true;
           }
           var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
             return _.pluck(c, 'id').indexOf(choice.id) >= 0;
           });
-          console.debug("withoutPlacedChoices placed", landingPlaceWithChoice);
           return _.isUndefined(landingPlaceWithChoice);
         });
       }
@@ -261,9 +257,13 @@ var answerAreaInline = [
 
           var isOut = false;
 
+          scope.canEdit = function(){
+            return renderScope && _.isFunction(renderScope.canEdit) && renderScope.canEdit();
+          };
+
           scope.targetSortableOptions = function(){
             return {
-              disabled: !renderScope.canEdit(),
+              disabled: scope.canEdit(),
               start: function () {
                 renderScope.targetDragging = true;
               },
