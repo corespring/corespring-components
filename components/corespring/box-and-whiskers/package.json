@@ -6,5 +6,8 @@
     }
   ],
   "name": "box-and-whiskers",
+  "released": false,
+  "title": "Box and Whiskers",
+  "titleGroup": "Mathematics",
   "organization": "corespring"
 }

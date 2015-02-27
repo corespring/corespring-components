@@ -1,11 +1,11 @@
 {
   "name": "drag-and-drop",
   "titleGroup": "Fixed Choice",
-  "title": "",
+  "title": "Drag And Drop",
   "organization": "corespring",
   "corespring-container-version": "0.0.1",
   "version": "0.0.1",
-  "released": true,
+  "released": false,
   "libraries": [
     {
       "name": "drag-and-drop-engine",

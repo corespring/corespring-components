@@ -44,6 +44,14 @@ describe.only('drag and drop inline v201', function() {
 
   it('correct answer results in correct feedback', function(done) {
     browser
+      .waitFor(choice('c_2'))
+      .getHTML(choice('c_2'), function(err,res){
+        console.log("getHTML c2: ", res);
+      })
+      .waitFor(landingPlace('aa_1'))
+      .getHTML(landingPlace('aa_1'), function(err,res){
+        console.log("getHTML aa_1: ", res);
+      })
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)

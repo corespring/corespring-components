@@ -139,7 +139,7 @@
     overflow: hidden;
     text-align: center;
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: bottom;
     }
 
   &.main-table.vertical {
@@ -153,6 +153,9 @@
       text-align: center;
     }
 
+    .choice-area .choices-inner-holder, .answer-area-table, .see-answer-area .choices-inner-holder{
+      margin-top: 5px;
+    }
     .main-row {
       margin-top: 20px;
       margin-bottom: 10px;
@@ -190,6 +193,7 @@
           border-radius: 4px;
           display: table;
           padding: 10px;
+
           .choice-wrapper {
             display: table-row;
           }
@@ -211,6 +215,7 @@
     .button-row {
       float: right;
       display: inline-block;
+      margin-bottom: 10px;
     }
 
 
@@ -281,6 +286,7 @@
   }
 
   .button-row {
+    margin-bottom: 10px;
     .btn-success {
       background: @correct-color;
     }
@@ -339,9 +345,10 @@
 
     .choice {
       // max-width: 150px;
-      // min-width: auto;
+      min-width: 50px;
     }
     .button-row {
+      margin-bottom: 10px;
       float: right;
     }
     .answer-area-container{
@@ -408,6 +415,7 @@
       .choice {
         background: #fff;
         width: auto;
+        min-width: 50px;
       }
     }
 
@@ -513,7 +521,7 @@
     height: 50px;
     overflow: hidden;
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: bottom;
   }
 
   .feedback {
@@ -522,6 +530,7 @@
   }
 
   .button-row {
+    margin-bottom: 10px;
     .btn-success {
       background: @correct-color;
     }
