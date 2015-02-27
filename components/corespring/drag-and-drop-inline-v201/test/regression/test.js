@@ -23,7 +23,7 @@ describe('drag and drop inline v201', function() {
   }
 
   function choice(id) {
-    return "//div[@data-id='" + id + "']";
+    return ".choice[data-choice-id='" + id + "']";
   }
 
   function elementWithClass(s) {
@@ -39,7 +39,7 @@ describe('drag and drop inline v201', function() {
   beforeEach(function() {
     browser
       .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
-      .waitFor('.corespring-drag-and-drop-inline-render-v201', regressionTestRunnerGlobals.defaultTimeout);
+      .waitFor('.render-csdndi-v201', regressionTestRunnerGlobals.defaultTimeout);
   });
 
   it('correct answer results in correct feedback', function(done) {
@@ -123,15 +123,14 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  it("removes choice when removeAfterPlacing is true and choice has been placed", function(done){
+  it.only("removes choice when moveOnDrag is true and choice has been placed", function(done){
     browser
       .isExisting(choice('c_4'), function(err,res){
-        expect(res).toBe(true);
+        expect("choice exists: " + res).toBe("choice exists: true");
       })
       .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
-      .submitItem()
       .isExisting(choice('c_4'), function(err,res){
-        expect(res).toBe(false);
+        expect("choice removed: " + !res).toBe("choice removed: true");
       })
       .call(done);
   });

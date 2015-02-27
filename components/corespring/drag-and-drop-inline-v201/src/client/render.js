@@ -23,24 +23,28 @@ var main = [
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
 
       function renderMath(){
-        MathJaxService.parseDomForMath(10, element[0]);
+        //MathJaxService.parseDomForMath(10, element[0]);
       }
 
       function answerAreaTemplate(attributes){
         attributes = (attributes? ' ' + attributes : '');
         var answerHtml = scope.model.answerAreaXhtml;
-        var answerArea = '<div scope-forwarder-v201=""' + attributes + '>' + answerHtml + '</div>';
+        var answerArea = '<div scope-forwarder-csdndi-v201=""' + attributes + '>' + answerHtml + '</div>';
         return answerArea;
       }
 
       function withoutPlacedChoices(originalChoices){
+        console.debug("withoutPlacedChoices", originalChoices);
         return _.filter(originalChoices, function(choice) {
-          if(!choice.removeAfterPlacing){
+          console.debug("withoutPlacedChoices choice", choice);
+          console.debug("withoutPlacedChoices moveOnDrag", choice.moveOnDrag);
+          if(!choice.moveOnDrag){
             return true;
           }
           var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
             return _.pluck(c, 'id').indexOf(choice.id) >= 0;
           });
+          console.debug("withoutPlacedChoices placed", landingPlaceWithChoice);
           return _.isUndefined(landingPlaceWithChoice);
         });
       }
@@ -175,7 +179,7 @@ var main = [
         '    data-jqyoui-options="draggableOptionsWithScope(choice)"',
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptionsWithScope(choice)"',
-        '    data-id="{{choice.id}}">',
+        '    data-choice-id="{{choice.id}}">',
         '    <span class="choice-content" ng-class="{disabled:!editable}" ng-bind-html-unsafe="choice.label"></span>',
         '  </div>',
         '</div>'
@@ -183,7 +187,7 @@ var main = [
     }
 
     var tmpl = [
-      '<div class="corespring-drag-and-drop-inline-render-v201" drag-and-drop-controller>',
+      '<div class="render-csdndi-v201" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="undo-start-over pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i> Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
@@ -316,9 +320,6 @@ var answerAreaInline = [
             return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
 
-          scope.showWarningIfEmpty = function(){
-            return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
-          };
         });
       },
       template: [
@@ -345,9 +346,9 @@ exports.framework = 'angular';
 exports.directives = [{
   directive: main
 }, {
-  name: 'scopeForwarderV201',
+  name: 'scopeForwarderCsdndiV201',
   directive: scopeForwarder
 }, {
-  name: 'answerAreaInlineV201',
+  name: 'answerAreaInlineCsdndiV201',
   directive: answerAreaInline
 }];

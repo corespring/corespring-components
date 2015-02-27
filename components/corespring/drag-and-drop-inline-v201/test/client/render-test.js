@@ -22,31 +22,31 @@ describe('corespring:drag-and-drop-inline-v201', function() {
               "id": "aa_1"
             }
           ],
-          "answerAreaXhtml": "text before <answer-area-inline-v201 id=\"aa_1\"></answer-area-inline-v201> text after",
+          "answerAreaXhtml": "text before <answer-area-inline-csdndi-v201 id=\"aa_1\"></answer-area-inline-csdndi-v201> text after",
           "choices": [
             {
               "label": "turkey",
               "labelType": "text",
               "id": "c_0",
-              "removeAfterPlacing": true
+              "moveOnDrag": true
             },
             {
               "label": "ham",
               "labelType": "text",
               "id": "c_1",
-              "removeAfterPlacing": true
+              "moveOnDrag": true
             },
             {
               "label": "lamb",
               "labelType": "text",
               "id": "c_2",
-              "removeAfterPlacing": true
+              "moveOnDrag": true
             },
             {
               "label": "bologna",
               "labelType": "text",
               "id": "c_3",
-              "removeAfterPlacing": true
+              "moveOnDrag": true
             }
           ],
           "config": {

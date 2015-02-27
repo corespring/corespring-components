@@ -27,13 +27,13 @@ var main = [
             new WiggiMathJaxFeatureDef(),
             new WiggiLinkFeatureDef(),
             {
-              name: 'answer-area-inline-v201',
+              name: 'answer-area-inline-csdndi-v201',
               title: 'Add Answer Blank',
               draggable: false,
               compile: true,
               addToEditor: function(editor, addContent) {
                 var id = $scope.addAnswerArea();
-                addContent($('<answer-area-inline-v201 id="' + id +'"/>'));
+                addContent($('<answer-area-inline-csdndi-v201 id="' + id +'"/>'));
               },
               deleteNode: function($node, services) {
                 var id = $node.attr('answer-area-id');
@@ -41,7 +41,7 @@ var main = [
               },
               initialise: function($node, replaceWith) {
                 var id = $node.attr('id');
-                return replaceWith($('<div cs-config-answer-area-inline-v201 answer-area-id="' + id + '"/>'));
+                return replaceWith($('<div config-answer-area-inline-csdndi-v201 answer-area-id="' + id + '"/>'));
               },
               onDblClick: function($node, $scope, editor) {
               },
@@ -49,7 +49,7 @@ var main = [
               },
               getMarkUp: function($node) {
                 var id = $node.attr('answer-area-id');
-                return '<answer-area-inline-v201 id="' + id +'"/>';
+                return '<answer-area-inline-csdndi-v201 id="' + id +'"/>';
               }
             }]
         };
@@ -154,7 +154,7 @@ var main = [
             id: findFreeChoiceSlot(),
             labelType: "text",
             label: "",
-            removeAfterPlacing: false
+            moveOnDrag: false
           });
         };
 
@@ -195,7 +195,7 @@ var main = [
           var $choice = $('li.draggable-choice[data-choice-id="' + choice.id +  '"]');
           var $content = $choice.find(".content-holder");
           return [
-            '<div class="corespring-drag-and-drop-inline-drag-helper-v201">',
+            '<div class="drag-helper-csdndi-v201">',
             $content[0].innerHTML,
             '</div>'
           ].join('');
@@ -258,7 +258,7 @@ var main = [
         };
 
         scope.canDragChoice = function(choice, index){
-          return !(scope.active[index] || choice.removeAfterPlacing === true && isPlaced(choice));
+          return !(scope.active[index] || choice.moveOnDrag === true && isPlaced(choice));
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
@@ -338,7 +338,7 @@ var main = [
         '          </div>',
         '        </div>',
         '        <div class="remove-after-placing">',
-        '          <checkbox id="removeAfterPlacing{{$index}}" ng-model="choice.removeAfterPlacing">',
+        '          <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">',
         '            Remove tile after placing',
         '          </checkbox>',
         '        </div>',
@@ -432,7 +432,7 @@ var main = [
       ].join('\n');
 
       var result = [
-        '<div class="corespring-drag-and-drop-inline-config-v201" choice-template-controller="">',
+        '<div class="config-csdndi-v201" choice-template-controller="">',
         '  <div navigator-panel="Design">',
         designOptions,
         '  </div>',
@@ -448,7 +448,7 @@ var main = [
 ];
 
 
-var csConfigAnswerAreaInline = [
+var configAnswerAreaInline = [
   '$log',
   'WIGGI_EVENTS',
   function($log, WIGGI_EVENTS) {
@@ -535,6 +535,6 @@ exports.framework = 'angular';
 exports.directives = [{
   directive: main
 }, {
-  name: 'csConfigAnswerAreaInlineV201',
-  directive: csConfigAnswerAreaInline
+  name: 'configAnswerAreaInlineCsdndiV201',
+  directive: configAnswerAreaInline
 }];

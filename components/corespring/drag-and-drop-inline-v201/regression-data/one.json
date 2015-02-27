@@ -31,7 +31,7 @@
           "answerAreas": [
             {"id": "aa_1"}
           ],
-          "answerAreaXhtml": "​<span mathjax=''>\\(w^1=15\\)</span>​<answer-area-inline-v201 id='aa_1'></answer-area-inline-v201>",
+          "answerAreaXhtml": "​<span mathjax=''>\\(w^1=15\\)</span>​<answer-area-inline-csdndi-v201 id='aa_1'></answer-area-inline-csdndi-v201>",
           "config": {
             "orientation": "vertical",
             "shuffle": false,
@@ -53,7 +53,7 @@
             {
               "label": "<span mathjax=''>\\(y=mx+5\\)</span>",
               "id": "c_4",
-              "removeAfterPlacing": true
+              "moveOnDrag": true
             }
           ]
         }
