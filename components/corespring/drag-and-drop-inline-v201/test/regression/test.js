@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('drag and drop inline v201', function() {
+describe('drag and drop inline v201', function() {
 
   "use strict";
 
@@ -19,17 +19,12 @@ describe.only('drag and drop inline v201', function() {
   var itemJson = RegressionHelper.getItemJson(componentName, itemJsonFilename);
 
   function landingPlace(id) {
-    return "//div[@id='" + id  + "']/div[1]";
+    return "#" + id + " > div";
   }
 
   function choice(id) {
     return ".choice[data-choice-id='" + id + "']";
   }
-
-  function elementWithClass(s) {
-    return "//*[@class[contains(., '" + s + "')]]";
-  }
-
 
   browser.submitItem = function() {
     this.execute('window.submit()');
@@ -45,13 +40,7 @@ describe.only('drag and drop inline v201', function() {
   it('correct answer results in correct feedback', function(done) {
     browser
       .waitFor(choice('c_2'))
-      .getHTML(choice('c_2'), function(err,res){
-        console.log("getHTML c2: ", res);
-      })
       .waitFor(landingPlace('aa_1'))
-      .getHTML(landingPlace('aa_1'), function(err,res){
-        console.log("getHTML aa_1: ", res);
-      })
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
@@ -131,7 +120,7 @@ describe.only('drag and drop inline v201', function() {
       .call(done);
   });
 
-  it.only("removes choice when moveOnDrag is true and choice has been placed", function(done){
+  it("removes choice when moveOnDrag is true and choice has been placed", function(done){
     browser
       .isExisting(choice('c_4'), function(err,res){
         expect("choice exists: " + res).toBe("choice exists: true");
@@ -154,7 +143,7 @@ describe.only('drag and drop inline v201', function() {
   describe("math", function(){
     it("renders math in choice", function(done){
       browser
-        .isExisting(choice('c_4') + ' ' + elementWithClass('MathJax_Preview'), regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting(choice('c_4') + ' .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
     it("renders math in answer area text", function(done){
