@@ -190,8 +190,11 @@ var main = [
               initTargets();
             },
             getModel: function() {
-              var model = _.cloneDeep($scope.fullModel);
-              return model;
+              var fullModel = _.cloneDeep($scope.fullModel);
+              if (fullModel.model.config.placementType === 'inPlace') {
+                fullModel.correctResponse = _.pluck(fullModel.model.choices, 'id');
+              }
+              return fullModel;
             }
           };
 
