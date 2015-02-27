@@ -141,12 +141,13 @@ var main = [
       });
 
       scope.classForChoice = function(answerAreaId, choice, targetIndex) {
+        var defaultClass = scope.canEdit() ? 'editable' : undefined;
         if (!scope.correctResponse) {
-          return;
+          return defaultClass;
         }
         var correctResponse = scope.correctResponse[answerAreaId];
         if (!correctResponse) {
-          return;
+          return defaultClass;
         }
 
         var actualIndex = correctResponse.indexOf(choice.id);
@@ -164,6 +165,10 @@ var main = [
         scope.local.choices = withoutPlacedChoices(scope.originalChoices);
       };
 
+      scope.canEdit = function(){
+        return scope.editable && !scope.correctResponse;
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
@@ -175,12 +180,13 @@ var main = [
         '  </div>',
         '  <div ng-repeat="choice in local.choices"',
         '    class="choice" ',
-        '    data-drag="editable"',
+        '    ng-class="{editable:canEdit()}"',
+        '    data-drag="canEdit()"',
         '    data-jqyoui-options="draggableOptionsWithScope(choice)"',
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptionsWithScope(choice)"',
         '    data-choice-id="{{choice.id}}">',
-        '    <span class="choice-content" ng-class="{disabled:!editable}" ng-bind-html-unsafe="choice.label"></span>',
+        '    <span class="choice-content" ng-bind-html-unsafe="choice.label"></span>',
         '  </div>',
         '</div>'
       ].join('');
@@ -188,7 +194,7 @@ var main = [
 
     var tmpl = [
       '<div class="render-csdndi-v201" drag-and-drop-controller>',
-      '  <div ng-show="!correctResponse" class="undo-start-over pull-right">',
+      '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i> Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
       '  </div>',
@@ -253,15 +259,11 @@ var answerAreaInline = [
           scope.renderScope = renderScope;
           scope.answerAreaId = attr.id;
 
-          scope.canEdit = function(){
-            return !renderScope.correctResponse && renderScope.editable;
-          };
-
           var isOut = false;
 
           scope.targetSortableOptions = function(){
             return {
-              disabled: !scope.canEdit(),
+              disabled: !renderScope.canEdit(),
               start: function () {
                 renderScope.targetDragging = true;
               },
@@ -307,10 +309,11 @@ var answerAreaInline = [
           };
           scope.classForCorrectness = function(choice, index){
             var choiceClass = scope.classForChoice(choice, index);
-            if(!choiceClass){
-              return;
+            if(choiceClass === "correct"){
+              return 'fa-check-circle';
+            } else if( choiceClass === "incorrect"){
+              return 'fa-times-circle';
             }
-            return choiceClass === 'correct' ? 'fa-check-circle' : 'fa-times-circle';
           };
           scope.removeChoice = function(index){
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
