@@ -2,7 +2,7 @@
 @import '../../../../../less/common';
 
 .component-placeholder {
-  .corespring-drag-and-drop-inline-render-v201 {
+  .render-csdndi-v201 {
     //the component takes the full width of the player
     width: 550px;
     max-width: 550px;
@@ -17,7 +17,7 @@
   }
 }
 
-.corespring-drag-and-drop-inline-drag-helper-v201 {
+.drag-helper-csdndi-v201 {
   position: absolute;
   display: inline-block;
   margin: 2px;
@@ -28,13 +28,7 @@
   cursor: move;
 }
 
-.corespring-drag-and-drop-inline-render-v201 {
-
-  .ui-draggable-dragging,
-  .ui-sortable-helper {
-    opacity: 0.75;
-    cursor: move;
-  }
+.render-csdndi-v201 {
 
   .ui-droppable {
     position: relative;
@@ -64,7 +58,6 @@
       display: inline-block;
       margin: 0.25em 10px 0.25em 0;
       white-space: nowrap;
-      cursor: pointer;
 
       .selected-choice-content {
         display: inline-block;
@@ -80,25 +73,8 @@
         }
 
         .remove-choice {
-          float: right;
-          list-style-type: none;
-          display: inline-block;
-          opacity: 0.3;
-          margin-left: 5px;
+          display: none;
         }
-
-        &:hover {
-          box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-
-          .remove-choice {
-            opacity: 0.8;
-          }
-        }
-
-        &:active {
-          cursor: move;
-        }
-
       }
 
       img {
@@ -106,16 +82,39 @@
         vertical-align: bottom;
       }
 
-      &.incorrect {
-        cursor: default;
+      &.editable {
+        cursor: pointer;
 
+        .remove-choice {
+          position: relative;
+          top: 0;
+          right: 0;
+          list-style-type: none;
+          display: inline-block;
+          opacity: 0.3;
+          margin-left: 5px;
+        }
+
+        &:hover {
+          .selected-choice-content {
+            box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+          }
+
+          .remove-choice {
+            opacity: 0.8;
+          }
+        }
+
+        &.ui-sortable-helper{
+          cursor: move;
+          opacity: 0.75;
+        }
+      }
+
+      &.incorrect {
         .selected-choice-content {
           .incorrect-input();
           box-shadow: none !important;
-
-          .remove-choice {
-            display: none;
-          }
         }
         .circle {
           font-size: 24px;
@@ -124,15 +123,9 @@
       }
 
       &.correct {
-        cursor: default;
-
         .selected-choice-content {
           .correct-input();
           box-shadow: none !important;
-
-          .remove-choice {
-            display: none;
-          }
         }
         .circle {
           font-size: 24px;
@@ -160,11 +153,9 @@
   }
 
   .answer-area-holder {
-
     &.warning {
       .warning-input();
     }
-
     div {
       vertical-align: bottom;
     }
@@ -200,7 +191,6 @@
     .choice {
       display: inline;
       margin: 0.25em 0;
-      cursor: pointer;
 
       .choice-content {
         display: inline-block;
@@ -211,23 +201,24 @@
         border-radius: 4px;
       }
 
-      .choice-content:hover {
-        box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
-      }
-
-      .choice-content.disabled:hover {
-        cursor: default;
-        box-shadow: none;
-      }
-
       img {
         max-width: 110px;
         vertical-align: bottom;
       }
 
-      &:active {
-        cursor: move;
+      &.editable {
+        cursor: pointer;
+
+        .choice-content:hover {
+          box-shadow: 0px 1px 11px 0px rgba(50, 50, 50, 0.75);
+        }
+
+        &.ui-draggable-dragging {
+          cursor: move;
+          opacity: 0.75;
+        }
       }
+
     }
   }
 
@@ -251,24 +242,21 @@
       }
     }
 
-    .selected-choice {
-      cursor: default !important;
+    .correct-answer-area-holder {
+      div {
+        vertical-align: bottom;
+      }
     }
 
     .selected-choice-content,
     .selected-choice-content:hover {
       .correct-input();
-
       box-shadow: none !important;
-    }
-
-    .remove-choice {
-      display: none !important;
     }
   }
 }
 
-.corespring-drag-and-drop-inline-config-v201 {
+.config-csdndi-v201 {
 
   .rounded-inputs;
 

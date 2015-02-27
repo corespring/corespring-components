@@ -186,8 +186,8 @@ describe('corespring:drag-and-drop-inline-v201:configure', function() {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       scope.$digest();
-      var c2RemoveSelector = '*[data-choice-id="c_2"] .delete-icon-button i';
       expect(testModel.correctResponse.aa_1).toContain("c_2");
+      var c2RemoveSelector = '*[data-choice-id="c_2"] .delete-icon-button i';
       $(c2RemoveSelector, element).click();
       scope.$digest();
       expect(testModel.correctResponse.aa_1).not.toContain("c_2");

@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('drag and drop inline v201', function() {
+describe.only('drag and drop inline v201', function() {
 
   "use strict";
 
@@ -23,7 +23,7 @@ describe('drag and drop inline v201', function() {
   }
 
   function choice(id) {
-    return "//div[@data-id='" + id + "']";
+    return ".choice[data-choice-id='" + id + "']";
   }
 
   function elementWithClass(s) {
@@ -39,10 +39,10 @@ describe('drag and drop inline v201', function() {
   beforeEach(function() {
     browser
       .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
-      .waitFor('.corespring-drag-and-drop-inline-render-v201', regressionTestRunnerGlobals.defaultTimeout);
+      .waitFor('.render-csdndi-v201', regressionTestRunnerGlobals.defaultTimeout);
   });
 
-  xit('correct answer results in correct feedback', function(done) {
+  it('correct answer results in correct feedback', function(done) {
     browser
       .waitFor(choice('c_2'))
       .getHTML(choice('c_2'), function(err,res){
@@ -58,7 +58,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('superfluous answer results in partial feedback', function(done) {
+  it('superfluous answer results in partial feedback', function(done) {
     browser
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
@@ -67,7 +67,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('incorrect answer results in incorrect feedback', function(done) {
+  it('incorrect answer results in incorrect feedback', function(done) {
     browser
       .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
@@ -75,7 +75,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('incorrect answer is marked as incorrect', function(done) {
+  it('incorrect answer is marked as incorrect', function(done) {
     browser
       .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
@@ -83,7 +83,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('correct answer is marked as correct', function(done) {
+  it('correct answer is marked as correct', function(done) {
     browser
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
       .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
@@ -92,7 +92,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('correct answer in wrong position is marked as incorrect', function(done) {
+  it('correct answer in wrong position is marked as incorrect', function(done) {
     browser
       .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
@@ -101,7 +101,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('superfluous answer is marked as incorrect', function(done) {
+  it('superfluous answer is marked as incorrect', function(done) {
     browser
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
@@ -110,7 +110,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('selected choices are marked correctly', function(done) {
+  it('selected choices are marked correctly', function(done) {
     browser
       .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
       .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
@@ -120,7 +120,7 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit('shows warning when no item is selected', function(done) {
+  it('shows warning when no item is selected', function(done) {
     browser
       .submitItem()
       .waitFor('.feedback.warning', regressionTestRunnerGlobals.defaultTimeout)
@@ -131,20 +131,19 @@ describe('drag and drop inline v201', function() {
       .call(done);
   });
 
-  xit("removes choice when removeAfterPlacing is true and choice has been placed", function(done){
+  it.only("removes choice when moveOnDrag is true and choice has been placed", function(done){
     browser
       .isExisting(choice('c_4'), function(err,res){
-        expect(res).toBe(true);
+        expect("choice exists: " + res).toBe("choice exists: true");
       })
       .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
-      .submitItem()
       .isExisting(choice('c_4'), function(err,res){
-        expect(res).toBe(false);
+        expect("choice removed: " + !res).toBe("choice removed: true");
       })
       .call(done);
   });
 
-  xit("shows correct answer area if answer is incorrect", function(done){
+  it("shows correct answer area if answer is incorrect", function(done){
     browser
       .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
       .submitItem()
@@ -153,23 +152,23 @@ describe('drag and drop inline v201', function() {
   });
 
   describe("math", function(){
-    xit("renders math in choice", function(done){
+    it("renders math in choice", function(done){
       browser
         .isExisting(choice('c_4') + ' ' + elementWithClass('MathJax_Preview'), regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
-    xit("renders math in answer area text", function(done){
+    it("renders math in answer area text", function(done){
       browser
         .isExisting('.answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
-    xit("renders math in selected choice", function(done){
+    it("renders math in selected choice", function(done){
       browser
         .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
         .isExisting('.answer-area-holder .selected-choice .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
-    xit("renders math in correct answer area", function(done){
+    it("renders math in correct answer area", function(done){
       browser
         .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
         .submitItem()

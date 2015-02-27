@@ -23,24 +23,28 @@ var main = [
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
 
       function renderMath(){
-        MathJaxService.parseDomForMath(10, element[0]);
+        //MathJaxService.parseDomForMath(10, element[0]);
       }
 
       function answerAreaTemplate(attributes){
         attributes = (attributes? ' ' + attributes : '');
         var answerHtml = scope.model.answerAreaXhtml;
-        var answerArea = '<div scope-forwarder-v201=""' + attributes + '>' + answerHtml + '</div>';
+        var answerArea = '<div scope-forwarder-csdndi-v201=""' + attributes + '>' + answerHtml + '</div>';
         return answerArea;
       }
 
       function withoutPlacedChoices(originalChoices){
+        console.debug("withoutPlacedChoices", originalChoices);
         return _.filter(originalChoices, function(choice) {
-          if(!choice.removeAfterPlacing){
+          console.debug("withoutPlacedChoices choice", choice);
+          console.debug("withoutPlacedChoices moveOnDrag", choice.moveOnDrag);
+          if(!choice.moveOnDrag){
             return true;
           }
           var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
             return _.pluck(c, 'id').indexOf(choice.id) >= 0;
           });
+          console.debug("withoutPlacedChoices placed", landingPlaceWithChoice);
           return _.isUndefined(landingPlaceWithChoice);
         });
       }
@@ -137,12 +141,13 @@ var main = [
       });
 
       scope.classForChoice = function(answerAreaId, choice, targetIndex) {
+        var defaultClass = scope.canEdit() ? 'editable' : undefined;
         if (!scope.correctResponse) {
-          return;
+          return defaultClass;
         }
         var correctResponse = scope.correctResponse[answerAreaId];
         if (!correctResponse) {
-          return;
+          return defaultClass;
         }
 
         var actualIndex = correctResponse.indexOf(choice.id);
@@ -160,6 +165,10 @@ var main = [
         scope.local.choices = withoutPlacedChoices(scope.originalChoices);
       };
 
+      scope.canEdit = function(){
+        return scope.editable && !scope.correctResponse;
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
@@ -171,20 +180,21 @@ var main = [
         '  </div>',
         '  <div ng-repeat="choice in local.choices"',
         '    class="choice" ',
-        '    data-drag="editable"',
+        '    ng-class="{editable:canEdit()}"',
+        '    data-drag="canEdit()"',
         '    data-jqyoui-options="draggableOptionsWithScope(choice)"',
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptionsWithScope(choice)"',
-        '    data-id="{{choice.id}}">',
-        '    <span class="choice-content" ng-class="{disabled:!editable}" ng-bind-html-unsafe="choice.label"></span>',
+        '    data-choice-id="{{choice.id}}">',
+        '    <span class="choice-content" ng-bind-html-unsafe="choice.label"></span>',
         '  </div>',
         '</div>'
       ].join('');
     }
 
     var tmpl = [
-      '<div class="corespring-drag-and-drop-inline-render-v201" drag-and-drop-controller>',
-      '  <div ng-show="!correctResponse" class="undo-start-over pull-right">',
+      '<div class="render-csdndi-v201" drag-and-drop-controller>',
+      '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
       '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i> Undo</button>',
       '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
       '  </div>',
@@ -249,15 +259,11 @@ var answerAreaInline = [
           scope.renderScope = renderScope;
           scope.answerAreaId = attr.id;
 
-          scope.canEdit = function(){
-            return !renderScope.correctResponse && renderScope.editable;
-          };
-
           var isOut = false;
 
           scope.targetSortableOptions = function(){
             return {
-              disabled: !scope.canEdit(),
+              disabled: !renderScope.canEdit(),
               start: function () {
                 renderScope.targetDragging = true;
               },
@@ -303,10 +309,11 @@ var answerAreaInline = [
           };
           scope.classForCorrectness = function(choice, index){
             var choiceClass = scope.classForChoice(choice, index);
-            if(!choiceClass){
-              return;
+            if(choiceClass === "correct"){
+              return 'fa-check-circle';
+            } else if( choiceClass === "incorrect"){
+              return 'fa-times-circle';
             }
-            return choiceClass === 'correct' ? 'fa-check-circle' : 'fa-times-circle';
           };
           scope.removeChoice = function(index){
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index,1);
@@ -316,9 +323,6 @@ var answerAreaInline = [
             return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
 
-          scope.showWarningIfEmpty = function(){
-            return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
-          };
         });
       },
       template: [
@@ -345,9 +349,9 @@ exports.framework = 'angular';
 exports.directives = [{
   directive: main
 }, {
-  name: 'scopeForwarderV201',
+  name: 'scopeForwarderCsdndiV201',
   directive: scopeForwarder
 }, {
-  name: 'answerAreaInlineV201',
+  name: 'answerAreaInlineCsdndiV201',
   directive: answerAreaInline
 }];
