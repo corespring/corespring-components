@@ -75,7 +75,7 @@ describe('corespring:ordering:configure', function () {
   function MockWiggiMathJaxFeatureDef() {
   }
 
-  beforeEach(function() {
+  beforeEach(function () {
     module(function ($provide) {
       $provide.value('ServerLogic', MockServerLogic);
       $provide.value('ImageUtils', MockImageUtils);
@@ -106,8 +106,20 @@ describe('corespring:ordering:configure', function () {
   });
 
   it('component is being registered by the container', function () {
-    expect(container.elements['1']).toNotBe(undefined);
+    expect(container.elements['1']).not.toBeUndefined();
     expect(container.elements['2']).toBeUndefined();
+  });
+
+  describe('correct response', function () {
+    it('is set by the order of choices for inplace ordering', function () {
+      var testModel = createTestModel();
+      testModel.model.config.placementType = 'inPlace';
+      delete testModel.correctResponse;
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+      var model = container.elements['1'].getModel();
+      expect(model.correctResponse).toEqual(['a','b','c']);
+    });
   });
 
   describe('partialScoring', function () {

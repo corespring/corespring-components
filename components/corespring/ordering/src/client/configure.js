@@ -191,6 +191,9 @@ var main = [
             },
             getModel: function() {
               var model = _.cloneDeep($scope.fullModel);
+              if (model.model.config.placementType === 'inPlace') {
+                model.correctResponse = _.pluck(model.model.choices, 'id');
+              }
               return model;
             }
           };
