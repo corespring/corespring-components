@@ -29,23 +29,29 @@ exports.respond = function (question, answer, settings) {
       correctResponse: question.correctResponse,
       answer: answer,
       score: 0,
-      correctClass: 'warning'
+      correctClass: 'warning',
+      feedbackPerChoice: {}
     });
   }
 
-  function countCorrectAnswers(correctResponses, answers) {
-    var count = 0;
-    var copyOfAnswers = answers.slice();
-    _.each(correctResponses, function (correctId) {
-      var index = _.indexOf(copyOfAnswers, correctId);
+  function evaluateChoices(correctResponses, answers){
+    var feedback = [];
+    var countCorrect = 0;
+    var copyOfResponses = correctResponses.slice();
+    _.each(answers, function (answerId) {
+      var index = _.indexOf(copyOfResponses, answerId);
       if (index >= 0) {
-        count++;
-        copyOfAnswers.splice(index, 1);
+        countCorrect++;
+        feedback.push('correct');
+        copyOfResponses.splice(index, 1);
+      } else {
+        feedback.push('incorrect');
       }
     });
-    return count;
+    return {correctAnswersCount: countCorrect, feedback: feedback};
   }
 
+  var feedbackPerChoice = {};
   var expectedNumberOfCorrectAnswers = 0;
   var numberOfCorrectAnswers = 0;
   var numberOfAnswers = 0;
@@ -59,8 +65,9 @@ exports.respond = function (question, answer, settings) {
       numberOfAnswers += answersForId.length;
     }
     if (_.isArray(correctResponsesForId) && _.isArray(answersForId)) {
-      var correctAnswersCount = countCorrectAnswers(correctResponsesForId, answersForId);
-      numberOfCorrectAnswers += correctAnswersCount;
+      var results = evaluateChoices(correctResponsesForId, answersForId);
+      numberOfCorrectAnswers += results.correctAnswersCount;
+      feedbackPerChoice[k] = results.feedback;
     }
   }
 
@@ -85,6 +92,7 @@ exports.respond = function (question, answer, settings) {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
     answer: answer,
+    feedbackPerChoice: feedbackPerChoice,
     score: score,
     correctClass: fb.correctness(isCorrect, isPartiallyCorrect)
   });

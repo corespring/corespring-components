@@ -135,7 +135,7 @@ var main = [
         }
       });
 
-      scope.classForChoice = function(answerAreaId, choice, targetIndex) {
+      scope.classForChoice = function(answerAreaId, choice, index) {
         var defaultClass = scope.canEdit() ? 'editable' : undefined;
         if (!scope.correctResponse) {
           return defaultClass;
@@ -145,9 +145,12 @@ var main = [
           return defaultClass;
         }
 
-        var actualIndex = correctResponse.indexOf(choice.id);
-        var isCorrect = actualIndex === targetIndex;
-        return isCorrect ? "correct" : "incorrect";
+        var result;
+        if(scope.response && scope.response.feedbackPerChoice &&
+          _.isArray(scope.response.feedbackPerChoice[answerAreaId])){
+          result = scope.response.feedbackPerChoice[answerAreaId][index];
+        }
+        return result === 'correct' ? 'correct' : 'incorrect';
       };
 
       scope.draggableOptionsWithScope = function(choice) {
