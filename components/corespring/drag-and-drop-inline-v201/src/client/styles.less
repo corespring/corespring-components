@@ -24,6 +24,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: white;
+  opacity: 0.75;
   cursor: move;
 }
 
@@ -407,9 +408,9 @@
         background-color: white;
         border: 1px solid #ccc;
         border-radius: 4px;
+        cursor: pointer;
 
         .delete-icon {
-          cursor: pointer;
           position: absolute;
           top: 2px;
           right: 2px;
@@ -418,6 +419,11 @@
             vertical-align: top;
           }
 
+        }
+
+        &.ui-sortable-helper{
+          cursor: move;
+          opacity: 0.75;
         }
       }
     }

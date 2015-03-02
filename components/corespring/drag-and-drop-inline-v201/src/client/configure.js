@@ -209,8 +209,8 @@ var main = [
               },
             appendTo: ".modal",
             cursorAt: {
-              bottom: 2,
-              right: 2
+              bottom: 10,
+              right: 10
             },
             distance: 15
 
