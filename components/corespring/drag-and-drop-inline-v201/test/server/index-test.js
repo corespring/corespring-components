@@ -8,13 +8,13 @@ server = proxyquire('../../src/server', {
   'corespring.server-shared.server.feedback-utils': fbu
 });
 
-describe('drag-and-drop-inline-v201', function () {
+describe('drag-and-drop-inline-v201', function() {
 
   var utils = null;
 
-  describe("should return correct", function () {
+  describe("should return correct", function() {
 
-    function assertCorrect(correctResponse, answers) {
+    function assertCorrect(correctResponse, answers, feedbackPerChoice) {
       var question = {
         correctResponse: _.cloneDeep(correctResponse)
       };
@@ -27,35 +27,58 @@ describe('drag-and-drop-inline-v201', function () {
         correctResponse: _.cloneDeep(correctResponse),
         answer: _.cloneDeep(answers),
         score: 1,
-        correctClass: "correct"
+        correctClass: "correct",
+        feedbackPerChoice: feedbackPerChoice
       });
     }
 
-    it("with one correct answer", function () {
-      assertCorrect({aa_1: ['c_1']}, {aa_1: ['c_1']});
+    it("with one correct answer", function() {
+      assertCorrect({
+        aa_1: ['c_1']
+      }, {
+        aa_1: ['c_1']
+      }, {aa_1:['correct']});
     });
 
-    it("with two same correct answers", function () {
-      assertCorrect({aa_1: ['c_1', 'c_1']}, {aa_1: ['c_1', 'c_1']});
+    it("with two same correct answers", function() {
+      assertCorrect({
+        aa_1: ['c_1', 'c_1']
+      }, {
+        aa_1: ['c_1', 'c_1']
+      }, {aa_1:['correct', 'correct']});
     });
 
-    it("with two different correct answers", function () {
-      assertCorrect({aa_1: ['c_1', 'c_2']}, {aa_1: ['c_1', 'c_2']});
+    it("with two different correct answers", function() {
+      assertCorrect({
+        aa_1: ['c_1', 'c_2']
+      }, {
+        aa_1: ['c_1', 'c_2']
+      }, {aa_1:['correct','correct']});
     });
 
-    it("with two different correct answers in wrong order", function () {
-      assertCorrect({aa_1: ['c_1', 'c_2']}, {aa_1: ['c_2', 'c_1']});
+    it("with two different correct answers in wrong order", function() {
+      assertCorrect({
+        aa_1: ['c_1', 'c_2']
+      }, {
+        aa_1: ['c_2', 'c_1']
+      }, {aa_1:['correct','correct']});
     });
 
-    it("with two areas", function () {
-      assertCorrect({aa_1: ['c_1'], aa_2: ['c_2']}, {aa_1: ['c_1'], aa_2: ['c_2']});
+    it("with two areas", function() {
+      assertCorrect({
+        aa_1: ['c_1'],
+        aa_2: ['c_2']
+      }, {
+        aa_1: ['c_1'],
+        aa_2: ['c_2']
+      }, {aa_1:['correct'], aa_2:['correct']});
     });
 
   });
 
-  describe("should return incorrect", function () {
+  describe("should return incorrect", function() {
 
-    function assertIncorrect(correctResponse, answers, correctClass) {
+    function assertIncorrect(correctResponse, answers, correctClass, feedbackPerChoice) {
       var question = {
         correctResponse: _.cloneDeep(correctResponse)
       };
@@ -68,58 +91,129 @@ describe('drag-and-drop-inline-v201', function () {
         correctResponse: _.cloneDeep(correctResponse),
         answer: _.cloneDeep(answers),
         score: 0,
-        correctClass: correctClass
+        correctClass: correctClass,
+        feedbackPerChoice: feedbackPerChoice
       });
     }
 
-    it("without answer", function () {
-      assertIncorrect({aa_1: ['c_1']}, {aa_1: []}, "warning");
+    it("without answer", function() {
+      assertIncorrect({
+        aa_1: ['c_1']
+      }, {
+        aa_1: []
+      }, "warning", {});
     });
 
-    it("with one incorrect answer", function () {
-      assertIncorrect({aa_1: ['c_1']}, {aa_1: ['c_2']}, "incorrect");
+    it("with one incorrect answer", function() {
+      assertIncorrect({
+        aa_1: ['c_1']
+      }, {
+        aa_1: ['c_2']
+      }, "incorrect", {
+        aa_1: ['incorrect']
+      });
     });
 
-    it("with one superfluous answer", function () {
-      assertIncorrect({aa_1: ['c_1']}, {aa_1: ['c_1','c_2']}, "partial");
+    it("with one superfluous answer", function() {
+      assertIncorrect({
+        aa_1: ['c_1']
+      }, {
+        aa_1: ['c_1', 'c_2']
+      }, "partial", {
+        aa_1: ['correct', 'incorrect']
+      });
     });
 
-    it("with one of two expected answers", function () {
-      assertIncorrect({aa_1: ['c_1', 'c_2']}, {aa_1: ['c_1']}, "partial");
+    it("with one of two expected answers", function() {
+      assertIncorrect({
+        aa_1: ['c_1', 'c_2']
+      }, {
+        aa_1: ['c_1']
+      }, "partial", {
+        aa_1: ['correct']
+      });
     });
 
-    it("with one of two expected answers", function () {
-      assertIncorrect({aa_1: ['c_1', 'c_2']}, {aa_1: ['c_2']}, "partial");
+    it("with one of two expected answers", function() {
+      assertIncorrect({
+        aa_1: ['c_1', 'c_2']
+      }, {
+        aa_1: ['c_2']
+      }, "partial", {
+        aa_1: ['correct']
+      });
     });
 
-    it("with one of two expected answers", function () {
-      assertIncorrect({aa_1: ['c_1', 'c_1']}, {aa_1: ['c_1']}, "partial");
+    it("with one of two expected answers", function() {
+      assertIncorrect({
+        aa_1: ['c_1', 'c_1']
+      }, {
+        aa_1: ['c_1']
+      }, "partial", {
+        aa_1: ['correct']
+      });
     });
 
-    it("with one correct and one incorrect", function () {
-      assertIncorrect({aa_1: ['c_1', 'c_1']}, {aa_1: ['c_1', 'c_2']}, "partial");
+    it("with one correct and one incorrect", function() {
+      assertIncorrect({
+        aa_1: ['c_1', 'c_1']
+      }, {
+        aa_1: ['c_1', 'c_2']
+      }, "partial", {
+        aa_1: ['correct', 'incorrect']
+      });
     });
 
-    it("with one correct and one incorrect", function () {
-      assertIncorrect({aa_1: ['c_1', 'c_2']}, {aa_1: ['c_1', 'c_1']}, "partial");
+    it("with one correct and one incorrect", function() {
+      assertIncorrect({
+        aa_1: ['c_1', 'c_2']
+      }, {
+        aa_1: ['c_1', 'c_1']
+      }, "partial", {
+        aa_1: ['correct', 'incorrect']
+      });
     });
 
-    it("with two incorrect answers", function () {
-      assertIncorrect({aa_1: ['c_1', 'c_2']}, {aa_1: ['c_3', 'c_4']}, "incorrect");
+    it("with two incorrect answers", function() {
+      assertIncorrect({
+        aa_1: ['c_1', 'c_2']
+      }, {
+        aa_1: ['c_3', 'c_4']
+      }, "incorrect", {
+        aa_1: ['incorrect', 'incorrect']
+      });
     });
 
-    it("with two areas and one incorrect", function () {
-      assertIncorrect({aa_1: ['c_1'], aa_2: ['c_2']}, {aa_1: ['c_1'], aa_2: ['c_4']}, "partial");
+    it("with two areas and one incorrect", function() {
+      assertIncorrect({
+        aa_1: ['c_1'],
+        aa_2: ['c_2']
+      }, {
+        aa_1: ['c_1'],
+        aa_2: ['c_4']
+      }, "partial", {
+        aa_1: ['correct'],
+        aa_2: ['incorrect']
+      });
     });
 
-    it("with two areas and two incorrect", function () {
-      assertIncorrect({aa_1: ['c_1'], aa_2: ['c_2']}, {aa_1: ['c_3'], aa_2: ['c_4']}, "incorrect");
+    it("with two areas and two incorrect", function() {
+      assertIncorrect({
+        aa_1: ['c_1'],
+        aa_2: ['c_2']
+      }, {
+        aa_1: ['c_3'],
+        aa_2: ['c_4']
+      }, "incorrect", {
+        aa_1: ['incorrect'],
+        aa_2: ['incorrect']
+      });
     });
 
   });
 
 
-  it('should return incorrect + feedback for an empty answer', function () {
+  it('should return incorrect + feedback for an empty answer', function() {
     var outcome = server.respond({
         feedback: {}
       },
@@ -133,12 +227,13 @@ describe('drag-and-drop-inline-v201', function () {
       correctResponse: null,
       correctClass: 'warning',
       answer: null,
-      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
+      feedbackPerChoice: {}
     });
   });
 
 
-  it('should return incorrect + feedback for an empty answer when using custom feedback', function () {
+  it('should return incorrect + feedback for an empty answer when using custom feedback', function() {
     var outcome = server.respond({
       feedback: {
         incorrectFeedbackType: 'custom',
@@ -153,7 +248,8 @@ describe('drag-and-drop-inline-v201', function () {
       correctResponse: null,
       correctClass: 'warning',
       answer: null,
-      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
+      feedbackPerChoice: {}
     });
   });
 
