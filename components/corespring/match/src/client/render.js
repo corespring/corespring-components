@@ -23,14 +23,14 @@ var main = [
       var UNKNOWN = "unknown";
       var ALL_CORRECT = "all_correct";
 
-      function updateInputType(model){
-        if (!model || !model.answerType){
+      function updateInputType(model) {
+        if (!model || !model.answerType) {
           scope.inputType = INPUT_TYPE_DEFAULT;
         }
-        else if (model.answerType === YES_NO || model.answerType === TRUE_FALSE){
+        else if (model.answerType === YES_NO || model.answerType === TRUE_FALSE) {
           scope.inputType = INPUT_TYPE_RADIOBUTTON;
         }
-        else if (model.answerType === MULTIPLE){
+        else if (model.answerType === MULTIPLE) {
           scope.inputType = INPUT_TYPE_CHECKBOX;
         }
         else{
@@ -38,15 +38,17 @@ var main = [
         }
       }
 
-      function whereIdIsEqual(id){
-        return function(match){return match.id === id;};
+      function whereIdIsEqual(id) {
+        return function(match) {
+          return match.id === id;
+        };
       }
 
-      function getAnswers(){
-         var result = scope.matchModel.rows.map(function(row){
+      function getAnswers() {
+         var result = scope.matchModel.rows.map(function(row) {
           return {
             "id" : row.id,
-            "matchSet" : row.matchSet.map(function(match){
+            "matchSet" : row.matchSet.map(function(match) {
               return match.value;
             })
           };
@@ -55,17 +57,17 @@ var main = [
         return result;
       }
 
-      function prepareModel(rawModel, session){
+      function prepareModel(rawModel, session) {
 
         var answerType = rawModel.answerType || TRUE_FALSE;
 
-        function prepareColumns(){
+        function prepareColumns() {
           if (answerType === YES_NO || answerType === TRUE_FALSE) {
-            if (rawModel.columns.length !== 3){
+            if (rawModel.columns.length !== 3) {
               $log.error('Match interaction with boolean answer type should have 2 columns, found ' + rawModel.columns.length);
             }
             return [  _.cloneDeep(rawModel.columns[0]),
-                      { "labelHtml": answerType === TRUE_FALSE ? TRUE_LABEL : YES_LABEL},
+                      { "labelHtml": answerType === TRUE_FALSE ? TRUE_LABEL : YES_LABEL },
                       { "labelHtml": answerType === TRUE_FALSE ? FALSE_LABEL : NO_LABEL } ];
           }
 
@@ -74,15 +76,15 @@ var main = [
 
         var answersExist = (session && session.answers);
 
-        function prepareRows(){
-          return rawModel.rows.map(function(row){
+        function prepareRows() {
+          return rawModel.rows.map(function(row) {
             var cloneRow = _.cloneDeep(row);
 
             cloneRow.matchSet = answersExist ?
-              _.find(session.answers, whereIdIsEqual(row.id)).matchSet.map(function(match){
+              _.find(session.answers, whereIdIsEqual(row.id)).matchSet.map(function(match) {
                 return { "value": match };
               }) :
-              _.range(rawModel.columns.length - 1).map(function(){
+              _.range(rawModel.columns.length - 1).map(function() {
                 return { "value": false };
               });
 
@@ -117,7 +119,7 @@ var main = [
             _.each(response.feedback.correctnessMatrix, function(correctnessRow) {
               var modelRow = _.find(scope.matchModel.rows, whereIdIsEqual(correctnessRow.id));
               if (modelRow !== null) {
-                for(var i=0;i<modelRow.matchSet.length;i++){
+                for(var i=0;i<modelRow.matchSet.length;i++) {
                   modelRow.matchSet[i].correct = correctnessRow.matchSet[i].correctness;
                 }
               }
@@ -150,42 +152,42 @@ var main = [
         }
       };
 
-      scope.showSeeCorrectAnswerLink = function(feedback){
+      scope.showSeeCorrectAnswerLink = function(feedback) {
         return (feedback && feedback.correctness &&
           feedback.correctness !== ALL_CORRECT);
       };
 
-      scope.getCorrectness = function(correct){
+      scope.getCorrectness = function(correct) {
         return !correct ? UNKNOWN : correct;
       };
 
-      scope.onClickMatch = function(matchSet,index){
+      scope.onClickMatch = function(matchSet,index) {
         if(scope.editable && !matchSet[index].correct ) {
           if (scope.inputType === INPUT_TYPE_RADIOBUTTON) {
-            for (var i =0 ;i < matchSet.length; i++){
+            for (var i =0 ;i < matchSet.length; i++) {
               matchSet[i].value = (i === index);
             }
           }
         }
       };
 
-      scope.getIconClass = function(row,$index){
+      scope.getIconClass = function(row,$index) {
         var correctRow = _.find(scope.data.correctResponse,whereIdIsEqual(row.id));
 
-        if (correctRow.matchSet[$index]){
+        if (correctRow.matchSet[$index]) {
           return (scope.inputType === 'checkbox') ?
             "correct-indicator fa-check-square" : "correct-indicator fa-check-circle";
         }
-        else{
+        else {
           return 'unknown';
         }
       };
 
-      scope.isCheckBox = function(inputType){
+      scope.isCheckBox = function(inputType) {
         return inputType === 'checkbox';
       };
 
-      scope.isRadioButton = function(inputType){
+      scope.isRadioButton = function(inputType) {
         return inputType === 'radiobutton';
       };
 

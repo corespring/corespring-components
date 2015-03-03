@@ -14,9 +14,9 @@ exports.preprocess = function(json) {
 
 exports.isCorrect = function(answer, correctAnswer) {
   return _.reduce(answer,function(acc, answerRow) {
-    var correctMatchSet = _.find(correctAnswer, function(correctRow){
+    var correctMatchSet = _.find(correctAnswer, function(correctRow) {
       return correctRow.id === answerRow.id;
-      }).matchSet;
+    }).matchSet;
 
     return acc && _.isEqual(answerRow.matchSet,correctMatchSet);
   }, true);
@@ -24,13 +24,13 @@ exports.isCorrect = function(answer, correctAnswer) {
 
 function countCorrectAnswers (answer, correctAnswer) {
   return _.reduce(answer,function(acc1, answerRow) {
-    var correctMatchSet = _.find(correctAnswer, function(correctRow){
+    var correctMatchSet = _.find(correctAnswer, function(correctRow) {
       return correctRow.id === answerRow.id;
     }).matchSet;
 
     var zippedMatchSet = _.zip(correctMatchSet,answerRow.matchSet);
 
-    return acc1 + _.reduce(zippedMatchSet,function(acc2, pair){
+    return acc1 + _.reduce(zippedMatchSet,function(acc2, pair) {
       var correctMatch = pair[0];
       var answeredMatch = pair[1];
       return acc2 + (correctMatch && answeredMatch ? 1 : 0);
@@ -48,38 +48,38 @@ function getCorrectnessString(answer, correctAnswer) {
 
   var totalCorrectAnswers = countCorrectAnswers(correctAnswer, correctAnswer);
 
-  if (totalCorrectAnswers === numAnsweredCorrectly){
+  if (totalCorrectAnswers === numAnsweredCorrectly) {
     return ALL_CORRECT;
-  }else if(numAnsweredCorrectly === 0){
+  } else if(numAnsweredCorrectly === 0) {
     return ALL_INCORRECT;
-  }else if (numAnsweredCorrectly < totalCorrectAnswers){
+  } else if (numAnsweredCorrectly < totalCorrectAnswers) {
     return SOME_CORRECT;
-  }else{
+  } else {
     return null;
   }
 }
 
-function whereIdIsEqual(id){
-  return function(match){
+function whereIdIsEqual(id) {
+  return function(match) {
     return match.id === id;
   };
 }
 
 function buildCorrectnessMatrix(question, answer, settings) {
 
-  var matrix = question.correctResponse.map(function(correctRow){
+  var matrix = question.correctResponse.map(function(correctRow) {
     var answerRow = _.find(answer, whereIdIsEqual(correctRow.id));
     var zippedMatchSet = _.zip(correctRow.matchSet,answerRow.matchSet);
 
-    var matchSet = zippedMatchSet.map(function(zippedMatches){
+    var matchSet = zippedMatchSet.map(function(zippedMatches) {
 
       var correctMatch = zippedMatches[0];
       var answeredMatch = zippedMatches[1];
       var correctness = "";
 
-      if (answeredMatch){
+      if (answeredMatch) {
         correctness = correctMatch ? "correct" : "incorrect";
-      }else{
+      } else {
         correctness = "unknown";
       }
 
@@ -104,23 +104,23 @@ defaultFeedbackTable[ALL_CORRECT] = keys.DEFAULT_CORRECT_FEEDBACK;
 defaultFeedbackTable[ALL_INCORRECT] = keys.DEFAULT_INCORRECT_FEEDBACK;
 defaultFeedbackTable[SOME_CORRECT] = keys.DEFAULT_PARTIAL_FEEDBACK;
 
-function buildFeedbackSummary(question,correctness){
+function buildFeedbackSummary(question,correctness) {
   var feedbackDef = (question && question.feedback && question.feedback[correctness]);
 
-  if (!feedbackDef || !feedbackDef.type || feedbackDef.type.length === 0 || feedbackDef.type === 'none'){
+  if (!feedbackDef || !feedbackDef.type || feedbackDef.type.length === 0 || feedbackDef.type === 'none') {
     return null;
-  }else if (feedbackDef.type === 'default'){
+  } else if (feedbackDef.type === 'default') {
     return defaultFeedbackTable[correctness];
-  }else if (feedbackDef.text && feedbackDef.text.length > 0){
+  } else if (feedbackDef.text && feedbackDef.text.length > 0) {
     return feedbackDef.text;
-  }else{
+  } else {
     return defaultFeedbackTable[correctness];
   }
 }
 
 function calculateScore(question, answer) {
 
-  function countWhenTrue(acc,bool){
+  function countWhenTrue(acc,bool) {
     return acc + (bool ? 1 : 0);
   }
 
@@ -130,40 +130,40 @@ function calculateScore(question, answer) {
     return countWhenTrue(acc, answer &&  !correct);
   }
 
-  function countWhenTrueAndCorrect(acc, correct_answer_pair){
+  function countWhenTrueAndCorrect(acc, correct_answer_pair) {
     var correct = correct_answer_pair[0];
     var answer = correct_answer_pair[1];
     return countWhenTrue(acc, answer && correct);
   }
 
-  function getPartialScores(){
+  function getPartialScores() {
 
-    function validateScoreDefinition(){
+    function validateScoreDefinition() {
       var result = {
         valid: false,
         errors:[]
       };
 
       var validation = _.reduce(question.correctResponse, function(acc, row) {
-        if (_.isNumber(question.partialScores[row.id])){
+        if (_.isNumber(question.partialScores[row.id])) {
           acc.hasAllDefs = acc.hasAllDefs && true;
           acc.scoreSumm = acc.scoreSumm + question.partialScores[row.id];
-        }else{
+        } else {
           acc.hasAllDefs = false;
         }
         return acc;
       },{ hasAllDefs :true, scoreSumm : 0 });
 
-      if (validation.hasAllDefs && validation.scoreSumm === 100){
+      if (validation.hasAllDefs && validation.scoreSumm === 100) {
         result.valid = true;
       }
 
-      if (!validation.hasAllDefs){
+      if (!validation.hasAllDefs) {
         result.valid = false;
         result.errors.push("number partialScores in match component should be the same as number of rows");
       }
 
-      if (validation.scoreSumm !== 100){
+      if (validation.scoreSumm !== 100) {
         result.valid = false;
         result.errors.push("The summary of all partial scores should be equal to 100");
       }
@@ -172,19 +172,19 @@ function calculateScore(question, answer) {
     }
 
     // Either return scores from the question or create evenly distributed scores
-    if (question.partialScores){
+    if (question.partialScores) {
       var validationResult = validateScoreDefinition(question);
 
-      if (validationResult.valid){
+      if (validationResult.valid) {
         return question.partialScores;
       } else {
-        if (console){
-          _.forEach(validationResult.errors,function(error) { console.error(error); });
+        if (console) {
+          _.forEach(validationResult.errors, function(error) { console.error(error); });
         }
         return null;
       }
-    }else{
-      var evenScoreDistribution = 100/question.correctResponse.length;
+    } else {
+      var evenScoreDistribution = 100 / question.correctResponse.length;
       var scoreDefinitions = _.reduce(question.correctResponse, function(acc, row) {
         acc[row.id] = evenScoreDistribution;
         return acc;
@@ -193,7 +193,7 @@ function calculateScore(question, answer) {
     }
   }
 
-  var calculatePartialScore = function(){
+  var calculatePartialScore = function() {
 
     var partialScores = getPartialScores(question);
 
@@ -209,7 +209,7 @@ function calculateScore(question, answer) {
 
       var totalCorrectAnswers = _.reduce(correctMatchSet,countWhenTrue,0);
 
-      if (totalCorrectAnswers === 0){
+      if (totalCorrectAnswers === 0) {
         return acc;
       }
 
@@ -236,7 +236,7 @@ function calculateScore(question, answer) {
   if (maxCorrect > 1 && question.allowPartialScoring) {
     return calculatePartialScore() / 100;
   }
-  else if (correctCount < maxCorrect){
+  else if (correctCount < maxCorrect) {
     return 0;
   }
 }
@@ -249,7 +249,7 @@ exports.respond = function(question, answer, settings) {
 
   var correctness = getCorrectnessString(answer, question.correctResponse);
 
-  if(!answer){
+  if(!answer) {
     return {
       correctness: 'incorrect',
       score: 0,
@@ -272,7 +272,7 @@ exports.respond = function(question, answer, settings) {
       correctnessMatrix : buildCorrectnessMatrix(question, answer, settings),
       summary : buildFeedbackSummary(question,correctness)
     };
-    if (question.summaryFeedback){
+    if (question.summaryFeedback) {
       response.summaryFeedback = question.summaryFeedback;
     }
   }
