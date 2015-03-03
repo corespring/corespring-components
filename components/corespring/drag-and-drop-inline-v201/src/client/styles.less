@@ -35,7 +35,7 @@
     bottom: 0;
     margin-bottom: 0px;
     min-width: 50px;
-    min-height: 30px;
+    min-height: 14px;
     height: auto;
     -webkit-padding-start: 0;
     -webkit-padding-end: 0;
@@ -45,7 +45,7 @@
     display: inline-block;
     border-bottom: 1px solid black;
     min-width: 70px;
-    min-height: 30px;
+    min-height: 14px;
     height: auto;
     margin-right: 5px;
     vertical-align: middle;
@@ -159,7 +159,6 @@
       .warning-input();
     }
     div {
-      // vertical-align: bottom;
     }
   }
 
@@ -368,8 +367,8 @@
 
   .answer-area-inline-hover {
     background: white;
-    border: 3px dashed #ccc;
-    border-radius: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
   }
 
   .answer-area-inline {
@@ -384,11 +383,10 @@
 
     .delete-answer-area-button {
       position: absolute;
-      top: 0;
-      right: 0;
-      padding: 5px;
-      font-size: 18px;
+      bottom: -10px;
+      right: 5px;
       cursor: pointer;
+      font-size: 1.25em;
     }
 
     .sortable-choices {
@@ -407,19 +405,21 @@
         position: relative;
         display: inline-block;
         margin: 2px;
-        padding: 1px 20px 1px 5px;
+        padding: 1px 30px 1px 10px;
         background-color: white;
         border: 1px solid #ccc;
         border-radius: 4px;
         cursor: pointer;
 
+
         .delete-icon {
           position: absolute;
           top: 2px;
-          right: 2px;
+          right: 8px;
+          opacity: 0.3;
 
-          i {
-            vertical-align: top;
+          &:hover{
+            opacity: 1;
           }
 
         }
