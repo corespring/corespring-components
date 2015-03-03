@@ -510,9 +510,9 @@ var configAnswerAreaInline = [
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in correctAnswers[answerAreaId] track by trackId(choice)">',
         '      <div class="delete-icon"',
-        '        tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom"' +
+        '        tooltip="remove choice" tooltip-append-to-body="true" tooltip-placement="bottom"' +
         '        ng-click="removeCorrectAnswer($index)">',
-        '        <i class="fa fa-times-circle"></i>',
+        '        <i class="fa fa-close"></i>',
         '      </div>',
         '      <span ng-bind-html-unsafe="choice.label"></span>',
         '    </li>',
@@ -522,7 +522,7 @@ var configAnswerAreaInline = [
         '  </ul>',
         '  <div class="delete-answer-area-button"',
         '      ng-click="removeAnswerArea()">',
-        '    <i class="fa fa-trash-o"',
+        '    <i class="fa fa-times-circle"',
         '      tooltip="delete answer blank" tooltip-append-to-body="true" tooltip-placement="bottom">',
         '    </i>',
         '  </div>',
