@@ -265,7 +265,7 @@ var answerAreaInline = [
 
           scope.targetSortableOptions = function() {
             return {
-              disabled: scope.canEdit(),
+              disabled: !scope.canEdit(),
               start: function() {
                 renderScope.targetDragging = true;
               },
