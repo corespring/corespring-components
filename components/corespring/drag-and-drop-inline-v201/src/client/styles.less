@@ -30,6 +30,25 @@
 
 .render-csdndi-v201 {
 
+  .answer-area-inline{
+    .selected-choice.incorrect{
+      padding-right:13px;
+      .circle{
+        right: -3px;
+      }
+    }
+  }
+
+  .answer-area-inline{
+    .selected-choice.correct{
+      padding-right:13px;
+      .circle{
+        right: -3px;
+        position: absolute;
+        top: 6px;
+      }
+    }
+  }
   .ui-droppable {
     position: relative;
     bottom: 0;
@@ -51,15 +70,22 @@
     vertical-align: middle;
 
     .empty-answer-area-warning {
-      margin-right: 5px;
       color: @warning-color;
-      float: right;
+      font-size: 24px;
+      padding-left: 25px;
+      height: 29px;
+      position: relative;
+
+      i{
+        position: absolute;
+      }
     }
 
     .selected-choice {
       display: inline-block;
       margin: 0.25em 3px 0.25em 7px;
       white-space: nowrap;
+      position: relative;
 
       .selected-choice-content {
         display: inline-block;
@@ -81,7 +107,6 @@
 
       img {
         max-width: 110px;
-        vertical-align: bottom;
       }
 
       &.editable {
@@ -116,18 +141,22 @@
       &.incorrect {
         .selected-choice-content {
           .incorrect-input();
-          box-shadow: none !important;
+            margin-right: 10px;
+            // box-shadow: none !important;
         }
         .circle {
           font-size: 24px;
           color: @incorrect-color;
+          position: absolute;
+          top: 6px;
         }
       }
 
       &.correct {
         .selected-choice-content {
           .correct-input();
-          box-shadow: none !important;
+          margin-right: 10px;
+          // box-shadow: none !important;
         }
         .circle {
           font-size: 24px;
@@ -157,6 +186,8 @@
   .answer-area-holder {
     &.warning {
       .warning-input();
+      border-radius: 4px;
+      padding: 1em;
     }
     div {
     }
@@ -183,7 +214,8 @@
   }
 
   .choices-holder {
-    margin-top: 20px;
+    margin-top: 1em;
+    margin-bottom: 1em;
     position: relative;
     padding: 1em;
     border: 1px solid #cccccc;
@@ -205,7 +237,6 @@
 
       img {
         max-width: 110px;
-        vertical-align: bottom;
       }
 
       &.editable {
@@ -246,14 +277,12 @@
 
     .correct-answer-area-holder {
       div {
-        vertical-align: bottom;
       }
     }
 
     .selected-choice-content,
     .selected-choice-content:hover {
       .correct-input();
-      box-shadow: none !important;
     }
   }
 }
