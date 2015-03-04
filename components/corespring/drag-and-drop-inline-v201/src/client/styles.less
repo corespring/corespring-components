@@ -1,5 +1,12 @@
 @import '../../../../../less/common';
 
+.limit-image-size() {
+  img {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
+
 .component-placeholder {
   .render-csdndi-v201 {
     //the component takes the full width of the player
@@ -26,9 +33,13 @@
   background-color: white;
   opacity: 0.75;
   cursor: move;
+
+  .limit-image-size();
 }
 
 .render-csdndi-v201 {
+
+  .limit-image-size();
 
   .ui-droppable {
     position: relative;
@@ -57,7 +68,7 @@
       height: 29px;
       position: relative;
 
-      i{
+      i {
         position: absolute;
       }
     }
@@ -85,21 +96,20 @@
         }
       }
 
-      img {
-        max-width: 110px;
-      }
-
       &.editable {
         cursor: pointer;
 
+        .html-wrapper {
+          padding-right: 10px;
+        }
+
         .remove-choice {
-          position: relative;
-          top: 0;
-          right: 0;
+          position: absolute;
+          top: 0px;
+          right: 7px;
           list-style-type: none;
-          display: inline-block;
+          display: block;
           opacity: 0.3;
-          margin-left: 5px;
         }
 
         &:hover {
@@ -112,19 +122,19 @@
           }
         }
 
-        &.ui-sortable-helper{
+        &.ui-sortable-helper {
           cursor: move;
           opacity: 0.75;
         }
       }
 
       &.incorrect {
-        padding-right:13px;
+        padding-right: 13px;
 
         .selected-choice-content {
           .incorrect-input();
-            margin-right: 10px;
-            // box-shadow: none !important;
+          margin-right: 10px;
+          // box-shadow: none !important;
         }
         .circle {
           font-size: 24px;
@@ -136,7 +146,7 @@
       }
 
       &.correct {
-        padding-right:13px;
+        padding-right: 13px;
 
         .selected-choice-content {
           .correct-input();
@@ -221,10 +231,6 @@
         border-radius: 4px;
       }
 
-      img {
-        max-width: 110px;
-      }
-
       &.editable {
         cursor: pointer;
 
@@ -276,6 +282,8 @@
 .config-csdndi-v201 {
 
   .rounded-inputs;
+
+  .limit-image-size();
 
   .mini-wiggi-wiz {
     background-color: white;
@@ -426,20 +434,19 @@
         border-radius: 4px;
         cursor: pointer;
 
-
         .delete-icon {
           position: absolute;
           top: 2px;
           right: 8px;
           opacity: 0.3;
 
-          &:hover{
+          &:hover {
             opacity: 1;
           }
 
         }
 
-        &.ui-sortable-helper{
+        &.ui-sortable-helper {
           cursor: move;
           opacity: 0.75;
         }
