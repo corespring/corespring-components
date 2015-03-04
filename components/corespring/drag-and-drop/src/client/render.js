@@ -112,7 +112,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
             };
           },
           template: [
-          '<div class="view-drag-and-drop">',
+          '<div class="view-drag-and-drop-legacy see-solution" style="display: block;">',
           '   <div class="modal-header">',
           '     <h3>Answer</h3>',
           '   </div>',

@@ -26,7 +26,6 @@
     display: inline-block;
 }
 
-.modal .choice,
 .view-drag-and-drop .choice {
     vertical-align: top;
     background-color: #EFEFEF;
@@ -72,8 +71,7 @@
     margin-right: 10px;
 }
 
-.view-drag-and-drop .sizerHolder,
-.modal .sizerHolder {
+.view-drag-and-drop .sizerHolder{
     visibility: hidden;
     position: fixed;
     max-width: 500px;
