@@ -1,6 +1,6 @@
 /* global exports */
-var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope',
-  function(DragAndDropTemplates, $compile, $log, $modal, $rootScope) {
+var main = ['DragAndDropTemplates','$compile', '$log', '$rootScope',
+  function(DragAndDropTemplates, $compile, $log, $rootScope) {
 
     "use strict";
 
