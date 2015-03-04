@@ -259,10 +259,6 @@ var answerAreaInline = [
           scope.renderScope = renderScope;
           scope.answerAreaId = attr.id;
 
-          scope.canEdit = function() {
-            return renderScope.canEdit();
-          };
-
           function mouseIsOverElement(event){
             var position = el.offset();
             var x = event.pageX - position.left;
@@ -275,18 +271,16 @@ var answerAreaInline = [
           scope.targetSortableOptions = function() {
             return {
               connectWith: "." + renderScope.dragAndDropScopeId,
-              disabled: !scope.canEdit(),
+              disabled: !renderScope.canEdit(),
               tolerance: 'pointer',
               start: function(event, ui) {
+                isOut = false;
                 renderScope.targetDragging = true;
               },
               stop: function(event, ui) {
                 renderScope.targetDragging = false;
                 if (isOut) {
-                  isOut = false;
-                  var index = ui.item.sortable.index;
-                  ui.item.sortable.cancel();
-                  scope.removeChoice(index);
+                  scope.removeChoice(ui.item.sortable.index);
                 }
               },
               receive: function(event,ui){
@@ -297,14 +291,18 @@ var answerAreaInline = [
               },
               beforeStop: function(event, ui) {
                 isOut = !mouseIsOverElement(event);
+              },
+              activate: function(event,ui){
+                el.addClass('answer-area-inline-active');
+              },
+              deactivate: function(event,ui){
+                el.removeClass('answer-area-inline-active');
               }
+
             };
           };
 
           scope.droppableOptions = {
-            accept: function() {
-              return !renderScope.targetDragging;
-            },
             activeClass: 'answer-area-inline-active',
             distance: 5,
             hoverClass: 'answer-area-inline-hover',
@@ -337,25 +335,13 @@ var answerAreaInline = [
             return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
 
-          scope.sortableNgClasses = function(){
-            var result = [renderScope.dragAndDropScopeId];
-            if(renderScope.targetDragging){
-              result.push('answer-area-inline-active');
-            }
-            return result.join(" ");
-          };
-
-          scope.onMouseUp = function(){
-            console.log("onMouseUp");
-          };
-
         });
       },
       template: [
-        '<div class="answer-area-inline" ng-mouseup="onMouseUp()">',
+        '<div class="answer-area-inline">',
         '  <div ui-sortable="targetSortableOptions()"',
         '    ng-model="renderScope.landingPlaceChoices[answerAreaId]"',
-        '    ng-class="sortableNgClasses()"',
+        '    ng-class="renderScope.dragAndDropScopeId"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
