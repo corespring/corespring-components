@@ -105,6 +105,8 @@ var main = [
           var solutionScope = $rootScope.$new();
           solutionScope.landingPlaceChoices = {};
           solutionScope.model = scope.model;
+          solutionScope.canEdit = function(){return false;};
+          solutionScope.classForChoice = function(){return "";};
           _.each(scope.correctResponse, function(v, k) {
             solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
               return scope.choiceForId(r);
@@ -146,8 +148,8 @@ var main = [
         }
 
         var result;
-        if(scope.response && scope.response.feedbackPerChoice &&
-          _.isArray(scope.response.feedbackPerChoice[answerAreaId])){
+        if (scope.response && scope.response.feedbackPerChoice &&
+          _.isArray(scope.response.feedbackPerChoice[answerAreaId])) {
           result = scope.response.feedbackPerChoice[answerAreaId][index];
         }
         return result === 'correct' ? 'correct' : 'incorrect';
@@ -257,42 +259,50 @@ var answerAreaInline = [
           scope.renderScope = renderScope;
           scope.answerAreaId = attr.id;
 
-          var isOut = false;
+          function mouseIsOverElement(event){
+            var position = el.offset();
+            var x = event.pageX - position.left;
+            var y = event.pageY - position.top;
+            return x >= 0 && x <= el.width() && y >= 0 && y <= el.height();
+          }
 
-          scope.canEdit = function() {
-            return renderScope && _.isFunction(renderScope.canEdit) && renderScope.canEdit();
-          };
+          var isOut = false;
 
           scope.targetSortableOptions = function() {
             return {
-              disabled: scope.canEdit(),
-              start: function() {
+              connectWith: "." + renderScope.dragAndDropScopeId,
+              disabled: !renderScope.canEdit(),
+              tolerance: 'pointer',
+              start: function(event, ui) {
+                isOut = false;
                 renderScope.targetDragging = true;
               },
-              stop: function() {
+              stop: function(event, ui) {
                 renderScope.targetDragging = false;
-              },
-              beforeStop: function(event, ui) {
                 if (isOut) {
-                  isOut = false;
-                  var index = ui.item.sortable.index;
-                  ui.item.sortable.cancel();
-                  scope.removeChoice(index);
+                  scope.removeChoice(ui.item.sortable.index);
                 }
               },
-              out: function(event, ui) {
-                isOut = true;
-              },
-              over: function(event, ui) {
+              receive: function(event,ui){
                 isOut = false;
+              },
+              remove: function(event,ui){
+                isOut = false;
+              },
+              beforeStop: function(event, ui) {
+                isOut = !mouseIsOverElement(event);
+              },
+              activate: function(event,ui){
+                el.addClass('answer-area-inline-active');
+              },
+              deactivate: function(event,ui){
+                el.removeClass('answer-area-inline-active');
               }
+
             };
           };
 
           scope.droppableOptions = {
-            accept: function() {
-              return !renderScope.targetDragging;
-            },
             activeClass: 'answer-area-inline-active',
             distance: 5,
             hoverClass: 'answer-area-inline-hover',
@@ -307,7 +317,7 @@ var answerAreaInline = [
             return _.uniqueId();
           };
           scope.classForChoice = function(choice, index) {
-            return renderScope && renderScope.classForChoice ? renderScope.classForChoice(scope.answerAreaId, choice, index) : undefined;
+            return renderScope.classForChoice(scope.answerAreaId, choice, index);
           };
           scope.classForCorrectness = function(choice, index) {
             var choiceClass = scope.classForChoice(choice, index);
@@ -331,6 +341,7 @@ var answerAreaInline = [
         '<div class="answer-area-inline">',
         '  <div ui-sortable="targetSortableOptions()"',
         '    ng-model="renderScope.landingPlaceChoices[answerAreaId]"',
+        '    ng-class="renderScope.dragAndDropScopeId"',
         '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
