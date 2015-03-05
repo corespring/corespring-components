@@ -1,5 +1,7 @@
 @import '../../../../../less/common';
 
+@max-width-choice-content: 421px;
+
 .limit-image-size() {
   img {
     max-width: 200px;
@@ -84,11 +86,13 @@
         padding: 0.5em 0.5em 0.5em 0.75em;
         background: #efefef;
         border-radius: 4px;
+        max-width: @max-width-choice-content;
 
         .html-wrapper {
           list-style-type: none;
           display: inline-block;
           padding-right: 5px;
+
         }
 
         .remove-choice {
@@ -223,7 +227,7 @@
 
       .choice-content {
         display: inline-block;
-        width: auto;
+        max-width: @max-width-choice-content;
         margin-right: 0.25em;
         margin-top: 0.25em;
         padding: 0.5em 0.75em;
