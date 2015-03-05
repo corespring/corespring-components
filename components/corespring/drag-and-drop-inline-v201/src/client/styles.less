@@ -1,6 +1,7 @@
 @import '../../../../../less/common';
 
 @max-width-choice-content: 421px;
+@line-height-answer-area: 250%;
 
 .limit-image-size() {
   img {
@@ -79,11 +80,12 @@
       display: inline-block;
       margin: 0.25em 3px 0.25em 7px;
       position: relative;
+      line-height: normal;
 
       .selected-choice-content {
         display: inline-block;
         margin-right: 0;
-        padding: 0.5em 0.5em 0.5em 0.75em;
+        padding: 0em 0.5em 0em 0.75em;
         background: #efefef;
         border-radius: 4px;
         max-width: @max-width-choice-content;
@@ -92,7 +94,6 @@
           list-style-type: none;
           display: inline-block;
           padding-right: 5px;
-
         }
 
         .remove-choice {
@@ -189,8 +190,8 @@
       border-radius: 4px;
       padding: 1em;
     }
-    div {
-    }
+
+    line-height: @line-height-answer-area;
   }
 
   .feedback.panel {
@@ -230,7 +231,7 @@
         max-width: @max-width-choice-content;
         margin-right: 0.25em;
         margin-top: 0.25em;
-        padding: 0.5em 0.75em;
+        padding: 0 0.75em;
         background: #efefef;
         border-radius: 4px;
       }
@@ -388,7 +389,7 @@
 
   .answer-area-wiggi {
     .wiggi-wiz-editable {
-      line-height: 250%;
+      line-height: @line-height-answer-area;
     }
   }
 
