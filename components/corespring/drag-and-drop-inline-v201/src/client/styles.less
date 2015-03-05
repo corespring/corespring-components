@@ -27,7 +27,6 @@
 
 .drag-helper-csdndi-v201 {
   position: absolute;
-  display: inline-block;
   margin: 2px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -35,6 +34,7 @@
   background-color: white;
   opacity: 0.75;
   cursor: move;
+  max-width: @max-width-choice-content;
 
   .limit-image-size();
 }
@@ -294,7 +294,6 @@
 
     .wiggi-wiz-editable {
       min-height: 35px;
-      line-height: 250%;
       vertical-align: bottom;
     }
   }
@@ -387,6 +386,12 @@
     margin-bottom: 30px;
   }
 
+  .answer-area-wiggi {
+    .wiggi-wiz-editable {
+      line-height: 250%;
+    }
+  }
+
   .answer-area-inline-active {
     background: #ccc;
     padding-left: 0.25em;
@@ -407,6 +412,7 @@
     height: auto;
     min-width: 50px;
     min-height: 20px;
+    line-height: normal;
 
     .delete-answer-area-button {
       position: absolute;
@@ -437,7 +443,6 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         cursor: pointer;
-        line-height: normal;
 
         .delete-icon {
           position: absolute;

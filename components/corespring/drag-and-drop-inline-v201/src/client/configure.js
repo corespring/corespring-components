@@ -261,6 +261,13 @@ var main = [
           return !(scope.active[index] || choice.moveOnDrag === true && isPlaced(choice));
         };
 
+        scope.cleanLabel = (function() {
+          var wiggiCleanerRe = new RegExp(String.fromCharCode(8203), 'g');
+          return function(choice) {
+            return (choice.label || '').replace(wiggiCleanerRe, '');
+          };
+        })();
+
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       }
     };
@@ -292,6 +299,7 @@ var main = [
         '<div class="row">',
         '  <div class="col-xs-12">',
         '    <div id="answerAreaWiggi"',
+        '      class="answer-area-wiggi"',
         '      mini-wiggi-wiz=""',
         '      ng-model="model.answerAreaXhtml"',
         '      dialog-launcher="external"',
@@ -342,7 +350,7 @@ var main = [
         '            Remove tile after placing',
         '          </checkbox>',
         '        </div>',
-        '        <span class="content-holder" ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
+        '        <span class="content-holder" ng-hide="active[$index]" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
         '        <div ng-show="active[$index]"',
         '            mini-wiggi-wiz=""',
         '            ng-model="choice.label"',
@@ -502,6 +510,8 @@ var configAnswerAreaInline = [
             scope.$emit(WIGGI_EVENTS.DELETE_NODE, el);
             scope.$destroy();
           };
+
+          scope.cleanLabel = configScope.cleanLabel;
         });
       },
       template: [
@@ -514,7 +524,7 @@ var configAnswerAreaInline = [
         '        ng-click="removeCorrectAnswer($index)">',
         '        <i class="fa fa-close"></i>',
         '      </div>',
-        '      <span ng-bind-html-unsafe="choice.label"></span>',
+        '      <span ng-bind-html-unsafe="cleanLabel(choice)"></span>',
         '    </li>',
         '    <p class="prompt" ng-hide="correctAnswers[answerAreaId].length">',
         '      Drag correct answers here.',
