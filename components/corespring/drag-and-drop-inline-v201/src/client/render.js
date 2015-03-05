@@ -99,7 +99,7 @@ var main = [
         },
 
         setResponse: function(response) {
-          $log.debug("[DnD-inline] setResponse: ", response);
+          $log.debug("[DnD-inline-v201] setResponse: ", response);
           scope.response = response;
           scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
