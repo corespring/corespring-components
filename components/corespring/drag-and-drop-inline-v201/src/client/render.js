@@ -68,6 +68,8 @@ var main = [
             }
           });
 
+          // resetChoices also initializes scope.local.choices
+          // and scope.originalChoices
           scope.resetChoices(scope.rawModel);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
@@ -107,6 +109,7 @@ var main = [
           solutionScope.model = scope.model;
           solutionScope.canEdit = function(){return false;};
           solutionScope.classForChoice = function(){return "";};
+          solutionScope.cleanLabel = scope.cleanLabel;
           _.each(scope.correctResponse, function(v, k) {
             solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
               return scope.choiceForId(r);
@@ -169,6 +172,13 @@ var main = [
         return scope.editable && !scope.correctResponse;
       };
 
+      scope.cleanLabel = (function() {
+        var wiggiCleanerRe = new RegExp(String.fromCharCode(8203), 'g');
+        return function(choice) {
+          return (choice.label || '').replace(wiggiCleanerRe, '');
+        };
+      })();
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
@@ -186,7 +196,7 @@ var main = [
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptionsWithScope(choice)"',
         '    data-choice-id="{{choice.id}}">',
-        '    <span class="choice-content" ng-bind-html-unsafe="choice.label"></span>',
+        '    <span class="choice-content" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
         '  </div>',
         '</div>'
       ].join('');
@@ -347,7 +357,7 @@ var answerAreaInline = [
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
         '      <div class="selected-choice-content">',
         '        <div class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
-        '        <span class="html-wrapper" ng-bind-html-unsafe="choice.label"></span>',
+        '        <span class="html-wrapper" ng-bind-html-unsafe="renderScope.cleanLabel(choice)"></span>',
         '      </div>',
         '      <i class="circle fa" ng-class="classForCorrectness(choice, $index)"></i>',
         '    </div>',
