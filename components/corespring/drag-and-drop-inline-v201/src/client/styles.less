@@ -53,26 +53,23 @@
 
   .limit-image-size();
 
-  .ui-droppable {
-    position: relative;
-    bottom: 0;
-    margin-bottom: 0px;
-    min-width: 50px;
-    min-height: 14px;
-    height: auto;
-    -webkit-padding-start: 0;
-    -webkit-padding-end: 0;
-  }
-
   .answer-area-inline {
     display: inline-block;
     border-bottom: 1px solid black;
     line-height: initial;
-    min-width: 70px;
-    min-height: 14px;
-    height: auto;
     margin-right: 5px;
     vertical-align: middle;
+
+    .ui-droppable {
+      position: relative;
+      bottom: 0;
+      margin-bottom: 0px;
+      min-width: 70px;
+      min-height: 27px;
+      height: auto;
+      -webkit-padding-start: 0;
+      -webkit-padding-end: 0;
+    }
 
     .empty-answer-area-warning {
       color: @warning-color;
