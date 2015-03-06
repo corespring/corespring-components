@@ -251,15 +251,34 @@ var answerAreaInline = [
           }
 
           var isOut = false;
+          var sortableSize;
+
+          //the sortable changes the height of its dropping area
+          //so that the currently dragged item fits in.
+          //The calculation does not seem to work properly in our case.
+          //When you drag a choice with just a word in it, the area is
+          //almost twice as high as necessary.
+          //The workaround safes the size of the original item and
+          //sets the placeholder to the same size. Also the placeholder
+          //is filled with some content, bc. otherwise we see the height
+          //changing a few pixels too
 
           scope.targetSortableOptions = function() {
             return {
               connectWith: "." + renderScope.dragAndDropScopeId,
               disabled: !renderScope.canEdit(),
               tolerance: 'pointer',
+              helper: function(event,ui){
+                sortableSize = {width:ui.width(),height:ui.height()};
+                return ui;
+              },
               start: function(event, ui) {
                 isOut = false;
                 renderScope.targetDragging = true;
+                console.log("start",sortableSize);
+                ui.placeholder.html('&nbsp;');
+                ui.placeholder.width(sortableSize.width);
+                ui.placeholder.height(sortableSize.height);
               },
               stop: function(event, ui) {
                 renderScope.targetDragging = false;
