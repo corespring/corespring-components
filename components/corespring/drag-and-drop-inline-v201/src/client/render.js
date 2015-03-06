@@ -45,6 +45,7 @@ var main = [
       }
 
       function renderAnswerArea(targetSelector, scope) {
+        console.log("renderAnswerArea", element.find(targetSelector));
         var $answerArea = element.find(targetSelector).html(answerAreaTemplate());
         $timeout(function() {
           $compile($answerArea)(scope);
@@ -209,19 +210,8 @@ var main = [
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-      '  <div class="see-solution" ng-show="correctResponse">',
-      '    <div class="panel panel-default">',
-      '      <div class="panel-heading">',
-      '        <h4 class="panel-title" ng-click="toggleAnswerVisible()">',
-      '          <i class="answerIcon fa fa-eye{{correctResponse.answerVisible ? \'-slash\' : \'\'}}"></i>',
-      '          {{correctResponse.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}',
-      '        </h4>',
-      '      </div>',
-      '      <div class="answer-collapse">',
-      '        <div class="panel-body correct-answer-area-holder">',
-      '        </div>',
-      '      </div>',
-      '    </div>',
+      '  <div see-answer-panel="" ng-show="correctResponse">',
+      '    <div class="correct-answer-area-holder"></div>',
       '  </div>',
       '</div>'
 
