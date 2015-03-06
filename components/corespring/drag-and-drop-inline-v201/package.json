@@ -31,6 +31,10 @@
       "organization": "corespring"
     },
     {
+      "name": "widgets",
+      "organization": "corespring"
+    },
+    {
       "name": "choice-templates",
       "organization": "corespring",
       "scope": "editor"
