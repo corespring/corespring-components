@@ -1,12 +1,13 @@
 @import '../../../../../less/common';
 
 @max-width-choice-content: 421px;
+@max-width-height-image: 200px;
 @line-height-answer-area: 250%;
 
 .limit-image-size() {
   img {
-    max-width: 200px;
-    max-height: 200px;
+    max-width: @max-width-height-image;
+    max-height: @max-width-height-image;
   }
 }
 
@@ -80,14 +81,15 @@
       display: inline-block;
       margin: 0.25em 3px 0.25em 7px;
       position: relative;
-      line-height: normal;
 
       .selected-choice-content {
         display: inline-block;
+        vertical-align: bottom;
         margin-right: 0;
-        padding: 0em 0.5em 0em 0.75em;
+        padding: 0em 0.25em 0em 0.75em;
         background: #efefef;
         border-radius: 4px;
+        line-height: normal;
         max-width: @max-width-choice-content;
 
         .html-wrapper {
@@ -97,23 +99,23 @@
         }
 
         .remove-choice {
+          height: 100%;
+          vertical-align: top;
           display: none;
         }
+      }
+
+      .circle {
+        height: 100%;
+        vertical-align: top;
+        display: none;
       }
 
       &.editable {
         cursor: pointer;
 
-        .html-wrapper {
-          padding-right: 10px;
-        }
-
         .remove-choice {
-          position: absolute;
-          top: 0px;
-          right: 7px;
-          list-style-type: none;
-          display: block;
+          display: inline-block;
           opacity: 0.3;
         }
 
@@ -138,15 +140,13 @@
 
         .selected-choice-content {
           .incorrect-input();
-          margin-right: 10px;
           // box-shadow: none !important;
         }
         .circle {
+          margin-left: 4px;
+          display: inline-block;
           font-size: 24px;
           color: @incorrect-color;
-          position: absolute;
-          top: 6px;
-          right: -3px;
         }
       }
 
@@ -155,15 +155,13 @@
 
         .selected-choice-content {
           .correct-input();
-          margin-right: 10px;
           // box-shadow: none !important;
         }
         .circle {
+          margin-left: 4px;
+          display: inline-block;
           font-size: 24px;
           color: @correct-color;
-          right: -3px;
-          position: absolute;
-          top: 6px;
         }
       }
     }
