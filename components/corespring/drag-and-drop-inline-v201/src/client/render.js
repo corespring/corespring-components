@@ -60,6 +60,7 @@ var main = [
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
           scope.editable = true;
+          scope.seeSolutionExpanded = false;
           scope.local = {};
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
@@ -123,21 +124,9 @@ var main = [
         reset: function() {
           scope.resetChoices(scope.rawModel);
 
+          scope.seeSolutionExpanded = false;
           scope.correctResponse = undefined;
           scope.response = undefined;
-        }
-      });
-
-      scope.toggleAnswerVisible = function() {
-        scope.correctResponse.answerVisible = !scope.correctResponse.answerVisible;
-        renderMath();
-      };
-
-      scope.$watch('correctResponse.answerVisible', function(answerVisible) {
-        if (answerVisible) {
-          $(element).find('.answer-collapse').slideDown(400);
-        } else {
-          $(element).find('.answer-collapse').slideUp(400);
         }
       });
 
@@ -210,7 +199,7 @@ var main = [
       '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
       '  <div class="clearfix"></div>',
       '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-      '  <div class="see-solution" see-answer-panel="" ng-show="correctResponse">',
+      '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="seeSolutionExpanded" ng-show="correctResponse">',
       '    <div class="correct-answer-area-holder"></div>',
       '  </div>',
       '</div>'
