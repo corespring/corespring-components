@@ -11,6 +11,12 @@
   }
 }
 
+.pad-image-in-choice() {
+  img {
+    padding: 10px 0;
+  }
+}
+
 .component-placeholder {
   .render-csdndi-v201 {
     //the component takes the full width of the player
@@ -39,6 +45,8 @@
   max-width: @max-width-choice-content;
 
   .limit-image-size();
+
+  .pad-image-in-choice();
 }
 
 .render-csdndi-v201 {
@@ -95,6 +103,8 @@
           list-style-type: none;
           display: inline-block;
           padding-right: 5px;
+
+          .pad-image-in-choice();
         }
 
         .remove-choice {
@@ -237,6 +247,8 @@
         padding: 0 0.75em;
         background: #efefef;
         border-radius: 4px;
+
+        .pad-image-in-choice();
       }
 
       &.editable {
@@ -252,6 +264,13 @@
         }
       }
 
+    }
+  }
+
+  .see-answer-panel {
+    &.answer-holder {
+      max-width: initial;
+      width: 100%;
     }
   }
 
@@ -423,6 +442,8 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         cursor: pointer;
+
+        .pad-image-in-choice();
 
         .delete-icon {
           position: absolute;
