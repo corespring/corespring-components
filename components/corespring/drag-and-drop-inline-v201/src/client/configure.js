@@ -281,7 +281,7 @@ var main = [
         '      equation using context clues presented in the text that surrounds it.',
         '    </p>',
         '    <p><i>',
-        '      The "Remove after placing" option removes the answer from the choice area after a student places ',
+        '      The "Remove tile after placing" option removes the answer from the choice area after a student places ',
         '      it in an answer area. <br>If you select this option on a choice, you may not add it to more than one ',
         '      answer blank.',
         '    </i></p>',
