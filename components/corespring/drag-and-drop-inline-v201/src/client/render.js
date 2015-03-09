@@ -45,7 +45,6 @@ var main = [
       }
 
       function renderAnswerArea(targetSelector, scope) {
-        console.log("renderAnswerArea", element.find(targetSelector));
         var $answerArea = element.find(targetSelector).html(answerAreaTemplate());
         $timeout(function() {
           $compile($answerArea)(scope);
@@ -297,7 +296,7 @@ var answerAreaInline = [
               start: function(event, ui) {
                 isOut = false;
                 renderScope.targetDragging = true;
-                cleanup = initPlaceholder();
+                cleanup = initPlaceholder(ui.placeholder);
               },
               stop: function(event, ui) {
                 renderScope.targetDragging = false;
