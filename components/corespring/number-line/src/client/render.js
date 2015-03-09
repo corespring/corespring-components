@@ -184,6 +184,16 @@ var interactiveGraph = [
           }
         });
 
+        function getLastRange() {
+          var lastRange = 0;
+          _.each(scope.responsemodel, function(e) {
+            if (e.rangePosition > lastRange) {
+              lastRange = e.rangePosition;
+            }
+          });
+          return lastRange;
+        }
+
         paperElement.mousedown(function(event) {
           if (!scope.editable) {
             return;
@@ -191,14 +201,14 @@ var interactiveGraph = [
           if (scope.responsemodel.length >= (scope.config.maxNumberOfPoints || 3)) {
             return;
           }
-          var lastRange = scope.responsemodel.length + 1;
+          var newRangePosition = getLastRange() + 1;
           var offX  = (event.offsetX || event.pageX - $(event.target).offset().left);
           var offY  = (event.offsetY || event.pageY - $(event.target).offset().top);
           var dr = scope.graph.coordsToDomainRange(offX, offY);
           var defaultLineModel = {
             "type": "line",
             "domainPosition": dr[0],
-            "rangePosition": lastRange,
+            "rangePosition": newRangePosition,
             "size": 1,
             "leftPoint": "empty",
             "rightPoint": "empty"
@@ -206,7 +216,7 @@ var interactiveGraph = [
           var defaultRayModel = {
             "type": "ray",
             "domainPosition": dr[0],
-            "rangePosition": lastRange,
+            "rangePosition": newRangePosition,
             "pointType": "empty"
           };
           switch (scope.selectedType) {
@@ -215,7 +225,7 @@ var interactiveGraph = [
                 "type": "point",
                 "pointType": "full",
                 "domainPosition": dr[0],
-                "rangePosition": lastRange
+                "rangePosition": 0
               });
               break;
             case "LEE":
@@ -243,6 +253,7 @@ var interactiveGraph = [
               scope.responsemodel.push(_.extend(defaultRayModel, {pointType: "full", direction: "positive"}));
               break;
           }
+          repositionElements();
           rebuildGraph();
           scope.$apply();
         });
@@ -252,6 +263,7 @@ var interactiveGraph = [
           domain: [0, 10],
           range: [0, NUMBER_OF_PLANES],
           applyCallback: function() {
+            console.log('apply');
             scope.$apply();
           },
           selectionChanged: function() {
@@ -260,8 +272,26 @@ var interactiveGraph = [
           }
         });
 
+        function repositionElements() {
+          var planeIndex = {};
+          var lastRange = 0;
+          _.each(scope.responsemodel, function (e, idx) {
+            if (e.type == 'point') {
+              planeIndex[e.domainPosition] = !_.isUndefined(planeIndex[e.domainPosition]) ? (planeIndex[e.domainPosition] + 1) : 0;
+              e.rangePosition = planeIndex[e.domainPosition];
+              lastRange = e.rangePosition;
+            }
+          });
+          _.each(scope.responsemodel, function (e, idx) {
+            if (e.type !== 'point') {
+              e.rangePosition = ++lastRange;
+            }
+          });
+        }
+
         // Clear out graph and rebuild it from the model
         function rebuildGraph() {
+          console.log('rebuild');
           scope.graph.clear();
 
           _.each(scope.responsemodel, function(o, level) {
@@ -271,6 +301,12 @@ var interactiveGraph = [
             }
             switch (o.type) {
               case "point":
+                options.onMoveFinished = function() {
+                  repositionElements();
+                  scope.graph.clear();
+                  rebuildGraph();
+
+                };
                 scope.graph.addMovablePoint(o, options);
                 break;
               case "line":
@@ -286,14 +322,15 @@ var interactiveGraph = [
         }
 
         scope.removeSelectedElement = function() {
-          var selectedPositions = scope.graph.getSelectedElements();
+          var selectedElements = scope.graph.getSelectedElements();
+          console.log("Removing: ", selectedElements);
           scope.responsemodel = _.filter(scope.responsemodel, function(e) {
-            return !_.contains(selectedPositions, e.rangePosition);
+            return _.isUndefined(_.find(selectedElements, function(element) {
+              return e.rangePosition === element.rangePosition && e.domainPosition === element.domainPosition;
+            }));
           }) || [];
-          _.each(scope.responsemodel, function(e, idx) {
-            e.rangePosition = idx + 1;
-          });
           scope.graph.clear();
+          repositionElements();
           rebuildGraph();
           scope.selected = scope.graph.getSelectedElements();
         };
@@ -352,7 +389,6 @@ var interactiveGraph = [
             if(n.config) {
               scope.config = n.config;
             }
-
             resetGraph(n);
           }
         }, true);
