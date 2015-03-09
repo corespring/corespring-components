@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('drag and drop inline v201', function() {
+describe.only('drag and drop inline v201', function() {
 
   "use strict";
 
@@ -168,5 +168,20 @@ describe('drag and drop inline v201', function() {
 
   });
 
+  it("allows drag and drop inside one answer area", function(){
+    //TODO write test
+  });
+
+  it("allows drag and drop between answer areas", function(){
+    //TODO write test
+  });
+
+  it("allows removing a choice by dragging it out of answer area", function(){
+    //TODO write test
+  });
+
+  it("shows choice as available after removing it from answer area", function(){
+    //TODO write test
+  });
 
 });
