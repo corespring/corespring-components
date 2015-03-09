@@ -252,6 +252,7 @@ var answerAreaInline = [
 
           var isOut = false;
           var sortableSize;
+          var cleanup;
 
           //the sortable changes the height of its dropping area
           //so that the currently dragged item fits in.
@@ -260,10 +261,31 @@ var answerAreaInline = [
           //almost twice as high as necessary.
           //The workaround safes the size of the original item and
           //sets the placeholder to the same size. Also the placeholder
-          //is filled with some content, bc. otherwise we see the height
+          //is filled with &nbsp;, bc. otherwise its height nyit is
           //changing a few pixels too
 
           scope.targetSortableOptions = function() {
+
+            function initPlaceholder(placeholder){
+              placeholder.html('&nbsp;');
+              placeholder.width(sortableSize.width);
+              placeholder.height(sortableSize.height);
+
+              //start interval to update hover state
+              var lastPlaceholderParent = placeholder.parents('.answer-area-inline');
+              lastPlaceholderParent.addClass('answer-area-inline-hover');
+              var intervalId = setInterval(function(){
+                var newParent = placeholder.parents('.answer-area-inline');
+                if(newParent !== lastPlaceholderParent) {
+                  lastPlaceholderParent.removeClass('answer-area-inline-hover');
+                  newParent.addClass('answer-area-inline-hover');
+                  lastPlaceholderParent = newParent;
+                }
+              }, 100);
+
+              return function(){clearInterval(intervalId);};
+            }
+
             return {
               connectWith: "." + renderScope.dragAndDropScopeId,
               disabled: !renderScope.canEdit(),
@@ -275,13 +297,12 @@ var answerAreaInline = [
               start: function(event, ui) {
                 isOut = false;
                 renderScope.targetDragging = true;
-                console.log("start",sortableSize);
-                ui.placeholder.html('&nbsp;');
-                ui.placeholder.width(sortableSize.width);
-                ui.placeholder.height(sortableSize.height);
+                cleanup = initPlaceholder();
               },
               stop: function(event, ui) {
                 renderScope.targetDragging = false;
+                cleanup();
+
                 if (isOut) {
                   scope.removeChoice(ui.item.sortable.index);
                 }
@@ -300,8 +321,8 @@ var answerAreaInline = [
               },
               deactivate: function(event,ui){
                 el.removeClass('answer-area-inline-active');
+                el.removeClass('answer-area-inline-hover');
               }
-
             };
           };
 
