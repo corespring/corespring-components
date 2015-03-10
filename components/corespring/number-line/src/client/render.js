@@ -136,8 +136,7 @@ var interactiveGraph = [
     var HORIZONTAL_AXIS_WIDTH = 480;
 
     return {
-      template:[
-        '<div>',
+      template: [
         '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Point\')" ng-class="{active: isGroupActive(\'Point\')}"  ng-mousedown="selectGroup(\'Point\')"><a>Point</a></li>',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Line\')" ng-class="{active: isGroupActive(\'Line\')}" ng-mousedown="selectGroup(\'Line\')"><a>Line</a></li>',
@@ -167,9 +166,9 @@ var interactiveGraph = [
         editable: "=",
         changehandler: "&changehandler"
       },
-      controller: function($scope){
+      controller: function($scope) {
         //set default config to avoid npe
-        $scope.config = {availableTypes:{}};
+        $scope.config = {availableTypes: {}};
       },
       link: function(scope, elm, attr, ngModel) {
         var paperElement = $(elm).find('.paper');
@@ -184,38 +183,45 @@ var interactiveGraph = [
           }
         });
 
-        paperElement.mousedown(function(event) {
+        function getLastRange() {
+          var lastRange = 0;
+          _.each(scope.responsemodel, function(e) {
+            if (e.rangePosition > lastRange) {
+              lastRange = e.rangePosition;
+            }
+          });
+          return lastRange;
+        }
+
+        scope.addElement = function(domainPosition, elementType) {
           if (!scope.editable) {
             return;
           }
           if (scope.responsemodel.length >= (scope.config.maxNumberOfPoints || 3)) {
             return;
           }
-          var lastRange = scope.responsemodel.length + 1;
-          var offX  = (event.offsetX || event.pageX - $(event.target).offset().left);
-          var offY  = (event.offsetY || event.pageY - $(event.target).offset().top);
-          var dr = scope.graph.coordsToDomainRange(offX, offY);
+          var newRangePosition = getLastRange() + 1;
           var defaultLineModel = {
             "type": "line",
-            "domainPosition": dr[0],
-            "rangePosition": lastRange,
+            "domainPosition": domainPosition,
+            "rangePosition": newRangePosition,
             "size": 1,
             "leftPoint": "empty",
             "rightPoint": "empty"
           };
           var defaultRayModel = {
             "type": "ray",
-            "domainPosition": dr[0],
-            "rangePosition": lastRange,
+            "domainPosition": domainPosition,
+            "rangePosition": newRangePosition,
             "pointType": "empty"
           };
-          switch (scope.selectedType) {
+          switch (elementType) {
             case "PF":
               scope.responsemodel.push({
                 "type": "point",
                 "pointType": "full",
-                "domainPosition": dr[0],
-                "rangePosition": lastRange
+                "domainPosition": domainPosition,
+                "rangePosition": 0
               });
               break;
             case "LEE":
@@ -245,6 +251,14 @@ var interactiveGraph = [
           }
           rebuildGraph();
           scope.$apply();
+
+        };
+
+        paperElement.mousedown(function(event) {
+          var offX = (event.offsetX || event.pageX - $(event.target).offset().left);
+          var offY = (event.offsetY || event.pageY - $(event.target).offset().top);
+          var dr = scope.graph.coordsToDomainRange(offX, offY);
+          scope.addElement(dr[0], scope.selectedType);
         });
 
         scope.graph = new GraphHelper(paperElement[0], {
@@ -260,10 +274,28 @@ var interactiveGraph = [
           }
         });
 
+        function repositionElements() {
+          var planeIndex = {};
+          var lastRange = 0;
+          _.each(scope.responsemodel, function(e, idx) {
+            if (e.type == 'point') {
+              planeIndex[e.domainPosition] = !_.isUndefined(planeIndex[e.domainPosition]) ? (planeIndex[e.domainPosition] + 1) : 0;
+              e.rangePosition = planeIndex[e.domainPosition];
+              lastRange = e.rangePosition;
+            }
+          });
+          _.each(scope.responsemodel, function(e, idx) {
+            if (e.type !== 'point') {
+              e.rangePosition = ++lastRange;
+            }
+          });
+        }
+
         // Clear out graph and rebuild it from the model
         function rebuildGraph() {
+          console.log('rebuild');
           scope.graph.clear();
-
+          repositionElements();
           _.each(scope.responsemodel, function(o, level) {
             var options = _.cloneDeep(o);
             if (!_.isUndefined(o.isCorrect)) {
@@ -271,6 +303,10 @@ var interactiveGraph = [
             }
             switch (o.type) {
               case "point":
+                options.onMoveFinished = function() {
+                  rebuildGraph();
+
+                };
                 scope.graph.addMovablePoint(o, options);
                 break;
               case "line":
@@ -286,14 +322,13 @@ var interactiveGraph = [
         }
 
         scope.removeSelectedElement = function() {
-          var selectedPositions = scope.graph.getSelectedElements();
+          var selectedElements = scope.graph.getSelectedElements();
+          console.log("Removing: ", selectedElements);
           scope.responsemodel = _.filter(scope.responsemodel, function(e) {
-            return !_.contains(selectedPositions, e.rangePosition);
+            return _.isUndefined(_.find(selectedElements, function(element) {
+              return e.rangePosition === element.rangePosition && e.domainPosition === element.domainPosition;
+            }));
           }) || [];
-          _.each(scope.responsemodel, function(e, idx) {
-            e.rangePosition = idx + 1;
-          });
-          scope.graph.clear();
           rebuildGraph();
           scope.selected = scope.graph.getSelectedElements();
         };
@@ -327,7 +362,7 @@ var interactiveGraph = [
           return scope.config.availableTypes[type] === true;
         };
 
-        var resetGraph = function(model) {
+        scope.resetGraph = function(model) {
           scope.graph.updateOptions(model.config);
 
           scope.graph.addHorizontalAxis("bottom", {
@@ -349,11 +384,10 @@ var interactiveGraph = [
         scope.$watch('model', function(n) {
           if (n) {
             //overwrite default config with real config
-            if(n.config) {
+            if (n.config) {
               scope.config = n.config;
             }
-
-            resetGraph(n);
+            scope.resetGraph(n);
           }
         }, true);
 
@@ -375,7 +409,7 @@ var interactiveGraph = [
             rebuildGraph();
             scope.graph.updateOptions({exhibitOnly: true});
           } else if (prev) {
-            resetGraph(scope.model);
+            scope.resetGraph(scope.model);
           }
         }, true);
 

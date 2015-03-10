@@ -47,7 +47,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.detach();
       };
       this.moveTo = function(d, r) {
-        var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, d);
+        var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, d, options.snapPerTick);
         if (tickDp !== pointModel.domainPosition) {
           pointModel.domainPosition = tickDp;
           this.draw();
@@ -146,6 +146,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             var d2 = thatLI.p2.model.domainPosition;
             thatLI.p2.moveTo(d1);
             thatLI.p1.moveTo(d2);
+            updateLineModel();
           }
         },
         onSelectionChanged: function(sel) {

@@ -71,13 +71,13 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     };
 
     this.getSelectedElements = function() {
-      var selectedPositions = [];
+      var selectedElements = [];
       _.each(this.elements, function(e) {
          if (e.selected) {
-           selectedPositions.push(e.model.rangePosition);
+           selectedElements.push(e.model);
          }
       });
-      return selectedPositions;
+      return selectedElements;
     };
 
     this.clear = function() {
