@@ -278,7 +278,7 @@ var interactiveGraph = [
           var planeIndex = {};
           var lastRange = 0;
           _.each(scope.responsemodel, function(e, idx) {
-            if (e.type == 'point') {
+            if (e.type === 'point') {
               planeIndex[e.domainPosition] = !_.isUndefined(planeIndex[e.domainPosition]) ? (planeIndex[e.domainPosition] + 1) : 0;
               e.rangePosition = planeIndex[e.domainPosition];
               lastRange = e.rangePosition;
