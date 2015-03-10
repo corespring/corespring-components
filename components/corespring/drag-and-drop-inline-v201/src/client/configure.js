@@ -300,6 +300,7 @@ var main = [
         '  <div class="col-xs-12">',
         '    <div id="answerAreaWiggi"',
         '      class="answer-area-wiggi"',
+        '      locked-active-state="true"',
         '      mini-wiggi-wiz=""',
         '      ng-model="model.answerAreaXhtml"',
         '      dialog-launcher="external"',
