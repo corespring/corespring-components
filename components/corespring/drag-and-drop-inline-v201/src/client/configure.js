@@ -219,24 +219,10 @@ var main = [
 
         scope.active = [];
 
-        scope.activate = function($index, $event) {
-          function activateChoiceEditor() {
-            var $editable = $($event.target).closest('.draggable-choice').find('.wiggi-wiz-editable');
-            if ($editable.length) {
-              $editable.click();
-              var editableScope = angular.element($editable).scope();
-              if (editableScope && _.isFunction(editableScope.focusCaretAtEnd)) {
-                editableScope.focusCaretAtEnd();
-              }
-            } else {
-              //should only happen in dev, when the structure/classes of the choice item are changed
-              throw "wiggiwiz editable not found";
-            }
-          }
+        scope.activate = function($event, $index) {
           $event.stopPropagation();
           scope.active = [];
           scope.active[$index] = true;
-          $timeout(activateChoiceEditor, 10);
         };
 
         scope.itemClick = function($event) {
@@ -331,12 +317,12 @@ var main = [
         '          ng-model="choice" ng-click="itemClick($event)" data-drag="{{canDragChoice(choice, $index)}}"',
         '          jqyoui-draggable="choiceDraggableOptions($index)"',
         '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
-        '        <div class="blocker" ng-click="activate($index, $event)" ng-hide="active[$index]">',
+        '        <div class="blocker" ng-click="activate($event, $index)" ng-hide="active[$index]">',
         '          <div class="bg"></div>',
         '          <div class="content">',
         '            <ul class="edit-controls">',
         '              <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true"',
-        '                  tooltip-placement="bottom" ng-click="activate($index, $event)">',
+        '                  tooltip-placement="bottom" ng-click="activate($event, $index)">',
         '                <i class="fa fa-pencil"></i>',
         '              </li>',
         '              <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"',
@@ -353,6 +339,7 @@ var main = [
         '        </div>',
         '        <span class="content-holder" ng-hide="active[$index]" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
         '        <div ng-show="active[$index]"',
+        '            active="active[$index]"',
         '            mini-wiggi-wiz=""',
         '            ng-model="choice.label"',
         '            dialog-launcher="external"',
