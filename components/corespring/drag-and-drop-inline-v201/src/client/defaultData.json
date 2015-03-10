@@ -14,12 +14,8 @@
     {}
   ],
   "model": {
-    "answerAreaXhtml": "<answer-area-inline-csdndi-v201 id='aa_1'></answer-area-inline-csdndi-v201>",
-    "answerAreas": [
-      {
-        "id": "aa_1"
-      }
-    ],
+    "answerAreaXhtml": "",
+    "answerAreas": [],
     "choices": [
       {
         "label": "",
