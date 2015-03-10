@@ -8,7 +8,9 @@ exports.keys = keys;
 exports.wrapTokensWithHtml = function(choices) {
   var idx = 0;
   return _(choices).map(function(choice) {
-    return "<span class='token' id='" + (idx++) + "'>" + choice.data + "</span>";
+    var attributes = choice.selectable === false ? '' : " class='token' id='" + idx + "'";
+    idx++;
+    return "<span" + attributes + ">" + choice.data + "</span>";
   }).value().join(' ');
 };
 

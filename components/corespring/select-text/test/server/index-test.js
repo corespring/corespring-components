@@ -28,7 +28,8 @@ var component = {
     }, {
       data: "carrot"
     }, {
-      data: "and"
+      data: "and",
+      selectable: false
     }, {
       data: "cheese"
     }, {
@@ -182,6 +183,16 @@ describe('select text server logic', function() {
     });
     responseTwo.feedback.choices['4'].should.eql({
       correct: false
+    });
+  });
+
+  describe('wrapTokensWithHtml', function() {
+    it('should not return span.token for unselectable token', function() {
+      var wrappedTokens = server.wrapTokensWithHtml(component.model.choices);
+      var unselectableIndex = _.findIndex(component.model.choices, function(choice) {
+        return choice.selectable === false;
+      });
+      wrappedTokens.should.not.match(new RegExp("span class=.token. id=." + unselectableIndex + ".*?<\/span>"));
     });
   });
 
