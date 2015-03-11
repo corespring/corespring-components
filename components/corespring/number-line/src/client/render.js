@@ -201,7 +201,7 @@ var interactiveGraph = [
           if (scope.responsemodel.length >= (scope.config.maxNumberOfPoints || 3)) {
             return;
           }
-          var newRangePosition = getLastRange() + 1;
+          var newRangePosition = 0;
           var defaultLineModel = {
             "type": "line",
             "domainPosition": domainPosition,
@@ -275,39 +275,101 @@ var interactiveGraph = [
           }
         });
 
-        function repositionElements() {
-          var planeIndex = {};
-          var lastRange = 0;
-          _.each(scope.responsemodel, function(e, idx) {
-            if (e.type === 'point') {
-              planeIndex[e.domainPosition] = !_.isUndefined(planeIndex[e.domainPosition]) ? (planeIndex[e.domainPosition] + 1) : 0;
-              e.rangePosition = planeIndex[e.domainPosition];
-              lastRange = e.rangePosition;
+        function isIntersecting(element, withElement) {
+          if (element.rangePosition !== withElement.rangePosition) {
+            return false;
+          }
+          if (element.type === 'point') {
+            switch (withElement.type) {
+              case 'point': return element.domainPosition === withElement.domainPosition;
+              case 'line': return (element.domainPosition >= withElement.domainPosition && element.domainPosition <= withElement.domainPosition + withElement.size);
+              case 'ray':
+                if (withElement.direction === 'positive') {
+                  return element.domainPosition >= withElement.domainPosition;
+                } else {
+                  return element.domainPosition <= withElement.domainPosition;
+                }
             }
-          });
-          _.each(scope.responsemodel, function(e, idx) {
-            if (e.type !== 'point') {
-              e.rangePosition = ++lastRange;
+          } else if (element.type === 'line') {
+            switch (withElement.type) {
+              case 'point': return isIntersecting(withElement, element);
+              case 'line': return (element.domainPosition >= withElement.domainPosition && element.domainPosition <= withElement.domainPosition + withElement.size)
+                || (withElement.domainPosition >= element.domainPosition && withElement.domainPosition <= element.domainPosition + element.size);
+              case 'ray':
+                if (withElement.direction === 'positive') {
+                  return element.domainPosition + element.size >= withElement.domainPosition;
+                } else {
+                  return element.domainPosition <= withElement.domainPosition;
+                }
             }
+          } else if (element.type === 'ray') {
+            switch (withElement.type) {
+              case 'point': return isIntersecting(withElement, element);
+              case 'line': return isIntersecting(withElement, element);
+              case 'ray':
+                if (element.direction === withElement.direction) {
+                  return true;
+                }
+                if (element.direction === 'positive') {
+                  return withElement.domainPosition >= element.domainPosition;
+                } else {
+                  return withElement.domainPosition <= element.domainPosition;
+                }
+
+            }
+          }
+        }
+
+        function repositionElements(lastMovedElement) {
+          console.log("Repositioning",lastMovedElement);
+          var intersectsWithAny = function(e) {
+            return _.any(scope.responsemodel, function(r) {
+               return e !==r && isIntersecting(e, r);
+            });
+          };
+          if (lastMovedElement) {
+            while (intersectsWithAny(lastMovedElement)) {
+              lastMovedElement.rangePosition++;
+            }
+          }
+          var elementsSortedByRangePosition = _.sortBy(scope.responsemodel, function(e) {
+             return e.rangePosition;
           });
+          _.each(elementsSortedByRangePosition, function(e) {
+               while (intersectsWithAny(e)) {
+                 e.rangePosition++;
+               }
+               if (e.rangePosition > 0 && !intersectsWithAny(e)) {
+                 while (e.rangePosition > 0 && !intersectsWithAny(e)) {
+                   e.rangePosition--;
+                 }
+                 if (intersectsWithAny(e)) {
+                   e.rangePosition++;
+                 }
+               }
+            });
+
         }
 
         // Clear out graph and rebuild it from the model
-        function rebuildGraph() {
+        function rebuildGraph(lastMovedElement) {
           console.log('rebuild');
           scope.graph.clear();
-          repositionElements();
+          repositionElements(lastMovedElement);
           _.each(scope.responsemodel, function(o, level) {
             var options = _.cloneDeep(o);
             if (!_.isUndefined(o.isCorrect)) {
               options.fillColor = options.strokeColor = o.isCorrect ? scope.colors.correct : scope.colors.incorrect;
             }
+            options.onMoveFinished = function(type, domainPosition) {
+              var lastMovedElement = _.find(scope.responsemodel, function(e) {
+                 return e.domainPosition === domainPosition && e.type === type;
+              });
+              console.log("Move Finished", type, domainPosition, lastMovedElement);
+              rebuildGraph(lastMovedElement);
+            };
             switch (o.type) {
               case "point":
-                options.onMoveFinished = function() {
-                  rebuildGraph();
-
-                };
                 scope.graph.addMovablePoint(o, options);
                 break;
               case "line":

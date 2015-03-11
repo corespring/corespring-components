@@ -89,7 +89,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             options.selectionChanged();
           } else {
             if (pointOptions.onMoveFinished) {
-              pointOptions.onMoveFinished(pointModel.domainPosition);
+              pointOptions.onMoveFinished('point', pointModel.domainPosition, pointModel.rangePosition);
             }
           }
           cancelEvent(ev);
@@ -147,6 +147,9 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             thatLI.p2.moveTo(d1);
             thatLI.p1.moveTo(d2);
             updateLineModel();
+          }
+          if (lineOptions.onMoveFinished) {
+            lineOptions.onMoveFinished('line', thatLI.p1.model.domainPosition, thatLI.p1.model.rangePosition);
           }
         },
         onSelectionChanged: function(sel) {
@@ -212,6 +215,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             thatLI.grabber.redraw();
 
             this.hasMoved = true;
+
           };
           var up = function(ev) {
             thatLI.line.animate({"stroke-width": 6, opacity: 1}, 200, ">");
@@ -219,6 +223,10 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
               thatLI.selected = thatLI.p1.selected = thatLI.p2.selected = !thatLI.selected;
               thatLI.draw();
               options.selectionChanged();
+            } else {
+              if (lineOptions.onMoveFinished) {
+                lineOptions.onMoveFinished('line', thatLI.p1.model.domainPosition, thatLI.p1.model.rangePosition);
+              }
             }
             cancelEvent(ev);
           };
