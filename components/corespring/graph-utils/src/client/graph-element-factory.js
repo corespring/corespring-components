@@ -280,6 +280,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         onMove: function(newPos) {
           thatLI.drawLine();
           updateLineModel();
+
+        },
+        onMoveFinished: function() {
+          if (lineOptions.onMoveFinished) {
+            lineOptions.onMoveFinished('ray', thatLI.p1.model.domainPosition, thatLI.p1.model.rangePosition);
+          }
         },
         onSelectionChanged: function(sel) {
           thatLI.selected = sel;
