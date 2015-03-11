@@ -153,10 +153,11 @@ var main = [
         }
       };
 
-      scope.draggableOptionsWithScope = function(choice) {
-        var options = scope.draggableOptions(choice);
-        options.scope = scope.dragAndDropScopeId;
-        return options;
+      scope.draggableJqueryOptions = function(choice){
+        return {
+          revert: 'invalid',
+          scope: scope.dragAndDropScopeId
+        };
       };
 
       scope.answerChangeCallback = function() {
@@ -187,9 +188,9 @@ var main = [
         '    class="choice" ',
         '    ng-class="{editable:canEdit()}"',
         '    data-drag="canEdit()"',
-        '    data-jqyoui-options="draggableOptionsWithScope(choice)"',
+        '    data-jqyoui-options="draggableJqueryOptions(choice)"',
         '    ng-model="local.choices"',
-        '    jqyoui-draggable="draggableOptionsWithScope(choice)"',
+        '    jqyoui-draggable="draggableOptions(choice)"',
         '    data-choice-id="{{choice.id}}">',
         '    <span class="choice-content" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
         '  </div>',
@@ -346,7 +347,24 @@ var answerAreaInline = ['$interval',
             };
           };
 
+          /**
+           * The dropped item has a $$hashKey property from the repeater in
+           * the choices area. To avoid the "duplicate tracking id" error
+           * this property is removed here. The repeater in the answer area
+           * will set a new value for it.
+           */
+          scope.removeHashKeyFromDroppedItem = function(){
+            var items = scope.renderScope.landingPlaceChoices[scope.answerAreaId];
+            var lastItem = _.cloneDeep(_.last(items));
+            delete lastItem.$$hashKey;
+            items[items.length-1] = lastItem;
+          };
+
           scope.droppableOptions = {
+            onDrop: 'removeHashKeyFromDroppedItem'
+          };
+
+          scope.droppableJqueryOptions = {
             activeClass: 'answer-area-inline-active',
             distance: 5,
             hoverClass: 'answer-area-inline-hover',
@@ -357,12 +375,10 @@ var answerAreaInline = ['$interval',
               //so we pass in a config bool that we can use to choose the tolerance
           };
 
-          scope.trackId = function(choice) {
-            return _.uniqueId();
-          };
           scope.classForChoice = function(choice, index) {
             return renderScope.classForChoice(scope.answerAreaId, choice, index);
           };
+
           scope.classForCorrectness = function(choice, index) {
             var choiceClass = scope.classForChoice(choice, index);
             if (choiceClass === "correct") {
@@ -371,6 +387,7 @@ var answerAreaInline = ['$interval',
               return 'fa-times-circle';
             }
           };
+
           scope.removeChoice = function(index) {
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index, 1);
           };
@@ -390,9 +407,11 @@ var answerAreaInline = ['$interval',
         '  <div ui-sortable="targetSortableOptions()"',
         '    ng-model="renderScope.landingPlaceChoices[answerAreaId]"',
         '    ng-class="renderScope.dragAndDropScopeId"',
-        '    data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
+        '    data-drop="true" ',
+        '    jqyoui-droppable="droppableOptions" ',
+        '    data-jqyoui-options="droppableJqueryOptions">',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
-        '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId] track by trackId(choice)">',
+        '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId]">',
         '      <div class="selected-choice-content">',
         '        <div class="html-wrapper" ng-bind-html-unsafe="renderScope.cleanLabel(choice)"></div>',
         '        <div class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
