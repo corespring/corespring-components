@@ -2,18 +2,18 @@
 
 var main = [
   '$sce', '$log',
-  function ($sce, $log) {
+  function($sce, $log) {
 
     "use strict";
 
     var def;
 
-    var link = function (scope, element, attrs) {
+    var link = function(scope, element, attrs) {
 
       scope.editable = true;
       scope.response = {};
 
-      scope.changeHandler = function () {
+      scope.changeHandler = function() {
         if (_.isFunction(scope.answerChangeCallback)) {
           scope.answerChangeCallback();
         }
@@ -26,7 +26,7 @@ var main = [
 
       scope.containerBridge = {
 
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           console.log("number line", dataAndSession);
 
           scope.correctModel = scope.model = dataAndSession.data.model;
@@ -38,13 +38,13 @@ var main = [
 
         },
 
-        getSession: function () {
+        getSession: function() {
           return {
             answers: scope.response
           };
         },
 
-        setResponse: function (response) {
+        setResponse: function(response) {
           console.log('number line response ', response);
           scope.serverResponse = response;
 
@@ -52,28 +52,28 @@ var main = [
           scope.correctModel.config.exhibitOnly = true;
           scope.correctModel.config.margin = {top: 30, right: 10, bottom: 30, left: 20};
           var i = 0;
-          scope.correctModel.config.initialElements = _.map(response.correctResponse, function (cr) {
+          scope.correctModel.config.initialElements = _.map(response.correctResponse, function(cr) {
             i++;
             return _.extend(cr, {rangePosition: i});
           });
         },
 
-        setMode: function (newMode) {
+        setMode: function(newMode) {
         },
 
-        reset: function () {
+        reset: function() {
           scope.serverResponse = undefined;
         },
 
-        isAnswerEmpty: function () {
+        isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
         },
 
-        answerChangedHandler: function (callback) {
+        answerChangedHandler: function(callback) {
           scope.answerChangeCallback = callback;
         },
 
-        editable: function (e) {
+        editable: function(e) {
           scope.editable = e;
         }
       };
@@ -122,7 +122,7 @@ var main = [
 
 var interactiveGraph = [
   '$log', 'ScaleUtils', 'GraphHelper',
-  function ($log, ScaleUtils, GraphHelper) {
+  function($log, ScaleUtils, GraphHelper) {
 
     "use strict";
 
@@ -167,14 +167,14 @@ var interactiveGraph = [
         editable: "=",
         changehandler: "&changehandler"
       },
-      controller: function ($scope) {
+      controller: function($scope) {
         //set default config to avoid npe
         $scope.config = {availableTypes: {}};
       },
-      link: function (scope, elm, attr, ngModel) {
+      link: function(scope, elm, attr, ngModel) {
         var paperElement = $(elm).find('.paper');
 
-        $(document).keydown(function (e) {
+        $(document).keydown(function(e) {
           var selectedCount = scope.graph.getSelectedElements().length;
           if (selectedCount > 0 && (e.keyCode === 8 || e.keyCode === 46)) {
             e.stopPropagation();
@@ -186,7 +186,7 @@ var interactiveGraph = [
 
         function getLastRange() {
           var lastRange = 0;
-          _.each(scope.responsemodel, function (e) {
+          _.each(scope.responsemodel, function(e) {
             if (e.rangePosition > lastRange) {
               lastRange = e.rangePosition;
             }
@@ -194,7 +194,7 @@ var interactiveGraph = [
           return lastRange;
         }
 
-        scope.addElement = function (domainPosition, elementType) {
+        scope.addElement = function(domainPosition, elementType) {
           if (!scope.editable) {
             return;
           }
@@ -255,7 +255,7 @@ var interactiveGraph = [
 
         };
 
-        paperElement.mousedown(function (event) {
+        paperElement.mousedown(function(event) {
           var offX = (event.offsetX || event.pageX - $(event.target).offset().left);
           var offY = (event.offsetY || event.pageY - $(event.target).offset().top);
           var dr = scope.graph.coordsToDomainRange(offX, offY);
@@ -266,10 +266,10 @@ var interactiveGraph = [
           horizontalAxisLength: HORIZONTAL_AXIS_WIDTH,
           domain: [0, 10],
           range: [0, NUMBER_OF_PLANES],
-          applyCallback: function () {
+          applyCallback: function() {
             scope.$apply();
           },
-          selectionChanged: function () {
+          selectionChanged: function() {
             scope.selected = scope.graph.getSelectedElements();
             scope.$apply();
           }
@@ -327,8 +327,8 @@ var interactiveGraph = [
 
         function repositionElements(lastMovedElement) {
           console.log("Repositioning", lastMovedElement);
-          var intersectsWithAny = function (e) {
-            return _.any(scope.responsemodel, function (r) {
+          var intersectsWithAny = function(e) {
+            return _.any(scope.responsemodel, function(r) {
               return e !== r && isIntersecting(e, r);
             });
           };
@@ -337,10 +337,10 @@ var interactiveGraph = [
               lastMovedElement.rangePosition++;
             }
           }
-          var elementsSortedByRangePosition = _.sortBy(scope.responsemodel, function (e) {
+          var elementsSortedByRangePosition = _.sortBy(scope.responsemodel, function(e) {
             return e.rangePosition;
           });
-          _.each(elementsSortedByRangePosition, function (e) {
+          _.each(elementsSortedByRangePosition, function(e) {
             e.rangePosition = 0;
             while (intersectsWithAny(e)) {
               e.rangePosition++;
@@ -354,13 +354,13 @@ var interactiveGraph = [
           console.log('rebuild');
           scope.graph.clear();
           repositionElements(lastMovedElement);
-          _.each(scope.responsemodel, function (o, level) {
+          _.each(scope.responsemodel, function(o, level) {
             var options = _.cloneDeep(o);
             if (!_.isUndefined(o.isCorrect)) {
               options.fillColor = options.strokeColor = o.isCorrect ? scope.colors.correct : scope.colors.incorrect;
             }
-            options.onMoveFinished = function (type, domainPosition) {
-              var lastMovedElement = _.find(scope.responsemodel, function (e) {
+            options.onMoveFinished = function(type, domainPosition) {
+              var lastMovedElement = _.find(scope.responsemodel, function(e) {
                 return e.domainPosition === domainPosition && e.type === type;
               });
               console.log("Move Finished", type, domainPosition, lastMovedElement);
@@ -382,11 +382,11 @@ var interactiveGraph = [
           scope.selected = [];
         }
 
-        scope.removeSelectedElement = function () {
+        scope.removeSelectedElement = function() {
           var selectedElements = scope.graph.getSelectedElements();
           console.log("Removing: ", selectedElements);
-          scope.responsemodel = _.filter(scope.responsemodel, function (e) {
-            return _.isUndefined(_.find(selectedElements, function (element) {
+          scope.responsemodel = _.filter(scope.responsemodel, function(e) {
+            return _.isUndefined(_.find(selectedElements, function(element) {
               return e.rangePosition === element.rangePosition && e.domainPosition === element.domainPosition;
             }));
           }) || [];
@@ -394,36 +394,36 @@ var interactiveGraph = [
           scope.selected = scope.graph.getSelectedElements();
         };
 
-        scope.isActive = function (type) {
+        scope.isActive = function(type) {
           return type === scope.selectedType;
         };
 
-        scope.select = function (type) {
+        scope.select = function(type) {
           scope.selectedType = type;
         };
 
-        scope.isGroupEnabled = function (group) {
-          return _.some(groups[group], function (type) {
+        scope.isGroupEnabled = function(group) {
+          return _.some(groups[group], function(type) {
             return scope.config.availableTypes[type] === true;
           });
         };
 
-        scope.isGroupActive = function (group) {
+        scope.isGroupActive = function(group) {
           if (!scope.config.groupingEnabled) {
             return true;
           }
           return group === scope.selectedGroup;
         };
 
-        scope.selectGroup = function (group) {
+        scope.selectGroup = function(group) {
           scope.selectedGroup = group;
         };
 
-        scope.isTypeEnabled = function (type) {
+        scope.isTypeEnabled = function(type) {
           return scope.config.availableTypes[type] === true;
         };
 
-        scope.resetGraph = function (model) {
+        scope.resetGraph = function(model) {
           scope.graph.updateOptions(model.config);
 
           scope.graph.addHorizontalAxis("bottom", {
@@ -437,12 +437,12 @@ var interactiveGraph = [
           scope.responsemodel = _.cloneDeep(model.config.initialElements) || [];
           rebuildGraph();
           scope.selectedType = model.config.initialType;
-          scope.selectedGroup = _.find(_.keys(groups), function (g) {
+          scope.selectedGroup = _.find(_.keys(groups), function(g) {
             return _.contains(groups[g], scope.selectedType);
           });
         };
 
-        scope.$watch('model', function (n) {
+        scope.$watch('model', function(n) {
           if (n) {
             //overwrite default config with real config
             if (n.config) {
@@ -452,19 +452,19 @@ var interactiveGraph = [
           }
         }, true);
 
-        scope.$watch('editable', function (n) {
+        scope.$watch('editable', function(n) {
           if (!_.isUndefined(n) && !n) {
             scope.graph.updateOptions({exhibitOnly: true});
           }
         }, true);
 
-        scope.$watch('responsemodel', function (n, prev) {
+        scope.$watch('responsemodel', function(n, prev) {
           if (!_.isEqual(n, prev)) {
             scope.changehandler();
           }
         }, true);
 
-        scope.$watch('serverresponse', function (n, prev) {
+        scope.$watch('serverresponse', function(n, prev) {
           if (!_.isEmpty(n)) {
             scope.responsemodel = _.cloneDeep(n.feedback.elements) || [];
             rebuildGraph();
