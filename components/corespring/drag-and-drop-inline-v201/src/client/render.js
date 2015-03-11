@@ -44,8 +44,15 @@ var main = [
         });
       }
 
+
       function renderAnswerArea(targetSelector, scope) {
-        var $answerArea = element.find(targetSelector).html(answerAreaTemplate());
+        var $holder = element.find(targetSelector);
+        //if the answer area exists already
+        if ($holder[0].childNodes.length) {
+          //destroy the scope of it
+          angular.element($holder[0].childNodes[0]).scope().$destroy();
+        }
+        var $answerArea = $holder.html(answerAreaTemplate());
         $timeout(function() {
           $compile($answerArea)(scope);
           renderMath();
@@ -108,8 +115,12 @@ var main = [
           var solutionScope = $rootScope.$new();
           solutionScope.landingPlaceChoices = {};
           solutionScope.model = scope.model;
-          solutionScope.canEdit = function(){return false;};
-          solutionScope.classForChoice = function(){return "";};
+          solutionScope.canEdit = function() {
+            return false;
+          };
+          solutionScope.classForChoice = function() {
+            return "";
+          };
           solutionScope.cleanLabel = scope.cleanLabel;
           _.each(scope.correctResponse, function(v, k) {
             solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
@@ -130,7 +141,7 @@ var main = [
       });
 
       scope.classForChoice = function(answerAreaId, choice, index) {
-        if(scope.response) {
+        if (scope.response) {
           var result;
           if (scope.response.feedbackPerChoice &&
             _.isArray(scope.response.feedbackPerChoice[answerAreaId])) {
@@ -230,8 +241,8 @@ var scopeForwarder = [
   }
 ];
 
-var answerAreaInline = [
-  function() {
+var answerAreaInline = ['$interval',
+  function($interval) {
     "use strict";
     return {
       scope: {},
@@ -242,7 +253,7 @@ var answerAreaInline = [
           scope.renderScope = renderScope;
           scope.answerAreaId = attr.id;
 
-          function mouseIsOverElement(event){
+          function mouseIsOverElement(event) {
             var position = el.offset();
             var x = event.pageX - position.left;
             var y = event.pageY - position.top;
@@ -251,7 +262,27 @@ var answerAreaInline = [
 
           var isOut = false;
           var sortableSize;
-          var cleanup;
+          var pollingHandle;
+
+          function startPollingHoverState(placeholder) {
+            var lastPlaceholderParent = placeholder.parents('.answer-area-inline');
+            lastPlaceholderParent.addClass('answer-area-inline-hover');
+            pollingHandle = $interval(function() {
+              var newParent = placeholder.parents('.answer-area-inline');
+              if (newParent !== lastPlaceholderParent) {
+                lastPlaceholderParent.removeClass('answer-area-inline-hover');
+                newParent.addClass('answer-area-inline-hover');
+                lastPlaceholderParent = newParent;
+              }
+            }, 100);
+          }
+
+          function stopPollingHoverState() {
+            if (!_.isUndefined(pollingHandle)) {
+              $interval.cancel(pollingHandle);
+              pollingHandle = undefined;
+            }
+          }
 
           //the sortable changes the height of its dropping area
           //so that the currently dragged item fits in.
@@ -265,60 +296,50 @@ var answerAreaInline = [
 
           scope.targetSortableOptions = function() {
 
-            function initPlaceholder(placeholder){
+            function initPlaceholder(placeholder) {
               placeholder.html('&nbsp;');
               placeholder.width(sortableSize.width);
               placeholder.height(sortableSize.height);
-
-              //start interval to update hover state
-              var lastPlaceholderParent = placeholder.parents('.answer-area-inline');
-              lastPlaceholderParent.addClass('answer-area-inline-hover');
-              var intervalId = setInterval(function(){
-                var newParent = placeholder.parents('.answer-area-inline');
-                if(newParent !== lastPlaceholderParent) {
-                  lastPlaceholderParent.removeClass('answer-area-inline-hover');
-                  newParent.addClass('answer-area-inline-hover');
-                  lastPlaceholderParent = newParent;
-                }
-              }, 100);
-
-              return function(){clearInterval(intervalId);};
             }
 
             return {
               connectWith: "." + renderScope.dragAndDropScopeId,
               disabled: !renderScope.canEdit(),
               tolerance: 'pointer',
-              helper: function(event,ui){
-                sortableSize = {width:ui.width(),height:ui.height()};
+              helper: function(event, ui) {
+                sortableSize = {
+                  width: ui.width(),
+                  height: ui.height()
+                };
                 return ui;
               },
               start: function(event, ui) {
                 isOut = false;
                 renderScope.targetDragging = true;
-                cleanup = initPlaceholder(ui.placeholder);
+                initPlaceholder(ui.placeholder);
+                startPollingHoverState(ui.placeholder);
               },
               stop: function(event, ui) {
                 renderScope.targetDragging = false;
-                cleanup();
+                stopPollingHoverState();
 
                 if (isOut) {
                   scope.removeChoice(ui.item.sortable.index);
                 }
               },
-              receive: function(event,ui){
+              receive: function(event, ui) {
                 isOut = false;
               },
-              remove: function(event,ui){
+              remove: function(event, ui) {
                 isOut = false;
               },
               beforeStop: function(event, ui) {
                 isOut = !mouseIsOverElement(event);
               },
-              activate: function(event,ui){
+              activate: function(event, ui) {
                 el.addClass('answer-area-inline-active');
               },
-              deactivate: function(event,ui){
+              deactivate: function(event, ui) {
                 el.removeClass('answer-area-inline-active');
                 el.removeClass('answer-area-inline-hover');
               }
@@ -357,6 +378,10 @@ var answerAreaInline = [
           scope.showWarningIfEmpty = function() {
             return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
+
+          scope.$on("$destroy", function() {
+            stopPollingHoverState();
+          });
 
         });
       },
