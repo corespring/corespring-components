@@ -4,6 +4,10 @@
   "weight": 1,
   "correctResponse": [
   ],
+  "allowPartialScoring": false,
+  "partialScoring" : [
+    {}
+  ],
   "model": {
     "config": {
       "domain": [0, 20],

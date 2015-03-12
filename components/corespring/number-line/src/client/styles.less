@@ -15,58 +15,61 @@
     text-decoration: none;
     background-position: @x -45px;
   }
+}
 
+.element-selector-template() {
+  white-space: nowrap;
+  span.element-pf a {
+    .style-element(0px);
+  }
+
+  span.element-lff a {
+    .style-element(-60px);
+  }
+
+  span.element-lef a {
+    .style-element(-120px);
+  }
+
+  span.element-lfe a {
+    .style-element(-180px);
+  }
+
+  span.element-lee a {
+    .style-element(-243px);
+  }
+
+  span.element-rfn a {
+    .style-element(-304px);
+  }
+
+  span.element-rfp a {
+    .style-element(-363px);
+  }
+
+  span.element-ren a {
+    .style-element(-426px);
+  }
+
+  span.element-rep a {
+    .style-element(-485px);
+  }
+
+  .bin-icon {
+    vertical-align: -90%;
+    padding: 10px;
+  }
+
+  .bin-icon:hover {
+    color: #aaa;
+    cursor: pointer;
+  }
 }
 
 .view-number-line {
 
   div.element-selector {
-    white-space: nowrap;
-    span.element-pf a {
-      .style-element(0px);
-    }
-
-    span.element-lff a {
-      .style-element(-60px);
-    }
-
-    span.element-lef a {
-      .style-element(-120px);
-    }
-
-    span.element-lfe a {
-      .style-element(-180px);
-    }
-
-    span.element-lee a {
-      .style-element(-243px);
-    }
-
-    span.element-rfn a {
-      .style-element(-304px);
-    }
-
-    span.element-rfp a {
-      .style-element(-363px);
-    }
-
-    span.element-ren a {
-      .style-element(-426px);
-    }
-
-    span.element-rep a {
-      .style-element(-485px);
-    }
-
-    .bin-icon {
-      vertical-align: -90%;
-      padding: 10px;
-    }
-
-    .bin-icon:hover {
-      color: #aaa;
-      cursor: pointer;
-    }
+    .element-selector-template();
   }
 
   .panel.feedback-panel {
@@ -102,4 +105,16 @@
     color: @incorrect-color;
   }
 
+}
+
+.config-number-line {
+
+  div.element-selector {
+    .element-selector-template();
+  }
+
+  .fixed-input-100 {
+    display: inline-block;
+    width: 100px;
+  }
 }
