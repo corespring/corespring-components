@@ -38,11 +38,11 @@ var main = [
          * Remove the choices which have moveOnDrag true and which are placed
          */
         function findVisibleChoices() {
-          return _.filter(scope.originalChoices, function (choice) {
+          return _.filter(scope.originalChoices, function(choice) {
             if (!choice.moveOnDrag) {
               return true;
             }
-            var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function (c) {
+            var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
               return _.pluck(c, 'id').indexOf(choice.id) >= 0;
             });
             return _.isUndefined(landingPlaceWithChoice);
@@ -54,10 +54,12 @@ var main = [
          * the $$hashKey is retained. This is to avoid
          * unnecessary updates of the repeater
          */
-        function mapToCurrentChoices(visibleChoices){
+        function mapToCurrentChoices(visibleChoices) {
           return _.map(visibleChoices, function(choice) {
-            var matchingChoice = _.find(scope.local.choices, {id:choice.id});
-            if(!matchingChoice){
+            var matchingChoice = _.find(scope.local.choices, {
+              id: choice.id
+            });
+            if (!matchingChoice) {
               matchingChoice = _.clone(choice);
               delete choice.$$hashKey;
             }
@@ -75,8 +77,12 @@ var main = [
         var $holder = element.find(targetSelector);
         //if the answer area exists already
         if ($holder[0].childNodes.length) {
-          //destroy the scope of it
-          angular.element($holder[0].childNodes[0]).scope().$destroy();
+          //get the scope of it
+          var existingScope = angular.element($holder[0].childNodes[0]).scope();
+          //and destroy the scope, if it is different from the one we are going to use
+          if (existingScope !== scope) {
+            existingScope.$destroy();
+          }
         }
         var $answerArea = $holder.html(answerAreaTemplate());
         $timeout(function() {
@@ -85,7 +91,7 @@ var main = [
         });
       }
 
-      scope.cleanChoiceForId = function(id){
+      scope.cleanChoiceForId = function(id) {
         var choice = scope.choiceForId(id);
         choice = _.clone(choice);
         delete choice.$$hashKey;
@@ -124,7 +130,7 @@ var main = [
             scope.local.choices = withoutPlacedChoices();
           }
 
-          renderAnswerArea(".answer-area-holder", scope.$new());
+          renderAnswerArea(".answer-area-holder", scope);
         },
 
         getSession: function() {
@@ -186,7 +192,7 @@ var main = [
         }
       };
 
-      scope.draggableJqueryOptions = function(choice){
+      scope.draggableJqueryOptions = function(choice) {
         return {
           revert: 'invalid',
           scope: scope.dragAndDropScopeId
@@ -387,11 +393,11 @@ var answerAreaInline = ['$interval',
            * this property is removed here. The repeater in the answer area
            * will set a new value for it.
            */
-          scope.removeHashKeyFromDroppedItem = function(){
+          scope.removeHashKeyFromDroppedItem = function() {
             var items = scope.renderScope.landingPlaceChoices[scope.answerAreaId];
             var lastItem = _.cloneDeep(_.last(items));
             delete lastItem.$$hashKey;
-            items[items.length-1] = lastItem;
+            items[items.length - 1] = lastItem;
           };
 
           scope.droppableOptions = {
@@ -403,10 +409,7 @@ var answerAreaInline = ['$interval',
             distance: 5,
             hoverClass: 'answer-area-inline-hover',
             scope: renderScope.dragAndDropScopeId,
-            tolerance: renderScope.model.config.isRegressionTest ? 'intersect' : 'pointer'
-              //regression tests fail when tolerance is pointer
-              //but for items which are bigger than the initial answer area, intersect does not feel natural
-              //so we pass in a config bool that we can use to choose the tolerance
+            tolerance: 'pointer'
           };
 
           scope.classForChoice = function(choice, index) {
@@ -426,7 +429,7 @@ var answerAreaInline = ['$interval',
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index, 1);
           };
 
-          scope.showWarningIfEmpty = function() {
+          scope.noAnswersPlaced = function() {
             return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
 
@@ -455,7 +458,7 @@ var answerAreaInline = ['$interval',
         '      </div>',
         '    </div>',
         '  </div>',
-        '  <div class="empty-answer-area-warning" ng-if="showWarningIfEmpty()"><i class="fa fa-exclamation-triangle"></i></div>',
+        '  <div class="empty-answer-area-warning" ng-if="noAnswersPlaced()"><i class="fa fa-exclamation-triangle"></i></div>',
         '</div>'
       ].join("\n")
     };

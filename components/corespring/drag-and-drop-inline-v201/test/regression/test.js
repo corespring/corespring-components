@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('drag and drop inline v201', function() {
+describe.only('drag and drop inline v201', function() {
 
   "use strict";
 
@@ -31,6 +31,13 @@ describe('drag and drop inline v201', function() {
     return this;
   };
 
+  browser.dragAndDropWithOffset = function(fromSelector, toSelector){
+    return this.moveToObject(fromSelector, 2, 2)
+      .buttonDown()
+      .moveToObject(toSelector, 2, 2)
+      .buttonUp();
+  };
+
   beforeEach(function() {
     browser
       .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
@@ -39,9 +46,7 @@ describe('drag and drop inline v201', function() {
 
   it('correct answer results in correct feedback', function(done) {
     browser
-      .waitFor(choice('c_2'))
-      .waitFor(landingPlace('aa_1'))
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -49,8 +54,8 @@ describe('drag and drop inline v201', function() {
 
   it('superfluous answer results in partial feedback', function(done) {
     browser
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.feedback.partial', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -58,7 +63,7 @@ describe('drag and drop inline v201', function() {
 
   it('incorrect answer results in incorrect feedback', function(done) {
     browser
-      .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.feedback.incorrect', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -66,7 +71,7 @@ describe('drag and drop inline v201', function() {
 
   it('incorrect answer is marked as incorrect', function(done) {
     browser
-      .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.selected-choice.incorrect', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -74,8 +79,8 @@ describe('drag and drop inline v201', function() {
 
   it('correct answer is marked as correct', function(done) {
     browser
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.selected-choice.correct', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -83,8 +88,8 @@ describe('drag and drop inline v201', function() {
 
   it('correct answer in wrong position is marked as incorrect', function(done) {
     browser
-      .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.selected-choice.incorrect', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -92,8 +97,8 @@ describe('drag and drop inline v201', function() {
 
   it('superfluous answer is marked as incorrect', function(done) {
     browser
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.selected-choice.incorrect', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -101,8 +106,8 @@ describe('drag and drop inline v201', function() {
 
   it('selected choices are marked correctly', function(done) {
     browser
-      .dragAndDrop(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDrop(choice('c_1'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.selected-choice.correct .fa-check-circle', regressionTestRunnerGlobals.defaultTimeout)
       .waitFor('.selected-choice.incorrect .fa-times-circle', regressionTestRunnerGlobals.defaultTimeout)
@@ -125,7 +130,7 @@ describe('drag and drop inline v201', function() {
       .isExisting(choice('c_4'), function(err,res){
         expect("choice exists: " + res).toBe("choice exists: true");
       })
-      .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
       .isExisting(choice('c_4'), function(err,res){
         expect("choice removed: " + !res).toBe("choice removed: true");
       })
@@ -134,7 +139,7 @@ describe('drag and drop inline v201', function() {
 
   it("shows correct answer area if answer is incorrect", function(done){
     browser
-      .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
       .submitItem()
       .waitFor('.correct-answer-area-holder', regressionTestRunnerGlobals.defaultTimeout)
       .call(done);
@@ -153,13 +158,13 @@ describe('drag and drop inline v201', function() {
     });
     it("renders math in selected choice", function(done){
       browser
-        .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .isExisting('.answer-area-holder .selected-choice .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
     });
     it("renders math in correct answer area", function(done){
       browser
-        .dragAndDrop(choice('c_4'), landingPlace('aa_1'))
+        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
         .click('h4.panel-title')
         .isExisting('.correct-answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
