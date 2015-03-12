@@ -226,7 +226,7 @@ var main = [
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptions(choice)"',
         '    data-choice-id="{{choice.id}}">',
-        '    <span class="choice-content" ng-bind-html="cleanLabel(choice)"></span>',
+        '    <span class="choice-content" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
         '  </div>',
         '</div>'
       ].join('');
@@ -447,7 +447,7 @@ var answerAreaInline = ['$interval',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId]">',
         '      <div class="selected-choice-content">',
-        '        <div class="html-wrapper" ng-bind-html="renderScope.cleanLabel(choice)"></div>',
+        '        <div class="html-wrapper" ng-bind-html-unsafe="renderScope.cleanLabel(choice)"></div>',
         '        <div class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
         '      </div>',
         '      <div class="circle">',
