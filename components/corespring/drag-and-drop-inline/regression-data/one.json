@@ -2,7 +2,7 @@
   "item": {
     "components": {
       "1": {
-        "componentType": "corespring-drag-and-drop-inline-v201",
+        "componentType": "corespring-drag-and-drop-inline",
         "title": "Get a Job",
         "weight": 4,
         "correctResponse": {
@@ -29,9 +29,10 @@
         ],
         "model": {
           "answerAreas": [
-            {"id": "aa_1"}
+            {"id": "aa_1"},
+            {"id": "aa_2"}
           ],
-          "answerAreaXhtml": "​<span mathjax=''>\\(w^1=15\\)</span>​<answer-area-inline-csdndi-v201 id='aa_1'></answer-area-inline-csdndi-v201>",
+          "answerAreaXhtml": "​<span mathjax=''>\\(w^1=15\\)</span>​<answer-area-inline-csdndi id='aa_1'></answer-area-inline-csdndi> and second area <answer-area-inline-csdndi id='aa_2'></answer-area-inline-csdndi>",
           "config": {
             "orientation": "vertical",
             "shuffle": false
@@ -58,6 +59,6 @@
         }
       }
     },
-    "xhtml": "<corespring-drag-and-drop-inline-v201 id=\"1\"></corespring-drag-and-drop-inline-v201>"
+    "xhtml": "<corespring-drag-and-drop-inline id=\"1\"></corespring-drag-and-drop-inline>"
   }
 }
