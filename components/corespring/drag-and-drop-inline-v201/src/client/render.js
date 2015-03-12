@@ -117,7 +117,7 @@ var main = [
 
             // Build up the landing places with the selected choices
             _.each(dataAndSession.session.answers, function(v, k) {
-              scope.landingPlaceChoices[k] = _.map(v, scope.cleanCoiceForId);
+              scope.landingPlaceChoices[k] = _.map(v, scope.cleanChoiceForId);
             });
 
             // Remove choices that are in landing place area
