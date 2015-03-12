@@ -34,8 +34,7 @@
           "answerAreaXhtml": "​<span mathjax=''>\\(w^1=15\\)</span>​<answer-area-inline-csdndi-v201 id='aa_1'></answer-area-inline-csdndi-v201>",
           "config": {
             "orientation": "vertical",
-            "shuffle": false,
-            "isRegressionTest": true
+            "shuffle": false
           },
           "choices": [
             {
