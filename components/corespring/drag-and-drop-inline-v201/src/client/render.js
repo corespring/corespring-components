@@ -32,16 +32,42 @@ var main = [
         return answerArea;
       }
 
-      function withoutPlacedChoices(originalChoices) {
-        return _.filter(originalChoices, function(choice) {
-          if (!choice.moveOnDrag) {
-            return true;
-          }
-          var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function(c) {
-            return _.pluck(c, 'id').indexOf(choice.id) >= 0;
+      function withoutPlacedChoices() {
+
+        /**
+         * Remove the choices which have moveOnDrag true and which are placed
+         */
+        function findVisibleChoices() {
+          return _.filter(scope.originalChoices, function (choice) {
+            if (!choice.moveOnDrag) {
+              return true;
+            }
+            var landingPlaceWithChoice = _.find(scope.landingPlaceChoices, function (c) {
+              return _.pluck(c, 'id').indexOf(choice.id) >= 0;
+            });
+            return _.isUndefined(landingPlaceWithChoice);
           });
-          return _.isUndefined(landingPlaceWithChoice);
-        });
+        }
+
+        /**
+         * Map the choices to the current choices so that
+         * the $$hashKey is retained. This is to avoid
+         * unnecessary updates of the repeater
+         */
+        function mapToCurrentChoices(visibleChoices){
+          return _.map(visibleChoices, function(choice) {
+            var matchingChoice = _.find(scope.local.choices, {id:choice.id});
+            if(!matchingChoice){
+              matchingChoice = _.clone(choice);
+              delete choice.$$hashKey;
+            }
+            return matchingChoice;
+          });
+        }
+
+        var visibleChoices = findVisibleChoices();
+        var returnValue = mapToCurrentChoices(visibleChoices);
+        return returnValue;
       }
 
 
@@ -58,6 +84,13 @@ var main = [
           renderMath();
         });
       }
+
+      scope.cleanChoiceForId = function(id){
+        var choice = scope.choiceForId(id);
+        choice = _.clone(choice);
+        delete choice.$$hashKey;
+        return choice;
+      };
 
       _.extend(scope.containerBridge, {
         setDataAndSession: function(dataAndSession) {
@@ -84,11 +117,11 @@ var main = [
 
             // Build up the landing places with the selected choices
             _.each(dataAndSession.session.answers, function(v, k) {
-              scope.landingPlaceChoices[k] = _.map(v, scope.choiceForId);
+              scope.landingPlaceChoices[k] = _.map(v, scope.cleanCoiceForId);
             });
 
             // Remove choices that are in landing place area
-            scope.local.choices = withoutPlacedChoices(scope.originalChoices);
+            scope.local.choices = withoutPlacedChoices();
           }
 
           renderAnswerArea(".answer-area-holder", scope.$new());
@@ -124,7 +157,7 @@ var main = [
           solutionScope.cleanLabel = scope.cleanLabel;
           _.each(scope.correctResponse, function(v, k) {
             solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
-              return scope.choiceForId(r);
+              return scope.cleanChoiceForId(r);
             });
           });
 
@@ -160,8 +193,9 @@ var main = [
         };
       };
 
+      //called by dnd engine, when landingPlaceChoices has changed
       scope.answerChangeCallback = function() {
-        scope.local.choices = withoutPlacedChoices(scope.originalChoices);
+        scope.local.choices = withoutPlacedChoices();
       };
 
       scope.canEdit = function() {
@@ -192,7 +226,7 @@ var main = [
         '    ng-model="local.choices"',
         '    jqyoui-draggable="draggableOptions(choice)"',
         '    data-choice-id="{{choice.id}}">',
-        '    <span class="choice-content" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
+        '    <span class="choice-content" ng-bind-html="cleanLabel(choice)"></span>',
         '  </div>',
         '</div>'
       ].join('');
@@ -413,7 +447,7 @@ var answerAreaInline = ['$interval',
         '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId]">',
         '      <div class="selected-choice-content">',
-        '        <div class="html-wrapper" ng-bind-html-unsafe="renderScope.cleanLabel(choice)"></div>',
+        '        <div class="html-wrapper" ng-bind-html="renderScope.cleanLabel(choice)"></div>',
         '        <div class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
         '      </div>',
         '      <div class="circle">',
