@@ -52,6 +52,7 @@ var main = [
               "exhibitOnly": false,
               "availableTypes": {
                 "PF": true,
+                "PE": true,
                 "LEE": true,
                 "LEF": true,
                 "LFE": true,

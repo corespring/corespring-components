@@ -127,7 +127,7 @@ var interactiveGraph = [
     "use strict";
 
     var groups = {
-      "Point": ["PF"],
+      "Point": ["PF","PE"],
       "Line": ["LEE", "LEF", "LFE", "LFF"],
       "Ray": ["REP", "REN", "RFP", "RFN"]
     };
@@ -145,6 +145,7 @@ var interactiveGraph = [
         '  </ul>',
         '  <div ng-show="editable" class="element-selector" >',
         '    <span role="presentation" class="element-pf" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PF\')"   ng-mousedown="select(\'PF\')"><a ng-class="{active: isActive(\'PF\')}">&nbsp;</a></span>',
+        '    <span role="presentation" class="element-pe" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PE\')"   ng-mousedown="select(\'PE\')"><a ng-class="{active: isActive(\'PE\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-lff" ng-show="isGroupActive(\'Line\') && isTypeEnabled(\'LFF\')"  ng-mousedown="select(\'LFF\')"><a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-lef" ng-show="isGroupActive(\'Line\') && isTypeEnabled(\'LEF\')"  ng-mousedown="select(\'LEF\')"><a ng-class="{active: isActive(\'LEF\')}">&nbsp;</a></span>',
         '    <span role="presentation"  class="element-lfe" ng-show="isGroupActive(\'Line\') && isTypeEnabled(\'LFE\')"  ng-mousedown="select(\'LFE\')"><a ng-class="{active: isActive(\'LFE\')}">&nbsp;</a></span>',
@@ -184,16 +185,6 @@ var interactiveGraph = [
           }
         });
 
-        function getLastRange() {
-          var lastRange = 0;
-          _.each(scope.responsemodel, function(e) {
-            if (e.rangePosition > lastRange) {
-              lastRange = e.rangePosition;
-            }
-          });
-          return lastRange;
-        }
-
         scope.addElement = function(domainPosition, elementType) {
           if (!scope.editable) {
             return;
@@ -202,6 +193,13 @@ var interactiveGraph = [
             return;
           }
           var newRangePosition = 0;
+          var defaultPointModel = {
+            "type": "point",
+            "pointType": "full",
+            "domainPosition": domainPosition,
+            "rangePosition": 0
+          };
+
           var defaultLineModel = {
             "type": "line",
             "domainPosition": domainPosition,
@@ -218,12 +216,10 @@ var interactiveGraph = [
           };
           switch (elementType) {
             case "PF":
-              scope.responsemodel.push({
-                "type": "point",
-                "pointType": "full",
-                "domainPosition": domainPosition,
-                "rangePosition": 0
-              });
+              scope.responsemodel.push(defaultPointModel);
+              break;
+            case "PE":
+              scope.responsemodel.push(_.extend(defaultPointModel, {pointType: 'empty'}));
               break;
             case "LEE":
               scope.responsemodel.push(defaultLineModel);
