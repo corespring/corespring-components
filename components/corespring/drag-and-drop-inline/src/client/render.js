@@ -218,51 +218,53 @@ var main = [
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
-    function choiceArea() {
+    function template() {
+      function choiceArea() {
+        return [
+          '<div class="choices-holder" >',
+          '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
+          '    <div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div>',
+          '  </div>',
+          '  <div ng-repeat="choice in local.choices"',
+          '    class="choice" ',
+          '    ng-class="{editable:canEdit()}"',
+          '    data-drag="canEdit()"',
+          '    data-jqyoui-options="draggableJqueryOptions(choice)"',
+          '    ng-model="local.choices"',
+          '    jqyoui-draggable="draggableOptions(choice)"',
+          '    data-choice-id="{{choice.id}}">',
+          '    <span class="choice-content" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
+          '  </div>',
+          '</div>'
+        ].join('');
+      }
+
       return [
-        '<div class="choices-holder" >',
-        '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
-        '    <div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div>',
+        '<div class="render-csdndi" drag-and-drop-controller>',
+        '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
+        '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i> Undo</button>',
+        '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
         '  </div>',
-        '  <div ng-repeat="choice in local.choices"',
-        '    class="choice" ',
-        '    ng-class="{editable:canEdit()}"',
-        '    data-drag="canEdit()"',
-        '    data-jqyoui-options="draggableJqueryOptions(choice)"',
-        '    ng-model="local.choices"',
-        '    jqyoui-draggable="draggableOptions(choice)"',
-        '    data-choice-id="{{choice.id}}">',
-        '    <span class="choice-content" ng-bind-html-unsafe="cleanLabel(choice)"></span>',
+        '  <div class="clearfix"></div>',
+        '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
+        '  <div class="answer-area-holder" ng-class="response.correctClass"></div>',
+        '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
+        '  <div class="clearfix"></div>',
+        '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
+        '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="seeSolutionExpanded" ng-show="correctResponse">',
+        '    <div class="correct-answer-area-holder"></div>',
         '  </div>',
         '</div>'
-      ].join('');
+      ].join("");
     }
-
-    var tmpl = [
-      '<div class="render-csdndi" drag-and-drop-controller>',
-      '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
-      '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i> Undo</button>',
-      '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
-      '  </div>',
-      '  <div class="clearfix"></div>',
-      '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
-      '  <div class="answer-area-holder" ng-class="response.correctClass"></div>',
-      '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
-      '  <div class="clearfix"></div>',
-      '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-      '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="seeSolutionExpanded" ng-show="correctResponse">',
-      '    <div class="correct-answer-area-holder"></div>',
-      '  </div>',
-      '</div>'
-
-    ].join("");
 
     return {
       link: link,
       scope: false,
       restrict: 'AE',
       replace: true,
-      template: tmpl
+      template: template(),
+      controller: ['$scope', function(scope){}]
     };
   }];
 
@@ -326,6 +328,12 @@ var answerAreaInline = ['$interval',
             }
           }
 
+          function initPlaceholder(placeholder) {
+            placeholder.html('&nbsp;');
+            placeholder.width(sortableSize.width);
+            placeholder.height(sortableSize.height);
+          }
+
           //the sortable changes the height of its dropping area
           //so that the currently dragged item fits in.
           //The calculation does not seem to work properly in our case.
@@ -335,15 +343,7 @@ var answerAreaInline = ['$interval',
           //sets the placeholder to the same size. Also the placeholder
           //is filled with &nbsp;, bc. otherwise its height nyit is
           //changing a few pixels too
-
           scope.targetSortableOptions = function() {
-
-            function initPlaceholder(placeholder) {
-              placeholder.html('&nbsp;');
-              placeholder.width(sortableSize.width);
-              placeholder.height(sortableSize.height);
-            }
-
             return {
               connectWith: "." + renderScope.dragAndDropScopeId,
               disabled: !renderScope.canEdit(),
