@@ -1,17 +1,30 @@
 var main = [
-  '$log','ChoiceTemplates',
-  function($log,ChoiceTemplates) {
+  '$log', 'ChoiceTemplates',
+  function($log, ChoiceTemplates) {
 
     var attributes = [
-      '  <h3>Number Line Attributes</h3>',
-      '  <checkbox ng-model="fullModel.model.config.exhibitOnly">Make exhibit</checkbox>',
-      '  <div>',
-      '     Domain = <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[0]"/> to <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[1]"/>',
-      '  </div>',
-      '  <div>Number of Ticks: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.tickFrequency"/></div>',
-      '  <checkbox ng-model="fullModel.model.config.showMinorTicks">Display minor tick marks</checkbox>',
-      '  <div>Minor tick frequency: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.snapPerTick"/></div>',
-      '  <div><a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a></div>',
+      '<table>',
+      '  <tr>',
+      '    <td>',
+      '    <h3>Number Line Attributes</h3>',
+      '    <checkbox ng-model="fullModel.model.config.exhibitOnly">Make exhibit</checkbox>',
+      '    <div>',
+      '       Domain = <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[0]"/> to <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[1]"/>',
+      '    </div>',
+      '    <div>Number of Ticks: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.tickFrequency"/></div>',
+      '    <checkbox ng-model="fullModel.model.config.showMinorTicks">Display minor tick marks</checkbox>',
+      '    <div>Minor tick frequency: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.snapPerTick"/></div>',
+      '    <div><a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a></div>',
+      '    </td>',
+      '    <td>',
+      '      <div interactive-graph',
+      '           ngModel="sampleNumberLine.model"',
+      '           responseModel="sampleNumberLine.responseModel"',
+      '           editable="sampleNumberLine.editable"></div>',
+
+      '    </td>',
+      '  </tr>',
+      '</table>'
     ].join('');
 
     var initialView = [
@@ -69,11 +82,21 @@ var main = [
         scope.correctResponseView = _.cloneDeep(scope.initialView);
         scope.correctResponseView.responseModel = {};
 
+        scope.sampleNumberLine = _.merge(_.cloneDeep(scope.initialView), {
+          model: {
+            config: {
+              maxNumberOfPoints: 1
+            }
+          },
+          editable: false
+        });
+
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
             scope.initialView.model.config.initialElements = _.cloneDeep(model.model.config.initialElements);
             scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse);
+            scope.updatePartialScoringModel(model.correctResponse.length);
           },
 
           getModel: function() {
@@ -94,6 +117,20 @@ var main = [
           });
         };
 
+        var updateNumberLineOptions= function(n) {
+          if (n) {
+            scope.$apply(function() {
+              _(n).omit('initialElements').each(function(e, k) {
+                if (!_.isUndefined(n[k])) {
+                  scope.initialView.model.config[k] = _.cloneDeep(n[k]);
+                  scope.correctResponseView.model.config[k] = _.cloneDeep(n[k]);
+                  scope.sampleNumberLine.model.config[k] = _.cloneDeep(n[k]);
+                }
+              });
+            });
+          }
+        };
+
         function debounce(fn) {
           return _.debounce(fn, 500, {
             trailing: true,
@@ -105,16 +142,7 @@ var main = [
 
         scope.$watch('correctResponseView.responseModel', debounce(updateCorrectResponse), true);
 
-        scope.$watch('fullModel.model.config', function(n) {
-          if (n) {
-            _(n).omit('initialElements').each(function(e, k) {
-              if (!_.isUndefined(n[k])) {
-                scope.initialView.model.config[k] = n[k];
-                scope.correctResponseView.model.config[k] = n[k];
-              }
-            });
-          }
-        }, true);
+        scope.$watch('fullModel.model.config', debounce(updateNumberLineOptions), true);
 
         // Temporary way to test the interaction
         scope.$watch('fullModel', function(n) {
