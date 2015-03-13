@@ -72,17 +72,12 @@ var main = [
         return returnValue;
       }
 
-
       function renderAnswerArea(targetSelector, scope) {
         var $holder = element.find(targetSelector);
         //if the answer area exists already
         if ($holder[0].childNodes.length) {
-          //get the scope of it
-          var existingScope = angular.element($holder[0].childNodes[0]).scope();
-          //and destroy the scope, if it is different from the one we are going to use
-          if (existingScope !== scope) {
-            existingScope.$destroy();
-          }
+          //bail out
+          return;
         }
         var $answerArea = $holder.html(answerAreaTemplate());
         $timeout(function() {

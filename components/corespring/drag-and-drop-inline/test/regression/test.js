@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('drag and drop inline', function() {
+describe('drag and drop inline', function() {
 
   "use strict";
 
@@ -170,7 +170,6 @@ describe.only('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .pause(20000)
         .click('h4.panel-title')
         .isExisting('.correct-answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
         .call(done);
@@ -189,7 +188,7 @@ describe.only('drag and drop inline', function() {
 
   //doesn't work, something wrong with the sortable?
   //it doesn't seem to highlight the answer areas if you do it manually
-  xit("allows drag and drop between answer areas", function(done){
+  it("allows drag and drop between answer areas", function(done){
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
@@ -200,17 +199,16 @@ describe.only('drag and drop inline', function() {
 
   //doesn't work, something wrong with the sortable?
   //it doesn't seem to highlight the answer areas if you do it manually
-  xit("allows removing a choice by dragging it out of answer area", function(done){
+  it("allows removing a choice by dragging it out of answer area", function(done){
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .pause(1000)
       .moveToObject(selectedChoice('c_2'), 2, 2)
       .buttonDown()
       .moveTo(null, 0, 200)
-      .pause(2000)
       .buttonUp()
-      .submitItem()
-      .waitFor('.empty-answer-area-warning', regressionTestRunnerGlobals.defaultTimeout)
+      .isExisting(selectedChoice('c_2'), function(err,res){
+        expect("selected choice removed: " + !res).toBe("selected choice removed: true");
+      })
       .call(done);
   });
 

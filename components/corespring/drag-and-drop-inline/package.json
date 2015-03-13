@@ -18,6 +18,15 @@
         "version": "0.0.6",
         "file": "src/directive.js",
         "angular-module": "corespring.input.radio"
+      },
+      "angular-ui-sortable": {
+        "bower_target": "~0.12.6",
+        "file": "sortable.js",
+        "angular-module": "ui.sortable"
+      },
+      "jquery-ui-touch-punch": {
+        "bower_target": "https://github.com/furf/jquery-ui-touch-punch.git",
+        "file": "jquery.ui.touch-punch.min.js"
       }
     }
   },
