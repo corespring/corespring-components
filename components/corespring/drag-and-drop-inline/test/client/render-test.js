@@ -300,4 +300,147 @@ describe('corespring:drag-and-drop-inline', function() {
 
   });
 
+  describe("answer-area-inline", function(){
+
+    function createAnswerArea(renderScope){
+      rootScope.$on('get-scope', function(event, callback){
+        callback(renderScope);
+      });
+      var link = compile('<answer-area-inline-csdndi id="aa_1"></answer-area-inline-csdndi>');
+      element = link(rootScope.$new());
+      scope = element.isolateScope();
+    }
+
+    it("should init answerAreaId from the id attribute", function(){
+      createAnswerArea({});
+      expect(scope.answerAreaId).toEqual('aa_1');
+    });
+
+    describe("removeHashKeyFromDroppedItem", function(){
+      beforeEach(function(){
+        var renderScope = {landingPlaceChoices:{aa_1:[{id:'c1', $$hashKey: 'h1'}]}};
+        createAnswerArea(renderScope);
+      });
+      it("should removeHashKey from last item in landingPlace", function(){
+        scope.removeHashKeyFromDroppedItem();
+        expect(scope.renderScope.landingPlaceChoices.aa_1[0]).toEqual({id:'c1'});
+      });
+
+      it("should be configured as handler for onDrop", function(){
+        expect(scope.droppableOptions.onDrop).toEqual('removeHashKeyFromDroppedItem');
+      });
+    });
+
+    describe("droppableJqueryOptions", function(){
+      beforeEach(function(){
+        createAnswerArea({dragAndDropScopeId: 'scope-123'});
+      });
+
+      it("should set scope to dragAndDropScopeId of renderScope", function(){
+        expect(scope.droppableJqueryOptions.scope).toEqual('scope-123');
+      });
+
+      it('should init activeClass', function(){
+        expect(scope.droppableJqueryOptions.activeClass).toEqual('answer-area-inline-active');
+      });
+
+      it('should init hoverClass', function(){
+        expect(scope.droppableJqueryOptions.hoverClass).toEqual('answer-area-inline-hover');
+      });
+
+      it('should init tolerance', function(){
+        expect(scope.droppableJqueryOptions.tolerance).toEqual('pointer');
+      });
+
+      it('should init distance', function(){
+        expect(scope.droppableJqueryOptions.distance).toEqual(5);
+      });
+
+    });
+
+    describe("classForChoice", function(){
+      var classForChoiceArgs;
+      beforeEach(function(){
+        classForChoiceArgs = [];
+        createAnswerArea({classForChoice: function(answerAreaId, index){
+          classForChoiceArgs.push({answerAreaId: answerAreaId, index: index});
+        }});
+      });
+
+      it("should delegate classForChoice to renderScope", function(){
+        scope.classForChoice(4);
+        expect(classForChoiceArgs).toEqual([{answerAreaId: 'aa_1', index: 4}]);
+      });
+
+    });
+
+    describe("classForCorrectness", function(){
+      var correctness;
+
+      beforeEach(function(){
+        createAnswerArea({classForChoice: function(answerAreaId, index){
+          return correctness;
+        }});
+      });
+
+      it("should return check mark for correct answers", function(){
+        correctness = 'correct';
+        expect(scope.classForCorrectness(0)).toEqual('fa-check-circle');
+      });
+
+      it("should return x mark for incorrect answers", function(){
+        correctness = 'incorrect';
+        expect(scope.classForCorrectness(0)).toEqual('fa-times-circle');
+      });
+    });
+
+    describe("removeChoice", function(){
+      beforeEach(function(){
+        createAnswerArea({landingPlaceChoices:{aa_1:[{id:'c1'},{id:'c2'}], aa_2:[{id:'c1'},{id:'c2'}]}});
+      });
+
+      it("should remove choice from its own landingPlace", function(){
+        scope.removeChoice(1);
+        expect(scope.renderScope.landingPlaceChoices.aa_1).toEqual([{id:'c1'}]);
+      });
+
+      it("should not remove choice from other landingPlace", function(){
+        scope.removeChoice(1);
+        expect(scope.renderScope.landingPlaceChoices.aa_2).toEqual([{id:'c1'}, {id: 'c2'}]);
+      });
+    });
+
+    describe("showNoAnswersWarning", function(){
+      var renderScope;
+      beforeEach(function(){
+        renderScope = {landingPlaceChoices:{aa_1:[]}};
+        createAnswerArea(renderScope);
+      });
+
+      function setResponse(){
+        renderScope.response = {};
+      }
+
+      function addAnswer(){
+        renderScope.landingPlaceChoices.aa_1.push({id:'c1'});
+      }
+
+      it("should return false before setResponse", function(){
+        expect(scope.showNoAnswersWarning()).toBeFalsy();
+      });
+
+      it("should return false after setResponse and with answers", function(){
+        setResponse();
+        addAnswer();
+        expect(scope.showNoAnswersWarning()).toBeFalsy();
+      });
+
+      it("should return true after setResponse and no answers", function(){
+        setResponse();
+        expect(scope.showNoAnswersWarning()).toBeTruthy();
+      });
+    });
+
+  });
+
 });

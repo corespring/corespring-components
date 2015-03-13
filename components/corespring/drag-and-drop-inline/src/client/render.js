@@ -290,9 +290,10 @@ var answerAreaInline = ['$interval',
       restrict: 'EA',
       replace: true,
       link: function(scope, el, attr) {
+        scope.answerAreaId = attr.id;
+
         scope.$emit("get-scope", function(renderScope) {
           scope.renderScope = renderScope;
-          scope.answerAreaId = attr.id;
 
           function mouseIsOverElement(event) {
             var position = el.offset();
@@ -429,8 +430,8 @@ var answerAreaInline = ['$interval',
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index, 1);
           };
 
-          scope.noAnswersPlaced = function() {
-            return renderScope.correctResponse && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
+          scope.showNoAnswersWarning = function() {
+            return renderScope.response && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
 
           scope.$on("$destroy", function() {
@@ -458,7 +459,7 @@ var answerAreaInline = ['$interval',
         '      </div>',
         '    </div>',
         '  </div>',
-        '  <div class="empty-answer-area-warning" ng-if="noAnswersPlaced()"><i class="fa fa-exclamation-triangle"></i></div>',
+        '  <div class="empty-answer-area-warning" ng-if="showNoAnswersWarning()"><i class="fa fa-exclamation-triangle"></i></div>',
         '</div>'
       ].join("\n")
     };
