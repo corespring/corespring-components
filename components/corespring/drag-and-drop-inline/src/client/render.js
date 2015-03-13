@@ -263,7 +263,8 @@ var main = [
       scope: false,
       restrict: 'AE',
       replace: true,
-      template: template()
+      template: template(),
+      controller: ['$scope', function(scope) {}]
     };
   }];
 
@@ -342,6 +343,7 @@ var answerAreaInline = ['$interval',
           //sets the placeholder to the same size. Also the placeholder
           //is filled with &nbsp;, bc. otherwise its height nyit is
           //changing a few pixels too
+
           scope.targetSortableOptions = function() {
             return {
               connectWith: "." + renderScope.dragAndDropScopeId,

@@ -17,7 +17,7 @@ var main = [
       replace: true,
       template: template(),
 
-      controller: ['$scope', function($scope){
+      controller: ['$scope', function($scope) {
         $scope.imageService = function() {
           return ComponentImageService;
         };
@@ -33,7 +33,7 @@ var main = [
               compile: true,
               addToEditor: function(editor, addContent) {
                 var id = $scope.addAnswerArea();
-                addContent($('<answer-area-inline-csdndi id="' + id +'"/>'));
+                addContent($('<answer-area-inline-csdndi id="' + id + '"/>'));
               },
               deleteNode: function($node, services) {
                 var id = $node.attr('answer-area-id');
@@ -43,13 +43,11 @@ var main = [
                 var id = $node.attr('id');
                 return replaceWith($('<div config-answer-area-inline-csdndi answer-area-id="' + id + '"/>'));
               },
-              onDblClick: function($node, $scope, editor) {
-              },
-              editInstance: function($node, $scope, editor) {
-              },
+              onDblClick: function($node, $scope, editor) {},
+              editInstance: function($node, $scope, editor) {},
               getMarkUp: function($node) {
                 var id = $node.attr('answer-area-id');
-                return '<answer-area-inline-csdndi id="' + id +'"/>';
+                return '<answer-area-inline-csdndi id="' + id + '"/>';
               }
             }]
         };
@@ -68,28 +66,34 @@ var main = [
         }
 
         function choiceById(choices, cid) {
-          return _.find(choices, {id:cid});
+          return _.find(choices, {
+            id: cid
+          });
         }
 
         function removeChoice(choices, id) {
-          _.remove(choices, {id: id});
+          _.remove(choices, {
+            id: id
+          });
         }
 
-        function idsToChoices(ids){
+        function idsToChoices(ids) {
           return _.map(ids, function(choiceId) {
             return choiceById(scope.model.choices, choiceId);
           });
         }
 
-        function isPlaced(choice){
-          return _.some(scope.correctAnswers, function(val, key){
-            return !_.isUndefined(_.find(val, {id:choice.id}));
+        function isPlaced(choice) {
+          return _.some(scope.correctAnswers, function(val, key) {
+            return !_.isUndefined(_.find(val, {
+              id: choice.id
+            }));
           });
         }
 
-        function initCorrectAnswers(answerAreas, correctResponse){
+        function initCorrectAnswers(answerAreas, correctResponse) {
           var correctAnswers = {};
-          _.each(answerAreas, function(area){
+          _.each(answerAreas, function(area) {
             correctAnswers[area.id] = [];
           });
           _.each(correctResponse, function(correctChoices, areaId) {
@@ -98,7 +102,7 @@ var main = [
           return correctAnswers;
         }
 
-        function correctAnswersToCorrectResponse(correctAnswers){
+        function correctAnswersToCorrectResponse(correctAnswers) {
           var correctResponse = {};
           _.each(correctAnswers, function(val, key) {
             correctResponse[key] = _.pluck(val, 'id');
@@ -137,15 +141,15 @@ var main = [
           });
         };
 
-        function findFreeSlot(ids, prefix){
+        function findFreeSlot(ids, prefix) {
           var slot = 1;
-          while(_.contains(ids, prefix + slot)){
+          while (_.contains(ids, prefix + slot)) {
             slot++;
           }
           return prefix + slot;
         }
 
-        function findFreeChoiceSlot(){
+        function findFreeChoiceSlot() {
           return findFreeSlot(_.pluck(scope.model.choices, 'id'), 'c_');
         }
 
@@ -158,7 +162,7 @@ var main = [
           });
         };
 
-        function findFreeAnswerAreaSlot(){
+        function findFreeAnswerAreaSlot() {
           return findFreeSlot(_.pluck(scope.model.answerAreas, 'id'), "aa_");
         }
 
@@ -172,16 +176,18 @@ var main = [
         };
 
         scope.removeAnswerArea = function(answerAreaId) {
-          _.remove(scope.model.answerAreas, {id: answerAreaId});
+          _.remove(scope.model.answerAreas, {
+            id: answerAreaId
+          });
           delete scope.correctAnswers[answerAreaId];
         };
 
-        scope.$on('get-config-scope', function(event, callback){
+        scope.$on('get-config-scope', function(event, callback) {
           callback(scope);
         });
 
-        scope.$on('remove-correct-answer', function(event, answerAreaId, index){
-          scope.correctAnswers[answerAreaId].splice(index,1);
+        scope.$on('remove-correct-answer', function(event, answerAreaId, index) {
+          scope.correctAnswers[answerAreaId].splice(index, 1);
         });
 
         scope.choiceDraggableOptions = function(index) {
@@ -191,8 +197,8 @@ var main = [
           };
         };
 
-        function dragHelperTemplate(choice){
-          var $choice = $('li.draggable-choice[data-choice-id="' + choice.id +  '"]');
+        function dragHelperTemplate(choice) {
+          var $choice = $('li.draggable-choice[data-choice-id="' + choice.id + '"]');
           var $content = $choice.find(".content-holder");
           return [
             '<div class="drag-helper-csdndi">',
@@ -201,12 +207,12 @@ var main = [
           ].join('');
         }
 
-        scope.choiceDraggableJqueryOptions = function(choice){
+        scope.choiceDraggableJqueryOptions = function(choice) {
           return {
             revert: 'invalid',
-            helper: function(){
-                return $(dragHelperTemplate(choice));
-              },
+            helper: function() {
+              return $(dragHelperTemplate(choice));
+            },
             appendTo: ".modal",
             cursorAt: {
               bottom: 10,
@@ -243,7 +249,7 @@ var main = [
           scope.$emit('mathJaxUpdateRequest');
         };
 
-        scope.canDragChoice = function(choice, index){
+        scope.canDragChoice = function(choice, index) {
           return !(scope.active[index] || choice.moveOnDrag === true && isPlaced(choice));
         };
 
@@ -258,7 +264,7 @@ var main = [
       }
     };
 
-    function template(){
+    function template() {
       function introduction() {
         return [
           '<div class="row">',
@@ -453,29 +459,28 @@ var main = [
   }
 ];
 
-
 var configAnswerAreaInline = [
   '$log',
   'WIGGI_EVENTS',
   function($log, WIGGI_EVENTS) {
     "use strict";
     return {
-      scope:{},
+      scope: {},
       restrict: 'A',
       replace: true,
-      link: function(scope,el,attr){
-        scope.$emit("get-config-scope", function(configScope){
+      link: function(scope, el, attr) {
+        scope.$emit("get-config-scope", function(configScope) {
           scope.answerAreaId = attr.answerAreaId;
           scope.correctAnswers = configScope.correctAnswers;
 
-          scope.targetSortableOptions = function(){
+          scope.targetSortableOptions = function() {
             return {
               disabled: configScope.correctAnswers[scope.answerAreaId].length === 0,
               distance: 5,
-              start: function () {
+              start: function() {
                 configScope.targetDragging = true;
               },
-              stop: function () {
+              stop: function() {
                 configScope.targetDragging = false;
               }
             };
@@ -491,19 +496,19 @@ var configAnswerAreaInline = [
             tolerance: "pointer"
           };
 
-          scope.trackId = function(choice){
+          scope.trackId = function(choice) {
             return _.uniqueId();
           };
 
-          scope.removeCorrectAnswer = function(index){
+          scope.removeCorrectAnswer = function(index) {
             scope.$emit("remove-correct-answer", scope.answerAreaId, index);
           };
 
-          function removeTooltip(){
+          function removeTooltip() {
             scope.$broadcast("$destroy");
           }
 
-          scope.removeAnswerArea = function(){
+          scope.removeAnswerArea = function() {
             removeTooltip();
             scope.$emit(WIGGI_EVENTS.DELETE_NODE, el);
             scope.$destroy();
