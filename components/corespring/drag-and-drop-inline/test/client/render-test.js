@@ -69,7 +69,7 @@ describe('corespring:drag-and-drop-inline', function() {
 
       testModel = createTestModel();
 
-      $provide.value('MathJaxService', function() {});
+      $provide.value('MathJaxService', {parseDomForMath:function(){}});
       $provide.value('$modal', function() {});
       $provide.value('DragAndDropTemplates', {choiceArea:function(){}});
     });
@@ -119,18 +119,6 @@ describe('corespring:drag-and-drop-inline', function() {
       });
     });
     
-    it('shows the text in the answerArea', function(){
-      container.elements['1'].setDataAndSession(testModel);
-      rootScope.$digest();
-      wrapper = wrapElement();
-      var $answerArea = wrapper.find(".answer-area-holder");
-      expect($answerArea.length).toBe(1);
-
-      var text = $answerArea.text();
-      expect(text).toContain('text before');
-      expect(text).toContain('text after');
-    });
-
     it('removes selected choices from available choices', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();

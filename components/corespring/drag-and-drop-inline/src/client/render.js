@@ -6,14 +6,12 @@ var main = [
   '$log',
   '$modal',
   '$rootScope',
-  '$timeout',
   function(DragAndDropTemplates,
     MathJaxService,
     $compile,
     $log,
     $modal,
-    $rootScope,
-    $timeout) {
+    $rootScope) {
 
     "use strict";
 
@@ -25,11 +23,8 @@ var main = [
         MathJaxService.parseDomForMath(10, element[0]);
       }
 
-      function answerAreaTemplate(attributes) {
-        attributes = (attributes ? ' ' + attributes : '');
-        var answerHtml = scope.model.answerAreaXhtml;
-        var answerArea = '<div scope-forwarder-csdndi=""' + attributes + '>' + answerHtml + '</div>';
-        return answerArea;
+      function throttle(fn){
+        return _.throttle(fn, 500, {trailing: true, leading: false});
       }
 
       function withoutPlacedChoices() {
@@ -72,19 +67,27 @@ var main = [
         return returnValue;
       }
 
-      function renderAnswerArea(targetSelector, scope) {
+      //we throttle bc. when multiple calls to renderAnswerArea are
+      //made rapidly, the rendering breaks, eg. in the regression test rig
+      var renderAnswerArea = throttle(function(targetSelector, scope) {
         var $holder = element.find(targetSelector);
+
         //if the answer area exists already
         if ($holder[0].childNodes.length) {
-          //bail out
-          return;
+          //get the scope of it
+          var existingScope = angular.element($holder[0].childNodes[0]).scope();
+          //and destroy the scope, if it is different from the one we are going to use
+          console.log(existingScope);
+          if (existingScope !== scope) {
+            console.log("destroying existingScope");
+            existingScope.$destroy();
+          }
         }
-        var $answerArea = $holder.html(answerAreaTemplate());
-        $timeout(function() {
-          $compile($answerArea)(scope);
-          renderMath();
-        });
-      }
+        var $answerArea = $holder.html(scope.model.answerAreaXhtml);
+        $compile($answerArea)(scope);
+        renderMath();
+      });
+
 
       scope.cleanChoiceForId = function(id) {
         var choice = scope.choiceForId(id);
@@ -125,7 +128,7 @@ var main = [
             scope.local.choices = withoutPlacedChoices();
           }
 
-          renderAnswerArea(".answer-area-holder", scope);
+          renderAnswerArea(".answer-area-holder", scope.$new());
         },
 
         getSession: function() {
@@ -210,6 +213,10 @@ var main = [
         };
       })();
 
+      scope.$on("get-scope", function(event, callback) {
+        callback(scope);
+      });
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     }
 
@@ -258,8 +265,7 @@ var main = [
       scope: false,
       restrict: 'AE',
       replace: true,
-      template: template(),
-      controller: ['$scope', function(scope) {}]
+      template: template()
     };
   }];
 
@@ -431,6 +437,7 @@ var answerAreaInline = ['$interval',
           };
 
           scope.$on("$destroy", function() {
+            console.log("answerAreaInline destroy");
             stopPollingHoverState();
           });
 

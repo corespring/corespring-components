@@ -45,7 +45,7 @@ describe('drag and drop inline', function() {
   beforeEach(function() {
     browser
       .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
-      .waitFor('.render-csdndi', regressionTestRunnerGlobals.defaultTimeout);
+      .waitFor(landingPlace('aa_1'), regressionTestRunnerGlobals.defaultTimeout);
   });
 
   it('correct answer results in correct feedback', function(done) {
