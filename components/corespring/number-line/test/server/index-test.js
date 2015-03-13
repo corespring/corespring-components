@@ -149,7 +149,7 @@ describe('number line', function() {
 
   });
 
-  describe.only('feedback', function() {
+  describe('feedback', function() {
 
     it('incorrect item has incorrect feedback message and class', function() {
       var outcome = server.respond(component, [{"type": "point", "pointType": "empty", "domainPosition": 1, "rangePosition": 1}], helper.settings(true, true, true));
