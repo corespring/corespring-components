@@ -429,16 +429,17 @@ describe('corespring:drag-and-drop-inline', function() {
         expect(scope.showNoAnswersWarning()).toBeFalsy();
       });
 
+      it("should return true after setResponse and no answers", function(){
+        setResponse();
+        expect(scope.showNoAnswersWarning()).toBeTruthy();
+      });
+
       it("should return false after setResponse and with answers", function(){
         setResponse();
         addAnswer();
         expect(scope.showNoAnswersWarning()).toBeFalsy();
       });
 
-      it("should return true after setResponse and no answers", function(){
-        setResponse();
-        expect(scope.showNoAnswersWarning()).toBeTruthy();
-      });
     });
 
   });
