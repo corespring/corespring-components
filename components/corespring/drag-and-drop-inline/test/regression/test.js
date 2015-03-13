@@ -10,12 +10,12 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('drag and drop inline v201', function() {
+describe('drag and drop inline', function() {
 
   "use strict";
 
   var itemJsonFilename = 'one.json';
-  var componentName = 'drag-and-drop-inline-v201';
+  var componentName = 'drag-and-drop-inline';
   var itemJson = RegressionHelper.getItemJson(componentName, itemJsonFilename);
 
   function landingPlace(id) {
@@ -24,6 +24,10 @@ describe.only('drag and drop inline v201', function() {
 
   function choice(id) {
     return ".choice[data-choice-id='" + id + "']";
+  }
+
+  function selectedChoice(id) {
+    return ".selected-choice[data-choice-id='" + id + "']";
   }
 
   browser.submitItem = function() {
@@ -41,7 +45,7 @@ describe.only('drag and drop inline v201', function() {
   beforeEach(function() {
     browser
       .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
-      .waitFor('.render-csdndi-v201', regressionTestRunnerGlobals.defaultTimeout);
+      .waitFor('.render-csdndi', regressionTestRunnerGlobals.defaultTimeout);
   });
 
   it('correct answer results in correct feedback', function(done) {
@@ -173,20 +177,39 @@ describe.only('drag and drop inline v201', function() {
 
   });
 
-  it("allows drag and drop inside one answer area", function(){
-    //TODO write test
+  it("allows drag and drop inside one answer area", function(done){
+    browser
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
+      .submitItem()
+      .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+      .call(done);
   });
 
-  it("allows drag and drop between answer areas", function(){
-    //TODO write test
+  //doesn't work, something wrong with the sortable?
+  //it doesn't seem to highlight the answer areas if you do it manually
+  it("allows drag and drop between answer areas", function(done){
+    browser
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'))
+      .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
+      .submitItem()
+      .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+      .call(done);
   });
 
-  it("allows removing a choice by dragging it out of answer area", function(){
-    //TODO write test
-  });
-
-  it("shows choice as available after removing it from answer area", function(){
-    //TODO write test
+  //doesn't work, something wrong with the sortable?
+  //it doesn't seem to highlight the answer areas if you do it manually
+  it("allows removing a choice by dragging it out of answer area", function(done){
+    browser
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .moveToObject(selectedChoice('c_2'), 2, 2)
+      .buttonDown()
+      .moveTo(null, 0, 200)
+      .buttonUp()
+      .isExisting(selectedChoice('c_2'), function(err,res){
+        expect("selected choice removed: " + !res).toBe("selected choice removed: true");
+      })
+      .call(done);
   });
 
 });

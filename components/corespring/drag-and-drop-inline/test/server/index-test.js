@@ -8,7 +8,7 @@ server = proxyquire('../../src/server', {
   'corespring.server-shared.server.feedback-utils': fbu
 });
 
-describe('drag-and-drop-inline-v201', function() {
+describe('drag-and-drop-inline', function() {
 
   var utils = null;
 
