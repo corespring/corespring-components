@@ -4,7 +4,7 @@ describe('corespring:drag-and-drop-inline', function() {
 
   "use strict";
 
-  var testModel, container, element, scope, rootScope, wrapper;
+  var testModel, container, element, scope, rootScope, wrapper, compile;
 
   function MockComponentRegister() {
     this.elements = {};
@@ -86,6 +86,7 @@ describe('corespring:drag-and-drop-inline', function() {
     element = $compile("<corespring-drag-and-drop-inline-render id='1'></corespring-drag-and-drop-inline-render>")($rootScope.$new());
     scope = element.scope();
     rootScope = $rootScope;
+    compile = $compile;
   }));
 
   function setAnswer(answer){
@@ -135,7 +136,7 @@ describe('corespring:drag-and-drop-inline', function() {
       rootScope.$digest();
       expect(_.find(scope.local.choices, {'id':'c_1'})).toBeDefined();
       setAnswer('c_1');
-      expect(_.find(scope.local.choices, {'id':'c_1'})).not.toBeDefined();
+      expect(_.find(scope.local.choices, {'id':'c_1'})).toBeUndefined();
     });
 
     it('setting response shows correctness', function() {
@@ -179,7 +180,123 @@ describe('corespring:drag-and-drop-inline', function() {
 
     });
 
+    describe("dragAndDropScopeId", function(){
+      it("should be initialised with a different value every time it is linked", function(){
+        var link = compile("<corespring-drag-and-drop-inline-render id='1'></corespring-drag-and-drop-inline-render>");
+        element = link(rootScope.$new());
+        scope = element.scope();
+        var idOne = scope.dragAndDropScopeId;
+        element = link(rootScope.$new());
+        scope = element.scope();
+        var idTwo = scope.dragAndDropScopeId;
+        expect(idOne).not.toEqual(idTwo);
+      });
+    });
 
+    describe("cleanChoiceForId", function(){
+      it("should remove $$hashKey", function(){
+        var item = {id:"c1", $$hashKey: "h1"};
+        scope.originalChoices = [item];
+        var resultItem = scope.cleanChoiceForId("c1");
+        expect(resultItem).toEqual({id:'c1'});
+      });
+      it("should return a clone", function(){
+        var item = {id:"c1"};
+        scope.originalChoices = [item];
+        var resultItem = scope.cleanChoiceForId("c1");
+        expect(resultItem).toEqual({id:'c1'});
+        expect(resultItem).not.toBe(item);
+      });
+    });
+
+    describe("classForChoice", function(){
+      it("should return the feedback per choice", function(){
+        scope.response = {feedbackPerChoice: {'aa_1':['correct', 'incorrect']}};
+        expect(scope.classForChoice('aa_1', 0)).toEqual('correct');
+        expect(scope.classForChoice('aa_1', 1)).toEqual('incorrect');
+      });
+      it("should return incorrect if server did not return feedbackPerChoice", function(){
+        scope.response = {};
+        expect(scope.classForChoice('aa_1', 0)).toEqual('incorrect');
+        expect(scope.classForChoice('aa_1', 1)).toEqual('incorrect');
+      });
+      it("should return incorrect if server did not return feedback for all choices", function(){
+        scope.response = {feedbackPerChoice: {'aa_1':['correct']}};
+        expect(scope.classForChoice('aa_1', 0)).toEqual('correct');
+        expect(scope.classForChoice('aa_1', 1)).toEqual('incorrect');
+      });
+      it("should return editable as long as server did not return response", function(){
+        scope.editable = true;
+        expect(scope.classForChoice('aa_1', 0)).toEqual('editable');
+        expect(scope.classForChoice('aa_1', 1)).toEqual('editable');
+      });
+      it("should return undefined as long as setDataAndSession has not been called", function(){
+        expect(scope.classForChoice('aa_1', 0)).toBeUndefined();
+        expect(scope.classForChoice('aa_1', 1)).toBeUndefined();
+      });
+    });
+
+    describe("draggableJqueryOptions", function(){
+      it("should set the scope to the dragAndDropScopeId", function(){
+        var result = scope.draggableJqueryOptions();
+        expect(result.scope).toEqual(scope.dragAndDropScopeId);
+      });
+      it("should set revert to invalid", function(){
+        var result = scope.draggableJqueryOptions();
+        expect(result.revert).toEqual('invalid');
+      });
+    });
+
+    describe("answerChangeCallback", function(){
+
+      it("should remove placed items from the available choices, if moveOnDrag is true", function(){
+        scope.originalChoices = [{id:"c1"}, {id:"c2", moveOnDrag: true}];
+        scope.local = {choices: [{id:"c1"}, {id:"c2", moveOnDrag: true}]};
+        scope.landingPlaceChoices= {'aa_1': [{id:'c2'}]};
+        scope.answerChangeCallback();
+        expect(scope.local.choices).toEqual([{id:"c1"}]);
+      });
+
+      it("should add removed items to the available choices, if they are not placed", function(){
+        scope.originalChoices = [{id:"c1"}, {id:"c2", moveOnDrag: true}];
+        scope.local = {choices: [{id:"c1"}]};
+        scope.landingPlaceChoices= {'aa_1': []};
+        scope.answerChangeCallback();
+        expect(scope.local.choices).toEqual([{id:"c1"},{id:"c2", moveOnDrag: true}]);
+      });
+
+      it("should retain the $$hashKey", function(){
+        scope.originalChoices = [{id:"c1"}, {id:"c2", moveOnDrag: true}];
+        scope.local = {choices: [{id:"c1", $$hashKey: 'h1'}, {id:"c2", moveOnDrag: true, $$hashKey: 'h2'}]};
+        scope.landingPlaceChoices= {'aa_1': [{id:'c2'}]};
+        scope.answerChangeCallback();
+        expect(scope.local.choices).toEqual([{id:"c1", $$hashKey: 'h1'}]);
+      });
+    });
+
+    describe("canEdit", function(){
+      it("should return false before setDataAndSession",function(){
+        expect(scope.canEdit()).toBeFalsy();
+      });
+
+      it("should return true after setDataAndSession",function(){
+        scope.containerBridge.setDataAndSession({data:{model:{config:{}}}});
+        expect(scope.canEdit()).toBeTruthy();
+      });
+
+      it("should return false after setResponse",function(){
+        scope.containerBridge.setDataAndSession({data:{model:{config:{}}}});
+        scope.containerBridge.setResponse({});
+        expect(scope.canEdit()).toBeFalsy();
+      });
+    });
+
+    describe("cleanLabel", function(){
+      it("should remove zero-width-space (8203) character", function(){
+        var label =  String.fromCharCode(8203) + "A" + String.fromCharCode(8203) + "B" + String.fromCharCode(8203);
+        expect(scope.cleanLabel({label:label})).toEqual('AB');
+      });
+    });
 
   });
 

@@ -179,7 +179,7 @@ var main = [
         }
       });
 
-      scope.classForChoice = function(answerAreaId, choice, index) {
+      scope.classForChoice = function(answerAreaId, index) {
         if (scope.response) {
           var result;
           if (scope.response.feedbackPerChoice &&
@@ -205,7 +205,7 @@ var main = [
       };
 
       scope.canEdit = function() {
-        return scope.editable && !scope.correctResponse;
+        return scope.editable && !scope.response;
       };
 
       scope.cleanLabel = (function() {
@@ -412,12 +412,12 @@ var answerAreaInline = ['$interval',
             tolerance: 'pointer'
           };
 
-          scope.classForChoice = function(choice, index) {
-            return renderScope.classForChoice(scope.answerAreaId, choice, index);
+          scope.classForChoice = function(index) {
+            return renderScope.classForChoice(scope.answerAreaId, index);
           };
 
-          scope.classForCorrectness = function(choice, index) {
-            var choiceClass = scope.classForChoice(choice, index);
+          scope.classForCorrectness = function(index) {
+            var choiceClass = scope.classForChoice(index);
             if (choiceClass === "correct") {
               return 'fa-check-circle';
             } else if (choiceClass === "incorrect") {
@@ -447,14 +447,14 @@ var answerAreaInline = ['$interval',
         '    data-drop="true" ',
         '    jqyoui-droppable="droppableOptions" ',
         '    data-jqyoui-options="droppableJqueryOptions">',
-        '    <div class="selected-choice" ng-class="classForChoice(choice, $index)" data-choice-id="{{choice.id}}" ',
+        '    <div class="selected-choice" ng-class="classForChoice($index)" data-choice-id="{{choice.id}}" ',
         '      ng-repeat="choice in renderScope.landingPlaceChoices[answerAreaId]">',
         '      <div class="selected-choice-content">',
         '        <div class="html-wrapper" ng-bind-html-unsafe="renderScope.cleanLabel(choice)"></div>',
         '        <div class="remove-choice"><i ng-click="removeChoice($index)" class="fa fa-close"></i></div>',
         '      </div>',
         '      <div class="circle">',
-        '        <i class="fa" ng-class="classForCorrectness(choice, $index)"></i>',
+        '        <i class="fa" ng-class="classForCorrectness($index)"></i>',
         '      </div>',
         '    </div>',
         '  </div>',
