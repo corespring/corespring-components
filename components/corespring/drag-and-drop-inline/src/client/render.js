@@ -263,8 +263,7 @@ var main = [
       scope: false,
       restrict: 'AE',
       replace: true,
-      template: template(),
-      controller: ['$scope', function(scope){}]
+      template: template()
     };
   }];
 
