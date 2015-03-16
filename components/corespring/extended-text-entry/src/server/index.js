@@ -14,7 +14,7 @@ exports.feedback = {
   NO_ANSWER: 'You did not enter a response'
 };
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
   if (!answer) {
     return {

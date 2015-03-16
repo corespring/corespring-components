@@ -157,7 +157,7 @@ function score(question, answer) {
   return scoreValue;
 }
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
   if(!question || _.isEmpty(question)){
     throw new Error('question should never be empty or null');

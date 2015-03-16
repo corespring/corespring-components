@@ -6,7 +6,7 @@ var keys = fb.keys;
 
 exports.keys = keys;
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
 
   if(!question || _.isEmpty(question)){

@@ -13,7 +13,7 @@ exports.isCorrect = function(answer, correctResponse, orderMatters) {
   }
 };
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
   var correctResponse = question.correctResponse;
 
 

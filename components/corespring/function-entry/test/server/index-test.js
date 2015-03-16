@@ -39,7 +39,7 @@ describe('function entry server logic', function() {
 
   it('should return warning outcome for empty answer', function(){
 
-    var outcome = server.respond({feedback: {}}, null, helper.settings(true, true, true));
+    var outcome = server.createOutcome({feedback: {}}, null, helper.settings(true, true, true));
 
     outcome.should.eql({
       correctness: 'warning',
@@ -52,7 +52,7 @@ describe('function entry server logic', function() {
 
   it('should respond with correct and score 1 if the answer is correct', function() {
     var expected, response;
-    response = server.respond(_.cloneDeep(component), "y=2x+4", helper.settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "y=2x+4", helper.settings(false, true, true));
     expected = {
       correctness: "correct",
       score: 1
@@ -63,7 +63,7 @@ describe('function entry server logic', function() {
 
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
     var expected, response;
-    response = server.respond(_.cloneDeep(component), "y=3x+2", helper.settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "y=3x+2", helper.settings(false, true, true));
     expected = {
       correctness: "incorrect",
       score: 0

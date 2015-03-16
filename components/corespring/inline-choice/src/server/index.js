@@ -145,4 +145,4 @@ exports.createOutcome = function(question, answer, settings) {
 };
 
 //@deprecated
-exports.respond = exports.createOutcome;
+exports.createOutcome = exports.createOutcome;
