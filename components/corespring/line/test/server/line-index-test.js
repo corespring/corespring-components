@@ -146,7 +146,7 @@ describe('line interaction server logic', function() {
     function evaluateCorrectAnswerWithFeedback(feedback) {
       var componentWithFeedback = _.cloneDeep(component);
       componentWithFeedback.feedback = feedback;
-      return server.respcreateOutcomeond(componentWithFeedback, correctAnswer, helper.settings(true, true, true));
+      return server.createOutcome(componentWithFeedback, correctAnswer, helper.settings(true, true, true));
     }
 
     it('should be default feedback if feedback obj is null', function() {
