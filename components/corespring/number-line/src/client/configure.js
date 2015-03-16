@@ -3,10 +3,10 @@ var main = [
   function($log, ChoiceTemplates) {
 
     var attributes = [
-      '<table>',
+      '<h3>Number Line Attributes</h3>',
+      '<table class="attributes-table">',
       '  <tr>',
       '    <td>',
-      '    <h3>Number Line Attributes</h3>',
       '    <checkbox ng-model="fullModel.model.config.exhibitOnly">Make exhibit</checkbox>',
       '    <div>',
       '       Domain = <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[0]"/> to <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[1]"/>',
@@ -31,6 +31,7 @@ var main = [
       '<h3>Initial view</h3>',
       '  <div interactive-graph',
       '       ngModel="initialView.model"',
+      '       options="configGraphOptions"',
       '       responseModel="initialView.responseModel"',
       '       editable="initialView.editable"',
       '       colors="initialView.colors"></div>',
@@ -42,6 +43,7 @@ var main = [
       '  <div interactive-graph',
       '       ngModel="correctResponseView.model"',
       '       responseModel="correctResponseView.responseModel"',
+      '       options="configGraphOptions"',
       '       editable="correctResponseView.editable"></div>',
 
     ].join('');
@@ -52,6 +54,9 @@ var main = [
       replace: true,
       link: function(scope, element, attrs) {
         ChoiceTemplates.extendScope(scope, 'corespring-number-line');
+        scope.configGraphOptions = {
+          startOverClearsGraph: true
+        };
         scope.initialView = {
           editable: true,
           model: {

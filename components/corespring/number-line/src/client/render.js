@@ -30,7 +30,6 @@ var main = [
           console.log("number line", dataAndSession);
 
           scope.correctModel = scope.model = dataAndSession.data.model;
-
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.response = dataAndSession.session.answers;
             scope.model.config.initialElements = _.cloneDeep(dataAndSession.session.answers);
@@ -52,10 +51,14 @@ var main = [
           scope.correctModel.config.exhibitOnly = true;
           scope.correctModel.config.margin = {top: 30, right: 10, bottom: 30, left: 20};
           var i = 0;
-          scope.correctModel.config.initialElements = _.map(response.correctResponse, function(cr) {
-            i++;
-            return _.extend(cr, {rangePosition: i});
-          });
+          scope.correctModelDummyResponse = {
+            feedback: {
+              elements: _.map(response.correctResponse, function(cr) {
+                i++;
+                return _.extend(cr, {rangePosition: i, isCorrect: true});
+              })
+            }
+          };
         },
 
         setMode: function(newMode) {
@@ -100,6 +103,7 @@ var main = [
         '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness !== \'correct\'">',
         '    <div interactive-graph',
         '         ngModel="correctModel"',
+        '         serverResponse="correctModelDummyResponse"',
         '         responseModel="dummyResponse"',
         '         colors="colors"></div>',
         '  </div>',
@@ -122,7 +126,7 @@ var interactiveGraph = [
     "use strict";
 
     var groups = {
-      "Point": ["PF","PE"],
+      "Point": ["PF", "PE"],
       "Line": ["LEE", "LEF", "LFE", "LFF"],
       "Ray": ["REP", "REN", "RFP", "RFN"]
     };
@@ -132,7 +136,12 @@ var interactiveGraph = [
 
     return {
       template: [
-        '<div>',
+        '<div class="interactive-graph">',
+        '  <div class="undo-button-row" ng-show="editable">',
+        '    <btn class="btn btn-default" ng-click="undo()">Undo</btn>',
+        '    <btn class="btn btn-default" ng-click="startOver()">Start over</btn>',
+        '  </div>',
+        '  <div class="clearfix"></div>',
         '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Point\')" ng-class="{active: isGroupActive(\'Point\')}"  ng-mousedown="selectGroup(\'Point\')"><a>Point</a></li>',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Line\')" ng-class="{active: isGroupActive(\'Line\')}" ng-mousedown="selectGroup(\'Line\')"><a>Line</a></li>',
@@ -149,7 +158,7 @@ var interactiveGraph = [
         '    <span role="presentation"  class="element-rfp" ng-show="isGroupActive(\'Ray\') && isTypeEnabled(\'RFP\')" ng-mousedown="select(\'RFP\')"><a ng-class="{active: isActive(\'RFP\')}" >&nbsp;</a></span>',
         '    <span role="presentation"  class="element-ren" ng-show="isGroupActive(\'Ray\') && isTypeEnabled(\'REN\')"  ng-mousedown="select(\'REN\')"><a ng-class="{active: isActive(\'REN\')}">&nbsp;</a></span>',
         '    <span role="presentation"  class="element-rep" ng-show="isGroupActive(\'Ray\') && isTypeEnabled(\'REP\')"  ng-mousedown="select(\'REP\')"><a ng-class="{active: isActive(\'REP\')}">&nbsp;</a></span>',
-        '    <span role="presentation"><a ng-click="removeSelectedElement()" ng-show="selected.length > 0"><i class="bin-icon fa fa-trash-o fa-lg"></i></a></span>',
+        '    <span role="presentation"><a ng-click="removeSelectedElements()" ng-show="selected.length > 0"><i class="bin-icon fa fa-trash-o fa-lg"></i></a></span>',
         '  </div>',
         "  <div class='paper'></div>",
         "</div>"
@@ -161,6 +170,7 @@ var interactiveGraph = [
         responsemodel: "=",
         serverresponse: "=",
         editable: "=",
+        options: "=",
         changehandler: "&changehandler"
       },
       controller: function($scope) {
@@ -175,7 +185,7 @@ var interactiveGraph = [
           if (selectedCount > 0 && (e.keyCode === 8 || e.keyCode === 46)) {
             e.stopPropagation();
             e.preventDefault();
-            scope.removeSelectedElement();
+            scope.removeSelectedElements();
             scope.$apply();
           }
         });
@@ -242,8 +252,8 @@ var interactiveGraph = [
               break;
           }
           rebuildGraph(_.last(scope.responsemodel));
+          scope.stack.push(_.cloneDeep(scope.responsemodel));
           scope.$apply();
-
         };
 
         paperElement.mousedown(function(event) {
@@ -311,7 +321,6 @@ var interactiveGraph = [
                 } else {
                   return withElement.domainPosition <= element.domainPosition;
                 }
-
             }
           }
         }
@@ -354,8 +363,10 @@ var interactiveGraph = [
               var lastMovedElement = _.find(scope.responsemodel, function(e) {
                 return e.domainPosition === domainPosition && e.type === type;
               });
-              console.log("Move Finished", type, domainPosition, lastMovedElement);
               rebuildGraph(lastMovedElement);
+              scope.$apply(function() {
+                scope.stack.push(_.cloneDeep(scope.responsemodel));
+              });
             };
             switch (o.type) {
               case "point":
@@ -373,16 +384,40 @@ var interactiveGraph = [
           scope.selected = [];
         }
 
-        scope.removeSelectedElement = function() {
-          var selectedElements = scope.graph.getSelectedElements();
-          console.log("Removing: ", selectedElements);
+        scope.startOver = function() {
+          if (scope.options.startOverClearsGraph) {
+            var emptyResponse = [];
+            scope.stack = [emptyResponse];
+            scope.responsemodel = _.cloneDeep(emptyResponse);
+          } else {
+            scope.stack = [_.first(scope.stack)];
+            scope.responsemodel = _.cloneDeep(scope.model.config.initialElements);
+          }
+          rebuildGraph();
+        };
+
+        scope.undo = function() {
+          if (scope.stack.length > 1) {
+            scope.stack.pop();
+            scope.responsemodel = _.cloneDeep(_.last(scope.stack));
+            rebuildGraph();
+          }
+        };
+
+        scope.removeElement = function(element) {
           scope.responsemodel = _.filter(scope.responsemodel, function(e) {
-            return _.isUndefined(_.find(selectedElements, function(element) {
-              return e.rangePosition === element.rangePosition && e.domainPosition === element.domainPosition;
-            }));
+            return !(e.type === element.type && e.rangePosition === element.rangePosition && e.domainPosition === element.domainPosition);
           }) || [];
           rebuildGraph();
-          scope.selected = scope.graph.getSelectedElements();
+          scope.stack.push(_.cloneDeep(scope.responsemodel));
+        };
+
+        scope.removeSelectedElements = function() {
+          var selectedElements = scope.graph.getSelectedElements();
+          scope.selected = selectedElements;
+          _.each(selectedElements, function(e) {
+            scope.removeElement(e);
+          });
         };
 
         scope.isActive = function(type) {
@@ -415,8 +450,8 @@ var interactiveGraph = [
         };
 
         scope.resetGraph = function(model) {
+          scope.stack = [_.cloneDeep(scope.model.config.initialElements)];
           scope.graph.updateOptions(model.config);
-
           scope.graph.addHorizontalAxis("bottom", {
             ticks: model.config.ticks,
             tickFrequency: model.config.tickFrequency || 10,

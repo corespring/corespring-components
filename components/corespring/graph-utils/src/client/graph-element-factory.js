@@ -28,6 +28,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
     this.MovablePoint = function(pointModel, pointOptions) {
       var thisPoint = this;
       this.model = pointModel;
+      this.options = pointOptions;
       this.selected = false;
       pointOptions = pointOptions || {};
       pointOptions = _.defaults(pointOptions || {}, {
