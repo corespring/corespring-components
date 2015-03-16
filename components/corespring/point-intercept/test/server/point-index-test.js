@@ -47,7 +47,7 @@ describe('server logic', function() {
 
   it('should return a warning outcome if the answer is empty', function() {
 
-    var outcome = server.respond({}, null, helper.settings(true, true, true));
+    var outcome = server.createOutcome({}, null, helper.settings(true, true, true));
     outcome.should.eql({
       correctness: "warning",
       score: 0,
@@ -57,23 +57,23 @@ describe('server logic', function() {
   });
 
   it('should respond with correct and score 1 if the answer is correct', function() {
-    var response = server.respond(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
+    var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
     response.score.should.eql(1);
   });
 
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
-    var response = server.respond(_.cloneDeep(component), ["1,2", "3,1"], defaultSettings);
+    var response = server.createOutcome(_.cloneDeep(component), ["1,2", "3,1"], defaultSettings);
     response.correctness.should.eql("incorrect");
     response.score.should.eql(0);
   });
 
   it('respects order matters', function() {
-    var response = server.respond(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
+    var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
     response.score.should.eql(1);
 
-    response = server.respond(_.cloneDeep(component), ["1,1", "0,0"], defaultSettings);
+    response = server.createOutcome(_.cloneDeep(component), ["1,1", "0,0"], defaultSettings);
     response.correctness.should.eql("incorrect");
     response.score.should.eql(0);
   });
@@ -83,20 +83,20 @@ describe('server logic', function() {
     clone.model.config.labelsType = "absent";
     clone.model.config.orderMatters = false;
 
-    var response = server.respond(clone, ["0,0", "1,1"], defaultSettings);
+    var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
     response.score.should.eql(1);
 
-    response = server.respond(clone, ["1,1", "0,0"], defaultSettings);
+    response = server.createOutcome(clone, ["1,1", "0,0"], defaultSettings);
     response.correctness.should.eql("correct");
     response.score.should.eql(1);
   });
 
   it('gives default feedback if feedback type is default', function() {
-    var response = server.respond(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
+    var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
     response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
 
-    response = server.respond(_.cloneDeep(component), ["2,2", "1,1"], defaultSettings);
+    response = server.createOutcome(_.cloneDeep(component), ["2,2", "1,1"], defaultSettings);
     response.feedback.should.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
   });
 
@@ -105,10 +105,10 @@ describe('server logic', function() {
     clone.feedback.correctFeedbackType = "none";
     clone.feedback.incorrectFeedbackType = "none";
 
-    var response = server.respond(clone, ["0,0", "1,1"], defaultSettings);
+    var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     should(response.feedback).not.be.ok;
 
-    response = server.respond(clone, ["2,2", "1,1"], defaultSettings);
+    response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
     should(response.feedback).not.be.ok;
   });
 
@@ -120,10 +120,10 @@ describe('server logic', function() {
     clone.feedback.incorrectFeedbackType = "custom";
     clone.feedback.incorrectFeedback = "CustomIncorrect";
 
-    var response = server.respond(clone, ["0,0", "1,1"], defaultSettings);
+    var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.feedback.should.eql("CustomCorrect");
 
-    response = server.respond(clone, ["2,2", "1,1"], defaultSettings);
+    response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
     response.feedback.should.eql("CustomIncorrect");
   });
 

@@ -104,15 +104,15 @@ beforeEach(function(){
 describe('match server logic', function() {
 
   it('should return incorrect if the answer is null or undefined', function() {
-    var outcome = server.respond(component ,null ,helper.settings(true, true, true));
+    var outcome = server.createOutcome(component ,null ,helper.settings(true, true, true));
     outcome.should.eql({ correctness: 'incorrect', score: 0, feedback: component.feedback.all_incorrect.text });
 
-    outcome = server.respond(component ,undefined ,helper.settings(true, true, true));
+    outcome = server.createOutcome(component ,undefined ,helper.settings(true, true, true));
     outcome.should.eql({ correctness: 'incorrect', score: 0, feedback: component.feedback.all_incorrect.text });
 
   });
 
-  describe('respond', function() {
+  describe('createOutcome', function() {
 
     it('should not show any feedback when no feedback is allowed', function() {
       var incorrectAnswer = [{
@@ -129,7 +129,7 @@ describe('match server logic', function() {
         "matchSet":[false,false]
       }];
 
-      var response = server.respond(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
+      var response = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
       response.correctness.should.eql("all_incorrect");
       response.score.should.eql(0);
     });
@@ -137,7 +137,7 @@ describe('match server logic', function() {
 
     it('should respond to a correct answer (feedback + user + correct)', function() {
       var correctAnswer = _.cloneDeep(component.correctResponse);
-      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
+      var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
       var expected = {
         "correctness": "all_correct",
         "score": 1,
@@ -183,7 +183,7 @@ describe('match server logic', function() {
 
     it('should respond to a correct answer (feedback - user - correct)', function() {
       var correctAnswer = _.cloneDeep(component.correctResponse);
-      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, false, false));
+      var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(true, false, false));
       var expected = {
         "correctness": "all_correct",
         "score": 1,
@@ -243,7 +243,7 @@ describe('match server logic', function() {
         "matchSet":[false,false]
       }];
 
-      var response = server.respond(_.cloneDeep(component), incorrectAnswer, helper.settings(true, true, true));
+      var response = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(true, true, true));
 
       var expected = {
         "correctness": "all_incorrect",
@@ -302,7 +302,7 @@ describe('match server logic', function() {
         "matchSet":[false,true]
       }];
 
-      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
+      var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
 
       var expected = {
         "correctness": "all_incorrect",
@@ -361,7 +361,7 @@ describe('match server logic', function() {
         "matchSet":[false,true]
       }];
 
-      var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(true, false, true));
+      var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(true, false, true));
 
       var expected = {
         "correctness": "all_incorrect",
@@ -420,7 +420,7 @@ describe('match server logic', function() {
         "matchSet":[false,true]
       }];
 
-      var response = server.respond(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
+      var response = server.createOutcome(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
 
       var expected = {
         "correctness": "some_correct",
@@ -479,7 +479,7 @@ describe('match server logic', function() {
         "matchSet":[false,false]
       }];
 
-      var response = server.respond(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
+      var response = server.createOutcome(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
 
       var expected = {
         "correctness": "some_correct",
@@ -539,7 +539,7 @@ describe('match server logic', function() {
         "matchSet":[false,true]
       }];
 
-      var response = server.respond(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, false));
+      var response = server.createOutcome(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, false));
 
       var expected = {
         "correctness": "some_correct",

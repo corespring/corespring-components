@@ -12,3 +12,4 @@ exports.createOutcome = function() {
     correctness: 'unknown'
   };
 };
+

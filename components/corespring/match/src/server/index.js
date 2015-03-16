@@ -245,7 +245,7 @@ function calculateScore(question, answer) {
 /*
  Create a response to the answer based on the question, the answer and the respond settings
  */
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
   var correctness = getCorrectnessString(answer, question.correctResponse);
 

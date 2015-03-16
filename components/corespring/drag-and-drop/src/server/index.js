@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var sax = require('sax');
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
 
   if(!answer){

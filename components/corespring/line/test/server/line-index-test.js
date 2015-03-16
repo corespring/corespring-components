@@ -59,7 +59,7 @@ describe('line interaction server logic', function() {
   };
 
   it('returns incorrect outcome for an empty answer', function() {
-    var outcome = server.respond({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
+    var outcome = server.createOutcome({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
     outcome.should.eql({
       correctness: 'incorrect',
       score: 0,
@@ -69,7 +69,7 @@ describe('line interaction server logic', function() {
 
   it('respond incorrect', function() {
     var spy = sinon.spy(serverObj, 'isFunctionEqual');
-    var response = server.respond(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
+    var response = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
     response.correctness.should.eql('incorrect');
     response.score.should.eql(0);
     // check if it was called with the right options
@@ -80,7 +80,7 @@ describe('line interaction server logic', function() {
   });
 
   it('respond correct', function() {
-    var response = server.respond(_.cloneDeep(component), correctAnswer, helper.settings(false, true, true));
+    var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
@@ -89,7 +89,7 @@ describe('line interaction server logic', function() {
     var response;
 
     beforeEach(function() {
-      response = server.respond(_.cloneDeep(component), {}, helper.settings(false, true, true));
+      response = server.createOutcome(_.cloneDeep(component), {}, helper.settings(false, true, true));
     });
 
     it('should return incorrect', function() {
@@ -115,10 +115,10 @@ describe('line interaction server logic', function() {
 
     beforeEach(function() {
       responses = [];
-      responses.push(server.respond(_.cloneDeep(component), noA, helper.settings(false, true, true)));
-      responses.push(server.respond(_.cloneDeep(component), noB, helper.settings(false, true, true)));
-      responses.push(server.respond(_.cloneDeep(component), AmissingX, helper.settings(false, true, true)));
-      responses.push(server.respond(_.cloneDeep(component), BmissingY, helper.settings(false, true, true)));
+      responses.push(server.createOutcome(_.cloneDeep(component), noA, helper.settings(false, true, true)));
+      responses.push(server.createOutcome(_.cloneDeep(component), noB, helper.settings(false, true, true)));
+      responses.push(server.createOutcome(_.cloneDeep(component), AmissingX, helper.settings(false, true, true)));
+      responses.push(server.createOutcome(_.cloneDeep(component), BmissingY, helper.settings(false, true, true)));
     });
 
     it('should return incorrect', function() {
@@ -146,7 +146,7 @@ describe('line interaction server logic', function() {
     function evaluateCorrectAnswerWithFeedback(feedback) {
       var componentWithFeedback = _.cloneDeep(component);
       componentWithFeedback.feedback = feedback;
-      return server.respond(componentWithFeedback, correctAnswer, helper.settings(true, true, true));
+      return server.respcreateOutcomeond(componentWithFeedback, correctAnswer, helper.settings(true, true, true));
     }
 
     it('should be default feedback if feedback obj is null', function() {
@@ -177,11 +177,11 @@ describe('line interaction server logic', function() {
 
   describe('outcome', function() {
     it('should be populated for incorrect answer', function() {
-      var response = server.respond(component, incorrectAnswer, helper.settings(true, true, true));
+      var response = server.createOutcome(component, incorrectAnswer, helper.settings(true, true, true));
       response.outcome.should.eql(['incorrect']);
     });
     it('should be populated for correct answer', function() {
-      var response = server.respond(component, correctAnswer, helper.settings(true, true, true));
+      var response = server.createOutcome(component, correctAnswer, helper.settings(true, true, true));
       response.outcome.should.eql(['correct']);
     });
   });

@@ -74,7 +74,7 @@ describe('drag and drop server logic', function() {
   helper.assertNullOrUndefinedAnswersReturnsIncorrect(server);
   
   describe('respond incorrect', function() {
-    var response = server.respond(_.cloneDeep(component), {
+    var response = server.createOutcome(_.cloneDeep(component), {
       1: ['larva']
     }, settings(false, true, true));
     response.correctness.should.eql('incorrect');
@@ -88,7 +88,7 @@ describe('drag and drop server logic', function() {
       "3": ["larva", "adult"],
       "4": []
     };
-    var response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));
+    var response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
     response.correctness.should.eql('correct');
     response.score.should.eql(1);
   });
@@ -100,7 +100,7 @@ describe('drag and drop server logic', function() {
       "3": ["larva", "adult"],
       "4": []
     };
-    var response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));
+    var response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
     response.correctness.should.eql('correct');
 
     answer = {
@@ -109,7 +109,7 @@ describe('drag and drop server logic', function() {
       "3": ["larva", "adult"],
       "4": []
     };
-    response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
     response.correctness.should.eql('incorrect');
 
     answer = {
@@ -118,7 +118,7 @@ describe('drag and drop server logic', function() {
       "3": ["adult", "larva"], // not ordered, so correct
       "4": []
     };
-    response = server.respond(_.cloneDeep(component), answer, settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
     response.correctness.should.eql('correct');
   });
 

@@ -50,7 +50,7 @@ exports.isCorrect = function(answer, correctAnswer) {
   });
 };
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
   if (!answer) {
     return {

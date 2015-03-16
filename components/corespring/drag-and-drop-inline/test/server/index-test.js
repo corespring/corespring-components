@@ -20,7 +20,7 @@ describe('drag-and-drop-inline', function() {
       };
       var answer = _.cloneDeep(answers);
       var settings = {};
-      var outcome = server.respond(question, answer, settings);
+      var outcome = server.createOutcome(question, answer, settings);
 
       outcome.should.eql({
         correctness: "correct",
@@ -84,7 +84,7 @@ describe('drag-and-drop-inline', function() {
       };
       var answer = _.cloneDeep(answers);
       var settings = {};
-      var outcome = server.respond(question, answer, settings);
+      var outcome = server.createOutcome(question, answer, settings);
 
       outcome.should.eql({
         correctness: "incorrect",
@@ -214,7 +214,7 @@ describe('drag-and-drop-inline', function() {
 
 
   it('should return incorrect + feedback for an empty answer', function() {
-    var outcome = server.respond({
+    var outcome = server.createOutcome({
         feedback: {}
       },
       null, {
@@ -234,7 +234,7 @@ describe('drag-and-drop-inline', function() {
 
 
   it('should return incorrect + feedback for an empty answer when using custom feedback', function() {
-    var outcome = server.respond({
+    var outcome = server.createOutcome({
       feedback: {
         incorrectFeedbackType: 'custom',
         incorrectFeedback: 'custom no'
