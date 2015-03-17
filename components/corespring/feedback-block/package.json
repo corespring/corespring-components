@@ -1,8 +1,13 @@
 {
   "libraries": [
+    {
+      "name": "multiple-choice",
+      "organization": "corespring",
+      "scope": "rig"
+    }
   ],
-  "dependencies" : {
-    "client" : {
+  "dependencies": {
+    "client": {
     }
   },
   "released": true,
