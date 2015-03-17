@@ -171,7 +171,8 @@ var interactiveGraph = [
         serverresponse: "=",
         editable: "=",
         options: "=",
-        changehandler: "&changehandler"
+        changehandler: "&changehandler",
+        ticklabelclick: "="
       },
       controller: function($scope) {
         //set default config to avoid npe
@@ -256,19 +257,26 @@ var interactiveGraph = [
           scope.$apply();
         };
 
-        paperElement.mousedown(function(event) {
-          var offX = (event.offsetX || event.pageX - $(event.target).offset().left);
-          var offY = (event.offsetY || event.pageY - $(event.target).offset().top);
-          var dr = scope.graph.coordsToDomainRange(offX, offY);
-          scope.addElement(dr[0], scope.selectedType);
-        });
-
         scope.graph = new GraphHelper(paperElement[0], {
           horizontalAxisLength: HORIZONTAL_AXIS_WIDTH,
           domain: [0, 10],
           range: [0, NUMBER_OF_PLANES],
           applyCallback: function() {
             scope.$apply();
+          },
+          clickAreaMouseDown: function(event) {
+            var offX = (event.offsetX || event.pageX - $(event.target).offset().left);
+            var offY = (event.offsetY || event.pageY - $(event.target).offset().top);
+            var y = event.pageY - paperElement.position().top;
+            console.log(y);
+            var dr = scope.graph.coordsToDomainRange(offX, offY);
+            scope.addElement(dr[0], scope.selectedType);
+
+          },
+          tickLabelClick: function(dp) {
+            if (_.isFunction(scope.ticklabelclick)) {
+              scope.ticklabelclick(dp);
+            }
           },
           selectionChanged: function() {
             scope.selected = scope.graph.getSelectedElements();
@@ -385,7 +393,7 @@ var interactiveGraph = [
         }
 
         scope.startOver = function() {
-          if (scope.options.startOverClearsGraph) {
+          if (scope.options && scope.options.startOverClearsGraph) {
             var emptyResponse = [];
             scope.stack = [emptyResponse];
             scope.responsemodel = _.cloneDeep(emptyResponse);
@@ -451,7 +459,7 @@ var interactiveGraph = [
 
         scope.resetGraph = function(model) {
           scope.stack = [_.cloneDeep(scope.model.config.initialElements)];
-          scope.graph.updateOptions(model.config);
+          scope.graph.updateOptions(_.merge(_.cloneDeep(model.config), scope.options));
           scope.graph.addHorizontalAxis("bottom", {
             ticks: model.config.ticks,
             tickFrequency: model.config.tickFrequency || 10,

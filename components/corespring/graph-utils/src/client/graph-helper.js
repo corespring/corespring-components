@@ -19,8 +19,11 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       range: [0, 20],
       applyCallback: function() {
       },
+      clickAreaMouseDown: function() {
+      },
+      tickLabelClick: function(tick) {
+      },
       selectionChanged: function() {
-
       }
     });
     _.defaults(options, {
@@ -38,6 +41,12 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     };
 
     this.updateOptions = function(newOptions) {
+      var allOptionsEqual = _.every(newOptions, function(v,k) {
+         return _.isEqual(options[k], v);
+      });
+      if (allOptionsEqual) {
+        return;
+      }
 
       if (!_.isUndefined(newOptions.maxNumberOfPoints) && newOptions.maxNumberOfPoints !== options.maxNumberOfPoints) {
         options.verticalAxisLength = newOptions.maxNumberOfPoints * PLANE_SIZE;
@@ -98,6 +107,12 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
         }
       });
       that.paper.clear();
+      var clickArea = that.paper.rect(options.margin.left - 10, 0, options.margin.left + options.horizontalAxisLength, options.height - options.margin.bottom - 10);
+      clickArea.attr('fill','black').attr('opacity',0);
+      clickArea.mousedown(function(ev) {
+        options.clickAreaMouseDown(ev);
+      });
+
       if (that.horizontalAxis) {
         that.horizontalAxis.draw(that.paper);
       }

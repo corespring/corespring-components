@@ -334,7 +334,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
         }
         this.grabber.x = this.line.x = x;
-        this.grabber.y =this.line.y = y;
+        this.grabber.y = this.line.y = y;
         this.grabber.x1 = this.line.x1 = x1 + dx;
         this.grabber.y1 = this.line.y1 = y;
         this.line.redraw();
@@ -405,6 +405,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         }));
         thatHA.elements.push(paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y));
 
+
         var scale = thatHA.scale;
         var tickSize = DEFAULT_TICK_SIZE;
 
@@ -414,8 +415,21 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2));
 
           var label = thatHA.tickLabels ? thatHA.tickLabels[idx] : tick;
-          thatHA.elements.push(paper.text(options.margin.left + x, options.height - options.margin.bottom, label));
-          var d = Math.abs(thatHA.ticks[idx+1] - thatHA.ticks[idx]) / axisOptions.snapPerTick;
+
+          if (!options.hiddenTickLabels || options.hiddenTickLabels[tick] !== true || options.hiddenTickLabelsAreGreyedOut) {
+            var text = paper.text(options.margin.left + x, options.height - options.margin.bottom, label);
+            if (options.hiddenTickLabelsAreGreyedOut && options.hiddenTickLabels && options.hiddenTickLabels[tick] === true) {
+              text.attr('opacity', 0.3);
+            }
+            text.click(function() {
+              if (_.isFunction(options.tickLabelClick)) {
+                options.tickLabelClick(tick);
+              }
+            });
+            thatHA.elements.push(text);
+          }
+
+          var d = Math.abs(thatHA.ticks[idx + 1] - thatHA.ticks[idx]) / axisOptions.snapPerTick;
 
           if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 1) {
             for (var i = 1; i < axisOptions.snapPerTick; i++) {

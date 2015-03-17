@@ -4,6 +4,7 @@ var main = [
 
     var attributes = [
       '<h3>Number Line Attributes</h3>',
+      '{{fullModel.model.config.hiddenTickLabels}}',
       '<table class="attributes-table">',
       '  <tr>',
       '    <td>',
@@ -20,6 +21,8 @@ var main = [
       '      <div interactive-graph',
       '           ngModel="sampleNumberLine.model"',
       '           responseModel="sampleNumberLine.responseModel"',
+      '           options="sampleGraphOptions"',
+      '           tickLabelClick="tickLabelClick"',
       '           editable="sampleNumberLine.editable"></div>',
 
       '    </td>',
@@ -57,6 +60,9 @@ var main = [
         scope.configGraphOptions = {
           startOverClearsGraph: true
         };
+        scope.sampleGraphOptions = {
+          hiddenTickLabelsAreGreyedOut: true
+        };
         scope.initialView = {
           editable: true,
           model: {
@@ -84,8 +90,12 @@ var main = [
           }
         };
 
+        scope.tickLabelClick = function(tick) {
+          scope.sampleNumberLine.model.config.hiddenTickLabels = scope.sampleNumberLine.model.config.hiddenTickLabels || {};
+          scope.sampleNumberLine.model.config.hiddenTickLabels[tick] = !scope.sampleNumberLine.model.config.hiddenTickLabels[tick];
+        };
+
         scope.correctResponseView = _.cloneDeep(scope.initialView);
-        scope.correctResponseView.responseModel = {};
 
         scope.sampleNumberLine = _.merge(_.cloneDeep(scope.initialView), {
           model: {
@@ -100,8 +110,9 @@ var main = [
           setModel: function(model) {
             scope.fullModel = model;
             scope.initialView.model.config.initialElements = _.cloneDeep(model.model.config.initialElements);
-            scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse);
+            scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse) || [];
             scope.updatePartialScoringModel(model.correctResponse.length);
+            scope.sampleNumberLine.model.config.hiddenTickLabels = _.cloneDeep(model.model.config.hiddenTickLabels);
           },
 
           getModel: function() {
@@ -112,6 +123,7 @@ var main = [
         var updateInitialElements = function(n) {
           scope.$apply(function() {
             scope.fullModel.model.config.initialElements = _.cloneDeep(n);
+            scope.initialView.model.config.initialElements = _.cloneDeep(n);
           });
         };
 
@@ -122,16 +134,28 @@ var main = [
           });
         };
 
-        var updateNumberLineOptions= function(n) {
+        var updateNumberLineOptions = function(n, onlyFor) {
           if (n) {
             scope.$apply(function() {
-              _(n).omit('initialElements').each(function(e, k) {
+              _(n).omit('initialElements','hiddenTickLabels').each(function(e, k) {
                 if (!_.isUndefined(n[k])) {
                   scope.initialView.model.config[k] = _.cloneDeep(n[k]);
                   scope.correctResponseView.model.config[k] = _.cloneDeep(n[k]);
                   scope.sampleNumberLine.model.config[k] = _.cloneDeep(n[k]);
+                  scope.fullModel.model.config[k] = _.cloneDeep(n[k]);
                 }
               });
+            });
+          }
+        };
+
+        var updateTickLabels = function(n) {
+          if (n) {
+            scope.$apply(function() {
+              scope.initialView.model.config.hiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
+              scope.correctResponseView.model.config.hiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
+              scope.sampleNumberLine.model.confighiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
+              scope.fullModel.model.config.hiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
             });
           }
         };
@@ -148,6 +172,8 @@ var main = [
         scope.$watch('correctResponseView.responseModel', debounce(updateCorrectResponse), true);
 
         scope.$watch('fullModel.model.config', debounce(updateNumberLineOptions), true);
+
+        scope.$watch('sampleNumberLine.model.config', debounce(updateTickLabels), true);
 
         // Temporary way to test the interaction
         scope.$watch('fullModel', function(n) {
