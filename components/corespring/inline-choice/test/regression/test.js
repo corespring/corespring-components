@@ -18,8 +18,6 @@ describe('inline-choice', function() {
   "use strict";
 
   var itemJsonFilename = 'one.json';
-  var itemJson = RegressionHelper.getItemJson('inline-choice', itemJsonFilename);
-
 
   browser.selectInlineChoice = function(id, choice) {
     browser.click(inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]');

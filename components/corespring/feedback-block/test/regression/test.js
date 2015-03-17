@@ -9,12 +9,11 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('feedback-block', function() {
+describe('feedback-block', function() {
 
   "use strict";
 
   var itemJsonFilename = 'one.json';
-  var itemJson = RegressionHelper.getItemJson('feedback-block', itemJsonFilename);
 
   browser.submitItem = function() {
     this.execute('window.submit()');

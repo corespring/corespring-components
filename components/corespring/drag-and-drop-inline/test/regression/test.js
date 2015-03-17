@@ -16,7 +16,6 @@ describe('drag and drop inline', function() {
 
   var itemJsonFilename = 'one.json';
   var componentName = 'drag-and-drop-inline';
-  var itemJson = RegressionHelper.getItemJson(componentName, itemJsonFilename);
 
   function landingPlace(id) {
     return "#" + id + " > div";
