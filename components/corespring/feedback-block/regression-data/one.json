@@ -2,6 +2,38 @@
   "item": {
     "components": {
       "1": {
+        "componentType": "corespring-feedback-block",
+        "feedback": {
+          "correct": [
+            {
+              "input": "mc_2",
+              "feedback": "Yes, this is correct"
+            }
+          ],
+          "incorrect": [
+            {
+              "input": "*",
+              "feedback": "No, this is not correct. You did not choose an answer."
+            },
+            {
+              "input": "mc_1",
+              "feedback": "No, this is not correct"
+            },
+            {
+              "input": "mc_3",
+              "feedback": "No, this is not correct"
+            },
+            {
+              "input": "mc_4",
+              "feedback": "No, this is not correct"
+            }
+          ]
+        },
+        "target": {
+          "id": "2"
+        }
+      },
+      "2": {
         "componentType": "corespring-multiple-choice",
         "title": "Get a Job",
         "weight": 4,
@@ -62,38 +94,8 @@
             }
           ]
         }
-      },
-      "2": {
-        "componentType": "corespring-feedback-block",
-        "feedback": {
-          "correct": [
-            {
-              "input": "mc_2",
-              "feedback": "Yes, this is correct"
-            }],
-          "incorrect": [
-            {
-              "input": "*",
-              "feedback": "No, this is not correct. You did not choose an answer."
-            },
-            {
-              "input": "mc_1",
-              "feedback": "No, this is not correct"
-            },
-            {
-              "input": "mc_3",
-              "feedback": "No, this is not correct"
-            },
-            {
-              "input": "mc_4",
-              "feedback": "No, this is not correct"
-            }]
-        },
-        "target": {
-          "id": "1"
-        }
       }
     },
-    "xhtml": "<corespring-multiple-choice id=\"1\"></corespring-multiple-choice><corespring-feedback-block id=\"2\"></corespring-feedback-block>"
+    "xhtml": "<corespring-multiple-choice id=\"2\"></corespring-multiple-choice><corespring-feedback-block id=\"1\"></corespring-feedback-block>"
   }
 }
