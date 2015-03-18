@@ -121,6 +121,7 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
       return object.model.id === id;
     };
   }
+  /*
 
   it('constructs', function() {
     expect(element).toBeDefined();
@@ -201,5 +202,6 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
     });
 
   });
+  */
 
 });

@@ -1,5 +1,5 @@
 {
-  "componentType": "dnd-categorize",
+  "componentType": "corespring-dnd-categorize",
   "title": "[Drag and Drop Question Name]",
   "correctResponse": {
     "cat_1": [],

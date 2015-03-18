@@ -92,50 +92,6 @@ describe('drag-and-drop-categorize', function() {
       scope.$digest();
     }));
 
-    /*describe('unsubmitted', function() {
-      it('should be hidden', function() {
-        expect($('.correct-answer', element).length).toBe(0);
-      });
-    });
-
-    function setResponse(response) {
-      container.elements['1'].setResponse(response);
-      rootScope.$digest();
-    }
-
-    describe('with correct response', function() {
-
-      beforeEach(function() {
-        setResponse({
-          correctResponse: 'correct',
-          feedback: 'Correct!',
-          correctClass: 'correct'
-        });
-      });
-
-      it('should be hidden', function() {
-        expect($('.see-solution', element).hasClass('ng-hide')).toBe(true);
-      });
-
-    });
-
-    describe('with incorrect response', function() {
-
-
-      beforeEach(function() {
-        setResponse({
-          correctResponse: 'incorrect',
-          feedback: 'Incorrect!',
-          correctClass: 'incorrect'
-        });
-      });
-
-      it('should be visible', function() {
-        expect($('.see-solution', element).hasClass('ng-hide')).toBe(false);
-      });
-
-    });*/
-
   });
 
 });
