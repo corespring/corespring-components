@@ -3,20 +3,23 @@ var def = function() {
     restrict: "AE",
     transclude: true,
     replace: true,
-    scope: {},
+    scope: {
+      answerExpanded: '=?seeAnswerPanelExpanded'
+    },
     link: function(scope, element, attrs) {
-      scope.answerVisible = false;
-      scope.$watch('answerVisible', function(n, p) {
+      scope.$watch('answerExpanded', function(n, p) {
         if (_.isUndefined(n) || n === p) {
           return;
         }
         if (n) {
           $(element).find('.answer-collapse').css('height', 'auto');
           $(element).find('.answer-collapse').css('display', 'none');
+          $(element).find('.answer-collapse').addClass('answerExpanded');
           $(element).find('.answer-collapse').slideDown(400);
         } else {
           $(element).find('.answer-collapse').slideUp(400, 'swing', function() {
             $(element).find('.answer-collapse').attr('style','');
+            $(element).find('.answer-collapse').removeClass('answerExpanded');
           });
         }
       });
@@ -24,10 +27,10 @@ var def = function() {
     template: [
       '  <div class="see-answer-panel answer-holder">',
       '    <div class="panel panel-default">',
-      '      <div class="panel-heading" ng-click="answerVisible = !answerVisible">',
-      '        <h4 class="panel-title" ><i class="answerIcon fa fa-eye{{answerVisible ? \'-slash\' : \'\'}}"></i>{{answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
+      '      <div class="panel-heading" ng-click="answerExpanded = !answerExpanded">',
+      '        <h4 class="panel-title" ><i class="answerIcon fa fa-eye{{answerExpanded ? \'-slash\' : \'\'}}"></i>{{answerExpanded ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
       '      </div>',
-      '      <div class="answer-collapse" ng-class="{answerVisible: answerVisible}">',
+      '      <div class="answer-collapse">',
       '        <div class="panel-body" ng-transclude>',
       '        </div>',
       '      </div>',

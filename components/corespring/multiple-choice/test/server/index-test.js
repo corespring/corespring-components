@@ -77,7 +77,7 @@ component = {
 describe('multiple-choice server logic', function() {
 
   it('should return incorrect if the answer is null or undefined', function() {
-    var outcome = server.respond(
+    var outcome = server.createOutcome(
       {
         correctResponse: {
           value: ['a']
@@ -101,10 +101,10 @@ describe('multiple-choice server logic', function() {
     server.isCorrect(["1"], ["1", "2"], false).should.eql(false);
   });
 
-  describe('respond', function() {
+  describe('createOutcome', function() {
     it('should not show any feedback', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple"], helper.settings(false, true, true));
+      response = server.createOutcome(_.cloneDeep(component), ["apple"], helper.settings(false, true, true));
       expected = {
         correctness: "incorrect",
         score: 0
@@ -115,7 +115,7 @@ describe('multiple-choice server logic', function() {
 
     it('should respond to a correct answer', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["carrot", "turnip", "pear"], helper.settings(true, true, true));
+      response = server.createOutcome(_.cloneDeep(component), ["carrot", "turnip", "pear"], helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -144,7 +144,7 @@ describe('multiple-choice server logic', function() {
 
     it('should respond to an incorrect response (show correct too)', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple"], helper.settings(true, true, true));
+      response = server.createOutcome(_.cloneDeep(component), ["apple"], helper.settings(true, true, true));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -179,7 +179,7 @@ describe('multiple-choice server logic', function() {
 
     it('should respond to an incorrect response (do not show correct too)', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple"], helper.settings(true, true, false));
+      response = server.createOutcome(_.cloneDeep(component), ["apple"], helper.settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -199,7 +199,7 @@ describe('multiple-choice server logic', function() {
 
     it('should respond to an incorrect response and show feedback for 1 incorrect and 1 correct', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple", "carrot"], helper.settings(true, true, false));
+      response = server.createOutcome(_.cloneDeep(component), ["apple", "carrot"], helper.settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -225,7 +225,7 @@ describe('multiple-choice server logic', function() {
       var noFeedbackComponent = _.cloneDeep(component);
       delete noFeedbackComponent.feedback;
 
-      var response = server.respond(noFeedbackComponent, ["apple", "carrot"], helper.settings(true, true, false));
+      var response = server.createOutcome(noFeedbackComponent, ["apple", "carrot"], helper.settings(true, true, false));
       var expected = {
         correctness: "incorrect",
         score: 0,
@@ -246,7 +246,7 @@ describe('multiple-choice server logic', function() {
 
     it('in partially correct case', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["carrot", "turnip", "pear"], helper.settings(true, true, true));
+      response = server.createOutcome(_.cloneDeep(component), ["carrot", "turnip", "pear"], helper.settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -317,23 +317,23 @@ describe('multiple-choice server logic', function() {
     describe('if no partial scoring is allowed', function() {
 
       it('For any incorrect answer the score should be 0', function() {
-        var response = server.respond(component, ["carrot"], helper.settings(true, true, false));
+        var response = server.createOutcome(component, ["carrot"], helper.settings(true, true, false));
         response.score.should.eql(0);
 
-        response = server.respond(component, ["turnip", "pear"], helper.settings(true, true, false));
+        response = server.createOutcome(component, ["turnip", "pear"], helper.settings(true, true, false));
         response.score.should.eql(0);
 
-        response = server.respond(component, ["apple"], helper.settings(true, true, false));
+        response = server.createOutcome(component, ["apple"], helper.settings(true, true, false));
         response.score.should.eql(0);
       });
 
       it('If all correct answers were checked the score should be 1 ', function() {
-        var response = server.respond(component, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
+        var response = server.createOutcome(component, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
         response.score.should.eql(1);
       });
 
       it('If all correct answers were checked and some incorrect ones the score should be 1', function() {
-        var response = server.respond(component, ["carrot", "turnip", "pear", "apple"], helper.settings(true, true, false));
+        var response = server.createOutcome(component, ["carrot", "turnip", "pear", "apple"], helper.settings(true, true, false));
         response.score.should.eql(1);
       });
 
@@ -424,7 +424,7 @@ describe('multiple-choice server logic', function() {
               "scoringType" : "standard"
             }};
 
-      var response = server.respond(comp, ["mc_0","mc_1","mc_3"], helper.settings(true, true, false));
+      var response = server.createOutcome(comp, ["mc_0","mc_1","mc_3"], helper.settings(true, true, false));
       response.score.should.eql(0);
     });
 
@@ -435,26 +435,26 @@ describe('multiple-choice server logic', function() {
         {numberOfCorrect: 1, scorePercentage: 25},
         {numberOfCorrect: 2, scorePercentage: 40}
       ];
-      var response = server.respond(comp, ["carrot"], helper.settings(true, true, false));
+      var response = server.createOutcome(comp, ["carrot"], helper.settings(true, true, false));
       response.score.should.eql(0.25);
 
-      response = server.respond(comp, ["turnip", "pear"], helper.settings(true, true, false));
+      response = server.createOutcome(comp, ["turnip", "pear"], helper.settings(true, true, false));
       response.score.should.eql(0.4);
 
-      response = server.respond(comp, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
+      response = server.createOutcome(comp, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
       response.score.should.eql(1);
     });
 
     it('for single choice with multiple correct answer', function() {
       var comp = _.cloneDeep(component);
       comp.model.config.choiceType = "radio";
-      var response = server.respond(comp, ["carrot"], helper.settings(true, true, false));
+      var response = server.createOutcome(comp, ["carrot"], helper.settings(true, true, false));
       response.score.should.eql(1);
 
-      response = server.respond(comp, ["turnip"], helper.settings(true, true, false));
+      response = server.createOutcome(comp, ["turnip"], helper.settings(true, true, false));
       response.score.should.eql(1);
 
-      response = server.respond(comp, ["pear"], helper.settings(true, true, false));
+      response = server.createOutcome(comp, ["pear"], helper.settings(true, true, false));
       response.score.should.eql(1);
     });
 
@@ -466,7 +466,7 @@ describe('multiple-choice server logic', function() {
         {numberOfCorrect: 1, scorePercentage: 25},
         {numberOfCorrect: 2, scorePercentage: 40}
       ];
-      var response = server.respond(comp, ["carrot"], helper.settings(true, true, false));
+      var response = server.createOutcome(comp, ["carrot"], helper.settings(true, true, false));
       response.score.should.eql(1);
     });
 

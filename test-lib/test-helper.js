@@ -16,7 +16,7 @@ exports.settings = function(feedback, userResponse, correctResponse) {
 };
 
 exports.assertNullOrUndefinedAnswersReturnsIncorrect = function(s, functionName, feedback){
-  functionName = functionName || 'respond';
+  functionName = functionName || 'createOutcome';
 
   it('should return incorrect if the answer is null or undefined', function(){
     var outcome = s[functionName]({}, null, {

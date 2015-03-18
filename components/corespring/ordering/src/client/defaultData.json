@@ -1,7 +1,6 @@
 {
   "componentType": "corespring-ordering",
   "title": "Ordering",
-  "correctResponse": [],
   "feedback": {
     "correctFeedbackType": "default",
     "partialFeedbackType": "default",
@@ -41,8 +40,8 @@
     "config": {
       "shuffle": true,
       "choiceAreaLayout": "vertical",
-      "choiceAreaLabel": "Choice Label",
-      "answerAreaLabel": "Answer Label",
+      "choiceAreaLabel": "",
+      "answerAreaLabel": "",
       "placementType": "inPlace"
     }
   },

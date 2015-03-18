@@ -29,7 +29,7 @@ describe('server logic', function() {
 
   it('should respond with correct and score 1 if the answer is correct', function() {
     var expected, response;
-    response = server.respond(_.cloneDeep(component), "", settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "", settings(false, true, true));
     expected = {
       correctness: "correct",
       score: 1
@@ -40,7 +40,7 @@ describe('server logic', function() {
 
   it('should respond with incorrect and score 0 if the answer is correct', function() {
     var expected, response;
-    response = server.respond(_.cloneDeep(component), "", settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "", settings(false, true, true));
     expected = {
       correctness: "incorrect",
       score: 0

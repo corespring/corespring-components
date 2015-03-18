@@ -1,37 +1,16 @@
 @import '../../../../../less/common';
 
-.show-correct-button-mixin() {
-  background: @correct-color;
-  padding: 5px;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-}
 
 .view-placement-ordering {
 
-  .show-correct-button {
-    .show-correct-button-mixin();
-  }
-
-  .choice {
-    img {
-      max-width: 100px;
-    }
-    border: 1px solid;
-    border-radius: 4px;
-    background-color: white;
-  }
-
   .choice-area {
-    .choice-area-label {
-      text-align: center;
-    }
+    margin-right: 20px;
     .choices {
       .choices-holder {
         .choices-inner-holder {
+          margin-top: 5px;
           border-radius: 4px;
-          border: 1px solid #000000;
+          border: 2px solid #9B9B9B;
           background-color: #efefef;
         }
         .choice {
@@ -44,22 +23,26 @@
   }
 
   .answer-area {
-    vertical-align: top;
-    display: inline-block;
     .choiceHolder {
       border-radius: 4px;
       border: 1px solid #979797;
       background-color: #d8d8d8 !important;
+      font-size: 38px;
+      line-height: 38px;
+      color: #999;
 
-      &:hover {
-        cursor: auto;
-      }
     }
 
     .answer-area-table {
-      display: table;
-      border: 1px solid #9b9b9b;
       border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+
+      .ui-draggable-dragging{
+        &:hover{
+          cursor: pointer;
+        }
+      }
       .choice {
         position: relative;
         background-color: #ffffff;
@@ -89,6 +72,10 @@
           right: 3px;
           top: 3px;
           color: #ccc;
+
+          &:hover{
+            cursor: pointer;
+          }
         }
 
         cursor: auto;
@@ -97,7 +84,6 @@
       &.warning {
         .warning-input();
       }
-
     }
   }
 
@@ -107,16 +93,16 @@
   }
 
   .choice {
-    vertical-align: top;
-    background-color: #EFEFEF;
+    border: 1px solid;
+    border-radius: 4px;
+    background-color: white;
     height: 100%;
     margin: 3px 3px 1px 1px;
     padding: 8px;
-    text-align: center;
-    min-width: 60px;
-    min-height: 40px;
+    min-width: 150px;
     max-width: 500px;
     overflow: hidden;
+    min-height: 55px;
 
     &.correct {
       .correct-input();
@@ -129,6 +115,16 @@
     &.hiddenChoice {
       visibility: hidden;
     }
+
+    img {
+      max-width: 100px;
+      max-height: 100px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
   }
 
   .choiceHolder {
@@ -147,55 +143,73 @@
 
   .choice-wrapper {
     padding: 10px;
+    position: relative;
   }
 
+  
   &.main-table.vertical {
-    display: table;
     width: 100%;
 
-    .main-row {
-      width: 100%;
-      display: table;
-      margin-top: 5px;
+    .button-row{
       margin-bottom: 10px;
     }
+    
+    .choice-area-label, .answer-area-label {
+      text-align: center;
+    }
 
+    .main-row {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      clear: both;
+    }
+    .label-row{
+      display: block;
+      clear: both;
+      overflow: hidden;
+
+      .choice-area-label,.answer-area-label{
+        width: 175px;
+        display: inline-block;
+        margin-left: 2px;
+        margin-right: 18px;
+        max-height: 40px;
+        text-align: center;
+        overflow: hidden;
+      }
+    }
     .choice-area {
-      display: table-cell;
-      vertical-align: top;
+      width: 180px;
+      float: left;
 
       .choices {
         padding-top: 0px;
         .choices-holder {
-          display: inline-block;
         }
 
         .choice {
           width: 150px;
+
         }
       }
     }
 
     .answer-area {
-      display: table-cell;
+      width: 180px;
+      float: left;
+
       .choice {
         width: 150px;
       }
 
-      .answer-area-label {
-        text-align: center;
-      }
-
       .answer-area-holder {
         display: inline-block;
-        height: 100%;
-
         .answer-area-table {
-          display: table;
-          height: 94%;
-          border: 1px solid #9b9b9b;
           border-radius: 4px;
-          padding: 5px;
+          display: table;
+          padding: 10px;
+          margin-top: 5px;
 
           .choice-wrapper {
             display: table-row;
@@ -205,23 +219,22 @@
     }
 
     .see-answer-area {
-      display: table-cell;
-      min-width: 150px;
-      max-width: 180px;
-      text-align: right;
-
+      width: 180px;
+      float: left;
+      margin: 0;
       .choice {
         .correct-input();
       }
     }
-
   }
 
   &.main-table.horizontal {
     .button-row {
       float: right;
       display: inline-block;
+      margin-bottom: 10px;
     }
+
 
     .main-row {
       display: table;
@@ -233,8 +246,10 @@
         display: table-cell;
         .choices-holder {
           display: inline-block;
+          max-width: 585px;
           .choice-area-label {
             text-align: left;
+            height: auto;
           }
         }
       }
@@ -244,17 +259,25 @@
     }
     .answer-area {
       display: table-row;
+
       .answer-area-label {
         margin-top: 10px;
+        height: auto;
+        display: block;
+        text-align: left;
       }
       .answer-area-holder {
         display: table-cell;
       }
       .choice-wrapper {
-        display: table-cell;
+        display: inline-block;
+        vertical-align: top;
       }
       .answer-area-table {
         width: 100%;
+        height: 100% !important;
+        max-width: 585px;
+        margin-top: 5px;
       }
     }
     .feedback-holder {
@@ -266,28 +289,72 @@
       .choice {
         .correct-input();
       }
+      .answer-area-label {
+        display: none;
+      }
+      .choices-inner-holder {
+        border: none;
+        background: #fff;
+        margin-top: 5px;
+      }
     }
   }
 
-  .panel.feedback.warning {
-    .panel-heading {
-      display: none;
-    }
-    .panel-body {
-      color: #a94442;
-      background-color: #f2dede;
-      border: 1px solid #ebccd1;
-      border-radius: 4px;
-    }
+  .feedback {
+    display: block;
+    clear: both;
   }
 
+  .button-row {
+    margin-bottom: 10px;
+    .btn-success {
+      background: @correct-color;
+    }
+  }
 }
 
 .view-ordering {
 
-  .choice {
-    img {
-      max-width: 100px;
+  ul {
+    border: 2px solid #9B9B9B;
+    background: #efefef;
+    padding: 5px 5px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+
+    .choice {
+      background: #fff;
+    }
+  }
+
+  li {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0 0 10px;
+  }
+
+  .sizerHolder {
+    visibility: hidden;
+    position: fixed;
+    max-width: 500px;
+  }
+
+  .choice-area {
+    .choices {
+      .choices-holder {
+        .choices-inner-holder {
+          margin-top: 5px;
+          border-radius: 4px;
+          border: 1px solid #9b9b9b;
+          background-color: #efefef;
+        }
+        .choice {
+          border: 1px solid #979797;
+          background-color: #ffffff;
+          border-radius: 4px;
+
+        }
+      }
     }
   }
 
@@ -297,10 +364,19 @@
 
   &.horizontal {
 
+    .choice {
+      // max-width: 150px;
+      min-width: 50px;
+    }
     .button-row {
+      margin-bottom: 10px;
       float: right;
     }
-
+    .answer-area-container{
+      display: table-cell;
+      max-width: 595px;
+      float:left;
+    }
     .container-border {
       border: 1px solid #9B9B9B;
       border-radius: 4px;
@@ -331,11 +407,13 @@
       margin-bottom: 10px;
       max-width: 595px;
       display: table-cell;
+      float: left;
     }
 
     .correct-answer {
       display: table-cell;
-      text-align: right;
+      vertical-align: top;
+      float: right;
 
       ul {
         border-color: @correct-color;
@@ -349,36 +427,55 @@
 
     ul {
       border: 2px solid #9B9B9B;
+      background: #efefef;
       border-radius: 4px;
       display: inline-block;
       padding-bottom: 0px;
+      max-width: 275px;
+
+      .choice {
+        background: #fff;
+        width: auto;
+        min-width: 50px;
+      }
     }
 
-    .show-correct-button {
-      .show-correct-button-mixin();
+  }
+
+  .ui-sortable-helper .choice {
+    background-color: #ffffff !important;
+    border: 2px dashed #9b9b9b !important;
+  }
+
+  .see-correct-answer .choice.correct {
+      border: 1px solid @correct-color;
+      -moz-box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
+      box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
+      position: relative;
+
+      &:after {
+        font-family: 'FontAwesome';
+        content: '';
+        color: @correct-color;
+        position: absolute;
+        right: 2px;
+        top: -2px;
+        font-size: 17px;
+      }
     }
-
-  }
-
-  ul {
-    padding: 5px 5px;
-    margin-left: 0px;
-    margin-bottom: 0px;
-  }
-
-  li {
-    list-style: none;
-    padding-left: 0px;
-    margin: 0 0 10px;
-  }
-
   .choice {
     border: 1px #9b9b9b solid;
     background: #efefef;
-    border-radius: 6px;
+    border-radius: 4px;
     display: inline-block;
-    padding: 18px;
+    padding: 8px;
     margin: 0;
+    width: 100%;
+    min-height: 55px;
+
+    div {
+      // width: 96%;
+    }
 
     &.correct {
       border: 1px solid @correct-color;
@@ -414,6 +511,15 @@
       }
 
     }
+
+    img {
+      max-width: 100px;
+      max-height: 100px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .see-answer-panel {
@@ -422,6 +528,8 @@
 
       ul {
         padding: 1px;
+        background: #fff;
+        border: none;
       }
 
       .choice.correct:after {
@@ -430,11 +538,24 @@
     }
   }
 
+  .feedback {
+    display: block;
+    clear: both;
+  }
+
+  .button-row {
+    margin-bottom: 10px;
+    .btn-success {
+      background: @correct-color;
+    }
+  }
+
 }
 
 .ordering-config {
   .mini-wiggi-wiz .wiggi-wiz-editable {
     background-color: #fff !important;
+    min-height: 30px;
   }
 
   .rounded-inputs;
@@ -458,10 +579,13 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 5px 0 45px 0;
-    max-width: 400px;
     min-height: 47px;
-    padding: 1em;
+    padding: 1.13em;
     background: #efefef;
+
+    &:hover {
+      cursor: pointer;
+    }
 
     .blocker {
       position: absolute;
@@ -544,6 +668,11 @@
     font-style: italic;
     color: #a9a9a9;
     padding: 9px 20px;
+  }
+
+  img {
+    max-width: 100px;
+    max-height: 100px;
   }
 
 }

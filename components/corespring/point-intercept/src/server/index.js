@@ -13,17 +13,16 @@ exports.isCorrect = function(answer, correctResponse, orderMatters) {
   }
 };
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
   var correctResponse = question.correctResponse;
 
 
   if(!answer){
     return {
-      correctness: 'incorrect', 
+      correctness: 'warning',
       score: 0, 
-      correctResponse: question.correctResponse,
-      feedback: settings.showFeedback ? fbu.makeFeedback(question.feedback, 'incorrect') : null,
-      outcome: settings.showFeedback ? 'incorrect' : null
+      feedback: settings.showFeedback ? fbu.makeFeedback(question.feedback, 'warning') : null,
+      outcome: settings.showFeedback ? 'warning' : null
     };
   }
 

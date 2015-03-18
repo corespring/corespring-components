@@ -1,8 +1,8 @@
 {
   "libraries": [
   ],
-  "dependencies" : {
-    "client" : {
+  "dependencies": {
+    "client": {
     }
   },
   "released": true,

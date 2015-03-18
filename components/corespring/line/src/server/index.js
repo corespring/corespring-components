@@ -22,7 +22,7 @@ exports.isScoreable = function(question, answer, outcome) {
   return !question.model.config.exhibitOnly; 
 };
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
   function validAnswer(answer) {
     function hasPoints(answer) {

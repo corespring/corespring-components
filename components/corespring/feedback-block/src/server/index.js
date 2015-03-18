@@ -101,3 +101,4 @@ exports.createOutcome = function(model, answer, settings, targetOutcome) {
 
   return response;
 };
+

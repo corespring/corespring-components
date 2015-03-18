@@ -72,7 +72,7 @@ describe('text entry server logic', function() {
   };
 
   it('should return a warning outcome for an empty answer', function() {
-    var outcome = server.respond(_.cloneDeep(component), null, helper.settings(true, true, true));
+    var outcome = server.createOutcome(_.cloneDeep(component), null, helper.settings(true, true, true));
     var expected = {
       correctness: "warning",
       score: 0,
@@ -85,7 +85,7 @@ describe('text entry server logic', function() {
   });
 
   it('should respond with correct and score 1 if the answer is correct', function() {
-    response = server.respond(_.cloneDeep(component), "carrot", helper.settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "carrot", helper.settings(false, true, true));
     expected = {
       correctness: "correct",
       score: 1
@@ -98,7 +98,7 @@ describe('text entry server logic', function() {
     var component2 = _.cloneDeep(component);
     component2.correctResponses.ignoreWhitespace = true;
     component2.correctResponses.ignoreCase = true;
-    response = server.respond(component2, "caR Rot", helper.settings(false, true, true));
+    response = server.createOutcome(component2, "caR Rot", helper.settings(false, true, true));
     expected = {
       correctness: "correct",
       score: 1
@@ -108,7 +108,7 @@ describe('text entry server logic', function() {
   });
 
   it('should respond with incorrect and score 0.25 if the answer is among partially correct ones', function() {
-    response = server.respond(_.cloneDeep(component), "lemon", helper.settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "lemon", helper.settings(false, true, true));
     expected = {
       correctness: "incorrect",
       score: 0.25
@@ -118,7 +118,7 @@ describe('text entry server logic', function() {
   });
 
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
-    response = server.respond(_.cloneDeep(component), "salami", helper.settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "salami", helper.settings(false, true, true));
     expected = {
       correctness: "incorrect",
       score: 0
@@ -157,7 +157,7 @@ describe('text entry server logic', function() {
         correctness: "correct",
         score: 1
       };
-      var response = server.respond(_.cloneDeep(component), "15", helper.settings(false, true, true));
+      var response = server.createOutcome(_.cloneDeep(component), "15", helper.settings(false, true, true));
 
       response.correctness.should.eql(expected.correctness);
       response.score.should.eql(expected.score);

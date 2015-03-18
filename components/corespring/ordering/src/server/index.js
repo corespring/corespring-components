@@ -6,14 +6,14 @@ var keys = fb.keys;
 
 exports.keys = keys;
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
 
   if(!question || _.isEmpty(question)){
     throw new Error('question should never be null or empty');
   }
 
-  var correctResponse = question.correctResponse || _.pluck(question.model.choices, 'id');
+  var correctResponse = _.isEmpty(question.correctResponse) ? _.pluck(question.model.choices, 'id') : question.correctResponse;
 
   var isEmptyAnswer = _.isEmpty(answer) || _.every(answer, function(a) {
     return _.isEmpty(a);

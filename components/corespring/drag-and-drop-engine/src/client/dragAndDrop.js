@@ -69,11 +69,11 @@ var dragAndDropController = [
           var htmlHolders = $(element).find('.html-holder');
           htmlHolders.each(function(idx, e) {
             var $e = $(e);
-            if ($e.width() > w) {
-              w = $e.width();
+            if ($e.outerWidth() > w) {
+              w = $e.outerWidth();
             }
-            if ($e.height() > h) {
-              h = $e.height();
+            if ($e.outerHeight() > h) {
+              h = $e.outerHeight();
             }
           });
 
@@ -202,7 +202,7 @@ var dragAndDropController = [
               };
             },
             template: [
-              ' <div class="see-solution">',
+              ' <div class="view-drag-and-drop see-solution">',
               '   <div class="modal-header">',
               '     <h3>Correct Answer</h3>',
               '   </div>',

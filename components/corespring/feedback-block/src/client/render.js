@@ -9,11 +9,11 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          console.log("FB block: ", dataAndSession);
+          console.log("FB-block setDataAndSession: ", dataAndSession);
         },
 
         setResponse: function(response) {
-          console.log("FB response: ", response);
+          console.log("FB-block setResponse: ", response);
           scope.correctClass = response.correctness;
           scope.feedback = response.feedback;
           this.updateVisibility();

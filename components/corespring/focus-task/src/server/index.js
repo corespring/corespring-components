@@ -35,7 +35,7 @@ exports.buildFeedback = buildFeedback;
 /*
  Create a response to the answer based on the question, the answer and the respond settings
  */
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
   if(!question || _.isEmpty(question)){
     throw new Error('question should never be undefined or empty');

@@ -39,12 +39,12 @@ describe('extended text entry server logic', function() {
 
 
   it('should return an incorrect response for a null answer', function(){
-    var outcome = server.respond({}, null, settings(true));
+    var outcome = server.createOutcome({}, null, settings(true));
     outcome.should.eql({correctness: 'incorrect', score: 0, feedback: server.feedback.NO_ANSWER});
   });
 
   it('should show default feedback', function() {
-    var response = server.respond(_.cloneDeep(component), "Some text", settings(true, true, false));
+    var response = server.createOutcome(_.cloneDeep(component), "Some text", settings(true, true, false));
     response.feedback.should.eql("<b>Submitted Successfully.</b> Your answer was submitted.");
   });
 
@@ -53,13 +53,13 @@ describe('extended text entry server logic', function() {
     customComponent.feedback.feedbackType = 'custom';
     customComponent.feedback.feedback = 'custom feedback';
 
-    var response = server.respond(customComponent, "Some text", settings(true, true, false));
+    var response = server.createOutcome(customComponent, "Some text", settings(true, true, false));
     response.feedback.should.eql("custom feedback");
   });
 
   it('should show empty response feedback', function() {
     var customComponent = _.cloneDeep(component);
-    var response = server.respond(customComponent, "", settings(true, true, false));
+    var response = server.createOutcome(customComponent, "", settings(true, true, false));
     response.correctness.should.eql("incorrect");
   });
 
@@ -68,7 +68,7 @@ describe('extended text entry server logic', function() {
     customComponent.feedback.feedbackType = 'none';
     customComponent.feedback.feedback = 'custom feedback';
 
-    var response = server.respond(customComponent, "Some text", settings(true, true, false));
+    var response = server.createOutcome(customComponent, "Some text", settings(true, true, false));
     response.should.eql({feedback: undefined, comments: undefined});
   });
 

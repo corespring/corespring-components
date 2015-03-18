@@ -25,7 +25,7 @@ exports.isCorrect = function(answer, responses) {
   });
 };
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
   var response;
 
   if(!question || _.isEmpty(question)){

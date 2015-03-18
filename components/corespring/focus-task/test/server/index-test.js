@@ -54,7 +54,7 @@ describe('focus-task server logic', function() {
 
 
   it('returns an incorrect outcome for an empty answer', function(){
-    var outcome = server.respond({correctResponse: {value: ['a']}}, null, {showFeedback: true, highlightCorrectResponse: true, highlightUserResponse: true});
+    var outcome = server.createOutcome({correctResponse: {value: ['a']}}, null, {showFeedback: true, highlightCorrectResponse: true, highlightUserResponse: true});
     outcome.should.eql({
       score: 0,
       correctness: 'incorrect',
@@ -98,10 +98,10 @@ describe('focus-task server logic', function() {
     server.isCorrect(["1"], ["1", "2"]).should.eql(false);
   });
 
-  describe('respond', function() {
+  describe('createOutcome', function() {
     it('should not show any feedback', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple"], settings(false, true, true));
+      response = server.createOutcome(_.cloneDeep(component), ["apple"], settings(false, true, true));
       expected = {
         correctness: "incorrect",
         score: 0
@@ -113,7 +113,7 @@ describe('focus-task server logic', function() {
 
     it('should respond to a correct answer', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["carrot", "turnip"], settings(true, true, true));
+      response = server.createOutcome(_.cloneDeep(component), ["carrot", "turnip"], settings(true, true, true));
       expected = {
         correctness: "correct",
         score: 1,
@@ -129,7 +129,7 @@ describe('focus-task server logic', function() {
 
     it('should respond to an incorrect response (show correct too)', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple"], settings(true, true, true));
+      response = server.createOutcome(_.cloneDeep(component), ["apple"], settings(true, true, true));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -147,7 +147,7 @@ describe('focus-task server logic', function() {
 
     it('should respond to an incorrect response (do not show correct too)', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple"], settings(true, true, false));
+      response = server.createOutcome(_.cloneDeep(component), ["apple"], settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,
@@ -164,7 +164,7 @@ describe('focus-task server logic', function() {
 
     it('should respond to an incorrect response and show feedback for 1 incorrect and 1 correct', function() {
       var expected, response;
-      response = server.respond(_.cloneDeep(component), ["apple", "carrot"], settings(true, true, false));
+      response = server.createOutcome(_.cloneDeep(component), ["apple", "carrot"], settings(true, true, false));
       expected = {
         correctness: "incorrect",
         score: 0,

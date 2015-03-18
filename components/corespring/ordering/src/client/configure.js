@@ -40,32 +40,28 @@ var main = [
         '      </p>',
         '    </div>',
         '  </div>',
-        '  <div class="row" ng-class="{\'hidden\': model.config.placementType == \'inPlace\'}">',
+        '  <div class="row">',
         '    <div class="col-xs-6">',
         '      <input class="prompt" type="text"',
         '          ng-model="model.config.choiceAreaLabel" placeholder="Enter a label or leave blank"/>',
         '    </div>',
-        '    <div class="col-xs-6">',
+        '    <div class="col-xs-6" ng-class="{\'hidden\': model.config.placementType == \'inPlace\'}">',
         '    <input class="prompt" type="text" ng-model="model.config.answerAreaLabel"',
         '        placeholder="Enter a label or leave blank" />',
         '    </div>',
         '  </div>',
         '  <div class="row choices-row">',
-        '    <div ng-class="{\'col-xs-6\': model.config.placementType == \'placement\', \'col-xs-12\': model.config.placementType == \'inPlace\'}">',
+        '    <div class="col-xs-6">',
         '      <ul class="sortable-choices draggable-choices"',
         '          ui-sortable="choicesSortableOptions" ng-model="model.choices">',
         '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
         '            ng-model="model.choices[$index]" ng-click="itemClick($event)"',
         '            jqyoui-draggable="{index: {{$index}}, placeholder: \'keep\'}"',
         '            data-jqyoui-options="{revert: \'invalid\'}">',
-        '          <div class="blocker" ng-hide="active[$index]">',
+        '          <div class="blocker" ng-click="activate($index, $event)" ng-hide="active[$index]">',
         '            <div class="bg"></div>',
         '            <div class="content">',
         '              <ul class="edit-controls">',
-        '                <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true"',
-        '                    tooltip-placement="bottom">',
-        '                  <i ng-click="activate($index, $event)" class="fa fa-pencil"></i>',
-        '                </li>',
         '                <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"',
         '                    tooltip-placement="bottom">',
         '                  <i ng-click="removeChoice($index)" class="fa fa-trash-o"></i>',
@@ -73,7 +69,7 @@ var main = [
         '              </ul>',
         '            </div>',
         '          </div>',
-        '          <div class="remove-after-placing">',
+        '          <div class="remove-after-placing" ng-show="model.config.placementType == \'placement\'">',
         '            <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">',
         '              Remove tile after placing',
         '            </checkbox>',
@@ -99,7 +95,7 @@ var main = [
         '          data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
         '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets">',
         '          <div class="delete-icon">',
-        '            <i ng-click="removeTarget(choice)" class="fa fa-trash-o"></i>',
+        '            <i ng-click="removeTarget(choice)" class="fa fa-close"></i>',
         '          </div>',
         '          <span ng-bind-html-unsafe="choice.label"></span>',
         '        </li>',
@@ -109,8 +105,8 @@ var main = [
         '      </div>',
         '    </div>',
         '  </div>',
-        '  <div class="placement-row-group" ng-show="model.config.placementType == \'placement\'">',
-        '    <div class="row">',
+        '  <div class="placement-row-group" >',
+        '    <div class="row" ng-show="model.config.placementType == \'placement\'">',
         '      <div class="col-xs-12">',
         '        <checkbox class="shuffle" ng-model="model.config.shuffle">Shuffle Tiles</checkbox>',
         '      </div>',
@@ -194,8 +190,11 @@ var main = [
               initTargets();
             },
             getModel: function() {
-              var model = _.cloneDeep($scope.fullModel);
-              return model;
+              var fullModel = _.cloneDeep($scope.fullModel);
+              if (fullModel.model.config.placementType === 'inPlace') {
+                fullModel.correctResponse = _.pluck(fullModel.model.choices, 'id');
+              }
+              return fullModel;
             }
           };
 
@@ -303,10 +302,12 @@ var main = [
             $scope.activate(_.findIndex($scope.active));
           });
 
-          $scope.$watchCollection('targets', function() {
-            var newOrder = _.pluck($scope.targets, 'id');
-            $scope.fullModel.correctResponse = newOrder;
-            $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+          $scope.$watchCollection('targets', function(n) {
+            if (!_.isEmpty(n)) {
+              var newOrder = _.pluck($scope.targets, 'id');
+              $scope.fullModel.correctResponse = newOrder;
+              $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+            }
           });
 
           $scope.init = function() {
