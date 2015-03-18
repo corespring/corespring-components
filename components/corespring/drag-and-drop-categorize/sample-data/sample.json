@@ -5,7 +5,7 @@
     "1": {
       "weight": 1,
       "componentType": "corespring-drag-and-drop-categorize",
-      "title": "Categorize",
+      "title": "[Drag and Drop Question Name]",
       "correctResponse": {
         "cat_1": [
           "choice_0",

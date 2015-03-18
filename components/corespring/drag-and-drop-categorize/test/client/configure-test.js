@@ -26,10 +26,19 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
         "incorrectFeedbackType": "default"
       },
       "allowPartialScoring": true,
-      "partialScoring": [{
-        "numberOfCorrect": 1,
-        "scorePercentage": 25
-      }],
+      "partialScoring": {
+        "cat_1" :[{
+          "numberOfCorrect": 1,
+          "scorePercentage": 25
+        },{
+          "numberOfCorrect": 1,
+          "scorePercentage": 25
+        },{
+          "numberOfCorrect": 1,
+          "scorePercentage": 25
+        }
+        ]
+      },
       "model": {
         "categories": [{
           "id": "cat_1",
@@ -106,6 +115,24 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
     rootScope = $rootScope;
   }));
 
+  function eq(objToDelete){
+    return function (obj){
+      return objToDelete === obj;
+    }
+  }
+
+  function byId(id){
+    return function(object){
+      return object.id === id;
+    };
+  }
+
+  function byModelId(id){
+    return function(object){
+      return object.model.id === id;
+    };
+  }
+
   it('constructs', function() {
     expect(element).toBeDefined();
   });
@@ -116,64 +143,72 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
     expect(container.elements['2']).toBeUndefined();
   });
 
-  describe('partialScoring', function() {
-    it('should automatically remove additional partial scoring scenarios after removing a correct choice', function() {
-      var testModel = createTestModel();
-      container.elements['1'].setModel(testModel);
-      expect(scope.numberOfCorrectResponses).toEqual(3);
-      expect(scope.maxNumberOfScoringScenarios).toEqual(2);
-      scope.addScoringScenario();
-      expect(scope.fullModel.partialScoring.length).toEqual(2);
-      scope.removeChoice(scope.model.choices[0]);
-      rootScope.$digest();
-      expect(scope.fullModel.partialScoring.length).toEqual(1);
-    });
-  });
-
   describe('removeCategory', function() {
     beforeEach(function() {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       rootScope.$digest();
     });
+
     it('should have a category in the beginning', function() {
       expect(scope.model.categories.length).toEqual(1);
     });
+
     it('should remove a category', function() {
-      scope.removeCategory(scope.model.categories[0]);
-      expect(scope.model.categories.length).toEqual(0);
+      _.remove(scope.categories,byModelId("cat_1"));
+      rootScope.$digest();
+      var model = container.elements['1'].getModel();
+      expect(model.model.categories.length).toBe(0);
     });
+
     it('should remove the category from the correctResponse', function() {
       var cat = scope.model.categories[0];
       expect(scope.fullModel.correctResponse[cat.id]).toBeDefined();
-      scope.removeCategory(cat);
-      expect(scope.fullModel.correctResponse[cat.id]).toBeUndefined();
+      _.remove(scope.categories,byModelId("cat_1"));
+      rootScope.$digest();
+      var model = container.elements['1'].getModel();
+      expect(model.correctResponse[cat.id]).toBeUndefined();
     });
   });
 
   describe('addCategory', function() {
+
     beforeEach(function() {
       var testModel = createTestModel();
+      testModel.partialScoring = {};
       testModel.correctResponse = {};
       testModel.model.categories = [];
       container.elements['1'].setModel(testModel);
       rootScope.$digest();
     });
-    it('should not have a category in the beginning', function() {
-      expect(scope.model.categories.length).toEqual(0);
-    });
+
     it('should add a category', function() {
+      expect(scope.fullModel.model.categories.length).toEqual(0);
+
       scope.addCategory();
-      expect(scope.model.categories.length).toEqual(1);
+
+      rootScope.$digest();
+
+      var model = container.elements['1'].getModel();
+
+      expect(model.model.categories.length).toEqual(1);
+
     });
+
     it('the new category should have default label Category 1', function() {
+
       scope.addCategory();
-      expect(scope.model.categories[0].label).toEqual('Category 1');
+      rootScope.$digest();
+      var model = container.elements['1'].getModel();
+      expect(model.model.categories[0].label).toEqual('Category 1');
     });
+
     it('a second new category should have label Category 2', function() {
       scope.addCategory();
       scope.addCategory();
-      expect(scope.model.categories[1].label).toEqual('Category 2');
+      rootScope.$digest();
+      var model = container.elements['1'].getModel();
+      expect(model.model.categories[1].label).toEqual('Category 2');
     });
 
   });
