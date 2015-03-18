@@ -273,9 +273,9 @@ var interactiveGraph = [
             scope.addElement(dr[0], scope.selectedType);
 
           },
-          tickLabelClick: function(dp) {
+          tickLabelClick: function(dp, x) {
             if (_.isFunction(scope.ticklabelclick)) {
-              scope.ticklabelclick(dp);
+              scope.ticklabelclick(dp, x);
             }
           },
           selectionChanged: function() {
@@ -462,6 +462,7 @@ var interactiveGraph = [
           scope.graph.updateOptions(_.merge(_.cloneDeep(model.config), scope.options));
           scope.graph.addHorizontalAxis("bottom", {
             ticks: model.config.ticks,
+            tickLabelOverrides: model.config.tickLabelOverrides,
             tickFrequency: model.config.tickFrequency || 10,
             snapPerTick: model.config.snapPerTick,
             showMinorTicks: model.config.showMinorTicks

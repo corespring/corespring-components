@@ -373,6 +373,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           });
         } else {
           this.ticks = this.scale.ticks(axisOptions.tickFrequency);
+          this.tickLabelOverrides = axisOptions.tickLabelOverrides;
         }
       };
 
@@ -414,20 +415,22 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
           thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2));
 
-          var label = thatHA.tickLabels ? thatHA.tickLabels[idx] : tick;
+          var tickLabel = (thatHA.tickLabelOverrides && !_.isUndefined(thatHA.tickLabelOverrides[tick])) ? thatHA.tickLabelOverrides[tick] : tick;
+          var label = thatHA.tickLabels ? thatHA.tickLabels[idx] : tickLabel;
 
-          if (!options.hiddenTickLabels || options.hiddenTickLabels[tick] !== true || options.hiddenTickLabelsAreGreyedOut) {
-            var text = paper.text(options.margin.left + x, options.height - options.margin.bottom, label);
-            if (options.hiddenTickLabelsAreGreyedOut && options.hiddenTickLabels && options.hiddenTickLabels[tick] === true) {
-              text.attr('opacity', 0.3);
-            }
-            text.click(function() {
-              if (_.isFunction(options.tickLabelClick)) {
-                options.tickLabelClick(tick);
-              }
-            });
-            thatHA.elements.push(text);
+          if (_.isEmpty(label.toString()) && !_.isUndefined(options.placeholderForEmptyTickLabel)) {
+            label = options.placeholderForEmptyTickLabel;
           }
+
+
+          var text = paper.text(options.margin.left + x, options.height - options.margin.bottom, label);
+          text.click(function(event) {
+            if (_.isFunction(options.tickLabelClick)) {
+              options.tickLabelClick(tick, x);
+              event.stopImmediatePropagation();
+            }
+          });
+          thatHA.elements.push(text);
 
           var d = Math.abs(thatHA.ticks[idx + 1] - thatHA.ticks[idx]) / axisOptions.snapPerTick;
 

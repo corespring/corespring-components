@@ -4,7 +4,6 @@ var main = [
 
     var attributes = [
       '<h3>Number Line Attributes</h3>',
-      '{{fullModel.model.config.hiddenTickLabels}}',
       '<table class="attributes-table">',
       '  <tr>',
       '    <td>',
@@ -24,7 +23,9 @@ var main = [
       '           options="sampleGraphOptions"',
       '           tickLabelClick="tickLabelClick"',
       '           editable="sampleNumberLine.editable"></div>',
-
+      '      <div class="tick-label-override-input-holder" ng-show="isEditingTickLabel">',
+      '        <input ng-model="sampleNumberLine.model.config.tickLabelOverrides[tickBeingEdited]" ng-click="$event.stopImmediatePropagation()" type="text" class="tick-label-override-input" style="left: {{tickLabelEditingPosition}}px"/>',
+      '      </div>',
       '    </td>',
       '  </tr>',
       '</table>'
@@ -61,7 +62,7 @@ var main = [
           startOverClearsGraph: true
         };
         scope.sampleGraphOptions = {
-          hiddenTickLabelsAreGreyedOut: true
+          placeholderForEmptyTickLabel: "N/A"
         };
         scope.initialView = {
           editable: true,
@@ -90,9 +91,13 @@ var main = [
           }
         };
 
-        scope.tickLabelClick = function(tick) {
-          scope.sampleNumberLine.model.config.hiddenTickLabels = scope.sampleNumberLine.model.config.hiddenTickLabels || {};
-          scope.sampleNumberLine.model.config.hiddenTickLabels[tick] = !scope.sampleNumberLine.model.config.hiddenTickLabels[tick];
+        scope.tickLabelClick = function(tick, x) {
+          scope.sampleNumberLine.model.config.tickLabelOverrides = scope.sampleNumberLine.model.config.tickLabelOverrides || {};
+          scope.sampleNumberLine.model.config.tickLabelOverrides[tick] = scope.sampleNumberLine.model.config.tickLabelOverrides[tick] || tick;
+          scope.isEditingTickLabel = true;
+          scope.tickLabelEditingPosition = x + 5;
+          scope.tickBeingEdited = tick;
+          scope.$apply();
         };
 
         scope.correctResponseView = _.cloneDeep(scope.initialView);
@@ -112,7 +117,7 @@ var main = [
             scope.initialView.model.config.initialElements = _.cloneDeep(model.model.config.initialElements);
             scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse) || [];
             scope.updatePartialScoringModel(model.correctResponse.length);
-            scope.sampleNumberLine.model.config.hiddenTickLabels = _.cloneDeep(model.model.config.hiddenTickLabels);
+            scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(model.model.config.tickLabelOverrides);
           },
 
           getModel: function() {
@@ -137,7 +142,7 @@ var main = [
         var updateNumberLineOptions = function(n, onlyFor) {
           if (n) {
             scope.$apply(function() {
-              _(n).omit('initialElements','hiddenTickLabels').each(function(e, k) {
+              _(n).omit('initialElements','tickLabelOverrides').each(function(e, k) {
                 if (!_.isUndefined(n[k])) {
                   scope.initialView.model.config[k] = _.cloneDeep(n[k]);
                   scope.correctResponseView.model.config[k] = _.cloneDeep(n[k]);
@@ -152,10 +157,10 @@ var main = [
         var updateTickLabels = function(n) {
           if (n) {
             scope.$apply(function() {
-              scope.initialView.model.config.hiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
-              scope.correctResponseView.model.config.hiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
-              scope.sampleNumberLine.model.confighiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
-              scope.fullModel.model.config.hiddenTickLabels = _.cloneDeep(n.hiddenTickLabels);
+              scope.initialView.model.config.tickLabelOverrides = _.cloneDeep(n.tickLabelOverrides);
+              scope.correctResponseView.model.config.tickLabelOverrides = _.cloneDeep(n.tickLabelOverrides);
+              scope.sampleNumberLine.model.tickLabelOverrides = _.cloneDeep(n.tickLabelOverrides);
+              scope.fullModel.model.config.tickLabelOverrides = _.cloneDeep(n.tickLabelOverrides);
             });
           }
         };
@@ -193,10 +198,14 @@ var main = [
           }
         }, 200));
 
+        scope.stopTickEditing = function(event) {
+          scope.isEditingTickLabel = false;
+        };
+
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       },
       template: [
-        '<div class="config-number-line">',
+        '<div class="config-number-line" ng-click="stopTickEditing($event)">',
         '  <div navigator-panel="Design">',
         '  <p>',
         '    In Number Line, students identify coordinates or plot points on a graph by clicking on the graph.',
