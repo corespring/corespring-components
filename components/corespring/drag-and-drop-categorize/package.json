@@ -11,11 +11,6 @@
         "bower_target": "https://github.com/corespring/angular-dragdrop.git",
         "file" : "src/angular-dragdrop.js",
         "angular-module" : "ngDragDrop"
-      },
-      "freewall": {
-        "bower_target": "https://github.com/kombai/freewall.git",
-        "file" : "freewall.js",
-        "version": "1.0.4"
       }
     }
   },
