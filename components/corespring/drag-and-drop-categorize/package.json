@@ -6,12 +6,17 @@
   "corespring-container-version": "0.0.1",
   "version": "0.0.1",
   "dependencies": {
-    "client": {
-      "angular-dragdrop": {
-        "bower_target": "https://github.com/corespring/angular-dragdrop.git",
-        "file" : "src/angular-dragdrop.js",
-        "angular-module" : "ngDragDrop"
-      }
+    "corespring-checkbox": {
+      "bower_target": "git@github.com:corespring/checkbox.git",
+      "version": "0.0.5",
+      "file": "src/directive.js",
+      "angular-module": "corespring.input.checkbox"
+    },
+    "corespring-radio": {
+      "bower_target": "git@github.com:corespring/radio.git",
+      "version": "0.0.6",
+      "file": "src/directive.js",
+      "angular-module": "corespring.input.radio"
     }
   },
   "libraries": [
@@ -22,6 +27,16 @@
     {
       "name": "feedback-templates",
       "organization": "corespring"
+    },
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope" : "editor"
+    },
+    {
+      "name": "bootstrap-multiselect",
+      "organization": "corespring",
+      "scope" : "editor"
     }
   ],
   "released": true

@@ -6,61 +6,151 @@ var main = [
     MathJaxService,
     ComponentImageService) {
 
-
-    var playerColumn = [
-      '  <div class="row">',
-      '      <p>In Categorize, students may drag & drop answer tiles to the appropriate category area(s).</p>',
+    var displayPanel = [
+      '<form class="form-horizontal" role="form">',
+      '  <div class="container-fluid">',
+      '    <div class="row"><div class="col-xs-12"><label class="control-label">Choice Area</label></div></div>',
+      '    <div class="row choice-area-row">',
+      '      <div class="col-xs-12">',
+      '        <div class="container-fluid">',
+      '          <div class="row"><div class="col-xs-12"><label class="control-label">Layout</label></div></div>',
+      '          <div class="row">',
+      '            <div class="col-xs-2">',
+      '              <radio value="vertical" ng-model="model.config.choiceAreaLayout">Vertical</radio>',
+      '            </div>',
+      '            <div class="col-xs-2">',
+      '              <radio value="horizontal" ng-model="model.config.choiceAreaLayout">Horizontal</radio>',
+      '            </div>',
+      '            <div class="col-xs-2">',
+      '              <radio value="tile" ng-model="model.config.choiceAreaLayout">Tile</radio>',
+      '            </div>',
+      '          </div>',
+      '          <div class="row" ng-show="model.config.choiceAreaLayout == \'tile\'">',
+      '            <div class="col-xs-offset-4 col-xs-2">',
+      '              <label class="control-label">Items Per Row</label>',
+      '            </div>',
+      '            <div class="col-xs-2">',
+      '              <input type="text" class="form-control" ng-model="model.config.itemsPerRow" />',
+      '            </div>',
+      '          </div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '    <div class="row"><div class="col-xs-12"><label class="control-label">Answers Area</label></div></div>',
+      '    <div class="row answer-area-row">',
+      '      <div class="col-xs-12">',
+      '        <div class="container-fluid">',
+      '          <div class="row answer-area-position-row">',
+      '            <div class="col-xs-12">',
+      '              Answer area is',
+      '              <select ng-model="model.config.answerAreaPosition" class="form-control">',
+      '                <option value="above">above</option>',
+      '                <option value="below">below</option>',
+      '              </select>',
+      '              choices.',
+      '            </div>',
+      '          </div>',
+      '          <div class="row answer-area-category-row" ng-repeat="category in model.categories">',
+      '            <div class="col-xs-12">',
+      '              <div class="well">',
+      '                <div class="container-fluid">',
+      '                  <div class="row">',
+      '                    <label class="control-label">{{category.label}}</label>',
+      '                  </div>',
+      '                  <div class="row">',
+      '                    <div class="col-xs-2">',
+      '                      <radio value="vertical" ng-model="area.layout">Vertical</radio>',
+      '                    </div>',
+      '                    <div class="col-xs-2">',
+      '                      <radio value="horizontal" ng-model="area.layout">Horizontal</radio>',
+      '                    </div>',
+      '                  </div>',
+      '                </div>',
+      '              </div>',
+      '            </div>',
+      '          </div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
       '  </div>',
-      '  <div class="row" >',
-      '     <corespring-drag-and-drop-categorize  id="chooser" ',
-      '                                           max-categories-per-row="model.config.maxCategoriesPerRow" ',
-      '                                           mode="edit" choices="choices" ',
-      '                                           categories="categories" ',
-      '                                           image-service="imageService">',
-      '     </corespring-drag-and-drop-categorize>',
-      '  </div>'
-    ].join("");
-
-    var configControls = [
-      '     <div class="row">',
-      '       <button type="button" id="add-choice" class="btn btn-default" ',
-      '              ng-click="addCategory()">Add a Category</button>',
-      '     </div>',
-      '     <div class="row">',
-      '      <button type="button" class="btn btn-default" ng-click="addChoice()">Add a Choice</button>',
-      '     </div>',
-      '     <div class="row">',
-      '         <checkbox ng-model="model.config.shuffle" class="control-label">Shuffle Tiles</checkbox>',
-      '     </div>',
-      '     <div class="row">',
-      '       Answer area is',
-      '       <select ng-model="model.config.answerAreaPosition" class="form-control">',
-      '         <option value="above">above</option>',
-      '         <option value="below">below</option>',
-      '       </select>',
-      '     </div>',
-      '     <div class="row">',
-      '       Max Number of categories per row',
-      '       <select ng-model="model.config.maxCategoriesPerRow" class="form-control">',
-      '         <option value="1">1</option>',
-      '         <option value="2">2</option>',
-      '         <option value="3">3</option>',
-      '         <option value="4">4</option>',
-      '       </select>',
-      '     </div>'
+      '</form>'
     ].join("");
 
     var designPanel = [
       '<div class="container-fluid">',
-      ' <div class="row">',
-      '   <div class="player-col">',
-            playerColumn,
-      '   </div>',
-      '   <div class="settings-col">',
-            configControls,
-      '   </div>',
-      ' </div>',
-      ' <div class="row feedback-row">',
+      '  <div class="row">',
+      '    <div class="col-xs-12">',
+      '      <p>In Categorize, students may drag & drop answer tiles to the appropriate category area(s).</p>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row"><div class="col-xs-12"><label class="control-label">Categories</label></div></div>',
+      '  <div class="row categorize-category-row" ng-repeat="category in model.categories">',
+      '    <div class="col-xs-1 text-center">',
+      '      <i class="fa fa-trash-o fa-lg" title="Delete" data-tggle="tooltip" ng-click="removeCategory(category)">',
+      '      </i>',
+      '    </div>',
+      '    <div class="col-xs-8 text-center">',
+      '      <input type=text" class="form-control" ng-model="category.label" placeholder="Enter category label"/>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row add-category-row">',
+      '    <div class="col-xs-offset-1 col-xs-11">',
+      '      <button type="button" id="add-choice" class="btn btn-default" ',
+      '              ng-click="addCategory()">Add a Category</button>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row"> <div class="col-xs-12"><label class="control-label">Choices</label></div></div>',
+      '  <div class="row">',
+      '    <div class="col-xs-9">',
+      '      <input type="text" class="form-control" ng-model="model.config.choiceAreaLabel" ',
+      '        placeholder="Enter choice area label or leave blank"/>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row">',
+      '    <div class="col-xs-offset-9 col-md-offset-9 col-md-3 col-xs-3 text-center choice-header-row">',
+      '      <label class="control-label">Select Correct Categories</label>',
+      '    </div>',
+      '  </div>',
+      '  <div class="choice-row-group" ng-repeat="choice in model.choices">',
+      '    <div class="row choice-row">',
+      '      <div class="col-md-2 col-xs-3 text-center choice-letter">',
+      '        <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
+      '            ng-click="removeChoice(choice)"></i>',
+      '      </div>',
+      '      <div class="col-md-7 col-xs-6">',
+      '        <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
+      '            image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
+      '            parent-selector=".modal-body">',
+      '          <edit-pane-toolbar alignment="bottom">',
+      '            <div class="btn-group pull-right">',
+      '              <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">Done</button>',
+      '            </div>',
+      '          </edit-pane-toolbar>',
+      '        </div>',
+      '      </div>',
+      '      <div class="col-md-3 col-xs-3 text-center">',
+      '        <select bootstrap-multiselect="{{componentState}}" multiple="multiple" ng-model="correctMap[choice.id]" ',
+      '            ng-options="c.label for c in model.categories"></select>',
+      '      </div>',
+      '    </div>',
+      '    <div class="row">',
+      '      <div class="col-xs-offset-3 col-md-offset-2 col-xs-9 col-md-10">',
+      '        <checkbox ng-model="choice.moveOnDrag">Remove tile after placing</checkbox>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row add-choice-row">',
+      '    <div class="col-xs-12">',
+      '      <button type="button" class="btn btn-default" ',
+      '          ng-click="addChoice()"><i class="fa fa-plus"></i>  Add a Choice</button>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row">',
+      '    <div class="col-xs-12">',
+      '      <checkbox ng-model="model.config.shuffle" class="control-label">Shuffle Tiles</checkbox>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row feedback-row">',
       '    <div class="col-xs-12">',
       '      <div feedback-panel>',
       '        <div feedback-selector',
@@ -89,166 +179,106 @@ var main = [
       '  </div>',
       '</div>'
 
-    ].join("");
-
-    function getOrNull() {
-      if (!arguments) {
-        return null;
-      }
-      var args = Array.prototype.slice.call(arguments);
-      if (!args || !args[0] || args.length === 0) {
-        return null;
-      }
-      var object = args.shift();
-      do {
-        var propName = args.shift();
-        object = (propName && (propName in object)) ? object[propName] : null;
-      } while (object && args.length > 0);
-      return object;
-    }
-
-    var scoringPanel = [
-      '    <div class="container-fluid scoring-panel">',
-      '      <div class="row partial-scoring">',
-      '         <span>Partial scoring</span>',
-      '         <div class="category-scoring" ng-repeat="category in categories">',
-      '           <span class="label">{{category.model.label}}</span>',
-      '           <div class="scenario" ng-repeat="scenario in category.scoring.partial.scenarios track by $index" >',
-      '             <span>If</span>',
-      '             <input type="number" ng-model="scenario.numCorrectAnswers" min="1" max="{{category.choices.length}}"/>',
-      '             <span>of correct answers is selected, award</span>',
-      '             <input type="number" ng-model="scenario.scorePercentage" min="1" max="100"/>',
-      '             <span>%</span>',
-      '             <i class="fa fa-trash remove-btn" ng-click="removeScoringScenario(category.model.id,scenario)"></i>',
-      '           </div>',
-      '           <button class="add-scoring-scenario" ',
-      '                   ng-click="addScoringScenario(category.model.id)" ',
-      '                   ng-disabled="canAddScenarios(category)" >Add scoring scenario to {{category.model.label}}</button>',
-      '         </div>',
-      '      </div>',
-      '    </div>'
-    ].join("");
+    ].join('\n');
 
     return {
       restrict: "E",
       scope: "isolate",
       template: [
-        '<div class="drag-and-drop-categorize-config-panel">',
+        '<div class="drag-and-drop-config-panel drag-and-drop-categorize-config-panel" choice-template-controller="">',
         '  <div navigator-panel="Design">',
-              designPanel,
+        designPanel,
         '  </div>',
         '  <div navigator-panel="Scoring">',
-              scoringPanel,
+        '    <div class="container-fluid">',
+        '      <div class="row">',
+        '        <div class="col-xs-12">',
+        ChoiceTemplates.scoring(),
+        '        </div>',
+        '      </div>',
+        '    </div>',
         '  </div>',
-        '</div>'].join(''),
-
+        '  <div navigator-panel="Display">',
+        displayPanel,
+        '  </div>',
+        '</div>'].join('\n'),
+      controller: ['$scope',
+        function($scope) {
+          $scope.imageService = function() {
+            return ComponentImageService;
+          };
+        }
+      ],
       replace: true,
       link: function($scope, $element, $attrs) {
 
         ChoiceTemplates.extendScope($scope, 'corespring-drag-and-drop-categorize');
 
-
-        $scope.imageService = ComponentImageService;
+        $scope.correctMap = {};
 
         $scope.choiceToLetter = function(c) {
           var idx = $scope.model.choices.indexOf(c);
           return $scope.toChar(idx);
         };
 
-        $scope.canAddScenarios = function(category) {
-          if (!category || !category.choices || category.choices.length == 0){
-            return false;
-          }
-          var scenarios = getOrNull(category,"scoring","partial","scenarios");
-          return category.choices.length === 0 || scenarios && scenarios.length >= category.choices.length;
-        };
-
-        function byId(id){
-          return function(object){
-            return object.id === id;
-          };
+        function sumCorrectResponses() {
+          return _.reduce($scope.correctMap, function(memo, ca) {
+            return ca.length + memo;
+          }, 0);
         }
-
-        function byModelId(id){
-          return function(object){
-            return object.model.id === id;
-          };
-        }
-
-        function all(){
-          return true;
-        }
-
-        function wrapCategoryModel(categoryModel){
-          return {
-            model:categoryModel,
-            choices: []
-          };
-        }
-
-        $scope.removeScoringScenario = function(categoryId,scenario){
-          var category = _.find($scope.categories,byModelId(categoryId));
-          if (category){
-            _.remove(category.scoring.partial.scenarios,function(sc){
-              return sc === scenario;
-            });
-          }
-        };
-
-        $scope.addScoringScenario = function (categoryId){
-          var category = _.find($scope.categories,byModelId(categoryId));
-          if (category){
-            category.scoring = category.scoring || {};
-            category.scoring.partial = category.scoring.partial || {};
-            category.scoring.partial.scenarios = category.scoring.partial.scenarios || [];
-
-            if (category.scoring.partial.scenarios.length < category.choices.length){
-              category.scoring.partial.scenarios.push({});
-            }
-          }
-        };
 
         $scope.containerBridge = {
-
           setModel: function(model) {
             $scope.fullModel = model;
             $scope.model = $scope.fullModel.model;
 
-            $scope.categories = _.map($scope.model.categories,wrapCategoryModel);
+            function categoryById(cid) {
+              return _.find(model.model.categories, function(c) {
+                return c.id === cid;
+              });
+            }
 
-            $scope.choices = _.cloneDeep($scope.model.choices);
-
-            var correctResponses = $scope.fullModel.correctResponse || {};
-
-            _.forEach($scope.categories,function(category){
-              var response = correctResponses[category.model.id] || {};
-              category.choices = _.map(response,function(choiceId){
-                return {
-                  model : _.find($scope.choices,byId(choiceId))
-                };
+            $scope.correctMap = {};
+            _.each(model.correctResponse, function(val, catId) {
+              _.each(val, function(cr) {
+                $scope.correctMap[cr] = $scope.correctMap[cr] || [];
+                $scope.correctMap[cr].push(categoryById(catId));
               });
             });
 
-            _.forEach($scope.fullModel.partialScoring,function(scenarios,categoryId){
-              var category = _.find($scope.categories,byModelId(categoryId));
-              category.scoring = {
-                partial : {
-                  scenarios : _.take(scenarios,all)
-                }
-              };
-            });
+            $scope.updatePartialScoringModel(sumCorrectResponses());
 
-            $scope.model.config.maxCategoriesPerRow = $scope.model.config.maxCategoriesPerRow || 2;
+            $scope.componentState = "initialized";
           },
-
           getModel: function() {
-
-            return $scope.fullModel;
+            var model = _.cloneDeep($scope.fullModel);
+            return model;
           },
 
           getAnswer: function() {
             return {};
           }
+        };
+
+        $scope.$watch('correctMap', function(n) {
+          if (n) {
+            var res = {};
+            _.each(n, function(correctCategories, choiceId) {
+              _.each(correctCategories, function(category) {
+                res[category.id] = res[category.id] || [];
+                res[category.id].push(choiceId);
+              });
+            });
+            $scope.fullModel.correctResponse = res;
+            $scope.updatePartialScoringModel(sumCorrectResponses());
+          }
+        }, true);
+
+        $scope.removeChoice = function(c) {
+          $scope.model.choices = _.filter($scope.model.choices, function(existing) {
+            return existing !== c;
+          });
+          delete $scope.correctMap[c.id];
         };
 
         function findFreeChoiceSlot() {
@@ -261,7 +291,7 @@ var main = [
         }
 
         $scope.addChoice = function() {
-          $scope.choices.push({
+          $scope.model.choices.push({
             id: "choice_" + findFreeChoiceSlot(),
             labelType: "text",
             label: "",
@@ -269,63 +299,17 @@ var main = [
           });
         };
 
-        $scope.$watch('categories', function() {
-          updateModel();
-        },true);
-
-        $scope.$watch('choices', function() {
-          updateModel();
-        },true);
-
-        function updateModel(){
-
-          function cleanChoicesHtml(choices){
-            var choicesCopy = _.cloneDeep(choices);
-            _.forEach(choicesCopy,function(choice){
-              if (choice && _.isString(choice.html)){
-                choice.html = choice.html.replace(/[\u200B-\u200D\uFEFF]/g, '');
-              }
+        $scope.removeCategory = function(category) {
+          $scope.model.categories = _.filter($scope.model.categories, function(existing) {
+            return existing !== category;
+          });
+          _.each($scope.correctMap, function(val, key) {
+            $scope.correctMap[key] = _.filter(val, function(cat) {
+              return cat.id !== category.id;
             });
-            return choicesCopy;
-          }
-
-          $scope.fullModel.model.choices = cleanChoicesHtml($scope.choices);
-
-          $scope.fullModel.correctResponse = _.reduce($scope.categories,function(acc, category){
-            if (category.choices && category.choices.length > 0) {
-              acc[category.model.id] = _.map(category.choices,function(choice){
-                return choice.model.id;
-              });
-            }
-            return acc;
-          },{});
-
-          $scope.fullModel.model.categories = _.map($scope.categories,function(category){
-            return _.cloneDeep(category.model);
           });
-
-          $scope.fullModel.partialScoring = _.reduce($scope.categories,function(acc,category){
-            var scenarios = getOrNull(category,"scoring","partial","scenarios");
-            if (scenarios){
-              category.scoring.partial.scenarios = _.take(scenarios,Math.min(category.choices.length,scenarios.length));
-              if (scenarios.length > 0){
-                acc[category.model.id] = scenarios;
-              }
-            }
-            return acc;
-          },{});
-
-          $scope.fullModel.allowPartialScoring = !_.isEmpty($scope.fullModel.partialScoring);
-
-          _.forEach($scope.fullModel.partialScoring,function(scenarios,categoryId){
-            var category = _.find($scope.categories,byModelId(categoryId));
-            category.scoring = {
-              partial : {
-                scenarios : _.take(scenarios,all)
-              }
-            };
-          });
-        }
+          delete $scope.fullModel.correctResponse[category.id];
+        };
 
         $scope.$watch('model', function() {
           MathJaxService.parseDomForMath(0); //TODO on every model change?
@@ -333,10 +317,7 @@ var main = [
 
         function findFreeCategorySlot() {
           var slot = 1; //categories start at 1
-          var usedSlots = _.reduce($scope.categories, function(acc,category){
-            acc.push(category.model.id);
-            return acc;
-          },[]);
+          var usedSlots = _.pluck($scope.model.categories, 'id');
           while (_.contains(usedSlots, "cat_" + slot)) {
             slot++;
           }
@@ -345,14 +326,11 @@ var main = [
 
         $scope.addCategory = function() {
           var idx = findFreeCategorySlot();
-          $scope.categories.push({
-            model:{
-              id: "cat_" + idx,
-              hasLabel: true,
-              label: "Category " + idx,
-              layout: "vertical"
-            },
-            choices:[]
+          $scope.model.categories.push({
+            id: "cat_" + idx,
+            hasLabel: true,
+            label: "Category " + idx,
+            layout: "vertical"
           });
         };
 

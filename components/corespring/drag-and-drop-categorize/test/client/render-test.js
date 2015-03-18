@@ -64,8 +64,6 @@ describe('drag-and-drop-categorize', function() {
       choiceArea: function() {}
     });
     $provide.value('$modal', function() {});
-
-    $provide.value('MiniWiggiScopeExtension', function() {});
   }));
 
   describe('see solution', function() {
@@ -92,9 +90,9 @@ describe('drag-and-drop-categorize', function() {
       scope.$digest();
     }));
 
-    /*describe('unsubmitted', function() {
+    describe('unsubmitted', function() {
       it('should be hidden', function() {
-        expect($('.correct-answer', element).length).toBe(0);
+        expect($('.see-solution', element).hasClass('ng-hide')).toBe(true);
       });
     });
 
@@ -134,7 +132,7 @@ describe('drag-and-drop-categorize', function() {
         expect($('.see-solution', element).hasClass('ng-hide')).toBe(false);
       });
 
-    });*/
+    });
 
   });
 

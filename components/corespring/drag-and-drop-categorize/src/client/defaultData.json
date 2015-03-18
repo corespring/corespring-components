@@ -1,6 +1,6 @@
 {
   "componentType": "corespring-drag-and-drop-categorize",
-  "title": "[Drag and Drop Question Name]",
+  "title": "Categorize",
   "correctResponse": {
     "cat_1": [],
     "cat_2": []
@@ -11,7 +11,9 @@
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": false,
-  "partialScoring" : {},
+  "partialScoring" : [
+    {}
+  ],
   "model": {
     "categories": [
       {
@@ -19,26 +21,18 @@
         "hasLabel": true,
         "label": "Category 1",
         "layout": "vertical"
-      },
-      {
-        "id": "cat_2",
-        "hasLabel": true,
-        "label": "Category 2",
-        "layout": "vertical"
       }
     ],
     "choices": [
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_0",
-        "moveOnDrag": false
+        "id": "choice_0"
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_1",
-        "moveOnDrag": false
+        "id": "choice_1"
       },
       {
         "label": "",
@@ -48,16 +42,14 @@
       {
         "label": "",
         "labelType": "text",
-        "id": "choice_3",
-        "moveOnDrag": false
+        "id": "choice_3"
       }
     ],
     "config": {
       "shuffle": false,
       "removeTilesOnDrop": true,
       "choiceAreaLayout": "vertical",
-      "answerAreaPosition": "below",
-      "maxCategoriesPerRow" : 2
+      "answerAreaPosition": "below"
 
     }
   },

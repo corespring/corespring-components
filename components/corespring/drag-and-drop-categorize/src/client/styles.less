@@ -1,326 +1,40 @@
 @import '../../../../../less/common';
 
-
-.tools-area{
-  background-color: #0078a3;
-}
-
-.clearfix {
-  *zoom: 1;
-  &:after {
-    content: '';
-    display: block;
-    clear: both;
-    height: 0;
-  }
-}
-
-body , .modal{
-  .choice{
-    z-index: 1000;
-    float: left;
-    .edit-controls{
-      display: none;
-    }
-    .delete-after-placing{
-      display: none;
-    }
-    .shell{
-      background-color: white;
-      border-radius: 8px;
-      padding:10px;
-      img{
-        max-width:100%;
-        display: block;
-      }
-    }
-  }
-}
-
-.roundBorder(){
-  border-style: solid;
-  border-radius: 8px;
-  border-width: 2px;
-}
-
-.view-drag-and-drop-categorize {
-  @learn-more-color: #008bc9;
-  @correct-color: #3C763D;
-  @incorrect-color: #EEA236;
-  @partial-color: #3A87AD;
-  @learn-more-color: #3A87AD;
-  @see-correct-color:#3C763D;
-
-  width:550px;
-
-  .choice-area-label{
-    font-size: 12px;
-    font-style: italic;
-  }
-
-  .correct-answer{
-
-    border-color: @learn-more-color;
-    border-width: 2px;
-    float: none;
-
-    .panel-heading{
-
-      background-color: @learn-more-color;
-      padding: 3px 15px;
-      .toggle{
-        display: inline-block;
-        font-family: FontAwesome;
-        font-size: 30px;
-        color: white;
-        font-weight: normal
-      }
-      .label{
-        font-size: 16px;
-        color: white;
-        font-weight: normal
-      }
-    }
-  }
-
-  .correct-answer {
-    border-color: @see-correct-color;
-    .panel-heading {
-      background-color: @see-correct-color;
-      height:45px;
-    }
-  }
-
-  .categories{
-    .clearfix();
-    width: 100%;
-    .row{
-      margin:0;
-      .category{
-        position: relative;
-        vertical-align: top;
-        margin-right: 20px;
-        &:last-child {
-          margin-right: 0px;
-        }
-        .clearfix();
-        .label-input{
-          margin: 0;
-          padding-bottom: 2px;
-        }
-        .delete-after-placing{
-          display: none;
-        }
-        .edit-controls {
-          position: absolute;
-          z-index: 10000;
-          padding: 3px 3px 3px 3px;
-          top: 55px;
-          right: 2px;
-          background: rgba(255, 255, 255, 0.7);
-          border-radius: 8px;
-          .edit-icon-button,.delete-icon-button {
-            display: inline-block;
-            margin-left: 3px;
-            margin-right: 3px;
-            i {
-              font-size: 15px;
-              color: #575757;
-            }
-          }
-
-        }
-
-        background-color: white;
-        display: inline-block;
-        &.draggedOver{
-          background-color: rgb(129, 129, 129);
-        }
-        .categorized.choices{
-          min-height: 40px;
-          padding: 23px 8px 8px 8px;
-          border-color: rgb(129, 129, 129);
-          border-style: solid;
-          border-radius: 8px;
-          border-width: 2px;
-          .choice-container{
-            .clearfix();
-            text-align: initial;
-            position: relative;
-            min-height: 20px;
-            &.draggedOver{
-              border-color: rgb(129, 129, 129);
-              border-style: dashed;
-              border-radius: 8px;
-              border-width: 2px;
-              background-color: white;
-            }
-            .choice{
-              padding: 0;
-              .edit-controls{
-                padding: 0;
-                top: 2px;
-                display: block;
-                .edit-icon-button{
-                  display: none;
-                }
-                .delete-icon-button {
-                  i:before{
-                    font-family: "FontAwesome";
-                    content: "\f00d"; // close
-                  }
-                }
-              }
-              &.correct{
-                .shell{
-                  text-align: initial;
-                  border-radius: 8px;
-                  border: 1px solid #3c763d;
-                  padding:5px;
-                }
-              }
-              &.incorrect{
-                .shell{
-                  text-align: initial;
-                  border-radius: 8px;
-                  border: 1px solid  #eea236;
-                  padding:5px;
-                }
-              }
-              width:100%;
-              display: inline-block;
-              .shell{
-                border-color: #C2C2C2;
-                border-style: solid;
-                border-width: 2px;
-                border-radius: 4px;
-                text-align: initial;
-                padding:5px;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .container-choices{
-    .clearfix();
-    position: relative;
-    .choice{
-      .clearfix();
-      text-align: start;
-      padding: 0;
-      margin: 0;
-      border-color: #C2C2C2;
-      border-style: solid;
-      border-width: 2px;
-      border-radius: 4px;
-      min-height: 40px;
-      .editor{
-        width:100%;
-      }
-      .edit-controls {
-        .clearfix();
-        display: block;
-        z-index: 10;
-        padding: 3px 3px 3px 3px;
-        top: 2px;
-        right: 2px;
-        background: rgba(255, 255, 255, 0.7);
-        margin: 0;
-        .edit-icon-button,.delete-icon-button {
-          display: inline-block;
-          margin-left: 3px;
-          margin-right: 3px;
-          float:right;
-          i {
-            font-size: 15px;
-            color: #575757;
-          }
-        }
-        .delete-icon-button {
-          i:before {
-            content: "\f014"; // trash o
-          }
-        }
-        .editing{
-          .edit-icon-button{
-            display: none;
-          }
-        }
-        .delete-after-placing{
-          float:left;
-          label {
-            padding-left: 10px;
-            font-weight: initial;
-          }
-          input{
-            margin-right: 5px;
-          }
-        }
-      }
-
-      .delete-after-placing {
-        display: block;
-        margin-left: 6px;
-        .checkbox-input .checkbox-toggle{
-          font-size: 16px;
-        }
-      }
-
-      -webkit-user-select: none;
-      float: left;
-      .shell{
-        margin: 4px;
-        padding: 0;
-        border-radius: 0px;
-        img{
-          max-width:100%;
-          display: block;
-        }
-        .description{
-          padding: 10px;
-          width:100%;
-        }
-      }
-    }
-  }
-
-  .feedback.panel-default {
-    margin-top: 20px;
-  }
-
-  .feedback.correct-answer{
-    .panel-body {
-      padding: 0;
-    }
-  }
-}
-
-
-
-
 .drag-and-drop-categorize-config-panel {
 
   .rounded-inputs;
 
-  .row{
-    margin-left:0;
-    margin-right: 0;
+  .categorize-category-row {
     margin-bottom: 10px;
+    i{
+      line-height: 1.85em;
+    }
   }
 
-  .player-col{
-    width:570px;
-    display: inline;
-    float:left;
+  .add-category-row {
+    margin-top: 10px;
+    margin-bottom: 20px;
   }
 
-  .settings-col{
-    padding-top: 58px;
-    display: inline;
-    float: left;
+  .choice-header-row {
+    margin-top: 20px;
+  }
+
+  .choice-row-group {
+    margin-bottom: 20px;
+  }
+
+  .choice-row {
+    i {
+      display: block;
+      line-height: 1.85em;
+    }
+  }
+
+  .add-choice-row {
+    @margin: 10px;
+    margin-top: @margin;
+    margin-bottom: @margin;
   }
 
   .feedback-row {
@@ -346,37 +60,7 @@ body , .modal{
         padding: 0;
       }
     }
-  }
-  .scoring-panel{
-    .partial-scoring{
-      .category-scoring{
-        .label {
-          color: black;
-          font-size: 14px;
-          padding: 0;
-        }
-        .scenario{
-          .clearfix();
-          span{
-            display: inline-block;
-            float: left;
-          }
-          input{
-            display: inline-block;
-            float: left;
-            width: 45px;
-            margin-left: 10px;
-            margin-right: 10px;
-          }
-          .remove-btn{
-            margin-left: 10px;
-          }
-        }
-        .add-scoring-scenario{
-          display: block;
-        }
-      }
-    }
+
   }
 
 }
