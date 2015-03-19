@@ -48,7 +48,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.detach();
       };
       this.moveTo = function(d, r) {
-        var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, d, options.snapPerTick);
+        var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, d, options.snapPerTick + 1);
         if (tickDp !== pointModel.domainPosition) {
           pointModel.domainPosition = tickDp;
           this.draw();
@@ -66,7 +66,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         var move = function(dx, dy) {
           var newX = (this.ox + dx - options.margin.left);
           var dp = that.horizontalAxis.scale.invert(newX);
-          var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, dp, options.snapPerTick);
+          var tickDp = that.horizontalAxis.scale.snapToTicks(that.horizontalAxis.ticks, dp, options.snapPerTick + 1);
           var dpx = that.horizontalAxis.scale(tickDp) + options.margin.left;
           this.attr({cx: dpx});
           if (pointModel.domainPosition !== tickDp) {
@@ -121,6 +121,11 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         size: 10,
         strokeColor: BASE_COLOR
       });
+
+      var domainSize = Math.abs(options.domain[1] - options.domain[0]);
+      var dp = domainSize / options.tickFrequency;
+
+      lineModel.size = lineModel.size || dp;
 
       var thatLI = this;
       this.selected = false;
@@ -211,7 +216,6 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             thatLI.p2.moveTo(p1d + lineModel.size, 0);
             thatLI.grabber.x = thatLI.line.x = that.horizontalAxis.scale(thatLI.p1.model.domainPosition) + options.margin.left;
             thatLI.grabber.x1 = thatLI.line.x1 = that.horizontalAxis.scale(thatLI.p2.model.domainPosition) + options.margin.left;
-            updateLineModel();
             thatLI.line.redraw();
             thatLI.grabber.redraw();
 
@@ -220,6 +224,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           };
           var up = function(ev) {
             thatLI.line.animate({"stroke-width": 6, opacity: 1}, 200, ">");
+            updateLineModel();
+
             if (!this.hasMoved) {
               thatLI.selected = thatLI.p1.selected = thatLI.p2.selected = !thatLI.selected;
               thatLI.draw();
@@ -415,7 +421,10 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
           thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2));
 
-          var tickLabel = (thatHA.tickLabelOverrides && !_.isUndefined(thatHA.tickLabelOverrides[tick])) ? thatHA.tickLabelOverrides[tick] : tick;
+          var override = _.find(thatHA.tickLabelOverrides, function(t) {
+             return t.tick === tick;
+          });
+          var tickLabel = override ? override.label : tick.toFixed(2).replace(/\.00/,'');
           var label = thatHA.tickLabels ? thatHA.tickLabels[idx] : tickLabel;
 
           if (_.isEmpty(label.toString()) && !_.isUndefined(options.placeholderForEmptyTickLabel)) {
@@ -432,15 +441,15 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           });
           thatHA.elements.push(text);
 
-          var d = Math.abs(thatHA.ticks[idx + 1] - thatHA.ticks[idx]) / axisOptions.snapPerTick;
+          var snapPerTick = axisOptions.snapPerTick + 1;
+          var d = Math.abs(thatHA.ticks[idx + 1] - thatHA.ticks[idx]) / snapPerTick;
 
           if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 1) {
-            for (var i = 1; i < axisOptions.snapPerTick; i++) {
+            for (var i = 1; i < snapPerTick; i++) {
               thatHA.elements.push(paper.line(options.margin.left + scale(tick + d * i), y - tickSize / 4, options.margin.left + scale(tick + d * i), y + tickSize / 4));
             }
           }
         });
-
       };
 
       return this;

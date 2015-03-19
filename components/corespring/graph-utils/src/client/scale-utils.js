@@ -32,12 +32,12 @@ exports.service = [ '$log', function($log) {
     step *= k;
     if (step < 0) {
       while ((j = start + step * ++i) > stop) {
-        _range.push(j / k);
+        _range.push(j/k);
       }
     }
     else {
       while ((j = start + step * ++i) < stop) {
-        _range.push(j / k);
+        _range.push(j/k);
       }
     }
     return _range;
@@ -81,6 +81,22 @@ exports.service = [ '$log', function($log) {
     };
   }
 
+  function scale_tickRange(domain, m) {
+    if (m == null) {
+      m = 10;
+    }
+
+    var extent = scaleExtent(domain),
+      span = extent[1] - extent[0],
+      step = span / m;
+
+    // Round start and stop values to step interval.
+    extent[0] = Math.ceil(extent[0] / step) * step;
+    extent[1] = Math.floor(extent[1] / step) * step + step * 0.5; // inclusive
+    extent[2] = step;
+    return extent;
+  }
+
   function scale_linearTickRange(domain, m) {
     if (m == null) {
       m = 10;
@@ -111,6 +127,10 @@ exports.service = [ '$log', function($log) {
 
   function scale_linearTicks(domain, m) {
     return range.apply(this, scale_linearTickRange(domain, m));
+  }
+
+  function scale_ticks(domain, m) {
+    return range.apply(this, scale_tickRange(domain, m));
   }
 
   var scale_linearFormatSignificant = {s: 1, g: 1, p: 1, r: 1, e: 1};
@@ -176,7 +196,7 @@ exports.service = [ '$log', function($log) {
     };
 
     scale.ticks = function(m) {
-      return scale_linearTicks(domain, m);
+      return scale_ticks(domain, m);
     };
 
     scale.snapToTicks = function(ticks, value, snapPerTick) {

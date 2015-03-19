@@ -134,6 +134,19 @@ var interactiveGraph = [
     var NUMBER_OF_PLANES = 3;
     var HORIZONTAL_AXIS_WIDTH = 480;
 
+    var pointEqual = function(p1, p2) {
+      return Math.abs(p1-p2) < 0.01;
+    };
+
+    var pointLessThanOrEqual = function(p1, p2) {
+      return p1 < p2+0.01;
+    };
+
+    var pointGreaterThanOrEqual = function(p1, p2) {
+      return p1 > p2-0.01;
+    };
+
+
     return {
       template: [
         '<div class="interactive-graph">',
@@ -210,7 +223,6 @@ var interactiveGraph = [
             "type": "line",
             "domainPosition": domainPosition,
             "rangePosition": newRangePosition,
-            "size": 1,
             "leftPoint": "empty",
             "rightPoint": "empty"
           };
@@ -291,14 +303,14 @@ var interactiveGraph = [
           if (element.type === 'point') {
             switch (withElement.type) {
               case 'point':
-                return element.domainPosition === withElement.domainPosition;
+                return pointEqual(element.domainPosition, withElement.domainPosition);
               case 'line':
-                return (element.domainPosition >= withElement.domainPosition && element.domainPosition <= withElement.domainPosition + withElement.size);
+                return (pointGreaterThanOrEqual(element.domainPosition, withElement.domainPosition) && pointLessThanOrEqual(element.domainPosition, withElement.domainPosition + withElement.size));
               case 'ray':
                 if (withElement.direction === 'positive') {
-                  return element.domainPosition >= withElement.domainPosition;
+                  return pointGreaterThanOrEqual(element.domainPosition, withElement.domainPosition);
                 } else {
-                  return element.domainPosition <= withElement.domainPosition;
+                  return pointLessThanOrEqual(element.domainPosition, withElement.domainPosition);
                 }
             }
           } else if (element.type === 'line') {
@@ -306,12 +318,13 @@ var interactiveGraph = [
               case 'point':
                 return isIntersecting(withElement, element);
               case 'line':
-                return (element.domainPosition >= withElement.domainPosition && element.domainPosition <= withElement.domainPosition + withElement.size) || (withElement.domainPosition >= element.domainPosition && withElement.domainPosition <= element.domainPosition + element.size);
+                return (pointGreaterThanOrEqual(element.domainPosition, withElement.domainPosition) && pointLessThanOrEqual(element.domainPosition, withElement.domainPosition + withElement.size)) ||
+                  (pointGreaterThanOrEqual(withElement.domainPosition, element.domainPosition) && pointLessThanOrEqual(withElement.domainPosition, element.domainPosition + element.size));
               case 'ray':
                 if (withElement.direction === 'positive') {
-                  return element.domainPosition + element.size >= withElement.domainPosition;
+                  return pointGreaterThanOrEqual(element.domainPosition + element.size, withElement.domainPosition);
                 } else {
-                  return element.domainPosition <= withElement.domainPosition;
+                  return pointLessThanOrEqual(element.domainPosition, withElement.domainPosition);
                 }
             }
           } else if (element.type === 'ray') {
@@ -325,9 +338,9 @@ var interactiveGraph = [
                   return true;
                 }
                 if (element.direction === 'positive') {
-                  return withElement.domainPosition >= element.domainPosition;
+                  return pointGreaterThanOrEqual(withElement.domainPosition, element.domainPosition);
                 } else {
-                  return withElement.domainPosition <= element.domainPosition;
+                  return pointLessThanOrEqual(withElement.domainPosition, element.domainPosition);
                 }
             }
           }

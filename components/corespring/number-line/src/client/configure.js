@@ -14,7 +14,7 @@ var main = [
       '    <div>Number of Ticks: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.tickFrequency"/></div>',
       '    <checkbox ng-model="fullModel.model.config.showMinorTicks">Display minor tick marks</checkbox>',
       '    <div>Minor tick frequency: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.snapPerTick"/></div>',
-      '    <div><a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a></div>',
+      '    <div><a class="reset-defaults btn btn-default" ng-click="resetToDefaults()">Reset to default values</a></div>',
       '    </td>',
       '    <td>',
       '      <div interactive-graph',
@@ -24,7 +24,7 @@ var main = [
       '           tickLabelClick="tickLabelClick"',
       '           editable="sampleNumberLine.editable"></div>',
       '      <div class="tick-label-override-input-holder" ng-show="isEditingTickLabel">',
-      '        <input ng-model="sampleNumberLine.model.config.tickLabelOverrides[tickBeingEdited]" ng-click="$event.stopImmediatePropagation()" type="text" class="tick-label-override-input" style="left: {{tickLabelEditingPosition}}px"/>',
+      '        <input ng-model="tickBeingEdited.label" ng-click="$event.stopImmediatePropagation()" ng-keyup="tickEditKeyup($event)" type="text" class="tick-label-override-input" style="left: {{tickLabelEditingPosition}}px"/>',
       '      </div>',
       '    </td>',
       '  </tr>',
@@ -38,18 +38,19 @@ var main = [
       '       options="configGraphOptions"',
       '       responseModel="initialView.responseModel"',
       '       editable="initialView.editable"',
-      '       colors="initialView.colors"></div>',
+      '       colors="initialView.colors"></div>'
 
     ].join('');
 
     var correctResponseView = [
+      '<div ng-hide="fullModel.model.config.exhibitOnly">',
       '<h3>Correct Response</h3>',
       '  <div interactive-graph',
       '       ngModel="correctResponseView.model"',
       '       responseModel="correctResponseView.responseModel"',
       '       options="configGraphOptions"',
       '       editable="correctResponseView.editable"></div>',
-
+      '</div>'
     ].join('');
 
     return {
@@ -57,6 +58,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
+        scope.defaults = scope.data.defaultData.model.config;
         ChoiceTemplates.extendScope(scope, 'corespring-number-line');
         scope.configGraphOptions = {
           startOverClearsGraph: true
@@ -92,11 +94,20 @@ var main = [
         };
 
         scope.tickLabelClick = function(tick, x) {
-          scope.sampleNumberLine.model.config.tickLabelOverrides = scope.sampleNumberLine.model.config.tickLabelOverrides || {};
-          scope.sampleNumberLine.model.config.tickLabelOverrides[tick] = scope.sampleNumberLine.model.config.tickLabelOverrides[tick] || tick;
+          var tickString = tick.toString();
+          scope.sampleNumberLine.model.config.tickLabelOverrides = scope.sampleNumberLine.model.config.tickLabelOverrides || [];
+
+          var override = _.find(scope.sampleNumberLine.model.config.tickLabelOverrides, function(t) {
+            return t.tick === tick;
+          });
+          if (_.isUndefined(override)) {
+            scope.sampleNumberLine.model.config.tickLabelOverrides.push({tick: tick, label: tick.toFixed(2)});
+            override = _.last(scope.sampleNumberLine.model.config.tickLabelOverrides);
+          }
+          override.label = override.label || tick.toFixed(2);
           scope.isEditingTickLabel = true;
           scope.tickLabelEditingPosition = x + 5;
-          scope.tickBeingEdited = tick;
+          scope.tickBeingEdited = override;
           scope.$apply();
         };
 
@@ -128,7 +139,6 @@ var main = [
         var updateInitialElements = function(n) {
           scope.$apply(function() {
             scope.fullModel.model.config.initialElements = _.cloneDeep(n);
-            scope.initialView.model.config.initialElements = _.cloneDeep(n);
           });
         };
 
@@ -198,8 +208,24 @@ var main = [
           }
         }, 200));
 
+        scope.resetToDefaults = function() {
+//          _.merge(scope.fullModel.model.config, _.pick(scope.defaults, ['domain','tickFrequency','snapPerTick']));
+          _.extend(scope.fullModel.model.config, _.omit(scope.defaults, 'exhibitOnly'));
+//          scope.fullModel.model.config = _.omit(scope.defaults, 'exhibitOnly');
+          scope.initialView.model.config.tickLabelOverrides = _.cloneDeep(scope.fullModel.model.config.tickLabelOverrides);
+          scope.correctResponseView.model.config.tickLabelOverrides = _.cloneDeep(scope.fullModel.model.config.tickLabelOverrides);
+          scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(scope.fullModel.model.config.tickLabelOverrides);
+
+        };
+
         scope.stopTickEditing = function(event) {
           scope.isEditingTickLabel = false;
+        };
+
+        scope.tickEditKeyup = function(event) {
+          if (event.keyCode === 13) {
+            scope.stopTickEditing();
+          }
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);

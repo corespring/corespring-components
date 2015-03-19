@@ -4,6 +4,10 @@ var keys = fb.keys;
 
 exports.keys = keys;
 
+var pointEqual = function(p1, p2) {
+  return Math.abs(p1-p2) < 0.01;
+};
+
 var elementEqual = function(e1, e2) {
   if (e1 == null && e2 == null) {
     return true;
@@ -16,11 +20,11 @@ var elementEqual = function(e1, e2) {
   }
   switch (e1.type) {
     case "point":
-      return e1.domainPosition === e2.domainPosition && e1.pointType === e2.pointType;
+      return pointEqual(e1.domainPosition, e2.domainPosition) && e1.pointType === e2.pointType;
     case "line":
-      return e1.domainPosition === e2.domainPosition && e1.size === e2.size && e1.leftPoint === e2.leftPoint && e1.rightPoint === e2.rightPoint;
+      return pointEqual(e1.domainPosition, e2.domainPosition) && pointEqual(e1.size, e2.size) && e1.leftPoint === e2.leftPoint && e1.rightPoint === e2.rightPoint;
     case "ray":
-      return e1.domainPosition === e2.domainPosition && e1.pointType === e2.pointType && e1.direction === e2.direction;
+      return pointEqual(e1.domainPosition, e2.domainPosition) && e1.pointType === e2.pointType && e1.direction === e2.direction;
   }
   return false;
 };

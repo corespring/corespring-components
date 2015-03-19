@@ -10,11 +10,12 @@
   ],
   "model": {
     "config": {
-      "domain": [0, 20],
+      "domain": [-5, 5],
       "maxNumberOfPoints": 3,
-      "tickFrequency": 20,
+      "tickFrequency": 10,
       "showMinorTicks": true,
-      "snapPerTick": 2,
+      "snapPerTick": 1,
+      "tickLabelOverrides": [],
       "initialType": "PF",
       "exhibitOnly": false,
       "availableTypes": {
