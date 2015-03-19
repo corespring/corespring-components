@@ -93,7 +93,7 @@ var createResponse = function(question, answer, settings) {
 
 exports.keys = fb.keys;
 
-exports.respond = function(question, answer, settings) {
+exports.createOutcome = function(question, answer, settings) {
 
   var defaults = {
     correct: exports.DEFAULT_CORRECT_FEEDBACK,
