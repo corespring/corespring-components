@@ -84,7 +84,7 @@ describe('drag-and-drop-categorize', function() {
       });
       scope = $rootScope.$new();
       scope.local = {};
-      element = $compile("<corespring-new-drag-and-drop-categorize-render id='1'></corespring-new-drag-and-drop-categorize-render>")(scope);
+      element = $compile("<corespring-drag-and-drop-categorize-render id='1'></corespring-drag-and-drop-categorize-render>")(scope);
       scope = element.scope();
       rootScope = $rootScope;
       scope.$digest();
