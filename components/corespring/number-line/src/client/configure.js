@@ -94,7 +94,6 @@ var main = [
         };
 
         scope.tickLabelClick = function(tick, x) {
-          var tickString = tick.toString();
           scope.sampleNumberLine.model.config.tickLabelOverrides = scope.sampleNumberLine.model.config.tickLabelOverrides || [];
 
           var override = _.find(scope.sampleNumberLine.model.config.tickLabelOverrides, function(t) {

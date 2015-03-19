@@ -87,6 +87,16 @@ var calculateScore = function(answer, question) {
 };
 
 
+exports.isScoreable = function(question, answer) {
+
+  if (!question || !question.model || !question.model.config){
+    return true;
+  }
+
+  return !question.model.config.exhibitOnly;
+};
+
+
 exports.isCorrect = function(answer, correctAnswer) {
   return answer.length === correctAnswer.length && _(answer).every(function(el) {
     return isElementCorrect(el, correctAnswer);
@@ -110,6 +120,15 @@ exports.respond = function(question, answer, settings) {
   if (question._uid !== answer._uid) {
     throw "Error - the uids must match";
   }
+
+  if (question.model && question.model.config && question.model.config.exhibitOnly) {
+    console.log('exhibit only don\'t process');
+    return {
+      correctness: 'n/a',
+      score: 0
+    };
+  }
+
 
 
   var isCorrect = exports.isCorrect(answer, _.cloneDeep(question.correctResponse));

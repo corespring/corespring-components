@@ -30,6 +30,7 @@ var main = [
           console.log("number line", dataAndSession);
 
           scope.correctModel = scope.model = dataAndSession.data.model;
+          scope.editable = !scope.model.config.exhibitOnly;
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.response = dataAndSession.session.answers;
             scope.model.config.initialElements = _.cloneDeep(dataAndSession.session.answers);
@@ -100,7 +101,7 @@ var main = [
         '       editable="editable"',
         '       colors="colors"></div>',
         '  <div feedback="serverResponse.feedback.message" correct-class="{{serverResponse.correctClass}}"></div>',
-        '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness !== \'correct\'">',
+        '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness !== \'correct\' && serverResponse.correctness !== \'n/a\'">',
         '    <div interactive-graph',
         '         ngModel="correctModel"',
         '         serverResponse="correctModelDummyResponse"',
@@ -160,7 +161,7 @@ var interactiveGraph = [
         '    <li role="presentation" ng-show="isGroupEnabled(\'Line\')" ng-class="{active: isGroupActive(\'Line\')}" ng-mousedown="selectGroup(\'Line\')"><a>Line</a></li>',
         '    <li role="presentation"  ng-show="isGroupEnabled(\'Ray\')" ng-class="{active: isGroupActive(\'Ray\')}" ng-mousedown="selectGroup(\'Ray\')"><a>Ray</a></li>',
         '  </ul>',
-        '  <div ng-show="editable" class="element-selector" >',
+        '  <div ng-show="editable && !config.exhibitOnly" class="element-selector" >',
         '    <span role="presentation" class="element-pf" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PF\')"   ng-mousedown="select(\'PF\')"><a ng-class="{active: isActive(\'PF\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-pe" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PE\')"   ng-mousedown="select(\'PE\')"><a ng-class="{active: isActive(\'PE\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-lff" ng-show="isGroupActive(\'Line\') && isTypeEnabled(\'LFF\')"  ng-mousedown="select(\'LFF\')"><a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a></span>',
@@ -205,7 +206,7 @@ var interactiveGraph = [
         });
 
         scope.addElement = function(domainPosition, elementType) {
-          if (!scope.editable) {
+          if (!scope.editable || scope.model.config.exhibitOnly) {
             return;
           }
           if (scope.responsemodel.length >= (scope.config.maxNumberOfPoints || 3)) {
@@ -372,7 +373,6 @@ var interactiveGraph = [
 
         // Clear out graph and rebuild it from the model
         function rebuildGraph(lastMovedElement) {
-          console.log('rebuild');
           scope.graph.clear();
           repositionElements(lastMovedElement);
           _.each(scope.responsemodel, function(o, level) {
@@ -513,7 +513,7 @@ var interactiveGraph = [
         }, true);
 
         scope.$watch('serverresponse', function(n, prev) {
-          if (!_.isEmpty(n)) {
+          if (!_.isEmpty(n) && !_.isEmpty(n.feedback)) {
             scope.responsemodel = _.cloneDeep(n.feedback.elements) || [];
             rebuildGraph();
             scope.graph.updateOptions({exhibitOnly: true});

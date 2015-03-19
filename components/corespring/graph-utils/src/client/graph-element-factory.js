@@ -123,7 +123,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       });
 
       var domainSize = Math.abs(options.domain[1] - options.domain[0]);
-      var dp = domainSize / options.tickFrequency;
+      var dp = domainSize / (options.tickFrequency - 1);
 
       lineModel.size = lineModel.size || dp;
 
@@ -378,7 +378,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             return t.label;
           });
         } else {
-          this.ticks = this.scale.ticks(axisOptions.tickFrequency);
+          this.ticks = this.scale.ticks(Math.max(axisOptions.tickFrequency - 1, 1));
           this.tickLabelOverrides = axisOptions.tickLabelOverrides;
         }
       };
