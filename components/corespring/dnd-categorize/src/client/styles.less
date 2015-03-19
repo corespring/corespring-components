@@ -134,7 +134,9 @@ body , .modal{
         background-color: white;
         display: inline-block;
         &.draggedOver{
-          background-color: rgb(129, 129, 129);
+          .categorized.choices {
+            background-color: rgb(129, 129, 129);
+          }
         }
         .categorized.choices{
           min-height: 40px;
@@ -145,6 +147,7 @@ body , .modal{
           border-width: 2px;
           .choice-container{
             .clearfix();
+            background-color: #fff;
             text-align: initial;
             position: relative;
             min-height: 20px;
