@@ -160,7 +160,7 @@ function CompactLayoutWhileEditing(initialConfig,interval){
       var thatTop = $(thatEl).position().top;
       var thatLeft = $(thatEl).position().left;
       return thisTop < thatTop && thisLeft === thatLeft;
-    }
+    };
   }
 
   function byElementTopPosition(el){
