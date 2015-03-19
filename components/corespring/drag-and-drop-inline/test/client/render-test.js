@@ -72,6 +72,7 @@ describe('corespring:drag-and-drop-inline', function() {
       $provide.value('MathJaxService', {parseDomForMath:function(){}});
       $provide.value('$modal', function() {});
       $provide.value('DragAndDropTemplates', {choiceArea:function(){}});
+      $provide.value('WiggiLinkFeatureDef', function(){});
     });
 
   });
@@ -398,7 +399,7 @@ describe('corespring:drag-and-drop-inline', function() {
       });
     });
 
-    describe("showNoAnswersWarning", function(){
+    describe("shouldShowNoAnswersWarning", function(){
       var renderScope;
       beforeEach(function(){
         renderScope = {landingPlaceChoices:{aa_1:[]}};
@@ -414,18 +415,18 @@ describe('corespring:drag-and-drop-inline', function() {
       }
 
       it("should return false before setResponse", function(){
-        expect(scope.showNoAnswersWarning()).toBeFalsy();
+        expect(scope.shouldShowNoAnswersWarning()).toBeFalsy();
       });
 
       it("should return true after setResponse and no answers", function(){
         setResponse();
-        expect(scope.showNoAnswersWarning()).toBeTruthy();
+        expect(scope.shouldShowNoAnswersWarning()).toBeTruthy();
       });
 
       it("should return false after setResponse and with answers", function(){
         setResponse();
         addAnswer();
-        expect(scope.showNoAnswersWarning()).toBeFalsy();
+        expect(scope.shouldShowNoAnswersWarning()).toBeFalsy();
       });
 
     });
