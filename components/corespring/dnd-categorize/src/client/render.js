@@ -488,7 +488,7 @@ var main = ['$interval',
            choicesTemplate.replace("{flipp}","shouldFlip"),
            categoriesTemplate.replace("{flipp}","!shouldFlip").replace("{rowsModel}","rows"),
         '  <hr/>',
-        '  <span ng-if="isEditMode" class="choice-area-label">Enter choices below and drag to correct categories above. Choice tiles may be reused unless “Remove Tile after Placing” option is selected.</span>',
+        '  <span ng-if="isEditMode" class="choice-area-label">Enter choices below and drag to correct categories above. Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.</span>',
            choicesTemplate.replace("{flipp}","!shouldFlip"),
            categoriesTemplate.replace("{flipp}","shouldFlip").replace("{rowsModel}","rows"),
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
@@ -742,7 +742,7 @@ var choice = ['$sce','MiniWiggiScopeExtension', function($sce,MiniWiggiScopeExte
 
       '   <div class="shell" ng-bind-html-unsafe="model.html" ng-if="!isEditing()"></div>',
       '   <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
-      '     <checkbox ng-model="model.moveOnDrag" class="control-label">unique</checkbox>',
+      '     <checkbox ng-model="model.moveOnDrag" class="control-label">Remove Tile after placing</checkbox>',
       '   </div>',
       '</div>'
     ].join('')
