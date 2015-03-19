@@ -1,3 +1,16 @@
+/**
+ * @param initialConfig:
+ *  container: jquery element of the container
+ *  itemSelector: string selector of an item to be layed out
+ *  cellWidth: the desired witdth of one column
+ *  gutter: GUTTER,
+ *  border: the border width of the item element as it is not measured by jquery
+ *
+ * This layout manager renders the layout every frame in the following order
+ * 1. selects all the items
+ * 2. Sorts them by height
+ * 3. Puts items in the most empty column until finished
+ */
 function CompactLayout(initialConfig,interval){
 
    this.config = _.assign({
@@ -122,12 +135,20 @@ function CompactLayout(initialConfig,interval){
   this.runLater(_.bind(this.refresh,this));
 }
 
+/**
+ *
+ * @param initialConfig
+ *  container: jquery element of the container
+ *  editedElement: one of the items in the container that is being edited
+ * @param interval
+ * @constructor
+ *
+ * This layout manager tracks the height of an edited component and adjusts components positioned
+ * after the edited one in the column
+ */
 function CompactLayoutWhileEditing(initialConfig,interval){
 
-  this.config = _.assign({
-    gutter:0,
-    border:0
-  },initialConfig);
+  this.config = initialConfig;
 
   this.nextRefreshHandle = null;
 
@@ -496,10 +517,7 @@ var main = ['$interval',
 
       var editingLayout = new CompactLayoutWhileEditing({
         container: elem.find(".container-choices"),
-        itemSelector: ".choice",
-        cellWidth: cellWidth(GUTTER),
-        gutter: GUTTER,
-        border:4
+        itemSelector: ".choice"
       },$interval);
 
       scope.onChoiceEditClicked = function(choiceId){
