@@ -122,6 +122,99 @@ function CompactLayout(initialConfig,interval){
   this.runLater(_.bind(this.refresh,this));
 }
 
+function CompactLayoutWhileEditing(initialConfig,interval){
+
+  this.config = _.assign({
+    gutter:0,
+    border:0
+  },initialConfig);
+
+  this.nextRefreshHandle = null;
+
+  this.runLater = function(block) {
+    if (this.cancelled){
+      return;
+    }
+    if (window.requestAnimationFrame) {
+      this.nextRefreshHandle = window.requestAnimationFrame(block);
+    } else {
+      this.nextRefreshHandle = interval(block, 100, 1);
+    }
+  };
+
+  this.cancel = function(){
+    this.cancelled = true;
+    if (this.nextRefreshHandle){
+      if (window.requestAnimationFrame) {
+        window.cancelAnimationFrame(this.nextRefreshHandle);
+      } else {
+        interval.cancel(this.nextRefreshHandle);
+      }
+    }
+  };
+
+  function isAbove(thisEl){
+    return function(thatEl){
+      var thisTop = thisEl.position().top;
+      var thisLeft = thisEl.position().left;
+      var thatTop = $(thatEl).position().top;
+      var thatLeft = $(thatEl).position().left;
+      return thisTop < thatTop && thisLeft === thatLeft;
+    }
+  }
+
+  function byElementTopPosition(el){
+    var jqel = $(el);
+    return jqel.position().top + jqel.height();
+  }
+
+  this.refresh = function(){
+
+    var editedElement = this.config.editedElement;
+
+    var choiceElements = this.config.container.find(this.config.itemSelector);
+
+    var elementsAboveEdited = _.filter(choiceElements,isAbove(editedElement));
+
+    elementsAboveEdited = _.sortBy(elementsAboveEdited, byElementTopPosition);
+
+    this.runLater(_.bind(this.refresh,this));
+
+    var lastBottom = this.config.editedElement.position().top + this.config.editedElement.height();
+
+    for(var i=0;i<elementsAboveEdited.length;i++){
+      var jqel = $(elementsAboveEdited[i]);
+
+      jqel.css({
+        top:lastBottom + this.config.gutter
+      });
+
+      lastBottom = lastBottom + jqel.height();
+    }
+
+    this.getContainerHeight = function() {
+      return _.reduce(choiceElements,function(acc,el){
+        var jqel = $(el);
+        var elBottom = jqel.position().top + jqel.height();
+        return acc < elBottom ? elBottom : acc;
+      },0);
+    };
+
+    this.config.container.css({
+      height: this.getContainerHeight()
+    });
+  };
+
+  this.start = function(newConfig){
+    this.cancelled = false;
+    this.config = _.assign(this.config ,newConfig);
+    this.runLater(_.bind(this.refresh,this));
+  };
+
+}
+
+
+
 var main = ['$interval',
   function( $interval) {
 
@@ -401,6 +494,14 @@ var main = ['$interval',
         return 'editable';
       };
 
+      var editingLayout = new CompactLayoutWhileEditing({
+        container: elem.find(".container-choices"),
+        itemSelector: ".choice",
+        cellWidth: cellWidth(GUTTER),
+        gutter: GUTTER,
+        border:4
+      },$interval);
+
       scope.onChoiceEditClicked = function(choiceId){
 
         scope.editedChoice = _.find(scope.choices,byId(choiceId));
@@ -412,10 +513,15 @@ var main = ['$interval',
         var choiceElSlector = '.container-choices [choiceid="' + choiceId + '"]';
         var choiceElement = elem.find(choiceElSlector);
 
+        editingLayout.start({
+          container: elem.find(".container-choices"),
+          editedElement:choiceElement
+        });
+
         $('body').on('click', function(e) {
           var $target = $(e.target);
           if (choiceElement.has($target).length === 0 && scope.editedChoice && scope.editedChoice.id === choiceId) {
-
+            editingLayout.cancel();
             layout.start();
             scope.editedChoice = null;
           }
