@@ -1,11 +1,8 @@
 @import '../../../../../less/common';
 
+@component-width: 600px;
 
-.tools-area{
-  background-color: #0078a3;
-}
-
-.clearfix {
+.clearfix() {
   *zoom: 1;
   &:after {
     content: '';
@@ -15,6 +12,20 @@
   }
 }
 
+.roundBorder(){
+  border-style: solid;
+  border-radius: 8px;
+  border-width: 2px;
+}
+
+/* seems like it is not used
+.tools-area{
+  background-color: #0078a3;
+}
+*/
+
+
+/* seems not to be used. but if, it has to be localised
 body , .modal{
   .choice{
     z-index: 1000;
@@ -36,14 +47,26 @@ body , .modal{
     }
   }
 }
+*/
 
-.roundBorder(){
-  border-style: solid;
-  border-radius: 8px;
-  border-width: 2px;
+
+.component-placeholder {
+  .render-dnd-categorize {
+    //the component takes the full width of the player
+    width: @component-width;
+    max-width: @component-width;
+    margin: 10px;
+
+    .undo-start-over {
+      //hide, but block the space, so that the
+      //content is not hidden behind the edit/delete
+      //buttons of the placeholder
+      visibility: hidden;
+    }
+  }
 }
 
-.view-dnd-categorize {
+.render-dnd-categorize {
   @learn-more-color: #008bc9;
   @correct-color: #3C763D;
   @incorrect-color: #EEA236;
@@ -51,7 +74,9 @@ body , .modal{
   @learn-more-color: #3A87AD;
   @see-correct-color:#3C763D;
 
-  width:550px;
+  //without this fixed width
+  //the config panel is not rendered properly
+  width: @component-width;
 
   .choice-area-label{
     font-size: 12px;
@@ -308,9 +333,7 @@ body , .modal{
 }
 
 
-
-
-.dnd-categorize-config-panel {
+.config-dnd-categorize {
 
   .rounded-inputs;
 

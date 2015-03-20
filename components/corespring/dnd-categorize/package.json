@@ -3,7 +3,6 @@
   "title": "New Categorize",
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
-  "corespring-container-version": "0.0.1",
   "version": "0.0.1",
   "dependencies": {
     "client": {
@@ -24,5 +23,5 @@
       "organization": "corespring"
     }
   ],
-  "released": true
+  "released": false
 }
