@@ -608,7 +608,7 @@ var main = ['$interval',
         imageService: "=?imageService"
       },
       template: [
-        '<div class="view-dnd-categorize">',
+        '<div class="render-dnd-categorize">',
            choicesTemplate.replace("{flipp}","shouldFlip"),
            categoriesTemplate.replace("{flipp}","!shouldFlip").replace("{rowsModel}","rows"),
         '  <hr/>',

@@ -133,7 +133,7 @@ var main = [
       restrict: "E",
       scope: "isolate",
       template: [
-        '<div class="dnd-categorize-config-panel">',
+        '<div class="config-dnd-categorize">',
         '  <div navigator-panel="Design">',
               designPanel,
         '  </div>',
