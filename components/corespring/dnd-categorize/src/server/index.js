@@ -2,13 +2,21 @@ var _ = require('lodash');
 
 var fb = require('corespring.server-shared.server.feedback-utils');
 
-var createResponse = function(question, answer, settings) {
+exports.keys = fb.keys;
 
-  if(!question || _.isEmpty(question)){
+exports.createOutcome = function(question, answer, settings) {
+
+  var defaults = {
+    correct: exports.DEFAULT_CORRECT_FEEDBACK,
+    incorrect: exports.DEFAULT_INCORRECT_FEEDBACK,
+    partial: exports.DEFAULT_PARTIAL_FEEDBACK
+  };
+
+  if (!question || _.isEmpty(question)) {
     throw new Error('the question should never be null or empty');
   }
 
-  if(!answer) {
+  if (!answer) {
     return {
       correctness: 'incorrect',
       score: 0,
@@ -33,18 +41,18 @@ var createResponse = function(question, answer, settings) {
 
   var score = 0;
 
-  function countCorrectAnswersInCategory(correctInCategory,actualInCategory){
-    return _.reduce(correctInCategory,function(acc,choiceId){
-      var foundChoice = _.find(actualInCategory,eq(choiceId));
-      if (foundChoice){
+  function countCorrectAnswersInCategory(correctInCategory, actualInCategory) {
+    return _.reduce(correctInCategory, function(acc, choiceId) {
+      var foundChoice = _.find(actualInCategory, eq(choiceId));
+      if (foundChoice) {
         return acc + 1;
       }
       return acc;
-    },0);
+    }, 0);
   }
 
-  function eq(str){
-    return function(object){
+  function eq(str) {
+    return function(object) {
       return object === str;
     };
   }
@@ -53,26 +61,27 @@ var createResponse = function(question, answer, settings) {
     score = 1;
   } else if (question.allowPartialScoring) {
 
-    score = _.reduce(question.partialScoring,function(acc,scenarios,categoryId){
+    var partialScore = _.reduce(question.partialScoring, function(acc, scenarios, categoryId) {
 
       var correctInCategory = question.correctResponse[categoryId];
-      if (correctInCategory.length === 0){
+      if (correctInCategory.length === 0) {
         return acc;
       }
       var actualInCategory = answer[categoryId];
-      var numCorrectInCategory = countCorrectAnswersInCategory(correctInCategory,actualInCategory);
+      var numCorrectInCategory = countCorrectAnswersInCategory(correctInCategory, actualInCategory);
 
-      var scenario = _.find(scenarios,function(scenario){
+      var scenario = _.find(scenarios, function(scenario) {
         return scenario.numCorrectAnswers === numCorrectInCategory;
       });
 
-      if (scenario){
-        return acc + ((numCorrectInCategory / correctInCategory.length) * (scenario.awardPercents/100));
+      if (scenario) {
+        return acc + ((numCorrectInCategory / correctInCategory.length) * (scenario.awardPercents / 100));
       }
 
       return acc;
+    }, 0);
 
-    },0) / question.model.categories.length;
+    score = partialScore / question.model.categories.length;
   }
 
   var res = {
@@ -90,18 +99,3 @@ var createResponse = function(question, answer, settings) {
 
   return res;
 };
-
-exports.keys = fb.keys;
-
-exports.createOutcome = function(question, answer, settings) {
-
-  var defaults = {
-    correct: exports.DEFAULT_CORRECT_FEEDBACK,
-    incorrect: exports.DEFAULT_INCORRECT_FEEDBACK,
-    partial: exports.DEFAULT_PARTIAL_FEEDBACK
-  };
-
-  return createResponse(question, answer, settings, defaults);
-
-};
-
