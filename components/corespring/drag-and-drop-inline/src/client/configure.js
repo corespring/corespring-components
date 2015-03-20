@@ -24,7 +24,7 @@ var main = [
 
         $scope.extraFeaturesForChoices = {
           definitions: [
-            new WiggiMathJaxFeatureDef(),
+            new WiggiMathJaxFeatureDef()
           ]
         };
 
@@ -265,10 +265,6 @@ var main = [
             return (choice.label || '').replace(wiggiCleanerRe, '');
           };
         })();
-
-        scope.handleBodyClick = function(event){
-            console.log("handleBodyClick", event)
-        };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       }
