@@ -1,22 +1,4 @@
-/**
- * @param initialConfig:
- *  container: jquery element of the container
- *  itemSelector: string selector of an item to be layed out
- *  cellWidth: the desired witdth of one column
- *  gutter: GUTTER,
- *  border: the border width of the item element as it is not measured by jquery
- *
- * This layout manager renders the layout every frame in the following order
- * 1. selects all the items
- * 2. Sorts them by height
- * 3. Puts items in the most empty column until finished
- */
-function CompactLayout(initialConfig, interval) {
-
-  this.config = _.assign({
-    gutter: 0,
-    border: 0
-  }, initialConfig);
+function LayoutRunner(interval) {
 
   this.nextRefreshHandle = null;
 
@@ -31,15 +13,6 @@ function CompactLayout(initialConfig, interval) {
     }
   };
 
-  function getElementHeight(el) {
-    if (!el) {
-      return 0;
-    }
-    return $(el).height();
-  }
-
-  this.choiceSizeCache = [];
-
   this.cancel = function() {
     this.cancelled = true;
     if (this.nextRefreshHandle) {
@@ -51,10 +24,49 @@ function CompactLayout(initialConfig, interval) {
     }
   };
 
-  this.start = function() {
+  this.start = function(layout) {
+    this.layout = layout;
     this.cancelled = false;
-    this.refresh();
+    this.runLater(_.bind(this.run, this));
   };
+
+  this.run = function() {
+    this.runLater(_.bind(this.run, this));
+    this.layout.refresh();
+  };
+
+}
+
+/**
+ * @param initialConfig:
+ *  container: jquery element of the container
+ *  itemSelector: string selector of an item to be layed out
+ *  cellWidth: the desired witdth of one column
+ *  gutter: GUTTER,
+ *  border: the border width of the item element as it is not measured by jquery
+ *
+ * This layout manager renders the layout every frame in the following order
+ * 1. selects all the items
+ * 2. Sorts them by height
+ * 3. Puts items in the most empty column until finished
+ */
+function CompactLayout(initialConfig, layoutRunner) {
+
+  this.config = _.assign({
+    gutter: 0,
+    border: 0
+  }, initialConfig);
+
+  this.runner = layoutRunner;
+
+  function getElementHeight(el) {
+    if (!el) {
+      return 0;
+    }
+    return $(el).height();
+  }
+
+  this.choiceSizeCache = [];
 
   this.updateConfig = function(newConfig) {
     this.newConfig = true;
@@ -62,15 +74,9 @@ function CompactLayout(initialConfig, interval) {
   };
 
   this.refresh = function() {
-
-    this.runLater(_.bind(this.refresh, this));
-
     var choiceElements = this.config.container.find(this.config.itemSelector);
-
     var reverseSortedChoices = _(_.sortBy(choiceElements, getElementHeight)).reverse().value();
-
     var reverseSortedChoicesHeights = _(reverseSortedChoices).map(getElementHeight).value();
-
     var someElementsHaveZeroHeight = _.some(reverseSortedChoicesHeights, function(height) {
       return height === 0;
     });
@@ -80,11 +86,8 @@ function CompactLayout(initialConfig, interval) {
     }
 
     this.newConfig = false;
-
     this.choiceSizeCache = reverseSortedChoicesHeights;
-
     var numColumns = Math.floor(this.config.container.width() / this.config.cellWidth);
-
     var columns = _.map(_.range(numColumns), function() {
       return [];
     });
@@ -132,7 +135,15 @@ function CompactLayout(initialConfig, interval) {
     });
   };
 
-  this.runLater(_.bind(this.refresh, this));
+  this.start = function(){
+    this.runner.start(this);
+  }
+
+  this.cancel = function(){
+    this.runner.cancel();
+  }
+
+  this.start();
 }
 
 /**
@@ -146,33 +157,10 @@ function CompactLayout(initialConfig, interval) {
  * This layout manager tracks the height of an edited component and adjusts components positioned
  * after the edited one in the column
  */
-function CompactLayoutWhileEditing(initialConfig, interval) {
+function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
 
   this.config = initialConfig;
-
-  this.nextRefreshHandle = null;
-
-  this.runLater = function(block) {
-    if (this.cancelled) {
-      return;
-    }
-    if (window.requestAnimationFrame) {
-      this.nextRefreshHandle = window.requestAnimationFrame(block);
-    } else {
-      this.nextRefreshHandle = interval(block, 100, 1);
-    }
-  };
-
-  this.cancel = function() {
-    this.cancelled = true;
-    if (this.nextRefreshHandle) {
-      if (window.requestAnimationFrame) {
-        window.cancelAnimationFrame(this.nextRefreshHandle);
-      } else {
-        interval.cancel(this.nextRefreshHandle);
-      }
-    }
-  };
+  this.runner = layoutRunner;
 
   function isAbove(thisEl) {
     return function(thatEl) {
@@ -190,16 +178,11 @@ function CompactLayoutWhileEditing(initialConfig, interval) {
   }
 
   this.refresh = function() {
-
     var editedElement = this.config.editedElement;
-
     var choiceElements = this.config.container.find(this.config.itemSelector);
-
     var elementsAboveEdited = _.filter(choiceElements, isAbove(editedElement));
 
     elementsAboveEdited = _.sortBy(elementsAboveEdited, byElementTopPosition);
-
-    this.runLater(_.bind(this.refresh, this));
 
     var lastBottom = this.config.editedElement.position().top + this.config.editedElement.height();
 
@@ -227,10 +210,13 @@ function CompactLayoutWhileEditing(initialConfig, interval) {
   };
 
   this.start = function(newConfig) {
-    this.cancelled = false;
     this.config = _.assign(this.config, newConfig);
-    this.runLater(_.bind(this.refresh, this));
+    this.runner.start(this);
   };
+
+  this.cancel = function(){
+    this.runner.cancel();
+  }
 }
 
 var main = ['$interval',
@@ -257,6 +243,7 @@ var main = ['$interval',
       scope.isEditMode = attrs.mode === 'edit';
 
       scope.onCategoryDrop = function(categoryId, choiceId) {
+        console.log("onCategoryDrop", categoryId, choiceId);
         var category = _.find(scope.categories, byModelId(categoryId));
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
@@ -446,7 +433,7 @@ var main = ['$interval',
         cellWidth: cellWidth(GUTTER),
         gutter: GUTTER,
         border: 4
-      }, $interval);
+      }, new LayoutRunner($interval));
 
       function updateView() {
         if (!scope.categories || !scope.choices) {
@@ -510,7 +497,7 @@ var main = ['$interval',
       var editingLayout = new CompactLayoutWhileEditing({
         container: elem.find(".container-choices"),
         itemSelector: ".choice"
-      }, $interval);
+      }, new LayoutRunner($interval));
 
       scope.onChoiceEditClicked = function(choiceId) {
 
@@ -585,7 +572,7 @@ var main = ['$interval',
             '    choice-id="{{choice.id}}" ',
             '    on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
             '    on-edit-clicked="onChoiceEditClicked(choiceId)" ',
-            '    delete-after-replacing="choice.moveOnDrag" ',
+            '    delete-after-placing="choice.moveOnDrag" ',
             '    ng-style="choiceStyle" ',
             '    image-service="imageService"></div>',
             '</div>'
@@ -652,7 +639,7 @@ var category = [function() {
 
     scope.onDropCallback = function(e, draggable) {
 
-      var choiceId = draggable.draggable.attr('choiceId');
+      var choiceId = draggable.draggable.attr('choice-id');
       scope.isDraggedOver = false;
       scope.$$postDigest(function() {
         scope.onDrop({
@@ -664,7 +651,7 @@ var category = [function() {
 
     scope.onOverCallback = function(e, draggable) {
 
-      var isChoiceId = draggable.draggable.attr('choiceId');
+      var isChoiceId = draggable.draggable.attr('choice-id');
 
       if (isChoiceId !== "" && !isLocalChoiceDragged) {
         scope.$apply(function() {
@@ -746,8 +733,8 @@ var category = [function() {
 
     function deleteTool() {
       return [
-        '<li tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom" class="delete-icon-button" ng-click="onDeleteClicked()">',
-        '  <i ng-click="deleteNode($event)" class="fa fa-trash-o"></i>',
+        '<li class="delete-icon-button" ng-click="onDeleteClicked()" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
+        '  <i class="fa fa-trash-o"></i>',
         '</li>'].join('');
     }
 
@@ -825,7 +812,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
 
     scope.$watch('correctness', updateClasses);
 
-    scope.$watch('model.html', function() {
+    scope.$watch('model.label', function() {
       $(window).trigger("resize");
     });
 
@@ -854,7 +841,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
       notifyDeleteClicked: '&onDeleteClicked',
       notifyEditClicked: '&onEditClicked',
       editMode: '=?editMode',
-      deleteAfterReplacing: '=?deleteAfterReplacing',
+      deleteAfterPlacing: '=?deleteAfterPlacing',
       imageService: "=?"
     }
   };
@@ -868,16 +855,16 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
       '  data-jqyoui-options="{revert: \'invalid\', helper: \'clone\',appendTo:\'{{draggedParent}}\'}" >',
       '  <ul class="edit-controls" ng-if="showTools">',
       '    <li class="delete-icon-button" ng-click="onDeleteClicked()" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
-      '      <i ng-click="deleteNode($event)" class="fa"></i>',
+      '      <i class="fa"></i>',
       '    </li>',
       '    <li class="edit-icon-button" ng-click="onChoiceEditClicked()" tooltip="edit" tooltip-append-to-body="true" tooltip-placement="bottom">',
-      '      <i ng-click="editNode($event)" class="fa fa-pencil"></i>',
+      '      <i class="fa fa-pencil"></i>',
       '    </li>',
       '  </ul>',
       '  <div class="shell" ng-if="showTools" ng-show="isEditing()" >',
       choiceEditorTemplate(),
       '  </div>',
-      '  <div class="shell" ng-bind-html-unsafe="model.html" ng-if="!isEditing()"></div>',
+      '  <div class="shell" ng-bind-html-unsafe="model.label" ng-if="!isEditing()"></div>',
       '  <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
       '    <checkbox ng-model="model.moveOnDrag" class="control-label">Remove Tile after placing</checkbox>',
       '  </div>',
@@ -889,7 +876,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
         '<div class="editor" ',
         '   mini-wiggi-wiz="" ',
         '   dialog-launcher="external" ',
-        '   ng-model="model.html" ',
+        '   ng-model="model.label" ',
         '   placeholder="Enter a choice"',
         '   image-service="imageService()" ',
         '   features="extraFeatures" ',

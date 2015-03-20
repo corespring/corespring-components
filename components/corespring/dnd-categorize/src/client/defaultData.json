@@ -29,36 +29,35 @@
     ],
     "choices": [
       {
-        "label": "",
-        "labelType": "text",
-        "id": "choice_0",
-        "moveOnDrag": false
-      },
-      {
-        "label": "",
-        "labelType": "text",
         "id": "choice_1",
+        "label": "a",
+        "labelType": "text",
         "moveOnDrag": false
       },
       {
-        "label": "",
+        "id": "choice_2",
+        "label": "b",
         "labelType": "text",
-        "id": "choice_2"
+        "moveOnDrag": false
       },
       {
-        "label": "",
-        "labelType": "text",
         "id": "choice_3",
+        "label": "c",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_4",
+        "label": "d",
+        "labelType": "text",
         "moveOnDrag": false
       }
     ],
     "config": {
       "shuffle": false,
-      "removeTilesOnDrop": true,
       "choiceAreaLayout": "vertical",
       "answerAreaPosition": "below",
       "maxCategoriesPerRow" : 2
-
     }
   },
   "weight": 1

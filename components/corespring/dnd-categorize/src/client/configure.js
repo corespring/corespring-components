@@ -127,7 +127,7 @@ var main = [
         };
 
         function findFreeChoiceSlot() {
-          var slot = 0;
+          var slot = 1;
           var usedSlots = _.pluck($scope.model.choices, 'id');
           while (_.contains(usedSlots, "choice_" + slot)) {
             slot++;
@@ -154,17 +154,17 @@ var main = [
 
         function updateModel() {
 
-          function cleanChoicesHtml(choices) {
+          function cleanChoicesLabel(choices) {
             var choicesCopy = _.cloneDeep(choices);
             _.forEach(choicesCopy, function(choice) {
-              if (choice && _.isString(choice.html)) {
-                choice.html = choice.html.replace(/[\u200B-\u200D\uFEFF]/g, '');
+              if (choice && _.isString(choice.label)) {
+                choice.label = choice.label.replace(/[\u200B-\u200D\uFEFF]/g, '');
               }
             });
             return choicesCopy;
           }
 
-          $scope.fullModel.model.choices = cleanChoicesHtml($scope.choices);
+          $scope.fullModel.model.choices = cleanChoicesLabel($scope.choices);
 
           $scope.fullModel.correctResponse = _.reduce($scope.categories, function(acc, category) {
             if (category.choices && category.choices.length > 0) {
@@ -254,13 +254,13 @@ var main = [
             '  <p>In Categorize, students may drag & drop answer tiles to the appropriate category area(s).</p>',
             '</div>',
             '<div class="row" >',
-            '  <corespring-dnd-categorize  id="chooser" ',
+            '  <corespring-dnd-categorize id="chooser" ',
             '     max-categories-per-row="model.config.maxCategoriesPerRow" ',
             '     mode="edit"',
             '     choices="choices"',
             '     categories="categories"',
-            '     image-service="imageService">',
-            '  </corespring-dnd-categorize>',
+            '     image-service="imageService"',
+            '   ></corespring-dnd-categorize>',
             '</div>'
                 ].join("");
       }
@@ -308,29 +308,27 @@ var main = [
             '    </div>',
             '  </div>',
             '  <div class="row feedback-row">',
-            '    <div class="col-xs-12">',
-            '      <div feedback-panel>',
-            '        <div feedback-selector',
-            '            fb-sel-label="If correct, show"',
-            '            fb-sel-class="correct"',
-            '            fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-            '            fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-            '            fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
-            '        </div>',
-            '        <div feedback-selector',
-            '            fb-sel-label="If partially correct, show"',
-            '            fb-sel-class="partial"',
-            '            fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-            '            fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-            '            fb-sel-default-feedback="{{defaultPartialFeedback}}">',
-            '        </div>',
-            '        <div feedback-selector',
-            '            fb-sel-label="If incorrect, show"',
-            '            fb-sel-class="incorrect"',
-            '            fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-            '            fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-            '            fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
-            '        </div>',
+            '    <div feedback-panel>',
+            '      <div feedback-selector',
+            '          fb-sel-label="If correct, show"',
+            '          fb-sel-class="correct"',
+            '          fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+            '          fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+            '          fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
+            '      </div>',
+            '      <div feedback-selector',
+            '          fb-sel-label="If partially correct, show"',
+            '          fb-sel-class="partial"',
+            '          fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+            '          fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+            '          fb-sel-default-feedback="{{defaultPartialFeedback}}">',
+            '      </div>',
+            '      <div feedback-selector',
+            '          fb-sel-label="If incorrect, show"',
+            '          fb-sel-class="incorrect"',
+            '          fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+            '          fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+            '          fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
             '      </div>',
             '    </div>',
             '  </div>',
