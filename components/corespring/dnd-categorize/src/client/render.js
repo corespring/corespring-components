@@ -564,14 +564,14 @@ var main = ['$interval',
       //TODO .replace? is it necessary?
       return [
         '<div class="render-dnd-categorize">',
-        choicesTemplate().replace("{flipp}", "shouldFlip"),
-        categoriesTemplate().replace("{flipp}", "!shouldFlip").replace("{rowsModel}", "rows"),
+          choicesTemplate().replace("{flipp}", "shouldFlip"),
+          categoriesTemplate().replace("{flipp}", "!shouldFlip").replace("{rowsModel}", "rows"),
         '  <hr/>',
         '  <span ng-if="isEditMode" class="choice-area-label">Enter choices below and drag to correct categories above. Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.</span>',
-        choicesTemplate().replace("{flipp}", "!shouldFlip"),
-        categoriesTemplate().replace("{flipp}", "shouldFlip").replace("{rowsModel}", "rows"),
+          choicesTemplate().replace("{flipp}", "!shouldFlip"),
+          categoriesTemplate().replace("{flipp}", "shouldFlip").replace("{rowsModel}", "rows"),
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-        seeSolutionTemplate(),
+          seeSolutionTemplate(),
         '</div>'
         ].join('');
 
@@ -621,7 +621,7 @@ var main = ['$interval',
             '    <span class="label" ng-if="!isSeeCorrectAnswerOpen">Show correct answer</span>',
             '  </div>',
             '  <div class="panel-body"  ng-show="isSeeCorrectAnswerOpen">',
-            categoriesTemplate().replace("{flipp}", "true").replace("{rowsModel}", "correctAnswerRows"),
+              categoriesTemplate().replace("{flipp}", "true").replace("{rowsModel}", "correctAnswerRows"),
             '  </div>',
             '</div>'
         ].join("");
@@ -725,7 +725,7 @@ var category = [function() {
       '    >',
       '  <h4 ng-if="!isEditMode">{{label}}</h4>',
       '  <h4><input class="label-input" type="text" ng-if="isEditMode" ng-model="$parent.label" ></h4>',
-      editControlsDelete(),
+         editControlsDelete(),
       '  <div class="categorized choices">',
       '    <div class="choice-container" ng-class="{draggedOver:isDraggedOver}">',
       '      <div choice-dnd-categorize="true" ',
@@ -770,19 +770,19 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
 
     scope.onStart = function() {
       scope.onDragStart({
-        choiceId: attrs.choiceid
+        choiceId: attrs.choiceId
       });
     };
 
     scope.onStop = function() {
       scope.onDragEnd({
-        choiceId: attrs.choiceid
+        choiceId: attrs.choiceId
       });
     };
 
     scope.onDeleteClicked = function() {
       scope.notifyDeleteClicked({
-        choiceId: attrs.choiceid
+        choiceId: attrs.choiceId
       });
     };
 
@@ -819,7 +819,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
 
     scope.onChoiceEditClicked = function() {
       scope.notifyEditClicked({
-        choiceId: attrs.choiceid
+        choiceId: attrs.choiceId
       });
     };
 
@@ -844,6 +844,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
     link: link,
     restrict: 'EA',
     replace: true,
+    template: template(),
     scope: {
       dragEnabled: '=',
       model: '=',
@@ -855,8 +856,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
       editMode: '=?editMode',
       deleteAfterReplacing: '=?deleteAfterReplacing',
       imageService: "=?"
-    },
-    template: template()
+    }
   };
 
   function template() {
@@ -866,7 +866,6 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
       '  ng-class="classes"',
       '  jqyoui-draggable="{animate:true, placeholder:\'keep\',onStart:\'onStart()\',onStop:\'onStop()\'}" ',
       '  data-jqyoui-options="{revert: \'invalid\', helper: \'clone\',appendTo:\'{{draggedParent}}\'}" >',
-
       '  <ul class="edit-controls" ng-if="showTools">',
       '    <li class="delete-icon-button" ng-click="onDeleteClicked()" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
       '      <i ng-click="deleteNode($event)" class="fa"></i>',
@@ -914,11 +913,11 @@ exports.directives = [
     directive: main
   },
   {
-    name: "category-dnd-categorize",
+    name: "categoryDndCategorize",
     directive: category
   },
   {
-    name: "choice-dnd-categorize",
+    name: "choiceDndCategorize",
     directive: choice
   }
 ];

@@ -240,10 +240,10 @@ var main = [
       return [
         '<div class="config-dnd-categorize">',
         '  <div navigator-panel="Design">',
-        designPanel,
+        designPanel(),
         '  </div>',
         '  <div navigator-panel="Scoring">',
-        scoringPanel,
+        scoringPanel(),
         '  </div>',
         '</div>'
       ].join('');
@@ -301,10 +301,10 @@ var main = [
             '<div class="container-fluid">',
             '  <div class="row">',
             '    <div class="player-col">',
-                            playerColumn(),
+                    playerColumn(),
             '    </div>',
             '    <div class="settings-col">',
-                            configControls(),
+                   configControls(),
             '    </div>',
             '  </div>',
             '  <div class="row feedback-row">',
