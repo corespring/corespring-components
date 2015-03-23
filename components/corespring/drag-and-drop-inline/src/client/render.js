@@ -86,7 +86,9 @@ var main = [
             existingScope.$destroy();
           }
         }
-        var $answerArea = $holder.html(scope.model.answerAreaXhtml);
+        var answerHtml = scope.model.answerAreaXhtml;
+        var answerArea = '<div scope-forwarder-csdndi="">' + answerHtml + '</div>';
+        var $answerArea = $holder.html(answerArea);
         $compile($answerArea)(scope);
         renderMath();
       });
@@ -161,6 +163,9 @@ var main = [
           solutionScope.classForChoice = function() {
             return "";
           };
+          solutionScope.shouldShowNoAnswersWarning = function(){
+            return false;
+          }
           solutionScope.cleanLabel = scope.cleanLabel;
           _.each(scope.correctResponse, function(v, k) {
             solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
