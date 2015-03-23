@@ -138,12 +138,14 @@ var main = [
         var updateInitialElements = function(n) {
           scope.$apply(function() {
             scope.fullModel.model.config.initialElements = _.cloneDeep(n);
+            scope.initialView.model.config.initialElements = _.cloneDeep(n);
           });
         };
 
         var updateCorrectResponse = function(n) {
           scope.$apply(function() {
             scope.fullModel.correctResponse = _.cloneDeep(n);
+            scope.correctResponseView.model.config.initialElements = _.cloneDeep(n);
             scope.updatePartialScoringModel(scope.correctResponseView.responseModel.length);
           });
         };
