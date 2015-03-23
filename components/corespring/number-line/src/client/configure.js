@@ -193,35 +193,14 @@ var main = [
 
         scope.$watch('sampleNumberLine.model.config', debounce(updateTickLabels), true);
 
-        // Temporary way to test the interaction
-        scope.$watch('fullModel', function(n) {
-          if (n) {
-            scope.modelJson = JSON.stringify(n, null, 2);
-          }
-        }, true);
-
-        scope.$watch("modelJson", _.debounce(function(json) {
-          if (!_.isUndefined(json)) {
-            scope.$apply(function() {
-              var newModel = JSON.parse(json);
-              _.merge(scope.fullModel, newModel);
-              scope.fullModel.correctResponse = newModel.correctResponse;
-              scope.fullModel.model.objects = newModel.model.objects;
-            });
-          }
-        }, 200));
-
         scope.resetToDefaults = function() {
-//          _.merge(scope.fullModel.model.config, _.pick(scope.defaults, ['domain','tickFrequency','snapPerTick']));
           _.extend(scope.fullModel.model.config, _.omit(scope.defaults, 'exhibitOnly'));
-//          scope.fullModel.model.config = _.omit(scope.defaults, 'exhibitOnly');
           scope.initialView.model.config.tickLabelOverrides = _.cloneDeep(scope.fullModel.model.config.tickLabelOverrides);
           scope.correctResponseView.model.config.tickLabelOverrides = _.cloneDeep(scope.fullModel.model.config.tickLabelOverrides);
           scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(scope.fullModel.model.config.tickLabelOverrides);
-
         };
 
-        scope.stopTickEditing = function(event) {
+        scope.stopTickEditing = function() {
           scope.isEditingTickLabel = false;
         };
 
@@ -242,9 +221,6 @@ var main = [
         attributes,
         initialView,
         correctResponseView,
-        '  </div>',
-        '  <div navigator-panel="DevMode">',
-        '    <textarea cols="100" rows="50" ng-model="modelJson"></textarea>',
         '  </div>',
         '  <div navigator-panel="Scoring">',
         ChoiceTemplates.scoring(),
