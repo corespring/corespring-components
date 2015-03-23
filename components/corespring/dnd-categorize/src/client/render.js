@@ -109,8 +109,8 @@ function CompactLayout(initialConfig, layoutRunner) {
 
     this.getChoiceTop = function(choices, index) {
       return _.reduce(_.take(choices, index), function(acc, choice) {
-        return $(choice).height() + acc;
-      }, 0) + (this.config.gutter * index);
+          return $(choice).height() + acc;
+        }, 0) + (this.config.gutter * index);
     };
 
     columns.forEach(function(colChoices, colIndex) {
@@ -243,7 +243,6 @@ var main = ['$interval',
       scope.isEditMode = attrs.mode === 'edit';
 
       scope.onCategoryDrop = function(categoryId, choiceId) {
-        console.log("onCategoryDrop", categoryId, choiceId);
         var category = _.find(scope.categories, byModelId(categoryId));
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
@@ -333,7 +332,6 @@ var main = ['$interval',
         },
 
         getSession: function() {
-
           var answers = _.reduce(scope.categories, function(result, category) {
             var catId = category.model.id;
             result[catId] = _.map(category.choices, function(choice) {
@@ -429,7 +427,7 @@ var main = ['$interval',
       var GUTTER = 10;
       var layout = new CompactLayout({
         container: elem.find(".container-choices"),
-        itemSelector: ".choice",
+        itemSelector: ".choice-corespring-dnd-categorize",
         cellWidth: cellWidth(GUTTER),
         gutter: GUTTER,
         border: 4
@@ -496,7 +494,7 @@ var main = ['$interval',
 
       var editingLayout = new CompactLayoutWhileEditing({
         container: elem.find(".container-choices"),
-        itemSelector: ".choice"
+        itemSelector: ".choice-corespring-dnd-categorize"
       }, new LayoutRunner($interval));
 
       scope.onChoiceEditClicked = function(choiceId) {
@@ -551,70 +549,74 @@ var main = ['$interval',
       //TODO .replace? is it necessary?
       return [
         '<div class="render-dnd-categorize">',
-          choicesTemplate().replace("{flipp}", "shouldFlip"),
-          categoriesTemplate().replace("{flipp}", "!shouldFlip").replace("{rowsModel}", "rows"),
+        choicesTemplate().replace("{flipp}", "shouldFlip"),
+        categoriesTemplate().replace("{flipp}", "!shouldFlip").replace("{rowsModel}", "rows"),
         '  <hr/>',
         '  <span ng-if="isEditMode" class="choice-area-label">Enter choices below and drag to correct categories above. Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.</span>',
-          choicesTemplate().replace("{flipp}", "!shouldFlip"),
-          categoriesTemplate().replace("{flipp}", "shouldFlip").replace("{rowsModel}", "rows"),
+        choicesTemplate().replace("{flipp}", "!shouldFlip"),
+        categoriesTemplate().replace("{flipp}", "shouldFlip").replace("{rowsModel}", "rows"),
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-          seeSolutionTemplate(),
+        seeSolutionTemplate(),
         '</div>'
-        ].join('');
+      ].join('');
 
       function choicesTemplate() {
         return [
-            '<div class="container-choices" ng-if="{flipp}">',
-            '  <div choice-dnd-categorize="true" ',
-            '    ng-repeat="choice in choices track by choice.id" ',
-            '    drag-enabled="isDragEnabled" edit-mode="getEditMode(choice)" ',
-            '    model="choice" ',
-            '    choice-id="{{choice.id}}" ',
-            '    on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-            '    on-edit-clicked="onChoiceEditClicked(choiceId)" ',
-            '    delete-after-placing="choice.moveOnDrag" ',
-            '    ng-style="choiceStyle" ',
-            '    image-service="imageService"></div>',
-            '</div>'
+          '<div class="container-choices" ng-if="{flipp}">',
+          '  <div choice-dnd-categorize="true" ',
+          '    ng-repeat="choice in choices track by choice.id" ',
+          '    drag-enabled="isDragEnabled"',
+          '    edit-mode="getEditMode(choice)" ',
+          '    model="choice" ',
+          '    choice-id="{{choice.id}}" ',
+          '    on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
+          '    on-edit-clicked="onChoiceEditClicked(choiceId)" ',
+          '    delete-after-placing="choice.moveOnDrag" ',
+          '    ng-style="choiceStyle" ',
+          '    image-service="imageService"',
+          '   ></div>',
+          '</div>'
         ].join('');
       }
 
       function categoriesTemplate() {
         return [
-            '<div class="categories" ng-if="{flipp}">',
-            '  <div class="row" ng-repeat="row in {rowsModel}">',
-            '    <div category-dnd-categorize="true" ',
-            '      ng-repeat="category in row"',
-            '      label="category.model.label" ',
-            '      drag-enabled="isDragEnabledFromCategory"',
-            '      edit-mode="isEditMode" ',
-            '      on-drop="onCategoryDrop(categoryId,choiceId)" ',
-            '      on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
-            '      on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
-            '      on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
-            '      category-id="{{category.model.id}}" ',
-            '      choices="category.choices" ng-style="categoryStyle"></div>',
-            '   </div>',
-            ' </div>'
+          '<div class="categories" ng-if="{flipp}">',
+          '  <div class="row" ng-repeat="row in {rowsModel}">',
+          '    <div category-dnd-categorize="true" ',
+          '      ng-repeat="category in row"',
+          '      label="category.model.label" ',
+          '      drag-enabled="isDragEnabledFromCategory"',
+          '      edit-mode="isEditMode" ',
+          '      on-drop="onCategoryDrop(categoryId,choiceId)" ',
+          '      on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
+          '      on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
+          '      on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
+          '      category-id="{{category.model.id}}" ',
+          '      choices="category.choices"',
+          '      ng-style="categoryStyle"',
+          '     ></div>',
+          '   </div>',
+          ' </div>'
         ].join('');
       }
 
       function seeSolutionTemplate() {
         return [
-            '<div class="panel feedback correct-answer" ng-if="showSeeCorrectAnswer(response)">',
-            '  <div class="panel-heading" ng-click="isSeeCorrectAnswerOpen=!isSeeCorrectAnswerOpen">',
-            '    <span class="toggle" ng-class="{true:\'fa-eye-slash\', false:\'fa-eye\'}[isSeeCorrectAnswerOpen]"></span>',
-            '    <span class="label" ng-if="isSeeCorrectAnswerOpen">Hide correct answer</span>',
-            '    <span class="label" ng-if="!isSeeCorrectAnswerOpen">Show correct answer</span>',
-            '  </div>',
-            '  <div class="panel-body"  ng-show="isSeeCorrectAnswerOpen">',
-              categoriesTemplate().replace("{flipp}", "true").replace("{rowsModel}", "correctAnswerRows"),
-            '  </div>',
-            '</div>'
+          '<div class="panel feedback correct-answer" ng-if="showSeeCorrectAnswer(response)">',
+          '  <div class="panel-heading" ng-click="isSeeCorrectAnswerOpen=!isSeeCorrectAnswerOpen">',
+          '    <span class="toggle" ng-class="{true:\'fa-eye-slash\', false:\'fa-eye\'}[isSeeCorrectAnswerOpen]"></span>',
+          '    <span class="label" ng-if="isSeeCorrectAnswerOpen">Hide correct answer</span>',
+          '    <span class="label" ng-if="!isSeeCorrectAnswerOpen">Show correct answer</span>',
+          '  </div>',
+          '  <div class="panel-body"  ng-show="isSeeCorrectAnswerOpen">',
+          categoriesTemplate().replace("{flipp}", "true").replace("{rowsModel}", "correctAnswerRows"),
+          '  </div>',
+          '</div>'
         ].join("");
       }
     }
-}];
+  }];
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -684,6 +686,13 @@ var category = [function() {
 
     scope.choiceEditMode = scope.isEditMode ? 'delete' : '';
     scope.showTools = scope.isEditMode;
+
+    scope.droppableOptions = {
+      multiple:true,
+      onDrop:'onDropCallback',
+      onOver:'onOverCallback',
+      onOut: 'onOutCallback'
+    }
   }
 
   return {
@@ -708,11 +717,11 @@ var category = [function() {
       '<div class="category"',
       '  ng-class="{draggedOver:isDraggedOver}" ',
       '  data-drop="true" ',
-      '  jqyoui-droppable="{multiple:true,onDrop:\'onDropCallback()\',onOver:\'onOverCallback()\',onOut: \'onOutCallback\'}"',
-      '    >',
+      '  jqyoui-droppable="droppableOptions"',
+      '  >',
       '  <h4 ng-if="!isEditMode">{{label}}</h4>',
-      '  <h4><input class="label-input" type="text" ng-if="isEditMode" ng-model="$parent.label" ></h4>',
-         editControlsDelete(),
+      '  <h4><input class="label-input" type="text" ng-if="isEditMode" ng-model="$parent.label"></h4>',
+      editControlsDelete(),
       '  <div class="categorized choices">',
       '    <div class="choice-container" ng-class="{draggedOver:isDraggedOver}">',
       '      <div choice-dnd-categorize="true" ',
@@ -825,6 +834,19 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
     scope.isDragEnabled = function() {
       return scope.dragEnabled && !scope.isEditing();
     };
+
+    scope.draggableOptions = {
+      animate:true    ,
+      placeholder:'keep',
+      onStart:'onStart',
+      onStop:'onStop'
+    };
+
+    scope.draggableJqueryOptions = {
+      revert: 'invalid',
+      helper: 'clone',
+      appendTo: scope.draggedParent
+    };
   }
 
   return {
@@ -848,13 +870,17 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
 
   function template() {
     return [
-      '<div class="choice item" ',
+      '<div class="choice-corespring-dnd-categorize" ',
       '  data-drag="isDragEnabled()"',
       '  ng-class="classes"',
-      '  jqyoui-draggable="{animate:true, placeholder:\'keep\',onStart:\'onStart()\',onStop:\'onStop()\'}" ',
-      '  data-jqyoui-options="{revert: \'invalid\', helper: \'clone\',appendTo:\'{{draggedParent}}\'}" >',
+      '  jqyoui-draggable="draggableOptions" ',
+      '  data-jqyoui-options="draggableJqueryOptions">',
       '  <ul class="edit-controls" ng-if="showTools">',
-      '    <li class="delete-icon-button" ng-click="onDeleteClicked()" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
+      '    <li class="delete-icon-button"',
+      '      ng-click="onDeleteClicked()"',
+      '      tooltip="delete" ',
+      '      tooltip-append-to-body="true" ',
+      '      tooltip-placement="bottom">',
       '      <i class="fa"></i>',
       '    </li>',
       '    <li class="edit-icon-button" ng-click="onChoiceEditClicked()" tooltip="edit" tooltip-append-to-body="true" tooltip-placement="bottom">',
@@ -881,13 +907,8 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
         '   image-service="imageService()" ',
         '   features="extraFeatures" ',
         '   feature-overrides="overrideFeatures"',
-        '   parent-selector=".modal-body">',
-        '  <edit-pane-toolbar alignment="bottom">',
-        '    <div class="btn-group pull-right">',
-        '      <button ng-click="closePane()" class="btn btn-sm btn-success">Done</button>',
-        '    </div>',
-        '  </edit-pane-toolbar>',
-        '</div>'
+        '   parent-selector=".modal-body"',
+        '></div>'
       ].join('');
     }
   }

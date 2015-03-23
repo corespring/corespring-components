@@ -12,40 +12,35 @@
   }
 }
 
-.roundBorder() {
-  border-style: solid;
-  border-radius: 8px;
-  border-width: 2px;
-}
-
-/* seems like it is not used
-.tools-area{
-  background-color: #0078a3;
-}
-*/
-
-//* seems not to be used. but if, it has to be localised
-body , .modal{
-  .choice{
+body, .modal {
+  .choice-corespring-dnd-categorize {
     z-index: 1000;
     float: left;
-    .edit-controls{
+    border-color: #C2C2C2;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+
+    .edit-controls {
       display: none;
     }
-    .delete-after-placing{
+
+    .delete-after-placing {
       display: none;
     }
-    .shell{
+
+    .shell {
       background-color: white;
-      border-radius: 8px;
-      padding:10px;
-      img{
-        max-width:100%;
+      border-radius: 4px;
+      padding: 10px;
+      img {
+        max-width: 100%;
         display: block;
       }
     }
   }
 }
+
 //*/
 
 .component-placeholder {
@@ -84,7 +79,7 @@ body , .modal{
 
   .correct-answer {
     border-color: @learn-more-color;
-    border-width: 2px;
+    border-width: 1px;
     float: none;
 
     .panel-heading {
@@ -179,7 +174,7 @@ body , .modal{
           border-color: rgb(129, 129, 129);
           border-style: solid;
           border-radius: 8px;
-          border-width: 2px;
+          border-width: 1px;
 
           .choice-container {
             .clearfix();
@@ -192,12 +187,13 @@ body , .modal{
               border-color: rgb(129, 129, 129);
               border-style: dashed;
               border-radius: 8px;
-              border-width: 2px;
+              border-width: 1px;
               background-color: white;
             }
 
-            .choice {
+            .choice-corespring-dnd-categorize {
               padding: 0;
+              margin: 2px 0;
               width: 100%;
               display: inline-block;
 
@@ -221,7 +217,7 @@ body , .modal{
               &.correct {
                 .shell {
                   text-align: initial;
-                  border-radius: 8px;
+                  border-radius: 4px;
                   border: 1px solid #3c763d;
                   padding: 5px;
                 }
@@ -230,7 +226,7 @@ body , .modal{
               &.incorrect {
                 .shell {
                   text-align: initial;
-                  border-radius: 8px;
+                  border-radius: 4px;
                   border: 1px solid #eea236;
                   padding: 5px;
                 }
@@ -239,7 +235,7 @@ body , .modal{
               .shell {
                 border-color: #C2C2C2;
                 border-style: solid;
-                border-width: 2px;
+                border-width: 1px;
                 border-radius: 4px;
                 text-align: initial;
                 padding: 5px;
@@ -256,14 +252,14 @@ body , .modal{
     position: relative;
     z-index: 0;
 
-    .choice {
+    .choice-corespring-dnd-categorize {
       .clearfix();
       text-align: start;
       padding: 0;
       margin: 0;
       border-color: #C2C2C2;
       border-style: solid;
-      border-width: 2px;
+      border-width: 1px;
       border-radius: 4px;
       min-height: 40px;
       -webkit-user-select: none;
@@ -337,7 +333,7 @@ body , .modal{
       .shell {
         margin: 4px;
         padding: 0;
-        border-radius: 0px;
+        border-radius: 4px;
         min-height: 22px;
 
         img {
