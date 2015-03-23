@@ -444,7 +444,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           var snapPerTick = axisOptions.snapPerTick + 1;
           var d = Math.abs(thatHA.ticks[idx + 1] - thatHA.ticks[idx]) / snapPerTick;
 
-          if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 1) {
+          if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 2) {
             for (var i = 1; i < snapPerTick; i++) {
               thatHA.elements.push(paper.line(options.margin.left + scale(tick + d * i), y - tickSize / 4, options.margin.left + scale(tick + d * i), y + tickSize / 4));
             }
