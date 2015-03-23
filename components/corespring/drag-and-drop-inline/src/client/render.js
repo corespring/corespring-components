@@ -165,7 +165,7 @@ var main = [
           };
           solutionScope.shouldShowNoAnswersWarning = function(){
             return false;
-          }
+          };
           solutionScope.cleanLabel = scope.cleanLabel;
           _.each(scope.correctResponse, function(v, k) {
             solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
