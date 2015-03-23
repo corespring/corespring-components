@@ -155,7 +155,7 @@ var main = [
         var updateNumberLineOptions = function(n, onlyFor) {
           if (n) {
             scope.$apply(function() {
-              _(n).omit('initialElements','tickLabelOverrides').each(function(e, k) {
+              _(n).omit('initialElements','tickLabelOverrides','exhibitOnly').each(function(e, k) {
                 if (!_.isUndefined(n[k])) {
                   scope.initialView.model.config[k] = _.cloneDeep(n[k]);
                   scope.correctResponseView.model.config[k] = _.cloneDeep(n[k]);
