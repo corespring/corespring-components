@@ -13,9 +13,9 @@ describe('corespring', function() {
     data: {
       "model": {
         "config": {
-          "domain": [0, 20],
+          "domain": [-10, 10],
           "maxNumberOfPoints": 3,
-          "tickFrequency": 20,
+          "tickFrequency": 10,
           "snapPerTick": 2,
           "showMinorTicks": true,
           "initialType": "PF",
@@ -38,33 +38,31 @@ describe('corespring', function() {
   };
 
   window.Raphael = function() {
+    var mockRaphaelObject = function() {
+      var that = {
+        attr: function() {
+          return that;
+        },
+        drag: function() {
+          return that;
+        },
+        click: function() {
+          return that;
+        },
+        mousedown: function() {
+          return that;
+        }
+      };
+      return that;
+    };
+
     return {
-      rect: function() {
-      },
-      circle: function() {
-        return {drag: function() {
-        }, click: function() {
-        }, attr: function() {
-        }};
-      },
+      rect: mockRaphaelObject,
+      circle: mockRaphaelObject,
       clear: function() {
       },
-      path: function() {
-        var that = {
-          attr: function() {
-            return that;
-          },
-          drag: function() {
-          },
-          click: function() {
-          },
-          mousedown: function() {
-          }
-        };
-        return that;
-      },
-      text: function() {
-      }
+      path: mockRaphaelObject,
+      text: mockRaphaelObject
     };
   };
 
@@ -118,7 +116,19 @@ describe('corespring', function() {
         ]);
       });
 
-      it('points on same domain position get stacked on each other', function() {
+      it('non intersecting points go on the same plane', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "PF");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
+          { type: 'point', pointType: 'full', domainPosition: 4, rangePosition: 0 }
+        ]);
+      });
+
+      it('point intersecting with point goes above', function() {
         nodeScope.graphModel = testModel.data.model;
         nodeScope.responseModel = {};
         scope.$digest();
@@ -130,29 +140,124 @@ describe('corespring', function() {
         ]);
       });
 
-      it('points on same domain position get stacked on each other', function() {
-        nodeScope.graphModel = testModel.data.model;
-        nodeScope.responseModel = {};
-        scope.$digest();
-        scope.addElement(3, "PF");
-        scope.addElement(3, "PF");
-        expect(nodeScope.responseModel).toEqual([
-          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
-          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 1 }
-        ]);
-      });
-
-      it('points go below other interaction types', function() {
+      it('point intersecting with line goes above', function() {
         nodeScope.graphModel = testModel.data.model;
         nodeScope.responseModel = {};
         scope.$digest();
         scope.addElement(3, "LEE");
         scope.addElement(3, "PF");
-        scope.addElement(3, "PF");
         expect(nodeScope.responseModel).toEqual([
-          { type: 'line', domainPosition: 3, rangePosition: 0, size: 1, leftPoint: 'empty', rightPoint: 'empty' },
-          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 1 },
-          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 2 }
+          { type: 'line', domainPosition: 3, rangePosition: 0, size: nodeScope.responseModel[0].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 1 }
+        ]);
+      });
+
+      it('point intersecting with ray goes above', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "RFP");
+        scope.addElement(4, "PF");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'ray', domainPosition: 3, rangePosition: 0, pointType: 'full', direction: 'positive' },
+          { type: 'point', pointType: 'full', domainPosition: 4, rangePosition: 1 }
+        ]);
+      });
+
+      it('non intersecting lines go on the same plane', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(6, "LEE");
+        scope.addElement(3, "LEE");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'line', domainPosition: 6, rangePosition: 0, size: nodeScope.responseModel[0].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'line', domainPosition: 3, rangePosition: 0, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('line intersecting with point goes above', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(3, "LEE");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
+          { type: 'line', domainPosition: 3, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' },
+
+        ]);
+      });
+
+      it('line intersecting with line goes above', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(4, "LEE");
+        scope.addElement(3, "LEE");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'line', domainPosition: 4, rangePosition: 0, size: nodeScope.responseModel[0].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'line', domainPosition: 3, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('line intersecting with ray goes above', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(1, "RFP");
+        scope.addElement(3, "LEE");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'ray', domainPosition: 1, rangePosition: 0, pointType: 'full', direction: 'positive' },
+          { type: 'line', domainPosition: 3, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('non intersecting lines go on the same plane', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "RFP");
+        scope.addElement(2, "RFN");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'ray', domainPosition: 3, rangePosition: 0, pointType: 'full', direction: 'positive' },
+          { type: 'ray', domainPosition: 2, rangePosition: 0, pointType: 'full', direction: 'negative' }
+        ]);
+      });
+
+      it('ray intersecting with point goes above', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(1, "RFP");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
+          { type: 'ray', domainPosition: 1, rangePosition: 1, pointType: 'full', direction: 'positive' }
+        ]);
+      });
+
+      it('ray intersecting with line goes above', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "LEE");
+        scope.addElement(1, "RFP");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'line', domainPosition: 3, rangePosition: 0, size: nodeScope.responseModel[0].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'ray', domainPosition: 1, rangePosition: 1, pointType: 'full', direction: 'positive' }
+        ]);
+      });
+
+      it('ray intersecting with ray goes above', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "RFP");
+        scope.addElement(1, "RFP");
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'ray', domainPosition: 3, rangePosition: 0, pointType: 'full', direction: 'positive' },
+          { type: 'ray', domainPosition: 1, rangePosition: 1, pointType: 'full', direction: 'positive' }
         ]);
       });
     });

@@ -222,6 +222,7 @@ var interactiveGraph = [
 
           var defaultLineModel = {
             "type": "line",
+            "size": scope.graph.getUnitSize(),
             "domainPosition": domainPosition,
             "rangePosition": newRangePosition,
             "leftPoint": "empty",
@@ -484,7 +485,7 @@ var interactiveGraph = [
 
           scope.responsemodel = _.cloneDeep(model.config.initialElements) || [];
           rebuildGraph();
-          scope.selectedType = model.config.initialType;
+          scope.selectedType = scope.selectedType || model.config.initialType;
           scope.selectedGroup = _.find(_.keys(groups), function(g) {
             return _.contains(groups[g], scope.selectedType);
           });

@@ -35,7 +35,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
 
     this.coordsToDomainRange = function(x, y) {
       var dp = this.horizontalAxis.scale.invert(x - options.margin.left);
-      dp = this.horizontalAxis.scale.snapToTicks(this.horizontalAxis.ticks, dp, options.snapPerTick - 1);
+      dp = this.horizontalAxis.scale.snapToTicks(this.horizontalAxis.ticks, dp, options.snapPerTick);
       var rp = this.horizontalAxis.scale.invert(options.verticalAxisLength - y);
       return [dp, rp];
     };
@@ -122,6 +122,13 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       _.each(that.elements, function(element) {
         element.draw(that.paper);
       });
+    };
+
+    this.getUnitSize = function() {
+      var domainSize = Math.abs(options.domain[1] - options.domain[0]);
+      var dp = domainSize / (options.tickFrequency - 1);
+
+      return dp;
     };
 
     this.addHorizontalAxis = function(position, axisOptions) {
