@@ -152,7 +152,7 @@ var interactiveGraph = [
       template: [
         '<div class="interactive-graph">',
         '  <div class="undo-button-row" ng-show="editable">',
-        '    <btn class="btn btn-default" ng-click="undo()">Undo</btn>',
+        '    <btn class="btn btn-default" ng-hide="options.undoDisabled" ng-click="undo()">Undo</btn>',
         '    <btn class="btn btn-default" ng-click="startOver()">Start over</btn>',
         '  </div>',
         '  <div class="clearfix"></div>',

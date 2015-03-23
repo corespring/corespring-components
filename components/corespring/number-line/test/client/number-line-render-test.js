@@ -60,25 +60,31 @@ describe('corespring', function() {
   };
 
   window.Raphael = function() {
+    var mockRaphaelObject = function() {
+      var that = {
+        attr: function() {
+          return that;
+        },
+        drag: function() {
+          return that;
+        },
+        click: function() {
+          return that;
+        },
+        mousedown: function() {
+          return that;
+        }
+      };
+      return that;
+    };
+
     return {
-      rect: function() {
-      },
-      circle: function() {
-        return {drag: function() {}, click: function() {}, attr: function() {}};
-      },
+      rect: mockRaphaelObject,
+      circle: mockRaphaelObject,
       clear: function() {
       },
-      path: function() {
-        var that ={
-          attr: function() { return that; },
-          drag: function() {},
-          click: function() {},
-          mousedown: function() {}
-        };
-        return that;
-      },
-      text: function() {
-      }
+      path: mockRaphaelObject,
+      text: mockRaphaelObject
     };
   };
 

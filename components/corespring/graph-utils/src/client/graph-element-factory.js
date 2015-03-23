@@ -433,6 +433,10 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
 
           var text = paper.text(options.margin.left + x, options.height - options.margin.bottom, label);
+          if (options.labelCursor) {
+            text.attr('cursor', options.labelCursor);
+          }
+
           text.click(function(event) {
             if (_.isFunction(options.tickLabelClick)) {
               options.tickLabelClick(tick, x);

@@ -61,10 +61,12 @@ var main = [
         scope.defaults = scope.data.defaultData.model.config;
         ChoiceTemplates.extendScope(scope, 'corespring-number-line');
         scope.configGraphOptions = {
-          startOverClearsGraph: true
+          startOverClearsGraph: true,
+          undoDisabled: true
         };
         scope.sampleGraphOptions = {
-          placeholderForEmptyTickLabel: "N/A"
+          placeholderForEmptyTickLabel: "N/A",
+          labelCursor: 'pointer'
         };
         scope.initialView = {
           editable: true,
