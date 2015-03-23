@@ -137,11 +137,11 @@ function CompactLayout(initialConfig, layoutRunner) {
 
   this.start = function(){
     this.runner.start(this);
-  }
+  };
 
   this.cancel = function(){
     this.runner.cancel();
-  }
+  };
 
   this.start();
 }
@@ -216,7 +216,7 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
 
   this.cancel = function(){
     this.runner.cancel();
-  }
+  };
 }
 
 var main = ['$interval',
@@ -692,7 +692,7 @@ var category = [function() {
       onDrop:'onDropCallback',
       onOver:'onOverCallback',
       onOut: 'onOutCallback'
-    }
+    };
   }
 
   return {
