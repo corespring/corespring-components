@@ -12,43 +12,36 @@
   }
 }
 
-.roundBorder(){
-  border-style: solid;
-  border-radius: 8px;
-  border-width: 2px;
-}
-
-/* seems like it is not used
-.tools-area{
-  background-color: #0078a3;
-}
-*/
-
-
-/* seems not to be used. but if, it has to be localised
-body , .modal{
-  .choice{
+body, .modal {
+  .choice-corespring-dnd-categorize {
     z-index: 1000;
     float: left;
-    .edit-controls{
+    border-color: #C2C2C2;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+
+    .edit-controls {
       display: none;
     }
-    .delete-after-placing{
+
+    .delete-after-placing {
       display: none;
     }
-    .shell{
+
+    .shell {
       background-color: white;
-      border-radius: 8px;
-      padding:10px;
-      img{
-        max-width:100%;
+      border-radius: 4px;
+      padding: 10px;
+      img {
+        max-width: 100%;
         display: block;
       }
     }
   }
 }
-*/
 
+//*/
 
 .component-placeholder {
   .render-dnd-categorize {
@@ -72,35 +65,36 @@ body , .modal{
   @incorrect-color: #EEA236;
   @partial-color: #3A87AD;
   @learn-more-color: #3A87AD;
-  @see-correct-color:#3C763D;
+  @see-correct-color: #3C763D;
 
   //without this fixed width
-  //the config panel is not rendered properly
+  //the config panel is not
+  //rendered properly
   width: @component-width;
 
-  .choice-area-label{
+  .choice-area-label {
     font-size: 12px;
     font-style: italic;
   }
 
-  .correct-answer{
-
+  .correct-answer {
     border-color: @learn-more-color;
-    border-width: 2px;
+    border-width: 1px;
     float: none;
 
-    .panel-heading{
-
+    .panel-heading {
       background-color: @learn-more-color;
       padding: 3px 15px;
-      .toggle{
+
+      .toggle {
         display: inline-block;
         font-family: FontAwesome;
         font-size: 30px;
         color: white;
         font-weight: normal
       }
-      .label{
+
+      .label {
         font-size: 16px;
         color: white;
         font-weight: normal
@@ -110,32 +104,42 @@ body , .modal{
 
   .correct-answer {
     border-color: @see-correct-color;
+
     .panel-heading {
       background-color: @see-correct-color;
-      height:45px;
+      height: 45px;
     }
   }
 
-  .categories{
+  .categories {
     .clearfix();
     width: 100%;
-    .row{
-      margin:0;
-      .category{
+
+    .row {
+      margin: 0 0 2px 0;
+
+      .category {
         position: relative;
         vertical-align: top;
         margin-right: 20px;
+        background-color: white;
+        display: inline-block;
+
         &:last-child {
           margin-right: 0px;
         }
+
         .clearfix();
-        .label-input{
+
+        .label-input {
           margin: 0;
           padding-bottom: 2px;
         }
-        .delete-after-placing{
+
+        .delete-after-placing {
           display: none;
         }
+
         .edit-controls {
           position: absolute;
           z-index: 10000;
@@ -144,10 +148,12 @@ body , .modal{
           right: 2px;
           background: rgba(255, 255, 255, 0.7);
           border-radius: 8px;
-          .edit-icon-button,.delete-icon-button {
+
+          .edit-icon-button, .delete-icon-button {
             display: inline-block;
             margin-left: 3px;
             margin-right: 3px;
+
             i {
               font-size: 15px;
               color: #575757;
@@ -156,74 +162,83 @@ body , .modal{
 
         }
 
-        background-color: white;
-        display: inline-block;
-        &.draggedOver{
+        &.draggedOver {
           .categorized.choices {
             background-color: rgb(129, 129, 129);
           }
         }
-        .categorized.choices{
+
+        .categorized.choices {
           min-height: 40px;
           padding: 23px 8px 8px 8px;
           border-color: rgb(129, 129, 129);
           border-style: solid;
           border-radius: 8px;
-          border-width: 2px;
-          .choice-container{
+          border-width: 1px;
+
+          .choice-container {
             .clearfix();
             background-color: #fff;
             text-align: initial;
             position: relative;
             min-height: 20px;
-            &.draggedOver{
+
+            &.draggedOver {
               border-color: rgb(129, 129, 129);
               border-style: dashed;
               border-radius: 8px;
-              border-width: 2px;
+              border-width: 1px;
               background-color: white;
             }
-            .choice{
+
+            .choice-corespring-dnd-categorize {
               padding: 0;
-              .edit-controls{
+              margin: 2px 0;
+              width: 100%;
+              display: inline-block;
+
+              .edit-controls {
                 padding: 0;
                 top: 2px;
                 display: block;
-                .edit-icon-button{
+
+                .edit-icon-button {
                   display: none;
                 }
+
                 .delete-icon-button {
-                  i:before{
+                  i:before {
                     font-family: "FontAwesome";
                     content: "\f00d"; // close
                   }
                 }
               }
-              &.correct{
-                .shell{
+
+              &.correct {
+                .shell {
                   text-align: initial;
-                  border-radius: 8px;
+                  border-radius: 4px;
                   border: 1px solid #3c763d;
-                  padding:5px;
+                  padding: 5px;
                 }
               }
-              &.incorrect{
-                .shell{
+
+              &.incorrect {
+                .shell {
                   text-align: initial;
-                  border-radius: 8px;
-                  border: 1px solid  #eea236;
-                  padding:5px;
+                  border-radius: 4px;
+                  border: 1px solid #eea236;
+                  padding: 5px;
                 }
               }
-              width:100%;
-              display: inline-block;
-              .shell{
+
+              .shell {
                 border-color: #C2C2C2;
                 border-style: solid;
-                border-width: 2px;
+                border-width: 1px;
                 border-radius: 4px;
                 text-align: initial;
-                padding:5px;
+                padding: 5px;
               }
             }
           }
@@ -232,23 +247,28 @@ body , .modal{
     }
   }
 
-  .container-choices{
+  .container-choices {
     .clearfix();
     position: relative;
     z-index: 0;
-    .choice{
+
+    .choice-corespring-dnd-categorize {
       .clearfix();
       text-align: start;
       padding: 0;
       margin: 0;
       border-color: #C2C2C2;
       border-style: solid;
-      border-width: 2px;
+      border-width: 1px;
       border-radius: 4px;
       min-height: 40px;
-      .editor{
-        width:100%;
+      -webkit-user-select: none;
+      float: left;
+
+      .editor {
+        width: 100%;
       }
+
       .edit-controls {
         .clearfix();
         display: block;
@@ -258,33 +278,40 @@ body , .modal{
         right: 2px;
         background: rgba(255, 255, 255, 0.7);
         margin: 0;
-        .edit-icon-button,.delete-icon-button {
+
+        .edit-icon-button, .delete-icon-button {
           display: inline-block;
           margin-left: 3px;
           margin-right: 3px;
-          float:right;
+          float: right;
+
           i {
             font-size: 15px;
             color: #575757;
           }
         }
+
         .delete-icon-button {
           i:before {
             content: "\f014"; // trash o
           }
         }
-        .editing{
-          .edit-icon-button{
+
+        .editing {
+          .edit-icon-button {
             display: none;
           }
         }
-        .delete-after-placing{
-          float:left;
+
+        .delete-after-placing {
+          float: left;
+
           label {
             padding-left: 10px;
             font-weight: initial;
           }
-          input{
+
+          input {
             margin-right: 5px;
           }
         }
@@ -297,25 +324,26 @@ body , .modal{
         border-color: #C2C2C2;
         padding-top: 3px;
         padding-left: 7px;
-        .checkbox-input .checkbox-toggle{
+
+        .checkbox-input .checkbox-toggle {
           font-size: 16px;
         }
       }
 
-      -webkit-user-select: none;
-      float: left;
-      .shell{
+      .shell {
         margin: 4px;
         padding: 0;
-        border-radius: 0px;
+        border-radius: 4px;
         min-height: 22px;
-        img{
-          max-width:100%;
+
+        img {
+          max-width: 100%;
           display: block;
         }
-        .description{
+
+        .description {
           padding: 10px;
-          width:100%;
+          width: 100%;
         }
       }
     }
@@ -325,31 +353,30 @@ body , .modal{
     margin-top: 20px;
   }
 
-  .feedback.correct-answer{
+  .feedback.correct-answer {
     .panel-body {
       padding: 0;
     }
   }
 }
 
-
 .config-dnd-categorize {
 
   .rounded-inputs;
 
-  .row{
-    margin-left:0;
+  .row {
+    margin-left: 0;
     margin-right: 0;
     margin-bottom: 10px;
   }
 
-  .player-col{
-    width:570px;
+  .player-col {
     display: inline;
-    float:left;
+    float: left;
   }
 
-  .settings-col{
+  .settings-col {
+    padding-left: 20px;
     padding-top: 58px;
     display: inline;
     float: left;
@@ -379,36 +406,36 @@ body , .modal{
       }
     }
   }
-  .scoring-panel{
-    .partial-scoring{
-      .category-scoring{
+  .scoring-panel {
+    .partial-scoring {
+      .category-scoring {
         .label {
           color: black;
           font-size: 14px;
           padding: 0;
         }
-        .scenario{
+
+        .scenario {
           .clearfix();
-          span{
+          span {
             display: inline-block;
             float: left;
           }
-          input{
+          input {
             display: inline-block;
             float: left;
             width: 45px;
             margin-left: 10px;
             margin-right: 10px;
           }
-          .remove-btn{
+          .remove-btn {
             margin-left: 10px;
           }
         }
-        .add-scoring-scenario{
+        .add-scoring-scenario {
           display: block;
         }
       }
     }
   }
-
 }
