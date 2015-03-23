@@ -140,12 +140,39 @@ describe('drag and drop inline', function() {
       .call(done);
   });
 
-  it("shows correct answer area if answer is incorrect", function(done){
-    browser
-      .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.correct-answer-area-holder', regressionTestRunnerGlobals.defaultTimeout)
-      .call(done);
+  describe('correct answer area', function(){
+    it("is shown, if answer is incorrect", function(done){
+      browser
+        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
+        .submitItem()
+        .waitFor('.see-solution', regressionTestRunnerGlobals.defaultTimeout)
+        .isVisible('.see-solution')
+        .call(done);
+    });
+
+    it("is hidden, if answer is correct", function(done){
+      browser
+        .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+        .submitItem()
+        .waitFor('.see-solution', regressionTestRunnerGlobals.defaultTimeout)
+        .isVisible('.see-solution', function(err,res){
+          expect(res).toBe(false);
+        })
+        .call(done);
+    });
+
+    it("renders correct answer if answer is incorrect", function(done){
+      browser
+        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
+        .submitItem()
+        .waitFor('.see-solution', regressionTestRunnerGlobals.defaultTimeout)
+        .click('.see-solution .panel-heading')
+        .waitFor('.see-solution .answer-area-inline', regressionTestRunnerGlobals.defaultTimeout)
+        .isVisible(selectedChoice('c_2'), function(err,res){
+          expect("correct choice rendered: " + res).toBe("correct choice rendered: true");
+        })
+        .call(done);
+    });
   });
 
   describe("math", function(){

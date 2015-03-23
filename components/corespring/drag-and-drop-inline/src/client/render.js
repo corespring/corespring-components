@@ -23,8 +23,11 @@ var main = [
         MathJaxService.parseDomForMath(10, element[0]);
       }
 
-      function throttle(fn){
-        return _.throttle(fn, 500, {trailing: true, leading: false});
+      function throttle(fn) {
+        return _.throttle(fn, 500, {
+          trailing: true,
+          leading: false
+        });
       }
 
       function withoutPlacedChoices() {
@@ -83,7 +86,9 @@ var main = [
             existingScope.$destroy();
           }
         }
-        var $answerArea = $holder.html(scope.model.answerAreaXhtml);
+        var answerHtml = scope.model.answerAreaXhtml;
+        var answerArea = '<div scope-forwarder-csdndi="">' + answerHtml + '</div>';
+        var $answerArea = $holder.html(answerArea);
         $compile($answerArea)(scope);
         renderMath();
       });
@@ -157,6 +162,9 @@ var main = [
           };
           solutionScope.classForChoice = function() {
             return "";
+          };
+          solutionScope.shouldShowNoAnswersWarning = function(){
+            return false;
           };
           solutionScope.cleanLabel = scope.cleanLabel;
           _.each(scope.correctResponse, function(v, k) {
@@ -432,7 +440,7 @@ var answerAreaInline = ['$interval',
             scope.renderScope.landingPlaceChoices[scope.answerAreaId].splice(index, 1);
           };
 
-          scope.showNoAnswersWarning = function() {
+          scope.shouldShowNoAnswersWarning = function() {
             return renderScope.response && renderScope.landingPlaceChoices[scope.answerAreaId].length === 0;
           };
 
@@ -444,8 +452,9 @@ var answerAreaInline = ['$interval',
         });
       },
       template: [
-        '<div class="answer-area-inline">',
+        '<div class="answer-area-inline" ng-switch="shouldShowNoAnswersWarning()">',
         '  <div ui-sortable="targetSortableOptions()"',
+        '    ng-switch-default',
         '    ng-model="renderScope.landingPlaceChoices[answerAreaId]"',
         '    ng-class="renderScope.dragAndDropScopeId"',
         '    data-drop="true" ',
@@ -462,7 +471,7 @@ var answerAreaInline = ['$interval',
         '      </div>',
         '    </div>',
         '  </div>',
-        '  <div class="empty-answer-area-warning" ng-if="showNoAnswersWarning()"><i class="fa fa-exclamation-triangle"></i></div>',
+        '  <div class="empty-answer-area-warning" ng-switch-when="true"><i class="fa fa-exclamation-triangle"></i></div>',
         '</div>'
       ].join("\n")
     };

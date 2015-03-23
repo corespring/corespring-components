@@ -22,35 +22,41 @@ var main = [
           return ComponentImageService;
         };
 
-        $scope.extraFeaturesForAnswerArea = {
+        $scope.extraFeaturesForChoices = {
           definitions: [
-            new WiggiMathJaxFeatureDef(),
-            new WiggiLinkFeatureDef(),
-            {
-              name: 'answer-area-inline-csdndi',
-              title: 'Add Answer Blank',
-              draggable: false,
-              compile: true,
-              addToEditor: function(editor, addContent) {
-                var id = $scope.addAnswerArea();
-                addContent($('<answer-area-inline-csdndi id="' + id + '"/>'));
-              },
-              deleteNode: function($node, services) {
-                var id = $node.attr('answer-area-id');
-                $scope.removeAnswerArea(id);
-              },
-              initialise: function($node, replaceWith) {
-                var id = $node.attr('id');
-                return replaceWith($('<div config-answer-area-inline-csdndi answer-area-id="' + id + '"/>'));
-              },
-              onDblClick: function($node, $scope, editor) {},
-              editInstance: function($node, $scope, editor) {},
-              getMarkUp: function($node) {
-                var id = $node.attr('answer-area-id');
-                return '<answer-area-inline-csdndi id="' + id + '"/>';
-              }
-            }]
+            new WiggiMathJaxFeatureDef()
+          ]
         };
+
+          $scope.extraFeaturesForAnswerArea = {
+              definitions: [
+                  new WiggiMathJaxFeatureDef(),
+                  new WiggiLinkFeatureDef(),
+                  {
+                      name: 'answer-area-inline-csdndi',
+                      title: 'Add Answer Blank',
+                      draggable: false,
+                      compile: true,
+                      addToEditor: function(editor, addContent) {
+                          var id = $scope.addAnswerArea();
+                          addContent($('<answer-area-inline-csdndi id="' + id + '"/>'));
+                      },
+                      deleteNode: function($node, services) {
+                          var id = $node.attr('answer-area-id');
+                          $scope.removeAnswerArea(id);
+                      },
+                      initialise: function($node, replaceWith) {
+                          var id = $node.attr('id');
+                          return replaceWith($('<div config-answer-area-inline-csdndi answer-area-id="' + id + '"/>'));
+                      },
+                      onDblClick: function($node, $scope, editor) {},
+                      editInstance: function($node, $scope, editor) {},
+                      getMarkUp: function($node) {
+                          var id = $node.attr('answer-area-id');
+                          return '<answer-area-inline-csdndi id="' + id + '"/>';
+                      }
+                  }]
+          };
       }],
 
       link: function(scope, element, attrs) {
@@ -354,7 +360,7 @@ var main = [
           '            mini-wiggi-wiz=""',
           '            ng-model="choice.label"',
           '            dialog-launcher="external"',
-          '            features="extraFeatures"',
+          '            features="extraFeaturesForChoices"',
           '            parent-selector=".modal-body"',
           '            image-service="imageService()">',
           '        </div>',

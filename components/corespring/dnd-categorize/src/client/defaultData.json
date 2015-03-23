@@ -1,0 +1,64 @@
+{
+  "componentType": "corespring-dnd-categorize",
+  "title": "[Drag and Drop Question Name]",
+  "correctResponse": {
+    "cat_1": [],
+    "cat_2": []
+  },
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": false,
+  "partialScoring" : {},
+  "model": {
+    "categories": [
+      {
+        "id": "cat_1",
+        "hasLabel": true,
+        "label": "Category 1",
+        "layout": "vertical"
+      },
+      {
+        "id": "cat_2",
+        "hasLabel": true,
+        "label": "Category 2",
+        "layout": "vertical"
+      }
+    ],
+    "choices": [
+      {
+        "id": "choice_1",
+        "label": "a",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_2",
+        "label": "b",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_3",
+        "label": "c",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_4",
+        "label": "d",
+        "labelType": "text",
+        "moveOnDrag": false
+      }
+    ],
+    "config": {
+      "shuffle": false,
+      "choiceAreaLayout": "vertical",
+      "answerAreaPosition": "below",
+      "maxCategoriesPerRow" : 2
+    }
+  },
+  "weight": 1
+}

@@ -1,5 +1,6 @@
 @import '../../../../../less/common';
 
+@component-width: 600px;
 @max-width-choice-content: 421px;
 @max-width-height-image: 200px;
 @line-height-answer-area: 250%;
@@ -13,15 +14,15 @@
 
 .pad-image-in-choice() {
   img {
-    padding: 10px 0;
+    margin: 10px 0;
   }
 }
 
 .component-placeholder {
   .render-csdndi {
     //the component takes the full width of the player
-    width: 550px;
-    max-width: 550px;
+    width: @component-width;
+    max-width: @component-width;
     margin: 10px;
 
     .undo-start-over {
@@ -75,12 +76,8 @@
       color: @warning-color;
       font-size: 24px;
       padding-left: 25px;
+      padding-right: 25px;
       height: 29px;
-      position: relative;
-
-      i {
-        position: absolute;
-      }
     }
 
     .selected-choice {
