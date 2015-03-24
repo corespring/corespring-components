@@ -35,7 +35,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
 
     this.coordsToDomainRange = function(x, y) {
       var dp = this.horizontalAxis.scale.invert(x - options.margin.left);
-      dp = this.horizontalAxis.scale.snapToTicks(this.horizontalAxis.ticks, dp, options.snapPerTick);
+      dp = this.horizontalAxis.scale.snapToTicks(this.horizontalAxis.ticks, dp, options.snapPerTick + 1);
       var rp = this.horizontalAxis.scale.invert(options.verticalAxisLength - y);
       return [dp, rp];
     };
