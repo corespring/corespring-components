@@ -13,7 +13,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
 
     options = options || {};
     _.defaults(options, {
-      margin: {top: 30, right: 30, bottom: 30, left: 30},
+      margin: {top: 0, right: 30, bottom: 30, left: 30},
       axisHeight: 20,
       domain: [0, 20],
       range: [0, 20],
