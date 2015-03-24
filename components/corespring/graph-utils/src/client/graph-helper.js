@@ -49,7 +49,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       }
 
       if (!_.isUndefined(newOptions.maxNumberOfPoints) && newOptions.maxNumberOfPoints !== options.maxNumberOfPoints) {
-        options.verticalAxisLength = newOptions.maxNumberOfPoints * PLANE_SIZE;
+        options.verticalAxisLength = 3 * PLANE_SIZE;
         options.height = (options.verticalAxisLength + options.margin.top + options.margin.bottom) + options.axisHeight;
 
         $(element).width(options.width);
@@ -69,7 +69,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       }
 
       options = _.extend(options, newOptions);
-      options.range = [0, Number(options.maxNumberOfPoints) || 3];
+      options.range = [0, 4];
       if (that.horizontalAxis) {
         that.horizontalAxis.reCalculate();
       }
