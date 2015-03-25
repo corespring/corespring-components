@@ -168,8 +168,8 @@ describe('drag and drop inline', function() {
         .submitItem()
         .waitFor('.see-solution')
         .click('.see-solution .panel-heading')
-        .waitFor('.answerExpanded')
-        .getHTML('.correct-answer-area-holder', function(err,res){
+        .waitFor('.correct-answer-area-holder .answer-area-inline')
+        .getHTML('.correct-answer-area-holder .answer-area-inline', function(err,res){
           console.log("HTML " + res);
         })
         .waitFor(selectedChoice('c_2'), function(err){
