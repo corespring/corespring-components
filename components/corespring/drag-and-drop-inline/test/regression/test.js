@@ -43,7 +43,7 @@ describe('drag and drop inline', function() {
 
   beforeEach(function() {
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
+      .timeouts("implicit", regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
       .waitFor(landingPlace('aa_1'));
   });
@@ -168,6 +168,7 @@ describe('drag and drop inline', function() {
         .submitItem()
         .waitFor('.see-solution')
         .click('.see-solution .panel-heading')
+        .waitFor('.correct-answer-area-holder .answer-area-inline')
         .waitFor(selectedChoice('c_2'), function(err){
           expect(err).toBe(undefined, "Expected correct choice c_2 to exist");
         })
