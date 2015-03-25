@@ -32,7 +32,7 @@
             {"id": "aa_1"},
             {"id": "aa_2"}
           ],
-          "answerAreaXhtml": "​<span mathjax=''>\\(w^1=15\\)</span>​<answer-area-inline-csdndi id='aa_1'></answer-area-inline-csdndi> and second area <answer-area-inline-csdndi id='aa_2'></answer-area-inline-csdndi>",
+          "answerAreaXhtml": "<span mathjax=''>\\(w^1=15\\)</span><answer-area-inline-csdndi id='aa_1'></answer-area-inline-csdndi> and second area <answer-area-inline-csdndi id='aa_2'></answer-area-inline-csdndi>",
           "config": {
             "orientation": "vertical",
             "shuffle": false
