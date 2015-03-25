@@ -130,6 +130,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       var thatLI = this;
       this.selected = false;
       this.model = lineModel;
+      this.options = lineOptions;
       function updateLineModel() {
         lineModel.domainPosition = thatLI.p1.model.domainPosition;
         lineModel.rangePosition = thatLI.p1.model.rangePosition;
@@ -273,6 +274,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
       this.selected = false;
       this.model = lineModel;
+      this.options = lineOptions;
 
       function updateLineModel() {
         lineModel.domainPosition = thatLI.p1.model.domainPosition;
@@ -448,7 +450,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
           var snapPerTick = axisOptions.snapPerTick + 1;
           var d = Math.abs(thatHA.ticks[idx + 1] - thatHA.ticks[idx]) / snapPerTick;
 
-          if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 2) {
+          if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 1) {
             for (var i = 1; i < snapPerTick; i++) {
               thatHA.elements.push(paper.line(options.margin.left + scale(tick + d * i), y - tickSize / 4, options.margin.left + scale(tick + d * i), y + tickSize / 4));
             }

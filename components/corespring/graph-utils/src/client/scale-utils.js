@@ -129,7 +129,18 @@ exports.service = [ '$log', function($log) {
   }
 
   function scale_ticks(domain, m) {
-    return range.apply(this, scale_tickRange(domain, m));
+    var extent = scaleExtent(domain);
+    var span = extent[1] - extent[0];
+    var step = span / m;
+
+    var ticks = [];
+    var tick = extent[0];
+    while (tick < extent[1]) {
+      ticks.push(tick);
+      tick += step;
+    }
+    ticks.push(extent[1]);
+    return ticks;
   }
 
   var scale_linearFormatSignificant = {s: 1, g: 1, p: 1, r: 1, e: 1};
