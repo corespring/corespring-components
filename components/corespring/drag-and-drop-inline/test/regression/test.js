@@ -162,14 +162,13 @@ describe('drag and drop inline', function() {
         .call(done);
     });
 
-    it("renders correct answer if answer is incorrect", function(done){
+    it.only("renders correct answer if answer is incorrect", function(done){
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
         .waitFor('.see-solution')
         .click('.see-solution .panel-heading')
-        .pause(1000)
-        .waitFor('.correct-answer-area-holder .answer-area-inline')
+        .waitFor('.answerExpanded')
         .waitFor(selectedChoice('c_2'), function(err){
           expect(err).toBe(undefined, "Expected correct choice c_2 to exist, timeout: " + browser.options.waitforTimeout + " err:" + err);
         })
