@@ -90,7 +90,12 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             options.selectionChanged();
           } else {
             if (pointOptions.onMoveFinished) {
-              pointOptions.onMoveFinished('point', pointModel.domainPosition, pointModel.rangePosition);
+              pointOptions.onMoveFinished({
+                type: 'point',
+                pointType: pointOptions.pointType,
+                domainPosition: pointModel.domainPosition,
+                rangePosition: pointModel.rangePosition
+              });
             }
           }
           cancelEvent(ev);
@@ -153,10 +158,20 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             var d2 = thatLI.p2.model.domainPosition;
             thatLI.p2.moveTo(d1);
             thatLI.p1.moveTo(d2);
+            var temp = lineModel.leftPoint;
+            lineModel.leftPoint = lineModel.rightPoint;
+            lineModel.rightPoint = temp;
             updateLineModel();
           }
           if (lineOptions.onMoveFinished) {
-            lineOptions.onMoveFinished('line', thatLI.p1.model.domainPosition, thatLI.p1.model.rangePosition);
+            lineOptions.onMoveFinished({
+              type: 'line',
+              leftPoint: lineOptions.leftPoint,
+              rightPoint: lineOptions.rightPoint,
+              domainPosition: thatLI.p1.model.domainPosition,
+              rangePosition: thatLI.p1.model.rangePosition,
+              size: lineModel.size
+            });
           }
         },
         onSelectionChanged: function(sel) {
@@ -233,7 +248,14 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
               options.selectionChanged();
             } else {
               if (lineOptions.onMoveFinished) {
-                lineOptions.onMoveFinished('line', thatLI.p1.model.domainPosition, thatLI.p1.model.rangePosition);
+                lineOptions.onMoveFinished({
+                  type: 'line',
+                  leftPoint: lineOptions.leftPoint,
+                  rightPoint: lineOptions.rightPoint,
+                  domainPosition: thatLI.p1.model.domainPosition,
+                  rangePosition: thatLI.p1.model.rangePosition,
+                  size: lineModel.size
+                });
               }
             }
             cancelEvent(ev);
@@ -293,7 +315,13 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         },
         onMoveFinished: function() {
           if (lineOptions.onMoveFinished) {
-            lineOptions.onMoveFinished('ray', thatLI.p1.model.domainPosition, thatLI.p1.model.rangePosition);
+            lineOptions.onMoveFinished({
+              type: 'ray',
+              pointType: lineOptions.pointType,
+              domainPosition: thatLI.p1.model.domainPosition,
+              rangePosition: thatLI.p1.model.rangePosition,
+              direction: lineOptions.direction
+            });
           }
         },
         onSelectionChanged: function(sel) {

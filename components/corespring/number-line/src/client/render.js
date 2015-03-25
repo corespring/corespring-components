@@ -381,9 +381,9 @@ var interactiveGraph = [
             if (!_.isUndefined(o.isCorrect)) {
               options.fillColor = options.strokeColor = o.isCorrect ? scope.colors.correct : scope.colors.incorrect;
             }
-            options.onMoveFinished = function(type, domainPosition) {
+            options.onMoveFinished = function(element) {
               var lastMovedElement = _.find(scope.responsemodel, function(e) {
-                return e.domainPosition === domainPosition && e.type === type;
+                return _.isEqual(e, element);
               });
               rebuildGraph(lastMovedElement);
               scope.$apply(function() {
