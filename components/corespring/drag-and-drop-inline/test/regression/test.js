@@ -167,9 +167,9 @@ describe('drag and drop inline', function() {
         .submitItem()
         .waitFor('.see-solution', regressionTestRunnerGlobals.defaultTimeout)
         .click('.see-solution .panel-heading')
-        .waitFor('.see-solution .answer-area-inline', regressionTestRunnerGlobals.defaultTimeout)
-        .isVisible(selectedChoice('c_2'), function(err,res){
-          expect("correct choice rendered: " + res).toBe("correct choice rendered: true");
+        .waitFor(selectedChoice('c_2'), regressionTestRunnerGlobals.defaultTimeout, function(err){
+          var msg = "Expected to find correct choice in see-solution: ";
+          expect(msg + err).toBe(msg + undefined);
         })
         .call(done);
     });
