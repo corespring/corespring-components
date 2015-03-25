@@ -169,6 +169,7 @@ describe('drag and drop inline', function() {
         .waitFor('.see-solution')
         .click('.see-solution .panel-heading')
         .waitFor('.correct-answer-area-holder .answer-area-inline')
+        .pause(3000)
         .getHTML('.correct-answer-area-holder .answer-area-inline', function(err,res){
           console.log("HTML " + res);
         })
