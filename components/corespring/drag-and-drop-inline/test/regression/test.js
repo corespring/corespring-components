@@ -169,6 +169,9 @@ describe('drag and drop inline', function() {
         .waitFor('.see-solution')
         .click('.see-solution .panel-heading')
         .waitFor('.answerExpanded')
+        .getHTML('.correct-answer-area-holder', function(err,res){
+          console.log("HTML " + res);
+        })
         .waitFor(selectedChoice('c_2'), function(err){
           expect(err).toBe(undefined, "Expected correct choice c_2 to exist, timeout: " + browser.options.waitforTimeout + " err:" + err);
         })
