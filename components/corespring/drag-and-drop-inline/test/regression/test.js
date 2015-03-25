@@ -170,7 +170,7 @@ describe('drag and drop inline', function() {
         .click('.see-solution .panel-heading')
         .waitFor('.correct-answer-area-holder .answer-area-inline')
         .waitFor(selectedChoice('c_2'), function(err){
-          expect(err).toBe(undefined, "Expected correct choice c_2 to exist");
+          expect(err).toBe(undefined, "Expected correct choice c_2 to exist, timeout: " + browser.options.waitforTimeout + " err:" + err);
         })
         .call(done);
     });
