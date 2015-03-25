@@ -10,7 +10,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('drag and drop inline', function() {
+describe('drag and drop inline', function() {
 
   "use strict";
 
@@ -35,9 +35,9 @@ describe.only('drag and drop inline', function() {
   };
 
   browser.dragAndDropWithOffset = function(fromSelector, toSelector){
-    return this.moveToObject(fromSelector, 4, 4)
-      .buttonDown()
-      .moveToObject(toSelector, 4, 4)
+    return this.moveToObject(fromSelector, 20, 4)
+      .buttonDown(0)
+      .moveToObject(toSelector, 20, 10)
       .buttonUp();
   };
 
