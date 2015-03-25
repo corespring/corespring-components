@@ -43,15 +43,16 @@ describe('drag and drop inline', function() {
 
   beforeEach(function() {
     browser
+      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
-      .waitFor(landingPlace('aa_1'), regressionTestRunnerGlobals.defaultTimeout);
+      .waitFor(landingPlace('aa_1'));
   });
 
   it('correct answer results in correct feedback', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.feedback.correct')
       .call(done);
   });
 
@@ -60,7 +61,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.partial', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.feedback.partial')
       .call(done);
   });
 
@@ -68,7 +69,7 @@ describe('drag and drop inline', function() {
     browser
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.incorrect', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.feedback.incorrect')
       .call(done);
   });
 
@@ -76,7 +77,7 @@ describe('drag and drop inline', function() {
     browser
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.incorrect', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.selected-choice.incorrect')
       .call(done);
   });
 
@@ -85,7 +86,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.correct', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.selected-choice.correct')
       .call(done);
   });
 
@@ -94,7 +95,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.incorrect', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.selected-choice.incorrect')
       .call(done);
   });
 
@@ -103,7 +104,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.incorrect', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.selected-choice.incorrect')
       .call(done);
   });
 
@@ -112,30 +113,30 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.correct .fa-check-circle', regressionTestRunnerGlobals.defaultTimeout)
-      .waitFor('.selected-choice.incorrect .fa-times-circle', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.selected-choice.correct .fa-check-circle')
+      .waitFor('.selected-choice.incorrect .fa-times-circle')
       .call(done);
   });
 
   it('shows warning when no item is selected', function(done) {
     browser
       .submitItem()
-      .waitFor('.feedback.warning', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.feedback.warning')
       .getText('.feedback.warning', function(err,res){
         expect(res).toEqual('You did not enter a response.');
       })
-      .waitFor('.empty-answer-area-warning', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.empty-answer-area-warning')
       .call(done);
   });
 
   it("removes choice when moveOnDrag is true and choice has been placed", function(done){
     browser
       .isExisting(choice('c_4'), function(err,res){
-        expect("choice exists: " + res).toBe("choice exists: true");
+        expect(res).toBe(true, "Expected choice to exist before moving");
       })
       .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
       .isExisting(choice('c_4'), function(err,res){
-        expect("choice removed: " + !res).toBe("choice removed: true");
+        expect(res).toBe(false, "expected choice to be removed");
       })
       .call(done);
   });
@@ -145,7 +146,7 @@ describe('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .waitFor('.see-solution', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.see-solution')
         .isVisible('.see-solution')
         .call(done);
     });
@@ -154,7 +155,7 @@ describe('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
         .submitItem()
-        .waitFor('.see-solution', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.see-solution')
         .isVisible('.see-solution', function(err,res){
           expect(res).toBe(false);
         })
@@ -165,11 +166,10 @@ describe('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .waitFor('.see-solution', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.see-solution')
         .click('.see-solution .panel-heading')
-        .waitFor(selectedChoice('c_2'), regressionTestRunnerGlobals.defaultTimeout, function(err){
-          var msg = "Expected to find correct choice in see-solution: ";
-          expect(msg + err).toBe(msg + undefined);
+        .waitFor(selectedChoice('c_2'), function(err){
+          expect(err).toBe(undefined, "Expected correct choice c_2 to exist");
         })
         .call(done);
     });
@@ -178,18 +178,18 @@ describe('drag and drop inline', function() {
   describe("math", function(){
     it("renders math in choice", function(done){
       browser
-        .isExisting(choice('c_4') + ' .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting(choice('c_4') + ' .MathJax_Preview')
         .call(done);
     });
     it("renders math in answer area text", function(done){
       browser
-        .isExisting('.answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting('.answer-area-holder .MathJax_Preview')
         .call(done);
     });
     it("renders math in selected choice", function(done){
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-        .isExisting('.answer-area-holder .selected-choice .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting('.answer-area-holder .selected-choice .MathJax_Preview')
         .call(done);
     });
     it("renders math in correct answer area", function(done){
@@ -197,7 +197,7 @@ describe('drag and drop inline', function() {
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
         .click('h4.panel-title')
-        .isExisting('.correct-answer-area-holder .MathJax_Preview', regressionTestRunnerGlobals.defaultTimeout)
+        .isExisting('.correct-answer-area-holder .MathJax_Preview')
         .call(done);
     });
 
@@ -208,23 +208,19 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.feedback.correct')
       .call(done);
   });
 
-  //doesn't work, something wrong with the sortable?
-  //it doesn't seem to highlight the answer areas if you do it manually
   it("allows drag and drop between answer areas", function(done){
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+      .waitFor('.feedback.correct')
       .call(done);
   });
 
-  //doesn't work, something wrong with the sortable?
-  //it doesn't seem to highlight the answer areas if you do it manually
   it("allows removing a choice by dragging it out of answer area", function(done){
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
@@ -233,7 +229,7 @@ describe('drag and drop inline', function() {
       .moveTo(null, 0, 200)
       .buttonUp()
       .isExisting(selectedChoice('c_2'), function(err,res){
-        expect("selected choice removed: " + !res).toBe("selected choice removed: true");
+        expect(res).toBe(false, "expected selected choice to be removed");
       })
       .call(done);
   });

@@ -76,8 +76,9 @@ describe('multiple-choice', function() {
 
   beforeEach(function() {
     browser
+      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('multiple-choice', itemJsonFilename))
-      .waitFor('.choice-input .radio-choice', regressionTestRunnerGlobals.defaultTimeout);
+      .waitFor('.choice-input .radio-choice');
   });
 
 
