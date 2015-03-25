@@ -14,7 +14,7 @@ describe('corespring', function() {
       "model": {
         "config": {
           "domain": [-10, 10],
-          "maxNumberOfPoints": 3,
+          "maxNumberOfPoints": 4,
           "tickFrequency": 10,
           "snapPerTick": 2,
           "showMinorTicks": true,
@@ -260,6 +260,194 @@ describe('corespring', function() {
           { type: 'ray', domainPosition: 1, rangePosition: 1, pointType: 'full', direction: 'positive' }
         ]);
       });
+    });
+
+    describe('moving elements', function() {
+      it('point dragged over point stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "PF");
+        scope.$digest();
+
+        nodeScope.responseModel[0].domainPosition = 4;
+        scope.graph.elements[0].options.onMoveFinished(nodeScope.responseModel[0]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 4, rangePosition: 1 },
+          { type: 'point', pointType: 'full', domainPosition: 4, rangePosition: 0 }
+        ]);
+      });
+
+      it('point dragged over line stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "LEE");
+        scope.$digest();
+
+        nodeScope.responseModel[0].domainPosition = 4;
+        scope.graph.elements[0].options.onMoveFinished(nodeScope.responseModel[0]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 4, rangePosition: 1 },
+          { type: 'line', domainPosition: 4, rangePosition: 0, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('point dragged over ray stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "RFP");
+        scope.$digest();
+
+        nodeScope.responseModel[0].domainPosition = 4;
+        scope.graph.elements[0].options.onMoveFinished(nodeScope.responseModel[0]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 4, rangePosition: 1 },
+          { type: 'ray', domainPosition: 4, rangePosition: 0, pointType: 'full', direction: 'positive' }
+        ]);
+      });
+
+      it('point dragged to inbetween elements doesnt stack', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(1, "PF");
+        scope.addElement(3, "PF");
+        scope.addElement(5, "LEE");
+        scope.addElement(8, "RFP");
+        scope.$digest();
+
+        nodeScope.responseModel[0].domainPosition = 2;
+        scope.graph.elements[0].options.onMoveFinished(nodeScope.responseModel[0]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 2, rangePosition: 0 },
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
+          { type: 'line', domainPosition: 5, rangePosition: 0, size: nodeScope.responseModel[2].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'ray', domainPosition: 8, rangePosition: 0, pointType: 'full', direction: 'positive' }
+        ]);
+      });
+
+      it('line dragged over point stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "LEE");
+        scope.$digest();
+
+        nodeScope.responseModel[1].domainPosition = 3;
+        scope.graph.elements[1].options.onMoveFinished(nodeScope.responseModel[1]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
+          { type: 'line', domainPosition: 3, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('line dragged over line stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "LEE");
+        scope.addElement(5, "LEE");
+        scope.$digest();
+
+        nodeScope.responseModel[1].domainPosition = 4;
+        scope.graph.elements[1].options.onMoveFinished(nodeScope.responseModel[1]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'line', domainPosition: 3, rangePosition: 0, size: nodeScope.responseModel[0].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'line', domainPosition: 4, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('line dragged over ray stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(6, "RFP");
+        scope.addElement(3, "LEE");
+        scope.$digest();
+
+        nodeScope.responseModel[1].domainPosition = 5;
+        scope.graph.elements[1].options.onMoveFinished(nodeScope.responseModel[1]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'ray', domainPosition: 6, rangePosition: 0, pointType: 'full', direction: 'positive' },
+          { type: 'line', domainPosition: 5, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('ray dragged over point stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "RFP");
+        scope.$digest();
+
+        nodeScope.responseModel[1].domainPosition = 3;
+        scope.graph.elements[1].options.onMoveFinished(nodeScope.responseModel[1]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
+          { type: 'ray', domainPosition: 3, rangePosition: 1, pointType: 'full', direction: 'positive' }
+        ]);
+      });
+
+      it('ray dragged over line stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(2, "LEE");
+        scope.addElement(4, "RFP");
+        scope.$digest();
+
+        nodeScope.responseModel[1].domainPosition = 2;
+        scope.graph.elements[1].options.onMoveFinished(nodeScope.responseModel[1]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'line', domainPosition: 2, rangePosition: 0, size: nodeScope.responseModel[0].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'ray', domainPosition: 2, rangePosition: 1, pointType: 'full', direction: 'positive' }
+        ]);
+      });
+
+      it('ray dragged over ray stacks', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "RFN");
+        scope.addElement(4, "RFP");
+        scope.$digest();
+
+        nodeScope.responseModel[1].domainPosition = 3;
+        scope.graph.elements[1].options.onMoveFinished(nodeScope.responseModel[1]);
+        scope.$digest();
+
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'ray', domainPosition: 3, rangePosition: 0, pointType: 'full', direction: 'negative' },
+          { type: 'ray', domainPosition: 3, rangePosition: 1, pointType: 'full', direction: 'positive' }
+        ]);
+      });
+
+
     });
 
     describe('undo / start over', function() {
