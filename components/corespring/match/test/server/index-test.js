@@ -1,4 +1,4 @@
-var assert, component, server, settings, should, _, helper;
+var assert, component, correctResponse, server, settings, should, _, helper;
 
 helper = require('../../../../../test-lib/test-helper');
 
@@ -99,16 +99,25 @@ var component;
 
 beforeEach(function(){
   component = _.cloneDeep(componentTemplate);
+  correctResponse = _.cloneDeep(componentTemplate.correctResponse);
 });
 
 describe('match server logic', function() {
 
   it('should return incorrect if the answer is null or undefined', function() {
     var outcome = server.createOutcome(component ,null ,helper.settings(true, true, true));
-    outcome.should.eql({ correctness: 'incorrect', score: 0, feedback: component.feedback.all_incorrect.text });
+    outcome.should.eql({
+      correctness: 'incorrect',
+      correctResponse: correctResponse,
+      score: 0,
+      feedback: component.feedback.all_incorrect.text });
 
     outcome = server.createOutcome(component ,undefined ,helper.settings(true, true, true));
-    outcome.should.eql({ correctness: 'incorrect', score: 0, feedback: component.feedback.all_incorrect.text });
+    outcome.should.eql({
+      correctness: 'incorrect',
+      correctResponse: correctResponse,
+      score: 0,
+      feedback: component.feedback.all_incorrect.text });
 
   });
 
@@ -140,6 +149,7 @@ describe('match server logic', function() {
       var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(true, true, true));
       var expected = {
         "correctness": "all_correct",
+        "correctResponse": correctResponse,
         "score": 1,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
@@ -186,6 +196,7 @@ describe('match server logic', function() {
       var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(true, false, false));
       var expected = {
         "correctness": "all_correct",
+        "correctResponse": correctResponse,
         "score": 1,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
@@ -247,6 +258,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "all_incorrect",
+        "correctResponse": correctResponse,
         "score": 0,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
@@ -306,6 +318,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "all_incorrect",
+        "correctResponse": correctResponse,
         "score": 0,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
@@ -365,6 +378,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "all_incorrect",
+        "correctResponse": correctResponse,
         "score": 0,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
@@ -424,6 +438,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "some_correct",
+        "correctResponse": correctResponse,
         "score": 0.5,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
@@ -483,6 +498,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "some_correct",
+        "correctResponse": correctResponse,
         "score": 0.125,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,
@@ -543,6 +559,7 @@ describe('match server logic', function() {
 
       var expected = {
         "correctness": "some_correct",
+        "correctResponse": correctResponse,
         "score": 0.5,
         "summaryFeedback": component.summaryFeedback,
         "comments":undefined,

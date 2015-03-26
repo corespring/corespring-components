@@ -172,11 +172,12 @@ var main = [
       };
 
       scope.getIconClass = function(row,$index) {
-        var correctRow = _.find(scope.data.correctResponse,whereIdIsEqual(row.id));
+        var correctRow = _.find(scope.response.correctResponse,whereIdIsEqual(row.id));
 
         if (correctRow.matchSet[$index]) {
           return (scope.inputType === 'checkbox') ?
-            "correct-indicator fa-check-square" : "correct-indicator fa-check-circle";
+            "correct-indicator fa-check-square" :
+            "correct-indicator fa-check-circle";
         }
         else {
           return 'unknown';

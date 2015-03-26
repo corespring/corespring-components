@@ -60,6 +60,7 @@
           "answerType" : "YES_NO"
         }
       }
-    }
+    },
+    "customScoring" : "exports.process = function(item, session, outcomes) {\n  var answers = session.components;\n\n  function isCorrect(key) {\n    return (outcomes && outcomes[key]) ? (outcomes[key].correctness === 'correct' || outcomes[key].correctness === 'all_correct') : false;\n  }\n  \n  var RESPONSE1 = answers['RESPONSE1'].answers;\n\n  var SCORE = 0.0;\n\n  if (isCorrect('RESPONSE1')) { SCORE = 1; } else { SCORE = 0; }\n\n  return {\n    summary: {\n      score: SCORE\n    }\n  };\n};"
   }
 }
