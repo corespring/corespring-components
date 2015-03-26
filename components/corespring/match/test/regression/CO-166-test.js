@@ -45,7 +45,7 @@ describe('match', function() {
       .click(answerInput('Row2', true))
       .click(answerInput('Row3', true))
       .submitItem()
-      .waitFor('.correct-answer .panel-heading')
+      .waitFor('.see-answer-panel .panel-heading')
       .isExisting(answerInput('Row1', true, 'correct'))
       .isExisting(answerInput('Row2', true, 'incorrect'))
       .isExisting(answerInput('Row3', true, 'correct'))
@@ -55,7 +55,7 @@ describe('match', function() {
   it('does show solution correctly', function(done) {
     browser
       .submitItem()
-      .waitFor('.correct-answer .panel-heading')
+      .waitFor('.see-answer-panel .panel-heading')
       .isExisting(correctAnswer('Row1'))
       .isExisting(correctAnswer('Row2'))
       .isExisting(correctAnswer('Row3'))
