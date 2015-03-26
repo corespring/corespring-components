@@ -9,7 +9,7 @@ var main = [
       replace: true,
       link: link,
       template: template()
-    }
+    };
 
     function link(scope, element, attrs) {
 
