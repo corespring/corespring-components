@@ -427,9 +427,12 @@ var interactiveGraph = [
         };
 
         scope.removeElement = function(element) {
-          scope.responsemodel = _.filter(scope.responsemodel, function(e) {
-            return !(e.type === element.type && e.rangePosition === element.rangePosition && e.domainPosition === element.domainPosition);
-          }) || [];
+          var idx = _.findIndex(scope.responsemodel, function(e) {
+            return (e.type === element.type && e.rangePosition === element.rangePosition && e.domainPosition === element.domainPosition);
+          });
+          if (idx >= 0) {
+            scope.responsemodel.splice(idx, 1);
+          }
           rebuildGraph();
           scope.stack.push(_.cloneDeep(scope.responsemodel));
         };

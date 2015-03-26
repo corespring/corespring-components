@@ -144,7 +144,7 @@ exports.respond = function(question, answer, settings) {
   if (settings.showFeedback) {
     response.feedback = {
       elements: getElementsWithFeedback(answer, _.cloneDeep(question.correctResponse)),
-      message: fb.makeFeedback(undefined, fb.correctness(isCorrect, isPartiallyCorrect))
+      message: fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect))
     };
 
   }

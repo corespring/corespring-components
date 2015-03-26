@@ -4,6 +4,11 @@
   "weight": 1,
   "correctResponse": [
   ],
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
   "allowPartialScoring": false,
   "partialScoring" : [
     {}

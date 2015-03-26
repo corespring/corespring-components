@@ -53,6 +53,50 @@ var main = [
       '</div>'
     ].join('');
 
+    var display = [
+      '<h3>Display</h3>',
+      '<table class="allowed-elements">',
+      '<tr><td>',
+      '<div>Show student options for</div>',
+      '<td>',
+      '<div><input id="points" type="checkbox" ng-model="allow.points"/><label for="points">Points</label></div>',
+      '<div><input id="lines" type="checkbox" ng-model="allow.lines"/><label for="lines">Line segments</label></div>',
+      '<div><input id="rays" type="checkbox" ng-model="allow.rays"/><label for="rays">Rays</label></div>',
+      '<div><input id="all" type="checkbox" ng-model="top.allowAll"/><label for="all">All</label></div>',
+      '</table>'
+    ].join('');
+
+    var feedback = [
+      '<div feedback-panel>',
+      '  <div feedback-selector',
+      '      fb-sel-label="If correct, show"',
+      '      fb-sel-class="correct"',
+      '      fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+      '      fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+      '      fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
+      '  </div>',
+      '  <div feedback-selector',
+      '      fb-sel-label="If partially correct, show"',
+      '      fb-sel-class="partial"',
+      '      fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+      '      fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+      '      fb-sel-default-feedback="{{defaultPartialFeedback}}">',
+      '  </div>',
+      '  <div feedback-selector',
+      '      fb-sel-label="If incorrect, show"',
+      '      fb-sel-class="incorrect"',
+      '      fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+      '      fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+      '      fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
+      '  </div>',
+      '</div>'
+
+    ].join('');
+
+    var points = ['PF','PE'];
+    var lines = ['LEE','LEF','LFE','LFF'];
+    var rays = ['REP','REN','RFP','RFN'];
+
     return {
       scope: 'isolate',
       restrict: 'E',
@@ -60,6 +104,8 @@ var main = [
       link: function(scope, element, attrs) {
         scope.defaults = scope.data.defaultData.model.config;
         ChoiceTemplates.extendScope(scope, 'corespring-number-line');
+        scope.allow = {};
+        scope.top = {};
         scope.configGraphOptions = {
           startOverClearsGraph: true,
           undoDisabled: true
@@ -130,6 +176,17 @@ var main = [
             scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse) || [];
             scope.updatePartialScoringModel(model.correctResponse.length);
             scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(model.model.config.tickLabelOverrides);
+
+            var hasAny = function(ofThese) {
+              return _.any(_.keys(scope.fullModel.model.config.availableTypes), function(k) {
+                 return _.contains(ofThese, k);
+              });
+            };
+            scope.allow = {
+              points: hasAny(points),
+              lines: hasAny(lines),
+              rays: hasAny(rays)
+            };
           },
 
           getModel: function() {
@@ -185,6 +242,29 @@ var main = [
           });
         }
 
+        scope.$watch('top.allowAll', function(n, o) {
+          if (!_.isUndefined(n) && n !== o) {
+            scope.allow.points = scope.allow.lines = scope.allow.rays = n;
+          }
+        });
+
+        scope.$watch('allow', function(n) {
+          if (n) {
+            _.each(points, function(key) {
+              scope.fullModel.model.config.availableTypes[key] = n.points;
+            });
+            _.each(lines, function(key) {
+              scope.fullModel.model.config.availableTypes[key] = n.lines;
+            });
+            _.each(rays, function(key) {
+              scope.fullModel.model.config.availableTypes[key] = n.rays;
+            });
+            if (n.points && n.lines && n.rays) {
+              scope.top.allowAll = true;
+            }
+          }
+        }, true);
+
         scope.$watch('initialView.responseModel', debounce(updateInitialElements), true);
 
         scope.$watch('correctResponseView.responseModel', debounce(updateCorrectResponse), true);
@@ -221,6 +301,8 @@ var main = [
         attributes,
         initialView,
         correctResponseView,
+        display,
+        feedback,
         '  </div>',
         '  <div navigator-panel="Scoring">',
         ChoiceTemplates.scoring(),
