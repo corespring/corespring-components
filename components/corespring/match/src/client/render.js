@@ -205,7 +205,7 @@ var main = [
         '     <tr>',
         '       <th class="answer-header" ng-repeat="column in matchModel.columns" ng-bind-html-unsafe="column.labelHtml"/>',
         '     </tr>',
-        '     <tr class="question-row" ng-repeat="row in matchModel.rows">',
+        '     <tr class="question-row" ng-repeat="row in matchModel.rows" question-id="{{row.id}}">',
         '       <td class="question-cell" ng-bind-html-unsafe="row.labelHtml" ng-switch="inputType"></td>',
         '       <td class="answer-cell" ng-repeat="match in row.matchSet track by $index">',
         '           <checkbox ng-if="isCheckBox(inputType)" ng-disabled="!editable" ng-model="match.value" ',
