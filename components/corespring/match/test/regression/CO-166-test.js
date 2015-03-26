@@ -17,7 +17,7 @@ describe.only('match', function() {
   var itemJson = RegressionHelper.getItemJson('match', itemJsonFilename);
 
   function answerInput(questionId, answerValue, correctness){
-    correctness = correctness || ''
+    correctness = correctness || '';
     return '.question-row[question-id="' + questionId + '"] ' + correctness + '[ng-value="' + answerValue + '"]';
   }
 
