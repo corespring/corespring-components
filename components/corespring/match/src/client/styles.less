@@ -5,47 +5,57 @@
 @incorrect-color: #EEA236;
 @partial-color: #3A87AD;
 @learn-more-color: #3A87AD;
-@see-correct-color:#3C763D;
+@see-correct-color: #3C763D;
 
-.view-match {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+.render-corespring-match {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #000000;
+  padding-top: 14px;
+  margin-bottom: 20px;
 
-  table{
-    tr{
+  table {
+    margin: 0;
+
+    tr {
       td {
         line-height: 2em;
         vertical-align: middle;
       }
     }
-    margin: 0;
+
   }
 
-  .correct-indicator{
+  .correct-indicator {
     font-family: FontAwesome;
     font-size: 40px;
-    color:@correct-color;
+    color: @correct-color;
   }
 
-  .summary-feedback, .feedback, .correct-answer{
+  .see-solution {
+    margin-top: 20px;
+  }
+
+  .summary-feedback,
+  .feedback,
+  .correct-answer {
 
     border-color: @learn-more-color;
     border-width: 2px;
     float: none;
 
-    .panel-heading{
-
+    .panel-heading {
       background-color: @learn-more-color;
       padding: 3px 15px;
-      .toggle{
+
+      .toggle {
         display: inline-block;
         font-family: FontAwesome;
         font-size: 30px;
         color: white;
         font-weight: normal
       }
-      .label{
+      .label {
         font-size: 16px;
         color: white;
         font-weight: normal
@@ -57,19 +67,18 @@
     border-color: @see-correct-color;
     .panel-heading {
       background-color: @see-correct-color;
-      height:45px;
+      height: 45px;
     }
   }
 
-  .feedback{
-    .panel-heading{
-      height:45px;
+  .feedback {
+    .panel-heading {
+      height: 45px;
     }
   }
 
-
-  .summary-feedback{
-    .panel-heading{
+  .summary-feedback {
+    .panel-heading {
       cursor: pointer;
     }
   }
@@ -77,19 +86,19 @@
   .feedback {
     &.all_correct {
       border-color: @correct-color;
-      .panel-heading{
+      .panel-heading {
         background-color: @correct-color;
       }
     }
     &.all_incorrect {
       border-color: @incorrect-color;
-      .panel-heading{
+      .panel-heading {
         background-color: @incorrect-color;
       }
     }
     &.some_correct {
       border-color: @partial-color;
-      .panel-heading{
+      .panel-heading {
         background-color: @partial-color;
       }
     }
@@ -98,8 +107,8 @@
   .radio-size(@size) {
     .radio-toggle {
       cursor: pointer;
-      
       font-size: @size;
+
       &:after {
         min-width: @size;
       }
@@ -149,6 +158,7 @@
   .radio-input.correct {
     .radio-size(40px);
     color: @correct-color;
+
     .radio-toggle {
       &.disabled:after {
         color: @correct-color;
@@ -164,6 +174,7 @@
 
   .radio-input.incorrect {
     color: @incorrect-color;
+
     .radio-toggle {
       &.disabled:after {
         color: @incorrect-color;
@@ -177,6 +188,7 @@
   .checkbox-size(@size) {
     .checkbox-toggle {
       font-size: @size;
+
       &:after {
         min-width: @size;
       }
@@ -226,6 +238,7 @@
   .checkbox-input.correct {
     .checkbox-size(40px);
     color: @correct-color;
+
     .checkbox-toggle {
       &:after {
         content: "\f14a";
@@ -241,6 +254,7 @@
 
   .checkbox-input.incorrect {
     color: @incorrect-color;
+
     .checkbox-toggle {
       &.disabled:after {
         color: @incorrect-color;
@@ -252,13 +266,11 @@
     }
   }
 
-  padding-top: 14px;
-  margin-bottom: 20px;
-
   td {
     vertical-align: top;
   }
+
 }
 
-.config-match {
+.config-corespring-match {
 }

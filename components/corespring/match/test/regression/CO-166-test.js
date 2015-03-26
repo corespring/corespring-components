@@ -9,7 +9,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('match', function() {
+describe('match', function() {
 
   "use strict";
 
