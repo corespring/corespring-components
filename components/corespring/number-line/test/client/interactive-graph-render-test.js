@@ -184,7 +184,7 @@ describe('corespring', function() {
         scope.addElement(3, "LEE");
         expect(nodeScope.responseModel).toEqual([
           { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 },
-          { type: 'line', domainPosition: 3, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' },
+          { type: 'line', domainPosition: 3, rangePosition: 1, size: nodeScope.responseModel[1].size, leftPoint: 'empty', rightPoint: 'empty' }
 
         ]);
       });
@@ -446,8 +446,56 @@ describe('corespring', function() {
           { type: 'ray', domainPosition: 3, rangePosition: 1, pointType: 'full', direction: 'positive' }
         ]);
       });
+    });
 
+    describe('deleting elements', function() {
+      it('deletes from model', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "PF");
+        scope.removeElement(nodeScope.responseModel[1]);
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 3, rangePosition: 0 }
+        ]);
+      });
 
+      it('stacked point falls down', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "PF");
+        scope.addElement(4, "PF");
+        scope.removeElement(nodeScope.responseModel[0]);
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'point', pointType: 'full', domainPosition: 4, rangePosition: 0 }
+        ]);
+      });
+
+      it('stacked line falls down', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "LEE");
+        scope.addElement(4, "LEE");
+        scope.removeElement(nodeScope.responseModel[0]);
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'line', domainPosition: 4, rangePosition: 0, size: nodeScope.responseModel[0].size, leftPoint: 'empty', rightPoint: 'empty' }
+        ]);
+      });
+
+      it('stacked ray falls down', function() {
+        nodeScope.graphModel = testModel.data.model;
+        nodeScope.responseModel = {};
+        scope.$digest();
+        scope.addElement(3, "RFP");
+        scope.addElement(4, "RFP");
+        scope.removeElement(nodeScope.responseModel[0]);
+        expect(nodeScope.responseModel).toEqual([
+          { type: 'ray', domainPosition: 4, rangePosition: 0, pointType: 'full', direction: 'positive' }
+        ]);
+      });
     });
 
     describe('undo / start over', function() {
