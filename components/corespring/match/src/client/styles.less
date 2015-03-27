@@ -6,6 +6,7 @@
 @partial-color: #3A87AD;
 @learn-more-color: #3A87AD;
 @see-correct-color: #3C763D;
+@component-width: 600px;
 
 .set-toggle-size(@size) {
   font-size: @size;
@@ -15,6 +16,23 @@
   }
   &.checked:after {
     min-width: @size;
+  }
+}
+
+.component-placeholder {
+  .render-corespring-match {
+    //the component takes the full width of the player
+    width: @component-width;
+    max-width: @component-width;
+    margin-bottom: 0;
+    padding-top: 0;
+
+    .undo-start-over {
+      //hide, but block the space, so that the
+      //content is not hidden behind the edit/delete
+      //buttons of the placeholder
+      visibility: hidden;
+    }
   }
 }
 
@@ -251,4 +269,21 @@
 }
 
 .config-corespring-match {
+
+  .inline-help {
+    font-style: italic;
+    color: #999999;
+  }
+
+  .row {
+    &.option {
+      margin-top: 10px;
+
+      &.input-type {
+        .inline-help {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
 }
