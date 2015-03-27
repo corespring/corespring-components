@@ -104,10 +104,16 @@
     }
   }
 
+  .editable {
+    .radio-input,
+    .checkbox-input {
+      cursor: pointer;
+    }
+  }
+
   .radio-input {
     @disabled-color: #cccccc;
     position: relative;
-    cursor: pointer;
 
     .radio-toggle {
       .set-toggle-size(22px);
@@ -141,7 +147,6 @@
 
     &.correct {
       color: @correct-color;
-      cursor: default;
 
       .radio-toggle {
         .set-toggle-size(40px);
@@ -160,7 +165,6 @@
 
     &.incorrect {
       color: @incorrect-color;
-      cursor: default;
 
       .radio-toggle {
         &.disabled:after {
@@ -171,16 +175,11 @@
         }
       }
     }
-
-    &.unknown {
-      cursor: default;
-    }
   }
 
   .checkbox-input {
     @disabled-color: #cccccc;
     position: relative;
-    cursor: pointer;
 
     .checkbox-toggle {
       .set-toggle-size(22px);
@@ -214,7 +213,6 @@
 
     &.correct {
       color: @correct-color;
-      cursor: default;
 
       .checkbox-toggle {
         .set-toggle-size(40px);
@@ -232,7 +230,6 @@
 
     &.incorrect {
       color: @incorrect-color;
-      cursor: default;
 
       .checkbox-toggle {
         &:after {
@@ -245,9 +242,6 @@
       }
     }
 
-    &.unknown {
-      cursor: default;
-    }
   }
 
   td {

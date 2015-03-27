@@ -250,6 +250,7 @@ var main = [
         '      <td class="question-cell"',
         '          ng-bind-html-unsafe="row.labelHtml"></td>',
         '      <td class="answer-cell"',
+        '          ng-class="{editable:editable}"',
         '          ng-repeat="match in row.matchSet track by $index">',
         '        <checkbox ng-if="isCheckBox(inputType)"',
         '            ng-disabled="!editable"',
