@@ -2,9 +2,16 @@ var main = [
   '$sce', '$log',
 
   function($sce, $log) {
-    var def;
 
-    var link = function(scope, element, attrs) {
+    return {
+      scope: {},
+      restrict: 'EA',
+      replace: true,
+      link: link,
+      template: template()
+    };
+
+    function link(scope, element, attrs) {
 
       scope.editable = true;
       scope.isSummaryFeedbackOpen = false;
@@ -26,14 +33,11 @@ var main = [
       function updateInputType(model) {
         if (!model || !model.answerType) {
           scope.inputType = INPUT_TYPE_DEFAULT;
-        }
-        else if (model.answerType === YES_NO || model.answerType === TRUE_FALSE) {
+        } else if (model.answerType === YES_NO || model.answerType === TRUE_FALSE) {
           scope.inputType = INPUT_TYPE_RADIOBUTTON;
-        }
-        else if (model.answerType === MULTIPLE) {
+        } else if (model.answerType === MULTIPLE) {
           scope.inputType = INPUT_TYPE_CHECKBOX;
-        }
-        else{
+        } else {
           scope.inputType = INPUT_TYPE_DEFAULT;
         }
       }
@@ -45,10 +49,10 @@ var main = [
       }
 
       function getAnswers() {
-         var result = scope.matchModel.rows.map(function(row) {
+        var result = scope.matchModel.rows.map(function(row) {
           return {
-            "id" : row.id,
-            "matchSet" : row.matchSet.map(function(match) {
+            "id": row.id,
+            "matchSet": row.matchSet.map(function(match) {
               return match.value;
             })
           };
@@ -66,9 +70,13 @@ var main = [
             if (rawModel.columns.length !== 3) {
               $log.error('Match interaction with boolean answer type should have 2 columns, found ' + rawModel.columns.length);
             }
-            return [  _.cloneDeep(rawModel.columns[0]),
-                      { "labelHtml": answerType === TRUE_FALSE ? TRUE_LABEL : YES_LABEL },
-                      { "labelHtml": answerType === TRUE_FALSE ? FALSE_LABEL : NO_LABEL } ];
+            return [_.cloneDeep(rawModel.columns[0]),
+              {
+                "labelHtml": answerType === TRUE_FALSE ? TRUE_LABEL : YES_LABEL
+              },
+              {
+                "labelHtml": answerType === TRUE_FALSE ? FALSE_LABEL : NO_LABEL
+              }];
           }
 
           return _.cloneDeep(rawModel.columns);
@@ -82,10 +90,14 @@ var main = [
 
             cloneRow.matchSet = answersExist ?
               _.find(session.answers, whereIdIsEqual(row.id)).matchSet.map(function(match) {
-                return { "value": match };
+                return {
+                  "value": match
+                };
               }) :
               _.range(rawModel.columns.length - 1).map(function() {
-                return { "value": false };
+                return {
+                  "value": false
+                };
               });
 
             return cloneRow;
@@ -93,33 +105,38 @@ var main = [
         }
 
         return {
-          "columns" : prepareColumns(),
-          "rows" : prepareRows(),
-          "answerType" : answerType
+          "columns": prepareColumns(),
+          "rows": prepareRows(),
+          "answerType": answerType
         };
       }
 
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          scope.session = dataAndSession.session ;
+          scope.session = dataAndSession.session;
           scope.data = dataAndSession.data;
-          scope.matchModel = prepareModel(dataAndSession.data.model , scope.session);
+          scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
           updateInputType(scope.matchModel);
-          scope.$emit('rerender-math', {delay: 100});
+          scope.$emit('rerender-math', {
+            delay: 100
+          });
         },
 
         getSession: function() {
-          return { answers: getAnswers() };
+          return {
+            answers: getAnswers()
+          };
         },
 
         setResponse: function(response) {
+          console.log("setResponse", response);
           scope.response = response;
           if (response.feedback) {
             _.each(response.feedback.correctnessMatrix, function(correctnessRow) {
               var modelRow = _.find(scope.matchModel.rows, whereIdIsEqual(correctnessRow.id));
               if (modelRow !== null) {
-                for(var i=0;i<modelRow.matchSet.length;i++) {
+                for (var i = 0; i < modelRow.matchSet.length; i++) {
                   modelRow.matchSet[i].correct = correctnessRow.matchSet[i].correctness;
                 }
               }
@@ -127,19 +144,23 @@ var main = [
 
           }
         },
+
         setMode: function(newMode) {},
 
         reset: function() {
           scope.session = {};
-          scope.matchModel = prepareModel(scope.data.model , {});
+          scope.matchModel = prepareModel(scope.data.model, {});
           scope.isSummaryFeedbackOpen = false;
           scope.isSeeCorrectAnswerOpen = false;
           delete scope.response;
         },
+
         resetStash: function() {},
+
         isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
         },
+
         answerChangedHandler: function(callback) {
           scope.$watch("matchModel", function(newValue, oldValue) {
             if (newValue !== oldValue) {
@@ -147,40 +168,46 @@ var main = [
             }
           }, true);
         },
+
         editable: function(e) {
           scope.editable = e;
         }
       };
 
-      scope.showSeeCorrectAnswerLink = function(feedback) {
-        return (feedback && feedback.correctness &&
-          feedback.correctness !== ALL_CORRECT);
+      scope.showSeeCorrectAnswerLink = function(response) {
+        return (response && response.correctness &&
+        response.correctness !== ALL_CORRECT);
       };
 
       scope.getCorrectness = function(correct) {
-        return !correct ? UNKNOWN : correct;
+        switch(correct){
+          case 'correct':
+          case 'incorrect':
+            return correct;
+        }
+        return UNKNOWN;
       };
 
-      scope.onClickMatch = function(matchSet,index) {
-        if(scope.editable && !matchSet[index].correct ) {
+      scope.onClickMatch = function(matchSet, index) {
+        if (scope.editable && !matchSet[index].correct) {
           if (scope.inputType === INPUT_TYPE_RADIOBUTTON) {
-            for (var i =0 ;i < matchSet.length; i++) {
+            for (var i = 0; i < matchSet.length; i++) {
               matchSet[i].value = (i === index);
             }
           }
         }
       };
 
-      scope.getIconClass = function(row,$index) {
-        var correctRow = _.find(scope.data.correctResponse,whereIdIsEqual(row.id));
-
-        if (correctRow.matchSet[$index]) {
-          return (scope.inputType === 'checkbox') ?
-            "correct-indicator fa-check-square" : "correct-indicator fa-check-circle";
+      scope.getIconClass = function(row, $index) {
+        if(scope.response && scope.response.correctResponse) {
+          var correctRow = _.find(scope.response.correctResponse, whereIdIsEqual(row.id));
+          if (correctRow && correctRow.matchSet[$index]) {
+            return (scope.inputType === 'checkbox') ?
+              "correct-indicator fa-check-square" :
+              "correct-indicator fa-check-circle";
+          }
         }
-        else {
-          return 'unknown';
-        }
+        return 'unknown';
       };
 
       scope.isCheckBox = function(inputType) {
@@ -192,28 +219,24 @@ var main = [
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-    };
+    }
 
-    def = {
-      scope: {},
-      restrict: 'EA',
-      replace: true,
-      link: link,
-      template: [
-        '<div class="view-match">',
+    function template() {
+      return [
+        '<div class="render-corespring-match">',
         '   <table class="table">',
         '     <tr>',
         '       <th class="answer-header" ng-repeat="column in matchModel.columns" ng-bind-html-unsafe="column.labelHtml"/>',
         '     </tr>',
-        '     <tr class="question-row" ng-repeat="row in matchModel.rows">',
+        '     <tr class="question-row" ng-repeat="row in matchModel.rows" question-id="{{row.id}}">',
         '       <td class="question-cell" ng-bind-html-unsafe="row.labelHtml" ng-switch="inputType"></td>',
         '       <td class="answer-cell" ng-repeat="match in row.matchSet track by $index">',
         '           <checkbox ng-if="isCheckBox(inputType)" ng-disabled="!editable" ng-model="match.value" ',
         '                     ng-value="true" ng-change="onClickMatch(row.matchSet ,$index)"',
-        '                     ng-class="{correct:\'correct\', incorrect:\'incorrect\', unknown:\'unknown\'}[getCorrectness(match.correct)]"></checkbox>',
+        '                     ng-class="getCorrectness(match.correct)"></checkbox>',
         '           <radio ng-if="isRadioButton(inputType)" ng-disabled="!editable" ng-model="match.value" ',
         '                   ng-value="true" ng-change="onClickMatch(row.matchSet ,$index)"',
-        '                   ng-class="{correct:\'correct\', incorrect:\'incorrect\', unknown:\'unknown\'}[getCorrectness(match.correct)]"></radio>',
+        '                   ng-class="getCorrectness(match.correct)"></radio>',
         '       </td>',
         '     </tr>',
         '   </table>',
@@ -224,13 +247,7 @@ var main = [
         '   </div>',
         ' </div>',
 
-        ' <div class="panel feedback correct-answer" ng-if="showSeeCorrectAnswerLink(response)">',
-        '   <div class="panel-heading" ng-click="isSeeCorrectAnswerOpen=!isSeeCorrectAnswerOpen">',
-        '     <span class="toggle" ng-class="{true:\'fa-eye-slash\', false:\'fa-eye\'}[isSeeCorrectAnswerOpen]"></span>',
-        '     <span class="label" ng-if="isSeeCorrectAnswerOpen">Hide correct answer</span>',
-        '     <span class="label" ng-if="!isSeeCorrectAnswerOpen">Show correct answer</span>',
-        '   </div>',
-        '   <div class="panel-body"  ng-show="isSeeCorrectAnswerOpen">',
+        '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="isSeeCorrectAnswerOpen" ng-if="showSeeCorrectAnswerLink(response)">',
         '     <table class="table">',
         '       <tr>',
         '         <th class="answer-header" ng-repeat="column in matchModel.columns" ng-bind-html-unsafe="column.labelHtml"/>',
@@ -242,8 +259,7 @@ var main = [
         '           </td>',
         '       </tr>',
         '     </table>',
-        '   </div>',
-        ' </div>',
+        '  </div>',
 
         '   <div class="panel summary-feedback" ng-if="response.summaryFeedback">',
         '    <div class="panel-heading" ng-click="isSummaryFeedbackOpen=!isSummaryFeedbackOpen">',
@@ -255,11 +271,8 @@ var main = [
         '   </div>',
 
         '</div>'
-      ].join("\n")
-
-    };
-
-    return def;
+      ].join("\n");
+    }
   }
 ];
 

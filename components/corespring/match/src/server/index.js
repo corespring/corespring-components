@@ -252,6 +252,7 @@ exports.createOutcome = function(question, answer, settings) {
   if(!answer) {
     return {
       correctness: 'incorrect',
+      correctResponse: question.correctResponse,
       score: 0,
       feedback: buildFeedbackSummary(question,correctness)
     };
@@ -263,6 +264,7 @@ exports.createOutcome = function(question, answer, settings) {
 
   var response = {
     correctness: correctness,
+    correctResponse: question.correctResponse,
     score: calculateScore(question, answer),
     comments: question.comments
   };

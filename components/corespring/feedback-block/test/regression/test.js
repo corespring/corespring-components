@@ -22,6 +22,7 @@ describe('feedback-block', function() {
 
   beforeEach(function() {
     browser
+      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('feedback-block', itemJsonFilename));
   });
 

@@ -25,7 +25,7 @@ module.exports = (grunt) ->
         tests: ['components/**/regression/*.js']
       dev:
         baseUrl: "http://localhost:9000"
-        defaultTimeout: 2000
+        defaultTimeout: grunt.option('defaultTimeout') || 2000
       saucelabs:
         defaultTimeout: grunt.option('defaultTimeout') || 5000
         local: false
