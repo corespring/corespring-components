@@ -178,8 +178,8 @@ var main = [
             scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(model.model.config.tickLabelOverrides);
 
             var hasAny = function(ofThese) {
-              return _.any(_.keys(scope.fullModel.model.config.availableTypes), function(k) {
-                 return _.contains(ofThese, k);
+              return _.any(ofThese, function(k) {
+                 return scope.fullModel.model.config.availableTypes[k] === true;
               });
             };
             scope.allow = {
