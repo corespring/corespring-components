@@ -261,6 +261,8 @@ var main = [
             });
             if (n.points && n.lines && n.rays) {
               scope.top.allowAll = true;
+            } else {
+              scope.top.allowAll = undefined;
             }
           }
         }, true);
