@@ -38,6 +38,10 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         selectedFillColor: pointOptions.pointType === 'empty' ? EMPTY_COLOR : SELECTED_COLOR,
         selectedStrokeColor: SELECTED_COLOR
       });
+      if (pointOptions.pointType === 'empty') {
+        pointOptions.fillColor = EMPTY_COLOR;
+      }
+
       this.detach = function() {
         this.point = undefined;
       };
@@ -461,8 +465,11 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             label = options.placeholderForEmptyTickLabel;
           }
 
-
           var text = paper.text(options.margin.left + x, options.height - options.margin.bottom, label);
+
+          // Below is a workaround for a RaphaelJS bug. See https://github.com/DmitryBaranovskiy/raphael/issues/772
+          $('tspan', text.node).attr('dy', 0);
+
           if (options.labelCursor) {
             text.attr('cursor', options.labelCursor);
           }
