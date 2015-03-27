@@ -32,24 +32,27 @@ var main = [
     ].join('');
 
     var initialView = [
-      '<h3>Initial view</h3>',
+      '<div collapsable-panel collapsable-panel-title="Initial view">',
       '  <div interactive-graph',
       '       ngModel="initialView.model"',
       '       options="configGraphOptions"',
       '       responseModel="initialView.responseModel"',
       '       editable="initialView.editable"',
-      '       colors="initialView.colors"></div>'
+      '       colors="initialView.colors"></div>',
+      '</div>'
 
     ].join('');
 
     var correctResponseView = [
-      '<div ng-hide="fullModel.model.config.exhibitOnly">',
-      '<h3>Correct Response</h3>',
-      '  <div interactive-graph',
-      '       ngModel="correctResponseView.model"',
-      '       responseModel="correctResponseView.responseModel"',
-      '       options="configGraphOptions"',
-      '       editable="correctResponseView.editable"></div>',
+      '<div ng-hide="fullModel.model.config.exhibitOnly" class="panel panel-default correct-response-panel">',
+      '<div class="panel-heading">Correct Response</div>',
+      '  <div class="panel-body">',
+      '    <div interactive-graph',
+      '         ngModel="correctResponseView.model"',
+      '         responseModel="correctResponseView.responseModel"',
+      '         options="configGraphOptions"',
+      '         editable="correctResponseView.editable"></div>',
+      '    </div>',
       '</div>'
     ].join('');
 
