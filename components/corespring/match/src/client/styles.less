@@ -7,6 +7,17 @@
 @learn-more-color: #3A87AD;
 @see-correct-color: #3C763D;
 
+.set-toggle-size(@size) {
+  font-size: @size;
+
+  &:after {
+    min-width: @size;
+  }
+  &.checked:after {
+    min-width: @size;
+  }
+}
+
 .render-corespring-match {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -23,7 +34,6 @@
         vertical-align: middle;
       }
     }
-
   }
 
   .correct-indicator {
@@ -37,9 +47,7 @@
   }
 
   .summary-feedback,
-  .feedback,
-  .correct-answer {
-
+  .feedback {
     border-color: @learn-more-color;
     border-width: 2px;
     float: none;
@@ -60,14 +68,6 @@
         color: white;
         font-weight: normal
       }
-    }
-  }
-
-  .correct-answer {
-    border-color: @see-correct-color;
-    .panel-heading {
-      background-color: @see-correct-color;
-      height: 45px;
     }
   }
 
@@ -104,26 +104,13 @@
     }
   }
 
-  .radio-size(@size) {
-    .radio-toggle {
-      cursor: pointer;
-      font-size: @size;
-
-      &:after {
-        min-width: @size;
-      }
-      &.checked:after {
-        min-width: @size;
-      }
-    }
-  }
-
   .radio-input {
     @disabled-color: #cccccc;
     position: relative;
-    .radio-size(22px);
+    cursor: pointer;
 
     .radio-toggle {
+      .set-toggle-size(22px);
       position: relative;
       vertical-align: middle;
       display: inline-block;
@@ -146,64 +133,57 @@
     .label-text {
       display: inline-block;
       vertical-align: middle;
-      cursor: pointer;
 
       &.disabled {
         color: @disabled-color;
-        cursor: default;
       }
     }
-  }
 
-  .radio-input.correct {
-    .radio-size(40px);
-    color: @correct-color;
+    &.correct {
+      color: @correct-color;
+      cursor: default;
 
-    .radio-toggle {
-      &.disabled:after {
-        color: @correct-color;
-      }
-      &.checked:after {
-        content: @correct-character;
-      }
-      &:after {
-        content: @correct-character;
+      .radio-toggle {
+        .set-toggle-size(40px);
+
+        &.disabled:after {
+          color: @correct-color;
+        }
+        &.checked:after {
+          content: @correct-character;
+        }
+        &:after {
+          content: @correct-character;
+        }
       }
     }
-  }
 
-  .radio-input.incorrect {
-    color: @incorrect-color;
+    &.incorrect {
+      color: @incorrect-color;
+      cursor: default;
 
-    .radio-toggle {
-      &.disabled:after {
-        color: @incorrect-color;
-      }
-      &.checked:after {
-        content: @incorrect-character;
+      .radio-toggle {
+        &.disabled:after {
+          color: @incorrect-color;
+        }
+        &.checked:after {
+          content: @incorrect-character;
+        }
       }
     }
-  }
 
-  .checkbox-size(@size) {
-    .checkbox-toggle {
-      font-size: @size;
-
-      &:after {
-        min-width: @size;
-      }
-      &.checked:after {
-        min-width: @size;
-      }
+    &.unknown {
+      cursor: default;
     }
   }
 
   .checkbox-input {
     @disabled-color: #cccccc;
     position: relative;
-    .checkbox-size(22px);
+    cursor: pointer;
 
     .checkbox-toggle {
+      .set-toggle-size(22px);
       position: relative;
       vertical-align: middle;
       display: inline-block;
@@ -226,43 +206,47 @@
     .label-text {
       display: inline-block;
       vertical-align: middle;
-      cursor: pointer;
 
       &.disabled {
         color: @disabled-color;
-        cursor: default;
       }
     }
-  }
 
-  .checkbox-input.correct {
-    .checkbox-size(40px);
-    color: @correct-color;
+    &.correct {
+      color: @correct-color;
+      cursor: default;
 
-    .checkbox-toggle {
-      &:after {
-        content: "\f14a";
-      }
-      &.checked:after {
-        content: "\f14a";
-      }
-      &.disabled:after {
-        color: @correct-color;
+      .checkbox-toggle {
+        .set-toggle-size(40px);
+        &:after {
+          content: "\f14a";
+        }
+        &.checked:after {
+          content: "\f14a";
+        }
+        &.disabled:after {
+          color: @correct-color;
+        }
       }
     }
-  }
 
-  .checkbox-input.incorrect {
-    color: @incorrect-color;
+    &.incorrect {
+      color: @incorrect-color;
+      cursor: default;
 
-    .checkbox-toggle {
-      &.disabled:after {
-        color: @incorrect-color;
+      .checkbox-toggle {
+        &:after {
+          display: inline-block;
+          content: "\f00d";
+        }
+        &.disabled:after {
+          color: @incorrect-color;
+        }
       }
-      &:after {
-        display: inline-block;
-        content: "\f00d";
-      }
+    }
+
+    &.unknown {
+      cursor: default;
     }
   }
 
