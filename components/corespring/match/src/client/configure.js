@@ -62,7 +62,7 @@ var main = [
           '      </div>',
           '    </div>',
           '  </div>',
-          '</div>',
+          '</div>'
         ].join('');
       }
 
@@ -87,7 +87,7 @@ var main = [
           '  <div class="col-xs-12">',
 
           '  </div>',
-          '</div>',
+          '</div>'
         ].join('');
       }
 
