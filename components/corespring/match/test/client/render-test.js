@@ -107,7 +107,7 @@ describe('corespring', function() {
       rootScope.$digest();
       var table = $(element).find('table');
       expect(table.length).toBe(1);
-      expect(table.find('td').length).toBe(12);
+      expect(table.find('td').length).toBe(16);
     });
 
     it('selects correctly radio buttons', function() {

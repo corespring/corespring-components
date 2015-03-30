@@ -122,6 +122,27 @@
     }
   }
 
+  .answer-expected-warning {
+    display: inline-block;
+    color: @warning-color;
+    font-size: 22px;
+  }
+
+  .question-label {
+    display: inline-block;
+  }
+
+  .noAnswer {
+    .radio-input {
+      .radio-toggle:after {
+        text-shadow:  0px 0px 5px @warning-color;
+      }
+    }
+    .checkbox-input {
+      .warning-input();
+    }
+  }
+
   .editable {
     .radio-input,
     .checkbox-input {
