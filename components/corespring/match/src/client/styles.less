@@ -47,9 +47,25 @@
     margin: 0;
 
     tr {
+      border: solid 2px #cccccc;
+
+      th {
+        border: none;
+        text-align: center;
+
+        &:first-of-type {
+          text-align: left;
+        }
+      }
       td {
+        border: none;
         line-height: 2em;
         vertical-align: middle;
+        text-align: center;
+
+        &:first-of-type {
+          text-align: left;
+        }
       }
     }
   }
@@ -168,6 +184,7 @@
   .radio-input {
     @disabled-color: #cccccc;
     position: relative;
+    display: inline-block;
 
     .radio-toggle {
       .set-toggle-size(22px);
