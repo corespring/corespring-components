@@ -284,7 +284,7 @@ describe('match server logic', function() {
             }
           ]
         },
-        summaryFeedback: componentTemplate.summaryFeedback,
+        summaryFeedback: componentTemplate.summaryFeedback
       };
 
       response.should.eql(expected);
@@ -734,7 +734,7 @@ describe('match server logic', function() {
             }
           ]
         },
-        summaryFeedback: componentTemplate.summaryFeedback,
+        summaryFeedback: componentTemplate.summaryFeedback
       };
       response.should.eql(expected);
     });
