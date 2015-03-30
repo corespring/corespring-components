@@ -123,20 +123,24 @@ var main = [
         var answerType = rawModel.answerType || TRUE_FALSE;
 
         function prepareColumns() {
+          var columns = _.cloneDeep(rawModel.columns);
+
           if (answerType === YES_NO || answerType === TRUE_FALSE) {
-            if (rawModel.columns.length !== 3) {
-              $log.error('Match interaction with boolean answer type should have 2 columns, found ' + rawModel.columns.length);
+            if (columns.length !== 3) {
+              $log.error('Match interaction with boolean answer type should have 2 columns, found ' + columns.length);
+              while(columns.length < 3){
+                columns.push({labelHtml: ''});
+              }
             }
-            return [_.cloneDeep(rawModel.columns[0]),
-              {
-                "labelHtml": answerType === TRUE_FALSE ? TRUE_LABEL : YES_LABEL
-              },
-              {
-                "labelHtml": answerType === TRUE_FALSE ? FALSE_LABEL : NO_LABEL
-              }];
+            if(_.isEmpty(columns[1].labelHtml)){
+              columns[1].labelHtml = answerType === TRUE_FALSE ? TRUE_LABEL : YES_LABEL;
+            }
+            if(_.isEmpty(columns[2].labelHtml)){
+              columns[2].labelHtml = answerType === TRUE_FALSE ? FALSE_LABEL : NO_LABEL;
+            }
           }
 
-          return _.cloneDeep(rawModel.columns);
+          return columns;
         }
 
         var answersExist = (session && session.answers);
