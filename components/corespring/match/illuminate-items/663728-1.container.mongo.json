@@ -1,0 +1,81 @@
+{
+    "_id" : ObjectId("54cf9727d4c6a82c2df15539"),
+    "xhtml" : "<div class=\"itemBody qti\"><style type=\"text/css\">@media print { .qti .noprint { display:none; } } .qti .vinculum { border-top:1px solid black; } .qti object { height:400; width:100%; } .qti .Verdana2t { vertical-align:top; text-align:left; text-decoration:none; border:1px solid white; } .qti .verdana2t div.exp { font-size:.7em; position:relative; left:7px; bottom:8px; } .qti .newradical { border-collapse:collapse; display:inline-block; *display:inline; vertical-align:middle; } .qti .newradical td { padding:0; vertical-align:top; } .qti .newradical div.exp { font-size:.7em; position:relative; left:7px; bottom:5px; } .qti u { border-bottom:2px solid black; text-decoration:none; border-collapse:collapse; line-height:1.5em; } .qti .under2 { border-bottom:2px solid black; text-decoration:none; border-collapse:collapse; line-height:1.5em; } .qti .under { text-decoration:underline; } .qti .center { text-align:center; margin:0; } .qti .borderme { vertical-align:top; text-align:left; text-decoration:none; border:1px solid white; } .qti .borderme TD { border:solid 1px black; } .qti b.frac { font-weight:normal; font-size:300%; font-family:times new roman; } .qti sup.frac { position:relative; top:-1.4em; font-size:70%; margin-left:-0.4em; } .qti sup.frac .frac { font-size:85%; } .qti .indent { text-indent:3em; } .qti .code { background-color:#fff5d2; border:#5585c6 1px dashed; padding:0px 20px; } .qti .abs { border-left:#000000 1px solid; border-right:#000000 1px solid; padding:0px 0.3em 0px 0.3em; } .qti .droptier { display:inline-block; *display:inline; vertical-align:-1em; } .qti .whole { display:inline-block; *display:inline; margin:0em 0em 0em 0.2em; font-size:120%; } .qti table.frac { display:inline-block; *display:inline; vertical-align:-1em; font-size:85%; border:0px; margin:0px; padding:0px; } .qti .neg { margin-right:-0.3em; } .qti frac.wh { margin:0em -0.2em 0em 0.2em; font-size:120%; } .qti .neg .nu { width:3px; } .qti .neg .de { width:3px; } .qti .frac .nu { border-left:0px; border-top:0px; border-right:0px; border-bottom:#000000 1px solid; text-align:center; } .qti .frac .de { border:0px; text-align:center; } .qti .fraction .numerator, .qti .fraction .denominator { text-align:center; } .qti .radical { font-size:114%; *font-size:108%; line-height:1.8em; display:inline-block; *display:inline; margin-right:-0.24em; } .qti .radical_content { line-height:1.8em; display:inline-block; *display:inline; text-decoration:overline; } .qti .fillin { margin:0em 0.2em; padding-left:1em; height:1em; border:#000000 1px solid; display:inline-block; *display:inline; } .qti table.KdsTable01 { border:1px solid black; border-spacing:0px; border-collapse:collapse; } .qti table.KdsTable01>tbody>tr>th { border:1px solid black; padding:2px; background-color:#D3D3D3; text-align:center; font-weight:normal; } .qti table.KdsTable01>tbody>tr>th.bold { border:1px solid black; padding:2px; background-color:#D3D3D3; text-align:center; font-weight:bold; } .qti table.KdsTable01>tbody>tr>td { border:1px solid black; padding:2px; text-align:center; } .qti table.KdsTable01>tbody>tr>td.bold { border:1px solid black; padding:2px; text-align:center; font-weight:bold; }</style><corespring-teacher-instructions id=\"teacher-instructions-1501207744\"></corespring-teacher-instructions><p class=\"prompt\"><strong>The table below shows 3 systems of equations and 3 matrices that have been set up to solve the systems of equations.</strong><br></br><br></br><strong> Use the table below to determine which sets of matrices have been set up correctly  to solve the systems of equations.</strong><br></br><br></br></p><corespring-match id=\"RESPONSE1\"></corespring-match></div>",
+    "components" : {
+      "RESPONSE1" : {
+        "componentType" : "corespring-match",
+        "correctResponse" : [
+          {
+            "id" : "Row1",
+            "matchSet" : [
+              false,
+              true
+            ]
+          },
+          {
+            "id" : "Row2",
+            "matchSet" : [
+              false,
+              true
+            ]
+          },
+          {
+            "id" : "Row3",
+            "matchSet" : [
+              true,
+              false
+            ]
+          }
+        ],
+        "model" : {
+          "columns" : [
+            {
+              "labelHtml" : "System of Equations/Matrices"
+            },
+            {
+              "labelHtml" : "<strong>Correct</strong>"
+            },
+            {
+              "labelHtml" : "<strong>Incorrect</strong>"
+            }
+          ],
+          "rows" : [
+            {
+              "id" : "Row1",
+              "labelHtml" : "<img alt=\"\" width=\"159\" height=\"135\" src=\"663728row13.gif\"></img>"
+            },
+            {
+              "id" : "Row2",
+              "labelHtml" : "<img alt=\"\" width=\"158\" height=\"130\" src=\"663728row23.gif\"></img>"
+            },
+            {
+              "id" : "Row3",
+              "labelHtml" : "<img alt=\"\" width=\"156\" height=\"131\" src=\"663728row33.gif\"></img>"
+            }
+          ],
+          "answerType" : "YES_NO"
+        }
+      }
+    },
+    "summaryFeedback" : "",
+    "customScoring" : "exports.process = function(item, session, outcomes) {\n  var answers = session.components;\n\n  function isCorrect(key) {\n    return (outcomes && outcomes[key]) ? (outcomes[key].correctness === 'correct' || outcomes[key].correctness === 'all_correct') : false;\n  }\n  \n  var RESPONSE1 = answers['RESPONSE1'].answers;\n\n  var SCORE = 0.0;\n\n  if (isCorrect('RESPONSE1')) { SCORE = 1; } else { SCORE = 0; }\n\n  return {\n    summary: {\n      score: SCORE\n    }\n  };\n};",
+  "profile" : {
+    "priorGradeLevels": [],
+    "published": true,
+    "reviewsPassed": [],
+    "sharedInCollections": [],
+    "standards": [],
+    "supportingMaterials": [],
+    "taskInfo": {
+      "extended": {
+        "kds": {
+          "scoringType": "PARCC",
+          "sourceId": "663728"
+        }
+      },
+      "gradeLevel": [],
+      "title": "663728 - PARCC",
+      "description": "663728 - PARCC"
+    }
+  }
+}

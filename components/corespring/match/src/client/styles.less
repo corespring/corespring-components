@@ -6,6 +6,35 @@
 @partial-color: #3A87AD;
 @learn-more-color: #3A87AD;
 @see-correct-color: #3C763D;
+@component-width: 600px;
+
+.set-toggle-size(@size) {
+  font-size: @size;
+
+  &:after {
+    min-width: @size;
+  }
+  &.checked:after {
+    min-width: @size;
+  }
+}
+
+.component-placeholder {
+  .render-corespring-match {
+    //the component takes the full width of the player
+    width: @component-width;
+    max-width: @component-width;
+    margin-bottom: 0;
+    padding-top: 0;
+
+    .undo-start-over {
+      //hide, but block the space, so that the
+      //content is not hidden behind the edit/delete
+      //buttons of the placeholder
+      visibility: hidden;
+    }
+  }
+}
 
 .render-corespring-match {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -18,12 +47,27 @@
     margin: 0;
 
     tr {
+      border: solid 2px #cccccc;
+
+      th {
+        border: none;
+        text-align: center;
+
+        &:first-of-type {
+          text-align: left;
+        }
+      }
       td {
+        border: none;
         line-height: 2em;
         vertical-align: middle;
+        text-align: center;
+
+        &:first-of-type {
+          text-align: left;
+        }
       }
     }
-
   }
 
   .correct-indicator {
@@ -34,12 +78,11 @@
 
   .see-solution {
     margin-top: 20px;
+    max-width: @component-width;
   }
 
   .summary-feedback,
-  .feedback,
-  .correct-answer {
-
+  .feedback {
     border-color: @learn-more-color;
     border-width: 2px;
     float: none;
@@ -63,17 +106,23 @@
     }
   }
 
-  .correct-answer {
-    border-color: @see-correct-color;
-    .panel-heading {
-      background-color: @see-correct-color;
-      height: 45px;
-    }
-  }
+  .feedback.panel {
+    margin-top: 10px;
 
-  .feedback {
     .panel-heading {
-      height: 45px;
+      cursor: default;
+    }
+
+    &.warning {
+      .panel-heading {
+        display: none;
+      }
+      .panel-body {
+        color: @warning-color;
+        background-color: lighten(@warning-color, 40%);
+        border: 1px solid lighten(@warning-color, 30%);
+        border-radius: 4px;
+      }
     }
   }
 
@@ -104,26 +153,41 @@
     }
   }
 
-  .radio-size(@size) {
-    .radio-toggle {
-      cursor: pointer;
-      font-size: @size;
+  .answer-expected-warning {
+    display: inline-block;
+    color: @warning-color;
+    font-size: 22px;
+  }
 
-      &:after {
-        min-width: @size;
+  .question-label {
+    display: inline-block;
+  }
+
+  .noAnswer {
+    .radio-input {
+      .radio-toggle:after {
+        text-shadow:  0px 0px 5px @warning-color;
       }
-      &.checked:after {
-        min-width: @size;
-      }
+    }
+    .checkbox-input {
+      .warning-input();
+    }
+  }
+
+  .editable {
+    .radio-input,
+    .checkbox-input {
+      cursor: pointer;
     }
   }
 
   .radio-input {
     @disabled-color: #cccccc;
     position: relative;
-    .radio-size(22px);
+    display: inline-block;
 
     .radio-toggle {
+      .set-toggle-size(22px);
       position: relative;
       vertical-align: middle;
       display: inline-block;
@@ -146,54 +210,40 @@
     .label-text {
       display: inline-block;
       vertical-align: middle;
-      cursor: pointer;
 
       &.disabled {
         color: @disabled-color;
-        cursor: default;
       }
     }
-  }
 
-  .radio-input.correct {
-    .radio-size(40px);
-    color: @correct-color;
+    &.correct {
+      color: @correct-color;
 
-    .radio-toggle {
-      &.disabled:after {
-        color: @correct-color;
-      }
-      &.checked:after {
-        content: @correct-character;
-      }
-      &:after {
-        content: @correct-character;
-      }
-    }
-  }
+      .radio-toggle {
+        .set-toggle-size(40px);
 
-  .radio-input.incorrect {
-    color: @incorrect-color;
-
-    .radio-toggle {
-      &.disabled:after {
-        color: @incorrect-color;
-      }
-      &.checked:after {
-        content: @incorrect-character;
+        &.disabled:after {
+          color: @correct-color;
+        }
+        &.checked:after {
+          content: @correct-character;
+        }
+        &:after {
+          content: @correct-character;
+        }
       }
     }
-  }
 
-  .checkbox-size(@size) {
-    .checkbox-toggle {
-      font-size: @size;
+    &.incorrect {
+      color: @incorrect-color;
 
-      &:after {
-        min-width: @size;
-      }
-      &.checked:after {
-        min-width: @size;
+      .radio-toggle {
+        &.disabled:after {
+          color: @incorrect-color;
+        }
+        &.checked:after {
+          content: @incorrect-character;
+        }
       }
     }
   }
@@ -201,9 +251,9 @@
   .checkbox-input {
     @disabled-color: #cccccc;
     position: relative;
-    .checkbox-size(22px);
 
     .checkbox-toggle {
+      .set-toggle-size(22px);
       position: relative;
       vertical-align: middle;
       display: inline-block;
@@ -226,44 +276,43 @@
     .label-text {
       display: inline-block;
       vertical-align: middle;
-      cursor: pointer;
 
       &.disabled {
         color: @disabled-color;
-        cursor: default;
       }
     }
-  }
 
-  .checkbox-input.correct {
-    .checkbox-size(40px);
-    color: @correct-color;
+    &.correct {
+      color: @correct-color;
 
-    .checkbox-toggle {
-      &:after {
-        content: "\f14a";
-      }
-      &.checked:after {
-        content: "\f14a";
-      }
-      &.disabled:after {
-        color: @correct-color;
+      .checkbox-toggle {
+        .set-toggle-size(40px);
+        &:after {
+          content: "\f14a";
+        }
+        &.checked:after {
+          content: "\f14a";
+        }
+        &.disabled:after {
+          color: @correct-color;
+        }
       }
     }
-  }
 
-  .checkbox-input.incorrect {
-    color: @incorrect-color;
+    &.incorrect {
+      color: @incorrect-color;
 
-    .checkbox-toggle {
-      &.disabled:after {
-        color: @incorrect-color;
-      }
-      &:after {
-        display: inline-block;
-        content: "\f00d";
+      .checkbox-toggle {
+        &:after {
+          display: inline-block;
+          content: "\f00d";
+        }
+        &.disabled:after {
+          color: @incorrect-color;
+        }
       }
     }
+
   }
 
   td {
@@ -273,4 +322,21 @@
 }
 
 .config-corespring-match {
+
+  .inline-help {
+    font-style: italic;
+    color: #999999;
+  }
+
+  .row {
+    &.option {
+      margin-top: 10px;
+
+      &.input-type {
+        .inline-help {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
 }

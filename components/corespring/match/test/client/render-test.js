@@ -81,6 +81,27 @@ describe('corespring', function() {
       expect(scope.inputType).toBe('radiobutton');
     });
 
+    it('uses the column header if available', function(){
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.matchModel.columns[1].labelHtml).toEqual('Column 1');
+      expect(scope.matchModel.columns[2].labelHtml).toEqual('Column 2');
+    });
+
+    it('uses the default header if column header is empty', function(){
+      testModel.data.model.columns[1].labelHtml = null;
+      testModel.data.model.columns[2].labelHtml = '';
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.matchModel.columns[1].labelHtml).toEqual('Yes');
+      expect(scope.matchModel.columns[2].labelHtml).toEqual('No');
+    });
+
+    it('uses the default header if column does not exist', function(){
+      testModel.data.model.columns = [];
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.matchModel.columns[1].labelHtml).toEqual('Yes');
+      expect(scope.matchModel.columns[2].labelHtml).toEqual('No');
+    });
+
     it('builds the table correctly', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
