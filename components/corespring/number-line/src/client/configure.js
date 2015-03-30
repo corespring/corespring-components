@@ -45,7 +45,7 @@ var main = [
 
     var correctResponseView = [
       '<div ng-hide="fullModel.model.config.exhibitOnly" class="panel panel-default correct-response-panel">',
-      '<div class="panel-heading">Correct Response</div>',
+      '<div class="panel-heading"><h4>Correct Response</h4></div>',
       '  <div class="panel-body">',
       '    <p>Select answer type and place it on the number line. Intersecting points, line segments and/or rays will appear above the number line.</p>',
       '    <div interactive-graph',
