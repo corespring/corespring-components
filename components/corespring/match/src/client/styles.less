@@ -70,7 +70,6 @@
     border-color: @learn-more-color;
     border-width: 2px;
     float: none;
-    margin-top: 20px;
 
     .panel-heading {
       background-color: @learn-more-color;
@@ -91,11 +90,23 @@
     }
   }
 
-  .feedback {
+  .feedback.panel {
+    margin-top: 10px;
 
     .panel-heading {
-      height: 45px;
       cursor: default;
+    }
+
+    &.warning {
+      .panel-heading {
+        display: none;
+      }
+      .panel-body {
+        color: @warning-color;
+        background-color: lighten(@warning-color, 40%);
+        border: 1px solid lighten(@warning-color, 30%);
+        border-radius: 4px;
+      }
     }
   }
 
