@@ -298,7 +298,7 @@ var main = [
 
       function matchInteraction(){
         return [
-          '<table class="table" ng-class="layout">',
+          '<table class="table" ng-class="config.layout">',
           '  <tr>',
           '    <th class="answer-header"',
           '        ng-class="{notFirst:!$first}"',
