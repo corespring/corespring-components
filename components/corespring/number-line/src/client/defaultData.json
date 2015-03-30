@@ -26,14 +26,14 @@
       "availableTypes": {
         "PF": true,
         "PE": true,
-        "LEE": true,
+        "LFF": true,
         "LEF": true,
         "LFE": true,
-        "LFF": true,
-        "REP": true,
-        "REN": true,
+        "LEE": true,
+        "RFN": true,
         "RFP": true,
-        "RFN": true
+        "REN": true,
+        "REP": true
       },
       "initialElements": [
       ]

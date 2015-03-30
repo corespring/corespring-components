@@ -62,10 +62,10 @@ var main = [
       '<tr><td>',
       '<div>Show student options for</div>',
       '<td>',
-      '<div><input id="points" type="checkbox" ng-model="allow.points"/><label for="points">Points</label></div>',
-      '<div><input id="lines" type="checkbox" ng-model="allow.lines"/><label for="lines">Line segments</label></div>',
-      '<div><input id="rays" type="checkbox" ng-model="allow.rays"/><label for="rays">Rays</label></div>',
-      '<div><input id="all" type="checkbox" ng-model="top.allowAll"/><label for="all">All</label></div>',
+      '<div><checkbox id="points"  ng-model="allow.points">Points</checkbox>',
+      '<div><checkbox id="lines"  ng-model="allow.lines">Line segments</checkbox>',
+      '<div><checkbox id="rays"  ng-model="allow.rays">Rays</checkbox>',
+      '<div><checkbox id="all"  ng-model="top.allowAll">All</checkbox>',
       '</table>'
     ].join('');
 
@@ -267,6 +267,17 @@ var main = [
             } else {
               scope.top.allowAll = undefined;
             }
+
+            var firstType;
+            for (var k in scope.fullModel.config.availableTypes) {
+              if (scope.fullModel.config.availableTypes[k] === true) {
+                firstType = k;
+                break;
+              }
+            }
+
+            scope.fullModel.model.config.initialType = firstType;
+
           }
         }, true);
 

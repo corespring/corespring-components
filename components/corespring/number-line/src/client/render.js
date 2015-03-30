@@ -489,6 +489,15 @@ var interactiveGraph = [
           scope.responsemodel = _.cloneDeep(model.config.initialElements) || [];
           rebuildGraph();
           scope.selectedType = scope.selectedType || model.config.initialType;
+          if (model.config.availableTypes[scope.selectedType] !== true) {
+            for (var k in model.config.availableTypes) {
+              if (model.config.availableTypes[k] === true) {
+                scope.selectedType = k;
+                break;
+              }
+            }
+          }
+
           scope.selectedGroup = _.find(_.keys(groups), function(g) {
             return _.contains(groups[g], scope.selectedType);
           });
