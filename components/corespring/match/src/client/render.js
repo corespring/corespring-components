@@ -29,7 +29,6 @@ var main = [
       var YES_NO = 'YES_NO';
 
       scope.editable = true;
-      scope.isSummaryFeedbackOpen = false;
       scope.isSeeCorrectAnswerOpen = false;
 
       scope.containerBridge = {
@@ -56,8 +55,10 @@ var main = [
       //-----------------------------------------------------------------
 
       function setDataAndSession(dataAndSession) {
+        console.log("corespring match:setDataAndSession", dataAndSession);
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
+        scope.config = {layout:'three-columns'};
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
         updateInputType(scope.matchModel);
         renderMath();
@@ -89,7 +90,6 @@ var main = [
       function reset() {
         scope.session = {};
         scope.matchModel = prepareModel(scope.data.model, {});
-        scope.isSummaryFeedbackOpen = false;
         scope.isSeeCorrectAnswerOpen = false;
         delete scope.response;
       }
@@ -256,15 +256,15 @@ var main = [
           matchInteraction(),
           itemFeedbackPanel(),
           seeSolutionPanel(),
-          summaryFeedbackPanel(),
         '</div>'
       ].join('\n');
 
       function matchInteraction(){
         return [
-          '<table class="table">',
+          '<table class="table" ng-class="layout">',
           '  <tr>',
           '    <th class="answer-header"',
+          '        ng-class="{notFirst:!$first}"',
           '        ng-repeat="column in matchModel.columns"',
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
@@ -312,13 +312,14 @@ var main = [
 
       function seeSolutionPanel(){
         return [
-          '<div class="see-solution"',
+          '<div class="see-answer-panel"',
           '    see-answer-panel=""',
           '    see-answer-panel-expanded="isSeeCorrectAnswerOpen"',
           '    ng-if="showSeeCorrectAnswerLink(response)">',
-          '  <table class="table">',
+          '  <table class="table" ng-class="layout">',
           '    <tr>',
           '      <th class="answer-header"',
+          '          ng-class="{notFirst:!$first}"',
           '          ng-repeat="column in matchModel.columns"',
           '          ng-bind-html-unsafe="column.labelHtml"/>',
           '    </tr>',
@@ -332,23 +333,6 @@ var main = [
           '      </td>',
           '    </tr>',
           '  </table>',
-          '</div>'
-        ].join('');
-      }
-
-      function summaryFeedbackPanel() {
-        return [
-          '<div class="panel summary-feedback"',
-          '    ng-if="response.summaryFeedback">',
-          '  <div class="panel-heading"',
-          '      ng-click="isSummaryFeedbackOpen=!isSummaryFeedbackOpen">',
-          '    <span class="toggle fa-lightbulb-o"></span>',
-          '    <span class="label">Learn More</span>',
-          '  </div>',
-          '  <div class="panel-body"',
-          '      ng-show="isSummaryFeedbackOpen"',
-          '      ng-bind-html-unsafe="response.summaryFeedback">',
-          '  </div>',
           '</div>'
         ].join('');
       }
