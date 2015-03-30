@@ -38,8 +38,24 @@ function createOutcome(question, answer, settings) {
     return response;
   }
 
-  if (!answer) {
-    return addOptionalParts(response);
+  function numberOfAnswers(answer){
+    if(!answer){
+      return 0;
+    }
+    var sum = _.reduce(answer, function(sum, row){
+      return sum + countTrueValues(row.matchSet);
+    }, 0);
+
+    return sum;
+  }
+
+  if (numberOfAnswers(answer) === 0) {
+    response = addOptionalParts(response);
+    response.correctness = 'warning';
+    response.feedback = {
+      summary: feedbackUtils.makeFeedback(question.feedback, 'warning')
+    };
+    return response;
   }
 
   if (question._uid !== answer._uid) {
@@ -94,6 +110,12 @@ function whereIdIsEqual(id) {
   };
 }
 
+function countTrueValues(arr){
+  return _.reduce(arr, function(sum, value){
+    return sum += (value ? 1 : 0);
+  });
+}
+
 function buildCorrectnessMatrix(question, answer, settings) {
   var matrix = question.correctResponse.map(function(correctRow) {
     var answerRow = _.find(answer, whereIdIsEqual(correctRow.id));
@@ -121,13 +143,6 @@ function buildCorrectnessMatrix(question, answer, settings) {
       id: correctRow.id,
       matchSet: matchSet
     };
-
-    function countTrueValues(arr){
-      return _.reduce(arr, function(sum, value){
-        console.log("value", value);
-        return sum += (value ? 1 : 0);
-      });
-    }
 
     var numberOfExpectedAnswers = countTrueValues(correctRow.matchSet);
     var numberOfActualAnswers = countTrueValues(answerRow.matchSet);
