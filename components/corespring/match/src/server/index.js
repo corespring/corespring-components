@@ -28,9 +28,6 @@ function createOutcome(question, answer, settings) {
       if (answer) {
         response.feedback.correctnessMatrix = buildCorrectnessMatrix(question, answer, settings);
       }
-      if (question.summaryFeedback) {
-        response.summaryFeedback = question.summaryFeedback;
-      }
     }
     if (question.comments) {
       response.comments = question.comments;
@@ -165,16 +162,14 @@ defaultFeedbackTable[SOME_CORRECT] = keys.DEFAULT_PARTIAL_FEEDBACK;
 function buildFeedbackSummary(question, correctness) {
   var feedback = (question && question.feedback && question.feedback[correctness]);
 
-  if (!feedback || !feedback.type || feedback.type.length === 0 || feedback.type === 'none') {
-    return null;
+  if(feedback) {
+    if (feedback.type === 'none') {
+      return null;
+    }
+    if (feedback.type !== 'default' && feedback.text && feedback.text.length > 0) {
+      return feedback.text;
+    }
   }
-  if (feedback.type === 'default') {
-    return defaultFeedbackTable[correctness];
-  }
-  if (feedback.text && feedback.text.length > 0) {
-    return feedback.text;
-  }
-
   return defaultFeedbackTable[correctness];
 }
 

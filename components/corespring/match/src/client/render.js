@@ -29,7 +29,7 @@ var main = [
       var YES_NO = 'YES_NO';
 
       scope.editable = true;
-      scope.isSummaryFeedbackOpen = false;
+      scope.stack = [];
       scope.isSeeCorrectAnswerOpen = false;
 
       scope.containerBridge = {
@@ -40,24 +40,29 @@ var main = [
         reset: reset,
         resetStash: function() {},
         isAnswerEmpty: isAnswerEmpty,
-        answerChangedHandler: answerChangedHandler,
         editable: setEditable
       };
 
       scope.showSeeCorrectAnswerLink = showSeeCorrectAnswerLink;
       scope.classForCorrectness = classForCorrectness;
       scope.onClickMatch = onClickMatch;
+      scope.undo = undo;
+      scope.startOver = startOver;
       scope.getIconClass = getIconClass;
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
+
+      scope.$watch("matchModel", matchModelWatch, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
       //-----------------------------------------------------------------
 
       function setDataAndSession(dataAndSession) {
+        console.log("corespring match:setDataAndSession", dataAndSession);
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
+        scope.config = {layout:'three-columns'};
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
         updateInputType(scope.matchModel);
         renderMath();
@@ -87,9 +92,9 @@ var main = [
       }
 
       function reset() {
+        scope.stack = [];
         scope.session = {};
         scope.matchModel = prepareModel(scope.data.model, {});
-        scope.isSummaryFeedbackOpen = false;
         scope.isSeeCorrectAnswerOpen = false;
         delete scope.response;
       }
@@ -176,14 +181,6 @@ var main = [
         };
       }
 
-      function answerChangedHandler(callback) {
-        scope.$watch("matchModel", function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            callback();
-          }
-        }, true);
-      }
-
       function showSeeCorrectAnswerLink(response) {
         return (response && response.correctness && response.correctness !== ALL_CORRECT);
       }
@@ -217,6 +214,35 @@ var main = [
           }
         }
         return UNKNOWN;
+      }
+
+      function matchModelWatch(newValue, oldValue){
+        console.log("matchModelWatch", newValue);
+        if (! _.isEqual(newValue.rows, _.last(scope.stack))) {
+          scope.stack.push(_.cloneDeep(newValue.rows));
+          console.log("pushing", scope.stack);
+        }
+      }
+
+      function startOver() {
+        scope.stack = [_.first(scope.stack)];
+        revertToState(_.first(scope.stack));
+      }
+
+      function undo() {
+        if (scope.stack.length < 2) {
+          return;
+        }
+        scope.stack.pop();
+        revertToState(_.last(scope.stack));
+      }
+
+      function revertToState(state){
+        _.forEach(scope.matchModel.rows, function(row, i){
+          _.forEach(row.matchSet, function(match, j){
+            match.value = state[i].matchSet[j].value;
+          });
+        });
       }
 
       function renderMath() {
@@ -253,18 +279,29 @@ var main = [
     function template() {
       return [
         '<div class="render-corespring-match">',
+          undoStartOver(),
           matchInteraction(),
           itemFeedbackPanel(),
           seeSolutionPanel(),
-          summaryFeedbackPanel(),
         '</div>'
       ].join('\n');
 
+      function undoStartOver(){
+        return [
+          '<div ng-show="editable" class="undo-start-over pull-right">',
+          '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="stack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
+          '  <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="stack.length < 2">Start over</button>',
+          '</div>',
+          '<div class="clearfix"></div>'
+        ].join('');
+      }
+
       function matchInteraction(){
         return [
-          '<table class="table">',
+          '<table class="table" ng-class="layout">',
           '  <tr>',
           '    <th class="answer-header"',
+          '        ng-class="{notFirst:!$first}"',
           '        ng-repeat="column in matchModel.columns"',
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
@@ -312,13 +349,14 @@ var main = [
 
       function seeSolutionPanel(){
         return [
-          '<div class="see-solution"',
+          '<div class="see-answer-panel"',
           '    see-answer-panel=""',
           '    see-answer-panel-expanded="isSeeCorrectAnswerOpen"',
           '    ng-if="showSeeCorrectAnswerLink(response)">',
-          '  <table class="table">',
+          '  <table class="table" ng-class="layout">',
           '    <tr>',
           '      <th class="answer-header"',
+          '          ng-class="{notFirst:!$first}"',
           '          ng-repeat="column in matchModel.columns"',
           '          ng-bind-html-unsafe="column.labelHtml"/>',
           '    </tr>',
@@ -332,23 +370,6 @@ var main = [
           '      </td>',
           '    </tr>',
           '  </table>',
-          '</div>'
-        ].join('');
-      }
-
-      function summaryFeedbackPanel() {
-        return [
-          '<div class="panel summary-feedback"',
-          '    ng-if="response.summaryFeedback">',
-          '  <div class="panel-heading"',
-          '      ng-click="isSummaryFeedbackOpen=!isSummaryFeedbackOpen">',
-          '    <span class="toggle fa-lightbulb-o"></span>',
-          '    <span class="label">Learn More</span>',
-          '  </div>',
-          '  <div class="panel-body"',
-          '      ng-show="isSummaryFeedbackOpen"',
-          '      ng-bind-html-unsafe="response.summaryFeedback">',
-          '  </div>',
           '</div>'
         ].join('');
       }

@@ -60,7 +60,6 @@ var componentTemplate = {
       text: "Everything is wrong !"
     }
   },
-  summaryFeedback: " This is the summary feedback. This is the summary feedback. This is the summary feedback ",
   model: {
     columns: [
       {
@@ -110,8 +109,7 @@ describe('match server logic', function() {
       score: 0,
       feedback: {
         summary: fbu.defaults.warning
-      },
-      summaryFeedback: componentTemplate.summaryFeedback
+      }
     });
 
     outcome = server.createOutcome(component, undefined, helper.settings(true, true, true));
@@ -121,8 +119,7 @@ describe('match server logic', function() {
       score: 0,
       feedback: {
         summary: fbu.defaults.warning
-      },
-      summaryFeedback: componentTemplate.summaryFeedback
+      }
     });
 
   });
@@ -213,8 +210,7 @@ describe('match server logic', function() {
               ]
             }
           ]
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
 
       response.should.eql(expected);
@@ -283,8 +279,7 @@ describe('match server logic', function() {
               ]
             }
           ]
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
 
       response.should.eql(expected);
@@ -314,8 +309,7 @@ describe('match server logic', function() {
         score: 0,
         feedback: {
           summary: fbu.defaults.warning
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
       response.should.eql(expected);
     });
@@ -397,8 +391,7 @@ describe('match server logic', function() {
               ]
             }
           ]
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
       response.should.eql(expected);
     });
@@ -480,8 +473,7 @@ describe('match server logic', function() {
               ]
             }
           ]
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
       response.should.eql(expected);
     });
@@ -563,8 +555,7 @@ describe('match server logic', function() {
               ]
             }
           ]
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
       response.should.eql(expected);
     });
@@ -649,8 +640,7 @@ describe('match server logic', function() {
               answerExpected: true
             }
           ]
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
       response.should.eql(expected);
     });
@@ -733,8 +723,7 @@ describe('match server logic', function() {
               ]
             }
           ]
-        },
-        summaryFeedback: componentTemplate.summaryFeedback
+        }
       };
       response.should.eql(expected);
     });
