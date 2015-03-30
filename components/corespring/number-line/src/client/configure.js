@@ -9,11 +9,11 @@ var main = [
       '    <td>',
       '    <checkbox ng-model="fullModel.model.config.exhibitOnly">Make exhibit</checkbox>',
       '    <div>',
-      '       Domain = <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[0]"/> to <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.domain[1]"/>',
+      '       Domain = <input type="number" class="form-control" ng-model="fullModel.model.config.domain[0]"/> to <input type="number" class="form-control" ng-model="fullModel.model.config.domain[1]"/>',
       '    </div>',
-      '    <div>Number of Ticks: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.tickFrequency"/></div>',
+      '    <div>Number of Ticks: <input type="number" class="form-control" ng-model="fullModel.model.config.tickFrequency"/></div>',
       '    <checkbox ng-model="fullModel.model.config.showMinorTicks">Display minor tick marks</checkbox>',
-      '    <div>Minor tick frequency: <input type="number" class="form-control fixed-input-100" ng-model="fullModel.model.config.snapPerTick"/></div>',
+      '    <div>Minor tick frequency: <input type="number" class="form-control" ng-model="fullModel.model.config.snapPerTick"/></div>',
       '    <div><a class="reset-defaults btn btn-default" ng-click="resetToDefaults()">Reset to default values</a></div>',
       '    </td>',
       '    <td>',
@@ -32,7 +32,7 @@ var main = [
     ].join('');
 
     var initialView = [
-      '<div collapsable-panel collapsable-panel-title="Initial view">',
+      '<div collapsable-panel collapsable-panel-title="Initial view / Make Exhibit">',
       '  <div interactive-graph',
       '       ngModel="initialView.model"',
       '       options="configGraphOptions"',
@@ -47,6 +47,7 @@ var main = [
       '<div ng-hide="fullModel.model.config.exhibitOnly" class="panel panel-default correct-response-panel">',
       '<div class="panel-heading">Correct Response</div>',
       '  <div class="panel-body">',
+      '    <p>Select answer type and place it on the number line. Intersecting points, line segments and/or rays will appear above the number line.</p>',
       '    <div interactive-graph',
       '         ngModel="correctResponseView.model"',
       '         responseModel="correctResponseView.responseModel"',
@@ -57,6 +58,7 @@ var main = [
     ].join('');
 
     var display = [
+      '<div ng-hide="fullModel.model.config.exhibitOnly">',
       '<h3>Display</h3>',
       '<table class="allowed-elements">',
       '<tr><td>',
@@ -66,10 +68,12 @@ var main = [
       '<div><checkbox id="lines"  ng-model="allow.lines">Line segments</checkbox>',
       '<div><checkbox id="rays"  ng-model="allow.rays">Rays</checkbox>',
       '<div><checkbox id="all"  ng-model="top.allowAll">All</checkbox>',
-      '</table>'
+      '</table>',
+      '</div>'
     ].join('');
 
     var feedback = [
+      '<div ng-hide="fullModel.model.config.exhibitOnly">',
       '<div feedback-panel>',
       '  <div feedback-selector',
       '      fb-sel-label="If correct, show"',
@@ -92,6 +96,7 @@ var main = [
       '      fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
       '      fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
       '  </div>',
+      '</div>',
       '</div>'
 
     ].join('');
@@ -312,7 +317,7 @@ var main = [
         '<div class="config-number-line" ng-click="stopTickEditing($event)">',
         '  <div navigator-panel="Design">',
         '  <p>',
-        '    In Number Line, students identify coordinates or plot points on a graph by clicking on the graph.',
+        '    In this interaction, students plot points, lines or rays on a number line.',
         '  </p>',
         attributes,
         initialView,
