@@ -60,9 +60,7 @@ var main = [
         scope.data = dataAndSession.data;
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
         updateInputType(scope.matchModel);
-        scope.$emit('rerender-math', {
-          delay: 100
-        });
+        renderMath();
       }
 
       function getSession() {
@@ -212,7 +210,14 @@ var main = [
               "correct-indicator fa-check-square";
           }
         }
-        return 'unknown';
+        return UNKNOWN;
+      }
+
+      function renderMath(){
+        scope.$emit('rerender-math', {
+          delay: 100,
+          element: element[0]
+        });
       }
 
       function isAnswerEmpty() {
