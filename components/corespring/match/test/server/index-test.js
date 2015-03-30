@@ -102,25 +102,25 @@ beforeEach(function() {
 
 describe('match server logic', function() {
 
-  it('should return incorrect if the answer is null or undefined', function() {
+  it('should return warning if the answer is null or undefined', function() {
     var outcome = server.createOutcome(component, null, helper.settings(true, true, true));
     outcome.should.eql({
-      correctness: 'all_incorrect',
+      correctness: 'warning',
       correctResponse: correctResponse,
       score: 0,
       feedback: {
-        summary: componentTemplate.feedback.all_incorrect.text
+        summary: fbu.defaults.warning
       },
       summaryFeedback: componentTemplate.summaryFeedback
     });
 
     outcome = server.createOutcome(component, undefined, helper.settings(true, true, true));
     outcome.should.eql({
-      correctness: 'all_incorrect',
+      correctness: 'warning',
       correctResponse: correctResponse,
       score: 0,
       feedback: {
-        summary: componentTemplate.feedback.all_incorrect.text
+        summary: fbu.defaults.warning
       },
       summaryFeedback: componentTemplate.summaryFeedback
     });
@@ -309,69 +309,11 @@ describe('match server logic', function() {
       var response = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(true, true, true));
 
       var expected = {
-        correctness: "all_incorrect",
+        correctness: "warning",
         correctResponse: correctResponse,
         score: 0,
         feedback: {
-          summary: componentTemplate.feedback.all_incorrect.text,
-          correctnessMatrix: [
-            {
-              id: "1",
-              matchSet: [
-                {
-                  correctness: "unknown",
-                  value: false
-                },
-                {
-                  correctness: "unknown",
-                  value: false
-                }
-              ],
-              answerExpected: true
-            },
-            {
-              id: "2",
-              matchSet: [
-                {
-                  correctness: "unknown",
-                  value: false
-                },
-                {
-                  correctness: "unknown",
-                  value: false
-                }
-              ],
-              answerExpected: true
-            },
-            {
-              id: "3",
-              matchSet: [
-                {
-                  correctness: "unknown",
-                  value: false
-                },
-                {
-                  correctness: "unknown",
-                  value: false
-                }
-              ],
-              answerExpected: true
-            },
-            {
-              id: "4",
-              matchSet: [
-                {
-                  correctness: "unknown",
-                  value: false
-                },
-                {
-                  correctness: "unknown",
-                  value: false
-                }
-              ],
-              answerExpected: true
-            }
-          ]
+          summary: fbu.defaults.warning
         },
         summaryFeedback: componentTemplate.summaryFeedback
       };
