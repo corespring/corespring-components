@@ -208,10 +208,16 @@ var main = [
       function getIconClass(row, $index) {
         if (scope.response && scope.response.correctResponse) {
           var correctRow = _.find(scope.response.correctResponse, whereIdIsEqual(row.id));
+          var answerRow = _.find(scope.matchModel.rows, whereIdIsEqual(row.id));
+          console.log("getIconClass", correctRow, answerRow);
           if (correctRow && correctRow.matchSet[$index]) {
             return (isRadioButton(scope.inputType)) ?
-              'correct-indicator fa-check-circle' :
-              'correct-indicator fa-check-square';
+              (answerRow.matchSet[$index].value ?
+                'correct-indicator fa-check-circle' :
+                'correct-indicator fa-circle') :
+              (answerRow.matchSet[$index].value ?
+                'correct-indicator fa-check-square' :
+                'correct-indicator fa-square');
           }
         }
         return UNKNOWN;
