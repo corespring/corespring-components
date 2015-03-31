@@ -30,7 +30,7 @@ var main = [
 
       scope.editable = true;
       scope.stack = [];
-      scope.isSeeCorrectAnswerOpen = false;
+      scope.isSeeAnswerOpen = false;
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
@@ -95,7 +95,8 @@ var main = [
         scope.stack = [];
         scope.session = {};
         scope.matchModel = prepareModel(scope.data.model, {});
-        scope.isSeeCorrectAnswerOpen = false;
+        scope.isSeeAnswerOpen = false;
+
         delete scope.response;
       }
 
@@ -313,7 +314,7 @@ var main = [
           '         <td class="question-label" ng-bind-html-unsafe="row.labelHtml">',
           '         </td>',
           '         <td class="answer-expected-warning">',
-          '           <div ng-if="row.answerExpected"><i class="fa fa-exclamation-triangle"></i></div>',
+          '           <div ng-if="row.answerExpected"><i class="fa fa-exclamation-triangle" alt="answer expected"></i></div>',
           '         </td>',
           '       </tr>',
           '      </table>',
@@ -355,9 +356,8 @@ var main = [
 
       function seeSolutionPanel(){
         return [
-          '<div class="see-answer-panel"',
-          '    see-answer-panel=""',
-          '    see-answer-panel-expanded="isSeeCorrectAnswerOpen"',
+          '<div see-answer-panel="true"',
+          '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
           '    ng-if="showSeeCorrectAnswerLink(response)">',
           '  <table class="table" ng-class="layout">',
           '    <tr>',
