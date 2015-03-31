@@ -35,8 +35,6 @@
 }
 
 .render-corespring-match {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
   color: #000000;
   padding-top: 14px;
   margin-bottom: 20px;
@@ -75,6 +73,7 @@
         text-align: center;
         background: white;
         color: black;
+        vertical-align: bottom;
 
         &:first-of-type {
           width: 100%;
@@ -91,6 +90,25 @@
           width: 100%;
           text-align: left;
         }
+      }
+    }
+  }
+
+  td.question-cell {
+    table {
+      border: none;
+      width: 100%;
+      tr,th,td {
+        border: none;
+      }
+      .question-label {
+        width:100%;
+      }
+      .answer-expected-warning {
+        color: @warning-color;
+        font-size: 22px;
+        width:28px;
+        min-width: 28px;
       }
     }
   }
@@ -136,25 +154,6 @@
       }
     }
 
-  }
-
-  .question-cell {
-    table {
-      border: none;
-      width: 100%;
-      tr,th,td {
-        border: none;
-      }
-      .question-label {
-        width:100%;
-      }
-      .answer-expected-warning {
-        color: @warning-color;
-        font-size: 22px;
-        width:28px;
-        min-width: 28px;
-      }
-    }
   }
 
   .noAnswer {
