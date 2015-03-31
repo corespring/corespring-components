@@ -274,7 +274,7 @@ describe('match server logic', function() {
         correctResponse: correctResponse,
         score: 1,
         feedback: {
-          summary: "Correct!",
+          summary: "Correct!"
         },
         correctnessMatrix: [
           correctUnknown("1"),
