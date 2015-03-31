@@ -314,7 +314,7 @@ var main = [
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
           '  <tr class="question-row"',
-          '      ng-repeat="row in matchModel.rows"',
+          '      ng-repeat="row in atchModel.rows"',
           '      question-id="{{row.id}}">',
           '    <td class="question-cell">',
           '      <table>',
