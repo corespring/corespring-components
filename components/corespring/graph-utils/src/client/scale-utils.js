@@ -136,7 +136,9 @@ exports.service = [ '$log', function($log) {
     var ticks = [];
     var tick = extent[0];
     while (tick < extent[1]) {
-      ticks.push(tick);
+      if (Math.abs(tick - extent[1]) > 0.01) {
+        ticks.push(tick);
+      }
       tick += step;
     }
     ticks.push(extent[1]);
