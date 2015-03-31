@@ -328,7 +328,7 @@ var main = [
           '      </table>',
           '    </td>',
           '    <td class="answer-cell"',
-          '        ng-class="{editable:editable, noAnswer: row.answerExpected}"',
+          '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet track by $index">',
           '      <checkbox ng-if="isCheckBox(inputType) && editable"',
           '          ng-model="match.value"',
