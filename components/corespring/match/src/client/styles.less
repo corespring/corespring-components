@@ -46,19 +46,19 @@
     border: solid 1px #cccccc;
 
     &.three-columns {
-      td,th {
+      td, th {
         max-width: 100px;
       }
     }
 
     &.four-columns {
-      td,th {
+      td, th {
         max-width: 80px;
       }
     }
 
     &.five-columns {
-      td,th {
+      td, th {
         max-width: 60px;
       }
     }
@@ -95,16 +95,16 @@
     table {
       border: none;
       width: 100%;
-      tr,th,td {
+      tr, th, td {
         border: none;
       }
       .question-label {
-        width:100%;
+        width: 100%;
       }
       .answer-expected-warning {
         color: @warning-color;
         font-size: 22px;
-        width:28px;
+        width: 28px;
         min-width: 28px;
       }
     }
@@ -155,11 +155,144 @@
   .noAnswer {
     .radio-input {
       .radio-toggle:after {
-        text-shadow:  0px 0px 5px @warning-color;
+        text-shadow: 0px 0px 5px @warning-color;
       }
     }
     .checkbox-input {
       .warning-input();
+    }
+  }
+
+  .radiobutton {
+    font-family: FontAwesome;
+    font-size: 22px;
+    position: relative;
+
+    .background {
+      position: absolute;
+      top: 4.5px;
+      color: white;
+      &:after {
+        content: '\f111';
+      }
+    }
+    &.correct {
+      .background {
+        text-shadow: 0 0 6px @correct-color;
+      }
+      .foreground {
+        color: @correct-color;
+        &:after {
+          content: @correct-character;
+        }
+      }
+      &.unchecked {
+        .foreground {
+          &:after {
+            content: '\f111';
+          }
+        }
+      }
+    }
+    &.incorrect {
+      .background {
+        text-shadow: 0 0 6px @incorrect-color;
+      }
+      .foreground {
+        color: @incorrect-color;
+        &:after {
+          content: @incorrect-character;
+        }
+      }
+    }
+    &.unknown {
+      .foreground {
+        color: black;
+        &:after {
+          content: '\f1db';
+        }
+      }
+      &.answer-expected {
+        .foreground {
+          opacity: 0.5;
+          color: @warning-color;
+        }
+        .background {
+          color: #eee;
+          font-size: 20px;
+          top: 5px;
+          text-shadow: 0 0 6px @warning-color;
+        }
+      }
+    }
+  }
+
+  .checkbox {
+    font-family: FontAwesome;
+    font-size: 22px;
+    position: relative;
+
+    .background {
+      position: absolute;
+      top: 4.5px;
+      color: white;
+    }
+    &.correct {
+      .background {
+        &:after {
+          content: '\f0c8';
+        }
+        text-shadow: 0 0 6px @correct-color;
+      }
+      .foreground {
+        color: @correct-color;
+        &:after {
+          content: '\f14a';
+        }
+      }
+      &.unchecked {
+        .foreground {
+          &:after {
+            content: '\f0c8';
+          }
+        }
+      }
+    }
+    &.incorrect {
+      .background {
+        &:after {
+          content: '\f00d';
+        }
+        text-shadow: 0 0 6px @incorrect-color;
+      }
+      .foreground {
+        color: @incorrect-color;
+        &:after {
+          content: '\f00d';
+        }
+      }
+    }
+    &.unknown {
+      .foreground {
+        color: black;
+        &:after {
+          content: '\f096';
+        }
+      }
+      &.answer-expected {
+        .foreground {
+          opacity: 0.5;
+          color: @warning-color;
+        }
+        .background {
+          color: #eee;
+          font-size: 20px;
+          text-shadow: 0 0 6px @warning-color;
+          &:after {
+            content: '\f0c8';
+          }
+        }
+      }
     }
   }
 
@@ -204,35 +337,6 @@
         color: @disabled-color;
       }
     }
-
-    &.correct {
-      color: @correct-color;
-
-      .radio-toggle {
-        &.disabled:after {
-          color: @correct-color;
-        }
-        &.checked:after {
-          content: @correct-character;
-        }
-        &:after {
-          content: @correct-character;
-        }
-      }
-    }
-
-    &.incorrect {
-      color: @incorrect-color;
-
-      .radio-toggle {
-        &.disabled:after {
-          color: @incorrect-color;
-        }
-        &.checked:after {
-          content: @incorrect-character;
-        }
-      }
-    }
   }
 
   .checkbox-input {
@@ -268,37 +372,6 @@
         color: @disabled-color;
       }
     }
-
-    &.correct {
-      color: @correct-color;
-
-      .checkbox-toggle {
-        &:after {
-          content: "\f14a";
-        }
-        &.checked:after {
-          content: "\f14a";
-        }
-        &.disabled:after {
-          color: @correct-color;
-        }
-      }
-    }
-
-    &.incorrect {
-      color: @incorrect-color;
-
-      .checkbox-toggle {
-        &:after {
-          display: inline-block;
-          content: "\f00d";
-        }
-        &.disabled:after {
-          color: @incorrect-color;
-        }
-      }
-    }
-
   }
 
   td {
