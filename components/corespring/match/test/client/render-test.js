@@ -106,8 +106,8 @@ describe('corespring', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       var table = $(element).find('table');
-      expect(table.length).toBe(1);
-      expect(table.find('td').length).toBe(12);
+      expect(table.length).toBe(5);
+      expect(table.find('td').length).toBe(20);
     });
 
     it('selects correctly radio buttons', function() {

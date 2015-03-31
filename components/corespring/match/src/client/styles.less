@@ -51,19 +51,19 @@
 
     &.three-columns {
       td,th {
-        width: 100px;
+        max-width: 100px;
       }
     }
 
     &.four-columns {
       td,th {
-        width: 80px;
+        max-width: 80px;
       }
     }
 
     &.five-columns {
       td,th {
-        width: 60px;
+        max-width: 60px;
       }
     }
 
@@ -77,7 +77,7 @@
         color: black;
 
         &:first-of-type {
-          width: auto;
+          width: 100%;
           text-align: left;
         }
       }
@@ -88,7 +88,7 @@
         text-align: center;
 
         &:first-of-type {
-          width: auto;
+          width: 100%;
           text-align: left;
         }
       }
@@ -97,7 +97,7 @@
 
   .correct-indicator {
     font-family: FontAwesome;
-    font-size: 40px;
+    font-size: 22px;
     color: @correct-color;
   }
 
@@ -138,14 +138,23 @@
 
   }
 
-  .answer-expected-warning {
-    display: inline-block;
-    color: @warning-color;
-    font-size: 22px;
-  }
-
-  .question-label {
-    display: inline-block;
+  .question-cell {
+    table {
+      border: none;
+      width: 100%;
+      tr,th,td {
+        border: none;
+      }
+      .question-label {
+        width:100%;
+      }
+      .answer-expected-warning {
+        color: @warning-color;
+        font-size: 22px;
+        width:28px;
+        min-width: 28px;
+      }
+    }
   }
 
   .noAnswer {
@@ -205,7 +214,7 @@
       color: @correct-color;
 
       .radio-toggle {
-        .set-toggle-size(40px);
+        .set-toggle-size(22px);
 
         &.disabled:after {
           color: @correct-color;
@@ -271,7 +280,7 @@
       color: @correct-color;
 
       .checkbox-toggle {
-        .set-toggle-size(40px);
+        .set-toggle-size(22px);
         &:after {
           content: "\f14a";
         }

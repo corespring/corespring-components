@@ -86,8 +86,8 @@ var main = [
         console.log("corespring match: setResponse", response);
         scope.response = response;
 
-        if (response.feedback) {
-          setCorrectnessOnAnswers(response.feedback.correctnessMatrix);
+        if (response.correctnessMatrix) {
+          setCorrectnessOnAnswers(response.correctnessMatrix);
         }
       }
 
@@ -301,7 +301,6 @@ var main = [
           '<table class="table" ng-class="config.layout">',
           '  <tr>',
           '    <th class="answer-header"',
-          '        ng-class="{notFirst:!$first}"',
           '        ng-repeat="column in matchModel.columns"',
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
@@ -309,8 +308,15 @@ var main = [
           '      ng-repeat="row in matchModel.rows"',
           '      question-id="{{row.id}}">',
           '    <td class="question-cell">',
-          '      <div class="question-label" ng-bind-html-unsafe="row.labelHtml"></div>',
-          '      <div class="answer-expected-warning" ng-if="row.answerExpected"><i class="fa fa-exclamation-triangle"></i></div>',
+          '      <table>',
+          '       <tr>',
+          '         <td class="question-label" ng-bind-html-unsafe="row.labelHtml">',
+          '         </td>',
+          '         <td class="answer-expected-warning">',
+          '           <div ng-if="row.answerExpected"><i class="fa fa-exclamation-triangle"></i></div>',
+          '         </td>',
+          '       </tr>',
+          '      </table>',
           '    </td>',
           '    <td class="answer-cell"',
           '        ng-class="{editable:editable, noAnswer: row.answerExpected}"',
