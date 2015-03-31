@@ -1,8 +1,11 @@
 @import '../../../../../less/common';
 
+@component-width: 600px;
+
 .view-multiple-choice {
   padding-top: 14px;
   margin-bottom: 20px;
+  max-width: @component-width;
 
   td {
     vertical-align: top;
@@ -10,9 +13,8 @@
 
   .choices-container {
     display: table;
-    width: 95%;
     .choice-holder-background {
-      width: 590px;
+      width: @component-width;
       &.selected {
         &.correct {
         }
@@ -360,7 +362,7 @@
   .answer-holder {
     background: #fff;
     overflow: hidden;
-    width: 590px;
+    width: @component-width;
     .panel {
       border: 4px solid #3C763D;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
