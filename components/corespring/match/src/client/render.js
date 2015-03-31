@@ -52,7 +52,7 @@ var main = [
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
 
-      scope.$watch("matchModel", matchModelWatch, true);
+      scope.$watch("matchModel", watchMatchModel, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
@@ -186,13 +186,18 @@ var main = [
         return (response && response.correctness && response.correctness !== ALL_CORRECT);
       }
 
-      function classForCorrectness(correctness) {
-        switch (correctness) {
-          case CORRECT:
-          case INCORRECT:
-            return correctness;
+      function classForCorrectness(row, index) {
+
+        return scope.inputType + ' ' + getClass(row.matchSet[index].correct);
+
+        function getClass(correct) {
+          switch (correct) {
+            case CORRECT:
+            case INCORRECT:
+              return correct;
+          }
+          return row.answerExpected ? 'unknown answer-expected' : UNKNOWN;
         }
-        return UNKNOWN;
       }
 
       function onClickMatch(matchSet, index) {
@@ -209,25 +214,23 @@ var main = [
         if (scope.response && scope.response.correctResponse) {
           var correctRow = _.find(scope.response.correctResponse, whereIdIsEqual(row.id));
           var answerRow = _.find(scope.matchModel.rows, whereIdIsEqual(row.id));
-          console.log("getIconClass", correctRow, answerRow);
           if (correctRow && correctRow.matchSet[$index]) {
             return (isRadioButton(scope.inputType)) ?
               (answerRow.matchSet[$index].value ?
-                'correct-indicator fa-check-circle' :
-                'correct-indicator fa-circle') :
+                'radiobutton correct' :
+                'radiobutton correct unchecked') :
               (answerRow.matchSet[$index].value ?
-                'correct-indicator fa-check-square' :
-                'correct-indicator fa-square');
+                'checkbox correct' :
+                'checkbox correct unchecked');
           }
         }
         return UNKNOWN;
       }
 
-      function matchModelWatch(newValue, oldValue){
-        console.log("matchModelWatch", newValue);
+      function watchMatchModel(newValue, oldValue){
+        console.log("watchMatchModel", newValue);
         if (! _.isEqual(newValue.rows, _.last(scope.stack))) {
           scope.stack.push(_.cloneDeep(newValue.rows));
-          console.log("pushing", scope.stack);
         }
       }
 
@@ -326,22 +329,24 @@ var main = [
           '      </table>',
           '    </td>',
           '    <td class="answer-cell"',
-          '        ng-class="{editable:editable, noAnswer: row.answerExpected}"',
-          '        ng-repeat="match in row.matchSet track by $index">',
-          '      <checkbox ng-if="isCheckBox(inputType)"',
-          '          ng-disabled="!editable"',
+          '        ng-class="{editable:editable}"',
+          '        ng-repeat="match in row.matchSet">',
+          '      <checkbox ng-if="isCheckBox(inputType) && editable"',
           '          ng-model="match.value"',
           '          ng-value="true"',
           '          ng-change="onClickMatch(row.matchSet, $index)"',
-          '          ng-class="classForCorrectness(match.correct)"',
           '          ></checkbox>',
-          '      <radio ng-if="isRadioButton(inputType)"',
-          '          ng-disabled="!editable"',
+          '      <radio ng-if="isRadioButton(inputType) && editable"',
           '          ng-model="match.value"',
           '          ng-value="true"',
           '          ng-change="onClickMatch(row.matchSet, $index)"',
-          '          ng-class="classForCorrectness(match.correct)"',
           '          ></radio>',
+          '      <div ng-if="!editable"',
+          '         ng-class="classForCorrectness(row, $index)"',
+          '        >',
+          '        <i class="background fa"></i>',
+          '        <i class="foreground fa"></i>',
+          '      </div>',
           '    </td>',
           '  </tr>',
           '</table>'
@@ -378,7 +383,12 @@ var main = [
           '          ng-bind-html-unsafe="row.labelHtml"></td>',
           '      <td class="answer-cell"',
           '          ng-repeat="match in row.matchSet track by $index">',
-          '        <span class="{{getIconClass(row,$index)}}"></span>',
+          '        <div ng-if="!editable"',
+          '           ng-class="getIconClass(row,$index)"',
+          '          >',
+          '            <i class="background fa"></i>',
+          '            <i class="foreground fa"></i>',
+          '        </div>',
           '      </td>',
           '    </tr>',
           '  </table>',
