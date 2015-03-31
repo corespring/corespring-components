@@ -52,7 +52,7 @@ var main = [
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
 
-      scope.$watch("matchModel", matchModelWatch, true);
+      scope.$watch("matchModel", watchMatchModel, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
@@ -227,7 +227,8 @@ var main = [
         return UNKNOWN;
       }
 
-      function matchModelWatch(newValue, oldValue){
+      function watchMatchModel(newValue, oldValue){
+        console.log("watchMatchModel", newValue);
         if (! _.isEqual(newValue.rows, _.last(scope.stack))) {
           scope.stack.push(_.cloneDeep(newValue.rows));
         }
@@ -314,7 +315,7 @@ var main = [
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
           '  <tr class="question-row"',
-          '      ng-repeat="row in atchModel.rows"',
+          '      ng-repeat="row in matchModel.rows"',
           '      question-id="{{row.id}}">',
           '    <td class="question-cell">',
           '      <table>',
@@ -329,7 +330,7 @@ var main = [
           '    </td>',
           '    <td class="answer-cell"',
           '        ng-class="{editable:editable}"',
-          '        ng-repeat="match in row.matchSet track by $index">',
+          '        ng-repeat="match in row.matchSet">',
           '      <checkbox ng-if="isCheckBox(inputType) && editable"',
           '          ng-model="match.value"',
           '          ng-value="true"',

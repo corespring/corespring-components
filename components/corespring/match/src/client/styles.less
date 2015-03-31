@@ -15,6 +15,11 @@
   }
 }
 
+.text-shadow(@color){
+  //comment in to show shadows on the correctness icons
+  //text-shadow: 0 0 6px @color;
+}
+
 .component-placeholder {
   .render-corespring-match {
     //the component takes the full width of the player
@@ -160,7 +165,7 @@
     }
     &.correct {
       .background {
-        text-shadow: 0 0 6px @correct-color;
+        .text-shadow(@correct-color);
       }
       .foreground {
         color: @correct-color;
@@ -178,7 +183,7 @@
     }
     &.incorrect {
       .background {
-        text-shadow: 0 0 6px @incorrect-color;
+        .text-shadow(@incorrect-color);
       }
       .foreground {
         color: @incorrect-color;
@@ -189,10 +194,13 @@
     }
     &.unknown {
       .foreground {
-        color: black;
+        color: #bbb;
         &:after {
           content: '\f1db';
         }
+      }
+      .background {
+        color: #eee;
       }
       &.answer-expected {
         .foreground {
@@ -200,10 +208,9 @@
           color: @warning-color;
         }
         .background {
-          color: #eee;
           font-size: 20px;
           top: 5px;
-          text-shadow: 0 0 6px @warning-color;
+          .text-shadow(@warning-color);
         }
       }
     }
@@ -224,7 +231,7 @@
         &:after {
           content: '\f0c8';
         }
-        text-shadow: 0 0 6px @correct-color;
+        .text-shadow(@correct-color);
       }
       .foreground {
         color: @correct-color;
@@ -245,7 +252,7 @@
         &:after {
           content: '\f00d';
         }
-        text-shadow: 0 0 6px @incorrect-color;
+        .text-shadow(@incorrect-color);
       }
       .foreground {
         color: @incorrect-color;
@@ -256,23 +263,24 @@
     }
     &.unknown {
       .foreground {
-        color: black;
+        color: #bbb;
         &:after {
           content: '\f096';
         }
       }
+      .background {
+        color: #eee;
+        &:after {
+          content: '\f0c8';
+        }
+      }
       &.answer-expected {
         .foreground {
-          opacity: 0.5;
           color: @warning-color;
         }
         .background {
-          color: #eee;
           font-size: 20px;
-          text-shadow: 0 0 6px @warning-color;
-          &:after {
-            content: '\f0c8';
-          }
+          .text-shadow(@warning-color);
         }
       }
     }
