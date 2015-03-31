@@ -23,10 +23,10 @@ var main = [
       '           options="sampleGraphOptions"',
       '           tickLabelClick="tickLabelClick"',
       '           editable="sampleNumberLine.editable"></div>',
-      '      <div class="sample-description">Click on a label to edit or remove.</div>',
       '      <div class="tick-label-override-input-holder" ng-show="isEditingTickLabel">',
       '        <input ng-model="tickBeingEdited.label" ng-click="$event.stopImmediatePropagation()" ng-keyup="tickEditKeyup($event)" type="text" class="tick-label-override-input" style="left: {{tickLabelEditingPosition}}px"/>',
       '      </div>',
+      '      <div class="sample-description">Click on a label to edit or remove.</div>',
       '    </td>',
       '  </tr>',
       '</table>'
@@ -66,10 +66,10 @@ var main = [
       '<tr><td>',
       '<div>Show student options for</div>',
       '<td>',
-      '<div><checkbox id="points"  ng-model="allow.points">Points</checkbox>',
-      '<div><checkbox id="lines"  ng-model="allow.lines">Line segments</checkbox>',
-      '<div><checkbox id="rays"  ng-model="allow.rays">Rays</checkbox>',
-      '<div><checkbox id="all"  ng-model="top.allowAll">All</checkbox>',
+      '<div><checkbox id="points" ng-model="allow.points">Points</checkbox>',
+      '<div><checkbox id="lines" ng-model="allow.lines">Line segments</checkbox>',
+      '<div><checkbox id="rays" ng-model="allow.rays">Rays</checkbox>',
+      '<div><checkbox id="all" ng-model="top.allowAll">All</checkbox>',
       '</table>',
       '</div>'
     ].join('');
