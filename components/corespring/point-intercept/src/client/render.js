@@ -28,7 +28,7 @@ var main = ['$compile', '$modal', '$rootScope',
         '  <div class="feedback-holder" ng-show="model.config.showFeedback">',
         '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '  </div>',
-        '  <div see-answer-panel class="solution-panel" ng-class="{panelVisible: correctResponse}">',
+        '  <div see-answer-panel see-answer-panel-expanded="trueValue" class="solution-panel" ng-class="{panelVisible: correctResponse}">',
         "    <div class='solution-container'></div>",
         "  </div>",
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
@@ -41,6 +41,7 @@ var main = ['$compile', '$modal', '$rootScope',
         $scope.submissions = 0;
         $scope.points = {};
         $scope.solutionView = false;
+        $scope.trueValue = true;
         this.setInitialParams = function (initialParams) {
           $scope.initialParams = initialParams;
         };
