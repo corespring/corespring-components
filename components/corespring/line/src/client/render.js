@@ -48,7 +48,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
         '<div class="feedback-holder" ng-show="config.showFeedback">',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>',
-        '<div see-answer-panel class="solution-panel" ng-class="{panelVisible: correctResponse}">',
+        '<div see-answer-panel see-answer-panel-expanded="trueValue" class="solution-panel" ng-class="{panelVisible: correctResponse}">',
         "  <div class='solution-container'>",
         "     <span>The correct equation is {{correctResponse.equation}}</span>",
         "     <div class='solution-graph'></div>",
@@ -63,8 +63,8 @@ var main = ['$compile', '$rootScope', "LineUtils",
       },
 
       link: function(scope, element, attrs) {
-
         scope.points = {};
+        scope.trueValue = true;
         scope.submissions = 0;
         scope.setInitialParams = function(initialParams) {
           scope.initialParams = initialParams;

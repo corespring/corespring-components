@@ -8,9 +8,14 @@ var def = function() {
     },
     link: function(scope, element, attrs) {
       scope.$watch('answerExpanded', function(n, p) {
+        if (_.isUndefined(scope.defaultState)) {
+          scope.defaultState = scope.answerExpanded ? 'answerExpanded' : '';
+        }
+
         if (_.isUndefined(n) || n === p) {
           return;
         }
+
         if (n) {
           $(element).find('.answer-collapse').css('height', 'auto');
           $(element).find('.answer-collapse').css('display', 'none');
@@ -30,7 +35,7 @@ var def = function() {
       '      <div class="panel-heading" ng-click="answerExpanded = !answerExpanded">',
       '        <h4 class="panel-title" ><i class="answerIcon fa fa-eye{{answerExpanded ? \'-slash\' : \'\'}}"></i>{{answerExpanded ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
       '      </div>',
-      '      <div class="answer-collapse">',
+      '      <div class="answer-collapse {{defaultState}}">',
       '        <div class="panel-body" ng-transclude>',
       '        </div>',
       '      </div>',
