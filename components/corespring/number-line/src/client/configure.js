@@ -34,6 +34,9 @@ var main = [
 
     var initialView = [
       '<div collapsable-panel collapsable-panel-title="Initial view / Make Exhibit">',
+      '  <p>Use this number line to set a starting point, line segment or ray. This is optional. ',
+      '  This number line may also be used to make an exhibit number line, which can not be manipulated by a student.',
+      '  Be sure to check “Make an Exhibit” in the Number Line Attributes area above.</p>',
       '  <div interactive-graph',
       '       ngModel="initialView.model"',
       '       options="configGraphOptions"',
