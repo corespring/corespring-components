@@ -1,48 +1,72 @@
 var main = [
-  '$log',
-  '$timeout',
   '$http',
+  '$timeout',
   'ChoiceTemplates',
+  'LogFactory',
   function(
-    $log,
-    $timeout,
     $http,
-    ChoiceTemplates
+    $timeout,
+    ChoiceTemplates,
+    LogFactory
     ) {
 
     return {
-      scope: 'isolate',
+      scope: {},
       restrict: 'E',
       replace: true,
       link: link,
       template: template()
     };
 
+    var $log = LogFactory('corespring-match-configure')
+
     function link(scope, element, attrs) {
 
       ChoiceTemplates.extendScope(scope, 'corespring-match');
-
-      scope.model = {
-        config: {
-          shuffle: false,
-          inputType: 'Radio',
-          layout: '3 Columns'
-        }
-      };
 
       scope.containerBridge = {
         setModel: setModel,
         getModel: getModel
       };
 
-      var matchModel = {};
-
-      function setModel(model) {
-        matchModel = model;
+      function setModel(fullModel) {
+        scope.fullModel = fullModel || {};
+        scope.model = scope.fullModel.model || {columns:[]};
+        scope.config = getConfig(scope.model);
       }
 
       function getModel() {
-        return matchModel;
+        return _.cloneDeep(scope.fullModel);
+      }
+
+      function getConfig(model){
+        var answerType = model.answerType;
+        if(answerType){
+          delete model.answerType;
+          var config = {};
+          config.inputType = answerType === 'MULTIPLE' ? 'Checkbox' : 'Radio';
+          if(answerType === 'YES_NO'){
+            setDefaultColumnLabels(model, 'Yes', 'No');
+          } else if(answerType === 'TRUE_FALSE'){
+            setDefaultColumnLabels(model, 'True', 'False');
+          }
+          config.layout = Math.min(5, Math.max(3, model.columns.length)) + " Columns";
+          config.shuffle = false;
+          return config;
+        }
+        return model.config;
+      }
+
+      function setDefaultColumnLabels(model, labelOne, labelTwo){
+        while(model.columns.length < 3){
+          model.columns.push({labelHtml:''});
+        }
+        if(_.isEmpty(model.columns[1].labelHtml)){
+          model.columns[1].labelHtml = labelOne;
+        }
+        if(_.isEmpty(model.columns[2].labelHtml)){
+          model.columns[2].labelHtml = labelTwo;
+        }
       }
     }
 
