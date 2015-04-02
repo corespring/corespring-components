@@ -9,8 +9,6 @@
 }
 
 .view-multiple-choice {
-  padding-top: 14px;
-  margin-bottom: 20px;
 
   td {
     vertical-align: top;
@@ -39,23 +37,19 @@
   }
 
   .choice-holder-background {
-    padding-top: 5px;
+    padding: 10px 0 10px 0;
     margin-bottom: 10px;
+    border:1px solid #fff;
+
     &.selected {
       border: 1px solid #ddd;
       background: #f5f5f5;
-      padding-top: 10px;
       border-radius: 4px;
       &.correct {
         margin-right: 10px;
         background-color: #dff0d8;
         border: 1px solid #d6e9c6;
         border-radius: 4px;
-        padding-bottom: 15px;
-        padding-top: 20px;
-        -webkit-box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
-        -moz-box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
-        box-shadow: -2px 5px 12px -2px rgba(0, 0, 0, 0.5);
       }
     }
   }
@@ -63,17 +57,16 @@
   .selected {
     .choice-holder {
       .choice-letter {
-        font-size: 18px;
       }
       .radio-choice {
         .radio-button {
           display: inline-block;
-          width: 27px;
-          height: 27px;
+          width: 14px;
+          height: 14px;
           left: 0px;
           top: -1px;
-          margin-left: 3px;
-          margin-top: 3px;
+          margin-left: 2px;
+          margin-top: 2px;
           border-radius: 50%;
           background-color: #555555;
           -webkit-transform: scale(1, 1);
@@ -92,12 +85,12 @@
           &:before {
             font-family: 'FontAwesome';
             content: "\f00c";
-            width: 30px;
-            height: 30px;
-            font-size: 28px;
+            width: 10px;
+            height: 10px;
+            font-size: 19px;
             color: #555555;
             left: 0px;
-            top: -5px;
+            top: -4px;
             position: absolute;
           }
         }
@@ -107,31 +100,20 @@
 
     &.correct {
       .choice-holder {
-        .choice-input {
-          padding-left: 15px;
-          padding-right: 20px;
-        }
-        .choice-label {
-          font-size: 18px;
-        }
-        .choice-letter {
-          font-size: 20px;
-          font-size: 30px;
-        }
         .radio-choice {
           opacity: 1;
           border: none;
           .radio-button {
             background: none;
             &:after {
-              font-size: 51px;
+              font-size: 25px;
               font-family: FontAwesome;
               content: @correct-character;
               color: @correct-color;
               border: 0;
               position: absolute;
-              top: -18px;
-              left: -5px;
+              top: -8px;
+              left: -1px;
             }
           }
         }
@@ -139,12 +121,12 @@
           background-color: @correct-color;
           opacity: 1;
           border: none;
-          width: 40px;
-          height: 40px;
+          width: 20px;
+          height: 20px;
           .checkbox-button {
             &:before {
               color: #ffffff;
-              font-size: 38px;
+              font-size: 20px;
             }
           }
         }
@@ -159,7 +141,7 @@
           .radio-button {
             background: none;
             &:after {
-              font-size: 35px;
+              font-size: 25px;
               font-family: FontAwesome;
               content: "\f05c";
               color: #ec971f;
@@ -178,7 +160,7 @@
             &:before {
               color: #ffffff;
               content: "\f00d";
-              left: 4px;
+              left: 3px;
             }
           }
         }
@@ -193,8 +175,9 @@
     }
     .checkbox-choice {
       display: inline-block;
-      width: 30px;
-      height: 30px;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
       left: 0px;
       border: 1px solid #cccccc;
       border-radius: 3px;
@@ -219,8 +202,9 @@
     }
     .radio-choice {
       display: inline-block;
-      width: 35px;
-      height: 35px;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
       border: 1px solid #cccccc;
       border-radius: 50%;
       background-color: #fff;
@@ -228,6 +212,7 @@
       -o-transition: border 0.15s ease-in-out;
       transition: border 0.15s ease-in-out;
       position: relative;
+      top: -1px;
 
       .radio-button {
         -webkit-transform: scale(0, 0);
@@ -265,11 +250,8 @@
 
   .choice-input, .choice-letter, .choice-currency-symbol, .choice-label {
     display: table-cell;
-    padding-top: 5px;
     padding-left: 5px;
     padding-right: 5px;
-    padding-bottom: 10px;
-    vertical-align: middle;
   }
 
   .show-correct-answer {
@@ -385,6 +367,12 @@
         border-color: #3C763D;
         border-radius: 0px;
         cursor: pointer;
+      }
+    }
+
+    .panel-body{
+      .answer{
+        width: 100%;
       }
     }
   }
