@@ -1,62 +1,65 @@
 @import '../../../../../less/common';
 
-.style-element(@x) {
+@icon-width: 42px;
+@icon-height: 41px;
+
+.style-element(@idx) {
   display: inline-block;
-  width: 50px;
-  height: 45px;
-  background: url('/client/public/corespring/number-line/elements-sprite.png') @x 0px;
+  width: @icon-width;
+  height: @icon-height;
+  background: url('/client/public/corespring/number-line/elements-sprite.png') (-@idx * @icon-width) 0px;
   cursor: pointer;
 
   &.active, &.active:hover {
-    background-position: @x -91px;
+    background-position: (-@idx * @icon-width) (-2 * @icon-height)
   }
 
   &:hover {
     text-decoration: none;
-    background-position: @x -45px;
+    background-position: (-@idx * @icon-width) (-@icon-height)
   }
 }
 
 .element-selector-template() {
   white-space: nowrap;
   span.element-pf a {
-    .style-element(3px);
+    .style-element(0);
   }
 
   span.element-pe a {
-    .style-element(-459px);
+    .style-element(9);
   }
 
   span.element-lff a {
-    .style-element(-50px);
+    .style-element(1);
   }
 
   span.element-lef a {
-    .style-element(-102px);
+    .style-element(2);
   }
 
   span.element-lfe a {
-    .style-element(-153px);
+    .style-element(3);
   }
 
   span.element-lee a {
-    .style-element(-203px);
+    .style-element(4);
   }
 
   span.element-rfn a {
-    .style-element(-254px);
+    .style-element(5);
   }
 
   span.element-rfp a {
-    .style-element(-304px);
+    .style-element(6);
   }
 
   span.element-ren a {
-    .style-element(-356px);
+    .style-element(7);
   }
 
   span.element-rep a {
-    .style-element(-406px);
+    .style-element(8);
   }
 
   .bin-icon {

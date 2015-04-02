@@ -1,11 +1,12 @@
 /* global Raphael */
 
 var BASE_COLOR = "#000";
-var DEFAULT_POINT_RADIUS = 7;
+var DEFAULT_POINT_RADIUS = 5;
 var DEFAULT_TICK_SIZE = 20;
 var SELECTED_COLOR = "#aaf";
 var EMPTY_COLOR = "#fff";
 var DEFAULT_STROKE_WIDTH = 3;
+var DEFAULT_LINE_THICKNESS = 5;
 
 exports.framework = 'angular';
 exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
@@ -278,7 +279,7 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         this.grabber.y1 = this.line.y1 = y;
         this.grabber.attr({"stroke-width": "30", "stroke": "#9aa", opacity: 0});
         this.grabber.redraw();
-        this.line.attr({"stroke-width": "6", "stroke": thatLI.selected ? SELECTED_COLOR : lineOptions.strokeColor});
+        this.line.attr({"stroke-width": DEFAULT_LINE_THICKNESS, "stroke": thatLI.selected ? SELECTED_COLOR : lineOptions.strokeColor});
         this.line.redraw();
       };
 
