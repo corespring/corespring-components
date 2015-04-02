@@ -16,7 +16,7 @@
   "model": {
     "config": {
       "domain": [-5, 5],
-      "maxNumberOfPoints": 10,
+      "maxNumberOfPoints": 20,
       "tickFrequency": 10,
       "showMinorTicks": true,
       "snapPerTick": 1,
