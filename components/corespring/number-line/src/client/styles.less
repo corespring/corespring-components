@@ -1,97 +1,86 @@
 @import '../../../../../less/common';
 
-.style-element(@x) {
+@icon-width: 42px;
+@icon-height: 41px;
+
+.style-element(@idx) {
   display: inline-block;
-  width: 55px;
-  height: 45px;
-  background: url('/client/public/corespring/number-line/elements-sprite.png') @x 0px;
+  width: @icon-width;
+  height: @icon-height;
+  background: url('/client/public/corespring/number-line/elements-sprite.png') (-@idx * @icon-width) 0px;
   cursor: pointer;
 
   &.active, &.active:hover {
-    background-position: @x -91px;
+    background-position: (-@idx * @icon-width) (-2 * @icon-height)
   }
 
   &:hover {
     text-decoration: none;
-    background-position: @x -45px;
+    background-position: (-@idx * @icon-width) (-@icon-height)
+  }
+}
+
+.element-selector-template() {
+  white-space: nowrap;
+  span.element-pf a {
+    .style-element(0);
   }
 
+  span.element-pe a {
+    .style-element(9);
+  }
+
+  span.element-lff a {
+    .style-element(1);
+  }
+
+  span.element-lef a {
+    .style-element(2);
+  }
+
+  span.element-lfe a {
+    .style-element(3);
+  }
+
+  span.element-lee a {
+    .style-element(4);
+  }
+
+  span.element-rfn a {
+    .style-element(5);
+  }
+
+  span.element-rfp a {
+    .style-element(6);
+  }
+
+  span.element-ren a {
+    .style-element(7);
+  }
+
+  span.element-rep a {
+    .style-element(8);
+  }
+
+  .bin-icon {
+    vertical-align: -90%;
+    padding: 10px;
+  }
+
+  .bin-icon:hover {
+    color: #aaa;
+    cursor: pointer;
+  }
 }
 
 .view-number-line {
 
-  div.element-selector {
-    white-space: nowrap;
-    span.element-pf a {
-      .style-element(0px);
-    }
-
-    span.element-lff a {
-      .style-element(-60px);
-    }
-
-    span.element-lef a {
-      .style-element(-120px);
-    }
-
-    span.element-lfe a {
-      .style-element(-180px);
-    }
-
-    span.element-lee a {
-      .style-element(-243px);
-    }
-
-    span.element-rfn a {
-      .style-element(-304px);
-    }
-
-    span.element-rfp a {
-      .style-element(-363px);
-    }
-
-    span.element-ren a {
-      .style-element(-426px);
-    }
-
-    span.element-rep a {
-      .style-element(-485px);
-    }
-
-    .bin-icon {
-      vertical-align: -90%;
-      padding: 10px;
-    }
-
-    .bin-icon:hover {
-      color: #aaa;
-      cursor: pointer;
-    }
+  .undo-button-row {
+    float: right;
   }
 
-  .panel.feedback-panel {
-    max-width: 550px;
-    border-width: 3px;
-    .panel-heading {
-      border-top-left-radius: 0px;
-      border-top-right-radius: 0px;
-      height: 30px;
-    }
-    .panel-body {
-      padding: 10px 20px;
-    }
-    &.incorrect {
-      border-color: @incorrect-color;
-      .panel-heading {
-        background-color: @incorrect-color;
-      }
-    }
-    &.correct {
-      border-color: @correct-color;
-      .panel-heading {
-        background-color: @correct-color;
-      }
-    }
+  div.element-selector {
+    .element-selector-template();
   }
 
   .correct-element {
@@ -102,4 +91,65 @@
     color: @incorrect-color;
   }
 
+}
+
+.config-number-line {
+
+  margin-left: 17px;
+
+  .interactive-graph {
+    max-width: 530px;
+  }
+
+  .tick-label-override-input-holder {
+    position: relative;
+    .tick-label-override-input {
+      position: absolute;
+      top: -44px;
+      width: 50px;
+    }
+  }
+
+  .sample-description {
+    text-align: center;
+  }
+
+  .undo-button-row {
+    float: right;
+  }
+
+  .allowed-elements {
+    td {
+      border: none;
+      vertical-align: top;
+      line-height: 22px;
+    }
+  }
+
+  .collapsable-panel,
+  .correct-response-panel {
+    width: 600px;
+
+    .panel-heading h4 {
+      font-size: 16px;
+    }
+  }
+
+  div.element-selector {
+    .element-selector-template();
+  }
+
+
+  .attributes-table {
+    margin: 0;
+    line-height: 40px;
+    input {
+      max-width: 70px;
+      display: inline-block;
+    }
+
+    td {
+      border: none;
+    }
+  }
 }

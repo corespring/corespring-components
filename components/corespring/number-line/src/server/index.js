@@ -4,6 +4,10 @@ var keys = fb.keys;
 
 exports.keys = keys;
 
+var pointEqual = function(p1, p2) {
+  return Math.abs(p1-p2) < 0.01;
+};
+
 var elementEqual = function(e1, e2) {
   if (e1 == null && e2 == null) {
     return true;
@@ -16,11 +20,11 @@ var elementEqual = function(e1, e2) {
   }
   switch (e1.type) {
     case "point":
-      return e1.domainPosition === e2.domainPosition;
+      return pointEqual(e1.domainPosition, e2.domainPosition) && e1.pointType === e2.pointType;
     case "line":
-      return e1.domainPosition === e2.domainPosition && e1.size === e2.size && e1.leftPoint === e2.leftPoint && e1.rightPoint === e2.rightPoint;
+      return pointEqual(e1.domainPosition, e2.domainPosition) && pointEqual(e1.size, e2.size) && e1.leftPoint === e2.leftPoint && e1.rightPoint === e2.rightPoint;
     case "ray":
-      return e1.domainPosition === e2.domainPosition && e1.pointType === e2.pointType && e1.direction === e2.direction;
+      return pointEqual(e1.domainPosition, e2.domainPosition) && e1.pointType === e2.pointType && e1.direction === e2.direction;
   }
   return false;
 };
@@ -44,14 +48,68 @@ var getElementsWithFeedback = function(answer, correctAnswer) {
   return answerWithFeedback;
 };
 
+var calculateScore = function(answer, question) {
+
+  var countAnsweredCorrectly = function() {
+    var correctResponse = _.cloneDeep(question.correctResponse);
+    var sum = _.reduce(answer, function(sum, a) {
+      var contains = isElementCorrect(a, correctResponse);
+      var newsum = sum + (contains ? 1 : 0);
+      return newsum;
+    }, 0);
+    return sum;
+  };
+
+  var calculatePartialScore = function(correctCount) {
+    var partialScore = _.find(question.partialScoring, function(ps) {
+      return ps.numberOfCorrect === correctCount;
+    });
+
+    return _.isUndefined(partialScore) ? 0 : partialScore.scorePercentage;
+  };
+
+  var definedAsCorrect = question.correctResponse.length;
+  var answeredCorrectly = countAnsweredCorrectly();
+
+  if (answeredCorrectly === 0) {
+    return 0;
+  }
+
+  if (answeredCorrectly === definedAsCorrect) {
+    return 1;
+  }
+
+  if (definedAsCorrect > 1 && question.allowPartialScoring) {
+    return calculatePartialScore(answeredCorrectly) / 100;
+  } else {
+    return (answeredCorrectly === definedAsCorrect) ? 1 : 0;
+  }
+};
+
+
+exports.isScoreable = function(question, answer) {
+
+  if (!question || !question.model || !question.model.config){
+    return true;
+  }
+
+  return !question.model.config.exhibitOnly;
+};
+
+
 exports.isCorrect = function(answer, correctAnswer) {
   return answer.length === correctAnswer.length && _(answer).every(function(el) {
     return isElementCorrect(el, correctAnswer);
   });
 };
 
-exports.createOutcome = function(question, answer, settings) {
+exports.isPartiallyCorrect = function(answer, correctAnswer) {
+  return _(answer).any(function(el) {
+    return isElementCorrect(el, correctAnswer);
+  });
+};
 
+exports.createOutcome = function(question, answer, settings) {
   if (!answer) {
     return {
       correctness: 'incorrect'
@@ -62,19 +120,30 @@ exports.createOutcome = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
 
+  if (question.model && question.model.config && question.model.config.exhibitOnly) {
+    console.log('exhibit only don\'t process');
+    return {
+      correctness: 'n/a',
+      score: 0
+    };
+  }
+
+
 
   var isCorrect = exports.isCorrect(answer, _.cloneDeep(question.correctResponse));
+  var isPartiallyCorrect = exports.isPartiallyCorrect(answer, _.cloneDeep(question.correctResponse));
 
   var response = {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
-    score: isCorrect ? 1 : 0
+    correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
+    score: calculateScore(answer, question)
   };
 
   if (settings.showFeedback) {
     response.feedback = {
       elements: getElementsWithFeedback(answer, _.cloneDeep(question.correctResponse)),
-      message: fb.makeFeedback(undefined, fb.correctness(isCorrect))
+      message: fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect))
     };
 
   }

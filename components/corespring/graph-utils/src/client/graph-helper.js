@@ -13,14 +13,17 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
 
     options = options || {};
     _.defaults(options, {
-      margin: {top: 30, right: 30, bottom: 30, left: 30},
+      margin: {top: 0, right: 30, bottom: 30, left: 30},
       axisHeight: 20,
       domain: [0, 20],
       range: [0, 20],
       applyCallback: function() {
       },
+      clickAreaMouseDown: function() {
+      },
+      tickLabelClick: function(tick) {
+      },
       selectionChanged: function() {
-
       }
     });
     _.defaults(options, {
@@ -32,15 +35,21 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
 
     this.coordsToDomainRange = function(x, y) {
       var dp = this.horizontalAxis.scale.invert(x - options.margin.left);
-      dp = this.horizontalAxis.scale.snapToTicks(this.horizontalAxis.ticks, dp, options.snapPerTick);
+      dp = this.horizontalAxis.scale.snapToTicks(this.horizontalAxis.ticks, dp, options.snapPerTick + 1);
       var rp = this.horizontalAxis.scale.invert(options.verticalAxisLength - y);
       return [dp, rp];
     };
 
     this.updateOptions = function(newOptions) {
+      var allOptionsEqual = _.every(newOptions, function(v,k) {
+         return _.isEqual(options[k], v);
+      });
+      if (allOptionsEqual) {
+        return;
+      }
 
       if (!_.isUndefined(newOptions.maxNumberOfPoints) && newOptions.maxNumberOfPoints !== options.maxNumberOfPoints) {
-        options.verticalAxisLength = newOptions.maxNumberOfPoints * PLANE_SIZE;
+        options.verticalAxisLength = 3 * PLANE_SIZE;
         options.height = (options.verticalAxisLength + options.margin.top + options.margin.bottom) + options.axisHeight;
 
         $(element).width(options.width);
@@ -60,7 +69,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       }
 
       options = _.extend(options, newOptions);
-      options.range = [0, Number(options.maxNumberOfPoints) || 3];
+      options.range = [0, 4];
       if (that.horizontalAxis) {
         that.horizontalAxis.reCalculate();
       }
@@ -98,6 +107,12 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
         }
       });
       that.paper.clear();
+      var clickArea = that.paper.rect(options.margin.left - 10, 0, options.margin.left + options.horizontalAxisLength, options.height - options.margin.bottom - 10);
+      clickArea.attr('fill','black').attr('opacity',0);
+      clickArea.mousedown(function(ev) {
+        options.clickAreaMouseDown(ev);
+      });
+
       if (that.horizontalAxis) {
         that.horizontalAxis.draw(that.paper);
       }
@@ -107,6 +122,13 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
       _.each(that.elements, function(element) {
         element.draw(that.paper);
       });
+    };
+
+    this.getUnitSize = function() {
+      var domainSize = Math.abs(options.domain[1] - options.domain[0]);
+      var dp = domainSize / (options.tickFrequency - 1);
+
+      return dp;
     };
 
     this.addHorizontalAxis = function(position, axisOptions) {
