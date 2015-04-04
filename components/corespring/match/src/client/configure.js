@@ -24,6 +24,9 @@ var main = [
 
       ChoiceTemplates.extendScope(scope, 'corespring-match');
 
+      var MIN_COLUMNS = 3;
+      var MAX_COLUMNS = 5;
+
       scope.layouts = [
         {
           id: 'three-columns',
@@ -59,6 +62,8 @@ var main = [
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
+      //-----------------------------------------------------------------------------
+
       function setModel(fullModel) {
         console.log("setModel", fullModel);
         scope.fullModel = fullModel || {};
@@ -66,6 +71,7 @@ var main = [
           columns: []
         };
         scope.config = getConfig(scope.model);
+        scope.updatePartialScoringModel(sumCorrectAnswers());
       }
 
       function getModel() {
@@ -73,12 +79,19 @@ var main = [
         return _.cloneDeep(scope.fullModel);
       }
 
+      /**
+       * When the item is an old item, it does not have an config object.
+       * In that case this method adds the config object and removes
+       * the old properties like answerType
+       * @param model
+       * @returns {*}
+       */
       function getConfig(model) {
-        var answerType = model.answerType;
-        if (answerType) {
+        if(!model.config){
           var config = {};
+          var answerType = model.answerType;
           config.inputType = answerType === 'MULTIPLE' ? scope.inputTypes[1].id : scope.inputTypes[0].id;
-          config.layout = scope.layouts[Math.min(5, Math.max(3, model.columns.length)) - 3].id;
+          config.layout = scope.layouts[Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, model.columns.length)) - MIN_COLUMNS].id;
           config.shuffle = false;
           if (answerType === 'YES_NO') {
             setDefaultColumnLabels(model, 'Yes', 'No');
@@ -93,7 +106,7 @@ var main = [
       }
 
       function setDefaultColumnLabels(model, labelOne, labelTwo) {
-        while (model.columns.length < 3) {
+        while (model.columns.length < MIN_COLUMNS) {
           model.columns.push({
             labelHtml: ''
           });
@@ -123,9 +136,17 @@ var main = [
           switch(layout){
             case 'four-columns': return 4;
             case 'five-columns': return 5;
-            default: return 3;
+            default: return MIN_COLUMNS;
           }
         }
+      }
+
+      function sumCorrectAnswers(){
+        return _.reduce(scope.fullModel.correctResponse, function(sum, row) {
+          return sum + _.sum(row.matchSet, function(match){
+            return match ? 1 : 0;
+          });
+        }, 0);
       }
     }
 

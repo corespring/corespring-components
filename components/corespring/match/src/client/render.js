@@ -70,9 +70,9 @@ var main = [
       }
 
       /**
-       * Some existing items have an answerType
+       * Some old existing items have an answerType
        * while visual editor items have a config object.
-       * We are using one or the other to set local 
+       * We are using one or the other to set local
        * properties for scope.inputType, scope.layout and scope.shuffle
        * @param model
        */
