@@ -24,53 +24,122 @@ var main = [
 
       ChoiceTemplates.extendScope(scope, 'corespring-match');
 
+      scope.layouts = [
+        {
+          id: 'three-columns',
+          label: '3 Columns'
+        },
+        {
+          id: 'four-columns',
+          label: '4 Columns'
+        },
+        {
+          id: 'five-columns',
+          label: '5 Columns'
+        }
+      ];
+
+      scope.inputTypes = [
+        {
+          id: 'radiobutton',
+          label: 'Radio'
+        },
+        {
+          id: 'checkbox',
+          label: 'Checkbox'
+        }
+      ];
+
       scope.containerBridge = {
         setModel: setModel,
         getModel: getModel
       };
 
+      scope.$watch('config.layout', watchLayout);
+
+      scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
+
       function setModel(fullModel) {
+        console.log("setModel", fullModel);
         scope.fullModel = fullModel || {};
-        scope.model = scope.fullModel.model || {columns:[]};
+        scope.model = scope.fullModel.model || {
+          columns: []
+        };
         scope.config = getConfig(scope.model);
       }
 
       function getModel() {
+        console.log("getModel", scope.fullModel);
         return _.cloneDeep(scope.fullModel);
       }
 
-      function getConfig(model){
+      function getConfig(model) {
         var answerType = model.answerType;
-        if(answerType){
-          delete model.answerType;
+        if (answerType) {
           var config = {};
-          config.inputType = answerType === 'MULTIPLE' ? 'Checkbox' : 'Radio';
-          if(answerType === 'YES_NO'){
+          config.inputType = answerType === 'MULTIPLE' ? scope.inputTypes[1].id : scope.inputTypes[0].id;
+          config.layout = scope.layouts[Math.min(5, Math.max(3, model.columns.length)) - 3].id;
+          config.shuffle = false;
+          if (answerType === 'YES_NO') {
             setDefaultColumnLabels(model, 'Yes', 'No');
-          } else if(answerType === 'TRUE_FALSE'){
+          } else if (answerType === 'TRUE_FALSE') {
             setDefaultColumnLabels(model, 'True', 'False');
           }
-          config.layout = Math.min(5, Math.max(3, model.columns.length)) + " Columns";
-          config.shuffle = false;
+          delete model.answerType;
+          model.config = config;
           return config;
         }
         return model.config;
       }
 
-      function setDefaultColumnLabels(model, labelOne, labelTwo){
-        while(model.columns.length < 3){
-          model.columns.push({labelHtml:''});
+      function setDefaultColumnLabels(model, labelOne, labelTwo) {
+        while (model.columns.length < 3) {
+          model.columns.push({
+            labelHtml: ''
+          });
         }
-        if(_.isEmpty(model.columns[1].labelHtml)){
+        if (_.isEmpty(model.columns[1].labelHtml)) {
           model.columns[1].labelHtml = labelOne;
         }
-        if(_.isEmpty(model.columns[2].labelHtml)){
+        if (_.isEmpty(model.columns[2].labelHtml)) {
           model.columns[2].labelHtml = labelTwo;
+        }
+      }
+
+      function watchLayout(newValue, oldValue){
+        if(newValue === oldValue){
+          return;
+        }
+        var numberOfColumnsForLayout = getNumberOfColumnsForLayout(newValue);
+        var actualNumberOfColumns = scope.model.columns.length;
+        while(scope.model.columns.length < numberOfColumnsForLayout){
+          scope.model.columns.push({labelHtml:"Column " + (scope.model.columns.length + 1)});
+        }
+        while(scope.model.columns.length > numberOfColumnsForLayout){
+          scope.model.columns.pop();
+        }
+
+        function getNumberOfColumnsForLayout(layout){
+          switch(layout){
+            case 'four-columns': return 4;
+            case 'five-columns': return 5;
+            default: return 3;
+          }
         }
       }
     }
 
     function template() {
+      return [
+        '<div class="config-corespring-match">',
+        '  <div navigator-panel="Design">',
+        designTemplate(),
+        '  </div>',
+        '  <div navigator-panel="Scoring">',
+        ChoiceTemplates.scoring(),
+        '  </div>',
+        '</div>'
+      ].join('');
 
       function designTemplate() {
         return [
@@ -130,7 +199,7 @@ var main = [
           '  <div class="col-xs-12">',
           '    <span>Layout</span>',
           '    <select class="form-control" ng-model="model.config.layout"',
-          '       ng-options="c for c in [\'3 Columns\', \'4 Columns\', \'5 Columns\']">',
+          '       ng-options="c.id as c.label for c in layouts">',
           '    </select>',
           '  </div>',
           '</div>',
@@ -138,7 +207,7 @@ var main = [
           '  <div class="col-xs-12">',
           '    <span>Input Type</span>',
           '    <select class="form-control" ng-model="model.config.inputType"',
-          '       ng-options="c for c in [\'Radio\', \'Checkbox\']">',
+          '       ng-options="c.id as c.label for c in inputTypes">',
           '    </select>',
           '    <p class="inline-help" ng-if="model.config.inputType==\'Radio\'">',
           '       This option allows students to select one',
@@ -154,17 +223,6 @@ var main = [
           '</div>'
         ].join('');
       }
-
-      return [
-        '<div class="config-corespring-match">',
-        '  <div navigator-panel="Design">',
-        designTemplate(),
-        '  </div>',
-        '  <div navigator-panel="Scoring">',
-        ChoiceTemplates.scoring(),
-        '  </div>',
-        '</div>'
-      ].join('');
     }
 
   }

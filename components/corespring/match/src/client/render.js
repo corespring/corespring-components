@@ -65,14 +65,15 @@ var main = [
         scope.data = dataAndSession.data;
         scope.config = setConfig(dataAndSession.data.model);
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
+        scope.saveMatchModel = _.cloneDeep(scope.matchModel);
         renderMath();
       }
 
       /**
-       * Some existing items have an answerType set
-       * Visual editor items have a config object
-       * We are using both to set up local config
-       * properties for inputType, layout and shuffle
+       * Some existing items have an answerType
+       * while visual editor items have a config object.
+       * We are using one or the other to set local 
+       * properties for scope.inputType, scope.layout and scope.shuffle
        * @param model
        */
       function setConfig(model) {
@@ -96,6 +97,7 @@ var main = [
 
       function getInputTypeForConfig(configValue){
         switch(configValue){
+          case 'checkbox':
           case 'Checkbox':
           case 'MULTIPLE':
             return INPUT_TYPE_CHECKBOX;
@@ -147,10 +149,9 @@ var main = [
       function reset() {
         scope.stack = [];
         scope.session = {};
-        scope.matchModel = prepareModel(scope.data.model, {});
         scope.isSeeAnswerOpen = false;
-
         delete scope.response;
+        scope.matchModel = _.cloneDeep(scope.saveMatchModel);
       }
 
       function setCorrectnessOnAnswers(correctnessRows) {
@@ -166,14 +167,18 @@ var main = [
       }
 
       function prepareModel(rawModel, session) {
-        var answerType = rawModel.answerType || TRUE_FALSE;
+        return {
+          columns: prepareColumns(),
+          rows: scope.shuffle ? _.shuffle(prepareRows()) : prepareRows()
+        };
 
         function prepareColumns() {
+          var answerType = rawModel.answerType || TRUE_FALSE;
           var columns = _.cloneDeep(rawModel.columns);
 
           if (answerType === YES_NO || answerType === TRUE_FALSE) {
-            if (columns.length !== 3) {
-              $log.error('Match interaction with boolean answer type should have 2 columns, found ' + columns.length);
+            if (rawModel.answerType && columns.length !== 3) {
+              $log.warn('Match interaction with boolean answer type should have 2 columns, found ' + columns.length);
               while (columns.length < 3) {
                 columns.push({
                   labelHtml: ''
@@ -191,9 +196,8 @@ var main = [
           return columns;
         }
 
-        var answersExist = (session && session.answers);
-
         function prepareRows() {
+          var answersExist = (session && session.answers);
           return rawModel.rows.map(function (row) {
             var cloneRow = _.cloneDeep(row);
 
@@ -212,11 +216,6 @@ var main = [
             return cloneRow;
           });
         }
-
-        return {
-          columns: prepareColumns(),
-          rows: prepareRows()
-        };
       }
 
       function showSeeCorrectAnswerLink(response) {
@@ -224,16 +223,25 @@ var main = [
       }
 
       function classForCorrectness(row, index) {
+        return getInputTypeClass(scope.inputType) + ' ' + getCorrectClass(row, row.matchSet[index].correct);
 
-        return scope.inputType + ' ' + getClass(row.matchSet[index].correct);
+        function getInputTypeClass(inputType){
+          return inputType === INPUT_TYPE_CHECKBOX ? 'checkbox' : 'radiobutton';
+        }
 
-        function getClass(correct) {
+        function getCorrectClass(row, correct) {
+          if(row.answerExpected){
+            return 'unknown answer-expected';
+          }
+
           switch (correct) {
             case CORRECT:
+              return CORRECT;
             case INCORRECT:
-              return correct;
+              return INCORRECT;
+            default:
+              return UNKNOWN;
           }
-          return row.answerExpected ? 'unknown answer-expected' : UNKNOWN;
         }
       }
 
@@ -266,7 +274,7 @@ var main = [
 
       function watchMatchModel(newValue, oldValue) {
         console.log("watchMatchModel", newValue);
-        if (!_.isEqual(newValue.rows, _.last(scope.stack))) {
+        if (newValue && !_.isEqual(newValue.rows, _.last(scope.stack))) {
           scope.stack.push(_.cloneDeep(newValue.rows));
         }
       }
