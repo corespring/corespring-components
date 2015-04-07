@@ -175,10 +175,24 @@ var main = [
         designTemplate(),
         '  </div>',
         '  <div navigator-panel="Scoring">',
-        ChoiceTemplates.scoring(),
+        scoringTemplate(),
         '  </div>',
         '</div>'
       ].join('');
+
+      function scoringTemplate(){
+        return [
+          '<div class="form-horizontal" role="form">',
+          '  <div class="container-fluid">',
+          '    <div class="row">',
+          '      <div class="col-xs-12">',
+          ChoiceTemplates.scoring(),
+          '      </div>',
+          '    </div>',
+          '  </div>',
+          '</div>'
+        ].join('');
+      }
 
       function designTemplate() {
         return [

@@ -4,7 +4,7 @@
 @incorrect-color: #EEA236;
 @partial-color: #3A87AD;
 
-.set-toggle-size(@size) {
+.set-toggle(@size) {
   font-size: @size;
 
   &:after {
@@ -18,6 +18,24 @@
 .text-shadow(@color){
   //comment in to show shadows on the correctness icons
   //text-shadow: 0 0 6px @color;
+}
+
+.scale(@x,@y) {
+  -webkit-transform: scale(@x,@y);
+  -ms-transform: scale(@x,@y);
+  -o-transform: scale(@x,@y);
+  transform: scale(@x,@y);
+}
+
+.fa-inputs {
+  .scale(1,1);
+  .set-toggle-size(22px);
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+  font-family: FontAwesome;
+  font-weight: normal;
+  color: #555555;
 }
 
 .component-placeholder {
@@ -77,6 +95,7 @@
         background: white;
         color: black;
         vertical-align: bottom;
+        word-wrap: break-word;
 
         &:first-of-type {
           width: 100%;
@@ -299,11 +318,7 @@
     display: inline-block;
 
     .radio-toggle {
-      .set-toggle-size(22px);
-      position: relative;
-      vertical-align: middle;
-      display: inline-block;
-      font-family: FontAwesome;
+      .fa-inputs(22px);
 
       &:after {
         display: inline-block;
@@ -334,11 +349,7 @@
     position: relative;
 
     .checkbox-toggle {
-      .set-toggle-size(22px);
-      position: relative;
-      vertical-align: middle;
-      display: inline-block;
-      font-family: FontAwesome;
+      .fa-inputs(22px);
 
       &:after {
         display: inline-block;
