@@ -207,11 +207,7 @@ var main = [
                   value: match
                 };
               }) :
-              _.range(rawModel.columns.length - 1).map(function () {
-                return {
-                  value: false
-                };
-              });
+              makeEmptyMatchSet(rawModel.columns.length - 1);
 
             return cloneRow;
           });
@@ -248,8 +244,8 @@ var main = [
       function onClickMatch(matchSet, index) {
         if (scope.editable && !matchSet[index].correct) {
           if (isRadioButton(scope.inputType)) {
-            _.forEach(matchSet, function (matchSetItem, i) {
-              matchSetItem.value = (i === index);
+            _.forEach(matchSet, function (match, i) {
+              match.value = (i === index);
             });
           }
         }
@@ -273,7 +269,7 @@ var main = [
       }
 
       function watchMatchModel(newValue, oldValue) {
-        console.log("watchMatchModel", newValue);
+        //console.log("watchMatchModel", newValue);
         if (newValue && !_.isEqual(newValue.rows, _.last(scope.stack))) {
           scope.stack.push(_.cloneDeep(newValue.rows));
         }
@@ -297,6 +293,14 @@ var main = [
           _.forEach(row.matchSet, function (match, j) {
             match.value = state[i].matchSet[j].value;
           });
+        });
+      }
+
+      function makeEmptyMatchSet(length){
+        return _.range(length).map(function () {
+          return {
+            value: false
+          };
         });
       }
 

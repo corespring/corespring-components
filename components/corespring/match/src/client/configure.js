@@ -18,14 +18,14 @@ var main = [
       template: template()
     };
 
-    var $log = LogFactory('corespring-match-configure')
-
     function link(scope, element, attrs) {
-
-      ChoiceTemplates.extendScope(scope, 'corespring-match');
 
       var MIN_COLUMNS = 3;
       var MAX_COLUMNS = 5;
+
+      var $log = LogFactory.getLogger('corespring-match-configure');
+
+      ChoiceTemplates.extendScope(scope, 'corespring-match');
 
       scope.layouts = [
         {
@@ -71,7 +71,7 @@ var main = [
           columns: []
         };
         scope.config = getConfig(scope.model);
-        scope.updatePartialScoringModel(sumCorrectAnswers());
+        updatePartialScoring();
       }
 
       function getModel() {
@@ -123,27 +123,45 @@ var main = [
         if(newValue === oldValue){
           return;
         }
-        var numberOfColumnsForLayout = getNumberOfColumnsForLayout(newValue);
-        var actualNumberOfColumns = scope.model.columns.length;
-        while(scope.model.columns.length < numberOfColumnsForLayout){
-          scope.model.columns.push({labelHtml:"Column " + (scope.model.columns.length + 1)});
+        var columns = scope.model.columns;
+        var actualNumberOfColumns = columns.length;
+        var expectedNumberOfColumns = getNumberOfColumnsForLayout(newValue);
+
+        while(columns.length < expectedNumberOfColumns){
+          columns.push(makeColumn("Column " + (columns.length + 1)));
+          _.forEach(scope.fullModel.correctResponse, function(row){
+            row.matchSet.push(false);
+          });
         }
-        while(scope.model.columns.length > numberOfColumnsForLayout){
-          scope.model.columns.pop();
+        while(columns.length > expectedNumberOfColumns){
+          columns.pop();
+          _.forEach(scope.fullModel.correctResponse, function(row){
+            row.matchSet.pop();
+          });
         }
 
-        function getNumberOfColumnsForLayout(layout){
-          switch(layout){
-            case 'four-columns': return 4;
-            case 'five-columns': return 5;
-            default: return MIN_COLUMNS;
-          }
+        updatePartialScoring();
+      }
+
+      function updatePartialScoring(){
+        scope.updatePartialScoringModel(sumCorrectAnswers());
+      }
+
+      function makeColumn(label){
+        return {labelHtml:label};
+      }
+
+      function getNumberOfColumnsForLayout(layout){
+        switch(layout){
+          case 'four-columns': return 4;
+          case 'five-columns': return 5;
+          default: return MIN_COLUMNS;
         }
       }
 
       function sumCorrectAnswers(){
         return _.reduce(scope.fullModel.correctResponse, function(sum, row) {
-          return sum + _.sum(row.matchSet, function(match){
+          return sum + _.reduce(row.matchSet, function(match){
             return match ? 1 : 0;
           });
         }, 0);
@@ -230,12 +248,12 @@ var main = [
           '    <select class="form-control" ng-model="model.config.inputType"',
           '       ng-options="c.id as c.label for c in inputTypes">',
           '    </select>',
-          '    <p class="inline-help" ng-if="model.config.inputType==\'Radio\'">',
+          '    <p class="inline-help" ng-if="model.config.inputType==\'radiobutton\'">',
           '       This option allows students to select one',
           '       correct answer. You may, however, set more',
           '       than one answer as correct if you choose',
           '    </p>',
-          '    <p class="inline-help" ng-if="model.config.inputType==\'Checkbox\'">',
+          '    <p class="inline-help" ng-if="model.config.inputType==\'checkbox\'">',
           '       This option allows students to select more than',
           '       one correct answer. You may, however, set only',
           '       one correct answer if you choose.',
