@@ -20,6 +20,13 @@
   //text-shadow: 0 0 6px @color;
 }
 
+.scale(@x,@y) {
+  -webkit-transform: scale(@x,@y);
+  -ms-transform: scale(@x,@y);
+  -o-transform: scale(@x,@y);
+  transform: scale(@x,@y);
+}
+
 .component-placeholder {
   .render-corespring-match {
     //the component takes the full width of the player
@@ -305,6 +312,10 @@
       vertical-align: middle;
       display: inline-block;
       font-family: FontAwesome;
+      font-weight: normal;
+      color: #555555;
+      .scale(1,1);
+
 
       &:after {
         display: inline-block;
@@ -340,6 +351,9 @@
       vertical-align: middle;
       display: inline-block;
       font-family: FontAwesome;
+      font-weight: normal;
+      color: #555555;
+      .scale(1,1);
 
       &:after {
         display: inline-block;
