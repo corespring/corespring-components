@@ -1,52 +1,166 @@
 var main = [
-  '$log',
-  '$timeout',
   '$http',
+  '$timeout',
   'ChoiceTemplates',
+  'LogFactory',
   function(
-    $log,
-    $timeout,
     $http,
-    ChoiceTemplates
+    $timeout,
+    ChoiceTemplates,
+    LogFactory
     ) {
 
     return {
-      scope: 'isolate',
+      scope: {},
       restrict: 'E',
       replace: true,
       link: link,
       template: template()
     };
 
+    var $log = LogFactory('corespring-match-configure')
+
     function link(scope, element, attrs) {
 
       ChoiceTemplates.extendScope(scope, 'corespring-match');
 
-      scope.model = {
-        config: {
-          shuffle: false,
-          inputType: 'Radio',
-          layout: '3 Columns'
+      var MIN_COLUMNS = 3;
+      var MAX_COLUMNS = 5;
+
+      scope.layouts = [
+        {
+          id: 'three-columns',
+          label: '3 Columns'
+        },
+        {
+          id: 'four-columns',
+          label: '4 Columns'
+        },
+        {
+          id: 'five-columns',
+          label: '5 Columns'
         }
-      };
+      ];
+
+      scope.inputTypes = [
+        {
+          id: 'radiobutton',
+          label: 'Radio'
+        },
+        {
+          id: 'checkbox',
+          label: 'Checkbox'
+        }
+      ];
 
       scope.containerBridge = {
         setModel: setModel,
         getModel: getModel
       };
 
-      var matchModel = {};
+      scope.$watch('config.layout', watchLayout);
 
-      function setModel(model) {
-        matchModel = model;
+      scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
+
+      //-----------------------------------------------------------------------------
+
+      function setModel(fullModel) {
+        console.log("setModel", fullModel);
+        scope.fullModel = fullModel || {};
+        scope.model = scope.fullModel.model || {
+          columns: []
+        };
+        scope.config = getConfig(scope.model);
+        scope.updatePartialScoringModel(sumCorrectAnswers());
       }
 
       function getModel() {
-        return matchModel;
+        console.log("getModel", scope.fullModel);
+        return _.cloneDeep(scope.fullModel);
+      }
+
+      /**
+       * When the item is an old item, it does not have an config object.
+       * In that case this method adds the config object and removes
+       * the old properties like answerType
+       * @param model
+       * @returns {*}
+       */
+      function getConfig(model) {
+        if(!model.config){
+          var config = {};
+          var answerType = model.answerType;
+          config.inputType = answerType === 'MULTIPLE' ? scope.inputTypes[1].id : scope.inputTypes[0].id;
+          config.layout = scope.layouts[Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, model.columns.length)) - MIN_COLUMNS].id;
+          config.shuffle = false;
+          if (answerType === 'YES_NO') {
+            setDefaultColumnLabels(model, 'Yes', 'No');
+          } else if (answerType === 'TRUE_FALSE') {
+            setDefaultColumnLabels(model, 'True', 'False');
+          }
+          delete model.answerType;
+          model.config = config;
+          return config;
+        }
+        return model.config;
+      }
+
+      function setDefaultColumnLabels(model, labelOne, labelTwo) {
+        while (model.columns.length < MIN_COLUMNS) {
+          model.columns.push({
+            labelHtml: ''
+          });
+        }
+        if (_.isEmpty(model.columns[1].labelHtml)) {
+          model.columns[1].labelHtml = labelOne;
+        }
+        if (_.isEmpty(model.columns[2].labelHtml)) {
+          model.columns[2].labelHtml = labelTwo;
+        }
+      }
+
+      function watchLayout(newValue, oldValue){
+        if(newValue === oldValue){
+          return;
+        }
+        var numberOfColumnsForLayout = getNumberOfColumnsForLayout(newValue);
+        var actualNumberOfColumns = scope.model.columns.length;
+        while(scope.model.columns.length < numberOfColumnsForLayout){
+          scope.model.columns.push({labelHtml:"Column " + (scope.model.columns.length + 1)});
+        }
+        while(scope.model.columns.length > numberOfColumnsForLayout){
+          scope.model.columns.pop();
+        }
+
+        function getNumberOfColumnsForLayout(layout){
+          switch(layout){
+            case 'four-columns': return 4;
+            case 'five-columns': return 5;
+            default: return MIN_COLUMNS;
+          }
+        }
+      }
+
+      function sumCorrectAnswers(){
+        return _.reduce(scope.fullModel.correctResponse, function(sum, row) {
+          return sum + _.sum(row.matchSet, function(match){
+            return match ? 1 : 0;
+          });
+        }, 0);
       }
     }
 
     function template() {
+      return [
+        '<div class="config-corespring-match">',
+        '  <div navigator-panel="Design">',
+        designTemplate(),
+        '  </div>',
+        '  <div navigator-panel="Scoring">',
+        ChoiceTemplates.scoring(),
+        '  </div>',
+        '</div>'
+      ].join('');
 
       function designTemplate() {
         return [
@@ -106,7 +220,7 @@ var main = [
           '  <div class="col-xs-12">',
           '    <span>Layout</span>',
           '    <select class="form-control" ng-model="model.config.layout"',
-          '       ng-options="c for c in [\'3 Columns\', \'4 Columns\', \'5 Columns\']">',
+          '       ng-options="c.id as c.label for c in layouts">',
           '    </select>',
           '  </div>',
           '</div>',
@@ -114,7 +228,7 @@ var main = [
           '  <div class="col-xs-12">',
           '    <span>Input Type</span>',
           '    <select class="form-control" ng-model="model.config.inputType"',
-          '       ng-options="c for c in [\'Radio\', \'Checkbox\']">',
+          '       ng-options="c.id as c.label for c in inputTypes">',
           '    </select>',
           '    <p class="inline-help" ng-if="model.config.inputType==\'Radio\'">',
           '       This option allows students to select one',
@@ -130,17 +244,6 @@ var main = [
           '</div>'
         ].join('');
       }
-
-      return [
-        '<div class="config-corespring-match">',
-        '  <div navigator-panel="Design">',
-        designTemplate(),
-        '  </div>',
-        '  <div navigator-panel="Scoring">',
-        ChoiceTemplates.scoring(),
-        '  </div>',
-        '</div>'
-      ].join('');
     }
 
   }

@@ -69,6 +69,10 @@
         "labelHtml": "Question text 4"
       }
     ],
-    "answerType" : "YES_NO"
+    "config" : {
+      "inputType" : "radiobutton",
+      "layout" : "three-columns",
+      "shuffle" : false
+    }
   }
 }
