@@ -13,6 +13,7 @@ var main = [
 
     function link(scope, element, attrs) {
 
+      var ALL_CORRECT = 'all_correct';
       var CORRECT = 'correct';
       var FALSE_LABEL = 'False';
       var INCORRECT = 'incorrect';
@@ -214,7 +215,7 @@ var main = [
       }
 
       function showSeeCorrectAnswerLink(response) {
-        return (response && response.correctness && response.correctness !== CORRECT);
+        return (response && response.correctness && response.correctness !== ALL_CORRECT);
       }
 
       function classForCorrectness(row, index) {
@@ -407,7 +408,13 @@ var main = [
 
       function itemFeedbackPanel() {
         return [
-          '<div ng-show="response.feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>'
+          '<div class="panel feedback {{response.correctness}}"',
+          '    ng-if="response.feedback.summary">',
+          '  <div class="panel-heading"></div>',
+          '  <div class="panel-body"',
+          '      ng-bind-html-unsafe="response.feedback.summary">',
+          '  </div>',
+          '</div>'
         ].join('');
       }
 
