@@ -27,15 +27,17 @@
   transform: scale(@x,@y);
 }
 
-.fa-inputs() {
-  .scale(1,1);
-  .set-toggle-size(22px);
-  position: relative;
-  vertical-align: middle;
-  display: inline-block;
-  font-family: FontAwesome;
-  font-weight: normal;
-  color: #555555;
+.transform-transition(){
+  -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+}
+
+.border-transition() {
+  -webkit-transition: border 0.15s ease-in-out;
+  -o-transition: border 0.15s ease-in-out;
+  transition: border 0.15s ease-in-out;
 }
 
 .component-placeholder {
@@ -56,7 +58,7 @@
 }
 
 .render-corespring-match {
-  color: #000000;
+  color: black;
   padding-top: 14px;
   margin-bottom: 20px;
 
@@ -305,81 +307,77 @@
     }
   }
 
-  .editable {
-    .radio-input,
-    .checkbox-input {
+  .choice-input {
+    .checkbox-choice[disabled] {
+      opacity: 0.65;
+    }
+    .checkbox-choice {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 3px;
+      background-color: #fff;
+      .border-transition();
+
+      .checkbox-button {
+        .scale(0,0);
+        .transform-transition();
+        position: relative;
+
+        &.selected {
+          .scale(1,1);
+
+          &:before {
+            font-family: 'FontAwesome';
+            content: "\f00c";
+            width: 10px;
+            height: 10px;
+            font-size: 19px;
+            color: #555555;
+            left: 0px;
+            top: -4px;
+            position: absolute;
+          }
+        }
+      }
+    }
+    .radio-choice[disabled] {
+      opacity: 0.65;
+    }
+    .radio-choice {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 50%;
+      background-color: #fff;
+      .border-transition();
+
+      .radio-button {
+        .scale(0,0);
+        .transform-transition();
+
+        &.selected {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          left: 0;
+          top: 0;
+          margin-left: 0;
+          margin-top: 1px;
+          border-radius: 50%;
+          background-color: #555555;
+          .scale(1,1);
+        }
+      }
+    }
+    &:hover {
       cursor: pointer;
     }
   }
-
-  .radio-input {
-    @disabled-color: #cccccc;
-    position: relative;
-    display: inline-block;
-
-    .radio-toggle {
-      .fa-inputs();
-
-      &:after {
-        display: inline-block;
-        content: "\f1db";
-      }
-
-      &.checked:after {
-        content: "\f111";
-      }
-
-      &.disabled:after {
-        color: @disabled-color;
-      }
-    }
-
-    .label-text {
-      display: inline-block;
-      vertical-align: middle;
-
-      &.disabled {
-        color: @disabled-color;
-      }
-    }
-  }
-
-  .checkbox-input {
-    @disabled-color: #cccccc;
-    position: relative;
-
-    .checkbox-toggle {
-      .fa-inputs();
-
-      &:after {
-        display: inline-block;
-        content: "\f096";
-      }
-
-      &.checked:after {
-        content: "\f14a";
-      }
-
-      &.disabled:after {
-        color: @disabled-color;
-      }
-    }
-
-    .label-text {
-      display: inline-block;
-      vertical-align: middle;
-
-      &.disabled {
-        color: @disabled-color;
-      }
-    }
-  }
-
-  //todo is this really necessary?
-  td {
-    vertical-align: top;
-  }
-
 }
 
 .config-corespring-match {

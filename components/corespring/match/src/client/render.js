@@ -242,11 +242,14 @@ var main = [
       }
 
       function onClickMatch(matchSet, index) {
-        if (scope.editable && !matchSet[index].correct) {
+        console.log("onClickMatch", matchSet, index);
+        if (scope.editable) {
           if (isRadioButton(scope.inputType)) {
             _.forEach(matchSet, function (match, i) {
               match.value = (i === index);
             });
+          } else {
+            matchSet[index].value = !matchSet[index].value;
           }
         }
       }
@@ -380,16 +383,17 @@ var main = [
           '    <td class="answer-cell"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
-          '      <checkbox ng-if="isCheckBox(inputType) && editable"',
-          '          ng-model="match.value"',
-          '          ng-value="true"',
-          '          ng-change="onClickMatch(row.matchSet, $index)"',
-          '          ></checkbox>',
-          '      <radio ng-if="isRadioButton(inputType) && editable"',
-          '          ng-model="match.value"',
-          '          ng-value="true"',
-          '          ng-change="onClickMatch(row.matchSet, $index)"',
-          '          ></radio>',
+          '      <span class="choice-input" ',
+          '        ng-if="editable"',
+          '        ng-switch="inputType" ',
+          '        ng-click="onClickMatch(row.matchSet, $index)">',
+          '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="true">',
+          '          <div class="checkbox-button" ng-class="{selected:match.value}"/>',
+          '        </div>',
+          '        <div class="radio-choice" ng-switch-when="radiobutton" ng-disabled="!editable" >',
+          '          <div class="radio-button" ng-class="{selected:match.value}" />',
+          '        </div>',
+          '      </span>',
           '      <div ng-if="!editable"',
           '         ng-class="classForCorrectness(row, $index)"',
           '        >',
