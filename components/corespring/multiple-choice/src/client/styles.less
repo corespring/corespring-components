@@ -1,5 +1,13 @@
 @import '../../../../../less/common';
 
+.component-placeholder {
+  .view-multiple-choice {
+    //the component takes the full width of the player
+    width: 600px;
+    max-width: 600px;
+  }
+}
+
 .view-multiple-choice {
   padding-top: 14px;
   margin-bottom: 20px;
@@ -10,7 +18,7 @@
 
   .choices-container {
     display: table;
-    width: 95%;
+    width: 100%;
     .choice-holder-background {
       width: 590px;
       &.selected {
@@ -239,14 +247,18 @@
 
   .correct {
     .choice-feedback-holder {
-      padding-left: 75px;
+      position: relative;
+      left: 38px;
+      top: 10px;
       width: 90%;
     }
   }
 
   .incorrect {
     .choice-feedback-holder {
-      padding-left: 45px;
+      position: relative;
+      left: 38px;
+      top: 10px;
       width: 90%;
     }
   }
@@ -270,7 +282,7 @@
   .choice-label {
     img {
       vertical-align: bottom;
-      max-width: 280px;
+      max-width: 480px;
     }
   }
   .choice-letter {
@@ -360,7 +372,7 @@
   .answer-holder {
     background: #fff;
     overflow: hidden;
-    width: 590px;
+    width: 100%;
     .panel {
       border: 4px solid #3C763D;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -384,9 +396,6 @@
     margin-right: 2%;
   }
 }
-
-
-
 
 .panel.feedback-panel {
   border-width: 3px;

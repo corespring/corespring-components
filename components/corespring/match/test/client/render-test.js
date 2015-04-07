@@ -106,8 +106,8 @@ describe('corespring', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       var table = $(element).find('table');
-      expect(table.length).toBe(1);
-      expect(table.find('td').length).toBe(12);
+      expect(table.length).toBe(5);
+      expect(table.find('td').length).toBe(20);
     });
 
     it('selects correctly radio buttons', function() {
@@ -141,6 +141,106 @@ describe('corespring', function() {
       expect(session.answers[0].id).toBe(testModel.data.model.rows[0].id);
       expect(session.answers[0].matchSet[0]).toBe(true);
       expect(session.answers[0].matchSet[1]).toBe(false);
+    });
+
+    describe('config', function(){
+
+      function setModel(answerType, config, columns){
+        testModel.data.model.answerType = answerType;
+        testModel.data.model.config = config;
+        if(columns){
+          testModel.data.model.columns = columns;
+        }
+        var component =  container.elements['1'];
+        component.setDataAndSession(testModel);
+      }
+
+      describe("sets inputType radiobutton", function(){
+        it('if answerType is "YES_NO"', function(){
+          setModel('YES_NO');
+          expect(scope.inputType).toBe('radiobutton');
+        });
+        it('if answerType is "TRUE_FALSE"', function(){
+          setModel('TRUE_FALSE');
+          expect(scope.inputType).toBe('radiobutton');
+        });
+        it('if answerType is undefined', function(){
+          setModel(undefined);
+          expect(scope.inputType).toBe('radiobutton');
+        });
+        it('if config.inputType is Radio', function(){
+          setModel(undefined, {inputType:'Radio'});
+          expect(scope.inputType).toBe('radiobutton');
+        });
+      });
+
+      describe("sets inputType checkbox", function(){
+        it('if answerType is "MULTIPLE"', function(){
+          setModel('MULTIPLE');
+          expect(scope.inputType).toBe('checkbox');
+        });
+        it('if config.inputType is Checkbox', function(){
+          setModel(undefined, {inputType:'Checkbox'});
+          expect(scope.inputType).toBe('checkbox');
+        });
+      });
+
+      describe("sets layout three-columns", function(){
+        it('if config is "3 Columns"', function(){
+          setModel(undefined, {layout: '3 Columns'});
+          expect(scope.layout).toBe('three-columns');
+        });
+        it('if model has three columns', function(){
+          setModel(undefined, undefined, [{}, {}, {}]);
+          expect(scope.layout).toBe('three-columns');
+        });
+        it('if model has less than three columns', function(){
+          setModel(undefined, undefined, [{}]);
+          expect(scope.layout).toBe('three-columns');
+        });
+      });
+
+      describe("sets layout four-columns", function(){
+        it('if config is "4 Columns"', function(){
+          setModel(undefined, {layout: '4 Columns'});
+          expect(scope.layout).toBe('four-columns');
+        });
+        it('if model has four columns', function(){
+          setModel(undefined, undefined, [{}, {}, {}, {}]);
+          expect(scope.layout).toBe('four-columns');
+        });
+      });
+
+      describe("sets layout five-columns", function(){
+        it('if config is "5 Columns"', function(){
+          setModel(undefined, {layout: '5 Columns'});
+          expect(scope.layout).toBe('five-columns');
+        });
+        it('if model has five columns', function(){
+          setModel(undefined, undefined, [{}, {}, {}, {}, {}]);
+          expect(scope.layout).toBe('five-columns');
+        });
+        it('if model has more than five columns', function(){
+          setModel(undefined, undefined, [{}, {}, {}, {}, {}, {}]);
+          expect(scope.layout).toBe('five-columns');
+        });
+      });
+
+      describe("sets shuffle", function(){
+        it('to false if config undefined', function(){
+          setModel(undefined, undefined);
+          expect(scope.shuffle).toBe(false);
+        });
+        it('to false if config is defined and config.shuffle is false', function(){
+          setModel(undefined, {shuffle: false});
+          expect(scope.shuffle).toBe(false);
+        });
+        it('to true if config is defined and config.shuffle is true', function(){
+          setModel(undefined, {shuffle: true});
+          expect(scope.shuffle).toBe(true);
+        });
+      });
+
     });
 
   });

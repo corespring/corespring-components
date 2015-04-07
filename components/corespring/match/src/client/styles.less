@@ -1,12 +1,8 @@
 @import '../../../../../less/common';
 
-@learn-more-color: #008bc9;
 @correct-color: #3C763D;
 @incorrect-color: #EEA236;
 @partial-color: #3A87AD;
-@learn-more-color: #3A87AD;
-@see-correct-color: #3C763D;
-@component-width: 600px;
 
 .set-toggle-size(@size) {
   font-size: @size;
@@ -19,11 +15,36 @@
   }
 }
 
+.text-shadow(@color){
+  //comment in to show shadows on the correctness icons
+  //text-shadow: 0 0 6px @color;
+}
+
+.scale(@x,@y) {
+  -webkit-transform: scale(@x,@y);
+  -ms-transform: scale(@x,@y);
+  -o-transform: scale(@x,@y);
+  transform: scale(@x,@y);
+}
+
+.transform-transition(){
+  -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+  transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+}
+
+.border-transition() {
+  -webkit-transition: border 0.15s ease-in-out;
+  -o-transition: border 0.15s ease-in-out;
+  transition: border 0.15s ease-in-out;
+}
+
 .component-placeholder {
   .render-corespring-match {
     //the component takes the full width of the player
-    width: @component-width;
-    max-width: @component-width;
+    width: 600px;
+    max-width: 600px;
     margin-bottom: 0;
     padding-top: 0;
 
@@ -37,73 +58,86 @@
 }
 
 .render-corespring-match {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #000000;
+  color: black;
   padding-top: 14px;
   margin-bottom: 20px;
 
+  .undo-start-over {
+    margin-bottom: 5px;
+  }
+
   table {
     margin: 0;
+    border: solid 1px #cccccc;
+
+    &.three-columns {
+      td, th {
+        max-width: 100px;
+      }
+    }
+
+    &.four-columns {
+      td, th {
+        max-width: 80px;
+      }
+    }
+
+    &.five-columns {
+      td, th {
+        max-width: 60px;
+      }
+    }
 
     tr {
-      border: solid 2px #cccccc;
+      border-bottom: solid 2px #cccccc;
 
       th {
         border: none;
         text-align: center;
+        background: white;
+        color: black;
+        vertical-align: bottom;
+        word-wrap: break-word;
 
         &:first-of-type {
+          width: 100%;
           text-align: left;
         }
       }
       td {
         border: none;
-        line-height: 2em;
         vertical-align: middle;
         text-align: center;
 
         &:first-of-type {
+          width: 100%;
           text-align: left;
         }
       }
     }
   }
 
-  .correct-indicator {
-    font-family: FontAwesome;
-    font-size: 40px;
-    color: @correct-color;
-  }
-
-  .see-solution {
-    margin-top: 20px;
-    max-width: @component-width;
-  }
-
-  .summary-feedback,
-  .feedback {
-    border-color: @learn-more-color;
-    border-width: 2px;
-    float: none;
-
-    .panel-heading {
-      background-color: @learn-more-color;
-      padding: 3px 15px;
-
-      .toggle {
-        display: inline-block;
-        font-family: FontAwesome;
-        font-size: 30px;
-        color: white;
-        font-weight: normal
+  td.question-cell {
+    table {
+      border: none;
+      width: 100%;
+      tr, th, td {
+        border: none;
       }
-      .label {
-        font-size: 16px;
-        color: white;
-        font-weight: normal
+      .question-label {
+        width: 100%;
+      }
+      .answer-expected-warning {
+        color: @warning-color;
+        font-size: 22px;
+        width: 28px;
+        min-width: 28px;
       }
     }
+  }
+
+  .see-answer-panel {
+    margin-top: 20px;
   }
 
   .feedback.panel {
@@ -112,7 +146,18 @@
     .panel-heading {
       cursor: default;
     }
+  }
 
+  .feedback {
+    &.all_correct {
+      .color-panel(@correct-color);
+    }
+    &.all_incorrect {
+      .color-panel(@incorrect-color);
+    }
+    &.some_correct {
+      .color-panel(@partial-color);
+    }
     &.warning {
       .panel-heading {
         display: none;
@@ -126,199 +171,213 @@
     }
   }
 
-  .summary-feedback {
-    .panel-heading {
-      cursor: pointer;
-    }
-  }
-
-  .feedback {
-    &.all_correct {
-      border-color: @correct-color;
-      .panel-heading {
-        background-color: @correct-color;
-      }
-    }
-    &.all_incorrect {
-      border-color: @incorrect-color;
-      .panel-heading {
-        background-color: @incorrect-color;
-      }
-    }
-    &.some_correct {
-      border-color: @partial-color;
-      .panel-heading {
-        background-color: @partial-color;
-      }
-    }
-  }
-
-  .answer-expected-warning {
-    display: inline-block;
-    color: @warning-color;
+  .radiobutton {
+    font-family: FontAwesome;
     font-size: 22px;
-  }
-
-  .question-label {
-    display: inline-block;
-  }
-
-  .noAnswer {
-    .radio-input {
-      .radio-toggle:after {
-        text-shadow:  0px 0px 5px @warning-color;
-      }
-    }
-    .checkbox-input {
-      .warning-input();
-    }
-  }
-
-  .editable {
-    .radio-input,
-    .checkbox-input {
-      cursor: pointer;
-    }
-  }
-
-  .radio-input {
-    @disabled-color: #cccccc;
     position: relative;
-    display: inline-block;
 
-    .radio-toggle {
-      .set-toggle-size(22px);
-      position: relative;
-      vertical-align: middle;
-      display: inline-block;
-      font-family: FontAwesome;
-
+    .background {
+      position: absolute;
+      top: 4.5px;
+      color: white;
       &:after {
-        display: inline-block;
-        content: "\f1db";
-      }
-
-      &.checked:after {
-        content: "\f111";
-      }
-
-      &.disabled:after {
-        color: @disabled-color;
+        content: '\f111';
       }
     }
-
-    .label-text {
-      display: inline-block;
-      vertical-align: middle;
-
-      &.disabled {
-        color: @disabled-color;
-      }
-    }
-
     &.correct {
-      color: @correct-color;
-
-      .radio-toggle {
-        .set-toggle-size(40px);
-
-        &.disabled:after {
-          color: @correct-color;
-        }
-        &.checked:after {
-          content: @correct-character;
-        }
+      .background {
+        .text-shadow(@correct-color);
+      }
+      .foreground {
+        color: @correct-color;
         &:after {
           content: @correct-character;
         }
       }
-    }
-
-    &.incorrect {
-      color: @incorrect-color;
-
-      .radio-toggle {
-        &.disabled:after {
-          color: @incorrect-color;
+      &.unchecked {
+        .foreground {
+          &:after {
+            content: '\f111';
+          }
         }
-        &.checked:after {
+      }
+    }
+    &.incorrect {
+      .background {
+        .text-shadow(@incorrect-color);
+      }
+      .foreground {
+        color: @incorrect-color;
+        &:after {
           content: @incorrect-character;
         }
       }
     }
+    &.unknown {
+      .foreground {
+        color: #bbb;
+        &:after {
+          content: '\f1db';
+        }
+      }
+      .background {
+        color: #eee;
+      }
+      &.answer-expected {
+        .foreground {
+          opacity: 0.5;
+          color: @warning-color;
+        }
+        .background {
+          font-size: 20px;
+          top: 5px;
+          .text-shadow(@warning-color);
+        }
+      }
+    }
   }
 
-  .checkbox-input {
-    @disabled-color: #cccccc;
+  .checkbox {
+    font-family: FontAwesome;
+    font-size: 22px;
     position: relative;
 
-    .checkbox-toggle {
-      .set-toggle-size(22px);
-      position: relative;
-      vertical-align: middle;
-      display: inline-block;
-      font-family: FontAwesome;
-
-      &:after {
-        display: inline-block;
-        content: "\f096";
-      }
-
-      &.checked:after {
-        content: "\f14a";
-      }
-
-      &.disabled:after {
-        color: @disabled-color;
-      }
+    .background {
+      position: absolute;
+      top: 4.5px;
+      color: white;
     }
-
-    .label-text {
-      display: inline-block;
-      vertical-align: middle;
-
-      &.disabled {
-        color: @disabled-color;
-      }
-    }
-
     &.correct {
-      color: @correct-color;
-
-      .checkbox-toggle {
-        .set-toggle-size(40px);
+      .background {
         &:after {
-          content: "\f14a";
+          content: '\f0c8';
         }
-        &.checked:after {
-          content: "\f14a";
+        .text-shadow(@correct-color);
+      }
+      .foreground {
+        color: @correct-color;
+        &:after {
+          content: '\f14a';
         }
-        &.disabled:after {
-          color: @correct-color;
+      }
+      &.unchecked {
+        .foreground {
+          &:after {
+            content: '\f0c8';
+          }
         }
       }
     }
-
     &.incorrect {
-      color: @incorrect-color;
-
-      .checkbox-toggle {
+      .background {
         &:after {
-          display: inline-block;
-          content: "\f00d";
+          content: '\f00d';
         }
-        &.disabled:after {
-          color: @incorrect-color;
+        .text-shadow(@incorrect-color);
+      }
+      .foreground {
+        color: @incorrect-color;
+        &:after {
+          content: '\f00d';
         }
       }
     }
-
+    &.unknown {
+      .foreground {
+        color: #bbb;
+        &:after {
+          content: '\f096';
+        }
+      }
+      .background {
+        color: #eee;
+        &:after {
+          content: '\f0c8';
+        }
+      }
+      &.answer-expected {
+        .foreground {
+          color: @warning-color;
+        }
+        .background {
+          font-size: 20px;
+          .text-shadow(@warning-color);
+        }
+      }
+    }
   }
 
-  td {
-    vertical-align: top;
-  }
+  .choice-input {
+    .checkbox-choice[disabled] {
+      opacity: 0.65;
+    }
+    .checkbox-choice {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 3px;
+      background-color: #fff;
+      .border-transition();
 
+      .checkbox-button {
+        .scale(0,0);
+        .transform-transition();
+        position: relative;
+
+        &.selected {
+          .scale(1,1);
+
+          &:before {
+            font-family: 'FontAwesome';
+            content: "\f00c";
+            width: 10px;
+            height: 10px;
+            font-size: 19px;
+            color: #555555;
+            left: 0px;
+            top: -4px;
+            position: absolute;
+          }
+        }
+      }
+    }
+    .radio-choice[disabled] {
+      opacity: 0.65;
+    }
+    .radio-choice {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 50%;
+      background-color: #fff;
+      .border-transition();
+
+      .radio-button {
+        .scale(0,0);
+        .transform-transition();
+
+        &.selected {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          left: 0;
+          top: 0;
+          margin-left: 0;
+          margin-top: 1px;
+          border-radius: 50%;
+          background-color: #555555;
+          .scale(1,1);
+        }
+      }
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .config-corespring-match {

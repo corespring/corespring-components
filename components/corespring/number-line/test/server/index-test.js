@@ -22,6 +22,7 @@ component = {
   "componentType": "corespring-number-line",
   "title": "Number Line",
   "weight": 1,
+  "allowPartialScoring": false,
   "correctResponse": [
     {
       "type": "point",
@@ -49,8 +50,7 @@ component = {
       "tickFrequency": 20,
       "snapPerTick": 2,
       "initialType": "PF"
-    },
-    "objects": []
+    }
   }
 };
 
@@ -151,6 +151,29 @@ describe('number line', function() {
 
   describe('feedback', function() {
 
+    it('incorrect item has incorrect feedback message and class', function() {
+      var outcome = server.createOutcome(component, [{"type": "point", "pointType": "empty", "domainPosition": 1, "rangePosition": 1}], helper.settings(true, true, true));
+      expect(outcome.feedback.message).to.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
+      expect(outcome.correctness).to.eql('incorrect');
+      expect(outcome.correctClass).to.eql('incorrect');
+    });
+
+    it('correct item has correct feedback message and class', function() {
+      var outcome = server.createOutcome(component, correctAnswer, helper.settings(true, true, true));
+      expect(outcome.feedback.message).to.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
+      expect(outcome.correctness).to.eql('correct');
+      expect(outcome.correctClass).to.eql('correct');
+    });
+
+    it('partially correct item has partial feedback message and class', function() {
+      var partiallCorrectAnswer = _.cloneDeep(correctAnswer);
+      partiallCorrectAnswer[0].domainPosition = 10;
+      var outcome = server.createOutcome(component, partiallCorrectAnswer, helper.settings(true, true, true));
+      expect(outcome.feedback.message).to.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
+      expect(outcome.correctness).to.eql('incorrect');
+      expect(outcome.correctClass).to.eql('partial');
+    });
+
     it('correct elements should have isCorrect true in feedback', function() {
       var answer = correctAnswer;
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
@@ -202,7 +225,7 @@ describe('number line', function() {
     });
   });
 
-  describe('score', function() {
+  describe('normal scoring', function() {
     it('score should be 0 if answer is incorrect', function() {
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
@@ -215,6 +238,43 @@ describe('number line', function() {
     it('score should be 1 if answer is correct', function() {
       var answer = correctAnswer;
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
+      expect(outcome).to.have.property("score").eql(1);
+    });
+  });
+
+  describe('partial scoring', function() {
+    var pComponent;
+    beforeEach(function() {
+      pComponent = _.merge(_.cloneDeep(component), {
+        allowPartialScoring: true,
+        "partialScoring": [
+          {numberOfCorrect: 1, scorePercentage: 20}
+        ]
+      });
+    });
+
+    it('score should be percentage if answer is partially correct', function() {
+      var answer = [
+        {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
+        {"type": "line", "domainPosition": 1, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"}
+      ];
+
+      var outcome = server.createOutcome(pComponent, answer, helper.settings(true, true, true));
+      expect(outcome).to.have.property("score").eql(0.2);
+    });
+
+    it('score should be 0 if answer is incorrect', function() {
+      var answer = [
+        {"type": "point", "pointType": "empty", "domainPosition": 2, "rangePosition": 1},
+        {"type": "line", "domainPosition": 1, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"}
+      ];
+
+      var outcome = server.createOutcome(pComponent, answer, helper.settings(true, true, true));
+      expect(outcome).to.have.property("score").eql(0);
+    });
+
+    it('score should be 1 if answer is incorrect', function() {
+      var outcome = server.createOutcome(pComponent, correctAnswer, helper.settings(true, true, true));
       expect(outcome).to.have.property("score").eql(1);
     });
   });

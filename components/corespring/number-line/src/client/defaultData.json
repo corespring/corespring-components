@@ -4,25 +4,36 @@
   "weight": 1,
   "correctResponse": [
   ],
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": false,
+  "partialScoring" : [
+    {}
+  ],
   "model": {
     "config": {
-      "domain": [0, 20],
-      "maxNumberOfPoints": 3,
-      "tickFrequency": 20,
+      "domain": [-5, 5],
+      "maxNumberOfPoints": 20,
+      "tickFrequency": 10,
       "showMinorTicks": true,
-      "snapPerTick": 2,
+      "snapPerTick": 1,
+      "tickLabelOverrides": [],
       "initialType": "PF",
       "exhibitOnly": false,
       "availableTypes": {
         "PF": true,
-        "LEE": true,
+        "PE": true,
+        "LFF": true,
         "LEF": true,
         "LFE": true,
-        "LFF": true,
-        "REP": true,
-        "REN": true,
+        "LEE": true,
+        "RFN": true,
         "RFP": true,
-        "RFN": true
+        "REN": true,
+        "REP": true
       },
       "initialElements": [
       ]
