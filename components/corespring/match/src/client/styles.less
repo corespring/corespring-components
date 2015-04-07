@@ -27,7 +27,7 @@
   transform: scale(@x,@y);
 }
 
-.fa-inputs {
+.fa-inputs() {
   .scale(1,1);
   .set-toggle-size(22px);
   position: relative;
@@ -318,7 +318,7 @@
     display: inline-block;
 
     .radio-toggle {
-      .fa-inputs(22px);
+      .fa-inputs();
 
       &:after {
         display: inline-block;
@@ -349,7 +349,7 @@
     position: relative;
 
     .checkbox-toggle {
-      .fa-inputs(22px);
+      .fa-inputs();
 
       &:after {
         display: inline-block;
