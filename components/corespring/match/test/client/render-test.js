@@ -194,7 +194,7 @@ describe('corespring', function() {
           setModel(undefined, undefined, [{}, {}, {}]);
           expect(scope.layout).toBe('three-columns');
         });
-        it('if model has lesss than three columns', function(){
+        it('if model has less than three columns', function(){
           setModel(undefined, undefined, [{}]);
           expect(scope.layout).toBe('three-columns');
         });

@@ -173,11 +173,11 @@ var main = [
         };
 
         function prepareColumns() {
-          var answerType = rawModel.answerType || TRUE_FALSE;
           var columns = _.cloneDeep(rawModel.columns);
 
+          var answerType = rawModel.answerType;
           if (answerType === YES_NO || answerType === TRUE_FALSE) {
-            if (rawModel.answerType && columns.length !== 3) {
+            if (columns.length !== 3) {
               $log.warn('Match interaction with boolean answer type should have 2 columns, found ' + columns.length);
               while (columns.length < 3) {
                 columns.push({
