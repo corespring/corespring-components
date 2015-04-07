@@ -1,7 +1,7 @@
 var main = [
   '$sce', '$log',
 
-  function($sce, $log) {
+  function ($sce, $log) {
 
     return {
       scope: {},
@@ -18,7 +18,6 @@ var main = [
       var FALSE_LABEL = 'False';
       var INCORRECT = 'incorrect';
       var INPUT_TYPE_CHECKBOX = 'checkbox';
-      var INPUT_TYPE_DEFAULT = INPUT_TYPE_RADIOBUTTON;
       var INPUT_TYPE_RADIOBUTTON = 'radiobutton';
       var MULTIPLE = 'MULTIPLE';
       var NO_LABEL = 'No';
@@ -28,17 +27,19 @@ var main = [
       var YES_LABEL = 'Yes';
       var YES_NO = 'YES_NO';
 
-      scope.editable = true;
       scope.stack = [];
+      scope.editable = true;
       scope.isSeeAnswerOpen = false;
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
         getSession: getSession,
         setResponse: setResponse,
-        setMode: function(newMode) {},
+        setMode: function (newMode) {
+        },
         reset: reset,
-        resetStash: function() {},
+        resetStash: function () {
+        },
         isAnswerEmpty: isAnswerEmpty,
         editable: setEditable
       };
@@ -62,17 +63,71 @@ var main = [
         console.log("corespring match:setDataAndSession", dataAndSession);
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
-        scope.config = {layout:'three-columns'};
+        scope.config = setConfig(dataAndSession.data.model);
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
-        updateInputType(scope.matchModel);
+        scope.saveMatchModel = _.cloneDeep(scope.matchModel);
         renderMath();
       }
 
+      /**
+       * Some old existing items have an answerType
+       * while visual editor items have a config object.
+       * We are using one or the other to set local
+       * properties for scope.inputType, scope.layout and scope.shuffle
+       * @param model
+       */
+      function setConfig(model) {
+        var config = model.config || {};
+
+        if (config.inputType) {
+          scope.inputType = getInputTypeForConfig(config.inputType);
+        } else {
+          scope.inputType = getInputTypeForConfig(model.answerType);
+        }
+
+        if (config.layout) {
+          scope.layout = getLayoutForConfig(config.layout);
+        } else {
+          var columns = _.isArray(model.columns) ? model.columns.length : 0;
+          scope.layout = getLayoutForConfig(Math.min(5, Math.max(3, columns)));
+        }
+
+        scope.shuffle = !!config.shuffle;
+      }
+
+      function getInputTypeForConfig(configValue){
+        switch(configValue){
+          case 'checkbox':
+          case 'Checkbox':
+          case 'MULTIPLE':
+            return INPUT_TYPE_CHECKBOX;
+          default:
+            return INPUT_TYPE_RADIOBUTTON;
+        }
+      }
+
+      function getLayoutForConfig(configValue) {
+        switch (configValue) {
+          case 4:
+          case '4 Columns':
+          case 'four-columns':
+            return 'four-columns';
+
+          case 5:
+          case '5 Columns':
+          case 'five-columns':
+            return 'five-columns';
+
+          default:
+            return 'three-columns';
+        }
+      }
+
       function getSession() {
-        var answers = scope.matchModel.rows.map(function(row) {
+        var answers = scope.matchModel.rows.map(function (row) {
           return {
             id: row.id,
-            matchSet: row.matchSet.map(function(match) {
+            matchSet: row.matchSet.map(function (match) {
               return match.value;
             })
           };
@@ -94,17 +149,16 @@ var main = [
       function reset() {
         scope.stack = [];
         scope.session = {};
-        scope.matchModel = prepareModel(scope.data.model, {});
         scope.isSeeAnswerOpen = false;
-
         delete scope.response;
+        scope.matchModel = _.cloneDeep(scope.saveMatchModel);
       }
 
-      function setCorrectnessOnAnswers(correctnessRows){
-        _.each(correctnessRows, function(correctnessRow) {
+      function setCorrectnessOnAnswers(correctnessRows) {
+        _.each(correctnessRows, function (correctnessRow) {
           var modelRow = _.find(scope.matchModel.rows, whereIdIsEqual(correctnessRow.id));
           if (modelRow) {
-            _.forEach(modelRow.matchSet, function(matchSetItem, i) {
+            _.forEach(modelRow.matchSet, function (matchSetItem, i) {
               matchSetItem.correct = correctnessRow.matchSet[i].correctness;
             });
             modelRow.answerExpected = correctnessRow.answerExpected;
@@ -112,30 +166,19 @@ var main = [
         });
       }
 
-      function updateInputType(model) {
-        function getInputType(model) {
-          switch (model.answerType) {
-            case YES_NO:
-            case TRUE_FALSE:
-              return INPUT_TYPE_RADIOBUTTON;
-            case MULTIPLE:
-              return INPUT_TYPE_CHECKBOX;
-            default:
-              return INPUT_TYPE_DEFAULT;
-          }
-        }
-        scope.inputType = getInputType(model || {});
-      }
-
       function prepareModel(rawModel, session) {
-        var answerType = rawModel.answerType || TRUE_FALSE;
+        return {
+          columns: prepareColumns(),
+          rows: scope.shuffle ? _.shuffle(prepareRows()) : prepareRows()
+        };
 
         function prepareColumns() {
+          var answerType = rawModel.answerType || TRUE_FALSE;
           var columns = _.cloneDeep(rawModel.columns);
 
           if (answerType === YES_NO || answerType === TRUE_FALSE) {
-            if (columns.length !== 3) {
-              $log.error('Match interaction with boolean answer type should have 2 columns, found ' + columns.length);
+            if (rawModel.answerType && columns.length !== 3) {
+              $log.warn('Match interaction with boolean answer type should have 2 columns, found ' + columns.length);
               while (columns.length < 3) {
                 columns.push({
                   labelHtml: ''
@@ -153,19 +196,18 @@ var main = [
           return columns;
         }
 
-        var answersExist = (session && session.answers);
-
         function prepareRows() {
-          return rawModel.rows.map(function(row) {
+          var answersExist = (session && session.answers);
+          return rawModel.rows.map(function (row) {
             var cloneRow = _.cloneDeep(row);
 
             cloneRow.matchSet = answersExist ?
-              _.find(session.answers, whereIdIsEqual(row.id)).matchSet.map(function(match) {
+              _.find(session.answers, whereIdIsEqual(row.id)).matchSet.map(function (match) {
                 return {
                   value: match
                 };
               }) :
-              _.range(rawModel.columns.length - 1).map(function() {
+              _.range(rawModel.columns.length - 1).map(function () {
                 return {
                   value: false
                 };
@@ -174,12 +216,6 @@ var main = [
             return cloneRow;
           });
         }
-
-        return {
-          columns: prepareColumns(),
-          rows: prepareRows(),
-          answerType: answerType
-        };
       }
 
       function showSeeCorrectAnswerLink(response) {
@@ -187,23 +223,32 @@ var main = [
       }
 
       function classForCorrectness(row, index) {
+        return getInputTypeClass(scope.inputType) + ' ' + getCorrectClass(row, row.matchSet[index].correct);
 
-        return scope.inputType + ' ' + getClass(row.matchSet[index].correct);
+        function getInputTypeClass(inputType){
+          return inputType === INPUT_TYPE_CHECKBOX ? 'checkbox' : 'radiobutton';
+        }
 
-        function getClass(correct) {
+        function getCorrectClass(row, correct) {
+          if(row.answerExpected){
+            return 'unknown answer-expected';
+          }
+
           switch (correct) {
             case CORRECT:
+              return CORRECT;
             case INCORRECT:
-              return correct;
+              return INCORRECT;
+            default:
+              return UNKNOWN;
           }
-          return row.answerExpected ? 'unknown answer-expected' : UNKNOWN;
         }
       }
 
       function onClickMatch(matchSet, index) {
         if (scope.editable && !matchSet[index].correct) {
           if (isRadioButton(scope.inputType)) {
-            _.forEach(matchSet, function(matchSetItem, i) {
+            _.forEach(matchSet, function (matchSetItem, i) {
               matchSetItem.value = (i === index);
             });
           }
@@ -227,9 +272,9 @@ var main = [
         return UNKNOWN;
       }
 
-      function watchMatchModel(newValue, oldValue){
+      function watchMatchModel(newValue, oldValue) {
         console.log("watchMatchModel", newValue);
-        if (! _.isEqual(newValue.rows, _.last(scope.stack))) {
+        if (newValue && !_.isEqual(newValue.rows, _.last(scope.stack))) {
           scope.stack.push(_.cloneDeep(newValue.rows));
         }
       }
@@ -247,9 +292,9 @@ var main = [
         revertToState(_.last(scope.stack));
       }
 
-      function revertToState(state){
-        _.forEach(scope.matchModel.rows, function(row, i){
-          _.forEach(row.matchSet, function(match, j){
+      function revertToState(state) {
+        _.forEach(scope.matchModel.rows, function (row, i) {
+          _.forEach(row.matchSet, function (match, j) {
             match.value = state[i].matchSet[j].value;
           });
         });
@@ -271,7 +316,7 @@ var main = [
       }
 
       function whereIdIsEqual(id) {
-        return function(match) {
+        return function (match) {
           return match.id === id;
         };
       }
@@ -289,14 +334,14 @@ var main = [
     function template() {
       return [
         '<div class="render-corespring-match">',
-          undoStartOver(),
-          matchInteraction(),
-          itemFeedbackPanel(),
-          seeSolutionPanel(),
+        undoStartOver(),
+        matchInteraction(),
+        itemFeedbackPanel(),
+        seeSolutionPanel(),
         '</div>'
       ].join('\n');
 
-      function undoStartOver(){
+      function undoStartOver() {
         return [
           '<div ng-show="editable" class="undo-start-over pull-right">',
           '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="stack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
@@ -306,9 +351,9 @@ var main = [
         ].join('');
       }
 
-      function matchInteraction(){
+      function matchInteraction() {
         return [
-          '<table class="table" ng-class="config.layout">',
+          '<table class="table" ng-class="layout">',
           '  <tr>',
           '    <th class="answer-header"',
           '        ng-repeat="column in matchModel.columns"',
@@ -353,7 +398,7 @@ var main = [
         ].join('');
       }
 
-      function itemFeedbackPanel(){
+      function itemFeedbackPanel() {
         return [
           '<div class="panel feedback {{response.correctness}}"',
           '    ng-if="response.feedback.summary">',
@@ -365,7 +410,7 @@ var main = [
         ].join('');
       }
 
-      function seeSolutionPanel(){
+      function seeSolutionPanel() {
         return [
           '<div see-answer-panel="true"',
           '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
