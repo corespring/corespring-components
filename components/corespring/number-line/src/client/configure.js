@@ -64,9 +64,10 @@ var main = [
 
     var display = [
       '<div class="display-panel" ng-hide="fullModel.model.config.exhibitOnly" collapsable-panel collapsable-panel-title="Display" collapsable-panel-default-state="in">',
-      '  <p>Click on the input options to display to students. All inputs display by default. Selecting none will display no icons and only allow stutends to plot a filled point.</p>',
+      '  <p>Click on the input options to display to students. All inputs display by default. Selecting none will display no icons and only allow students to plot a filled point.</p>',
       '  <div  class="element-selector" >',
       '    <span role="presentation" class="element-pf" ng-mousedown="select(\'PF\')"><a ng-class="{active: isActive(\'PF\')}">&nbsp;</a></span>',
+      '    <span role="presentation" class="element-pe" ng-mousedown="select(\'PE\')"><a ng-class="{active: isActive(\'PE\')}">&nbsp;</a></span>',
       '    <span role="presentation" class="element-lff" ng-mousedown="select(\'LFF\')"><a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a></span>',
       '    <span role="presentation" class="element-lef" ng-mousedown="select(\'LEF\')"><a ng-class="{active: isActive(\'LEF\')}">&nbsp;</a></span>',
       '    <span role="presentation"  class="element-lfe" ng-mousedown="select(\'LFE\')"><a ng-class="{active: isActive(\'LFE\')}">&nbsp;</a></span>',
