@@ -44,9 +44,9 @@ var main = [
 
       scope.classForEvaluatedAnswer = classForEvaluatedAnswer;
       scope.classForSolution = classForSolution;
-      scope.getTooltip = getTooltip;
-      scope.getTooltipForEvaluatedAnswer = getTooltipForEvaluatedAnswer;
-      scope.getTooltipForSolution = getTooltipForSolution;
+      scope.getTooltip = noTooltip;
+      scope.getTooltipForEvaluatedAnswer = noTooltip;
+      scope.getTooltipForSolution = noTooltip;
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
       scope.onClickMatch = onClickMatch;
@@ -283,6 +283,10 @@ var main = [
                 'checkbox correct unchecked');
           }
         }
+        return "";
+      }
+
+      function noTooltip(){
         return "";
       }
 
