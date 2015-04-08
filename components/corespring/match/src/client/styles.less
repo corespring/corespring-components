@@ -66,72 +66,83 @@
     margin-bottom: 5px;
   }
 
-  table {
+  .match-table {
     margin: 0;
     border: solid 1px #cccccc;
 
     &.three-columns {
-      td, th {
+      .answer-header {
+        min-width: 50px;
         max-width: 100px;
       }
     }
 
     &.four-columns {
-      td, th {
+      .answer-header {
+        min-width: 50px;
         max-width: 80px;
       }
     }
 
     &.five-columns {
-      td, th {
+      .answer-header {
+        min-width: 50px;
         max-width: 60px;
       }
     }
 
-    tr {
+    .match-tr {
       border-bottom: solid 2px #cccccc;
+      padding: 10px 5px;
 
-      th {
+      .answer-header {
         border: none;
         text-align: center;
         background: white;
         color: black;
         vertical-align: bottom;
         word-wrap: break-word;
+        padding: 10px 5px;
 
         &:first-of-type {
           width: 100%;
           text-align: left;
         }
       }
-      td {
+      .match-td {
         border: none;
         vertical-align: middle;
-        text-align: center;
+        padding: 10px 5px;
+      }
 
-        &:first-of-type {
+      .question-cell {
+
+        .question-table {
+          border: none;
           width: 100%;
-          text-align: left;
+          .question-tr, .question-td {
+            border: none;
+          }
+          .question-label {
+            text-align: left;
+            width: 100%;
+          }
+          .answer-expected-warning {
+            color: @warning-color;
+            font-size: 22px;
+            width: 50px;
+            min-width: 50px;
+            vertical-align: middle;
+
+            .warning-holder {
+              margin-top: 28px;
+            }
+          }
         }
       }
-    }
-  }
 
-  td.question-cell {
-    table {
-      border: none;
-      width: 100%;
-      tr, th, td {
-        border: none;
-      }
-      .question-label {
-        width: 100%;
-      }
-      .answer-expected-warning {
-        color: @warning-color;
-        font-size: 22px;
-        width: 28px;
-        min-width: 28px;
+      .answer-cell {
+        text-align: center;
       }
     }
   }
@@ -178,7 +189,6 @@
 
     .background {
       position: absolute;
-      top: 4.5px;
       color: white;
       &:after {
         content: '\f111';
@@ -230,7 +240,6 @@
         }
         .background {
           font-size: 20px;
-          top: 5px;
           .text-shadow(@warning-color);
         }
       }
@@ -364,9 +373,7 @@
           display: inline-block;
           width: 16px;
           height: 16px;
-          left: 0;
-          top: 0;
-          margin-left: 0;
+          margin-left: 1px;
           margin-top: 1px;
           border-radius: 50%;
           background-color: #555555;
