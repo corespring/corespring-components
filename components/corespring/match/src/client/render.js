@@ -95,8 +95,8 @@ var main = [
         scope.shuffle = !!config.shuffle;
       }
 
-      function getInputTypeForConfig(configValue){
-        switch(configValue){
+      function getInputTypeForConfig(configValue) {
+        switch (configValue) {
           case 'checkbox':
           case 'Checkbox':
           case 'MULTIPLE':
@@ -202,16 +202,30 @@ var main = [
             var cloneRow = _.cloneDeep(row);
 
             cloneRow.matchSet = answersExist ?
-              _.find(session.answers, whereIdIsEqual(row.id)).matchSet.map(function (match) {
-                return {
-                  value: match
-                };
-              }) :
-              makeEmptyMatchSet(rawModel.columns.length - 1);
+              createMatchSetFromSession(row.id) :
+              createEmptyMatchSet(rawModel.columns.length - 1);
 
             return cloneRow;
           });
         }
+
+        function createMatchSetFromSession(id) {
+          return _.find(session.answers, whereIdIsEqual(id))
+            .matchSet.map(function (match) {
+              return {
+                value: match
+              };
+            });
+        }
+
+        function createEmptyMatchSet(length) {
+          return _.range(length).map(function () {
+            return {
+              value: false
+            };
+          });
+        }
+
       }
 
       function showSeeCorrectAnswerLink(response) {
@@ -221,12 +235,12 @@ var main = [
       function classForCorrectness(row, index) {
         return getInputTypeClass(scope.inputType) + ' ' + getCorrectClass(row, row.matchSet[index].correct);
 
-        function getInputTypeClass(inputType){
+        function getInputTypeClass(inputType) {
           return inputType === INPUT_TYPE_CHECKBOX ? 'checkbox' : 'radiobutton';
         }
 
         function getCorrectClass(row, correct) {
-          if(row.answerExpected){
+          if (row.answerExpected) {
             return 'unknown answer-expected';
           }
 
@@ -296,14 +310,6 @@ var main = [
           _.forEach(row.matchSet, function (match, j) {
             match.value = state[i].matchSet[j].value;
           });
-        });
-      }
-
-      function makeEmptyMatchSet(length){
-        return _.range(length).map(function () {
-          return {
-            value: false
-          };
         });
       }
 
