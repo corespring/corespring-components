@@ -28,7 +28,7 @@ describe.only('match', function() {
     return '.see-answer-panel .panel-body .question-row[question-id="' + questionId + '"] .correct';
   }
 
-  beforeEach(function() {
+  beforeEach(function(done) {
 
     browser.submitItem = function() {
       this.execute('window.submit()');
@@ -38,7 +38,8 @@ describe.only('match', function() {
     browser
       .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('match', itemJsonFilename))
-      .waitFor(answerInput('Row1'));
+      .waitFor(answerInput('Row3'))
+      .call(done);
   });
 
   it('does evaluate answers correctly', function(done) {
