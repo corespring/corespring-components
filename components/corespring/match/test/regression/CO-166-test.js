@@ -9,7 +9,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('match', function() {
+describe('match', function() {
 
   "use strict";
 
@@ -26,6 +26,10 @@ describe.only('match', function() {
 
   function correctAnswer(questionId){
     return '.see-answer-panel .panel-body .question-row[question-id="' + questionId + '"] .correct';
+  }
+
+  function solutionPanelHeader(){
+    return '.see-answer-panel .panel-heading';
   }
 
   beforeEach(function(done) {
@@ -52,7 +56,7 @@ describe.only('match', function() {
       .click(answerInput('Row2'))
       .click(answerInput('Row3'))
       .submitItem()
-      .waitForWithTimeout('.see-answer-panel .panel-heading')
+      .waitForWithTimeout(solutionPanelHeader())
       .isExisting(answerEvaluated('Row1', 'correct'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })
@@ -68,10 +72,8 @@ describe.only('match', function() {
   it('does show solution correctly', function(done) {
     browser
       .submitItem()
-      .waitForWithTimeout('.see-answer-panel .panel-heading', function(){
-
-      })
-      .click('.see-answer-panel .panel-heading')
+      .waitForWithTimeout(solutionPanelHeader())
+      .click(solutionPanelHeader())
       .isExisting(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })
