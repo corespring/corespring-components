@@ -279,10 +279,8 @@ var interactiveGraph = [
             scope.$apply();
           },
           clickAreaMouseDown: function(event) {
-            var offX = (event.offsetX || event.pageX - $(event.target).offset().left);
-            var offY = (event.offsetY || event.pageY - $(event.target).offset().top);
-            var y = event.pageY - paperElement.position().top;
-            console.log(y);
+            var offX = event.offX;
+            var offY = event.offY;
             var dr = scope.graph.coordsToDomainRange(offX, offY);
             scope.addElement(dr[0], scope.selectedType);
 
