@@ -9,7 +9,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe.only('match', function() {
+describe('match', function() {
 
   "use strict";
 
@@ -37,7 +37,6 @@ describe.only('match', function() {
 
     browser
       .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
-      .timeouts('page load', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('match', itemJsonFilename))
       .call(done);
   });

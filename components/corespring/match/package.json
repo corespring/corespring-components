@@ -42,7 +42,12 @@
         "version": "0.0.9",
         "file": "build/corespring-ng-components.js",
         "angular-module": "cs.directives"
+      },
+      "jquery-ui-touch-punch": {
+        "bower_target": "https://github.com/furf/jquery-ui-touch-punch.git",
+        "file": "jquery.ui.touch-punch.min.js"
       }
+
     }
   },
   "name": "match",
