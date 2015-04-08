@@ -190,6 +190,11 @@
         content: '\f111';
       }
     }
+
+    .foreground {
+      position: absolute;
+    }
+
     &.correct {
       .background {
         .text-shadow(@correct-color);
@@ -251,6 +256,11 @@
       position: absolute;
       color: white;
     }
+
+    .foreground {
+      position: absolute;
+    }
+
     &.correct {
       .background {
         &:after {
@@ -328,7 +338,6 @@
       .checkbox-button {
         .scale(0,0);
         .transform-transition();
-        position: relative;
 
         &.selected {
           .scale(1,1);
