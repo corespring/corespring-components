@@ -120,6 +120,8 @@
         .question-table {
           border: none;
           width: 100%;
+          margin: 0;
+
           .question-tr, .question-td {
             border: none;
           }
@@ -130,13 +132,9 @@
           .answer-expected-warning {
             color: @warning-color;
             font-size: 22px;
-            width: 50px;
-            min-width: 50px;
+            width: 28px;
+            min-width: 28px;
             vertical-align: middle;
-
-            .warning-holder {
-              margin-top: 28px;
-            }
           }
         }
       }
@@ -253,7 +251,6 @@
 
     .background {
       position: absolute;
-      top: 4.5px;
       color: white;
     }
     &.correct {
@@ -341,13 +338,8 @@
           &:before {
             font-family: 'FontAwesome';
             content: "\f00c";
-            width: 10px;
-            height: 10px;
             font-size: 19px;
             color: #555555;
-            left: 0px;
-            top: -4px;
-            position: absolute;
           }
         }
       }
