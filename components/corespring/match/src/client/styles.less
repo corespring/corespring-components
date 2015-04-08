@@ -69,17 +69,18 @@
   .match-table {
     margin: 0;
     border: solid 1px #cccccc;
+    width: 100%;
 
     &.three-columns {
       .answer-header {
-        min-width: 50px;
+        min-width: 90px;
         max-width: 100px;
       }
     }
 
     &.four-columns {
       .answer-header {
-        min-width: 50px;
+        min-width: 70px;
         max-width: 80px;
       }
     }
@@ -105,7 +106,7 @@
         padding: 10px 5px;
 
         &:first-of-type {
-          width: 100%;
+          max-width: none;
           text-align: left;
         }
       }
