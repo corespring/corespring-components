@@ -37,6 +37,7 @@ describe.only('match', function() {
 
     browser
       .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
+      .timeouts('page load', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('match', itemJsonFilename))
       .call(done);
   });
