@@ -63,17 +63,23 @@ var main = [
     ].join('');
 
     var display = [
-      '<div ng-hide="fullModel.model.config.exhibitOnly">',
-      '<h3>Display</h3>',
-      '<table class="allowed-elements">',
-      '<tr><td>',
-      '<div>Show student options for</div>',
-      '<td>',
-      '<div><checkbox id="points" ng-model="allow.points">Points</checkbox>',
-      '<div><checkbox id="lines" ng-model="allow.lines">Line segments</checkbox>',
-      '<div><checkbox id="rays" ng-model="allow.rays">Rays</checkbox>',
-      '<div><checkbox id="all" ng-model="top.allowAll">All</checkbox>',
-      '</table>',
+      '<div class="display-panel" ng-hide="fullModel.model.config.exhibitOnly" collapsable-panel collapsable-panel-title="Display" collapsable-panel-default-state="in">',
+      '  <p>Click on the input options to display to students. All inputs display by default. Selecting none will display no icons and only allow stutends to plot a filled point.</p>',
+      '  <div  class="element-selector" >',
+      '    <span role="presentation" class="element-pf" ng-mousedown="select(\'PF\')"><a ng-class="{active: isActive(\'PF\')}">&nbsp;</a></span>',
+      '    <span role="presentation" class="element-lff" ng-mousedown="select(\'LFF\')"><a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a></span>',
+      '    <span role="presentation" class="element-lef" ng-mousedown="select(\'LEF\')"><a ng-class="{active: isActive(\'LEF\')}">&nbsp;</a></span>',
+      '    <span role="presentation"  class="element-lfe" ng-mousedown="select(\'LFE\')"><a ng-class="{active: isActive(\'LFE\')}">&nbsp;</a></span>',
+      '    <span role="presentation"  class="element-lee" ng-mousedown="select(\'LEE\')"><a ng-class="{active: isActive(\'LEE\')}">&nbsp;</a></span>',
+      '    <span role="presentation"  class="element-rfn" ng-mousedown="select(\'RFN\')"><a ng-class="{active: isActive(\'RFN\')}">&nbsp;</a></span>',
+      '    <span role="presentation"  class="element-rfp" ng-mousedown="select(\'RFP\')"><a ng-class="{active: isActive(\'RFP\')}" >&nbsp;</a></span>',
+      '    <span role="presentation"  class="element-ren" ng-mousedown="select(\'REN\')"><a ng-class="{active: isActive(\'REN\')}">&nbsp;</a></span>',
+      '    <span role="presentation"  class="element-rep" ng-mousedown="select(\'REP\')"><a ng-class="{active: isActive(\'REP\')}">&nbsp;</a></span>',
+      '  </div>',
+      '  <p>',
+      '    <button class="btn btn-default" ng-click="displayAll()">Display All</button>',
+      '    <button class="btn btn-default" ng-click="displayNone()">None</button>',
+      '  </p>',
       '</div>'
     ].join('');
 
@@ -117,7 +123,6 @@ var main = [
       link: function(scope, element, attrs) {
         scope.defaults = scope.data.defaultData.model.config;
         ChoiceTemplates.extendScope(scope, 'corespring-number-line');
-        scope.allow = {};
         scope.top = {};
         scope.configGraphOptions = {
           startOverClearsGraph: true,
@@ -127,6 +132,7 @@ var main = [
           placeholderForEmptyTickLabel: "N/A",
           labelCursor: 'pointer'
         };
+
         scope.initialView = {
           editable: true,
           model: {
@@ -189,17 +195,6 @@ var main = [
             scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse) || [];
             scope.updatePartialScoringModel(model.correctResponse.length);
             scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(model.model.config.tickLabelOverrides);
-
-            var hasAny = function(ofThese) {
-              return _.any(ofThese, function(k) {
-                 return scope.fullModel.model.config.availableTypes[k] === true;
-              });
-            };
-            scope.allow = {
-              points: hasAny(points),
-              lines: hasAny(lines),
-              rays: hasAny(rays)
-            };
           },
 
           getModel: function() {
@@ -255,42 +250,6 @@ var main = [
           });
         }
 
-        scope.$watch('top.allowAll', function(n, o) {
-          if (!_.isUndefined(n) && n !== o) {
-            scope.allow.points = scope.allow.lines = scope.allow.rays = n;
-          }
-        });
-
-        scope.$watch('allow', function(n) {
-          if (n) {
-            _.each(points, function(key) {
-              scope.fullModel.model.config.availableTypes[key] = n.points;
-            });
-            _.each(lines, function(key) {
-              scope.fullModel.model.config.availableTypes[key] = n.lines;
-            });
-            _.each(rays, function(key) {
-              scope.fullModel.model.config.availableTypes[key] = n.rays;
-            });
-            if (n.points && n.lines && n.rays) {
-              scope.top.allowAll = true;
-            } else {
-              scope.top.allowAll = undefined;
-            }
-
-            var firstType;
-            for (var k in scope.fullModel.config.availableTypes) {
-              if (scope.fullModel.config.availableTypes[k] === true) {
-                firstType = k;
-                break;
-              }
-            }
-
-            scope.fullModel.model.config.initialType = firstType;
-
-          }
-        }, true);
-
         scope.$watch('initialView.responseModel', debounce(updateInitialElements), true);
 
         scope.$watch('correctResponseView.responseModel', debounce(updateCorrectResponse), true);
@@ -314,6 +273,26 @@ var main = [
           if (event.keyCode === 13) {
             scope.stopTickEditing();
           }
+        };
+
+        scope.isActive = function(type) {
+          return scope.fullModel.model.config.availableTypes[type] === true;
+        };
+
+        scope.select = function(type) {
+          scope.fullModel.model.config.availableTypes[type] = !!!scope.fullModel.model.config.availableTypes[type];
+        };
+
+        scope.displayAll = function() {
+          _.each(_.flatten([points, rays, lines]), function(key) {
+            scope.fullModel.model.config.availableTypes[key] = true;
+          });
+        };
+
+        scope.displayNone = function() {
+          _.each(_.flatten([points, rays, lines]), function(key) {
+            scope.fullModel.model.config.availableTypes[key] = false;
+          });
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
