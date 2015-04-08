@@ -40,6 +40,12 @@
   transition: border 0.15s ease-in-out;
 }
 
+.fa-nudge(@value){
+  position: absolute;
+  margin-left: @value;
+  margin-top: @value;
+}
+
 .component-placeholder {
   .render-corespring-match {
     //the component takes the full width of the player
@@ -184,7 +190,7 @@
     position: relative;
 
     .background {
-      position: absolute;
+      .fa-nudge(-11px);
       color: white;
       &:after {
         content: '\f111';
@@ -192,7 +198,7 @@
     }
 
     .foreground {
-      position: absolute;
+      .fa-nudge(-11px);
     }
 
     &.correct {
@@ -253,12 +259,12 @@
     position: relative;
 
     .background {
-      position: absolute;
+      .fa-nudge(-11px);
       color: white;
     }
 
     .foreground {
-      position: absolute;
+      .fa-nudge(-11px);
     }
 
     &.correct {
