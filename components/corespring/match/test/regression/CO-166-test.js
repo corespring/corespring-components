@@ -9,7 +9,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('match', function() {
+describe.only('match', function() {
 
   "use strict";
 
@@ -21,11 +21,11 @@ describe('match', function() {
   }
 
   function answerEvaluated(questionId, correctness){
-    return '.question-row[question-id="' + questionId + '"] ' + correctness;
+    return '.question-row[question-id="' + questionId + '"] .' + correctness;
   }
 
   function correctAnswer(questionId){
-    return '.panel-body .question-row[question-id="' + questionId + '"] .correct[ng-value="true"]';
+    return '.see-answer-panel .panel-body .question-row[question-id="' + questionId + '"] .correct';
   }
 
   beforeEach(function(done) {
@@ -48,19 +48,34 @@ describe('match', function() {
       .click(answerInput('Row3'))
       .submitItem()
       .waitFor('.see-answer-panel .panel-heading')
-      .isExisting(answerEvaluated('Row1', 'correct'))
-      .isExisting(answerEvaluated('Row2', 'incorrect'))
-      .isExisting(answerEvaluated('Row3', 'correct'))
+      .isExisting(answerEvaluated('Row1', 'correct'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row1");
+      })
+      .isExisting(answerEvaluated('Row2', 'incorrect'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row2");
+      })
+      .isExisting(answerEvaluated('Row3', 'correct'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row3");
+      })
       .call(done);
   });
 
   it('does show solution correctly', function(done) {
     browser
       .submitItem()
-      .waitFor('.see-answer-panel .panel-heading')
-      .isExisting(correctAnswer('Row1'))
-      .isExisting(correctAnswer('Row2'))
-      .isExisting(correctAnswer('Row3'))
+      .waitFor('.see-answer-panel .panel-heading', function(){
+
+      })
+      .click('.see-answer-panel .panel-heading')
+      .isExisting(correctAnswer('Row1'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row1");
+      })
+      .isExisting(correctAnswer('Row2'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row2");
+      })
+      .isExisting(correctAnswer('Row3'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row3");
+      })
       .call(done);
   });
 

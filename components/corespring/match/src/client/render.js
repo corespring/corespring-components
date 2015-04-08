@@ -469,7 +469,8 @@ var main = [
           '          ng-bind-html-unsafe="column.labelHtml"/>',
           '    </tr>',
           '    <tr class="match-tr question-row"',
-          '        ng-repeat="row in matchModel.rows">',
+          '        ng-repeat="row in matchModel.rows"' +
+          '        question-id="{{row.id}}">',
           '      <td class="match-td question-cell"',
           '          ng-bind-html-unsafe="row.labelHtml"></td>',
           '      <td class="match-td answer-cell"' +
