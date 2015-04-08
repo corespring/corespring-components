@@ -16,13 +16,20 @@ describe('match', function() {
   var itemJsonFilename = 'CO-166.json';
   var itemJson = RegressionHelper.getItemJson('match', itemJsonFilename);
 
-  function answerInput(questionId, answerValue, correctness){
-    correctness = correctness || '';
-    return '.question-row[question-id="' + questionId + '"] ' + correctness + '[ng-value="' + answerValue + '"]';
+  function answerInput(questionId){
+    return '.question-row[question-id="' + questionId + '"] .choice-input';
+  }
+
+  function answerEvaluated(questionId, correctness){
+    return '.question-row[question-id="' + questionId + '"] .' + correctness;
   }
 
   function correctAnswer(questionId){
-    return '.panel-body .question-row[question-id="' + questionId + '"] .correct[ng-value="true"]';
+    return '.see-answer-panel .panel-body .question-row[question-id="' + questionId + '"] .correct';
+  }
+
+  function solutionPanelHeader(){
+    return '.see-answer-panel .panel-heading';
   }
 
   beforeEach(function(done) {
@@ -32,33 +39,50 @@ describe('match', function() {
       return this;
     };
 
+    browser.waitForWithTimeout = function(selector){
+      return browser.waitFor(selector, regressionTestRunnerGlobals.defaultTimeout);
+    };
+
     browser
       .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
-      .timeouts('page load', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('match', itemJsonFilename))
+      .waitForWithTimeout(answerInput('Row3'))
       .call(done);
   });
 
   it('does evaluate answers correctly', function(done) {
     browser
-      .click(answerInput('Row1', true))
-      .click(answerInput('Row2', true))
-      .click(answerInput('Row3', true))
+      .click(answerInput('Row1'))
+      .click(answerInput('Row2'))
+      .click(answerInput('Row3'))
       .submitItem()
-      .waitFor('.see-answer-panel .panel-heading')
-      .isExisting(answerInput('Row1', true, 'correct'))
-      .isExisting(answerInput('Row2', true, 'incorrect'))
-      .isExisting(answerInput('Row3', true, 'correct'))
+      .waitForWithTimeout(solutionPanelHeader())
+      .isExisting(answerEvaluated('Row1', 'correct'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row1");
+      })
+      .isExisting(answerEvaluated('Row2', 'incorrect'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row2");
+      })
+      .isExisting(answerEvaluated('Row3', 'correct'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row3");
+      })
       .call(done);
   });
 
   it('does show solution correctly', function(done) {
     browser
       .submitItem()
-      .waitFor('.see-answer-panel .panel-heading')
-      .isExisting(correctAnswer('Row1'))
-      .isExisting(correctAnswer('Row2'))
-      .isExisting(correctAnswer('Row3'))
+      .waitForWithTimeout(solutionPanelHeader())
+      .click(solutionPanelHeader())
+      .isExisting(correctAnswer('Row1'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row1");
+      })
+      .isExisting(correctAnswer('Row2'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row2");
+      })
+      .isExisting(correctAnswer('Row3'), function(err,res){
+        [err,res].should.eql([undefined,true], "Row3");
+      })
       .call(done);
   });
 
