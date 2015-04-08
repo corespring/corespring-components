@@ -488,11 +488,16 @@ var interactiveGraph = [
           rebuildGraph();
           scope.selectedType = scope.selectedType || model.config.initialType;
           if (model.config.availableTypes[scope.selectedType] !== true) {
+            var foundAvailable = false;
             for (var k in model.config.availableTypes) {
               if (model.config.availableTypes[k] === true) {
                 scope.selectedType = k;
+                foundAvailable = true;
                 break;
               }
+            }
+            if (!foundAvailable) {
+              scope.selectedType = 'PF';
             }
           }
 
