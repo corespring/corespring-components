@@ -35,10 +35,14 @@ describe.only('match', function() {
       return this;
     };
 
+    browser.waitForWithTimeout = function(selector){
+      return browser.waitFor(selector, regressionTestRunnerGlobals.defaultTimeout);
+    };
+
     browser
       .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('match', itemJsonFilename))
-      .waitFor(answerInput('Row3'))
+      .waitForWithTimeout(answerInput('Row3'))
       .call(done);
   });
 
@@ -48,7 +52,7 @@ describe.only('match', function() {
       .click(answerInput('Row2'))
       .click(answerInput('Row3'))
       .submitItem()
-      .waitFor('.see-answer-panel .panel-heading')
+      .waitForWithTimeout('.see-answer-panel .panel-heading')
       .isExisting(answerEvaluated('Row1', 'correct'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })
@@ -64,7 +68,7 @@ describe.only('match', function() {
   it('does show solution correctly', function(done) {
     browser
       .submitItem()
-      .waitFor('.see-answer-panel .panel-heading', function(){
+      .waitForWithTimeout('.see-answer-panel .panel-heading', function(){
 
       })
       .click('.see-answer-panel .panel-heading')
