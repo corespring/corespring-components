@@ -1,7 +1,7 @@
 var main = [
   '$sce', '$log',
 
-  function ($sce, $log) {
+  function($sce, $log) {
 
     return {
       scope: {},
@@ -35,23 +35,24 @@ var main = [
         setDataAndSession: setDataAndSession,
         getSession: getSession,
         setResponse: setResponse,
-        setMode: function (newMode) {
-        },
+        setMode: function(newMode) {},
         reset: reset,
-        resetStash: function () {
-        },
+        resetStash: function() {},
         isAnswerEmpty: isAnswerEmpty,
         editable: setEditable
       };
 
-      scope.showSeeCorrectAnswerLink = showSeeCorrectAnswerLink;
-      scope.classForCorrectness = classForCorrectness;
-      scope.onClickMatch = onClickMatch;
-      scope.undo = undo;
-      scope.startOver = startOver;
-      scope.getIconClass = getIconClass;
+      scope.classForEvaluatedAnswer = classForEvaluatedAnswer;
+      scope.classForSolution = classForSolution;
+      scope.getTooltip = getTooltip;
+      scope.getTooltipForEvaluatedAnswer = getTooltipForEvaluatedAnswer;
+      scope.getTooltipForSolution = getTooltipForSolution;
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
+      scope.onClickMatch = onClickMatch;
+      scope.showSeeCorrectAnswerLink = showSeeCorrectAnswerLink;
+      scope.startOver = startOver;
+      scope.undo = undo;
 
       scope.$watch("matchModel", watchMatchModel, true);
 
@@ -124,10 +125,10 @@ var main = [
       }
 
       function getSession() {
-        var answers = scope.matchModel.rows.map(function (row) {
+        var answers = scope.matchModel.rows.map(function(row) {
           return {
             id: row.id,
-            matchSet: row.matchSet.map(function (match) {
+            matchSet: row.matchSet.map(function(match) {
               return match.value;
             })
           };
@@ -155,10 +156,10 @@ var main = [
       }
 
       function setCorrectnessOnAnswers(correctnessRows) {
-        _.each(correctnessRows, function (correctnessRow) {
+        _.each(correctnessRows, function(correctnessRow) {
           var modelRow = _.find(scope.matchModel.rows, whereIdIsEqual(correctnessRow.id));
           if (modelRow) {
-            _.forEach(modelRow.matchSet, function (matchSetItem, i) {
+            _.forEach(modelRow.matchSet, function(matchSetItem, i) {
               matchSetItem.correct = correctnessRow.matchSet[i].correctness;
             });
             modelRow.answerExpected = correctnessRow.answerExpected;
@@ -198,7 +199,7 @@ var main = [
 
         function prepareRows() {
           var answersExist = (session && session.answers);
-          return rawModel.rows.map(function (row) {
+          return rawModel.rows.map(function(row) {
             var cloneRow = _.cloneDeep(row);
 
             cloneRow.matchSet = answersExist ?
@@ -211,7 +212,7 @@ var main = [
 
         function createMatchSetFromSession(id) {
           return _.find(session.answers, whereIdIsEqual(id))
-            .matchSet.map(function (match) {
+            .matchSet.map(function(match) {
               return {
                 value: match
               };
@@ -219,7 +220,7 @@ var main = [
         }
 
         function createEmptyMatchSet(length) {
-          return _.range(length).map(function () {
+          return _.range(length).map(function() {
             return {
               value: false
             };
@@ -232,7 +233,7 @@ var main = [
         return (response && response.correctness && response.correctness !== ALL_CORRECT);
       }
 
-      function classForCorrectness(row, index) {
+      function classForEvaluatedAnswer(row, index) {
         return getInputTypeClass(scope.inputType) + ' ' + getCorrectClass(row, row.matchSet[index].correct);
 
         function getInputTypeClass(inputType) {
@@ -259,7 +260,7 @@ var main = [
         console.log("onClickMatch", matchSet, index);
         if (scope.editable) {
           if (isRadioButton(scope.inputType)) {
-            _.forEach(matchSet, function (match, i) {
+            _.forEach(matchSet, function(match, i) {
               match.value = (i === index);
             });
           } else {
@@ -268,7 +269,7 @@ var main = [
         }
       }
 
-      function getIconClass(row, $index) {
+      function classForSolution(row, $index) {
         if (scope.response && scope.response.correctResponse) {
           var correctRow = _.find(scope.response.correctResponse, whereIdIsEqual(row.id));
           var answerRow = _.find(scope.matchModel.rows, whereIdIsEqual(row.id));
@@ -282,7 +283,35 @@ var main = [
                 'checkbox correct unchecked');
           }
         }
-        return UNKNOWN;
+        return "";
+      }
+
+      function getTooltip(row, index) {
+        var column = scope.matchModel.columns[index + 1];
+        var tooltip = removeHtmlTags(column.labelHtml);
+        return tooltip;
+      }
+
+      function getTooltipForEvaluatedAnswer(row, index) {
+        if (row.answerExpected) {
+          return "Answer expected";
+        }
+        switch(row.matchSet[index].correct){
+          case CORRECT: return "Correct answer";
+          case INCORRECT: return "Incorrect answer";
+          default: return undefined;
+        }
+      }
+
+      function getTooltipForSolution(row, index) {
+        var clazz = classForSolution(row, index);
+        return clazz ? getTooltip(row, index) : undefined;
+      }
+
+      function removeHtmlTags(html) {
+        var node = $('<div>');
+        node.html(html);
+        return node.text();
       }
 
       function watchMatchModel(newValue, oldValue) {
@@ -306,8 +335,8 @@ var main = [
       }
 
       function revertToState(state) {
-        _.forEach(scope.matchModel.rows, function (row, i) {
-          _.forEach(row.matchSet, function (match, j) {
+        _.forEach(scope.matchModel.rows, function(row, i) {
+          _.forEach(row.matchSet, function(match, j) {
             match.value = state[i].matchSet[j].value;
           });
         });
@@ -329,7 +358,7 @@ var main = [
       }
 
       function whereIdIsEqual(id) {
-        return function (match) {
+        return function(match) {
           return match.id === id;
         };
       }
@@ -366,42 +395,46 @@ var main = [
 
       function matchInteraction() {
         return [
-          '<table class="table" ng-class="layout">',
-          '  <tr>',
-          '    <th class="answer-header"',
+          '<table class="match-table" ng-class="layout">',
+          '  <tr class="match-tr header-row">',
+          '    <th class="match-th answer-header"',
           '        ng-repeat="column in matchModel.columns"',
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
-          '  <tr class="question-row"',
+          '  <tr class="match-tr question-row"',
           '      ng-repeat="row in matchModel.rows"',
           '      question-id="{{row.id}}">',
-          '    <td class="question-cell">',
-          '      <table>',
-          '       <tr>',
-          '         <td class="question-label" ng-bind-html-unsafe="row.labelHtml">',
+          '    <td class="match-td question-cell">',
+          '      <table class="question-table">',
+          '       <tr class="question-tr">',
+          '         <td class="question-td question-label" ng-bind-html-unsafe="row.labelHtml">',
           '         </td>',
-          '         <td class="answer-expected-warning">',
-          '           <div ng-if="row.answerExpected"><i class="fa fa-exclamation-triangle" alt="answer expected"></i></div>',
+          '         <td class="question-td answer-expected-warning">',
+          '           <div class="warning-holder" ng-if="row.answerExpected">',
+          '             <i class="fa fa-exclamation-triangle" tooltip="Answer expected"></i>',
+          '           </div>',
           '         </td>',
           '       </tr>',
           '      </table>',
           '    </td>',
-          '    <td class="answer-cell"',
+          '    <td class="match-td answer-cell"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
           '      <span class="choice-input" ',
           '        ng-if="editable"',
-          '        ng-switch="inputType" ',
+          '        ng-switch="inputType" ' +
+          '        tooltip="{{getTooltip(row, $index)}}"',
           '        ng-click="onClickMatch(row.matchSet, $index)">',
           '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="true">',
           '          <div class="checkbox-button" ng-class="{selected:match.value}"/>',
           '        </div>',
           '        <div class="radio-choice" ng-switch-when="radiobutton" ng-disabled="!editable" >',
-          '          <div class="radio-button" ng-class="{selected:match.value}" />',
+          '          <div class="radio-button" ng-class="{selected:match.value}" ng-value="true"/>',
           '        </div>',
           '      </span>',
           '      <div ng-if="!editable"',
-          '         ng-class="classForCorrectness(row, $index)"',
+          '         tooltip="{{getTooltipForEvaluatedAnswer(row, $index)}}"',
+          '         ng-class="classForEvaluatedAnswer(row, $index)"',
           '        >',
           '        <i class="background fa"></i>',
           '        <i class="foreground fa"></i>',
@@ -429,22 +462,20 @@ var main = [
           '<div see-answer-panel="true"',
           '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
           '    ng-if="showSeeCorrectAnswerLink(response)">',
-          '  <table class="table" ng-class="layout">',
-          '    <tr>',
-          '      <th class="answer-header"',
-          '          ng-class="{notFirst:!$first}"',
+          '  <table class="match-table" ng-class="layout">',
+          '    <tr class="match-tr">',
+          '      <th class="match-th answer-header"',
           '          ng-repeat="column in matchModel.columns"',
           '          ng-bind-html-unsafe="column.labelHtml"/>',
           '    </tr>',
-          '    <tr class="question-row"',
+          '    <tr class="match-tr question-row"',
           '        ng-repeat="row in matchModel.rows">',
-          '      <td class="question-cell"',
+          '      <td class="match-td question-cell"',
           '          ng-bind-html-unsafe="row.labelHtml"></td>',
-          '      <td class="answer-cell"',
+          '      <td class="match-td answer-cell"' +
           '          ng-repeat="match in row.matchSet track by $index">',
-          '        <div ng-if="!editable"',
-          '           ng-class="getIconClass(row,$index)"',
-          '          >',
+          '        <div ng-class="classForSolution(row,$index)"' +
+          '            tooltip="{{getTooltipForSolution(row, $index)}}">',
           '            <i class="background fa"></i>',
           '            <i class="foreground fa"></i>',
           '        </div>',
