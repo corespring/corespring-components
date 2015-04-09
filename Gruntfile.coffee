@@ -22,7 +22,7 @@ module.exports = (grunt) ->
 
     regressionTestRunner:
       options:
-        tests: ['components/**/match/regression/*.js']
+        tests: ['components/**/regression/*.js']
       dev:
         baseUrl: 'http://localhost:9000'
         defaultTimeout: grunt.option('defaultTimeout') || 2000
