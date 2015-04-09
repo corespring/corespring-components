@@ -400,7 +400,8 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
       axisOptions = _.defaults(axisOptions || {}, {
         tickFrequency: 20,
         snapPerTick: 4,
-        visible: true
+        visible: true,
+        axisColor: '#000000'
       });
 
       this.reCalculate = function() {
@@ -440,12 +441,16 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
             break;
         }
         thatHA.elements.push(paper.leftArrow(options.margin.left - 18, y, 8, 5).attr({
-          fill: "#000"
+          fill: axisOptions.axisColor,
+          stroke: axisOptions.axisColor
         }));
         thatHA.elements.push(paper.rightArrow(options.margin.left + options.horizontalAxisLength + 10, y, 8, 5).attr({
-          fill: "#000"
+          fill: axisOptions.axisColor,
+          stroke: axisOptions.axisColor
         }));
-        thatHA.elements.push(paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y));
+        thatHA.elements.push(paper.line(options.margin.left - 10, y, options.margin.left + options.horizontalAxisLength + 20, y).attr({
+          stroke: axisOptions.axisColor
+        }));
 
 
         var scale = thatHA.scale;
@@ -454,7 +459,9 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
         _(thatHA.ticks).each(function(tick, idx) {
           var x = scale(tick);
 
-          thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2));
+          thatHA.elements.push(paper.line(options.margin.left + x, y - tickSize / 2, options.margin.left + x, y + tickSize / 2).attr({
+            stroke: axisOptions.axisColor
+          }));
 
           var override = _.find(thatHA.tickLabelOverrides, function(t) {
              return t.tick === tick;
@@ -488,7 +495,9 @@ exports.factory = [ '$log', 'ScaleUtils', function($log, ScaleUtils) {
 
           if (axisOptions.showMinorTicks && idx < thatHA.ticks.length - 1) {
             for (var i = 1; i < snapPerTick; i++) {
-              thatHA.elements.push(paper.line(options.margin.left + scale(tick + d * i), y - tickSize / 4, options.margin.left + scale(tick + d * i), y + tickSize / 4));
+              thatHA.elements.push(paper.line(options.margin.left + scale(tick + d * i), y - tickSize / 4, options.margin.left + scale(tick + d * i), y + tickSize / 4).attr({
+                stroke: axisOptions.axisColor
+              }));
             }
           }
         });

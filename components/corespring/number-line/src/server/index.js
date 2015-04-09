@@ -110,9 +110,15 @@ exports.isPartiallyCorrect = function(answer, correctAnswer) {
 };
 
 exports.createOutcome = function(question, answer, settings) {
-  if (!answer) {
+  if (!answer || _.isEmpty(answer)){
     return {
-      correctness: 'incorrect'
+      correctness: 'warning',
+      correctClass: 'warning',
+      score: 0,
+      feedback: settings.showFeedback ? {
+        correctness: 'warning',
+        message: "You did not enter a response."
+      } : null
     };
   }
 

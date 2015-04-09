@@ -63,17 +63,40 @@ var correctAnswer = [
 
 describe('number line', function() {
 
+  describe('empty response warning', function() {
+    it('should respond with warning when empty response is given', function() {
+      var outcome = server.createOutcome(component, [], helper.settings(true, true, true));
+
+      expect(outcome).to.eql({
+        "correctness": "warning",
+        "correctClass": "warning",
+        "score": 0,
+        "feedback": {
+          "correctness": "warning",
+          "message": "You did not enter a response."
+        }
+      });
+    });
+  });
+
   describe('correctness', function() {
 
-    it('should return an incorrect outcome for an empty answer', function() {
+    it('should return a warning outcome for an empty answer', function() {
       var outcome = server.createOutcome(component, null, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").eql("warning");
     });
 
     it('should return incorrect outcome if point element is incorrect', function() {
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
-        {"type": "line", "domainPosition": 1, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"},
+        {
+          "type": "line",
+          "domainPosition": 1,
+          "rangePosition": 2,
+          "size": 2,
+          "leftPoint": "full",
+          "rightPoint": "empty"
+        },
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
 
@@ -85,7 +108,14 @@ describe('number line', function() {
     it('should return incorrect outcome if domainPosition of line element is incorrect', function() {
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
-        {"type": "line", "domainPosition": 3, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"},
+        {
+          "type": "line",
+          "domainPosition": 3,
+          "rangePosition": 2,
+          "size": 2,
+          "leftPoint": "full",
+          "rightPoint": "empty"
+        },
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
@@ -95,7 +125,14 @@ describe('number line', function() {
     it('should return incorrect outcome if size of line element is incorrect', function() {
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
-        {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 4, "leftPoint": "full", "rightPoint": "empty"},
+        {
+          "type": "line",
+          "domainPosition": 2,
+          "rangePosition": 2,
+          "size": 4,
+          "leftPoint": "full",
+          "rightPoint": "empty"
+        },
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
@@ -106,7 +143,14 @@ describe('number line', function() {
       //Left Point
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
-        {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 2, "leftPoint": "empty", "rightPoint": "empty"},
+        {
+          "type": "line",
+          "domainPosition": 2,
+          "rangePosition": 2,
+          "size": 2,
+          "leftPoint": "empty",
+          "rightPoint": "empty"
+        },
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
@@ -125,7 +169,14 @@ describe('number line', function() {
     it('should return incorrect outcome if element type is missing', function() {
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
-        {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"},
+        {
+          "type": "line",
+          "domainPosition": 2,
+          "rangePosition": 2,
+          "size": 2,
+          "leftPoint": "full",
+          "rightPoint": "empty"
+        },
         {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
@@ -152,7 +203,12 @@ describe('number line', function() {
   describe('feedback', function() {
 
     it('incorrect item has incorrect feedback message and class', function() {
-      var outcome = server.createOutcome(component, [{"type": "point", "pointType": "empty", "domainPosition": 1, "rangePosition": 1}], helper.settings(true, true, true));
+      var outcome = server.createOutcome(component, [{
+        "type": "point",
+        "pointType": "empty",
+        "domainPosition": 1,
+        "rangePosition": 1
+      }], helper.settings(true, true, true));
       expect(outcome.feedback.message).to.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
       expect(outcome.correctness).to.eql('incorrect');
       expect(outcome.correctClass).to.eql('incorrect');
@@ -187,7 +243,14 @@ describe('number line', function() {
     it('incorrect elements should have isCorrect false in feedback', function() {
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
-        {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"},
+        {
+          "type": "line",
+          "domainPosition": 2,
+          "rangePosition": 2,
+          "size": 2,
+          "leftPoint": "full",
+          "rightPoint": "empty"
+        },
         {"type": "ray", "pointType": "full", "domainPosition": 2, "direction": "negative"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
@@ -215,7 +278,14 @@ describe('number line', function() {
       ];
       var answer = [
         {"type": "point", "pointType": "empty", "domainPosition": 3, "rangePosition": 1},
-        {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"},
+        {
+          "type": "line",
+          "domainPosition": 2,
+          "rangePosition": 2,
+          "size": 2,
+          "leftPoint": "full",
+          "rightPoint": "empty"
+        },
         {"type": "ray", "pointType": "full", "domainPosition": 2, "direction": "negative"}
       ];
       var outcome = server.createOutcome(_component, answer, helper.settings(true, true, true));

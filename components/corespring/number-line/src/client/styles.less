@@ -82,6 +82,23 @@
 
   div.element-selector {
     .element-selector-template();
+    margin-left: 10px;
+  }
+
+  .no-response {
+    background: #eaeaea;
+    border: 2px solid @warning-color;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 90%;
+    padding-left: 10px;
+
+    i {
+      margin-top: 30px;
+      color: @warning-color;
+      font-size: 30px;
+    }
   }
 
   .correct-element {
@@ -91,6 +108,25 @@
   .incorrect-element {
     color: @incorrect-color;
   }
+
+  .feedback {
+    &.panel {
+      &.warning {
+        .panel-heading {
+          display: none;
+        }
+
+        .panel-body {
+          border-radius: 4px;
+          padding: 15px;
+          background-color: #f2dede;
+          border-color: #eed3d7;
+          color: #b94a48;
+        }
+      }
+    }
+  }
+
 
 }
 
@@ -113,6 +149,7 @@
 
   .sample-description {
     text-align: center;
+    font-style: italic;
   }
 
   .undo-button-row {
@@ -127,9 +164,17 @@
     }
   }
 
+  .centered-graph-holder {
+    width: 85%;
+    text-align: center;
+
+    .centered-graph {
+      display: inline-block;
+    }
+  }
+
   .collapsable-panel,
   .correct-response-panel {
-    width: 600px;
 
     .panel-heading h4 {
       font-size: 16px;
