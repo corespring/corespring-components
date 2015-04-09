@@ -21,15 +21,14 @@ function createOutcome(question, answer, settings) {
 
   var response = {
     correctness: ALL_INCORRECT,
-    correctResponse: question.correctResponse,
     score: 0,
     feedback:{},
     correctnessMatrix: buildCorrectnessMatrix(question, answer, settings)
   };
 
   if (numberOfAnswers(answer) === 0) {
-    response = addOptionalParts(response);
     response.correctness = WARNING;
+    response = addOptionalParts(response);
     response.feedback.summary = feedbackUtils.makeFeedback(question.feedback, WARNING);
     return response;
   }
@@ -43,6 +42,9 @@ function createOutcome(question, answer, settings) {
   return addOptionalParts(response);
 
   function addOptionalParts(response) {
+    if(response.correctness === SOME_CORRECT || response.correctness === ALL_INCORRECT){
+      response.correctResponse = question.correctResponse;
+    }
     if (settings.showFeedback) {
       response.feedback.summary = buildFeedbackSummary(question, response.correctness);
     }

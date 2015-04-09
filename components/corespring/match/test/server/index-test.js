@@ -199,7 +199,6 @@ describe('match server logic', function() {
     var outcome = server.createOutcome(component, null, helper.settings(true, true, true));
     outcome.should.eql({
       correctness: 'warning',
-      correctResponse: correctResponse,
       score: 0,
       feedback: {
         summary: fbu.defaults.warning
@@ -215,7 +214,6 @@ describe('match server logic', function() {
     outcome = server.createOutcome(component, undefined, helper.settings(true, true, true));
     outcome.should.eql({
       correctness: 'warning',
-      correctResponse: correctResponse,
       score: 0,
       feedback: {
         summary: fbu.defaults.warning
@@ -250,7 +248,6 @@ describe('match server logic', function() {
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
       var expected = {
         correctness: "all_correct",
-        correctResponse: correctResponse,
         score: 1,
         feedback: {
           summary: "Correct!"
@@ -271,7 +268,6 @@ describe('match server logic', function() {
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, false, false));
       var expected = {
         correctness: "all_correct",
-        correctResponse: correctResponse,
         score: 1,
         feedback: {
           summary: "Correct!"
@@ -300,7 +296,6 @@ describe('match server logic', function() {
 
       var expected = {
         correctness: "warning",
-        correctResponse: correctResponse,
         score: 0,
         feedback: {
           summary: fbu.defaults.warning

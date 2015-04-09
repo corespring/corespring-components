@@ -71,6 +71,7 @@ describe('match', function() {
 
   it('does show solution correctly', function(done) {
     browser
+      .click(answerInput('Row1'))
       .submitItem()
       .waitForWithTimeout(solutionPanelHeader())
       .click(solutionPanelHeader())
