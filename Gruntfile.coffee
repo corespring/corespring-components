@@ -1,19 +1,19 @@
-fs = require "fs"
-templates = require "./lib/templates"
-components = require "./lib/components"
-_ = require "lodash"
-utils = require "./lib/utils"
-testClient = require "./lib/test-client"
+fs = require 'fs'
+templates = require './lib/templates'
+components = require './lib/components'
+_ = require 'lodash'
+utils = require './lib/utils'
+testClient = require './lib/test-client'
 writeVersionInfo = require('./lib/version-info')
 
 
 module.exports = (grunt) ->
 
-  corespringCore = grunt.option("corespringCore") ?  "../modules/container-client/src/js/corespring"
+  corespringCore = grunt.option('corespringCore') ?  '../modules/container-client/src/js/corespring'
 
   commonConfig =
-    app: "."
-    componentPath: grunt.config("componentPath") ? "components"
+    app: '.'
+    componentPath: grunt.config('componentPath') ? 'components'
     corespringCore: corespringCore
 
   config =
@@ -22,9 +22,9 @@ module.exports = (grunt) ->
 
     regressionTestRunner:
       options:
-        tests: ['components/**/regression/*.js']
+        tests: ['components/**/match/regression/*.js']
       dev:
-        baseUrl: "http://localhost:9000"
+        baseUrl: 'http://localhost:9000'
         defaultTimeout: grunt.option('defaultTimeout') || 2000
       saucelabs:
         defaultTimeout: grunt.option('defaultTimeout') || 5000
@@ -33,6 +33,8 @@ module.exports = (grunt) ->
         user: process.env.SAUCE_USERNAME
         key: process.env.SAUCE_ACCESS_KEY
         baseUrl: 'http://corespring-container-devt.herokuapp.com'
+        capabilities:
+          name: grunt.option('sauceJob') ? 'components tests'
 
     jasmine:
       unit:
@@ -40,18 +42,18 @@ module.exports = (grunt) ->
         options:
           keepRunner: true
           vendor: [
-            '<%= common.app %>/bower_components/lodash/dist/lodash.js',
-            '<%= common.app %>/bower_components/headjs/dist/1.0.0/head.js',
-            '<%= common.app %>/bower_components/jquery/dist/jquery.js',
-            '<%= common.app %>/bower_components/angular/angular.js',
-            '<%= common.app %>/bower_components/angular-sanitize/angular-sanitize.js',
-            '<%= common.app %>/bower_components/angular-ui-select/dist/select.js',
-            '<%= common.app %>/bower_components/angular-mocks/angular-mocks.js',
+            '<%= common.app %>/bower_components/lodash/dist/lodash.js'
+            '<%= common.app %>/bower_components/headjs/dist/1.0.0/head.js'
+            '<%= common.app %>/bower_components/jquery/dist/jquery.js'
+            '<%= common.app %>/bower_components/angular/angular.js'
+            '<%= common.app %>/bower_components/angular-sanitize/angular-sanitize.js'
+            '<%= common.app %>/bower_components/angular-ui-select/dist/select.js'
+            '<%= common.app %>/bower_components/angular-mocks/angular-mocks.js'
             # TODO : how to build out packages like this..
-            '<%= common.app %>/bower_components/ckeditor/ckeditor.js',
-            '<%= common.app %>/bower_components/saxjs/lib/sax.js',
-            '<%= common.corespringCore %>/core.js',
-            '<%= common.corespringCore %>/lodash-mixins.js',
+            '<%= common.app %>/bower_components/ckeditor/ckeditor.js'
+            '<%= common.app %>/bower_components/saxjs/lib/sax.js'
+            '<%= common.corespringCore %>/core.js'
+            '<%= common.corespringCore %>/lodash-mixins.js'
             '<%= grunt.config("testClient.appDeclaration") %>'
           ]
           specs: '<%= grunt.config("testClient.specPath") %>'
@@ -94,18 +96,18 @@ module.exports = (grunt) ->
         tasks: ['jshint:main']
 
     clean:
-      test: ["<%= common.componentPath %>/**/*-wrapped.js"]
-      production : ["<%= common.app %>/node_modules", "<%= common.app %>/bower_components"]
+      test: ['<%= common.componentPath %>/**/*-wrapped.js']
+      production : ['<%= common.app %>/node_modules', '<%= common.app %>/bower_components']
 
     jsbeautifier:
-      files : ["<%= common.componentPath %>/**/*.js"],
+      files : ['<%= common.componentPath %>/**/*.js'],
       options :
         js:
-          braceStyle: "collapse"
+          braceStyle: 'collapse'
           breakChainedMethods: false
           e4x: false
           evalCode: false
-          indentChar: " "
+          indentChar: ' '
           indentLevel: 0
           indentSize: 2
           indentWithTabs: false
@@ -132,8 +134,6 @@ module.exports = (grunt) ->
     'grunt-jsbeautifier',
     'regression-test-runner'
   ]
-
-
 
   grunt.loadNpmTasks(t) for t in npmTasks
   grunt.loadTasks('tasks')
