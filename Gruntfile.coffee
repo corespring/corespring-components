@@ -35,6 +35,8 @@ module.exports = (grunt) ->
         baseUrl: 'http://corespring-container-devt.herokuapp.com'
         capabilities:
           name: grunt.option('sauceJob') ? 'components tests'
+          recordVideo: grunt.option('sauceRecordVideo') ? false
+          recordScreenshots: grunt.option('sauceRecordScreenshots') ? false
 
     jasmine:
       unit:
