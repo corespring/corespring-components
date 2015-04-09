@@ -67,6 +67,73 @@
   }
 }
 
+.config-corespring-match {
+
+  .inline-help {
+    font-style: italic;
+    color: #999999;
+  }
+
+  .row {
+    &.option {
+      margin-top: 10px;
+
+      &.input-type {
+        .inline-help {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+
+  .config-table {
+    margin: 0;
+    width: 95%;
+
+    th, td {
+      min-width: 0;
+    }
+
+    .no-border {
+      border: none;
+    }
+
+    .help {
+      vertical-align: bottom;
+      padding: 0;
+
+      p {
+        padding: 0;
+      }
+    }
+
+    .remove-row {
+      width: 20px;
+      padding: 0;
+      text-align: center;
+    }
+
+    .question-header {
+      color: black;
+      background: none;
+    }
+
+    .answer-header {
+      color: black;
+      background: none;
+      width: 100px;
+      text-align: center;
+    }
+
+    .question-col {
+    }
+
+    .answer-col {
+      text-align: center;
+    }
+  }
+}
+
 .render-corespring-match {
   color: black;
   padding-top: 14px;
@@ -404,22 +471,3 @@
   }
 }
 
-.config-corespring-match {
-
-  .inline-help {
-    font-style: italic;
-    color: #999999;
-  }
-
-  .row {
-    &.option {
-      margin-top: 10px;
-
-      &.input-type {
-        .inline-help {
-          margin-top: 5px;
-        }
-      }
-    }
-  }
-}
