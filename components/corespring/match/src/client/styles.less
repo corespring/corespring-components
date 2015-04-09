@@ -40,10 +40,10 @@
   transition: border 0.15s ease-in-out;
 }
 
-.fa-nudge(@value){
+.fa-nudge(@left, @top){
   position: absolute;
-  margin-left: @value;
-  margin-top: @value;
+  margin-left: @left;
+  margin-top: @top;
 }
 
 .component-placeholder {
@@ -54,11 +54,82 @@
     margin-bottom: 0;
     padding-top: 0;
 
+    .match-table.interaction {
+      margin-bottom: 0px;
+    }
+
     .undo-start-over {
       //hide, but block the space, so that the
       //content is not hidden behind the edit/delete
       //buttons of the placeholder
       visibility: hidden;
+    }
+  }
+}
+
+.config-corespring-match {
+
+  .inline-help {
+    font-style: italic;
+    color: #999999;
+  }
+
+  .row {
+    &.option {
+      margin-top: 10px;
+
+      &.input-type {
+        .inline-help {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+
+  .config-table {
+    margin: 0;
+    width: 95%;
+
+    th, td {
+      min-width: 0;
+    }
+
+    .no-border {
+      border: none;
+    }
+
+    .help {
+      vertical-align: bottom;
+      padding: 0;
+
+      p {
+        padding: 0;
+      }
+    }
+
+    .remove-row {
+      width: 20px;
+      padding: 0;
+      text-align: center;
+    }
+
+    .question-header {
+      color: black;
+      background: none;
+    }
+
+    .answer-header {
+      color: black;
+      background: none;
+      width: 100px;
+      text-align: center;
+    }
+
+    .question-col {
+    }
+
+    .answer-col {
+      text-align: center;
     }
   }
 }
@@ -75,8 +146,12 @@
   .match-table {
     margin: 0;
     border-collapse: collapse;
-    border: solid 1px #cccccc;
+    border: none;
     width: 100%;
+
+    &.interaction {
+      margin-bottom: 20px;
+    }
 
     &.three-columns {
       .answer-header {
@@ -105,7 +180,7 @@
         text-align: center;
         background: white;
         color: black;
-        vertical-align: bottom;
+        vertical-align: middle;
         word-wrap: break-word;
         padding: 10px 5px;
 
@@ -129,6 +204,7 @@
 
           .question-tr, .question-td {
             border: none;
+            padding: 0;
           }
           .question-label {
             text-align: left;
@@ -151,11 +227,13 @@
   }
 
   .see-answer-panel {
-    margin-top: 20px;
+
+    .panel-body {
+      padding: 0;
+    }
   }
 
   .feedback.panel {
-    margin-top: 10px;
 
     .panel-heading {
       cursor: default;
@@ -185,13 +263,20 @@
     }
   }
 
+  .radio,
+  .checkbox {
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   .radiobutton {
     font-family: FontAwesome;
     font-size: 22px;
     position: relative;
 
     .background {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
       color: white;
       &:after {
         content: '\f111';
@@ -199,7 +284,7 @@
     }
 
     .foreground {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
     }
 
     &.correct {
@@ -260,12 +345,12 @@
     position: relative;
 
     .background {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
       color: white;
     }
 
     .foreground {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
     }
 
     &.correct {
@@ -291,38 +376,41 @@
     }
     &.incorrect {
       .background {
+        color: @incorrect-color;
         &:after {
-          content: '\f00d';
+          content: '\f0c8';
         }
         .text-shadow(@incorrect-color);
       }
       .foreground {
-        color: @incorrect-color;
+        color: white;
+        .fa-nudge(-10px, -12px);
         &:after {
           content: '\f00d';
         }
       }
     }
     &.unknown {
+      .background {
+        color: #eee;
+        font-size: 20px;
+        &:after {
+          content: '\f0c8';
+        }
+      }
       .foreground {
         color: #bbb;
         &:after {
           content: '\f096';
         }
       }
-      .background {
-        color: #eee;
-        &:after {
-          content: '\f0c8';
-        }
-      }
       &.answer-expected {
-        .foreground {
-          color: @warning-color;
-        }
         .background {
           font-size: 20px;
           .text-shadow(@warning-color);
+        }
+        .foreground {
+          color: @warning-color;
         }
       }
     }
@@ -376,14 +464,15 @@
         .transform-transition();
 
         &.selected {
+          .scale(1,1);
           display: inline-block;
           width: 16px;
           height: 16px;
-          margin-left: 1px;
+          margin-left: auto;
+          margin-right: auto;
           margin-top: 1px;
           border-radius: 50%;
           background-color: #555555;
-          .scale(1,1);
         }
       }
     }
@@ -393,22 +482,3 @@
   }
 }
 
-.config-corespring-match {
-
-  .inline-help {
-    font-style: italic;
-    color: #999999;
-  }
-
-  .row {
-    &.option {
-      margin-top: 10px;
-
-      &.input-type {
-        .inline-help {
-          margin-top: 5px;
-        }
-      }
-    }
-  }
-}
