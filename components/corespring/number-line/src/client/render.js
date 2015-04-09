@@ -21,7 +21,12 @@ var main = [
 
       scope.colors = {
         correct: $(element).find('.correct-element').css('color'),
-        incorrect: $(element).find('.incorrect-element').css('color')
+        incorrect: $(element).find('.incorrect-element').css('color'),
+        axis: 'rgb(0, 0, 0)'
+      };
+
+      scope.noResponseOptions = {
+        explicitHeight: 10
       };
 
       scope.containerBridge = {
@@ -100,8 +105,17 @@ var main = [
         '       changeHandler="changeHandler()"',
         '       editable="editable"',
         '       colors="colors"></div>',
+
+        '  <div ng-if="serverResponse && serverResponse.correctness == \'warning\'" class="no-response">',
+        '    <i class="fa fa-exclamation-triangle"></i>',
+        '    <div interactive-graph',
+        '         ngModel="correctModel"',
+        '         responseModel="dummyResponse"',
+        '         options="noResponseOptions"></div>',
+        '  </div>',
+
         '  <div feedback="serverResponse.feedback.message" correct-class="{{serverResponse.correctClass}}"></div>',
-        '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness !== \'correct\' && serverResponse.correctness !== \'n/a\'">',
+        '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness === \'incorrect\'">',
         '    <div interactive-graph',
         '         ngModel="correctModel"',
         '         serverResponse="correctModelDummyResponse"',
@@ -132,7 +146,7 @@ var interactiveGraph = [
       "Ray": ["REP", "REN", "RFP", "RFN"]
     };
 
-    var NUMBER_OF_PLANES = 3;
+    var NUMBER_OF_PLANES = 6;
     var HORIZONTAL_AXIS_WIDTH = 480;
 
     var pointEqual = function(p1, p2) {
@@ -275,6 +289,7 @@ var interactiveGraph = [
           horizontalAxisLength: HORIZONTAL_AXIS_WIDTH,
           domain: [0, 10],
           range: [0, NUMBER_OF_PLANES],
+          numberOfPlanes: NUMBER_OF_PLANES,
           applyCallback: function() {
             scope.$apply();
           },
@@ -480,7 +495,8 @@ var interactiveGraph = [
             tickLabelOverrides: model.config.tickLabelOverrides,
             tickFrequency: model.config.tickFrequency || 10,
             snapPerTick: model.config.snapPerTick,
-            showMinorTicks: model.config.showMinorTicks
+            showMinorTicks: model.config.showMinorTicks,
+            axisColor: scope.colors && scope.colors.axis
           });
           scope.graph.addVerticalAxis("left", {visible: false});
 

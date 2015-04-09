@@ -14,6 +14,7 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
     options = options || {};
     _.defaults(options, {
       margin: {top: 0, right: 30, bottom: 30, left: 30},
+      numberOfPlanes: 3,
       axisHeight: 20,
       domain: [0, 20],
       range: [0, 20],
@@ -48,9 +49,8 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
         return;
       }
 
-      if (!_.isUndefined(newOptions.maxNumberOfPoints) && newOptions.maxNumberOfPoints !== options.maxNumberOfPoints) {
-        options.verticalAxisLength = 3 * PLANE_SIZE;
-        options.height = (options.verticalAxisLength + options.margin.top + options.margin.bottom) + options.axisHeight;
+        options.verticalAxisLength = newOptions.explicitHeight || options.numberOfPlanes * PLANE_SIZE;
+        options.height = (options.verticalAxisLength + options.margin.top + options.margin.bottom) + options.axisHeight + 10;
 
         $(element).width(options.width);
         $(element).height(options.height);
@@ -66,10 +66,8 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
         this.height = options.height;
         this.margin = options.margin;
 
-      }
-
       options = _.extend(options, newOptions);
-      options.range = [0, 4];
+      options.range = [0, options.numberOfPlanes-1];
       if (that.horizontalAxis) {
         that.horizontalAxis.reCalculate();
       }

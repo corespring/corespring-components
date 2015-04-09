@@ -16,7 +16,7 @@ var main = [
       '    <div>Minor tick frequency: <input type="number" class="form-control" ng-model="fullModel.model.config.snapPerTick"/></div>',
       '    <div><a class="reset-defaults btn btn-default" ng-click="resetToDefaults()">Reset to default values</a></div>',
       '    </td>',
-      '    <td>',
+      '    <td style="padding-left: 50px">',
       '      <div interactive-graph',
       '           ngModel="sampleNumberLine.model"',
       '           responseModel="sampleNumberLine.responseModel"',
@@ -37,27 +37,31 @@ var main = [
       '  <p>Use this number line to set a starting point, line segment or ray. This is optional.</p>',
       '  <p>This number line may also be used to make an exhibit number line, which can not be manipulated by a student.',
       '  Be sure to check &ldquo;Make an Exhibit&rdquo; in the Number Line Attributes area above.</p>',
-      '  <div interactive-graph',
-      '       ngModel="initialView.model"',
-      '       options="configGraphOptions"',
-      '       responseModel="initialView.responseModel"',
-      '       editable="initialView.editable"',
-      '       colors="initialView.colors"></div>',
+      '  <div class="centered-graph-holder">',
+      '    <div class="centered-graph" interactive-graph',
+      '         ngModel="initialView.model"',
+      '         options="configGraphOptions"',
+      '         responseModel="initialView.responseModel"',
+      '         editable="initialView.editable"',
+      '         colors="initialView.colors">',
+      '     </div>',
+      '   </div>',
       '</div>'
 
     ].join('');
 
     var correctResponseView = [
-      '<div ng-hide="fullModel.model.config.exhibitOnly" class="panel panel-default correct-response-panel">',
-      '<div class="panel-heading"><h4>Correct Response</h4></div>',
-      '  <div class="panel-body">',
+      '<div ng-hide="fullModel.model.config.exhibitOnly">',
+      '<h4>Correct Response</h4>',
       '    <p>Select answer type and place it on the number line. Intersecting points, line segments and/or rays will appear above the number line.</p>',
       '    <p><i>Note: A maximum of 20 points, line segments or rays may be plotted.</i></p>',
-      '    <div interactive-graph',
-      '         ngModel="correctResponseView.model"',
-      '         responseModel="correctResponseView.responseModel"',
-      '         options="configGraphOptions"',
-      '         editable="correctResponseView.editable"></div>',
+      '    <div class="centered-graph-holder">',
+      '      <div class="centered-graph" interactive-graph',
+      '           ngModel="correctResponseView.model"',
+      '           responseModel="correctResponseView.responseModel"',
+      '           options="configGraphOptions"',
+      '           editable="correctResponseView.editable">',
+      '      </div>',
       '    </div>',
       '</div>'
     ].join('');
@@ -131,7 +135,8 @@ var main = [
         };
         scope.sampleGraphOptions = {
           placeholderForEmptyTickLabel: "N/A",
-          labelCursor: 'pointer'
+          labelCursor: 'pointer',
+          explicitHeight: 30
         };
 
         scope.initialView = {
