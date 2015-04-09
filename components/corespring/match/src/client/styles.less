@@ -263,6 +263,13 @@
     }
   }
 
+  .radio,
+  .checkbox {
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   .radiobutton {
     font-family: FontAwesome;
     font-size: 22px;
@@ -454,6 +461,7 @@
         .transform-transition();
 
         &.selected {
+          .scale(1,1);
           display: inline-block;
           width: 16px;
           height: 16px;
@@ -461,7 +469,6 @@
           margin-top: 1px;
           border-radius: 50%;
           background-color: #555555;
-          .scale(1,1);
         }
       }
     }
