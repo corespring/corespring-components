@@ -54,6 +54,10 @@
     margin-bottom: 0;
     padding-top: 0;
 
+    .match-table.interaction {
+      margin-bottom: 0px;
+    }
+
     .undo-start-over {
       //hide, but block the space, so that the
       //content is not hidden behind the edit/delete
@@ -77,6 +81,10 @@
     border-collapse: collapse;
     border: solid 1px #cccccc;
     width: 100%;
+
+    &.interaction {
+      margin-bottom: 20px;
+    }
 
     &.three-columns {
       .answer-header {
@@ -129,6 +137,7 @@
 
           .question-tr, .question-td {
             border: none;
+            padding: 0;
           }
           .question-label {
             text-align: left;
@@ -151,7 +160,6 @@
   }
 
   .see-answer-panel {
-    margin-top: 20px;
 
     .panel-body {
       padding: 0;
@@ -159,7 +167,6 @@
   }
 
   .feedback.panel {
-    margin-top: 10px;
 
     .panel-heading {
       cursor: default;

@@ -399,7 +399,7 @@ var main = [
 
       function matchInteraction() {
         return [
-          '<table class="match-table" ng-class="layout">',
+          '<table class="match-table interaction" ng-class="layout">',
           '  <tr class="match-tr header-row">',
           '    <th class="match-th answer-header"',
           '        ng-repeat="column in matchModel.columns"',
