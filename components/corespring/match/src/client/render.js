@@ -50,7 +50,6 @@ var main = [
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
       scope.onClickMatch = onClickMatch;
-      scope.showSeeCorrectAnswerLink = showSeeCorrectAnswerLink;
       scope.startOver = startOver;
       scope.undo = undo;
 
@@ -227,10 +226,6 @@ var main = [
           });
         }
 
-      }
-
-      function showSeeCorrectAnswerLink(response) {
-        return (response && response.correctness && response.correctness !== ALL_CORRECT);
       }
 
       function classForEvaluatedAnswer(row, index) {
@@ -465,7 +460,7 @@ var main = [
         return [
           '<div see-answer-panel="true"',
           '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
-          '    ng-if="showSeeCorrectAnswerLink(response)">',
+          '    ng-if="response.correctResponse">',
           '  <table class="match-table" ng-class="layout">',
           '    <tr class="match-tr">',
           '      <th class="match-th answer-header"',
