@@ -40,10 +40,10 @@
   transition: border 0.15s ease-in-out;
 }
 
-.fa-nudge(@value){
+.fa-nudge(@left, @top){
   position: absolute;
-  margin-left: @value;
-  margin-top: @value;
+  margin-left: @left;
+  margin-top: @top;
 }
 
 .component-placeholder {
@@ -276,7 +276,7 @@
     position: relative;
 
     .background {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
       color: white;
       &:after {
         content: '\f111';
@@ -284,7 +284,7 @@
     }
 
     .foreground {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
     }
 
     &.correct {
@@ -345,12 +345,12 @@
     position: relative;
 
     .background {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
       color: white;
     }
 
     .foreground {
-      .fa-nudge(-11px);
+      .fa-nudge(-11px, -11px);
     }
 
     &.correct {
@@ -376,38 +376,41 @@
     }
     &.incorrect {
       .background {
+        color: @incorrect-color;
         &:after {
-          content: '\f00d';
+          content: '\f0c8';
         }
         .text-shadow(@incorrect-color);
       }
       .foreground {
-        color: @incorrect-color;
+        color: white;
+        .fa-nudge(-10px, -12px);
         &:after {
           content: '\f00d';
         }
       }
     }
     &.unknown {
+      .background {
+        color: #eee;
+        font-size: 20px;
+        &:after {
+          content: '\f0c8';
+        }
+      }
       .foreground {
         color: #bbb;
         &:after {
           content: '\f096';
         }
       }
-      .background {
-        color: #eee;
-        &:after {
-          content: '\f0c8';
-        }
-      }
       &.answer-expected {
-        .foreground {
-          color: @warning-color;
-        }
         .background {
           font-size: 20px;
           .text-shadow(@warning-color);
+        }
+        .foreground {
+          color: @warning-color;
         }
       }
     }
