@@ -58,6 +58,9 @@ var main = [
         getModel: getModel
       };
 
+      scope.addRow = addRow;
+      scope.removeRow = removeRow;
+
       scope.$watch('config.layout', watchLayout);
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
@@ -71,6 +74,7 @@ var main = [
           columns: []
         };
         scope.config = getConfig(scope.model);
+        scope.matchModel = createMatchModel();
         updatePartialScoring();
       }
 
@@ -166,6 +170,77 @@ var main = [
           });
         }, 0);
       }
+
+      function findFreeRowSlot(){
+        var slot = 1;
+        var rows = _.pluck(scope.model.rows, 'id');
+        while(_.contains(rows, 'row-' + slot)){
+          slot++;
+        }
+        return slot;
+      }
+
+      function addRow(){
+        $log.debug("addRow");
+        var index = findFreeRowSlot();
+        scope.model.rows.push({
+          id: 'row-' + index,
+          labelHtml: 'Question text ' + index
+        });
+        scope.matchModel = createMatchModel();
+        updatePartialScoring();
+      }
+
+      function removeRow(index){
+        $log.debug("removeRow", index);
+        scope.model.rows.splice(index, 1);
+        scope.matchModel = createMatchModel();
+        updatePartialScoring();
+      }
+
+      function createMatchModel(){
+        return {
+          columns: makeHeaders(),
+          rows: makeRows(),
+        };
+
+        function makeHeaders(){
+          var questionHeaders = [];
+          questionHeaders.push({
+            cssClass: 'question-header',
+            labelHtml: scope.model.columns[0].labelHtml
+          });
+          var answerHeaders = scope.model.columns.slice(1).map(function(col){
+            return {
+              cssClass: 'answer-header',
+              labelHtml: col.labelHtml
+            };
+          });
+          var columns = questionHeaders.concat(answerHeaders);
+          return columns;
+        }
+
+        function makeRows(){
+          var rows = scope.model.rows.map(makeRow);
+          return rows;
+        }
+
+        function makeRow(sourceRow){
+          var columns = [];
+          columns.push({
+            cssClass: 'question-col',
+            labelHtml: sourceRow.labelHtml
+          });
+          for( var i = 1; i < scope.model.columns.length; i++){
+            columns.push({
+              cssClass: 'answer-col radiobutton',
+              labelHtml: 'O',
+              value: false
+            });
+          }
+          return columns;
+        }
+      }
     }
 
     function template() {
@@ -245,35 +320,32 @@ var main = [
           '      <tr>',
           '        <td class="no-border">',
           '        </td>',
-          '        <th class="question-header">',
-          '          Header Label',
-          '        </th>',
-          '        <th class="answer-header">',
-          '          Column 1 Label',
-          '        </th>',
-          '        <th class="answer-header">',
-          '          Column 2 Label',
+          '        <th ng-repeat="column in matchModel.columns"',
+          '          ng-class="column.cssClass">',
+          '          {{column.labelHtml}}',
           '        </th>',
           '      </tr>',
-          '      <tr>',
-          '        <td class="remove-row no-border">',
-          '           x',
+          '      <tr ng-repeat="row in matchModel.rows">',
+          '        <td class="remove-row">',
+          '          <i class="remove-row-button fa fa-trash-o fa-lg" ',
+          '             tooltip="Remove Row"',
+          '             tooltip-append-to-body="true"',
+          '             ng-click="removeRow($index)" ',
+          '           ></i>',
           '        </td>',
-          '        <td class="question-col">',
-          '          Enter a choice',
-          '        </td>',
-          '        <td class="answer-col">',
-          '          O',
-          '        </td>',
-          '        <td class="answer-col">',
-          '          O',
+          '        <td ng-repeat="col in row"',
+          '          ng-class="col.cssClass">',
+          '          {{col.labelHtml}}',
           '        </td>',
           '      </tr>',
           '      <tr>',
           '        <td class="no-border">',
           '        </td>',
-          '        <td class="add-row no-border" colspan="5">',
-          '          + Add a row',
+          '        <td class="add-row" colspan="5">',
+          '          <button type="button" class="add-row-button btn btn-default" ',
+          '             tooltip="Add Row"',
+          '             tooltip-append-to-body="true"',
+          '            ng-click="addRow()">+ Add a row</button>',
           '        </td>',
           '      </tr>',
           '    </table>',
