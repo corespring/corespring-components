@@ -9,7 +9,7 @@ var RegressionHelper = (function() {
   return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
 })();
 
-describe('match', function() {
+describe.only('match', function() {
 
   "use strict";
 
@@ -17,7 +17,7 @@ describe('match', function() {
   var itemJson = RegressionHelper.getItemJson('match', itemJsonFilename);
 
   function answerInput(questionId){
-    return '.question-row[question-id="' + questionId + '"] .choice-input';
+    return '.question-row[question-id="' + questionId + '"] .match-choice.input';
   }
 
   function answerEvaluated(questionId, correctness){
