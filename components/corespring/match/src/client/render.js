@@ -42,11 +42,8 @@ var main = [
         editable: setEditable
       };
 
-      scope.classForEvaluatedAnswer = classForEvaluatedAnswer;
+      scope.classForChoice = classForChoice;
       scope.classForSolution = classForSolution;
-      scope.getTooltip = noTooltip;
-      scope.getTooltipForEvaluatedAnswer = noTooltip;
-      scope.getTooltipForSolution = noTooltip;
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
       scope.onClickMatch = onClickMatch;
@@ -225,14 +222,22 @@ var main = [
             };
           });
         }
-
       }
 
-      function classForEvaluatedAnswer(row, index) {
-        return getInputTypeClass(scope.inputType) + ' ' + getCorrectClass(row, row.matchSet[index].correct);
+      function classForChoice(row, index) {
+        var classes = [getInputTypeClass(scope.inputType)];
+        if(scope.editable){
+          classes.push('input');
+          if(row.matchSet[index].value){
+            classes.push('selected');
+          }
+        } else {
+          classes.push(getCorrectClass(row, row.matchSet[index].correct));
+        }
+        return classes.join(' ');
 
         function getInputTypeClass(inputType) {
-          return inputType === INPUT_TYPE_CHECKBOX ? 'checkbox' : 'radiobutton';
+          return 'match-' + (inputType === INPUT_TYPE_CHECKBOX ? 'checkbox' : 'radiobutton');
         }
 
         function getCorrectClass(row, correct) {
@@ -242,13 +247,30 @@ var main = [
 
           switch (correct) {
             case CORRECT:
-              return CORRECT;
+              return CORRECT + ' checked';
             case INCORRECT:
               return INCORRECT;
             default:
               return UNKNOWN;
           }
         }
+      }
+
+      function classForSolution(row, $index) {
+        if (scope.response && scope.response.correctResponse) {
+          var correctRow = _.find(scope.response.correctResponse, whereIdIsEqual(row.id));
+          var answerRow = _.find(scope.matchModel.rows, whereIdIsEqual(row.id));
+          if (correctRow && correctRow.matchSet[$index]) {
+            return (isRadioButton(scope.inputType)) ?
+              (answerRow.matchSet[$index].value ?
+                'match-radiobutton correct checked' :
+                'match-radiobutton correct') :
+              (answerRow.matchSet[$index].value ?
+                'match-checkbox correct checked' :
+                'match-checkbox correct');
+          }
+        }
+        return "";
       }
 
       function onClickMatch(matchSet, index) {
@@ -262,49 +284,6 @@ var main = [
             matchSet[index].value = !matchSet[index].value;
           }
         }
-      }
-
-      function classForSolution(row, $index) {
-        if (scope.response && scope.response.correctResponse) {
-          var correctRow = _.find(scope.response.correctResponse, whereIdIsEqual(row.id));
-          var answerRow = _.find(scope.matchModel.rows, whereIdIsEqual(row.id));
-          if (correctRow && correctRow.matchSet[$index]) {
-            return (isRadioButton(scope.inputType)) ?
-              (answerRow.matchSet[$index].value ?
-                'radiobutton correct' :
-                'radiobutton correct unchecked') :
-              (answerRow.matchSet[$index].value ?
-                'checkbox correct' :
-                'checkbox correct unchecked');
-          }
-        }
-        return "";
-      }
-
-      function noTooltip(){
-        return "";
-      }
-
-      function getTooltip(row, index) {
-        var column = scope.matchModel.columns[index + 1];
-        var tooltip = removeHtmlTags(column.labelHtml);
-        return tooltip;
-      }
-
-      function getTooltipForEvaluatedAnswer(row, index) {
-        if (row.answerExpected) {
-          return "Answer expected";
-        }
-        switch(row.matchSet[index].correct){
-          case CORRECT: return "Correct answer";
-          case INCORRECT: return "Incorrect answer";
-          default: return undefined;
-        }
-      }
-
-      function getTooltipForSolution(row, index) {
-        var clazz = classForSolution(row, index);
-        return clazz ? getTooltip(row, index) : undefined;
       }
 
       function removeHtmlTags(html) {
@@ -419,24 +398,12 @@ var main = [
           '    <td class="match-td answer-cell"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
-          '      <span class="choice-input" ',
-          '        ng-if="editable"',
-          '        ng-switch="inputType" ' +
-          '        tooltip="{{getTooltip(row, $index)}}"',
-          '        ng-click="onClickMatch(row.matchSet, $index)">',
-          '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="true">',
-          '          <div class="checkbox-button" ng-class="{selected:match.value}"/>',
-          '        </div>',
-          '        <div class="radio-choice" ng-switch-when="radiobutton" ng-disabled="!editable" >',
-          '          <div class="radio-button" ng-class="{selected:match.value}" ng-value="true"/>',
-          '        </div>',
-          '      </span>',
-          '      <div ng-if="!editable"',
-          '         tooltip="{{getTooltipForEvaluatedAnswer(row, $index)}}"',
-          '         ng-class="classForEvaluatedAnswer(row, $index)"',
+          '      <div class="match-choice"',
+          '         ng-class="classForChoice(row, $index)"',
+          '         ng-click="onClickMatch(row.matchSet, $index)"',
           '        >',
-          '        <i class="background fa"></i>',
-          '        <i class="foreground fa"></i>',
+          '        <div class="background fa"></div>',
+          '        <div class="foreground fa"></div>',
           '      </div>',
           '    </td>',
           '  </tr>',
@@ -474,10 +441,10 @@ var main = [
           '          ng-bind-html-unsafe="row.labelHtml"></td>',
           '      <td class="match-td answer-cell"' +
           '          ng-repeat="match in row.matchSet track by $index">',
-          '        <div ng-class="classForSolution(row,$index)"' +
-          '            tooltip="{{getTooltipForSolution(row, $index)}}">',
-          '            <i class="background fa"></i>',
-          '            <i class="foreground fa"></i>',
+          '        <div class="match-choice"',
+          '             ng-class="classForSolution(row,$index)">' +
+          '            <div class="background fa"></div>',
+          '            <div class="foreground fa"></div>',
           '        </div>',
           '      </td>',
           '    </tr>',
