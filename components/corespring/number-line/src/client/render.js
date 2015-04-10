@@ -100,6 +100,7 @@ var main = [
         '<div class="view-number-line">',
         '  <div interactive-graph',
         '       ngModel="model"',
+        '       ng-hide="serverResponse && serverResponse.correctness == \'warning\'"',
         '       responseModel="response"',
         '       serverResponse="serverResponse"',
         '       changeHandler="changeHandler()"',
