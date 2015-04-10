@@ -4,43 +4,48 @@
   "weight": 4,
   "correctResponse": [
     {
-      "id" : "row-1",
-      "matchSet" : [true,false]
+      "id": "row-1",
+      "matchSet": [
+        true,
+        false
+      ]
     },
     {
-      "id" : "row-2",
-      "matchSet" : [true,false]
+      "id": "row-2",
+      "matchSet": [
+        true,
+        false
+      ]
     },
     {
-      "id" : "row-3",
-      "matchSet" : [true,false]
+      "id": "row-3",
+      "matchSet": [
+        true,
+        false
+      ]
     },
     {
-      "id" : "row-4",
-      "matchSet" : [true,false]
+      "id": "row-4",
+      "matchSet": [
+        true,
+        false
+      ]
     }
   ],
-  "allowPartialScoring":true,
-  "partialScores": {
-    "1": 25,
-    "2": 25,
-    "3": 25,
-    "4": 25
-  },
+  "allowPartialScoring": true,
+  "partialScoring": [
+    {"numberOfCorrect": "1", "scorePercentage": 25},
+    {"numberOfCorrect": "2", "scorePercentage": 25},
+    {"numberOfCorrect": "3", "scorePercentage": 25},
+    {"numberOfCorrect": "4", "scorePercentage": 25}
+  ],
   "feedback": {
-    "all_correct": {
-      "type": "default"
-    },
-    "some_correct":{
-      "type": "default"
-    },
-    "all_incorrect" :{
-      "type": "default"
-    }
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
-  "summaryFeedback": "This is the summary feedback.",
   "model": {
-    "columns" : [
+    "columns": [
       {
         "labelHtml": "Custom header"
       },
@@ -51,28 +56,28 @@
         "labelHtml": "Column 2"
       }
     ],
-    "rows" : [
+    "rows": [
       {
-        "id" : "row-1",
+        "id": "row-1",
         "labelHtml": "Question text 1"
       },
       {
-        "id" : "row-2",
+        "id": "row-2",
         "labelHtml": "Question text 2"
       },
       {
-        "id" : "row-3",
+        "id": "row-3",
         "labelHtml": "Question text 3"
       },
       {
-        "id" : "row-4",
+        "id": "row-4",
         "labelHtml": "Question text 4"
       }
     ],
-    "config" : {
-      "inputType" : "radiobutton",
-      "layout" : "three-columns",
-      "shuffle" : false
+    "config": {
+      "inputType": "radiobutton",
+      "layout": "three-columns",
+      "shuffle": false
     }
   }
 }

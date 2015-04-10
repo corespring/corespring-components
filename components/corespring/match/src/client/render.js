@@ -413,13 +413,8 @@ var main = [
 
       function itemFeedbackPanel() {
         return [
-          '<div class="panel feedback {{response.correctness}}"',
-          '    ng-if="response.feedback.summary">',
-          '  <div class="panel-heading"></div>',
-          '  <div class="panel-body"',
-          '      ng-bind-html-unsafe="response.feedback.summary">',
-          '  </div>',
-          '</div>'
+          '<div feedback="response.feedback"',
+          '   correct-class="{{response.correctClass}}"></div>'
         ].join('');
       }
 

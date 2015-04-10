@@ -7,19 +7,19 @@
         "weight": 4,
         "correctResponse": [
           {
-            "id" : "1",
+            "id" : "row-1",
             "matchSet" : [true,false]
           },
           {
-            "id" : "2",
+            "id" : "row-2",
             "matchSet" : [true,false]
           },
           {
-            "id" : "3",
+            "id" : "row-3",
             "matchSet" : [true,false]
           },
           {
-            "id" : "4",
+            "id" : "row-4",
             "matchSet" : [true,false]
           }
         ],
@@ -31,18 +31,11 @@
           "4": 25
         },
         "feedback": {
-          "all_correct": {
-            "type": "default"
-          },
-          "some_correct":{
-            "type": "default"
-          },
-          "all_incorrect" :{
-            "type": "custom",
-            "text" : " <span mathjax=\"\">\\(\\frac12\\)</span> Everything is wrong !"
-          }
+          "correctFeedbackType": "default",
+          "partialFeedbackType": "default",
+          "incorrectFeedbackType": "custom",
+          "incorrectFeedback": " <span mathjax=\"\">\\(\\frac12\\)</span> Everything is wrong !"
         },
-        "summaryFeedback": " <span mathjax=\"\">\\(\\frac12\\)</span> This is the summary feedback. This is the summary feedback. This is the summary feedback ",
         "model": {
           "columns" : [
             {
@@ -57,19 +50,19 @@
           ],
           "rows" : [
             {
-              "id" : "1",
+              "id" : "row-1",
               "labelHtml": "Question text 1"
             },
             {
-              "id" : "2",
+              "id" : "row-2",
               "labelHtml": "Question text 2"
             },
             {
-              "id" : "3",
+              "id" : "row-3",
               "labelHtml": "Question text 3"
             },
             {
-              "id" : "4",
+              "id" : "row-4",
               "labelHtml": "Question text 4"
             }
           ],
