@@ -61,7 +61,8 @@ var main = [
       scope.addRow = addRow;
       scope.removeRow = removeRow;
 
-      scope.$watch('config.layout', watchLayout);
+      //the trottle is to avoid update problems of the editor models
+      scope.$watch('config.layout', _.throttle(watchLayout, 50));
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -74,13 +75,18 @@ var main = [
           columns: []
         };
         scope.config = getConfig(scope.model);
-        scope.matchModel = createMatchModel();
-        updatePartialScoring();
+
+        updateEditorModels();
       }
 
       function getModel() {
         console.log("getModel", scope.fullModel);
         return _.cloneDeep(scope.fullModel);
+      }
+
+      function updateEditorModels(){
+        scope.matchModel = createMatchModel();
+        scope.updatePartialScoringModel(sumCorrectAnswers());
       }
 
       /**
@@ -94,8 +100,9 @@ var main = [
         if(!model.config){
           var config = {};
           var answerType = model.answerType;
-          config.inputType = answerType === 'MULTIPLE' ? scope.inputTypes[1].id : scope.inputTypes[0].id;
-          config.layout = scope.layouts[Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, model.columns.length)) - MIN_COLUMNS].id;
+          config.inputType = scope.inputTypes[answerType === 'MULTIPLE' ? 1:0].id;
+          var columns = Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, model.columns.length));
+          config.layout = scope.layouts[columns - MIN_COLUMNS].id;
           config.shuffle = false;
           if (answerType === 'YES_NO') {
             setDefaultColumnLabels(model, 'Yes', 'No');
@@ -132,7 +139,7 @@ var main = [
         var expectedNumberOfColumns = getNumberOfColumnsForLayout(newValue);
 
         while(columns.length < expectedNumberOfColumns){
-          columns.push(makeColumn("Column " + (columns.length + 1)));
+          columns.push({labelHtml: "Column " + (columns.length)});
           _.forEach(scope.fullModel.correctResponse, function(row){
             row.matchSet.push(false);
           });
@@ -144,15 +151,7 @@ var main = [
           });
         }
 
-        updatePartialScoring();
-      }
-
-      function updatePartialScoring(){
-        scope.updatePartialScoringModel(sumCorrectAnswers());
-      }
-
-      function makeColumn(label){
-        return {labelHtml:label};
+        updateEditorModels();
       }
 
       function getNumberOfColumnsForLayout(layout){
@@ -187,15 +186,15 @@ var main = [
           id: 'row-' + index,
           labelHtml: 'Question text ' + index
         });
-        scope.matchModel = createMatchModel();
-        updatePartialScoring();
+
+        updateEditorModels();
       }
 
       function removeRow(index){
         $log.debug("removeRow", index);
         scope.model.rows.splice(index, 1);
-        scope.matchModel = createMatchModel();
-        updatePartialScoring();
+
+        updateEditorModels();
       }
 
       function createMatchModel(){
