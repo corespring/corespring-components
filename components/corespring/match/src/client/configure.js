@@ -200,7 +200,7 @@ var main = [
       function createMatchModel(){
         return {
           columns: makeHeaders(),
-          rows: makeRows(),
+          rows: makeRows()
         };
 
         function makeHeaders(){
