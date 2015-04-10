@@ -25,40 +25,34 @@ var componentTemplate = {
   weight: 4,
   correctResponse: [
     {
-      id: "1",
+      id: "row-1",
       matchSet: [true, false]
     },
     {
-      id: "2",
+      id: "row-2",
       matchSet: [true, false]
     },
     {
-      id: "3",
+      id: "row-3",
       matchSet: [true, false]
     },
     {
-      id: "4",
+      id: "row-4",
       matchSet: [true, false]
     }
   ],
   allowPartialScoring: true,
-  partialScores: {
-    1: 25,
-    2: 25,
-    3: 25,
-    4: 25
-  },
+  "partialScoring": [
+    {"numberOfCorrect": 1, "scorePercentage": 10},
+    {"numberOfCorrect": 2, "scorePercentage": 20},
+    {"numberOfCorrect": 3, "scorePercentage": 30},
+    {"numberOfCorrect": 4, "scorePercentage": 40}
+  ],
   feedback: {
-    all_correct: {
-      type: "default"
-    },
-    some_correct: {
-      type: "default"
-    },
-    all_incorrect: {
-      type: "custom",
-      text: "Everything is wrong !"
-    }
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "custom",
+    "incorrectFeedback": "Everything is wrong !"
   },
   model: {
     columns: [
@@ -74,19 +68,19 @@ var componentTemplate = {
     ],
     rows: [
       {
-        id: "1",
+        id: "row-1",
         labelHtml: "Question text 1"
       },
       {
-        id: "2",
+        id: "row-2",
         labelHtml: "Question text 2"
       },
       {
-        id: "3",
+        id: "row-3",
         labelHtml: "Question text 3"
       },
       {
-        id: "4",
+        id: "row-4",
         labelHtml: "Question text 4"
       }
     ],
@@ -187,6 +181,11 @@ function correctIncorrect(id){
   };
 }
 
+function shouldEql(actual, expected){
+  _.forEach(actual, function(value, key){
+    value.should.eql(expected[key], 'key ' + key);
+  });
+}
 
 beforeEach(function() {
   component = _.cloneDeep(componentTemplate);
@@ -195,69 +194,68 @@ beforeEach(function() {
 
 describe('match server logic', function() {
 
-  it('should return warning if the answer is null or undefined', function() {
+  it('should return warning if the answer is null', function() {
     var outcome = server.createOutcome(component, null, helper.settings(true, true, true));
     outcome.should.eql({
-      correctness: 'warning',
+      correctness:'incorrect',
+      correctClass: 'warning',
       score: 0,
-      feedback: {
-        summary: fbu.defaults.warning
-      },
       correctnessMatrix: [
-        answerExpected("1"),
-        answerExpected("2"),
-        answerExpected("3"),
-        answerExpected("4")
-      ]
+        answerExpected("row-1"),
+        answerExpected("row-2"),
+        answerExpected("row-3"),
+        answerExpected("row-4")
+      ],
+      feedback: fbu.defaults.warning
     });
+  });
 
-    outcome = server.createOutcome(component, undefined, helper.settings(true, true, true));
+  it('should return warning if the answer is undefined', function() {
+    var outcome = server.createOutcome(component, undefined, helper.settings(true, true, true));
     outcome.should.eql({
-      correctness: 'warning',
+      correctness:'incorrect',
+      correctClass: 'warning',
       score: 0,
-      feedback: {
-        summary: fbu.defaults.warning
-      },
       correctnessMatrix: [
-        answerExpected("1"),
-        answerExpected("2"),
-        answerExpected("3"),
-        answerExpected("4")
-      ]
+        answerExpected("row-1"),
+        answerExpected("row-2"),
+        answerExpected("row-3"),
+        answerExpected("row-4")
+      ],
+      feedback: fbu.defaults.warning
     });
 
   });
+
 
   describe('createOutcome', function() {
 
     it('should not show any feedback when no feedback is allowed', function() {
       var answers = [
-        noAnswer("1"),
-        noAnswer("2"),
-        incorrectAnswer("3"),
-        noAnswer("4")];
+        noAnswer("row-1"),
+        noAnswer("row-2"),
+        incorrectAnswer("row-3"),
+        noAnswer("row-4")];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(false, true, true));
-      response.correctness.should.eql("all_incorrect");
+      response.correctness.should.eql("incorrect");
       response.score.should.eql(0);
     });
-
 
     it('should respond to a correct answer (feedback + user + correct)', function() {
       var answers = _.cloneDeep(component.correctResponse);
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
       var expected = {
-        correctness: "all_correct",
+        correctness: "correct",
+        correctClass: "correct",
         score: 1,
-        feedback: {
-          summary: "Correct!"
-        },
         correctnessMatrix: [
-          correctUnknown("1"),
-          correctUnknown("2"),
-          correctUnknown("3"),
-          correctUnknown("4")
-          ]
+          correctUnknown("row-1"),
+          correctUnknown("row-2"),
+          correctUnknown("row-3"),
+          correctUnknown("row-4")
+          ],
+        feedback: "Correct!"
       };
 
       response.should.eql(expected);
@@ -267,184 +265,178 @@ describe('match server logic', function() {
       var answers = _.cloneDeep(component.correctResponse);
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, false, false));
       var expected = {
-        correctness: "all_correct",
+        correctness: "correct",
+        correctClass: "correct",
         score: 1,
-        feedback: {
-          summary: "Correct!"
-        },
         correctnessMatrix: [
-          correctUnknown("1"),
-          correctUnknown("2"),
-          correctUnknown("3"),
-          correctUnknown("4")
-          ]
+          correctUnknown("row-1"),
+          correctUnknown("row-2"),
+          correctUnknown("row-3"),
+          correctUnknown("row-4")
+          ],
+        feedback: "Correct!"
       };
 
       response.should.eql(expected);
     });
 
 
-    it('should respond to all_incorrect result (feedback + user + correct) and user did not choose anything', function() {
+    it('should respond to incorrect result (feedback + user + correct) and user did not choose anything', function() {
       var answers = [
-        noAnswer("1"),
-        noAnswer("2"),
-        noAnswer("3"),
-        noAnswer("4")
+        noAnswer("row-1"),
+        noAnswer("row-2"),
+        noAnswer("row-3"),
+        noAnswer("row-4")
       ];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
 
       var expected = {
-        correctness: "warning",
+        correctness: "incorrect",
+        correctClass: "warning",
         score: 0,
-        feedback: {
-          summary: fbu.defaults.warning
-        },
         correctnessMatrix: [
-          answerExpected("1"),
-          answerExpected("2"),
-          answerExpected("3"),
-          answerExpected("4")
-        ]
+          answerExpected("row-1"),
+          answerExpected("row-2"),
+          answerExpected("row-3"),
+          answerExpected("row-4")
+        ],
+        feedback:fbu.defaults.warning
       };
       response.should.eql(expected);
     });
 
-    it('should respond to all_incorrect result (feedback + user + correct) and user chose incorrectly', function() {
+    it('should respond to incorrect result (feedback + user + correct) and user chose incorrectly', function() {
       var answers = [
-        incorrectAnswer("1"),
-        incorrectAnswer("2"),
-        incorrectAnswer("3"),
-        incorrectAnswer("4")
+        incorrectAnswer("row-1"),
+        incorrectAnswer("row-2"),
+        incorrectAnswer("row-3"),
+        incorrectAnswer("row-4")
       ];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
 
       var expected = {
-        correctness: "all_incorrect",
+        correctness: "incorrect",
+        correctClass: "incorrect",
+        score: 0,
+        correctnessMatrix: [
+          unknownIncorrect("row-1"),
+          unknownIncorrect("row-2"),
+          unknownIncorrect("row-3"),
+          unknownIncorrect("row-4")
+          ],
         correctResponse: correctResponse,
-        score: 0,
-        feedback: {
-          summary: componentTemplate.feedback.all_incorrect.text
-        },
-        correctnessMatrix: [
-          unknownIncorrect("1"),
-          unknownIncorrect("2"),
-          unknownIncorrect("3"),
-          unknownIncorrect("4")
-          ]
+        feedback: componentTemplate.feedback.incorrectFeedback
       };
       response.should.eql(expected);
     });
 
-    it('should respond to all_incorrect result (feedback - user + correct) and user chose incorrectly', function() {
+    it('should respond to incorrect result (feedback - user + correct) and user chose incorrectly', function() {
       var answers = [
-        incorrectAnswer("1"),
-        incorrectAnswer("2"),
-        incorrectAnswer("3"),
-        incorrectAnswer("4")
+        incorrectAnswer("row-1"),
+        incorrectAnswer("row-2"),
+        incorrectAnswer("row-3"),
+        incorrectAnswer("row-4")
       ];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, false, true));
 
       var expected = {
-        correctness: "all_incorrect",
-        correctResponse: correctResponse,
+        correctness: "incorrect",
+        correctClass: "incorrect",
         score: 0,
-        feedback: {
-          summary: componentTemplate.feedback.all_incorrect.text
-        },
         correctnessMatrix: [
-          unknownIncorrect("1"),
-          unknownIncorrect("2"),
-          unknownIncorrect("3"),
-          unknownIncorrect("4")
-        ]
+          unknownIncorrect("row-1"),
+          unknownIncorrect("row-2"),
+          unknownIncorrect("row-3"),
+          unknownIncorrect("row-4")
+        ],
+        correctResponse: correctResponse,
+        feedback:componentTemplate.feedback.incorrectFeedback
       };
       response.should.eql(expected);
     });
 
     it('should respond to partially correct result (feedback + user + correct)', function() {
       var answers = [
-        correctAnswer("1"),
-        incorrectAnswer("2"),
-        correctAnswer("3"),
-        incorrectAnswer("4")
+        correctAnswer("row-1"),
+        incorrectAnswer("row-2"),
+        correctAnswer("row-3"),
+        incorrectAnswer("row-4")
       ];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
 
       var expected = {
-        correctness: "some_correct",
-        correctResponse: correctResponse,
-        score: 0.5,
-        feedback: {
-          summary: "Almost!"
-        },
+        correctness: "incorrect",
+        correctClass: "partial",
+        score: 0.2,
         correctnessMatrix: [
-          correctUnknown("1"),
-          unknownIncorrect("2"),
-          correctUnknown("3"),
-          unknownIncorrect("4")
-        ]
+          correctUnknown("row-1"),
+          unknownIncorrect("row-2"),
+          correctUnknown("row-3"),
+          unknownIncorrect("row-4")
+        ],
+        correctResponse: correctResponse,
+        feedback:"Almost!"
       };
       response.should.eql(expected);
     });
+
 
     it('should respond to partially correct result in MULTIPLE choice case ', function() {
       var answers = [
-        superfluousAnswer("1"),
-        noAnswer("2"),
-        noAnswer("3"),
-        noAnswer("4")
+        superfluousAnswer("row-1"),
+        noAnswer("row-2"),
+        noAnswer("row-3"),
+        noAnswer("row-4")
       ];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
 
       var expected = {
-        correctness: "some_correct",
-        correctResponse: correctResponse,
-        score: 0.125,
-        feedback: {
-          summary: "Almost!"
-        },
+        correctness: "incorrect",
+        correctClass: "partial",
+        score: 0.1,
         correctnessMatrix: [
-          correctIncorrect("1"),
-          answerExpected("2"),
-          answerExpected("3"),
-          answerExpected("4")
-        ]
+          correctIncorrect("row-1"),
+          answerExpected("row-2"),
+          answerExpected("row-3"),
+          answerExpected("row-4")
+        ],
+        correctResponse: correctResponse,
+        feedback:"Almost!"
       };
       response.should.eql(expected);
     });
 
-
     it('should repond to partially correct result ( feedback - correct + user)', function() {
       var answers = [
-        correctAnswer("1"),
-        incorrectAnswer("2"),
-        correctAnswer("3"),
-        incorrectAnswer("4")
+        correctAnswer("row-1"),
+        incorrectAnswer("row-2"),
+        correctAnswer("row-3"),
+        incorrectAnswer("row-4")
       ];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, false));
 
       var expected = {
-        correctness: "some_correct",
-        correctResponse: correctResponse,
-        score: 0.5,
-        feedback: {
-          summary: "Almost!"
-        },
+        correctness: "incorrect",
+        correctClass: "partial",
+        score: 0.2,
         correctnessMatrix: [
-          correctUnknown("1"),
-          unknownIncorrect("2"),
-          correctUnknown("3"),
-          unknownIncorrect("4")
-        ]
+          correctUnknown("row-1"),
+          unknownIncorrect("row-2"),
+          correctUnknown("row-3"),
+          unknownIncorrect("row-4")
+        ],
+        correctResponse: correctResponse,
+        feedback:"Almost!"
       };
       response.should.eql(expected);
     });
 
   });
+
 });

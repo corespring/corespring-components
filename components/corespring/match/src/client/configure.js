@@ -81,7 +81,8 @@ var main = [
 
       function getModel() {
         console.log("getModel", scope.fullModel);
-        return _.cloneDeep(scope.fullModel);
+        var fullModel = _.cloneDeep(scope.fullModel);
+        return fullModel;
       }
 
       function updateEditorModels(){
@@ -276,6 +277,7 @@ var main = [
           '      <div class="col-xs-9">',
           header(),
           mainEditorPanel(),
+          feedback(),
           '      </div>',
           '      <div class="col-xs-3">',
           optionsPanel(),
@@ -305,7 +307,7 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <table class="config-table">',
+          '    <table class="config-table" ng-class="scope.config.layout">',
           '      <tr>',
           '        <td class="remove-row no-border">',
           '        </td>',
@@ -353,6 +355,38 @@ var main = [
         ].join('');
       }
 
+      function feedback() {
+        return [
+          '<div class="row">',
+          '  <div class="col-xs-11 feedback-panel-col">',
+          '    <div feedback-panel>',
+          '      <div feedback-selector',
+          '          fb-sel-label="If correct, show"',
+          '          fb-sel-class="correct"',
+          '          fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+          '          fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+          '          fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
+          '      </div>',
+          '      <div feedback-selector',
+          '          fb-sel-label="If partially correct, show"',
+          '          fb-sel-class="partial"',
+          '          fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+          '          fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+          '          fb-sel-default-feedback="{{defaultPartialFeedback}}">',
+          '      </div>',
+          '      <div feedback-selector',
+          '          fb-sel-label="If incorrect, show"',
+          '          fb-sel-class="incorrect"',
+          '          fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+          '          fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+          '          fb-sel-default-feedback="{{defaultIncorrectFeedback}}">' +
+          '      </div>',
+          '    </div>',
+          '  </div>',
+          '</div>'
+        ].join("\n");
+      }
+
       function optionsPanel() {
         return [
           '<div class="row option shuffle">',
@@ -378,12 +412,12 @@ var main = [
           '    <select class="form-control" ng-model="model.config.inputType"',
           '       ng-options="c.id as c.label for c in inputTypes">',
           '    </select>',
-          '    <p class="inline-help" ng-if="model.config.inputType==\'radiobutton\'">',
+          '    <p class="help" ng-if="model.config.inputType==\'radiobutton\'">',
           '       This option allows students to select one',
           '       correct answer. You may, however, set more',
           '       than one answer as correct if you choose',
           '    </p>',
-          '    <p class="inline-help" ng-if="model.config.inputType==\'checkbox\'">',
+          '    <p class="help" ng-if="model.config.inputType==\'checkbox\'">',
           '       This option allows students to select more than',
           '       one correct answer. You may, however, set only',
           '       one correct answer if you choose.',
