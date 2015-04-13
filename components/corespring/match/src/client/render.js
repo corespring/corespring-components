@@ -268,6 +268,10 @@ var main = [
               (answerRow.matchSet[$index].value ?
                 'match-checkbox correct checked' :
                 'match-checkbox correct');
+          } else {
+            return (isRadioButton(scope.inputType) ?
+              'match-radiobutton unknown' :
+              'match-checkbox unknown');
           }
         }
         return "";
