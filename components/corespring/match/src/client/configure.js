@@ -30,8 +30,7 @@ var main = [
 
       scope.extraFeatures = {
         definitions: [
-          new WiggiMathJaxFeatureDef(),
-          new WiggiLinkFeatureDef()
+          new WiggiMathJaxFeatureDef()
         ]
       };
     }
