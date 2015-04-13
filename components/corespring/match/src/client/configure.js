@@ -40,6 +40,8 @@ var main = [
 
       var MIN_COLUMNS = 3;
       var MAX_COLUMNS = 5;
+      var INPUT_TYPE_CHECKBOX = 'checkbox';
+      var INPUT_TYPE_RADIOBUTTON = 'radiobutton';
 
       var $log = LogFactory.getLogger('corespring-match-configure');
 
@@ -62,11 +64,11 @@ var main = [
 
       scope.inputTypes = [
         {
-          id: 'radiobutton',
+          id: INPUT_TYPE_RADIOBUTTON,
           label: 'Radio'
         },
         {
-          id: 'checkbox',
+          id: INPUT_TYPE_CHECKBOX,
           label: 'Checkbox'
         }
       ];
@@ -91,6 +93,9 @@ var main = [
 
       //the trottle is to avoid update problems of the editor models
       scope.$watch('config.layout', _.throttle(watchLayout, 50));
+
+      //the trottle is to avoid update problems of the editor models
+      scope.$watch('config.inputType', _.throttle(watchInputType, 50));
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -181,6 +186,25 @@ var main = [
         }
 
         updateEditorModels();
+      }
+
+      function watchInputType(newValue, oldValue) {
+        if (newValue === oldValue) {
+          return;
+        }
+        if(newValue === INPUT_TYPE_RADIOBUTTON){
+          removeAllCorrectAnswersButFirst();
+        }
+        updateEditorModels();
+      }
+
+      function removeAllCorrectAnswersButFirst(){
+        _.forEach(scope.fullModel.correctResponse, function(row){
+          var indexOfFirstTrue = _.indexOf(row.matchSet, true);
+          _.forEach(row.matchSet, function(match,index){
+            row.matchSet[index] = match && index <= indexOfFirstTrue;
+          });
+        });
       }
 
       function addColumnToCorrectResponseMatrix() {
@@ -325,13 +349,14 @@ var main = [
         return classes.join(' ');
 
         function getInputTypeClass(inputType) {
-          return 'match-' + (inputType === 'checkbox' ? 'checkbox' : 'radiobutton');
+          return 'match-' + (inputType === INPUT_TYPE_CHECKBOX ?
+              INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
         }
       }
 
       function onClickMatch(row, index) {
         console.log("onClickMatch", row, index);
-        if (scope.config.inputType === 'checkbox') {
+        if (scope.config.inputType === INPUT_TYPE_CHECKBOX) {
           row.matchSet[index].value = !row.matchSet[index].value;
         } else {
           _.forEach(row.matchSet, function(match, i) {
