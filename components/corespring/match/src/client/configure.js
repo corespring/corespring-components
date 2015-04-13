@@ -28,7 +28,7 @@ var main = [
         return ComponentImageService;
       };
 
-      scope.extraFeatures = {
+      scope.extraFeaturesForMatch = {
         definitions: [
           new WiggiMathJaxFeatureDef()
         ]
@@ -218,7 +218,7 @@ var main = [
       }
 
       function addRowToCorrectResponseMatrix(rowId) {
-        var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length);
+        var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length-1);
         scope.fullModel.correctResponse.push({
           id: rowId,
           matchSet: emptyMatchSet
@@ -276,7 +276,8 @@ var main = [
         $log.debug("addRow", rowId);
         scope.model.rows.push({
           id: rowId,
-          labelHtml: 'Question text ' + index
+          labelHtml: 'Question text ' + index,
+          matchSet: createEmptyMatchSet(scope.model.columns.length)
         });
         addRowToCorrectResponseMatrix(rowId);
 
@@ -522,7 +523,7 @@ var main = [
           '              ng-model="row.labelHtml"',
           '              ng-change="rowLabelUpdated($index)"',
           '              dialog-launcher="external"',
-          '              features="extraFeatures"',
+          '              features="extraFeaturesForMatch"',
           '              parent-selector=".modal-body"',
           '              image-service="imageService()">',
           '          </div>',
@@ -542,8 +543,6 @@ var main = [
           '        </td>',
           '        <td class="add-row" colspan="5">',
           '          <button type="button" class="add-row-button btn btn-default" ',
-          '             tooltip="Add Row"',
-          '             tooltip-append-to-body="true"',
           '            ng-click="addRow()">+ Add a row</button>',
           '        </td>',
           '      </tr>',
@@ -568,7 +567,7 @@ var main = [
           '      ng-model="column.labelHtml"',
           '      ng-change="columnLabelUpdated($index)"',
           '      dialog-launcher="external"',
-          '      features="extraFeatures"',
+          '      features="extraFeaturesForMatch"',
           '      parent-selector=".modal-body"',
           '      image-service="imageService()">',
           '  </div>',
