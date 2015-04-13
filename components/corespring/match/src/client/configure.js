@@ -85,9 +85,11 @@ var main = [
         return fullModel;
       }
 
-      function updateEditorModels(){
+      function updateEditorModels() {
+        $log.debug("updateEditorModels in");
         scope.matchModel = createMatchModel();
         scope.updatePartialScoringModel(sumCorrectAnswers());
+        $log.debug("updateEditorModels out");
       }
 
       /**
@@ -98,10 +100,10 @@ var main = [
        * @returns {*}
        */
       function getConfig(model) {
-        if(!model.config){
+        if (!model.config) {
           var config = {};
           var answerType = model.answerType;
-          config.inputType = scope.inputTypes[answerType === 'MULTIPLE' ? 1:0].id;
+          config.inputType = scope.inputTypes[answerType === 'MULTIPLE' ? 1 : 0].id;
           var columns = Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, model.columns.length));
           config.layout = scope.layouts[columns - MIN_COLUMNS].id;
           config.shuffle = false;
@@ -131,86 +133,126 @@ var main = [
         }
       }
 
-      function watchLayout(newValue, oldValue){
-        if(newValue === oldValue){
+      function watchLayout(newValue, oldValue) {
+        if (newValue === oldValue) {
           return;
         }
         var columns = scope.model.columns;
         var actualNumberOfColumns = columns.length;
         var expectedNumberOfColumns = getNumberOfColumnsForLayout(newValue);
 
-        while(columns.length < expectedNumberOfColumns){
-          columns.push({labelHtml: "Column " + (columns.length)});
-          _.forEach(scope.fullModel.correctResponse, function(row){
-            row.matchSet.push(false);
+        while (columns.length < expectedNumberOfColumns) {
+          columns.push({
+            labelHtml: "Column " + (columns.length)
           });
+          addColumnToCorrectResponseMatrix();
         }
-        while(columns.length > expectedNumberOfColumns){
+        while (columns.length > expectedNumberOfColumns) {
           columns.pop();
-          _.forEach(scope.fullModel.correctResponse, function(row){
-            row.matchSet.pop();
-          });
+          removeColumnFromCorrectResponseMatrix();
         }
 
         updateEditorModels();
       }
 
-      function getNumberOfColumnsForLayout(layout){
-        switch(layout){
-          case 'four-columns': return 4;
-          case 'five-columns': return 5;
-          default: return MIN_COLUMNS;
+      function addColumnToCorrectResponseMatrix() {
+        _.forEach(scope.fullModel.correctResponse, function(row) {
+          row.matchSet.push(false);
+        });
+      }
+
+      function removeColumnFromCorrectResponseMatrix() {
+        _.forEach(scope.fullModel.correctResponse, function(row) {
+          row.matchSet.pop();
+        });
+      }
+
+      function addRowToCorrectResponseMatrix(rowId) {
+        var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length);
+        scope.fullModel.correctResponse.push({
+          id: rowId,
+          matchSet: createEmptyMatchSet(scope.model.columns.length)
+        });
+      }
+
+      function removeRowFromCorrectResponseMatrix(rowId) {
+        var index = _.indexOf(scope.fullModel.correctResponse, {id: rowId});
+        scope.fullModel.correctResponse.splice(index, 1);
+      }
+
+      function createEmptyMatchSet(length) {
+        return _.range(length).map(function() {
+          return {
+            value: false
+          };
+        });
+      }
+
+      function getNumberOfColumnsForLayout(layout) {
+        switch (layout) {
+          case 'four-columns':
+            return 4;
+          case 'five-columns':
+            return 5;
+          default:
+            return MIN_COLUMNS;
         }
       }
 
-      function sumCorrectAnswers(){
-        return _.reduce(scope.fullModel.correctResponse, function(sum, row) {
-          return sum + _.reduce(row.matchSet, function(match){
+      function sumCorrectAnswers() {
+        var total =  _.reduce(scope.fullModel.correctResponse, function(sum, row) {
+          return sum + _.reduce(row.matchSet, function(match) {
             return match ? 1 : 0;
           });
         }, 0);
+        $log.debug("sumCorrectAnswers", total, scope.fullModel.correctResponse);
+        return total;
       }
 
-      function findFreeRowSlot(){
+      function findFreeRowSlot() {
         var slot = 1;
         var rows = _.pluck(scope.model.rows, 'id');
-        while(_.contains(rows, 'row-' + slot)){
+        while (_.contains(rows, 'row-' + slot)) {
           slot++;
         }
         return slot;
       }
 
-      function addRow(){
-        $log.debug("addRow");
+      function addRow() {
         var index = findFreeRowSlot();
+        var rowId = 'row-' + index;
+        $log.debug("addRow", rowId);
         scope.model.rows.push({
-          id: 'row-' + index,
+          id: rowId,
           labelHtml: 'Question text ' + index
         });
+        addRowToCorrectResponseMatrix(rowId);
 
         updateEditorModels();
       }
 
-      function removeRow(index){
+      function removeRow(index) {
         $log.debug("removeRow", index);
+        var row = scope.model.rows[index];
         scope.model.rows.splice(index, 1);
+        removeRowFromCorrectResponseMatrix(row.id);
 
         updateEditorModels();
       }
 
-      function createMatchModel(){
+      function createMatchModel() {
         return {
           columns: makeHeaders(),
           rows: makeRows()
         };
 
-        function makeHeaders(){
+        function makeHeaders() {
           var questionHeaders = [];
           questionHeaders.push({
             cssClass: 'question-header',
             labelHtml: scope.model.columns[0].labelHtml
           });
-          var answerHeaders = scope.model.columns.slice(1).map(function(col){
+          var answerHeaders = scope.model.columns.slice(1).map(function(col) {
             return {
               cssClass: 'answer-header',
               labelHtml: col.labelHtml
@@ -220,18 +262,18 @@ var main = [
           return columns;
         }
 
-        function makeRows(){
+        function makeRows() {
           var rows = scope.model.rows.map(makeRow);
           return rows;
         }
 
-        function makeRow(sourceRow){
+        function makeRow(sourceRow) {
           var columns = [];
           columns.push({
             cssClass: 'question-col',
             labelHtml: sourceRow.labelHtml
           });
-          for( var i = 1; i < scope.model.columns.length; i++){
+          for (var i = 1; i < scope.model.columns.length; i++) {
             columns.push({
               cssClass: 'answer-col radiobutton',
               labelHtml: 'O',
@@ -255,7 +297,7 @@ var main = [
         '</div>'
       ].join('');
 
-      function scoringTemplate(){
+      function scoringTemplate() {
         return [
           '<div class="form-horizontal" role="form">',
           '  <div class="container-fluid">',
