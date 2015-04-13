@@ -17,7 +17,7 @@ describe('match', function() {
   var itemJson = RegressionHelper.getItemJson('match', itemJsonFilename);
 
   function answerInput(questionId){
-    return '.question-row[question-id="' + questionId + '"] .match-choice.input';
+    return '.question-row[question-id="' + questionId + '"] .corespring-match-choice.input';
   }
 
   function answerEvaluated(questionId, correctness){
