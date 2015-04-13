@@ -113,13 +113,16 @@ describe('corespring', function() {
     it('selects correctly radio buttons', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      var matchSet = scope.matchModel.rows[0].matchSet;
-      scope.onClickMatch(matchSet,0);
+      var row = scope.matchModel.rows[0];
+      var matchSet = row.matchSet;
+      scope.onClickMatch(row,0);
       rootScope.$digest();
       expect(matchSet[0].value).toBe(true);
       expect(matchSet[1].value).toBe(false);
 
-      scope.onClickMatch(matchSet,1);
+      row = scope.matchModel.rows[1];
+      scope.onClickMatch(row,1);
+      matchSet = row.matchSet;
       rootScope.$digest();
       expect(matchSet[0].value).toBe(false);
       expect(matchSet[1].value).toBe(true);
@@ -131,8 +134,8 @@ describe('corespring', function() {
       component.setDataAndSession(testModel);
       rootScope.$digest();
 
-      var matchSet = scope.matchModel.rows[0].matchSet;
-      scope.onClickMatch(matchSet,0);
+      var row = scope.matchModel.rows[0];
+      scope.onClickMatch(row,0);
       rootScope.$digest();
 
       var session = component.getSession();
