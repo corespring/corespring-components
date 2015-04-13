@@ -59,6 +59,8 @@ var main = [
       };
 
       scope.addRow = addRow;
+      scope.classForChoice = classForChoice;
+      scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
 
       //the trottle is to avoid update problems of the editor models
@@ -171,7 +173,7 @@ var main = [
         var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length);
         scope.fullModel.correctResponse.push({
           id: rowId,
-          matchSet: createEmptyMatchSet(scope.model.columns.length)
+          matchSet:emptyMatchSet
         });
       }
 
@@ -241,10 +243,12 @@ var main = [
       }
 
       function createMatchModel() {
-        return {
+        var matchModel = {
           columns: makeHeaders(),
           rows: makeRows()
         };
+        $log.debug("createMatchModel", matchModel);
+        return matchModel;
 
         function makeHeaders() {
           var questionHeaders = [];
@@ -268,20 +272,57 @@ var main = [
         }
 
         function makeRow(sourceRow) {
-          var columns = [];
-          columns.push({
-            cssClass: 'question-col',
-            labelHtml: sourceRow.labelHtml
+          var correctRow = _.find(scope.fullModel.correctResponse, {id: sourceRow.id});
+          var matchSet = correctRow.matchSet.map(function(match){
+            return {
+              value: match
+            };
           });
-          for (var i = 1; i < scope.model.columns.length; i++) {
-            columns.push({
-              cssClass: 'answer-col radiobutton',
-              labelHtml: 'O',
-              value: false
-            });
-          }
-          return columns;
+          var row = {
+            id: sourceRow.id,
+            labelHtml: sourceRow.labelHtml,
+            matchSet: matchSet
+          };
+          return row;
         }
+      }
+
+      function classForChoice(row, index) {
+        var classes = [getInputTypeClass(scope.config.inputType), 'input'];
+        if(row.matchSet[index].value){
+          classes.push('selected');
+        }
+        return classes.join(' ');
+
+        function getInputTypeClass(inputType) {
+          return 'match-' + (inputType === 'checkbox' ? 'checkbox' : 'radiobutton');
+        }
+      }
+
+      function onClickMatch(row, index) {
+        console.log("onClickMatch", row, index);
+        if (scope.config.inputType === 'checkbox') {
+          row.matchSet[index].value = !row.matchSet[index].value;
+        } else {
+          _.forEach(row.matchSet, function(match, i) {
+            match.value = (i === index);
+          });
+        }
+
+        updateCorrectResponse();
+        updateEditorModels();
+      }
+
+      function updateCorrectResponse(){
+        var correctResponse = scope.matchModel.rows.map(function(row) {
+          return {
+            id: row.id,
+            matchSet: row.matchSet.map(function(match) {
+              return match.value;
+            })
+          };
+        });
+        scope.fullModel.correctResponse = correctResponse;
       }
     }
 
@@ -376,9 +417,17 @@ var main = [
           '             ng-click="removeRow($index)" ',
           '           ></i>',
           '        </td>',
-          '        <td ng-repeat="col in row"',
-          '          ng-class="col.cssClass">',
-          '          {{col.labelHtml}}',
+          '        <td class="question-col">',
+          '          <div class="html-wrapper" ng-bind-html-unsafe="row.labelHtml"></div>',
+          '        </td>',
+          '        <td class="answer-col" ng-repeat="match in row.matchSet">',
+          '          <div class="corespring-match-choice"',
+          '             ng-class="classForChoice(row, $index)"',
+          '             ng-click="onClickMatch(row, $index)"',
+          '            >',
+          '            <div class="background fa"></div>',
+          '            <div class="foreground fa"></div>',
+          '          </div>',
           '        </td>',
           '      </tr>',
           '      <tr>',

@@ -120,7 +120,8 @@
   }
 
   .feedback-panel-col {
-    margin: 0 20px 0 30px;
+    margin: 0 0 0 32px;
+    width: 660px;
   }
 }
 
@@ -252,244 +253,244 @@
       }
     }
   }
+}
 
-  .match-choice {
+.corespring-match-choice {
+
+  .background {
+    position: absolute;
+  }
+
+  .foreground {
+    position: absolute;
+  }
+
+  &.correct {
 
     .background {
-      position: absolute;
+      color: @correct-color;
     }
 
     .foreground {
-      position: absolute;
+      color: white;
+    }
+  }
+
+  &.incorrect {
+    .background {
+      color: @incorrect-color;
     }
 
-    &.correct {
+    .foreground {
+      color: white;
+    }
+  }
+
+  &.unknown {
+    .background {
+      color: #eee;
+    }
+
+    .foreground {
+      color: #aaa;
+    }
+
+    &.answer-expected {
+      .foreground {
+        color: @warning-color;
+      }
+    }
+  }
+
+  &.match-radiobutton {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    font-family: FontAwesome;
+    font-size: 24px;
+
+    &.input {
+      cursor: pointer;
 
       .background {
-        color: @correct-color;
+        width: 22px;
+        height: 22px;
+        border: solid 1px #ccc;
+        border-radius: 50%;
+        left: 3px;
+        top: 3px;
       }
 
       .foreground {
-        color: white;
+        .scale(0);
+        .transform-transition();
+      }
+
+      &.selected {
+        .foreground {
+          .scale(1);
+          width: 16px;
+          height: 16px;
+          border: solid 1px #555;
+          border-radius: 50%;
+          background: #555;
+          left: 6px;
+          top: 6px;
+        }
+      }
+    }
+
+    &.correct {
+      .background {
+        left: 5px;
+        top: 3.5px;
+        &:after {
+          content: '\f111';
+        }
+      }
+
+      &.checked {
+        .foreground {
+          left: 7px;
+          top: 1px;
+          &:after {
+            font-size: 16px;
+            content: '\f00c';
+          }
+        }
       }
     }
 
     &.incorrect {
       .background {
-        color: @incorrect-color;
+        left: 5px;
+        top: 3.5px;
+        &:after {
+          content: '\f111';
+        }
       }
 
       .foreground {
-        color: white;
+        left: 9px;
+        top: 0px;
+        &:after {
+          font-size: 16px;
+          content: '\f00d';
+        }
       }
     }
 
     &.unknown {
       .background {
-        color: #eee;
+        left: 5px;
+        top: 3.5px;
+        &:after {
+          content: '\f111';
+        }
       }
 
       .foreground {
-        color: #aaa;
+        left: 5px;
+        top: 3.5px;
+        &:after {
+          content: '\f1db';
+        }
+      }
+    }
+  }
+
+  &.match-checkbox {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    font-family: FontAwesome;
+    font-size: 22px;
+
+    &.input {
+      cursor: pointer;
+
+      .background {
+        width: 22px;
+        height: 22px;
+        border: solid 1px #ccc;
+        border-radius: 4px;
+        left: 3px;
+        top: 3px;
       }
 
-      &.answer-expected {
-        .foreground {
-          color: @warning-color;
+      .foreground {
+        .scale(0);
+        .transform-transition();
+      }
+
+      &.selected .foreground {
+        .scale(1);
+        left: 5px;
+        top: 2px;
+        &:after {
+          font-size: 20px;
+          content: '\f00c';
         }
       }
     }
 
-    &.match-radiobutton {
-      display: inline-block;
-      position: relative;
-      width: 30px;
-      height: 30px;
-      font-family: FontAwesome;
-      font-size: 24px;
-
-      &.input {
-        cursor: pointer;
-
-        .background {
-          width: 22px;
-          height: 22px;
-          border: solid 1px #ccc;
-          border-radius: 50%;
-          left: 3px;
-          top: 3px;
-        }
-
-        .foreground {
-          .scale(0);
-          .transform-transition();
-        }
-
-        &.selected {
-          .foreground {
-            .scale(1);
-            width: 16px;
-            height: 16px;
-            border: solid 1px #555;
-            border-radius: 50%;
-            background: #555;
-            left: 6px;
-            top: 6px;
-          }
+    &.correct {
+      .background {
+        left: 5px;
+        top: 3.5px;
+        &:after {
+          content: '\f0c8';
         }
       }
 
-      &.correct {
-        .background {
-          left: 5px;
-          top: 3.5px;
-          &:after {
-            content: '\f111';
-          }
-        }
-
-        &.checked {
-          .foreground {
-            left: 7px;
-            top: 1px;
-            &:after {
-              font-size: 16px;
-              content: '\f00c';
-            }
-          }
-        }
-      }
-
-      &.incorrect {
-        .background {
-          left: 5px;
-          top: 3.5px;
-          &:after {
-            content: '\f111';
-          }
-        }
-
+      &.checked {
         .foreground {
-          left: 9px;
-          top: 0px;
-          &:after {
-            font-size: 16px;
-            content: '\f00d';
-          }
-        }
-      }
-
-      &.unknown {
-        .background {
-          left: 5px;
-          top: 3.5px;
-          &:after {
-            content: '\f111';
-          }
-        }
-
-        .foreground {
-          left: 5px;
-          top: 3.5px;
-          &:after {
-            content: '\f1db';
-          }
-        }
-      }
-    }
-
-    &.match-checkbox {
-      display: inline-block;
-      position: relative;
-      width: 30px;
-      height: 30px;
-      font-family: FontAwesome;
-      font-size: 22px;
-
-      &.input {
-        cursor: pointer;
-
-        .background {
-          width: 22px;
-          height: 22px;
-          border: solid 1px #ccc;
-          border-radius: 4px;
-          left: 3px;
-          top: 3px;
-        }
-
-        .foreground {
-          .scale(0);
-          .transform-transition();
-        }
-
-        &.selected .foreground {
-          .scale(1);
-          left: 5px;
+          left: 6px;
           top: 2px;
           &:after {
-            font-size: 20px;
+            font-size: 16px;
             content: '\f00c';
           }
         }
       }
+    }
 
-      &.correct {
-        .background {
-          left: 5px;
-          top: 3.5px;
-          &:after {
-            content: '\f0c8';
-          }
-        }
-
-        &.checked {
-          .foreground {
-            left: 6px;
-            top: 2px;
-            &:after {
-              font-size: 16px;
-              content: '\f00c';
-            }
-          }
+    &.incorrect {
+      .background {
+        left: 5px;
+        top: 3.5px;
+        &:after {
+          content: '\f0c8';
         }
       }
 
-      &.incorrect {
-        .background {
-          left: 5px;
-          top: 3.5px;
-          &:after {
-            content: '\f0c8';
-          }
+      .foreground {
+        left: 8px;
+        top: 2px;
+        &:after {
+          font-size: 16px;
+          content: '\f00d';
         }
+      }
+    }
 
-        .foreground {
-          left: 8px;
-          top: 2px;
-          &:after {
-            font-size: 16px;
-            content: '\f00d';
-          }
+    &.unknown {
+      .background {
+        left: 5.5px;
+        top: 3.5px;
+        &:after {
+          content: '\f0c8';
         }
       }
 
-      &.unknown {
-        .background {
-          left: 5.5px;
-          top: 3.5px;
-          &:after {
-            content: '\f0c8';
-          }
-        }
-
-        .foreground {
-          left: 5.5px;
-          top: 3.5px;
-          &:after {
-            font-size: 23px;
-            content: '\f096';
-          }
+      .foreground {
+        left: 5.5px;
+        top: 3.5px;
+        &:after {
+          font-size: 23px;
+          content: '\f096';
         }
       }
     }

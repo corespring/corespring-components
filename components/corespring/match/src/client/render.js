@@ -273,15 +273,15 @@ var main = [
         return "";
       }
 
-      function onClickMatch(matchSet, index) {
-        console.log("onClickMatch", matchSet, index);
+      function onClickMatch(row, index) {
+        console.log("onClickMatch", row, index);
         if (scope.editable) {
           if (isRadioButton(scope.inputType)) {
-            _.forEach(matchSet, function(match, i) {
+            _.forEach(row.matchSet, function(match, i) {
               match.value = (i === index);
             });
           } else {
-            matchSet[index].value = !matchSet[index].value;
+            row.matchSet[index].value = !row.matchSet[index].value;
           }
         }
       }
@@ -398,9 +398,9 @@ var main = [
           '    <td class="match-td answer-cell"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
-          '      <div class="match-choice"',
+          '      <div class="corespring-match-choice"',
           '         ng-class="classForChoice(row, $index)"',
-          '         ng-click="onClickMatch(row.matchSet, $index)"',
+          '         ng-click="onClickMatch(row, $index)"',
           '        >',
           '        <div class="background fa"></div>',
           '        <div class="foreground fa"></div>',
@@ -436,7 +436,7 @@ var main = [
           '          ng-bind-html-unsafe="row.labelHtml"></td>',
           '      <td class="match-td answer-cell"' +
           '          ng-repeat="match in row.matchSet track by $index">',
-          '        <div class="match-choice"',
+          '        <div class="corespring-match-choice"',
           '             ng-class="classForSolution(row,$index)">' +
           '            <div class="background fa"></div>',
           '            <div class="foreground fa"></div>',
