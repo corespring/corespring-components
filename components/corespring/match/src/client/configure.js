@@ -87,6 +87,7 @@ var main = [
       scope.onClickEdit = onClickEdit;
       scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
+      scope.rowLabelUpdated = rowLabelUpdated;
 
       //the trottle is to avoid update problems of the editor models
       scope.$watch('config.layout', _.throttle(watchLayout, 50));
@@ -368,10 +369,6 @@ var main = [
       }
 
       function onClickEdit($event, index) {
-        function isMiniWiggi($event) {
-          return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
-        }
-
         if (!scope.active[index]) {
           $event.stopPropagation();
           $event.preventDefault();
@@ -388,6 +385,11 @@ var main = [
       function columnLabelUpdated(index){
         $log.debug("columnLabelUpdated", index);
         scope.model.columns[index].labelHtml = scope.matchModel.columns[index].labelHtml;
+      }
+
+      function rowLabelUpdated(index){
+        $log.debug("rowLabelUpdated", index);
+        scope.model.rows[index].labelHtml = scope.matchModel.rows[index].labelHtml;
       }
     }
 
@@ -469,7 +471,7 @@ var main = [
           '      <tr>',
           '        <td class="no-border">',
           '        </td>',
-          '        <th class="editable-area" ng-repeat="column in matchModel.columns"',
+          '        <th ng-repeat="column in matchModel.columns"',
           '          ng-click="onClickEdit($event, $index)"',
           '          ng-class="column.cssClass">',
           '          <span class="content-holder" ' +
@@ -496,8 +498,23 @@ var main = [
           '             ng-click="removeRow($index)" ',
           '           ></i>',
           '        </td>',
-          '        <td class="question-col">',
-          '          <div class="html-wrapper" ng-bind-html-unsafe="row.labelHtml"></div>',
+          '        <td class="question-col"' +
+          '           ng-click="onClickEdit($event, 100+$index)"',
+          '          >',
+          '          <span class="content-holder" ' +
+          '            ng-hide="active[100+$index]" ' +
+          '            ng-bind-html-unsafe="cleanLabel(row)"' +
+          '           ></span>',
+          '          <div mini-wiggi-wiz=""',
+          '              ng-show="active[100+$index]"',
+          '              active="active[100+$index]"',
+          '              ng-model="row.labelHtml"',
+          '              ng-change="rowLabelUpdated($index)"',
+          '              dialog-launcher="external"',
+          '              features="extraFeatures"',
+          '              parent-selector=".modal-body"',
+          '              image-service="imageService()">',
+          '          </div>',
           '        </td>',
           '        <td class="answer-col" ng-repeat="match in row.matchSet">',
           '          <div class="corespring-match-choice"',
