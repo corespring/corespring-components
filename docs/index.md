@@ -27,6 +27,7 @@
 ```
 
   * component provides undo/restart
+  * can show the solution after the answer has been committed 
   * provides warning if no answer has been selected
   * the editor calls setDataAndSession every time when it changes the config
   * the editor is able to execute the server side javascript locally for demo/testing purposes
