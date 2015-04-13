@@ -2,21 +2,39 @@ var main = [
   '$http',
   '$timeout',
   'ChoiceTemplates',
+  'ComponentImageService',
   'LogFactory',
-  function(
-    $http,
+  'WiggiLinkFeatureDef',
+  'WiggiMathJaxFeatureDef',
+  function($http,
     $timeout,
     ChoiceTemplates,
-    LogFactory
-    ) {
+    ComponentImageService,
+    LogFactory,
+    WiggiLinkFeatureDef,
+    WiggiMathJaxFeatureDef) {
 
     return {
       scope: {},
       restrict: 'E',
       replace: true,
+      controller: ['$scope', controller],
       link: link,
       template: template()
     };
+
+    function controller(scope) {
+      scope.imageService = function() {
+        return ComponentImageService;
+      };
+
+      scope.extraFeatures = {
+        definitions: [
+          new WiggiMathJaxFeatureDef(),
+          new WiggiLinkFeatureDef()
+          ]
+      };
+    }
 
     function link(scope, element, attrs) {
 
@@ -53,13 +71,20 @@ var main = [
         }
       ];
 
+      scope.active = [];
+
       scope.containerBridge = {
         setModel: setModel,
         getModel: getModel
       };
 
+      scope.activate = activate;
       scope.addRow = addRow;
       scope.classForChoice = classForChoice;
+      scope.cleanLabel = makeCleanLabel();
+      scope.columnLabelUpdated = columnLabelUpdated;
+      scope.deactivate = deactivate;
+      scope.onClickEdit = onClickEdit;
       scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
 
@@ -173,12 +198,14 @@ var main = [
         var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length);
         scope.fullModel.correctResponse.push({
           id: rowId,
-          matchSet:emptyMatchSet
+          matchSet: emptyMatchSet
         });
       }
 
       function removeRowFromCorrectResponseMatrix(rowId) {
-        var index = _.indexOf(scope.fullModel.correctResponse, {id: rowId});
+        var index = _.indexOf(scope.fullModel.correctResponse, {
+          id: rowId
+        });
         scope.fullModel.correctResponse.splice(index, 1);
       }
 
@@ -202,7 +229,7 @@ var main = [
       }
 
       function sumCorrectAnswers() {
-        var total =  _.reduce(scope.fullModel.correctResponse, function(sum, row) {
+        var total = _.reduce(scope.fullModel.correctResponse, function(sum, row) {
           return sum + _.reduce(row.matchSet, function(match) {
             return match ? 1 : 0;
           });
@@ -272,8 +299,10 @@ var main = [
         }
 
         function makeRow(sourceRow) {
-          var correctRow = _.find(scope.fullModel.correctResponse, {id: sourceRow.id});
-          var matchSet = correctRow.matchSet.map(function(match){
+          var correctRow = _.find(scope.fullModel.correctResponse, {
+            id: sourceRow.id
+          });
+          var matchSet = correctRow.matchSet.map(function(match) {
             return {
               value: match
             };
@@ -289,7 +318,7 @@ var main = [
 
       function classForChoice(row, index) {
         var classes = [getInputTypeClass(scope.config.inputType), 'input'];
-        if(row.matchSet[index].value){
+        if (row.matchSet[index].value) {
           classes.push('selected');
         }
         return classes.join(' ');
@@ -313,7 +342,7 @@ var main = [
         updateEditorModels();
       }
 
-      function updateCorrectResponse(){
+      function updateCorrectResponse() {
         var correctResponse = scope.matchModel.rows.map(function(row) {
           return {
             id: row.id,
@@ -323,6 +352,42 @@ var main = [
           };
         });
         scope.fullModel.correctResponse = correctResponse;
+      }
+
+      function makeCleanLabel() {
+        var wiggiCleanerRe = new RegExp(String.fromCharCode(8203), 'g');
+        return function(item) {
+          return (item.labelHtml || '').replace(wiggiCleanerRe, '');
+        };
+      }
+
+      function activate($event, $index) {
+        $event.stopPropagation();
+        scope.active = [];
+        scope.active[$index] = true;
+      }
+
+      function onClickEdit($event, index) {
+        function isMiniWiggi($event) {
+          return $($event.target).parents('.mini-wiggi-wiz').length !== 0;
+        }
+
+        if (!scope.active[index]) {
+          $event.stopPropagation();
+          $event.preventDefault();
+          scope.active = [];
+          scope.active[index] = true;
+        }
+      }
+
+      function deactivate() {
+        scope.active = [];
+        scope.$emit('mathJaxUpdateRequest');
+      }
+
+      function columnLabelUpdated(index){
+        $log.debug("columnLabelUpdated", index);
+        scope.model.columns[index].labelHtml = scope.matchModel.columns[index].labelHtml;
       }
     }
 
@@ -404,9 +469,23 @@ var main = [
           '      <tr>',
           '        <td class="no-border">',
           '        </td>',
-          '        <th ng-repeat="column in matchModel.columns"',
+          '        <th class="editable-area" ng-repeat="column in matchModel.columns"',
+          '          ng-click="onClickEdit($event, $index)"',
           '          ng-class="column.cssClass">',
-          '          {{column.labelHtml}}',
+          '          <span class="content-holder" ' +
+          '            ng-hide="active[$index]" ' +
+          '            ng-bind-html-unsafe="cleanLabel(column)"' +
+          '           ></span>',
+          '          <div mini-wiggi-wiz=""',
+          '              ng-show="active[$index]"',
+          '              active="active[$index]"',
+          '              ng-model="column.labelHtml"',
+          '              ng-change="columnLabelUpdated($index)"',
+          '              dialog-launcher="external"',
+          '              features="extraFeatures"',
+          '              parent-selector=".modal-body"',
+          '              image-service="imageService()">',
+          '          </div>',
           '        </th>',
           '      </tr>',
           '      <tr ng-repeat="row in matchModel.rows">',

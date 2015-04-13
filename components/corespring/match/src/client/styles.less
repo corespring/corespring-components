@@ -61,11 +61,28 @@
     }
   }
 
+  .blocker {
+    position: absolute;
+    user-select: none;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+
+    .bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: red;
+      opacity: 0.4;
+    }
+  }
+
   .config-table {
     margin: 0 0 20px 0;
     width: 95%;
 
     th, td {
+      padding: 10px 5px;
       min-width: 0;
     }
 
@@ -102,6 +119,11 @@
     .question-header {
       color: black;
       background: none;
+
+      .wiggi-label {
+        position: relative;
+        z-index: 100;
+      }
     }
 
     .answer-header {
