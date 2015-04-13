@@ -2,21 +2,39 @@ var main = [
   '$http',
   '$timeout',
   'ChoiceTemplates',
+  'ComponentImageService',
   'LogFactory',
-  function(
-    $http,
+  'WiggiLinkFeatureDef',
+  'WiggiMathJaxFeatureDef',
+  function($http,
     $timeout,
     ChoiceTemplates,
-    LogFactory
-    ) {
+    ComponentImageService,
+    LogFactory,
+    WiggiLinkFeatureDef,
+    WiggiMathJaxFeatureDef) {
 
     return {
       scope: {},
       restrict: 'E',
       replace: true,
+      controller: ['$scope', controller],
       link: link,
       template: template()
     };
+
+    function controller(scope) {
+      scope.imageService = function() {
+        return ComponentImageService;
+      };
+
+      scope.extraFeatures = {
+        definitions: [
+          new WiggiMathJaxFeatureDef(),
+          new WiggiLinkFeatureDef()
+          ]
+      };
+    }
 
     function link(scope, element, attrs) {
 
@@ -53,13 +71,23 @@ var main = [
         }
       ];
 
+      scope.active = [];
+
       scope.containerBridge = {
         setModel: setModel,
         getModel: getModel
       };
 
+      scope.activate = activate;
       scope.addRow = addRow;
+      scope.classForChoice = classForChoice;
+      scope.cleanLabel = makeCleanLabel();
+      scope.columnLabelUpdated = columnLabelUpdated;
+      scope.deactivate = deactivate;
+      scope.onClickEdit = onClickEdit;
+      scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
+      scope.rowLabelUpdated = rowLabelUpdated;
 
       //the trottle is to avoid update problems of the editor models
       scope.$watch('config.layout', _.throttle(watchLayout, 50));
@@ -85,9 +113,11 @@ var main = [
         return fullModel;
       }
 
-      function updateEditorModels(){
+      function updateEditorModels() {
+        $log.debug("updateEditorModels in");
         scope.matchModel = createMatchModel();
         scope.updatePartialScoringModel(sumCorrectAnswers());
+        $log.debug("updateEditorModels out");
       }
 
       /**
@@ -98,10 +128,10 @@ var main = [
        * @returns {*}
        */
       function getConfig(model) {
-        if(!model.config){
+        if (!model.config) {
           var config = {};
           var answerType = model.answerType;
-          config.inputType = scope.inputTypes[answerType === 'MULTIPLE' ? 1:0].id;
+          config.inputType = scope.inputTypes[answerType === 'MULTIPLE' ? 1 : 0].id;
           var columns = Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, model.columns.length));
           config.layout = scope.layouts[columns - MIN_COLUMNS].id;
           config.shuffle = false;
@@ -131,86 +161,130 @@ var main = [
         }
       }
 
-      function watchLayout(newValue, oldValue){
-        if(newValue === oldValue){
+      function watchLayout(newValue, oldValue) {
+        if (newValue === oldValue) {
           return;
         }
         var columns = scope.model.columns;
         var actualNumberOfColumns = columns.length;
         var expectedNumberOfColumns = getNumberOfColumnsForLayout(newValue);
 
-        while(columns.length < expectedNumberOfColumns){
-          columns.push({labelHtml: "Column " + (columns.length)});
-          _.forEach(scope.fullModel.correctResponse, function(row){
-            row.matchSet.push(false);
+        while (columns.length < expectedNumberOfColumns) {
+          columns.push({
+            labelHtml: "Column " + (columns.length)
           });
+          addColumnToCorrectResponseMatrix();
         }
-        while(columns.length > expectedNumberOfColumns){
+        while (columns.length > expectedNumberOfColumns) {
           columns.pop();
-          _.forEach(scope.fullModel.correctResponse, function(row){
-            row.matchSet.pop();
-          });
+          removeColumnFromCorrectResponseMatrix();
         }
 
         updateEditorModels();
       }
 
-      function getNumberOfColumnsForLayout(layout){
-        switch(layout){
-          case 'four-columns': return 4;
-          case 'five-columns': return 5;
-          default: return MIN_COLUMNS;
+      function addColumnToCorrectResponseMatrix() {
+        _.forEach(scope.fullModel.correctResponse, function(row) {
+          row.matchSet.push(false);
+        });
+      }
+
+      function removeColumnFromCorrectResponseMatrix() {
+        _.forEach(scope.fullModel.correctResponse, function(row) {
+          row.matchSet.pop();
+        });
+      }
+
+      function addRowToCorrectResponseMatrix(rowId) {
+        var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length);
+        scope.fullModel.correctResponse.push({
+          id: rowId,
+          matchSet: emptyMatchSet
+        });
+      }
+
+      function removeRowFromCorrectResponseMatrix(rowId) {
+        var index = _.indexOf(scope.fullModel.correctResponse, {
+          id: rowId
+        });
+        scope.fullModel.correctResponse.splice(index, 1);
+      }
+
+      function createEmptyMatchSet(length) {
+        return _.range(length).map(function() {
+          return {
+            value: false
+          };
+        });
+      }
+
+      function getNumberOfColumnsForLayout(layout) {
+        switch (layout) {
+          case 'four-columns':
+            return 4;
+          case 'five-columns':
+            return 5;
+          default:
+            return MIN_COLUMNS;
         }
       }
 
-      function sumCorrectAnswers(){
-        return _.reduce(scope.fullModel.correctResponse, function(sum, row) {
-          return sum + _.reduce(row.matchSet, function(match){
+      function sumCorrectAnswers() {
+        var total = _.reduce(scope.fullModel.correctResponse, function(sum, row) {
+          return sum + _.reduce(row.matchSet, function(match) {
             return match ? 1 : 0;
           });
         }, 0);
+        $log.debug("sumCorrectAnswers", total, scope.fullModel.correctResponse);
+        return total;
       }
 
-      function findFreeRowSlot(){
+      function findFreeRowSlot() {
         var slot = 1;
         var rows = _.pluck(scope.model.rows, 'id');
-        while(_.contains(rows, 'row-' + slot)){
+        while (_.contains(rows, 'row-' + slot)) {
           slot++;
         }
         return slot;
       }
 
-      function addRow(){
-        $log.debug("addRow");
+      function addRow() {
         var index = findFreeRowSlot();
+        var rowId = 'row-' + index;
+        $log.debug("addRow", rowId);
         scope.model.rows.push({
-          id: 'row-' + index,
+          id: rowId,
           labelHtml: 'Question text ' + index
         });
+        addRowToCorrectResponseMatrix(rowId);
 
         updateEditorModels();
       }
 
-      function removeRow(index){
+      function removeRow(index) {
         $log.debug("removeRow", index);
+        var row = scope.model.rows[index];
         scope.model.rows.splice(index, 1);
+        removeRowFromCorrectResponseMatrix(row.id);
 
         updateEditorModels();
       }
 
-      function createMatchModel(){
-        return {
+      function createMatchModel() {
+        var matchModel = {
           columns: makeHeaders(),
           rows: makeRows()
         };
+        $log.debug("createMatchModel", matchModel);
+        return matchModel;
 
-        function makeHeaders(){
+        function makeHeaders() {
           var questionHeaders = [];
           questionHeaders.push({
             cssClass: 'question-header',
             labelHtml: scope.model.columns[0].labelHtml
           });
-          var answerHeaders = scope.model.columns.slice(1).map(function(col){
+          var answerHeaders = scope.model.columns.slice(1).map(function(col) {
             return {
               cssClass: 'answer-header',
               labelHtml: col.labelHtml
@@ -220,26 +294,102 @@ var main = [
           return columns;
         }
 
-        function makeRows(){
+        function makeRows() {
           var rows = scope.model.rows.map(makeRow);
           return rows;
         }
 
-        function makeRow(sourceRow){
-          var columns = [];
-          columns.push({
-            cssClass: 'question-col',
-            labelHtml: sourceRow.labelHtml
+        function makeRow(sourceRow) {
+          var correctRow = _.find(scope.fullModel.correctResponse, {
+            id: sourceRow.id
           });
-          for( var i = 1; i < scope.model.columns.length; i++){
-            columns.push({
-              cssClass: 'answer-col radiobutton',
-              labelHtml: 'O',
-              value: false
-            });
-          }
-          return columns;
+          var matchSet = correctRow.matchSet.map(function(match) {
+            return {
+              value: match
+            };
+          });
+          var row = {
+            id: sourceRow.id,
+            labelHtml: sourceRow.labelHtml,
+            matchSet: matchSet
+          };
+          return row;
         }
+      }
+
+      function classForChoice(row, index) {
+        var classes = [getInputTypeClass(scope.config.inputType), 'input'];
+        if (row.matchSet[index].value) {
+          classes.push('selected');
+        }
+        return classes.join(' ');
+
+        function getInputTypeClass(inputType) {
+          return 'match-' + (inputType === 'checkbox' ? 'checkbox' : 'radiobutton');
+        }
+      }
+
+      function onClickMatch(row, index) {
+        console.log("onClickMatch", row, index);
+        if (scope.config.inputType === 'checkbox') {
+          row.matchSet[index].value = !row.matchSet[index].value;
+        } else {
+          _.forEach(row.matchSet, function(match, i) {
+            match.value = (i === index);
+          });
+        }
+
+        updateCorrectResponse();
+        updateEditorModels();
+      }
+
+      function updateCorrectResponse() {
+        var correctResponse = scope.matchModel.rows.map(function(row) {
+          return {
+            id: row.id,
+            matchSet: row.matchSet.map(function(match) {
+              return match.value;
+            })
+          };
+        });
+        scope.fullModel.correctResponse = correctResponse;
+      }
+
+      function makeCleanLabel() {
+        var wiggiCleanerRe = new RegExp(String.fromCharCode(8203), 'g');
+        return function(item) {
+          return (item.labelHtml || '').replace(wiggiCleanerRe, '');
+        };
+      }
+
+      function activate($event, $index) {
+        $event.stopPropagation();
+        scope.active = [];
+        scope.active[$index] = true;
+      }
+
+      function onClickEdit($event, index) {
+        if (!scope.active[index]) {
+          $event.stopPropagation();
+          $event.preventDefault();
+          scope.active = [];
+          scope.active[index] = true;
+        }
+      }
+
+      function deactivate() {
+        scope.active = [];
+        scope.$emit('mathJaxUpdateRequest');
+      }
+
+      function columnLabelUpdated(index){
+        $log.debug("columnLabelUpdated", index);
+        scope.model.columns[index].labelHtml = scope.matchModel.columns[index].labelHtml;
+      }
+
+      function rowLabelUpdated(index){
+        $log.debug("rowLabelUpdated", index);
+        scope.model.rows[index].labelHtml = scope.matchModel.rows[index].labelHtml;
       }
     }
 
@@ -255,7 +405,7 @@ var main = [
         '</div>'
       ].join('');
 
-      function scoringTemplate(){
+      function scoringTemplate() {
         return [
           '<div class="form-horizontal" role="form">',
           '  <div class="container-fluid">',
@@ -322,8 +472,22 @@ var main = [
           '        <td class="no-border">',
           '        </td>',
           '        <th ng-repeat="column in matchModel.columns"',
+          '          ng-click="onClickEdit($event, $index)"',
           '          ng-class="column.cssClass">',
-          '          {{column.labelHtml}}',
+          '          <span class="content-holder" ' +
+          '            ng-hide="active[$index]" ' +
+          '            ng-bind-html-unsafe="cleanLabel(column)"' +
+          '           ></span>',
+          '          <div mini-wiggi-wiz=""',
+          '              ng-show="active[$index]"',
+          '              active="active[$index]"',
+          '              ng-model="column.labelHtml"',
+          '              ng-change="columnLabelUpdated($index)"',
+          '              dialog-launcher="external"',
+          '              features="extraFeatures"',
+          '              parent-selector=".modal-body"',
+          '              image-service="imageService()">',
+          '          </div>',
           '        </th>',
           '      </tr>',
           '      <tr ng-repeat="row in matchModel.rows">',
@@ -334,9 +498,32 @@ var main = [
           '             ng-click="removeRow($index)" ',
           '           ></i>',
           '        </td>',
-          '        <td ng-repeat="col in row"',
-          '          ng-class="col.cssClass">',
-          '          {{col.labelHtml}}',
+          '        <td class="question-col"' +
+          '           ng-click="onClickEdit($event, 100+$index)"',
+          '          >',
+          '          <span class="content-holder" ' +
+          '            ng-hide="active[100+$index]" ' +
+          '            ng-bind-html-unsafe="cleanLabel(row)"' +
+          '           ></span>',
+          '          <div mini-wiggi-wiz=""',
+          '              ng-show="active[100+$index]"',
+          '              active="active[100+$index]"',
+          '              ng-model="row.labelHtml"',
+          '              ng-change="rowLabelUpdated($index)"',
+          '              dialog-launcher="external"',
+          '              features="extraFeatures"',
+          '              parent-selector=".modal-body"',
+          '              image-service="imageService()">',
+          '          </div>',
+          '        </td>',
+          '        <td class="answer-col" ng-repeat="match in row.matchSet">',
+          '          <div class="corespring-match-choice"',
+          '             ng-class="classForChoice(row, $index)"',
+          '             ng-click="onClickMatch(row, $index)"',
+          '            >',
+          '            <div class="background fa"></div>',
+          '            <div class="foreground fa"></div>',
+          '          </div>',
           '        </td>',
           '      </tr>',
           '      <tr>',
