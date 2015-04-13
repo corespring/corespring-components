@@ -61,28 +61,12 @@
     }
   }
 
-  .blocker {
-    position: absolute;
-    user-select: none;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-
-    .bg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: red;
-      opacity: 0.4;
-    }
-  }
-
   .config-table {
     margin: 0 0 20px 0;
     width: 95%;
 
     th, td {
-      padding: 10px 5px;
+      padding: 0;
       min-width: 0;
     }
 
@@ -111,19 +95,24 @@
     }
 
     .add-row {
+      padding: 10px 5px;
+      
       border: none;
       .add-row-button {
       }
     }
 
+    .content-holder {
+      padding: 10px 5px;
+    }
+
+    .wiggi-wiz-editable {
+      padding: 10px 5px;
+    }
+
     .question-header {
       color: black;
       background: none;
-
-      .wiggi-label {
-        position: relative;
-        z-index: 100;
-      }
     }
 
     .answer-header {
@@ -137,6 +126,7 @@
     }
 
     .answer-col {
+      padding: 10px 5px;
       text-align: center;
     }
   }

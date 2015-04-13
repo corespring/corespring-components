@@ -32,14 +32,15 @@ var main = [
         definitions: [
           new WiggiMathJaxFeatureDef(),
           new WiggiLinkFeatureDef()
-          ]
+        ]
       };
     }
 
     function link(scope, element, attrs) {
-
       var MIN_COLUMNS = 3;
       var MAX_COLUMNS = 5;
+      var INPUT_TYPE_CHECKBOX = 'checkbox';
+      var INPUT_TYPE_RADIOBUTTON = 'radiobutton';
 
       var $log = LogFactory.getLogger('corespring-match-configure');
 
@@ -62,11 +63,11 @@ var main = [
 
       scope.inputTypes = [
         {
-          id: 'radiobutton',
+          id: INPUT_TYPE_RADIOBUTTON,
           label: 'Radio'
         },
         {
-          id: 'checkbox',
+          id: INPUT_TYPE_CHECKBOX,
           label: 'Checkbox'
         }
       ];
@@ -91,6 +92,9 @@ var main = [
 
       //the trottle is to avoid update problems of the editor models
       scope.$watch('config.layout', _.throttle(watchLayout, 50));
+
+      //the trottle is to avoid update problems of the editor models
+      scope.$watch('config.inputType', _.throttle(watchInputType, 50));
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -181,6 +185,25 @@ var main = [
         }
 
         updateEditorModels();
+      }
+
+      function watchInputType(newValue, oldValue) {
+        if (newValue === oldValue) {
+          return;
+        }
+        if (newValue === INPUT_TYPE_RADIOBUTTON) {
+          removeAllCorrectAnswersButFirst();
+        }
+        updateEditorModels();
+      }
+
+      function removeAllCorrectAnswersButFirst() {
+        _.forEach(scope.fullModel.correctResponse, function(row) {
+          var indexOfFirstTrue = _.indexOf(row.matchSet, true);
+          _.forEach(row.matchSet, function(match, index) {
+            row.matchSet[index] = match && index <= indexOfFirstTrue;
+          });
+        });
       }
 
       function addColumnToCorrectResponseMatrix() {
@@ -281,11 +304,13 @@ var main = [
         function makeHeaders() {
           var questionHeaders = [];
           questionHeaders.push({
+            wiggiId: _.uniqueId(),
             cssClass: 'question-header',
             labelHtml: scope.model.columns[0].labelHtml
           });
           var answerHeaders = scope.model.columns.slice(1).map(function(col) {
             return {
+              wiggiId: _.uniqueId(),
               cssClass: 'answer-header',
               labelHtml: col.labelHtml
             };
@@ -310,6 +335,7 @@ var main = [
           });
           var row = {
             id: sourceRow.id,
+            wiggiId: _.uniqueId(),
             labelHtml: sourceRow.labelHtml,
             matchSet: matchSet
           };
@@ -325,13 +351,14 @@ var main = [
         return classes.join(' ');
 
         function getInputTypeClass(inputType) {
-          return 'match-' + (inputType === 'checkbox' ? 'checkbox' : 'radiobutton');
+          return 'match-' + (inputType === INPUT_TYPE_CHECKBOX ?
+            INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
         }
       }
 
       function onClickMatch(row, index) {
         console.log("onClickMatch", row, index);
-        if (scope.config.inputType === 'checkbox') {
+        if (scope.config.inputType === INPUT_TYPE_CHECKBOX) {
           row.matchSet[index].value = !row.matchSet[index].value;
         } else {
           _.forEach(row.matchSet, function(match, i) {
@@ -369,25 +396,27 @@ var main = [
       }
 
       function onClickEdit($event, index) {
+        $event.stopPropagation();
+
         if (!scope.active[index]) {
-          $event.stopPropagation();
           $event.preventDefault();
           scope.active = [];
           scope.active[index] = true;
         }
       }
 
-      function deactivate() {
+      function deactivate($event) {
+        $log.debug("deactivate", $event);
         scope.active = [];
         scope.$emit('mathJaxUpdateRequest');
       }
 
-      function columnLabelUpdated(index){
+      function columnLabelUpdated(index) {
         $log.debug("columnLabelUpdated", index);
         scope.model.columns[index].labelHtml = scope.matchModel.columns[index].labelHtml;
       }
 
-      function rowLabelUpdated(index){
+      function rowLabelUpdated(index) {
         $log.debug("rowLabelUpdated", index);
         scope.model.rows[index].labelHtml = scope.matchModel.rows[index].labelHtml;
       }
@@ -395,7 +424,7 @@ var main = [
 
     function template() {
       return [
-        '<div class="config-corespring-match">',
+        '<div class="config-corespring-match" ng-click="deactivate($event)">',
         '  <div navigator-panel="Design">',
         designTemplate(),
         '  </div>',
@@ -471,24 +500,7 @@ var main = [
           '      <tr>',
           '        <td class="no-border">',
           '        </td>',
-          '        <th ng-repeat="column in matchModel.columns"',
-          '          ng-click="onClickEdit($event, $index)"',
-          '          ng-class="column.cssClass">',
-          '          <span class="content-holder" ' +
-          '            ng-hide="active[$index]" ' +
-          '            ng-bind-html-unsafe="cleanLabel(column)"' +
-          '           ></span>',
-          '          <div mini-wiggi-wiz=""',
-          '              ng-show="active[$index]"',
-          '              active="active[$index]"',
-          '              ng-model="column.labelHtml"',
-          '              ng-change="columnLabelUpdated($index)"',
-          '              dialog-launcher="external"',
-          '              features="extraFeatures"',
-          '              parent-selector=".modal-body"',
-          '              image-service="imageService()">',
-          '          </div>',
-          '        </th>',
+                   headerColumns(),
           '      </tr>',
           '      <tr ng-repeat="row in matchModel.rows">',
           '        <td class="remove-row">',
@@ -498,16 +510,16 @@ var main = [
           '             ng-click="removeRow($index)" ',
           '           ></i>',
           '        </td>',
-          '        <td class="question-col"' +
-          '           ng-click="onClickEdit($event, 100+$index)"',
+          '        <td class="question-col"',
+          '           ng-click="onClickEdit($event, row.wiggiId)"',
           '          >',
-          '          <span class="content-holder" ' +
-          '            ng-hide="active[100+$index]" ' +
-          '            ng-bind-html-unsafe="cleanLabel(row)"' +
-          '           ></span>',
+          '          <div class="content-holder" ',
+          '            ng-hide="active[row.wiggiId]" ',
+          '            ng-bind-html-unsafe="cleanLabel(row)"',
+          '           ></div>',
           '          <div mini-wiggi-wiz=""',
-          '              ng-show="active[100+$index]"',
-          '              active="active[100+$index]"',
+          '              ng-show="active[row.wiggiId]"',
+          '              active="active[row.wiggiId]"',
           '              ng-model="row.labelHtml"',
           '              ng-change="rowLabelUpdated($index)"',
           '              dialog-launcher="external"',
@@ -542,6 +554,29 @@ var main = [
         ].join('');
       }
 
+      function headerColumns() {
+        return [
+          '<th ng-repeat="column in matchModel.columns"',
+          '  ng-click="onClickEdit($event, column.wiggiId)"',
+          '  ng-class="column.cssClass">',
+          '  <div class="content-holder" ',
+          '    ng-hide="active[column.wiggiId]" ',
+          '    ng-bind-html-unsafe="cleanLabel(column)"',
+          '   ></div>',
+          '  <div mini-wiggi-wiz=""',
+          '      ng-show="active[column.wiggiId]"',
+          '      active="active[column.wiggiId]"',
+          '      ng-model="column.labelHtml"',
+          '      ng-change="columnLabelUpdated($index)"',
+          '      dialog-launcher="external"',
+          '      features="extraFeatures"',
+          '      parent-selector=".modal-body"',
+          '      image-service="imageService()">',
+          '  </div>',
+          '</th>'
+        ].join('');
+      }
+
       function feedback() {
         return [
           '<div class="row">',
@@ -566,7 +601,7 @@ var main = [
           '          fb-sel-class="incorrect"',
           '          fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
           '          fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-          '          fb-sel-default-feedback="{{defaultIncorrectFeedback}}">' +
+          '          fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
           '      </div>',
           '    </div>',
           '  </div>',
