@@ -98,6 +98,10 @@
             "shuffle" : {
               "description" : "Sets whether to shuffle the choices.",
               "type" : "boolean"
+            },
+            "showOrdering" : {
+              "description" : "Sets whether to show the ordering numbers for placement choices placeholders.",
+              "type" : "boolean"
             }
           },
           "required" : ["placementType"]
