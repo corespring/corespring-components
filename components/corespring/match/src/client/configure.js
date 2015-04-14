@@ -28,10 +28,9 @@ var main = [
         return ComponentImageService;
       };
 
-      scope.extraFeatures = {
+      scope.extraFeaturesForMatch = {
         definitions: [
-          new WiggiMathJaxFeatureDef(),
-          new WiggiLinkFeatureDef()
+          new WiggiMathJaxFeatureDef()
         ]
       };
     }
@@ -103,9 +102,7 @@ var main = [
       function setModel(fullModel) {
         console.log("setModel", fullModel);
         scope.fullModel = fullModel || {};
-        scope.model = scope.fullModel.model || {
-          columns: []
-        };
+        scope.model = scope.fullModel.model;
         scope.config = getConfig(scope.model);
 
         updateEditorModels();
@@ -219,7 +216,7 @@ var main = [
       }
 
       function addRowToCorrectResponseMatrix(rowId) {
-        var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length);
+        var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length-1);
         scope.fullModel.correctResponse.push({
           id: rowId,
           matchSet: emptyMatchSet
@@ -227,17 +224,14 @@ var main = [
       }
 
       function removeRowFromCorrectResponseMatrix(rowId) {
-        var index = _.indexOf(scope.fullModel.correctResponse, {
+        _.remove(scope.fullModel.correctResponse, {
           id: rowId
         });
-        scope.fullModel.correctResponse.splice(index, 1);
       }
 
       function createEmptyMatchSet(length) {
         return _.range(length).map(function() {
-          return {
-            value: false
-          };
+          return false;
         });
       }
 
@@ -285,11 +279,10 @@ var main = [
       }
 
       function removeRow(index) {
-        $log.debug("removeRow", index);
         var row = scope.model.rows[index];
+        $log.debug("removeRow", index, row);
         scope.model.rows.splice(index, 1);
         removeRowFromCorrectResponseMatrix(row.id);
-
         updateEditorModels();
       }
 
@@ -328,6 +321,7 @@ var main = [
           var correctRow = _.find(scope.fullModel.correctResponse, {
             id: sourceRow.id
           });
+          console.log("makeRow", sourceRow, correctRow, scope.fullModel.correctResponse);
           var matchSet = correctRow.matchSet.map(function(match) {
             return {
               value: match
@@ -523,7 +517,7 @@ var main = [
           '              ng-model="row.labelHtml"',
           '              ng-change="rowLabelUpdated($index)"',
           '              dialog-launcher="external"',
-          '              features="extraFeatures"',
+          '              features="extraFeaturesForMatch"',
           '              parent-selector=".modal-body"',
           '              image-service="imageService()">',
           '          </div>',
@@ -543,8 +537,6 @@ var main = [
           '        </td>',
           '        <td class="add-row" colspan="5">',
           '          <button type="button" class="add-row-button btn btn-default" ',
-          '             tooltip="Add Row"',
-          '             tooltip-append-to-body="true"',
           '            ng-click="addRow()">+ Add a row</button>',
           '        </td>',
           '      </tr>',
@@ -569,7 +561,7 @@ var main = [
           '      ng-model="column.labelHtml"',
           '      ng-change="columnLabelUpdated($index)"',
           '      dialog-launcher="external"',
-          '      features="extraFeatures"',
+          '      features="extraFeaturesForMatch"',
           '      parent-selector=".modal-body"',
           '      image-service="imageService()">',
           '  </div>',
