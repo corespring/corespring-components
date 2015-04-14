@@ -6,38 +6,34 @@
     {
       "id": "row-1",
       "matchSet": [
-        true,
+        false,
         false
       ]
     },
     {
       "id": "row-2",
       "matchSet": [
-        true,
+        false,
         false
       ]
     },
     {
       "id": "row-3",
       "matchSet": [
-        true,
+        false,
         false
       ]
     },
     {
       "id": "row-4",
       "matchSet": [
-        true,
+        false,
         false
       ]
     }
   ],
-  "allowPartialScoring": true,
-  "partialScoring": [
-    {"numberOfCorrect": 1, "scorePercentage": 10},
-    {"numberOfCorrect": 2, "scorePercentage": 20},
-    {"numberOfCorrect": 3, "scorePercentage": 30}
-  ],
+  "allowPartialScoring": false,
+  "partialScoring": [],
   "feedback": {
     "correctFeedbackType": "none",
     "partialFeedbackType": "none",
