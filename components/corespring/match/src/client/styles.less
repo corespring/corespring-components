@@ -118,13 +118,31 @@
     .question-header {
       color: black;
       background: none;
+      width: 100%;
     }
 
     .answer-header {
       color: black;
       background: none;
-      width: 100px;
       text-align: center;
+    }
+
+    &.three-columns {
+      .answer-header {
+        min-width: 100px;
+      }
+    }
+
+    &.four-columns {
+      .answer-header {
+        min-width: 80px;
+      }
+    }
+
+    &.five-columns {
+      .answer-header {
+        min-width: 60px;
+      }
     }
 
     .question-col {
@@ -181,22 +199,27 @@
 
     .match-tr {
       border-bottom: solid 2px #cccccc;
-      padding: 10px 5px;
 
+      .question-header,
       .answer-header {
         border: none;
-        text-align: center;
         background: white;
         color: black;
         vertical-align: middle;
         word-wrap: break-word;
         padding: 10px 5px;
-
-        &:first-of-type {
-          width: 100%;
-          text-align: left;
-        }
       }
+
+      .question-header {
+        width: 100%;
+        text-align: left;
+      }
+
+      .answer-header {
+        width: 100%;
+        text-align: center;
+      }
+
       .match-td {
         border: none;
         vertical-align: middle;

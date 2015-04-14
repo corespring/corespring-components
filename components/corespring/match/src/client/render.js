@@ -190,6 +190,10 @@ var main = [
             }
           }
 
+          _.forEach(columns, function(col, index){
+            col.cssClass = index === 0 ? 'question-header' : 'answer-header';
+          });
+
           return columns;
         }
 
@@ -379,8 +383,9 @@ var main = [
         return [
           '<table class="match-table interaction" ng-class="layout">',
           '  <tr class="match-tr header-row">',
-          '    <th class="match-th answer-header"',
-          '        ng-repeat="column in matchModel.columns"',
+          '    <th ng-repeat="column in matchModel.columns"',
+          '        class="match-th"',
+          '        ng-class="column.cssClass"',
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
           '  <tr class="match-tr question-row"',

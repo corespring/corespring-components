@@ -84,6 +84,8 @@ var main = [
       scope.cleanLabel = makeCleanLabel();
       scope.columnLabelUpdated = columnLabelUpdated;
       scope.deactivate = deactivate;
+      scope.isRadioButton = isRadioButton;
+      scope.isCheckBox = isCheckBox;
       scope.onClickEdit = onClickEdit;
       scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
@@ -345,14 +347,14 @@ var main = [
         return classes.join(' ');
 
         function getInputTypeClass(inputType) {
-          return 'match-' + (inputType === INPUT_TYPE_CHECKBOX ?
+          return 'match-' + (isCheckBox(inputType) ?
             INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
         }
       }
 
       function onClickMatch(row, index) {
         console.log("onClickMatch", row, index);
-        if (scope.config.inputType === INPUT_TYPE_CHECKBOX) {
+        if (isCheckBox(scope.config.inputType)) {
           row.matchSet[index].value = !row.matchSet[index].value;
         } else {
           _.forEach(row.matchSet, function(match, i) {
@@ -413,6 +415,14 @@ var main = [
       function rowLabelUpdated(index) {
         $log.debug("rowLabelUpdated", index);
         scope.model.rows[index].labelHtml = scope.matchModel.rows[index].labelHtml;
+      }
+
+      function isCheckBox(inputType) {
+        return inputType === INPUT_TYPE_CHECKBOX;
+      }
+
+      function isRadioButton(inputType) {
+        return inputType === INPUT_TYPE_RADIOBUTTON;
       }
     }
 
@@ -480,7 +490,7 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <table class="config-table" ng-class="scope.config.layout">',
+          '    <table class="config-table" ng-class="config.layout">',
           '      <tr>',
           '        <td class="remove-row no-border">',
           '        </td>',
@@ -572,7 +582,7 @@ var main = [
       function feedback() {
         return [
           '<div class="row">',
-          '  <div class="col-xs-11 feedback-panel-col">',
+          '  <div class="col-xs-12 feedback-panel-col">',
           '    <div feedback-panel>',
           '      <div feedback-selector',
           '          fb-sel-label="If correct, show"',
@@ -609,13 +619,13 @@ var main = [
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <checkbox class="shuffle-choices" ng-model="model.config.shuffle">Shuffle Choices</checkbox>',
+          '    <checkbox class="shuffle-choices" ng-model="config.shuffle">Shuffle Choices</checkbox>',
           '  </div>',
           '</div>',
           '<div class="row option layout">',
           '  <div class="col-xs-12">',
           '    <span>Layout</span>',
-          '    <select class="form-control" ng-model="model.config.layout"',
+          '    <select class="form-control" ng-model="config.layout"',
           '       ng-options="c.id as c.label for c in layouts">',
           '    </select>',
           '  </div>',
@@ -623,15 +633,15 @@ var main = [
           '<div class="row option input-type">',
           '  <div class="col-xs-12">',
           '    <span>Input Type</span>',
-          '    <select class="form-control" ng-model="model.config.inputType"',
+          '    <select class="form-control" ng-model="config.inputType"',
           '       ng-options="c.id as c.label for c in inputTypes">',
           '    </select>',
-          '    <p class="help" ng-if="model.config.inputType==\'radiobutton\'">',
+          '    <p class="help" ng-if="isRadioButton(config.inputType)">',
           '       This option allows students to select one',
           '       correct answer. You may, however, set more',
           '       than one answer as correct if you choose',
           '    </p>',
-          '    <p class="help" ng-if="model.config.inputType==\'checkbox\'">',
+          '    <p class="help" ng-if="isCheckBox(config.inputType)">',
           '       This option allows students to select more than',
           '       one correct answer. You may, however, set only',
           '       one correct answer if you choose.',
