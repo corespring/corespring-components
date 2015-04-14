@@ -10,13 +10,18 @@ exports.factory = [
      */
     function MiniWiggiScopeExtension() {
 
-      this.postLink = function($scope) {
+      this.postLink = function(scope) {
 
-        $scope.imageService = function() {
+        if(scope.hasMiniWiggiScopeExtension){
+          return;
+        }
+        scope.hasMiniWiggiScopeExtension = true;
+
+        scope.imageService = function() {
           return ComponentImageService;
         };
 
-        $scope.extraFeatures = {
+        scope.extraFeatures = {
           definitions: [
             {
               type: 'group',
@@ -29,7 +34,7 @@ exports.factory = [
           ]
         };
 
-        $scope.linkFeature = {
+        scope.linkFeature = {
           definitions: [{
             type: 'group',
             buttons: [
@@ -38,8 +43,8 @@ exports.factory = [
           }]
         };
 
-        $scope.updateMathJax = function() {
-          $scope.$emit('mathJaxUpdateRequest');
+        scope.updateMathJax = function() {
+          scope.$emit('mathJaxUpdateRequest');
         };
 
       };

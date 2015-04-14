@@ -1,0 +1,10 @@
+{
+  "name": "feedback-config",
+  "organization": "corespring",
+  "purpose": "library",
+  "libraries": [{
+    "organization": "corespring",
+    "name": "mini-wiggi-lib",
+    "scope": "editor"
+  }]
+}
