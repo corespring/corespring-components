@@ -1,0 +1,44 @@
+{
+  "libraries": [
+    {
+      "name": "widgets",
+      "organization": "corespring"
+    },
+    {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    }
+  ],
+  "dependencies": {
+    "client": {
+      "ngDraggable": {
+        "version": "~0.1.4",
+        "file": "ngDraggable.js",
+        "angular-module": "ngDraggable"
+      },
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      },
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
+      }
+    }
+  },
+
+  "released": false,
+  "title": "Hotspot Drag And Drop",
+  "titleGroup": "Mathematics",
+  "name": "hotspot",
+  "organization": "corespring"
+}
