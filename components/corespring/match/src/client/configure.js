@@ -481,11 +481,11 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <p class="intro">In a choice matrix students associate choices in the ',
-          '       first column with options in the first row. This ',
+          '    <p class="intro">In Choice Matrix, students associate choices in the ',
+          '       first column with options in the adjacent rows. This ',
           '       interaction allows for either one or more correct answers. ',
           '       Setting more than one answer as correct ',
-          '       allows for partial credit (see the scoring tab).',
+          '       allows for partial credit (<i>see the Scoring tab</i>).',
           '    </p>',
           '  </div>',
           '</div>'
