@@ -4,7 +4,6 @@ var main = [
   'ComponentImageService',
   'FeedbackConfig',
   'LogFactory',
-  'PartialScoringConfig',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
   function($http,
@@ -12,7 +11,6 @@ var main = [
     ComponentImageService,
     FeedbackConfig,
     LogFactory,
-    PartialScoringConfig,
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef) {
 
@@ -46,7 +44,6 @@ var main = [
       var $log = LogFactory.getLogger('corespring-match-configure');
 
       FeedbackConfig.extendScope(scope, 'corespring-match');
-      PartialScoringConfig.extendScope(scope, 'corespring-match');
 
       scope.layouts = [
         {
@@ -76,6 +73,8 @@ var main = [
 
       scope.active = [];
 
+      scope.numberOfCorrectResponses = 0;
+
       scope.containerBridge = {
         setModel: setModel,
         getModel: getModel
@@ -93,6 +92,7 @@ var main = [
       scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
       scope.rowLabelUpdated = rowLabelUpdated;
+      scope.updatePartialScoringModel = updatePartialScoringModel;
 
       //the trottle is to avoid update problems of the editor models
       scope.$watch('config.layout', _.throttle(watchLayout, 50));
@@ -124,6 +124,10 @@ var main = [
         scope.matchModel = createMatchModel();
         scope.updatePartialScoringModel(sumCorrectAnswers());
         $log.debug("updateEditorModels out");
+      }
+
+      function updatePartialScoringModel(count){
+        scope.numberOfCorrectResponses = count;
       }
 
       /**
@@ -448,7 +452,10 @@ var main = [
           '  <div class="container-fluid">',
           '    <div class="row">',
           '      <div class="col-xs-12">',
-          PartialScoringConfig.scoringPanel(),
+          '        <corespring-partial-scoring-config ',
+          '            full-model="fullModel"',
+          '            number-of-correct-responses="numberOfCorrectResponses"',
+          '         ></corespring-partial-scoring-config>',
           '      </div>',
           '    </div>',
           '  </div>',
