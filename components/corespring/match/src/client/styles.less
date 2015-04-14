@@ -148,8 +148,14 @@
       margin-bottom: 20px;
     }
 
-    .match-tr {
+    tr {
       border-bottom: solid 2px #cccccc;
+    }
+
+    td {
+      border: none;
+      vertical-align: middle;
+      padding: 10px 5px;
     }
 
     .question-header,
@@ -162,35 +168,12 @@
       padding: 10px 5px;
     }
 
-    .match-td {
-      border: none;
+    .answer-expected-warning {
+      color: @warning-color;
+      font-size: 22px;
+      width: 28px;
+      min-width: 28px;
       vertical-align: middle;
-      padding: 10px 5px;
-    }
-
-    .question-cell {
-
-      .question-table {
-        border: none;
-        width: 100%;
-        margin: 0;
-
-        .question-tr, .question-td {
-          border: none;
-          padding: 0;
-        }
-        .question-label {
-          text-align: left;
-          width: 100%;
-        }
-        .answer-expected-warning {
-          color: @warning-color;
-          font-size: 22px;
-          width: 28px;
-          min-width: 28px;
-          vertical-align: middle;
-        }
-      }
     }
 
     .answer-cell {
