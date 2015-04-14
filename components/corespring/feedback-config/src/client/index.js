@@ -1,30 +1,35 @@
-// module: corespring.choice-templates
-// service: FeedbackConfig
-/* global exports */
-exports.framework = "angular";
-exports.service = [
+var main = [
   'LogFactory',
   'MiniWiggiScopeExtension',
   'ServerLogic',
   function(LogFactory, MiniWiggiScopeExtension, ServerLogic) {
 
-    "use strict";
+    var $log = LogFactory.getLogger('FeedbackConfig');
 
-    function FeedbackConfig() {
+    return {
+      scope: {
+        fullModel: '=',
+        componentType: '@'
+      },
+      restrict: 'E',
+      replace: false,
+      link: link,
+      template: template()
+    };
 
-      this.extendScope = function(scope, componentType) {
-        new MiniWiggiScopeExtension().postLink(scope);
+    function link(scope, elem, attr) {
+      new MiniWiggiScopeExtension().postLink(scope);
 
-        var server = ServerLogic.load(componentType);
-        scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
-        scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
-        scope.defaultPartialFeedback = server.keys.DEFAULT_PARTIAL_FEEDBACK;
-        scope.defaultNotChosenFeedback = server.keys.DEFAULT_NOT_CHOSEN_FEEDBACK;
-        scope.defaultSubmittedFeedback = server.keys.DEFAULT_SUBMITTED_FEEDBACK;
-      };
+      var server = ServerLogic.load(scope.componentType);
+      scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
+      scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
+      scope.defaultPartialFeedback = server.keys.DEFAULT_PARTIAL_FEEDBACK;
+      scope.defaultNotChosenFeedback = server.keys.DEFAULT_NOT_CHOSEN_FEEDBACK;
+      scope.defaultSubmittedFeedback = server.keys.DEFAULT_SUBMITTED_FEEDBACK;
+    }
 
-      this.feedbackConfigPanel = function() {
-        return [
+    function template() {
+      return [
           '<div feedback-panel>',
           '  <div feedback-selector',
           '      fb-sel-label="If correct, show"',
@@ -49,9 +54,12 @@ exports.service = [
           '  </div>',
           '</div>'
         ].join('');
-      };
     }
-
-    return new FeedbackConfig();
   }
 ];
+
+exports.framework = 'angular';
+exports.directive = {
+  name: "corespringFeedbackConfig",
+  directive: main
+};

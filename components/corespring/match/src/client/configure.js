@@ -2,14 +2,12 @@ var main = [
   '$http',
   '$timeout',
   'ComponentImageService',
-  'FeedbackConfig',
   'LogFactory',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
   function($http,
     $timeout,
     ComponentImageService,
-    FeedbackConfig,
     LogFactory,
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef) {
@@ -42,8 +40,6 @@ var main = [
       var INPUT_TYPE_RADIOBUTTON = 'radiobutton';
 
       var $log = LogFactory.getLogger('corespring-match-configure');
-
-      FeedbackConfig.extendScope(scope, 'corespring-match');
 
       scope.layouts = [
         {
@@ -594,7 +590,10 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12 feedback-panel-col">',
-          FeedbackConfig.feedbackConfigPanel(),
+          '    <corespring-feedback-config ',
+          '       full-model="fullModel"',
+          '       component-type="corespring-match"',
+          '    ></corespring-feedback-config>',
           '  </div>',
           '</div>'
         ].join("\n");
