@@ -384,7 +384,7 @@ var main = [
 
       function matchInteraction() {
         return [
-          '<table class="corespring-match-table interaction" ng-class="layout">',
+          '<table class="corespring-match-table" ng-class="layout">',
           '  <tr class="header-row">',
           '    <th ng-repeat="column in matchModel.columns"',
           '        ng-class="column.cssClass"',
