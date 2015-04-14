@@ -2,17 +2,13 @@ var main = [
   '$http',
   '$timeout',
   'ComponentImageService',
-  'FeedbackConfig',
   'LogFactory',
-  'PartialScoringConfig',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
   function($http,
     $timeout,
     ComponentImageService,
-    FeedbackConfig,
     LogFactory,
-    PartialScoringConfig,
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef) {
 
@@ -45,9 +41,6 @@ var main = [
 
       var $log = LogFactory.getLogger('corespring-match-configure');
 
-      FeedbackConfig.extendScope(scope, 'corespring-match');
-      PartialScoringConfig.extendScope(scope, 'corespring-match');
-
       scope.layouts = [
         {
           id: 'three-columns',
@@ -76,6 +69,8 @@ var main = [
 
       scope.active = [];
 
+      scope.numberOfCorrectResponses = 0;
+
       scope.containerBridge = {
         setModel: setModel,
         getModel: getModel
@@ -93,6 +88,7 @@ var main = [
       scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
       scope.rowLabelUpdated = rowLabelUpdated;
+      scope.updatePartialScoringModel = updatePartialScoringModel;
 
       //the trottle is to avoid update problems of the editor models
       scope.$watch('config.layout', _.throttle(watchLayout, 50));
@@ -124,6 +120,10 @@ var main = [
         scope.matchModel = createMatchModel();
         scope.updatePartialScoringModel(sumCorrectAnswers());
         $log.debug("updateEditorModels out");
+      }
+
+      function updatePartialScoringModel(count){
+        scope.numberOfCorrectResponses = count;
       }
 
       /**
@@ -448,7 +448,10 @@ var main = [
           '  <div class="container-fluid">',
           '    <div class="row">',
           '      <div class="col-xs-12">',
-          PartialScoringConfig.scoringPanel(),
+          '        <corespring-partial-scoring-config ',
+          '            full-model="fullModel"',
+          '            number-of-correct-responses="numberOfCorrectResponses"',
+          '         ></corespring-partial-scoring-config>',
           '      </div>',
           '    </div>',
           '  </div>',
@@ -587,7 +590,10 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12 feedback-panel-col">',
-          FeedbackConfig.feedbackConfigPanel(),
+          '    <corespring-feedback-config ',
+          '       full-model="fullModel"',
+          '       component-type="corespring-match"',
+          '    ></corespring-feedback-config>',
           '  </div>',
           '</div>'
         ].join("\n");
