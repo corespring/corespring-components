@@ -218,10 +218,11 @@ var main = [
       }
 
       function addRowToCorrectResponseMatrix(rowId) {
-        var emptyMatchSet = createEmptyMatchSet(scope.model.columns.length-1);
+        var matchSet = createEmptyMatchSet(scope.model.columns.length-1);
+        matchSet[0] = true;
         scope.fullModel.correctResponse.push({
           id: rowId,
-          matchSet: emptyMatchSet
+          matchSet: matchSet
         });
       }
 
