@@ -222,7 +222,6 @@ var main = [
 
       function addRowToCorrectResponseMatrix(rowId) {
         var matchSet = createEmptyMatchSet(scope.model.columns.length-1);
-        matchSet[0] = true;
         scope.fullModel.correctResponse.push({
           id: rowId,
           matchSet: matchSet
