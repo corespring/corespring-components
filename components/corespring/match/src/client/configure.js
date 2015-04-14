@@ -490,7 +490,7 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <table class="config-table" ng-class="config.layout">',
+          '    <table class="corespring-match-table" ng-class="config.layout">',
           '      <tr>',
           '        <td class="remove-row no-border">',
           '        </td>',
