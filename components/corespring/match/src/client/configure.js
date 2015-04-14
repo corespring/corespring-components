@@ -1,16 +1,18 @@
 var main = [
   '$http',
   '$timeout',
-  'ChoiceTemplates',
   'ComponentImageService',
+  'FeedbackConfig',
   'LogFactory',
+  'PartialScoringConfig',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
   function($http,
     $timeout,
-    ChoiceTemplates,
     ComponentImageService,
+    FeedbackConfig,
     LogFactory,
+    PartialScoringConfig,
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef) {
 
@@ -43,7 +45,8 @@ var main = [
 
       var $log = LogFactory.getLogger('corespring-match-configure');
 
-      ChoiceTemplates.extendScope(scope, 'corespring-match');
+      FeedbackConfig.extendScope(scope, 'corespring-match');
+      PartialScoringConfig.extendScope(scope, 'corespring-match');
 
       scope.layouts = [
         {
@@ -445,7 +448,7 @@ var main = [
           '  <div class="container-fluid">',
           '    <div class="row">',
           '      <div class="col-xs-12">',
-          ChoiceTemplates.scoring(),
+          PartialScoringConfig.scoringPanel(),
           '      </div>',
           '    </div>',
           '  </div>',
@@ -584,29 +587,7 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12 feedback-panel-col">',
-          '    <div feedback-panel>',
-          '      <div feedback-selector',
-          '          fb-sel-label="If correct, show"',
-          '          fb-sel-class="correct"',
-          '          fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-          '          fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-          '          fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
-          '      </div>',
-          '      <div feedback-selector',
-          '          fb-sel-label="If partially correct, show"',
-          '          fb-sel-class="partial"',
-          '          fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-          '          fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-          '          fb-sel-default-feedback="{{defaultPartialFeedback}}">',
-          '      </div>',
-          '      <div feedback-selector',
-          '          fb-sel-label="If incorrect, show"',
-          '          fb-sel-class="incorrect"',
-          '          fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-          '          fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-          '          fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
-          '      </div>',
-          '    </div>',
+          FeedbackConfig.feedbackConfigPanel(),
           '  </div>',
           '</div>'
         ].join("\n");

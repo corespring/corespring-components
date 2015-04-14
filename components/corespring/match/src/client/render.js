@@ -28,7 +28,7 @@ var main = [
       var YES_NO = 'YES_NO';
 
       scope.stack = [];
-      scope.editable = true;
+      scope.editable = false;
       scope.isSeeAnswerOpen = false;
 
       scope.containerBridge = {
@@ -58,6 +58,7 @@ var main = [
 
       function setDataAndSession(dataAndSession) {
         console.log("corespring match:setDataAndSession", dataAndSession);
+        scope.editable = true;
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
         scope.config = setConfig(dataAndSession.data.model);
@@ -144,6 +145,7 @@ var main = [
       }
 
       function reset() {
+        scope.editable = true;
         scope.stack = [];
         scope.session = {};
         scope.isSeeAnswerOpen = false;
@@ -340,6 +342,7 @@ var main = [
       }
 
       function setEditable(e) {
+        console.log("setEditable", e, scope.editable);
         scope.editable = e;
       }
 
@@ -432,9 +435,10 @@ var main = [
           '<div see-answer-panel="true"',
           '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
           '    ng-if="response.correctResponse">',
-          '  <table class="match-table" ng-class="layout">',
+          '  <table class="corespring-match-table" ng-class="layout">',
           '    <tr class="match-tr">',
-          '      <th class="match-th answer-header"',
+          '      <th class="match-th"',
+          '          ng-class="column.cssClass"',
           '          ng-repeat="column in matchModel.columns"',
           '          ng-bind-html-unsafe="column.labelHtml"/>',
           '    </tr>',
