@@ -231,7 +231,6 @@
     color: black;
     background: none;
     text-align: left;
-    width: 100%;
   }
 
   .answer-header {
@@ -241,38 +240,35 @@
   }
 
   &.three-columns {
-    td {
+    .question-header,
+    .question-cell {
       max-width: 372px;
     }
-    .question-header {
-      width: 372px;
-    }
-    .answer-header {
-      width: 100px;
+    .answer-header,
+    .answer-cell {
+      max-width: 100px;
     }
   }
 
   &.four-columns {
-    td {
+    .question-header,
+    .question-cell {
       max-width: 322px;
     }
-    .question-header {
-      width: 322px;
-    }
-    .answer-header {
-      width: 80px;
+    .answer-header,
+    .answer-cell {
+      max-width: 80px;
     }
   }
 
   &.five-columns {
-    td {
+    .question-header,
+    .question-cell {
       max-width: 322px;
     }
-    .question-header {
-      width: 322px;
-    }
-    .answer-header {
-      width: 60px;
+    .answer-header,
+    .answer-cell {
+      max-width: 60px;
     }
   }
 }
