@@ -236,10 +236,17 @@ var main = [
       function removeUnexpectedTags(s){
         var node = $('<div>');
         node.html(s);
-        node.find('*').css('width', null);
-        node.find('*').css('min-width', null);
-        node.find('*').css('height', null);
-        node.find('*').css('min-height', null);
+
+        node.find('*').css('width', '');
+        node.find('*').css('min-width', '');
+        node.find('*').css('height', '');
+        node.find('*').css('min-height', '');
+
+        node.find('*').attr('width', '');
+        node.find('*').attr('min-width', '');
+        node.find('*').attr('height', '');
+        node.find('*').attr('min-height', '');
+
         var out = node.html();
         $log.debug(["removeUnexpectedTags", s, out].join('\n'));
         return out;
