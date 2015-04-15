@@ -16,59 +16,14 @@ var INCORRECT = "incorrect";
 var WARNING = "warning";
 
 function createOutcome(question, answer, settings) {
-  settings = settings || {};
-
   var numAnswers = numberOfAnswers(answer);
-
-  if (numAnswers === 0) {
-    return makeResponse(INCORRECT, WARNING, 0);
-  }
-
-  if (question._uid !== answer._uid) {
-    throw "Error - the uids must match";
-  }
-
   var numAnsweredCorrectly = countCorrectAnswers(answer, question.correctResponse);
   var totalCorrectAnswers = countCorrectAnswers(question.correctResponse, question.correctResponse);
 
-  var isCorrect = totalCorrectAnswers === numAnsweredCorrectly &&
-    totalCorrectAnswers === numAnswers;
-  var isPartiallyCorrect = numAnsweredCorrectly > 0;
-
-  var score = 0;
-  if (isCorrect) {
-    score = 1;
-  } else if (question.allowPartialScoring) {
-    var partialScore = _.find(question.partialScoring, function(ps) {
-      return ps.numberOfCorrect === numAnsweredCorrectly;
-    });
-    if (partialScore) {
-      score = partialScore.scorePercentage / 100;
-    }
-  }
-
-  return makeResponse(
-    isCorrect ? CORRECT : INCORRECT,
-    feedbackUtils.correctness(isCorrect, isPartiallyCorrect),
-    score);
-
-  function makeResponse(correctness, correctClass, score) {
-    var response = {};
-    response.correctness = correctness;
-    response.correctClass = correctClass;
-    response.score = score;
-    response.correctnessMatrix = buildCorrectnessMatrix(question, answer);
-    if (correctClass === PARTIAL || correctClass === INCORRECT) {
-      response.correctResponse = question.correctResponse;
-    }
-    if (settings.showFeedback) {
-      response.feedback = feedbackUtils.makeFeedback(question.feedback, correctClass);
-    }
-    if (question.comments) {
-      response.comments = question.comments;
-    }
-    return response;
-  }
+  var response = feedbackUtils.defaultCreateOutcome(question, answer, settings,
+    numAnswers, numAnsweredCorrectly, totalCorrectAnswers);
+  response.correctnessMatrix = buildCorrectnessMatrix(question, answer);
+  return response;
 }
 
 function buildCorrectnessMatrix(question, answer) {
@@ -139,7 +94,6 @@ function whereIdIsEqual(id) {
     return match.id === id;
   };
 }
-
 
 function countCorrectAnswers(answer, correctAnswer) {
   return _.reduce(answer, function(acc1, answerRow) {
