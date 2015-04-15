@@ -136,7 +136,7 @@ var main = [
             } else {
               $scope.model.choices = [$scope.content.xhtml];
             }
-            $scope.updatePartialScoringModel(getNumberOfCorrectChoices());
+            $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
           }
         }
 
@@ -151,7 +151,7 @@ var main = [
 
         $scope.selectItem = function (index) {
           $scope.model.choices[index].correct = !$scope.model.choices[index].correct;
-          $scope.updatePartialScoringModel(getNumberOfCorrectChoices());
+          $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
         };
 
         $scope.safeApply = function (fn) {
@@ -196,7 +196,7 @@ var main = [
             $scope.model.choices = $scope.model.choices || [];
             $scope.content = {};
             $scope.content.xhtml = _.pluck($scope.model.choices, 'data').join(' ');
-            $scope.updatePartialScoringModel(getNumberOfCorrectChoices());
+            $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
           },
           getModel: function () {
             var model = _.cloneDeep($scope.fullModel);

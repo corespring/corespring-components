@@ -385,10 +385,10 @@ describe('match server logic', function() {
     });
 
 
-    it('should respond to partially correct result in MULTIPLE choice case ', function() {
+    it('should respond to partial result in MULTIPLE choice case ', function() {
       var answers = [
         superfluousAnswer("row-1"),
-        noAnswer("row-2"),
+        correctAnswer("row-2"),
         noAnswer("row-3"),
         noAnswer("row-4")
       ];
@@ -401,7 +401,7 @@ describe('match server logic', function() {
         score: 0.1,
         correctnessMatrix: [
           correctIncorrect("row-1"),
-          answerExpected("row-2"),
+          correctUnknown("row-2"),
           answerExpected("row-3"),
           answerExpected("row-4")
         ],

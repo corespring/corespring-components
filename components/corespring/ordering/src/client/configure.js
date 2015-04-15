@@ -306,7 +306,7 @@ var main = [
             if (!_.isEmpty(n)) {
               var newOrder = _.pluck($scope.targets, 'id');
               $scope.fullModel.correctResponse = newOrder;
-              $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+              $scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
             }
           });
 

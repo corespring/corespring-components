@@ -194,7 +194,7 @@ var main = [
               c.labelType = c.labelType || "text";
             });
 
-            scope.updatePartialScoringModel(scope.fullModel.correctResponse.value.length);
+            scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.value.length);
           },
 
           getModel: function() {
@@ -241,7 +241,7 @@ var main = [
             }
           });
           scope.fullModel.correctResponse.value = res;
-          scope.updatePartialScoringModel(res.length);
+          scope.updateNumberOfCorrectResponses(res.length);
         }, true);
 
 

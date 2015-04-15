@@ -24,7 +24,7 @@ describe('partial-scoring-scope-extension', function(){
     });
 
     it('should add a scenario', function(){
-      scope.updatePartialScoringModel(3); //make sure we are allowed to add one, otherwise it will be removed on digest
+      scope.updateNumberOfCorrectResponses(3); //make sure we are allowed to add one, otherwise it will be removed on digest
       scope.addScoringScenario();
       expect(scope.fullModel.partialScoring.length).toEqual(2);
       expect(scope.fullModel.partialScoring[1]).toEqual({numberOfCorrect: 2, scorePercentage: 20});
@@ -66,32 +66,32 @@ describe('partial-scoring-scope-extension', function(){
 
   describe('updatePartialScoringModel', function() {
     it('should exist', function () {
-      expect(scope.updatePartialScoringModel).toBeDefined();
+      expect(scope.updateNumberOfCorrectResponses).toBeDefined();
     });
 
     describe('numberOfCorrectResponses', function () {
       it('should be set to the value passed in', function () {
-        scope.updatePartialScoringModel(123);
+        scope.updateNumberOfCorrectResponses(123);
         scope.$digest();
         expect(scope.numberOfCorrectResponses).toEqual(123);
       });
       it('should accept negative numbers', function () {
-        scope.updatePartialScoringModel(-1);
+        scope.updateNumberOfCorrectResponses(-1);
         scope.$digest();
         expect(scope.numberOfCorrectResponses).toEqual(0);
       });
       it('should accept undefined', function () {
-        scope.updatePartialScoringModel(undefined);
+        scope.updateNumberOfCorrectResponses(undefined);
         scope.$digest();
         expect(scope.numberOfCorrectResponses).toEqual(0);
       });
       it('should accept null', function () {
-        scope.updatePartialScoringModel(null);
+        scope.updateNumberOfCorrectResponses(null);
         scope.$digest();
         expect(scope.numberOfCorrectResponses).toEqual(0);
       });
       it('should accept NaN', function () {
-        scope.updatePartialScoringModel(NaN);
+        scope.updateNumberOfCorrectResponses(NaN);
         scope.$digest();
         expect(scope.numberOfCorrectResponses).toEqual(0);
       });
@@ -99,12 +99,12 @@ describe('partial-scoring-scope-extension', function(){
 
     describe('maxNumberOfScoringScenarios', function () {
       it('should be one less that the correct answers', function () {
-        scope.updatePartialScoringModel(123);
+        scope.updateNumberOfCorrectResponses(123);
         scope.$digest();
         expect(scope.maxNumberOfScoringScenarios).toEqual(123 - 1);
       });
       it('should have a minimum of 1', function () {
-        scope.updatePartialScoringModel(0);
+        scope.updateNumberOfCorrectResponses(0);
         scope.$digest();
         expect(scope.maxNumberOfScoringScenarios).toEqual(1);
       });
@@ -112,17 +112,17 @@ describe('partial-scoring-scope-extension', function(){
 
     describe('canAddScoringScenario', function () {
       it("should be false if we cannot add a scenario", function () {
-        scope.updatePartialScoringModel(2);
+        scope.updateNumberOfCorrectResponses(2);
         scope.$digest();
         expect(scope.canAddScoringScenario).toBe(false);
       });
       it("should be true if we can add a scenario", function () {
-        scope.updatePartialScoringModel(3);
+        scope.updateNumberOfCorrectResponses(3);
         scope.$digest();
         expect(scope.canAddScoringScenario).toBe(true);
       });
       it("should be false if we cannot add a scenario", function () {
-        scope.updatePartialScoringModel(3);
+        scope.updateNumberOfCorrectResponses(3);
         scope.addScoringScenario();
         scope.$digest();
         expect(scope.canAddScoringScenario).toBe(false);
@@ -131,13 +131,13 @@ describe('partial-scoring-scope-extension', function(){
 
     describe('canRemoveScoringScenario', function () {
       it("should be false if we have 1 or less scenarios", function () {
-        scope.updatePartialScoringModel(1);
+        scope.updateNumberOfCorrectResponses(1);
         scope.$digest();
         expect(scope.canRemoveScoringScenario).toBe(false);
       });
 
       it("should be true if we have 2 or more scenarios", function () {
-        scope.updatePartialScoringModel(3);
+        scope.updateNumberOfCorrectResponses(3);
         scope.addScoringScenario();
         scope.$digest();
         expect(scope.canRemoveScoringScenario).toBe(true);
@@ -146,21 +146,21 @@ describe('partial-scoring-scope-extension', function(){
 
     describe('automatic removal of scenarios', function(){
       it('should remove scenarios if we have more scenarios than allowed', function(){
-        scope.updatePartialScoringModel(3);
+        scope.updateNumberOfCorrectResponses(3);
         scope.addScoringScenario();
         scope.$digest();
         expect(scope.fullModel.partialScoring.length).toEqual(2);
-        scope.updatePartialScoringModel(2);
+        scope.updateNumberOfCorrectResponses(2);
         scope.$digest();
         expect(scope.fullModel.partialScoring.length).toEqual(1);
       });
 
       it('should not remove the first scenario', function(){
-        scope.updatePartialScoringModel(3);
+        scope.updateNumberOfCorrectResponses(3);
         scope.addScoringScenario();
         scope.$digest();
         expect(scope.fullModel.partialScoring.length).toEqual(2);
-        scope.updatePartialScoringModel(0);
+        scope.updateNumberOfCorrectResponses(0);
         scope.$digest();
         expect(scope.fullModel.partialScoring.length).toEqual(1);
       });

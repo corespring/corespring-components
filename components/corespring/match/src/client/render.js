@@ -242,10 +242,10 @@ var main = [
         node.find('*').css('height', '');
         node.find('*').css('min-height', '');
 
-        node.find('*').attr('width', '');
-        node.find('*').attr('min-width', '');
-        node.find('*').attr('height', '');
-        node.find('*').attr('min-height', '');
+        node.find('*').removeAttr('width');
+        node.find('*').removeAttr('min-width');
+        node.find('*').removeAttr('height');
+        node.find('*').removeAttr('min-height');
 
         var out = node.html();
         $log.debug(["removeUnexpectedTags", s, out].join('\n'));
