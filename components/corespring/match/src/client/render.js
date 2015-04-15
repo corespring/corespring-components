@@ -61,7 +61,7 @@ var main = [
         scope.editable = true;
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
-        scope.config = setConfig(dataAndSession.data.model);
+        setConfig(dataAndSession.data.model);
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
         scope.saveMatchModel = _.cloneDeep(scope.matchModel);
         renderMath();
@@ -302,7 +302,7 @@ var main = [
               'match-checkbox unknown');
           }
         }
-        return "";
+        return '';
       }
 
       function onClickMatch(row, index) {
