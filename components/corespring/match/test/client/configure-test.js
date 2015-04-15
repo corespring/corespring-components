@@ -106,7 +106,7 @@ describe('corespring:match:configure', function() {
     return {
       stopPropagation: function() {},
       preventDefault: function() {}
-    }
+    };
   }
 
   var MockServerLogic = {
