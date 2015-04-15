@@ -128,6 +128,23 @@ describe('corespring', function() {
       expect(matchSet[1].value).toBe(true);
     });
 
+    describe('tag filtering for labels',function(){
+      it('removes size settings', function(){
+        testModel.data.model.rows[0].labelHtml = '<div width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">some text</div>';
+        container.elements['1'].setDataAndSession(testModel);
+        rootScope.$digest();
+        var row = scope.matchModel.rows[0];
+        expect(row.labelHtml).toEqual('<div style="">some text</div>');
+      });
+
+      it('does not remove out other settings', function(){
+        testModel.data.model.rows[0].labelHtml = '<div class="someClass" style="border:none;">some text</div>';
+        container.elements['1'].setDataAndSession(testModel);
+        rootScope.$digest();
+        var row = scope.matchModel.rows[0];
+        expect(row.labelHtml).toEqual('<div class="someClass" style="border:none;">some text</div>');
+      });
+    });
 
     it('returns session correctly', function() {
       var component =  container.elements['1'];
@@ -229,7 +246,7 @@ describe('corespring', function() {
         });
       });
 
-      describe("sets shuffle", function(){
+      describe('sets shuffle', function(){
         it('to false if config undefined', function(){
           setModel(undefined, undefined);
           expect(scope.shuffle).toBe(false);
