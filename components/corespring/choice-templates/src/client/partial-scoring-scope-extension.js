@@ -50,7 +50,7 @@ exports.factory = [
         scope.canAddScoringScenario = false;
         scope.canRemoveScoringScenario = false;
 
-        scope.updatePartialScoringModel = function(numberOfCorrectResponses){
+        scope.updateNumberOfCorrectResponses = function(numberOfCorrectResponses){
           if(!scope.fullModel.partialScoring){
             scope.fullModel.partialScoring = [{"numberOfCorrect": 1, "scorePercentage": 25}];
           }
@@ -67,7 +67,7 @@ exports.factory = [
         };
 
         scope.$watch('fullModel.partialScoring.length', function(){
-          scope.updatePartialScoringModel(scope.numberOfCorrectResponses);
+          scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
         });
 
       };

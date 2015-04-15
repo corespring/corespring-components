@@ -246,7 +246,7 @@ var main = [
               });
             });
 
-            $scope.updatePartialScoringModel(sumCorrectResponses());
+            $scope.updateNumberOfCorrectResponses(sumCorrectResponses());
 
             $scope.componentState = "initialized";
           },
@@ -270,7 +270,7 @@ var main = [
               });
             });
             $scope.fullModel.correctResponse = res;
-            $scope.updatePartialScoringModel(sumCorrectResponses());
+            $scope.updateNumberOfCorrectResponses(sumCorrectResponses());
           }
         }, true);
 

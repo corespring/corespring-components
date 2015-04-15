@@ -121,7 +121,7 @@ var main = [
             scope.fullModel = fullModel;
             scope.model = fullModel.model;
             scope.correctAnswers = initCorrectAnswers(fullModel.model.answerAreas, fullModel.correctResponse);
-            scope.updatePartialScoringModel(sumCorrectAnswers());
+            scope.updateNumberOfCorrectResponses(sumCorrectAnswers());
             scope.componentState = "initialized";
           },
           getModel: function() {
@@ -136,7 +136,7 @@ var main = [
         scope.$watch('correctAnswers', function(newCorrectAnswers) {
           if (newCorrectAnswers) {
             scope.fullModel.correctResponse = correctAnswersToCorrectResponse(newCorrectAnswers);
-            scope.updatePartialScoringModel(sumCorrectAnswers());
+            scope.updateNumberOfCorrectResponses(sumCorrectAnswers());
           }
         }, true);
 

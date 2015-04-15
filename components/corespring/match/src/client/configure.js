@@ -89,13 +89,14 @@ var main = [
       scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
       scope.rowLabelUpdated = rowLabelUpdated;
-      scope.updatePartialScoringModel = updatePartialScoringModel;
+      scope.onChangeLayout = onChangeLayout;
+      scope.onChangeInputType = onChangeInputType;
 
       //the trottle is to avoid update problems of the editor models
-      scope.$watch('config.layout', _.throttle(watchLayout, 50));
+      scope.$watch('config.layout', _.throttle(onChangeLayout, 50));
 
       //the trottle is to avoid update problems of the editor models
-      scope.$watch('config.inputType', _.throttle(watchInputType, 50));
+      scope.$watch('config.inputType', _.throttle(onChangeInputType, 50));
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -119,12 +120,8 @@ var main = [
       function updateEditorModels() {
         $log.debug("updateEditorModels in");
         scope.matchModel = createMatchModel();
-        scope.updatePartialScoringModel(sumCorrectAnswers());
+        scope.numberOfCorrectResponses = sumCorrectAnswers();
         $log.debug("updateEditorModels out");
-      }
-
-      function updatePartialScoringModel(count){
-        scope.numberOfCorrectResponses = count;
       }
 
       /**
@@ -168,7 +165,7 @@ var main = [
         }
       }
 
-      function watchLayout(newValue, oldValue) {
+      function onChangeLayout(newValue, oldValue) {
         if (newValue === oldValue) {
           return;
         }
@@ -190,7 +187,7 @@ var main = [
         updateEditorModels();
       }
 
-      function watchInputType(newValue, oldValue) {
+      function onChangeInputType(newValue, oldValue) {
         if (newValue === oldValue) {
           return;
         }
@@ -374,9 +371,7 @@ var main = [
         var correctResponse = scope.matchModel.rows.map(function(row) {
           return {
             id: row.id,
-            matchSet: row.matchSet.map(function(match) {
-              return match.value;
-            })
+            matchSet: _.pluck(row.matchSet, 'value')
           };
         });
         scope.fullModel.correctResponse = correctResponse;
@@ -430,10 +425,10 @@ var main = [
         node.find('*').css('height', '');
         node.find('*').css('min-height', '');
 
-        node.find('*').attr('width', '');
-        node.find('*').attr('min-width', '');
-        node.find('*').attr('height', '');
-        node.find('*').attr('min-height', '');
+        node.find('*').removeAttr('width');
+        node.find('*').removeAttr('min-width');
+        node.find('*').removeAttr('height');
+        node.find('*').removeAttr('min-height');
 
         var out = node.html();
         $log.debug(["removeUnexpectedTags", s, out].join('\n'));

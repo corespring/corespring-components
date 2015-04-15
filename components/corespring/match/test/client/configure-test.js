@@ -38,10 +38,22 @@ describe('corespring:match:configure', function() {
           ],
       allowPartialScoring: true,
       partialScoring: [
-        {numberOfCorrect: 1, scorePercentage: 10},
-        {numberOfCorrect: 2, scorePercentage: 20},
-        {numberOfCorrect: 3, scorePercentage: 30},
-        {numberOfCorrect: 4, scorePercentage: 40}
+        {
+          numberOfCorrect: 1,
+          scorePercentage: 10
+        },
+        {
+          numberOfCorrect: 2,
+          scorePercentage: 20
+        },
+        {
+          numberOfCorrect: 3,
+          scorePercentage: 30
+        },
+        {
+          numberOfCorrect: 4,
+          scorePercentage: 40
+        }
       ],
       feedback: {
         correctFeedbackType: "default",
@@ -90,6 +102,13 @@ describe('corespring:match:configure', function() {
 
   beforeEach(angular.mock.module('test-app'));
 
+  function fakeEvent() {
+    return {
+      stopPropagation: function() {},
+      preventDefault: function() {}
+    }
+  }
+
   var MockServerLogic = {
     load: function() {
       return {
@@ -108,7 +127,7 @@ describe('corespring:match:configure', function() {
       $provide.value('ServerLogic', MockServerLogic);
       $provide.value('ImageUtils', MockImageUtils);
       $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
-      $provide.value('WiggiLinkFeatureDef', function(){});
+      $provide.value('WiggiLinkFeatureDef', function() {});
       $provide.value('LogFactory', {
         getLogger: function() {
           return {
@@ -180,10 +199,12 @@ describe('corespring:match:configure', function() {
     it('an empty correctResponse for the new row should have been added', function() {
       scope.addRow();
       var row = _.last(scope.model.rows);
-      var correctRow = _.find(scope.fullModel.correctResponse, {id:row.id});
+      var correctRow = _.find(scope.fullModel.correctResponse, {
+        id: row.id
+      });
       expect(correctRow).toBeDefined();
       var matchSet = correctRow.matchSet;
-      expect(matchSet).toEqual([false,false]);
+      expect(matchSet).toEqual([false, false]);
     });
 
   });
@@ -204,11 +225,348 @@ describe('corespring:match:configure', function() {
     });
 
     it('the correctResponse for this row should also be removed', function() {
-      var rowOne = _.find(scope.fullModel.correctResponse, {id:'row-1'});
+      var rowOne = _.find(scope.fullModel.correctResponse, {
+        id: 'row-1'
+      });
       expect(rowOne).toBeDefined();
       scope.removeRow(0);
-      rowOne = _.find(scope.fullModel.correctResponse, {id:'row-1'});
+      rowOne = _.find(scope.fullModel.correctResponse, {
+        id: 'row-1'
+      });
       expect(rowOne).toBeUndefined();
+    });
+
+  });
+
+  describe('activate', function() {
+    it("activates the editor with the given id", function() {
+      scope.activate(fakeEvent(), 4);
+      expect(scope.active[4]).toBeTruthy();
+    });
+
+    it("deactivates the editor that was active before", function() {
+      scope.activate(fakeEvent(), 4);
+      expect(scope.active[4]).toBeTruthy();
+      scope.activate(fakeEvent(), 5);
+      expect(scope.active[4]).toBeFalsy();
+    });
+  });
+
+  describe('onClickEdit', function() {
+    it("activates the editor with the given id", function() {
+      scope.onClickEdit(fakeEvent(), 4);
+      expect(scope.active[4]).toBeTruthy();
+    });
+  });
+
+  describe('deactivate', function() {
+    it("deactivates the editor that is active", function() {
+      scope.activate(fakeEvent(), 4);
+      expect(scope.active[4]).toBeTruthy();
+      scope.deactivate(fakeEvent());
+      expect(scope.active[4]).toBeFalsy();
+    });
+  });
+
+  describe('classForChoice', function() {
+    beforeEach(function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+
+    function assert(inputType, selected, expected) {
+      scope.config.inputType = inputType;
+      scope.matchModel.rows[0].matchSet[0].value = selected;
+      var value = scope.classForChoice(scope.matchModel.rows[0], 0);
+      expect(value).toEqual(expected, "for inputType,selected:" + [inputType, selected]);
+    }
+
+    it("returns correct classes", function() {
+      assert("radiobutton", false, 'match-radiobutton input');
+      assert("radiobutton", true, 'match-radiobutton input selected');
+      assert("checkbox", false, 'match-checkbox input');
+      assert("checkbox", true, 'match-checkbox input selected');
+    });
+  });
+
+  describe('columnLabelUpdated', function() {
+    beforeEach(function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+
+    it('assigns label to model', function() {
+      scope.matchModel.columns[0].labelHtml = 'Eins Zwei Drei';
+      scope.columnLabelUpdated(0);
+      expect(scope.model.columns[0].labelHtml).toEqual('Eins Zwei Drei');
+    });
+
+    it('removes size settings', function() {
+      scope.matchModel.columns[0].labelHtml = '<div width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">some text</div>';
+      scope.columnLabelUpdated(0);
+      expect(scope.model.columns[0].labelHtml).toEqual('<div style="">some text</div>');
+    });
+
+    it('does not remove other settings', function() {
+      scope.matchModel.columns[0].labelHtml = '<div class="someClass" style="border:none;">some text</div>';
+      scope.columnLabelUpdated(0);
+      expect(scope.model.columns[0].labelHtml).toEqual('<div class="someClass" style="border:none;">some text</div>');
+    });
+  });
+
+  describe('rowLabelUpdated', function() {
+    beforeEach(function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+
+    it('assigns label to model', function() {
+      scope.matchModel.rows[0].labelHtml = 'Eins Zwei Drei';
+      scope.rowLabelUpdated(0);
+      expect(scope.model.rows[0].labelHtml).toEqual('Eins Zwei Drei');
+    });
+
+    it('removes size settings', function() {
+      scope.matchModel.rows[0].labelHtml = '<div width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">some text</div>';
+      scope.rowLabelUpdated(0);
+      expect(scope.model.rows[0].labelHtml).toEqual('<div style="">some text</div>');
+    });
+
+    it('does not remove other settings', function() {
+      scope.matchModel.rows[0].labelHtml = '<div class="someClass" style="border:none;">some text</div>';
+      scope.rowLabelUpdated(0);
+      expect(scope.model.rows[0].labelHtml).toEqual('<div class="someClass" style="border:none;">some text</div>');
+    });
+  });
+
+  describe('isRadioButton', function() {
+    it('returns true if inputType is radiobutton', function() {
+      expect(scope.isRadioButton('radiobutton')).toBeTruthy();
+    });
+    it('returns false if inputType is not radiobutton', function() {
+      expect(scope.isRadioButton('something else')).toBeFalsy();
+    });
+  });
+
+  describe('isCheckBox', function() {
+    it('returns true if inputType is checkbox', function() {
+      expect(scope.isCheckBox('checkbox')).toBeTruthy();
+    });
+    it('returns false if inputType is not checkbox', function() {
+      expect(scope.isCheckBox('something else')).toBeFalsy();
+    });
+  });
+
+  describe('onClickMatch', function() {
+    beforeEach(function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+
+    function row() {
+      //the matchModel is updated after onClickMatch
+      //so we cannot keep a referrence to the row but
+      //need to get the row from there directly
+      return scope.matchModel.rows[0];
+    }
+
+    describe('input type radio', function() {
+      beforeEach(function() {
+        scope.config.inputType = 'radiobutton';
+      });
+      it('selects one value if inputType is radio', function() {
+        row().matchSet[0].value = false;
+        row().matchSet[1].value = false;
+        scope.onClickMatch(row(), 0);
+        expect(_.pluck(row().matchSet, 'value')).toEqual([true, false]);
+        scope.onClickMatch(row(), 1);
+        expect(_.pluck(row().matchSet, 'value')).toEqual([false, true]);
+      });
+
+      it('selects corresponding values in correctResponse', function() {
+        row().matchSet[0].value = false;
+        row().matchSet[1].value = false;
+        scope.onClickMatch(row(), 1);
+        expect(_.pluck(row().matchSet, 'value')).toEqual([false, true]);
+        expect(scope.fullModel.correctResponse[0].matchSet).toEqual([false, true]);
+      });
+
+    });
+
+    describe('input type checkbox', function() {
+      beforeEach(function() {
+        scope.config.inputType = 'checkbox';
+      });
+      it('selects multiple values if inputType is checkbox', function() {
+        row().matchSet[0].value = false;
+        row().matchSet[1].value = false;
+        scope.onClickMatch(row(), 0);
+        expect(_.pluck(row().matchSet, 'value')).toEqual([true, false]);
+        scope.onClickMatch(row(), 1);
+        expect(_.pluck(row().matchSet, 'value')).toEqual([true, true]);
+      });
+
+      it('selects corresponding values in correctResponse', function() {
+        row().matchSet[0].value = false;
+        row().matchSet[1].value = false;
+        scope.onClickMatch(row(), 0);
+        scope.onClickMatch(row(), 1);
+        expect(_.pluck(row().matchSet, 'value')).toEqual([true, true], 'in matchModel');
+        expect(scope.fullModel.correctResponse[0].matchSet).toEqual([true, true], 'in correct response');
+      });
+
+    });
+  });
+
+  describe('setModel', function() {
+    beforeEach(function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+    it('sets fullModel', function() {
+      expect(scope.fullModel).toBeDefined();
+    });
+    it('sets model', function() {
+      expect(scope.model).toBeDefined();
+      expect(scope.model).toBe(scope.fullModel.model);
+    });
+    it('sets config', function() {
+      expect(scope.config).toBeDefined();
+      expect(scope.config).toBe(scope.model.config);
+    });
+
+    it('creates matchModel', function() {
+      expect(scope.matchModel).toBeDefined();
+      expect(scope.matchModel.rows).toBeDefined();
+      expect(scope.matchModel.rows.length).toEqual(4);
+      expect(scope.matchModel.columns).toBeDefined();
+      expect(scope.matchModel.columns.length).toEqual(3);
+    });
+
+    it('updates numberOfCorrectResponses', function() {
+      expect(scope.numberOfCorrectResponses).toEqual(4);
+    });
+  });
+
+  describe('config', function() {
+    it('uses config if defined in  in model', function() {
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      expect(scope.config).toEqual(testModel.model.config);
+    });
+    describe('if config not defined', function(){
+      var testModel;
+      beforeEach(function(){
+        testModel = createTestModel();
+        delete testModel.model.config;
+      });
+      describe('model updates', function(){
+        it('removes answerType', function(){
+          testModel.model.answerType = 'MULTIPLE';
+          container.elements['1'].setModel(testModel);
+          expect(scope.model.answerType).toBeUndefined();
+        });
+      });
+      describe('config.inputType', function(){
+        it('sets inputType radio if answerType is not defined', function() {
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.inputType).toEqual('radiobutton');
+        });
+        it('sets inputType radio if answerType is anything else', function() {
+          testModel.model.answerType = 'anything else';
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.inputType).toEqual('radiobutton');
+        });
+        it('sets inputType checkbox if answerType is MULTIPLE', function() {
+          testModel.model.answerType = 'MULTIPLE';
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.inputType).toEqual('checkbox');
+        });
+      });
+      describe('config.layout', function() {
+        it('sets layout to three-columns if model has 3 columns', function () {
+          expect(testModel.model.columns.length).toEqual(3);
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.layout).toEqual('three-columns');
+        });
+        it('sets layout to three-columns if model has less than 3 columns', function () {
+          testModel.model.columns.splice(0, 1);
+          expect(testModel.model.columns.length).toEqual(2);
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.layout).toEqual('three-columns');
+        });
+        it('sets layout to four-columns if model has 4 columns', function () {
+          testModel.model.columns.push(testModel.model.columns[0]);
+          expect(testModel.model.columns.length).toEqual(4);
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.layout).toEqual('four-columns');
+        });
+        it('sets layout to five-columns if model has 5 columns', function () {
+          testModel.model.columns.push(testModel.model.columns[0]);
+          testModel.model.columns.push(testModel.model.columns[0]);
+          expect(testModel.model.columns.length).toEqual(5);
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.layout).toEqual('five-columns');
+        });
+        it('sets layout to five-columns if model has more than 5 columns', function () {
+          testModel.model.columns.push(testModel.model.columns[0]);
+          testModel.model.columns.push(testModel.model.columns[0]);
+          expect(testModel.model.columns.length).toEqual(5);
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.layout).toEqual('five-columns');
+        });
+      });
+      describe('config.shuffle', function(){
+        it('sets shuffle to false', function(){
+          container.elements['1'].setModel(testModel);
+          expect(scope.config.shuffle).toBe(false);
+        });
+      });
+    });
+  });
+
+  describe('onChangeInputType', function(){
+    it('setting inputType radio removes the correctAnswers but the first', function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      scope.config.inputType = "checkbox";
+      scope.fullModel.correctResponse[0].matchSet[0] = true;
+      scope.fullModel.correctResponse[0].matchSet[1] = true;
+      expect(scope.fullModel.correctResponse[0].matchSet[0]).toBe(true);
+      expect(scope.fullModel.correctResponse[0].matchSet[1]).toBe(true);
+      scope.onChangeInputType("radiobutton");
+      rootScope.$digest();
+      expect(scope.fullModel.correctResponse[0].matchSet[0]).toBe(true);
+      expect(scope.fullModel.correctResponse[0].matchSet[1]).toBe(false);
+    });
+  });
+
+  describe('onChangeLayout', function(){
+    beforeEach(function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+    it('adds columns when switching from three to four', function(){
+      expect(scope.matchModel.columns.length).toEqual(3);
+      scope.onChangeLayout('four-columns');
+      expect(scope.matchModel.columns.length).toEqual(4);
+    });
+    it('adds columns when switching from three to five', function(){
+      expect(scope.matchModel.columns.length).toEqual(3);
+      scope.onChangeLayout('five-columns');
+      expect(scope.matchModel.columns.length).toEqual(5);
+    });
+    it('removes columns when switching from five to four', function(){
+      scope.onChangeLayout('five-columns');
+      expect(scope.matchModel.columns.length).toEqual(5);
+      scope.onChangeLayout('four-columns');
+      expect(scope.matchModel.columns.length).toEqual(4);
+    });
+    it('removes columns when switching from five to three', function(){
+      scope.onChangeLayout('five-columns');
+      expect(scope.matchModel.columns.length).toEqual(5);
+      scope.onChangeLayout('three-columns');
+      expect(scope.matchModel.columns.length).toEqual(3);
     });
 
   });
