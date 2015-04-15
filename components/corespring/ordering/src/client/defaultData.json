@@ -39,6 +39,7 @@
     ],
     "config": {
       "shuffle": true,
+      "showOrdering": true,
       "choiceAreaLayout": "vertical",
       "choiceAreaLabel": "",
       "answerAreaLabel": "",
