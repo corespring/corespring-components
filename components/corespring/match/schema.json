@@ -1,5 +1,5 @@
 {
-  "title" : "CoreSpring Matching Question Schema",
+  "title" : "CoreSpring Choice Matrix Schema",
   "type" : "object",
   "properties" : {
     "componentType" : {
@@ -30,19 +30,55 @@
       "type" : "boolean",
       "description" : "If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted."
     },
-    "partialScores" : {
-      "type" : "object",
-      "description" : "An object which keys the id of the matching row to a percentage value corresponding to the weight to award it in the overall score."
+    "partialScoring" : {
+      "description" : "A description of the partial scoring to be used by the interaction.",
+      "type" : "array",
+      "items" : {
+        "description" : "A configuration object which maps the number of correct responses to the percentage to be awarded.",
+        "type" : "object",
+        "properties" : {
+          "numberOfCorrect" : {
+            "description" : "The number of correct responses.",
+            "type" : "number"
+          },
+          "scorePercentage" : {
+            "description" : "The percentage of the score to be awarded for the number of correct responses.",
+            "type" : "number",
+            "minimum" : 0,
+            "maximum" : 100
+          }
+        },
+        "required" : ["numberOfCorrect", "scorePercentage"]
+      }
     },
     "feedback" : {
       "type" : "object",
       "properties" : {
-        "description" : "Describes the feedback to be displayed to the user when the interaction is submitted."
+        "correctFeedbackType": {
+          "type" : "string",
+          "description" : "An identifier for the three types of feedback for correct answers: default, none and custom"
+        },
+        "correctFeedback": {
+          "type" : "string",
+          "description" : "The feedback text if correctFeedbackType is custom"
+        },
+        "partialFeedbackType": {
+          "type" : "string",
+          "description" : "An identifier for the three types of feedback for partially correct answers: default, none and custom"
+        },
+        "partialFeedback": {
+          "type" : "string",
+          "description" : "The feedback text if partialFeedbackType is custom"
+        },
+        "incorrectFeedbackType": {
+          "type" : "string",
+          "description" : "An identifier for the three types of feedback for incorrect answers: default, none and custom"
+        },
+        "incorrectFeedback": {
+          "type" : "string",
+          "description" : "The feedback text if incorrectFeedbackType is custom"
+        }
       }
-    },
-    "summaryFeedback" : {
-      "type" : "string",
-      "description" : "Overall feedback to be displayed to the user when the interaction is submitted."
     },
     "model" : {
       "type" : "object",
@@ -77,12 +113,25 @@
             }
           }
         },
-        "answerType" : {
-          "description" : "An enum describing the type of answer available in the match interaction.",
-          "enum" : ["YES_NO"]
+        "config" : {
+          "type" : "object",
+          "properties": {
+            "layout":{
+              "type" : "string",
+              "description" : "An identifier for the three different layouts: three-, four- and five-columns"
+            },
+            "inputType":{
+              "type" : "string",
+              "description" : "And identifier for the two types of inputs that can be used: radiobutton and checkbox"
+            },
+            "shuffle":{
+              "type" : "boolean",
+              "description" : "Wether or not the rows should be shuffled in the player"
+            }
+          }
         }
       },
-      "required" : ["columns", "rows", "answerType"]
+      "required" : ["columns", "rows", "config"]
     },
     "title" : {
       "description" : "A title for the interaction, displayed in the editor.",
