@@ -177,9 +177,12 @@ describe('corespring:match:configure', function() {
       expect(scope.model.rows.length).toEqual(5);
     });
 
-    it('the new row should not have something selected', function() {
+    it('an empty correctResponse for the new row should have been added', function() {
       scope.addRow();
-      var matchSet = scope.fullModel.correctResponse[4].matchSet;
+      var row = _.last(scope.model.rows);
+      var correctRow = _.find(scope.fullModel.correctResponse, {id:row.id});
+      expect(correctRow).toBeDefined();
+      var matchSet = correctRow.matchSet;
       expect(matchSet).toEqual([false,false]);
     });
 
