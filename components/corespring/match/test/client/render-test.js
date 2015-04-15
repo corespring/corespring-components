@@ -137,7 +137,7 @@ describe('corespring', function() {
         expect(row.labelHtml).toEqual('<div style="">some text</div>');
       });
 
-      it('does not remove out other settings', function(){
+      it('does not remove other settings', function(){
         testModel.data.model.rows[0].labelHtml = '<div class="someClass" style="border:none;">some text</div>';
         container.elements['1'].setDataAndSession(testModel);
         rootScope.$digest();

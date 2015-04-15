@@ -34,12 +34,13 @@ var main = [
     }
 
     function link(scope, element, attrs) {
+
+      var $log = LogFactory.getLogger('corespring-match-configure');
+
       var MIN_COLUMNS = 3;
       var MAX_COLUMNS = 5;
       var INPUT_TYPE_CHECKBOX = 'checkbox';
       var INPUT_TYPE_RADIOBUTTON = 'radiobutton';
-
-      var $log = LogFactory.getLogger('corespring-match-configure');
 
       scope.layouts = [
         {
@@ -546,7 +547,7 @@ var main = [
           '            ng-hide="active[row.wiggiId]" ',
           '            ng-bind-html-unsafe="cleanLabel(row)"',
           '           ></div>',
-          '          <div micro-wiggi=""',
+          '          <div mini-wiggi-wiz=""',
           '              ng-show="active[row.wiggiId]"',
           '              active="active[row.wiggiId]"',
           '              ng-model="row.labelHtml"',
@@ -590,7 +591,7 @@ var main = [
           '    ng-hide="active[column.wiggiId]" ',
           '    ng-bind-html-unsafe="cleanLabel(column)"',
           '   ></div>',
-          '  <div micro-wiggi=""',
+          '  <div mini-wiggi-wiz=""',
           '      ng-show="active[column.wiggiId]"',
           '      active="active[column.wiggiId]"',
           '      ng-model="column.labelHtml"',
