@@ -3,6 +3,7 @@
 var main = [
   '$sce', '$log',
   function($sce, $log) {
+    $log = console;
 
     "use strict";
 
@@ -16,11 +17,25 @@ var main = [
           scope.model = dataAndSession.data.model;
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
+
+          if (dataAndSession.session && dataAndSession.session.answers) {
+            scope.droppedChoices = _.map(dataAndSession.session.answers, function(a) {
+              var choiceForAnswer = _.find(scope.model.choices, function(c) {
+                return c.id === a.id;
+              });
+              return _.extend(a, choiceForAnswer);
+            });
+            scope.choices = _.reject(scope.choices, function(c) {
+              return _(dataAndSession.session.answers).pluck('id').contains(c.id);
+            });
+          }
         },
 
         getSession: function() {
           return {
-            answers: scope.response
+            answers: _(scope.droppedChoices).map(function(o) {
+              return _.pick(o, 'id', 'left', 'top')
+            }).value()
           };
         },
 
@@ -32,7 +47,8 @@ var main = [
         },
 
         reset: function() {
-          scope.serverResponse = undefined;
+          scope.droppedChoices = [];
+          scope.choices = _.cloneDeep(scope.model.choices);
         },
 
         isAnswerEmpty: function() {
@@ -48,30 +64,52 @@ var main = [
         }
       };
 
-      scope.dropChoiceDone = function(data, evt) {
-        var imagePosition = $('.background-image').offset();
-        console.log("img", imagePosition);
-        console.log("evt", evt);
-        data.left = evt.x - imagePosition.left - evt.event.offsetX - 5;
-        data.top = evt.y - imagePosition.top - evt.event.offsetY - 5;
-        console.log("Dropped: ", data.left, data.top);
-        scope.droppedChoices.push(data);
-      }
-      ;
-      scope.dropDroppedChoiceDone = function(data, evt) {
-        delete data.left;
-        delete data.top;
-        scope.choices.push(data);
+      scope.onDragStart = function(ev, ui, choice) {
+        console.log('drag start');
+        scope.draggedChoice = choice;
+
       };
 
-      scope.dragChoiceDone = function(data, evt) {
-        console.log("drag start: ", evt);
-        scope.choices = _.reject(scope.choices, data);
+      scope.draggableJquiOptions = {
+        revert: 'invalid'
       };
 
-      scope.dragDroppedChoiceDone = function(data, evt) {
-        scope.droppedChoices = _.reject(scope.droppedChoices, data);
+      var idEquals = function(choice) {
+        return function(c) {
+          return c.id === choice.id;
+        }
       };
+
+      scope.onDrop = function(ev, ui) {
+        var MARGIN = 5;
+        var offsetX = ev.clientX - ui.helper.offset().left;
+        var offsetY = ev.clientY - ui.helper.offset().top;
+
+        var imageOffset = $('.background-image').offset();
+        var newChoice = _.extend(scope.draggedChoice, {
+          left: ev.clientX - imageOffset.left - offsetX - MARGIN,
+          top: ev.clientY - imageOffset.top - offsetY - MARGIN
+        });
+        scope.choices = _.reject(scope.choices, idEquals(scope.draggedChoice));
+        scope.droppedChoices = _.reject(scope.droppedChoices, idEquals(scope.draggedChoice));
+        scope.droppedChoices.push(newChoice);
+      };
+
+      scope.onChoiceAreaDrop = function(ev, ui) {
+        console.log("Dropping In Choice Area: ", scope.draggedChoice);
+        scope.droppedChoices = _.reject(scope.droppedChoices, idEquals(scope.draggedChoice));
+        var newChoice = _.cloneDeep(scope.draggedChoice);
+        delete newChoice.left;
+        delete newChoice.top;
+        scope.choices.push(newChoice);
+      };
+
+
+      scope.$watch('droppedChoices', function(n, prev) {
+        if (_.isFunction(scope.answerChangeHandler) && !_.isEqual(n, prev)) {
+          scope.answerChangeCallback(n);
+        }
+      }, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
@@ -84,15 +122,16 @@ var main = [
       link: link,
       template: [
         '<div class="view-hotspot">',
-        '  <div class="background-image" ng-drop="true" ng-drop-success="dropChoiceDone($data,$event)">',
+        '  {{droppedChoices}}',
+        '  <div class="background-image" data-drop="true" jqyoui-droppable="{onDrop: \'onDrop()\'}">',
         '    <svg class="hotspots">',
-        '      <rect ng-repeat="hotspot in model.hotspots" coords-for-hotspot="hotspot"  style="stroke:#ff0000; fill: #0000ff" />',
+        '      <rect ng-repeat="hotspot in model.hotspots" coords-for-hotspot="hotspot" fill-opacity="0" style="stroke:#ff0000" />',
         '    </svg>',
-        '    <div class="dropped choice" ng-repeat="choice in droppedChoices" style="left: {{choice.left}}px; top: {{choice.top}}px" ng-drag="true" ng-drag-data="choice" ng-drag-success="dragDroppedChoiceDone($data,$event)">{{choice.label}}</div>',
-        '    <img src="http://www.newthinktank.com/wp-content/uploads/2011/08/US-Map-Detailed-EPS.png" />',
+        '    <div class="dropped choice" ng-repeat="choice in droppedChoices" style="left: {{choice.left}}px; top: {{choice.top}}px" data-drag="true" jqyoui-draggable="{onStart: \'onDragStart(choice)\'}" data-jqyoui-options="draggableJquiOptions">{{choice.label}}</div>',
+        '    <img ng-src="{{model.config.backgroundImage}}" />',
         '  </div>',
-        '  <div class="choices" ng-drop="true" ng-drop-success="dropDroppedChoiceDone($data,$event)">',
-        '    <div class="choice" ng-repeat="choice in choices" ng-drag="true" ng-drag-data="choice" ng-drag-success="dragChoiceDone($data,$event)">{{choice.label}}</div>',
+        '  <div class="choices" data-drop="true" jqyoui-droppable="{onDrop: \'onChoiceAreaDrop()\'}">',
+        '    <div class="choice" ng-repeat="choice in choices" data-drag="true" jqyoui-draggable="{onStart: \'onDragStart(choice)\'}" data-jqyoui-options="draggableJquiOptions">{{choice.label}}</div>',
         '  </div>',
         '</div>'
       ].join("\n")
