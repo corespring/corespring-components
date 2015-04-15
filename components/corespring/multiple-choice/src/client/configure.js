@@ -274,7 +274,7 @@ var main = [
         };
 
         function findFreeChoiceSlot() {
-          var slot = 0;
+          var slot = 1;
           var ids = _.pluck(scope.model.choices, 'value');
           while (_.contains(ids, "mc_" + slot)) {
             slot++;
