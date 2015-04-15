@@ -194,6 +194,7 @@ var main = [
 
           _.forEach(columns, function(col, index){
             col.cssClass = index === 0 ? 'question-header' : 'answer-header';
+            col.labelHtml = removeUnexpectedTags(col.labelHtml);
           });
 
           return columns;
@@ -201,15 +202,17 @@ var main = [
 
         function prepareRows() {
           var answersExist = (session && session.answers);
-          return rawModel.rows.map(function(row) {
+          var rows = rawModel.rows.map(function(row) {
             var cloneRow = _.cloneDeep(row);
 
+            cloneRow.labelHtml = removeUnexpectedTags(cloneRow.labelHtml);
             cloneRow.matchSet = answersExist ?
               createMatchSetFromSession(row.id) :
               createEmptyMatchSet(rawModel.columns.length - 1);
 
             return cloneRow;
           });
+          return rows;
         }
 
         function createMatchSetFromSession(id) {
@@ -228,6 +231,18 @@ var main = [
             };
           });
         }
+      }
+
+      function removeUnexpectedTags(s){
+        var node = $('<div>');
+        node.html(s);
+        node.find('*').css('width', null);
+        node.find('*').css('min-width', null);
+        node.find('*').css('height', null);
+        node.find('*').css('min-height', null);
+        var out = node.html();
+        $log.debug(["removeUnexpectedTags", s, out].join('\n'));
+        return out;
       }
 
       function classForChoice(row, index) {
@@ -394,11 +409,10 @@ var main = [
           '  <tr class="question-row"',
           '      ng-repeat="row in matchModel.rows"',
           '      question-id="{{row.id}}">',
-          '    <td class="question-cell" ng-bind-html-unsafe="row.labelHtml">',
-          '    </td>',
+          '    <td class="question-cell" ng-bind-html-unsafe="row.labelHtml"></td>',
           '    <td class="answer-expected-warning">',
           '      <div class="warning-holder" ng-if="row.answerExpected">',
-          '        <i class="fa fa-exclamation-triangle" tooltip="Answer expected"></i>',
+          '        <i class="fa fa-exclamation-triangle"></i>',
           '      </div>',
           '    </td>',
           '    <td class="answer-cell"',
