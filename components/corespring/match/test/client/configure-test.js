@@ -118,7 +118,7 @@ describe('corespring:match:configure', function() {
             warn: function() {},
             error: function() {},
             fatal: function() {},
-            info: function() {},
+            info: function() {}
           };
         }
       });
