@@ -412,12 +412,24 @@ var main = [
 
       function columnLabelUpdated(index) {
         $log.debug("columnLabelUpdated", index);
-        scope.model.columns[index].labelHtml = scope.matchModel.columns[index].labelHtml;
+        scope.model.columns[index].labelHtml = removeUnexpectedTags(scope.matchModel.columns[index].labelHtml);
       }
 
       function rowLabelUpdated(index) {
         $log.debug("rowLabelUpdated", index);
-        scope.model.rows[index].labelHtml = scope.matchModel.rows[index].labelHtml;
+        scope.model.rows[index].labelHtml = removeUnexpectedTags(scope.matchModel.rows[index].labelHtml);
+      }
+
+      function removeUnexpectedTags(s){
+        var node = $('<div>');
+        node.html(s);
+        node.find('*').css('width', null);
+        node.find('*').css('min-width', null);
+        node.find('*').css('height', null);
+        node.find('*').css('min-height', null);
+        var out = node.html();
+        $log.debug(["removeUnexpectedTags", s, out].join('\n'));
+        return out;
       }
 
       function isCheckBox(inputType) {
@@ -527,7 +539,7 @@ var main = [
           '            ng-hide="active[row.wiggiId]" ',
           '            ng-bind-html-unsafe="cleanLabel(row)"',
           '           ></div>',
-          '          <div mini-wiggi-wiz=""',
+          '          <div micro-wiggi=""',
           '              ng-show="active[row.wiggiId]"',
           '              active="active[row.wiggiId]"',
           '              ng-model="row.labelHtml"',
@@ -571,7 +583,7 @@ var main = [
           '    ng-hide="active[column.wiggiId]" ',
           '    ng-bind-html-unsafe="cleanLabel(column)"',
           '   ></div>',
-          '  <div mini-wiggi-wiz=""',
+          '  <div micro-wiggi=""',
           '      ng-show="active[column.wiggiId]"',
           '      active="active[column.wiggiId]"',
           '      ng-model="column.labelHtml"',
