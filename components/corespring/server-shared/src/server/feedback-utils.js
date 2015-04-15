@@ -23,9 +23,14 @@ var correctnessToFeedbackMap = {
   partial: 'partialFeedback'
 };
 
-exports.correctness = function(isCorrect, isPartiallyCorrect) {
+exports.correctness = correctness;
+exports.makeFeedback = makeFeedback;
+exports.defaultCreateOutcome = defaultCreateOutcome;
+
+
+function correctness(isCorrect, isPartiallyCorrect) {
   return isCorrect ? 'correct' : isPartiallyCorrect ? 'partial' : 'incorrect';
-};
+}
 
 /**
  * build the feedback object
@@ -34,7 +39,7 @@ exports.correctness = function(isCorrect, isPartiallyCorrect) {
  * @param  {object} defaults    optional default feedback object
  * @return {object}             the generated feedback object
  */
-exports.makeFeedback = function(feedback, correctness, defaults) {
+function makeFeedback(feedback, correctness, defaults) {
   defaults = defaults || exports.defaults;
   var key = correctnessToFeedbackMap[correctness];
   var feedbackType = key + 'Type';
@@ -46,7 +51,7 @@ exports.makeFeedback = function(feedback, correctness, defaults) {
   } else {
     return defaults[correctness];
   }
-};
+}
 
 /**
  * Quite a few comps seem to have a similar if not the same
@@ -62,7 +67,7 @@ exports.makeFeedback = function(feedback, correctness, defaults) {
  * @param totalCorrectAnswers
  * @returns {*}
  */
-exports.defaultCreateOutcome = function(
+function defaultCreateOutcome(
   question,
   answer,
   settings,
@@ -98,7 +103,7 @@ exports.defaultCreateOutcome = function(
 
   return makeResponse(
     isCorrect ? 'correct' : 'incorrect',
-    exports.correctness(isCorrect, isPartiallyCorrect),
+    correctness(isCorrect, isPartiallyCorrect),
     score);
 
   function makeResponse(correctness, correctClass, score) {
@@ -110,7 +115,7 @@ exports.defaultCreateOutcome = function(
       response.correctResponse = question.correctResponse;
     }
     if (settings.showFeedback) {
-      response.feedback = exports.makeFeedback(question.feedback, correctClass);
+      response.feedback = makeFeedback(question.feedback, correctClass);
     }
     if (question.comments) {
       response.comments = question.comments;
