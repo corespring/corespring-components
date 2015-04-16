@@ -9,26 +9,50 @@ var main = [
 
     var def;
 
+    var idEquals = function(choice) {
+      return function(c) {
+        return c.id === choice.id;
+      }
+    };
+
+
     var link = function(scope, element, attrs) {
+
+      function removeExplicitStyles() {
+        $(element).find('.choices').attr('style', '');
+        $(element).find('.background-image').attr('style', '');
+      }
+
+      function alignChoiceAreaToImage() {
+        if (_.contains(['left', 'right'], scope.model.config.choiceAreaPosition)) {
+          removeExplicitStyles();
+          var imgHeight = $(".background-image img").outerHeight();
+          var choicesHeight = $(element).find('.choices').outerHeight();
+          var biggerHeight = Math.max(imgHeight, choicesHeight);
+          $(element).find('.choices').height(biggerHeight);
+          $(element).find('.background-image').height(biggerHeight);
+        }
+      }
 
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
-          $log.debug("hotspot", dataAndSession);
+          $log.debug("[hotspot] setDataAndSession: ", dataAndSession);
           scope.model = dataAndSession.data.model;
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
 
           if (dataAndSession.session && dataAndSession.session.answers) {
-            scope.droppedChoices = _.map(dataAndSession.session.answers, function(a) {
-              var choiceForAnswer = _.find(scope.model.choices, function(c) {
-                return c.id === a.id;
-              });
-              return _.extend(a, choiceForAnswer);
+            scope.droppedChoices = _.map(dataAndSession.session.answers, function(answer) {
+              var choiceForAnswer = _.find(scope.model.choices, idEquals(answer));
+              return _.extend(answer, choiceForAnswer);
             });
             scope.choices = _.reject(scope.choices, function(c) {
               return _(dataAndSession.session.answers).pluck('id').contains(c.id);
             });
           }
+
+          removeExplicitStyles();
+          alignChoiceAreaToImage();
         },
 
         getSession: function() {
@@ -40,7 +64,7 @@ var main = [
         },
 
         setResponse: function(response) {
-          console.log('hotspot response ', response);
+          $log.debug('[hotspot] setResponse: ', response);
         },
 
         setMode: function(newMode) {
@@ -60,23 +84,22 @@ var main = [
         },
 
         editable: function(e) {
+          console.log('e', e);
           scope.editable = e;
         }
       };
 
       scope.onDragStart = function(ev, ui, choice) {
-        console.log('drag start');
         scope.draggedChoice = choice;
-
       };
 
       scope.draggableJquiOptions = {
-        revert: 'invalid'
+        revert: 'invalid',
       };
 
-      var idEquals = function(choice) {
-        return function(c) {
-          return c.id === choice.id;
+      scope.droppableJquiOptions = {
+        accept: function() {
+          return !_.contains(scope.choices, scope.draggedChoice);
         }
       };
 
@@ -96,7 +119,6 @@ var main = [
       };
 
       scope.onChoiceAreaDrop = function(ev, ui) {
-        console.log("Dropping In Choice Area: ", scope.draggedChoice);
         scope.droppedChoices = _.reject(scope.droppedChoices, idEquals(scope.draggedChoice));
         var newChoice = _.cloneDeep(scope.draggedChoice);
         delete newChoice.left;
@@ -104,16 +126,41 @@ var main = [
         scope.choices.push(newChoice);
       };
 
-
       scope.$watch('droppedChoices', function(n, prev) {
         if (_.isFunction(scope.answerChangeHandler) && !_.isEqual(n, prev)) {
           scope.answerChangeCallback(n);
         }
       }, true);
 
+      scope.$watch(function() {
+        alignChoiceAreaToImage();
+      });
+
+      $(element).find('.background-image img').load(function() {
+        alignChoiceAreaToImage();
+      });
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
+    var choices = function(positons) {
+      return [
+        '<div ng-if="model.config.choiceAreaPosition == \'' + positons[0] + '\' || model.config.choiceAreaPosition == \'' + positons[1] + '\'"',
+        '       class="choices {{model.config.choiceAreaPosition}}"',
+        '       data-drop="true"',
+        '       jqyoui-droppable="{onDrop: \'onChoiceAreaDrop()\'}"',
+        '       data-jqyoui-options="droppableJquiOptions">',
+        '  <div class="choice-wrapper" ng-repeat="choice in choices">',
+        '    <div class="choice"',
+        '         data-drag="editable"',
+        '         jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
+        '         data-jqyoui-options="draggableJquiOptions"',
+        '         ng-bind-html-unsafe="choice.label">',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    };
 
     def = {
       scope: {},
@@ -122,17 +169,22 @@ var main = [
       link: link,
       template: [
         '<div class="view-hotspot">',
-        '  {{droppedChoices}}',
+        choices(['left', 'top']),
         '  <div class="background-image" data-drop="true" jqyoui-droppable="{onDrop: \'onDrop()\'}">',
-        '    <svg class="hotspots">',
+        '    <svg ng-if="" class="hotspots">',
         '      <rect ng-repeat="hotspot in model.hotspots" coords-for-hotspot="hotspot" fill-opacity="0" style="stroke:#ff0000" />',
         '    </svg>',
-        '    <div class="dropped choice" ng-repeat="choice in droppedChoices" style="left: {{choice.left}}px; top: {{choice.top}}px" data-drag="true" jqyoui-draggable="{onStart: \'onDragStart(choice)\'}" data-jqyoui-options="draggableJquiOptions">{{choice.label}}</div>',
+        '    <div class="dropped choice"',
+        '         ng-repeat="choice in droppedChoices"',
+        '         style="left: {{choice.left}}px; top: {{choice.top}}px"',
+        '         data-drag="editable"',
+        '         jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
+        '         data-jqyoui-options="draggableJquiOptions"',
+        '         ng-bind-html-unsafe="choice.label">',
+        '    </div>',
         '    <img ng-src="{{model.config.backgroundImage}}" />',
         '  </div>',
-        '  <div class="choices" data-drop="true" jqyoui-droppable="{onDrop: \'onChoiceAreaDrop()\'}">',
-        '    <div class="choice" ng-repeat="choice in choices" data-drag="true" jqyoui-draggable="{onStart: \'onDragStart(choice)\'}" data-jqyoui-options="draggableJquiOptions">{{choice.label}}</div>',
-        '  </div>',
+        choices(['bottom', 'right']),
         '</div>'
       ].join("\n")
     };
@@ -144,29 +196,13 @@ var main = [
 var coordsForHotspot = [
   '$sce', '$log',
   function($sce, $log) {
-
     "use strict";
 
     var def;
-
     var link = function(scope, element, attrs) {
-      scope.coords = function(hotspot) {
-        return hotspot.coords;
-        var coords = hotspot.coords.split(",");
-        return {
-          x: coords[0],
-          y: coords[1],
-          x1: coords[2],
-          y1: coords[3],
-          height: coords[3] - coords[1],
-          width: coords[2] - coords[0]
-        };
-      };
-
       scope.$watch('coordsForHotspot', function(hotspot) {
-        console.log('h', hotspot);
         if (hotspot) {
-          var coords = scope.coords(hotspot);
+          var coords = hotspot.coords;
           $(element).attr('x', coords.left);
           $(element).attr('y', coords.top);
           $(element).attr('width', coords.width);
@@ -174,6 +210,7 @@ var coordsForHotspot = [
         }
       });
     };
+
     def = {
       scope: {
         coordsForHotspot: "="

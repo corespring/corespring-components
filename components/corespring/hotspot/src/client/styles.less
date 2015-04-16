@@ -3,7 +3,17 @@
 .view-hotspot {
 
   .background-image {
+    background-color: #ffeeee;
+    border-radius: 4px;
+    border: 1px solid orange;
+
     position: relative;
+    display: inline-block;
+    vertical-align: top;
+
+    img {
+      max-width: 420px;
+    }
 
     .hotspots {
       position: absolute;
@@ -20,6 +30,28 @@
     border: 1px solid orange;
     padding: 5px;
     min-height: 50px;
+    vertical-align: top;
+
+    &.top, &.bottom {
+      .choice-wrapper {
+        display: inline-block;
+      }
+    }
+
+    &.left {
+      margin-right: 5px;
+    }
+
+    &.right {
+      margin-left: 5px;
+    }
+    &.left, &.right {
+      display: inline-block;
+      width: 150px;
+      .choice-wrapper {
+        text-align: center;
+      }
+    }
   }
 
   .choice {
@@ -28,6 +60,11 @@
     border-radius: 4px;
     display: inline-block;
     margin: 5px;
+    padding: 5px;
+
+    img {
+      max-width: 120px;
+    }
 
     &.dropped {
       position: absolute;
