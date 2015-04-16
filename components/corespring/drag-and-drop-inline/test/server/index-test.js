@@ -85,23 +85,22 @@ describe('drag-and-drop-inline', function() {
       var answer = _.cloneDeep(answers);
       var settings = {};
       var outcome = server.createOutcome(question, answer, settings);
-
-      outcome.should.eql({
+      var expectedOutcome = {
         correctness: "incorrect",
-        correctResponse: _.cloneDeep(correctResponse),
         answer: _.cloneDeep(answers),
         score: 0,
         correctClass: correctClass,
         feedbackPerChoice: feedbackPerChoice
-      });
+      }
+      if(correctResponse !== undefined){
+        expectedOutcome.correctResponse = _.cloneDeep(correctResponse);
+      }        
+
+      outcome.should.eql(expectedOutcome);
     }
 
     it("without answer", function() {
-      assertIncorrect({
-        aa_1: ['c_1']
-      }, {
-        aa_1: []
-      }, "warning", {});
+      assertIncorrect(undefined, null, "warning", {});
     });
 
     it("with one incorrect answer", function() {
@@ -224,7 +223,6 @@ describe('drag-and-drop-inline', function() {
     outcome.should.eql({
       correctness: 'incorrect',
       score: 0,
-      correctResponse: null,
       correctClass: 'warning',
       answer: null,
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
@@ -245,7 +243,6 @@ describe('drag-and-drop-inline', function() {
     outcome.should.eql({
       correctness: 'incorrect',
       score: 0,
-      correctResponse: null,
       correctClass: 'warning',
       answer: null,
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
