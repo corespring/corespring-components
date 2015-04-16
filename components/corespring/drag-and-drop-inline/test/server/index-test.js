@@ -91,7 +91,7 @@ describe('drag-and-drop-inline', function() {
         score: 0,
         correctClass: correctClass,
         feedbackPerChoice: feedbackPerChoice
-      }
+      };
       if(correctResponse !== undefined){
         expectedOutcome.correctResponse = _.cloneDeep(correctResponse);
       }        
