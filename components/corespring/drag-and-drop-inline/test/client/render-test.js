@@ -139,7 +139,7 @@ describe('corespring:drag-and-drop-inline', function() {
 
       function setCorrectness(correctness){
         setAnswer('c_1');
-        setResponse({correctness: correctness, validAnswer: correctness !== "warning", correctResponse: {}});
+        setResponse({correctness: correctness, correctResponse: correctness === "warning" ? undefined : {}});
         wrapper = wrapElement();
       }
 

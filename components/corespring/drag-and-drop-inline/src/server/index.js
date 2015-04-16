@@ -26,7 +26,6 @@ exports.createOutcome = function (question, answer, settings) {
   if (isEmptyAnswer) {
     return addOptionalParts("warning", {
       correctness: 'incorrect',
-      correctResponse: question.correctResponse,
       answer: answer,
       score: 0,
       correctClass: 'warning',
@@ -94,7 +93,6 @@ exports.createOutcome = function (question, answer, settings) {
     answer: answer,
     feedbackPerChoice: feedbackPerChoice,
     score: score,
-    validAnswer: isCorrect !== "warning",
     correctClass: fb.correctness(isCorrect, isPartiallyCorrect)
   });
 };

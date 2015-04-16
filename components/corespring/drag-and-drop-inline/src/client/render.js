@@ -261,7 +261,7 @@ var main = [
         '  <div ng-if="model.config.choiceAreaPosition == \'below\'">', choiceArea(), '</div>',
         '  <div class="clearfix"></div>',
         '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-        '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="seeSolutionExpanded" ng-show="correctResponse && response.validAnswer">',
+        '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="seeSolutionExpanded" ng-show="correctResponse">',
         '    <div class="correct-answer-area-holder"></div>',
         '  </div>',
         '</div>'
