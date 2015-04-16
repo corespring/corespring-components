@@ -26,7 +26,6 @@ exports.createOutcome = function (question, answer, settings) {
   if (isEmptyAnswer) {
     return addOptionalParts("warning", {
       correctness: 'incorrect',
-      correctResponse: question.correctResponse,
       answer: answer,
       score: 0,
       correctClass: 'warning',
