@@ -183,7 +183,7 @@ exports.createOutcome = function(question, answer, settings) {
       score: 0,
       feedback: settings.showFeedback ? {
         emptyAnswer: true,
-        message: "You did not enter a response."
+        message: keys.DEFAULT_WARNING_FEEDBACK
       } : null
     };
   }
