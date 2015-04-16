@@ -94,6 +94,7 @@ exports.createOutcome = function (question, answer, settings) {
     answer: answer,
     feedbackPerChoice: feedbackPerChoice,
     score: score,
+    validAnswer: isCorrect !== "warning",
     correctClass: fb.correctness(isCorrect, isPartiallyCorrect)
   });
 };

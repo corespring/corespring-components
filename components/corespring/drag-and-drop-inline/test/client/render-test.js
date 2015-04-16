@@ -139,7 +139,7 @@ describe('corespring:drag-and-drop-inline', function() {
 
       function setCorrectness(correctness){
         setAnswer('c_1');
-        setResponse({correctness: correctness, correctResponse: {}});
+        setResponse({correctness: correctness, validAnswer: correctness !== "warning", correctResponse: {}});
         wrapper = wrapElement();
       }
 
@@ -163,6 +163,12 @@ describe('corespring:drag-and-drop-inline', function() {
 
       it('should hide the button if answer is correct', function() {
         setCorrectness('correct');
+
+        expect($(wrapper.find(".see-solution")).attr('class')).toContain('ng-hide');
+      });
+
+      it('should hide the button if answer is invalid', function() {
+        setCorrectness('warning');
 
         expect($(wrapper.find(".see-solution")).attr('class')).toContain('ng-hide');
       });
