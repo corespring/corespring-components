@@ -36,7 +36,7 @@ var main = [
 
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
-          $log.debug("[hotspot] setDataAndSession: ", dataAndSession);
+          $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
           scope.model = dataAndSession.data.model;
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
@@ -64,7 +64,7 @@ var main = [
         },
 
         setResponse: function(response) {
-          $log.debug('[hotspot] setResponse: ', response);
+          $log.debug('[graphic gap match] setResponse: ', response);
         },
 
         setMode: function(newMode) {
@@ -168,7 +168,7 @@ var main = [
       restrict: 'EA',
       link: link,
       template: [
-        '<div class="view-hotspot">',
+        '<div class="view-graphic-gap-match">',
         choices(['left', 'top']),
         '  <div class="background-image" data-drop="true" jqyoui-droppable="{onDrop: \'onDrop()\'}">',
         '    <svg ng-if="" class="hotspots">',

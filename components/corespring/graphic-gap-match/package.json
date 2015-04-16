@@ -37,8 +37,8 @@
   },
 
   "released": false,
-  "title": "Hotspot Drag And Drop",
+  "title": "Graphic Gap Match",
   "titleGroup": "Mathematics",
-  "name": "hotspot",
+  "name": "graphic-gap-match",
   "organization": "corespring"
 }

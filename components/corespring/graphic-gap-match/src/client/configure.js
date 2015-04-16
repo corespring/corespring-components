@@ -43,7 +43,7 @@ var main = [
       replace: true,
       link: function(scope, element, attrs) {
         scope.defaults = scope.data.defaultData.model.config;
-        ChoiceTemplates.extendScope(scope, 'corespring-hotspot');
+        ChoiceTemplates.extendScope(scope, 'corespring-graphic-gap-match');
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
@@ -58,7 +58,7 @@ var main = [
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
       },
       template: [
-        '<div class="config-hotspot">',
+        '<div class="config-graphic-gap-match">',
         '  <div navigator-panel="Design">',
         '  <p>',
         '    In this interaction, students plot points, line segments or rays on a number line.',
