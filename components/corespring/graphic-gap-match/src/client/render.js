@@ -17,7 +17,7 @@ var main = [
 
 
     var link = function(scope, element, attrs) {
-
+      scope.editable = true;
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
@@ -150,7 +150,7 @@ var main = [
         '<div class="view-graphic-gap-match {{model.config.choiceAreaPosition}}">',
         choices(['left', 'top']),
         '  <div class="background-image" data-drop="true" jqyoui-droppable="{onDrop: \'onDrop()\'}">',
-        '    <svg ng-if="" class="hotspots">',
+        '    <svg ng-if="model.config.showHotspots" class="hotspots">',
         '      <rect ng-repeat="hotspot in model.hotspots" coords-for-hotspot="hotspot" fill-opacity="0" style="stroke:#ff0000" />',
         '    </svg>',
         '    <div class="dropped choice"',
