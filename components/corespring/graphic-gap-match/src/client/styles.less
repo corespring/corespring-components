@@ -3,13 +3,19 @@
 
 .view-graphic-gap-match {
 
-  &.left, &.right {
-    display: table;
-    border-spacing: 5px;
+  .main-container {
+    &.left, &.right {
+      display: table;
+      border-spacing: 5px;
 
-    .background-image {
-      display: table-cell;;
+      .background-image {
+        display: table-cell;;
+      }
     }
+  }
+
+  .button-row {
+    float: right;
   }
 
   .background-image {
@@ -20,7 +26,7 @@
     vertical-align: top;
 
     img {
-      max-width: 420px;
+      max-width: 430px;
     }
 
     .hotspots {
