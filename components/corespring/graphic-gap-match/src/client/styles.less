@@ -3,13 +3,20 @@
 
 .view-graphic-gap-match {
 
+  &.left, &.right {
+    display: table;
+    border-spacing: 5px;
+
+    .background-image {
+      display: table-cell;;
+    }
+  }
+
   .background-image {
-    background-color: #ffeeee;
+    background-color: #eeffee;
     border-radius: 4px;
     border: 1px solid orange;
-
     position: relative;
-    display: inline-block;
     vertical-align: top;
 
     img {
@@ -35,19 +42,20 @@
 
     &.top, &.bottom {
       .choice-wrapper {
-        display: inline-block;
+        float: left;
       }
     }
 
-    &.left {
-      margin-right: 5px;
+    &.top {
+      margin-bottom: 5px;
     }
 
-    &.right {
-      margin-left: 5px;
+    &.bottom {
+      margin-top: 5px;
     }
+
     &.left, &.right {
-      display: inline-block;
+      display: table-cell;;
       width: 150px;
       .choice-wrapper {
         text-align: center;
@@ -65,6 +73,10 @@
 
     img {
       max-width: 120px;
+    }
+
+    &.placeholder {
+      visibility: hidden;
     }
 
     &.dropped {

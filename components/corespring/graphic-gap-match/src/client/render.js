@@ -18,22 +18,6 @@ var main = [
 
     var link = function(scope, element, attrs) {
 
-      function removeExplicitStyles() {
-        $(element).find('.choices').attr('style', '');
-        $(element).find('.background-image').attr('style', '');
-      }
-
-      function alignChoiceAreaToImage() {
-        if (_.contains(['left', 'right'], scope.model.config.choiceAreaPosition)) {
-          removeExplicitStyles();
-          var imgHeight = $(".background-image img").outerHeight();
-          var choicesHeight = $(element).find('.choices').outerHeight();
-          var biggerHeight = Math.max(imgHeight, choicesHeight);
-          $(element).find('.choices').height(biggerHeight);
-          $(element).find('.background-image').height(biggerHeight);
-        }
-      }
-
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
@@ -50,9 +34,6 @@ var main = [
               return _(dataAndSession.session.answers).pluck('id').contains(c.id);
             });
           }
-
-          removeExplicitStyles();
-          alignChoiceAreaToImage();
         },
 
         getSession: function() {
@@ -94,7 +75,7 @@ var main = [
       };
 
       scope.draggableJquiOptions = {
-        revert: 'invalid',
+        revert: 'invalid'
       };
 
       scope.droppableJquiOptions = {
@@ -132,14 +113,6 @@ var main = [
         }
       }, true);
 
-      scope.$watch(function() {
-        alignChoiceAreaToImage();
-      });
-
-      $(element).find('.background-image img').load(function() {
-        alignChoiceAreaToImage();
-      });
-
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
@@ -153,11 +126,17 @@ var main = [
         '  <div class="choice-wrapper" ng-repeat="choice in choices">',
         '    <div class="choice"',
         '         data-drag="editable"',
-        '         jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
+        '         jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
         '         data-jqyoui-options="draggableJquiOptions"',
         '         ng-bind-html-unsafe="choice.label">',
         '    </div>',
         '  </div>',
+        '  <div class="choice-wrapper" ng-repeat="choice in droppedChoices">',
+        '    <div class="choice placeholder"',
+        '         ng-bind-html-unsafe="choice.label">',
+        '    </div>',
+        '  </div>',
+        '  <div class="clearfix"></div>',
         '</div>'
       ].join('');
     };
@@ -168,7 +147,7 @@ var main = [
       restrict: 'EA',
       link: link,
       template: [
-        '<div class="view-graphic-gap-match">',
+        '<div class="view-graphic-gap-match {{model.config.choiceAreaPosition}}">',
         choices(['left', 'top']),
         '  <div class="background-image" data-drop="true" jqyoui-droppable="{onDrop: \'onDrop()\'}">',
         '    <svg ng-if="" class="hotspots">',
