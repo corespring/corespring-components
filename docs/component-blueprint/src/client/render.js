@@ -131,7 +131,7 @@ var main = [
 
     function template() {
       return [
-        '<div class="render-corespring-dnd-categorize">',
+        '<div class="render-corespring-blueprint">',
         undoStartOver(),
         mainInteraction(),
         itemFeedbackPanel(),
@@ -151,7 +151,7 @@ var main = [
 
       function mainInteraction() {
         return [
-          '<div class="dnd-categorize-interaction">',
+          '<div class="dnd-blueprint-interaction">',
           //TODO Fill in template code to render the interaction
           '</div>'
         ].join('');
