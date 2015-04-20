@@ -1,7 +1,7 @@
 {
   "name": "blueprint",
-  "title": "Blueprint Component",
-  "titleGroup": "Fixed Choice",
+  "title": "NAME OF THE COMPONENT IN THE EDITOR MENU",
+  "titleGroup": "NAME OF THE GROUP IN THE EDITOR MENU",
   "organization": "corespring",
   "version": "0.0.1",
   "released": false,
