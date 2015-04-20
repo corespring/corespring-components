@@ -12,7 +12,7 @@ var main = [
     };
 
     function link(scope, element, attrs) {
-      scope.stack = [];
+      scope.undoStack = [];
       scope.editable = false;
       scope.isSeeAnswerOpen = false;
 
@@ -70,7 +70,7 @@ var main = [
 
       function reset() {
         scope.editable = true;
-        scope.stack = [];
+        scope.undoStack = [];
         scope.session = {};
         scope.isSeeAnswerOpen = false;
         delete scope.response;
@@ -85,22 +85,22 @@ var main = [
 
       function onChangeRenderModel(newValue, oldValue) {
         //console.log(":onChangeRenderModel", newValue);
-        if (newValue && !_.isEqual(newValue, _.last(scope.stack))) {
-          scope.stack.push(_.cloneDeep(newValue));
+        if (newValue && !_.isEqual(newValue, _.last(scope.undoStack))) {
+          scope.undoStack.push(_.cloneDeep(newValue));
         }
       }
 
       function startOver() {
-        scope.stack = [_.first(scope.stack)];
-        revertToState(_.first(scope.stack));
+        scope.undoStack = [_.first(scope.undoStack)];
+        revertToState(_.first(scope.undoStack));
       }
 
       function undo() {
-        if (scope.stack.length < 2) {
+        if (scope.undoStack.length < 2) {
           return;
         }
-        scope.stack.pop();
-        revertToState(_.last(scope.stack));
+        scope.undoStack.pop();
+        revertToState(_.last(scope.undoStack));
       }
 
       function revertToState(state) {
@@ -142,8 +142,8 @@ var main = [
       function undoStartOver() {
         return [
           '<div ng-show="editable" class="undo-start-over pull-right">',
-          '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="stack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
-          '  <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="stack.length < 2">Start over</button>',
+          '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="undoStack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
+          '  <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="undoStack.length < 2">Start over</button>',
           '</div>',
           '<div class="clearfix"></div>'
         ].join('');
