@@ -1,6 +1,6 @@
 @import '../../../../../less/common';
 
-@hotspot-border-color: #ff0000;
+@hotspot-border-color: #000;
 
 .hotspot-border() {
   border: 1px solid @hotspot-border-color;
@@ -105,11 +105,32 @@
     }
 
     &.correct {
+      position: absolute;
       .correct-input();
+
+      &:after {
+        font-family: FontAwesome;
+        content: '\f058';
+        color: #3c763d;
+        position: absolute;
+        right: -4px;
+        top: -8px;
+        font-size: 17px
+      }
     }
 
     &.incorrect {
+      position: absolute;
       .incorrect-input();
+      &:after {
+        font-family: FontAwesome;
+        content: '\f057';
+        color: #ec971f;
+        position: absolute;
+        right: -4px;
+        top: -8px;
+        font-size: 17px;
+      }
     }
   }
 

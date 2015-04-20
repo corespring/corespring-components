@@ -230,7 +230,7 @@ var main = [
         '           coords-for-hotspot="hotspot"',
         '           populate="style"',
         '           class="hotspot"',
-      '             ng-class="{withBorder: model.config.showHotspots}">',
+       '             ng-class="{withBorder: model.config.showHotspots}">',
         '      <div class="choice correct"',
         '           ng-repeat="choice in correctAnswerForHotspot(hotspot)"',
         '           ng-bind-html-unsafe="choice.label">',
@@ -239,9 +239,7 @@ var main = [
         '      </div>',
         '      <img ng-src="{{model.config.backgroundImage}}" />',
         '    </div>',
-
         '  </div>',
-
         '</div>'
       ].join("\n")
     };
