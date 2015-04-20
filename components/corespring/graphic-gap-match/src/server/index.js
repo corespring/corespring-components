@@ -5,6 +5,7 @@ var keys = fb.keys;
 exports.keys = keys;
 
 exports.createOutcome = function(question, answer, settings) {
+  console.log('a',answer);
 
   var isChoiceInHotspot = function(choice, hotspot) {
     var choiceWidth = 10;
@@ -28,6 +29,15 @@ exports.createOutcome = function(question, answer, settings) {
     }
   };
 
+  var getFeedbackForChoices = function() {
+    return _.map(answer, function(a) {
+       return {
+         id: a.id,
+         isCorrect: isAnswerCorrect(a)
+       }
+    });
+  };
+
   if (!answer || _.isEmpty(answer)) {
     return {
       correctness: 'warning',
@@ -45,14 +55,20 @@ exports.createOutcome = function(question, answer, settings) {
   }
 
   var isCorrect = answer.length === question.correctResponse.length && _.every(answer, isAnswerCorrect);
+  var isPartiallyCorrect = false;
+
   var response = {
     correctness: isCorrect ? "correct" : "incorrect",
+    correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
     correctResponse: question.correctResponse,
     score: isCorrect ? 1 : 0
   };
 
   if (settings.showFeedback) {
-    response.feedback = {};
+    response.feedback = {
+      choices: getFeedbackForChoices(),
+      message: fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect))
+    };
   }
 
   return response;
