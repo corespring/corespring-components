@@ -25,7 +25,7 @@ exports.createOutcome = function(question, answer, settings) {
       var hotspotForChoice = _.find(question.model.hotspots, function(hs) {
         return isChoiceInHotspot(answer, hs);
       });
-      return hotspotForChoice && hotspotForChoice.id === correctHotspot;
+      return (!_.isUndefined(hotspotForChoice) && hotspotForChoice.id === correctHotspot);
     }
   };
 
