@@ -19,18 +19,25 @@ var main = [
 
       //--------------------------
 
-      function setModel(model) {
-        scope.model = model;
+      function setModel(fullModel) {
+        //The difference between fullModel and model is that
+        //model should only contain the data that is necessary to
+        //render the interaction in the player's "gather" mode,
+        //iow. before the answer has been submitted. This to avoid
+        //cheating
+        scope.fullModel = fullModel;
+        scope.model = fullModel.model;
       }
 
       function getModel() {
-        return scope.model;
+        var model = _.cloneDeep(scope.fullModel);
+        return model;
       }
     }
 
     function template() {
       return [
-          '<div class="config-corespring-component-blueprint">',
+          '<div class="config-corespring-blueprint">',
           '  <div navigator-panel="Design">',
           designTemplate(),
           '  </div>',

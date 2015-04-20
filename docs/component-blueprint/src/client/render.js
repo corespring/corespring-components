@@ -26,18 +26,23 @@ var main = [
         resetStash: function () {
         },
         isAnswerEmpty: isAnswerEmpty,
+        answerChangedHandler: function(callback){
+
+        },
         editable: setEditable
       };
 
+
+
       scope.undo = undo;
       scope.startOver = startOver;
-      scope.$watch("renderModel", watchRenderModel, true);
+      scope.$watch("renderModel", onChangeRenderModel, true);
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
       //-----------------------------------------------------------------
 
       function log() {
-        console.log.apply(console, ['[corespring-component-blueprint]', arguments]);
+        console.log.apply(console, ['[corespring-blueprint]', arguments]);
       }
 
       function setDataAndSession(dataAndSession) {
@@ -78,8 +83,8 @@ var main = [
         };
       }
 
-      function watchRenderModel(newValue, oldValue) {
-        //console.log(":watchRenderModel", newValue);
+      function onChangeRenderModel(newValue, oldValue) {
+        //console.log(":onChangeRenderModel", newValue);
         if (newValue && !_.isEqual(newValue, _.last(scope.stack))) {
           scope.stack.push(_.cloneDeep(newValue));
         }
