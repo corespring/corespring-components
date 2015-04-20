@@ -1,0 +1,77 @@
+{
+  "title" : "CoreSpring Blueprint Component Question Schema",
+  "type" : "object",
+  "properties" : {
+    "allowPartialScoring" : {
+      "type" : "boolean",
+      "description" : "If true, partial scoring is enabled for the interaction."
+    },
+    "correctResponse" : {
+      "type" : "object",
+      "description" : "TODO Describe the format of the object"
+    },
+    "feedback" : {
+      "description" : "Describes feedback which should be presented to the user when the component is submitted.",
+      "type" : "object",
+      "correctFeedback" : {
+        "description" : "A feedback string that will be shown for a correct response if correctFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "correctFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if all of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "incorrectFeedback" : {
+        "description" : "A feedback string that will be shown for a incorrect response if incorrectFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "incorrectFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if no correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "partialFeedback" : {
+        "description" : "A feedback string that will be shown for a partially correct response if partialFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "partialFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if some of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      }
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "config" : {
+          "type" : "object",
+          "description" : "An object which describes the configuration parameters for the interaction.",
+          "properties" : {
+          },
+          "required" : []
+        }
+      },
+      "required" : ["config"]
+    },
+    "partialScoring" : {
+      "description" : "A description of the partial scoring to be used by the interaction.",
+      "type" : "array",
+      "items" : {
+        "description": "A configuration object which maps the number of correct responses to the percentage to be awarded.",
+        "type": "object",
+        "properties": {
+          "numberOfCorrect": {
+            "description": "The number of correct responses.",
+            "type": "number"
+          },
+          "scorePercentage": {
+            "description": "The percentage of the score to be awarded for the number of correct responses.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "required": ["numberOfCorrect", "scorePercentage"]
+      }
+    }
+  },
+  "required" : ["correctResponse", "feedback", "model"]
+}

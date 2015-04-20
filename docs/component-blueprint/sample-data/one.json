@@ -1,0 +1,20 @@
+{
+  "item": {
+    "metadata": {
+      "title": ""
+    },
+    "xhtml": "<div corespring-blueprint-component='' id='blueprint'/>",
+    "components": {
+      "blueprint": {
+        "componentType": "corespring-blueprint-component",
+        "correctResponse": {
+
+        },
+        "model": {
+          "config": {
+          }
+        }
+      }
+    }
+  }
+}
