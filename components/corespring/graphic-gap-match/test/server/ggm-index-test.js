@@ -94,7 +94,6 @@ describe.only('hotspot', function() {
   });
 
   describe('correctness', function() {
-
     it('should return correct outcome if answer is correct', function() {
       var answer = [
         {id: "c1", left: 25, top: 25},
@@ -122,7 +121,35 @@ describe.only('hotspot', function() {
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
       expect(outcome).to.have.property("correctness").eql("incorrect");
     });
-
-
   });
+
+  describe.only('feedback', function() {
+    it('correct answer should give correct feedback', function() {
+      var answer = [
+        {id: "c1", left: 25, top: 25},
+        {id: "c2", left: 25, top: 145}
+      ];
+      var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
+      expect(outcome.correctness).to.eql('correct');
+    });
+
+    it('incorrect answer should give incorrect feedback', function() {
+      var answer = [
+        {id: "c1", left: 25, top: 25},
+        {id: "c2", left: 175, top: 145}
+      ];
+      var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
+      expect(outcome.correctness).to.eql('incorrect');
+    });
+
+    it('should return feedback for choices', function() {
+      var answer = [
+        {id: "c1", left: 25, top: 25},
+        {id: "c2", left: 125, top: 145}
+      ];
+      var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
+      expect(outcome.feedback.choices).to.eql([{id: "c1", isCorrect: true}, {id: "c2", isCorrect: false}]);
+    });
+  });
+
 });
