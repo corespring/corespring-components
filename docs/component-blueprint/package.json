@@ -1,0 +1,20 @@
+{
+  "name": "blueprint-component",
+  "title": "Blueprint Component",
+  "titleGroup": "Fixed Choice",
+  "organization": "corespring",
+  "version": "0.0.1",
+  "released": false,
+  "dependencies": {
+    "client": {
+    },
+    "server":{
+    }
+  },
+  "libraries": [
+    {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    }
+  ]
+}
