@@ -128,11 +128,11 @@ var main = [
       };
 
       scope.onDrop = function(ev, ui) {
-        var MARGIN = 1;
+        var MARGIN = 2;
         var offsetX = ev.clientX - ui.helper.offset().left;
         var offsetY = ev.clientY - ui.helper.offset().top;
 
-        var imageOffset = $('.background-image').offset();
+        var imageOffset = $(element).find('.background-image').offset();
         var newChoice = _.extend(scope.draggedChoice, {
           left: ev.clientX - imageOffset.left - offsetX - MARGIN,
           top: ev.clientY - imageOffset.top - offsetY - MARGIN,
