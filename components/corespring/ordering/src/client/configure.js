@@ -104,7 +104,7 @@ var main = [
         '        Drag and order correct answers here.',
         '      </div>',
         '      <div>',
-        '        <checkbox class="show-ordering" ng-model="model.config.showOrdering">Show ordering</checkbox>',
+        '        <checkbox class="show-ordering" ng-model="model.config.showOrdering">Show numbered guides</checkbox>',
         '      </div>',
         '    </div>',
         '  </div>',
