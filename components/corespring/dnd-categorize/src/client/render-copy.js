@@ -75,7 +75,7 @@ function CompactLayout(initialConfig, layoutRunner) {
 
   this.refresh = function() {
     var choiceElements = this.config.container.find(this.config.itemSelector);
-    var reverseSortedChoices = _(_.sortBy(choiceElements, getElementHeight)).reverse().value();
+    var reverseSortedChoices = _(choiceElement).sortBy(getElementHeight).reverse().value();
     var reverseSortedChoicesHeights = _(reverseSortedChoices).map(getElementHeight).value();
     var someElementsHaveZeroHeight = _.some(reverseSortedChoicesHeights, function(height) {
       return height === 0;

@@ -52,29 +52,32 @@ function LayoutRunner(interval) {
  */
 function CompactLayout(initialConfig, layoutRunner) {
 
-  this.config = _.assign({
+  var newConfig = true;
+  var config = _.assign({
     gutter: 0,
     border: 0
   }, initialConfig);
+  var choiceSizeCache = [];
 
   this.runner = layoutRunner;
 
-  function getElementHeight(el) {
-    if (!el) {
-      return 0;
-    }
-    return $(el).height();
+
+  this.updateConfig = updateConfig.bind(this);
+  this.refresh = refresh.bind(this);
+  this.start = startRunner.bind(this);
+  this.cancel = cancelRunner.bind(this);
+
+  this.start();
+
+  //-----------------------------------------
+
+  function updateConfig(newConfig) {
+    newConfig = true;
+    config = _.assign(config, newConfig);
   }
 
-  this.choiceSizeCache = [];
-
-  this.updateConfig = function(newConfig) {
-    this.newConfig = true;
-    this.config = _.assign(this.config, newConfig);
-  };
-
-  this.refresh = function() {
-    var choiceElements = this.config.container.find(this.config.itemSelector);
+  function refresh() {
+    var choiceElements = config.container.find(config.itemSelector);
     var reverseSortedChoices = _(_.sortBy(choiceElements, getElementHeight)).reverse().value();
     var reverseSortedChoicesHeights = _(reverseSortedChoices).map(getElementHeight).value();
     var someElementsHaveZeroHeight = _.some(reverseSortedChoicesHeights, function(height) {
@@ -87,63 +90,69 @@ function CompactLayout(initialConfig, layoutRunner) {
 
     this.newConfig = false;
     this.choiceSizeCache = reverseSortedChoicesHeights;
-    var numColumns = Math.floor(this.config.container.width() / this.config.cellWidth);
-    var columns = _.map(_.range(numColumns), function() {
-      return [];
-    });
 
-    if (!columns || columns.length === 0) {
+    var numColumns = this.config.numColumns || Math.floor(this.config.container.width() / this.config.cellWidth);
+    if (numColumns === 0) {
       return;
     }
-
-    function getColumnHeight(column) {
-      return _.reduce(column, function(acc, el) {
-        return acc + $(el).height();
-      }, 0);
-    }
+    var columns = _.range(numColumns).map(function() {
+      return [];
+    });
 
     _.forEach(reverseSortedChoices, function(choice) {
       var sortedColumns = _.sortBy(columns, getColumnHeight);
       sortedColumns[0].push(choice);
     });
 
-    this.getChoiceTop = function(choices, index) {
-      return _.reduce(_.take(choices, index), function(acc, choice) {
-          return $(choice).height() + acc;
-        }, 0) + (this.config.gutter * index);
-    };
-
     columns.forEach(function(colChoices, colIndex) {
       colChoices.forEach(function(choice, choiceIndex) {
         $(choice).css({
           position: 'absolute',
-          top: this.getChoiceTop(colChoices, choiceIndex),
+          top: getChoiceTop(colChoices, choiceIndex),
           left: (this.config.cellWidth + this.config.gutter) * colIndex
         });
       }, this);
     }, this);
 
-    this.getContainerHeight = function() {
-      var tallestColumn = _.sortBy(columns, getColumnHeight)[columns.length - 1];
-      // Simplistic border width calculation
-      return getColumnHeight(tallestColumn) +
-        ((tallestColumn.length - 1) * (this.config.gutter + (this.config.border || 0)));
-    };
-
     this.config.container.css({
-      height: this.getContainerHeight()
+      height: this.getContainerHeight(columns)
     });
-  };
+  }
 
-  this.start = function(){
+  function getChoiceTop(choices, index) {
+    return _.reduce(_.take(choices, index), function(acc, choice) {
+        return $(choice).height() + acc;
+      }, 0) + (this.config.gutter * index);
+  }
+
+  function getContainerHeight(columns) {
+    var tallestColumn = _(columns).sortBy(getColumnHeight).last().value();
+
+    // Simplistic border width calculation
+    return getColumnHeight(tallestColumn) +
+      ((tallestColumn.length - 1) * (this.config.gutter + (this.config.border || 0)));
+  }
+
+  function getColumnHeight(column) {
+    return _.reduce(column, function(acc, el) {
+      return acc + $(el).height();
+    }, 0);
+  }
+
+  function getElementHeight(el) {
+    if (!el) {
+      return 0;
+    }
+    return $(el).height();
+  }
+
+  function startRunner() {
     this.runner.start(this);
-  };
+  }
 
-  this.cancel = function(){
+  function cancelRunner() {
     this.runner.cancel();
-  };
-
-  this.start();
+  }
 }
 
 /**
@@ -214,7 +223,7 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
     this.runner.start(this);
   };
 
-  this.cancel = function(){
+  this.cancel = function() {
     this.runner.cancel();
   };
 }
@@ -419,9 +428,8 @@ var main = ['$interval',
         if (!scope.categories) {
           return 0;
         }
-        var maxCategoriesPerRow = parseInt(scope.maxCategoriesPerRow, 10);
-        var numActualCategoriesPerRow = Math.min(maxCategoriesPerRow, scope.categories.length);
-        return (elem.width() - (gutter * (numActualCategoriesPerRow - 1))) / numActualCategoriesPerRow;
+        var maxCategoriesPerRow = 5; //parseInt(scope.maxCategoriesPerRow, 10);
+        return (elem.width() - (gutter * (maxCategoriesPerRow - 1))) / maxCategoriesPerRow;
       }
 
       var GUTTER = 10;
@@ -688,9 +696,9 @@ var category = [function() {
     scope.showTools = scope.isEditMode;
 
     scope.droppableOptions = {
-      multiple:true,
-      onDrop:'onDropCallback',
-      onOver:'onOverCallback',
+      multiple: true,
+      onDrop: 'onDropCallback',
+      onOver: 'onOverCallback',
       onOut: 'onOutCallback'
     };
   }
@@ -836,10 +844,10 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
     };
 
     scope.draggableOptions = {
-      animate:true    ,
-      placeholder:'keep',
-      onStart:'onStart',
-      onStop:'onStop'
+      animate: true,
+      placeholder: 'keep',
+      onStart: 'onStart',
+      onStop: 'onStop'
     };
 
     scope.draggableJqueryOptions = {
