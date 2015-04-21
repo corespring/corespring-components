@@ -1,0 +1,21 @@
+{
+  "componentType": "corespring-component-blueprint",
+  "title": "Component Blueprint",
+  "correctResponse": {
+    //TODO Fill in data for evaluation of the interaction
+  },
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": false,
+  "partialScoring" : [],
+  "model": {
+    //TODO Fill in data for rendering the interaction
+    "config": {
+      //TODO fill in options for the rendering
+    }
+  },
+  "weight": 1
+}

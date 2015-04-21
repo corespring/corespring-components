@@ -29,7 +29,7 @@
     margin-bottom: 0;
     padding-top: 0px;
 
-    .corespring-match-table.interaction {
+    .corespring-match-table {
       margin-bottom: 0px;
 
       tr:last-of-type {
@@ -47,6 +47,10 @@
 }
 
 .config-corespring-match {
+
+  .intro {
+    margin: 0 30px 0 20px;
+  }
 
   .help {
     font-style: italic;
@@ -124,8 +128,8 @@
   }
 
   .feedback-panel-col {
-    margin: 0 0 0 32px;
-    width: 660px;
+    margin: 0 0 0 12px;
+    width: 680px;
   }
 }
 
@@ -143,13 +147,16 @@
     border-collapse: collapse;
     border: none;
     width: 100%;
+    margin-bottom: 20px;
 
-    &.interaction {
-      margin-bottom: 20px;
+    tr {
+      border-bottom: solid 2px #cccccc;
     }
 
-    .match-tr {
-      border-bottom: solid 2px #cccccc;
+    td {
+      border: none;
+      vertical-align: middle;
+      padding: 10px 5px;
     }
 
     .question-header,
@@ -162,35 +169,12 @@
       padding: 10px 5px;
     }
 
-    .match-td {
-      border: none;
+    .answer-expected-warning {
+      color: @warning-color;
+      font-size: 22px;
+      width: 28px;
+      min-width: 28px;
       vertical-align: middle;
-      padding: 10px 5px;
-    }
-
-    .question-cell {
-
-      .question-table {
-        border: none;
-        width: 100%;
-        margin: 0;
-
-        .question-tr, .question-td {
-          border: none;
-          padding: 0;
-        }
-        .question-label {
-          text-align: left;
-          width: 100%;
-        }
-        .answer-expected-warning {
-          color: @warning-color;
-          font-size: 22px;
-          width: 28px;
-          min-width: 28px;
-          vertical-align: middle;
-        }
-      }
     }
 
     .answer-cell {
@@ -201,6 +185,13 @@
   .see-answer-panel {
     .panel-body {
       padding: 0;
+    }
+    .corespring-match-table {
+      margin-bottom: 0px;
+
+      tr:last-of-type {
+        border: none;
+      }
     }
   }
 
@@ -244,7 +235,6 @@
     color: black;
     background: none;
     text-align: left;
-    width: 100%;
   }
 
   .answer-header {
@@ -254,20 +244,35 @@
   }
 
   &.three-columns {
-    .answer-header {
-      min-width: 100px;
+    .question-header,
+    .question-cell {
+      max-width: 372px;
+    }
+    .answer-header,
+    .answer-cell {
+      max-width: 100px;
     }
   }
 
   &.four-columns {
-    .answer-header {
-      min-width: 80px;
+    .question-header,
+    .question-cell {
+      max-width: 322px;
+    }
+    .answer-header,
+    .answer-cell {
+      max-width: 80px;
     }
   }
 
   &.five-columns {
-    .answer-header {
-      min-width: 60px;
+    .question-header,
+    .question-cell {
+      max-width: 322px;
+    }
+    .answer-header,
+    .answer-cell {
+      max-width: 60px;
     }
   }
 }

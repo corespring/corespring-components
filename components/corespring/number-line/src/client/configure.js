@@ -199,7 +199,7 @@ var main = [
             scope.fullModel = model;
             scope.initialView.model.config.initialElements = _.cloneDeep(model.model.config.initialElements);
             scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse) || [];
-            scope.updatePartialScoringModel(model.correctResponse.length);
+            scope.updateNumberOfCorrectResponses(model.correctResponse.length);
             scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(model.model.config.tickLabelOverrides);
           },
 
@@ -219,7 +219,7 @@ var main = [
           scope.$apply(function() {
             scope.fullModel.correctResponse = _.cloneDeep(n);
             scope.correctResponseView.model.config.initialElements = _.cloneDeep(n);
-            scope.updatePartialScoringModel(scope.correctResponseView.responseModel.length);
+            scope.updateNumberOfCorrectResponses(scope.correctResponseView.responseModel.length);
           });
         };
 

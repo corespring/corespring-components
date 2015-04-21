@@ -61,7 +61,7 @@ var main = [
         scope.editable = true;
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
-        scope.config = setConfig(dataAndSession.data.model);
+        setConfig(dataAndSession.data.model);
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
         scope.saveMatchModel = _.cloneDeep(scope.matchModel);
         renderMath();
@@ -194,6 +194,7 @@ var main = [
 
           _.forEach(columns, function(col, index){
             col.cssClass = index === 0 ? 'question-header' : 'answer-header';
+            col.labelHtml = removeUnexpectedTags(col.labelHtml);
           });
 
           return columns;
@@ -201,15 +202,17 @@ var main = [
 
         function prepareRows() {
           var answersExist = (session && session.answers);
-          return rawModel.rows.map(function(row) {
+          var rows = rawModel.rows.map(function(row) {
             var cloneRow = _.cloneDeep(row);
 
+            cloneRow.labelHtml = removeUnexpectedTags(cloneRow.labelHtml);
             cloneRow.matchSet = answersExist ?
               createMatchSetFromSession(row.id) :
               createEmptyMatchSet(rawModel.columns.length - 1);
 
             return cloneRow;
           });
+          return rows;
         }
 
         function createMatchSetFromSession(id) {
@@ -228,6 +231,25 @@ var main = [
             };
           });
         }
+      }
+
+      function removeUnexpectedTags(s){
+        var node = $('<div>');
+        node.html(s);
+
+        node.find('*').css('width', '');
+        node.find('*').css('min-width', '');
+        node.find('*').css('height', '');
+        node.find('*').css('min-height', '');
+
+        node.find('*').removeAttr('width');
+        node.find('*').removeAttr('min-width');
+        node.find('*').removeAttr('height');
+        node.find('*').removeAttr('min-height');
+
+        var out = node.html();
+        $log.debug(["removeUnexpectedTags", s, out].join('\n'));
+        return out;
       }
 
       function classForChoice(row, index) {
@@ -280,7 +302,7 @@ var main = [
               'match-checkbox unknown');
           }
         }
-        return "";
+        return '';
       }
 
       function onClickMatch(row, index) {
@@ -384,30 +406,23 @@ var main = [
 
       function matchInteraction() {
         return [
-          '<table class="corespring-match-table interaction" ng-class="layout">',
-          '  <tr class="match-tr header-row">',
+          '<table class="corespring-match-table" ng-class="layout">',
+          '  <tr class="header-row">',
           '    <th ng-repeat="column in matchModel.columns"',
-          '        class="match-th"',
           '        ng-class="column.cssClass"',
+          '        colspan="{{$index?1:2}}"',
           '        ng-bind-html-unsafe="column.labelHtml"/>',
           '  </tr>',
-          '  <tr class="match-tr question-row"',
+          '  <tr class="question-row"',
           '      ng-repeat="row in matchModel.rows"',
           '      question-id="{{row.id}}">',
-          '    <td class="match-td question-cell">',
-          '      <table class="question-table">',
-          '       <tr class="question-tr">',
-          '         <td class="question-td question-label" ng-bind-html-unsafe="row.labelHtml">',
-          '         </td>',
-          '         <td class="question-td answer-expected-warning">',
-          '           <div class="warning-holder" ng-if="row.answerExpected">',
-          '             <i class="fa fa-exclamation-triangle" tooltip="Answer expected"></i>',
-          '           </div>',
-          '         </td>',
-          '       </tr>',
-          '      </table>',
+          '    <td class="question-cell" ng-bind-html-unsafe="row.labelHtml"></td>',
+          '    <td class="answer-expected-warning">',
+          '      <div class="warning-holder" ng-if="row.answerExpected">',
+          '        <i class="fa fa-exclamation-triangle"></i>',
+          '      </div>',
           '    </td>',
-          '    <td class="match-td answer-cell"',
+          '    <td class="answer-cell"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
           '      <div class="corespring-match-choice"',

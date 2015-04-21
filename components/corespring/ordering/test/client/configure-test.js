@@ -28,6 +28,7 @@ describe('corespring:ordering:configure', function () {
       "model": {
         "config": {
           "shuffle": false,
+          "showOrdering": false,
           "choiceAreaLayout": "horizontal",
           "answerAreaLabel": "Place answers here",
           "placementType": "placement"

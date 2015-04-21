@@ -52,6 +52,7 @@ describe('corespring', function() {
           ],
           "config": {
             "shuffle": true,
+            "showOrdering": false,
             "choiceAreaLabel": "Choice Label",
             "answerAreaLabel": "Answer Label",
             "placementType": "placement"
@@ -156,6 +157,11 @@ describe('corespring', function() {
         expect(element.scope().correctChoices.length).toBe(2);
       });
 
+      it('ordering numbers are hidden', function() {
+        setModelAndDigest(verticalModel);
+        expect($(element).find('.ordering-number').length).toBe(0);
+      });
+
     });
 
     describe('horizontal layout', function() {
@@ -192,6 +198,11 @@ describe('corespring', function() {
         setModelAndDigest(horizontalModel);
         setResponseAndDigest({correctness: 'correct', correctClass: 'correct', answer: ['c1', 'c2'], correctResponse: ['c1', 'c2']});
         expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(true);
+      });
+
+      it('ordering numbers are hidden', function() {
+        setModelAndDigest(horizontalModel);
+        expect($(element).find('.ordering-number').length).toBe(0);
       });
     });
 

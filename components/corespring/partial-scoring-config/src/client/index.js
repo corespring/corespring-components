@@ -23,14 +23,14 @@ var main = [
       scope.addScoringScenario = addScoringScenario;
       scope.removeScoringScenario = removeScoringScenario;
       scope.togglePartialScoring = togglePartialScoring;
-      scope.updatePartialScoringModel = updatePartialScoringModel;
+      scope.updateNumberOfCorrectResponses = updatePartialScoringModel;
 
       scope.$watch('fullModel.partialScoring.length', function (newValue) {
-        scope.updatePartialScoringModel(scope.numberOfCorrectResponses);
+        scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
       });
 
       scope.$watch('numberOfCorrectResponses', function (newValue) {
-        scope.updatePartialScoringModel(scope.numberOfCorrectResponses);
+        scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
       });
 
       //--------------------------------------------------------------

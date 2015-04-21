@@ -66,7 +66,7 @@ var main = [
       '    <div class="choice-row" ng-repeat="choice in model.choices">',
       '      <div class="row">',
       '        <div class="col-md-2 col-xs-3 text-center choice-letter">',
-      '          <label class="control-label">{{toChar($index)}}</label>',
+      '          <label class="control-label">{{letter($index)}}</label>',
       '          <i class="fa fa-trash-o fa-lg" title="Delete" data-toggle="tooltip"',
       '              ng-click="removeChoice(choice)"></i>',
       '        </div>',
@@ -194,7 +194,7 @@ var main = [
               c.labelType = c.labelType || "text";
             });
 
-            scope.updatePartialScoringModel(scope.fullModel.correctResponse.value.length);
+            scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.value.length);
           },
 
           getModel: function() {
@@ -241,7 +241,7 @@ var main = [
             }
           });
           scope.fullModel.correctResponse.value = res;
-          scope.updatePartialScoringModel(res.length);
+          scope.updateNumberOfCorrectResponses(res.length);
         }, true);
 
 
@@ -274,7 +274,7 @@ var main = [
         };
 
         function findFreeChoiceSlot() {
-          var slot = 0;
+          var slot = 1;
           var ids = _.pluck(scope.model.choices, 'value');
           while (_.contains(ids, "mc_" + slot)) {
             slot++;
@@ -305,6 +305,19 @@ var main = [
         };
 
         scope.leftPanelClosed = false;
+
+        scope.letter = function(idx) {
+          var type = scope.model && scope.model.config ? scope.model.config.choiceLabels : "none";
+          switch (type) {
+            case "none":
+              return "";
+            case "numbers":
+              return (idx + 1) + "";
+          }
+
+          // default to a...z
+          return String.fromCharCode(65 + idx);
+        };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 

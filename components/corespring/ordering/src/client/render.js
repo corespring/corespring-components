@@ -24,7 +24,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index].id}"',
       '         data-drag="editable && landingPlaceChoices[$index].id" jqyoui-draggable="answerDragOptions($index)" data-jqyoui-options="answerDragOptions($index)" ng-model="landingPlaceChoices[$index]" >',
       '        <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
-      '        <div ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
+      '        <div class="ordering-number" ng-if="model.config.showOrdering" ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
       '        <i class="fa fa-close remove-choice-button" ng-show="editable && landingPlaceChoices[$index].label" ng-click="putBackChoice($index)"></i>',
       '      </div>',
       '    </div>',
@@ -357,12 +357,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
 
       '   <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
+      '        <div class="warning-icon" ng-show="feedback && correctClass === \'warning\'"><i class="fa fa-warning"></i></div>',
       '        <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '      </div>',
       '    </div>',
 
 
       '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
+      '      <div class="warning-icon" ng-show="feedback && correctClass === \'warning\'"><i class="fa fa-warning"></i></div>',
       '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '    </div>',
 

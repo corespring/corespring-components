@@ -1,4 +1,9 @@
 {
+  "name": "match",
+  "organization": "corespring",
+  "title": "Choice Matrix",
+  "titleGroup": "Fixed Choice",
+  "released": true,
   "libraries": [
     {
       "name": "feedback-config",
@@ -20,8 +25,8 @@
       "scope": "editor"
     },
     {
-      "name" : "server-shared",
-      "organization" : "corespring"
+      "name": "server-shared",
+      "organization": "corespring"
     },
     {
       "name": "widgets",
@@ -52,12 +57,6 @@
         "bower_target": "https://github.com/furf/jquery-ui-touch-punch.git",
         "file": "jquery.ui.touch-punch.min.js"
       }
-
     }
-  },
-  "name": "match",
-  "organization": "corespring",
-  "title": "Choice Matrix",
-  "titleGroup": "Fixed Choice",
-  "released": false
+  }
 }

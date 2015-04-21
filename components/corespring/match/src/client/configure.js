@@ -34,12 +34,13 @@ var main = [
     }
 
     function link(scope, element, attrs) {
+
+      var $log = LogFactory.getLogger('corespring-match-configure');
+
       var MIN_COLUMNS = 3;
       var MAX_COLUMNS = 5;
       var INPUT_TYPE_CHECKBOX = 'checkbox';
       var INPUT_TYPE_RADIOBUTTON = 'radiobutton';
-
-      var $log = LogFactory.getLogger('corespring-match-configure');
 
       scope.layouts = [
         {
@@ -88,13 +89,14 @@ var main = [
       scope.onClickMatch = onClickMatch;
       scope.removeRow = removeRow;
       scope.rowLabelUpdated = rowLabelUpdated;
-      scope.updatePartialScoringModel = updatePartialScoringModel;
+      scope.onChangeLayout = onChangeLayout;
+      scope.onChangeInputType = onChangeInputType;
 
       //the trottle is to avoid update problems of the editor models
-      scope.$watch('config.layout', _.throttle(watchLayout, 50));
+      scope.$watch('config.layout', _.throttle(onChangeLayout, 50));
 
       //the trottle is to avoid update problems of the editor models
-      scope.$watch('config.inputType', _.throttle(watchInputType, 50));
+      scope.$watch('config.inputType', _.throttle(onChangeInputType, 50));
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -118,12 +120,8 @@ var main = [
       function updateEditorModels() {
         $log.debug("updateEditorModels in");
         scope.matchModel = createMatchModel();
-        scope.updatePartialScoringModel(sumCorrectAnswers());
+        scope.numberOfCorrectResponses = sumCorrectAnswers();
         $log.debug("updateEditorModels out");
-      }
-
-      function updatePartialScoringModel(count){
-        scope.numberOfCorrectResponses = count;
       }
 
       /**
@@ -167,7 +165,7 @@ var main = [
         }
       }
 
-      function watchLayout(newValue, oldValue) {
+      function onChangeLayout(newValue, oldValue) {
         if (newValue === oldValue) {
           return;
         }
@@ -189,7 +187,7 @@ var main = [
         updateEditorModels();
       }
 
-      function watchInputType(newValue, oldValue) {
+      function onChangeInputType(newValue, oldValue) {
         if (newValue === oldValue) {
           return;
         }
@@ -373,9 +371,7 @@ var main = [
         var correctResponse = scope.matchModel.rows.map(function(row) {
           return {
             id: row.id,
-            matchSet: row.matchSet.map(function(match) {
-              return match.value;
-            })
+            matchSet: _.pluck(row.matchSet, 'value')
           };
         });
         scope.fullModel.correctResponse = correctResponse;
@@ -412,12 +408,31 @@ var main = [
 
       function columnLabelUpdated(index) {
         $log.debug("columnLabelUpdated", index);
-        scope.model.columns[index].labelHtml = scope.matchModel.columns[index].labelHtml;
+        scope.model.columns[index].labelHtml = removeUnexpectedTags(scope.matchModel.columns[index].labelHtml);
       }
 
       function rowLabelUpdated(index) {
         $log.debug("rowLabelUpdated", index);
-        scope.model.rows[index].labelHtml = scope.matchModel.rows[index].labelHtml;
+        scope.model.rows[index].labelHtml = removeUnexpectedTags(scope.matchModel.rows[index].labelHtml);
+      }
+
+      function removeUnexpectedTags(s){
+        var node = $('<div>');
+        node.html(s);
+
+        node.find('*').css('width', '');
+        node.find('*').css('min-width', '');
+        node.find('*').css('height', '');
+        node.find('*').css('min-height', '');
+
+        node.find('*').removeAttr('width');
+        node.find('*').removeAttr('min-width');
+        node.find('*').removeAttr('height');
+        node.find('*').removeAttr('min-height');
+
+        var out = node.html();
+        $log.debug(["removeUnexpectedTags", s, out].join('\n'));
+        return out;
       }
 
       function isCheckBox(inputType) {
@@ -481,11 +496,11 @@ var main = [
         return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <p class="intro">In a choice matrix students associate choices in the ',
-          '       first column with options in the first row. This ',
+          '    <p class="intro">In Choice Matrix, students associate choices in the ',
+          '       first column with options in the adjacent rows. This ',
           '       interaction allows for either one or more correct answers. ',
           '       Setting more than one answer as correct ',
-          '       allows for partial credit (see the scoring tab).',
+          '       allows for partial credit (<i>see the Scoring tab</i>).',
           '    </p>',
           '  </div>',
           '</div>'

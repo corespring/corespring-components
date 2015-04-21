@@ -103,6 +103,9 @@ var main = [
         '      <div class="zero-state" ng-show="targets.length == 0">',
         '        Drag and order correct answers here.',
         '      </div>',
+        '      <div>',
+        '        <checkbox class="show-ordering" ng-model="model.config.showOrdering">Show numbered guides</checkbox>',
+        '      </div>',
         '    </div>',
         '  </div>',
         '  <div class="placement-row-group" >',
@@ -306,7 +309,7 @@ var main = [
             if (!_.isEmpty(n)) {
               var newOrder = _.pluck($scope.targets, 'id');
               $scope.fullModel.correctResponse = newOrder;
-              $scope.updatePartialScoringModel(getNumberOfCorrectResponses());
+              $scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
             }
           });
 
