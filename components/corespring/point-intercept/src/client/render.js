@@ -26,7 +26,8 @@ var main = ['$compile', '$modal', '$rootScope',
         "     <div id='initialParams' ng-transclude></div>",
         "  </div>",
         '  <div class="feedback-holder" ng-show="model.config.showFeedback">',
-        '    <div ng-show="feedback" feedback="feedback" correct-class="{{response.correctClass}}"></div>',
+        '    <div class="warning-icon" ng-show="feedback && correctClass === \'warning\'"><i class="fa fa-warning"></i></div>',
+        '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '  </div>',
         '  <div see-answer-panel see-answer-panel-expanded="trueValue" class="solution-panel" ng-class="{panelVisible: correctResponse}">',
         "    <div class='solution-container'></div>",
@@ -298,6 +299,7 @@ var main = ['$compile', '$modal', '$rootScope',
           },
 
           setResponse: function (response) {
+            console.log(response);
             scope.feedback = response && response.feedback;
             scope.response = response;
             scope.correctClass = response.correctness;
