@@ -1,7 +1,9 @@
 /* global corespring */
 
-var main = ['ServerLogic',
-  function(ServerLogic) {
+var main = [
+  'ServerLogic',
+  'ChoiceTemplates',
+  function(ServerLogic, ChoiceTemplates) {
 
     this.inline = function(type, value, body, attrs) {
       return ['<label class="' + type + '-inline">',
@@ -167,6 +169,7 @@ var main = ['ServerLogic',
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
+        ChoiceTemplates.extendScope(scope, 'corespring-point-intercept');
         scope.defaults = scope.data.defaultData.model.config;
         var server = ServerLogic.load('corespring-point-intercept');
         scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
@@ -187,6 +190,7 @@ var main = ['ServerLogic',
                 correctResponse: cra
               });
             });
+            scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
           },
 
           getModel: function() {
@@ -206,12 +210,14 @@ var main = ['ServerLogic',
             label: getLetterForIndex(scope.points.length),
             correctResponse: [0, 0]
           });
+          scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.value.length);
         };
 
         scope.removePoint = function(p) {
           scope.points = _.filter(scope.points, function(sp) {
             return sp !== p;
           });
+          scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.value.length);
         };
 
 
@@ -253,18 +259,25 @@ var main = ['ServerLogic',
 
       },
       template: [
-        '<div class="point-intercept-configuration col-md-12">',
-        '  <p>',
-        '    In Plot Points, students identify coordinates or plot points on a graph by clicking on the graph.',
-        '  </p>',
-           pointsBlock,
-           graphAttributes,
-        '  <div class="row">',
-        '     <div class="col-md-8">',
-        '       <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
-        '     </div>',
-        '   </div>',
-           feedback,
+        '<div class="config-point-intercept">',
+        '  <div navigator-panel="Design">',
+        '    <div class="point-intercept-configuration col-md-12">',
+        '      <p>',
+        '        In Plot Points, students identify coordinates or plot points on a graph by clicking on the graph.',
+        '      </p>',
+               pointsBlock,
+               graphAttributes,
+        '      <div class="row">',
+        '        <div class="col-md-8">',
+        '          <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
+        '        </div>',
+        '      </div>',
+               feedback,
+        '    </div>',
+        '  </div>',
+        '  <div navigator-panel="Scoring">',
+            ChoiceTemplates.scoring(),
+        '  </div>',
         '</div>'
       ].join('\n')
     };
