@@ -12,9 +12,7 @@ exports.isCorrect = function(answer, correctResponse, orderMatters) {
 
 var countAnsweredCorrectly = function(answer, correctResponse, orderMatters) {
   var sum = _.reduce(answer, function(sum, a, index) {
-    var contains = orderMatters 
-      ? correctResponse[index] === a 
-      : _.contains(correctResponse, a);
+    var contains = orderMatters ? correctResponse[index] === a : _.contains(correctResponse, a);
     var newsum = sum + (contains ? 1 : 0);
     return newsum;
   }, 0);

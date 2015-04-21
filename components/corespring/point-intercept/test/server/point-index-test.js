@@ -95,7 +95,7 @@ describe('server logic', function() {
     response.score.should.eql(1);
 
     // score will be given, even when the user marks extra points
-    var response = server.createOutcome(clone, ["0,0", "1,1", "2,2"], defaultSettings);
+    response = server.createOutcome(clone, ["0,0", "1,1", "2,2"], defaultSettings);
     response.correctness.should.eql("correct");
     response.score.should.eql(1);
   });
