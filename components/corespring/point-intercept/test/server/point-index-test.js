@@ -26,7 +26,8 @@ var component = {
       "labelsType": "present",
       "orderMatters": true
     }
-  }
+  },
+  allowPartialScoring: false
 };
 
 var defaultSettings = helper.settings(true, true, false);
@@ -68,6 +69,37 @@ describe('server logic', function() {
     response.score.should.eql(0);
   });
 
+  it('should respond with incorrect and score 0 if the answer is partially correct, but partial scoring is disabled', function() {
+    var response = server.createOutcome(_.cloneDeep(component), ["0,0", "3,1"], defaultSettings);
+    response.correctness.should.eql("incorrect");
+    response.score.should.eql(0);
+  });
+
+  it('if partial scoring is allowed score should be calculated using it', function() {
+    var clone = _.cloneDeep(component);
+    clone.allowPartialScoring = true;
+    clone.partialScoring = [
+      {numberOfCorrect: 1, scorePercentage: 50}
+    ];
+
+    var response = server.createOutcome(clone, ["1,2", "3,1"], defaultSettings);
+    response.correctness.should.eql("incorrect");
+    response.score.should.eql(0);
+    
+    response = server.createOutcome(clone, ["0,0", "3,1"], defaultSettings);
+    response.correctness.should.eql("incorrect");
+    response.score.should.eql(0.5);
+
+    response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
+    response.correctness.should.eql("correct");
+    response.score.should.eql(1);
+
+    // score will be given, even when the user marks extra points
+    var response = server.createOutcome(clone, ["0,0", "1,1", "2,2"], defaultSettings);
+    response.correctness.should.eql("correct");
+    response.score.should.eql(1);
+  });
+
   it('respects order matters', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
@@ -93,22 +125,34 @@ describe('server logic', function() {
   });
 
   it('gives default feedback if feedback type is default', function() {
-    var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
+    var clone = _.cloneDeep(component);
+    var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
 
-    response = server.createOutcome(_.cloneDeep(component), ["2,2", "1,1"], defaultSettings);
+    response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
     response.feedback.should.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
+
+    clone.allowPartialScoring = true;
+
+    response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
+    response.feedback.should.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
   });
 
   it('gives no feedback if feedback type is none', function() {
     var clone = _.cloneDeep(component);
     clone.feedback.correctFeedbackType = "none";
     clone.feedback.incorrectFeedbackType = "none";
+    clone.feedback.partialFeedbackType = "none";
 
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     should(response.feedback).not.be.ok;
 
     response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
+    should(response.feedback).not.be.ok;
+
+    clone.allowPartialScoring = true;
+    
+    response = server.createOutcome(clone, ["0,0", "2,2"], defaultSettings);
     should(response.feedback).not.be.ok;
   });
 
@@ -119,12 +163,20 @@ describe('server logic', function() {
 
     clone.feedback.incorrectFeedbackType = "custom";
     clone.feedback.incorrectFeedback = "CustomIncorrect";
+    
+    clone.feedback.partialFeedbackType = "custom";
+    clone.feedback.partialFeedback = "CustomPartial";
 
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.feedback.should.eql("CustomCorrect");
 
     response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
     response.feedback.should.eql("CustomIncorrect");
+
+    clone.allowPartialScoring = true;
+
+    response = server.createOutcome(clone, ["0,0", "2,2"], defaultSettings);
+    response.feedback.should.eql("CustomPartial");
   });
 
 });

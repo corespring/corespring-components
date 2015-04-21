@@ -2,6 +2,10 @@
     "type": "object",
     "title": "CoreSpring Point Intercept",
     "properties": {
+        "allowPartialScoring" : {
+            "description" : "If there is more than one correct answer to this question, you may allow partial credit based on the number of correct answers submitted.",
+            "type" : "boolean"
+        },
         "componentType": {
             "type": "string",
             "title": "Component Type",
@@ -146,6 +150,31 @@
                     }
                 }
             }
+        },
+        "partialScoring" : {
+            "description" : "A description of the partial scoring to be used by the interaction.",
+            "type" : "array",
+            "items" : {
+                "description" : "A configuration object which maps the number of correct responses to the percentage to be awarded.",
+                "type" : "object",
+                "properties" : {
+                    "numberOfCorrect" : {
+                        "description" : "The number of correct responses.",
+                        "type" : "number"
+                    },
+                    "scorePercentage" : {
+                        "description" : "The percentage of the score to be awarded for the number of correct responses.",
+                        "type" : "number",
+                        "minimum" : 0,
+                        "maximum" : 100
+                    }
+                },
+                "required" : ["numberOfCorrect", "scorePercentage"]
+            }
+        },
+        "scoreMapping" : {
+            "description" : "An object mapping correct values to their score weighting. The keys of this object should be the choice values, and the values their numeric weighting.",
+            "type" : "object"
         },
         "weight": {
             "type": "integer",
