@@ -1,54 +1,31 @@
 var main = [
   '$timeout',
-  function($timeout) {
+  function ($timeout) {
 
     return {
       restrict: 'AE',
       replace: true,
       link: link,
-      scope: {
-        mode: '@',
-        attrCategories: '=?categories',
-        attrChoices: '=?choices',
-        categoriesPerRow: "=?",
-        choicesPerRow: "=?",
-        imageService: "=?"
-      },
+      scope: {},
       template: template()
     };
 
-    function byModelId(id) {
-      return function(object) {
-        return object.model.id === id;
-      };
-    }
-
-    function byId(id) {
-      return function(object) {
-        return object.id === id;
-      };
-    }
-
-    function all() {
-      return true;
-    }
-
     function link(scope, elem, attrs) {
 
-      var GUTTER = 10;
+      var layout = new CompactLayout(
+        new LayoutConfig()
+          .withContainer(elem.find(".container-choices"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .withCellWidth(choiceWidth())
+          .value(),
+        new LayoutRunner($timeout));
 
-      var layout = new CompactLayout({
-        container: elem.find(".container-choices"),
-        itemSelector: ".choice-corespring-dnd-categorize",
-        cellWidth: cellWidth(GUTTER),
-        gutter: GUTTER,
-        border: 4
-      }, new LayoutRunner($timeout));
-
-      var editingLayout = new CompactLayoutWhileEditing({
-        container: elem.find(".container-choices"),
-        itemSelector: ".choice-corespring-dnd-categorize"
-      }, new LayoutRunner($timeout));
+      var editingLayout = new CompactLayoutWhileEditing(
+        new LayoutConfig()
+          .withContainer(elem.find(".container-choices"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .value(),
+        new LayoutRunner($timeout));
 
 
       scope.isEditMode = attrs.mode === 'edit';
@@ -80,6 +57,8 @@ var main = [
       scope.$watch('choicesPerRow', updateView);
       scope.$watch('shouldFlip', updateView);
 
+      scope.$on("$destroy", onDestroy);
+
       if (scope.isEditMode) {
         scope.$watch('attrCategories.length', onChangeCategoriesOrChoices);
         scope.$watch('attrChoices.length', onChangeCategoriesOrChoices);
@@ -90,14 +69,6 @@ var main = [
       }
 
       //-----------------------------------------------------------
-
-      function cellWidth(gutter) {
-        if (!scope.choices) {
-          return 0;
-        }
-        var choicesPerRow = parseInt(scope.choicesPerRow, 10);
-        return (elem.width() - (gutter * (choicesPerRow - 1))) / choicesPerRow;
-      }
 
       function updateView() {
         if (!scope.categories || !scope.choices) {
@@ -111,23 +82,41 @@ var main = [
 
         scope.rows = chunk(scope.categories, categoriesPerRow);
 
+        scope.choiceWidth = choiceWidth();
+
         scope.categoryStyle = {
-          "width": cellWidth(20)
+          "width": elem.width() / categoriesPerRow
         };
         scope.choiceStyle = {
-          "width": cellWidth(GUTTER)
+          "width": scope.choiceWidth
         };
         layout.updateConfig({
           container: elem.find(".container-choices"),
-          cellWidth: cellWidth(GUTTER)
+          cellWidth: scope.choiceWidth
         });
-
       }
 
-      function chunk(arr, chunkSize){
+      function onDestroy(){
+        if(layout){
+          layout.cancel();
+        }
+        if(editingLayout){
+          editingLayout.cancel();
+        }
+      }
+
+      function choiceWidth() {
+        if (!scope.choices) {
+          return 0;
+        }
+        var choicesPerRow = parseInt(scope.choicesPerRow, 10);
+        return elem.width() / choicesPerRow;
+      }
+
+      function chunk(arr, chunkSize) {
         //can be replaced with _.chunk, once lodash has been updated
         var chunks = [[]];
-        _.forEach(arr, function(elem) {
+        _.forEach(arr, function (elem) {
           var lastRow = _.last(chunks);
           if (lastRow.length === chunkSize) {
             chunks.push(lastRow = []);
@@ -142,7 +131,7 @@ var main = [
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
           var choice = _.find(scope.allChoices || scope.choices, byId(choiceId));
-          scope.$apply(function() {
+          scope.$apply(function () {
             category.choices.push(wrapChoiceModel(choice));
           });
 
@@ -157,7 +146,7 @@ var main = [
       }
 
       function findInAllCategories(choiceId) {
-        return _.find(scope.categories, function(category) {
+        return _.find(scope.categories, function (category) {
           return _.find(category.choices, byModelId(choiceId)) !== undefined;
         });
       }
@@ -175,7 +164,7 @@ var main = [
 
       function onChoiceDeleteClicked(choiceId) {
         _.remove(scope.choices, byId(choiceId));
-        _.forEach(scope.categories, function(category) {
+        _.forEach(scope.categories, function (category) {
           if (category) {
             _.remove(category.choices, byId(choiceId));
           }
@@ -212,7 +201,7 @@ var main = [
           _.take(dataAndSession.data.model.choices, all);
         scope.allChoices = _.take(scope.choices, all);
         scope.categories = _.map(dataAndSession.data.model.categories, wrapCategoryModel);
-        _.forEach(scope.categories, function(category) {
+        _.forEach(scope.categories, function (category) {
           category.choices = category.choices || [];
         });
         scope.categoriesPerRow = dataAndSession.data.model.config.categoriesPerRow || 3;
@@ -223,9 +212,9 @@ var main = [
       }
 
       function getSession() {
-        var answers = _.reduce(scope.categories, function(result, category) {
+        var answers = _.reduce(scope.categories, function (result, category) {
           var catId = category.model.id;
-          result[catId] = _.map(category.choices, function(choice) {
+          result[catId] = _.map(category.choices, function (choice) {
             return choice.model.id;
           });
           return result;
@@ -242,9 +231,9 @@ var main = [
         scope.correctClass = response.correctClass;
 
         // Update categories with responses
-        _.forEach(scope.categories, function(category) {
+        _.forEach(scope.categories, function (category) {
           var correctChoices = response.correctResponse[category.model.id];
-          _.forEach(category.choices, function(choice) {
+          _.forEach(category.choices, function (choice) {
             if (_.contains(correctChoices, choice.model.id)) {
               choice.correctness = 'correct';
             } else {
@@ -256,7 +245,7 @@ var main = [
         // Create model for see correct answer section
         function createNewCategoryModelWithChoices(category, correctChoices) {
           var newCategory = _.cloneDeep(category);
-          newCategory.choices = _.map(correctChoices, function(correctChoiceId) {
+          newCategory.choices = _.map(correctChoices, function (correctChoiceId) {
             var choiceModel = _.find(scope.allChoices, byId(correctChoiceId));
             var choice = wrapChoiceModel(choiceModel);
             choice.correctness = 'correct';
@@ -268,7 +257,7 @@ var main = [
         var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
         scope.correctAnswerRows = [[]];
 
-        _.forEach(scope.categories, function(category) {
+        _.forEach(scope.categories, function (category) {
           var lastrow = scope.correctAnswerRows[scope.correctAnswerRows.length - 1];
           if (lastrow.length === categoriesPerRow) {
             scope.correctAnswerRows.push([]);
@@ -283,7 +272,7 @@ var main = [
         scope.choices = _.take(scope.allChoices, all);
         scope.response = undefined;
         scope.feedback = undefined;
-        _.forEach(scope.categories, function(category) {
+        _.forEach(scope.categories, function (category) {
           category.choices = [];
         });
       }
@@ -324,7 +313,7 @@ var main = [
           editedElement: choiceElement
         });
 
-        $('body').on('click', function(e) {
+        $('body').on('click', function (e) {
           var $target = $(e.target);
           if (choiceElement.has($target).length === 0 && scope.editedChoice && scope.editedChoice.id === choiceId) {
             editingLayout.cancel();
@@ -333,11 +322,29 @@ var main = [
           }
         });
       }
+
+      function byModelId(id) {
+        return function (object) {
+          return object.model.id === id;
+        };
+      }
+
+      function byId(id) {
+        return function (object) {
+          return object.id === id;
+        };
+      }
+
+      function all() {
+        return true;
+      }
+
+
     }
 
     function template() {
       return [
-        '<div class="render-dnd-categorize">',
+        '<div class="render-corespring-dnd-categorize">',
         choicesTemplate().replace("{flipp}", "shouldFlip"),
         categoriesTemplate().replace("{flipp}", "!shouldFlip").replace("{rowsModel}", "rows"),
         '  <hr/>',
@@ -352,7 +359,7 @@ var main = [
       function choicesTemplate() {
         return [
           '<div class="container-choices" ng-if="{flipp}">',
-          '  <div choice-dnd-categorize="true" ',
+          '  <div choice-corespring-dnd-categorize="true" ',
           '    ng-repeat="choice in choices track by choice.id" ',
           '    drag-enabled="isDragEnabled"',
           '    edit-mode="getEditMode(choice)" ',
@@ -372,18 +379,19 @@ var main = [
         return [
           '<div class="categories" ng-if="{flipp}">',
           '  <div class="row" ng-repeat="row in {rowsModel}">',
-          '    <div category-dnd-categorize="true" ',
+          '    <div category-corespring-dnd-categorize="true" ',
           '      ng-repeat="category in row"',
-          '      label="category.model.label" ',
+          '      category-id="{{category.model.id}}" ',
+          '      choice-width="{{choiceWidth}}"',
+          '      choices="category.choices"',
           '      drag-enabled="isDragEnabledFromCategory"',
           '      edit-mode="isEditMode" ',
-          '      on-drop="onCategoryDrop(categoryId,choiceId)" ',
-          '      on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
-          '      on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
-          '      on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
-          '      category-id="{{category.model.id}}" ',
-          '      choices="category.choices"',
+          '      label="category.model.label" ',
           '      ng-style="categoryStyle"',
+          '      on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
+          '      on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
+          '      on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
+          '      on-drop="onCategoryDrop(categoryId,choiceId)" ',
           '     ></div>',
           '   </div>',
           ' </div>'
@@ -409,69 +417,31 @@ var main = [
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-var category = [function() {
+var category = ['$timeout', function ($timeout) {
+
+  return {
+    restrict: 'A',
+    replace: true,
+    link: link,
+    template: template(),
+    scope: {
+      choices: '=',
+      choiceWidth: '@',
+      dragEnabled: '=',
+      isEditMode: '=?editMode',
+      label: '=',
+      notifyDeleteChoiceClicked: '&onDeleteChoiceClicked',
+      notifyDeleteClicked: '&onDeleteClicked',
+      onChoiceDraggedAway: '&',
+      onDrop: '&'
+    }
+  };
+
 
   function link(scope, elem, attrs) {
 
-    scope.onDeleteClicked = function() {
-      scope.$$postDigest(function() {
-        scope.notifyDeleteClicked({
-          categoryId: attrs.categoryId
-        });
-      });
-    };
-
-    scope.onChoiceDeleteClicked = function(choiceId) {
-      scope.notifyDeleteChoiceClicked({
-        categoryId: attrs.categoryId,
-        choiceId: choiceId
-      });
-    };
-
-    scope.onDropCallback = function(e, draggable) {
-
-      var choiceId = draggable.draggable.attr('choice-id');
-      scope.isDraggedOver = false;
-      scope.$$postDigest(function() {
-        scope.onDrop({
-          categoryId: attrs.categoryId,
-          choiceId: choiceId
-        });
-      });
-    };
-
-    scope.onOverCallback = function(e, draggable) {
-
-      var isChoiceId = draggable.draggable.attr('choice-id');
-
-      if (isChoiceId !== "" && !isLocalChoiceDragged) {
-        scope.$apply(function() {
-          scope.isDraggedOver = true;
-        });
-      }
-    };
-
-    scope.onOutCallback = function() {
-      scope.$apply(function() {
-        scope.isDraggedOver = false;
-      });
-    };
-
+    var layout;
     var isLocalChoiceDragged = false;
-
-    scope.onLocalChoiceDragStart = function(choiceId) {
-      isLocalChoiceDragged = true;
-    };
-
-    scope.onLocalChoiceDragEnd = function(choiceId, dropEffect) {
-
-      isLocalChoiceDragged = false;
-
-      scope.onChoiceDraggedAway({
-        fromCategoryId: attrs.categoryId,
-        choiceId: choiceId
-      });
-    };
 
     scope.choiceEditMode = scope.isEditMode ? 'delete' : '';
     scope.showTools = scope.isEditMode;
@@ -482,24 +452,104 @@ var category = [function() {
       onOver: 'onOverCallback',
       onOut: 'onOutCallback'
     };
-  }
 
-  return {
-    restrict: 'A',
-    replace: true,
-    scope: {
-      label: '=',
-      dragEnabled: '=',
-      choices: '=choices',
-      onDrop: '&onDrop',
-      onChoiceDraggedAway: '&onChoiceDraggedAway',
-      notifyDeleteClicked: '&onDeleteClicked',
-      notifyDeleteChoiceClicked: '&onDeleteChoiceClicked',
-      isEditMode: '=?editMode'
-    },
-    link: link,
-    template: template()
-  };
+    scope.onDeleteClicked = onDeleteClicked;
+    scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
+    scope.onDropCallback = onDropCallback;
+    scope.onOverCallback = onOverCallback;
+    scope.onOutCallback = onOutCallback;
+    scope.onLocalChoiceDragStart = onLocalChoiceDragStart;
+    scope.onLocalChoiceDragEnd = onLocalChoiceDragEnd;
+
+    scope.$on('$destroy', onDestroy);
+    attrs.$observe('choiceWidth', onChangeChoiceWidth);
+
+
+    //---------------------------------------------------------------
+
+    function onDeleteClicked() {
+      scope.$$postDigest(function () {
+        scope.notifyDeleteClicked({
+          categoryId: attrs.categoryId
+        });
+      });
+    }
+
+    function onChoiceDeleteClicked(choiceId) {
+      scope.notifyDeleteChoiceClicked({
+        categoryId: attrs.categoryId,
+        choiceId: choiceId
+      });
+    }
+
+    function onDropCallback(e, draggable) {
+      var choiceId = draggable.draggable.attr('choice-id');
+      scope.isDraggedOver = false;
+      scope.$$postDigest(function () {
+        scope.onDrop({
+          categoryId: attrs.categoryId,
+          choiceId: choiceId
+        });
+      });
+    }
+
+    function onOverCallback(e, draggable) {
+      var choiceId = draggable.draggable.attr('choice-id');
+
+      if (choiceId !== "" && !isLocalChoiceDragged) {
+        scope.$apply(function () {
+          scope.isDraggedOver = true;
+        });
+      }
+    }
+
+    function onOutCallback() {
+      scope.$apply(function () {
+        scope.isDraggedOver = false;
+      });
+    }
+
+    function onLocalChoiceDragStart(choiceId) {
+      isLocalChoiceDragged = true;
+    }
+
+    function onLocalChoiceDragEnd(choiceId, dropEffect) {
+      isLocalChoiceDragged = false;
+
+      scope.onChoiceDraggedAway({
+        fromCategoryId: attrs.categoryId,
+        choiceId: choiceId
+      });
+    }
+
+    function onChangeChoiceWidth(newValue,oldValue) {
+      if (newValue != oldValue && newValue > 0) {
+        initLayout(newValue);
+      }
+    }
+
+    function initLayout(choiceWidth){
+        if(!layout) {
+          layout = new CompactLayout(
+            new LayoutConfig()
+              .withContainer(elem.find(".choice-container"))
+              .withItemSelector(".choice-corespring-dnd-categorize")
+              .withCellWidth(choiceWidth)
+              .value(),
+            new LayoutRunner($timeout));
+        } else {
+          layout.updateConfig(new LayoutConfig()
+            .withCellWidth(choiceWidth)
+            .value());
+        }
+    }
+
+    function onDestroy(){
+      if(layout){
+        layout.cancel();
+      }
+    }
+  }
 
   function template() {
     return [
@@ -508,26 +558,36 @@ var category = [function() {
       '  data-drop="true" ',
       '  jqyoui-droppable="droppableOptions"',
       '  >',
-      '  <h4 ng-if="!isEditMode">{{label}}</h4>',
-      '  <h4><input class="label-input" type="text" ng-if="isEditMode" ng-model="$parent.label"></h4>',
+      '  <div class="border">',
+      '    <h4 ng-if="isEditMode"><input class="label-input" type="text" ng-model="$parent.label"></h4>',
+      '    <h4 ng-if="!isEditMode">{{label}}</h4>',
       editControlsDelete(),
-      '  <div class="categorized choices">',
-      '    <div class="choice-container" ng-class="{draggedOver:isDraggedOver}">',
-      '      <div choice-dnd-categorize="true" ',
-      '         model="choice.model"',
-      '         edit-mode="choiceEditMode" ',
-      '         correctness="{{choice.correctness}}" ',
-      '         ng-repeat="choice in choices track by $index" ',
-      '         drag-enabled="dragEnabled" ',
-      '         choice-id="{{choice.model.id}}" ',
-      '         on-drag-start-now="onLocalChoiceDragStart(choiceId)" ',
-      '         on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-      '         on-drag-end="onLocalChoiceDragEnd(choiceId,dropEffect)"',
-      '      ></div>',
-      '   </div>',
-      ' </div>',
+      '    <div class="categorized choices">',
+      '      <div class="choice-container" ng-class="{draggedOver:isDraggedOver}">',
+      '        <div choice-corespring-dnd-categorize="true" ',
+      '           choice-id="{{choice.model.id}}" ',
+      '           correctness="{{choice.correctness}}" ',
+      '           drag-enabled="dragEnabled" ',
+      '           edit-mode="choiceEditMode" ',
+      '           model="choice.model"',
+      '           ng-repeat="choice in choices track by $index" ',
+      '           ng-style="{width:choiceWidth}"',
+      '           on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
+      '           on-drag-end="onLocalChoiceDragEnd(choiceId,dropEffect)"',
+      '           on-drag-start-now="onLocalChoiceDragStart(choiceId)" ',
+      '        ></div>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
       '</div>'
     ].join('');
+
+    function editControlsDelete() {
+      return [
+        '<ul class="edit-controls" ng-if="showTools">',
+        deleteTool(),
+        '</ul>'].join('');
+    }
 
     function deleteTool() {
       return [
@@ -536,50 +596,63 @@ var category = [function() {
         '</li>'].join('');
     }
 
-    function editControlsDelete() {
-      return [
-        '<ul class="edit-controls" ng-if="showTools">',
-        deleteTool(),
-        '</ul>'].join('');
-    }
   }
 }];
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeExtension) {
+var choice = ['$sce', 'MiniWiggiScopeExtension', function ($sce, MiniWiggiScopeExtension) {
+
+  return {
+    restrict: 'EA',
+    replace: true,
+    link: link,
+    template: template(),
+    scope: {
+      dragEnabled: '=',
+      model: '=',
+      correctness: '@',
+      onDragStart: '&onDragStartNow',
+      onDragEnd: '&onDragEnd',
+      notifyDeleteClicked: '&onDeleteClicked',
+      notifyEditClicked: '&onEditClicked',
+      editMode: '=?editMode',
+      deleteAfterPlacing: '=?deleteAfterPlacing',
+      imageService: "=?"
+    }
+  };
 
   function link(scope, elem, attrs) {
 
     new MiniWiggiScopeExtension().postLink(scope);
 
-    scope.onStart = function() {
+    scope.onStart = function () {
       scope.onDragStart({
         choiceId: attrs.choiceId
       });
     };
 
-    scope.onStop = function() {
+    scope.onStop = function () {
       scope.onDragEnd({
         choiceId: attrs.choiceId
       });
     };
 
-    scope.onDeleteClicked = function() {
+    scope.onDeleteClicked = function () {
       scope.notifyDeleteClicked({
         choiceId: attrs.choiceId
       });
     };
 
-    scope.canEdit = function() {
+    scope.canEdit = function () {
       return _.contains(scope.editMode, 'editable') || _.contains(scope.editMode, 'editing');
     };
 
-    scope.isEditing = function() {
+    scope.isEditing = function () {
       return _.contains(scope.editMode, 'editing');
     };
 
-    scope.canDelete = function() {
+    scope.canDelete = function () {
       return _.contains(scope.editMode, 'delete');
     };
 
@@ -602,7 +675,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
       scope.classes = classes;
     }
 
-    scope.onChoiceEditClicked = function() {
+    scope.onChoiceEditClicked = function () {
       scope.notifyEditClicked({
         choiceId: attrs.choiceId
       });
@@ -610,7 +683,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
 
     scope.$watch('correctness', updateClasses);
 
-    scope.$watch('model.label', function() {
+    scope.$watch('model.label', function () {
       $(window).trigger("resize");
     });
 
@@ -620,7 +693,7 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
 
     scope.draggedParent = scope.canEdit(scope.editMode) ? ".modal" : "body";
 
-    scope.isDragEnabled = function() {
+    scope.isDragEnabled = function () {
       return scope.dragEnabled && !scope.isEditing();
     };
 
@@ -638,25 +711,6 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
     };
   }
 
-  return {
-    link: link,
-    restrict: 'EA',
-    replace: true,
-    template: template(),
-    scope: {
-      dragEnabled: '=',
-      model: '=',
-      correctness: '@',
-      onDragStart: '&onDragStartNow',
-      onDragEnd: '&onDragEnd',
-      notifyDeleteClicked: '&onDeleteClicked',
-      notifyEditClicked: '&onEditClicked',
-      editMode: '=?editMode',
-      deleteAfterPlacing: '=?deleteAfterPlacing',
-      imageService: "=?"
-    }
-  };
-
   function template() {
     return [
       '<div class="choice-corespring-dnd-categorize" ',
@@ -664,24 +718,26 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeEx
       '  ng-class="classes"',
       '  jqyoui-draggable="draggableOptions" ',
       '  data-jqyoui-options="draggableJqueryOptions">',
-      '  <ul class="edit-controls" ng-if="showTools">',
-      '    <li class="delete-icon-button"',
-      '      ng-click="onDeleteClicked()"',
-      '      tooltip="delete" ',
-      '      tooltip-append-to-body="true" ',
-      '      tooltip-placement="bottom">',
-      '      <i class="fa"></i>',
-      '    </li>',
-      '    <li class="edit-icon-button" ng-click="onChoiceEditClicked()" tooltip="edit" tooltip-append-to-body="true" tooltip-placement="bottom">',
-      '      <i class="fa fa-pencil"></i>',
-      '    </li>',
-      '  </ul>',
-      '  <div class="shell" ng-if="showTools" ng-show="isEditing()" >',
+      '  <div class="border">',
+      '    <ul class="edit-controls" ng-if="showTools">',
+      '      <li class="delete-icon-button"',
+      '        ng-click="onDeleteClicked()"',
+      '        tooltip="delete" ',
+      '        tooltip-append-to-body="true" ',
+      '        tooltip-placement="bottom">',
+      '        <i class="fa"></i>',
+      '      </li>',
+      '      <li class="edit-icon-button" ng-click="onChoiceEditClicked()" tooltip="edit" tooltip-append-to-body="true" tooltip-placement="bottom">',
+      '        <i class="fa fa-pencil"></i>',
+      '      </li>',
+      '    </ul>',
+      '    <div class="shell" ng-if="showTools" ng-show="isEditing()" >',
       choiceEditorTemplate(),
-      '  </div>',
-      '  <div class="shell" ng-bind-html-unsafe="model.label" ng-if="!isEditing()"></div>',
-      '  <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
-      '    <checkbox ng-model="model.moveOnDrag" class="control-label">Remove Tile after placing</checkbox>',
+      '    </div>',
+      '    <div class="shell" ng-bind-html-unsafe="model.label" ng-if="!isEditing()"></div>',
+      '    <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
+      '      <checkbox ng-model="model.moveOnDrag" class="control-label">Remove Tile after placing</checkbox>',
+      '    </div>',
       '  </div>',
       '</div>'
     ].join('');
@@ -710,11 +766,11 @@ exports.directives = [
     directive: main
   },
   {
-    name: "categoryDndCategorize",
+    name: "categoryCorespringDndCategorize",
     directive: category
   },
   {
-    name: "choiceDndCategorize",
+    name: "choiceCorespringDndCategorize",
     directive: choice
   }
 ];
@@ -724,8 +780,6 @@ exports.directives = [
  *  container: jquery element of the container
  *  itemSelector: string selector of an item to be layed out
  *  cellWidth: the desired width of one column
- *  gutter: vertical and horizontal distance between elements,
- *  border: the border width of the item element as it is not measured by jquery
  *
  * This layout manager renders the layout every frame in the following order
  * 1. Selects all the items
@@ -736,10 +790,9 @@ function CompactLayout(initialConfig, layoutRunner) {
 
   var hasNewConfig = false;
   var choiceSizeCache = [];
-  var config = _.assign({
-    gutter: 0,
-    border: 0
-  }, initialConfig);
+  var config = _.assign({}, initialConfig);
+
+  console.log("CompactLayout", config);
 
 
   this.updateConfig = updateConfig;
@@ -751,72 +804,68 @@ function CompactLayout(initialConfig, layoutRunner) {
 
   //-----------------------------------------
 
-  function updateConfig(newConfig) {
-    hasNewConfig = true;
-    config = _.assign(config, newConfig);
-  }
-
   function refresh() {
     var choiceElements = config.container.find(config.itemSelector);
-    var reverseSortedChoices = _(_.sortBy(choiceElements, getElementHeight)).reverse().value();
-    var reverseSortedChoicesHeights = _(reverseSortedChoices).map(getElementHeight).value();
-    var someElementsHaveZeroHeight = _.some(reverseSortedChoicesHeights, function(height) {
-      return height === 0;
-    });
-
-    if (!hasNewConfig && (someElementsHaveZeroHeight || _.isEqual(choiceSizeCache, reverseSortedChoicesHeights))) {
+    if(choiceElements.length === 0){
       return;
     }
 
+    if (!hasNewConfig) {
+      var heights = _(choiceElements).map(getElementHeight).value();
+      var someElementsHaveZeroHeight = _.some(heights, function (height) {
+        return height === 0;
+      });
+      if (someElementsHaveZeroHeight || _.isEqual(this.choiceSizeCache, heights)) {
+        return;
+      }
+      choiceSizeCache = heights;
+    }
     hasNewConfig = false;
-    choiceSizeCache = reverseSortedChoicesHeights;
 
     var numColumns = Math.floor(config.container.width() / config.cellWidth);
     if (numColumns === 0) {
       return;
     }
-    var columns = _.range(numColumns).map(function() {
+
+    var columns = _.range(numColumns).map(function () {
       return [];
     });
 
-    _.forEach(reverseSortedChoices, function(choice) {
+    _.forEach(choiceElements, function (choice) {
       var sortedColumns = _.sortBy(columns, getColumnHeight);
       sortedColumns[0].push(choice);
     });
 
-    columns.forEach(function(colChoices, colIndex) {
-      colChoices.forEach(function(choice, choiceIndex) {
+    columns.forEach(function (colChoices, colIndex) {
+      colChoices.forEach(function (choice, choiceIndex) {
         $(choice).css({
           position: 'absolute',
           top: getChoiceTop(colChoices, choiceIndex),
-          left: (config.cellWidth + config.gutter) * colIndex
+          left: config.cellWidth * colIndex
         });
       }, this);
     }, this);
 
-    //TODO Not sure why this is necessary
     config.container.css({
       height: getContainerHeight(columns)
     });
   }
 
   function getChoiceTop(choices, index) {
-    return _.reduce(_.take(choices, index), function(acc, choice) {
+    return _.reduce(_.take(choices, index), function (acc, choice) {
       return $(choice).height() + acc;
-    }, 0) + (config.gutter * index);
+    }, 0);
   }
 
   function getContainerHeight(columns) {
     var tallestColumn = _.last(_.sortBy(columns, getColumnHeight));
-
-    // Simplistic border width calculation
-    return getColumnHeight(tallestColumn) +
-      ((columns.length - 1) * (config.gutter + (config.border || 0)));
+    return getColumnHeight(tallestColumn);
   }
 
   function getColumnHeight(column) {
-    return _.reduce(column, function(acc, el) {
-      return acc + $(el).height();
+    return _.reduce(column, function (acc, el) {
+      var elHeight = $(el).height();
+      return acc + elHeight;
     }, 0);
   }
 
@@ -825,6 +874,11 @@ function CompactLayout(initialConfig, layoutRunner) {
       return 0;
     }
     return $(el).height();
+  }
+
+  function updateConfig(newConfig) {
+    hasNewConfig = true;
+    config = _.assign(config, newConfig);
   }
 
   function startRunner() {
@@ -853,7 +907,7 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
   this.runner = layoutRunner;
 
   function isAbove(thisEl) {
-    return function(thatEl) {
+    return function (thatEl) {
       var thisTop = thisEl.position().top;
       var thisLeft = thisEl.position().left;
       var thatTop = $(thatEl).position().top;
@@ -867,7 +921,7 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
     return jqel.position().top + jqel.height();
   }
 
-  this.refresh = function() {
+  this.refresh = function () {
     var editedElement = this.config.editedElement;
     var choiceElements = this.config.container.find(this.config.itemSelector);
     var elementsAboveEdited = _.filter(choiceElements, isAbove(editedElement));
@@ -880,14 +934,14 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
       var jqel = $(elementsAboveEdited[i]);
 
       jqel.css({
-        top: lastBottom + this.config.gutter
+        top: lastBottom
       });
 
       lastBottom = lastBottom + jqel.height();
     }
 
-    this.getContainerHeight = function() {
-      return _.reduce(choiceElements, function(acc, el) {
+    this.getContainerHeight = function () {
+      return _.reduce(choiceElements, function (acc, el) {
         var jqel = $(el);
         var elBottom = jqel.position().top + jqel.height();
         return acc < elBottom ? elBottom : acc;
@@ -899,12 +953,12 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
     });
   };
 
-  this.start = function(newConfig) {
+  this.start = function (newConfig) {
     this.config = _.assign(this.config, newConfig);
     this.runner.start(this);
   };
 
-  this.cancel = function() {
+  this.cancel = function () {
     this.runner.cancel();
   };
 }
@@ -956,3 +1010,25 @@ function LayoutRunner(timeout) {
   }
 }
 
+function LayoutConfig() {
+  var config = {};
+
+  this.withContainer = function (value) {
+    config.container = value;
+    return this;
+  }
+
+  this.withItemSelector = function (value) {
+    config.itemSelector = value;
+    return this;
+  }
+
+  this.withCellWidth = function (value) {
+    config.cellWidth = value;
+    return this;
+  }
+
+  this.value = function () {
+    return config;
+  }
+}

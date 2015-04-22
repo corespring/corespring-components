@@ -31,7 +31,20 @@
         "hasLabel": true,
         "label": "Category 3",
         "layout": "vertical"
+      },
+      {
+        "id": "cat_4",
+        "hasLabel": true,
+        "label": "Category 4",
+        "layout": "vertical"
+      },
+      {
+        "id": "cat_5",
+        "hasLabel": true,
+        "label": "Category 5",
+        "layout": "vertical"
       }
+
     ],
     "choices": [
       {
@@ -48,7 +61,7 @@
       },
       {
         "id": "choice_3",
-        "label": "c",
+        "label": "c has a longer label than the others",
         "labelType": "text",
         "moveOnDrag": false
       },
