@@ -96,6 +96,7 @@ var main = [
         scope.droppedChoices = _.cloneDeep(state.droppedChoices);
       };
 
+      scope.alreadyMarkedAsCorrect = [];
       scope.correctClass = function(forChoice) {
         if (scope.response && scope.response.feedback) {
           var choice = _.find(scope.response.feedback.choices, function(c) {

@@ -15,8 +15,9 @@ exports.createOutcome = function(question, answer, settings) {
     }
   };
 
+  var mutableCorrectResponse;
   var isAnswerCorrect = function(answer) {
-    return _.some(question.correctResponse, function(cr) {
+    return _.some(mutableCorrectResponse, function(cr) {
       if (cr.id === answer.id) {
         var correctResponseForChoice = cr;
         if (correctResponseForChoice) {
@@ -24,7 +25,11 @@ exports.createOutcome = function(question, answer, settings) {
           var hotspotForChoice = _.find(question.model.hotspots, function(hs) {
             return isChoiceInHotspot(answer, hs);
           });
-          return (!_.isUndefined(hotspotForChoice) && hotspotForChoice.id === correctHotspot);
+          var isCorrect = (!_.isUndefined(hotspotForChoice) && hotspotForChoice.id === correctHotspot);
+          if (isCorrect) {
+            cr.id = undefined;
+          }
+          return isCorrect;
         }
       }
       return false;
@@ -57,6 +62,7 @@ exports.createOutcome = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
 
+  mutableCorrectResponse = _.cloneDeep(question.correctResponse);
   var isCorrect = answer.length === question.correctResponse.length && _.every(answer, isAnswerCorrect);
   var isPartiallyCorrect = false;
 
@@ -67,6 +73,7 @@ exports.createOutcome = function(question, answer, settings) {
     score: isCorrect ? 1 : 0
   };
 
+  mutableCorrectResponse = _.cloneDeep(question.correctResponse);
   if (settings.showFeedback) {
     response.feedback = {
       choices: getFeedbackForChoices(),
