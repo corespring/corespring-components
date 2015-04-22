@@ -27,27 +27,29 @@ var main = [
           .value(),
         new LayoutRunner($timeout));
 
-
-      scope.isEditMode = attrs.mode === 'edit';
-      scope.rows = [[]];
       scope.correctAnswerRows = [[]];
-      scope.isSeeCorrectAnswerOpen = false;
+      scope.editable = false;
       scope.isDragEnabled = false;
       scope.isDragEnabledFromCategory = false;
+      scope.isEditMode = attrs.mode === 'edit';
+      scope.isSeeCorrectAnswerOpen = false;
+      scope.rows = [[]];
+      scope.undoStack = [];
 
-      scope.onCategoryDrop = onCategoryDrop;
-      scope.onCategoryDeleteClicked = onCategoryDeleteClicked;
-      scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
-      scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
-      scope.showSeeCorrectAnswer = showSeeCorrectAnswer;
       scope.getEditMode = getEditMode;
+      scope.onCategoryDeleteClicked = onCategoryDeleteClicked;
+      scope.onCategoryDrop = onCategoryDrop;
+      scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
       scope.onChoiceEditClicked = onChoiceEditClicked;
+      scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
+      scope.showSeeCorrectAnswer = showSeeCorrectAnswer;
 
       scope.containerBridge = {
-        setDataAndSession: setDataAndSession,
+        editable: setEditable,
         getSession: getSession,
-        setResponse: setResponse,
-        reset: reset
+        reset: reset,
+        setDataAndSession: setDataAndSession,
+        setResponse: setResponse
       };
 
       scope.$watch('response', updateIsDragEnabled);
@@ -69,6 +71,105 @@ var main = [
       }
 
       //-----------------------------------------------------------
+
+      function setEditable(e){
+        scope.editable = true;
+      }
+
+      function setDataAndSession(dataAndSession) {
+        console.log("[dnd-categorize] setDataAndSession ", dataAndSession);
+
+        reset();
+
+        scope.session = dataAndSession.session || {};
+        scope.choices = dataAndSession.data.model.config.shuffle ?
+          _.shuffle(dataAndSession.data.model.choices) :
+          _.take(dataAndSession.data.model.choices, all);
+        scope.allChoices = _.take(scope.choices, all);
+        scope.categories = _.map(dataAndSession.data.model.categories, wrapCategoryModel);
+        _.forEach(scope.categories, function (category) {
+          category.choices = category.choices || [];
+        });
+        scope.categoriesPerRow = dataAndSession.data.model.config.categoriesPerRow || 3;
+        scope.choicesPerRow = dataAndSession.data.model.config.choicesPerRow || 4;
+        scope.shouldFlip = dataAndSession.data.model.config.answerAreaPosition === 'above';
+
+        updateView();
+      }
+
+      function getSession() {
+        var answers = _.reduce(scope.categories, function (result, category) {
+          var catId = category.model.id;
+          result[catId] = _.map(category.choices, function (choice) {
+            return choice.model.id;
+          });
+          return result;
+        }, {});
+
+        return {
+          answers: answers
+        };
+      }
+
+      function setResponse(response) {
+        scope.response = response;
+        scope.feedback = response.feedback;
+        scope.correctClass = response.correctClass;
+
+        setCorrectnessOnAnswers();
+        initSeeSolutionModel();
+      }
+
+      function setCorrectnessOnAnswers() {
+        // Update categories with responses
+        _.forEach(scope.categories, function (category) {
+          var correctChoices = response.correctResponse[category.model.id];
+          _.forEach(category.choices, function (choice) {
+            if (_.contains(correctChoices, choice.model.id)) {
+              choice.correctness = 'correct';
+            } else {
+              choice.correctness = 'incorrect';
+            }
+          });
+        });
+      }
+
+      function initSeeSolutionModel(){
+        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
+        scope.correctAnswerRows = [[]];
+
+        _.forEach(scope.categories, function (category) {
+          var lastRow = _.last(scope.correctAnswerRows);
+          if (lastRow.length === categoriesPerRow) {
+            scope.correctAnswerRows.push(lastRow = []);
+          }
+          var correctChoices = response.correctResponse[category.model.id];
+          var categoryModel = createCategoryModelForSolution(category, correctChoices);
+          lastRow.push(categoryModel);
+        });
+      }
+
+      function createCategoryModelForSolution(category, correctChoices) {
+        var newCategory = _.cloneDeep(category);
+        newCategory.choices = _.map(correctChoices, function (correctChoiceId) {
+          var choiceModel = _.find(scope.allChoices, byId(correctChoiceId));
+          var choice = wrapChoiceModel(choiceModel);
+          choice.correctness = 'correct';
+          return choice;
+        });
+        return newCategory;
+      }
+
+      function reset() {
+        scope.choices = _.take(scope.allChoices, all);
+        scope.editable = true;
+        scope.feedback = undefined;
+        scope.isSeeAnswerPanelExpanded = false;
+        scope.response = undefined;
+        _.forEach(scope.categories, function (category) {
+          category.choices = [];
+        });
+      }
 
       function updateView() {
         if (!scope.categories || !scope.choices) {
@@ -96,11 +197,11 @@ var main = [
         });
       }
 
-      function onDestroy(){
-        if(layout){
+      function onDestroy() {
+        if (layout) {
           layout.cancel();
         }
-        if(editingLayout){
+        if (editingLayout) {
           editingLayout.cancel();
         }
       }
@@ -191,91 +292,7 @@ var main = [
         scope.shouldFlip = false;
       }
 
-      function setDataAndSession(dataAndSession) {
-        console.log("[dnd-categorize] setDataAndSession ", dataAndSession);
 
-        this.reset();
-        scope.session = dataAndSession.session || {};
-        scope.choices = dataAndSession.data.model.config.shuffle ?
-          _.shuffle(dataAndSession.data.model.choices) :
-          _.take(dataAndSession.data.model.choices, all);
-        scope.allChoices = _.take(scope.choices, all);
-        scope.categories = _.map(dataAndSession.data.model.categories, wrapCategoryModel);
-        _.forEach(scope.categories, function (category) {
-          category.choices = category.choices || [];
-        });
-        scope.categoriesPerRow = dataAndSession.data.model.config.categoriesPerRow || 3;
-        scope.choicesPerRow = dataAndSession.data.model.config.choicesPerRow || 4;
-        scope.shouldFlip = dataAndSession.data.model.config.answerAreaPosition === 'above';
-
-        updateView();
-      }
-
-      function getSession() {
-        var answers = _.reduce(scope.categories, function (result, category) {
-          var catId = category.model.id;
-          result[catId] = _.map(category.choices, function (choice) {
-            return choice.model.id;
-          });
-          return result;
-        }, {});
-
-        return {
-          answers: answers
-        };
-      }
-
-      function setResponse(response) {
-        scope.response = response;
-        scope.feedback = response.feedback;
-        scope.correctClass = response.correctClass;
-
-        // Update categories with responses
-        _.forEach(scope.categories, function (category) {
-          var correctChoices = response.correctResponse[category.model.id];
-          _.forEach(category.choices, function (choice) {
-            if (_.contains(correctChoices, choice.model.id)) {
-              choice.correctness = 'correct';
-            } else {
-              choice.correctness = 'incorrect';
-            }
-          });
-        });
-
-        // Create model for see correct answer section
-        function createNewCategoryModelWithChoices(category, correctChoices) {
-          var newCategory = _.cloneDeep(category);
-          newCategory.choices = _.map(correctChoices, function (correctChoiceId) {
-            var choiceModel = _.find(scope.allChoices, byId(correctChoiceId));
-            var choice = wrapChoiceModel(choiceModel);
-            choice.correctness = 'correct';
-            return choice;
-          });
-          return newCategory;
-        }
-
-        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
-        scope.correctAnswerRows = [[]];
-
-        _.forEach(scope.categories, function (category) {
-          var lastrow = scope.correctAnswerRows[scope.correctAnswerRows.length - 1];
-          if (lastrow.length === categoriesPerRow) {
-            scope.correctAnswerRows.push([]);
-            lastrow = scope.correctAnswerRows[scope.correctAnswerRows.length - 1];
-          }
-          var correctChoices = response.correctResponse[category.model.id];
-          lastrow.push(createNewCategoryModelWithChoices(category, correctChoices));
-        });
-      }
-
-      function reset() {
-        scope.choices = _.take(scope.allChoices, all);
-        scope.response = undefined;
-        scope.feedback = undefined;
-        _.forEach(scope.categories, function (category) {
-          category.choices = [];
-        });
-      }
 
       function updateIsDragEnabled() {
         scope.isDragEnabled = _.isUndefined(scope.response);
@@ -300,7 +317,6 @@ var main = [
       }
 
       function onChoiceEditClicked(choiceId) {
-
         console.log('editedChoice', choiceId);
         scope.editedChoice = _.find(scope.choices, byId(choiceId));
         layout.cancel();
@@ -323,6 +339,30 @@ var main = [
         });
       }
 
+      function watchRenderModel(newValue, oldValue) {
+        //console.log("watchRenderModel", newValue);
+        if (newValue && !_.isEqual(newValue, _.last(scope.undoStack))) {
+          scope.undoStack.push(_.cloneDeep(newValue));
+        }
+      }
+
+      function startOver() {
+        scope.undoStack = [_.first(scope.undoStack)];
+        revertToState(_.first(scope.undoStack));
+      }
+
+      function undo() {
+        if (scope.undoStack.length < 2) {
+          return;
+        }
+        scope.undoStack.pop();
+        revertToState(_.last(scope.undoStack));
+      }
+
+      function revertToState(state) {
+        scope.renderModel = state;
+      }
+
       function byModelId(id) {
         return function (object) {
           return object.model.id === id;
@@ -338,80 +378,105 @@ var main = [
       function all() {
         return true;
       }
-
-
     }
 
     function template() {
       return [
         '<div class="render-corespring-dnd-categorize">',
+        undoStartOver(),
+        interaction(),
+        itemFeedbackPanel(),
+        seeSolutionPanel(),
+        '</div>'
+      ].join('\n');
+    }
+
+    function undoStartOver() {
+      return [
+        '<div ng-show="editable" class="undo-start-over pull-right">',
+        '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="undoStack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
+        '  <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="undoStack.length < 2">Start over</button>',
+        '</div>',
+        '<div class="clearfix"></div>'
+      ].join('');
+    }
+
+    function itemFeedbackPanel() {
+      return [
+        '<div feedback="response.feedback"',
+        '   correct-class="{{response.correctClass}}"></div>'
+      ].join('');
+    }
+
+    function seeSolutionPanel() {
+      return [
+        '<div see-answer-panel="true"',
+        '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
+        '    ng-if="response.correctResponse">',
+        seeSolutionContent(),
+        '</div>'
+      ].join('');
+    }
+
+    function interaction() {
+      return [
+        '<div class="interaction-corespring-dnd-categorize">',
         choicesTemplate().replace("{flipp}", "shouldFlip"),
         categoriesTemplate().replace("{flipp}", "!shouldFlip").replace("{rowsModel}", "rows"),
         '  <hr/>',
         '  <span ng-if="isEditMode" class="choice-area-label">Enter choices below and drag to correct categories above. Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.</span>',
         choicesTemplate().replace("{flipp}", "!shouldFlip"),
         categoriesTemplate().replace("{flipp}", "shouldFlip").replace("{rowsModel}", "rows"),
-        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-        seeSolutionTemplate(),
         '</div>'
       ].join('');
+    }
 
-      function choicesTemplate() {
-        return [
-          '<div class="container-choices" ng-if="{flipp}">',
-          '  <div choice-corespring-dnd-categorize="true" ',
-          '    ng-repeat="choice in choices track by choice.id" ',
-          '    drag-enabled="isDragEnabled"',
-          '    edit-mode="getEditMode(choice)" ',
-          '    model="choice" ',
-          '    choice-id="{{choice.id}}" ',
-          '    on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-          '    on-edit-clicked="onChoiceEditClicked(choiceId)" ',
-          '    delete-after-placing="choice.moveOnDrag" ',
-          '    ng-style="choiceStyle" ',
-          '    image-service="imageService"',
-          '   ></div>',
-          '</div>'
-        ].join('');
-      }
+    function choicesTemplate() {
+      return [
+        '<div class="container-choices" ng-if="{flipp}">',
+        '  <div choice-corespring-dnd-categorize="true" ',
+        '    ng-repeat="choice in choices track by choice.id" ',
+        '    drag-enabled="isDragEnabled"',
+        '    edit-mode="getEditMode(choice)" ',
+        '    model="choice" ',
+        '    choice-id="{{choice.id}}" ',
+        '    on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
+        '    on-edit-clicked="onChoiceEditClicked(choiceId)" ',
+        '    delete-after-placing="choice.moveOnDrag" ',
+        '    ng-style="choiceStyle" ',
+        '    image-service="imageService"',
+        '   ></div>',
+        '</div>'
+      ].join('');
+    }
 
-      function categoriesTemplate() {
-        return [
-          '<div class="categories" ng-if="{flipp}">',
-          '  <div class="row" ng-repeat="row in {rowsModel}">',
-          '    <div category-corespring-dnd-categorize="true" ',
-          '      ng-repeat="category in row"',
-          '      category-id="{{category.model.id}}" ',
-          '      choice-width="{{choiceWidth}}"',
-          '      choices="category.choices"',
-          '      drag-enabled="isDragEnabledFromCategory"',
-          '      edit-mode="isEditMode" ',
-          '      label="category.model.label" ',
-          '      ng-style="categoryStyle"',
-          '      on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
-          '      on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
-          '      on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
-          '      on-drop="onCategoryDrop(categoryId,choiceId)" ',
-          '     ></div>',
-          '   </div>',
-          ' </div>'
-        ].join('');
-      }
+    function categoriesTemplate() {
+      return [
+        '<div class="categories" ng-if="{flipp}">',
+        '  <div class="row" ng-repeat="row in {rowsModel}">',
+        '    <div category-corespring-dnd-categorize="true" ',
+        '      ng-repeat="category in row"',
+        '      category-id="{{category.model.id}}" ',
+        '      choice-width="{{choiceWidth}}"',
+        '      choices="category.choices"',
+        '      drag-enabled="isDragEnabledFromCategory"',
+        '      edit-mode="isEditMode" ',
+        '      label="category.model.label" ',
+        '      ng-style="categoryStyle"',
+        '      on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
+        '      on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
+        '      on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
+        '      on-drop="onCategoryDrop(categoryId,choiceId)" ',
+        '     ></div>',
+        '   </div>',
+        ' </div>'
+      ].join('');
+    }
 
-      function seeSolutionTemplate() {
-        return [
-          '<div class="panel feedback correct-answer" ng-if="showSeeCorrectAnswer(response)">',
-          '  <div class="panel-heading" ng-click="isSeeCorrectAnswerOpen=!isSeeCorrectAnswerOpen">',
-          '    <span class="toggle" ng-class="{true:\'fa-eye-slash\', false:\'fa-eye\'}[isSeeCorrectAnswerOpen]"></span>',
-          '    <span class="label" ng-if="isSeeCorrectAnswerOpen">Hide correct answer</span>',
-          '    <span class="label" ng-if="!isSeeCorrectAnswerOpen">Show correct answer</span>',
-          '  </div>',
-          '  <div class="panel-body"  ng-show="isSeeCorrectAnswerOpen">',
-          categoriesTemplate().replace("{flipp}", "true").replace("{rowsModel}", "correctAnswerRows"),
-          '  </div>',
-          '</div>'
-        ].join("");
-      }
+    function seeSolutionContent() {
+      return [
+        categoriesTemplate().replace("{flipp}", "true").replace("{rowsModel}", "correctAnswerRows"),
+      ].join("");
     }
   }];
 
@@ -522,30 +587,30 @@ var category = ['$timeout', function ($timeout) {
       });
     }
 
-    function onChangeChoiceWidth(newValue,oldValue) {
+    function onChangeChoiceWidth(newValue, oldValue) {
       if (newValue != oldValue && newValue > 0) {
         initLayout(newValue);
       }
     }
 
-    function initLayout(choiceWidth){
-        if(!layout) {
-          layout = new CompactLayout(
-            new LayoutConfig()
-              .withContainer(elem.find(".choice-container"))
-              .withItemSelector(".choice-corespring-dnd-categorize")
-              .withCellWidth(choiceWidth)
-              .value(),
-            new LayoutRunner($timeout));
-        } else {
-          layout.updateConfig(new LayoutConfig()
+    function initLayout(choiceWidth) {
+      if (!layout) {
+        layout = new CompactLayout(
+          new LayoutConfig()
+            .withContainer(elem.find(".choice-container"))
+            .withItemSelector(".choice-corespring-dnd-categorize")
             .withCellWidth(choiceWidth)
-            .value());
-        }
+            .value(),
+          new LayoutRunner($timeout));
+      } else {
+        layout.updateConfig(new LayoutConfig()
+          .withCellWidth(choiceWidth)
+          .value());
+      }
     }
 
-    function onDestroy(){
-      if(layout){
+    function onDestroy() {
+      if (layout) {
         layout.cancel();
       }
     }
@@ -792,9 +857,6 @@ function CompactLayout(initialConfig, layoutRunner) {
   var choiceSizeCache = [];
   var config = _.assign({}, initialConfig);
 
-  console.log("CompactLayout", config);
-
-
   this.updateConfig = updateConfig;
   this.refresh = refresh;
   this.start = startRunner;
@@ -806,21 +868,10 @@ function CompactLayout(initialConfig, layoutRunner) {
 
   function refresh() {
     var choiceElements = config.container.find(config.itemSelector);
-    if(choiceElements.length === 0){
+
+    if (!elementsShouldBeRendered(choiceElements))
       return;
     }
-
-    if (!hasNewConfig) {
-      var heights = _(choiceElements).map(getElementHeight).value();
-      var someElementsHaveZeroHeight = _.some(heights, function (height) {
-        return height === 0;
-      });
-      if (someElementsHaveZeroHeight || _.isEqual(this.choiceSizeCache, heights)) {
-        return;
-      }
-      choiceSizeCache = heights;
-    }
-    hasNewConfig = false;
 
     var numColumns = Math.floor(config.container.width() / config.cellWidth);
     if (numColumns === 0) {
@@ -832,8 +883,7 @@ function CompactLayout(initialConfig, layoutRunner) {
     });
 
     _.forEach(choiceElements, function (choice) {
-      var sortedColumns = _.sortBy(columns, getColumnHeight);
-      sortedColumns[0].push(choice);
+      smallestColumn(columns).push(choice);
     });
 
     columns.forEach(function (colChoices, colIndex) {
@@ -846,9 +896,30 @@ function CompactLayout(initialConfig, layoutRunner) {
       }, this);
     }, this);
 
+    //the choices are positioned absolutely
+    //so the container height is not pushed
     config.container.css({
       height: getContainerHeight(columns)
     });
+  }
+
+  function smallestColumn(columns) {
+    return _.sortBy(columns, getColumnHeight)[0];
+  }
+
+  function elementsShouldBeRendered(choiceElements){
+    if(!hasNewConfig) {
+      var heights = _(choiceElements).map(getElementHeight).value();
+      var someElementsHaveZeroHeight = _.some(heights, function (height) {
+        return height === 0;
+      });
+      if (someElementsHaveZeroHeight || _.isEqual(choiceSizeCache, heights)) {
+        return false;
+      }
+      choiceSizeCache = heights;
+    }
+    hasNewConfig = false;
+    return true;
   }
 
   function getChoiceTop(choices, index) {
@@ -864,8 +935,7 @@ function CompactLayout(initialConfig, layoutRunner) {
 
   function getColumnHeight(column) {
     return _.reduce(column, function (acc, el) {
-      var elHeight = $(el).height();
-      return acc + elHeight;
+      return acc + $(el).height();
     }, 0);
   }
 
@@ -963,6 +1033,29 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
   };
 }
 
+function LayoutConfig() {
+  var config = {};
+
+  this.withContainer = function (value) {
+    config.container = value;
+    return this;
+  };
+
+  this.withItemSelector = function (value) {
+    config.itemSelector = value;
+    return this;
+  };
+
+  this.withCellWidth = function (value) {
+    config.cellWidth = value;
+    return this;
+  };
+
+  this.value = function () {
+    return config;
+  };
+}
+
 function LayoutRunner(timeout) {
 
   var nextRefreshHandle = null;
@@ -1010,25 +1103,3 @@ function LayoutRunner(timeout) {
   }
 }
 
-function LayoutConfig() {
-  var config = {};
-
-  this.withContainer = function (value) {
-    config.container = value;
-    return this;
-  }
-
-  this.withItemSelector = function (value) {
-    config.itemSelector = value;
-    return this;
-  }
-
-  this.withCellWidth = function (value) {
-    config.cellWidth = value;
-    return this;
-  }
-
-  this.value = function () {
-    return config;
-  }
-}
