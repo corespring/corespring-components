@@ -1,235 +1,21 @@
-function LayoutRunner(interval) {
+var main = [
+  '$timeout',
+  function($timeout) {
 
-  this.nextRefreshHandle = null;
-
-  this.runLater = function(block) {
-    if (this.cancelled) {
-      return;
-    }
-    if (window.requestAnimationFrame) {
-      this.nextRefreshHandle = window.requestAnimationFrame(block);
-    } else {
-      this.nextRefreshHandle = interval(block, 100, 1);
-    }
-  };
-
-  this.cancel = function() {
-    this.cancelled = true;
-    if (this.nextRefreshHandle) {
-      if (window.requestAnimationFrame) {
-        window.cancelAnimationFrame(this.nextRefreshHandle);
-      } else {
-        interval.cancel(this.nextRefreshHandle);
-      }
-    }
-  };
-
-  this.start = function(layout) {
-    this.layout = layout;
-    this.cancelled = false;
-    this.runLater(_.bind(this.run, this));
-  };
-
-  this.run = function() {
-    this.runLater(_.bind(this.run, this));
-    this.layout.refresh();
-  };
-
-}
-
-/**
- * @param initialConfig:
- *  container: jquery element of the container
- *  itemSelector: string selector of an item to be layed out
- *  cellWidth: the desired witdth of one column
- *  gutter: GUTTER,
- *  border: the border width of the item element as it is not measured by jquery
- *
- * This layout manager renders the layout every frame in the following order
- * 1. selects all the items
- * 2. Sorts them by height
- * 3. Puts items in the most empty column until finished
- */
-function CompactLayout(initialConfig, layoutRunner) {
-
-  var newConfig = true;
-  var config = _.assign({
-    gutter: 0,
-    border: 0
-  }, initialConfig);
-  var choiceSizeCache = [];
-
-  this.runner = layoutRunner;
-
-
-  this.updateConfig = updateConfig.bind(this);
-  this.refresh = refresh.bind(this);
-  this.start = startRunner.bind(this);
-  this.cancel = cancelRunner.bind(this);
-
-  this.start();
-
-  //-----------------------------------------
-
-  function updateConfig(newConfig) {
-    newConfig = true;
-    config = _.assign(config, newConfig);
-  }
-
-  function refresh() {
-    var choiceElements = config.container.find(config.itemSelector);
-    var reverseSortedChoices = _(_.sortBy(choiceElements, getElementHeight)).reverse().value();
-    var reverseSortedChoicesHeights = _(reverseSortedChoices).map(getElementHeight).value();
-    var someElementsHaveZeroHeight = _.some(reverseSortedChoicesHeights, function(height) {
-      return height === 0;
-    });
-
-    if (!this.newConfig && (someElementsHaveZeroHeight || _.isEqual(this.choiceSizeCache, reverseSortedChoicesHeights))) {
-      return;
-    }
-
-    this.newConfig = false;
-    this.choiceSizeCache = reverseSortedChoicesHeights;
-
-    var numColumns = this.config.numColumns || Math.floor(this.config.container.width() / this.config.cellWidth);
-    if (numColumns === 0) {
-      return;
-    }
-    var columns = _.range(numColumns).map(function() {
-      return [];
-    });
-
-    _.forEach(reverseSortedChoices, function(choice) {
-      var sortedColumns = _.sortBy(columns, getColumnHeight);
-      sortedColumns[0].push(choice);
-    });
-
-    columns.forEach(function(colChoices, colIndex) {
-      colChoices.forEach(function(choice, choiceIndex) {
-        $(choice).css({
-          position: 'absolute',
-          top: getChoiceTop(colChoices, choiceIndex),
-          left: (this.config.cellWidth + this.config.gutter) * colIndex
-        });
-      }, this);
-    }, this);
-
-    this.config.container.css({
-      height: this.getContainerHeight(columns)
-    });
-  }
-
-  function getChoiceTop(choices, index) {
-    return _.reduce(_.take(choices, index), function(acc, choice) {
-        return $(choice).height() + acc;
-      }, 0) + (this.config.gutter * index);
-  }
-
-  function getContainerHeight(columns) {
-    var tallestColumn = _(columns).sortBy(getColumnHeight).last().value();
-
-    // Simplistic border width calculation
-    return getColumnHeight(tallestColumn) +
-      ((tallestColumn.length - 1) * (this.config.gutter + (this.config.border || 0)));
-  }
-
-  function getColumnHeight(column) {
-    return _.reduce(column, function(acc, el) {
-      return acc + $(el).height();
-    }, 0);
-  }
-
-  function getElementHeight(el) {
-    if (!el) {
-      return 0;
-    }
-    return $(el).height();
-  }
-
-  function startRunner() {
-    this.runner.start(this);
-  }
-
-  function cancelRunner() {
-    this.runner.cancel();
-  }
-}
-
-/**
- *
- * @param initialConfig
- *  container: jquery element of the container
- *  editedElement: one of the items in the container that is being edited
- * @param interval
- * @constructor
- *
- * This layout manager tracks the height of an edited component and adjusts components positioned
- * after the edited one in the column
- */
-function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
-
-  this.config = initialConfig;
-  this.runner = layoutRunner;
-
-  function isAbove(thisEl) {
-    return function(thatEl) {
-      var thisTop = thisEl.position().top;
-      var thisLeft = thisEl.position().left;
-      var thatTop = $(thatEl).position().top;
-      var thatLeft = $(thatEl).position().left;
-      return thisTop < thatTop && thisLeft === thatLeft;
+    return {
+      restrict: 'AE',
+      replace: true,
+      link: link,
+      scope: {
+        mode: '@',
+        attrCategories: '=?categories',
+        attrChoices: '=?choices',
+        categoriesPerRow: "=?",
+        choicesPerRow: "=?",
+        imageService: "=?"
+      },
+      template: template()
     };
-  }
-
-  function byElementTopPosition(el) {
-    var jqel = $(el);
-    return jqel.position().top + jqel.height();
-  }
-
-  this.refresh = function() {
-    var editedElement = this.config.editedElement;
-    var choiceElements = this.config.container.find(this.config.itemSelector);
-    var elementsAboveEdited = _.filter(choiceElements, isAbove(editedElement));
-
-    elementsAboveEdited = _.sortBy(elementsAboveEdited, byElementTopPosition);
-
-    var lastBottom = this.config.editedElement.position().top + this.config.editedElement.height();
-
-    for (var i = 0; i < elementsAboveEdited.length; i++) {
-      var jqel = $(elementsAboveEdited[i]);
-
-      jqel.css({
-        top: lastBottom + this.config.gutter
-      });
-
-      lastBottom = lastBottom + jqel.height();
-    }
-
-    this.getContainerHeight = function() {
-      return _.reduce(choiceElements, function(acc, el) {
-        var jqel = $(el);
-        var elBottom = jqel.position().top + jqel.height();
-        return acc < elBottom ? elBottom : acc;
-      }, 0);
-    };
-
-    this.config.container.css({
-      height: this.getContainerHeight()
-    });
-  };
-
-  this.start = function(newConfig) {
-    this.config = _.assign(this.config, newConfig);
-    this.runner.start(this);
-  };
-
-  this.cancel = function() {
-    this.runner.cancel();
-  };
-}
-
-var main = ['$interval',
-  function($interval) {
 
     function byModelId(id) {
       return function(object) {
@@ -249,9 +35,109 @@ var main = ['$interval',
 
     function link(scope, elem, attrs) {
 
-      scope.isEditMode = attrs.mode === 'edit';
+      var GUTTER = 10;
 
-      scope.onCategoryDrop = function(categoryId, choiceId) {
+      var layout = new CompactLayout({
+        container: elem.find(".container-choices"),
+        itemSelector: ".choice-corespring-dnd-categorize",
+        cellWidth: cellWidth(GUTTER),
+        gutter: GUTTER,
+        border: 4
+      }, new LayoutRunner($timeout));
+
+      var editingLayout = new CompactLayoutWhileEditing({
+        container: elem.find(".container-choices"),
+        itemSelector: ".choice-corespring-dnd-categorize"
+      }, new LayoutRunner($timeout));
+
+
+      scope.isEditMode = attrs.mode === 'edit';
+      scope.rows = [[]];
+      scope.correctAnswerRows = [[]];
+      scope.isSeeCorrectAnswerOpen = false;
+      scope.isDragEnabled = false;
+      scope.isDragEnabledFromCategory = false;
+
+      scope.onCategoryDrop = onCategoryDrop;
+      scope.onCategoryDeleteClicked = onCategoryDeleteClicked;
+      scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
+      scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
+      scope.showSeeCorrectAnswer = showSeeCorrectAnswer;
+      scope.getEditMode = getEditMode;
+      scope.onChoiceEditClicked = onChoiceEditClicked;
+
+      scope.containerBridge = {
+        setDataAndSession: setDataAndSession,
+        getSession: getSession,
+        setResponse: setResponse,
+        reset: reset
+      };
+
+      scope.$watch('response', updateIsDragEnabled);
+      scope.$watch('choices.length', updateView);
+      scope.$watch('categories.length', updateView);
+      scope.$watch('categoriesPerRow', updateView);
+      scope.$watch('choicesPerRow', updateView);
+      scope.$watch('shouldFlip', updateView);
+
+      if (scope.isEditMode) {
+        scope.$watch('attrCategories.length', onChangeCategoriesOrChoices);
+        scope.$watch('attrChoices.length', onChangeCategoriesOrChoices);
+      }
+
+      if (!scope.isEditMode) {
+        scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
+      }
+
+      //-----------------------------------------------------------
+
+      function cellWidth(gutter) {
+        if (!scope.choices) {
+          return 0;
+        }
+        var choicesPerRow = parseInt(scope.choicesPerRow, 10);
+        return (elem.width() - (gutter * (choicesPerRow - 1))) / choicesPerRow;
+      }
+
+      function updateView() {
+        if (!scope.categories || !scope.choices) {
+          return;
+        }
+
+        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
+        if (isNaN(categoriesPerRow)) {
+          return;
+        }
+
+        scope.rows = chunk(scope.categories, categoriesPerRow);
+
+        scope.categoryStyle = {
+          "width": cellWidth(20)
+        };
+        scope.choiceStyle = {
+          "width": cellWidth(GUTTER)
+        };
+        layout.updateConfig({
+          container: elem.find(".container-choices"),
+          cellWidth: cellWidth(GUTTER)
+        });
+
+      }
+
+      function chunk(arr, chunkSize){
+        //can be replaced with _.chunk, once lodash has been updated
+        var chunks = [[]];
+        _.forEach(arr, function(elem) {
+          var lastRow = _.last(chunks);
+          if (lastRow.length === chunkSize) {
+            chunks.push(lastRow = []);
+          }
+          lastRow.push(elem);
+        });
+        return chunks;
+      }
+
+      function onCategoryDrop(categoryId, choiceId) {
         var category = _.find(scope.categories, byModelId(categoryId));
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
@@ -264,11 +150,11 @@ var main = ['$interval',
             _.remove(scope.choices, byId(choiceId));
           }
         }
-      };
+      }
 
-      scope.onCategoryDeleteClicked = function(categoryId) {
+      function onCategoryDeleteClicked(categoryId) {
         _.remove(scope.categories, byModelId(categoryId));
-      };
+      }
 
       function findInAllCategories(choiceId) {
         return _.find(scope.categories, function(category) {
@@ -276,7 +162,7 @@ var main = ['$interval',
         });
       }
 
-      scope.onChoiceRemovedFromCategory = function(categoryId, choiceId) {
+      function onChoiceRemovedFromCategory(categoryId, choiceId) {
         var category = _.find(scope.categories, byModelId(categoryId));
         if (category) {
           _.remove(category.choices, byModelId(choiceId));
@@ -285,19 +171,16 @@ var main = ['$interval',
             scope.choices.push(choice);
           }
         }
-      };
+      }
 
-      scope.onChoiceDeleteClicked = function(choiceId) {
+      function onChoiceDeleteClicked(choiceId) {
         _.remove(scope.choices, byId(choiceId));
         _.forEach(scope.categories, function(category) {
           if (category) {
             _.remove(category.choices, byId(choiceId));
           }
         });
-      };
-
-      scope.rows = [[]];
-      scope.correctAnswerRows = [[]];
+      }
 
       function wrapChoiceModel(choiceModel) {
         return {
@@ -313,184 +196,111 @@ var main = ['$interval',
         };
       }
 
-      scope.containerBridge = {
+      function onChangeCategoriesOrChoices() {
+        scope.choices = scope.attrChoices;
+        scope.categories = scope.attrCategories;
+        scope.shouldFlip = false;
+      }
 
-        setDataAndSession: function(dataAndSession) {
+      function setDataAndSession(dataAndSession) {
+        console.log("[dnd-categorize] setDataAndSession ", dataAndSession);
 
-          this.reset();
+        this.reset();
+        scope.session = dataAndSession.session || {};
+        scope.choices = dataAndSession.data.model.config.shuffle ?
+          _.shuffle(dataAndSession.data.model.choices) :
+          _.take(dataAndSession.data.model.choices, all);
+        scope.allChoices = _.take(scope.choices, all);
+        scope.categories = _.map(dataAndSession.data.model.categories, wrapCategoryModel);
+        _.forEach(scope.categories, function(category) {
+          category.choices = category.choices || [];
+        });
+        scope.categoriesPerRow = dataAndSession.data.model.config.categoriesPerRow || 3;
+        scope.choicesPerRow = dataAndSession.data.model.config.choicesPerRow || 4;
+        scope.shouldFlip = dataAndSession.data.model.config.answerAreaPosition === 'above';
 
-          scope.session = dataAndSession.session || {};
+        updateView();
+      }
 
-          scope.choices = dataAndSession.data.model.config.shuffle ?
-            _.shuffle(dataAndSession.data.model.choices) :
-            _.take(dataAndSession.data.model.choices, all);
-
-          scope.allChoices = _.take(scope.choices, all);
-
-          scope.categories = _.map(dataAndSession.data.model.categories, wrapCategoryModel);
-
-          _.forEach(scope.categories, function(category) {
-            category.choices = category.choices || [];
+      function getSession() {
+        var answers = _.reduce(scope.categories, function(result, category) {
+          var catId = category.model.id;
+          result[catId] = _.map(category.choices, function(choice) {
+            return choice.model.id;
           });
+          return result;
+        }, {});
 
-          scope.maxCategoriesPerRow = dataAndSession.data.model.config.maxCategoriesPerRow || 3;
+        return {
+          answers: answers
+        };
+      }
 
-          scope.shouldFlip = dataAndSession.data.model.config.answerAreaPosition === 'above';
+      function setResponse(response) {
+        scope.response = response;
+        scope.feedback = response.feedback;
+        scope.correctClass = response.correctClass;
 
-          updateView();
-        },
-
-        getSession: function() {
-          var answers = _.reduce(scope.categories, function(result, category) {
-            var catId = category.model.id;
-            result[catId] = _.map(category.choices, function(choice) {
-              return choice.model.id;
-            });
-            return result;
-          }, {});
-
-          return {
-            answers: answers
-          };
-        },
-
-        setResponse: function(response) {
-          scope.response = response;
-          scope.feedback = response.feedback;
-          scope.correctClass = response.correctClass;
-
-          // Update categories with responses
-          _.forEach(scope.categories, function(category) {
-            var correctChoices = response.correctResponse[category.model.id];
-            _.forEach(category.choices, function(choice) {
-              if (_.contains(correctChoices, choice.model.id)) {
-                choice.correctness = 'correct';
-              } else {
-                choice.correctness = 'incorrect';
-              }
-            });
-          });
-
-          // Create model for see correct answer section
-          function createNewCategoryModelWithChoices(category, correctChoices) {
-            var newCategory = _.cloneDeep(category);
-            newCategory.choices = _.map(correctChoices, function(correctChoiceId) {
-              var choiceModel = _.find(scope.allChoices, byId(correctChoiceId));
-              var choice = wrapChoiceModel(choiceModel);
+        // Update categories with responses
+        _.forEach(scope.categories, function(category) {
+          var correctChoices = response.correctResponse[category.model.id];
+          _.forEach(category.choices, function(choice) {
+            if (_.contains(correctChoices, choice.model.id)) {
               choice.correctness = 'correct';
-              return choice;
-            });
-            return newCategory;
-          }
-
-          var maxCategoriesPerRow = parseInt(scope.maxCategoriesPerRow, 10);
-          scope.correctAnswerRows = [[]];
-
-          _.forEach(scope.categories, function(category) {
-            var lastrow = scope.correctAnswerRows[scope.correctAnswerRows.length - 1];
-            if (lastrow.length === maxCategoriesPerRow) {
-              scope.correctAnswerRows.push([]);
-              lastrow = scope.correctAnswerRows[scope.correctAnswerRows.length - 1];
+            } else {
+              choice.correctness = 'incorrect';
             }
-            var correctChoices = response.correctResponse[category.model.id];
-            lastrow.push(createNewCategoryModelWithChoices(category, correctChoices));
           });
-        },
+        });
 
-        reset: function() {
-          scope.choices = _.take(scope.allChoices, all);
-          scope.response = undefined;
-          scope.feedback = undefined;
-          _.forEach(scope.categories, function(category) {
-            category.choices = [];
+        // Create model for see correct answer section
+        function createNewCategoryModelWithChoices(category, correctChoices) {
+          var newCategory = _.cloneDeep(category);
+          newCategory.choices = _.map(correctChoices, function(correctChoiceId) {
+            var choiceModel = _.find(scope.allChoices, byId(correctChoiceId));
+            var choice = wrapChoiceModel(choiceModel);
+            choice.correctness = 'correct';
+            return choice;
           });
+          return newCategory;
         }
-      };
 
-      if (attrs.mode === 'edit') {
-        scope.$watch('attrCategories.length + "_" + attrChoices.length', function() {
-          scope.choices = scope.attrChoices;
-          scope.categories = scope.attrCategories;
-          scope.shouldFlip = false;
+        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
+        scope.correctAnswerRows = [[]];
+
+        _.forEach(scope.categories, function(category) {
+          var lastrow = scope.correctAnswerRows[scope.correctAnswerRows.length - 1];
+          if (lastrow.length === categoriesPerRow) {
+            scope.correctAnswerRows.push([]);
+            lastrow = scope.correctAnswerRows[scope.correctAnswerRows.length - 1];
+          }
+          var correctChoices = response.correctResponse[category.model.id];
+          lastrow.push(createNewCategoryModelWithChoices(category, correctChoices));
         });
       }
 
-      scope.$watch('response', function() {
-        updateIsDragEnabled();
-      });
+      function reset() {
+        scope.choices = _.take(scope.allChoices, all);
+        scope.response = undefined;
+        scope.feedback = undefined;
+        _.forEach(scope.categories, function(category) {
+          category.choices = [];
+        });
+      }
 
       function updateIsDragEnabled() {
         scope.isDragEnabled = _.isUndefined(scope.response);
         scope.isDragEnabledFromCategory = scope.isDragEnabled && !scope.isEditMode;
       }
 
-      function cellWidth(gutter) {
-        if (!scope.categories) {
-          return 0;
-        }
-        var maxCategoriesPerRow = 5; //parseInt(scope.maxCategoriesPerRow, 10);
-        return (elem.width() - (gutter * (maxCategoriesPerRow - 1))) / maxCategoriesPerRow;
-      }
-
-      var GUTTER = 10;
-      var layout = new CompactLayout({
-        container: elem.find(".container-choices"),
-        itemSelector: ".choice-corespring-dnd-categorize",
-        cellWidth: cellWidth(GUTTER),
-        gutter: GUTTER,
-        border: 4
-      }, new LayoutRunner($interval));
-
-      function updateView() {
-        if (!scope.categories || !scope.choices) {
-          return;
-        }
-
-        var maxCategoriesPerRow = parseInt(scope.maxCategoriesPerRow, 10);
-
-        if (!isNaN(maxCategoriesPerRow)) {
-          var rows = [[]];
-
-          _.forEach(scope.categories, function(category) {
-            var lastrow = rows[rows.length - 1];
-            if (lastrow.length === maxCategoriesPerRow) {
-              rows.push([]);
-              lastrow = rows[rows.length - 1];
-            }
-            lastrow.push(category);
-          });
-
-          scope.rows = rows;
-
-          scope.categoryStyle = {
-            "width": cellWidth(20)
-          };
-
-          scope.choiceStyle = {
-            "width": cellWidth(GUTTER)
-          };
-
-          layout.updateConfig({
-            container: elem.find(".container-choices"),
-            cellWidth: cellWidth(GUTTER)
-          });
-        }
-      }
-
-      scope.$watch('choices.length + "_" + categories.length', updateView);
-      scope.$watch('maxCategoriesPerRow', updateView);
-      scope.$watch('shouldFlip', updateView);
-
-      scope.isSeeCorrectAnswerOpen = false;
-
-      scope.showSeeCorrectAnswer = function(response) {
+      function showSeeCorrectAnswer(response) {
         if (!response) {
           return false;
         }
         return response.correctness !== 'correct';
-      };
+      }
 
-      scope.getEditMode = function(choice) {
+      function getEditMode(choice) {
         if (!scope.isEditMode) {
           return '';
         }
@@ -498,19 +308,12 @@ var main = ['$interval',
           return 'editing';
         }
         return 'editable';
-      };
+      }
 
-      var editingLayout = new CompactLayoutWhileEditing({
-        container: elem.find(".container-choices"),
-        itemSelector: ".choice-corespring-dnd-categorize"
-      }, new LayoutRunner($interval));
-
-      scope.onChoiceEditClicked = function(choiceId) {
-
-        scope.editedChoice = _.find(scope.choices, byId(choiceId));
+      function onChoiceEditClicked(choiceId) {
 
         console.log('editedChoice', choiceId);
-
+        scope.editedChoice = _.find(scope.choices, byId(choiceId));
         layout.cancel();
 
         var choiceElementSelector = '.container-choices [choice-id="' + choiceId + '"]';
@@ -529,32 +332,10 @@ var main = ['$interval',
             scope.editedChoice = null;
           }
         });
-
-      };
-
-      if (!scope.isEditMode) {
-        scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
       }
-
-      updateIsDragEnabled();
     }
 
-    return {
-      restrict: 'AE',
-      replace: true,
-      link: link,
-      scope: {
-        mode: '@',
-        attrCategories: '=?categories',
-        attrChoices: '=?choices',
-        maxCategoriesPerRow: "=?maxCategoriesPerRow",
-        imageService: "=?imageService"
-      },
-      template: template()
-    };
-
     function template() {
-      //TODO .replace? is it necessary?
       return [
         '<div class="render-dnd-categorize">',
         choicesTemplate().replace("{flipp}", "shouldFlip"),
@@ -937,3 +718,241 @@ exports.directives = [
     directive: choice
   }
 ];
+
+/**
+ * @param initialConfig:
+ *  container: jquery element of the container
+ *  itemSelector: string selector of an item to be layed out
+ *  cellWidth: the desired width of one column
+ *  gutter: vertical and horizontal distance between elements,
+ *  border: the border width of the item element as it is not measured by jquery
+ *
+ * This layout manager renders the layout every frame in the following order
+ * 1. Selects all the items
+ * 2. Sorts them by height
+ * 3. Puts items in the most empty column until finished
+ */
+function CompactLayout(initialConfig, layoutRunner) {
+
+  var hasNewConfig = false;
+  var choiceSizeCache = [];
+  var config = _.assign({
+    gutter: 0,
+    border: 0
+  }, initialConfig);
+
+
+  this.updateConfig = updateConfig;
+  this.refresh = refresh;
+  this.start = startRunner;
+  this.cancel = cancelRunner;
+
+  this.start();
+
+  //-----------------------------------------
+
+  function updateConfig(newConfig) {
+    hasNewConfig = true;
+    config = _.assign(config, newConfig);
+  }
+
+  function refresh() {
+    var choiceElements = config.container.find(config.itemSelector);
+    var reverseSortedChoices = _(_.sortBy(choiceElements, getElementHeight)).reverse().value();
+    var reverseSortedChoicesHeights = _(reverseSortedChoices).map(getElementHeight).value();
+    var someElementsHaveZeroHeight = _.some(reverseSortedChoicesHeights, function(height) {
+      return height === 0;
+    });
+
+    if (!hasNewConfig && (someElementsHaveZeroHeight || _.isEqual(choiceSizeCache, reverseSortedChoicesHeights))) {
+      return;
+    }
+
+    hasNewConfig = false;
+    choiceSizeCache = reverseSortedChoicesHeights;
+
+    var numColumns = Math.floor(config.container.width() / config.cellWidth);
+    if (numColumns === 0) {
+      return;
+    }
+    var columns = _.range(numColumns).map(function() {
+      return [];
+    });
+
+    _.forEach(reverseSortedChoices, function(choice) {
+      var sortedColumns = _.sortBy(columns, getColumnHeight);
+      sortedColumns[0].push(choice);
+    });
+
+    columns.forEach(function(colChoices, colIndex) {
+      colChoices.forEach(function(choice, choiceIndex) {
+        $(choice).css({
+          position: 'absolute',
+          top: getChoiceTop(colChoices, choiceIndex),
+          left: (config.cellWidth + config.gutter) * colIndex
+        });
+      }, this);
+    }, this);
+
+    //TODO Not sure why this is necessary
+    config.container.css({
+      height: getContainerHeight(columns)
+    });
+  }
+
+  function getChoiceTop(choices, index) {
+    return _.reduce(_.take(choices, index), function(acc, choice) {
+      return $(choice).height() + acc;
+    }, 0) + (config.gutter * index);
+  }
+
+  function getContainerHeight(columns) {
+    var tallestColumn = _.last(_.sortBy(columns, getColumnHeight));
+
+    // Simplistic border width calculation
+    return getColumnHeight(tallestColumn) +
+      ((columns.length - 1) * (config.gutter + (config.border || 0)));
+  }
+
+  function getColumnHeight(column) {
+    return _.reduce(column, function(acc, el) {
+      return acc + $(el).height();
+    }, 0);
+  }
+
+  function getElementHeight(el) {
+    if (!el) {
+      return 0;
+    }
+    return $(el).height();
+  }
+
+  function startRunner() {
+    layoutRunner.start(this);
+  }
+
+  function cancelRunner() {
+    layoutRunner.cancel();
+  }
+}
+
+/**
+ *
+ * @param initialConfig
+ *  container: jquery element of the container
+ *  editedElement: one of the items in the container that is being edited
+ * @param interval
+ * @constructor
+ *
+ * This layout manager tracks the height of an edited component and adjusts components positioned
+ * after the edited one in the column
+ */
+function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
+
+  this.config = initialConfig;
+  this.runner = layoutRunner;
+
+  function isAbove(thisEl) {
+    return function(thatEl) {
+      var thisTop = thisEl.position().top;
+      var thisLeft = thisEl.position().left;
+      var thatTop = $(thatEl).position().top;
+      var thatLeft = $(thatEl).position().left;
+      return thisTop < thatTop && thisLeft === thatLeft;
+    };
+  }
+
+  function byElementTopPosition(el) {
+    var jqel = $(el);
+    return jqel.position().top + jqel.height();
+  }
+
+  this.refresh = function() {
+    var editedElement = this.config.editedElement;
+    var choiceElements = this.config.container.find(this.config.itemSelector);
+    var elementsAboveEdited = _.filter(choiceElements, isAbove(editedElement));
+
+    elementsAboveEdited = _.sortBy(elementsAboveEdited, byElementTopPosition);
+
+    var lastBottom = this.config.editedElement.position().top + this.config.editedElement.height();
+
+    for (var i = 0; i < elementsAboveEdited.length; i++) {
+      var jqel = $(elementsAboveEdited[i]);
+
+      jqel.css({
+        top: lastBottom + this.config.gutter
+      });
+
+      lastBottom = lastBottom + jqel.height();
+    }
+
+    this.getContainerHeight = function() {
+      return _.reduce(choiceElements, function(acc, el) {
+        var jqel = $(el);
+        var elBottom = jqel.position().top + jqel.height();
+        return acc < elBottom ? elBottom : acc;
+      }, 0);
+    };
+
+    this.config.container.css({
+      height: this.getContainerHeight()
+    });
+  };
+
+  this.start = function(newConfig) {
+    this.config = _.assign(this.config, newConfig);
+    this.runner.start(this);
+  };
+
+  this.cancel = function() {
+    this.runner.cancel();
+  };
+}
+
+function LayoutRunner(timeout) {
+
+  var nextRefreshHandle = null;
+  var cancelled = false;
+  var layout = null;
+
+  this.runLater = runLater;
+  this.cancel = cancel;
+  this.start = start;
+  this.run = run;
+
+  //--------------------------------
+
+  function runLater(block) {
+    if (cancelled) {
+      return;
+    }
+    if (window.requestAnimationFrame) {
+      nextRefreshHandle = window.requestAnimationFrame(block);
+    } else {
+      nextRefreshHandle = timeout(block, 100);
+    }
+  }
+
+  function cancel() {
+    cancelled = true;
+    if (nextRefreshHandle) {
+      if (window.requestAnimationFrame) {
+        window.cancelAnimationFrame(nextRefreshHandle);
+      } else {
+        timeout.cancel(nextRefreshHandle);
+      }
+    }
+  }
+
+  function start(targetLayout) {
+    layout = targetLayout;
+    cancelled = false;
+    runLater(run);
+  }
+
+  function run() {
+    runLater(run);
+    layout.refresh();
+  }
+}
+

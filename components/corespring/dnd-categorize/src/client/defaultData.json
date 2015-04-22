@@ -25,6 +25,12 @@
         "hasLabel": true,
         "label": "Category 2",
         "layout": "vertical"
+      },
+      {
+        "id": "cat_3",
+        "hasLabel": true,
+        "label": "Category 3",
+        "layout": "vertical"
       }
     ],
     "choices": [
@@ -51,13 +57,49 @@
         "label": "d",
         "labelType": "text",
         "moveOnDrag": false
+      },
+      {
+        "id": "choice_5",
+        "label": "e",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_6",
+        "label": "f",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_7",
+        "label": "g",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_8",
+        "label": "h",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_9",
+        "label": "i",
+        "labelType": "text",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_10",
+        "label": "j",
+        "labelType": "text",
+        "moveOnDrag": false
       }
     ],
     "config": {
       "shuffle": false,
-      "choiceAreaLayout": "vertical",
       "answerAreaPosition": "below",
-      "maxCategoriesPerRow" : 2
+      "categoriesPerRow" : 2,
+      "choicesPerRow" : 5
     }
   },
   "weight": 1
