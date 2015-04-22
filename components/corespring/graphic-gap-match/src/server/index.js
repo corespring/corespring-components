@@ -16,17 +16,20 @@ exports.createOutcome = function(question, answer, settings) {
   };
 
   var isAnswerCorrect = function(answer) {
-    var correctResponseForChoice = _.find(question.correctResponse, function(cr) {
-      return cr.id === answer.id;
+    return _.some(question.correctResponse, function(cr) {
+      if (cr.id === answer.id) {
+        var correctResponseForChoice = cr;
+        if (correctResponseForChoice) {
+          var correctHotspot = correctResponseForChoice.hotspot;
+          var hotspotForChoice = _.find(question.model.hotspots, function(hs) {
+            return isChoiceInHotspot(answer, hs);
+          });
+          return (!_.isUndefined(hotspotForChoice) && hotspotForChoice.id === correctHotspot);
+        }
+      }
+      return false;
     });
 
-    if (correctResponseForChoice) {
-      var correctHotspot = correctResponseForChoice.hotspot;
-      var hotspotForChoice = _.find(question.model.hotspots, function(hs) {
-        return isChoiceInHotspot(answer, hs);
-      });
-      return (!_.isUndefined(hotspotForChoice) && hotspotForChoice.id === correctHotspot);
-    }
   };
 
   var getFeedbackForChoices = function() {

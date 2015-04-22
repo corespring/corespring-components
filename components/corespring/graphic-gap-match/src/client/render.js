@@ -15,6 +15,12 @@ var main = [
       }
     };
 
+    var choiceEquals = function(choice) {
+      return function(c) {
+        return c === choice;
+      }
+    };
+
 
     var link = function(scope, element, attrs) {
       scope.editable = true;
@@ -113,6 +119,12 @@ var main = [
         }).value();
       };
 
+      scope.getPlaceholderChoices = function() {
+        return _.reject(scope.model.choices, function(c) {
+           return !_.isUndefined(_.find(scope.choices, idEquals(c)));
+        });
+      };
+
       scope.onDragStart = function(ev, ui, choice) {
         scope.draggedChoice = choice;
       };
@@ -133,25 +145,38 @@ var main = [
         var offsetY = ev.clientY - ui.helper.offset().top;
 
         var imageOffset = $(element).find('.background-image').offset();
-        var newChoice = _.extend(scope.draggedChoice, {
+        var newChoice = _.extend(_.cloneDeep(scope.draggedChoice), {
           left: ev.clientX - imageOffset.left - offsetX - MARGIN,
           top: ev.clientY - imageOffset.top - offsetY - MARGIN,
           width: ui.helper.outerWidth(),
           height: ui.helper.outerHeight()
         });
-        scope.choices = _.reject(scope.choices, idEquals(scope.draggedChoice));
-        scope.droppedChoices = _.reject(scope.droppedChoices, idEquals(scope.draggedChoice));
+        scope.droppedChoices = _.reject(scope.droppedChoices, choiceEquals(scope.draggedChoice));
+        if (scope.draggedChoice.moveOnDrag) {
+          scope.choices = _.reject(scope.choices, idEquals(scope.draggedChoice));
+        } else {
+          var currentPosition = _.findIndex(scope.choices, idEquals(scope.draggedChoice));
+          scope.choices = _.reject(scope.choices, idEquals(scope.draggedChoice));
+          scope.choices.splice(currentPosition, 0, _.pick(scope.draggedChoice, 'id', 'label'));
+
+        }
         scope.droppedChoices.push(newChoice);
+
       };
 
       scope.onChoiceAreaDrop = function(ev, ui) {
-        scope.droppedChoices = _.reject(scope.droppedChoices, idEquals(scope.draggedChoice));
-        var newChoice = _.cloneDeep(scope.draggedChoice);
-        delete newChoice.left;
-        delete newChoice.top;
-        delete newChoice.width;
-        delete newChoice.height;
-        scope.choices.push(newChoice);
+        scope.droppedChoices = _.reject(scope.droppedChoices, function(c) {
+          return c === scope.draggedChoice;
+        });
+
+        if (!_.find(scope.choices, idEquals(scope.draggedChoice))) {
+          var newChoice = _.cloneDeep(scope.draggedChoice);
+          delete newChoice.left;
+          delete newChoice.top;
+          delete newChoice.width;
+          delete newChoice.height;
+          scope.choices.push(newChoice);
+        }
       };
 
       scope.$watch('droppedChoices', function(n, prev) {
@@ -183,7 +208,7 @@ var main = [
         '         ng-bind-html-unsafe="choice.label">',
         '    </div>',
         '  </div>',
-        '  <div class="choice-wrapper" ng-repeat="choice in droppedChoices">',
+        '  <div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
         '    <div class="choice placeholder"',
         '         ng-bind-html-unsafe="choice.label">',
         '    </div>',
