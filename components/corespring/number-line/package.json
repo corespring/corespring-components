@@ -35,7 +35,7 @@
     }
   },
 
-  "released": false,
+  "released": true,
   "title": "Number Line",
   "titleGroup": "Mathematics",
   "name": "number-line",
