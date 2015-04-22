@@ -1,6 +1,7 @@
 {
   "componentType": "corespring-dnd-categorize",
-  "title": "[Drag and Drop Question Name]",
+  "title": "Drag and Drop Categorize",
+  "weight": 1,
   "correctResponse": {
     "cat_1": [],
     "cat_2": []
@@ -11,38 +12,28 @@
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": false,
-  "partialScoring" : {},
+  "partialScoring" : [],
   "model": {
     "categories": [
       {
         "id": "cat_1",
-        "hasLabel": true,
-        "label": "Category 1",
-        "layout": "vertical"
+        "label": "Category 1"
       },
       {
         "id": "cat_2",
-        "hasLabel": true,
-        "label": "Category 2",
-        "layout": "vertical"
+        "label": "Category 2"
       },
       {
         "id": "cat_3",
-        "hasLabel": true,
-        "label": "Category 3",
-        "layout": "vertical"
+        "label": "Category 3"
       },
       {
         "id": "cat_4",
-        "hasLabel": true,
-        "label": "Category 4",
-        "layout": "vertical"
+        "label": "Category 4"
       },
       {
         "id": "cat_5",
-        "hasLabel": true,
-        "label": "Category 5",
-        "layout": "vertical"
+        "label": "Category 5"
       }
 
     ],
@@ -50,61 +41,51 @@
       {
         "id": "choice_1",
         "label": "a",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_2",
         "label": "b",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_3",
         "label": "c has a longer label than the others",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_4",
         "label": "d",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_5",
         "label": "e",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_6",
         "label": "f",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_7",
         "label": "g",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_8",
         "label": "h",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_9",
         "label": "i",
-        "labelType": "text",
         "moveOnDrag": false
       },
       {
         "id": "choice_10",
         "label": "j",
-        "labelType": "text",
         "moveOnDrag": false
       }
     ],
@@ -114,6 +95,5 @@
       "categoriesPerRow" : 2,
       "choicesPerRow" : 5
     }
-  },
-  "weight": 1
+  }
 }

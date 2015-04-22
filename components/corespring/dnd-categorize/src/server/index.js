@@ -3,99 +3,78 @@ var _ = require('lodash');
 var fb = require('corespring.server-shared.server.feedback-utils');
 
 exports.keys = fb.keys;
+exports.createOutcome = createOutcome;
 
-exports.createOutcome = function(question, answer, settings) {
+//---------------------------------------------
 
-  var defaults = {
-    correct: exports.DEFAULT_CORRECT_FEEDBACK,
-    incorrect: exports.DEFAULT_INCORRECT_FEEDBACK,
-    partial: exports.DEFAULT_PARTIAL_FEEDBACK
-  };
+function createOutcome(question, answer, settings) {
+  var numberOfAnswers = countAnswers(answer);
+  var numberOfCorrectAnswers = countCorrectAnswers(question, answer);
+  var numberOfExpectedAnswers = countExpectedAnswers(question);
 
-  if (!question || _.isEmpty(question)) {
-    throw new Error('the question should never be null or empty');
+  var response = db.createOutcome(question, answer, settings,
+    numberOfAnswers, numberOfCorrectAnswers, numberOfExpectedAnswers);
+
+  response.specificFeedback = createSpecificFeedback(question, answer);
+
+  return response;
+}
+
+
+
+function countAnswers(answers) {
+  if (!answers) {
+    return 0;
   }
+  _.reduce(answers, function(sum, cat) {
+    return sum + cat.length;
+  })
+}
 
-  if (!answer) {
-    return {
-      correctness: 'incorrect',
-      score: 0,
-      correctResponse: question.correctResponse,
-      answer: answer,
-      feedback: settings.showFeedback ? fb.makeFeedback(question.feedback, 'incorrect') : null
-    };
+function countCorrectAnswers(question, answers) {
+  if (!answers) {
+    return 0;
   }
+  _.reduce(question.categories, function(sum, cat) {
+    return sum + countCorrectAnswersInCategory(question.correctResponse[cat.id], answers[cat.id]);
+  });
+}
 
-  var isCorrect = true;
-  var isPartiallyCorrect = false;
-  var numberOfCorrectAnswers = 0;
-
-  for (var k in answer) {
-    var correctResponseForId = question.correctResponse[k];
-    if (correctResponseForId && answer[k]) {
-      isCorrect &= _.isEmpty(_.xor(answer[k], correctResponseForId));
-      isPartiallyCorrect |= _.xor(answer[k], correctResponseForId).length < (answer[k].length + correctResponseForId.length);
-      numberOfCorrectAnswers += correctResponseForId.length - _.xor(answer[k], correctResponseForId).length;
+function countCorrectAnswersInCategory(correctAnswers, answers) {
+  var copyOfCorrect = _.cloneDeep(correctAnswers);
+  return _.reduce(answers, function(sum, answer) {
+    var index = _.indexOf(copyOfCorrect, answer);
+    if (index >= 0) {
+      copyOfCorrect.splice(index, 1);
+      return sum + 1;
     }
-  }
+    return sum;
+  });
+}
 
-  var score = 0;
+function countExpectedAnswers(question) {
+  _.reduce(question.correctResponse, function(sum, cat) {
+    return sum + cat.length;
+  })
+}
 
-  function countCorrectAnswersInCategory(correctInCategory, actualInCategory) {
-    return _.reduce(correctInCategory, function(acc, choiceId) {
-      var foundChoice = _.find(actualInCategory, eq(choiceId));
-      if (foundChoice) {
-        return acc + 1;
-      }
-      return acc;
-    }, 0);
-  }
+function createSpecificFeedback(question, answers) {
+  return _.reduce(question.categories, function(sum, category) {
+    sum[category.id] = makeFeedbackForCategory(category.id);
+  }, {});
 
-  function eq(str) {
-    return function(object) {
-      return object === str;
-    };
-  }
-
-  if (isCorrect && !question.allowPartialScoring) {
-    score = 1;
-  } else if (question.allowPartialScoring) {
-
-    var partialScore = _.reduce(question.partialScoring, function(acc, scenarios, categoryId) {
-
-      var correctInCategory = question.correctResponse[categoryId];
-      if (correctInCategory.length === 0) {
-        return acc;
-      }
-      var actualInCategory = answer[categoryId];
-      var numCorrectInCategory = countCorrectAnswersInCategory(correctInCategory, actualInCategory);
-
-      var scenario = _.find(scenarios, function(scenario) {
-        return scenario.numCorrectAnswers === numCorrectInCategory;
+  function makeFeedbackForCategory(catId) {
+    var correctChoices = question.correctResponse[catId];
+    var selectedAnswers = answers[catId];
+    var feedback = {};
+    if (selectedAnswers.length === 0) {
+      feedback.answersExpected = correctChoices.length > 0;
+    } else {
+      feedback.correctness = _.map(selectedAnswers, function(answer) {
+        return _.contains(correctChoices, answer) ? 'correct' : 'incorrect';
       });
-
-      if (scenario) {
-        return acc + ((numCorrectInCategory / correctInCategory.length) * (scenario.awardPercents / 100));
-      }
-
-      return acc;
-    }, 0);
-
-    score = partialScore / question.model.categories.length;
+    }
+    return feedback;
   }
 
-  var res = {
-    correctness: isCorrect ? "correct" : "incorrect",
-    correctResponse: question.correctResponse,
-    answer: answer,
-    score: score,
-    correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
-    comments: question.comments
-  };
-
-  if (settings.showFeedback) {
-    res.feedback = fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect));
-  }
-
-  return res;
-};
+}
