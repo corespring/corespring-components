@@ -15,7 +15,7 @@ function createOutcome(question, answer, settings) {
   var response = fb.defaultCreateOutcome(question, answer, settings,
     numberOfAnswers, numberOfCorrectAnswers, numberOfExpectedAnswers);
 
-  response.specificFeedback = createSpecificFeedback(question, answer);
+  response.detailedFeedback = createDetailedFeedback(question, answer);
   return response;
 }
 
@@ -25,51 +25,50 @@ function countAnswers(answers) {
   }
   return _.reduce(answers, function(sum, cat) {
     return sum + cat.length;
-  });
+  }, 0);
 }
 
 function countCorrectAnswers(question, answers) {
   if (!answers) {
     return 0;
   }
-  return _.reduce(question.model.categories, function(sum, cat) {
-    return sum + countCorrectAnswersInCategory(question.correctResponse[cat.id], answers[cat.id]);
-  });
+  return _.reduce(question.correctResponse, function(sum, expectedAnswers, categoryId) {
+    return sum + countCorrectAnswersInCategory( expectedAnswers, answers[categoryId]);
+  }, 0);
 }
 
 function countExpectedAnswers(question) {
   return _.reduce(question.correctResponse, function(sum, cat) {
     return sum + cat.length;
-  });
+  }, 0);
 }
 
-function countCorrectAnswersInCategory(correctAnswers, answers) {
-  var copyOfCorrect = _.cloneDeep(correctAnswers);
+function countCorrectAnswersInCategory(expectedAnswers, answers) {
+  var copyOfExpectedAnswers = _.cloneDeep(expectedAnswers);
   return _.reduce(answers, function(sum, answer) {
-    var index = _.indexOf(copyOfCorrect, answer);
+    var index = _.indexOf(copyOfExpectedAnswers, answer);
     if (index >= 0) {
-      copyOfCorrect.splice(index, 1);
+      copyOfExpectedAnswers.splice(index, 1);
       return sum + 1;
     }
     return sum;
-  });
+  }, 0);
 }
 
-function createSpecificFeedback(question, answers) {
-  return _.reduce(question.model.categories, function(result, category) {
-    result[category.id] = makeFeedbackForCategory(category.id);
+function createDetailedFeedback(question, answers) {
+  return _.reduce(question.correctResponse, function(result, expectedAnswers, categoryId) {
+    result[categoryId] = makeFeedbackForCategory(expectedAnswers, categoryId);
     return result;
   }, {});
 
-  function makeFeedbackForCategory(catId) {
-    var correctChoices = question.correctResponse[catId];
+  function makeFeedbackForCategory(expectedAnswers, catId) {
     var selectedAnswers = answers[catId];
     var feedback = {};
     if (selectedAnswers.length === 0) {
-      feedback.answersExpected = correctChoices.length > 0;
+      feedback.answersExpected = expectedAnswers.length > 0;
     } else {
       feedback.correctness = _.map(selectedAnswers, function(answer) {
-        return _.contains(correctChoices, answer) ? 'correct' : 'incorrect';
+        return _.contains(expectedAnswers, answer) ? 'correct' : 'incorrect';
       });
     }
     return feedback;

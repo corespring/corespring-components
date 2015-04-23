@@ -120,12 +120,12 @@ var main = [
         initSeeSolutionModel(response);
       }
 
-      function setSpecificFeedback(response) {
-        if(!response.specificFeedback){
+      function setDetailedFeedback(response) {
+        if(!response.detailedFeedback){
           return;
         }
         _.forEach(scope.renderModel.categories, function(cat){
-          var feedback = response.specificFeedback[cat.model.id];
+          var feedback = response.detailedFeedback[cat.model.id];
           if(feedback.answersExpected){
             cat.answersExpected = true;
           }
@@ -136,6 +136,9 @@ var main = [
       }
 
       function initSeeSolutionModel(response) {
+        if(!response.correctAnswers){
+          return;
+        }
         var categoriesPerRow = scope.categoriesPerRow;
         scope.correctAnswerRows = [[]];
 
