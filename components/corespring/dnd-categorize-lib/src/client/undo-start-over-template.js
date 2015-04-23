@@ -16,7 +16,6 @@ exports.directive = {
       };
 
       function link(scope, elem, attrs) {
-
         var log = console.log.bind(console, '[undo-start-over]');
 
         scope.undoStack = [];

@@ -16,7 +16,6 @@ function createOutcome(question, answer, settings) {
     numberOfAnswers, numberOfCorrectAnswers, numberOfExpectedAnswers);
 
   response.specificFeedback = createSpecificFeedback(question, answer);
-
   return response;
 }
 
@@ -33,7 +32,7 @@ function countCorrectAnswers(question, answers) {
   if (!answers) {
     return 0;
   }
-  return _.reduce(question.categories, function(sum, cat) {
+  return _.reduce(question.model.categories, function(sum, cat) {
     return sum + countCorrectAnswersInCategory(question.correctResponse[cat.id], answers[cat.id]);
   });
 }
@@ -57,8 +56,9 @@ function countCorrectAnswersInCategory(correctAnswers, answers) {
 }
 
 function createSpecificFeedback(question, answers) {
-  return _.reduce(question.categories, function(sum, category) {
-    sum[category.id] = makeFeedbackForCategory(category.id);
+  return _.reduce(question.model.categories, function(result, category) {
+    result[category.id] = makeFeedbackForCategory(category.id);
+    return result;
   }, {});
 
   function makeFeedbackForCategory(catId) {
