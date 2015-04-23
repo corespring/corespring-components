@@ -90,7 +90,10 @@ var main = [
       }
 
       function prepareRenderModel(model, session) {
-        var renderModel = {};
+        var renderModel = {
+          dragAndDropScope: "scope-" + Math.floor(Math.random() * 10000)
+      }
+
         renderModel.choices = model.config.shuffle ?
           _.shuffle(model.choices) :
           _.take(model.choices, all);
@@ -485,6 +488,7 @@ var main = [
         '  <div choice-corespring-dnd-categorize="true" ',
         '    ng-repeat="choice in renderModel.choices track by choice.id" ',
         '    drag-enabled="isDragEnabled"',
+        '    drag-and-drop-scope="renderModel.dragAndDropScope"',
         '    edit-mode="getEditMode(choice)" ',
         '    model="choice" ',
         '    choice-id="{{choice.id}}" ',
@@ -508,6 +512,7 @@ var main = [
         '      choice-width="{{choiceWidth}}"',
         '      choices="category.choices"',
         '      drag-enabled="isDragEnabledFromCategory"',
+        '      drag-and-drop-scope="renderModel.dragAndDropScope"',
         '      edit-mode="isEditMode" ',
         '      label="category.model.label" ',
         '      ng-style="categoryStyle"',

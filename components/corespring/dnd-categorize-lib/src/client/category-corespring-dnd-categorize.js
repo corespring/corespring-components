@@ -13,6 +13,7 @@ var category = [
       scope: {
         choices: '=',
         choiceWidth: '@',
+        dragAndDropScope: '=',
         dragEnabled: '=',
         isEditMode: '=?editMode',
         label: '=',
@@ -25,6 +26,9 @@ var category = [
 
     function link(scope, elem, attrs) {
 
+      var log = console.log.bind(console, '[category]');
+      //log("dragAndDropScope", scope.dragAndDropScope);
+
       var layout;
       var isLocalChoiceDragged = false;
 
@@ -35,7 +39,8 @@ var category = [
         multiple: true,
         onDrop: 'onDropCallback',
         onOver: 'onOverCallback',
-        onOut: 'onOutCallback'
+        onOut: 'onOutCallback',
+        scope: scope.dragAndDropScope
       };
 
       scope.onDeleteClicked = onDeleteClicked;
@@ -138,51 +143,52 @@ var category = [
 
     function template() {
       return [
-      '<div class="category"',
-      '  ng-class="{draggedOver:isDraggedOver}" ',
-      '  data-drop="true" ',
-      '  jqyoui-droppable="droppableOptions"',
-      '  >',
-      '  <div class="border">',
-      '    <h4 ng-if="isEditMode"><input class="label-input" type="text" ng-model="$parent.label"></h4>',
-      '    <h4 ng-if="!isEditMode">{{label}}</h4>',
-      editControlsDelete(),
-      '    <div class="categorized choices">',
-      '      <div class="choice-container" ng-class="{draggedOver:isDraggedOver}">',
-      '        <div choice-corespring-dnd-categorize="true" ',
-      '           choice-id="{{choice.model.id}}" ',
-      '           correctness="{{choice.correctness}}" ',
-      '           drag-enabled="dragEnabled" ',
-      '           edit-mode="choiceEditMode" ',
-      '           model="choice.model"',
-      '           ng-repeat="choice in choices track by $index" ',
-      '           ng-style="{width:choiceWidth}"',
-      '           on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-      '           on-drag-end="onLocalChoiceDragEnd(choiceId,dropEffect)"',
-      '           on-drag-start-now="onLocalChoiceDragStart(choiceId)" ',
-      '        ></div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('');
+        '<div class="category"',
+        '  ng-class="{draggedOver:isDraggedOver}" ',
+        '  data-drop="true" ',
+        '  jqyoui-droppable="droppableOptions"',
+        '  >',
+        '  <div class="border">',
+        '    <h4 ng-if="isEditMode"><input class="label-input" type="text" ng-model="$parent.label"></h4>',
+        '    <h4 ng-if="!isEditMode">{{label}}</h4>',
+        editControlsDelete(),
+        '    <div class="categorized choices">',
+        '      <div class="choice-container" ng-class="{draggedOver:isDraggedOver}">',
+        '        <div choice-corespring-dnd-categorize="true" ',
+        '           choice-id="{{choice.model.id}}" ',
+        '           correctness="{{choice.correctness}}" ',
+        '           drag-and-drop-scope="dragAndDropScope"',
+        '           drag-enabled="dragEnabled" ',
+        '           edit-mode="choiceEditMode" ',
+        '           model="choice.model"',
+        '           ng-repeat="choice in choices track by $index" ',
+        '           ng-style="{width:choiceWidth}"',
+        '           on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
+        '           on-drag-end="onLocalChoiceDragEnd(choiceId,dropEffect)"',
+        '           on-drag-start-now="onLocalChoiceDragStart(choiceId)" ',
+        '        ></div>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    }
 
-      function editControlsDelete() {
-        return [
+    function editControlsDelete() {
+      return [
         '<ul class="edit-controls" ng-if="showTools">',
         deleteTool(),
         '</ul>'].join('');
-      }
+    }
 
-      function deleteTool() {
-        return [
+    function deleteTool() {
+      return [
         '<li class="delete-icon-button" ng-click="onDeleteClicked()" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
         '  <i class="fa fa-trash-o"></i>',
         '</li>'].join('');
-      }
-
     }
-}];
+
+  }];
 
 
 exports.framework = 'angular';

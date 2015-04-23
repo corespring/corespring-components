@@ -9,20 +9,23 @@ var choice = [
       link: link,
       template: template(),
       scope: {
-        dragEnabled: '=',
-        model: '=',
         correctness: '@',
-        onDragStart: '&onDragStartNow',
-        onDragEnd: '&onDragEnd',
+        deleteAfterPlacing: '=?deleteAfterPlacing',
+        dragAndDropScope: '=',
+        dragEnabled: '=',
+        editMode: '=?editMode',
+        imageService: "=?",
+        model: '=',
         notifyDeleteClicked: '&onDeleteClicked',
         notifyEditClicked: '&onEditClicked',
-        editMode: '=?editMode',
-        deleteAfterPlacing: '=?deleteAfterPlacing',
-        imageService: "=?"
+        onDragEnd: '&onDragEnd',
+        onDragStart: '&onDragStartNow'
       }
     };
 
     function link(scope, elem, attrs) {
+      var log = console.log.bind(console, '[choice]');
+      //log("dragAndDropScope", scope.dragAndDropScope);
 
       new MiniWiggiScopeExtension().postLink(scope);
 
@@ -40,19 +43,22 @@ var choice = [
 
       scope.draggableOptions = {
         animate: true,
-        placeholder: 'keep',
         onStart: 'onStart',
-        onStop: 'onStop'
+        onStop: 'onStop',
+        placeholder: true,
+        scope: scope.dragAndDropScope
       };
+
+      console.log("ch")
 
       scope.draggableJqueryOptions = {
         revert: 'invalid',
-        helper: 'clone',
         appendTo: scope.draggedParent
       };
 
       scope.$watch('correctness', updateClasses);
       scope.$watch('model.label', triggerResize);
+
       updateClasses();
 
       //------------------------------------------------
@@ -115,6 +121,9 @@ var choice = [
         }
         if (scope.canDelete()) {
           classes.push('delete');
+        }
+        if(scope.isDragEnabled()){
+          classes.push('draggable');
         }
 
         scope.classes = classes;
