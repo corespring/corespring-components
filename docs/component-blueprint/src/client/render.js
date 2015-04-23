@@ -15,6 +15,7 @@ var main = [
       scope.undoStack = [];
       scope.editable = false;
       scope.isSeeAnswerOpen = false;
+      scop.answerChangeCallback;
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
@@ -26,8 +27,12 @@ var main = [
         resetStash: function () {
         },
         isAnswerEmpty: isAnswerEmpty,
-        answerChangedHandler: function(callback){
-
+        answerChangedHandler: function(callback) {
+          //you need save this callback and call it every time
+          //the user interacts with the component and changes the
+          //content of the session. This is important for
+          //the inputReceived event that the player dispatches
+          scope.answerChangeCallback = callback;
         },
         editable: setEditable
       };
