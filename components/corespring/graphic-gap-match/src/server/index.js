@@ -5,7 +5,7 @@ var keys = fb.keys;
 exports.keys = keys;
 
 exports.createOutcome = function(question, answer, settings) {
-  console.log('a',answer);
+  console.log('a', answer);
 
   var isChoiceInHotspot = function(choice, hotspot) {
     var choiceWidth = 10;
@@ -16,8 +16,10 @@ exports.createOutcome = function(question, answer, settings) {
   };
 
   var mutableCorrectResponse;
-  var isAnswerCorrect = function(answer) {
-    return _.some(mutableCorrectResponse, function(cr) {
+
+  var hotspotAndCorrectnessForAnswer = function(answer) {
+    var foundHotspot;
+    var result = _.find(mutableCorrectResponse, function(cr) {
       if (cr.id === answer.id) {
         var correctResponseForChoice = cr;
         if (correctResponseForChoice) {
@@ -27,6 +29,7 @@ exports.createOutcome = function(question, answer, settings) {
           });
           var isCorrect = (!_.isUndefined(hotspotForChoice) && hotspotForChoice.id === correctHotspot);
           if (isCorrect) {
+            foundHotspot = hotspotForChoice.id;
             cr.id = undefined;
           }
           return isCorrect;
@@ -35,14 +38,25 @@ exports.createOutcome = function(question, answer, settings) {
       return false;
     });
 
+    var isCorrect = !_.isUndefined(result);
+    var hotspot = foundHotspot;
+    return {isCorrect: isCorrect, hotspot: hotspot};
+  };
+
+  var isAnswerCorrect = function(answer) {
+    return hotspotAndCorrectnessForAnswer(answer).isCorrect;
   };
 
   var getFeedbackForChoices = function() {
     return _.map(answer, function(a) {
-       return {
-         id: a.id,
-         isCorrect: isAnswerCorrect(a)
-       }
+      var hotspotAndCorrectness = hotspotAndCorrectnessForAnswer(a);
+      return {
+        id: a.id,
+        isCorrect: hotspotAndCorrectness.isCorrect,
+        hotspot: hotspotAndCorrectness.hotspot,
+        left: a.left,
+        top: a.top
+      }
     });
   };
 

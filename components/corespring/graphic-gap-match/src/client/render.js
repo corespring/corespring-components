@@ -21,7 +21,6 @@ var main = [
       }
     };
 
-
     var link = function(scope, element, attrs) {
       scope.editable = true;
       scope.stack = [];
@@ -96,14 +95,14 @@ var main = [
         scope.droppedChoices = _.cloneDeep(state.droppedChoices);
       };
 
-      scope.alreadyMarkedAsCorrect = [];
       scope.correctClass = function(forChoice) {
         if (scope.response && scope.response.feedback) {
           var choice = _.find(scope.response.feedback.choices, function(c) {
-            return c.id === forChoice.id;
+            return (c.id === forChoice.id && c.left === forChoice.left && c.top === forChoice.top);
           });
           if (choice) {
-            return choice.isCorrect ? "correct" : "incorrect";
+            var result = choice.isCorrect ? "correct" : "incorrect";
+            return result;
           }
         }
         return "";
