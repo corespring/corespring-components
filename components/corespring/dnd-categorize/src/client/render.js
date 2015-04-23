@@ -116,7 +116,7 @@ var main = [
       function setResponse(response) {
         scope.response = response;
 
-        setSpecificFeedback(response);
+        setDetailedFeedback(response);
         initSeeSolutionModel(response);
       }
 
@@ -124,14 +124,16 @@ var main = [
         if(!response.detailedFeedback){
           return;
         }
-        _.forEach(scope.renderModel.categories, function(cat){
-          var feedback = response.detailedFeedback[cat.model.id];
-          if(feedback.answersExpected){
-            cat.answersExpected = true;
+        _.forEach(scope.renderModel.categories, function(category){
+          var feedback = response.detailedFeedback[category.model.id];
+          if(feedback) {
+            if (feedback.answersExpected) {
+              category.answersExpected = true;
+            }
+            _.forEach(category.choices, function (choice, choiceIndex) {
+              choice.correctness = feedback.correctness[choiceIndex];
+            });
           }
-          _.forEach(cat.choices, function(choice, choiceIndex){
-            choice.correctness = feedback.correctness[choiceIndex];
-          });
         });
       }
 

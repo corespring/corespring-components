@@ -42,13 +42,26 @@
   }
 
   &.ui-draggable-dragging {
+    cursor: move;
+    opacity: 0.75;
     z-index: 1000;
+  }
+
+  &.draggable {
+    cursor: pointer;
   }
 }
 
 .render-corespring-dnd-categorize {
 
+  .feedback {
+    .panel-heading {
+      cursor: default;
+    }
+  }
+
   .container-choices {
+    margin-bottom: 10px;
     position: relative;
   }
 
