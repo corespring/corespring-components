@@ -39,6 +39,7 @@ var main = [
       scope.revertToState = revertToState;
 
       scope.containerBridge = {
+        answerChangedHandler: saveAnswerChangedCallback,
         editable: setEditable,
         getSession: getSession,
         reset: reset,
@@ -59,6 +60,8 @@ var main = [
         scope.$watch('attrCategories.length', updateCategoriesAndChoicesFromEditor);
         scope.$watch('attrChoices.length', updateCategoriesAndChoicesFromEditor);
       }
+
+      scope.$watch('renderModel', callAnswerChangedHandlerIfAnswersHaveChanged, true);
 
       if (!scope.isEditMode) {
         scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
@@ -178,6 +181,22 @@ var main = [
 
       function setEditable(e) {
         scope.editable = true;
+      }
+
+      function saveAnswerChangedCallback(callback){
+        scope.answerChangedCallback = callback;
+      }
+
+      var lastSession = null;
+
+      function callAnswerChangedHandlerIfAnswersHaveChanged(){
+        if(_.isFunction(scope.answerChangedCallback)){
+          var session = getSession();
+          if(!_.equal(session, lastSession)){
+            lastSession = session;
+            scope.answerChangedCallback();
+          }
+        }
       }
 
       function initLayouts() {
