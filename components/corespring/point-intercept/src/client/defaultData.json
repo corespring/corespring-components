@@ -7,6 +7,11 @@
     "2,2",
     "3,3"
   ],
+  "allowPartialScoring": false,
+
+  "partialScoring" : [
+    {}
+  ],
   "feedback" :  {
     "correctFeedbackType": "default",
     "incorrectFeedbackType": "default"

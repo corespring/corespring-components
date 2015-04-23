@@ -304,9 +304,27 @@
     }
   }
 
+  .warning-icon {
+    text-align: center;
+    font-size: 25px;
+    line-height: 31px !important;
+    color: @warning-color;
+  }
+
   .feedback {
     display: block;
     clear: both;
+    &.warning {
+      .panel-heading {
+        display: none;
+      }
+      .panel-body {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        background-color: #F2DEDE;
+        color: @warning-color;
+      }
+    }
   }
 
   .button-row {

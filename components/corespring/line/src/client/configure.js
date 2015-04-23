@@ -64,6 +64,7 @@ var main = [
       '<div class="row">',
       '  <div class="body col-md-12">',
       '  <h3>Lines</h3>',
+       '  <div class="col-md-12 intro-text"><strong>Line equations must be in y=mx+b form. Only whole number coordinates can be plotted.</strong></div>',
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       '         <div class="col-sm-8">',
