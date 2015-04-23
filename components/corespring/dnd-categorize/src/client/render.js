@@ -1,6 +1,7 @@
 var main = [
   '$timeout',
-  function ($timeout) {
+  'LayoutRunner',
+  function($timeout, LayoutRunner) {
 
     return {
       restrict: 'AE',
@@ -12,20 +13,8 @@ var main = [
 
     function link(scope, elem, attrs) {
 
-      var layout = new CompactLayout(
-        new LayoutConfig()
-          .withContainer(elem.find(".container-choices"))
-          .withItemSelector(".choice-corespring-dnd-categorize")
-          .withCellWidth(choiceWidth())
-          .value(),
-        new LayoutRunner($timeout));
-
-      var editingLayout = new CompactLayoutWhileEditing(
-        new LayoutConfig()
-          .withContainer(elem.find(".container-choices"))
-          .withItemSelector(".choice-corespring-dnd-categorize")
-          .value(),
-        new LayoutRunner($timeout));
+      var layout, editingLayout;
+      var log = console.log.bind(console, '[dnd-categorize]');
 
       scope.correctAnswerRows = [[]];
       scope.editable = false;
@@ -33,6 +22,7 @@ var main = [
       scope.isDragEnabledFromCategory = false;
       scope.isEditMode = attrs.mode === 'edit';
       scope.isSeeCorrectAnswerOpen = false;
+      scope.renderModel = {};
       scope.rows = [[]];
       scope.undoStack = [];
 
@@ -62,8 +52,10 @@ var main = [
       scope.$on("$destroy", onDestroy);
 
       if (scope.isEditMode) {
-        scope.$watch('attrCategories.length', onChangeCategoriesOrChoices);
-        scope.$watch('attrChoices.length', onChangeCategoriesOrChoices);
+        scope.$watch('attrCategories.length', updateCategoriesAndChoicesFromEditor);
+        scope.$watch('attrChoices.length', updateCategoriesAndChoicesFromEditor);
+      } else {
+        scope.$watch('renderModel', updateUndoStack, true);
       }
 
       if (!scope.isEditMode) {
@@ -72,35 +64,43 @@ var main = [
 
       //-----------------------------------------------------------
 
-      function setEditable(e){
-        scope.editable = true;
-      }
-
       function setDataAndSession(dataAndSession) {
-        console.log("[dnd-categorize] setDataAndSession ", dataAndSession);
+        log("setDataAndSession ", dataAndSession);
 
-        reset();
+        scope.editable = true;
+        scope.session = dataAndSession.session;
+        scope.data = dataAndSession.data;
+        setConfig(dataAndSession.data.model);
+        scope.renderModel = prepareRenderModel(dataAndSession.data.model, dataAndSession.session);
+        scope.saveRenderModel = _.cloneDeep(scope.renderModel);
 
-        scope.session = dataAndSession.session || {};
-        scope.choices = dataAndSession.data.model.config.shuffle ?
-          _.shuffle(dataAndSession.data.model.choices) :
-          _.take(dataAndSession.data.model.choices, all);
-        scope.allChoices = _.take(scope.choices, all);
-        scope.categories = _.map(dataAndSession.data.model.categories, wrapCategoryModel);
-        _.forEach(scope.categories, function (category) {
-          category.choices = category.choices || [];
-        });
-        scope.categoriesPerRow = dataAndSession.data.model.config.categoriesPerRow || 3;
-        scope.choicesPerRow = dataAndSession.data.model.config.choicesPerRow || 4;
-        scope.shouldFlip = dataAndSession.data.model.config.answerAreaPosition === 'above';
-
+        initLayouts();
         updateView();
       }
 
+      function setConfig(model) {
+        scope.categoriesPerRow = parseInt(model.config.categoriesPerRow, 10) || 2;
+        scope.choicesPerRow = parseInt(model.config.choicesPerRow, 10) || 4;
+        scope.shouldFlip = model.config.answerAreaPosition === 'above';
+      }
+
+      function prepareRenderModel(model, session) {
+        var renderModel = {};
+        renderModel.choices = model.config.shuffle ?
+          _.shuffle(model.choices) :
+          _.take(model.choices, all);
+        renderModel.allChoices = _.take(renderModel.choices, all);
+        renderModel.categories = _.map(model.categories, wrapCategoryModel);
+        _.forEach(renderModel.categories, function(category) {
+          category.choices = category.choices || [];
+        });
+        return renderModel;
+      }
+
       function getSession() {
-        var answers = _.reduce(scope.categories, function (result, category) {
+        var answers = _.reduce(scope.renderModel.categories, function(result, category) {
           var catId = category.model.id;
-          result[catId] = _.map(category.choices, function (choice) {
+          result[catId] = _.map(category.choices, function(choice) {
             return choice.model.id;
           });
           return result;
@@ -113,32 +113,31 @@ var main = [
 
       function setResponse(response) {
         scope.response = response;
-        scope.feedback = response.feedback;
-        scope.correctClass = response.correctClass;
 
-        setCorrectnessOnAnswers();
-        initSeeSolutionModel();
+        setSpecificFeedback(response);
+        initSeeSolutionModel(response);
       }
 
-      function setCorrectnessOnAnswers() {
-        // Update categories with responses
-        _.forEach(scope.categories, function (category) {
-          var correctChoices = response.correctResponse[category.model.id];
-          _.forEach(category.choices, function (choice) {
-            if (_.contains(correctChoices, choice.model.id)) {
-              choice.correctness = 'correct';
-            } else {
-              choice.correctness = 'incorrect';
-            }
+      function setSpecificFeedback(response) {
+        if(!response.specificFeedback){
+          return;
+        }
+        _.forEach(scope.renderModel.categories, function(cat){
+          var feedback = response.specificFeedback[cat.model.id];
+          if(feedback.answersExpected){
+            cat.answersExpected = true;
+          }
+          _.forEach(cat.choices, function(choice, choiceIndex){
+            choice.correctness = feedback.correctness[choiceIndex];
           });
         });
       }
 
-      function initSeeSolutionModel(){
-        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
+      function initSeeSolutionModel(response) {
+        var categoriesPerRow = scope.categoriesPerRow;
         scope.correctAnswerRows = [[]];
 
-        _.forEach(scope.categories, function (category) {
+        _.forEach(scope.renderModel.categories, function(category) {
           var lastRow = _.last(scope.correctAnswerRows);
           if (lastRow.length === categoriesPerRow) {
             scope.correctAnswerRows.push(lastRow = []);
@@ -151,8 +150,8 @@ var main = [
 
       function createCategoryModelForSolution(category, correctChoices) {
         var newCategory = _.cloneDeep(category);
-        newCategory.choices = _.map(correctChoices, function (correctChoiceId) {
-          var choiceModel = _.find(scope.allChoices, byId(correctChoiceId));
+        newCategory.choices = _.map(correctChoices, function(correctChoiceId) {
+          var choiceModel = _.find(scope.renderModel.allChoices, byId(correctChoiceId));
           var choice = wrapChoiceModel(choiceModel);
           choice.correctness = 'correct';
           return choice;
@@ -161,40 +160,38 @@ var main = [
       }
 
       function reset() {
-        scope.choices = _.take(scope.allChoices, all);
         scope.editable = true;
-        scope.feedback = undefined;
         scope.isSeeAnswerPanelExpanded = false;
         scope.response = undefined;
-        _.forEach(scope.categories, function (category) {
-          category.choices = [];
-        });
+
+        scope.renderModel = _.cloneDeep(scope.saveRenderModel);
       }
 
-      function updateView() {
-        if (!scope.categories || !scope.choices) {
-          return;
+      function setEditable(e) {
+        scope.editable = true;
+      }
+
+      function initLayouts() {
+        if (layout) {
+          layout.cancel();
         }
+        layout = new CompactLayout(
+          new LayoutConfig()
+          .withContainer(elem.find(".container-choices"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .withCellWidth(calcChoiceWidth())
+          .value(),
+          new LayoutRunner($timeout));
 
-        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
-        if (isNaN(categoriesPerRow)) {
-          return;
+        if (editingLayout) {
+          editingLayout.cancel();
         }
-
-        scope.rows = chunk(scope.categories, categoriesPerRow);
-
-        scope.choiceWidth = choiceWidth();
-
-        scope.categoryStyle = {
-          "width": elem.width() / categoriesPerRow
-        };
-        scope.choiceStyle = {
-          "width": scope.choiceWidth
-        };
-        layout.updateConfig({
-          container: elem.find(".container-choices"),
-          cellWidth: scope.choiceWidth
-        });
+        editingLayout = new CompactLayoutWhileEditing(
+          new LayoutConfig()
+          .withContainer(elem.find(".container-choices"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .value(),
+          new LayoutRunner($timeout));
       }
 
       function onDestroy() {
@@ -206,8 +203,36 @@ var main = [
         }
       }
 
-      function choiceWidth() {
-        if (!scope.choices) {
+      function updateView() {
+        if (!scope.renderModel.categories || !scope.renderModel.choices) {
+          return;
+        }
+
+        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
+        if (isNaN(categoriesPerRow)) {
+          return;
+        }
+
+        scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
+
+        scope.choiceWidth = calcChoiceWidth();
+
+        scope.categoryStyle = {
+          "width": elem.width() / categoriesPerRow
+        };
+        scope.choiceStyle = {
+          "width": scope.choiceWidth
+        };
+        layout.updateConfig({
+          container: elem.find(".container-choices"),
+          cellWidth: scope.choiceWidth
+        });
+
+        renderMath();
+      }
+
+      function calcChoiceWidth() {
+        if (!scope.renderModel.choices) {
           return 0;
         }
         var choicesPerRow = parseInt(scope.choicesPerRow, 10);
@@ -217,7 +242,7 @@ var main = [
       function chunk(arr, chunkSize) {
         //can be replaced with _.chunk, once lodash has been updated
         var chunks = [[]];
-        _.forEach(arr, function (elem) {
+        _.forEach(arr, function(elem) {
           var lastRow = _.last(chunks);
           if (lastRow.length === chunkSize) {
             chunks.push(lastRow = []);
@@ -228,44 +253,44 @@ var main = [
       }
 
       function onCategoryDrop(categoryId, choiceId) {
-        var category = _.find(scope.categories, byModelId(categoryId));
+        var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
-          var choice = _.find(scope.allChoices || scope.choices, byId(choiceId));
-          scope.$apply(function () {
+          var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
+          scope.$apply(function() {
             category.choices.push(wrapChoiceModel(choice));
           });
 
           if (choice.moveOnDrag && !scope.isEditMode) {
-            _.remove(scope.choices, byId(choiceId));
+            _.remove(scope.renderModel.choices, byId(choiceId));
           }
         }
       }
 
       function onCategoryDeleteClicked(categoryId) {
-        _.remove(scope.categories, byModelId(categoryId));
+        _.remove(scope.renderModel.categories, byModelId(categoryId));
       }
 
       function findInAllCategories(choiceId) {
-        return _.find(scope.categories, function (category) {
+        return _.find(scope.renderModel.categories, function(category) {
           return _.find(category.choices, byModelId(choiceId)) !== undefined;
         });
       }
 
       function onChoiceRemovedFromCategory(categoryId, choiceId) {
-        var category = _.find(scope.categories, byModelId(categoryId));
+        var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         if (category) {
           _.remove(category.choices, byModelId(choiceId));
-          var choice = _.find(scope.allChoices || scope.choices, byId(choiceId));
+          var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
           if (!scope.isEditMode && choice && choice.moveOnDrag && !findInAllCategories(choiceId)) {
-            scope.choices.push(choice);
+            scope.renderModel.choices.push(choice);
           }
         }
       }
 
       function onChoiceDeleteClicked(choiceId) {
-        _.remove(scope.choices, byId(choiceId));
-        _.forEach(scope.categories, function (category) {
+        _.remove(scope.renderModel.choices, byId(choiceId));
+        _.forEach(scope.renderModel.categories, function(category) {
           if (category) {
             _.remove(category.choices, byId(choiceId));
           }
@@ -286,13 +311,21 @@ var main = [
         };
       }
 
-      function onChangeCategoriesOrChoices() {
-        scope.choices = scope.attrChoices;
-        scope.categories = scope.attrCategories;
+      function updateCategoriesAndChoicesFromEditor() {
+        //TODO Changes from the editor? setDataAndSession not sufficient?
+        scope.renderModel.choices = scope.attrChoices;
+        scope.renderModel.categories = scope.attrCategories;
+
+        //TODO Why does it reset shouldFlip ?
         scope.shouldFlip = false;
       }
 
-
+      function renderMath() {
+        scope.$emit('rerender-math', {
+          delay: 100,
+          element: elem[0]
+        });
+      }
 
       function updateIsDragEnabled() {
         scope.isDragEnabled = _.isUndefined(scope.response);
@@ -317,8 +350,8 @@ var main = [
       }
 
       function onChoiceEditClicked(choiceId) {
-        console.log('editedChoice', choiceId);
-        scope.editedChoice = _.find(scope.choices, byId(choiceId));
+        log('editedChoice', choiceId);
+        scope.editedChoice = _.find(scope.renderModel.choices, byId(choiceId));
         layout.cancel();
 
         var choiceElementSelector = '.container-choices [choice-id="' + choiceId + '"]';
@@ -329,7 +362,7 @@ var main = [
           editedElement: choiceElement
         });
 
-        $('body').on('click', function (e) {
+        $('body').on('click', function(e) {
           var $target = $(e.target);
           if (choiceElement.has($target).length === 0 && scope.editedChoice && scope.editedChoice.id === choiceId) {
             editingLayout.cancel();
@@ -339,8 +372,8 @@ var main = [
         });
       }
 
-      function watchRenderModel(newValue, oldValue) {
-        //console.log("watchRenderModel", newValue);
+      function updateUndoStack(newValue, oldValue) {
+        //log("updateUndoStack", newValue);
         if (newValue && !_.isEqual(newValue, _.last(scope.undoStack))) {
           scope.undoStack.push(_.cloneDeep(newValue));
         }
@@ -364,13 +397,13 @@ var main = [
       }
 
       function byModelId(id) {
-        return function (object) {
+        return function(object) {
           return object.model.id === id;
         };
       }
 
       function byId(id) {
-        return function (object) {
+        return function(object) {
           return object.id === id;
         };
       }
@@ -421,21 +454,24 @@ var main = [
     function interaction() {
       return [
         '<div class="interaction-corespring-dnd-categorize">',
-        choicesTemplate().replace("{flipp}", "shouldFlip"),
-        categoriesTemplate().replace("{flipp}", "!shouldFlip").replace("{rowsModel}", "rows"),
+        choicesTemplate("shouldFlip"),
+        categoriesTemplate("!shouldFlip", "rows"),
         '  <hr/>',
-        '  <span ng-if="isEditMode" class="choice-area-label">Enter choices below and drag to correct categories above. Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.</span>',
-        choicesTemplate().replace("{flipp}", "!shouldFlip"),
-        categoriesTemplate().replace("{flipp}", "shouldFlip").replace("{rowsModel}", "rows"),
+        '  <span ng-if="isEditMode" class="choice-area-label">',
+        '    Enter choices below and drag to correct categories above. ',
+        '    Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.',
+        '  </span>',
+        choicesTemplate("!shouldFlip"),
+        categoriesTemplate("shouldFlip", "rows"),
         '</div>'
       ].join('');
     }
 
-    function choicesTemplate() {
+    function choicesTemplate(flip) {
       return [
-        '<div class="container-choices" ng-if="{flipp}">',
+        '<div class="container-choices" ng-if="#flip#">',
         '  <div choice-corespring-dnd-categorize="true" ',
-        '    ng-repeat="choice in choices track by choice.id" ',
+        '    ng-repeat="choice in renderModel.choices track by choice.id" ',
         '    drag-enabled="isDragEnabled"',
         '    edit-mode="getEditMode(choice)" ',
         '    model="choice" ',
@@ -447,13 +483,13 @@ var main = [
         '    image-service="imageService"',
         '   ></div>',
         '</div>'
-      ].join('');
+      ].join('').replace("#flip#", flip);
     }
 
-    function categoriesTemplate() {
+    function categoriesTemplate(flip, rowsModel) {
       return [
-        '<div class="categories" ng-if="{flipp}">',
-        '  <div class="row" ng-repeat="row in {rowsModel}">',
+        '<div class="categories" ng-if="#flip#">',
+        '  <div class="row" ng-repeat="row in #rowsModel#">',
         '    <div category-corespring-dnd-categorize="true" ',
         '      ng-repeat="category in row"',
         '      category-id="{{category.model.id}}" ',
@@ -470,19 +506,19 @@ var main = [
         '     ></div>',
         '   </div>',
         ' </div>'
-      ].join('');
+      ].join('').replace("#flip#", flip).replace("#rowsModel#", rowsModel);
     }
 
     function seeSolutionContent() {
       return [
-        categoriesTemplate().replace("{flipp}", "true").replace("{rowsModel}", "correctAnswerRows"),
+        categoriesTemplate("true", "correctAnswerRows")
       ].join("");
     }
   }];
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-var category = ['$timeout', function ($timeout) {
+var category = ['$timeout', 'LayoutRunner', function($timeout, LayoutRunner) {
 
   return {
     restrict: 'A',
@@ -501,7 +537,6 @@ var category = ['$timeout', function ($timeout) {
       onDrop: '&'
     }
   };
-
 
   function link(scope, elem, attrs) {
 
@@ -527,13 +562,13 @@ var category = ['$timeout', function ($timeout) {
     scope.onLocalChoiceDragEnd = onLocalChoiceDragEnd;
 
     scope.$on('$destroy', onDestroy);
-    attrs.$observe('choiceWidth', onChangeChoiceWidth);
+    attrs.$observe('choiceWidth', updateChoiceWidthInLayout);
 
 
     //---------------------------------------------------------------
 
     function onDeleteClicked() {
-      scope.$$postDigest(function () {
+      scope.$$postDigest(function() {
         scope.notifyDeleteClicked({
           categoryId: attrs.categoryId
         });
@@ -550,7 +585,7 @@ var category = ['$timeout', function ($timeout) {
     function onDropCallback(e, draggable) {
       var choiceId = draggable.draggable.attr('choice-id');
       scope.isDraggedOver = false;
-      scope.$$postDigest(function () {
+      scope.$$postDigest(function() {
         scope.onDrop({
           categoryId: attrs.categoryId,
           choiceId: choiceId
@@ -562,14 +597,14 @@ var category = ['$timeout', function ($timeout) {
       var choiceId = draggable.draggable.attr('choice-id');
 
       if (choiceId !== "" && !isLocalChoiceDragged) {
-        scope.$apply(function () {
+        scope.$apply(function() {
           scope.isDraggedOver = true;
         });
       }
     }
 
     function onOutCallback() {
-      scope.$apply(function () {
+      scope.$apply(function() {
         scope.isDraggedOver = false;
       });
     }
@@ -587,8 +622,8 @@ var category = ['$timeout', function ($timeout) {
       });
     }
 
-    function onChangeChoiceWidth(newValue, oldValue) {
-      if (newValue != oldValue && newValue > 0) {
+    function updateChoiceWidthInLayout(newValue, oldValue) {
+      if (newValue !== oldValue && newValue > 0) {
         initLayout(newValue);
       }
     }
@@ -597,10 +632,10 @@ var category = ['$timeout', function ($timeout) {
       if (!layout) {
         layout = new CompactLayout(
           new LayoutConfig()
-            .withContainer(elem.find(".choice-container"))
-            .withItemSelector(".choice-corespring-dnd-categorize")
-            .withCellWidth(choiceWidth)
-            .value(),
+          .withContainer(elem.find(".choice-container"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .withCellWidth(choiceWidth)
+          .value(),
           new LayoutRunner($timeout));
       } else {
         layout.updateConfig(new LayoutConfig()
@@ -666,7 +701,7 @@ var category = ['$timeout', function ($timeout) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-var choice = ['$sce', 'MiniWiggiScopeExtension', function ($sce, MiniWiggiScopeExtension) {
+var choice = ['$sce', 'MiniWiggiScopeExtension', function($sce, MiniWiggiScopeExtension) {
 
   return {
     restrict: 'EA',
@@ -691,35 +726,80 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function ($sce, MiniWiggiScopeE
 
     new MiniWiggiScopeExtension().postLink(scope);
 
-    scope.onStart = function () {
+    scope.onStart = onStart;
+    scope.onStop = onStop;
+    scope.onDeleteClicked = onDeleteClicked;
+    scope.canEdit = canEdit;
+    scope.isEditing = isEditing;
+    scope.canDelete = canDelete;
+    scope.onChoiceEditClicked = onChoiceEditClicked;
+    scope.isDragEnabled = isDragEnabled;
+
+    scope.showTools = canEdit(scope.editMode) || canDelete(scope.editMode);
+    scope.draggedParent = canEdit(scope.editMode) ? ".modal" : "body";
+
+    scope.draggableOptions = {
+      animate: true,
+      placeholder: 'keep',
+      onStart: 'onStart',
+      onStop: 'onStop'
+    };
+
+    scope.draggableJqueryOptions = {
+      revert: 'invalid',
+      helper: 'clone',
+      appendTo: scope.draggedParent
+    };
+
+    scope.$watch('correctness', updateClasses);
+    scope.$watch('model.label', triggerResize);
+    updateClasses();
+
+    //------------------------------------------------
+
+    function onStart() {
       scope.onDragStart({
         choiceId: attrs.choiceId
       });
-    };
+    }
 
-    scope.onStop = function () {
+    function onStop() {
       scope.onDragEnd({
         choiceId: attrs.choiceId
       });
-    };
+    }
 
-    scope.onDeleteClicked = function () {
+    function onDeleteClicked() {
       scope.notifyDeleteClicked({
         choiceId: attrs.choiceId
       });
-    };
+    }
 
-    scope.canEdit = function () {
+    function canEdit() {
       return _.contains(scope.editMode, 'editable') || _.contains(scope.editMode, 'editing');
-    };
+    }
 
-    scope.isEditing = function () {
+    function isEditing() {
       return _.contains(scope.editMode, 'editing');
-    };
+    }
 
-    scope.canDelete = function () {
+    function canDelete() {
       return _.contains(scope.editMode, 'delete');
-    };
+    }
+
+    function isDragEnabled() {
+      return scope.dragEnabled && !scope.isEditing();
+    }
+
+    function onChoiceEditClicked() {
+      scope.notifyEditClicked({
+        choiceId: attrs.choiceId
+      });
+    }
+
+    function triggerResize() {
+      $(window).trigger("resize");
+    }
 
     function updateClasses() {
       var classes = [attrs.choiceId];
@@ -740,40 +820,6 @@ var choice = ['$sce', 'MiniWiggiScopeExtension', function ($sce, MiniWiggiScopeE
       scope.classes = classes;
     }
 
-    scope.onChoiceEditClicked = function () {
-      scope.notifyEditClicked({
-        choiceId: attrs.choiceId
-      });
-    };
-
-    scope.$watch('correctness', updateClasses);
-
-    scope.$watch('model.label', function () {
-      $(window).trigger("resize");
-    });
-
-    updateClasses();
-
-    scope.showTools = scope.canEdit(scope.editMode) || scope.canDelete(scope.editMode);
-
-    scope.draggedParent = scope.canEdit(scope.editMode) ? ".modal" : "body";
-
-    scope.isDragEnabled = function () {
-      return scope.dragEnabled && !scope.isEditing();
-    };
-
-    scope.draggableOptions = {
-      animate: true,
-      placeholder: 'keep',
-      onStart: 'onStart',
-      onStop: 'onStop'
-    };
-
-    scope.draggableJqueryOptions = {
-      revert: 'invalid',
-      helper: 'clone',
-      appendTo: scope.draggedParent
-    };
   }
 
   function template() {
@@ -869,7 +915,7 @@ function CompactLayout(initialConfig, layoutRunner) {
   function refresh() {
     var choiceElements = config.container.find(config.itemSelector);
 
-    if (!elementsShouldBeRendered(choiceElements))
+    if (!elementsShouldBeRendered(choiceElements)) {
       return;
     }
 
@@ -878,16 +924,16 @@ function CompactLayout(initialConfig, layoutRunner) {
       return;
     }
 
-    var columns = _.range(numColumns).map(function () {
+    var columns = _.range(numColumns).map(function() {
       return [];
     });
 
-    _.forEach(choiceElements, function (choice) {
+    _.forEach(choiceElements, function(choice) {
       smallestColumn(columns).push(choice);
     });
 
-    columns.forEach(function (colChoices, colIndex) {
-      colChoices.forEach(function (choice, choiceIndex) {
+    columns.forEach(function(colChoices, colIndex) {
+      colChoices.forEach(function(choice, choiceIndex) {
         $(choice).css({
           position: 'absolute',
           top: getChoiceTop(colChoices, choiceIndex),
@@ -907,10 +953,10 @@ function CompactLayout(initialConfig, layoutRunner) {
     return _.sortBy(columns, getColumnHeight)[0];
   }
 
-  function elementsShouldBeRendered(choiceElements){
-    if(!hasNewConfig) {
+  function elementsShouldBeRendered(choiceElements) {
+    if (!hasNewConfig) {
       var heights = _(choiceElements).map(getElementHeight).value();
-      var someElementsHaveZeroHeight = _.some(heights, function (height) {
+      var someElementsHaveZeroHeight = _.some(heights, function(height) {
         return height === 0;
       });
       if (someElementsHaveZeroHeight || _.isEqual(choiceSizeCache, heights)) {
@@ -923,7 +969,7 @@ function CompactLayout(initialConfig, layoutRunner) {
   }
 
   function getChoiceTop(choices, index) {
-    return _.reduce(_.take(choices, index), function (acc, choice) {
+    return _.reduce(_.take(choices, index), function(acc, choice) {
       return $(choice).height() + acc;
     }, 0);
   }
@@ -934,7 +980,7 @@ function CompactLayout(initialConfig, layoutRunner) {
   }
 
   function getColumnHeight(column) {
-    return _.reduce(column, function (acc, el) {
+    return _.reduce(column, function(acc, el) {
       return acc + $(el).height();
     }, 0);
   }
@@ -977,7 +1023,7 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
   this.runner = layoutRunner;
 
   function isAbove(thisEl) {
-    return function (thatEl) {
+    return function(thatEl) {
       var thisTop = thisEl.position().top;
       var thisLeft = thisEl.position().left;
       var thatTop = $(thatEl).position().top;
@@ -991,7 +1037,7 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
     return jqel.position().top + jqel.height();
   }
 
-  this.refresh = function () {
+  this.refresh = function() {
     var editedElement = this.config.editedElement;
     var choiceElements = this.config.container.find(this.config.itemSelector);
     var elementsAboveEdited = _.filter(choiceElements, isAbove(editedElement));
@@ -1010,8 +1056,8 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
       lastBottom = lastBottom + jqel.height();
     }
 
-    this.getContainerHeight = function () {
-      return _.reduce(choiceElements, function (acc, el) {
+    this.getContainerHeight = function() {
+      return _.reduce(choiceElements, function(acc, el) {
         var jqel = $(el);
         var elBottom = jqel.position().top + jqel.height();
         return acc < elBottom ? elBottom : acc;
@@ -1023,12 +1069,12 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
     });
   };
 
-  this.start = function (newConfig) {
+  this.start = function(newConfig) {
     this.config = _.assign(this.config, newConfig);
     this.runner.start(this);
   };
 
-  this.cancel = function () {
+  this.cancel = function() {
     this.runner.cancel();
   };
 }
@@ -1036,70 +1082,23 @@ function CompactLayoutWhileEditing(initialConfig, layoutRunner) {
 function LayoutConfig() {
   var config = {};
 
-  this.withContainer = function (value) {
+  this.withContainer = function(value) {
     config.container = value;
     return this;
   };
 
-  this.withItemSelector = function (value) {
+  this.withItemSelector = function(value) {
     config.itemSelector = value;
     return this;
   };
 
-  this.withCellWidth = function (value) {
+  this.withCellWidth = function(value) {
     config.cellWidth = value;
     return this;
   };
 
-  this.value = function () {
+  this.value = function() {
     return config;
   };
-}
-
-function LayoutRunner(timeout) {
-
-  var nextRefreshHandle = null;
-  var cancelled = false;
-  var layout = null;
-
-  this.runLater = runLater;
-  this.cancel = cancel;
-  this.start = start;
-  this.run = run;
-
-  //--------------------------------
-
-  function runLater(block) {
-    if (cancelled) {
-      return;
-    }
-    if (window.requestAnimationFrame) {
-      nextRefreshHandle = window.requestAnimationFrame(block);
-    } else {
-      nextRefreshHandle = timeout(block, 100);
-    }
-  }
-
-  function cancel() {
-    cancelled = true;
-    if (nextRefreshHandle) {
-      if (window.requestAnimationFrame) {
-        window.cancelAnimationFrame(nextRefreshHandle);
-      } else {
-        timeout.cancel(nextRefreshHandle);
-      }
-    }
-  }
-
-  function start(targetLayout) {
-    layout = targetLayout;
-    cancelled = false;
-    runLater(run);
-  }
-
-  function run() {
-    runLater(run);
-    layout.refresh();
-  }
 }
 

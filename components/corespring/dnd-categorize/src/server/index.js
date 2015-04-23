@@ -12,7 +12,7 @@ function createOutcome(question, answer, settings) {
   var numberOfCorrectAnswers = countCorrectAnswers(question, answer);
   var numberOfExpectedAnswers = countExpectedAnswers(question);
 
-  var response = db.createOutcome(question, answer, settings,
+  var response = fb.defaultCreateOutcome(question, answer, settings,
     numberOfAnswers, numberOfCorrectAnswers, numberOfExpectedAnswers);
 
   response.specificFeedback = createSpecificFeedback(question, answer);
@@ -20,23 +20,27 @@ function createOutcome(question, answer, settings) {
   return response;
 }
 
-
-
 function countAnswers(answers) {
   if (!answers) {
     return 0;
   }
-  _.reduce(answers, function(sum, cat) {
+  return _.reduce(answers, function(sum, cat) {
     return sum + cat.length;
-  })
+  });
 }
 
 function countCorrectAnswers(question, answers) {
   if (!answers) {
     return 0;
   }
-  _.reduce(question.categories, function(sum, cat) {
+  return _.reduce(question.categories, function(sum, cat) {
     return sum + countCorrectAnswersInCategory(question.correctResponse[cat.id], answers[cat.id]);
+  });
+}
+
+function countExpectedAnswers(question) {
+  return _.reduce(question.correctResponse, function(sum, cat) {
+    return sum + cat.length;
   });
 }
 
@@ -50,12 +54,6 @@ function countCorrectAnswersInCategory(correctAnswers, answers) {
     }
     return sum;
   });
-}
-
-function countExpectedAnswers(question) {
-  _.reduce(question.correctResponse, function(sum, cat) {
-    return sum + cat.length;
-  })
 }
 
 function createSpecificFeedback(question, answers) {
