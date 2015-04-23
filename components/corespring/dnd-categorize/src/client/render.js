@@ -36,6 +36,7 @@ var main = [
       scope.onChoiceEditClicked = onChoiceEditClicked;
       scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
       scope.showSeeCorrectAnswer = showSeeCorrectAnswer;
+      scope.revertToState = revertToState;
 
       scope.containerBridge = {
         editable: setEditable,
@@ -57,8 +58,6 @@ var main = [
       if (scope.isEditMode) {
         scope.$watch('attrCategories.length', updateCategoriesAndChoicesFromEditor);
         scope.$watch('attrChoices.length', updateCategoriesAndChoicesFromEditor);
-      } else {
-        scope.$watch('renderModel', updateUndoStack, true);
       }
 
       if (!scope.isEditMode) {
@@ -168,6 +167,8 @@ var main = [
         scope.response = undefined;
 
         scope.renderModel = _.cloneDeep(scope.saveRenderModel);
+        updateView();
+        scope.$broadcast('reset');
       }
 
       function setEditable(e) {
@@ -377,28 +378,10 @@ var main = [
         });
       }
 
-      function updateUndoStack(newValue, oldValue) {
-        //log("updateUndoStack", newValue);
-        if (newValue && !_.isEqual(newValue, _.last(scope.undoStack))) {
-          scope.undoStack.push(_.cloneDeep(newValue));
-        }
-      }
-
-      function startOver() {
-        scope.undoStack = [_.first(scope.undoStack)];
-        revertToState(_.first(scope.undoStack));
-      }
-
-      function undo() {
-        if (scope.undoStack.length < 2) {
-          return;
-        }
-        scope.undoStack.pop();
-        revertToState(_.last(scope.undoStack));
-      }
-
       function revertToState(state) {
+        log("revertToState", state);
         scope.renderModel = state;
+        updateView();
       }
 
       function byModelId(id) {
@@ -431,11 +414,11 @@ var main = [
 
     function undoStartOver() {
       return [
-        '<div ng-show="editable" class="undo-start-over pull-right">',
-        '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="undoStack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
-        '  <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="undoStack.length < 2">Start over</button>',
-        '</div>',
-        '<div class="clearfix"></div>'
+        '<div corespring-undo-start-over="" ',
+        '    render-model="renderModel"',
+        '    revert-to-state="revertToState(state)"',
+        '    ng-show="editable"',
+        '></div>'
       ].join('');
     }
 
