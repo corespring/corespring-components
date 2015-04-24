@@ -123,7 +123,7 @@ describe.only('hotspot', function() {
     });
   });
 
-  describe.only('feedback', function() {
+  describe('feedback', function() {
     it('correct answer should give correct feedback', function() {
       var answer = [
         {id: "c1", left: 25, top: 25},
@@ -149,6 +149,25 @@ describe.only('hotspot', function() {
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
       expect(outcome.feedback.choices).to.eql([{id: "c1", isCorrect: true}, {id: "c2", isCorrect: false}]);
+    });
+  });
+
+  describe.only('choices belonging to multiple hotspots', function() {
+    var otherComponent;
+    beforeEach(function() {
+      otherComponent = _.extend(component, {"correctResponse": [
+        {"id": "c1", "hotspot": "h1"},
+        {"id": "c1", "hotspot": "h2"}
+      ]});
+
+    });
+    it('should evaluate to correct when the choice is dragged to the respective correct hotspots', function() {
+      var answer = [
+        {id: "c1", left: 25, top: 25},
+        {id: "c1", left: 25, top: 145}
+      ];
+      var outcome = server.createOutcome(otherComponent, answer, helper.settings(true, true, true));
+      expect(_.pluck(outcome.feedback.choices, 'id','isCorrect')).to.eql([{id: "c1", isCorrect: true}, {id: "c1", isCorrect: true}]);
     });
   });
 
