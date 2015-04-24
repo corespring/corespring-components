@@ -15,7 +15,6 @@ var main = [
       scope.undoStack = [];
       scope.editable = false;
       scope.isSeeAnswerOpen = false;
-      scop.answerChangeCallback;
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
