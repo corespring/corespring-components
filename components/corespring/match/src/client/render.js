@@ -46,7 +46,7 @@ var main = [
               callback();
             }
           }, true);
-        },
+        }
       };
 
       scope.classForChoice = classForChoice;
