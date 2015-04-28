@@ -5,11 +5,15 @@ var main = [
   '$timeout',
   '$http',
   'ChoiceTemplates',
+  "ComponentImageService",
+  "WiggiMathJaxFeatureDef",
   function(
     $log,
     $timeout,
     $http,
-    ChoiceTemplates
+    ChoiceTemplates,
+    ComponentImageService,
+    WiggiMathJaxFeatureDef
   ) {
 
     "use strict";
@@ -72,7 +76,7 @@ var main = [
       '        </div>',
       '        <div class="col-md-9 col-xs-8">',
       '          <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
-      '              image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
+      '              image-service="imageService()" features="extraFeaturesForChoices"',
       '              parent-selector=".modal-body">',
       '            <edit-pane-toolbar alignment="bottom">',
       '              <div class="btn-group pull-right">',
@@ -336,7 +340,19 @@ var main = [
         ChoiceTemplates.scoring(),
         '  </div>',
         '</div>'
-      ].join("")
+      ].join(""),
+
+      controller: ['$scope', function($scope) {
+        $scope.imageService = function() {
+          return ComponentImageService;
+        };
+
+        $scope.extraFeaturesForChoices = {
+          definitions: [
+            new WiggiMathJaxFeatureDef()
+          ]
+        };
+      }]
     };
 
   }
