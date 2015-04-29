@@ -362,12 +362,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
 
       '   <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
+      '        <div class="warning-icon" ng-show="feedback && correctClass === \'warning\'"><i class="fa fa-warning"></i></div>',
       '        <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '      </div>',
       '    </div>',
 
 
       '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
+      '      <div class="warning-icon" ng-show="feedback && correctClass === \'warning\'"><i class="fa fa-warning"></i></div>',
       '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '    </div>',
 
