@@ -49,10 +49,11 @@ exports.createOutcome = function(question, answer, settings) {
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 
   if (!validAnswer(answer)) {
+    var answerCorrectness = answer.A === undefined && answer.B === undefined ? 'warning' : 'incorrect';
     return {
-      correctness: 'incorrect',
+      correctness: answerCorrectness,
       score: 0,
-      feedback: addFeedback ? fbu.makeFeedback(question.feedback, 'incorrect') : null
+      feedback: addFeedback ? fbu.makeFeedback(question.feedback, answerCorrectness) : null
     };
   }
 

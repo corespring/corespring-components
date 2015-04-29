@@ -179,9 +179,12 @@ var calculateScore = function(question, answer, isSingleChoice) {
 exports.createOutcome = function(question, answer, settings) {
   if(_.isEmpty(answer)) {
     return {
-      correctness: 'incorrect',
+      correctness: 'warning',
       score: 0,
-      feedback: settings.showFeedback ? buildFeedback(question, answer, settings, false) : null
+      feedback: settings.showFeedback ? {
+        emptyAnswer: true,
+        message: keys.DEFAULT_WARNING_FEEDBACK
+      } : null
     };
   }
 

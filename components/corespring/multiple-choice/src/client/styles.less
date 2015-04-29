@@ -1,3 +1,4 @@
+
 @import '../../../../../less/common';
 
 .view-multiple-choice {
@@ -367,10 +368,18 @@
         cursor: pointer;
       }
     }
-
     .panel-body{
       .answer{
         width: 100%;
+      }
+    }
+    .fa.warning {
+      margin: 0;
+      font-size: 25px;
+      line-height: 31px !important;
+      color: @warning-color;
+      &:before {
+        content: @warning-character;
       }
     }
   }
@@ -380,6 +389,14 @@
   .answerIcon, .learnMoreIcon {
     font-size: 30px;
     margin-right: 2%;
+  }
+  &.warning {
+    .checkbox-choice,
+    .radio-choice {
+      border-color: #B94A48;
+      border-width: 2px;
+      opacity: 1;
+    }
   }
 }
 
