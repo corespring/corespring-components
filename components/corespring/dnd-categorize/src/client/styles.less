@@ -76,6 +76,20 @@
         vertical-align: top;
         display: inline-block;
 
+        &.category-active {
+          .choice-container {
+            background-color: #ccc;
+            border-radius: 8px;
+          }
+        }
+
+        &.category-hover {
+          .choice-container {
+            border: dashed 1px rgb(129, 129, 129);
+            border-radius: 8px;
+          }
+        }
+
         .border {
           margin: 3px;
 
@@ -110,12 +124,6 @@
 
           }
 
-          &.draggedOver {
-            .categorized.choices {
-              background-color: rgb(129, 129, 129);
-            }
-          }
-
           .categorized.choices {
             border: solid 1px rgb(129, 129, 129);
             border-radius: 8px;
@@ -123,14 +131,8 @@
             padding: 8px;
 
             .choice-container {
-              background-color: white;
               min-height: 20px;
               position: relative;
-
-              &.draggedOver {
-                border: dashed 1px rgb(129, 129, 129);
-                border-radius: 8px;
-              }
 
               .choice-corespring-dnd-categorize {
 

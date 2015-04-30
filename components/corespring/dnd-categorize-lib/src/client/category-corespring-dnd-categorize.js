@@ -27,7 +27,7 @@ var category = [
     function link(scope, elem, attrs) {
 
       var log = console.log.bind(console, '[category]');
-      //log("dragAndDropScope", scope.dragAndDropScope);
+      log("dragAndDropScope", scope.dragAndDropScope);
 
       var layout;
       var isLocalChoiceDragged = false;
@@ -39,7 +39,14 @@ var category = [
         multiple: true,
         onDrop: 'onDropCallback',
         onOver: 'onOverCallback',
-        onOut: 'onOutCallback',
+        onOut: 'onOutCallback'
+      };
+
+      scope.droppableJqueryOptions = {
+        activeClass: 'category-active',
+        distance: 5,
+        hoverClass: 'category-hover',
+        tolerance: 'pointer',
         scope: scope.dragAndDropScope
       };
 
@@ -147,6 +154,7 @@ var category = [
         '  ng-class="{draggedOver:isDraggedOver}" ',
         '  data-drop="true" ',
         '  jqyoui-droppable="droppableOptions"',
+        '  data-jqyoui-options="droppableJqueryOptions"',
         '  >',
         '  <div class="border">',
         '    <h4 ng-if="isEditMode"><input class="label-input" type="text" ng-model="$parent.label"></h4>',

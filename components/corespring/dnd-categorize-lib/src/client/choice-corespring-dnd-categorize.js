@@ -25,7 +25,7 @@ var choice = [
 
     function link(scope, elem, attrs) {
       var log = console.log.bind(console, '[choice]');
-      //log("dragAndDropScope", scope.dragAndDropScope);
+      log("dragAndDropScope", scope.dragAndDropScope);
 
       new MiniWiggiScopeExtension().postLink(scope);
 
@@ -45,15 +45,13 @@ var choice = [
         animate: true,
         onStart: 'onStart',
         onStop: 'onStop',
-        placeholder: true,
-        scope: scope.dragAndDropScope
+        placeholder: true
       };
-
-      console.log("ch")
 
       scope.draggableJqueryOptions = {
         revert: 'invalid',
-        appendTo: scope.draggedParent
+        appendTo: scope.draggedParent,
+        scope: scope.dragAndDropScope
       };
 
       scope.$watch('correctness', updateClasses);
