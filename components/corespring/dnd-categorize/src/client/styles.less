@@ -5,9 +5,9 @@
 .clearfix() {
   *zoom: 1;
   &:after {
+    clear: both;
     content: '';
     display: block;
-    clear: both;
     height: 0;
   }
 }
@@ -33,19 +33,20 @@
   -webkit-user-select: none;
 
   .border {
-    position: relative;
     background: white;
-    border: solid 1px #c2c2c2;
     border-radius: 4px;
+    border: solid 1px #D8D8D8;
     margin: 3px;
     min-height: 40px;
     padding: 3px;
+    position: relative;
 
     .remove-choice {
-      position: absolute;
-      top: 0;
-      right: 3px;
+      color: #333333;
       opacity: 0.3;
+      position: absolute;
+      right: 3px;
+      top: 0;
 
       &:hover {
         opacity: 1.0;
@@ -109,10 +110,15 @@
 
         .border {
           margin: 3px;
+          text-align: center;
 
           .label-input {
             margin: 0;
             padding-bottom: 2px;
+          }
+
+          .category-label {
+            font-weight: normal;
           }
 
           .delete-after-placing {
@@ -120,13 +126,13 @@
           }
 
           .edit-controls {
-            position: absolute;
-            z-index: 10000;
-            padding: 3px 3px 3px 3px;
-            top: 55px;
-            right: 2px;
             background: rgba(255, 255, 255, 0.7);
             border-radius: 8px;
+            padding: 3px 3px 3px 3px;
+            position: absolute;
+            right: 2px;
+            top: 55px;
+            z-index: 10000;
 
             .edit-icon-button, .delete-icon-button {
               display: inline-block;
@@ -142,7 +148,7 @@
           }
 
           .categorized.choices {
-            border: solid 1px rgb(129, 129, 129);
+            border: solid 2px #979797;
             border-radius: 8px;
             min-height: 40px;
             padding: 8px;
