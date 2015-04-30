@@ -37,9 +37,7 @@ var category = [
 
       scope.droppableOptions = {
         multiple: true,
-        onDrop: 'onDropCallback',
-        onOver: 'onOverCallback',
-        onOut: 'onOutCallback'
+        onDrop: 'onDropCallback'
       };
 
       scope.droppableJqueryOptions = {
@@ -53,8 +51,6 @@ var category = [
       scope.onDeleteClicked = onDeleteClicked;
       scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
       scope.onDropCallback = onDropCallback;
-      scope.onOverCallback = onOverCallback;
-      scope.onOutCallback = onOutCallback;
       scope.onLocalChoiceDragStart = onLocalChoiceDragStart;
       scope.onLocalChoiceDragEnd = onLocalChoiceDragEnd;
 
@@ -81,7 +77,6 @@ var category = [
 
       function onDropCallback(e, draggable) {
         var choiceId = draggable.draggable.attr('choice-id');
-        scope.isDraggedOver = false;
         scope.$$postDigest(function() {
           scope.onDrop({
             categoryId: attrs.categoryId,
@@ -90,29 +85,11 @@ var category = [
         });
       }
 
-      function onOverCallback(e, draggable) {
-        var choiceId = draggable.draggable.attr('choice-id');
-
-        if (choiceId !== "" && !isLocalChoiceDragged) {
-          scope.$apply(function() {
-            scope.isDraggedOver = true;
-          });
-        }
-      }
-
-      function onOutCallback() {
-        scope.$apply(function() {
-          scope.isDraggedOver = false;
-        });
-      }
-
       function onLocalChoiceDragStart(choiceId) {
-        isLocalChoiceDragged = true;
+        //nothing to do here
       }
 
-      function onLocalChoiceDragEnd(choiceId, dropEffect) {
-        isLocalChoiceDragged = false;
-
+      function onLocalChoiceDragEnd(choiceId) {
         scope.onChoiceDraggedAway({
           fromCategoryId: attrs.categoryId,
           choiceId: choiceId
@@ -151,7 +128,6 @@ var category = [
     function template() {
       return [
         '<div class="category"',
-        '  ng-class="{draggedOver:isDraggedOver}" ',
         '  data-drop="true" ',
         '  jqyoui-droppable="droppableOptions"',
         '  data-jqyoui-options="droppableJqueryOptions"',
@@ -161,7 +137,7 @@ var category = [
         '    <h4 ng-if="!isEditMode">{{label}}</h4>',
         editControlsDelete(),
         '    <div class="categorized choices">',
-        '      <div class="choice-container" ng-class="{draggedOver:isDraggedOver}">',
+        '      <div class="choice-container">',
         '        <div choice-corespring-dnd-categorize="true" ',
         '           choice-id="{{choice.model.id}}" ',
         '           correctness="{{choice.correctness}}" ',
@@ -172,7 +148,7 @@ var category = [
         '           ng-repeat="choice in choices track by $index" ',
         '           ng-style="{width:choiceWidth}"',
         '           on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-        '           on-drag-end="onLocalChoiceDragEnd(choiceId,dropEffect)"',
+        '           on-drag-end="onLocalChoiceDragEnd(choiceId)"',
         '           on-drag-start-now="onLocalChoiceDragStart(choiceId)" ',
         '        ></div>',
         '      </div>',
