@@ -1,10 +1,14 @@
 var main = [
   '$timeout',
-  'LayoutConfig',
-  'LayoutRunner',
   'CompactLayout',
   'CompactLayoutWhileEditing',
-  function($timeout, LayoutConfig, LayoutRunner, CompactLayout, CompactLayoutWhileEditing) {
+  'LayoutConfig',
+  'LayoutRunner',
+  function ($timeout,
+            CompactLayout,
+            CompactLayoutWhileEditing,
+            LayoutConfig,
+            LayoutRunner) {
 
     return {
       restrict: 'AE',
@@ -16,8 +20,8 @@ var main = [
 
     function link(scope, elem, attrs) {
 
-      var layout, editingLayout;
       var log = console.log.bind(console, '[dnd-categorize]');
+      var layout, editingLayout;
 
       scope.correctAnswerRows = [[]];
       scope.editable = false;
@@ -47,21 +51,20 @@ var main = [
         setResponse: setResponse
       };
 
-      scope.$watch('response', updateIsDragEnabled);
-      scope.$watch('choices.length', updateView);
       scope.$watch('categories.length', updateView);
       scope.$watch('categoriesPerRow', updateView);
+      scope.$watch('choices.length', updateView);
       scope.$watch('choicesPerRow', updateView);
+      scope.$watch('response', updateIsDragEnabled);
       scope.$watch('shouldFlip', updateView);
-
-      scope.$on("$destroy", onDestroy);
+      scope.$watch('renderModel', callAnswerChangedHandlerIfAnswersHaveChanged, true);
 
       if (scope.isEditMode) {
         scope.$watch('attrCategories.length', updateCategoriesAndChoicesFromEditor);
         scope.$watch('attrChoices.length', updateCategoriesAndChoicesFromEditor);
       }
 
-      scope.$watch('renderModel', callAnswerChangedHandlerIfAnswersHaveChanged, true);
+      scope.$on("$destroy", onDestroy);
 
       if (!scope.isEditMode) {
         scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
@@ -73,8 +76,8 @@ var main = [
         log("setDataAndSession ", dataAndSession);
 
         scope.editable = true;
-        scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
+        scope.session = dataAndSession.session;
         setConfig(dataAndSession.data.model);
         scope.renderModel = prepareRenderModel(dataAndSession.data.model, dataAndSession.session);
         scope.saveRenderModel = _.cloneDeep(scope.renderModel);
@@ -92,23 +95,20 @@ var main = [
       function prepareRenderModel(model, session) {
         var renderModel = {
           dragAndDropScope: "scope-" + Math.floor(Math.random() * 10000)
-      }
+        };
 
         renderModel.choices = model.config.shuffle ?
           _.shuffle(model.choices) :
           _.take(model.choices, all);
         renderModel.allChoices = _.take(renderModel.choices, all);
         renderModel.categories = _.map(model.categories, wrapCategoryModel);
-        _.forEach(renderModel.categories, function(category) {
-          category.choices = category.choices || [];
-        });
         return renderModel;
       }
 
       function getSession() {
-        var answers = _.reduce(scope.renderModel.categories, function(result, category) {
+        var answers = _.reduce(scope.renderModel.categories, function (result, category) {
           var catId = category.model.id;
-          result[catId] = _.map(category.choices, function(choice) {
+          result[catId] = _.map(category.choices, function (choice) {
             return choice.model.id;
           });
           return result;
@@ -127,12 +127,12 @@ var main = [
       }
 
       function setDetailedFeedback(response) {
-        if(!response.detailedFeedback){
+        if (!response.detailedFeedback) {
           return;
         }
-        _.forEach(scope.renderModel.categories, function(category){
+        _.forEach(scope.renderModel.categories, function (category) {
           var feedback = response.detailedFeedback[category.model.id];
-          if(feedback) {
+          if (feedback) {
             if (feedback.answersExpected) {
               category.answersExpected = true;
             }
@@ -144,13 +144,13 @@ var main = [
       }
 
       function initSeeSolutionModel(response) {
-        if(!response.correctAnswers){
+        if (!response.correctAnswers) {
           return;
         }
         var categoriesPerRow = scope.categoriesPerRow;
         scope.correctAnswerRows = [[]];
 
-        _.forEach(scope.renderModel.categories, function(category) {
+        _.forEach(scope.renderModel.categories, function (category) {
           var lastRow = _.last(scope.correctAnswerRows);
           if (lastRow.length === categoriesPerRow) {
             scope.correctAnswerRows.push(lastRow = []);
@@ -163,7 +163,7 @@ var main = [
 
       function createCategoryModelForSolution(category, correctChoices) {
         var newCategory = _.cloneDeep(category);
-        newCategory.choices = _.map(correctChoices, function(correctChoiceId) {
+        newCategory.choices = _.map(correctChoices, function (correctChoiceId) {
           var choiceModel = _.find(scope.renderModel.allChoices, byId(correctChoiceId));
           var choice = wrapChoiceModel(choiceModel);
           choice.correctness = 'correct';
@@ -186,16 +186,16 @@ var main = [
         scope.editable = true;
       }
 
-      function saveAnswerChangedCallback(callback){
+      function saveAnswerChangedCallback(callback) {
         scope.answerChangedCallback = callback;
       }
 
       var lastSession = null;
 
-      function callAnswerChangedHandlerIfAnswersHaveChanged(){
-        if(_.isFunction(scope.answerChangedCallback)){
+      function callAnswerChangedHandlerIfAnswersHaveChanged() {
+        if (_.isFunction(scope.answerChangedCallback)) {
           var session = getSession();
-          if(!_.equal(session, lastSession)){
+          if (!_.equal(session, lastSession)) {
             lastSession = session;
             scope.answerChangedCallback();
           }
@@ -208,10 +208,10 @@ var main = [
         }
         layout = new CompactLayout(
           new LayoutConfig()
-          .withContainer(elem.find(".container-choices"))
-          .withItemSelector(".choice-corespring-dnd-categorize")
-          .withCellWidth(calcChoiceWidth())
-          .value(),
+            .withContainer(elem.find(".container-choices"))
+            .withItemSelector(".choice-corespring-dnd-categorize")
+            .withCellWidth(calcChoiceWidth())
+            .value(),
           new LayoutRunner($timeout));
 
         if (editingLayout) {
@@ -219,9 +219,9 @@ var main = [
         }
         editingLayout = new CompactLayoutWhileEditing(
           new LayoutConfig()
-          .withContainer(elem.find(".container-choices"))
-          .withItemSelector(".choice-corespring-dnd-categorize")
-          .value(),
+            .withContainer(elem.find(".container-choices"))
+            .withItemSelector(".choice-corespring-dnd-categorize")
+            .value(),
           new LayoutRunner($timeout));
       }
 
@@ -273,7 +273,7 @@ var main = [
       function chunk(arr, chunkSize) {
         //can be replaced with _.chunk, once lodash has been updated
         var chunks = [[]];
-        _.forEach(arr, function(elem) {
+        _.forEach(arr, function (elem) {
           var lastRow = _.last(chunks);
           if (lastRow.length === chunkSize) {
             chunks.push(lastRow = []);
@@ -288,13 +288,14 @@ var main = [
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
           var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
-          scope.$apply(function() {
+          scope.$apply(function () {
             category.choices.push(wrapChoiceModel(choice));
           });
 
           if (choice.moveOnDrag && !scope.isEditMode) {
             _.remove(scope.renderModel.choices, byId(choiceId));
           }
+          updateView();
         }
       }
 
@@ -303,7 +304,7 @@ var main = [
       }
 
       function findInAllCategories(choiceId) {
-        return _.find(scope.renderModel.categories, function(category) {
+        return _.find(scope.renderModel.categories, function (category) {
           return _.find(category.choices, byModelId(choiceId)) !== undefined;
         });
       }
@@ -321,7 +322,7 @@ var main = [
 
       function onChoiceDeleteClicked(choiceId) {
         _.remove(scope.renderModel.choices, byId(choiceId));
-        _.forEach(scope.renderModel.categories, function(category) {
+        _.forEach(scope.renderModel.categories, function (category) {
           if (category) {
             _.remove(category.choices, byId(choiceId));
           }
@@ -395,7 +396,7 @@ var main = [
           editedElement: choiceElement
         });
 
-        $('body').on('click', function(e) {
+        $('body').on('click', function (e) {
           var $target = $(e.target);
           if (choiceElement.has($target).length === 0 && scope.editedChoice && scope.editedChoice.id === choiceId) {
             editingLayout.cancel();
@@ -412,13 +413,13 @@ var main = [
       }
 
       function byModelId(id) {
-        return function(object) {
+        return function (object) {
           return object.model.id === id;
         };
       }
 
       function byId(id) {
-        return function(object) {
+        return function (object) {
           return object.id === id;
         };
       }

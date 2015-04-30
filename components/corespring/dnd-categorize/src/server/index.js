@@ -56,18 +56,20 @@ function countCorrectAnswersInCategory(expectedAnswers, answers) {
 }
 
 function createDetailedFeedback(question, answers) {
-  return _.reduce(question.correctResponse, function(result, expectedAnswers, categoryId) {
-    result[categoryId] = makeFeedbackForCategory(expectedAnswers, categoryId);
+  return _.reduce(question.model.categories, function(result, category) {
+    var categoryId = category.id;
+    var expectedAnswers = question.correctResponse[categoryId] || [];
+    var actualAnswers = answers[categoryId] || [];
+    result[categoryId] = makeFeedback(expectedAnswers, actualAnswers);
     return result;
   }, {});
 
-  function makeFeedbackForCategory(expectedAnswers, catId) {
-    var selectedAnswers = answers[catId];
+  function makeFeedback(expectedAnswers, actualAnswers) {
     var feedback = {};
-    if (selectedAnswers.length === 0) {
+    if (actualAnswers.length === 0) {
       feedback.answersExpected = expectedAnswers.length > 0;
     } else {
-      feedback.correctness = _.map(selectedAnswers, function(answer) {
+      feedback.correctness = _.map(actualAnswers, function(answer) {
         return _.contains(expectedAnswers, answer) ? 'correct' : 'incorrect';
       });
     }
