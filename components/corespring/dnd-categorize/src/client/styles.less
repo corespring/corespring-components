@@ -33,12 +33,24 @@
   -webkit-user-select: none;
 
   .border {
+    position: relative;
     background: white;
     border: solid 1px #c2c2c2;
     border-radius: 4px;
     margin: 3px;
     min-height: 40px;
     padding: 3px;
+
+    .remove-choice {
+      position: absolute;
+      top: 0;
+      right: 3px;
+      opacity: 0.3;
+
+      &:hover {
+        opacity: 1.0;
+      }
+    }
   }
 
   &.draggable {
@@ -50,6 +62,7 @@
       z-index: 1000;
     }
   }
+
 }
 
 .render-corespring-dnd-categorize {
@@ -63,6 +76,10 @@
   .container-choices {
     margin-bottom: 10px;
     position: relative;
+
+    .remove-choice {
+      display: none;
+    }
   }
 
   .categories {

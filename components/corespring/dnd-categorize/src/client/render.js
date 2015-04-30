@@ -310,6 +310,7 @@ var main = [
       }
 
       function onChoiceRemovedFromCategory(categoryId, choiceId) {
+        log("onChoiceRemovedFromCategory", categoryId, choiceId);
         var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         if (category) {
           _.remove(category.choices, byModelId(choiceId));
