@@ -33,9 +33,9 @@
   -webkit-user-select: none;
 
   .border {
-    background: white;
+    background-color: white;
     border-radius: 4px;
-    border: solid 1px #D8D8D8;
+    border: solid 1px #979797;
     margin: 3px;
     min-height: 40px;
     padding: 3px;
@@ -55,6 +55,40 @@
     }
   }
 
+  &.correct {
+    .border {
+      border-width: 2px;
+      border-color: @correct-color;
+
+      &:after {
+        color: @correct-color;
+        content: @correct-character;
+        font-family: 'FontAwesome';
+        font-size: 17px;
+        position: absolute;
+        right: 2px;
+        top: -2px;
+      }
+    }
+  }
+
+  &.incorrect {
+    .border {
+      border-width: 2px;
+      border-color: @incorrect-color;
+
+      &:after {
+        color: @incorrect-color;
+        content: @incorrect-character;
+        font-family: 'FontAwesome';
+        font-size: 17px;
+        position: absolute;
+        right: 2px;
+        top: -2px;
+      }
+    }
+  }
+
   &.draggable {
     cursor: pointer;
 
@@ -63,11 +97,16 @@
       opacity: 0.75;
       z-index: 1000;
     }
+
   }
 
 }
 
 .render-corespring-dnd-categorize {
+
+  .undo-start-over {
+    margin-bottom: 15px;
+  }
 
   .feedback {
     .panel-heading {
@@ -78,7 +117,7 @@
   .container-choices {
     margin-bottom: 10px;
     position: relative;
-    background-color: #eee;
+    background-color: #efefef;
     border-radius: 4px;
   }
 
@@ -95,7 +134,7 @@
 
         &.category-active {
           .categorized.choices {
-            background-color: #ccc;
+            background-color: #d8d8d8;
             .choice-container {
               border-radius: 8px;
             }
@@ -158,38 +197,7 @@
               min-height: 20px;
               position: relative;
 
-
-              .choice-corespring-dnd-categorize {
-
-                &.correct {
-                  .border {
-                    border-width: 2px;
-                    border-color: @correct-color;
-
-                    .remove-choice {
-                      display: none;
-                    }
-                  }
-                }
-
-                &.incorrect {
-                  .border {
-                    border-width: 2px;
-                    border-color: @incorrect-color;
-
-                    .remove-choice {
-                      display: none;
-                    }
-                  }
-                }
-
-                .border {
-                  border-radius: 4px;
-                  .shell {
-                    text-align: initial;
-                    padding: 5px;
-                  }
-                }
+              .choice-corespring-dnd-categorize.draggable {
 
                 .remove-choice {
                   display:inline-block;
