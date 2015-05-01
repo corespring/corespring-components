@@ -216,13 +216,15 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
                 choices[i] = scope.landingPlaceChoices[i].id;
               }
             }
-            console.log("Answers are ", choices);
             return {
               answers: choices
             };
           } else {
             return {
-              answers: scope.userHasInteracted ? _.pluck(scope.local.choices, 'id') : []
+              answers: {
+                choices: _.pluck(scope.local.choices, 'id'),
+                didInteract: scope.userHasInteracted
+              }
             };
           }
         },
