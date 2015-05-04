@@ -23,7 +23,7 @@ exports.directive = {
         scope.startOver = startOver;
 
         scope.$on('reset', clearUndoStack);
-        scope.$watch('renderModel', updateUndoStack, true)
+        scope.$watch('renderModel', updateUndoStack, true);
 
         function clearUndoStack(){
           log("clearUndoStack");
