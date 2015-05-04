@@ -136,11 +136,12 @@ var main = [
       scope.droppableJquiOptions = {
         accept: function() {
           return !_.contains(scope.choices, scope.draggedChoice);
-        }
+        },
+        activeClass: 'dropping'
       };
 
       scope.onDrop = function(ev, ui) {
-        var MARGIN = 2;
+        var MARGIN = 1;
         var offsetX = ev.clientX - ui.helper.offset().left;
         var offsetY = ev.clientY - ui.helper.offset().top;
 
@@ -232,19 +233,23 @@ var main = [
         '  <div class="clearfix"></div>',
         '  <div class="main-container {{model.config.choiceAreaPosition}}">',
         choices(['left', 'top']),
-        '    <div class="background-image" data-drop="true" jqyoui-droppable="{onDrop: \'onDrop()\'}">',
-        '      <svg ng-if="model.config.showHotspots" class="hotspots">',
-        '        <rect ng-repeat="hotspot in model.hotspots" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
-        '      </svg>',
-        '      <div class="dropped choice {{correctClass(choice)}}"',
-        '           ng-repeat="choice in droppedChoices"',
-        '           style="left: {{choice.left}}px; top: {{choice.top}}px"',
-        '           data-drag="editable"',
-        '           jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
-        '           data-jqyoui-options="draggableJquiOptions"',
-        '           ng-bind-html-unsafe="choice.label">',
+        '    <div class="answers">',
+        '      <div class="background-image {{response.correctClass}}"',
+        '           data-drop="true"',
+        '           jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
+        '        <svg ng-if="model.config.showHotspots" class="hotspots">',
+        '          <rect ng-repeat="hotspot in model.hotspots" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '        </svg>',
+        '        <div class="dropped choice {{correctClass(choice)}}"',
+        '             ng-repeat="choice in droppedChoices"',
+        '             style="left: {{choice.left}}px; top: {{choice.top}}px"',
+        '             data-drag="editable"',
+        '             jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
+        '             data-jqyoui-options="draggableJquiOptions"',
+        '             ng-bind-html-unsafe="choice.label">',
+        '        </div>',
+        '        <img ng-src="{{model.config.backgroundImage}}" />',
         '      </div>',
-        '      <img ng-src="{{model.config.backgroundImage}}" />',
         '    </div>',
         choices(['bottom', 'right']),
         '  </div>',
@@ -255,11 +260,11 @@ var main = [
         '           coords-for-hotspot="hotspot"',
         '           populate="style"',
         '           class="hotspot"',
-       '             ng-class="{withBorder: model.config.showHotspots}">',
-        '      <div class="choice correct"',
-        '           ng-repeat="choice in correctAnswerForHotspot(hotspot)"',
-        '           ng-bind-html-unsafe="choice.label">',
-        '      </div>',
+        '           ng-class="{withBorder: model.config.showHotspots}">',
+        '        <div class="choice correct"',
+        '             ng-repeat="choice in correctAnswerForHotspot(hotspot)"',
+        '             ng-bind-html-unsafe="choice.label">',
+        '        </div>',
 
         '      </div>',
         '      <img ng-src="{{model.config.backgroundImage}}" />',

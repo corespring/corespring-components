@@ -6,6 +6,7 @@
   border: 2px solid @hotspot-border-color;
 }
 
+
 .view-graphic-gap-match {
 
   .main-container {
@@ -15,7 +16,7 @@
       display: table;
       border-spacing: 5px;
 
-      .background-image {
+      .answers {
         display: table-cell;
       }
     }
@@ -28,9 +29,19 @@
 
   .background-image {
     border-radius: 4px;
-    border: 2px solid #9B9B9B;
+    border: 1px solid #cccccc;
+    margin: 1px;
     position: relative;
     vertical-align: top;
+
+    &.dropping {
+      border: 2px dashed #CCCCCC;
+      margin: 0px;
+    }
+
+    &.warning {
+      border: 2px solid @warning-color;
+    }
 
     img {
       max-width: 430px;
@@ -89,13 +100,36 @@
     }
   }
 
-  .see-answer-panel .choice.correct {
-    position: relative;
+  .see-answer-panel {
+    .choice {
+      margin: 3px;
+      &.correct {
+        position: relative;
+      }
+    }
+  }
+
+  .feedback {
+    &.panel {
+      &.warning {
+        .panel-heading {
+          display: none;
+        }
+
+        .panel-body {
+          border-radius: 4px;
+          padding: 15px;
+          background-color: #f2dede;
+          border-color: #eed3d7;
+          color: #b94a48;
+        }
+      }
+    }
   }
 
   .choice {
     background-color: #fff;
-    border: 1px solid black;
+    border: 1px solid #979797;
     border-radius: 4px;
     display: inline-block;
     padding: 5px;
