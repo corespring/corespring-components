@@ -1,5 +1,13 @@
 @import '../../../../../less/common';
 
+@max-width-height-image: 100px;
+
+.limit-image-size() {
+  img {
+    max-width: @max-width-height-image;
+    max-height: @max-width-height-image;
+  }
+}
 
 .view-placement-ordering {
 
@@ -546,10 +554,7 @@
 
     }
 
-    img {
-      max-width: 100px;
-      max-height: 100px;
-    }
+    .limit-image-size();
 
     &:hover {
       cursor: pointer;
@@ -720,9 +725,6 @@
     padding: 9px 20px;
   }
 
-  img {
-    max-width: 100px;
-    max-height: 100px;
-  }
+  .limit-image-size();
 
 }

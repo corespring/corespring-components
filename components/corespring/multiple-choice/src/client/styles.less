@@ -1,7 +1,18 @@
 
 @import '../../../../../less/common';
 
+@max-width-height-image: 200px;
+
+.limit-image-size() {
+  img {
+    max-width: @max-width-height-image;
+    max-height: @max-width-height-image;
+  }
+}
+
 .view-multiple-choice {
+
+  .limit-image-size();
 
   td {
     vertical-align: top;
@@ -490,4 +501,8 @@
 
 .config-multiple-choice .label-select, .select2-drop {
   min-width: 120px;
+}
+
+.config-multiple-choice {
+  .limit-image-size();
 }
