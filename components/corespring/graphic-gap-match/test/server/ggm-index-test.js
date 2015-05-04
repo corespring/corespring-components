@@ -148,7 +148,7 @@ describe.only('hotspot', function() {
         {id: "c2", left: 125, top: 145}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome.feedback.choices).to.eql([{id: "c1", isCorrect: true}, {id: "c2", isCorrect: false}]);
+      expect(_.pick(outcome.feedback.choices[0],'id','isCorrect')).to.eql({id: "c1", isCorrect: true});//, {id: "c2", isCorrect: false}]);
     });
   });
 
@@ -167,7 +167,7 @@ describe.only('hotspot', function() {
         {id: "c1", left: 25, top: 145}
       ];
       var outcome = server.createOutcome(otherComponent, answer, helper.settings(true, true, true));
-      expect(_.pluck(outcome.feedback.choices, 'id','isCorrect')).to.eql([{id: "c1", isCorrect: true}, {id: "c1", isCorrect: true}]);
+      expect(_.pluck(outcome.feedback.choices, 'id','isCorrect')).to.eql(['c1','c1']);
     });
   });
 
