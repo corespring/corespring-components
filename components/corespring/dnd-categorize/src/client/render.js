@@ -144,7 +144,7 @@ var main = [
       }
 
       function initSeeSolutionModel(response) {
-        if (!response.correctAnswers) {
+        if (!response.correctResponse) {
           return;
         }
         var categoriesPerRow = scope.categoriesPerRow;
@@ -239,7 +239,7 @@ var main = [
           return;
         }
 
-        var categoriesPerRow = parseInt(scope.categoriesPerRow, 10);
+        var categoriesPerRow = scope.categoriesPerRow;
         if (isNaN(categoriesPerRow)) {
           return;
         }
@@ -249,7 +249,7 @@ var main = [
         scope.choiceWidth = calcChoiceWidth();
 
         scope.categoryStyle = {
-          "width": elem.width() / categoriesPerRow
+          "width": (elem.find('.container-choices').width()) / categoriesPerRow
         };
         scope.choiceStyle = {
           "width": scope.choiceWidth
@@ -266,8 +266,7 @@ var main = [
         if (!scope.renderModel.choices) {
           return 0;
         }
-        var choicesPerRow = parseInt(scope.choicesPerRow, 10);
-        return elem.width() / choicesPerRow;
+        return elem.find('.container-choices').width() / scope.choicesPerRow;
       }
 
       function chunk(arr, chunkSize) {
@@ -486,6 +485,7 @@ var main = [
 
     function choicesTemplate(flip) {
       return [
+        '<div class="container-choices-holder">',
         '<div class="container-choices" ng-if="#flip#">',
         '  <div choice-corespring-dnd-categorize="true" ',
         '    ng-repeat="choice in renderModel.choices track by choice.id" ',
@@ -500,31 +500,34 @@ var main = [
         '    ng-style="choiceStyle" ',
         '    image-service="imageService"',
         '   ></div>',
+        '  </div>',
         '</div>'
       ].join('').replace("#flip#", flip);
     }
 
     function categoriesTemplate(flip, rowsModel) {
       return [
-        '<div class="categories" ng-if="#flip#">',
-        '  <div class="row" ng-repeat="row in #rowsModel#">',
-        '    <div category-corespring-dnd-categorize="true" ',
-        '      ng-repeat="category in row"',
-        '      category-id="{{category.model.id}}" ',
-        '      choice-width="{{choiceWidth}}"',
-        '      choices="category.choices"',
-        '      drag-enabled="isDragEnabledFromCategory"',
-        '      drag-and-drop-scope="renderModel.dragAndDropScope"',
-        '      edit-mode="isEditMode" ',
-        '      label="category.model.label" ',
-        '      ng-style="categoryStyle"',
-        '      on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
-        '      on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
-        '      on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
-        '      on-drop="onCategoryDrop(categoryId,choiceId)" ',
-        '     ></div>',
-        '   </div>',
-        ' </div>'
+        '<div class="categories-holder">',
+        '  <div class="categories" ng-if="#flip#">',
+        '    <div class="row" ng-repeat="row in #rowsModel#">',
+        '      <div category-corespring-dnd-categorize="true" ',
+        '        ng-repeat="category in row"',
+        '        category-id="{{category.model.id}}" ',
+        '        choice-width="{{choiceWidth}}"',
+        '        choices="category.choices"',
+        '        drag-enabled="isDragEnabledFromCategory"',
+        '        drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '        edit-mode="isEditMode" ',
+        '        label="category.model.label" ',
+        '        ng-style="categoryStyle"',
+        '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
+        '        on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
+        '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
+        '        on-drop="onCategoryDrop(categoryId,choiceId)" ',
+        '       ></div>',
+        '     </div>',
+        '  </div>',
+        '</div>'
       ].join('').replace("#flip#", flip).replace("#rowsModel#", rowsModel);
     }
 
