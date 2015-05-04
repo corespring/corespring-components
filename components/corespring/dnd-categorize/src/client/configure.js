@@ -114,7 +114,8 @@ var main = [
               };
             });
 
-            $scope.model.config.maxCategoriesPerRow = $scope.model.config.maxCategoriesPerRow || 2;
+            $scope.model.config.categoriesPerRow = $scope.model.config.categoriesPerRow || 2;
+            $scope.model.config.choicesPerRow = $scope.model.config.choicesPerRow || 4;
           },
 
           getModel: function() {
@@ -238,7 +239,7 @@ var main = [
 
     function template() {
       return [
-        '<div class="config-dnd-categorize">',
+        '<div class="config-corespring-dnd-categorize">',
         '  <div navigator-panel="Design">',
         designPanel(),
         '  </div>',
@@ -254,13 +255,15 @@ var main = [
             '  <p>In Categorize, students may drag & drop answer tiles to the appropriate category area(s).</p>',
             '</div>',
             '<div class="row" >',
+          /*
             '  <corespring-dnd-categorize id="chooser" ',
-            '     max-categories-per-row="model.config.maxCategoriesPerRow" ',
+            '     categories-per-row="model.config.categoriesPerRow" ',
             '     mode="edit"',
             '     choices="choices"',
             '     categories="categories"',
             '     image-service="imageService"',
             '   ></corespring-dnd-categorize>',
+          */
             '</div>'
                 ].join("");
       }
@@ -286,13 +289,31 @@ var main = [
             '</div>',
             '<div class="row">',
             '  Max Number of categories per row',
-            '  <select ng-model="model.config.maxCategoriesPerRow" class="form-control">',
+            '  <select ng-model="model.config.categoriesPerRow" class="form-control">',
             '    <option value="1">1</option>',
             '    <option value="2">2</option>',
             '    <option value="3">3</option>',
             '    <option value="4">4</option>',
             '  </select>',
+            '</div>',
+            '<div class="row">',
+            '  Max Number of choices per row',
+            '  <select ng-model="model.config.choicesPerRow" class="form-control">',
+            '    <option value="1">1</option>',
+            '    <option value="2">2</option>',
+            '    <option value="3">3</option>',
+            '    <option value="4">4</option>',
+            '    <option value="5">5</option>',
+            '    <option value="6">6</option>',
+            '    <option value="7">7</option>',
+            '    <option value="8">8</option>',
+            '    <option value="9">9</option>',
+            '    <option value="10">10</option>',
+            '    <option value="11">11</option>',
+            '    <option value="12">12</option>',
+            '  </select>',
             '</div>'
+
         ].join("");
       }
 

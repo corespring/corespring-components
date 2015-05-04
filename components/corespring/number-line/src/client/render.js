@@ -56,6 +56,7 @@ var main = [
           scope.correctModel = _.cloneDeep(scope.model);
           scope.correctModel.config.exhibitOnly = true;
           scope.correctModel.config.margin = {top: 30, right: 10, bottom: 30, left: 20};
+
           var i = 0;
           scope.correctModelDummyResponse = {
             feedback: {

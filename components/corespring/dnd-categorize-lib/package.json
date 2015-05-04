@@ -1,15 +1,8 @@
 {
-  "name": "dnd-categorize",
-  "title": "New Categorize",
-  "titleGroup": "Fixed Choice",
+  "name": "dnd-categorize-lib",
   "organization": "corespring",
-  "version": "0.0.1",
-  "released": false,
+  "purpose": "library",
   "libraries": [
-    {
-      "name": "dnd-categorize-lib",
-      "organization": "corespring"
-    },
     {
       "name": "drag-and-drop-engine",
       "organization": "corespring"
