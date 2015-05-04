@@ -12,6 +12,14 @@
   .main-container {
     margin-bottom: 5px;
 
+    &.top .answers {
+        padding-top: 5px;
+    }
+
+    &.bottom .answers {
+        padding-bottom: 5px;
+    }
+
     &.left, &.right {
       display: table;
       border-spacing: 5px;
@@ -36,7 +44,7 @@
 
     &.dropping {
       border: 2px dashed #CCCCCC;
-      margin: 0px;
+      margin: 0;
     }
 
     &.warning {
@@ -81,14 +89,6 @@
       .choice-wrapper {
         float: left;
       }
-    }
-
-    &.top {
-      margin-bottom: 5px;
-    }
-
-    &.bottom {
-      margin-top: 5px;
     }
 
     &.left, &.right {
