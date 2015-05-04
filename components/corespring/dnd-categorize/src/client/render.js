@@ -295,8 +295,8 @@ var main = [
           if (choice.moveOnDrag && !scope.isEditMode) {
             _.remove(scope.renderModel.choices, byId(choiceId));
           }
-          updateView();
         }
+        updateView();
       }
 
       function onCategoryDeleteClicked(categoryId) {
