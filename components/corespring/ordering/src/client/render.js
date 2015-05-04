@@ -140,7 +140,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         if (_.isEmpty(id)) {
           return "";
         }
-        if (scope.response && scope.response.correctResponse) {
+        if (scope.response && scope.response.correctResponse && scope.response.correctness !== 'warning') {
           if (scope.response.correctResponse.length > idx && scope.response.correctResponse[idx] === id) {
             return 'correct';
           }
@@ -181,6 +181,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.cardinality = 'ordered';
           scope.local = {};
           scope.resetChoices(scope.rawModel);
+          scope.userHasInteracted = false;
 
           for (var i = 0; i < scope.rawModel.choices.length; i++) {
             scope.landingPlaceChoices[i] = {};
@@ -215,13 +216,15 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
                 choices[i] = scope.landingPlaceChoices[i].id;
               }
             }
-            console.log("Answers are ", choices);
             return {
               answers: choices
             };
           } else {
             return {
-              answers: _.pluck(scope.local.choices, 'id')
+              answers: {
+                choices: _.pluck(scope.local.choices, 'id'),
+                didInteract: scope.userHasInteracted
+              }
             };
           }
         },
@@ -236,10 +239,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.comments = undefined;
           scope.feedback = undefined;
           scope.top = {};
+          scope.userHasInteracted = false;
         },
 
         setResponse: function (response) {
-          console.log("R: ", response);
           scope.response = response;
           if (response.correctness === 'incorrect') {
             scope.correctResponse = response.correctResponse;
@@ -290,6 +293,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           if (scope.model.config.choiceAreaLayout === "horizontal") {
             $(e.target).data("ui-sortable").floating = true;
           }
+        },
+        update: function (e, ui) {
+          scope.userHasInteracted = true;
         }
       };
 
@@ -312,7 +318,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    <div class="clearfix" />',
       '    <div ng-show="model.config.choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel" class="choice-area-label"></div>',
       '    <div class="answer-area-container">',
-      '      <div class="container-border">',
+      '      <div class="container-border {{correctClass}}">',
       '        <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
       '          <li ng-repeat="choice in local.choices">',
       '            <div class="choice {{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label"></div>',
@@ -332,6 +338,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      </div>',
       '    </div>',
       '    <div class="clearfix" />',
+      '    <div class="warning-icon" ng-show="feedback && correctClass === \'warning\'"><i class="fa fa-warning"></i></div>',
       '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
       '    <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       '      <ul class="clearfix">',

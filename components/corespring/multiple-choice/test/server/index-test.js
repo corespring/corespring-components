@@ -76,7 +76,7 @@ component = {
 
 describe('multiple-choice server logic', function() {
 
-  it('should return incorrect if the answer is null or undefined', function() {
+  it('should return warning if the answer is null or undefined', function() {
     var outcome = server.createOutcome(
       {
         correctResponse: {
@@ -89,9 +89,14 @@ describe('multiple-choice server logic', function() {
       null,
       helper.settings(true, true, true)
     );
-    outcome.should.eql({correctness: 'incorrect', score: 0, feedback: [
-      {value: 'a', feedback: 'no', correct: true}
-    ]});
+    outcome.should.eql({
+      correctness: 'warning',
+      score: 0,
+      feedback: {
+        emptyAnswer: true,
+        message: fbu.keys.DEFAULT_WARNING_FEEDBACK
+      }
+    });
   });
 
 

@@ -39,7 +39,14 @@ var main = [
         reset: reset,
         resetStash: function() {},
         isAnswerEmpty: isAnswerEmpty,
-        editable: setEditable
+        editable: setEditable,
+        answerChangedHandler: function(callback) {
+          scope.$watch("matchModel.rows", function(newValue, oldValue) {
+            if (newValue !== oldValue) {
+              callback();
+            }
+          }, true);
+        }
       };
 
       scope.classForChoice = classForChoice;

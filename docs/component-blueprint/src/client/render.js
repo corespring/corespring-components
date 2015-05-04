@@ -21,13 +21,16 @@ var main = [
         getSession: getSession,
         setResponse: setResponse,
         setMode: function (newMode) {
+          //player mode: view, gather, evaluate
         },
         reset: reset,
-        resetStash: function () {
-        },
         isAnswerEmpty: isAnswerEmpty,
-        answerChangedHandler: function(callback){
-
+        answerChangedHandler: function(callback) {
+          //you need save this callback and call it every time
+          //the user interacts with the component and changes the
+          //content of the session. This is important for
+          //the inputReceived event that the player dispatches
+          scope.answerChangedCallback = callback;
         },
         editable: setEditable
       };
@@ -83,10 +86,19 @@ var main = [
         };
       }
 
+      var lastSession = {};
+
       function onChangeRenderModel(newValue, oldValue) {
         //console.log(":onChangeRenderModel", newValue);
         if (newValue && !_.isEqual(newValue, _.last(scope.undoStack))) {
           scope.undoStack.push(_.cloneDeep(newValue));
+        }
+        if(_.isFunction(scope.answerChangedCallback)) {
+          var session = getSession();
+          if(!_.isEqual(session,lastSession)){
+            lastSession = session;
+            answerChangedCallback();
+          }
         }
       }
 

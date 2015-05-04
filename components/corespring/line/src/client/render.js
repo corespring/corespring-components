@@ -46,6 +46,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
         "   <div id='graph-container' class='row-fluid graph-container'></div>",
         "</div>",
         '<div class="feedback-holder" ng-show="config.showFeedback">',
+        '  <div class="text-center" ng-show="correctClass === \'warning\'"><i class="fa fa-warning"></i></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>',
         '<div see-answer-panel see-answer-panel-expanded="trueValue" class="solution-panel" ng-class="{panelVisible: correctResponse}">',
@@ -399,6 +400,13 @@ var main = ['$compile', '$rootScope', "LineUtils",
               if (response.correctResponse) {
                 renderSolution(response);
               }
+            } else if (response && response.correctness === 'warning') {
+              scope.graphCallback({
+                graphStyle: {
+                  borderColor: "#B94A48",
+                  borderWidth: "2px"
+                }
+              });
             }
 
             scope.lockGraph();
@@ -410,6 +418,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
           reset: function() {
             scope.feedback = undefined;
             scope.response = undefined;
+            scope.correctClass = undefined;
             scope.graphCallback({graphStyle: {}});
             scope.unlockGraph();
             scope.graphCallback({
