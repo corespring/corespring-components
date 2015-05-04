@@ -76,4 +76,4 @@ exports.factory = [function() {
     };
   }
 
-}]
+}];
