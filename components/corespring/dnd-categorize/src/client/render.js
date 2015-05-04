@@ -4,17 +4,25 @@ var main = [
   'CompactLayoutWhileEditing',
   'LayoutConfig',
   'LayoutRunner',
-  function ($timeout,
-            CompactLayout,
-            CompactLayoutWhileEditing,
-            LayoutConfig,
-            LayoutRunner) {
+  function(
+    $timeout,
+    CompactLayout,
+    CompactLayoutWhileEditing,
+    LayoutConfig,
+    LayoutRunner
+  ) {
 
     return {
       restrict: 'AE',
       replace: true,
       link: link,
-      scope: {},
+      scope: {
+        mode: '@',
+        attrCategories: '=?categories',
+        attrChoices: '=?choices',
+        maxCategoriesPerRow: "=?maxCategoriesPerRow",
+        imageService: "=?imageService"
+      },
       template: template()
     };
 
@@ -106,9 +114,9 @@ var main = [
       }
 
       function getSession() {
-        var answers = _.reduce(scope.renderModel.categories, function (result, category) {
+        var answers = _.reduce(scope.renderModel.categories, function(result, category) {
           var catId = category.model.id;
-          result[catId] = _.map(category.choices, function (choice) {
+          result[catId] = _.map(category.choices, function(choice) {
             return choice.model.id;
           });
           return result;
@@ -130,13 +138,13 @@ var main = [
         if (!response.detailedFeedback) {
           return;
         }
-        _.forEach(scope.renderModel.categories, function (category) {
+        _.forEach(scope.renderModel.categories, function(category) {
           var feedback = response.detailedFeedback[category.model.id];
           if (feedback) {
             if (feedback.answersExpected) {
               category.answersExpected = true;
             }
-            _.forEach(category.choices, function (choice, choiceIndex) {
+            _.forEach(category.choices, function(choice, choiceIndex) {
               choice.correctness = feedback.correctness[choiceIndex];
             });
           }
@@ -150,7 +158,7 @@ var main = [
         var categoriesPerRow = scope.categoriesPerRow;
         scope.correctAnswerRows = [[]];
 
-        _.forEach(scope.renderModel.categories, function (category) {
+        _.forEach(scope.renderModel.categories, function(category) {
           var lastRow = _.last(scope.correctAnswerRows);
           if (lastRow.length === categoriesPerRow) {
             scope.correctAnswerRows.push(lastRow = []);
@@ -163,7 +171,7 @@ var main = [
 
       function createCategoryModelForSolution(category, correctChoices) {
         var newCategory = _.cloneDeep(category);
-        newCategory.choices = _.map(correctChoices, function (correctChoiceId) {
+        newCategory.choices = _.map(correctChoices, function(correctChoiceId) {
           var choiceModel = _.find(scope.renderModel.allChoices, byId(correctChoiceId));
           var choice = wrapChoiceModel(choiceModel);
           choice.correctness = 'correct';
@@ -208,10 +216,10 @@ var main = [
         }
         layout = new CompactLayout(
           new LayoutConfig()
-            .withContainer(elem.find(".container-choices"))
-            .withItemSelector(".choice-corespring-dnd-categorize")
-            .withCellWidth(calcChoiceWidth())
-            .value(),
+          .withContainer(elem.find(".container-choices"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .withCellWidth(calcChoiceWidth())
+          .value(),
           new LayoutRunner($timeout));
 
         if (editingLayout) {
@@ -219,9 +227,9 @@ var main = [
         }
         editingLayout = new CompactLayoutWhileEditing(
           new LayoutConfig()
-            .withContainer(elem.find(".container-choices"))
-            .withItemSelector(".choice-corespring-dnd-categorize")
-            .value(),
+          .withContainer(elem.find(".container-choices"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .value(),
           new LayoutRunner($timeout));
       }
 
@@ -272,7 +280,7 @@ var main = [
       function chunk(arr, chunkSize) {
         //can be replaced with _.chunk, once lodash has been updated
         var chunks = [[]];
-        _.forEach(arr, function (elem) {
+        _.forEach(arr, function(elem) {
           var lastRow = _.last(chunks);
           if (lastRow.length === chunkSize) {
             chunks.push(lastRow = []);
@@ -287,7 +295,7 @@ var main = [
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
           var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
-          scope.$apply(function () {
+          scope.$apply(function() {
             category.choices.push(wrapChoiceModel(choice));
           });
 
@@ -303,7 +311,7 @@ var main = [
       }
 
       function findInAllCategories(choiceId) {
-        return _.find(scope.renderModel.categories, function (category) {
+        return _.find(scope.renderModel.categories, function(category) {
           return _.find(category.choices, byModelId(choiceId)) !== undefined;
         });
       }
@@ -322,7 +330,7 @@ var main = [
 
       function onChoiceDeleteClicked(choiceId) {
         _.remove(scope.renderModel.choices, byId(choiceId));
-        _.forEach(scope.renderModel.categories, function (category) {
+        _.forEach(scope.renderModel.categories, function(category) {
           if (category) {
             _.remove(category.choices, byId(choiceId));
           }
@@ -396,7 +404,7 @@ var main = [
           editedElement: choiceElement
         });
 
-        $('body').on('click', function (e) {
+        $('body').on('click', function(e) {
           var $target = $(e.target);
           if (choiceElement.has($target).length === 0 && scope.editedChoice && scope.editedChoice.id === choiceId) {
             editingLayout.cancel();
@@ -413,13 +421,13 @@ var main = [
       }
 
       function byModelId(id) {
-        return function (object) {
+        return function(object) {
           return object.model.id === id;
         };
       }
 
       function byId(id) {
-        return function (object) {
+        return function(object) {
           return object.id === id;
         };
       }
@@ -545,5 +553,3 @@ exports.directives = [
     directive: main
   }
 ];
-
-
