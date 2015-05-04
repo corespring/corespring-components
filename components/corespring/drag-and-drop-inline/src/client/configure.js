@@ -57,6 +57,12 @@ var main = [
                       }
                   }]
           };
+
+          $scope.extraFeaturesForChoiceLabel = {
+              definitions: [
+                  new WiggiMathJaxFeatureDef()
+              ]
+          };
       }],
 
       link: function(scope, element, attrs) {
@@ -323,8 +329,15 @@ var main = [
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '      <input class="prompt" type="text"',
-          '          ng-model="model.config.choiceAreaLabel" placeholder="Choice Label"/>',
+          '    <div id="choiceLabelWiggi" ',
+          '         mini-wiggi-wiz=""',
+          '         dialog-launcher="external"',
+          '         ng-model="model.config.choiceAreaLabel"',
+          '         placeholder="Choice Label"',
+          '         features="extraFeaturesForChoiceLabel"',
+          '         parent-selector=".modal-body"',
+          '         image-service="imageService()">',
+          '    </div>',
           '  </div>',
           '</div>',
           '<div class="row">',
