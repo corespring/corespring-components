@@ -1,16 +1,8 @@
 @import '../../../../../less/common';
 
 @component-width-in-placeholder: 600px;
-
-.clearfix() {
-  *zoom: 1;
-  &:after {
-    clear: both;
-    content: '';
-    display: block;
-    height: 0;
-  }
-}
+@categories-holder-padding: 15px; //make sure the cats fit into the see solution panel
+@choices-holder-padding: @categories-holder-padding + 15px; //make sure choices fit into cats
 
 .component-placeholder {
   .render-corespring-dnd-categorize {
@@ -125,18 +117,19 @@
   }
 
   .container-choices-holder {
-    padding: 15px;
+    padding: 15px @choices-holder-padding;
 
     .container-choices {
-      margin-bottom: 10px;
-      position: relative;
       background-color: #efefef;
       border-radius: 4px;
+      border: solid 2px #9b9b9b;
+      margin-bottom: 10px;
+      position: relative;
     }
   }
 
   .categories-holder {
-    padding: 0 15px;
+    padding: 0 @categories-holder-padding;
   }
 
   .categories {
@@ -153,16 +146,15 @@
         &.category-active {
           .categorized.choices {
             background-color: #d8d8d8;
-            .choice-container {
-              border-radius: 8px;
-            }
           }
         }
 
         &.category-hover {
-          .choice-container {
-            border: dashed 1px rgb(129, 129, 129);
-            border-radius: 8px;
+          .border {
+            .categorized.choices {
+              background-color: white;
+              border: dashed 2px #979797;
+            }
           }
         }
 
@@ -206,12 +198,11 @@
 
           .categorized.choices {
             border: solid 2px #979797;
-            border-radius: 8px;
+            border-radius: 4px;
             min-height: 40px;
             padding: 8px;
 
             .choice-container {
-              background-color: white;
               min-height: 20px;
               position: relative;
 
@@ -241,6 +232,7 @@
   }
 
   .player-col {
+    width: 650px;
     display: inline;
     float: left;
   }
@@ -273,38 +265,6 @@
     .answer-area-category-row {
       .control-label {
         padding: 0;
-      }
-    }
-  }
-  .scoring-panel {
-    .partial-scoring {
-      .category-scoring {
-        .label {
-          color: black;
-          font-size: 14px;
-          padding: 0;
-        }
-
-        .scenario {
-          .clearfix();
-          span {
-            display: inline-block;
-            float: left;
-          }
-          input {
-            display: inline-block;
-            float: left;
-            width: 45px;
-            margin-left: 10px;
-            margin-right: 10px;
-          }
-          .remove-btn {
-            margin-left: 10px;
-          }
-        }
-        .add-scoring-scenario {
-          display: block;
-        }
       }
     }
   }

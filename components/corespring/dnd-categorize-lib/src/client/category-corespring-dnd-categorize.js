@@ -103,6 +103,7 @@ var category = [
       }
 
       function initLayout(choiceWidth) {
+        /*
         if (!layout) {
           layout = new CompactLayout(
             new LayoutConfig()
@@ -116,6 +117,7 @@ var category = [
             .withCellWidth(choiceWidth)
             .value());
         }
+        */
       }
 
       function onDestroy() {

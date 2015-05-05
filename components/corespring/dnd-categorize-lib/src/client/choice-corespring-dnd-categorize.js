@@ -49,7 +49,7 @@ var choice = [
       };
 
       scope.draggableJqueryOptions = {
-        revert: 'invalid',
+        revert: alwaysRevertButAnimateIfInvalid,
         appendTo: scope.draggedParent,
         scope: scope.dragAndDropScope
       };
@@ -60,6 +60,20 @@ var choice = [
       updateClasses();
 
       //------------------------------------------------
+
+      function alwaysRevertButAnimateIfInvalid(dropTarget){
+        setRevertDuration(!choiceAcceptedBy(dropTarget) ? 300 : 0);
+        return true;
+
+        function choiceAcceptedBy(dropTarget){
+          //log('choiceAcceptedBy', dropTarget.has('.' + attrs.choiceId));
+          return dropTarget && dropTarget.is('.category');
+        }
+      }
+
+      function setRevertDuration(revertDuration){
+        $(elem).draggable('option', 'revertDuration', revertDuration);
+      }
 
       function onStart() {
         scope.onDragStart({
@@ -145,7 +159,11 @@ var choice = [
       '        tooltip-placement="bottom">',
       '        <i class="fa"></i>',
       '      </li>',
-      '      <li class="edit-icon-button" ng-click="onChoiceEditClicked()" tooltip="edit" tooltip-append-to-body="true" tooltip-placement="bottom">',
+      '      <li class="edit-icon-button" ',
+      '         ng-click="onChoiceEditClicked()" ',
+      '         tooltip="edit" ',
+      '         tooltip-append-to-body="true" ',
+      '         tooltip-placement="bottom">',
       '        <i class="fa fa-pencil"></i>',
       '      </li>',
       '    </ul>',

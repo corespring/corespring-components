@@ -222,6 +222,7 @@ var main = [
             '  </p>',
             '</div>',
             '<div class="row" >',
+            /*
             '  <corespring-dnd-categorize id="chooser" ',
             '     categories-per-row="model.config.categoriesPerRow" ',
             '     choices-per-row="model.config.choicesPerRow" ',
@@ -230,6 +231,7 @@ var main = [
             '     categories="categories"',
             '     image-service="imageService"',
             '   ></corespring-dnd-categorize>',
+            */
             '</div>'
         ].join('');
       }

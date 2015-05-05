@@ -16,6 +16,7 @@ var main = [
     return {
       restrict: 'AE',
       replace: true,
+      template: template(),
       link: link,
       scope: {
         mode: '@',
@@ -24,8 +25,7 @@ var main = [
         attrCategoriesPerRow: '=?categoriesPerRow',
         attrChoicesPerRow: '=?choicesPerRow',
         imageService: '=?imageService'
-      },
-      template: template()
+      }
     };
 
     function link(scope, elem, attrs) {
@@ -215,6 +215,7 @@ var main = [
       }
 
       function initLayouts() {
+        /*
         if (layout) {
           layout.cancel();
         }
@@ -235,9 +236,10 @@ var main = [
           .withItemSelector('.choice-corespring-dnd-categorize')
           .value(),
           new LayoutRunner($timeout));
+        */
       }
 
-      function onDestroy() {
+      function destroyLayouts() {
         if (layout) {
           layout.cancel();
         }
@@ -246,43 +248,67 @@ var main = [
         }
       }
 
+      function updateLayoutConfig(cellWidth) {
+        if (layout) {
+          layout.updateConfig({
+            container: elem.find('.container-choices'),
+            cellWidth: cellWidth
+          });
+        }
+      }
+
+      function startEditingLayout(choiceElement) {
+        if (layout) {
+          layout.cancel();
+
+          editingLayout.start({
+            container: elem.find('.container-choices'),
+            editedElement: choiceElement
+          });
+        }
+      }
+
+      function stopEditingLayout() {
+        if (editingLayout) {
+          editingLayout.cancel();
+          layout.start();
+        }
+      }
+
+      function onDestroy() {
+        destroyLayouts();
+      }
+
       function updateView() {
-        log('updateView enter, mode=', scope.mode);
         if (!scope.renderModel.categories || !scope.renderModel.choices) {
-          log('updateView exit no categories or choices');
           return;
         }
 
         var categoriesPerRow = scope.categoriesPerRow;
         if (isNaN(categoriesPerRow)) {
-          log('updateView exit categoriesPerRow is not a number');
           return;
         }
 
         scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
-
         scope.choiceWidth = calcChoiceWidth();
 
         scope.categoryStyle = {
-          width: (elem.find('.container-choices').width()) / categoriesPerRow
+          width: elem.find('.categories').width() / categoriesPerRow
         };
+
         scope.choiceStyle = {
           width: scope.choiceWidth
         };
-        layout.updateConfig({
-          container: elem.find('.container-choices'),
-          cellWidth: scope.choiceWidth
-        });
 
+        updateLayoutConfig(scope.choiceWidth);
         renderMath();
-        log('updateView exit');
       }
 
       function calcChoiceWidth() {
         if (!scope.renderModel.choices) {
           return 0;
         }
-        return elem.find('.container-choices').width() / scope.choicesPerRow;
+        return (elem.find('.container-choices').width()) / scope.choicesPerRow;
       }
 
       function chunk(arr, chunkSize) {
@@ -299,6 +325,7 @@ var main = [
       }
 
       function onCategoryDrop(categoryId, choiceId) {
+        log('onCategoryDrop', categoryId, choiceId);
         var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         var choiceInCategory = _.find(category.choices, byModelId(choiceId));
         if (!choiceInCategory) {
@@ -360,15 +387,15 @@ var main = [
       }
 
       function updateCategoriesPerRowFromEditor(newValue, oldValue) {
-        var categoriesPerRow = parseInt(newValue,10);
-        if(!isNaN(categoriesPerRow)){
-          scope.catgeoriesPerRow = categoriesPerRow;
+        var categoriesPerRow = parseInt(newValue, 10);
+        if (!isNaN(categoriesPerRow)) {
+          scope.categoriesPerRow = categoriesPerRow;
         }
       }
 
       function updateChoicesPerRowFromEditor(newValue, oldValue) {
-        var choicesPerRow = parseInt(newValue,10);
-        if(!isNaN(choicesPerRow)){
+        var choicesPerRow = parseInt(newValue, 10);
+        if (!isNaN(choicesPerRow)) {
           scope.choicesPerRow = choicesPerRow;
         }
       }
@@ -379,7 +406,7 @@ var main = [
         //That is used in config. Do we really want that? Doesn't it mean we
         //include editing related stuff like wiggi in to player?
 
-        if(!layout){
+        if (!layout) {
           initLayouts();
         }
 
@@ -422,24 +449,26 @@ var main = [
       function onChoiceEditClicked(choiceId) {
         log('editedChoice', choiceId);
         scope.editedChoice = _.find(scope.renderModel.choices, byId(choiceId));
-        layout.cancel();
+        startEditingLayout(choiceElement());
+        $('body').one('click', exitChoiceEditing);
 
-        var choiceElementSelector = '.container-choices [choice-id="' + choiceId + '"]';
-        var choiceElement = elem.find(choiceElementSelector);
+        function choiceElement() {
+          var choiceElementSelector = '.container-choices [choice-id="' + choiceId + '"]';
+          return elem.find(choiceElementSelector);
+        }
 
-        editingLayout.start({
-          container: elem.find('.container-choices'),
-          editedElement: choiceElement
-        });
-
-        $('body').on('click', function(e) {
-          var $target = $(e.target);
-          if (choiceElement.has($target).length === 0 && scope.editedChoice && scope.editedChoice.id === choiceId) {
-            editingLayout.cancel();
-            layout.start();
+        function exitChoiceEditing(e) {
+          if (!clickedOnChoice(e) &&
+            scope.editedChoice && scope.editedChoice.id === choiceId) {
+            stopEditingLayout();
             scope.editedChoice = null;
           }
-        });
+        }
+
+        function clickedOnChoice(e) {
+          var $target = $(e.target);
+          return choiceElement().has($target).length === 0;
+        }
       }
 
       function revertToState(state) {
