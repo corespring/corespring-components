@@ -405,9 +405,6 @@ var main = [
 
       function updateCategoriesAndChoicesFromEditor() {
         log('updateCategoriesAndChoicesFromEditor');
-        //TODO Changes from the editor?
-        //That is used in config. Do we really want that? Doesn't it mean we
-        //include editing related stuff like wiggi in to player?
 
         if (!layout) {
           initLayouts();

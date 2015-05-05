@@ -1,9 +1,7 @@
 var main = [
-    'ChoiceTemplates',
     'ComponentImageService',
     'MathJaxService',
   function(
-    ChoiceTemplates,
     ComponentImageService,
     MathJaxService
     ) {
@@ -28,6 +26,8 @@ var main = [
       scope.choicesPerRowOptions = _.range(1, MAX_CHOICES_PER_ROW + 1);
       scope.imageService = ComponentImageService;
       scope.leftPanelClosed = false;
+      scope.numberOfCorrectAnswers = 0;
+
 
       scope.addCategory = addCategory;
       scope.addChoice = addChoice;
@@ -52,6 +52,7 @@ var main = [
       function setModel(fullModel) {
         scope.fullModel = fullModel;
         scope.fullModel.correctResponse = scope.fullModel.correctResponse || {};
+
         scope.model = scope.fullModel.model;
         scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 2;
         scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 4;
@@ -78,6 +79,14 @@ var main = [
         scope.fullModel.model.categories = _.map(scope.categories, function(category) {
           return _.cloneDeep(category.model);
         });
+        scope.numberOfCorrectResponses = countCorrectAnswers();
+        log('updateModel', scope.numberOfCorrectResponses);
+      }
+
+      function countCorrectAnswers(){
+        return _.reduce(scope.fullModel.correctResponse, function(acc, correctAnswers){
+          return acc + correctAnswers.length;
+        }, 0);
       }
 
       function addChoice() {
@@ -136,14 +145,14 @@ var main = [
       function getChoicesForCorrectResponse() {
         return _.reduce(scope.categories, function(acc, category) {
           if (category.choices) {
-            acc[category.model.id] = _.map(category.choices, getIdForWrappedChoice);
+            acc[category.model.id] = _.map(category.choices, getIdForChoice);
           }
           return acc;
         }, {});
       }
 
-      function getIdForWrappedChoice(choice) {
-        return choice.model.id;
+      function getIdForChoice(choice) {
+        return choice.id;
       }
 
       function renderMath() {
@@ -306,7 +315,10 @@ var main = [
           '<div class="container-fluid">',
           '  <div class="row">',
           '    <div class="col-xs-12">',
-          ChoiceTemplates.scoring(),
+          '      <corespring-partial-scoring-config ',
+          '         full-model="fullModel"',
+          '         number-of-correct-responses="numberOfCorrectResponses"',
+          '      ></corespring-partial-scoring-config>',
           '    </div>',
           '  </div>',
           '</div>'
