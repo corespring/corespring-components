@@ -1,8 +1,10 @@
 @import '../../../../../less/common';
 
 @component-width-in-placeholder: 600px;
-@categories-holder-padding: 15px; //make sure the category fits into the see solution panel
-@choices-holder-padding: @categories-holder-padding + 15px; //make sure choice fits into category
+@categories-holder-padding: 15px;
+//make sure the category fits into the see solution panel
+@choices-holder-padding: @categories-holder-padding + 15px;
+//make sure choice fits into category
 
 .component-placeholder {
   .render-corespring-dnd-categorize {
@@ -24,6 +26,24 @@
   display: inline-block;
   -webkit-user-select: none;
 
+  .delete-after-placing {
+
+    padding-left: 7px;
+
+    .checkbox-input {
+      .checkbox-toggle {
+        font-size: 17px;
+
+        &:after {
+          min-width: initial;
+        }
+      }
+      .label-text {
+        font-size: 12px;
+      }
+    }
+  }
+
   .border {
     background-color: white;
     border-radius: 4px;
@@ -43,6 +63,27 @@
 
       &:hover {
         opacity: 1.0;
+      }
+    }
+
+    .edit-controls {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      padding: 3px 3px 3px 3px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 10000;
+
+      .edit-icon-button, .delete-icon-button {
+        display: inline-block;
+        margin-left: 3px;
+        margin-right: 3px;
+
+        i {
+          font-size: 15px;
+          color: #575757;
+        }
       }
     }
   }
@@ -170,17 +211,13 @@
             font-weight: normal;
           }
 
-          .delete-after-placing {
-            display: none;
-          }
-
           .edit-controls {
             background: rgba(255, 255, 255, 0.7);
             border-radius: 8px;
             padding: 3px 3px 3px 3px;
             position: absolute;
-            right: 2px;
-            top: 55px;
+            right: 6px;
+            top: 42px;
             z-index: 10000;
 
             .edit-icon-button, .delete-icon-button {
@@ -208,7 +245,7 @@
               .choice-corespring-dnd-categorize.draggable {
 
                 .remove-choice {
-                  display:inline-block;
+                  display: inline-block;
                 }
               }
             }
@@ -231,7 +268,7 @@
   }
 
   .player-col {
-    width: 650px;
+    width: 700px;
     display: inline;
     float: left;
   }

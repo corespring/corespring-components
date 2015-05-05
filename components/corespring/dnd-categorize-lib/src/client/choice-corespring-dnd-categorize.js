@@ -11,7 +11,7 @@ var choice = [
       scope: {
         correctness: '@',
         deleteAfterPlacing: '=?deleteAfterPlacing',
-        dragAndDropScope: '=',
+        dragAndDropScope: '@',
         dragEnabled: '=',
         editMode: '=?editMode',
         imageService: "=?",
@@ -160,7 +160,7 @@ var choice = [
       '        tooltip="delete" ',
       '        tooltip-append-to-body="true" ',
       '        tooltip-placement="bottom">',
-      '        <i class="fa"></i>',
+      '        <i class="fa fa-trash-o"></i>',
       '      </li>',
       '      <li class="edit-icon-button" ',
       '         ng-click="onChoiceEditClicked()" ',
@@ -177,9 +177,9 @@ var choice = [
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
-      '    <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
-      '      <checkbox ng-model="model.moveOnDrag" class="control-label">Remove Tile after placing</checkbox>',
-      '    </div>',
+      '  </div>',
+      '  <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
+      '    <checkbox ng-model="model.moveOnDrag" class="control-label">Remove after placing</checkbox>',
       '  </div>',
       '</div>'
     ].join('');

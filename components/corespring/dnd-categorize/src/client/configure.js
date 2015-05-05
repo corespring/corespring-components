@@ -213,6 +213,22 @@ var main = [
         '</div>'
       ].join('');
 
+      function designPanel() {
+        return [
+          '<div class="container-fluid">',
+          '  <div class="row">',
+          '    <div class="player-col">',
+          playerColumn(),
+          feedback(),
+          '    </div>',
+          '    <div class="settings-col">',
+          configControls(),
+          '    </div>',
+          '  </div>',
+          '</div>'
+        ].join('');
+      }
+
       function playerColumn() {
         return [
             '<div class="row">',
@@ -222,86 +238,67 @@ var main = [
             '  </p>',
             '</div>',
             '<div class="row" >',
-            /*
-            '  <corespring-dnd-categorize id="chooser" ',
+            '  <corespring-dnd-categorize',
+            '     id="chooser" ',
             '     categories-per-row="model.config.categoriesPerRow" ',
-            '     choices-per-row="model.config.choicesPerRow" ',
-            '     mode="edit"',
-            '     choices="choices"',
             '     categories="categories"',
+            '     choices-per-row="model.config.choicesPerRow" ',
+            '     choices="choices"',
             '     image-service="imageService"',
+            '     mode="edit"',
             '   ></corespring-dnd-categorize>',
-            */
             '</div>'
         ].join('');
-      }
-
-      function configControls() {
-        return [
-            '<div class="row">',
-            '  <button type="button" id="add-choice" class="btn btn-default" ',
-            '    ng-click="addCategory()">Add a Category</button>',
-            '</div>',
-            '<div class="row">',
-            '  <button type="button" class="btn btn-default" ',
-            '     ng-click="addChoice()">Add a Choice</button>',
-            '</div>',
-            '<div class="row">',
-            '  <checkbox ng-model="model.config.shuffle" ',
-            '     class="control-label">Shuffle Tiles</checkbox>',
-            '</div>',
-            '<div class="row">',
-            '  Answer area is',
-            '  <select ng-model="model.config.answerAreaPosition" ',
-            '     class="form-control" ',
-            '     ng-options="o for o in answerAreaOptions"/>',
-            '  </select>',
-            '</div>',
-            '<div class="row">',
-            '  Max Number of categories per row',
-            '  <select ng-model="model.config.categoriesPerRow" ',
-            '     class="form-control" ',
-            '    ng-change="onChangeCategoriesPerRow()"',
-            '     ng-options="o for o in categoriesPerRowOptions">',
-            '  </select>',
-            '</div>',
-            '<div class="row">',
-            '  Max Number of choices per row',
-            '  <select ng-model="model.config.choicesPerRow" ',
-            '    class="form-control"',
-            '    ng-options="o for o in choicesPerRowOptions | filter:geThanCategories">',
-            '  </select>',
-            '</div>'
-        ].join('');
-      }
-
-      function designPanel() {
-        return [
-            '<div class="container-fluid">',
-            '  <div class="row">',
-            '    <div class="player-col">',
-                    playerColumn(),
-            '    </div>',
-            '    <div class="settings-col">',
-                   configControls(),
-            '    </div>',
-            '  </div>',
-               feedback(),
-            '</div>'
-         ].join('');
       }
 
       function feedback() {
         return [
           '<div class="row">',
-          '  <div class="col-xs-12 feedback-panel-col">',
-          '    <corespring-feedback-config ',
-          '       full-model="fullModel"',
-          '       component-type="corespring-dnd-categorize"',
-          '    ></corespring-feedback-config>',
-          '  </div>',
+          '  <corespring-feedback-config ',
+          '     full-model="fullModel"',
+          '     component-type="corespring-dnd-categorize"',
+          '  ></corespring-feedback-config>',
           '</div>'
         ].join('\n');
+      }
+
+      function configControls() {
+        return [
+          '<div class="row">',
+          '  <button type="button" id="add-choice" class="btn btn-default" ',
+          '    ng-click="addCategory()">Add a Category</button>',
+          '</div>',
+          '<div class="row">',
+          '  <button type="button" class="btn btn-default" ',
+          '     ng-click="addChoice()">Add a Choice</button>',
+          '</div>',
+          '<div class="row">',
+          '  <checkbox ng-model="model.config.shuffle" ',
+          '     class="control-label">Shuffle Tiles</checkbox>',
+          '</div>',
+          '<div class="row">',
+          '  Answer area is',
+          '  <select ng-model="model.config.answerAreaPosition" ',
+          '     class="form-control" ',
+          '     ng-options="o for o in answerAreaOptions"/>',
+          '  </select>',
+          '</div>',
+          '<div class="row">',
+          '  Max Number of categories per row',
+          '  <select ng-model="model.config.categoriesPerRow" ',
+          '     class="form-control" ',
+          '    ng-change="onChangeCategoriesPerRow()"',
+          '     ng-options="o for o in categoriesPerRowOptions">',
+          '  </select>',
+          '</div>',
+          '<div class="row">',
+          '  Max Number of choices per row',
+          '  <select ng-model="model.config.choicesPerRow" ',
+          '    class="form-control"',
+          '    ng-options="o for o in choicesPerRowOptions | filter:geThanCategories">',
+          '  </select>',
+          '</div>'
+        ].join('');
       }
 
       function scoringPanel() {

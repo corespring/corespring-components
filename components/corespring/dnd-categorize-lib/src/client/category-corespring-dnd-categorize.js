@@ -13,7 +13,7 @@ var category = [
       scope: {
         choices: '=',
         choiceWidth: '@',
-        dragAndDropScope: '=',
+        dragAndDropScope: '@',
         dragEnabled: '=',
         isEditMode: '=?editMode',
         label: '=',
@@ -140,7 +140,9 @@ var category = [
         '  <div class="border">',
         '    <label ng-if="isEditMode"><input class="label-input" type="text" ng-model="$parent.label"></label>',
         '    <label ng-if="!isEditMode" class="category-label">{{label}}</label>',
-        editControlsDelete(),
+        '    <ul class="edit-controls" ng-if="showTools">',
+               deleteTool(),
+        '    </ul>',
         '    <div class="categorized choices">',
         '      <div class="choice-container">',
         '        <div choice-corespring-dnd-categorize="true" ',
@@ -163,16 +165,13 @@ var category = [
       ].join('');
     }
 
-    function editControlsDelete() {
-      return [
-        '<ul class="edit-controls" ng-if="showTools">',
-        deleteTool(),
-        '</ul>'].join('');
-    }
-
     function deleteTool() {
       return [
-        '<li class="delete-icon-button" ng-click="onDeleteClicked()" tooltip="delete" tooltip-append-to-body="true" tooltip-placement="bottom">',
+        '<li class="delete-icon-button" ',
+        '    ng-click="onDeleteClicked()" ' +
+        '    tooltip="delete" ',
+        '    tooltip-append-to-body="true" ',
+        '    tooltip-placement="bottom">',
         '  <i class="fa fa-trash-o"></i>',
         '</li>'].join('');
     }

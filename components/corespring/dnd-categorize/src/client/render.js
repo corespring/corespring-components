@@ -41,6 +41,7 @@ var main = [
       scope.isSeeCorrectAnswerOpen = false;
       scope.renderModel = {};
       scope.rows = [[]];
+      scope.shouldFlip = false;
       scope.undoStack = [];
 
       scope.getEditMode = getEditMode;
@@ -61,13 +62,13 @@ var main = [
         setResponse: setResponse
       };
 
-      scope.$watch('categories.length', updateView);
       scope.$watch('categoriesPerRow', updateView);
-      scope.$watch('choices.length', updateView);
       scope.$watch('choicesPerRow', updateView);
+      scope.$watch('renderModel', callAnswerChangedHandlerIfAnswersHaveChanged, true);
+      scope.$watch('renderModel.categories.length', updateView);
+      scope.$watch('renderModel.choices.length', updateView);
       scope.$watch('response', updateIsDragEnabled);
       scope.$watch('shouldFlip', updateView);
-      scope.$watch('renderModel', callAnswerChangedHandlerIfAnswersHaveChanged, true);
 
       if (scope.isEditMode) {
         scope.$watch('attrCategories.length', updateCategoriesAndChoicesFromEditor);
@@ -293,11 +294,11 @@ var main = [
         scope.choiceWidth = calcChoiceWidth();
 
         scope.categoryStyle = {
-          width: elem.find('.categories').width() / categoriesPerRow
+          width: 100 / categoriesPerRow + '%'
         };
 
         scope.choiceStyle = {
-          width: scope.choiceWidth
+          width: 100 / scope.choicesPerRow + '%'
         };
 
         updateLayoutConfig(scope.choiceWidth);
@@ -396,7 +397,9 @@ var main = [
       function updateChoicesPerRowFromEditor(newValue, oldValue) {
         var choicesPerRow = parseInt(newValue, 10);
         if (!isNaN(choicesPerRow)) {
-          scope.choicesPerRow = choicesPerRow;
+          //in editor we need some space to show all the tools
+          //so we limit the number of choices per row to 4
+          scope.choicesPerRow = Math.min(4, choicesPerRow);
         }
       }
 
@@ -413,7 +416,7 @@ var main = [
         scope.renderModel.choices = scope.attrChoices;
         scope.renderModel.categories = scope.attrCategories;
 
-        //TODO Why does it reset shouldFlip ?
+        //never flip in editMode
         scope.shouldFlip = false;
       }
 
@@ -540,8 +543,9 @@ var main = [
         '  <hr/>',
         '  <span ng-if="isEditMode" class="choice-area-label">',
         '    Enter choices below and drag to correct categories above. ',
-        '    Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.',
+        '    Choice tiles may be reused unless \"Remove after Placing\" option is selected.',
         '  </span>',
+        '  <h3 ng-if="isEditMode">Choices</h3>',
         choicesTemplate('!shouldFlip'),
         categoriesTemplate('shouldFlip', 'rows'),
         '</div>'
@@ -551,20 +555,20 @@ var main = [
     function choicesTemplate(flip) {
       return [
         '<div class="container-choices-holder">',
-        '<div class="container-choices" ng-if="#flip#">',
-        '  <div choice-corespring-dnd-categorize="true" ',
-        '    ng-repeat="choice in renderModel.choices track by choice.id" ',
-        '    drag-enabled="isDragEnabled"',
-        '    drag-and-drop-scope="renderModel.dragAndDropScope"',
-        '    edit-mode="getEditMode(choice)" ',
-        '    model="choice" ',
-        '    choice-id="{{choice.id}}" ',
-        '    on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-        '    on-edit-clicked="onChoiceEditClicked(choiceId)" ',
-        '    delete-after-placing="choice.moveOnDrag" ',
-        '    ng-style="choiceStyle" ',
-        '    image-service="imageService"',
-        '   ></div>',
+        '  <div class="container-choices" ng-if="#flip#">',
+        '    <div choice-corespring-dnd-categorize="true" ',
+        '      ng-repeat="choice in renderModel.choices track by choice.id" ',
+        '      drag-enabled="isDragEnabled"',
+        '      drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '      edit-mode="getEditMode(choice)" ',
+        '      model="choice" ',
+        '      choice-id="{{choice.id}}" ',
+        '      on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
+        '      on-edit-clicked="onChoiceEditClicked(choiceId)" ',
+        '      delete-after-placing="choice.moveOnDrag" ',
+        '      ng-style="choiceStyle" ',
+        '      image-service="imageService"',
+        '    ></div>',
         '  </div>',
         '</div>'
       ].join('').replace('#flip#', flip);
