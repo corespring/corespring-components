@@ -78,7 +78,7 @@ function defaultCreateOutcome(
   settings = settings || {};
 
   if (numAnswers === 0) {
-    return makeResponse('incorrect', 'warning', 0);
+    return makeResponse('incorrect', 'warning', 0, 'answer-expected');
   }
 
   if (question._uid !== answer._uid) {
@@ -106,7 +106,7 @@ function defaultCreateOutcome(
     correctness(isCorrect, isPartiallyCorrect),
     score);
 
-  function makeResponse(correctness, correctClass, score) {
+  function makeResponse(correctness, correctClass, score, warningClass) {
     var response = {};
     response.correctness = correctness;
     response.correctClass = correctClass;
@@ -119,6 +119,9 @@ function defaultCreateOutcome(
     }
     if (question.comments) {
       response.comments = question.comments;
+    }
+    if(warningClass){
+      response.warningClass = warningClass;
     }
     return response;
   }
