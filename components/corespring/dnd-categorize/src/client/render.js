@@ -21,7 +21,8 @@ var main = [
         mode: '@',
         attrCategories: '=?categories',
         attrChoices: '=?choices',
-        maxCategoriesPerRow: '=?maxCategoriesPerRow',
+        attrCategoriesPerRow: '=?categoriesPerRow',
+        attrChoicesPerRow: '=?choicesPerRow',
         imageService: '=?imageService'
       },
       template: template()
@@ -71,6 +72,8 @@ var main = [
       if (scope.isEditMode) {
         scope.$watch('attrCategories.length', updateCategoriesAndChoicesFromEditor);
         scope.$watch('attrChoices.length', updateCategoriesAndChoicesFromEditor);
+        scope.$watch('attrCategoriesPerRow', updateCategoriesPerRowFromEditor);
+        scope.$watch('attrChoicesPerRow', updateChoicesPerRowFromEditor);
       }
 
       scope.$on('$destroy', onDestroy);
@@ -88,16 +91,15 @@ var main = [
         scope.data = dataAndSession.data;
         scope.session = dataAndSession.session;
         setConfig(dataAndSession.data.model);
+        initLayouts();
+
         scope.renderModel = prepareRenderModel(dataAndSession.data.model, dataAndSession.session);
         scope.saveRenderModel = _.cloneDeep(scope.renderModel);
-
-        initLayouts();
-        updateView();
       }
 
       function setConfig(model) {
-        scope.categoriesPerRow = parseInt(model.config.categoriesPerRow, 10) || 2;
-        scope.choicesPerRow = parseInt(model.config.choicesPerRow, 10) || 4;
+        scope.categoriesPerRow = model.config.categoriesPerRow || 2;
+        scope.choicesPerRow = model.config.choicesPerRow || 4;
         scope.shouldFlip = model.config.answerAreaPosition === 'above';
       }
 
@@ -245,12 +247,15 @@ var main = [
       }
 
       function updateView() {
+        log('updateView enter, mode=', scope.mode);
         if (!scope.renderModel.categories || !scope.renderModel.choices) {
+          log('updateView exit no categories or choices');
           return;
         }
 
         var categoriesPerRow = scope.categoriesPerRow;
         if (isNaN(categoriesPerRow)) {
+          log('updateView exit categoriesPerRow is not a number');
           return;
         }
 
@@ -270,6 +275,7 @@ var main = [
         });
 
         renderMath();
+        log('updateView exit');
       }
 
       function calcChoiceWidth() {
@@ -353,10 +359,30 @@ var main = [
         };
       }
 
+      function updateCategoriesPerRowFromEditor(newValue, oldValue) {
+        var categoriesPerRow = parseInt(newValue,10);
+        if(!isNaN(categoriesPerRow)){
+          scope.catgeoriesPerRow = categoriesPerRow;
+        }
+      }
+
+      function updateChoicesPerRowFromEditor(newValue, oldValue) {
+        var choicesPerRow = parseInt(newValue,10);
+        if(!isNaN(choicesPerRow)){
+          scope.choicesPerRow = choicesPerRow;
+        }
+      }
+
       function updateCategoriesAndChoicesFromEditor() {
+        log('updateCategoriesAndChoicesFromEditor');
         //TODO Changes from the editor?
         //That is used in config. Do we really want that? Doesn't it mean we
         //include editing related stuff like wiggi in to player?
+
+        if(!layout){
+          initLayouts();
+        }
+
         scope.renderModel.choices = scope.attrChoices;
         scope.renderModel.categories = scope.attrCategories;
 

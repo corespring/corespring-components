@@ -18,17 +18,22 @@ var main = [
 
     function link(scope, $element, attrs) {
 
+      var log = console.log.bind(console, '[cs-dnd-cat:configure]');
+
       var MAX_CATEGORIES_PER_ROW = 4;
       var MAX_CHOICES_PER_ROW = 12;
 
       scope.answerAreaOptions = ['above','below'];
-      scope.categoriesPerRowOptions = _.range(1, MAX_CATEGORIES_PER_ROW);
-      scope.choicesPerRowOptions = _.range(1, MAX_CHOICES_PER_ROW);
+      scope.categoriesPerRowOptions = _.range(1, MAX_CATEGORIES_PER_ROW + 1);
+      scope.choicesPerRowOptions = _.range(1, MAX_CHOICES_PER_ROW + 1);
       scope.imageService = ComponentImageService;
       scope.leftPanelClosed = false;
 
+      scope.addCategory = addCategory;
       scope.addChoice = addChoice;
       scope.choiceToLetter = choiceToLetter;
+      scope.geThanCategories = geThanCategories;
+      scope.onChangeCategoriesPerRow = onChangeCategoriesPerRow;
 
       scope.$watch('categories', updateModel, true);
       scope.$watch('choices', updateModel, true);
@@ -142,7 +147,7 @@ var main = [
       }
 
       function renderMath() {
-        MathJaxService.parseDomForMath(0, $element);
+        MathJaxService.parseDomForMath(0, $element[0]);
       }
 
       function findFreeChoiceSlot() {
@@ -179,6 +184,20 @@ var main = [
         return 'choice_' + slot;
       }
 
+      function geThanCategories(choicesPerRow){
+        return choicesPerRow >= scope.model.config.categoriesPerRow;
+      }
+
+      /**
+       * Make sure choices-per-row is always >= categories-per-row
+       * otherwise the choices don't fit into the categories.
+       */
+      function onChangeCategoriesPerRow(){
+        if(scope.model.config.choicesPerRow < scope.model.config.categoriesPerRow){
+          scope.model.config.choicesPerRow = scope.model.config.categoriesPerRow;
+        }
+      }
+
     }
 
 
@@ -204,8 +223,8 @@ var main = [
             '</div>',
             '<div class="row" >',
             '  <corespring-dnd-categorize id="chooser" ',
-            '     categories-per-row="parseInt(model.config.categoriesPerRow, 10)" ',
-            '     choices-per-row="parseInt(model.config.choicesPerRow, 10)" ',
+            '     categories-per-row="model.config.categoriesPerRow" ',
+            '     choices-per-row="model.config.choicesPerRow" ',
             '     mode="edit"',
             '     choices="choices"',
             '     categories="categories"',
@@ -233,21 +252,22 @@ var main = [
             '  Answer area is',
             '  <select ng-model="model.config.answerAreaPosition" ',
             '     class="form-control" ',
-            '     ng-options="answerAreaOptions"/>',
+            '     ng-options="o for o in answerAreaOptions"/>',
             '  </select>',
             '</div>',
             '<div class="row">',
             '  Max Number of categories per row',
             '  <select ng-model="model.config.categoriesPerRow" ',
-            '     class="form-control" ' +
-            '     ng-options="categoriesPerRowOptions">',
+            '     class="form-control" ',
+            '    ng-change="onChangeCategoriesPerRow()"',
+            '     ng-options="o for o in categoriesPerRowOptions">',
             '  </select>',
             '</div>',
             '<div class="row">',
             '  Max Number of choices per row',
             '  <select ng-model="model.config.choicesPerRow" ',
-            '    class="form-control"' +
-            '    ng-options="choicesPerRowOptions">',
+            '    class="form-control"',
+            '    ng-options="o for o in choicesPerRowOptions | filter:geThanCategories">',
             '  </select>',
             '</div>'
         ].join('');
