@@ -33,6 +33,18 @@
 
     &.warning {
       .color-panel(@warning-color);
+
+      &.answer-expected {
+        .panel-heading {
+          display: none;
+        }
+        .panel-body {
+          color: #B94A48;
+          background-color: #F2DEDE;
+          border: 1px solid #EED3D7;
+          border-radius: 4px;
+        }
+      }
     }
   }
 }
