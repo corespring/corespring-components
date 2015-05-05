@@ -4,6 +4,7 @@ var main = [
   'CompactLayoutWhileEditing',
   'LayoutConfig',
   'LayoutRunner',
+
   function(
     $timeout,
     CompactLayout,
@@ -20,8 +21,8 @@ var main = [
         mode: '@',
         attrCategories: '=?categories',
         attrChoices: '=?choices',
-        maxCategoriesPerRow: "=?maxCategoriesPerRow",
-        imageService: "=?imageService"
+        maxCategoriesPerRow: '=?maxCategoriesPerRow',
+        imageService: '=?imageService'
       },
       template: template()
     };
@@ -72,7 +73,7 @@ var main = [
         scope.$watch('attrChoices.length', updateCategoriesAndChoicesFromEditor);
       }
 
-      scope.$on("$destroy", onDestroy);
+      scope.$on('$destroy', onDestroy);
 
       if (!scope.isEditMode) {
         scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
@@ -81,7 +82,7 @@ var main = [
       //-----------------------------------------------------------
 
       function setDataAndSession(dataAndSession) {
-        log("setDataAndSession ", dataAndSession);
+        log('setDataAndSession ', dataAndSession);
 
         scope.editable = true;
         scope.data = dataAndSession.data;
@@ -102,7 +103,7 @@ var main = [
 
       function prepareRenderModel(model, session) {
         var renderModel = {
-          dragAndDropScope: "scope-" + Math.floor(Math.random() * 10000)
+          dragAndDropScope: 'scope-' + Math.floor(Math.random() * 10000)
         };
 
         renderModel.choices = model.config.shuffle ?
@@ -128,6 +129,7 @@ var main = [
       }
 
       function setResponse(response) {
+        log('setResponse', response);
         scope.response = response;
 
         setDetailedFeedback(response);
@@ -216,8 +218,8 @@ var main = [
         }
         layout = new CompactLayout(
           new LayoutConfig()
-          .withContainer(elem.find(".container-choices"))
-          .withItemSelector(".choice-corespring-dnd-categorize")
+          .withContainer(elem.find('.container-choices'))
+          .withItemSelector('.choice-corespring-dnd-categorize')
           .withCellWidth(calcChoiceWidth())
           .value(),
           new LayoutRunner($timeout));
@@ -227,8 +229,8 @@ var main = [
         }
         editingLayout = new CompactLayoutWhileEditing(
           new LayoutConfig()
-          .withContainer(elem.find(".container-choices"))
-          .withItemSelector(".choice-corespring-dnd-categorize")
+          .withContainer(elem.find('.container-choices'))
+          .withItemSelector('.choice-corespring-dnd-categorize')
           .value(),
           new LayoutRunner($timeout));
       }
@@ -257,13 +259,13 @@ var main = [
         scope.choiceWidth = calcChoiceWidth();
 
         scope.categoryStyle = {
-          "width": (elem.find('.container-choices').width()) / categoriesPerRow
+          width: (elem.find('.container-choices').width()) / categoriesPerRow
         };
         scope.choiceStyle = {
-          "width": scope.choiceWidth
+          width: scope.choiceWidth
         };
         layout.updateConfig({
-          container: elem.find(".container-choices"),
+          container: elem.find('.container-choices'),
           cellWidth: scope.choiceWidth
         });
 
@@ -317,7 +319,7 @@ var main = [
       }
 
       function onChoiceRemovedFromCategory(categoryId, choiceId) {
-        log("onChoiceRemovedFromCategory", categoryId, choiceId);
+        log('onChoiceRemovedFromCategory', categoryId, choiceId);
         var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         if (category) {
           _.remove(category.choices, byModelId(choiceId));
@@ -340,7 +342,7 @@ var main = [
       function wrapChoiceModel(choiceModel) {
         return {
           model: choiceModel,
-          correctness: "none"
+          correctness: 'none'
         };
       }
 
@@ -400,7 +402,7 @@ var main = [
         var choiceElement = elem.find(choiceElementSelector);
 
         editingLayout.start({
-          container: elem.find(".container-choices"),
+          container: elem.find('.container-choices'),
           editedElement: choiceElement
         });
 
@@ -415,7 +417,7 @@ var main = [
       }
 
       function revertToState(state) {
-        log("revertToState", state);
+        log('revertToState', state);
         scope.renderModel = state;
         updateView();
       }
@@ -461,7 +463,7 @@ var main = [
     function itemFeedbackPanel() {
       return [
         '<div feedback="response.feedback"',
-        '   correct-class="{{response.correctClass}}"></div>'
+        '   correct-class="{{response.correctClass}} {{response.warningClass}}"></div>'
       ].join('');
     }
 
@@ -485,8 +487,8 @@ var main = [
         '    Enter choices below and drag to correct categories above. ',
         '    Choice tiles may be reused unless \"Remove Tile after Placing\" option is selected.',
         '  </span>',
-        choicesTemplate("!shouldFlip"),
-        categoriesTemplate("shouldFlip", "rows"),
+        choicesTemplate('!shouldFlip'),
+        categoriesTemplate('shouldFlip', 'rows'),
         '</div>'
       ].join('');
     }
@@ -510,7 +512,7 @@ var main = [
         '   ></div>',
         '  </div>',
         '</div>'
-      ].join('').replace("#flip#", flip);
+      ].join('').replace('#flip#', flip);
     }
 
     function categoriesTemplate(flip, rowsModel) {
@@ -536,13 +538,13 @@ var main = [
         '     </div>',
         '  </div>',
         '</div>'
-      ].join('').replace("#flip#", flip).replace("#rowsModel#", rowsModel);
+      ].join('').replace('#flip#', flip).replace('#rowsModel#', rowsModel);
     }
 
     function seeSolutionContent() {
       return [
-        categoriesTemplate("true", "correctAnswerRows")
-      ].join("");
+        categoriesTemplate('true', 'correctAnswerRows')
+      ].join('');
     }
   }];
 
