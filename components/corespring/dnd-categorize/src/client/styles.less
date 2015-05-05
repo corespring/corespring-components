@@ -1,8 +1,8 @@
 @import '../../../../../less/common';
 
 @component-width-in-placeholder: 600px;
-@categories-holder-padding: 15px; //make sure the cats fit into the see solution panel
-@choices-holder-padding: @categories-holder-padding + 15px; //make sure choices fit into cats
+@categories-holder-padding: 15px; //make sure the category fits into the see solution panel
+@choices-holder-padding: @categories-holder-padding + 15px; //make sure choice fits into category
 
 .component-placeholder {
   .render-corespring-dnd-categorize {
@@ -48,9 +48,9 @@
   }
 
   &.correct {
+
     .border {
-      border-width: 2px;
-      border-color: @correct-color;
+      .correct-input();
 
       &:after {
         color: @correct-color;
@@ -66,8 +66,7 @@
 
   &.incorrect {
     .border {
-      border-width: 2px;
-      border-color: @incorrect-color;
+      .incorrect-input();
 
       &:after {
         color: @incorrect-color;

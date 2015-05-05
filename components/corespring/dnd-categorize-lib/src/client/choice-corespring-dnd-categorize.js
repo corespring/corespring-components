@@ -29,15 +29,6 @@ var choice = [
 
       new MiniWiggiScopeExtension().postLink(scope);
 
-      scope.onStart = onStart;
-      scope.onStop = onStop;
-      scope.onDeleteClicked = onDeleteClicked;
-      scope.canEdit = canEdit;
-      scope.isEditing = isEditing;
-      scope.canDelete = canDelete;
-      scope.onChoiceEditClicked = onChoiceEditClicked;
-      scope.isDragEnabled = isDragEnabled;
-
       scope.showTools = canEdit(scope.editMode) || canDelete(scope.editMode);
       scope.draggedParent = canEdit(scope.editMode) ? ".modal" : "body";
 
@@ -48,11 +39,15 @@ var choice = [
         placeholder: true
       };
 
-      scope.draggableJqueryOptions = {
-        revert: alwaysRevertButAnimateIfInvalid,
-        appendTo: scope.draggedParent,
-        scope: scope.dragAndDropScope
-      };
+      scope.canDelete = canDelete;
+      scope.canEdit = canEdit;
+      scope.draggableJqueryOptions = draggableJqueryOptions;
+      scope.isDragEnabled = isDragEnabled;
+      scope.isEditing = isEditing;
+      scope.onChoiceEditClicked = onChoiceEditClicked;
+      scope.onDeleteClicked = onDeleteClicked;
+      scope.onStart = onStart;
+      scope.onStop = onStop;
 
       scope.$watch('correctness', updateClasses);
       scope.$watch('model.label', triggerResize);
@@ -60,6 +55,14 @@ var choice = [
       updateClasses();
 
       //------------------------------------------------
+
+      function draggableJqueryOptions() {
+        return {
+          revert: alwaysRevertButAnimateIfInvalid,
+          appendTo: scope.draggedParent,
+          scope: scope.dragAndDropScope
+        };
+      }
 
       function alwaysRevertButAnimateIfInvalid(dropTarget){
         setRevertDuration(!choiceAcceptedBy(dropTarget) ? 300 : 0);
@@ -149,7 +152,7 @@ var choice = [
       '  data-drag="isDragEnabled()"',
       '  ng-class="classes"',
       '  jqyoui-draggable="draggableOptions" ',
-      '  data-jqyoui-options="draggableJqueryOptions">',
+      '  data-jqyoui-options="draggableJqueryOptions()">',
       '  <div class="border">',
       '    <ul class="edit-controls" ng-if="showTools">',
       '      <li class="delete-icon-button"',

@@ -40,14 +40,7 @@ var category = [
         onDrop: 'onDropCallback'
       };
 
-      scope.droppableJqueryOptions = {
-        activeClass: 'category-active',
-        distance: 5,
-        hoverClass: 'category-hover',
-        tolerance: 'pointer',
-        scope: scope.dragAndDropScope
-      };
-
+      scope.droppableJqueryOptions = droppableJqueryOptions;
       scope.onDeleteClicked = onDeleteClicked;
       scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
       scope.onDropCallback = onDropCallback;
@@ -59,6 +52,16 @@ var category = [
 
 
       //---------------------------------------------------------------
+
+      function droppableJqueryOptions() {
+        return {
+          activeClass: 'category-active',
+          distance: 5,
+          hoverClass: 'category-hover',
+          tolerance: 'pointer',
+          scope: scope.dragAndDropScope
+        };
+      }
 
       function onDeleteClicked() {
         scope.$$postDigest(function() {
@@ -132,7 +135,7 @@ var category = [
         '<div class="category"',
         '  data-drop="true" ',
         '  jqyoui-droppable="droppableOptions"',
-        '  data-jqyoui-options="droppableJqueryOptions"',
+        '  data-jqyoui-options="droppableJqueryOptions()"',
         '  >',
         '  <div class="border">',
         '    <label ng-if="isEditMode"><input class="label-input" type="text" ng-model="$parent.label"></label>',
