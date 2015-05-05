@@ -14,7 +14,7 @@ var main = [
     function link(scope, element, attrs) {
       scope.undoStack = [];
       scope.editable = false;
-      scope.isSeeAnswerOpen = false;
+      scope.isSeeAnswerPanelExpanded = false;
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
@@ -26,10 +26,10 @@ var main = [
         reset: reset,
         isAnswerEmpty: isAnswerEmpty,
         answerChangedHandler: function(callback) {
-          //you need save this callback and call it every time
+          //you need call this callback every time
           //the user interacts with the component and changes the
           //content of the session. This is important for
-          //the inputReceived event that the player dispatches
+          //the inputReceived event, that the player dispatches
           scope.answerChangedCallback = callback;
         },
         editable: setEditable
@@ -48,6 +48,13 @@ var main = [
         console.log.apply(console, ['[corespring-blueprint]', arguments]);
       }
 
+      /**
+       * dataAndSession.data is equivalent to configure's fullModel.model
+       * It contains all the data necessary to render the interaction
+       * so that the user can answer the question.
+       * dataAndSession.session is equivalent to what getSession() returns
+       * @param dataAndSession
+       */
       function setDataAndSession(dataAndSession) {
         log(":setDataAndSession", dataAndSession);
         scope.editable = true;
@@ -75,7 +82,7 @@ var main = [
         scope.editable = true;
         scope.undoStack = [];
         scope.session = {};
-        scope.isSeeAnswerOpen = false;
+        scope.isSeeAnswerPanelExpanded = false;
         delete scope.response;
         scope.renderModel = _.cloneDeep(scope.saveRenderModel);
       }
@@ -164,7 +171,7 @@ var main = [
       function mainInteraction() {
         return [
           '<div class="dnd-blueprint-interaction">',
-          //TODO Fill in template code to render the interaction
+          //TODO Fill in code to render the interaction
           '</div>'
         ].join('');
       }
@@ -185,7 +192,7 @@ var main = [
         ].join('');
 
         function correctResult() {
-
+          //TODO fill in code to render the correct result
         }
       }
     }

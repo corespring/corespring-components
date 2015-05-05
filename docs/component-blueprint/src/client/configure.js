@@ -8,7 +8,7 @@ var main = [
       restrict: "E",
       scope: {},
       template: template()
-    }
+    };
 
     function link(scope, element, attrs) {
 
@@ -23,8 +23,10 @@ var main = [
         //The difference between fullModel and model is that
         //model should only contain the data that is necessary to
         //render the interaction in the player's "gather" mode,
-        //iow. before the answer has been submitted. This to avoid
-        //cheating
+        //iow. before the user has answered the question.
+        //This to avoid cheating
+        //fullModel contains the correctResponse, the feedback
+        //configuration, the scoring information
         scope.fullModel = fullModel;
         scope.model = fullModel.model;
       }
@@ -88,7 +90,7 @@ var main = [
             '<div class="row">',
             '  <div class="col-xs-12">',
             '    <p class="intro">',
-            '       TODO Fill in some text to explain the component and how it is configured.',
+          //TODO Fill in some text to explain the component and how it is configured.',
             '    </p>',
             '  </div>',
             '</div>'
@@ -111,7 +113,7 @@ var main = [
             '  <div class="col-xs-12 feedback-panel-col">',
             '    <corespring-feedback-config ',
             '       full-model="fullModel"',
-            '       component-type="corespring-match"',
+            '       component-type="corespring-blueprint"', //TODO replace component type
             '    ></corespring-feedback-config>',
             '  </div>',
             '</div>'
