@@ -4,6 +4,10 @@
 @warning-color: #a94442;
 @learn-more-color: #008bc9;
 
+
+@warning-color-border: #ebccd1;
+@warning-color-background: #f2dede;
+
 @warning-character: '\f071';
 @correct-character: '\f058';
 @incorrect-character: '\f057';
@@ -28,9 +32,13 @@
 }
 
 .warning-input() {
-  border: 1px solid @warning-color;
+  .warning-border();
   -moz-box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
   box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
+}
+
+.warning-border() {
+  border: 2px solid @warning-color;
 }
 
 .color-panel(@color) {
