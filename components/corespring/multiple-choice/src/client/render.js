@@ -314,7 +314,6 @@ var main = [
       '    </div>',
       '  </div>',
       '  <div class="answer-holder" ng-show="response && response.correctness === \'warning\'">',
-      '    <div class="text-center"><i class="fa" ng-class="response.correctness"></i></div>',
       '    <div class="alert alert-danger" role="alert">{{feedback && feedback.message ? feedback.message : \'Error\'}}</div>',
       '  </div>'
     ].join('');
