@@ -3,6 +3,7 @@ var server;
 var _ = require('lodash');
 var fbu = require('../../../server-shared/src/server/feedback-utils');
 var proxyquire = require('proxyquire').noCallThru();
+var expect = require('expect');
 
 server = proxyquire('../../src/server', {
   'corespring.server-shared.server.feedback-utils': fbu
@@ -119,7 +120,7 @@ describe('dnd-categorize', function() {
 
   describe("should return incorrect", function() {
 
-    function assertIncorrect(correctClass, question, answers, detailedFeedback, dontExpectCorrectResponse) {
+    function assertIncorrect(correctClass, question, answers, detailedFeedback, warningClass, dontExpectCorrectResponse) {
       var answer = _.cloneDeep(answers);
       var settings = {};
       var outcome = server.createOutcome(question, answer, settings);
@@ -129,11 +130,17 @@ describe('dnd-categorize', function() {
         score: 0
       };
 
-      if (!dontExpectCorrectResponse) {
-        expectedOutcome.correctResponse = _.cloneDeep(question.correctResponse);
+      expectedOutcome.detailedFeedback = detailedFeedback;
+
+      if(warningClass){
+        expectedOutcome.warningClass = warningClass;
       }
 
-      expectedOutcome.detailedFeedback = detailedFeedback;
+      if (dontExpectCorrectResponse) {
+        expect(outcome.correctResponse).toBe(undefined);
+      } else {
+        expectedOutcome.correctResponse = _.cloneDeep(question.correctResponse);
+      }
 
       outcome.should.eql(expectedOutcome);
     }
@@ -144,6 +151,7 @@ describe('dnd-categorize', function() {
         question([], {}),
         answers(null),
         detailedFeedback({}),
+        "answer-expected",
         true);
     });
 
@@ -300,7 +308,8 @@ describe('dnd-categorize', function() {
       correctClass: 'warning',
       score: 0,
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
-      detailedFeedback: {}
+      detailedFeedback: {},
+      warningClass: "answer-expected"
     });
   });
 
@@ -320,7 +329,8 @@ describe('dnd-categorize', function() {
       correctClass: 'warning',
       score: 0,
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
-      detailedFeedback: {}
+      detailedFeedback: {},
+      warningClass: "answer-expected"
     });
   });
 
