@@ -1,7 +1,21 @@
 
 @import '../../../../../less/common';
 
+@max-width-height-image: 200px;
+@warning-color: #B94A48;
+@warning-color-border: #EED3D7;
+@warning-color-background: #F2DEDE; 
+
+.limit-image-size() {
+  img {
+    max-width: @max-width-height-image;
+    max-height: @max-width-height-image;
+  }
+}
+
 .view-multiple-choice {
+
+  .limit-image-size();
 
   td {
     vertical-align: top;
@@ -69,6 +83,7 @@
         }
       }
       .checkbox-choice {
+        line-height: 25px;
         .checkbox-button {
           -webkit-transform: scale(1, 1);
           -ms-transform: scale(1, 1);
@@ -82,8 +97,8 @@
           height: 10px;
           font-size: 19px;
           color: #555555;
-          left: 0px;
-          top: -4px;
+          left: -0.5px;
+          top: -3px;
           position: absolute;
         }
         }
@@ -98,6 +113,7 @@
           border: none;
           .radio-button {
             background: none;
+            line-height: 33px;
             &:after {
               font-size: 25px;
               font-family: FontAwesome;
@@ -106,7 +122,7 @@
               border: 0;
               position: absolute;
               top: -8px;
-              left: -1px;
+              left: -3px;
             }
           }
         }
@@ -120,6 +136,8 @@
             &:before {
               color: #ffffff;
               font-size: 20px;
+              left: 0px;
+              top: -2px;
             }
           }
         }
@@ -131,6 +149,7 @@
         .radio-choice {
           opacity: 1;
           border: none;
+          line-height: 30px;
           .radio-button {
             background: none;
             &:after {
@@ -141,7 +160,7 @@
               border: 0;
               position: absolute;
               top: -10px;
-              left: -1px;
+              left: -3px;
             }
           }
         }
@@ -153,7 +172,7 @@
             &:before {
               color: #ffffff;
               content: "\f00d";
-              left: 3px;
+              left: 2.5px;
             }
           }
         }
@@ -392,8 +411,9 @@
   }
   &.warning {
     .checkbox-choice,
-    .radio-choice {
-      border-color: #B94A48;
+    .radio-choice,
+    .radio-choice[disabled] {
+      border-color: @warning-color;
       border-width: 2px;
       opacity: 1;
     }
@@ -490,4 +510,8 @@
 
 .config-multiple-choice .label-select, .select2-drop {
   min-width: 120px;
+}
+
+.config-multiple-choice {
+  .limit-image-size();
 }

@@ -1,7 +1,7 @@
 /* global exports */
 var main = [
-  '$log', 'ChoiceTemplates', 'ServerLogic',
-  function($log, ChoiceTemplates, ServerLogic) {
+  '$log', 'ChoiceTemplates', 'ServerLogic', 'ComponentImageService', 'WiggiMathJaxFeatureDef',
+  function($log, ChoiceTemplates, ServerLogic, ComponentImageService, WiggiMathJaxFeatureDef) {
 
     "use strict";
 
@@ -30,7 +30,7 @@ var main = [
       '        </div>',
       '        <div class="col-md-9 col-xs-8">',
       '          <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
-      '              image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
+      '              image-service="imageService()" features="extraFeaturesForChoices" ',
       '              parent-selector=".modal-body">',
       '            <edit-pane-toolbar alignment="bottom">',
       '              <div class="btn-group pull-right">',
@@ -266,7 +266,19 @@ var main = [
         '<div class="config-inline-choice" choice-template-controller="">',
         choices,
         '</div>'
-      ].join("")
+      ].join(""),
+
+      controller: ['$scope', function($scope) {
+        $scope.imageService = function() {
+          return ComponentImageService;
+        };
+
+        $scope.extraFeaturesForChoices = {
+          definitions: [
+            new WiggiMathJaxFeatureDef()
+          ]
+        };
+      }]
     };
 
   }

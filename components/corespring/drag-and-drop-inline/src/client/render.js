@@ -233,7 +233,7 @@ var main = [
         return [
           '<div class="choices-holder" >',
           '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
-          '    <div class="choiceAreaLabel">{{model.config.choiceAreaLabel}}</div>',
+          '    <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
           '  </div>',
           '  <div ng-repeat="choice in local.choices"',
           '    class="choice" ',

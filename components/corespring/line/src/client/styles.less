@@ -1,5 +1,7 @@
 .line-interaction-view {
   @warning-color: #B94A48;
+  @warning-color-border: #EED3D7;
+  @warning-color-background: #F2DEDE; 
   .jxgbox {
     position: relative;
     overflow: hidden;
@@ -40,8 +42,8 @@
           display: none;
         }
         .panel-body {
-          background-color: #F2DEDE;
-          border-color: @warning-color;
+          background-color: @warning-color-background;
+          border-color: @warning-color-border;
           color: @warning-color;
           border-top-left-radius: 4px;
           border-top-right-radius: 4px;
@@ -102,7 +104,7 @@
   }
   .graph-interaction {
     margin-top: 10px;
-    padding: 10px 10px 30px 10px;
+    padding: 10px;
     max-width: 600px;
     &.warning {
       .jxgbox {

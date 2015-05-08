@@ -4,9 +4,11 @@ var main = [
   '$timeout',
   'ChoiceTemplates',
   'ComponentImageService',
+  "WiggiMathJaxFeatureDef",
    function($timeout,
             ChoiceTemplates,
-            ComponentImageService
+            ComponentImageService,
+            WiggiMathJaxFeatureDef
    ) {
 
      "use strict";
@@ -75,7 +77,7 @@ var main = [
         '            </checkbox>',
         '          </div>',
         '          <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
-        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external" features="extraFeatures"',
+        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external" features="extraFeaturesForChoices"',
         '              parent-selector=".modal-body"',
         '              image-service="imageService()">',
         '            <edit-pane-toolbar alignment="bottom">',
@@ -160,6 +162,12 @@ var main = [
           function($scope) {
             $scope.imageService = function() {
               return ComponentImageService;
+            };
+
+            $scope.extraFeaturesForChoices = {
+              definitions: [
+                new WiggiMathJaxFeatureDef()
+              ]
             };
           }
         ],

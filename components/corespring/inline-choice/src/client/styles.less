@@ -1,5 +1,14 @@
 @import '../../../../../less/common';
 
+@max-width-height-image: 200px;
+
+.limit-image-size() {
+  img {
+    max-width: @max-width-height-image;
+    max-height: @max-width-height-image;
+  }
+}
+
 .component-placeholder.corespring-inline-choice {
   display: inline-block;
   max-width: 200px;
@@ -167,6 +176,8 @@
 
 .config-inline-choice {
 
+  .limit-image-size();
+
   .rounded-inputs;
 
   .choice-checkbox {
@@ -181,4 +192,8 @@
     margin-bottom: 1em;
   }
 
+}
+
+.view-inline-choice {  
+  .limit-image-size();
 }
