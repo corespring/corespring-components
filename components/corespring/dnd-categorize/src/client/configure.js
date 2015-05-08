@@ -28,7 +28,6 @@ var main = [
       scope.leftPanelClosed = false;
       scope.numberOfCorrectAnswers = 0;
 
-
       scope.addCategory = addCategory;
       scope.addChoice = addChoice;
       scope.choiceToLetter = choiceToLetter;
@@ -50,6 +49,7 @@ var main = [
       //----------------------------------------------------
 
       function setModel(fullModel) {
+        log('setModel', fullModel);
         scope.fullModel = fullModel;
         scope.fullModel.correctResponse = scope.fullModel.correctResponse || {};
 
@@ -62,11 +62,19 @@ var main = [
 
         var correctResponses = scope.fullModel.correctResponse;
 
+        log('setModel', scope.categories);
+        log('setModel', scope.choices);
         _.forEach(scope.categories, function(category) {
           var response = correctResponses[category.model.id] || {};
           category.choices = _(response).map(getChoiceForId).map(wrapChoiceModel).value();
         });
+        log('setModel', scope.categories);
+      }
 
+      function getChoiceForId(choiceId) {
+        return _.find(scope.choices, {
+          id: choiceId
+        });
       }
 
       function getModel() {
@@ -124,12 +132,6 @@ var main = [
         };
       }
 
-      function getChoiceForId(choiceId) {
-        return _.find(scope.choices, {
-          id: choiceId
-        });
-      }
-
       function getAnswer() {
         return {};
       }
@@ -145,14 +147,14 @@ var main = [
       function getChoicesForCorrectResponse() {
         return _.reduce(scope.categories, function(acc, category) {
           if (category.choices) {
-            acc[category.model.id] = _.map(category.choices, getIdForChoice);
+            acc[category.model.id] = _.map(category.choices, getModelIdForChoice);
           }
           return acc;
         }, {});
       }
 
-      function getIdForChoice(choice) {
-        return choice.id;
+      function getModelIdForChoice(choice) {
+        return choice.model.id;
       }
 
       function renderMath() {

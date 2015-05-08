@@ -9,6 +9,7 @@ var choice = [
       link: link,
       template: template(),
       scope: {
+        choiceId:'@',
         correctness: '@',
         deleteAfterPlacing: '=?deleteAfterPlacing',
         dragAndDropScope: '@',
@@ -25,11 +26,11 @@ var choice = [
 
     function link(scope, elem, attrs) {
       var log = console.log.bind(console, '[choice]');
-      log("dragAndDropScope", scope.dragAndDropScope);
+      log("choiceId ", attrs.choiceId, " dragAndDropScope ", attrs.dragAndDropScope);
 
       new MiniWiggiScopeExtension().postLink(scope);
 
-      scope.showTools = canEdit(scope.editMode) || canDelete(scope.editMode);
+      scope.showTools = !isCategorised() && (canEdit(scope.editMode) || canDelete(scope.editMode));
       scope.draggedParent = canEdit(scope.editMode) ? ".modal" : "body";
 
       scope.draggableOptions = {
@@ -94,6 +95,10 @@ var choice = [
         scope.notifyDeleteClicked({
           choiceId: attrs.choiceId
         });
+      }
+
+      function isCategorised(){
+        return $(elem).parents('.categorized').length > 0;
       }
 
       function canEdit() {

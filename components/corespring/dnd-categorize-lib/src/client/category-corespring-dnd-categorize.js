@@ -11,6 +11,7 @@ var category = [
       link: link,
       template: template(),
       scope: {
+        categoryId: '@',
         choices: '=',
         choiceWidth: '@',
         dragAndDropScope: '@',
@@ -27,7 +28,7 @@ var category = [
     function link(scope, elem, attrs) {
 
       var log = console.log.bind(console, '[category]');
-      log("dragAndDropScope", scope.dragAndDropScope);
+      log("categoryId ", attrs.categoryId, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
 
       var layout;
       var isLocalChoiceDragged = false;
@@ -148,7 +149,7 @@ var category = [
         '        <div choice-corespring-dnd-categorize="true" ',
         '           choice-id="{{choice.model.id}}" ',
         '           correctness="{{choice.correctness}}" ',
-        '           drag-and-drop-scope="dragAndDropScope"',
+        '           drag-and-drop-scope="{{dragAndDropScope}}"',
         '           drag-enabled="dragEnabled" ',
         '           edit-mode="choiceEditMode" ',
         '           model="choice.model"',

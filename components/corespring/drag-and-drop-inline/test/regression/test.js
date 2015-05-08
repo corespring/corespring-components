@@ -48,10 +48,11 @@ describe('drag and drop inline', function() {
       .waitFor(landingPlace('aa_1'));
   });
 
-  it('correct answer results in correct feedback', function(done) {
+  it.only('correct answer results in correct feedback', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
+      .pause(60000)
       .waitFor('.feedback.correct')
       .call(done);
   });

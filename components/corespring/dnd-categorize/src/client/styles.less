@@ -55,7 +55,6 @@
 
     .remove-choice {
       color: #333333;
-      display: none;
       opacity: 0.3;
       position: absolute;
       right: 3px;
@@ -128,6 +127,16 @@
       cursor: move;
       opacity: 0.75;
       z-index: 1000;
+
+      .edit-controls {
+        //display:none messes up the position when dragging
+        visibility: hidden;
+      }
+
+      .delete-after-placing {
+        //display:none messes up the position when dragging
+        visibility: hidden;
+      }
     }
 
   }
@@ -165,6 +174,10 @@
       border: solid 2px #9b9b9b;
       margin-bottom: 10px;
       position: relative;
+
+      .remove-choice {
+        display: none;
+      }
     }
   }
 
@@ -241,13 +254,6 @@
             .choice-container {
               min-height: 20px;
               position: relative;
-
-              .choice-corespring-dnd-categorize.draggable {
-
-                .remove-choice {
-                  display: inline-block;
-                }
-              }
             }
           }
         }

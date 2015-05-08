@@ -71,8 +71,8 @@ var main = [
       scope.$watch('shouldFlip', updateView);
 
       if (scope.isEditMode) {
-        scope.$watch('attrCategories.length', updateCategoriesAndChoicesFromEditor);
-        scope.$watch('attrChoices.length', updateCategoriesAndChoicesFromEditor);
+        scope.$watch('attrCategories.length', setRenderModelFromEditor);
+        scope.$watch('attrChoices.length', setRenderModelFromEditor);
         scope.$watch('attrCategoriesPerRow', updateCategoriesPerRowFromEditor);
         scope.$watch('attrChoicesPerRow', updateChoicesPerRowFromEditor);
       }
@@ -86,7 +86,7 @@ var main = [
       //-----------------------------------------------------------
 
       function setDataAndSession(dataAndSession) {
-        log('setDataAndSession ', dataAndSession);
+        log('setDataAndSession mode:', attrs.mode, dataAndSession);
 
         scope.editable = true;
         scope.data = dataAndSession.data;
@@ -281,15 +281,18 @@ var main = [
       }
 
       function updateView() {
+        log('updateView init ', attrs.mode, $(elem).width());
         if (!scope.renderModel.categories || !scope.renderModel.choices) {
           return;
         }
 
+        log('updateView 2');
         var categoriesPerRow = scope.categoriesPerRow;
         if (isNaN(categoriesPerRow)) {
           return;
         }
 
+        log('updateView 3');
         scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
         scope.choiceWidth = calcChoiceWidth();
 
@@ -297,19 +300,22 @@ var main = [
           width: 100 / categoriesPerRow + '%'
         };
 
+        //in editor we need some space to show all the tools
+        //so we limit the number of choices per row to 4
         scope.choiceStyle = {
-          width: 100 / scope.choicesPerRow + '%'
+          width: 100 / Math.min(4, scope.choicesPerRow) + '%'
         };
 
         updateLayoutConfig(scope.choiceWidth);
         renderMath();
+        log('updateView exit', scope.choicesPerRow, scope.choiceWidth);
       }
 
       function calcChoiceWidth() {
         if (!scope.renderModel.choices) {
           return 0;
         }
-        return (elem.find('.container-choices').width()) / scope.choicesPerRow;
+        return ((elem.width() || 600) - 64) / scope.choicesPerRow;
       }
 
       function chunk(arr, chunkSize) {
@@ -353,15 +359,40 @@ var main = [
       }
 
       function onChoiceRemovedFromCategory(categoryId, choiceId) {
-        log('onChoiceRemovedFromCategory', categoryId, choiceId);
+        log('onChoiceRemovedFromCategory', categoryId, choiceId, scope.renderModel.categories);
         var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         if (category) {
           _.remove(category.choices, byModelId(choiceId));
-          var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
-          if (!scope.isEditMode && choice && choice.moveOnDrag && !findInAllCategories(choiceId)) {
-            scope.renderModel.choices.push(choice);
+
+          if(!scope.isEditMode){
+            var choice = _.find(scope.renderModel.allChoices, byId(choiceId));
+            if (choice && choice.moveOnDrag && !findInAllCategories(choiceId)) {
+              addChoiceBackIn(choice);
+            }
           }
         }
+      }
+
+      /**
+       * Add choice back in at the same position where it was in the beginning
+       * Obviously works only if the order of the choices has not been changed
+       */
+      function addChoiceBackIn(choice){
+        //find original position of choice
+        var index = _.indexOf(scope.renderModel.allChoices, choice);
+        //go backwards in allChoices and try to find the first choice
+        //before choice, that is still in choices
+        while(--index >= 0){
+          var otherChoice = scope.renderModel.allChoices[index];
+          var otherChoiceIndex = _.indexOf(scope.renderModel.choices, otherChoice);
+          if(otherChoiceIndex >= 0){
+            //insert the choice after the otherChoice
+            scope.renderModel.choices.splice(otherChoiceIndex + 1, 0, choice);
+            return;
+          }
+        }
+        //no otherChoice found, insert at the beginning
+        scope.renderModel.choices.unshift(choice);
       }
 
       function onChoiceDeleteClicked(choiceId) {
@@ -397,24 +428,26 @@ var main = [
       function updateChoicesPerRowFromEditor(newValue, oldValue) {
         var choicesPerRow = parseInt(newValue, 10);
         if (!isNaN(choicesPerRow)) {
-          //in editor we need some space to show all the tools
-          //so we limit the number of choices per row to 4
-          scope.choicesPerRow = Math.min(4, choicesPerRow);
+          scope.choicesPerRow = choicesPerRow;
         }
       }
 
-      function updateCategoriesAndChoicesFromEditor() {
-        log('updateCategoriesAndChoicesFromEditor');
+      function setRenderModelFromEditor() {
+        log('setRenderModelFromEditor categories old/new',  scope.renderModel.categories, scope.attrCategories);
 
         if (!layout) {
           initLayouts();
         }
 
-        scope.renderModel.choices = scope.attrChoices;
-        scope.renderModel.categories = scope.attrCategories;
+        var renderModel = {
+          dragAndDropScope: 'scope-' + Math.floor(Math.random() * 10000)
+        };
 
-        //never flip in editMode
-        scope.shouldFlip = false;
+        renderModel.choices = scope.attrChoices;
+        renderModel.allChoices = _.take(renderModel.choices, all);
+        renderModel.categories = scope.attrCategories;
+
+        scope.renderModel = renderModel;
       }
 
       function renderMath() {
@@ -556,7 +589,7 @@ var main = [
         '    <div choice-corespring-dnd-categorize="true" ',
         '      ng-repeat="choice in renderModel.choices track by choice.id" ',
         '      drag-enabled="isDragEnabled"',
-        '      drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '      drag-and-drop-scope="{{renderModel.dragAndDropScope}}"',
         '      edit-mode="getEditMode(choice)" ',
         '      model="choice" ',
         '      choice-id="{{choice.id}}" ',
@@ -582,7 +615,7 @@ var main = [
         '        choice-width="{{choiceWidth}}"',
         '        choices="category.choices"',
         '        drag-enabled="isDragEnabledFromCategory"',
-        '        drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '        drag-and-drop-scope="{{renderModel.dragAndDropScope}}"',
         '        edit-mode="isEditMode" ',
         '        label="category.model.label" ',
         '        ng-style="categoryStyle"',
