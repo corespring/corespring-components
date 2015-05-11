@@ -28,14 +28,11 @@ exports.directive = {
         //------------------------------------------------------
 
         function clearUndoStack(){
-          log("clearUndoStack");
           scope.undoStack = [];
         }
 
         function updateUndoStack(newValue, oldValue) {
-          log("updateUndoStack", newValue, scope.undoStack);
           if (newValue && !_.isEqual(newValue, _.last(scope.undoStack))) {
-            log("updateUndoStack pushing");
             scope.undoStack.push(_.cloneDeep(newValue));
           }
         }

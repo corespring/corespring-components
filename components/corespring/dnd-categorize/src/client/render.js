@@ -14,7 +14,7 @@ var main = [
   ) {
 
     return {
-      controller:['$scope', controller],
+      controller: ['$scope', controller],
       link: link,
       replace: true,
       restrict: 'AE',
@@ -29,8 +29,8 @@ var main = [
       }
     };
 
-    function controller(scope){
-      scope.activate = function(id){
+    function controller(scope) {
+      scope.activate = function(id) {
         scope.$broadcast('activate', id);
       };
     }
@@ -300,6 +300,11 @@ var main = [
           return;
         }
 
+        var choicesPerRow = scope.choicesPerRow;
+        if (isNaN(choicesPerRow)) {
+          return;
+        }
+
         scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
         scope.choiceWidth = calcChoiceWidth();
 
@@ -310,7 +315,7 @@ var main = [
         //in editor we need some space to show all the tools
         //so we limit the number of choices per row to 4
         scope.choiceStyle = {
-          width: 100 / Math.min(4, scope.choicesPerRow) + '%'
+          width: (100 / (scope.isEditMode ? Math.min(4, choicesPerRow) : choicesPerRow)) + '%'
         };
 
         updateLayoutConfig(scope.choiceWidth);
@@ -365,7 +370,7 @@ var main = [
         if (category) {
           _.remove(category.choices, byModelId(choiceId));
 
-          if(!scope.isEditMode){
+          if (!scope.isEditMode) {
             var choice = _.find(scope.renderModel.allChoices, byId(choiceId));
             if (choice && choice.moveOnDrag && !findInAllCategories(choiceId)) {
               addChoiceBackIn(choice);
@@ -378,15 +383,15 @@ var main = [
        * Add choice back in at the same position where it was in the beginning
        * Obviously works only if the order of the choices has not been changed
        */
-      function addChoiceBackIn(choice){
+      function addChoiceBackIn(choice) {
         //find original position of choice
         var index = _.indexOf(scope.renderModel.allChoices, choice);
         //go backwards in allChoices and try to find the first choice
         //before choice, that is still in choices
-        while(--index >= 0){
+        while (--index >= 0) {
           var otherChoice = scope.renderModel.allChoices[index];
           var otherChoiceIndex = _.indexOf(scope.renderModel.choices, otherChoice);
-          if(otherChoiceIndex >= 0){
+          if (otherChoiceIndex >= 0) {
             //insert the choice after the otherChoice
             scope.renderModel.choices.splice(otherChoiceIndex + 1, 0, choice);
             return;
