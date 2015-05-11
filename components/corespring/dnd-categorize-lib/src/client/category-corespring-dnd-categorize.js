@@ -42,7 +42,7 @@ var category = [
     function link(scope, elem, attrs) {
 
       var log = console.log.bind(console, '[category]');
-      log("categoryId ", attrs.categoryId, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
+      //log("categoryId ", attrs.categoryId, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
 
       new MiniWiggiScopeExtension().postLink(scope);
 
@@ -95,7 +95,6 @@ var category = [
       }
 
       function onLabelEditClicked(event) {
-        console.log('onLabelEditClicked', event);
         event.stopPropagation();
         scope.notifyEditClicked({
           categoryId: attrs.categoryId

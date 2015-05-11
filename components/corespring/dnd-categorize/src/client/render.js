@@ -102,6 +102,7 @@ var main = [
         setConfig(dataAndSession.data.model);
         initLayouts();
 
+        scope.$broadcast('reset');
         scope.renderModel = prepareRenderModel(dataAndSession.data.model, dataAndSession.session);
         scope.saveRenderModel = _.cloneDeep(scope.renderModel);
       }
@@ -194,13 +195,14 @@ var main = [
       }
 
       function reset() {
+        scope.$broadcast('reset');
+
         scope.editable = true;
         scope.isSeeAnswerPanelExpanded = false;
         scope.response = undefined;
 
         scope.renderModel = _.cloneDeep(scope.saveRenderModel);
         updateView();
-        scope.$broadcast('reset');
       }
 
       function setEditable(e) {
@@ -289,18 +291,15 @@ var main = [
       }
 
       function updateView() {
-        log('updateView init ', attrs.mode, $(elem).width());
         if (!scope.renderModel.categories || !scope.renderModel.choices) {
           return;
         }
 
-        log('updateView 2');
         var categoriesPerRow = scope.categoriesPerRow;
         if (isNaN(categoriesPerRow)) {
           return;
         }
 
-        log('updateView 3');
         scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
         scope.choiceWidth = calcChoiceWidth();
 
@@ -316,7 +315,6 @@ var main = [
 
         updateLayoutConfig(scope.choiceWidth);
         renderMath();
-        log('updateView exit', scope.choicesPerRow, scope.choiceWidth);
       }
 
       function calcChoiceWidth() {
@@ -340,18 +338,14 @@ var main = [
       }
 
       function onCategoryDrop(categoryId, choiceId) {
-        log('onCategoryDrop', categoryId, choiceId);
         var category = _.find(scope.renderModel.categories, byModelId(categoryId));
-        var choiceInCategory = _.find(category.choices, byModelId(choiceId));
-        if (!choiceInCategory) {
-          var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
-          scope.$apply(function() {
-            category.choices.push(wrapChoiceModel(choice));
-          });
+        var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
+        scope.$apply(function() {
+          category.choices.push(wrapChoiceModel(choice));
+        });
 
-          if (choice.moveOnDrag && !scope.isEditMode) {
-            _.remove(scope.renderModel.choices, byId(choiceId));
-          }
+        if (choice.moveOnDrag && !scope.isEditMode) {
+          _.remove(scope.renderModel.choices, byId(choiceId));
         }
         updateView();
       }
@@ -367,7 +361,6 @@ var main = [
       }
 
       function onChoiceRemovedFromCategory(categoryId, choiceId) {
-        log('onChoiceRemovedFromCategory', categoryId, choiceId, scope.renderModel.categories);
         var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         if (category) {
           _.remove(category.choices, byModelId(choiceId));
@@ -441,8 +434,6 @@ var main = [
       }
 
       function setRenderModelFromEditor() {
-        log('setRenderModelFromEditor categories old/new',  scope.renderModel.categories, scope.attrCategories);
-
         if (!layout) {
           initLayouts();
         }
@@ -492,7 +483,6 @@ var main = [
       }
 
       function onChoiceEditClicked(choiceId) {
-        log('editedChoice', choiceId);
         scope.activate(choiceId);
 
         scope.editedChoice = _.find(scope.renderModel.choices, byId(choiceId));
@@ -519,8 +509,7 @@ var main = [
       }
 
       function revertToState(state) {
-        log('revertToState', state);
-        scope.renderModel = state;
+        scope.renderModel = _.cloneDeep(state);
         updateView();
       }
 
@@ -555,9 +544,9 @@ var main = [
     function undoStartOver() {
       return [
         '<div corespring-undo-start-over="" ',
+        '    ng-show="editable"',
         '    render-model="renderModel"',
         '    revert-to-state="revertToState(state)"',
-        '    ng-show="editable"',
         '></div>'
       ].join('');
     }

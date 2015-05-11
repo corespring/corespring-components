@@ -28,6 +28,12 @@ function countAnswers(answers) {
   }, 0);
 }
 
+function countExpectedAnswers(question) {
+  return _.reduce(question.correctResponse, function(sum, cat) {
+    return sum + cat.length;
+  }, 0);
+}
+
 function countCorrectAnswers(question, answers) {
   if (!answers) {
     return 0;
@@ -37,11 +43,6 @@ function countCorrectAnswers(question, answers) {
   }, 0);
 }
 
-function countExpectedAnswers(question) {
-  return _.reduce(question.correctResponse, function(sum, cat) {
-    return sum + cat.length;
-  }, 0);
-}
 
 function countCorrectAnswersInCategory(expectedAnswers, answers) {
   var copyOfExpectedAnswers = _.cloneDeep(expectedAnswers);

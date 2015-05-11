@@ -31,7 +31,7 @@ var choice = [
 
     function link(scope, elem, attrs) {
       var log = console.log.bind(console, '[choice]');
-      log("choiceId ", attrs.choiceId, " dragAndDropScope ", attrs.dragAndDropScope);
+      //log("choiceId ", attrs.choiceId, " dragAndDropScope ", attrs.dragAndDropScope);
 
       scope.active = false;
       scope.showTools = !isCategorised() && (canEdit(scope.editMode) || canDelete(scope.editMode));
@@ -65,17 +65,21 @@ var choice = [
 
       //------------------------------------------------
 
+      var revertValidAnimationMs = 0;
+      var revertInvalidAnimationMs = 300;
+
       function draggableJqueryOptions() {
         return {
           appendTo: scope.draggedParent,
-          delay: 300,
+          delay: revertInvalidAnimationMs,
           revert: alwaysRevertButAnimateIfInvalid,
           scope: scope.dragAndDropScope
         };
       }
 
       function alwaysRevertButAnimateIfInvalid(dropTarget){
-        setRevertDuration(!choiceAcceptedBy(dropTarget) ? 300 : 0);
+        var invalid = !choiceAcceptedBy(dropTarget);
+        setRevertDuration(invalid ? revertInvalidAnimationMs : revertValidAnimationMs);
         return true;
 
         function choiceAcceptedBy(dropTarget){
@@ -127,7 +131,6 @@ var choice = [
       }
 
       function onChoiceEditClicked(event) {
-        console.log('onChoiceEditClicked', event);
         event.stopPropagation();
         scope.notifyEditClicked({
           choiceId: attrs.choiceId

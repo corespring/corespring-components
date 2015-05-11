@@ -25,14 +25,17 @@ exports.directive = {
         scope.$on('reset', clearUndoStack);
         scope.$watch('renderModel', updateUndoStack, true);
 
+        //------------------------------------------------------
+
         function clearUndoStack(){
           log("clearUndoStack");
           scope.undoStack = [];
         }
 
         function updateUndoStack(newValue, oldValue) {
-          log("updateUndoStack", newValue);
+          log("updateUndoStack", newValue, scope.undoStack);
           if (newValue && !_.isEqual(newValue, _.last(scope.undoStack))) {
+            log("updateUndoStack pushing");
             scope.undoStack.push(_.cloneDeep(newValue));
           }
         }
