@@ -32,7 +32,19 @@
     }
 
     &.warning {
-      .color-panel(@warning-color);
+      .warning-panel();
+
+      &.answer-expected {
+        .panel-heading {
+          display: none;
+        }
+        .panel-body {
+          color: #a94442;
+          background-color: #f2dede;
+          border: 1px solid #ebccd1;
+          border-radius: 4px;
+        }
+      }
     }
   }
 }

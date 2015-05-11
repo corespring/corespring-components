@@ -13,16 +13,6 @@ exports.createOutcome = function (question, answer, settings) {
       return _.isEmpty(a);
     });
 
-  function addOptionalParts(feedbackType, value) {
-    if (settings.showFeedback) {
-      value.feedback = fb.makeFeedback(question.feedback, feedbackType);
-    }
-    if(question.comments){
-      value.comments = question.comments;
-    }
-    return value;
-  }
-
   if (isEmptyAnswer) {
     return addOptionalParts("warning", {
       correctness: 'incorrect',
@@ -31,23 +21,6 @@ exports.createOutcome = function (question, answer, settings) {
       correctClass: 'warning',
       feedbackPerChoice: {}
     });
-  }
-
-  function evaluateChoices(correctResponses, answers){
-    var feedback = [];
-    var countCorrect = 0;
-    var copyOfResponses = correctResponses.slice();
-    _.each(answers, function (answerId) {
-      var index = _.indexOf(copyOfResponses, answerId);
-      if (index >= 0) {
-        countCorrect++;
-        feedback.push('correct');
-        copyOfResponses.splice(index, 1);
-      } else {
-        feedback.push('incorrect');
-      }
-    });
-    return {correctAnswersCount: countCorrect, feedback: feedback};
   }
 
   var feedbackPerChoice = {};
@@ -95,6 +68,34 @@ exports.createOutcome = function (question, answer, settings) {
     score: score,
     correctClass: fb.correctness(isCorrect, isPartiallyCorrect)
   });
+
+  function addOptionalParts(feedbackType, value) {
+    if (settings.showFeedback) {
+      value.feedback = fb.makeFeedback(question.feedback, feedbackType);
+    }
+    if(question.comments){
+      value.comments = question.comments;
+    }
+    return value;
+  }
+
+  function evaluateChoices(correctResponses, answers){
+    var feedback = [];
+    var countCorrect = 0;
+    var copyOfResponses = correctResponses.slice();
+    _.each(answers, function (answerId) {
+      var index = _.indexOf(copyOfResponses, answerId);
+      if (index >= 0) {
+        countCorrect++;
+        feedback.push('correct');
+        copyOfResponses.splice(index, 1);
+      } else {
+        feedback.push('incorrect');
+      }
+    });
+    return {correctAnswersCount: countCorrect, feedback: feedback};
+  }
+
 };
 
 

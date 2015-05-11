@@ -107,8 +107,6 @@ var main = [
           return;
         }
 
-        $(element).find(".alert").hide();
-
         var model = scope.question;
         var stash = scope.session.stash = scope.session.stash || {};
         var answers = scope.session.answers = scope.session.answers || {};
@@ -158,19 +156,24 @@ var main = [
           resetFeedback(scope.choices);
 
           scope.response = response;
+
           if (response.feedback) {
-            _.each(response.feedback, function(fb) {
+            if (response.feedback.emptyAnswer) {
+              scope.feedback = response.feedback;
+            } else {
+              _.each(response.feedback, function(fb) {
+                var choice = _.find(scope.choices, function(c) {
+                  return c.value === fb.value;
+                });
 
-              var choice = _.find(scope.choices, function(c) {
-                return c.value === fb.value;
+                if (choice !== null) {
+                  choice.feedback = fb.feedback;
+                  choice.correct = fb.correct;
+                }
               });
-
-              if (choice !== null) {
-                choice.feedback = fb.feedback;
-                choice.correct = fb.correct;
-              }
-            });
+            }
           }
+
           setTimeout(function() {
             $(element).find(".feedback-panel.visible").slideDown(400);
           }, 10);
@@ -280,7 +283,7 @@ var main = [
 
 
     var seeAnswer = [
-      '  <div class="answer-holder" ng-show="response && response.correctness != \'correct\' && question.config.showCorrectAnswer === \'separately\'">',
+      '  <div class="answer-holder" ng-show="response && response.correctness != \'correct\' && response.correctness != \'warning\' && question.config.showCorrectAnswer === \'separately\'">',
       '    <div class="panel panel-default">',
       '      <div class="panel-heading">',
       '        <h4 class="panel-title" ng-click="bridge.answerVisible = !bridge.answerVisible"><i class="answerIcon fa fa-eye{{bridge.answerVisible ? \'-slash\' : \'\'}}"></i>{{bridge.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}</h4>',
@@ -309,6 +312,9 @@ var main = [
       '        </div>',
       '      </div>',
       '    </div>',
+      '  </div>',
+      '  <div class="answer-holder" ng-show="response && response.correctness === \'warning\'">',
+      '    <div class="alert alert-danger" role="alert">{{feedback && feedback.message ? feedback.message : \'Error\'}}</div>',
       '  </div>'
     ].join('');
 
@@ -398,7 +404,7 @@ var main = [
       replace: true,
       link: link,
       template: [
-        '<div class="view-multiple-choice">',
+        '<div class="view-multiple-choice" ng-class="response.correctness">',
           '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
           '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
           '  <div ng-if="isTile()">' + tileTemplate + '</div>',

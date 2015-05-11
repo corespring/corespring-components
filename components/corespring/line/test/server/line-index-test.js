@@ -58,12 +58,14 @@ describe('line interaction server logic', function() {
     }
   };
 
-  it('returns incorrect outcome for an empty answer', function() {
-    var outcome = server.createOutcome({ feedback: {}, model: {config: {}}}, null, helper.settings(true, true, true));
+  var emptyAnswer = {};
+
+  it('returns warning outcome for an empty answer', function() {
+    var outcome = server.createOutcome(_.cloneDeep(component), emptyAnswer, helper.settings(true, true, true));
     outcome.should.eql({
-      correctness: 'incorrect',
+      correctness: 'warning',
       score: 0,
-      feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
     });
   });
 
@@ -92,8 +94,8 @@ describe('line interaction server logic', function() {
       response = server.createOutcome(_.cloneDeep(component), {}, helper.settings(false, true, true));
     });
 
-    it('should return incorrect', function() {
-      response.correctness.should.eql('incorrect');
+    it('should return warning', function() {
+      response.correctness.should.eql('warning');
     });
 
     it('should return a score of 0', function() {

@@ -1,6 +1,21 @@
+
 @import '../../../../../less/common';
 
+@max-width-height-image: 200px;
+@warning-color: #B94A48;
+@warning-color-border: #EED3D7;
+@warning-color-background: #F2DEDE; 
+
+.limit-image-size() {
+  img {
+    max-width: @max-width-height-image;
+    max-height: @max-width-height-image;
+  }
+}
+
 .view-multiple-choice {
+
+  .limit-image-size();
 
   td {
     vertical-align: top;
@@ -372,10 +387,18 @@
         cursor: pointer;
       }
     }
-
     .panel-body{
       .answer{
         width: 100%;
+      }
+    }
+    .fa.warning {
+      margin: 0;
+      font-size: 25px;
+      line-height: 31px !important;
+      color: @warning-color;
+      &:before {
+        content: @warning-character;
       }
     }
   }
@@ -385,6 +408,15 @@
   .answerIcon, .learnMoreIcon {
     font-size: 30px;
     margin-right: 2%;
+  }
+  &.warning {
+    .checkbox-choice,
+    .radio-choice,
+    .radio-choice[disabled] {
+      border-color: @warning-color;
+      border-width: 2px;
+      opacity: 1;
+    }
   }
 }
 
@@ -478,4 +510,8 @@
 
 .config-multiple-choice .label-select, .select2-drop {
   min-width: 120px;
+}
+
+.config-multiple-choice {
+  .limit-image-size();
 }

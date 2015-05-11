@@ -206,7 +206,8 @@ describe('match server logic', function() {
         answerExpected("row-3"),
         answerExpected("row-4")
       ],
-      feedback: fbu.defaults.warning
+      feedback: fbu.defaults.warning,
+      warningClass: 'answer-expected'
     });
   });
 
@@ -222,7 +223,8 @@ describe('match server logic', function() {
         answerExpected("row-3"),
         answerExpected("row-4")
       ],
-      feedback: fbu.defaults.warning
+      feedback: fbu.defaults.warning,
+      warningClass: 'answer-expected'
     });
 
   });
@@ -301,7 +303,8 @@ describe('match server logic', function() {
           answerExpected("row-3"),
           answerExpected("row-4")
         ],
-        feedback:fbu.defaults.warning
+        feedback:fbu.defaults.warning,
+        warningClass: 'answer-expected'
       };
       response.should.eql(expected);
     });

@@ -1,5 +1,7 @@
 .line-interaction-view {
-
+  @warning-color: #B94A48;
+  @warning-color-border: #EED3D7;
+  @warning-color-background: #F2DEDE; 
   .jxgbox {
     position: relative;
     overflow: hidden;
@@ -27,6 +29,27 @@
   }
   .JXGimageHighlight {
     opacity: 0.6;
+  }
+  .feedback-holder {
+    .fa-warning {
+      font-size: 22px;
+      line-height: 31px;
+      color: @warning-color;
+    }
+    .feedback {
+      &.warning {
+        .panel-heading {
+          display: none;
+        }
+        .panel-body {
+          background-color: @warning-color-background;
+          border-color: @warning-color-border;
+          color: @warning-color;
+          border-top-left-radius: 4px;
+          border-top-right-radius: 4px;
+        }
+      }
+    }
   }
   .solution-panel {
     visibility: hidden;
@@ -81,8 +104,13 @@
   }
   .graph-interaction {
     margin-top: 10px;
-    padding: 10px 10px 30px 10px;
+    padding: 10px;
     max-width: 600px;
+    &.warning {
+      .jxgbox {
+        border-color: @warning-color;
+      }
+    }
   }
 }
 .line-interaction-view .point-display p,.line-interaction-view .point-display input {

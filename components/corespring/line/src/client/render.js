@@ -399,6 +399,13 @@ var main = ['$compile', '$rootScope', "LineUtils",
               if (response.correctResponse) {
                 renderSolution(response);
               }
+            } else if (response && response.correctness === 'warning') {
+              scope.graphCallback({
+                graphStyle: {
+                  borderColor: "#B94A48",
+                  borderWidth: "2px"
+                }
+              });
             }
 
             scope.lockGraph();
@@ -410,6 +417,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
           reset: function() {
             scope.feedback = undefined;
             scope.response = undefined;
+            scope.correctClass = undefined;
             scope.graphCallback({graphStyle: {}});
             scope.unlockGraph();
             scope.graphCallback({

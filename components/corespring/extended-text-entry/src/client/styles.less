@@ -1,3 +1,4 @@
+@import '../../../../../less/common';
 @component-width: 600px;
 
 .view-extended-text-entry {
@@ -39,9 +40,8 @@
   }
 
   &.received.incorrect textarea {
-    border: 1px solid #A94442;
-    -moz-box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
-    box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
+    border: 2px solid @warning-color;
+    box-shadow: none;
   }
 
   .warning-icon {
@@ -54,11 +54,10 @@
     top: 10px;
     right: 10px;
     font-size: 28px;
-    color: #a94442;
+    color: @warning-color;
   }
 
-  .feedback,
-  .no-feedback {
+  .feedback {
     color: #31708f;
     background-color: #d9edf7;
     border-radius: 4px;
@@ -69,9 +68,13 @@
   }
 
   .no-feedback {
-    background-color: #f2dede;
-    border-color: #eed3d7;
-    color: #b94a48;
+    background-color: @warning-color-background;
+    border: 1px solid @warning-color-border;
+    color: @warning-color;
+    border-radius: 4px;
+    padding: 15px;
+    position: relative;
+    width: 100%;
   }
 
 }
