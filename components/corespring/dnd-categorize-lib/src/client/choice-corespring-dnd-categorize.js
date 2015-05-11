@@ -6,6 +6,7 @@ var choice = [
     return {
       restrict: 'EA',
       replace: true,
+      controller: ['$scope', controller],
       link: link,
       template: template(),
       scope: {
@@ -24,12 +25,15 @@ var choice = [
       }
     };
 
+    function controller(scope){
+      new MiniWiggiScopeExtension().postLink(scope);
+    }
+
     function link(scope, elem, attrs) {
       var log = console.log.bind(console, '[choice]');
       log("choiceId ", attrs.choiceId, " dragAndDropScope ", attrs.dragAndDropScope);
 
-      new MiniWiggiScopeExtension().postLink(scope);
-
+      scope.active = false;
       scope.showTools = !isCategorised() && (canEdit(scope.editMode) || canDelete(scope.editMode));
       scope.draggedParent = canEdit(scope.editMode) ? ".modal" : "body";
 
@@ -53,14 +57,19 @@ var choice = [
       scope.$watch('correctness', updateClasses);
       scope.$watch('model.label', triggerResize);
 
+      scope.$on('activate', function(event, id){
+        scope.active = id === attrs.choiceId;
+      });
+
       updateClasses();
 
       //------------------------------------------------
 
       function draggableJqueryOptions() {
         return {
-          revert: alwaysRevertButAnimateIfInvalid,
           appendTo: scope.draggedParent,
+          delay: 300,
+          revert: alwaysRevertButAnimateIfInvalid,
           scope: scope.dragAndDropScope
         };
       }
@@ -114,10 +123,12 @@ var choice = [
       }
 
       function isDragEnabled() {
-        return scope.dragEnabled && !scope.isEditing();
+        return scope.dragEnabled && !scope.active;
       }
 
-      function onChoiceEditClicked() {
+      function onChoiceEditClicked(event) {
+        console.log('onChoiceEditClicked', event);
+        event.stopPropagation();
         scope.notifyEditClicked({
           choiceId: attrs.choiceId
         });
@@ -159,7 +170,7 @@ var choice = [
       '  jqyoui-draggable="draggableOptions" ',
       '  data-jqyoui-options="draggableJqueryOptions()">',
       '  <div class="border">',
-      '    <ul class="edit-controls" ng-if="showTools">',
+      '    <ul class="edit-controls" ng-if="showTools" ng-hide="active">',
       '      <li class="delete-icon-button"',
       '        ng-click="onDeleteClicked()"',
       '        tooltip="delete" ',
@@ -168,17 +179,17 @@ var choice = [
       '        <i class="fa fa-trash-o"></i>',
       '      </li>',
       '      <li class="edit-icon-button" ',
-      '         ng-click="onChoiceEditClicked()" ',
+      '         ng-click="onChoiceEditClicked($event)" ',
       '         tooltip="edit" ',
       '         tooltip-append-to-body="true" ',
       '         tooltip-placement="bottom">',
       '        <i class="fa fa-pencil"></i>',
       '      </li>',
       '    </ul>',
-      '    <div class="shell" ng-if="showTools" ng-show="isEditing()" >',
+      '    <div class="shell" ng-show="active"  >',
       choiceEditorTemplate(),
       '    </div>',
-      '    <div class="shell" ng-if="!isEditing()">',
+      '    <div class="shell" ng-hide="active">',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
@@ -192,14 +203,14 @@ var choice = [
       function choiceEditorTemplate() {
         return [
         '<div class="editor" ',
-        '   mini-wiggi-wiz="" ',
+        '   active="active"',
         '   dialog-launcher="external" ',
+        '   feature-overrides="overrideFeatures"',
+        '   features="extraFeatures" ',
+        '   image-service="imageService()" ',
+        '   micro-wiggi-wiz="" ',
         '   ng-model="model.label" ',
         '   placeholder="Enter a choice"',
-        '   image-service="imageService()" ',
-        '   features="extraFeatures" ',
-        '   feature-overrides="overrideFeatures"',
-        '   parent-selector=".modal-body"',
         '></div>'
       ].join('');
       }

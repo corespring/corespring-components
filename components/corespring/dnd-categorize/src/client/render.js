@@ -14,10 +14,11 @@ var main = [
   ) {
 
     return {
-      restrict: 'AE',
-      replace: true,
-      template: template(),
+      controller:['$scope', controller],
       link: link,
+      replace: true,
+      restrict: 'AE',
+      template: template(),
       scope: {
         mode: '@',
         attrCategories: '=?categories',
@@ -27,6 +28,12 @@ var main = [
         imageService: '=?imageService'
       }
     };
+
+    function controller(scope){
+      scope.activate = function(id){
+        scope.$broadcast('activate', id);
+      };
+    }
 
     function link(scope, elem, attrs) {
 
@@ -45,6 +52,7 @@ var main = [
       scope.undoStack = [];
 
       scope.getEditMode = getEditMode;
+      scope.onCategoryEditClicked = onCategoryEditClicked;
       scope.onCategoryDeleteClicked = onCategoryDeleteClicked;
       scope.onCategoryDrop = onCategoryDrop;
       scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
@@ -479,11 +487,17 @@ var main = [
         return 'editable';
       }
 
+      function onCategoryEditClicked(categoryId) {
+        scope.activate(categoryId);
+      }
+
       function onChoiceEditClicked(choiceId) {
         log('editedChoice', choiceId);
+        scope.activate(choiceId);
+
         scope.editedChoice = _.find(scope.renderModel.choices, byId(choiceId));
         startEditingLayout(choiceElement());
-        $('body').one('click', exitChoiceEditing);
+        //$('body').one('click', exitChoiceEditing);
 
         function choiceElement() {
           var choiceElementSelector = '.container-choices [choice-id="' + choiceId + '"]';
@@ -587,17 +601,17 @@ var main = [
         '<div class="container-choices-holder">',
         '  <div class="container-choices" ng-if="#flip#">',
         '    <div choice-corespring-dnd-categorize="true" ',
-        '      ng-repeat="choice in renderModel.choices track by choice.id" ',
-        '      drag-enabled="isDragEnabled"',
-        '      drag-and-drop-scope="{{renderModel.dragAndDropScope}}"',
-        '      edit-mode="getEditMode(choice)" ',
-        '      model="choice" ',
         '      choice-id="{{choice.id}}" ',
+        '      delete-after-placing="choice.moveOnDrag" ',
+        '      drag-and-drop-scope="{{renderModel.dragAndDropScope}}"',
+        '      drag-enabled="isDragEnabled"',
+        '      edit-mode="getEditMode(choice)" ',
+        '      image-service="imageService"',
+        '      model="choice" ',
+        '      ng-repeat="choice in renderModel.choices track by choice.id" ',
+        '      ng-style="choiceStyle" ',
         '      on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
         '      on-edit-clicked="onChoiceEditClicked(choiceId)" ',
-        '      delete-after-placing="choice.moveOnDrag" ',
-        '      ng-style="choiceStyle" ',
-        '      image-service="imageService"',
         '    ></div>',
         '  </div>',
         '</div>'
@@ -610,16 +624,17 @@ var main = [
         '  <div class="categories" ng-if="#flip#">',
         '    <div class="row" ng-repeat="row in #rowsModel#">',
         '      <div category-corespring-dnd-categorize="true" ',
-        '        ng-repeat="category in row"',
         '        category-id="{{category.model.id}}" ',
         '        choice-width="{{choiceWidth}}"',
         '        choices="category.choices"',
-        '        drag-enabled="isDragEnabledFromCategory"',
         '        drag-and-drop-scope="{{renderModel.dragAndDropScope}}"',
+        '        drag-enabled="isDragEnabledFromCategory"',
         '        edit-mode="isEditMode" ',
         '        label="category.model.label" ',
+        '        ng-repeat="category in row"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
+        '        on-edit-clicked="onCategoryEditClicked(categoryId)" ',
         '        on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
         '        on-drop="onCategoryDrop(categoryId,choiceId)" ',

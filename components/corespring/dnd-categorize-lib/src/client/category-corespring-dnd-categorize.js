@@ -1,13 +1,21 @@
 var category = [
   '$timeout',
+  'CompactLayout',
   'LayoutConfig',
   'LayoutRunner',
-  'CompactLayout',
-  function($timeout, LayoutConfig, LayoutRunner, CompactLayout) {
+  'MiniWiggiScopeExtension',
+  function(
+    $timeout,
+    CompactLayout,
+    LayoutConfig,
+    LayoutRunner,
+    MiniWiggiScopeExtension
+  ) {
 
     return {
       restrict: 'A',
       replace: true,
+      controller: ['$scope', controller],
       link: link,
       template: template(),
       scope: {
@@ -20,19 +28,28 @@ var category = [
         label: '=',
         notifyDeleteChoiceClicked: '&onDeleteChoiceClicked',
         notifyDeleteClicked: '&onDeleteClicked',
+        notifyEditClicked: '&onEditClicked',
         onChoiceDraggedAway: '&',
         onDrop: '&'
       }
     };
+
+
+    function controller($scope){
+      new MiniWiggiScopeExtension().postLink($scope);
+    }
 
     function link(scope, elem, attrs) {
 
       var log = console.log.bind(console, '[category]');
       log("categoryId ", attrs.categoryId, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
 
+      new MiniWiggiScopeExtension().postLink(scope);
+
       var layout;
       var isLocalChoiceDragged = false;
 
+      scope.active = false;
       scope.choiceEditMode = scope.isEditMode ? 'delete' : '';
       scope.showTools = scope.isEditMode;
 
@@ -45,11 +62,16 @@ var category = [
       scope.onDeleteClicked = onDeleteClicked;
       scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
       scope.onDropCallback = onDropCallback;
+      scope.onLabelEditClicked = onLabelEditClicked;
       scope.onLocalChoiceDragStart = onLocalChoiceDragStart;
       scope.onLocalChoiceDragEnd = onLocalChoiceDragEnd;
 
       scope.$on('$destroy', onDestroy);
       attrs.$observe('choiceWidth', updateChoiceWidthInLayout);
+
+      scope.$on('activate', function(event, id){
+        scope.active = id === attrs.categoryId;
+      });
 
 
       //---------------------------------------------------------------
@@ -69,6 +91,14 @@ var category = [
           scope.notifyDeleteClicked({
             categoryId: attrs.categoryId
           });
+        });
+      }
+
+      function onLabelEditClicked(event) {
+        console.log('onLabelEditClicked', event);
+        event.stopPropagation();
+        scope.notifyEditClicked({
+          categoryId: attrs.categoryId
         });
       }
 
@@ -139,8 +169,19 @@ var category = [
         '  data-jqyoui-options="droppableJqueryOptions()"',
         '  >',
         '  <div class="border">',
-        '    <label ng-if="isEditMode"><input class="label-input" type="text" ng-model="$parent.label"></label>',
-        '    <label ng-if="!isEditMode" class="category-label">{{label}}</label>',
+        '    <div ng-click="onLabelEditClicked($event)">',
+        '      <div class="editor" ',
+        '         active="active"',
+        '         dialog-launcher="external" ',
+        '         feature-overrides="overrideFeatures"',
+        '         features="extraFeatures" ',
+        '         image-service="imageService()" ',
+        '         micro-wiggi-wiz="" ',
+        '         ng-model="label" ',
+        '         placeholder="Enter a label"',
+        '      ></div>',
+        '    </div>',
+        '    <div class="html-wrapper" ng-bind-html-unsafe="$parent.label"></div>',
         '    <ul class="edit-controls" ng-if="showTools">',
                deleteTool(),
         '    </ul>',

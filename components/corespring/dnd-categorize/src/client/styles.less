@@ -214,6 +214,7 @@
         .border {
           margin: 3px;
           text-align: center;
+          position: relative;
 
           .label-input {
             margin: 0;
@@ -229,8 +230,8 @@
             border-radius: 8px;
             padding: 3px 3px 3px 3px;
             position: absolute;
-            right: 6px;
-            top: 42px;
+            right: 1px;
+            top: 2px;
             z-index: 10000;
 
             .edit-icon-button, .delete-icon-button {
@@ -267,6 +268,13 @@
 
   .rounded-inputs();
 
+  .wiggi-wiz-toolbar {
+    .btn-small {
+      padding: 2px 5px;
+      font-size: 10px;
+    }
+  }
+
   .row {
     margin-left: 0;
     margin-right: 0;
@@ -275,14 +283,14 @@
 
   .player-col {
     width: 700px;
-    display: inline;
+    display: inline-block;
     float: left;
   }
 
   .settings-col {
     padding-left: 20px;
     padding-top: 58px;
-    display: inline;
+    display: inline-block;
     float: left;
   }
 

@@ -31,7 +31,8 @@ var main = [
       scope.addCategory = addCategory;
       scope.addChoice = addChoice;
       scope.choiceToLetter = choiceToLetter;
-      scope.geThanCategories = geThanCategories;
+      scope.deactivate = deactivate;
+      scope.geThanCategoriesFilter = geThanCategoriesFilter;
       scope.onChangeCategoriesPerRow = onChangeCategoriesPerRow;
 
       scope.$watch('categories', updateModel, true);
@@ -195,18 +196,26 @@ var main = [
         return 'choice_' + slot;
       }
 
-      function geThanCategories(choicesPerRow){
+      function geThanCategoriesFilter(choicesPerRow){
         return choicesPerRow >= scope.model.config.categoriesPerRow;
       }
 
+      function onChangeCategoriesPerRow() {
+        ensureChoicesFitIntoCategories();
+      }
+
       /**
-       * Make sure choices-per-row is always >= categories-per-row
-       * otherwise the choices don't fit into the categories.
+       * The width of the category area and the width of the choice area are
+       * roughly the same.
        */
-      function onChangeCategoriesPerRow(){
+      function ensureChoicesFitIntoCategories(){
         if(scope.model.config.choicesPerRow < scope.model.config.categoriesPerRow){
           scope.model.config.choicesPerRow = scope.model.config.categoriesPerRow;
         }
+      }
+
+      function deactivate(){
+        scope.$broadcast('activate', 'none');
       }
 
     }
@@ -214,7 +223,7 @@ var main = [
 
     function template() {
       return [
-        '<div class="config-corespring-dnd-categorize">',
+        '<div class="config-corespring-dnd-categorize" ng-click="deactivate()">',
         '  <div navigator-panel="Design">',
         designPanel(),
         '  </div>',
@@ -306,7 +315,7 @@ var main = [
           '  Max Number of choices per row',
           '  <select ng-model="model.config.choicesPerRow" ',
           '    class="form-control"',
-          '    ng-options="o for o in choicesPerRowOptions | filter:geThanCategories">',
+          '    ng-options="o for o in choicesPerRowOptions | filter:geThanCategoriesFilter">',
           '  </select>',
           '</div>'
         ].join('');
