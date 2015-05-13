@@ -4,7 +4,8 @@ exports.directive = {
   directive: [
     '$log',
     'MiniWiggiScopeExtension',
-    function($log, MiniWiggiScopeExtension) {
+    'WiggiMathJaxFeatureDef',
+    function($log, MiniWiggiScopeExtension, WiggiMathJaxFeatureDef) {
       function inline(type, value, body, attrs, labelAttrs) {
         var input = (type === 'radio') ?
           '<radio type="' + type + '" value="' + value + '" ' + attrs + '>' + body + '</radio>' :
@@ -25,8 +26,15 @@ exports.directive = {
           fbSelCustomFeedback: "=",
           fbSelFeedbackType: "="
         },
-        link: function($scope, $element, $attrs) {
+        controller: ['$scope', function($scope) {
+          $scope.extraFeaturesForFeedback = {
+            definitions: [
+              new WiggiMathJaxFeatureDef()
+            ]
+          };
+        }],
 
+        link: function($scope, $element, $attrs) {
           $scope.$watch('fbSelHideFeedbackOptions', function(n) {
             if (n) {
               var opts = $scope.fbSelHideFeedbackOptions.split(",");
@@ -53,6 +61,7 @@ exports.directive = {
           '  <div class="panel-body">',
           '    <div ng-show="fbSelFeedbackType == \'custom\'" ',
           '        mini-wiggi-wiz=""',
+          '        features="extraFeaturesForFeedback"',
           '        class="form-control feedback-preview custom"',
           '        ng-model="fbSelCustomFeedback"',
           '        image-service="imageService()"',
