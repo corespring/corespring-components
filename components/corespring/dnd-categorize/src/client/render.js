@@ -227,7 +227,9 @@ var main = [
       }
 
       function initLayouts() {
-        /*
+        if(scope.isEditMode){
+          return;
+        }
         if (layout) {
           layout.cancel();
         }
@@ -239,6 +241,7 @@ var main = [
           .value(),
           new LayoutRunner($timeout));
 
+        /*
         if (editingLayout) {
           editingLayout.cancel();
         }
@@ -273,10 +276,12 @@ var main = [
         if (layout) {
           layout.cancel();
 
-          editingLayout.start({
-            container: elem.find('.container-choices'),
-            editedElement: choiceElement
-          });
+          if(editingLayout) {
+            editingLayout.start({
+              container: elem.find('.container-choices'),
+              editedElement: choiceElement
+            });
+          }
         }
       }
 
