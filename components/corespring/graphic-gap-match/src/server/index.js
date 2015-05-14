@@ -56,7 +56,7 @@ exports.createOutcome = function(question, answer, settings) {
         hotspot: hotspotAndCorrectness.hotspot,
         left: a.left,
         top: a.top
-      }
+      };
     });
   };
 

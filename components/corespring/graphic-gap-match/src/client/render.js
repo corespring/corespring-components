@@ -3,22 +3,22 @@
 var main = [
   '$sce', '$log',
   function($sce, $log) {
-    $log = console;
+    'use strict';
 
-    "use strict";
+    $log = console;
 
     var def;
 
     var idEquals = function(choice) {
       return function(c) {
         return c.id === choice.id;
-      }
+      };
     };
 
     var choiceEquals = function(choice) {
       return function(c) {
         return c === choice;
-      }
+      };
     };
 
     var link = function(scope, element, attrs) {
@@ -47,7 +47,7 @@ var main = [
         getSession: function() {
           return {
             answers: _(scope.droppedChoices).map(function(o) {
-              return _.pick(o, 'id', 'left', 'top', 'width', 'height')
+              return _.pick(o, 'id', 'left', 'top', 'width', 'height');
             }).value()
           };
         },
@@ -289,7 +289,7 @@ var coordsForHotspot = [
         if (hotspot) {
           var populate = scope.populate || "tag";
           var coords = hotspot.coords;
-          if (populate == "tag") {
+          if (populate === "tag") {
             $(element).attr('x', coords.left);
             $(element).attr('y', coords.top);
             $(element).attr('width', coords.width);
