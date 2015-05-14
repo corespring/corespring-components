@@ -105,6 +105,7 @@ var main = [
         scope.$broadcast('reset');
         scope.renderModel = prepareRenderModel(dataAndSession.data.model, dataAndSession.session);
         scope.saveRenderModel = _.cloneDeep(scope.renderModel);
+        updateView();
       }
 
       function setConfig(model) {
@@ -618,13 +619,11 @@ var main = [
         '  <div class="categories" ng-if="#flip#">',
         '    <div class="row" ng-repeat="row in #rowsModel#">',
         '      <div category-corespring-dnd-categorize="true" ',
-        '        category-id="{{category.model.id}}" ',
+        '        category="category" ',
         '        choice-width="{{choiceWidth}}"',
-        '        choices="category.choices"',
         '        drag-and-drop-scope="{{renderModel.dragAndDropScope}}"',
         '        drag-enabled="isDragEnabledFromCategory"',
         '        edit-mode="isEditMode" ',
-        '        label="category.model.label" ',
         '        ng-repeat="category in row"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',

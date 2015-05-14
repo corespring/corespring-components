@@ -19,13 +19,11 @@ var category = [
       link: link,
       template: template(),
       scope: {
-        categoryId: '@',
-        choices: '=',
+        category: '=',
         choiceWidth: '@',
         dragAndDropScope: '@',
         dragEnabled: '=',
         isEditMode: '=?editMode',
-        label: '=',
         notifyDeleteChoiceClicked: '&onDeleteChoiceClicked',
         notifyDeleteClicked: '&onDeleteClicked',
         notifyEditClicked: '&onEditClicked',
@@ -42,7 +40,7 @@ var category = [
     function link(scope, elem, attrs) {
 
       var log = console.log.bind(console, '[category]');
-      //log("categoryId ", attrs.categoryId, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
+      //log("categoryId ", attrs.category, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
 
       new MiniWiggiScopeExtension().postLink(scope);
 
@@ -66,15 +64,22 @@ var category = [
       scope.onLocalChoiceDragStart = onLocalChoiceDragStart;
       scope.onLocalChoiceDragEnd = onLocalChoiceDragEnd;
 
-      scope.$on('$destroy', onDestroy);
+      scope.$watch('category', function(newValue, oldValue){
+        log('$watch category', newValue, oldValue);
+      }, true);
       attrs.$observe('choiceWidth', updateChoiceWidthInLayout);
 
+      scope.$on('$destroy', onDestroy);
       scope.$on('activate', function(event, id){
-        scope.active = id === attrs.categoryId;
+        scope.active = id === getCategoryId();
       });
 
 
       //---------------------------------------------------------------
+
+      function getCategoryId(){
+        return scope.category.model.id;
+      }
 
       function droppableJqueryOptions() {
         return {
@@ -89,7 +94,7 @@ var category = [
       function onDeleteClicked() {
         scope.$$postDigest(function() {
           scope.notifyDeleteClicked({
-            categoryId: attrs.categoryId
+            categoryId: getCategoryId()
           });
         });
       }
@@ -97,13 +102,13 @@ var category = [
       function onLabelEditClicked(event) {
         event.stopPropagation();
         scope.notifyEditClicked({
-          categoryId: attrs.categoryId
+          categoryId: getCategoryId()
         });
       }
 
       function onChoiceDeleteClicked(choiceId) {
         scope.notifyDeleteChoiceClicked({
-          categoryId: attrs.categoryId,
+          categoryId: getCategoryId(),
           choiceId: choiceId
         });
       }
@@ -112,7 +117,7 @@ var category = [
         var choiceId = draggable.draggable.attr('choice-id');
         scope.$$postDigest(function() {
           scope.onDrop({
-            categoryId: attrs.categoryId,
+            categoryId: getCategoryId(),
             choiceId: choiceId
           });
         });
@@ -124,7 +129,7 @@ var category = [
 
       function onLocalChoiceDragEnd(choiceId) {
         scope.onChoiceDraggedAway({
-          fromCategoryId: attrs.categoryId,
+          fromCategoryId: getCategoryId(),
           choiceId: choiceId
         });
       }
@@ -168,7 +173,7 @@ var category = [
         '  data-jqyoui-options="droppableJqueryOptions()"',
         '  >',
         '  <div class="border">',
-        '    <div ng-click="onLabelEditClicked($event)">',
+        '    <div ng-click="onLabelEditClicked($event)" ng-if="isEditMode">',
         '      <div class="editor" ',
         '         active="active"',
         '         dialog-launcher="external" ',
@@ -176,11 +181,11 @@ var category = [
         '         features="extraFeatures" ',
         '         image-service="imageService()" ',
         '         micro-wiggi-wiz="" ',
-        '         ng-model="label" ',
+        '         ng-model="category.model.label" ',
         '         placeholder="Enter a label"',
         '      ></div>',
         '    </div>',
-        '    <div class="html-wrapper" ng-bind-html-unsafe="$parent.label"></div>',
+        '    <div class="html-wrapper" ng-bind-html-unsafe="category.model.label" ng-if="!isEditMode"></div>',
         '    <ul class="edit-controls" ng-if="showTools">',
                deleteTool(),
         '    </ul>',
@@ -193,7 +198,7 @@ var category = [
         '           drag-enabled="dragEnabled" ',
         '           edit-mode="choiceEditMode" ',
         '           model="choice.model"',
-        '           ng-repeat="choice in choices track by $index" ',
+        '           ng-repeat="choice in category.choices track by $index" ',
         '           ng-style="{width:choiceWidth}"',
         '           on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
         '           on-drag-end="onLocalChoiceDragEnd(choiceId)"',

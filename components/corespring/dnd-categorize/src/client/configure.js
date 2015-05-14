@@ -35,8 +35,10 @@ var main = [
       scope.geThanCategoriesFilter = geThanCategoriesFilter;
       scope.onChangeCategoriesPerRow = onChangeCategoriesPerRow;
 
-      scope.$watch('categories', updateModel, true);
-      scope.$watch('choices', updateModel, true);
+      var debouncedUpdateModel = _.debounce(updateModel, 100);
+
+      scope.$watch('categories', debouncedUpdateModel, true);
+      scope.$watch('choices', debouncedUpdateModel, true);
       scope.$watch('model', renderMath, true);
 
       scope.containerBridge = {
@@ -83,6 +85,7 @@ var main = [
       }
 
       function updateModel() {
+        log('updateModel');
         scope.fullModel.correctResponse = getChoicesForCorrectResponse();
         scope.fullModel.model.choices = scope.choices.map(cleanChoiceLabel);
         scope.fullModel.model.categories = _.map(scope.categories, function(category) {

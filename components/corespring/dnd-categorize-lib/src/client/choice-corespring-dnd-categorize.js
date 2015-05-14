@@ -34,7 +34,7 @@ var choice = [
       //log("choiceId ", attrs.choiceId, " dragAndDropScope ", attrs.dragAndDropScope);
 
       scope.active = false;
-      scope.showTools = !isCategorised() && (canEdit(scope.editMode) || canDelete(scope.editMode));
+      scope.showTools = !isCategorised() && (canEdit() || canDelete());
       scope.draggedParent = canEdit(scope.editMode) ? ".modal" : "body";
 
       scope.draggableOptions = {
@@ -189,7 +189,7 @@ var choice = [
       '        <i class="fa fa-pencil"></i>',
       '      </li>',
       '    </ul>',
-      '    <div class="shell" ng-show="active"  >',
+      '    <div class="shell" ng-show="active">',
       choiceEditorTemplate(),
       '    </div>',
       '    <div class="shell" ng-hide="active">',
