@@ -238,6 +238,7 @@ var main = [
           .withContainer(elem.find('.container-choices'))
           .withItemSelector('.choice-corespring-dnd-categorize')
           .withCellWidth(calcChoiceWidth())
+          .withPaddingBottom(7)
           .value(),
           new LayoutRunner($timeout));
 

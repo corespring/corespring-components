@@ -21,6 +21,11 @@ exports.factory = [function() {
       return this;
     };
 
+    this.withPaddingBottom = function(value) {
+      config.paddingBottom = value;
+      return this;
+    };
+
     this.value = function() {
       return config;
     };

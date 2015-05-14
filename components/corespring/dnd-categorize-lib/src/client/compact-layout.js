@@ -8,17 +8,13 @@ exports.factory = [function(){
    *  container: jquery element of the container
    *  itemSelector: string selector of an item to be layed out
    *  cellWidth: the desired width of one column
-   *
-   * This layout manager renders the layout every frame in the following order
-   * 1. Selects all the items
-   * 2. Sorts them by height
-   * 3. Puts items in the most empty column until finished
+   *  paddingBottom: the padding to be added to the container height
    */
   function CompactLayout(initialConfig, layoutRunner) {
 
     var hasNewConfig = false;
     var choiceSizeCache = [];
-    var config = _.assign({}, initialConfig);
+    var config = _.assign({paddingBottom: 0}, initialConfig);
 
     this.updateConfig = updateConfig;
     this.refresh = refresh;
@@ -62,7 +58,7 @@ exports.factory = [function(){
       //the choices are positioned absolutely
       //so the container height is not pushed
       config.container.css({
-        height: getContainerHeight(columns)
+        height: getContainerHeight(columns) + config.paddingBottom
       });
     }
 
@@ -111,7 +107,7 @@ exports.factory = [function(){
 
     function updateConfig(newConfig) {
       hasNewConfig = true;
-      config = _.assign(config, newConfig);
+      config = _.assign({paddingBottom:0}, config, newConfig);
     }
 
     function startRunner() {
