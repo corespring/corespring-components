@@ -30,15 +30,11 @@ var main = [
 
       scope.addCategory = addCategory;
       scope.addChoice = addChoice;
-      scope.choiceToLetter = choiceToLetter;
       scope.deactivate = deactivate;
       scope.geThanCategoriesFilter = geThanCategoriesFilter;
       scope.onChangeCategoriesPerRow = onChangeCategoriesPerRow;
 
-      var debouncedUpdateModel = _.debounce(updateModel, 100);
-
-      scope.$watch('categories', debouncedUpdateModel, true);
-      scope.$watch('choices', debouncedUpdateModel, true);
+      scope.$watch('editorModel', _.debounce(updateModel, 100), true);
       scope.$watch('model', renderMath, true);
 
       scope.containerBridge = {
@@ -60,24 +56,32 @@ var main = [
         scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 2;
         scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 4;
 
-        scope.categories = _.map(scope.model.categories, wrapCategoryModel);
-        scope.choices = _.cloneDeep(scope.model.choices);
+        scope.editorModel = prepareEditorModel();
+      }
+
+      function prepareEditorModel(){
+        var choices = _.cloneDeep(scope.model.choices);
+        var categories = _.map(scope.model.categories, wrapCategoryModel);
+
+        log('prepareEditorModel', categories);
+        log('prepareEditorModel', choices);
 
         var correctResponses = scope.fullModel.correctResponse;
-
-        log('setModel', scope.categories);
-        log('setModel', scope.choices);
-        _.forEach(scope.categories, function(category) {
+        _.forEach(categories, function(category) {
           var response = correctResponses[category.model.id] || {};
           category.choices = _(response).map(getChoiceForId).map(wrapChoiceModel).value();
         });
-        log('setModel', scope.categories);
-      }
 
-      function getChoiceForId(choiceId) {
-        return _.find(scope.choices, {
-          id: choiceId
-        });
+        return {
+          choices: choices,
+          categories: categories
+        };
+
+        function getChoiceForId(choiceId) {
+          return _.find(choices, {
+            id: choiceId
+          });
+        }
       }
 
       function getModel() {
@@ -86,11 +90,11 @@ var main = [
 
       function updateModel() {
         log('updateModel');
-        scope.fullModel.correctResponse = getChoicesForCorrectResponse();
-        scope.fullModel.model.choices = scope.choices.map(cleanChoiceLabel);
-        scope.fullModel.model.categories = _.map(scope.categories, function(category) {
+        scope.fullModel.model.choices = scope.editorModel.choices.map(cleanChoiceLabel);
+        scope.fullModel.model.categories = _.map(scope.editorModel.categories, function(category) {
           return _.cloneDeep(category.model);
         });
+        scope.fullModel.correctResponse = getChoicesForCorrectResponse();
         scope.numberOfCorrectResponses = countCorrectAnswers();
         log('updateModel', scope.numberOfCorrectResponses);
       }
@@ -103,24 +107,19 @@ var main = [
 
       function addChoice() {
         var idx = findFreeChoiceSlot();
-        scope.choices.push({
+        scope.editorModel.choices.push({
           id: makeChoiceId(idx),
-          label: '',
+          label: 'choice',
           moveOnDrag: false
         });
       }
 
       function addCategory() {
         var idx = findFreeCategorySlot();
-        scope.categories.push(wrapCategoryModel({
+        scope.editorModel.categories.push(wrapCategoryModel({
           id: makeCategoryId(idx),
           label: 'Category ' + idx
         }));
-      }
-
-      function choiceToLetter(c) {
-        var idx = scope.model.choices.indexOf(c);
-        return scope.toChar(idx);
       }
 
       function wrapCategoryModel(categoryModel) {
@@ -149,7 +148,7 @@ var main = [
       }
 
       function getChoicesForCorrectResponse() {
-        return _.reduce(scope.categories, function(acc, category) {
+        return _.reduce(scope.editorModel.categories, function(acc, category) {
           if (category.choices) {
             acc[category.model.id] = _.map(category.choices, getModelIdForChoice);
           }
@@ -182,7 +181,7 @@ var main = [
       }
 
       function getCategoryIds() {
-        return _.map(scope.categories, function(category) {
+        return _.map(scope.editorModel.categories, function(category) {
           return category.model.id;
         });
       }
@@ -264,9 +263,9 @@ var main = [
             '  <corespring-dnd-categorize',
             '     id="chooser" ',
             '     categories-per-row="model.config.categoriesPerRow" ',
-            '     categories="categories"',
+            '     categories="editorModel.categories"',
             '     choices-per-row="model.config.choicesPerRow" ',
-            '     choices="choices"',
+            '     choices="editorModel.choices"',
             '     image-service="imageService"',
             '     mode="edit"',
             '   ></corespring-dnd-categorize>',

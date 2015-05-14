@@ -372,10 +372,10 @@ var main = [
         });
       }
 
-      function onChoiceRemovedFromCategory(categoryId, choiceId) {
+      function onChoiceRemovedFromCategory(categoryId, choiceId, index) {
         var category = _.find(scope.renderModel.categories, byModelId(categoryId));
         if (category) {
-          _.remove(category.choices, byModelId(choiceId));
+          category.choices.splice(index, 1);
 
           if (!scope.isEditMode) {
             var choice = _.find(scope.renderModel.allChoices, byId(choiceId));
@@ -388,7 +388,7 @@ var main = [
 
       /**
        * Add choice back in at the same position where it was in the beginning
-       * Obviously works only if the order of the choices has not been changed
+       * Obviously only works if the order of the choices has not been changed
        */
       function addChoiceBackIn(choice) {
         //find original position of choice
@@ -632,9 +632,9 @@ var main = [
         '        edit-mode="isEditMode" ',
         '        ng-repeat="category in row"',
         '        ng-style="categoryStyle"',
-        '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId)" ',
+        '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId,index)" ',
         '        on-edit-clicked="onCategoryEditClicked(categoryId)" ',
-        '        on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId)" ',
+        '        on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId,index)" ',
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
         '        on-drop="onCategoryDrop(categoryId,choiceId)" ',
         '       ></div>',

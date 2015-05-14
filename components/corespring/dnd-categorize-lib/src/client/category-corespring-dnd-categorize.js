@@ -104,10 +104,11 @@ var category = [
         });
       }
 
-      function onChoiceDeleteClicked(choiceId) {
+      function onChoiceDeleteClicked(choiceId, index) {
         scope.notifyDeleteChoiceClicked({
           categoryId: getCategoryId(),
-          choiceId: choiceId
+          choiceId: choiceId,
+          index: index
         });
       }
 
@@ -121,14 +122,15 @@ var category = [
         });
       }
 
-      function onLocalChoiceDragStart(choiceId) {
+      function onLocalChoiceDragStart(choiceId, index) {
         //nothing to do here
       }
 
-      function onLocalChoiceDragEnd(choiceId) {
+      function onLocalChoiceDragEnd(choiceId, index) {
         scope.onChoiceDraggedAway({
           fromCategoryId: getCategoryId(),
-          choiceId: choiceId
+          choiceId: choiceId,
+          index: index
         });
       }
 
@@ -198,9 +200,9 @@ var category = [
         '           model="choice.model"',
         '           ng-repeat="choice in category.choices track by $index" ',
         '           ng-style="{width:choiceWidth}"',
-        '           on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-        '           on-drag-end="onLocalChoiceDragEnd(choiceId)"',
-        '           on-drag-start-now="onLocalChoiceDragStart(choiceId)" ',
+        '           on-delete-clicked="onChoiceDeleteClicked(choiceId, $index)" ',
+        '           on-drag-end="onLocalChoiceDragEnd(choiceId, $index)"',
+        '           on-drag-start-now="onLocalChoiceDragStart(choiceId, $index)" ',
         '        ></div>',
         '      </div>',
         '    </div>',
