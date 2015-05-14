@@ -42,8 +42,6 @@ var category = [
       var log = console.log.bind(console, '[category]');
       //log("categoryId ", attrs.category, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
 
-      new MiniWiggiScopeExtension().postLink(scope);
-
       var layout;
       var isLocalChoiceDragged = false;
 
