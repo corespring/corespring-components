@@ -137,15 +137,22 @@ var main = [
         },
 
         getSession: function() {
+          var numberOfAnswers = 0;
           var answer = {};
           _.each(scope.landingPlaceChoices, function(v, k) {
             if (k) {
               answer[k] = _.pluck(v, 'id');
+              numberOfAnswers += answer[k].length;
             }
           });
           return {
-            answers: answer
+            answers: answer,
+            numberOfAnswers: numberOfAnswers
           };
+        },
+
+        isAnswerEmpty: function(){
+          return this.getSession().numberOfAnswers === 0;
         },
 
         setResponse: function(response) {
