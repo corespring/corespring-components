@@ -16,6 +16,16 @@ exports.preroll = ->
   angular.module('test-app', ['ngSanitize', 'ui.select']);
 
   //Mock dependencies
+  angular.module('test-app').factory('ImageFeature', [function(){
+    return function(){
+      return {};
+    }
+  }]);
+  angular.module('test-app').factory('WiggiLinkFeatureDef', [function(){
+    return function(){
+      return {};
+    }
+  }]);
   angular.module('test-app').factory('WiggiMathJaxFeatureDef', [function(){
     return function(){
       return {};
