@@ -3,11 +3,8 @@
   "title": "Drag and Drop Categorize",
   "weight": 1,
   "correctResponse": {
-    "cat_1": ["choice_1"],
-    "cat_2": ["choice_2"],
-    "cat_3": ["choice_3"],
-    "cat_4": ["choice_4"],
-    "cat_5": []
+    "cat_1": [],
+    "cat_2": []
   },
   "feedback": {
     "correctFeedbackType": "default",
@@ -25,20 +22,7 @@
       {
         "id": "cat_2",
         "label": "Category 2"
-      },
-      {
-        "id": "cat_3",
-        "label": "Category 3"
-      },
-      {
-        "id": "cat_4",
-        "label": "Category 4"
-      },
-      {
-        "id": "cat_5",
-        "label": "Category 5"
       }
-
     ],
     "choices": [
       {
@@ -50,53 +34,13 @@
         "id": "choice_2",
         "label": "b",
         "moveOnDrag": false
-      },
-      {
-        "id": "choice_3",
-        "label": "c has a longer label than the others",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_4",
-        "label": "d",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_5",
-        "label": "e",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_6",
-        "label": "f",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_7",
-        "label": "g",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_8",
-        "label": "h",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_9",
-        "label": "i",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_10",
-        "label": "j",
-        "moveOnDrag": false
       }
     ],
     "config": {
       "shuffle": false,
       "answerAreaPosition": "below",
       "categoriesPerRow" : 2,
-      "choicesPerRow" : 5
+      "choicesPerRow" : 2
     }
   }
 }
