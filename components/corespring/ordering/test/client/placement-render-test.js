@@ -74,7 +74,7 @@ describe('corespring:placement ordering', function() {
   beforeEach(function() {
     module(function($provide) {
       verticalModel = _.cloneDeep(testModelTemplate);
-      horizontalModel = _.merge(_.cloneDeep(verticalModel), {
+      horizontalModel = _.merge(_.cloneDeep(testModelTemplate), {
         data: {
           model: {
             config: {
@@ -442,13 +442,13 @@ describe('corespring:placement ordering', function() {
   });
 
   describe('isAnswerEmpty', function() {
-    it('should return false initially', function() {
+    it('should return true initially', function() {
       setModelAndDigest(verticalModel);
-      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
     });
     it('should return false if answer is set initially', function() {
       verticalModel.session = {
-        answers: ['a', 'b', 'c', 'd']
+        answers: ['c1']
       };
       setModelAndDigest(verticalModel);
       rootScope.$digest();
@@ -456,7 +456,7 @@ describe('corespring:placement ordering', function() {
     });
     it('should return false if answer is selected', function() {
       setModelAndDigest(verticalModel);
-      scope.local.choices.push(scope.local.choices.shift())
+      scope.landingPlaceChoices[0] = {id:'c1'};
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
