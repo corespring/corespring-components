@@ -212,7 +212,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           if (scope.model.config.placementType === 'placement') {
             var choices = [];
             for (var i = 0; i < scope.originalChoices.length; i++) {
-              if (scope.landingPlaceChoices[i]) {
+              if (scope.landingPlaceChoices[i] && scope.landingPlaceChoices[i].id) {
                 choices[i] = scope.landingPlaceChoices[i].id;
               }
             }

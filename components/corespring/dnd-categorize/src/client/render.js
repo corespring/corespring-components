@@ -65,6 +65,7 @@ var main = [
         answerChangedHandler: saveAnswerChangedCallback,
         editable: setEditable,
         getSession: getSession,
+        isAnswerEmpty: isAnswerEmpty,
         reset: reset,
         setDataAndSession: setDataAndSession,
         setResponse: setResponse
@@ -115,30 +116,54 @@ var main = [
       }
 
       function prepareRenderModel(model, session) {
-        var renderModel = {
-          dragAndDropScope: 'scope-' + Math.floor(Math.random() * 10000)
-        };
+        var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000)
 
-        renderModel.choices = model.config.shuffle ?
+        var choices = model.config.shuffle ?
           _.shuffle(model.choices) :
           _.take(model.choices, all);
-        renderModel.allChoices = _.take(renderModel.choices, all);
-        renderModel.categories = _.map(model.categories, wrapCategoryModel);
-        return renderModel;
+        var allChoices = _.take(choices, all);
+        var categories = _.map(model.categories, wrapCategoryModel);
+        if(session.answers) {
+          _.forEach(categories, function (cat) {
+            var answers = session.answers[cat.model.id];
+            if(_.isArray(answers)) {
+              cat.choices = _(answers).map(getChoiceForId).map(wrapChoiceModel).value();
+            }
+          });
+        }
+        return {
+          dragAndDropScope: dragAndDropScope,
+          choices: choices,
+          allChoices: allChoices,
+          categories: categories
+        };
+
+        function getChoiceForId(choiceId) {
+          return _.find(choices, {
+            id: choiceId
+          });
+        }
       }
 
       function getSession() {
+        var numberOfAnswers = 0;
         var answers = _.reduce(scope.renderModel.categories, function(result, category) {
           var catId = category.model.id;
           result[catId] = _.map(category.choices, function(choice) {
             return choice.model.id;
           });
+          numberOfAnswers += category.choices.length;
           return result;
         }, {});
 
         return {
-          answers: answers
+          answers: answers,
+          numberOfAnswers: numberOfAnswers
         };
+      }
+
+      function isAnswerEmpty(){
+        return getSession().numberOfAnswers === 0
       }
 
       function setResponse(response) {

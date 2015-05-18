@@ -1,4 +1,4 @@
-describe('corespring:focus-task', function() {
+describe('corespring:dnd-categorize', function() {
 
   var testModel, scope, rootScope, container, element;
 
@@ -11,10 +11,34 @@ describe('corespring:focus-task', function() {
 
   var testModelTemplate = {
     data: {
-      model: {
-        choices: [],
-        config: {
-          itemShape: ""
+      "model": {
+        "categories": [
+          {
+            "id": "cat_1",
+            "label": "Category 1"
+          },
+          {
+            "id": "cat_2",
+            "label": "Category 2"
+          }
+        ],
+        "choices": [
+          {
+            "id": "choice_1",
+            "label": "a",
+            "moveOnDrag": false
+          },
+          {
+            "id": "choice_2",
+            "label": "b",
+            "moveOnDrag": false
+          }
+        ],
+        "config": {
+          "shuffle": false,
+          "answerAreaPosition": "below",
+          "categoriesPerRow" : 2,
+          "choicesPerRow" : 2
         }
       }
     },
@@ -36,7 +60,7 @@ describe('corespring:focus-task', function() {
       container.registerComponent(id, obj);
     });
 
-    element = $compile("<corespring-focus-task-render id='1'></corespring-focus-task-render>")($rootScope.$new());
+    element = $compile("<corespring-dnd-categorize-render id='1'></corespring-dnd-categorize-render>")($rootScope.$new());
     scope = element.isolateScope();
     rootScope = $rootScope;
   }));
@@ -45,14 +69,30 @@ describe('corespring:focus-task', function() {
     expect(element).toNotBe(null);
   });
 
+  describe('setDataAndSession', function(){
+    it('should set the answers from the session', function(){
+      testModel.session = {
+        answers: {
+          cat_1: ['choice_1']
+        }
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(scope.renderModel.categories[0].choices[0].model.id).toEqual('choice_1');
+    });
+  });
+
   describe('isAnswerEmpty', function() {
     it('should return true initially', function() {
       container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(true);
     });
     it('should return false if answer is set initially', function() {
       testModel.session = {
-        answers: 'mc_1'
+        answers: {
+          cat_1: ['choice_1']
+        }
       };
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
@@ -60,7 +100,7 @@ describe('corespring:focus-task', function() {
     });
     it('should return false if answer is selected', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.answer.choices['1'] = true;
+      scope.renderModel.categories[0].choices = [{model:{id:'choice_1'}}];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
