@@ -1,4 +1,4 @@
-describe('corespring', function() {
+describe('corespring:text-entry:render', function() {
 
   var testModel, scope, element, container, rootScope;
 
@@ -52,8 +52,9 @@ describe('corespring', function() {
       container.registerComponent(id, obj);
     });
 
-    element = $compile("<corespring-inline-choice-render id='1'></corespring-inline-choice-render>")($rootScope.$new());
-    scope = element.scope();
+    element = $compile("<corespring-text-entry-render id='1'></corespring-text-entry-render>")($rootScope.$new());
+    $.fn.popover = function(){};
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 
@@ -62,9 +63,31 @@ describe('corespring', function() {
   });
 
 
-  describe('text entry render', function() {
-
-    it('', function() {});
+  describe('isAnswerEmpty', function() {
+    it('should return true initially', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+    it('should return false if answer is set initially', function() {
+      testModel.session = {
+        answers: "Hi"
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+    it('should return false if answer is set', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.answer = "Ho";
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
   });
+
+  it('should implement containerBridge',function(){
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
 
 });

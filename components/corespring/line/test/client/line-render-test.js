@@ -1,4 +1,4 @@
-describe('corespring', function() {
+describe('corespring:line:render', function() {
 
   var testModel, scope, rootScope, container, element;
 
@@ -23,8 +23,8 @@ describe('corespring', function() {
 
   var testModelTemplate = {
     data: {
-      "componentType": "corespring-point-intercept",
-      "title": "Point interaction sample",
+      "componentType": "corespring-line",
+      "title": "Line interaction sample",
       "weight": 1,
       "correctResponse": [
         "0,6",
@@ -97,5 +97,32 @@ describe('corespring', function() {
     });
   });
 
+  describe('isAnswerEmpty', function() {
+    it('should return true initially', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+    xit('should return false if answer is set initially', function() {
+      //Not sure how to set an initial value that
+      //makes the component.isAnswerEmpty to return false
+      //It seems like the interaction deletes the points in startOver
+      testModel.session = {
+        answers: {A:{x:0.1,y:0.2}}
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+    it('should return false if answer is selected', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.points = {A:{x:0.1,y:0.2}};
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  it('should implement containerBridge',function(){
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
 
 });

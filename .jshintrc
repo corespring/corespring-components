@@ -21,6 +21,7 @@
     "module" : true,
     "spyOn" : true,
     "inject" : true,
-    "jasmine" : true
+    "jasmine" : true,
+    "corespringComponentsTestLib": true
   }
 }

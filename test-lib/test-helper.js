@@ -1,6 +1,7 @@
 var assert, should;
 
 assert = require('assert');
+expect = require('expect');
 should = require('should');
 
 exports.settings = function(feedback, userResponse, correctResponse) {

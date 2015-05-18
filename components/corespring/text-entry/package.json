@@ -1,4 +1,9 @@
 {
+  "name": "text-entry",
+  "title": "Short Answer - Enter Text",
+  "titleGroup": "Text Entry",
+  "organization": "corespring",
+  "released": true,
   "libraries": [
     {
       "name": "choice-templates",
@@ -33,10 +38,5 @@
     "corespring-editor": {
       "placeholder-show-tooltip": true
     }
-  },
-  "name": "text-entry",
-  "title": "Short Answer - Enter Text",
-  "titleGroup": "Text Entry",
-  "organization": "corespring",
-  "released": true
+  }
 }

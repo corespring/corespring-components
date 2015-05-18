@@ -68,6 +68,7 @@ var main = [
         isAnswerEmpty: isAnswerEmpty,
         reset: reset,
         setDataAndSession: setDataAndSession,
+        setMode: function(mode){},
         setResponse: setResponse
       };
 
@@ -116,7 +117,7 @@ var main = [
       }
 
       function prepareRenderModel(model, session) {
-        var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000)
+        var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
 
         var choices = model.config.shuffle ?
           _.shuffle(model.choices) :
@@ -163,7 +164,7 @@ var main = [
       }
 
       function isAnswerEmpty(){
-        return getSession().numberOfAnswers === 0
+        return 0 === getSession().numberOfAnswers;
       }
 
       function setResponse(response) {
