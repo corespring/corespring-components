@@ -1,0 +1,64 @@
+{
+  "name": "dnd-categorize-lib",
+  "organization": "corespring",
+  "purpose": "library",
+  "libraries": [
+    {
+      "name": "drag-and-drop-engine",
+      "organization": "corespring"
+    },
+    {
+      "name": "feedback-config",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "image-service",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
+    },
+    {
+      "name": "partial-scoring-config",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "server-shared",
+      "organization": "corespring"
+    },
+    {
+      "name": "widgets",
+      "organization": "corespring"
+    }
+  ],
+  "dependencies": {
+    "client": {
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      },
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
+      },
+      "corespring-ng-components": {
+        "bower_target": "git@github.com:corespring/corespring-ng-components.git",
+        "version": "0.0.9",
+        "file": "build/corespring-ng-components.js",
+        "angular-module": "cs.directives"
+      },
+      "jquery-ui-touch-punch": {
+        "bower_target": "https://github.com/furf/jquery-ui-touch-punch.git",
+        "file": "jquery.ui.touch-punch.min.js"
+      }
+    }
+  }
+}
