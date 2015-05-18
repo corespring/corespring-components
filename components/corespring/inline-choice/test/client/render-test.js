@@ -137,4 +137,8 @@ describe('corespring:inline-choice', function() {
     });
   });
 
+  it('should implement containerBridge',function(){
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
 });

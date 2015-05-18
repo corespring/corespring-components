@@ -326,4 +326,8 @@ describe('corespring:ordering-in-place', function () {
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
+
+  it('should implement containerBridge',function(){
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
 });

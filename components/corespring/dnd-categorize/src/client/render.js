@@ -68,6 +68,7 @@ var main = [
         isAnswerEmpty: isAnswerEmpty,
         reset: reset,
         setDataAndSession: setDataAndSession,
+        setMode: function(mode){},
         setResponse: setResponse
       };
 

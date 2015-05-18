@@ -31,4 +31,28 @@ exports.preroll = ->
       return {};
     } 
   }]);
+
+  //Test helper
+  window.corespringComponentsTestLib = {};
+  corespringComponentsTestLib.verifyContainerBridge = function(bridge){
+    var errors = [];
+    function assertFunction(name){
+      if(!_.isFunction(bridge[name])){
+        errors.push(name);
+      }
+    }
+    assertFunction('setDataAndSession');
+    assertFunction('getSession');
+    assertFunction('setResponse');
+    assertFunction('setMode');
+    assertFunction('reset');
+    assertFunction('isAnswerEmpty');
+    assertFunction('answerChangedHandler');
+    assertFunction('editable');
+    if(errors.length){
+       return 'Missing methods: ' + errors.join(',')
+    } else {
+      return 'ok'
+    }
+  };
   """
