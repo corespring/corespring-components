@@ -6,10 +6,6 @@
   "released": true,
   "libraries": [
     {
-      "name": "common-lib",
-      "organization": "corespring"
-    },
-    {
       "name": "feedback-templates",
       "organization": "corespring"
     },
