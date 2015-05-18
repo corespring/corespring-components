@@ -322,7 +322,7 @@ describe('corespring:ordering-in-place', function () {
     });
     it('should return false if answer is selected', function () {
       setModelAndDigest(verticalModel);
-      scope.local.choices.push(scope.local.choices.shift())
+      scope.local.choices.push(scope.local.choices.shift());
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });

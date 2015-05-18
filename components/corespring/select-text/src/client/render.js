@@ -123,7 +123,7 @@ var main = [
       }
 
       function isAnswerEmpty() {
-        return _.isEmpty(getSession().answers)
+        return _.isEmpty(getSession().answers);
       }
 
       function answerChangedHandler(callback) {}

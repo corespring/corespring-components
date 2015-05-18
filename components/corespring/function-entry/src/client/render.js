@@ -138,7 +138,7 @@ var main = [
         '       <li>For \\( \\sqrt{x} \\), enter \\sqrt(x)</li>',
         '    </ul>',
         '  </div>',
-        '</div>'].join("\n")
+        '</div>'].join("\n");
     }
   }
 ];

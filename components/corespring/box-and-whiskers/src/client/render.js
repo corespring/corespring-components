@@ -9,7 +9,7 @@ var main = [
       replace: true,
       link: link,
       template: template()
-    }
+    };
 
     function link(scope, element, attrs) {
 
@@ -75,7 +75,7 @@ var main = [
         ' <td ng-repeat="g in model.graphs" box-and-whiskers-graph editable="editable" ngModel="g" responseModel="response[$index]" style="background-color: #d3d3d3; border: 1px solid black">{{$index}}</td>',
         ' </table>',
         '</div>'
-      ].join("\n")
+      ].join("\n");
     }
   }
 ];
