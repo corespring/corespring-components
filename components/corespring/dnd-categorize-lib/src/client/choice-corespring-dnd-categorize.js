@@ -208,10 +208,11 @@ var choice = [
         '<div class="editor" ',
         '   active="active"',
         '   dialog-launcher="external" ',
+        '   disable-auto-activation="true"',
         '   feature-overrides="overrideFeatures"',
         '   features="extraFeatures" ',
         '   image-service="imageService()" ',
-        '   micro-wiggi-wiz="" ',
+        '   mini-wiggi-wiz="" ',
         '   ng-model="model.label" ',
         '   placeholder="Enter a choice"',
         '></div>'
