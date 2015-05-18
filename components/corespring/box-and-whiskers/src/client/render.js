@@ -2,9 +2,16 @@ var main = [
   '$sce', '$log',
 
   function ($sce, $log) {
-    var def;
 
-    var link = function (scope, element, attrs) {
+    return {
+      scope: {},
+      restrict: 'EA',
+      replace: true,
+      link: link,
+      template: template()
+    }
+
+    function link(scope, element, attrs) {
 
       scope.editable = true;
       scope.response = {};
@@ -58,15 +65,10 @@ var main = [
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-    };
+    }
 
-
-    def = {
-      scope: {},
-      restrict: 'EA',
-      replace: true,
-      link: link,
-      template: [
+    function template(){
+      return [
         '<div class="box-and-whiskers">',
         ' <div>{{response}}</div>',
         ' <table><tr>',
@@ -74,9 +76,7 @@ var main = [
         ' </table>',
         '</div>'
       ].join("\n")
-    };
-
-    return def;
+    }
   }
 ];
 
