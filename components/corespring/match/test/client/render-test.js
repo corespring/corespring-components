@@ -275,9 +275,9 @@ describe('corespring:match:render', function() {
 
   });
 
-  describe('classForChoice', function(){
+  describe('classForChoice', function() {
 
-    function assert(editable, inputType, selected, correct, expected){
+    function assert(editable, inputType, selected, correct, expected) {
       container.elements['1'].setDataAndSession(testModel);
 
       scope.editable = editable;
@@ -288,7 +288,7 @@ describe('corespring:match:render', function() {
       expect(scope.classForChoice(scope.matchModel.rows[0], 0)).toEqual(expected);
     }
 
-    describe('if editable is true', function(){
+    describe('if editable is true', function() {
       it('should return inputs', function() {
         assert(true, 'radiobutton', false, false, 'match-radiobutton input');
         assert(true, 'radiobutton', true, false, 'match-radiobutton input selected');
@@ -297,7 +297,7 @@ describe('corespring:match:render', function() {
       });
     });
 
-    describe('if editable is false', function(){
+    describe('if editable is false', function() {
       it('should return evaluated inputs', function() {
         assert(false, 'radiobutton', false, 'correct', 'match-radiobutton correct checked');
         assert(false, 'radiobutton', true, 'correct', 'match-radiobutton correct checked');
@@ -316,9 +316,9 @@ describe('corespring:match:render', function() {
     });
   });
 
-  describe('classForSolution', function(){
+  describe('classForSolution', function() {
 
-    function assert(inputType, selected, expected){
+    function assert(inputType, selected, expected) {
       container.elements['1'].setDataAndSession(testModel);
 
       scope.editable = false;
@@ -328,24 +328,73 @@ describe('corespring:match:render', function() {
       expect(scope.classForSolution(scope.matchModel.rows[0], 0)).toEqual(expected);
     }
 
-    it('should return nothing before response is set', function(){
+    it('should return nothing before response is set', function() {
       assert('radiobutton', false, '');
     });
 
     it('should return checked if user has selected the correct answer', function() {
       container.elements['1'].setDataAndSession(testModel);
-      container.elements['1'].setResponse({correctResponse: [{id:'row-1', matchSet:[true,false]}]});
+      container.elements['1'].setResponse({
+        correctResponse: [{
+          id: 'row-1',
+          matchSet: [true, false]
+        }]
+      });
       assert('radiobutton', true, 'match-radiobutton correct checked');
       assert('checkbox', true, 'match-checkbox correct checked');
     });
 
     it('should return no checked if user has not selected the correct answer', function() {
       container.elements['1'].setDataAndSession(testModel);
-      container.elements['1'].setResponse({correctResponse: [{id:'row-1', matchSet:[true,false]}]});
+      container.elements['1'].setResponse({
+        correctResponse: [{
+          id: 'row-1',
+          matchSet: [true, false]
+        }]
+      });
       assert('radiobutton', false, 'match-radiobutton correct');
       assert('checkbox', false, 'match-checkbox correct');
     });
 
+  });
+
+  describe('isAnswerEmpty', function() {
+    it('should return true initially', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+    it('should return false if answer is set initially', function() {
+      testModel.session = {
+        answers: [
+          {
+            id: "row-1",
+            matchSet: [true, false]
+          },
+          {
+            id: "row-2",
+            matchSet: [false, false]
+          },
+          {
+            id: "row-3",
+            matchSet: [false, false]
+          },
+          {
+            id: "row-4",
+            matchSet: [false, false]
+          }
+        ]
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+    it('should return false if answer is selected', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      scope.matchModel.rows[0].matchSet[0].value = true;
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
   });
 
 });
