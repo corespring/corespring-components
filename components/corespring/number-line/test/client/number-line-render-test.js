@@ -1,4 +1,4 @@
-describe('corespring', function() {
+describe('corespring:number-line:render', function() {
 
   var testModel, scope, element, container, rootScope;
 
@@ -11,7 +11,7 @@ describe('corespring', function() {
 
   var testModelTemplate = {
     data: {
-        "model": {
+      "model": {
         "config": {
           "domain": [0, 20],
           "maxNumberOfPoints": 3,
@@ -81,8 +81,7 @@ describe('corespring', function() {
     return {
       rect: mockRaphaelObject,
       circle: mockRaphaelObject,
-      clear: function() {
-      },
+      clear: function() {},
       path: mockRaphaelObject,
       text: mockRaphaelObject
     };
@@ -93,8 +92,7 @@ describe('corespring', function() {
   beforeEach(function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
-      $provide.value('MathJaxService', function() {
-      });
+      $provide.value('MathJaxService', function() {});
     });
   });
 
@@ -115,42 +113,65 @@ describe('corespring', function() {
   });
 
 
-  describe('number line', function() {
-
-    it('answer change handler does not get called initially', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      var changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
-      });
-
-      scope.$digest();
-      expect(changeHandlerCalled).toBe(false);
+  it('answer change handler does not get called initially', function() {
+    container.elements['1'].setDataAndSession(testModel);
+    var changeHandlerCalled = false;
+    container.elements['1'].answerChangedHandler(function(c) {
+      changeHandlerCalled = true;
     });
 
-    it('answer change handler gets called when new response gets added', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      var changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
-      });
-      scope.$digest();
-      scope.response.push('resp');
-      scope.$digest();
-      expect(changeHandlerCalled).toBe(true);
-    });
+    scope.$digest();
+    expect(changeHandlerCalled).toBe(false);
+  });
 
-    it('answer change handler gets called when response gets removed', function() {
+  it('answer change handler gets called when new response gets added', function() {
+    container.elements['1'].setDataAndSession(testModel);
+    var changeHandlerCalled = false;
+    container.elements['1'].answerChangedHandler(function(c) {
+      changeHandlerCalled = true;
+    });
+    scope.$digest();
+    scope.response.push('resp');
+    scope.$digest();
+    expect(changeHandlerCalled).toBe(true);
+  });
+
+  it('answer change handler gets called when response gets removed', function() {
+    container.elements['1'].setDataAndSession(testModel);
+    var changeHandlerCalled = false;
+    container.elements['1'].answerChangedHandler(function(c) {
+      changeHandlerCalled = true;
+    });
+    scope.$digest();
+    scope.response = _.initial(scope.response);
+    scope.$digest();
+    expect(changeHandlerCalled).toBe(true);
+  });
+
+  describe('isAnswerEmpty', function() {
+    xit('should return true initially', function() {
+      //It is not clear what an empty answer should look like
       container.elements['1'].setDataAndSession(testModel);
-      var changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
-      });
-      scope.$digest();
-      scope.response = _.initial(scope.response);
-      scope.$digest();
-      expect(changeHandlerCalled).toBe(true);
+      rootScope.$digest();
+      expect(container.elements['1'].getSession()).toBe(true);
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+    it('should return false if answer is set initially', function() {
+      testModel.session = {
+        answers: [{ type : 'point', pointType : 'full', domainPosition : 3, rangePosition : 0 }]
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+    it('should return false if answer is selected', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.response = [{ type : 'point', pointType : 'full', domainPosition : 3, rangePosition : 0 }];
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
 
+  it('should implement containerBridge', function() {
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
 });
