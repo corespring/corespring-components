@@ -2,9 +2,16 @@ var main = [
   '$sce', '$log',
 
   function ($sce, $log) {
-    var def;
 
-    var link = function (scope, element, attrs) {
+    return {
+      scope: {},
+      restrict: 'EA',
+      replace: true,
+      link: link,
+      template: template()
+    };
+
+    function link(scope, element, attrs) {
 
       scope.editable = true;
       scope.response = {};
@@ -58,25 +65,18 @@ var main = [
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-    };
+    }
 
-
-    def = {
-      scope: {},
-      restrict: 'EA',
-      replace: true,
-      link: link,
-      template: [
+    function template(){
+      return [
         '<div class="box-and-whiskers">',
         ' <div>{{response}}</div>',
         ' <table><tr>',
         ' <td ng-repeat="g in model.graphs" box-and-whiskers-graph editable="editable" ngModel="g" responseModel="response[$index]" style="background-color: #d3d3d3; border: 1px solid black">{{$index}}</td>',
         ' </table>',
         '</div>'
-      ].join("\n")
-    };
-
-    return def;
+      ].join("\n");
+    }
   }
 ];
 

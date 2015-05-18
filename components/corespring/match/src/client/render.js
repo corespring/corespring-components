@@ -128,17 +128,23 @@ var main = [
         }
       }
 
+      /**
+       * @returns {answers: [{id:String, matchSet: [Boolean*]}*], numberOfAnswers: number}
+       */
       function getSession() {
+        var numberOfAnswers = 0;
         var answers = scope.matchModel.rows.map(function(row) {
           return {
             id: row.id,
             matchSet: row.matchSet.map(function(match) {
+              numberOfAnswers += match.value ? 1 : 0;
               return match.value;
             })
           };
         });
         return {
-          answers: answers
+          answers: answers,
+          numberOfAnswers: numberOfAnswers
         };
       }
 
@@ -367,7 +373,7 @@ var main = [
       }
 
       function isAnswerEmpty() {
-        return _.isEmpty(this.getSession().answers);
+        return 0 === this.getSession().numberOfAnswers;
       }
 
       function setEditable(e) {

@@ -1,4 +1,4 @@
-describe('corespring', function() {
+describe('corespring:inline-choice', function() {
 
   var testModel, container, element, scope, rootScope;
 
@@ -115,6 +115,30 @@ describe('corespring', function() {
       expect(wrapper.find(".incorrect").length).toBe(1);
     });
 
+  });
+
+  describe('isAnswerEmpty', function() {
+    it('should return true initially', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+    it('should return false if answer is set initially', function() {
+      testModel.session = {
+        answers: 'mc_1'
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+    it('should return false if answer is selected', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.selected = testModel.data.model.choices['1'];
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  it('should implement containerBridge',function(){
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
 });

@@ -101,7 +101,7 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          $log.debug("multiple-choice setDataAndSession", dataAndSession);
+          $log.debug("focus-task setDataAndSession", dataAndSession);
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
           scope.itemShape = dataAndSession.data.model.config.itemShape || "circle";

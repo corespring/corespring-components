@@ -1,0 +1,66 @@
+{
+  "componentType": "corespring-graphic-gap-match",
+  "title": "",
+  "correctResponse": [
+    {
+      "id": "c1",
+      "hotspot": "h1"
+    },
+    {
+      "id": "c2",
+      "hotspot": "h2"
+    }
+  ],
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": true,
+  "partialScoring": [],
+  "model": {
+    "choices": [
+      {
+        "label": "C1",
+        "id": "c1"
+      },
+      {
+        "label": "C2",
+        "id": "c2"
+      },
+      {
+        "label": "C3",
+        "id": "c3"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "h1",
+        "shape": "rect",
+        "coords": {
+          "left": 20,
+          "top": 20,
+          "width": 100,
+          "height": 100
+        }
+      },
+      {
+        "id": "h2",
+        "shape": "rect",
+        "coords": {
+          "left": 20,
+          "top": 140,
+          "width": 100,
+          "height": 100
+        }
+      }
+    ],
+    "config": {
+      "backgroundImage": "map.png",
+      "shuffle": true,
+      "choiceAreaPosition": "top",
+      "showHotspots": true
+    }
+  },
+  "weight": 1
+}

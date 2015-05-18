@@ -1,65 +1,97 @@
-var link = function() {
-  return function(scope, element, attrs) {
+var main = [
+  function() {
 
-    scope.editable = true;
-
-    scope.resetSelection = function() {
-      $(element).find('.token').each(function() {
-        $(this).removeClass('correct').removeClass('incorrect');
-      });
+    return {
+      scope: {},
+      restrict: 'AE',
+      replace: true,
+      link: link,
+      template: template()
     };
 
-    scope.highlightSelection = function(selection) {
-      $(element).find('.token').each(function() {
-        if (_.contains(selection, $(this).attr('id'))) {
-          $(this).addClass('selected');
-        } else {
-          $(this).removeClass('selected');
-        }
-      });
+    function link(scope, element, attrs) {
 
-      scope.selectedTokens = selection;
-    };
+      var log = console.log.bind(console,'[select-text]');
 
-    scope.$watch('selectedTokens', function(value) {
-      scope.highlightSelection(scope.selectedTokens || []);
-    });
+      scope.editable = true;
+      scope.resetSelection = resetSelection;
+      scope.highlightSelection = highlightSelection;
 
-    scope.$watch('text', function() {
-      var contentElement = $(element).find('.select-text-content');
-      contentElement.html(scope.text);
-      contentElement.find('.token').each(function(idx, elem) {
-        $(elem).click(function() {
-          if (scope.editable) {
-            scope.selectedTokens = _.xor(scope.selectedTokens, [$(this).attr('id')]);
-            scope.$apply();
+      scope.containerBridge = {
+        setDataAndSession: setDataAndSession,
+        getSession: getSession,
+        setResponse: setResponse,
+        setMode: setMode,
+        reset: reset,
+        isAnswerEmpty: isAnswerEmpty,
+        answerChangedHandler: answerChangedHandler,
+        editable: editable
+      };
+
+      scope.$watch('selectedTokens', onChangeSelectedTokens);
+      scope.$watch('text', onChangeText);
+
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+
+      //--------------------------------------------------------
+
+      function resetSelection() {
+        $(element).find('.token').each(function() {
+          $(this).removeClass('correct').removeClass('incorrect');
+        });
+      }
+
+      function highlightSelection(selection) {
+        $(element).find('.token').each(function() {
+          if (_.contains(selection, $(this).attr('id'))) {
+            $(this).addClass('selected');
+          } else {
+            $(this).removeClass('selected');
           }
         });
-      });
 
-      scope.highlightSelection(scope.selectedTokens);
-    });
+        scope.selectedTokens = selection;
+      }
 
-    scope.containerBridge = {
+      function onChangeSelectedTokens(newValue, oldValue) {
+        if(newValue !== oldValue) {
+          scope.highlightSelection(newValue || []);
+        }
+      }
 
-      setDataAndSession: function(dataAndSession) {
-        console.log("Setting data for Select Text: ", dataAndSession);
+      function onChangeText() {
+        var contentElement = $(element).find('.select-text-content');
+        contentElement.html(scope.text);
+        contentElement.find('.token').each(function(idx, elem) {
+          $(elem).click(function() {
+            if (scope.editable) {
+              scope.selectedTokens = _.xor(scope.selectedTokens, [$(this).attr('id')]);
+              scope.$apply();
+            }
+          });
+        });
+
+        scope.highlightSelection(scope.selectedTokens);
+      }
+
+      function setDataAndSession(dataAndSession) {
+        log("Setting data for Select Text: ", dataAndSession);
         scope.model = dataAndSession.data.model;
         scope.text = dataAndSession.data.wrappedText;
         if (dataAndSession.session) {
           scope.selectedTokens = _.cloneDeep(dataAndSession.session.answers);
         }
         scope.showFeedback = _.isUndefined(scope.model.config.showFeedback) ? true : scope.model.config.showFeedback;
-      },
+      }
 
-      getSession: function() {
+      function getSession() {
         return {
           answers: scope.selectedTokens
         };
-      },
+      }
 
-      setResponse: function(response) {
-        console.log("Setting response", response);
+      function setResponse(response) {
+        log("Setting response", response);
         $(element).find('.token').each(function(idx, elem) {
           var id = $(elem).attr('id');
           var feedback = (response && response.feedback.choices[id]) || {};
@@ -77,54 +109,41 @@ var link = function() {
         scope.feedback = response.feedback.message;
         scope.correctClass = response.correctClass;
         scope.comments = response.comments;
-      },
+      }
 
-      setMode: function(newMode) {},
+      function setMode(newMode) {}
 
-      reset: function() {
+      function reset() {
         scope.selectedTokens = undefined;
         scope.feedback = undefined;
         scope.correctClass = undefined;
         scope.comments = undefined;
         scope.resetSelection();
         $('.incorrectlyNotSelected').removeClass('incorrectlyNotSelected');
-      },
-
-      isAnswerEmpty: function() {},
-
-      answerChangedHandler: function(callback) {},
-
-      editable: function(e) {
-        scope.editable = e;
       }
 
-    };
-    scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+      function isAnswerEmpty() {
+        return _.isEmpty(getSession().answers);
+      }
 
-  };
-};
+      function answerChangedHandler(callback) {}
 
-var main = [
+      function editable(e) {
+        scope.editable = e;
+      }
+    }
 
-  function() {
-    var def = {
-      scope: {},
-      restrict: 'AE',
-      replace: true,
-      link: link(),
-      template: [
+    function template() {
+      return [
         '<div class="view-select-text" ng-class="{true: \'enabled\', false: \'\'}[editable]">',
         '  <div class="select-text-content"></div>',
         '  <div class="clearfix"></div>',
         '  <div ng-show="feedback && showFeedback" class="feedback feedback-{{correctClass}}" ng-bind-html-unsafe="feedback"></div>',
         '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
         '</div>'
-      ].join("")
-    };
-
-    return def;
-  }
-];
+      ].join("");
+    }
+  }];
 
 exports.framework = 'angular';
 exports.directive = main;

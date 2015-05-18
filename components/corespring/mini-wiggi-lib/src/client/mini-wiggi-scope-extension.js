@@ -1,9 +1,15 @@
 exports.framework = "angular";
 exports.factory = [
-  'WiggiMathJaxFeatureDef',
-  'WiggiLinkFeatureDef',
   'ComponentImageService',
-  function(WiggiMathJaxFeatureDef, WiggiLinkFeatureDef, ComponentImageService) {
+  'ImageFeature',
+  'WiggiLinkFeatureDef',
+  'WiggiMathJaxFeatureDef',
+  function(
+      ComponentImageService,
+      ImageFeature,
+      WiggiLinkFeatureDef,
+      WiggiMathJaxFeatureDef
+  ) {
 
     /**
      * Provide features to the scope that are used by mini wiggi
@@ -20,6 +26,10 @@ exports.factory = [
         scope.imageService = function() {
           return ComponentImageService;
         };
+
+        scope.overrideFeatures = [
+          ImageFeature
+        ];
 
         scope.extraFeatures = {
           definitions: [

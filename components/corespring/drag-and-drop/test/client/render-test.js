@@ -1,4 +1,4 @@
-describe('corespring', function() {
+describe('corespring:drag-and-drop', function() {
 
   var testModel, scope, element, container, rootScope;
 
@@ -14,7 +14,7 @@ describe('corespring', function() {
       "componentType": "corespring-drag-and-drop",
       "title": "Butterfly D&D",
       "correctResponse": {
-        "1": ["egg","pupa"],
+        "1": ["egg", "pupa"],
         "2": [],
         "3": ["larva"],
         "4": ["adult"]
@@ -62,8 +62,7 @@ describe('corespring', function() {
   beforeEach(function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
-      $provide.value('MathJaxService', function() {
-      });
+      $provide.value('MathJaxService', function() {});
       $provide.value('$modal', {});
     });
   });
@@ -104,12 +103,38 @@ describe('corespring', function() {
       container.elements['1'].answerChangedHandler(function(c) {
         changeHandlerCalled = true;
       });
-      scope.landingPlaceChoices = {'choice1': 'apple'};
+      scope.landingPlaceChoices = {
+        'choice1': 'apple'
+      };
       scope.$digest();
       scope.landingPlaceChoices.choice1 = 'pear';
       scope.$digest();
       expect(changeHandlerCalled).toBe(true);
     });
+  });
+
+  describe('isAnswerEmpty', function() {
+    it('should return true initially', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+    it('should return false if answer is set initially', function() {
+      testModel.session = {
+        answers: [['pupa']]
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+    it('should return false if answer is selected', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.landingPlaceChoices[0] = [{id:'pupa'}];
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  it('should implement containerBridge',function(){
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
 });
