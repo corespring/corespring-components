@@ -140,11 +140,26 @@ var main = [
         activeClass: 'dropping'
       };
 
+
+      scope.dropChoice = function(draggedChoice, newChoice) {
+        scope.droppedChoices = _.reject(scope.droppedChoices, choiceEquals(draggedChoice));
+        var numberOfDroppedChoices = _(scope.droppedChoices).filter(idEquals(draggedChoice)).size();
+        var removeFromChoices = draggedChoice.matchMax && numberOfDroppedChoices >= draggedChoice.matchMax - 1;
+        if (removeFromChoices) {
+          scope.choices = _.reject(scope.choices, idEquals(draggedChoice));
+        } else {
+          var currentPosition = _.findIndex(scope.choices, idEquals(draggedChoice));
+          scope.choices = _.reject(scope.choices, idEquals(draggedChoice));
+          scope.choices.splice(currentPosition, 0, _.pick(draggedChoice, 'id', 'label', 'matchMax'));
+
+        }
+        scope.droppedChoices.push(newChoice);
+      };
+
       scope.onDrop = function(ev, ui) {
         var MARGIN = 1;
         var offsetX = ev.clientX - ui.helper.offset().left;
         var offsetY = ev.clientY - ui.helper.offset().top;
-
         var imageOffset = $(element).find('.background-image').offset();
         var newChoice = _.extend(_.cloneDeep(scope.draggedChoice), {
           left: ev.clientX - imageOffset.left - offsetX - MARGIN,
@@ -152,17 +167,7 @@ var main = [
           width: ui.helper.outerWidth(),
           height: ui.helper.outerHeight()
         });
-        scope.droppedChoices = _.reject(scope.droppedChoices, choiceEquals(scope.draggedChoice));
-        if (scope.draggedChoice.moveOnDrag) {
-          scope.choices = _.reject(scope.choices, idEquals(scope.draggedChoice));
-        } else {
-          var currentPosition = _.findIndex(scope.choices, idEquals(scope.draggedChoice));
-          scope.choices = _.reject(scope.choices, idEquals(scope.draggedChoice));
-          scope.choices.splice(currentPosition, 0, _.pick(scope.draggedChoice, 'id', 'label'));
-
-        }
-        scope.droppedChoices.push(newChoice);
-
+        scope.dropChoice(scope.draggedChoice, newChoice);
       };
 
       scope.onChoiceAreaDrop = function(ev, ui) {
