@@ -1,4 +1,9 @@
 {
+  "name": "select-text",
+  "title": "Select Evidence in Text",
+  "titleGroup": "English Language Arts",
+  "organization": "corespring",
+  "released": false,
   "libraries": [
     {
       "name": "choice-templates",
@@ -28,10 +33,5 @@
         "angular-module": "corespring.input.radio"
       }
     }
-  },
-  "name": "select-text",
-  "title": "Select Evidence in Text",
-  "titleGroup": "English Language Arts",
-  "organization": "corespring",
-  "released": false
+  }
 }

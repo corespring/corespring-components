@@ -153,7 +153,6 @@ describe('corespring:number-line:render', function() {
       //It is not clear what an empty answer should look like
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect(container.elements['1'].getSession()).toBe(true);
       expect(container.elements['1'].isAnswerEmpty()).toBe(true);
     });
     it('should return false if answer is set initially', function() {
