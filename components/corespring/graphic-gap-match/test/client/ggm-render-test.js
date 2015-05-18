@@ -1,4 +1,4 @@
-describe('corespring', function() {
+describe('corespring:graphic-gap-match:render', function() {
 
   var testModel, scope, element, container, rootScope;
 
@@ -14,8 +14,14 @@ describe('corespring', function() {
       "componentType": "corespring-graphic-gap-match",
       "title": "",
       "correctResponse": [
-        {"id": "c1", "hotspot": "h1"},
-        {"id": "c2", "hotspot": "h2"}
+        {
+          "id": "c1",
+          "hotspot": "h1"
+        },
+        {
+          "id": "c2",
+          "hotspot": "h2"
+        }
       ],
       "feedback": {
         "correctFeedbackType": "default",
@@ -23,7 +29,7 @@ describe('corespring', function() {
         "incorrectFeedbackType": "default"
       },
       "allowPartialScoring": true,
-      "partialScoring" : [],
+      "partialScoring": [],
       "model": {
         "choices": [
           {
@@ -45,7 +51,7 @@ describe('corespring', function() {
             "shape": "rect",
             "coords": {
               "left": 20,
-              "top":  20,
+              "top": 20,
               "width": 100,
               "height": 100
             }
@@ -55,7 +61,7 @@ describe('corespring', function() {
             "shape": "rect",
             "coords": {
               "left": 20,
-              "top":  140,
+              "top": 140,
               "width": 100,
               "height": 100
             }
@@ -78,8 +84,7 @@ describe('corespring', function() {
   beforeEach(function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
-      $provide.value('MathJaxService', function() {
-      });
+      $provide.value('MathJaxService', function() {});
     });
   });
 
@@ -100,67 +105,91 @@ describe('corespring', function() {
   });
 
 
-  describe('graphic gap match', function() {
+  it('answer change handler does not get called initially', function() {
+    container.elements['1'].setDataAndSession(testModel);
+    var changeHandlerCalled = false;
+    container.elements['1'].answerChangedHandler(function(c) {
+      changeHandlerCalled = true;
+    });
 
-    it('answer change handler does not get called initially', function() {
+    scope.$digest();
+    expect(changeHandlerCalled).toBe(false);
+  });
+
+  describe('undo / start over', function() {
+    it('undo undoes move between choice area and image', function() {
       container.elements['1'].setDataAndSession(testModel);
-      var changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
-      });
-
       scope.$digest();
-      expect(changeHandlerCalled).toBe(false);
+      var originalChoices = _.cloneDeep(scope.choices);
+      var originalDroppedChoices = _.cloneDeep(scope.droppedChoices);
+      scope.droppedChoices.push(scope.choices.pop());
+      scope.$digest();
+      scope.droppedChoices.push(scope.choices.pop());
+      scope.$digest();
+
+      scope.undo();
+      scope.undo();
+
+      expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
+      expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
     });
 
-    describe('undo / start over', function() {
-      it('undo undoes move between choice area and image', function() {
-        container.elements['1'].setDataAndSession(testModel);
-        scope.$digest();
-        var originalChoices = _.cloneDeep(scope.choices);
-        var originalDroppedChoices = _.cloneDeep(scope.droppedChoices);
-        scope.droppedChoices.push(scope.choices.pop());
-        scope.$digest();
-        scope.droppedChoices.push(scope.choices.pop());
-        scope.$digest();
+    it('undo undoes move on the image', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      scope.droppedChoices.push(_.extend(scope.choices.pop(), {
+        left: 100,
+        top: 100
+      }));
+      scope.$digest();
+      scope.droppedChoices[0].left = 150;
+      scope.$digest();
 
-        scope.undo();
-        scope.undo();
+      scope.undo();
+      scope.$digest();
 
-        expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
-        expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
-      });
-
-      it('undo undoes move on the image', function() {
-        container.elements['1'].setDataAndSession(testModel);
-        scope.$digest();
-        scope.droppedChoices.push(_.extend(scope.choices.pop(), {left: 100, top: 100}));
-        scope.$digest();
-        scope.droppedChoices[0].left = 150;
-        scope.$digest();
-
-        scope.undo();
-        scope.$digest();
-
-        expect(scope.droppedChoices[0].left).toEqual(100);
-      });
-
-      it('start over goes back to initial state', function() {
-        container.elements['1'].setDataAndSession(testModel);
-        scope.$digest();
-        var originalChoices = _.cloneDeep(scope.choices);
-        var originalDroppedChoices = _.cloneDeep(scope.droppedChoices);
-        scope.droppedChoices.push(scope.choices.pop());
-        scope.$digest();
-        scope.droppedChoices.push(scope.choices.pop());
-        scope.$digest();
-        scope.startOver();
-        scope.$digest();
-        expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
-        expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
-      });
+      expect(scope.droppedChoices[0].left).toEqual(100);
     });
 
+    it('start over goes back to initial state', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      var originalChoices = _.cloneDeep(scope.choices);
+      var originalDroppedChoices = _.cloneDeep(scope.droppedChoices);
+      scope.droppedChoices.push(scope.choices.pop());
+      scope.$digest();
+      scope.droppedChoices.push(scope.choices.pop());
+      scope.$digest();
+      scope.startOver();
+      scope.$digest();
+      expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
+      expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
+    });
+  });
+
+  describe('isAnswerEmpty', function() {
+    it('should return true initially', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+    it('should return false if answer is set initially', function() {
+      testModel.session = {
+        answers: [{id:"c1"}]
+      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+    it('should return false if answer is selected', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.droppedChoices = [{id:"c1"}];
+      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  it('should implement containerBridge', function() {
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
 });
