@@ -159,7 +159,6 @@ describe('corespring', function() {
         scope.$digest();
 
         var choiceToDrag = scope.choices[2];
-        console.log('a',choiceToDrag);
         scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
         scope.$digest();
         expect(scope.choices.length).toEqual(3);
