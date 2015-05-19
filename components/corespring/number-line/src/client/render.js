@@ -250,55 +250,45 @@ var interactiveGraph = [
             switch (elementType) {
               case "PF":
                 return point({});
-                break;
               case "PE":
                 return point({
                   pointType: 'empty'
                 });
-                break;
               case "LEE":
                 return line({});
-                break;
               case "LEF":
                 return line({
                   "rightPoint": "full"
                 });
-                break;
               case "LFE":
                 return line({
                   "leftPoint": "full"
                 });
-                break;
               case "LFF":
                 return line({
                   "leftPoint": "full",
                   "rightPoint": "full"
                 });
-                break;
               case "REN":
                 return ray({
                   pointType: "empty",
                   direction: "negative"
                 });
-                break;
               case "REP":
                 return ray({
                   pointType: "empty",
                   direction: "positive"
                 });
-                break;
               case "RFN":
                 return ray({
                   pointType: "full",
                   direction: "negative"
                 });
-                break;
               case "RFP":
                 return ray({
                   pointType: "full",
                   direction: "positive"
                 });
-                break;
             }
           }
 
