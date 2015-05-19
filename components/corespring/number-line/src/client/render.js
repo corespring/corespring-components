@@ -98,6 +98,7 @@ var main = [
         }
       };
 
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 

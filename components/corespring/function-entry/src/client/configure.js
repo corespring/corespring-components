@@ -59,7 +59,7 @@ var main = [
     ].join("\n");
 
     return {
-      scope: 'isolate',
+      scope: {},
       restrict: 'E',
       replace: true,
       template: panels,

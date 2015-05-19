@@ -57,7 +57,7 @@ var main = [
 
     return {
       restrict: "E",
-      scope: "isolate",
+      scope: {},
       template: template,
       link: function($scope, element, attrs) {
 
