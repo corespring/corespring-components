@@ -311,10 +311,10 @@ var main = [
           '      dialog-launcher="external"',
           '      disable-auto-activation="true"',
           '      features="extraFeaturesForAnswerArea"',
-          '      image-service="imageService()">',
+          '      image-service="imageService()"',
           '      mini-wiggi-wiz=""',
           '      ng-model="model.answerAreaXhtml"',
-          '      parent-selector=".modal-body"',
+          '      parent-selector=".modal-body">',
           '    </div>',
           '  </div>',
           '</div>'
