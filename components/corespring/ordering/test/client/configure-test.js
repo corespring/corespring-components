@@ -98,7 +98,8 @@ describe('corespring:ordering:configure', function () {
       container.registerConfigPanel(id, b);
     };
     element = $compile("<div navigator=''><corespring-ordering-configure id='1'></corespring-ordering-configure></div>")(scope);
-    scope = element.scope().$$childHead;
+    element.find('.ordering-config');
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 

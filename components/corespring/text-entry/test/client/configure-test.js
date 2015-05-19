@@ -90,8 +90,8 @@ describe('corespring:text-entry:configure', function () {
     $rootScope.registerConfigPanel = function (id, b) {
       container.registerConfigPanel(id, b);
     };
-    element = $compile("<div navigator=''><corespring-text-entry-configure id='1'></corespring-text-entry-configure></div>")(scope);
-    scope = element.scope().$$childHead;
+    element = $compile("<corespring-text-entry-configure id='1'></corespring-text-entry-configure>")(scope);
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 

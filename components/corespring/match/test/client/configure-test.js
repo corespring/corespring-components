@@ -156,7 +156,8 @@ describe('corespring:match:configure', function() {
       container.registerConfigPanel(id, b);
     };
     element = $compile("<div navigator=''><corespring-match-configure id='1'></corespring-match-configure></div>")(scope);
-    scope = element.scope().$$childHead.$$childHead;
+    element = element.find('.config-corespring-match');
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 

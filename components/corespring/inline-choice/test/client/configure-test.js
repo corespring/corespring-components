@@ -107,7 +107,8 @@ describe('corespring:inline-choice:configure', function() {
       container.registerConfigPanel(id, b);
     };
     element = $compile("<div navigator=''><corespring-inline-choice-configure id='1'></corespring-inline-choice-configure></div>")(scope);
-    scope = element.scope().$$childHead;
+    element = element.find('.config-inline-choice');
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 

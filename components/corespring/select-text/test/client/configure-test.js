@@ -90,7 +90,8 @@ describe('corespring:select-text:configure', function () {
       container.registerConfigPanel(id, b);
     };
     element = $compile("<div navigator=''><corespring-select-text-configure id='1'></corespring-select-text-configure></div>")(scope);
-    scope = element.scope().$$childHead;
+    element = element.find('.select-text-configuration');
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 
