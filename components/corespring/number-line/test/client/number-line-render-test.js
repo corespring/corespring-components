@@ -9,6 +9,17 @@ describe('corespring:number-line:render', function() {
     };
   };
 
+  function MockGraphHelper(){
+    this.updateOptions = function(){};
+    this.addHorizontalAxis = function(){};
+    this.addVerticalAxis = function(){};
+    this.clear = function(){};
+    this.addMovablePoint = function(){};
+    this.addMovableLineSegment = function(){};
+    this.addMovableRay = function(){};
+    this.redraw = function(){};
+  }
+
   var testModelTemplate = {
     data: {
       "model": {
@@ -36,12 +47,12 @@ describe('corespring:number-line:render', function() {
               "type": "point",
               "pointType": "full",
               "domainPosition": 3,
-              "rangePosition": 1
+              "rangePosition": 0
             },
             {
               "type": "line",
               "domainPosition": 2,
-              "rangePosition": 2,
+              "rangePosition": 1,
               "size": 2,
               "leftPoint": "full",
               "rightPoint": "empty"
@@ -49,7 +60,7 @@ describe('corespring:number-line:render', function() {
             {
               "type": "ray",
               "domainPosition": 2,
-              "rangePosition": 3,
+              "rangePosition": 2,
               "pointType": "empty",
               "direction": "positive"
             }
@@ -93,6 +104,7 @@ describe('corespring:number-line:render', function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
       $provide.value('MathJaxService', function() {});
+      $provide.value('GraphHelper', MockGraphHelper);
     });
   });
 
@@ -149,8 +161,7 @@ describe('corespring:number-line:render', function() {
   });
 
   describe('isAnswerEmpty', function() {
-    xit('should return true initially', function() {
-      //It is not clear what an empty answer should look like
+    it('should return true initially', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(true);

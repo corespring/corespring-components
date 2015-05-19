@@ -34,13 +34,15 @@ var main = [
         setDataAndSession: function(dataAndSession) {
           console.log("number line", dataAndSession);
 
-          scope.correctModel = scope.model = dataAndSession.data.model;
+          scope.model = dataAndSession.data.model;
+          scope.correctModel = dataAndSession.data.model;
           scope.editable = !scope.model.config.exhibitOnly;
+          scope.configuredInitialElements = _.cloneDeep(scope.model.config.initialElements) || [];
+
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.response = dataAndSession.session.answers;
             scope.model.config.initialElements = _.cloneDeep(dataAndSession.session.answers);
           }
-
         },
 
         getSession: function() {
@@ -55,28 +57,36 @@ var main = [
 
           scope.correctModel = _.cloneDeep(scope.model);
           scope.correctModel.config.exhibitOnly = true;
-          scope.correctModel.config.margin = {top: 30, right: 10, bottom: 30, left: 20};
+          scope.correctModel.config.margin = {
+            top: 30,
+            right: 10,
+            bottom: 30,
+            left: 20
+          };
 
           var i = 0;
           scope.correctModelDummyResponse = {
             feedback: {
               elements: _.map(response.correctResponse, function(cr) {
                 i++;
-                return _.extend(cr, {rangePosition: i, isCorrect: true});
+                return _.extend(cr, {
+                  rangePosition: i,
+                  isCorrect: true
+                });
               })
             }
           };
         },
 
-        setMode: function(newMode) {
-        },
+        setMode: function(newMode) {},
 
         reset: function() {
           scope.serverResponse = undefined;
         },
 
         isAnswerEmpty: function() {
-          return _.isEmpty(this.getSession().answers);
+          var answers = this.getSession().answers;
+          return _.isEmpty(answers) || _.isEqual(answers, scope.configuredInitialElements);
         },
 
         answerChangedHandler: function(callback) {
@@ -152,15 +162,15 @@ var interactiveGraph = [
     var HORIZONTAL_AXIS_WIDTH = 480;
 
     var pointEqual = function(p1, p2) {
-      return Math.abs(p1-p2) < 0.01;
+      return Math.abs(p1 - p2) < 0.01;
     };
 
     var pointLessThanOrEqual = function(p1, p2) {
-      return p1 < p2+0.01;
+      return p1 < p2 + 0.01;
     };
 
     var pointGreaterThanOrEqual = function(p1, p2) {
-      return p1 > p2-0.01;
+      return p1 > p2 - 0.01;
     };
 
 
@@ -206,7 +216,9 @@ var interactiveGraph = [
       },
       controller: function($scope) {
         //set default config to avoid npe
-        $scope.config = {availableTypes: {}};
+        $scope.config = {
+          availableTypes: {}
+        };
       },
       link: function(scope, elm, attr, ngModel) {
         var paperElement = $(elm).find('.paper');
@@ -228,63 +240,95 @@ var interactiveGraph = [
           if (scope.responsemodel.length >= (scope.config.maxNumberOfPoints || 3)) {
             return;
           }
-          var newRangePosition = 0;
-          var defaultPointModel = {
-            "type": "point",
-            "pointType": "full",
-            "domainPosition": domainPosition,
-            "rangePosition": 0
-          };
-
-          var defaultLineModel = {
-            "type": "line",
-            "size": scope.graph.getUnitSize(),
-            "domainPosition": domainPosition,
-            "rangePosition": newRangePosition,
-            "leftPoint": "empty",
-            "rightPoint": "empty"
-          };
-          var defaultRayModel = {
-            "type": "ray",
-            "domainPosition": domainPosition,
-            "rangePosition": newRangePosition,
-            "pointType": "empty"
-          };
-          switch (elementType) {
-            case "PF":
-              scope.responsemodel.push(defaultPointModel);
-              break;
-            case "PE":
-              scope.responsemodel.push(_.extend(defaultPointModel, {pointType: 'empty'}));
-              break;
-            case "LEE":
-              scope.responsemodel.push(defaultLineModel);
-              break;
-            case "LEF":
-              scope.responsemodel.push(_.extend(defaultLineModel, {"rightPoint": "full"}));
-              break;
-            case "LFE":
-              scope.responsemodel.push(_.extend(defaultLineModel, {"leftPoint": "full"}));
-              break;
-            case "LFF":
-              scope.responsemodel.push(_.extend(defaultLineModel, {"leftPoint": "full", "rightPoint": "full"}));
-              break;
-            case "REN":
-              scope.responsemodel.push(_.extend(defaultRayModel, {pointType: "empty", direction: "negative"}));
-              break;
-            case "REP":
-              scope.responsemodel.push(_.extend(defaultRayModel, {pointType: "empty", direction: "positive"}));
-              break;
-            case "RFN":
-              scope.responsemodel.push(_.extend(defaultRayModel, {pointType: "full", direction: "negative"}));
-              break;
-            case "RFP":
-              scope.responsemodel.push(_.extend(defaultRayModel, {pointType: "full", direction: "positive"}));
-              break;
-          }
+          scope.responsemodel.push(element(elementType));
           rebuildGraph(_.last(scope.responsemodel));
           scope.stack.push(_.cloneDeep(scope.responsemodel));
           scope.$apply();
+
+          function element(elementType) {
+            switch (elementType) {
+              case "PF":
+                return point({});
+                break;
+              case "PE":
+                return point({
+                  pointType: 'empty'
+                });
+                break;
+              case "LEE":
+                return line({});
+                break;
+              case "LEF":
+                return line({
+                  "rightPoint": "full"
+                });
+                break;
+              case "LFE":
+                return line({
+                  "leftPoint": "full"
+                });
+                break;
+              case "LFF":
+                return line({
+                  "leftPoint": "full",
+                  "rightPoint": "full"
+                });
+                break;
+              case "REN":
+                return ray({
+                  pointType: "empty",
+                  direction: "negative"
+                });
+                break;
+              case "REP":
+                return ray({
+                  pointType: "empty",
+                  direction: "positive"
+                });
+                break;
+              case "RFN":
+                return ray({
+                  pointType: "full",
+                  direction: "negative"
+                });
+                break;
+              case "RFP":
+                return ray({
+                  pointType: "full",
+                  direction: "positive"
+                });
+                break;
+            }
+          }
+
+          function point(params) {
+            return _.extend({
+              "type": "point",
+              "pointType": "full",
+              "domainPosition": domainPosition,
+              "rangePosition": 0
+            }, params);
+          }
+
+          function line(params) {
+            return _.extend({
+              "type": "line",
+              "size": scope.graph.getUnitSize(),
+              "domainPosition": domainPosition,
+              "rangePosition": 0,
+              "leftPoint": "empty",
+              "rightPoint": "empty"
+            }, params);
+          }
+
+          function ray(params) {
+            return _.extend({
+              "type": "ray",
+              "domainPosition": domainPosition,
+              "rangePosition": 0,
+              "pointType": "empty"
+            }, params);
+          }
         };
 
         scope.graph = new GraphHelper(paperElement[0], {
@@ -365,11 +409,7 @@ var interactiveGraph = [
 
         function repositionElements(lastMovedElement) {
           console.log("Repositioning", lastMovedElement);
-          var intersectsWithAny = function(e) {
-            return _.any(scope.responsemodel, function(r) {
-              return e !== r && isIntersecting(e, r);
-            });
-          };
+
           if (lastMovedElement) {
             while (intersectsWithAny(lastMovedElement)) {
               lastMovedElement.rangePosition++;
@@ -378,6 +418,7 @@ var interactiveGraph = [
           var elementsSortedByRangePosition = _.sortBy(scope.responsemodel, function(e) {
             return e.rangePosition;
           });
+
           _.each(elementsSortedByRangePosition, function(e) {
             e.rangePosition = 0;
             while (intersectsWithAny(e)) {
@@ -385,6 +426,11 @@ var interactiveGraph = [
             }
           });
 
+          function intersectsWithAny(e) {
+            return _.any(scope.responsemodel, function(r) {
+              return e !== r && isIntersecting(e, r);
+            });
+          }
         }
 
         // Clear out graph and rebuild it from the model
@@ -490,7 +536,6 @@ var interactiveGraph = [
         };
 
         scope.resetGraph = function(model) {
-          scope.stack = [_.cloneDeep(scope.model.config.initialElements)];
           scope.graph.updateOptions(_.merge(_.cloneDeep(model.config), scope.options));
           scope.graph.addHorizontalAxis("bottom", {
             ticks: model.config.ticks,
@@ -500,10 +545,14 @@ var interactiveGraph = [
             showMinorTicks: model.config.showMinorTicks,
             axisColor: scope.colors && scope.colors.axis
           });
-          scope.graph.addVerticalAxis("left", {visible: false});
+          scope.graph.addVerticalAxis("left", {
+            visible: false
+          });
 
           scope.responsemodel = _.cloneDeep(model.config.initialElements) || [];
+          scope.stack = [_.cloneDeep(scope.responsemodel)];
           rebuildGraph();
+
           scope.selectedType = scope.selectedType || model.config.initialType;
           if (model.config.availableTypes[scope.selectedType] !== true) {
             var foundAvailable = false;
@@ -536,7 +585,9 @@ var interactiveGraph = [
 
         scope.$watch('editable', function(n) {
           if (!_.isUndefined(n) && !n) {
-            scope.graph.updateOptions({exhibitOnly: true});
+            scope.graph.updateOptions({
+              exhibitOnly: true
+            });
           }
         }, true);
 
@@ -550,7 +601,9 @@ var interactiveGraph = [
           if (!_.isEmpty(n) && !_.isEmpty(n.feedback)) {
             scope.responsemodel = _.cloneDeep(n.feedback.elements) || [];
             rebuildGraph();
-            scope.graph.updateOptions({exhibitOnly: true});
+            scope.graph.updateOptions({
+              exhibitOnly: true
+            });
           } else if (prev) {
             scope.resetGraph(scope.model);
           }
