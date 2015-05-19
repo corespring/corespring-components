@@ -28,6 +28,7 @@ var main = [
         setDataAndSession: function(dataAndSession) {
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
           scope.model = dataAndSession.data.model;
+          scope.model.config = _.defaults(scope.model.config || {}, {choiceAreaPosition: "top"});
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
 
