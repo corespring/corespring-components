@@ -157,7 +157,7 @@ describe('corespring:match:configure', function() {
     };
     element = $compile("<div navigator=''><corespring-match-configure id='1'></corespring-match-configure></div>")(scope);
     element = element.find('.config-corespring-match');
-    scope = element.isolateScope();
+    scope = element.scope().$$childHead;
     rootScope = $rootScope;
   }));
 

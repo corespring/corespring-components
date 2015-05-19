@@ -99,7 +99,7 @@ describe('corespring:ordering:configure', function () {
     };
     element = $compile("<div navigator=''><corespring-ordering-configure id='1'></corespring-ordering-configure></div>")(scope);
     element.find('.ordering-config');
-    scope = element.isolateScope();
+    scope = element.scope().$$childHead.$$childHead;
     rootScope = $rootScope;
   }));
 
