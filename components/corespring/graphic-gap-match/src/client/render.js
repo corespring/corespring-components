@@ -253,7 +253,7 @@ var main = [
         '             data-jqyoui-options="draggableJquiOptions"',
         '             ng-bind-html-unsafe="choice.label">',
         '        </div>',
-        '        <img ng-src="{{model.config.backgroundImage}}" />',
+        '        <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}"/>',
         '      </div>',
         '    </div>',
         choices(['bottom', 'right']),
