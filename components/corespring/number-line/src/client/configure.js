@@ -122,7 +122,7 @@ var main = [
     var rays = ['REP','REN','RFP','RFN'];
 
     return {
-      scope: {},
+      scope: false,
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
