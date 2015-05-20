@@ -34,15 +34,18 @@ describe('corespring:graphic-gap-match:render', function() {
         "choices": [
           {
             "label": "C1",
-            "id": "c1"
+            "id": "c1",
+            "matchMax": 0
           },
           {
             "label": "Choice 2<br/>Choice 2<br/>Choice 2<br/>Choice 2<br/>Choice 2<br/>Choice 2<br/>Choice 2<br/>Choice 2<br/>Choice 2<br/>",
-            "id": "c2"
+            "id": "c2",
+            "matchMax": 1
           },
           {
             "label": "<img src='http://www.mattress-factory.co.uk/eCommerce/ProductImages/Small/CKS12060-02.jpg' />",
-            "id": "c3"
+            "id": "c3",
+            "matchMax": 2
           }
         ],
         "hotspots": [
@@ -164,6 +167,62 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.$digest();
       expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
+    });
+  });
+
+  describe('dragging choices', function() {
+
+      var cloneChoice = function(choice) {
+        return _.extend(_.cloneDeep(choice), {$$hashKey: undefined});
+      };
+
+      it('choice remains available to drag  any number of times if matchMax is 0', function() {
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+
+        scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
+        scope.$digest();
+
+        expect(scope.choices.length).toEqual(3);
+
+        scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
+        scope.$digest();
+
+        expect(scope.choices.length).toEqual(3);
+
+        scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
+        scope.$digest();
+
+        expect(scope.choices.length).toEqual(3);
+      });
+
+      it('if matchMax is 1 choice can be dragged exactly once', function() {
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+
+        var choiceToDrag = scope.choices[1];
+        scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+        scope.$digest();
+
+        expect(scope.choices.length).toEqual(2);
+        expect(_.contains(scope.choices, choiceToDrag)).toEqual(false);
+      });
+
+      it('if matchMax is 2 choice can be dragged exactly twice', function() {
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+
+        var choiceToDrag = scope.choices[2];
+        scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+        scope.$digest();
+        expect(scope.choices.length).toEqual(3);
+        expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(true);
+
+        scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+        scope.$digest();
+        expect(scope.choices.length).toEqual(2);
+        expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(false);
+      });
     });
   });
 
