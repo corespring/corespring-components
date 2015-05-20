@@ -170,59 +170,57 @@ describe('corespring:graphic-gap-match:render', function() {
     });
   });
 
-  describe('dragging choices', function() {
+describe('dragging choices', function() {
+    var cloneChoice = function(choice) {
+      return _.extend(_.cloneDeep(choice), {$$hashKey: undefined});
+    };
 
-      var cloneChoice = function(choice) {
-        return _.extend(_.cloneDeep(choice), {$$hashKey: undefined});
-      };
+    it('choice remains available to drag  any number of times if matchMax is 0', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
 
-      it('choice remains available to drag  any number of times if matchMax is 0', function() {
-        container.elements['1'].setDataAndSession(testModel);
-        scope.$digest();
+      scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
+      scope.$digest();
 
-        scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
-        scope.$digest();
+      expect(scope.choices.length).toEqual(3);
 
-        expect(scope.choices.length).toEqual(3);
+      scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
+      scope.$digest();
 
-        scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
-        scope.$digest();
+      expect(scope.choices.length).toEqual(3);
 
-        expect(scope.choices.length).toEqual(3);
+      scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
+      scope.$digest();
 
-        scope.dropChoice(scope.choices[0], cloneChoice(scope.choices[0]));
-        scope.$digest();
+      expect(scope.choices.length).toEqual(3);
+    });
 
-        expect(scope.choices.length).toEqual(3);
-      });
+    it('if matchMax is 1 choice can be dragged exactly once', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
 
-      it('if matchMax is 1 choice can be dragged exactly once', function() {
-        container.elements['1'].setDataAndSession(testModel);
-        scope.$digest();
+      var choiceToDrag = scope.choices[1];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
 
-        var choiceToDrag = scope.choices[1];
-        scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
-        scope.$digest();
+      expect(scope.choices.length).toEqual(2);
+      expect(_.contains(scope.choices, choiceToDrag)).toEqual(false);
+    });
 
-        expect(scope.choices.length).toEqual(2);
-        expect(_.contains(scope.choices, choiceToDrag)).toEqual(false);
-      });
+    it('if matchMax is 2 choice can be dragged exactly twice', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
 
-      it('if matchMax is 2 choice can be dragged exactly twice', function() {
-        container.elements['1'].setDataAndSession(testModel);
-        scope.$digest();
+      var choiceToDrag = scope.choices[2];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+      expect(scope.choices.length).toEqual(3);
+      expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(true);
 
-        var choiceToDrag = scope.choices[2];
-        scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
-        scope.$digest();
-        expect(scope.choices.length).toEqual(3);
-        expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(true);
-
-        scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
-        scope.$digest();
-        expect(scope.choices.length).toEqual(2);
-        expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(false);
-      });
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+      expect(scope.choices.length).toEqual(2);
+      expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(false);
     });
   });
 
