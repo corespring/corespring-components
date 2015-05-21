@@ -24,18 +24,7 @@
         "label": "Category 2"
       }
     ],
-    "choices": [
-      {
-        "id": "choice_1",
-        "label": "a",
-        "moveOnDrag": false
-      },
-      {
-        "id": "choice_2",
-        "label": "b",
-        "moveOnDrag": false
-      }
-    ],
+    "choices": [ ],
     "config": {
       "shuffle": false,
       "answerAreaPosition": "below",

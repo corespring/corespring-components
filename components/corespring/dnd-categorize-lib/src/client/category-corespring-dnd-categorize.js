@@ -1,172 +1,178 @@
-var category = [
-  '$timeout',
-  'CompactLayout',
-  'LayoutConfig',
-  'LayoutRunner',
-  'MiniWiggiScopeExtension',
-  function(
-    $timeout,
-    CompactLayout,
-    LayoutConfig,
-    LayoutRunner,
-    MiniWiggiScopeExtension
-  ) {
+exports.framework = 'angular';
+exports.directive = {
+  name: "categoryCorespringDndCategorize",
+  directive: [
+    '$timeout',
+    'CompactLayout',
+    'LayoutConfig',
+    'LayoutRunner',
+    'MiniWiggiScopeExtension',
+    CategoryCorespringDndCategorize]
+}
 
-    return {
-      restrict: 'A',
-      replace: true,
-      controller: ['$scope', controller],
-      link: link,
-      template: template(),
-      scope: {
-        category: '=',
-        choiceWidth: '@',
-        dragAndDropScope: '@',
-        dragEnabled: '=',
-        isEditMode: '=?editMode',
-        notifyDeleteChoiceClicked: '&onDeleteChoiceClicked',
-        notifyDeleteClicked: '&onDeleteClicked',
-        notifyEditClicked: '&onEditClicked',
-        onChoiceDraggedAway: '&',
-        onDrop: '&'
-      }
+function CategoryCorespringDndCategorize(
+  $timeout,
+  CompactLayout,
+  LayoutConfig,
+  LayoutRunner,
+  MiniWiggiScopeExtension
+) {
+
+  return {
+    restrict: 'A',
+    replace: true,
+    controller: ['$scope', controller],
+    link: link,
+    template: template(),
+    scope: {
+      category: '=',
+      choiceWidth: '@',
+      dragAndDropScope: '@',
+      dragEnabled: '=',
+      isEditMode: '=?editMode',
+      notifyDeleteChoiceClicked: '&onDeleteChoiceClicked',
+      notifyDeleteClicked: '&onDeleteClicked',
+      notifyEditClicked: '&onEditClicked',
+      onChoiceDraggedAway: '&',
+      onDrop: '&'
+    }
+  };
+
+
+  function controller($scope) {
+    new MiniWiggiScopeExtension().postLink($scope);
+  }
+
+  function link(scope, elem, attrs) {
+
+    var log = console.log.bind(console, '[category]');
+    //log("categoryId ", attrs.category, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
+
+    var layout;
+    var isLocalChoiceDragged = false;
+
+    scope.active = false;
+    scope.choiceEditMode = scope.isEditMode ? 'delete' : '';
+    scope.showTools = scope.isEditMode;
+
+    scope.droppableOptions = {
+      multiple: true,
+      onDrop: 'onDropCallback'
     };
 
+    scope.droppableJqueryOptions = droppableJqueryOptions;
+    scope.onDeleteClicked = onDeleteClicked;
+    scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
+    scope.onDropCallback = onDropCallback;
+    scope.onLabelEditClicked = onLabelEditClicked;
+    scope.onLocalChoiceDragStart = onLocalChoiceDragStart;
+    scope.onLocalChoiceDragEnd = onLocalChoiceDragEnd;
 
-    function controller($scope){
-      new MiniWiggiScopeExtension().postLink($scope);
+    scope.$watch('category', function(newValue, oldValue) {
+      log('$watch category', newValue, oldValue);
+    }, true);
+    attrs.$observe('choiceWidth', updateChoiceWidthInLayout);
+
+    scope.$on('$destroy', onDestroy);
+    scope.$on('activate', function(event, id) {
+      scope.active = id === getCategoryId();
+    });
+
+
+    //---------------------------------------------------------------
+
+    function getCategoryId() {
+      return scope.category.model.id;
     }
 
-    function link(scope, elem, attrs) {
-
-      var log = console.log.bind(console, '[category]');
-      //log("categoryId ", attrs.category, " dragAndDropScope ", attrs.dragAndDropScope, " choiceWidth ", attrs.choiceWidth);
-
-      var layout;
-      var isLocalChoiceDragged = false;
-
-      scope.active = false;
-      scope.choiceEditMode = scope.isEditMode ? 'delete' : '';
-      scope.showTools = scope.isEditMode;
-
-      scope.droppableOptions = {
-        multiple: true,
-        onDrop: 'onDropCallback'
+    function droppableJqueryOptions() {
+      return {
+        activeClass: 'category-active',
+        distance: 5,
+        hoverClass: 'category-hover',
+        tolerance: 'pointer',
+        scope: scope.dragAndDropScope
       };
+    }
 
-      scope.droppableJqueryOptions = droppableJqueryOptions;
-      scope.onDeleteClicked = onDeleteClicked;
-      scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
-      scope.onDropCallback = onDropCallback;
-      scope.onLabelEditClicked = onLabelEditClicked;
-      scope.onLocalChoiceDragStart = onLocalChoiceDragStart;
-      scope.onLocalChoiceDragEnd = onLocalChoiceDragEnd;
-
-      scope.$watch('category', function(newValue, oldValue){
-        log('$watch category', newValue, oldValue);
-      }, true);
-      attrs.$observe('choiceWidth', updateChoiceWidthInLayout);
-
-      scope.$on('$destroy', onDestroy);
-      scope.$on('activate', function(event, id){
-        scope.active = id === getCategoryId();
-      });
-
-
-      //---------------------------------------------------------------
-
-      function getCategoryId(){
-        return scope.category.model.id;
-      }
-
-      function droppableJqueryOptions() {
-        return {
-          activeClass: 'category-active',
-          distance: 5,
-          hoverClass: 'category-hover',
-          tolerance: 'pointer',
-          scope: scope.dragAndDropScope
-        };
-      }
-
-      function onDeleteClicked() {
-        scope.$$postDigest(function() {
-          scope.notifyDeleteClicked({
-            categoryId: getCategoryId()
-          });
-        });
-      }
-
-      function onLabelEditClicked(event) {
-        event.stopPropagation();
-        scope.notifyEditClicked({
+    function onDeleteClicked() {
+      scope.$$postDigest(function() {
+        scope.notifyDeleteClicked({
           categoryId: getCategoryId()
         });
-      }
+      });
+    }
 
-      function onChoiceDeleteClicked(choiceId, index) {
-        scope.notifyDeleteChoiceClicked({
+    function onLabelEditClicked(event) {
+      event.stopPropagation();
+      scope.notifyEditClicked({
+        categoryId: getCategoryId()
+      });
+    }
+
+    function onChoiceDeleteClicked(choiceId, index) {
+      scope.notifyDeleteChoiceClicked({
+        categoryId: getCategoryId(),
+        choiceId: choiceId,
+        index: index
+      });
+    }
+
+    function onDropCallback(e, draggable) {
+      var choiceId = draggable.draggable.attr('choice-id');
+      scope.$$postDigest(function() {
+        scope.onDrop({
           categoryId: getCategoryId(),
-          choiceId: choiceId,
-          index: index
+          choiceId: choiceId
         });
-      }
+      });
+    }
 
-      function onDropCallback(e, draggable) {
-        var choiceId = draggable.draggable.attr('choice-id');
-        scope.$$postDigest(function() {
-          scope.onDrop({
-            categoryId: getCategoryId(),
-            choiceId: choiceId
-          });
-        });
-      }
+    function onLocalChoiceDragStart(choiceId, index) {
+      //nothing to do here
+    }
 
-      function onLocalChoiceDragStart(choiceId, index) {
-        //nothing to do here
-      }
+    function onLocalChoiceDragEnd(choiceId, index) {
+      scope.onChoiceDraggedAway({
+        fromCategoryId: getCategoryId(),
+        choiceId: choiceId,
+        index: index
+      });
+    }
 
-      function onLocalChoiceDragEnd(choiceId, index) {
-        scope.onChoiceDraggedAway({
-          fromCategoryId: getCategoryId(),
-          choiceId: choiceId,
-          index: index
-        });
-      }
-
-      function updateChoiceWidthInLayout(newValue, oldValue) {
-        if (newValue !== oldValue && newValue > 0) {
-          initLayout(newValue);
-        }
-      }
-
-      function initLayout(choiceWidth) {
-        /*
-        if (!layout) {
-          layout = new CompactLayout(
-            new LayoutConfig()
-            .withContainer(elem.find(".choice-container"))
-            .withItemSelector(".choice-corespring-dnd-categorize")
-            .withCellWidth(choiceWidth)
-            .value(),
-            new LayoutRunner($timeout));
-        } else {
-          layout.updateConfig(new LayoutConfig()
-            .withCellWidth(choiceWidth)
-            .value());
-        }
-        */
-      }
-
-      function onDestroy() {
-        if (layout) {
-          layout.cancel();
-        }
+    function updateChoiceWidthInLayout(newValue, oldValue) {
+      if (newValue !== oldValue && newValue > 0) {
+        initLayout(newValue);
       }
     }
 
-    function template() {
-      return [
+    function initLayout(choiceWidth) {
+      /*
+      if (!layout) {
+        layout = new CompactLayout(
+          new LayoutConfig()
+          .withContainer(elem.find(".choice-container"))
+          .withItemSelector(".choice-corespring-dnd-categorize")
+          .withCellWidth(choiceWidth)
+          .value(),
+          new LayoutRunner($timeout));
+      } else {
+        layout.updateConfig(new LayoutConfig()
+          .withCellWidth(choiceWidth)
+          .value());
+      }
+      */
+    }
+
+    function onDestroy() {
+      if (layout) {
+        layout.cancel();
+      }
+    }
+  }
+
+  function template() {
+    return [
         '<div class="category"',
         '  data-drop="true" ',
         '  jqyoui-droppable="droppableOptions"',
@@ -210,10 +216,10 @@ var category = [
         '  </div>',
         '</div>'
       ].join('');
-    }
+  }
 
-    function deleteTool() {
-      return [
+  function deleteTool() {
+    return [
         '<li class="delete-icon-button" ',
         '    ng-click="onDeleteClicked()" ' +
         '    tooltip="delete" ',
@@ -221,13 +227,6 @@ var category = [
         '    tooltip-placement="bottom">',
         '  <i class="fa fa-trash-o"></i>',
         '</li>'].join('');
-    }
+  }
 
-  }];
-
-
-exports.framework = 'angular';
-exports.directive = {
-  name: "categoryCorespringDndCategorize",
-  directive: category
-};
+}
