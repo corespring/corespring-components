@@ -94,12 +94,18 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
 
     function updateDragAndDropScope(newValue){
       if(newValue && _.isFunction($(elem).draggable)) {
-        $(elem).draggable('option', 'scope', newValue);
+        setDraggableOption('scope', newValue);
       }
     }
 
     function setRevertDuration(revertDuration) {
-      $(elem).draggable('option', 'revertDuration', revertDuration);
+      setDraggableOption('revertDuration', revertDuration);
+    }
+
+    function setDraggableOption(name, value){
+      if(_.isFunction($(elem).draggable)) {
+        $(elem).draggable('option', name, value);
+      }
     }
 
     function onStart() {
