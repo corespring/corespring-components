@@ -1,0 +1,19 @@
+/** editor placeholder */
+.component-placeholder.corespring-calculator {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.cs-calculator .icon {
+    height: 200px;
+}
+
+/* config */
+.cs-calculator-config .description {
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.cs-calculator-config .cs-calculator-row {
+    margin-bottom: 5px;
+}
