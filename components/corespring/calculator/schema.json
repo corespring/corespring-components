@@ -1,0 +1,25 @@
+{
+  "type" : "object",
+  "title" : "CoreSpring Calculator Component",
+  "properties" : {
+    "componentType" : {
+      "description" : "A required value to indicate the component type. For videos, this must be 'corespring-calculator'.",
+      "type" : "string"
+    },
+    "model" : {
+      "type" : "object",
+      "properties" : {
+        "config" : {
+          "type" : "object",
+          "required" : ["type"]
+        }
+      },
+      "required" : ["config"]
+    },
+    "title" : {
+      "description" : "A title for the interaction, displayed in the editor.",
+      "type" : "string"
+    }
+  },
+  "required" : ["componentType", "model"]
+}

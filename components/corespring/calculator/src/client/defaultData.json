@@ -1,0 +1,9 @@
+{
+  "title": "Calculator",
+  "componentType": "corespring-calculator",
+  "model": {
+    "config": {
+      "type": "basic"      
+    }
+  }
+}
