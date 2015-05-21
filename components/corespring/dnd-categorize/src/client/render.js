@@ -59,7 +59,6 @@ function renderCorespringDndCategorize(
     scope.onCategoryDeleteClicked = onCategoryDeleteClicked;
     scope.onCategoryDrop = onCategoryDrop;
     scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
-    scope.onChoiceDragStart = onChoiceDragStart;
     scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
     scope.showSeeCorrectAnswer = showSeeCorrectAnswer;
@@ -508,17 +507,6 @@ function renderCorespringDndCategorize(
       scope.activate(categoryId);
     }
 
-    function onChoiceDragStart(choiceId, $index){
-      console.log('onChoiceDragStart', choiceId, $index, scope.renderModel.dragAndDropScope);
-
-      console.log('draggable scope', elem.find('.container-choices .' + choiceId).draggable('option','scope'));
-
-      $(elem).find('.category').each(function(idx,n){
-        console.log('category', $(n));
-        console.log('droppable scope', $(n).droppable('option','scope'));
-      });
-    }
-
     function onChoiceEditClicked(choiceId) {
       scope.activate(choiceId);
 
@@ -635,7 +623,6 @@ function renderCorespringDndCategorize(
         '      ng-style="choiceStyle" ',
         '      on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
         '      on-edit-clicked="onChoiceEditClicked(choiceId)" ',
-        '      on-drag-start-now="onChoiceDragStart(choiceId, $index)" ',
         '    ></div>',
         '  </div>',
         '</div>'
