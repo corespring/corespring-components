@@ -55,7 +55,7 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
       appendTo: scope.draggedParent,
       delay: revertInvalidAnimationMs,
       revert: alwaysRevertButAnimateIfInvalid
-    }
+    };
 
     scope.canDelete = canDelete;
     scope.canEdit = canEdit;
