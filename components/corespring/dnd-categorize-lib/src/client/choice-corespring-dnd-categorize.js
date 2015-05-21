@@ -32,13 +32,14 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
   };
 
   function controller(scope) {
-    new MiniWiggiScopeExtension().withExtraFeatures(['math']).postLink(scope);
+    new MiniWiggiScopeExtension().withExtraFeatureMath().postLink(scope);
   }
 
   function link(scope, elem, attrs) {
     var log = console.log.bind(console, '[choice]');
     //log("choiceId ", attrs.choiceId, " dragAndDropScope ", attrs.dragAndDropScope);
 
+    scope.isDragging = false;
     scope.active = false;
     scope.showTools = !isCategorised() && (canEdit() || canDelete());
     scope.draggedParent = canEdit(scope.editMode) ? ".modal" : "body";
@@ -99,15 +100,29 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
     }
 
     function onStart() {
+      log('onStart');
+      scope.isDragging = true;
       scope.onDragStart({
         choiceId: attrs.choiceId
       });
     }
 
     function onStop() {
+      log('onStop');
+      scope.isDragging = false;
       scope.onDragEnd({
         choiceId: attrs.choiceId
       });
+    }
+
+    function onChoiceEditClicked(event) {
+      log('onChoiceEditClicked');
+      if(!scope.isDragging) {
+        event.stopPropagation();
+        scope.notifyEditClicked({
+          choiceId: attrs.choiceId
+        });
+      }
     }
 
     function onDeleteClicked() {
@@ -134,13 +149,6 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
 
     function isDragEnabled() {
       return scope.dragEnabled && !scope.active;
-    }
-
-    function onChoiceEditClicked(event) {
-      event.stopPropagation();
-      scope.notifyEditClicked({
-        choiceId: attrs.choiceId
-      });
     }
 
     function triggerResize() {
@@ -195,10 +203,10 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
       '        <i class="fa fa-trash-o"></i>',
       '      </li>',
       '    </ul>',
-      '    <div class="shell" ng-show="active" ng-if="canEdit()">',
+      '    <div class="shell" ng-if="canEdit()" ng-click="onChoiceEditClicked($event)">',
       choiceEditorTemplate(),
       '    </div>',
-      '    <div class="shell" ng-hide="active">',
+      '    <div class="shell" ng-if="!canEdit()">',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
@@ -220,7 +228,7 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
         '   image-service="imageService()" ',
         '   mini-wiggi-wiz="" ',
         '   ng-model="model.label" ',
-        '   placeholder="Enter a choice"',
+        '   placeholder="Enter choice here"',
         '></div>'
       ].join('');
     }

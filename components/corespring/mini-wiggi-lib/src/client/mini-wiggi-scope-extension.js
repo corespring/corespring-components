@@ -44,26 +44,38 @@ exports.factory = [
         };
       };
 
-      this.withExtraFeatures = function(extraFeatureIds){
-        this.extraFeatureIds = extraFeatureIds;
+      this.withExtraFeatureMath = function(){
+        this.extraFeatureIds = this.extraFeatureIds || [];
+        this.extraFeatureIds.push('math');
+        return this;
+      };
+
+      this.withExtraFeatureLinks = function(){
+        this.extraFeatureIds = this.extraFeatureIds || [];
+        this.extraFeatureIds.push('link');
         return this;
       };
 
       function makeExtraFeatures(extraFeatureIds) {
         extraFeatureIds = extraFeatureIds || ['math', 'link'];
-        var definitions = [];
+        var buttons = [];
         _.forEach(extraFeatureIds, function(featureId) {
           switch (featureId) {
-            case 'link':
-              definitions.push(makeLinkFeature());
-              break;
             case 'math':
-              definitions.push(makeMathJaxFeature());
+              buttons.push(new WiggiMathJaxFeatureDef());
+              break;
+            case 'link':
+              buttons.push(new WiggiLinkFeatureDef());
               break;
           }
         });
         return {
-          definitions: definitions
+          definitions: [
+            {
+              type: 'group',
+              buttons: buttons
+            }
+          ]
         };
       }
 

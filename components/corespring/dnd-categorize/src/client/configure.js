@@ -114,7 +114,7 @@ function configureCorespringDndCategorize(
       var idx = findFreeChoiceSlot();
       scope.editorModel.choices.push({
         id: makeChoiceId(idx),
-        label: 'choice',
+        label: undefined,
         moveOnDrag: false
       });
     }
