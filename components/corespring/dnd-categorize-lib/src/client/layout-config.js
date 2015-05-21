@@ -16,6 +16,11 @@ function LayoutConfig() {
     return this;
   };
 
+  this.withNumColumns = function(value) {
+    config.numColumns = value;
+    return this;
+  };
+
   this.withCellWidth = function(value) {
     config.cellWidth = value;
     return this;
@@ -23,6 +28,11 @@ function LayoutConfig() {
 
   this.withPaddingBottom = function(value) {
     config.paddingBottom = value;
+    return this;
+  };
+
+  this.withGutter = function(value) {
+    config.gutter = value;
     return this;
   };
 

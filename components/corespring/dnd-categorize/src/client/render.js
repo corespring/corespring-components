@@ -103,12 +103,12 @@ function renderCorespringDndCategorize(
 
       scope.editable = true;
       scope.data = dataAndSession.data;
-      scope.session = dataAndSession.session;
+      scope.session = dataAndSession.session || {};
       setConfig(dataAndSession.data.model);
       initLayouts();
 
       scope.$broadcast('reset');
-      scope.renderModel = prepareRenderModel(dataAndSession.data.model, dataAndSession.session);
+      scope.renderModel = prepareRenderModel(scope.data.model, scope.session);
       scope.saveRenderModel = _.cloneDeep(scope.renderModel);
       updateView();
     }
@@ -266,7 +266,9 @@ function renderCorespringDndCategorize(
         new LayoutConfig()
         .withContainer(elem.find('.container-choices'))
         .withItemSelector('.choice-corespring-dnd-categorize')
+        .withNumColumns(scope.choicesPerRow)
         .withCellWidth(calcChoiceWidth())
+        .withGutter(0) //margin of choice border
         .withPaddingBottom(7)
         .value(),
         new LayoutRunner($timeout));
@@ -323,11 +325,28 @@ function renderCorespringDndCategorize(
       renderMath();
     }
 
+    /**
+     * We start with a total width for the categories
+     * which holds numberOfCategories plus some paddings
+     * The choices should fit into the categories without
+     * resizing. They have to take paddings inside of
+     * the categories into account.
+     *
+     * @returns {number}
+     */
     function calcChoiceWidth() {
       if (!scope.renderModel.choices) {
         return 0;
       }
-      return ((elem.width() || 600) - 64) / scope.choicesPerRow;
+      var totalWidth = (elem.width() || 600);
+      totalWidth -= 2*15; //padding of the categories-holder
+      var maxChoiceWidth = totalWidth / scope.categoriesPerRow;
+      maxChoiceWidth -=2*3; //margin of category.border
+      maxChoiceWidth -=2*8; //padding of categorized choices
+      maxChoiceWidth -=2*2; //border width of categorized choices
+      //maxChoiceWidth -=2*3; //margin of choice.border
+      var totalChoiceWidth = maxChoiceWidth * scope.categoriesPerRow;
+      return totalChoiceWidth / scope.choicesPerRow;
     }
 
     function chunk(arr, chunkSize) {

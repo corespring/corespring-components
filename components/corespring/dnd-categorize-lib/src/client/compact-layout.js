@@ -7,7 +7,9 @@ exports.factory = [function() {
  * @param initialConfig:
  *  container: jquery element of the container
  *  itemSelector: string selector of an item to be laid out
+ *  numColumns: the desired number of columns
  *  cellWidth: the desired width of one column
+ *  gutter: gutter to be added to the cellWidth
  *  paddingBottom: the padding to be added to the container height
  */
 function CompactLayout(initialConfig, layoutRunner) {
@@ -15,7 +17,8 @@ function CompactLayout(initialConfig, layoutRunner) {
   var hasNewConfig = false;
   var choiceSizeCache = [];
   var config = _.assign({
-    paddingBottom: 0
+    paddingBottom: 0,
+    gutter: 0
   }, initialConfig);
 
   this.updateConfig = updateConfig;
@@ -34,8 +37,8 @@ function CompactLayout(initialConfig, layoutRunner) {
       return;
     }
 
-    var numColumns = Math.floor(config.container.width() / config.cellWidth);
-    if (numColumns === 0) {
+    var numColumns = config.numColumns;
+    if (isNaN(numColumns) || numColumns === 0) {
       return;
     }
 
@@ -52,7 +55,7 @@ function CompactLayout(initialConfig, layoutRunner) {
         $(choice).css({
           position: 'absolute',
           top: getChoiceTop(colChoices, choiceIndex),
-          left: config.cellWidth * colIndex
+          left: (config.cellWidth + config.gutter) * colIndex
         });
       }, this);
     }, this);
@@ -110,7 +113,8 @@ function CompactLayout(initialConfig, layoutRunner) {
   function updateConfig(newConfig) {
     hasNewConfig = true;
     config = _.assign({
-      paddingBottom: 0
+      paddingBottom: 0,
+      gutter: 0
     }, config, newConfig);
   }
 

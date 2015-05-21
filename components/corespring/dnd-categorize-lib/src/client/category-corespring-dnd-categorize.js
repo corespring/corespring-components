@@ -152,6 +152,7 @@ function CategoryCorespringDndCategorize(
           new LayoutConfig()
           .withContainer(elem.find(".choice-container"))
           .withItemSelector(".choice-corespring-dnd-categorize")
+          .withNumColumns(1)
           .withCellWidth(choiceWidth)
           .value(),
           new LayoutRunner($timeout));
