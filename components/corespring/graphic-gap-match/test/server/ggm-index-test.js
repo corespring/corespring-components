@@ -75,7 +75,7 @@ component = {
   }
 };
 
-describe.only('hotspot', function() {
+describe('hotspot', function() {
 
   describe('empty response warning', function() {
     it('should respond with warning when empty response is given', function() {
@@ -121,6 +121,29 @@ describe.only('hotspot', function() {
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
       expect(outcome).to.have.property("correctness").eql("incorrect");
     });
+
+    it('should set correctNum to the number of correct answers', function() {
+      var answer = [
+        {id: "c1", left: 25, top: 25},
+        {id: "c2", left: 25, top: 145}
+      ];
+      var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
+      expect(outcome.correctNum).to.eql(2);
+
+      answer = [
+        {id: "c1", left: 25, top: 25},
+        {id: "c2", left: 5, top: 145}
+      ];
+      outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
+      expect(outcome.correctNum).to.eql(1);
+
+      answer = [
+        {id: "c1", left: 5, top: 25},
+        {id: "c2", left: 5, top: 145}
+      ];
+      outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
+      expect(outcome.correctNum).to.eql(0);
+    });
   });
 
   describe('feedback', function() {
@@ -152,7 +175,7 @@ describe.only('hotspot', function() {
     });
   });
 
-  describe.only('choices belonging to multiple hotspots', function() {
+  describe('choices belonging to multiple hotspots', function() {
     var otherComponent;
     beforeEach(function() {
       otherComponent = _.extend(component, {"correctResponse": [

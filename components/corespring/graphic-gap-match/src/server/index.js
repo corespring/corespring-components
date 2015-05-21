@@ -5,8 +5,6 @@ var keys = fb.keys;
 exports.keys = keys;
 
 exports.createOutcome = function(question, answer, settings) {
-  console.log('a', answer);
-
   var isChoiceInHotspot = function(choice, hotspot) {
     var choiceWidth = 10;
     var choiceHeight = 10;
@@ -76,15 +74,27 @@ exports.createOutcome = function(question, answer, settings) {
     throw "Error - the uids must match";
   }
 
-  mutableCorrectResponse = _.cloneDeep(question.correctResponse);
-  var isCorrect = answer.length === question.correctResponse.length && _.every(answer, isAnswerCorrect);
+  var withCleanMutableCorrectResponse = function(fn) {
+    mutableCorrectResponse = _.cloneDeep(question.correctResponse);
+    return fn();
+  };
+
+  var correctlyAnswered = withCleanMutableCorrectResponse(function() {
+    return _.filter(answer, isAnswerCorrect);
+  });
+
+  var isCorrect = withCleanMutableCorrectResponse(function() {
+    return answer.length === question.correctResponse.length && _.every(answer, isAnswerCorrect);
+  });
+
   var isPartiallyCorrect = false;
 
   var response = {
     correctness: isCorrect ? "correct" : "incorrect",
     correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
     correctResponse: question.correctResponse,
-    score: isCorrect ? 1 : 0
+    score: isCorrect ? 1 : 0,
+    correctNum: (correctlyAnswered || []).length
   };
 
   mutableCorrectResponse = _.cloneDeep(question.correctResponse);
