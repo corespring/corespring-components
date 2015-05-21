@@ -83,14 +83,14 @@ exports.factory = [
         return {
           type: 'group',
           buttons: [new WiggiMathJaxFeatureDef()]
-        }
+        };
       }
 
       function makeLinkFeature() {
         return {
           type: 'group',
           buttons: [new WiggiLinkFeatureDef()]
-        }
+        };
       }
     }
 

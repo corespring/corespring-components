@@ -8,7 +8,7 @@ exports.directive = {
     'LayoutRunner',
     'MiniWiggiScopeExtension',
     CategoryCorespringDndCategorize]
-}
+};
 
 function CategoryCorespringDndCategorize(
   $timeout,
@@ -147,7 +147,6 @@ function CategoryCorespringDndCategorize(
     }
 
     function initLayout(choiceWidth) {
-      /*
       if (!layout) {
         layout = new CompactLayout(
           new LayoutConfig()
@@ -161,7 +160,6 @@ function CategoryCorespringDndCategorize(
           .withCellWidth(choiceWidth)
           .value());
       }
-      */
     }
 
     function onDestroy() {
