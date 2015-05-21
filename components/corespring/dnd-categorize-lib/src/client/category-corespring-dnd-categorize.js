@@ -27,7 +27,7 @@ function CategoryCorespringDndCategorize(
     scope: {
       category: '=',
       choiceWidth: '@',
-      dragAndDropScope: '@',
+      dragAndDropScope: '=',
       dragEnabled: '=',
       isEditMode: '=?editMode',
       notifyDeleteChoiceClicked: '&onDeleteChoiceClicked',
@@ -86,6 +86,8 @@ function CategoryCorespringDndCategorize(
     }
 
     function droppableJqueryOptions() {
+      log('droppableJqueryOptions', getCategoryId(), scope.dragAndDropScope );
+
       return {
         activeClass: 'category-active',
         distance: 5,
@@ -200,7 +202,7 @@ function CategoryCorespringDndCategorize(
         '        <div choice-corespring-dnd-categorize="true" ',
         '           choice-id="{{choice.model.id}}" ',
         '           correctness="{{choice.correctness}}" ',
-        '           drag-and-drop-scope="{{dragAndDropScope}}"',
+        '           drag-and-drop-scope="dragAndDropScope"',
         '           drag-enabled="dragEnabled" ',
         '           edit-mode="choiceEditMode" ',
         '           model="choice.model"',
