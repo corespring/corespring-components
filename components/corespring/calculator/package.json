@@ -1,0 +1,13 @@
+{
+  "libraries": [
+  ],
+  "dependencies" : {
+    "client" : {
+    }
+  },  
+  "name": "calculator",
+  "title": "Calculator",
+  "purpose" : "widget",
+  "organization": "corespring",
+  "released": true
+}
