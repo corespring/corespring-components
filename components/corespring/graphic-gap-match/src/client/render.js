@@ -244,7 +244,10 @@ var main = [
         '           data-drop="true"',
         '           jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
         '        <svg ng-if="model.config.showHotspots" class="hotspots">',
-        '          <rect ng-repeat="hotspot in model.hotspots" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '          <g ng-repeat="hotspot in model.hotspots">',
+        '            <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '            <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '          </g>',
         '        </svg>',
         '        <div class="dropped choice {{correctClass(choice)}}"',
         '             ng-repeat="choice in droppedChoices"',
@@ -296,10 +299,20 @@ var coordsForHotspot = [
           var populate = scope.populate || "tag";
           var coords = hotspot.coords;
           if (populate === "tag") {
-            $(element).attr('x', coords.left);
-            $(element).attr('y', coords.top);
-            $(element).attr('width', coords.width);
-            $(element).attr('height', coords.height);
+            if (hotspot.shape == 'rect') {
+              $(element).attr('x', coords.left);
+              $(element).attr('y', coords.top);
+              $(element).attr('width', coords.width);
+              $(element).attr('height', coords.height);
+            }
+            if (hotspot.shape == 'poly') {
+              var points = [];
+              _.each(hotspot.coords, function(c) {
+                points.push(c.x);
+                points.push(c.y);
+              });
+              $(element).attr('points', points.join(','));
+            }
           } else {
             var style = ["left: " + coords.left + "px",
               "top: " + coords.top + "px",

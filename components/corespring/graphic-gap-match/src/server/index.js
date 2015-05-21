@@ -4,12 +4,40 @@ var keys = fb.keys;
 
 exports.keys = keys;
 
+exports.isPointInsidePolygon = function (point, vs) {
+  // ray-casting algorithm based on
+  // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+  var x = point[0], y = point[1];
+
+  var inside = false;
+  for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+    var xi = vs[i][0], yi = vs[i][1];
+    var xj = vs[j][0], yj = vs[j][1];
+
+    var intersect = ((yi > y) != (yj > y))
+      && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+
+  return inside;
+};
+
+
+
 exports.createOutcome = function(question, answer, settings) {
   var isChoiceInHotspot = function(choice, hotspot) {
-    var choiceWidth = 10;
-    var choiceHeight = 10;
+    var answerForChoice = _.find(answer, function(a) { return a.id === choice.id });
+    var choiceWidth = (answerForChoice && answerForChoice.width) || 10;
+    var choiceHeight = (answerForChoice && answerForChoice.height) || 10;
     if (hotspot.shape === 'rect') {
       return choice.left >= hotspot.coords.left && choice.top >= hotspot.coords.top && (choice.left + choiceWidth) <= (hotspot.coords.left + hotspot.coords.width) && (choice.top + choiceHeight) <= (hotspot.coords.top + hotspot.coords.height);
+    } else if (hotspot.shape === 'poly') {
+      var polygonPoints = _.map(hotspot.coords, function(c) {
+        return [c.x, c.y];
+      });
+      return exports.isPointInsidePolygon([choice.left, choice.top], polygonPoints) &&
+        exports.isPointInsidePolygon([choice.left + choiceWidth, choice.top + choiceHeight], polygonPoints);
     }
   };
 

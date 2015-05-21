@@ -77,6 +77,29 @@ component = {
 
 describe('hotspot', function() {
 
+  describe.only('point inside polygon checking', function() {
+    var polygon;
+    beforeEach(function() {
+      polygon = [[155,2],[105,11],[84,18],[60,27],[34,41],[23,54],[15,64],[8,74],[3,87],[3,95],[3,105],[5,113],[12,126],[19,139],[31,151],[45,163],[69,177],[82,183],[93,186],[106,188],[118,192],[140,194],[159,197],[173,197],[194,196],[212,194],[229,192],[246,187],[263,183],[283,176],[298,167],[315,156],[328,141],[337,130],[345,112],[347,97],[344,79],[338,68],[333,59],[330,55],[325,50],[319,44],[308,36],[302,32],[292,27],[284,24],[274,19],[265,16],[251,13],[236,8],[227,6],[213,4],[201,2],[190,1],[173,0],[165,0],[155,2]];
+    });
+
+    it('should return true if point is inside polygon', function () {
+      var isInside = server.isPointInsidePolygon([61, 27], polygon);
+      expect(isInside).to.eql(true);
+
+      isInside = server.isPointInsidePolygon([283, 171], polygon);
+      expect(isInside).to.eql(true);
+    });
+
+    it('should return false if point is outside polygon', function () {
+      var isInside = server.isPointInsidePolygon([60, 26], polygon);
+      expect(isInside).to.eql(false);
+
+      isInside = server.isPointInsidePolygon([288, 173], polygon);
+      expect(isInside).to.eql(false);
+    });
+  });
+
   describe('empty response warning', function() {
     it('should respond with warning when empty response is given', function() {
       var outcome = server.createOutcome(component, [], helper.settings(true, true, true));
