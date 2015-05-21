@@ -81,7 +81,7 @@ describe('feedback popover', function() {
       scope.$digest();
       expect(element).toBeDefined();
       popoverCall = findPopoverCall();
-      expect(popoverCall.content).toBe("Please select your answer and press submit.");
+      expect(popoverCall.content).toBe("You did not enter a response.");
     });
 
     it('popover class is according to correctness', function() {
