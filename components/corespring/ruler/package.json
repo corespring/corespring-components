@@ -1,0 +1,13 @@
+{
+  "libraries": [
+  ],
+  "dependencies" : {
+    "client" : {
+    }
+  },  
+  "name": "ruler",
+  "title": "Ruler",
+  "purpose" : "widget",
+  "organization": "corespring",
+  "released": true
+}
