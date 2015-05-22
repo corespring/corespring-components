@@ -163,9 +163,25 @@ var main = [
         var offsetX = ev.clientX - ui.helper.offset().left;
         var offsetY = ev.clientY - ui.helper.offset().top;
         var imageOffset = $(element).find('.background-image').offset();
+        var imageWidth = $(element).find('.background-image').width();
+        var imageHeight = $(element).find('.background-image').height();
+
+        var choiceWidth = ui.helper.outerWidth();
+        var choiceHeight = ui.helper.outerHeight();
+
+        var constrain = function(value, range, maxValue) {
+          if (value < 0) {
+            return (1 + Math.random() / 2);
+          }
+          if ((value + range) > maxValue) {
+            return maxValue - range - (1 + Math.random() / 2);
+          }
+          return value;
+        };
+
         var newChoice = _.extend(_.cloneDeep(scope.draggedChoice), {
-          left: ev.clientX - imageOffset.left - offsetX - MARGIN,
-          top: ev.clientY - imageOffset.top - offsetY - MARGIN,
+          left: constrain(ev.clientX - imageOffset.left - offsetX - MARGIN, choiceWidth, imageWidth),
+          top: constrain(ev.clientY - imageOffset.top - offsetY - MARGIN, choiceHeight, imageHeight),
           width: ui.helper.outerWidth(),
           height: ui.helper.outerHeight()
         });
@@ -252,7 +268,7 @@ var main = [
         '        </svg>',
         '        <div class="dropped choice {{correctClass(choice)}}"',
         '             ng-repeat="choice in droppedChoices"',
-        '             style="left: {{choice.left}}px; top: {{choice.top}}px"',
+        '             ng-style="{left: choice.left, top: choice.top}"',
         '             data-drag="editable"',
         '             jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
         '             data-jqyoui-options="draggableJquiOptions"',
