@@ -24,6 +24,54 @@ exports.isPointInsidePolygon = function (point, vs) {
   return inside;
 };
 
+exports.getOverlappingRectangle = function(rect1, rect2) {
+  
+  var r1 = _.cloneDeep(rect1);
+  var r2 = _.cloneDeep(rect2);
+  
+  r1.bottom = r1.top + r1.height;
+  r1.right = r1.left + r1.width;
+  
+  r2.bottom = r2.top + r2.height;
+  r2.right = r2.left + r2.width;
+  
+  var overlappingRectangle = {left: NaN, top: NaN, width: 0, height: 0};
+
+  overlappingRectangle.right = Math.min(r1.right, r2.right);
+  if (r2.left >= r1.left && r2.left <= r1.right) {
+    overlappingRectangle.left = r2.left;
+  } else if (r1.left >= r2.left && r1.left <= r2.right) {
+    overlappingRectangle.left = r1.left;
+  }
+
+  overlappingRectangle.bottom = Math.min(r1.bottom, r2.bottom);
+  if (r2.top >= r1.top && r2.top <= r1.bottom) {
+    overlappingRectangle.top = r2.top;
+  } else if (r1.top >= r2.top && r1.top <= r2.bottom) {
+    overlappingRectangle.top = r1.top;
+  }
+
+  if (!isNaN(overlappingRectangle.left)) {
+    overlappingRectangle.width = overlappingRectangle.right - overlappingRectangle.left;
+  }
+  if (!isNaN(overlappingRectangle.top)) {
+    overlappingRectangle.height = overlappingRectangle.bottom - overlappingRectangle.top;
+  }
+  delete overlappingRectangle.right;
+  delete overlappingRectangle.bottom;
+
+
+  return overlappingRectangle;
+};
+
+exports.getOverlappingPercentage = function (rect1, rect2) {
+  var r1Area = rect1.width * rect1.height;
+  var r2Area = rect2.width * rect2.height;
+  var overlappingRectangle = exports.getOverlappingRectangle(rect1, rect2);
+  var overlapArea = overlappingRectangle.width * overlappingRectangle.height;
+  var smallerRectArea = Math.min(r1Area, r2Area);
+  return overlapArea / smallerRectArea;
+};
 
 exports.createOutcome = function (question, answer, settings) {
   var isChoiceInHotspot = function (choice, hotspot) {
@@ -33,7 +81,11 @@ exports.createOutcome = function (question, answer, settings) {
     var choiceWidth = (answerForChoice && answerForChoice.width) || 10;
     var choiceHeight = (answerForChoice && answerForChoice.height) || 10;
     if (hotspot.shape === 'rect') {
-      return choice.left >= hotspot.coords.left && choice.top >= hotspot.coords.top && (choice.left + choiceWidth) <= (hotspot.coords.left + hotspot.coords.width) && (choice.top + choiceHeight) <= (hotspot.coords.top + hotspot.coords.height);
+      var choiceRect = {left: choice.left, top: choice.top, width: choiceWidth, height: choiceHeight};
+      var hotspotRect = hotspot.coords;
+      var perc = exports.getOverlappingPercentage(choiceRect, hotspotRect);
+      // Choice is considered to be in the hotspot if overlap is > 70% of the choice size
+      return perc > 0.7;
     } else if (hotspot.shape === 'poly') {
       var polygonPoints = _.map(hotspot.coords, function (c) {
         return [c.x, c.y];
