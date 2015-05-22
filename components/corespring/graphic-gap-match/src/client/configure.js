@@ -1,7 +1,6 @@
 var main = [
-  '$log', 'ChoiceTemplates',
-  function($log, ChoiceTemplates) {
-
+  '$log', 'ChoiceTemplates','ComponentDefaultData',
+  function($log, ChoiceTemplates, ComponentDefaultData) {
 
     var display = [
       '<div>',
@@ -42,7 +41,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-        scope.defaults = scope.data.defaultData.model.config;
+        scope.defaults = ComponentDefaultData.getDefaultData('corespring-graphic-gap-match', 'model.config');
         ChoiceTemplates.extendScope(scope, 'corespring-graphic-gap-match');
         scope.containerBridge = {
           setModel: function(model) {

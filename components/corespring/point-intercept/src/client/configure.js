@@ -3,7 +3,8 @@
 var main = [
   'ServerLogic',
   'ChoiceTemplates',
-  function(ServerLogic, ChoiceTemplates) {
+  'ComponentDefaultData',
+  function(ServerLogic, ChoiceTemplates, ComponentDefaultData) {
 
     this.inline = function(type, value, body, attrs) {
       return ['<label class="' + type + '-inline">',
@@ -169,8 +170,8 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
+        scope.defaults = ComponentDefaultData.getDefaultData('corespring-point-intercept', 'model.config');
         ChoiceTemplates.extendScope(scope, 'corespring-point-intercept');
-        scope.defaults = scope.data.defaultData.model.config;
         var server = ServerLogic.load('corespring-point-intercept');
         scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
         scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;

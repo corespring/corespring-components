@@ -1,5 +1,5 @@
-var main = [
-  function() {
+var main = ['ComponentDefaultData',
+  function(ComponentDefaultData) {
 
     this.inline = function(type, value, body, attrs) {
       return ['<label class="' + type + '-inline">',
@@ -118,7 +118,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-        scope.defaults = scope.data.defaultData.model.config;
+        scope.defaults = ComponentDefaultData.getDefaultData('corespring-line', 'model.config');
         scope.defaultCorrectFeedback = "Correct!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
         scope.containerBridge = {
@@ -128,7 +128,7 @@ var main = [
             model.model.config = model.model.config || {};
 
             scope.correctResponse = (scope.fullModel) ? scope.removeYEqualsPrefix(scope.fullModel.correctResponse) : undefined;
-            scope.initialCurve = (scope.fullModel && scope.fullModel.model && scope.fullModel.model.config) ?
+            scope.initialCurve = (scope.fullModel && scope.fullModel.model && scope.fullModel.model.config && scope.fullModel.model.config.initialCurve) ?
               scope.removeYEqualsPrefix(scope.fullModel.model.config.initialCurve) : undefined;
 
             var labels = (model.model.config.pointLabels || []);
@@ -154,7 +154,11 @@ var main = [
         };
 
         scope.prefixWithYEquals = function(expression) {
-          return (expression.replace(/ /g,'').indexOf('y=') === 0) ? expression : ("y=" + expression);
+          if(expression) {
+            return (expression.replace(/ /g, '').indexOf('y=') === 0) ? expression : ("y=" + expression);
+          } else {
+            return '';
+          }
         };
 
         scope.$watch('correctResponse', function(newValue) {
