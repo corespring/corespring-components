@@ -65,6 +65,7 @@ var main = [
           scope.droppedChoices = [];
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.response = undefined;
+          scope.stack = [_.first(scope.stack)];
         },
 
         isAnswerEmpty: function() {
@@ -233,8 +234,8 @@ var main = [
       template: [
         '<div class="view-graphic-gap-match">',
         '  <div class="button-row">',
-        '    <button class="btn btn-default" ng-click="undo()">Undo</button>',
-        '    <button class="btn btn-default" ng-click="startOver()">Start Over</button>',
+        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="undo()">Undo</button>',
+        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="startOver()">Start Over</button>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div class="main-container {{model.config.choiceAreaPosition}}">',

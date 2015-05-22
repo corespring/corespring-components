@@ -168,6 +168,17 @@ describe('corespring:graphic-gap-match:render', function() {
       expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
     });
+
+    it('reset empties undo stack', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      scope.droppedChoices.push(scope.choices.pop());
+      scope.$digest();
+      scope.droppedChoices.push(scope.choices.pop());
+      scope.$digest();
+      container.elements['1'].reset();
+      expect(scope.stack.length).toEqual(1);
+    });
   });
 
 describe('dragging choices', function() {
