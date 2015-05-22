@@ -323,6 +323,7 @@ function configureCorespringDndCategorize(
         '    class="form-control"',
         '    ng-options="o for o in choicesPerRowOptions | filter:geThanCategoriesFilter">',
         '  </select>',
+        '  <i>Display of number of choices per row may not reflect in editor </i>',
         '</div>'
       ].join('');
     }

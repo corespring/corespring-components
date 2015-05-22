@@ -24,7 +24,28 @@
         "label": "Category 2"
       }
     ],
-    "choices": [ ],
+    "choices": [
+      {
+        "id": "choice_1",
+        "label": "",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_2",
+        "label": "",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_3",
+        "label": "",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_4",
+        "label": "",
+        "moveOnDrag": false
+      }
+    ],
     "config": {
       "shuffle": false,
       "answerAreaPosition": "below",
