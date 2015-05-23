@@ -24,6 +24,10 @@
       display: table;
       border-spacing: 5px;
 
+      .choice img {
+        max-width: 120px;
+      }
+
       .answers {
         display: table-cell;
       }
@@ -89,7 +93,8 @@
 
     &.top, &.bottom {
       .choice-wrapper {
-        float: left;
+        display: inline-block;
+        vertical-align: top;
       }
     }
 
@@ -104,7 +109,8 @@
 
   .see-answer-panel {
     .choice {
-      margin: 3px;
+      margin-right: 3px;
+      margin-bottom: 3px;
       &.correct {
         position: relative;
       }
@@ -135,10 +141,6 @@
     border-radius: 4px;
     display: inline-block;
     cursor: pointer;
-
-    img {
-      max-width: 120px;
-    }
 
     &.placeholder {
       visibility: hidden;
