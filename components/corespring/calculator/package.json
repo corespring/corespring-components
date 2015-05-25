@@ -1,5 +1,9 @@
 {
   "libraries": [
+    {
+      "name": "calculator-lib",
+      "organization": "corespring"
+    }
   ],
   "dependencies" : {
     "client" : {
