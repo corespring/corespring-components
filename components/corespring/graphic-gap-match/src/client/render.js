@@ -282,16 +282,20 @@ var main = [
         '  <div feedback="response.feedback.message" correct-class="{{response.correctClass}}"></div>',
         '  <div see-answer-panel ng-if="response && response.correctness === \'incorrect\'">',
         '    <div class="background-image">',
+        '      <svg class="hotspots">',
+        '        <g ng-repeat="hotspot in model.hotspots">',
+        '          <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '          <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '        </g>',
+        '      </svg>',
         '      <div ng-repeat="hotspot in model.hotspots"',
         '           coords-for-hotspot="hotspot"',
         '           populate="style"',
-        '           class="hotspot"',
-        '           ng-class="{withBorder: model.config.showHotspots}">',
+        '           class="hotspot">',
         '        <div class="choice correct"',
         '             ng-repeat="choice in correctAnswerForHotspot(hotspot)"',
         '             ng-bind-html-unsafe="choice.label">',
         '        </div>',
-
         '      </div>',
         '      <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}" />',
         '    </div>',
@@ -330,11 +334,25 @@ var coordsForHotspot = [
               $(element).attr('points', points.join(','));
             }
           } else {
-            var style = ["left: " + coords.left + "px",
-              "top: " + coords.top + "px",
-              "width: " + coords.width + "px",
-              "height: " + coords.height + "px"
-            ].join(';');
+            var style;
+            if (hotspot.shape === 'rect') {
+              style = ["left: " + coords.left + "px",
+                "top: " + coords.top + "px",
+                "width: " + coords.width + "px",
+                "height: " + coords.height + "px"
+              ].join(';');
+            }
+            else {
+              console.log('faszom',scope.choices);
+              var leftTopMostPoints = _.min(hotspot.coords, function(c) {
+                return c.x + c.y;
+              });
+
+              style = ["left: " + (leftTopMostPoints.x + 5) + "px",
+                "top: " + (leftTopMostPoints.y + 5) + "px"
+              ].join(';');
+
+            }
             $(element).attr('style', style);
           }
         }
