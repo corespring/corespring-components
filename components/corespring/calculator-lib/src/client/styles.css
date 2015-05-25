@@ -1,0 +1,63 @@
+.calculator {
+  padding:10px;
+}
+
+.basic {
+  width: 242px;
+  height: 220px;
+}
+
+.scientific {
+  
+}
+
+.graphing {
+  
+}
+
+.results {	
+	padding-bottom: 10px;
+}
+
+.results input {	
+	width: 212px;
+}
+
+.buttons-panel {	
+	margin: 0;
+	padding: 0;
+}
+
+.left {
+	float: left;
+	width: 160px;
+}
+
+.clear-pad {
+	width: 160px;
+	margin: 0;
+}
+
+.backspace-button {
+	width: 105px;
+}
+
+.clear-button {
+	width: 50px;
+}
+
+.numbers-pad {
+	width: 160px;
+	margin-top: 10px;
+}
+
+.number-button {
+	width: 50px;
+	margin-bottom: 10px;
+}
+
+.basic-functions-pad {
+	float: right;
+	width: 60px;
+	margin-top: 0;
+}
