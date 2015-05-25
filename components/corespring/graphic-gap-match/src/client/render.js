@@ -343,7 +343,6 @@ var coordsForHotspot = [
               ].join(';');
             }
             else {
-              console.log('faszom',scope.choices);
               var leftTopMostPoints = _.min(hotspot.coords, function(c) {
                 return c.x + c.y;
               });
