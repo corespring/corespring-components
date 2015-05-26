@@ -320,7 +320,7 @@ function renderCorespringDndCategorize(
       //in editor we need some space to show all the tools
       //so we limit the number of choices per row to 4
       scope.choiceStyle = {
-        width: (100 / (scope.isEditMode ? Math.min(4, choicesPerRow) : choicesPerRow)) + '%'
+        width: scope.choiceWidth + 'px'
       };
 
       updateLayoutConfig(scope.choiceWidth);
@@ -346,9 +346,13 @@ function renderCorespringDndCategorize(
       maxChoiceWidth -=2*3; //margin of category.border
       maxChoiceWidth -=2*8; //padding of categorized choices
       maxChoiceWidth -=2*2; //border width of categorized choices
-      //maxChoiceWidth -=2*3; //margin of choice.border
-      var totalChoiceWidth = maxChoiceWidth * scope.categoriesPerRow;
-      return totalChoiceWidth / scope.choicesPerRow;
+      maxChoiceWidth -=2*3; //margin of choice.border
+      if(scope.choicesPerRow <= scope.categoriesPerRow) {
+        return maxChoiceWidth;
+      } else {
+        var totalChoiceWidth = maxChoiceWidth * scope.categoriesPerRow;
+        return totalChoiceWidth / (scope.isEditMode ? Math.min(4,scope.choicesPerRow) : scope.choicesPerRow);
+      }
     }
 
     function chunk(arr, chunkSize) {
