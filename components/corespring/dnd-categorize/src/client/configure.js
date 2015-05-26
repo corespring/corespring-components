@@ -36,8 +36,6 @@ function configureCorespringDndCategorize(
     scope.addCategory = addCategory;
     scope.addChoice = addChoice;
     scope.deactivate = deactivate;
-    scope.geThanCategoriesFilter = geThanCategoriesFilter;
-    scope.onChangeCategoriesPerRow = onChangeCategoriesPerRow;
 
     scope.$watch('editorModel', _.debounce(updateModel, 100), true);
     scope.$watch('model', renderMath, true);
@@ -203,24 +201,6 @@ function configureCorespringDndCategorize(
       return 'choice_' + slot;
     }
 
-    function geThanCategoriesFilter(choicesPerRow) {
-      return choicesPerRow >= scope.model.config.categoriesPerRow;
-    }
-
-    function onChangeCategoriesPerRow() {
-      ensureChoicesFitIntoCategories();
-    }
-
-    /**
-     * The width of the category area and the width of the choice area are
-     * roughly the same.
-     */
-    function ensureChoicesFitIntoCategories() {
-      if (scope.model.config.choicesPerRow < scope.model.config.categoriesPerRow) {
-        scope.model.config.choicesPerRow = scope.model.config.categoriesPerRow;
-      }
-    }
-
     function deactivate() {
       scope.$broadcast('activate', 'none');
     }
@@ -313,7 +293,6 @@ function configureCorespringDndCategorize(
         '  Max Number of categories per row',
         '  <select ng-model="model.config.categoriesPerRow" ',
         '     class="form-control" ',
-        '    ng-change="onChangeCategoriesPerRow()"',
         '     ng-options="o for o in categoriesPerRowOptions">',
         '  </select>',
         '</div>',
@@ -321,7 +300,7 @@ function configureCorespringDndCategorize(
         '  Max Number of choices per row',
         '  <select ng-model="model.config.choicesPerRow" ',
         '    class="form-control"',
-        '    ng-options="o for o in choicesPerRowOptions | filter:geThanCategoriesFilter">',
+        '    ng-options="o for o in choicesPerRowOptions">',
         '  </select>',
         '  <i>Display of number of choices per row may not reflect in editor </i>',
         '</div>'
