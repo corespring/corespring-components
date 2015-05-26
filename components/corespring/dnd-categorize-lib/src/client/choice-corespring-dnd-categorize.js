@@ -61,7 +61,6 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
     scope.canDelete = canDelete;
     scope.canEdit = canEdit;
     scope.isDragEnabled = isDragEnabled;
-    scope.isEditing = isEditing;
     scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.onDeleteClicked = onDeleteClicked;
     scope.onStartDragging = onStartDragging;
@@ -153,10 +152,6 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       return _.contains(scope.editMode, 'editable') || _.contains(scope.editMode, 'editing');
     }
 
-    function isEditing() {
-      return _.contains(scope.editMode, 'editing');
-    }
-
     function canDelete() {
       return _.contains(scope.editMode, 'delete');
     }
@@ -177,9 +172,6 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       }
       if (scope.canEdit()) {
         classes.push('editable');
-      }
-      if (scope.isEditing()) {
-        classes.push('editing');
       }
       if (scope.canDelete()) {
         classes.push('delete');

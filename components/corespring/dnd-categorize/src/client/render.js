@@ -63,7 +63,6 @@ function renderCorespringDndCategorize(
     scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
     scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
-    scope.showSeeCorrectAnswer = showSeeCorrectAnswer;
     scope.revertToState = revertToState;
 
     scope.containerBridge = {
@@ -124,9 +123,7 @@ function renderCorespringDndCategorize(
     function prepareRenderModel(model, session) {
       var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
 
-      var choices = model.config.shuffle ?
-        _.shuffle(model.choices) :
-        _.take(model.choices, all);
+      var choices = model.config.shuffle ? _.shuffle(model.choices) : _.take(model.choices, all);
       var allChoices = _.take(choices, all);
       var categories = _.map(model.categories, wrapCategoryModel);
       if (session.answers) {
@@ -250,7 +247,7 @@ function renderCorespringDndCategorize(
     function callAnswerChangedHandlerIfAnswersHaveChanged() {
       if (_.isFunction(scope.answerChangedCallback)) {
         var session = getSession();
-        if (!_.equal(session, lastSession)) {
+        if (!_.isEqual(session, lastSession)) {
           lastSession = session;
           scope.answerChangedCallback();
         }
@@ -434,7 +431,7 @@ function renderCorespringDndCategorize(
       _.remove(scope.renderModel.choices, byId(choiceId));
       _.forEach(scope.renderModel.categories, function(category) {
         if (category) {
-          _.remove(category.choices, byId(choiceId));
+          _.remove(category.choices, byModelId(choiceId));
         }
       });
     }
@@ -495,19 +492,9 @@ function renderCorespringDndCategorize(
       scope.isDragEnabledFromCategory = scope.isDragEnabled && !scope.isEditMode;
     }
 
-    function showSeeCorrectAnswer(response) {
-      if (!response) {
-        return false;
-      }
-      return response.correctness !== 'correct';
-    }
-
     function getEditMode(choice) {
       if (!scope.isEditMode) {
         return '';
-      }
-      if (choice === scope.editedChoice) {
-        return 'editing';
       }
       return 'editable';
     }
@@ -518,25 +505,6 @@ function renderCorespringDndCategorize(
 
     function onChoiceEditClicked(choiceId) {
       scope.activate(choiceId);
-
-      scope.editedChoice = _.find(scope.renderModel.choices, byId(choiceId));
-
-      function choiceElement() {
-        var choiceElementSelector = '.container-choices [choice-id="' + choiceId + '"]';
-        return elem.find(choiceElementSelector);
-      }
-
-      function exitChoiceEditing(e) {
-        if (!clickedOnChoice(e) &&
-          scope.editedChoice && scope.editedChoice.id === choiceId) {
-          scope.editedChoice = null;
-        }
-      }
-
-      function clickedOnChoice(e) {
-        var $target = $(e.target);
-        return choiceElement().has($target).length === 0;
-      }
     }
 
     function revertToState(state) {
