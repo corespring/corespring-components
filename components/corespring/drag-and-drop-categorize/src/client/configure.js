@@ -183,7 +183,7 @@ var main = [
 
     return {
       restrict: "E",
-      scope: "isolate",
+      scope: {},
       template: [
         '<div class="drag-and-drop-config-panel drag-and-drop-categorize-config-panel" choice-template-controller="">',
         '  <div navigator-panel="Design">',

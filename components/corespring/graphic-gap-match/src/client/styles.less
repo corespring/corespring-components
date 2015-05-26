@@ -24,6 +24,10 @@
       display: table;
       border-spacing: 5px;
 
+      .choice img {
+        max-width: 120px;
+      }
+
       .answers {
         display: table-cell;
       }
@@ -69,9 +73,6 @@
       position: absolute;
       stroke: @hotspot-border-color;
       stroke-width: 2px;
-      &.withBorder {
-        .hotspot-border();
-      }
     }
   }
 
@@ -89,7 +90,8 @@
 
     &.top, &.bottom {
       .choice-wrapper {
-        float: left;
+        display: inline-block;
+        vertical-align: top;
       }
     }
 
@@ -104,7 +106,8 @@
 
   .see-answer-panel {
     .choice {
-      margin: 3px;
+      margin-right: 6px;
+      margin-bottom: 6px;
       &.correct {
         position: relative;
       }
@@ -134,12 +137,7 @@
     border: 1px solid #979797;
     border-radius: 4px;
     display: inline-block;
-    padding: 5px;
     cursor: pointer;
-
-    img {
-      max-width: 120px;
-    }
 
     &.placeholder {
       visibility: hidden;
@@ -153,6 +151,16 @@
       position: absolute;
       cursor: auto;
       .correct-input();
+
+      &:before {
+        font-family: FontAwesome;
+        content: '\f111';
+        color: white;
+        position: absolute;
+        right: -4px;
+        top: -8px;
+        font-size: 17px
+      }
 
       &:after {
         font-family: FontAwesome;
@@ -169,6 +177,16 @@
       position: absolute;
       cursor: auto;
       .incorrect-input();
+      &:before {
+        font-family: FontAwesome;
+        content: '\f111';
+        color: white;
+        position: absolute;
+        right: -4px;
+        top: -8px;
+        font-size: 17px
+      }
+
       &:after {
         font-family: FontAwesome;
         content: '\f057';

@@ -5,12 +5,12 @@ var main = [
 
   function() {
     return {
-      scope: 'isolate',
+      scope: {},
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {},
       template: [
-      ].join("")
+      ].join('')
     };
   }
 ];

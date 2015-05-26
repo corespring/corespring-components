@@ -96,7 +96,8 @@ describe('corespring:multiple-choice:configure', function() {
       container.registerConfigPanel(id, b);
     };
     element = $compile("<div navigator=''><corespring-multiple-choice-configure id='1'></corespring-multiple-choice-configure></div>")(scope);
-    scope = element.scope().$$childHead;
+    element = element.find('.config-multiple-choice');
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 

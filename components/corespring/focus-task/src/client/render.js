@@ -161,12 +161,12 @@ var main = [
       };
 
       scope.getRows = function() {
-        return _.range(scope.choices.length / 5);
+        var numRows = scope.choices ? scope.choices.length / 5 : 0;
+        return _.range(numRows);
       };
 
       scope.getChoicesForRow = function(row) {
         return scope.choices.slice(row * 5, row * 5 + 5);
-
       };
 
       scope.getChoiceClass = function(o) {

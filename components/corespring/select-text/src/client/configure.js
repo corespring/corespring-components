@@ -110,7 +110,7 @@ var main = [
     ].join('');
 
     return {
-      scope: 'isolate',
+      scope: {},
       restrict: 'E',
       replace: true,
       link: function ($scope, $element, $attrs) {

@@ -45,8 +45,10 @@ describe('corespring:line:configure', function() {
         }
       }
     };
-    element = $compile("<div navigator=''><corespring-line-configure id='1'></corespring-line-configure></div>")(scope);
-    scope = element.scope().$$childHead;
+    var link = $compile("<div navigator=''><corespring-line-configure id='1'></corespring-line-configure></div>");
+    element = link(scope);
+    element = element.find('.line-interaction-configuration');
+    scope = element.scope();
     rootScope = $rootScope;
   }));
 

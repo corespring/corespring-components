@@ -46,7 +46,7 @@ var main = [
       '</div>'].join('\n');
 
     return {
-      scope: 'isolate',
+      scope: {},
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {

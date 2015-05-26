@@ -165,7 +165,7 @@ var main = [
     ].join('\n');
 
     return {
-      scope: 'isolate',
+      scope: false,
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {

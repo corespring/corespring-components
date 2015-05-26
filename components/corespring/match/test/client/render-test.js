@@ -65,7 +65,7 @@ describe('corespring:match:render', function() {
     });
 
     element = $compile("<corespring-match-render id='1'></corespring-match-render>")($rootScope.$new());
-    scope = element.scope().$$childHead;
+    scope = element.isolateScope();
     rootScope = $rootScope;
   }));
 
