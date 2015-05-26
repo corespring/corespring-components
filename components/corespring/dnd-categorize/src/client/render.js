@@ -1,6 +1,7 @@
 exports.framework = 'angular';
 exports.directives = [{
   directive: [
+    '$log',
     '$timeout',
     'CompactLayout',
     'LayoutConfig',
@@ -10,6 +11,7 @@ exports.directives = [{
 }];
 
 function renderCorespringDndCategorize(
+  $log,
   $timeout,
   CompactLayout,
   LayoutConfig,
@@ -351,6 +353,9 @@ function renderCorespringDndCategorize(
 
     function chunk(arr, chunkSize) {
       //can be replaced with _.chunk, once lodash has been updated
+      if(_.isFunction(_.chunk)){
+        $log.warn('chunk can be replaced with lodash version.');
+      }
       var chunks = [[]];
       _.forEach(arr, function(elem) {
         var lastRow = _.last(chunks);

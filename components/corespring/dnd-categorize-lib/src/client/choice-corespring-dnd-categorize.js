@@ -3,11 +3,12 @@ exports.directive = {
   name: "choiceCorespringDndCategorize",
   directive: [
     '$sce',
+    '$timeout',
     'MiniWiggiScopeExtension',
     ChoiceCorespringDndCategorize]
 };
 
-function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
+function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) {
 
   return {
     restrict: 'EA',
@@ -118,10 +119,12 @@ function ChoiceCorespringDndCategorize($sce, MiniWiggiScopeExtension) {
 
     function onStop() {
       log('onStop');
-      scope.isDragging = false;
       scope.onDragEnd({
         choiceId: attrs.choiceId
       });
+      $timeout(function(){
+        scope.isDragging = false;
+      }, 100);
     }
 
     function onChoiceEditClicked(event) {
