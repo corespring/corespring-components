@@ -106,7 +106,7 @@ describe('hotspot', function() {
     it('should handle case when r1 is shifted down to r2', function () {
       var r1 = {left: 0, top: 0, width: 100, height: 100};
       var r2 = {left: 0, top: 20, width: 100, height: 100};
-      expect(server.getOverlappingRectangle(r1, r2)).to.eql({left: 00, top: 20, width: 100, height: 80});
+      expect(server.getOverlappingRectangle(r1, r2)).to.eql({left: 0, top: 20, width: 100, height: 80});
     });
 
     it('should handle case when r1 is shifted up to r2', function () {
