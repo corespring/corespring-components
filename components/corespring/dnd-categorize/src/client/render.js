@@ -573,11 +573,11 @@ function renderCorespringDndCategorize(
         choicesTemplate("shouldFlip"),
         categoriesTemplate("!shouldFlip", "rows"),
         '  <hr/>',
+        '  <h3 ng-if="isEditMode">Choices</h3>',
         '  <span ng-if="isEditMode" class="choice-area-label">',
         '    Enter choices below and drag to correct categories above. ',
         '    Choice tiles may be reused unless \"Remove after Placing\" option is selected.',
         '  </span>',
-        '  <h3 ng-if="isEditMode">Choices</h3>',
         choicesTemplate('!shouldFlip'),
         categoriesTemplate('shouldFlip', 'rows'),
         '</div>'
