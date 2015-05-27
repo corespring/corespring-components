@@ -73,7 +73,7 @@ describe('corespring:dnd-categorize:configure', function() {
           "choicesPerRow": 2
         }
       }
-    }
+    };
   }
 
   beforeEach(angular.mock.module('test-app'));
