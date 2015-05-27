@@ -161,6 +161,11 @@
     }
   }
 
+  .component-placeholder {
+    min-width: initial;
+    padding-right: 22px;
+  }
+
   .see-answer-panel {
     .panel-body {
       padding: 15px 10px;
@@ -200,7 +205,7 @@
 
       .category {
         position: relative;
-        vertical-align: top;
+        vertical-align: bottom;
         display: inline-block;
 
         &.category-active {
@@ -233,7 +238,7 @@
           }
 
           .edit-controls {
-            background: rgba(255, 255, 255, 0.7);
+            background: transparent;
             border-radius: 8px;
             padding: 3px 3px 3px 3px;
             position: absolute;
@@ -268,12 +273,17 @@
       }
     }
   }
-
 }
 
 .config-corespring-dnd-categorize {
 
   .rounded-inputs();
+
+  .choice-corespring-dnd-categorize {
+    .border {
+      padding: 0;
+    }
+  }
 
   .wiggi-wiz-toolbar {
     .btn-small {
@@ -326,5 +336,8 @@
       }
     }
   }
+
+
+
 }
 

@@ -190,7 +190,7 @@ function configureCorespringDndCategorize(
     }
 
     function getChoiceIds() {
-      return _.pluck(scope.model.choices, 'id');
+      return _.pluck(scope.editorModel.choices, 'id');
     }
 
     function makeCategoryId(slot) {

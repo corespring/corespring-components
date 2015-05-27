@@ -49,7 +49,8 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       animate: true,
       onStart: 'onStartDragging()',
       onStop: 'onStopDragging()',
-      placeholder: true
+      placeholder: true,
+      delay: 30
     };
 
     scope.draggableJqueryOptions = {
