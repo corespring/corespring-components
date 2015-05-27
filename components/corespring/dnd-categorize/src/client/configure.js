@@ -42,8 +42,7 @@ function configureCorespringDndCategorize(
 
     scope.containerBridge = {
       setModel: setModel,
-      getModel: getModel,
-      getAnswer: getAnswer
+      getModel: getModel
     };
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
@@ -65,9 +64,6 @@ function configureCorespringDndCategorize(
     function prepareEditorModel() {
       var choices = _.cloneDeep(scope.model.choices);
       var categories = _.map(scope.model.categories, wrapCategoryModel);
-
-      log('prepareEditorModel', categories);
-      log('prepareEditorModel', choices);
 
       var correctResponses = scope.fullModel.correctResponse;
       _.forEach(categories, function (category) {
@@ -102,9 +98,18 @@ function configureCorespringDndCategorize(
       log('updateModel', scope.numberOfCorrectResponses);
     }
 
+    function getChoicesForCorrectResponse() {
+      return _.reduce(scope.editorModel.categories, function (acc, category) {
+        if (category.choices) {
+          acc[category.model.id] = _.map(category.choices, getModelIdForChoice);
+        }
+        return acc;
+      }, {});
+    }
+
     function countCorrectAnswers() {
-      return _.reduce(scope.fullModel.correctResponse, function (acc, correctAnswers) {
-        return acc + correctAnswers.length;
+      return _.reduce(scope.editorModel.categories, function (acc, category) {
+        return acc + (category.choices ? category.choices.length : 0);
       }, 0);
     }
 
@@ -138,25 +143,12 @@ function configureCorespringDndCategorize(
       };
     }
 
-    function getAnswer() {
-      return {};
-    }
-
     function cleanChoiceLabel(choice) {
       var copy = _.cloneDeep(choice);
       if (_.isString(copy.label)) {
         copy.label = copy.label.replace(/[\u200B-\u200D\uFEFF]/g, '');
       }
       return copy;
-    }
-
-    function getChoicesForCorrectResponse() {
-      return _.reduce(scope.editorModel.categories, function (acc, category) {
-        if (category.choices) {
-          acc[category.model.id] = _.map(category.choices, getModelIdForChoice);
-        }
-        return acc;
-      }, {});
     }
 
     function getModelIdForChoice(choice) {
