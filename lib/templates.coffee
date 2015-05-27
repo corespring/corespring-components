@@ -31,6 +31,18 @@ exports.preroll = ->
       return {};
     } 
   }]);
+  angular.module('test-app').service('LogFactory', [function(){
+    return {
+      getLogger: function(id){
+         return {
+            log: function(){},
+            debug: function(){},
+            warn: function(){},
+            error: function(){}
+         };
+      }
+    };
+  }]);
 
   //Test helper
   window.corespringComponentsTestLib = {};
