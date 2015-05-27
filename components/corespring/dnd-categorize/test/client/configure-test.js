@@ -12,45 +12,49 @@ describe('corespring:dnd-categorize:configure', function() {
 
   var element = null,
     scope, container = null,
-    rootScope;
+    rootScope, testModel;
 
-  function createTestModel(options) {
-    var answerAreas = (options && options.answerAreas) || [
+  function createTestModel() {
+    var categories = [
       {
-        "id": "aa_1"
+        "id": "cat_1",
+        "label": "Category 1"
+      },
+      {
+        "id": "cat_2",
+        "label": "Category 2"
       }
     ];
-    var choices = (options && options.choices) || [
+    var choices = [
       {
-        "label": "turkey",
-        "labelType": "text",
-        "id": "c_0"
+        "id": "choice_1",
+        "label": "",
+        "moveOnDrag": false
       },
       {
-        "label": "ham",
-        "labelType": "text",
-        "id": "c_1"
+        "id": "choice_2",
+        "label": "",
+        "moveOnDrag": false
       },
       {
-        "label": "lamb",
-        "labelType": "text",
-        "id": "c_2"
+        "id": "choice_3",
+        "label": "",
+        "moveOnDrag": false
       },
       {
-        "label": "bologna",
-        "labelType": "text",
-        "id": "c_3"
+        "id": "choice_4",
+        "label": "",
+        "moveOnDrag": false
       }
     ];
-
-    var correctResponse = (options && options.correctResponse) || {
-      "aa_1": [
-        "c_0", "c_1", "c_2"
-      ]
+    var correctResponse = {
+      "cat_1": [],
+      "cat_2": []
     };
-
     return {
       "componentType": "corespring-dnd-categorize",
+      "title": "Drag and Drop Categorize",
+      "weight": 1,
       "correctResponse": correctResponse,
       "feedback": {
         "correctFeedbackType": "default",
@@ -58,23 +62,18 @@ describe('corespring:dnd-categorize:configure', function() {
         "incorrectFeedbackType": "default"
       },
       "allowPartialScoring": false,
-      "partialScoring": [
-        {
-          "numberOfCorrect": 1,
-          "scorePercentage": 25
-        }
-      ],
+      "partialScoring": [],
       "model": {
-        "answerAreas": answerAreas,
+        "categories": categories,
         "choices": choices,
         "config": {
           "shuffle": false,
-          "choiceAreaLabel": "Choices",
-          "choiceAreaLayout": "horizontal",
-          "choiceAreaPosition": "below"
+          "answerAreaPosition": "below",
+          "categoriesPerRow": 2,
+          "choicesPerRow": 2
         }
       }
-    };
+    }
   }
 
   beforeEach(angular.mock.module('test-app'));
@@ -90,13 +89,10 @@ describe('corespring:dnd-categorize:configure', function() {
 
   beforeEach(function() {
     module(function($provide) {
-      $provide.value('ServerLogic', MockServerLogic);
-      $provide.value('ImageUtils', {});
       $provide.value('MathJaxService', {
         parseDomForMath: function() {}
       });
-      $provide.value('WiggiMathJaxFeatureDef', function() {});
-      $provide.value('WiggiLinkFeatureDef', function() {});
+      $provide.value('ServerLogic', MockServerLogic);
     });
   });
 
@@ -115,6 +111,12 @@ describe('corespring:dnd-categorize:configure', function() {
     rootScope = $rootScope;
   }));
 
+  function setModel(){
+    testModel = createTestModel();
+    scope.containerBridge.setModel(testModel);
+    rootScope.$digest();
+  }
+
   it('constructs', function() {
     expect(element).toBeDefined();
     expect(element).not.toBe(null);
@@ -125,6 +127,55 @@ describe('corespring:dnd-categorize:configure', function() {
     expect(container.elements['2']).toBeUndefined();
   });
 
+  describe('setModel', function() {
+    beforeEach(setModel);
+    it('should set fullModel', function() {
+      expect(scope.fullModel).toEqual(testModel);
+    });
+    it('should set model', function() {
+      expect(scope.model).toEqual(testModel.model);
+    });
+    it('should set categories', function() {
+      expect(scope.editorModel.categories.length).toBe(2);
+    });
+    it('should set choices', function() {
+      expect(scope.editorModel.choices.length).toBe(4);
+    });
+
+  });
+
+  describe('getModel', function() {
+    beforeEach(setModel);
+    it('should return fullModel', function() {
+      expect(scope.containerBridge.getModel()).toEqual(scope.fullModel);
+    });
+  });
+
+  describe('addCategory', function() {
+    beforeEach(setModel);
+    it('should add a category', function() {
+      expect(scope.editorModel.categories.length).toBe(2);
+      scope.addCategory();
+      expect(scope.editorModel.categories.length).toBe(3);
+    });
+  });
+
+  describe('addChoice', function() {
+    beforeEach(setModel);
+    it('should work', function() {
+      expect(scope.editorModel.choices.length).toBe(4);
+      scope.addChoice();
+      expect(scope.editorModel.choices.length).toBe(5);
+    });
+  });
+
+  describe('deactivate', function() {
+    it('should call activate with an id that does not exist', function() {
+      spyOn(scope, '$broadcast');
+      scope.deactivate();
+      expect(scope.$broadcast).toHaveBeenCalledWith('activate', 'none');
+    });
+  });
 
 
 });
