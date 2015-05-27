@@ -348,7 +348,7 @@ function renderCorespringDndCategorize(
         return maxChoiceWidth;
       } else {
         var totalChoiceWidth = maxChoiceWidth * scope.categoriesPerRow;
-        return totalChoiceWidth / (scope.isEditMode ? Math.min(4,scope.choicesPerRow) : scope.choicesPerRow);
+        return totalChoiceWidth / scope.choicesPerRow;
       }
     }
 
