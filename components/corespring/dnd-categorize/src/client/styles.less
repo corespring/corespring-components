@@ -72,7 +72,7 @@
     }
 
     .edit-controls {
-      background: rgba(255, 255, 255, 0.7);
+      background: transparent;
       border-radius: 8px;
       padding: 3px 3px 3px 3px;
       position: absolute;
@@ -281,8 +281,10 @@
 
   .container-choices {
     .choice-corespring-dnd-categorize {
-      .border {
-        padding: 0;
+      &.active {
+        .border {
+          padding: 0;
+        }
       }
     }
   }
@@ -292,6 +294,9 @@
       .edit-controls {
         display: none;
       }
+    }
+    .wiggi-wiz-editable {
+      padding: 2px!important;
     }
     &.active {
       .image-holder {

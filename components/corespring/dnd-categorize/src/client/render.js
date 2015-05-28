@@ -47,16 +47,14 @@ function renderCorespringDndCategorize(
 
     scope.correctAnswerRows = [[]];
     scope.editable = false;
-    scope.isDragEnabled = false;
-    scope.isDragEnabledFromCategory = false;
     scope.isEditMode = attrs.mode === 'edit';
-    scope.isSeeCorrectAnswerOpen = false;
     scope.renderModel = {};
     scope.rows = [[]];
     scope.shouldFlip = false;
-    scope.undoStack = [];
 
     scope.getEditMode = getEditMode;
+    scope.isDragEnabled = isDragEnabled;
+    scope.isDragEnabledFromCategory = isDragEnabledFromCategory;
     scope.onCategoryEditClicked = onCategoryEditClicked;
     scope.onCategoryDeleteClicked = onCategoryDeleteClicked;
     scope.onCategoryDrop = onCategoryDrop;
@@ -81,7 +79,6 @@ function renderCorespringDndCategorize(
     scope.$watch('renderModel', callAnswerChangedHandlerIfAnswersHaveChanged, true);
     scope.$watch('renderModel.categories.length', updateView);
     scope.$watch('renderModel.choices.length', updateView);
-    scope.$watch('response', updateIsDragEnabled);
     scope.$watch('shouldFlip', updateView);
 
     if (scope.isEditMode) {
@@ -487,9 +484,21 @@ function renderCorespringDndCategorize(
       });
     }
 
-    function updateIsDragEnabled() {
-      scope.isDragEnabled = _.isUndefined(scope.response);
-      scope.isDragEnabledFromCategory = scope.isDragEnabled && !scope.isEditMode;
+    function isDragEnabled(choice){
+      return !scope.response &&
+          (choiceCanBePlacedMultipleTimes(choice) || choiceIsNotPlaced(choice));
+
+      function choiceCanBePlacedMultipleTimes(choice){
+        return !choice.moveOnDrag;
+      }
+
+      function choiceIsNotPlaced(choice){
+        return !findInAllCategories(choice.id);
+      }
+    }
+
+    function isDragEnabledFromCategory() {
+      return !scope.response && !scope.isEditMode;
     }
 
     function getEditMode(choice) {
@@ -592,7 +601,7 @@ function renderCorespringDndCategorize(
         '      choice-id="{{choice.id}}" ',
         '      delete-after-placing="choice.moveOnDrag" ',
         '      drag-and-drop-scope="renderModel.dragAndDropScope"',
-        '      drag-enabled="isDragEnabled"',
+        '      drag-enabled="isDragEnabled(choice)"',
         '      edit-mode="getEditMode(choice)" ',
         '      image-service="imageService"',
         '      model="choice" ',
@@ -615,7 +624,7 @@ function renderCorespringDndCategorize(
         '        category="category" ',
         '        choice-width="{{choiceWidth}}"',
         '        drag-and-drop-scope="renderModel.dragAndDropScope"',
-        '        drag-enabled="isDragEnabledFromCategory"',
+        '        drag-enabled="isDragEnabledFromCategory()"',
         '        edit-mode="isEditMode" ',
         '        ng-repeat="category in row"',
         '        ng-style="categoryStyle"',
