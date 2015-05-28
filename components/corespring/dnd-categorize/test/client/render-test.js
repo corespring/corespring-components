@@ -1,4 +1,4 @@
-describe('corespring:dnd-categorize', function() {
+describe('corespring:dnd-categorize:render', function() {
 
   var testModel, scope, rootScope, container, element;
 
@@ -393,13 +393,11 @@ describe('corespring:dnd-categorize', function() {
   describe('isDragEnabled', function() {
     it('should be true, if no response has been set', function() {
       delete scope.response;
-      scope.$digest();
-      expect(scope.isDragEnabled).toBe(true);
+      expect(scope.isDragEnabled({})).toBe(true);
     });
     it('should be false, if response has been set', function() {
       scope.response = {};
-      rootScope.$digest();
-      expect(scope.isDragEnabled).toBe(false);
+      expect(scope.isDragEnabled({})).toBe(false);
     });
   });
 
@@ -407,19 +405,16 @@ describe('corespring:dnd-categorize', function() {
     it('should be true, if no response has been set and not isEditMode', function() {
       delete scope.response;
       scope.isEditMode = false;
-      scope.$digest();
-      expect(scope.isDragEnabledFromCategory).toBe(true);
+      expect(scope.isDragEnabledFromCategory()).toBe(true);
     });
     it('should be false, if response has been set', function() {
       scope.response = {};
-      rootScope.$digest();
-      expect(scope.isDragEnabledFromCategory).toBe(false);
+      expect(scope.isDragEnabledFromCategory()).toBe(false);
     });
     it('should be false, if isEditMode', function() {
       delete scope.response;
       scope.isEditMode = true;
-      rootScope.$digest();
-      expect(scope.isDragEnabledFromCategory).toBe(false);
+      expect(scope.isDragEnabledFromCategory()).toBe(false);
     });
   });
 

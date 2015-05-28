@@ -193,15 +193,15 @@ function configureCorespringDndCategorize(
       return 'choice_' + slot;
     }
 
-    function deactivate(event) {
-      scope.$broadcast('activate', 'none', event);
+    function deactivate() {
+      scope.$broadcast('activate', 'none');
     }
 
   }
 
   function template() {
     return [
-      '<div class="config-corespring-dnd-categorize" ng-click="deactivate($event)">',
+      '<div class="config-corespring-dnd-categorize" ng-click="deactivate()">',
       '  <div navigator-panel="Design">',
       designPanel(),
       '  </div>',
