@@ -49,7 +49,9 @@ describe('corespring:dnd-categorize:render', function() {
 
   beforeEach(function() {
     module(function($provide) {
-      testModel = _.cloneDeep(testModelTemplate);
+      $provide.value('MathJaxService', {
+        parseDomForMath: function() {}
+      });
     });
   });
 
@@ -63,6 +65,8 @@ describe('corespring:dnd-categorize:render', function() {
     element = $compile("<corespring-dnd-categorize-render id='1'></corespring-dnd-categorize-render>")($rootScope.$new());
     scope = element.isolateScope();
     rootScope = $rootScope;
+
+    testModel = _.cloneDeep(testModelTemplate);
   }));
 
   it('constructs', function() {
