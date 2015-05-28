@@ -98,6 +98,10 @@
     .border {
       .correct-input();
 
+      .remove-choice {
+        display: none;
+      }
+
       &:after {
         color: @correct-color;
         content: @correct-character;
@@ -111,8 +115,13 @@
   }
 
   &.incorrect {
+
     .border {
       .incorrect-input();
+
+      .remove-choice {
+        display: none;
+      }
 
       &:after {
         color: @incorrect-color;
@@ -128,6 +137,10 @@
 
   &.draggable {
     cursor: pointer;
+
+    &.ui-draggable-disabled {
+      cursor: initial;
+    }
 
     &.ui-draggable-dragging {
       cursor: move;

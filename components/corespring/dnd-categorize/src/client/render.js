@@ -6,6 +6,7 @@ exports.directives = [{
     'CompactLayout',
     'LayoutConfig',
     'LayoutRunner',
+    'MathJaxService',
     renderCorespringDndCategorize
   ]
 }];
@@ -15,7 +16,8 @@ function renderCorespringDndCategorize(
   $timeout,
   CompactLayout,
   LayoutConfig,
-  LayoutRunner
+  LayoutRunner,
+  MathJaxService
 ) {
 
   return {
@@ -478,10 +480,7 @@ function renderCorespringDndCategorize(
     }
 
     function renderMath() {
-      scope.$emit('rerender-math', {
-        delay: 100,
-        element: elem[0]
-      });
+      MathJaxService.parseDomForMath(100, elem[0]);
     }
 
     function isDragEnabled(choice){

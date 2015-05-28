@@ -132,13 +132,14 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
     }
 
     function onChoiceEditClicked(event) {
-      log('onChoiceEditClicked isDragging:', scope.isDragging);
-      if (!scope.isDragging) {
-        event.stopPropagation();
-        scope.notifyEditClicked({
-          choiceId: attrs.choiceId
-        });
+      log('onChoiceEditClicked isDragging:', scope.isDragging, ' canEdit:', scope.canEdit());
+      event.stopPropagation();
+      if(!scope.canEdit() || scope.isDragging){
+        return;
       }
+      scope.notifyEditClicked({
+        choiceId: attrs.choiceId
+      });
     }
 
     function onDeleteClicked() {
