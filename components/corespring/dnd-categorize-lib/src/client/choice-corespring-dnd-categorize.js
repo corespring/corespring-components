@@ -125,10 +125,15 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
 
     function onStop(event, ui) {
       log('onStop', event);
-      scope.isDragging = false;
       scope.onDragEnd({
         choiceId: attrs.choiceId
       });
+      //small timeout to avoid activating
+      //the wiggi when dragging a choice into
+      //a category inside the config panel
+      $timeout(function(){
+        scope.isDragging = false;
+      }, 200);
     }
 
     function onChoiceEditClicked(event) {
