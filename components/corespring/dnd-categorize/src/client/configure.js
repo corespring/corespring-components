@@ -275,7 +275,7 @@ function configureCorespringDndCategorize(
         '     class="control-label">Shuffle Tiles</checkbox>',
         '</div>',
         '<div class="row">',
-        '  Answer area is',
+        '  Choice area is',
         '  <select ng-model="model.config.answerAreaPosition" ',
         '     class="form-control" ',
         '     ng-options="o for o in answerAreaOptions"/>',
