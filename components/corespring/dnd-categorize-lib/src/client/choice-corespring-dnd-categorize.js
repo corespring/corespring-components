@@ -63,6 +63,7 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
     scope.canDelete = canDelete;
     scope.canEdit = canEdit;
     scope.isDragEnabled = isDragEnabled;
+    scope.onChangeActive = onChangeActive;
     scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.onDeleteClicked = onDeleteClicked;
     scope.onStart = onStart;
@@ -72,13 +73,17 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
     scope.$watch('dragAndDropScope', updateDragAndDropScope);
     scope.$watch('model.label', triggerResize);
 
-    scope.$on('activate', function(event, id) {
-      scope.active = id === attrs.choiceId;
-    });
+    scope.$on('activate', onChangeActive);
 
     updateClasses();
 
     //------------------------------------------------
+
+    function onChangeActive(event, id) {
+      console.log("onchangeActive", id, scope.active);
+      scope.active = id === attrs.choiceId;
+      updateClasses();
+    }
 
     var revertValidAnimationMs = 0;
     var revertInvalidAnimationMs = 300;
@@ -177,6 +182,9 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       if (scope.isDragEnabled()) {
         classes.push('draggable');
       }
+      if(scope.active){
+        classes.push('active');
+      }
 
       scope.classes = classes;
     }
@@ -189,7 +197,8 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       '  data-drag="isDragEnabled()"',
       '  ng-class="classes"',
       '  jqyoui-draggable="draggableOptions" ',
-      '  data-jqyoui-options="draggableJqueryOptions">',
+      '  data-jqyoui-options="draggableJqueryOptions"',
+      '  >',
       '  <div class="border">',
       '    <ul class="edit-controls" ng-if="showTools" ng-hide="active">',
       '      <li class="edit-icon-button" ',
@@ -207,10 +216,10 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       '        <i class="fa fa-trash-o"></i>',
       '      </li>',
       '    </ul>',
-      '    <div class="shell" ng-if="canEdit()" ng-click="onChoiceEditClicked($event)">',
+      '    <div class="shell" ng-if="canEdit()" ng-show="active" ng-click="$event.stopPropagation()">',
       choiceEditorTemplate(),
       '    </div>',
-      '    <div class="shell" ng-if="!canEdit()">',
+      '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
