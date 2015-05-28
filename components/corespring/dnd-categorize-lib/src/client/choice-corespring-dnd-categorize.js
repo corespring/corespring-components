@@ -42,15 +42,16 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
 
     scope.isDragging = false;
     scope.active = false;
-    scope.showTools = !isCategorised() && (canEdit() || canDelete());
+    scope.showTools = !isCategorized() && (canEdit() || canDelete());
     scope.draggedParent = canEdit(scope.editMode) ? ".modal" : "body";
 
     scope.draggableOptions = {
       animate: true,
-      onStart: 'onStartDragging()',
-      onStop: 'onStopDragging()',
+      onStart: 'onStart',
+      onStop: 'onStop',
       placeholder: true,
-      delay: 30
+      delay: 200,
+      distance: 10
     };
 
     scope.draggableJqueryOptions = {
@@ -64,8 +65,8 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
     scope.isDragEnabled = isDragEnabled;
     scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.onDeleteClicked = onDeleteClicked;
-    scope.onStartDragging = onStartDragging;
-    scope.onStopDragging = onStopDragging;
+    scope.onStart = onStart;
+    scope.onStop = onStop;
 
     scope.$watch('correctness', updateClasses);
     scope.$watch('dragAndDropScope', updateDragAndDropScope);
@@ -93,8 +94,8 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       }
     }
 
-    function updateDragAndDropScope(newValue){
-      if(newValue && _.isFunction($(elem).draggable)) {
+    function updateDragAndDropScope(newValue) {
+      if (newValue) {
         setDraggableOption('scope', newValue);
       }
     }
@@ -103,13 +104,13 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       setDraggableOption('revertDuration', revertDuration);
     }
 
-    function setDraggableOption(name, value){
-      if(_.isFunction($(elem).draggable)) {
+    function setDraggableOption(name, value) {
+      if (_.isFunction($(elem).draggable)) {
         $(elem).draggable('option', name, value);
       }
     }
 
-    function onStartDragging() {
+    function onStart(event, ui) {
       log('onStart', scope.dragAndDropScope);
       scope.isDragging = true;
       scope.onDragStart({
@@ -117,21 +118,17 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       });
     }
 
-    function onStopDragging() {
-      log('onStop');
+    function onStop(event, ui) {
+      log('onStop', event);
+      scope.isDragging = false;
       scope.onDragEnd({
         choiceId: attrs.choiceId
       });
-      //small delay to avoid activation
-      //of the mini wiggi on mouseUp
-      $timeout(function(){
-        scope.isDragging = false;
-      }, 100);
     }
 
     function onChoiceEditClicked(event) {
-      log('onChoiceEditClicked');
-      if(!scope.isDragging) {
+      log('onChoiceEditClicked isDragging:', scope.isDragging);
+      if (!scope.isDragging) {
         event.stopPropagation();
         scope.notifyEditClicked({
           choiceId: attrs.choiceId
@@ -145,7 +142,7 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
       });
     }
 
-    function isCategorised() {
+    function isCategorized() {
       return $(elem).parents('.categorized').length > 0;
     }
 
@@ -241,5 +238,3 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
     }
   }
 }
-
-
