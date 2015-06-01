@@ -3,8 +3,8 @@
   "title": "New Categorize",
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
-  "version": "0.0.1",
-  "released": false,
+  "version": "0.2.0",
+  "released": true,
   "libraries": [
     {
       "name": "dnd-categorize-lib",
