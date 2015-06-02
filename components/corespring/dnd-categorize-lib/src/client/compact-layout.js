@@ -48,7 +48,7 @@ function CompactLayout(initialConfig, layoutRunner) {
       smallestColumn(columns).push(choice);
     });
 
-    var gutter = Math.max(0, (config.container.width() - numColumns * config.cellWidth) / (numColumns + 1))
+    var gutter = Math.max(0, (config.container.width() - numColumns * config.cellWidth) / (numColumns + 1));
 
     columns.forEach(function(colChoices, colIndex) {
       colChoices.forEach(function(choice, choiceIndex) {
