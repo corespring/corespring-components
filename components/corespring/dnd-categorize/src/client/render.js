@@ -260,13 +260,13 @@ function renderCorespringDndCategorize(
       if (layout) {
         layout.cancel();
       }
+
       layout = new CompactLayout(
         new LayoutConfig()
         .withContainer(elem.find('.container-choices'))
         .withItemSelector('.choice-corespring-dnd-categorize')
         .withNumColumns(scope.choicesPerRow)
         .withCellWidth(calcChoiceWidth())
-        .withGutter(0) //margin of choice border
         .withPaddingBottom(7)
         .value(),
         new LayoutRunner($timeout));
@@ -282,7 +282,7 @@ function renderCorespringDndCategorize(
       if (layout) {
         layout.updateConfig({
           container: elem.find('.container-choices'),
-          cellWidth: cellWidth
+          cellWidth: cellWidth,
         });
       }
     }

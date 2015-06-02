@@ -9,7 +9,6 @@ exports.factory = [function() {
  *  itemSelector: string selector of an item to be laid out
  *  numColumns: the desired number of columns
  *  cellWidth: the desired width of one column
- *  gutter: gutter to be added to the cellWidth
  *  paddingBottom: the padding to be added to the container height
  */
 function CompactLayout(initialConfig, layoutRunner) {
@@ -17,8 +16,7 @@ function CompactLayout(initialConfig, layoutRunner) {
   var hasNewConfig = false;
   var choiceSizeCache = [];
   var config = _.assign({
-    paddingBottom: 0,
-    gutter: 0
+    paddingBottom: 0
   }, initialConfig);
 
   this.updateConfig = updateConfig;
@@ -50,18 +48,21 @@ function CompactLayout(initialConfig, layoutRunner) {
       smallestColumn(columns).push(choice);
     });
 
+    var gutter = Math.max(0, (config.container.width() - numColumns * config.cellWidth) / (numColumns + 1))
+
     columns.forEach(function(colChoices, colIndex) {
       colChoices.forEach(function(choice, choiceIndex) {
         $(choice).css({
           position: 'absolute',
           top: getChoiceTop(colChoices, choiceIndex),
-          left: (config.cellWidth + config.gutter) * colIndex
+          left: gutter + (config.cellWidth + gutter) * colIndex
         });
       }, this);
     }, this);
 
     //the choices are positioned absolutely
-    //so the container height is not pushed
+    //which means the container height is not pushed.
+    //Therefor we have to set the height explicitely
     config.container.css({
       height: getContainerHeight(columns) + config.paddingBottom
     });
@@ -113,8 +114,7 @@ function CompactLayout(initialConfig, layoutRunner) {
   function updateConfig(newConfig) {
     hasNewConfig = true;
     config = _.assign({
-      paddingBottom: 0,
-      gutter: 0
+      paddingBottom: 0
     }, config, newConfig);
   }
 
