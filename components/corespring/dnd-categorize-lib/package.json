@@ -22,6 +22,11 @@
       "organization": "corespring"
     },
     {
+      "name": "mini-wiggi-lib",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
       "name": "partial-scoring-config",
       "organization": "corespring",
       "scope": "editor"

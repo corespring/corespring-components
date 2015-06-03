@@ -2,12 +2,12 @@ exports.framework = 'angular';
 exports.directive = {
   name: "categoryLabelCorespringDndCategorize",
   directive: [
-    'MiniWiggiScopeExtension',
+    '$injector',
     CategoryLabelCorespringDndCategorize]
 };
 
 function CategoryLabelCorespringDndCategorize(
-  MiniWiggiScopeExtension
+  $injector
 ) {
 
   return {
@@ -25,8 +25,14 @@ function CategoryLabelCorespringDndCategorize(
   };
 
 
-  function controller($scope) {
-    new MiniWiggiScopeExtension().postLink($scope);
+  function controller(scope) {
+    try {
+      //optional injection
+      var MiniWiggiScopeExtension = $injector.get('MiniWiggiScopeExtension');
+      scope.miniWiggiScopeExtension = new MiniWiggiScopeExtension().postLink(scope);
+    } catch (e) {
+      //ignore
+    }
   }
 
   function link(scope, elem, attrs) {
@@ -41,6 +47,11 @@ function CategoryLabelCorespringDndCategorize(
     scope.onLabelEditClicked = onLabelEditClicked;
 
     scope.$on('activate', function(event, id) {
+      console.log("onLabelEditClicked", scope.miniWiggiScopeExtension);
+      if(!scope.miniWiggiScopeExtension){
+        throw "Expected miniWiggiScopeExtension to be available";
+      }
+
       scope.active = id === getCategoryId();
     });
 

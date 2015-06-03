@@ -2,13 +2,13 @@ exports.framework = 'angular';
 exports.directive = {
   name: "choiceCorespringDndCategorize",
   directive: [
+    '$injector',
     '$sce',
     '$timeout',
-    'MiniWiggiScopeExtension',
     ChoiceCorespringDndCategorize]
 };
 
-function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) {
+function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
 
   return {
     restrict: 'EA',
@@ -33,7 +33,13 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
   };
 
   function controller(scope) {
-    new MiniWiggiScopeExtension().withExtraFeatureMath().postLink(scope);
+    try {
+      //optional injection
+      var MiniWiggiScopeExtension = $injector.get('MiniWiggiScopeExtension');
+      scope.miniWiggiScopeExtension = new MiniWiggiScopeExtension().postLink(scope);
+    } catch (e) {
+      //ignore
+    }
   }
 
   function link(scope, elem, attrs) {
@@ -80,7 +86,10 @@ function ChoiceCorespringDndCategorize($sce, $timeout, MiniWiggiScopeExtension) 
     //------------------------------------------------
 
     function onChangeActive(event, id) {
-      console.log("onchangeActive", id, scope.active);
+      console.log("onChangeActive", id, scope.active, scope.miniWiggiScopeExtension);
+      if(!scope.miniWiggiScopeExtension){
+        throw "Expected miniWiggiScopeExtension to be available";
+      }
       scope.active = id === attrs.choiceId;
       updateClasses();
     }
