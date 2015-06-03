@@ -352,7 +352,6 @@ function renderCorespringDndCategorize(
     }
 
     function chunk(arr, chunkSize) {
-      //can be replaced with _.chunk, once lodash has been updated
       if(_.isFunction(_.chunk)){
         $log.warn('chunk can be replaced with lodash version.');
       }
@@ -616,10 +615,20 @@ function renderCorespringDndCategorize(
 
   function categoriesTemplate(flip, rowsModel) {
     return [
-        '<div class="categories-holder">',
-        '  <div class="categories" ng-if="#flip#">',
-        '    <div class="row" ng-repeat="row in #rowsModel#">',
-        '      <div category-corespring-dnd-categorize="true" ',
+        '<div class="categories-holder" ng-if="#flip#">',
+        '  <div class="categories">',
+        '    <div class="row" ng-repeat-start="row in #rowsModel#">',
+        '      <div category-label-corespring-dnd-categorize="true" ',
+        '        category="category" ',
+        '        edit-mode="isEditMode" ',
+        '        ng-repeat="category in row"',
+        '        ng-style="categoryStyle"',
+        '        on-edit-clicked="onCategoryEditClicked(categoryId)" ',
+        '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
+        '       ></div>',
+        '     </div>',
+        '    <div class="row" ng-repeat-end>',
+        '      <div category-choices-corespring-dnd-categorize="true" ',
         '        category="category" ',
         '        choice-width="{{choiceWidth}}"',
         '        drag-and-drop-scope="renderModel.dragAndDropScope"',

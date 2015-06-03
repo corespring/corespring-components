@@ -7,13 +7,13 @@ exports.factory = [function() {
  * @param initialConfig:
  *  container: jquery element of the container
  *  itemSelector: string selector of an item to be laid out
- *  numColumns: the desired number of columns
+ *  numColumns: the desired number of columns, can also be a function
  *  cellWidth: the desired width of one column
  *  paddingBottom: the padding to be added to the container height
  */
-function CompactLayout(initialConfig, layoutRunner) {
+function CompactLayout(initialConfig, layoutRunner, name) {
 
-  var hasNewConfig = false;
+  var hasNewConfig = true;
   var choiceSizeCache = [];
   var config = _.assign({
     paddingBottom: 0
@@ -35,7 +35,7 @@ function CompactLayout(initialConfig, layoutRunner) {
       return;
     }
 
-    var numColumns = config.numColumns;
+    var numColumns = _.isFunction(config.numColumns) ? config.numColumns() : config.numColumns;
     if (isNaN(numColumns) || numColumns === 0) {
       return;
     }
@@ -52,11 +52,13 @@ function CompactLayout(initialConfig, layoutRunner) {
 
     columns.forEach(function(colChoices, colIndex) {
       colChoices.forEach(function(choice, choiceIndex) {
-        $(choice).css({
+        var choiceCss = {
           position: 'absolute',
+          left: (gutter + (config.cellWidth + gutter) * colIndex),
           top: getChoiceTop(colChoices, choiceIndex),
-          left: gutter + (config.cellWidth + gutter) * colIndex
-        });
+          width: config.cellWidth
+        };
+        $(choice).css(choiceCss);
       }, this);
     }, this);
 
@@ -66,6 +68,8 @@ function CompactLayout(initialConfig, layoutRunner) {
     config.container.css({
       height: getContainerHeight(columns) + config.paddingBottom
     });
+
+    hasNewConfig = false;
   }
 
   function smallestColumn(columns) {
@@ -74,7 +78,7 @@ function CompactLayout(initialConfig, layoutRunner) {
 
   function elementsShouldBeRendered(choiceElements) {
     if (!hasNewConfig) {
-      var heights = _(choiceElements).map(getElementHeight).value();
+      var heights = _.map(choiceElements, getElementHeight);
       var someElementsHaveZeroHeight = _.some(heights, function(height) {
         return height === 0;
       });
@@ -83,7 +87,6 @@ function CompactLayout(initialConfig, layoutRunner) {
       }
       choiceSizeCache = heights;
     }
-    hasNewConfig = false;
     return true;
   }
 
