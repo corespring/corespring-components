@@ -282,7 +282,7 @@ function renderCorespringDndCategorize(
       if (layout) {
         layout.updateConfig({
           container: elem.find('.container-choices'),
-          cellWidth: cellWidth,
+          cellWidth: cellWidth
         });
       }
     }
