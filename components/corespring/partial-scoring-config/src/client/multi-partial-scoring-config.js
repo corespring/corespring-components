@@ -1,99 +1,127 @@
-var main = [
-  'LogFactory',
-  function (LogFactory) {
+exports.framework = 'angular';
+exports.directive = {
+  name: "corespringMultiPartialScoringConfig",
+  directive: [
+    'LogFactory',
+    corespringMultiPartialScoringConfig
+  ]
+};
 
-    var $log = LogFactory.getLogger('PartialScoringConfig');
+/*
+  Allows to configure multiples sections of partial scoring.
+  The model looks like this.
 
-    return {
-      scope: {
-        fullModel: '=',
-        numberOfCorrectResponses: '='
-      },
-      restrict: 'E',
-      replace: true,
-      link: link,
-      template: template()
-    };
-
-    function link(scope, elem, attr) {
-      scope.canAddScoringScenario = false;
-      scope.canRemoveScoringScenario = false;
-      scope.maxNumberOfScoringScenarios = 1;
-
-      scope.addScoringScenario = addScoringScenario;
-      scope.removeScoringScenario = removeScoringScenario;
-      scope.togglePartialScoring = togglePartialScoring;
-      scope.updateNumberOfCorrectResponses = updatePartialScoringModel;
-
-      scope.$watch('fullModel.partialScoring.length', function (newValue) {
-        scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
-      });
-
-      scope.$watch('numberOfCorrectResponses', function (newValue) {
-        scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
-      });
-
-      //--------------------------------------------------------------
-
-      function addScoringScenario() {
-        function findMaxNumberOfCorrectInScoringScenarios() {
-          var maxNumberOfCorrect = 0;
-          _.each(scope.fullModel.partialScoring, function (ps) {
-            if (ps.numberOfCorrect > maxNumberOfCorrect) {
-              maxNumberOfCorrect = ps.numberOfCorrect;
-            }
-          });
-          return maxNumberOfCorrect;
-        }
-
-        var maxNumberOfCorrect = findMaxNumberOfCorrectInScoringScenarios();
-        scope.fullModel.partialScoring.push(makeScenario(maxNumberOfCorrect + 1,20));
+  {
+     sections: [
+      {
+        label: "some label",
+        numberOfCorrectAnswers: 4,
+        canAddScoringScenario: false,
+        canRemoveScoringScenario: false,
+        maxNumberOfScoringScenarios: 1,
+        partialScoring: [
+          {numberOfCorrect: 3, scorePercentage: 20},
+          {numberOfCorrect: 2, scorePercentage: 10}
+        ]
       }
+     ]
+  }
 
-      function togglePartialScoring() {
-        if (scope.numberOfCorrectResponses > 1) {
-          scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
-        }
-      }
+ */
+function corespringMultiPartialScoringConfig(LogFactory) {
 
-      function removeScoringScenario(scoringScenario) {
-        scope.fullModel.partialScoring = _.filter(scope.fullModel.partialScoring, function (ps) {
-          return ps !== scoringScenario;
-        });
-      }
+  var $log = LogFactory.getLogger('MultiPartialScoringConfig');
 
-      function updatePartialScoringModel(numberOfCorrectResponses) {
-        if(isNaN(numberOfCorrectResponses) || !scope.fullModel){
-          return;
-        }
+  return {
+    scope: {
+      model: '=',
+      allowPartialScoring: '='
+    },
+    restrict: 'E',
+    replace: true,
+    link: link,
+    template: template()
+  };
 
-        if (!scope.fullModel.partialScoring) {
-          scope.fullModel.partialScoring = [makeScenario(1,25)];
-        }
-        scope.numberOfCorrectResponses = Math.max(0, isNaN(numberOfCorrectResponses) ? 0 : numberOfCorrectResponses);
-        scope.maxNumberOfScoringScenarios = Math.max(1, scope.numberOfCorrectResponses - 1);
-        scope.canAddScoringScenario = scope.fullModel.partialScoring.length < scope.maxNumberOfScoringScenarios;
-        scope.canRemoveScoringScenario = scope.fullModel.partialScoring.length > 1;
+  function link(scope, elem, attr) {
+    scope.addScoringScenario = addScoringScenario;
+    scope.removeScoringScenario = removeScoringScenario;
+    scope.togglePartialScoring = togglePartialScoring;
+    scope.updateNumberOfCorrectResponses = updatePartialScoringModel;
 
-        if (scope.fullModel.partialScoring.length > scope.maxNumberOfScoringScenarios) {
-          scope.fullModel.partialScoring = _.filter(scope.fullModel.partialScoring, function (ps) {
-            return ps.numberOfCorrect <= 1 || ps.numberOfCorrect < scope.numberOfCorrectResponses;
-          });
-        }
-      }
+    scope.$watch('model', function(newValue) {
+      scope.updateNumberOfCorrectResponses();
+    }, true);
 
-      function makeScenario(numberOfCorrect,scorePercentage){
-        return {
-          numberOfCorrect: numberOfCorrect,
-          scorePercentage: scorePercentage
-        };
+    //--------------------------------------------------------------
+
+    function togglePartialScoring() {
+      if (isAllowedToConfigurePartialScoring()) {
+        scope.allowPartialScoring = !scope.allowPartialScoring;
       }
     }
 
+    function isAllowedToConfigurePartialScoring(){
+      return getMaxNumberOfCorrectResponses() > 1;
+    }
 
+    function getMaxNumberOfCorrectResponses(){
+      return _.reduce(scope.model.sections, function(acc,section){
+        return Math.max(section.numberOfCorrectResponses, acc);
+      }, 0);
+    }
 
-    function template() {
-      return [
+    function addScoringScenario(section) {
+      var maxNumberOfCorrect = findMaxNumberOfCorrectInScoringScenarios(section);
+      section.partialScoring.push(makeScenario(maxNumberOfCorrect + 1, 20));
+
+      function findMaxNumberOfCorrectInScoringScenarios(section) {
+        var maxNumberOfCorrect = 0;
+        _.each(section.partialScoring, function(ps) {
+          if (ps.numberOfCorrect > maxNumberOfCorrect) {
+            maxNumberOfCorrect = ps.numberOfCorrect;
+          }
+        });
+        return maxNumberOfCorrect;
+      }
+    }
+
+    function removeScoringScenario(section, index) {
+      section.partialScoring.splice(index,1);
+    }
+
+    function updatePartialScoringModel() {
+      /*
+      if (isNaN(numberOfCorrectResponses) || !scope.fullModel) {
+        return;
+      }
+
+      if (!scope.fullModel.partialScoring) {
+        scope.fullModel.partialScoring = [makeScenario(1, 25)];
+      }
+      scope.numberOfCorrectResponses = Math.max(0, isNaN(numberOfCorrectResponses) ? 0 : numberOfCorrectResponses);
+      scope.maxNumberOfScoringScenarios = Math.max(1, scope.numberOfCorrectResponses - 1);
+      scope.canAddScoringScenario = scope.fullModel.partialScoring.length < scope.maxNumberOfScoringScenarios;
+      scope.canRemoveScoringScenario = scope.fullModel.partialScoring.length > 1;
+
+      if (scope.fullModel.partialScoring.length > scope.maxNumberOfScoringScenarios) {
+        scope.fullModel.partialScoring = _.filter(scope.fullModel.partialScoring, function(ps) {
+          return ps.numberOfCorrect <= 1 || ps.numberOfCorrect < scope.numberOfCorrectResponses;
+        });
+      }
+      */
+    }
+
+    function makeScenario(numberOfCorrect, scorePercentage) {
+      return {
+        numberOfCorrect: numberOfCorrect,
+        scorePercentage: scorePercentage
+      };
+    }
+  }
+
+  function template() {
+    return [
         '<div class="corespring-partial-scoring">',
         '  <div class="scoring-header-text">',
         '   If there is more than one correct answer to this ',
@@ -134,12 +162,5 @@ var main = [
         '  </div>',
         '</div>'
       ].join('');
-    }
   }
-];
-
-exports.framework = 'angular';
-exports.directive = {
-  name: "corespringPartialScoringConfig",
-  directive: main
-};
+}
