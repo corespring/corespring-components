@@ -213,14 +213,22 @@
 
   .categories {
     width: 100%;
+    display: table;
 
     .row {
       margin: 0;
+      display: table-row;
 
       .category {
-        position: relative;
-        vertical-align: bottom;
-        display: inline-block;
+        display: table-cell;
+
+        &.category-label {
+          vertical-align: bottom;
+        }
+
+        &.category-choices {
+          vertical-align: top;
+        }
 
         &.category-active {
           .categorized.choices {
