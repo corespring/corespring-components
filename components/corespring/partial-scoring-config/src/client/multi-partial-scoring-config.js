@@ -80,7 +80,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
 
     function addScoringScenario(section) {
       var maxNumberOfCorrect = findMaxNumberOfCorrectInScoringScenarios(section);
-      section.partialScoring.push(makeScenario(maxNumberOfCorrect + 1, 20));
+      section.partialScoring.push(makeScenario(maxNumberOfCorrect + 1, 0));
 
       function findMaxNumberOfCorrectInScoringScenarios(section) {
         var maxNumberOfCorrect = 0;
@@ -104,7 +104,10 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
 
       _.forEach(scope.model.sections, function(section){
         if(!section.partialScoring){
-          section.partialScoring = [makeScenario(1, 25)];
+          section.partialScoring = [];
+        }
+        if(section.partialScoring.length === 0){
+          section.partialScoring.push(makeScenario(1, 0));
         }
         section.numberOfCorrectResponses = Math.max(0, isNaN(section.numberOfCorrectResponses) ? 0 : section.numberOfCorrectResponses);
         section.maxNumberOfScoringScenarios = Math.max(1, section.numberOfCorrectResponses - 1);
@@ -153,7 +156,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
         '            <li class="scoring-item" ng-repeat="scenario in section.partialScoring">',
         '              If',
         '              <input class="form-control" type="number" min="1" max="{{section.maxNumberOfScoringScenarios}}" ng-model="scenario.numberOfCorrect"/>',
-        '              of {{section.numberOfCorrectResponses}} possible correct answers is selected, award',
+        '              of correct answers is selected, award',
         '              <input class="form-control" type="number" min="1" max="99" ng-model="scenario.scorePercentage"/>',
         '              % of full credit.',
         '              <i class="fa fa-trash-o remove-item" ng-show="section.canRemoveScoringScenario" ng-click="removeScoringScenario(section, $index)"></i>',
