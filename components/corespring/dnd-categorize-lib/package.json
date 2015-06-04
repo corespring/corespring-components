@@ -4,10 +4,6 @@
   "purpose": "library",
   "libraries": [
     {
-      "name": "drag-and-drop-engine",
-      "organization": "corespring"
-    },
-    {
       "name": "feedback-config",
       "organization": "corespring",
       "scope": "editor"

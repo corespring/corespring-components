@@ -36,7 +36,8 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     try {
       //optional injection
       var MiniWiggiScopeExtension = $injector.get('MiniWiggiScopeExtension');
-      scope.miniWiggiScopeExtension = new MiniWiggiScopeExtension().postLink(scope);
+      scope.miniWiggiScopeExtension = new MiniWiggiScopeExtension();
+      scope.miniWiggiScopeExtension.postLink(scope);
     } catch (e) {
       //ignore
     }

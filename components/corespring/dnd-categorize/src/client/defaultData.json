@@ -12,7 +12,7 @@
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": false,
-  "partialScoring" : [],
+  "partialScoring" : {},
   "model": {
     "categories": [
       {

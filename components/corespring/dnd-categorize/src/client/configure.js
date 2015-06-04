@@ -71,9 +71,12 @@ function configureCorespringDndCategorize(
         category.choices = _(response).map(getChoiceForId).map(wrapChoiceModel).value();
       });
 
+      var partialScoring = preparePartialScoringEditorModel(scope.fullModel.partialScoring);
+
       return {
         choices: choices,
-        categories: categories
+        categories: categories,
+        partialScoring: partialScoring
       };
 
       function getChoiceForId(choiceId) {
@@ -83,19 +86,61 @@ function configureCorespringDndCategorize(
       }
     }
 
+    function preparePartialScoringEditorModel(inputPartialScoring){
+      var result = _.cloneDeep(inputPartialScoring || {});
+      if(!result.sections){
+        result.sections = _.map(scope.model.categories, makePartialScoringSection);
+      }
+      return result;
+    }
+
+    function makePartialScoringSection(cat){
+      var correctResponses = scope.fullModel.correctResponse[cat.id] || [];
+      var section = {
+        id: cat.id,
+        label: cat.label,
+        numberOfCorrectResponses: correctResponses.length,
+        partialScoring: []
+      };
+      log("makePartialScoringSection", section);
+      return section;
+    }
+
     function getModel() {
       return scope.fullModel;
     }
 
     function updateModel() {
-      log('updateModel');
+      log('updateModel before', _.cloneDeep(scope.fullModel));
       scope.fullModel.model.choices = scope.editorModel.choices.map(cleanChoiceLabel);
       scope.fullModel.model.categories = _.map(scope.editorModel.categories, function (category) {
         return _.cloneDeep(category.model);
       });
       scope.fullModel.correctResponse = getChoicesForCorrectResponse();
-      scope.numberOfCorrectResponses = countCorrectAnswers();
-      log('updateModel', scope.numberOfCorrectResponses);
+
+      scope.editorModel.partialScoring = getUpdatedPartialScoringEditorModel();
+      scope.fullModel.partialScoring = getPartialScoring();
+      log('updateModel after', _.cloneDeep(scope.fullModel));
+
+      function getUpdatedPartialScoringEditorModel(){
+        //if categories have been changed
+        //add/remove sections if a category has been added/removed
+        //update numberOfCorrectResponses in the sections
+        //update labels
+
+        var result = {sections:[]};
+        _.forEach(scope.model.categories, function(cat){
+          var section = _.find(scope.editorModel.partialScoring.sections, {id:cat.id});
+          if(!section){
+            section = makePartialScoringSection(cat);
+          } else {
+            section.label = cat.label;
+            section.numberOfCorrectResponses = (scope.fullModel.correctResponse[cat.id] || []).length;
+          }
+          result.sections.push(section);
+        });
+        return result;
+      }
     }
 
     function getChoicesForCorrectResponse() {
@@ -105,6 +150,18 @@ function configureCorespringDndCategorize(
         }
         return acc;
       }, {});
+    }
+
+    function getPartialScoring(){
+      var sections = _.map(scope.editorModel.partialScoring.sections, function(section){
+        return {
+          id: section.id,
+          partialScoring: section.partialScoring
+        }
+      });
+      return {
+        sections: sections
+      };
     }
 
     function countCorrectAnswers() {
@@ -304,9 +361,9 @@ function configureCorespringDndCategorize(
         '<div class="container-fluid">',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <corespring-partial-scoring-config ',
-        '         full-model="fullModel"',
-        '         number-of-correct-responses="numberOfCorrectResponses"',
+        '      <corespring-multi-partial-scoring-config ',
+        '         model="editorModel.partialScoring"',
+        '         allow-partial-scoring="fullModel.allowPartialScoring"',
         '      ></corespring-partial-scoring-config>',
         '    </div>',
         '  </div>',
