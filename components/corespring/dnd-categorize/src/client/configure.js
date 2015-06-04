@@ -157,7 +157,7 @@ function configureCorespringDndCategorize(
         return {
           id: section.id,
           partialScoring: section.partialScoring
-        }
+        };
       });
       return {
         sections: sections

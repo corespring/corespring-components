@@ -70,10 +70,11 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
     }
 
     function getMaxNumberOfCorrectResponses(){
-      var result = _.reduce(scope.model.sections, function(acc,section){
+      var sections = scope.model && scope.model.sections || [];
+      var result = _.reduce(sections, function(acc,section){
         return Math.max(section.numberOfCorrectResponses, acc);
       }, 0);
-      $log.debug("getMaxNumberOfCorrectResponses", result, scope.model.sections);
+      $log.debug("getMaxNumberOfCorrectResponses", result, sections);
       return result;
     }
 
