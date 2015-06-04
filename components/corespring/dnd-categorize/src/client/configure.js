@@ -63,6 +63,13 @@ function configureCorespringDndCategorize(
 
     function prepareEditorModel() {
       var choices = _.cloneDeep(scope.model.choices);
+
+      _.forEach(choices, function(choice){
+        if(_.isEmpty(choice.label)){
+          choice.label = "&#8203";
+        }
+      });
+
       var categories = _.map(scope.model.categories, wrapCategoryModel);
 
       var correctResponses = scope.fullModel.correctResponse;
@@ -174,7 +181,7 @@ function configureCorespringDndCategorize(
       var idx = findFreeChoiceSlot();
       scope.editorModel.choices.push({
         id: makeChoiceId(idx),
-        label: undefined,
+        label: "&#8203;",
         moveOnDrag: false
       });
     }
