@@ -42,6 +42,7 @@
   "name": "ordering",
   "organization": "corespring",
   "released": true,
+  "minimumWidth": 100,
   "title": "Ordering",
   "titleGroup": "Fixed Choice",
   "version": "0.0.1"

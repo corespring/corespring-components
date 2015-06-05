@@ -4,6 +4,7 @@
   "titleGroup": "Text Entry",
   "organization": "corespring",
   "released": true,
+  "minimumWidth": 100,
   "libraries": [
     {
       "name": "feedback-templates",

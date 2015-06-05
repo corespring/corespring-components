@@ -5,6 +5,7 @@
   "organization": "corespring",
   "version": "2.0.1",
   "released": true,
+  "minimumWidth": 100,
   "dependencies": {
     "client": {
       "corespring-checkbox": {

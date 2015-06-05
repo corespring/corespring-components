@@ -43,6 +43,7 @@
     "name": "line",
     "organization": "corespring",
     "released": true,
+    "minimumWidth": 500,
     "title": "Graph Lines",
     "titleGroup": "Mathematics"
 }
