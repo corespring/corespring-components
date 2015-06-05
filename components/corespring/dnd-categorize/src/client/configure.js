@@ -37,11 +37,9 @@ function configureCorespringDndCategorize(
     scope.addChoice = addChoice;
     scope.deactivate = deactivate;
 
-    var debouncedUpdatePartialScoring = _.debounce(updatePartialScoring, 200);
-
     scope.$watch('editorModel.choices', updateModel, true);
     scope.$watch('editorModel.categories', updateModel, true);
-    scope.$watch('editorModel.partialScoring', debouncedUpdatePartialScoring, true);
+    scope.$watch('editorModel.partialScoring',  _.debounce(updatePartialScoring, 200), true);
     scope.$watch('model', renderMath, true);
 
     scope.containerBridge = {

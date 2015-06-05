@@ -111,7 +111,7 @@ describe('corespring:dnd-categorize:configure', function() {
     rootScope = $rootScope;
   }));
 
-  function setModel(){
+  function setModel() {
     testModel = createTestModel();
     scope.containerBridge.setModel(testModel);
     rootScope.$digest();
@@ -141,7 +141,175 @@ describe('corespring:dnd-categorize:configure', function() {
     it('should set choices', function() {
       expect(scope.editorModel.choices.length).toBe(4);
     });
+    it('should set partialScoring', function() {
+      expect(scope.editorModel.partialScoring.sections.length).toBe(2);
+    });
+  });
 
+  describe('partialScoring', function() {
+    function ignoreNgHash(sections) {
+      var result = _.cloneDeep(sections);
+      _.forEach(result, function(section) {
+        delete section.$$hashKey;
+        _.forEach(section.partialScoring, function(scenario) {
+          delete scenario.$$hashKey;
+        });
+      });
+      return result;
+    }
+    function sections(index){
+      var s = ignoreNgHash(scope.editorModel.partialScoring.sections);
+      return isNaN(index) ? s : s[index];
+    }
+    it('setModel should create sections if they do not exist', function() {
+      setModel();
+      expect(sections()).toEqual(
+        [{
+          catId: 'cat_1',
+          label: 'Category 1',
+          numberOfCorrectResponses: 0,
+          partialScoring: [{
+            numberOfCorrect: 1,
+            scorePercentage: 0
+          }],
+          maxNumberOfScoringScenarios: 1,
+          canAddScoringScenario: false,
+          canRemoveScoringScenario: false
+        }, {
+          catId: 'cat_2',
+          label: 'Category 2',
+          numberOfCorrectResponses: 0,
+          partialScoring: [{
+            numberOfCorrect: 1,
+            scorePercentage: 0
+          }],
+          maxNumberOfScoringScenarios: 1,
+          canAddScoringScenario: false,
+          canRemoveScoringScenario: false
+        }]
+      );
+    });
+    it('should keep existing sections and augment them', function() {
+      var dummy = createTestModel();
+      var testModel = {
+        model: {
+          choices: dummy.model.choices,
+          categories: _.take(dummy.model.categories, 1),
+          config: {}
+        },
+        correctResponse: {
+          cat_1: ['choice_1', 'choice_2']
+        },
+        partialScoring: {
+          sections: [
+            {
+              catId: 'cat_1',
+              partialScoring: [{
+                numberOfCorrect: 1,
+                scorePercentage: 44
+              }]
+            }
+          ]
+        }
+      };
+      scope.containerBridge.setModel(testModel);
+      rootScope.$digest();
+      var section = sections(0);
+      expect(section.catId).toEqual('cat_1');
+      expect(section.label).toEqual('Category 1');
+      expect(section.numberOfCorrectResponses).toEqual(2);
+      expect(section.maxNumberOfScoringScenarios).toEqual(1);
+      expect(section.canAddScoringScenario).toEqual(false);
+      expect(section.canRemoveScoringScenario).toEqual(false);
+      expect(section.partialScoring).toEqual([{
+        numberOfCorrect: 1,
+        scorePercentage: 44
+      }]);
+    });
+
+    it('should set canAddScenario to true, when number of scenarios < max', function() {
+      var dummy = createTestModel();
+      var testModel = {
+        model: {
+          choices: dummy.model.choices,
+          categories: _.take(dummy.model.categories, 1),
+          config: {}
+        },
+        correctResponse: {
+          cat_1: ['choice_1', 'choice_2', 'choice_3']
+        },
+        partialScoring: {
+          sections: [
+            {
+              catId: 'cat_1',
+              partialScoring: [{
+                numberOfCorrect: 1,
+                scorePercentage: 44
+              }]
+            }
+          ]
+        }
+      };
+      scope.containerBridge.setModel(testModel);
+      rootScope.$digest();
+      var section = sections(0);
+      expect(section.catId).toEqual('cat_1');
+      expect(section.label).toEqual('Category 1');
+      expect(section.numberOfCorrectResponses).toEqual(3);
+      expect(section.maxNumberOfScoringScenarios).toEqual(2);
+      expect(section.canAddScoringScenario).toEqual(true);
+      expect(section.canRemoveScoringScenario).toEqual(false);
+      expect(section.partialScoring).toEqual([{
+        numberOfCorrect: 1,
+        scorePercentage: 44
+      }]);
+    });
+
+    it('should set canRemoveScenario to true, when number of scenarios > 1', function() {
+      var dummy = createTestModel();
+      var testModel = {
+        model: {
+          choices: dummy.model.choices,
+          categories: _.take(dummy.model.categories, 1),
+          config: {}
+        },
+        correctResponse: {
+          cat_1: ['choice_1', 'choice_2', 'choice_3']
+        },
+        partialScoring: {
+          sections: [
+            {
+              catId: 'cat_1',
+              partialScoring: [{
+                  numberOfCorrect: 1,
+                  scorePercentage: 11
+              },
+                {
+                  numberOfCorrect: 2,
+                  scorePercentage: 22
+              }]
+            }
+          ]
+        }
+      };
+      scope.containerBridge.setModel(testModel);
+      rootScope.$digest();
+      var section = sections(0);
+      expect(section.catId).toEqual('cat_1');
+      expect(section.label).toEqual('Category 1');
+      expect(section.numberOfCorrectResponses).toEqual(3);
+      expect(section.maxNumberOfScoringScenarios).toEqual(2);
+      expect(section.canAddScoringScenario).toEqual(false);
+      expect(section.canRemoveScoringScenario).toEqual(true);
+      expect(section.partialScoring).toEqual([{
+          numberOfCorrect: 1,
+          scorePercentage: 11
+      },
+        {
+          numberOfCorrect: 2,
+          scorePercentage: 22
+        }]);
+    });
   });
 
   describe('getModel', function() {
