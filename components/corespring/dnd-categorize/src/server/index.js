@@ -28,7 +28,7 @@ function evaluatePartialScoringSections(question, answer){
     section.numAnswers = answers.length;
     var correctResponses = question.correctResponse[catId];
     section.numberOfCorrectResponses = correctResponses.length;
-    section.numCorrectAnswers = countCorrectAnswersInCategory(correctResponses, answers);
+    section.numAnsweredCorrectly = countCorrectAnswersInCategory(correctResponses, answers);
   });
 }
 
