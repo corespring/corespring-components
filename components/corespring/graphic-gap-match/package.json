@@ -37,6 +37,7 @@
   },
 
   "released": false,
+  "minimumWidth": 100,
   "title": "Graphic Gap Match",
   "titleGroup": "Mathematics",
   "name": "graphic-gap-match",
