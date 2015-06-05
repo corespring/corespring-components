@@ -37,7 +37,9 @@ function configureCorespringDndCategorize(
     scope.addChoice = addChoice;
     scope.deactivate = deactivate;
 
-    scope.$watch('editorModel', _.debounce(updateModel, 100), true);
+    scope.$watch('editorModel.choices', updateModel, true);
+    scope.$watch('editorModel.categories', updateModel, true);
+    scope.$watch('editorModel.partialScoring', updatePartialScoring, true);
     scope.$watch('model', renderMath, true);
 
     scope.containerBridge = {
@@ -63,8 +65,8 @@ function configureCorespringDndCategorize(
 
     function prepareEditorModel() {
       var choices = _.cloneDeep(scope.model.choices);
-      var categories = _.map(scope.model.categories, wrapCategoryModel);
 
+      var categories = _.map(scope.model.categories, wrapCategoryModel);
       var correctResponses = scope.fullModel.correctResponse;
       _.forEach(categories, function (category) {
         var response = correctResponses[category.model.id] || {};
@@ -97,12 +99,11 @@ function configureCorespringDndCategorize(
     function makePartialScoringSection(cat){
       var correctResponses = scope.fullModel.correctResponse[cat.id] || [];
       var section = {
-        id: cat.id,
+        catId: cat.id,
         label: cat.label,
         numberOfCorrectResponses: correctResponses.length,
         partialScoring: []
       };
-      log("makePartialScoringSection", section);
       return section;
     }
 
@@ -111,18 +112,33 @@ function configureCorespringDndCategorize(
     }
 
     function updateModel() {
-      log('updateModel before', _.cloneDeep(scope.fullModel));
-      scope.fullModel.model.choices = scope.editorModel.choices.map(cleanChoiceLabel);
-      scope.fullModel.model.categories = _.map(scope.editorModel.categories, function (category) {
-        return _.cloneDeep(category.model);
-      });
-      scope.fullModel.correctResponse = getChoicesForCorrectResponse();
+      updateChoices();
+      updateCategories();
+      updateCorrectResponse();
+      updatePartialScoringEditorModel();
 
-      scope.editorModel.partialScoring = getUpdatedPartialScoringEditorModel();
-      scope.fullModel.partialScoring = getPartialScoring();
-      log('updateModel after', _.cloneDeep(scope.fullModel));
+      //--------------------------------------
 
-      function getUpdatedPartialScoringEditorModel(){
+      function updateChoices(){
+        scope.fullModel.model.choices = scope.editorModel.choices.map(cleanChoiceLabel);
+      }
+
+      function updateCategories(){
+        scope.fullModel.model.categories = _.map(scope.editorModel.categories, function (category) {
+          return _.cloneDeep(category.model);
+        });
+      }
+
+      function updateCorrectResponse(){
+        scope.fullModel.correctResponse = _.reduce(scope.editorModel.categories, function (acc, category) {
+          if (category.choices) {
+            acc[category.model.id] = _.map(category.choices, getModelIdForChoice);
+          }
+          return acc;
+        }, {});
+      }
+
+      function updatePartialScoringEditorModel(){
         //if categories have been changed
         //add/remove sections if a category has been added/removed
         //update numberOfCorrectResponses in the sections
@@ -139,27 +155,18 @@ function configureCorespringDndCategorize(
           }
           result.sections.push(section);
         });
-        return result;
+        scope.editorModel.partialScoring = result;
       }
     }
 
-    function getChoicesForCorrectResponse() {
-      return _.reduce(scope.editorModel.categories, function (acc, category) {
-        if (category.choices) {
-          acc[category.model.id] = _.map(category.choices, getModelIdForChoice);
-        }
-        return acc;
-      }, {});
-    }
-
-    function getPartialScoring(){
+    function updatePartialScoring(){
       var sections = _.map(scope.editorModel.partialScoring.sections, function(section){
         return {
-          id: section.id,
+          catId: section.catId,
           partialScoring: section.partialScoring
         };
       });
-      return {
+      scope.fullModel.partialScoring = {
         sections: sections
       };
     }

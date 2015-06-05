@@ -11,12 +11,25 @@ function createOutcome(question, answer, settings) {
   var numberOfAnswers = countAnswers(answer);
   var numberOfCorrectAnswers = countCorrectAnswers(question, answer);
   var numberOfExpectedAnswers = countExpectedAnswers(question);
+  evaluatePartialScoringSections(question, answer);
 
   var response = fb.defaultCreateOutcome(question, answer, settings,
     numberOfAnswers, numberOfCorrectAnswers, numberOfExpectedAnswers);
 
   response.detailedFeedback = createDetailedFeedback(question, answer);
   return response;
+}
+
+function evaluatePartialScoringSections(question, answer){
+  answer = answer || {};
+  _.forEach(question.partialScoring.sections, function(section){
+    var catId = section.catId;
+    var answers = answer[catId] || [];
+    section.numAnswers = answers.length;
+    var correctResponses = question.correctResponse[catId];
+    section.numberOfCorrectResponses = correctResponses.length;
+    section.numCorrectAnswers = countCorrectAnswersInCategory(correctResponses, answers);
+  });
 }
 
 function countAnswers(answers) {

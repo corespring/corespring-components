@@ -16,6 +16,7 @@ describe('dnd-categorize', function() {
   function question(categories, correctResponse) {
     return {
       correctResponse: _.cloneDeep(correctResponse),
+      partialScoring: {sections:[]},
       model: {
         categories: _.map(categories, function(id) {
           return {
@@ -296,6 +297,7 @@ describe('dnd-categorize', function() {
 
   it('should return incorrect + feedback for an empty answer', function() {
     var outcome = server.createOutcome({
+        partialScoring: {sections:[]},
         model:{categories:[]},
         feedback: {}
       },
@@ -316,6 +318,7 @@ describe('dnd-categorize', function() {
 
   it('should return incorrect + feedback for an empty answer when using custom feedback', function() {
     var outcome = server.createOutcome({
+      partialScoring: {sections:[]},
       model:{categories:[]},
       feedback: {
         incorrectFeedbackType: 'custom',

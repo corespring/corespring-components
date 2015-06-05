@@ -48,24 +48,43 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
     $log.debug("link", scope.model);
 
     scope.addScoringScenario = addScoringScenario;
-    scope.isAllowedToConfigurePartialScoring = isAllowedToConfigurePartialScoring;
+    scope.isPanelCollapsed = isPanelCollapsed;
     scope.removeScoringScenario = removeScoringScenario;
-    scope.togglePartialScoring = togglePartialScoring;
+    scope.toggleAllowPartialScoring = toggleAllowPartialScoring;
     scope.updatePartialScoringModel = updatePartialScoringModel;
 
-    scope.$watch('model', function(newValue) {
+    scope.$watch('model', function(newValue, oldValue) {
       scope.updatePartialScoringModel();
     }, true);
 
     //--------------------------------------------------------------
 
-    function togglePartialScoring() {
-      if (isAllowedToConfigurePartialScoring()) {
+    function isPanelCollapsed(){
+      var collapsed = !(scope.allowPartialScoring && hasPartialScoringToConfigure());
+      if(collapsed && isPartialScoringHidden()){
+        fixPanelCollapsed();
+      }
+      return collapsed;
+
+      //-----------------------
+
+      function isPartialScoringHidden(){
+       return elem.parents('.ng-hide').length > 0;
+      }
+
+      function fixPanelCollapsed(){
+        elem.find('.panel-body').removeClass('collapsing');
+        elem.find('.panel-body').addClass('collapse');
+      }
+    }
+
+    function toggleAllowPartialScoring() {
+      if (hasPartialScoringToConfigure()) {
         scope.allowPartialScoring = !scope.allowPartialScoring;
       }
     }
 
-    function isAllowedToConfigurePartialScoring(){
+    function hasPartialScoringToConfigure(){
       return getMaxNumberOfCorrectResponses() > 1;
     }
 
@@ -74,7 +93,6 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
       var result = _.reduce(sections, function(acc,section){
         return Math.max(section.numberOfCorrectResponses, acc);
       }, 0);
-      $log.debug("getMaxNumberOfCorrectResponses", result, sections);
       return result;
     }
 
@@ -102,6 +120,10 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
         return;
       }
 
+      if(!hasPartialScoringToConfigure()) {
+        scope.allowPartialScoring = false;
+      }
+
       _.forEach(scope.model.sections, function(section){
         if(!section.partialScoring){
           section.partialScoring = [];
@@ -118,7 +140,6 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
           return ps.numberOfCorrect <= 1 || ps.numberOfCorrect < section.numberOfCorrectResponses;
         });
       });
-      $log.debug("updatePartialScoringModel", scope.model);
     }
 
     function makeScenario(numberOfCorrect, scorePercentage) {
@@ -137,19 +158,19 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
         '   question, you may allow partial credit based on the ',
         '   number of correct answers submitted. This is optional.',
         '  </div>',
-        '  <div class="panel panel-default" ng-class="{disabled: !isAllowedToConfigurePartialScoring()}">',
+        '  <div class="panel panel-default">',
         '    <div class="panel-heading">',
         '      <h4 class="panel-title">',
-        '        <a ng-click="togglePartialScoring()">',
+        '        <a ng-click="toggleAllowPartialScoring()">',
         '          <span class="icon">',
-        '            <i class="fa fa-{{allowPartialScoring ? \'minus\' : \'plus\'}}-circle"></i>',
+        '            <i class="fa fa-{{isPanelCollapsed() ? \'plus\' : \'minus\'}}-circle"></i>',
         '          </span>',
         '          Partial Scoring Rules',
         '        </a>',
         '      </h4>',
         '    </div>',
         '    <div class="partial-scoring">',
-        '      <div class="panel-body" collapse="!isAllowedToConfigurePartialScoring() || !allowPartialScoring">',
+        '      <div class="panel-body" collapse="isPanelCollapsed()">',
         '        <div class="section" ng-repeat="section in model.sections" ng-show="section.numberOfCorrectResponses > 1">',
         '          <div class="html-wrapper" ng-bind-html-unsafe="section.label"></div>',
         '          <ul class="list-unstyled">',
@@ -157,7 +178,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
         '              If',
         '              <input class="form-control" type="number" min="1" max="{{section.maxNumberOfScoringScenarios}}" ng-model="scenario.numberOfCorrect"/>',
         '              of correct answers is selected, award',
-        '              <input class="form-control" type="number" min="1" max="99" ng-model="scenario.scorePercentage"/>',
+        '              <input class="form-control" type="number" min="0" max="99" ng-model="scenario.scorePercentage"/>',
         '              % of full credit.',
         '              <i class="fa fa-trash-o remove-item" ng-show="section.canRemoveScoringScenario" ng-click="removeScoringScenario(section, $index)"></i>',
         '            </li>',

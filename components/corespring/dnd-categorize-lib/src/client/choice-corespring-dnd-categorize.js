@@ -87,7 +87,6 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     //------------------------------------------------
 
     function onChangeActive(event, id) {
-      console.log("onChangeActive", id, scope.active, scope.miniWiggiScopeExtension);
       if(!scope.miniWiggiScopeExtension){
         throw "Expected miniWiggiScopeExtension to be available";
       }
@@ -147,7 +146,6 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     }
 
     function onChoiceEditClicked(event) {
-      log('onChoiceEditClicked isDragging:', scope.isDragging, ' canEdit:', scope.canEdit());
       event.stopPropagation();
       if(!scope.canEdit() || scope.isDragging){
         return;
