@@ -5,6 +5,7 @@
   "organization": "corespring",
   "corespring-container-version": "0.0.1",
   "version": "0.0.1",
+  "minimumWidth": 300,
   "dependencies": {
     "corespring-checkbox": {
       "bower_target": "git@github.com:corespring/checkbox.git",
