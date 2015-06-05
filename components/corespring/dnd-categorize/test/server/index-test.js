@@ -33,7 +33,7 @@ describe('dnd-categorize', function() {
   function partialScoring(sections) {
     return {
       sections: sections
-    }
+    };
   }
 
   function answers(o) {
