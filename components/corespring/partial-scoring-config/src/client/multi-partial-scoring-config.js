@@ -45,8 +45,6 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
   };
 
   function link(scope, elem, attr) {
-    $log.debug("link", scope.model);
-
     scope.addScoringScenario = addScoringScenario;
     scope.isPanelCollapsed = isPanelCollapsed;
     scope.removeScoringScenario = removeScoringScenario;

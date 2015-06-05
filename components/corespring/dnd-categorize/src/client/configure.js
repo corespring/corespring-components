@@ -37,9 +37,11 @@ function configureCorespringDndCategorize(
     scope.addChoice = addChoice;
     scope.deactivate = deactivate;
 
+    var debouncedUpdatePartialScoring = _.debounce(updatePartialScoring, 200);
+
     scope.$watch('editorModel.choices', updateModel, true);
     scope.$watch('editorModel.categories', updateModel, true);
-    scope.$watch('editorModel.partialScoring', updatePartialScoring, true);
+    scope.$watch('editorModel.partialScoring', debouncedUpdatePartialScoring, true);
     scope.$watch('model', renderMath, true);
 
     scope.containerBridge = {
@@ -52,7 +54,7 @@ function configureCorespringDndCategorize(
     //----------------------------------------------------
 
     function setModel(fullModel) {
-      log('setModel', fullModel);
+      //log('setModel in', _.cloneDeep(fullModel));
       scope.fullModel = fullModel;
       scope.fullModel.correctResponse = scope.fullModel.correctResponse || {};
 
@@ -61,6 +63,7 @@ function configureCorespringDndCategorize(
       scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 4;
 
       scope.editorModel = prepareEditorModel();
+      //log('setModel out', _.cloneDeep(fullModel), _.cloneDeep(scope.editorModel));
     }
 
     function prepareEditorModel() {
@@ -146,7 +149,8 @@ function configureCorespringDndCategorize(
 
         var result = {sections:[]};
         _.forEach(scope.model.categories, function(cat){
-          var section = _.find(scope.editorModel.partialScoring.sections, {id:cat.id});
+          var section = _.find(scope.editorModel.partialScoring.sections, {catId:cat.id});
+          log("[Warn] updatePartialScoringEditorModel: section for " + cat.id + " not found. Creating new section.");
           if(!section){
             section = makePartialScoringSection(cat);
           } else {
@@ -166,6 +170,7 @@ function configureCorespringDndCategorize(
           partialScoring: section.partialScoring
         };
       });
+      //log("updatePartialScoring sections:", scope.editorModel.partialScoring.sections, sections);
       scope.fullModel.partialScoring = {
         sections: sections
       };
