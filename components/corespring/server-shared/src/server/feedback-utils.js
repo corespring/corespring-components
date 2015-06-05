@@ -56,8 +56,8 @@ function makeFeedback(feedback, correctness, defaults) {
 /**
  * Quite a few comps seem to have a similar if not the same
  * createOutcome method apart from where they get the numbers
- * from, By passing the numbers in we might be able to factor
- * out the common behaviour into this method here.
+ * from. By passing the numbers in, we are able to factor
+ * out the common behaviour into the method below.
  *
  * @param question
  * @param answer
@@ -73,7 +73,8 @@ function defaultCreateOutcome(
   settings,
   numAnswers,
   numAnsweredCorrectly,
-  totalCorrectAnswers) {
+  totalCorrectAnswers
+) {
 
   settings = settings || {};
 
@@ -85,26 +86,24 @@ function defaultCreateOutcome(
     throw "Error - the uids must match";
   }
 
-  var isCorrect = totalCorrectAnswers === numAnsweredCorrectly &&
-    totalCorrectAnswers === numAnswers;
-  var isPartiallyCorrect = numAnsweredCorrectly > 0;
+  var isCorrect = totalCorrectAnswers === numAnsweredCorrectly && totalCorrectAnswers === numAnswers;
+  var isPartiallyCorrect = !isCorrect && numAnsweredCorrectly > 0;
 
   var score = 0;
   if (isCorrect) {
     score = 1;
-  } else if (question.allowPartialScoring) {
-    var partialScore = _.find(question.partialScoring, function(ps) {
-      return ps.numberOfCorrect === numAnsweredCorrectly;
-    });
-    if (partialScore) {
-      score = partialScore.scorePercentage / 100;
-    }
+  } else if (isPartiallyCorrect && question.allowPartialScoring) {
+    score = calculatePartialScoring() / 100;
   }
 
-  return makeResponse(
+  var response = makeResponse(
     isCorrect ? 'correct' : 'incorrect',
     correctness(isCorrect, isPartiallyCorrect),
     score);
+
+  return response;
+
+  //----------------------------------------------------
 
   function makeResponse(correctness, correctClass, score, warningClass) {
     var response = {};
@@ -120,9 +119,63 @@ function defaultCreateOutcome(
     if (question.comments) {
       response.comments = question.comments;
     }
-    if(warningClass){
+    if (warningClass) {
       response.warningClass = warningClass;
     }
     return response;
   }
+
+  function calculatePartialScoring() {
+    return isMultiSectionPartialScoring() ? calcMultiSectionPartialScoring() : calcSimplePartialScoring();
+  }
+
+  function isMultiSectionPartialScoring(){
+    return question.partialScoring && _.isArray(question.partialScoring.sections);
+  }
+
+  /**
+   * Calculate the score of every section and return the average
+   * @returns {number}
+   */
+  function calcMultiSectionPartialScoring(){
+    var numberOfSections = question.partialScoring.sections.length;
+    if(numberOfSections === 0){
+      return 0;
+    }
+    var sumOfScores = _.reduce(question.partialScoring.sections, function(acc, section){
+      return acc + calcSectionScore(section);
+    }, 0);
+    return sumOfScores / numberOfSections;
+
+    function calcSectionScore(section){
+      var isCorrect = section.numAnswers === section.numAnsweredCorrectly &&
+        section.numAnsweredCorrectly === section.numberOfCorrectResponses;
+      var isPartiallyCorrect = !isCorrect && section.numAnsweredCorrectly > 0;
+      var score = 0;
+      if(isCorrect){
+        score = 100;
+      }
+      else if(isPartiallyCorrect){
+        score = calcPartialScoring(section.partialScoring, section.numAnsweredCorrectly);
+      }
+      return score;
+    }
+  }
+
+  function calcSimplePartialScoring(){
+    return calcPartialScoring(question.partialScoring, numAnsweredCorrectly);
+  }
+
+  function calcPartialScoring(partialScoring, numAnsweredCorrectly) {
+    var partialScore = findPartialScoringScenario(partialScoring, numAnsweredCorrectly);
+    return partialScore ? partialScore.scorePercentage : 0;
+  }
+
+  function findPartialScoringScenario(scenarios, numAnsweredCorrectly) {
+    var scenario = _.find(scenarios, function(ps) {
+      return ps.numberOfCorrect === numAnsweredCorrectly;
+    });
+    return scenario;
+  }
+
 }

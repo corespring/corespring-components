@@ -48,11 +48,9 @@ function CategoryLabelCorespringDndCategorize(
     scope.onLabelEditClicked = onLabelEditClicked;
 
     scope.$on('activate', function(event, id) {
-      console.log("onLabelEditClicked", scope.miniWiggiScopeExtension);
       if(!scope.miniWiggiScopeExtension){
         throw "Expected miniWiggiScopeExtension to be available";
       }
-
       scope.active = id === getCategoryId();
     });
 
