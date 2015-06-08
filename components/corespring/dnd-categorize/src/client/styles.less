@@ -1,10 +1,7 @@
 @import '../../../../../less/common';
 
 @component-width-in-placeholder: 600px;
-@categories-holder-padding: 15px;
-//make sure the category fits into the see solution panel
-@choices-holder-padding: @categories-holder-padding + 3px;
-//make sure choice fits into category
+@categories-holder-padding: 15px; //make sure the category fits into the see solution panel
 
 .component-placeholder {
   .render-corespring-dnd-categorize {
@@ -92,6 +89,25 @@
         }
       }
     }
+
+    .correctness-display {
+      font-size: 17px;
+      position: absolute;
+      right: 17px;
+      top: 0px;
+
+      .background {
+        color: white;
+        left:0;
+        position:absolute;
+        top:0;
+      }
+      .foreground {
+        left:0;
+        position:absolute;
+        top:0;
+      }
+    }
   }
 
   &.correct {
@@ -103,14 +119,16 @@
         display: none;
       }
 
-      &:after {
-        color: @correct-color;
-        content: @correct-character;
-        font-family: 'FontAwesome';
-        font-size: 17px;
-        position: absolute;
-        right: 2px;
-        top: -2px;
+      .correctness-display {
+
+        .background:after {
+          color: white;
+          content: '\f111';
+        }
+        .foreground:after {
+          color: @correct-color;
+          content: @correct-character;
+        }
       }
     }
   }
@@ -124,14 +142,16 @@
         display: none;
       }
 
-      &:after {
-        color: @incorrect-color;
-        content: @incorrect-character;
-        font-family: 'FontAwesome';
-        font-size: 17px;
-        position: absolute;
-        right: 2px;
-        top: -2px;
+      .correctness-display {
+
+        .background:after {
+          color: white;
+          content: '\f111';
+        }
+        .foreground:after {
+          color: @incorrect-color;
+          content: @incorrect-character;
+        }
       }
     }
   }

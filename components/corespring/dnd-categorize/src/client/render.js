@@ -292,6 +292,9 @@ function renderCorespringDndCategorize(
     }
 
     function updateView() {
+      if(elem.width() === 0){
+        return;
+      }
       if (!scope.renderModel.categories || !scope.renderModel.choices) {
         return;
       }
@@ -333,10 +336,7 @@ function renderCorespringDndCategorize(
      * @returns {number}
      */
     function calcChoiceWidth() {
-      if (!scope.renderModel.choices) {
-        return 0;
-      }
-      var totalWidth = (elem.width() || 600);
+      var totalWidth = elem.width();
       totalWidth -= 2*15; //padding of the categories-holder
       var maxChoiceWidth = totalWidth / scope.categoriesPerRow;
       maxChoiceWidth -=2*3; //margin of category.border
