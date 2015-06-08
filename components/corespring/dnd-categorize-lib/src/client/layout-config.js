@@ -31,8 +31,8 @@ function LayoutConfig() {
     return this;
   };
 
-  this.withGutter = function(value) {
-    config.gutter = value;
+  this.withDistributeSpace = function(value) {
+    config.distributeSpace = value;
     return this;
   };
 

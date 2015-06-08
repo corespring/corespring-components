@@ -10,6 +10,7 @@ exports.factory = [function() {
  *  numColumns: the desired number of columns, can also be a function
  *  cellWidth: the desired width of one column
  *  paddingBottom: the padding to be added to the container height
+ *  distributeSpace: whether the available horizontal space should be distributed
  */
 function CompactLayout(initialConfig, layoutRunner, name) {
 
@@ -48,7 +49,9 @@ function CompactLayout(initialConfig, layoutRunner, name) {
       smallestColumn(columns).push(choice);
     });
 
-    var gutter = Math.max(0, (config.container.width() - numColumns * config.cellWidth) / (numColumns + 1));
+    var gutter = config.distributeSpace ?
+      Math.max(0, (config.container.width() - numColumns * config.cellWidth) / (numColumns + 1)) :
+      0;
 
     columns.forEach(function(colChoices, colIndex) {
       colChoices.forEach(function(choice, choiceIndex) {
@@ -64,7 +67,7 @@ function CompactLayout(initialConfig, layoutRunner, name) {
 
     //the choices are positioned absolutely
     //which means the container height is not pushed.
-    //Therefor we have to set the height explicitely
+    //Therefor we have to set the height explicitly
     config.container.css({
       height: getContainerHeight(columns) + config.paddingBottom
     });

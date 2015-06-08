@@ -153,7 +153,7 @@ function CategoryChoicesCorespringDndCategorize(
         '  data-jqyoui-options="droppableJqueryOptions()"',
         '  >',
         '  <div class="border">',
-        '    <div class="categorized choices">',
+        '    <div class="categorized choices" ng-class="{\'answers-expected\':category.answersExpected}">',
         '      <div class="choice-container">',
         '        <div choice-corespring-dnd-categorize="true" ',
         '           choice-id="{{choice.model.id}}" ',
