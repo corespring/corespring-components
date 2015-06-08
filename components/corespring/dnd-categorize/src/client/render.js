@@ -293,6 +293,7 @@ function renderCorespringDndCategorize(
 
     function updateView() {
       if(elem.width() === 0){
+        $timeout(updateView, 100);
         return;
       }
       if (!scope.renderModel.categories || !scope.renderModel.choices) {
