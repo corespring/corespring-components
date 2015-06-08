@@ -1,4 +1,4 @@
-var calculatorScientific = [
+var calculatorScientificTemplate = [
 
   function() {
     var link = function(scope, elm, attrs, container) {      
@@ -26,6 +26,6 @@ var calculatorScientific = [
 
 exports.framework = 'angular';
 exports.directive = {
-  name: "calculatorScientific",
-  directive: calculatorScientific
+  name: "calculatorScientificTemplate",
+  directive: calculatorScientificTemplate
 };

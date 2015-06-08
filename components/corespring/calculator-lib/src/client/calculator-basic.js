@@ -1,62 +1,110 @@
 var calculatorBasic = [
+  'CalculatorCore',
+  'CalculatorConfig',
+  function(CalculatorCore, CalculatorConfig) {
 
-	function() {
-    var link = function(scope, elm, attrs, container) {      
+    var calculatorCore;
 
-    }
+    function CalculatorBasic(scope, input) {
 
-    function template() {
-	    return [
-	      '<div class=\"calculator basic\">',
-	      '  <div class="results">',
-	      '    <input id="results" />',
-	      '  </div>',
-	      '  <div class="buttons-panel">',
-	      '    <div class="left">',
-	      '    <div class="clear-pad">',
-	      '      <button id="backspace-button" class="backspace-button">Backspace</button>',
-	      '      <button id="clear-button" class="clear-button">C</button>',	     
-	      '    </div>',
-	      '    <div class="numbers-pad">',
-	      '      <button id="one-button" class="number-button">1</button>',
-	      '      <button id="two-button" class="number-button">2</button>',
-	      '      <button id="three-button" class="number-button">3</button>',
-	      '      <button id="four-button" class="number-button">4</button>',
-	      '      <button id="five-button" class="number-button">5</button>',
-	      '      <button id="six-button" class="number-button">6</button>',
-	      '      <button id="seven-button" class="number-button">7</button>',
-	      '      <button id="eight-button" class="number-button">8</button>',
-	      '      <button id="nine-button" class="number-button">9</button>',
-	      '      <button id="zero-button" class="number-button">0</button>',
-	      '      <button id="dot-button" class="number-button">.</button>',
-	      '      <button id="equal-button" class="number-button">=</button>',
-	      '    </div>',
-	      '    </div>',
-	      '    <div class="basic-functions-pad clearfix">',
-	      '      <button id="sqrt-button" class="number-button" title="Square root">&radic;</button>',
-	      '      <button id="plus-button" class="number-button" title="Plus">+</button>',
-	      '      <button id="minus-button" class="number-button" title="Minus">-</button>',
-	      '      <button id="multiply-button" class="number-button" title="Multiply">*</button>',
-	      '      <button id="divide-button" class="number-button" title="Divide">/</button>',
-	      '    </div>',
-	      '  </div>',
-	      '</div>'
-	    ].join('');
-		}
-    
-    return {
-      restrict: 'EA',
-      replace: true,
-      link: link,
-      scope: {
-      },
-      template: template()
-    };
-	}
+      var self = this;      
+      var resultsInput = input;     
+      var scope = scope; 
+      calculatorCore = new CalculatorCore(scope, resultsInput);
+      scope.$on('resolveOperation', function(){ self.resolveOperation(calculatorCore.pendingOperation); });
+
+      this.extendScope = function(scope, componentType) {
+        new CalculatorConfig().postLink(scope);
+      }
+
+      this.click = function(button, type, logic) {
+        if(calculatorCore.state !== 'error' || button === 'clear') {
+          var context = (logic === 'basic') ? self : calculatorCore;
+          var functionName, optionalArgs;
+
+          if(type.indexOf('Operator') != -1) {
+            var typeParts = type.split('_');
+            optionalArgs = typeParts[0];
+            functionName = 'click' + typeParts[1];
+          } else {
+            functionName = 'click' + type;
+          }
+
+          calculatorCore.executeFunctionByName(functionName, context, button, optionalArgs)
+        }
+      }
+
+      this.clickOperator = function(button, operatorType) {
+        if(operatorType === 'unary') {
+          self.clickUnaryOperator(button);
+        } else {
+          self.clickBinaryOperator(button);
+        }        
+      }
+
+      this.clickUnaryOperator = function(button) {
+        var input = new Number(resultsInput.val());
+        switch(button) {
+          case 'sqrt':
+            calculatorCore.results = Math.sqrt(input);
+            resultsInput.val(calculatorCore.results);
+            break;
+          default:
+            break;
+        }
+
+        calculatorCore.pendingOperation = '';
+        calculatorCore.newInput = true;
+      }
+
+      this.clickBinaryOperator = function(button) {
+        self.resolveOperation(button);
+
+        calculatorCore.pendingOperation = button;
+        calculatorCore.newInput = true;
+      }
+
+      this.resolveOperation = function(button) {
+        var input = new Number(resultsInput.val());
+
+        if(calculatorCore.pendingOperation !== '') {
+          if (calculatorCore.newInput) {
+            calculatorCore.pendingOperation = button;
+          } else {
+            switch(calculatorCore.pendingOperation) {
+              case 'plus':
+                calculatorCore.results = calculatorCore.results + input;
+                break;
+              case 'minus':
+                calculatorCore.results = calculatorCore.results - input;
+                break;
+              case 'multiply':
+                calculatorCore.results = calculatorCore.results * input;
+                break;
+              case 'divide':
+                if(resultsInput.val() === '0') {
+                  calculatorCore.results = 'Error';
+                  calculatorCore.pendingOperation = '';
+                  calculatorCore.newInput = true;
+                  calculatorCore.state = 'error';
+                } else {
+                  calculatorCore.results = calculatorCore.results / input;
+                }
+                break;
+              default:
+                break;
+            } 
+            resultsInput.val(calculatorCore.results);
+          }          
+        } else {
+          calculatorCore.results = new Number(resultsInput.val());
+        }
+      }
+    }    
+
+    return CalculatorBasic;
+  }
 ];
 
-exports.framework = 'angular';
-exports.directive = {
-  name: "calculatorBasic",
-  directive: calculatorBasic
-};
+exports.framework = "angular";
+exports.factory = calculatorBasic;

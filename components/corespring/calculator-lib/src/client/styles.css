@@ -1,10 +1,11 @@
 .calculator {
   padding:10px;
+  min-height: 50px;
 }
 
 .basic {
-  width: 242px;
-  height: 220px;
+  width: 235px;
+  height: 215px;
 }
 
 .scientific {
@@ -17,10 +18,12 @@
 
 .results {	
 	padding-bottom: 10px;
+	width: 215px;
+	margin: 0;
 }
 
 .results input {	
-	width: 212px;
+	width: 100%;
 }
 
 .buttons-panel {	
@@ -34,12 +37,13 @@
 }
 
 .clear-pad {
-	width: 160px;
+	width: 165px;
 	margin: 0;
 }
 
 .backspace-button {
-	width: 105px;
+	width: 105px;	
+	margin-right: 5px;
 }
 
 .clear-button {
@@ -47,17 +51,24 @@
 }
 
 .numbers-pad {
-	width: 160px;
+	width: 165px;
 	margin-top: 10px;
 }
 
 .number-button {
 	width: 50px;
 	margin-bottom: 10px;
+	margin-right: 5px;
 }
 
 .basic-functions-pad {
 	float: right;
-	width: 60px;
+	width: 50px;
 	margin-top: 0;
+}
+
+.basic-function-button {
+	width: 48px;
+	height: 25px;
+	margin-bottom: 10px;	
 }
