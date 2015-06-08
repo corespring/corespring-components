@@ -635,6 +635,7 @@ function renderCorespringDndCategorize(
         '        drag-and-drop-scope="renderModel.dragAndDropScope"',
         '        drag-enabled="isDragEnabledFromCategory()"',
         '        edit-mode="isEditMode" ',
+        '        ng-class="response.warningClass"',
         '        ng-repeat="category in row"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId,index)" ',
