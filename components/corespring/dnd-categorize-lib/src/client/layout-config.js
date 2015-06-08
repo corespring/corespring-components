@@ -31,11 +31,6 @@ function LayoutConfig() {
     return this;
   };
 
-  this.withDistributeSpace = function(value) {
-    config.distributeSpace = value;
-    return this;
-  };
-
   this.value = function() {
     return config;
   };
