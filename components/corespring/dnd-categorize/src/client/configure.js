@@ -38,6 +38,7 @@ function configureCorespringDndCategorize(
     scope.deactivate = deactivate;
 
     scope.$watch('editorModel.choices', updateModel, true);
+    scope.$watch('editorModel.choicesLabel', updateChoicesLabel, true);
     scope.$watch('editorModel.categories', updateModel, true);
     scope.$watch('editorModel.partialScoring',  _.debounce(updatePartialScoring, 200), true);
     scope.$watch('model', renderMath, true);
@@ -66,7 +67,7 @@ function configureCorespringDndCategorize(
 
     function prepareEditorModel() {
       var choices = _.cloneDeep(scope.model.choices);
-
+      var choicesLabel = {label:scope.model.config.choicesLabel};
       var categories = _.map(scope.model.categories, wrapCategoryModel);
       var correctResponses = scope.fullModel.correctResponse;
       _.forEach(categories, function (category) {
@@ -78,6 +79,7 @@ function configureCorespringDndCategorize(
 
       return {
         choices: choices,
+        choicesLabel: choicesLabel,
         categories: categories,
         partialScoring: partialScoring
       };
@@ -114,13 +116,14 @@ function configureCorespringDndCategorize(
 
     function updateModel() {
       updateChoices();
+      updateChoicesLabel();
       updateCategories();
       updateCorrectResponse();
       updatePartialScoringEditorModel();
 
       //--------------------------------------
 
-      function updateChoices(){
+      function updateChoices() {
         scope.fullModel.model.choices = scope.editorModel.choices.map(cleanChoiceLabel);
       }
 
@@ -159,6 +162,10 @@ function configureCorespringDndCategorize(
         });
         scope.editorModel.partialScoring = result;
       }
+    }
+
+    function updateChoicesLabel(){
+      scope.fullModel.model.config.choicesLabel = scope.editorModel.choicesLabel.label;
     }
 
     function updatePartialScoring(){
@@ -309,6 +316,7 @@ function configureCorespringDndCategorize(
         '     categories="editorModel.categories"',
         '     choices-per-row="model.config.choicesPerRow" ',
         '     choices="editorModel.choices"',
+        '     choices-label="editorModel.choicesLabel"',
         '     image-service="imageService"',
         '     mode="edit"',
         '   ></corespring-dnd-categorize>',

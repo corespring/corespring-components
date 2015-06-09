@@ -98,7 +98,7 @@ function CategoryLabelCorespringDndCategorize(
                deleteTool(),
         '    </ul>',
         '  </div>',
-        '</td>'
+        '</div>'
       ].join('');
   }
 

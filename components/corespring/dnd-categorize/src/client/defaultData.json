@@ -50,7 +50,8 @@
       "shuffle": false,
       "answerAreaPosition": "below",
       "categoriesPerRow" : 2,
-      "choicesPerRow" : 2
+      "choicesPerRow" : 2,
+      "choicesLabel" : ""
     }
   }
 }

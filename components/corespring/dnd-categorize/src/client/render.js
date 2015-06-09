@@ -30,6 +30,7 @@ function renderCorespringDndCategorize(
       mode: '@',
       attrCategories: '=?categories',
       attrChoices: '=?choices',
+      attrChoicesLabel: '=?choicesLabel',
       attrCategoriesPerRow: '=?categoriesPerRow',
       attrChoicesPerRow: '=?choicesPerRow',
       imageService: '=?imageService'
@@ -57,11 +58,9 @@ function renderCorespringDndCategorize(
     scope.getEditMode = getEditMode;
     scope.isDragEnabled = isDragEnabled;
     scope.isDragEnabledFromCategory = isDragEnabledFromCategory;
-    scope.onCategoryEditClicked = onCategoryEditClicked;
     scope.onCategoryDeleteClicked = onCategoryDeleteClicked;
     scope.onCategoryDrop = onCategoryDrop;
     scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
-    scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
     scope.revertToState = revertToState;
 
@@ -86,6 +85,7 @@ function renderCorespringDndCategorize(
     if (scope.isEditMode) {
       scope.$watch('attrCategories.length', setRenderModelFromEditor);
       scope.$watch('attrChoices.length', setRenderModelFromEditor);
+      scope.$watch('attrChoicesLabel', updateChoicesLabelFromEditor);
       scope.$watch('attrCategoriesPerRow', updateCategoriesPerRowFromEditor);
       scope.$watch('attrChoicesPerRow', updateChoicesPerRowFromEditor);
     }
@@ -123,6 +123,7 @@ function renderCorespringDndCategorize(
       var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
 
       var choices = model.config.shuffle ? _.shuffle(model.choices) : _.take(model.choices, all);
+      var choicesLabel = model.config.choicesLabel;
       var allChoices = _.take(choices, all);
       var categories = _.map(model.categories, wrapCategoryModel);
       if (session.answers) {
@@ -136,6 +137,7 @@ function renderCorespringDndCategorize(
       return {
         dragAndDropScope: dragAndDropScope,
         choices: choices,
+        choicesLabel: choicesLabel,
         allChoices: allChoices,
         categories: categories
       };
@@ -263,7 +265,7 @@ function renderCorespringDndCategorize(
 
       layout = new CompactLayout(
         new LayoutConfig()
-        .withContainer(elem.find('.container-choices'))
+        .withContainer(elem.find('.choices-container'))
         .withItemSelector('.choice-corespring-dnd-categorize')
         .withNumColumns(scope.choicesPerRow)
         .withCellWidth(calcChoiceWidth())
@@ -281,7 +283,7 @@ function renderCorespringDndCategorize(
     function updateLayoutConfig(cellWidth) {
       if (layout) {
         layout.updateConfig({
-          container: elem.find('.container-choices'),
+          container: elem.find('.choices-container'),
           cellWidth: cellWidth
         });
       }
@@ -463,6 +465,10 @@ function renderCorespringDndCategorize(
       }
     }
 
+    function updateChoicesLabelFromEditor(newValue, oldValue) {
+      scope.renderModel.choicesLabel = scope.attrChoicesLabel;
+    }
+
     function setRenderModelFromEditor() {
       if (!layout) {
         initLayouts();
@@ -473,6 +479,7 @@ function renderCorespringDndCategorize(
       };
 
       renderModel.choices = scope.attrChoices;
+      renderModel.choicesLabel = scope.attrChoicesLabel;
       renderModel.allChoices = _.take(renderModel.choices, all);
       renderModel.categories = scope.attrCategories;
 
@@ -505,14 +512,6 @@ function renderCorespringDndCategorize(
         return '';
       }
       return 'editable';
-    }
-
-    function onCategoryEditClicked(categoryId) {
-      scope.activate(categoryId);
-    }
-
-    function onChoiceEditClicked(choiceId) {
-      scope.activate(choiceId);
     }
 
     function revertToState(state) {
@@ -594,8 +593,16 @@ function renderCorespringDndCategorize(
 
   function choicesTemplate(flip) {
     return [
-        '<div class="container-choices-holder">',
-        '  <div class="container-choices" ng-if="#flip#">',
+        '<div class="choices-container-holder" ng-if="#flip#">',
+        '  <div label-editor-corespring-dnd-categorize="true"',
+        '      active-id="choices-label"',
+        '      class="choices-label-editor"',
+        '      editable="isEditMode"',
+        '      model="renderModel.choicesLabel"',
+        '      on-edit-clicked="activate(activeId)"',
+        '   >',
+        '  </div>',
+        '  <div class="choices-container">',
         '    <div choice-corespring-dnd-categorize="true" ',
         '      choice-id="{{choice.id}}" ',
         '      delete-after-placing="choice.moveOnDrag" ',
@@ -607,7 +614,7 @@ function renderCorespringDndCategorize(
         '      ng-repeat="choice in renderModel.choices track by choice.id" ',
         '      ng-style="choiceStyle" ',
         '      on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
-        '      on-edit-clicked="onChoiceEditClicked(choiceId)" ',
+        '      on-edit-clicked="activate(choiceId)" ',
         '    ></div>',
         '  </div>',
         '</div>'
@@ -624,7 +631,7 @@ function renderCorespringDndCategorize(
         '        edit-mode="isEditMode" ',
         '        ng-repeat="category in row"',
         '        ng-style="categoryStyle"',
-        '        on-edit-clicked="onCategoryEditClicked(categoryId)" ',
+        '        on-edit-clicked="activate(categoryId)" ',
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
         '       ></div>',
         '     </div>',
@@ -639,7 +646,7 @@ function renderCorespringDndCategorize(
         '        ng-repeat="category in row"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId,index)" ',
-        '        on-edit-clicked="onCategoryEditClicked(categoryId)" ',
+        '        on-edit-clicked="activate(categoryId)" ',
         '        on-delete-choice-clicked="onChoiceRemovedFromCategory(categoryId,choiceId,index)" ',
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
         '        on-drop="onCategoryDrop(categoryId,choiceId)" ',
