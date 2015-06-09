@@ -275,14 +275,6 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
-  describe('onCategoryEditClicked', function() {
-    it('should activate editor with categoryId', function() {
-      spyOn(scope, 'activate');
-      scope.onCategoryEditClicked('some-category-id');
-      expect(scope.activate).toHaveBeenCalledWith('some-category-id');
-    });
-  });
-
   describe('onCategoryDeleteClicked', function() {
     it('should delete category from renderModel', function() {
       setModelAndDigest();
@@ -346,14 +338,6 @@ describe('corespring:dnd-categorize:render', function() {
       scope.onChoiceDeleteClicked('choice_1');
       expect(scope.renderModel.categories[0].choices.length).toBe(0);
       expect(scope.renderModel.categories[1].choices.length).toBe(0);
-    });
-  });
-
-  describe('onChoiceEditClicked', function() {
-    it('should activate choice', function() {
-      spyOn(scope, 'activate');
-      scope.onChoiceEditClicked('some-id');
-      expect(scope.activate).toHaveBeenCalledWith('some-id');
     });
   });
 
