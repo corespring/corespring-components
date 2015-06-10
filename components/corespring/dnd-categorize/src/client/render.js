@@ -3,6 +3,7 @@ exports.directives = [{
   directive: [
     '$log',
     '$timeout',
+    'ColumnLayout',
     'CompactLayout',
     'LayoutConfig',
     'LayoutRunner',
@@ -14,6 +15,7 @@ exports.directives = [{
 function renderCorespringDndCategorize(
   $log,
   $timeout,
+  ColumnLayout,
   CompactLayout,
   LayoutConfig,
   LayoutRunner,
@@ -256,14 +258,13 @@ function renderCorespringDndCategorize(
     }
 
     function initLayouts() {
-      if (scope.isEditMode) {
-        return;
-      }
       if (layout) {
         layout.cancel();
       }
 
-      layout = new CompactLayout(
+      var layoutConstructor = scope.isEditMode ? ColumnLayout : CompactLayout;
+
+      layout = new layoutConstructor(
         new LayoutConfig()
         .withContainer(elem.find('.choices-container'))
         .withItemSelector('.choice-corespring-dnd-categorize')
@@ -462,6 +463,7 @@ function renderCorespringDndCategorize(
       var choicesPerRow = parseInt(newValue, 10);
       if (!isNaN(choicesPerRow)) {
         scope.choicesPerRow = choicesPerRow;
+        initLayouts();
       }
     }
 
