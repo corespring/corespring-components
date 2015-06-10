@@ -8,7 +8,7 @@ var main = [
         scope.containerBridge = {
           setDataAndSession: function(dataAndSession) {
             scope.session = dataAndSession.session || {};
-            scope.isVisible = true;
+            scope.isVisible = false;
             var defaultPlayerDimensions = [600, 450],
                 arrowFillColor = "#9ED343",
                 $player = element.closest('.corespring-player'),
