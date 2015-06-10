@@ -47,6 +47,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
   function link(scope, elem, attr) {
     scope.addScoringScenario = addScoringScenario;
     scope.isPanelCollapsed = isPanelCollapsed;
+    scope.hasPartialScoringToConfigure = hasPartialScoringToConfigure;
     scope.removeScoringScenario = removeScoringScenario;
     scope.toggleAllowPartialScoring = toggleAllowPartialScoring;
     scope.updatePartialScoringModel = updatePartialScoringModel;
@@ -156,7 +157,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
         '   question, you may allow partial credit based on the ',
         '   number of correct answers submitted. This is optional.',
         '  </div>',
-        '  <div class="panel panel-default">',
+        '  <div class="panel panel-default" ng-class="{disabled: !hasPartialScoringToConfigure()}">',
         '    <div class="panel-heading">',
         '      <h4 class="panel-title">',
         '        <a ng-click="toggleAllowPartialScoring()">',
