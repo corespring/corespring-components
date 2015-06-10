@@ -30,7 +30,7 @@ function CategoryLabelCorespringDndCategorize(
       //optional injection
       var MiniWiggiScopeExtension = $injector.get('MiniWiggiScopeExtension');
       scope.miniWiggiScopeExtension = new MiniWiggiScopeExtension();
-      scope.miniWiggiScopeExtension.postLink(scope);
+      scope.miniWiggiScopeExtension.withExtraFeatureMath().postLink(scope);
     } catch (e) {
       //ignore
     }
