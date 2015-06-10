@@ -36,7 +36,6 @@
   "name": "function-entry",
   "organization": "corespring",
   "released": true,
-  "minimumWidth": 100,
   "title": "Evaluate an Expression",
   "titleGroup": "Mathematics"
 }

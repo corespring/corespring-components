@@ -2,6 +2,7 @@
   "title": "Graph Lines",
   "componentType" : "corespring-line",
   "weight" : 1,
+  "minimumWidth": 500,
   "correctResponse": "",
   "feedback" :  {
     "correctFeedbackType": "default",

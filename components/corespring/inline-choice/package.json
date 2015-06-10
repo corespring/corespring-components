@@ -38,6 +38,5 @@
   "title": "Short Answer - Drop Down",
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
-  "released": true,
-  "minimumWidth": 100
+  "released": true
 }

@@ -5,7 +5,6 @@
   "organization": "corespring",
   "version": "0.2.0",
   "released": true,
-  "minimumWidth": 600,
   "libraries": [
     {
       "name": "dnd-categorize-lib",

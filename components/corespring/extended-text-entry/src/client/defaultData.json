@@ -9,5 +9,6 @@
       "expectedLength": "100",
       "expectedLines": "5"
     }
-  }
+  },
+  "minimumWidth": 100
 }

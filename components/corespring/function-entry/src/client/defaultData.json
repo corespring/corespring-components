@@ -2,6 +2,7 @@
   "componentType" : "corespring-function-entry",
   "title": "Evaluate an Expression",
   "weight" : 1,
+  "minimumWidth": 100,
   "feedback" :  {
     "correctFeedbackType": "default",
     "incorrectFeedbackType": "default"

@@ -39,6 +39,5 @@
   "title": "Number Line",
   "titleGroup": "Mathematics",
   "name": "number-line",
-  "organization": "corespring",
-  "minimumWidth": 540
+  "organization": "corespring"
 }

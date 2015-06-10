@@ -2,6 +2,7 @@
   "componentType": "corespring-dnd-categorize",
   "title": "Drag and Drop Categorize",
   "weight": 1,
+  "minimumWidth": 600,
   "correctResponse": {
     "cat_1": [],
     "cat_2": []

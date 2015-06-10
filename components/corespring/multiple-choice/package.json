@@ -45,6 +45,5 @@
   "organization": "corespring",
   "title": "Multiple Choice",
   "titleGroup": "Fixed Choice",
-  "released": true,
-  "minimumWidth": 100
+  "released": true
 }
