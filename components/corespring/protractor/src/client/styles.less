@@ -1,0 +1,34 @@
+.component-placeholder {
+  .cs-protractor {
+    position: relative;
+    width: 220px;
+    height: 205px;
+    background: url('/client/icon/corespring-protractor') no-repeat center;
+    .cs-protractor-toggle,
+    .cs-protractor-widget {
+      display: none;
+    }
+  }
+}
+.cs-protractor {
+    .cs-protractor-toggle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+    .cs-protractor-widget {
+        position: absolute!important;
+        top: 0;
+        left: 0;
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            image, path, circle {
+                pointer-events: auto;
+            }
+        }
+    }
+}
