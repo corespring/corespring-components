@@ -40,23 +40,33 @@
   ],
   "dependencies": {
     "client": {
+      "angular-dragdrop": {
+        "bower_target": "https://github.com/corespring/angular-dragdrop.git",
+        "file": "src/angular-dragdrop.js",
+        "angular-module": "ngDragDrop"
+      },
+      "angular-bootstrap": {
+        "version": "~0.10.0",
+        "file": "ui-bootstrap-tpls.min.js",
+        "angular-module": "ui.bootstrap"
+      },
       "corespring-checkbox": {
         "bower_target": "git@github.com:corespring/checkbox.git",
         "version": "0.0.6",
         "file": "src/directive.js",
         "angular-module": "corespring.input.checkbox"
       },
-      "corespring-radio": {
-        "bower_target": "git@github.com:corespring/radio.git",
-        "version": "0.0.6",
-        "file": "src/directive.js",
-        "angular-module": "corespring.input.radio"
-      },
       "corespring-ng-components": {
         "bower_target": "git@github.com:corespring/corespring-ng-components.git",
         "version": "0.0.9",
         "file": "build/corespring-ng-components.js",
         "angular-module": "cs.directives"
+      },
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
       },
       "jquery-ui-touch-punch": {
         "bower_target": "https://github.com/furf/jquery-ui-touch-punch.git",

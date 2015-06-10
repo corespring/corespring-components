@@ -119,7 +119,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     }
 
     function setDraggableOption(name, value) {
-      if (_.isFunction($(elem).draggable)) {
+      if ($(elem).is('.ui-draggable')) {
         $(elem).draggable('option', name, value);
       }
     }
