@@ -1,5 +1,9 @@
 {
   "libraries": [
+    {
+      "name": "khan-utils",
+      "organization": "corespring"
+    }
   ],
   "dependencies" : {
     "client" : {

@@ -2104,7 +2104,7 @@ $.extend(KhanUtil.Graphie.prototype, {
     },
 
     // MovableAngle is an angle that can be dragged around the screen.
-    // By attaching a smartPoint to the vertex and ray control points, the 
+    // By attaching a smartPoint to the vertex and ray control points, the
     // rays can be manipulated individually.
     //
     // Use only with smartPoints; add the smartPoints first, then:
@@ -3342,8 +3342,8 @@ $.extend(KhanUtil.Graphie.prototype, {
         };
     })(),
 
-    protractor: function(center) {
-        return new Protractor(this, center);
+    protractor: function(center, arrowFillColor) {
+        return new Protractor(this, center, arrowFillColor);
     },
 
     ruler: function(options) {
@@ -3354,7 +3354,7 @@ $.extend(KhanUtil.Graphie.prototype, {
 });
 
 
-function Protractor(graph, center) {
+function Protractor(graph, center, arrowFillColor) {
     this.set = graph.raphael.set();
 
     this.cx = center[0];
@@ -3397,7 +3397,7 @@ function Protractor(graph, center) {
         " Z"
     ).attr({
         "stroke": null,
-        "fill": KhanUtil.ORANGE
+        "fill": arrowFillColor ? arrowFillColor : KhanUtil.ORANGE
     });
 
     // add it to the set so it translates with everything else
@@ -3597,7 +3597,7 @@ function Ruler(graphie, options) {
     }
 
     var tickFrequencies = _.keys(tickHeightMap).sort(function(a, b) {
-        return b - a; 
+        return b - a;
     });
 
     function getTickHeight(i) {
