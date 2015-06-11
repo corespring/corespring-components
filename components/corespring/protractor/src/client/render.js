@@ -11,9 +11,9 @@ var main = [
             scope.isVisible = false;
             var defaultPlayerDimensions = [600, 450],
                 arrowFillColor = "#9ED343",
-                $player = element.closest('.corespring-player'),
-                $player = $player.length ? $player : element.closest('.player-body'),
-                player = $player.length ? $player[0] : null;
+                $player = element.closest('.corespring-player');
+            $player = $player.length ? $player : element.closest('.player-body');
+            var player = $player.length ? $player[0] : null;
             // The $timeout is required due to player size changes during render
             $timeout(function() {
               if (player) {
@@ -21,7 +21,7 @@ var main = [
                 defaultPlayerDimensions[1] = $player.height();
               }
               var graphie = KhanUtilService.KhanUtil.createGraphie(element.find('.cs-protractor-widget')[0]),
-                  scale = [40, 40];
+                  scale = [40, 40],
                   range = [
                     [0, defaultPlayerDimensions[0] / scale[0]],
                     [0, defaultPlayerDimensions[1] / scale[1]]
@@ -34,7 +34,7 @@ var main = [
               var protractor = graphie.protractor([6, 4], arrowFillColor);
             }, 100);
           },
-          getSession: function() {return {}},
+          getSession: function() {return {};},
           setResponse: function(response) {},
           setMode: function(newMode) {},
           reset: function() {},
@@ -50,7 +50,7 @@ var main = [
         function toggleVisibility() {
           scope.isVisible = !scope.isVisible;
         }
-      }
+      };
     };
 
     return {
