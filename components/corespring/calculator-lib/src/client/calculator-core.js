@@ -2,14 +2,14 @@ var calculatorCore = [
   'CalculatorConfig',
   function(CalculatorConfig) {
 
-    function CalculatorCore(scope, input) {
+    function CalculatorCore(_scope, input) {
       
       var self = this;
       var config = {};
       var calculatorConfig = new CalculatorConfig();
       calculatorConfig.postLink(config);
       var resultsInput = input;
-      var scope = scope;
+      var scope = _scope;
 
       this.results = 0;
       this.pendingOperation = '';
@@ -25,8 +25,8 @@ var calculatorCore = [
           val = resultsInput.val();
         }
 
-        resultsInput.val(val + config.buttons[button].symbol)
-      }
+        resultsInput.val(val + config.buttons[button].symbol);
+      };
 
       this.clickOperator = function(button, operatorType) {
         if(operatorType === 'unary') {
@@ -34,7 +34,7 @@ var calculatorCore = [
         } else {
           self.clickBinaryOperator(button);
         }        
-      }
+      };
 
       this.clickUnaryOperator = function(button) {
         switch(button) {
@@ -46,11 +46,11 @@ var calculatorCore = [
         }
         self.pendingOperation = '';
         self.newInput = true;
-      }
+      };
 
       this.clickBinaryOperator = function(button) {
         this.pendingOperation = button;
-      }
+      };
 
       this.clickMisc = function(button) {
         switch(button){
@@ -63,7 +63,7 @@ var calculatorCore = [
           default:
             break;
         }
-      }
+      };
 
       this.executeFunctionByName = function(functionName, context /*, args */) {
         var args = [].slice.call(arguments).splice(2);
@@ -73,7 +73,7 @@ var calculatorCore = [
           context = context[namespaces[i]];
         }
         return context[func].apply(this, args);
-      }
+      };
 
       function clearResults() {
         resultsInput.val('');

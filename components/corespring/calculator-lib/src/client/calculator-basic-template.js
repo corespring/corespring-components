@@ -15,7 +15,7 @@ var calculatorBasicTemplate = [
 			}
 
 			scope.click = click;
-    }    
+    };    
 
     function template() {
 	    return [

@@ -3,13 +3,13 @@ var calculatorScientificTemplate = [
   function() {
     var link = function(scope, elm, attrs, container) {      
 
-    }
+    };
 
     function template() {
       return [
         '<div class=\"calculator-scientific\">Scientific calculator template',
         '  <div>Not yet implemented</div>',
-        '</div>',
+        '</div>'
       ].join('');
     }
     

@@ -5,24 +5,24 @@ var calculatorBasic = [
 
     var calculatorCore;
 
-    function CalculatorBasic(scope, input) {
+    function CalculatorBasic(_scope, input) {
 
       var self = this;      
       var resultsInput = input;     
-      var scope = scope; 
+      var scope = _scope; 
       calculatorCore = new CalculatorCore(scope, resultsInput);
       scope.$on('resolveOperation', function(){ self.resolveOperation(calculatorCore.pendingOperation); });
 
       this.extendScope = function(scope, componentType) {
         new CalculatorConfig().postLink(scope);
-      }
+      };
 
       this.click = function(button, type, logic) {
         if(calculatorCore.state !== 'error' || button === 'clear') {
           var context = (logic === 'basic') ? self : calculatorCore;
           var functionName, optionalArgs;
 
-          if(type.indexOf('Operator') != -1) {
+          if(type.indexOf('Operator') !== -1) {
             var typeParts = type.split('_');
             optionalArgs = typeParts[0];
             functionName = 'click' + typeParts[1];
@@ -30,20 +30,20 @@ var calculatorBasic = [
             functionName = 'click' + type;
           }
 
-          calculatorCore.executeFunctionByName(functionName, context, button, optionalArgs)
+          calculatorCore.executeFunctionByName(functionName, context, button, optionalArgs);
         }
-      }
+      };
 
       this.clickOperator = function(button, operatorType) {
         if(operatorType === 'unary') {
           self.clickUnaryOperator(button);
         } else {
           self.clickBinaryOperator(button);
-        }        
-      }
+        }
+      };
 
       this.clickUnaryOperator = function(button) {
-        var input = new Number(resultsInput.val());
+        var input = parseFloat(resultsInput.val());
         switch(button) {
           case 'sqrt':
             calculatorCore.results = Math.sqrt(input);
@@ -55,17 +55,17 @@ var calculatorBasic = [
 
         calculatorCore.pendingOperation = '';
         calculatorCore.newInput = true;
-      }
+      };
 
       this.clickBinaryOperator = function(button) {
         self.resolveOperation(button);
 
         calculatorCore.pendingOperation = button;
         calculatorCore.newInput = true;
-      }
+      };
 
       this.resolveOperation = function(button) {
-        var input = new Number(resultsInput.val());
+        var input = parseFloat(resultsInput.val());
 
         if(calculatorCore.pendingOperation !== '') {
           if (calculatorCore.newInput) {
@@ -97,9 +97,9 @@ var calculatorBasic = [
             resultsInput.val(calculatorCore.results);
           }          
         } else {
-          calculatorCore.results = new Number(resultsInput.val());
+          calculatorCore.results = parseFloat(resultsInput.val());
         }
-      }
+      };
     }    
 
     return CalculatorBasic;
