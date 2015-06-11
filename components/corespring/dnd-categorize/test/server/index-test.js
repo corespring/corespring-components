@@ -16,6 +16,9 @@ describe('dnd-categorize', function() {
   function question(categories, correctResponse) {
     return {
       correctResponse: _.cloneDeep(correctResponse),
+      partialScoring: {
+        sections: []
+      },
       model: {
         categories: _.map(categories, function(id) {
           return {
@@ -27,7 +30,17 @@ describe('dnd-categorize', function() {
     };
   }
 
+  function partialScoring(sections) {
+    return {
+      sections: sections
+    };
+  }
+
   function answers(o) {
+    return o;
+  }
+
+  function outcome(o) {
     return o;
   }
 
@@ -132,7 +145,7 @@ describe('dnd-categorize', function() {
 
       expectedOutcome.detailedFeedback = detailedFeedback;
 
-      if(warningClass){
+      if (warningClass) {
         expectedOutcome.warningClass = warningClass;
       }
 
@@ -291,12 +304,149 @@ describe('dnd-categorize', function() {
           }
         }));
     });
+  });
+
+  describe("partial scoring", function() {
+
+    function assertPartial(question, partialScoring, answers, expectedOutcome) {
+      var answer = _.cloneDeep(answers);
+      var settings = {};
+      question.allowPartialScoring = true;
+      question.partialScoring = partialScoring;
+      var outcome = server.createOutcome(question, answer, settings);
+      outcome.should.eql(expectedOutcome);
+    }
+
+
+    it('one of two answers correct', function() {
+      assertPartial(
+        question(
+          ['aa_1'], {
+            aa_1: ['c_1', 'c_2']
+          }),
+        partialScoring(
+            [{
+            catId: 'aa_1',
+            partialScoring: [
+              {
+                numberOfCorrect: 1,
+                scorePercentage: 10
+              }
+              ]
+            }]
+        ),
+        answers({
+          aa_1: ['c_1']
+        }),
+        outcome({
+          correctness: 'incorrect',
+          correctClass: 'partial',
+          score:0.1,
+          correctResponse: {
+            aa_1: ['c_1', 'c_2']
+          },
+          detailedFeedback: detailedFeedback({
+            aa_1: {
+              correctness: ['correct']
+            }
+          })
+        }));
+    });
+
+    it('two of two answers correct', function() {
+      assertPartial(
+        question(
+          ['aa_1'], {
+            aa_1: ['c_1', 'c_2']
+          }),
+        partialScoring(
+          [{
+            catId: 'aa_1',
+            partialScoring: [
+              {
+                numberOfCorrect: 1,
+                scorePercentage: 10
+              }
+            ]
+          }]
+        ),
+        answers({
+          aa_1: ['c_1', 'c_2']
+        }),
+        outcome({
+          correctness: 'correct',
+          correctClass: 'correct',
+          score: 1,
+          detailedFeedback: detailedFeedback({
+            aa_1: {
+              correctness: ['correct','correct']
+            }
+          })
+        })
+      );
+    });
+
+    it('1/2 and 1/1 answers correct', function() {
+      assertPartial(
+        question(
+          ['aa_1', 'aa_2'], {
+            aa_1: ['c_1', 'c_2'],
+            aa_2: ['c_1']
+          }),
+        partialScoring(
+          [{
+            catId: 'aa_1',
+            partialScoring: [
+              {
+                numberOfCorrect: 1,
+                scorePercentage: 10
+              }
+            ]
+          },
+          {
+            catId: 'aa_2',
+            partialScoring: [
+              {
+                numberOfCorrect: 1,
+                scorePercentage: 0
+              }
+            ]
+          }]
+        ),
+        answers({
+          aa_1: ['c_1'],
+          aa_2: ['c_1']
+        }),
+        outcome({
+          correctness: 'incorrect',
+          correctClass: 'partial',
+          score:0.55,
+          correctResponse: {
+            aa_1: ['c_1', 'c_2'],
+            aa_2: ['c_1']
+          },
+          detailedFeedback: detailedFeedback({
+            aa_1: {
+              correctness: ['correct']
+            },
+            aa_2: {
+              correctness: ['correct']
+            }
+          })
+        })
+      );
+    });
 
   });
 
   it('should return incorrect + feedback for an empty answer', function() {
     var outcome = server.createOutcome({
-        model:{categories:[]},
+        partialScoring: {
+          sections: []
+        },
+        model: {
+          categories: []
+        },
         feedback: {}
       },
       null, {
@@ -316,7 +466,12 @@ describe('dnd-categorize', function() {
 
   it('should return incorrect + feedback for an empty answer when using custom feedback', function() {
     var outcome = server.createOutcome({
-      model:{categories:[]},
+      partialScoring: {
+        sections: []
+      },
+      model: {
+        categories: []
+      },
       feedback: {
         incorrectFeedbackType: 'custom',
         incorrectFeedback: 'bad boy!'

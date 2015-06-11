@@ -1,10 +1,7 @@
 @import '../../../../../less/common';
 
 @component-width-in-placeholder: 600px;
-@categories-holder-padding: 15px;
-//make sure the category fits into the see solution panel
-@choices-holder-padding: @categories-holder-padding + 15px;
-//make sure choice fits into category
+@categories-holder-padding: 15px; //make sure the category fits into the see solution panel
 
 .component-placeholder {
   .render-corespring-dnd-categorize {
@@ -45,13 +42,20 @@
   }
 
   .border {
-    background-color: white;
+    background-color: #e7e7e7;
     border-radius: 4px;
     border: solid 1px #979797;
     margin: 3px;
     min-height: 40px;
-    padding: 3px;
+    padding: 3px 15px 3px 3px;
     position: relative;
+    text-align: center;
+
+    .mini-wiggi-wiz {
+      border: none;
+      box-shadow: none;
+      margin-bottom: 0;
+    }
 
     .remove-choice {
       color: #333333;
@@ -66,7 +70,7 @@
     }
 
     .edit-controls {
-      background: rgba(255, 255, 255, 0.7);
+      background: #e7e7e7;
       border-radius: 8px;
       padding: 3px 3px 3px 3px;
       position: absolute;
@@ -85,6 +89,25 @@
         }
       }
     }
+
+    .correctness-display {
+      font-size: 17px;
+      position: absolute;
+      right: 17px;
+      top: 0px;
+
+      .background {
+        color: white;
+        left:0;
+        position:absolute;
+        top:0;
+      }
+      .foreground {
+        left:0;
+        position:absolute;
+        top:0;
+      }
+    }
   }
 
   &.correct {
@@ -92,36 +115,53 @@
     .border {
       .correct-input();
 
-      &:after {
-        color: @correct-color;
-        content: @correct-character;
-        font-family: 'FontAwesome';
-        font-size: 17px;
-        position: absolute;
-        right: 2px;
-        top: -2px;
+      .remove-choice {
+        display: none;
+      }
+
+      .correctness-display {
+
+        .background:after {
+          color: white;
+          content: '\f111';
+        }
+        .foreground:after {
+          color: @correct-color;
+          content: @correct-character;
+        }
       }
     }
   }
 
   &.incorrect {
+
     .border {
       .incorrect-input();
 
-      &:after {
-        color: @incorrect-color;
-        content: @incorrect-character;
-        font-family: 'FontAwesome';
-        font-size: 17px;
-        position: absolute;
-        right: 2px;
-        top: -2px;
+      .remove-choice {
+        display: none;
+      }
+
+      .correctness-display {
+
+        .background:after {
+          color: white;
+          content: '\f111';
+        }
+        .foreground:after {
+          color: @incorrect-color;
+          content: @incorrect-character;
+        }
       }
     }
   }
 
   &.draggable {
     cursor: pointer;
+
+    &.ui-draggable-disabled {
+      cursor: initial;
+    }
 
     &.ui-draggable-dragging {
       cursor: move;
@@ -145,6 +185,13 @@
 
 .render-corespring-dnd-categorize {
 
+  .html-wrapper {
+    word-wrap: break-word;
+    img {
+      max-width: 100%;
+    }
+  }
+
   .undo-start-over {
     margin-bottom: 15px;
   }
@@ -153,6 +200,11 @@
     .panel-heading {
       cursor: default;
     }
+  }
+
+  .component-placeholder {
+    min-width: initial;
+    padding-right: 22px;
   }
 
   .see-answer-panel {
@@ -165,14 +217,16 @@
     }
   }
 
-  .container-choices-holder {
-    padding: 15px @choices-holder-padding;
+  .choices-container-holder {
 
-    .container-choices {
-      background-color: #efefef;
-      border-radius: 4px;
-      border: solid 2px #9b9b9b;
+    .choices-label-editor {
+      margin: 10px 3px 15px 3px;
+      text-align: center;
+    }
+
+    .choices-container {
       margin-bottom: 10px;
+      min-height: 40px;
       position: relative;
 
       .remove-choice {
@@ -187,14 +241,22 @@
 
   .categories {
     width: 100%;
+    display: table;
 
     .row {
       margin: 0;
+      display: table-row;
 
       .category {
-        position: relative;
-        vertical-align: top;
-        display: inline-block;
+        display: table-cell;
+
+        &.category-label {
+          vertical-align: bottom;
+        }
+
+        &.category-choices {
+          vertical-align: top;
+        }
 
         &.category-active {
           .categorized.choices {
@@ -211,6 +273,15 @@
           }
         }
 
+        &.answer-expected {
+          .border {
+            .categorized.choices {
+              border-color: #af4442;
+            }
+          }
+        }
+
+
         .border {
           margin: 3px;
           text-align: center;
@@ -226,7 +297,7 @@
           }
 
           .edit-controls {
-            background: rgba(255, 255, 255, 0.7);
+            background: transparent;
             border-radius: 8px;
             padding: 3px 3px 3px 3px;
             position: absolute;
@@ -261,12 +332,42 @@
       }
     }
   }
-
 }
 
 .config-corespring-dnd-categorize {
 
   .rounded-inputs();
+
+  .choices-container {
+    .choice-corespring-dnd-categorize {
+      &.active {
+        .border {
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  .mini-wiggi-wiz {
+    .image-holder {
+      width: 100%;
+      .edit-controls {
+        display: none;
+      }
+    }
+    .wiggi-wiz-editable {
+      padding: 2px!important;
+      min-height: 22px;
+      word-wrap: break-word;
+    }
+    &.active {
+      .image-holder {
+        .edit-controls {
+          display: initial;
+        }
+      }
+    }
+  }
 
   .wiggi-wiz-toolbar {
     .btn-small {
@@ -282,12 +383,13 @@
   }
 
   .player-col {
-    width: 680px;
+    width: 630px;
     display: inline-block;
     float: left;
   }
 
   .settings-col {
+    width: 220px;
     padding-left: 20px;
     padding-top: 58px;
     display: inline-block;
@@ -318,5 +420,8 @@
       }
     }
   }
+
+
+
 }
 

@@ -18,7 +18,7 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
           }
           if (response.correctness === 'warning') {
             title = '&nbsp;';
-            content = content || "Please select your answer and press submit.";
+            content = content || "You did not enter a response.";
             popoverClass = 'warning';
           } else if (response.correctness === 'incorrect') {
             title = '&nbsp;';

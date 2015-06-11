@@ -1,13 +1,10 @@
 exports.framework = 'angular';
 exports.factory = [function() {
-  return CompactLayout;
+  return ColumnLayout;
 }];
 
 /**
- * This layout looks at the height of the elements and tries to
- * fill the columns as good as possible. Basically it iterates through
- * the items and places the current item in the smallest column.
- * Also the content is centered.
+ * This layout layouts elements in columns and centers the content
  *
  * @param initialConfig:
  *  container: jquery element of the container
@@ -16,7 +13,7 @@ exports.factory = [function() {
  *  cellWidth: the desired width of one column
  *  paddingBottom: the padding to be added to the container height
  */
-function CompactLayout(initialConfig, layoutRunner) {
+function ColumnLayout(initialConfig, layoutRunner) {
 
   var hasNewConfig = true;
   var choiceSizeCache = [];
@@ -49,8 +46,10 @@ function CompactLayout(initialConfig, layoutRunner) {
       return [];
     });
 
+    var columnIndex = 0;
     _.forEach(choiceElements, function(choice) {
-      smallestColumn(columns).push(choice);
+      columns[columnIndex].push(choice);
+      columnIndex = (columnIndex + 1) % columns.length;
     });
 
     var paddingLeft = Math.max(0, (config.container.width() - numColumns * config.cellWidth) / 2);

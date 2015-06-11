@@ -21,9 +21,16 @@ describe('corespring:line:configure', function() {
 
   function MockWiggiMathJaxFeatureDef() {}
 
+  function MockComponentDefaultData(){
+    this.getDefaultData = function(){
+      return {};
+    };
+  }
+
   beforeEach(function() {
     module(function($provide) {
       $provide.value('WiggiLinkFeatureDef', function() {});
+      $provide.value('ComponentDefaultData', new MockComponentDefaultData());
     });
   });
 

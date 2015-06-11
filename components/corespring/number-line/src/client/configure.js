@@ -1,6 +1,6 @@
 var main = [
-  '$log', 'ChoiceTemplates',
-  function($log, ChoiceTemplates) {
+  '$log', 'ChoiceTemplates', 'ComponentDefaultData',
+  function($log, ChoiceTemplates, ComponentDefaultData) {
 
     var attributes = [
       '<h3>Number Line Attributes</h3>',
@@ -126,7 +126,7 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-        scope.defaults = scope.data.defaultData.model.config;
+        scope.defaults = ComponentDefaultData.getDefaultData('corespring-number-line', 'model.config');
         ChoiceTemplates.extendScope(scope, 'corespring-number-line');
         scope.top = {};
         scope.configGraphOptions = {

@@ -12,7 +12,7 @@
     "incorrectFeedbackType": "default"
   },
   "allowPartialScoring": false,
-  "partialScoring" : [],
+  "partialScoring" : {},
   "model": {
     "categories": [
       {
@@ -27,12 +27,22 @@
     "choices": [
       {
         "id": "choice_1",
-        "label": "a",
+        "label": "",
         "moveOnDrag": false
       },
       {
         "id": "choice_2",
-        "label": "b",
+        "label": "",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_3",
+        "label": "",
+        "moveOnDrag": false
+      },
+      {
+        "id": "choice_4",
+        "label": "",
         "moveOnDrag": false
       }
     ],
@@ -40,7 +50,8 @@
       "shuffle": false,
       "answerAreaPosition": "below",
       "categoriesPerRow" : 2,
-      "choicesPerRow" : 2
+      "choicesPerRow" : 2,
+      "choicesLabel" : ""
     }
   }
 }

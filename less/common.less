@@ -33,14 +33,16 @@
 
 .warning-input() {
   .warning-border();
-  -moz-box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
-  box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
 }
 
 .warning-border() {
   border: 2px solid @warning-color;
 }
 
+.warning-shadow(){
+  -moz-box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
+  box-shadow: 0px 0px 6px 0px #CE8483, inset 0px 1px 0px 0px #ECECEC;
+}
 .warning-panel(){
   box-shadow: none;
   .panel-heading{
@@ -101,7 +103,6 @@
 
     .wiggi-wiz-editable {
       padding: 6px 12px !important;
-      background-color: transparent;
     }
 
     .toolbar {
