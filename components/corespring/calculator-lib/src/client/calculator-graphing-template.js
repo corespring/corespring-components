@@ -3,13 +3,13 @@ var calculatorGraphingTemplate = [
   function() {
     var link = function(scope, elm, attrs, container) {      
 
-    }
+    };
 
     function template() {
       return [
         '<div class=\"calculator-graphing\">Graphing calculator template',
         '  <div>Not yet implemented</div>',
-        '</div>',
+        '</div>'
       ].join('');
     }
     

@@ -12,7 +12,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         '  <calculator-graphing-template ng-switch-when="graphing"></calculator-graphing-template>',
         '</div>'
       ].join("\n");
-    }
+    };
 
     var link = function(scope, element, attrs) {
       var addEmptyFunctions = function(obj, fns) {
