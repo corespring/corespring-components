@@ -45,8 +45,8 @@ function configureTextEntry(
 
     scope.itemId = attrs.id;
 
-    scope.correctResponsesPrompt = 'Type all the possible correct answers here';
-    scope.partialResponsesPrompt = 'Type all acceptable partially correct answers here';
+    scope.correctResponsesPrompt = 'Enter answers here';
+    scope.partialResponsesPrompt = 'Enter answers here';
 
     scope.answerBlankSizeDataProvider = [{
       size: 3,
@@ -166,10 +166,16 @@ function configureTextEntry(
 
     // Workaround for https://github.com/ivaynberg/select2/issues/291
     function fixPlaceholderCutOff() {
-      $('.select2-search-field input', element).each(function(i, el) {
-        el.focus();
-        el.blur();
-      });
+      var inputs = $('.ui-select-search input', element);
+      if(inputs.length > 0) {
+        inputs.each(function (i, el) {
+          el.focus();
+          el.blur();
+          el.css('width', '');
+        });
+      } else {
+        $timeout(fixPlaceholderCutOff, 200);
+      }
     }
 
     function onBlurCorrectResponse(text) {
