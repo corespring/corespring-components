@@ -129,4 +129,42 @@ describe('corespring:text-entry:configure', function () {
     });
   });
 
+
+  describe('autoSaving', function(){
+    it('should set onDone', function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+      scope.onBlurCorrectResponse("new answer");
+      expect(_.isFunction(scope.onDone)).toBe(true);
+      scope.onDone();
+      rootScope.$digest();
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.correctResponses.values).toContain('new answer');
+    });
+
+    it('should add unsaved answer when modal is closed with done', function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+      scope.onBlurCorrectResponse("new answer");
+      scope.$broadcast('closeModal', {action:'done'});
+      rootScope.$digest();
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.correctResponses.values).toContain('new answer');
+    });
+
+    it('should not add unsaved answer when modal is closed with other than done', function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+      scope.onBlurCorrectResponse("new answer");
+      scope.$broadcast('closeModal', {action:'close'});
+      rootScope.$digest();
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.correctResponses.values).not.toContain('new answer');
+    });
+  });
+
+
 });

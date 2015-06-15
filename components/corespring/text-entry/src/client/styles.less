@@ -148,12 +148,25 @@
 
   .rounded-inputs;
 
-  .award-row {
-    margin-bottom: 20px;
-
-    .award-percent {
-      width: auto;
+  .row {
+    &.correct-answers {
+      margin-top: 15px;
     }
+    &.partially-correct-answers {
+      margin-top: 25px;
+    }
+    &.award-row {
+      margin-top: 10px;
+      margin-bottom: 20px;
+
+      .award-percent {
+        width: auto;
+      }
+    }
+  }
+
+  .feedback-panel-header {
+    width: 60%;
   }
 
   .response-input {
@@ -164,8 +177,15 @@
     }
 
     //Overwrite position:relative bc. that displaces the input field
-    .ui-select-container.dropdown {
-      position: inherit;
+    .ui-select-container {
+      width: 60%;
+      display: inline-block;
+      &.dropdown {
+        position: inherit;
+      }
+      &.open {
+        border-color: rgba(82, 168, 236, 0.8);
+      }
     }
 
     .ui-select-match-item {
@@ -210,7 +230,7 @@
     }
 
     .ui-select-match-close:hover, .ui-select-match-close:focus {
-        opacity: 1;
+      opacity: 1;
     }
 
 
@@ -221,6 +241,7 @@
     }
 
     .checkbox-input {
+      display: inline-block;
       margin-left: 20px;
     }
 
