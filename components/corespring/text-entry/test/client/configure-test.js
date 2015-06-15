@@ -131,38 +131,34 @@ describe('corespring:text-entry:configure', function () {
 
 
   describe('autoSaving', function(){
-    it('should set onDone', function(){
+    it('should add correct answer on blur', function(){
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       rootScope.$digest();
       scope.onBlurCorrectResponse("new answer");
-      expect(_.isFunction(scope.onDone)).toBe(true);
-      scope.onDone();
       rootScope.$digest();
       var resultModel = container.elements['1'].getModel();
       expect(resultModel.correctResponses.values).toContain('new answer');
     });
 
-    it('should add unsaved answer when modal is closed with done', function(){
+    it('should add partial answer on blur', function(){
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       rootScope.$digest();
-      scope.onBlurCorrectResponse("new answer");
-      scope.$broadcast('closeModal', {action:'done'});
+      scope.onBlurPartialResponse("new answer");
       rootScope.$digest();
       var resultModel = container.elements['1'].getModel();
-      expect(resultModel.correctResponses.values).toContain('new answer');
+      expect(resultModel.partialResponses.values).toContain('new answer');
     });
 
-    it('should not add unsaved answer when modal is closed with other than done', function(){
+    it('should not add answer when text is empty', function(){
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       rootScope.$digest();
-      scope.onBlurCorrectResponse("new answer");
-      scope.$broadcast('closeModal', {action:'close'});
+      scope.onBlurCorrectResponse("");
       rootScope.$digest();
       var resultModel = container.elements['1'].getModel();
-      expect(resultModel.correctResponses.values).not.toContain('new answer');
+      expect(resultModel.correctResponses.values.length).toBe(3);
     });
   });
 

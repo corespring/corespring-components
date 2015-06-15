@@ -78,7 +78,6 @@ function configureTextEntry(
 
     scope.$watch('editorModel.correctResponses.values.length', initFeedbacks);
     scope.$watch('editorModel', updateModel, true);
-    scope.$on('closeModal', onCloseModal);
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -182,33 +181,21 @@ function configureTextEntry(
     }
 
     function onBlurCorrectResponse(text) {
-      scope.onDone = function() {
-        var newAnswer = trim(text);
-        if (!_.isEmpty(newAnswer)) {
-          scope.editorModel.correctResponses.values.push(newAnswer);
-        }
-      };
+      var newAnswer = trim(text);
+      if (!_.isEmpty(newAnswer)) {
+        scope.editorModel.correctResponses.values.push(newAnswer);
+      }
     }
 
     function onBlurPartialResponse(text) {
-      scope.onDone = function() {
-        var newAnswer = trim(text);
-        if (!_.isEmpty(newAnswer)) {
-          scope.editorModel.partialResponses.values.push(newAnswer);
-        }
-      };
+      var newAnswer = trim(text);
+      if (!_.isEmpty(newAnswer)) {
+        scope.editorModel.partialResponses.values.push(newAnswer);
+      }
     }
 
     function trim(s) {
       return s ? ("" + s).trim() : "";
-    }
-
-    function onCloseModal(evt, data) {
-      if (data && data.action === 'done') {
-        if (_.isFunction(scope.onDone)) {
-          scope.onDone();
-        }
-      }
     }
 
   }
