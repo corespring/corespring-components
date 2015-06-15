@@ -166,14 +166,17 @@ function configureTextEntry(
 
     // Workaround for https://github.com/ivaynberg/select2/issues/291
     function fixPlaceholderCutOff() {
-      var inputs = $('.ui-select-search input', element);
-      if(inputs.length > 0) {
-        inputs.each(function (i, el) {
-          el.focus();
-          el.blur();
-          el.css('width', '');
-        });
-      } else {
+      var done = false;
+      
+      $('input.ui-select-search', element).each(function (i, el) {
+        $el = $(el);
+        if($el.css('width')) {
+          $el.css('width', '');
+          done = true
+        }
+      });
+
+      if(!done){
         $timeout(fixPlaceholderCutOff, 200);
       }
     }
