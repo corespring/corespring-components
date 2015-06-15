@@ -1,6 +1,6 @@
 {
   "name": "drag-and-drop-categorize",
-  "title": "Categorize",
+  "title": "Old Categorize",
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
   "corespring-container-version": "0.0.1",
@@ -39,5 +39,5 @@
       "scope" : "editor"
     }
   ],
-  "released": true
+  "released": false
 }
