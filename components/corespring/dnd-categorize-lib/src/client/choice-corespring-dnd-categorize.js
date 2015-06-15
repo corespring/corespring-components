@@ -98,8 +98,10 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     var revertInvalidAnimationMs = 300;
 
     function alwaysRevertButAnimateIfInvalid(dropTarget) {
-      var invalid = !choiceAcceptedBy(dropTarget);
-      setRevertDuration(invalid ? revertInvalidAnimationMs : revertValidAnimationMs);
+      if(!scope.model.moveOnDrag) {
+        var invalid = !choiceAcceptedBy(dropTarget);
+        setRevertDuration(invalid ? revertInvalidAnimationMs : revertValidAnimationMs);
+      }
       return true;
 
       function choiceAcceptedBy(dropTarget) {
@@ -119,13 +121,17 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     }
 
     function setDraggableOption(name, value) {
-      if ($(elem).is('.ui-draggable')) {
+      try {
         $(elem).draggable('option', name, value);
+      }
+      catch(err){
+        console.error("setDraggableOption", err, elem, attrs.id);
       }
     }
 
+
     function onStart(event, ui) {
-      log('onStart', scope.dragAndDropScope);
+      log('onStart', scope.dragAndDropScope, attrs.choiceId, elem);
       scope.isDragging = true;
       scope.onDragStart({
         choiceId: attrs.choiceId
