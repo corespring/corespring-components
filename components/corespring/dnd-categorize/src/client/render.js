@@ -373,13 +373,14 @@ function renderCorespringDndCategorize(
     function onCategoryDrop(categoryId, choiceId) {
       var category = _.find(scope.renderModel.categories, byModelId(categoryId));
       var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
+
       scope.$apply(function() {
         category.choices.push(wrapChoiceModel(choice));
+        if (choice.moveOnDrag && !scope.isEditMode) {
+          _.remove(scope.renderModel.choices, byId(choiceId));
+        }
       });
 
-      if (choice.moveOnDrag && !scope.isEditMode) {
-        _.remove(scope.renderModel.choices, byId(choiceId));
-      }
       updateView();
     }
 
