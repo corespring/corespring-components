@@ -178,7 +178,7 @@ function configureTextEntry(
         if (!_.isEmpty(newAnswer)) {
           scope.editorModel.correctResponses.values.push(newAnswer);
         }
-      }
+      };
     }
 
     function onBlurPartialResponse(text) {
@@ -187,7 +187,7 @@ function configureTextEntry(
         if (!_.isEmpty(newAnswer)) {
           scope.editorModel.partialResponses.values.push(newAnswer);
         }
-      }
+      };
     }
 
     function trim(s) {
@@ -233,13 +233,7 @@ function configureTextEntry(
       '    <div class="row correct-answers">',
       '      <div class="col-xs-9">',
       '        <label class="control-label">Correct Answers</label>',
-      '      </div>',
-      '    </div>',
-      '    <div class="row">',
-      '      <div class="col-xs-9">',
-      '        <p>',
-      '          Use the tab key or the Enter/Return key for each possible word, phrase, expression, or equation.',
-      '        </p>',
+      '        <p>Additional correct answers may be added by clicking <b>tab</b> or <b>enter/return</b> between answers.</p>',
       '      </div>',
       '    </div>',
       '    <div class="row">',
@@ -254,13 +248,7 @@ function configureTextEntry(
       '    <div class="row partially-correct-answers">',
       '      <div class="col-xs-9">',
       '        <label class="control-label">Partially Correct Answers (optional)</label>',
-      '      </div>',
-      '    </div>',
-      '    <div class="row">',
-      '      <div class="col-xs-9">',
-      '        <p>',
-      '          Use the tab key or the Enter/Return key for each possible word, phrase, expression, or equation.',
-      '        </p>',
+      '        <p>Additional partially correct answers may be added by clicking <b>tab</b> or <b>enter/return</b> between answers.</p>',
       '      </div>',
       '    </div>',
       '    <div class="row">',
