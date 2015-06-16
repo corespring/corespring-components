@@ -4,7 +4,7 @@
   "correctResponses": {
     "award": 100,
     "values": [],
-    "ignoreWhitespace": true,
+    "ignoreWhitespace": false,
     "ignoreCase": true,
     "feedback": {
       "type": "default"
