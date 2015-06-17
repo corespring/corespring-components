@@ -2,6 +2,7 @@
   "componentType": "corespring-multiple-choice",
   "title": "Multiple Choice",
   "weight" : 1,
+  "minimumWidth": 100,
   "correctResponse": {
     "value": []
   },

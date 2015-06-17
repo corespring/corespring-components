@@ -2,6 +2,7 @@
   "componentType": "corespring-number-line",
   "title": "Number Line",
   "weight": 1,
+  "minimumWidth": 540,
   "correctResponse": [
   ],
   "feedback": {
