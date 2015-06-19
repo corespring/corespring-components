@@ -150,7 +150,7 @@ function main(
       });
 
       function existsAnswerAreaNode(id){
-        return $('<div>' + scope.model.answerAreaXhtml + '</div>').find('#' + id).length > 0
+        return $('<div>' + scope.model.answerAreaXhtml + '</div>').find('#' + id).length > 0;
       }
     }
 
