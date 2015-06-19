@@ -210,4 +210,29 @@ describe('corespring:drag-and-drop-inline:configure', function() {
     });
   });
 
+  describe('removeSuperfluousAnswerAreaModels', function(){
+    it('should remove a model if it does not have a component in xhtml', function(){
+      var testModel = createTestModel({
+        answerAreas: [{
+          "id": "aa_1"
+        }]
+      });
+      container.elements['1'].setModel(testModel);
+      testModel.model.answerAreaXhtml = '';
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.model.answerAreas.length).toBe(0);
+    });
+    it('should not remove a model if it does have a component in xhtml', function(){
+      var testModel = createTestModel({
+        answerAreas: [{
+          "id": "aa_1"
+        }]
+      });
+      container.elements['1'].setModel(testModel);
+      testModel.model.answerAreaXhtml = '<answer-area-inline-csdndi id="aa_1"></answer-area-inline-csdndi>';
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.model.answerAreas.length).toBe(1);
+    });
+  });
+
 });

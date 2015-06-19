@@ -36,6 +36,11 @@
       "organization": "corespring"
     },
     {
+      "name": "feedback-config",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
       "name": "feedback-templates",
       "organization": "corespring"
     },
