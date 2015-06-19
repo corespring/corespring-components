@@ -210,6 +210,33 @@ describe('corespring:drag-and-drop-inline:configure', function() {
     });
   });
 
+  describe('removeAnswerArea', function() {
+    it('should remove answerArea', function() {
+      var ids, testModel = createTestModel({
+        answerAreas: [{
+          "id": "aa_1"
+        }]
+      });
+      container.elements['1'].setModel(testModel);
+      scope.removeAnswerArea('aa_1');
+      expect(testModel.model.answerAreas).toEqual([]);
+    });
+    it('should remove correctResponses for this answerArea', function() {
+      var ids, testModel = createTestModel({
+        answerAreas: [{
+          "id": "aa_1"
+        }],
+        correctResponse: {
+          "aa_1" : ["c1"]
+        }
+      });
+      container.elements['1'].setModel(testModel);
+      scope.removeAnswerArea('aa_1');
+      scope.$digest();
+      expect(testModel.correctResponse).toEqual({});
+    });
+  });
+
   describe('removeSuperfluousAnswerAreaModels', function(){
     it('should remove a model if it does not have a component in xhtml', function(){
       var testModel = createTestModel({
