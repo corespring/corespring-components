@@ -2,6 +2,7 @@
   "componentType": "corespring-match",
   "title": "Match component sample item",
   "weight": 4,
+  "minimumWidth": 300,
   "correctResponse": [
     {
       "id": "row-1",

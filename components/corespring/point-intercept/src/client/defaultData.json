@@ -1,6 +1,7 @@
 {
   "title": "Plot Points",
   "componentType": "corespring-point-intercept",
+  "minimumWidth": 500,
   "correctResponse": [
     "0,0",
     "1,1",
@@ -8,7 +9,6 @@
     "3,3"
   ],
   "allowPartialScoring": false,
-
   "partialScoring" : [
     {}
   ],
