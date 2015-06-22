@@ -34,13 +34,12 @@ function CompactLayout(initialConfig, layoutRunner) {
   //-----------------------------------------
 
   function refresh() {
-    var choiceElements = config.container.find(config.itemSelector);
-
     var numColumns = _.isFunction(config.numColumns) ? config.numColumns() : config.numColumns;
     if (isNaN(numColumns) || numColumns <= 0) {
       return;
     }
 
+    var choiceElements = config.container.find(config.itemSelector);
     if (!elementsShouldBeRendered(choiceElements)) {
       return;
     }
@@ -124,6 +123,7 @@ function CompactLayout(initialConfig, layoutRunner) {
     config = _.assign({
       paddingBottom: 0
     }, config, newConfig);
+    console.log("updateConfig", config.cellWidth, config.container.width());
   }
 
   function startRunner() {

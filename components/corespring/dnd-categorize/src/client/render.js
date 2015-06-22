@@ -295,10 +295,6 @@ function renderCorespringDndCategorize(
     }
 
     function updateView() {
-      if(elem.width() === 0){
-        $timeout(updateView, 100);
-        return;
-      }
       if (!scope.renderModel.categories || !scope.renderModel.choices) {
         return;
       }
@@ -314,11 +310,14 @@ function renderCorespringDndCategorize(
       }
 
       scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
-      scope.choiceWidth = calcChoiceWidth();
-
       scope.categoryStyle = {
         width: 100 / categoriesPerRow + '%'
       };
+
+      scope.choiceWidth = calcChoiceWidth();
+      if(scope.choiceWidth === 0){
+        $timeout(updateView, 100);
+      }
 
       //in editor we need some space to show all the tools
       //so we limit the number of choices per row to 4
@@ -340,19 +339,16 @@ function renderCorespringDndCategorize(
      * @returns {number}
      */
     function calcChoiceWidth() {
-      var totalWidth = elem.width();
-      totalWidth -= 2*15; //padding of the categories-holder
-      var maxChoiceWidth = totalWidth / scope.categoriesPerRow;
-      maxChoiceWidth -=2*3; //margin of category.border
-      maxChoiceWidth -=2*8; //padding of categorized choices
-      maxChoiceWidth -=2*2; //border width of categorized choices
+      var maxChoiceWidth = elem.find('.choice-container').width();
       maxChoiceWidth -=2*3; //margin of choice.border
+      if(maxChoiceWidth < 0){
+        return 0;
+      }
       if(scope.choicesPerRow <= scope.categoriesPerRow) {
         return maxChoiceWidth;
-      } else {
-        var totalChoiceWidth = maxChoiceWidth * scope.categoriesPerRow;
-        return totalChoiceWidth / scope.choicesPerRow;
       }
+      var totalChoiceWidth = maxChoiceWidth * scope.categoriesPerRow;
+      return totalChoiceWidth / scope.choicesPerRow;
     }
 
     function chunk(arr, chunkSize) {
