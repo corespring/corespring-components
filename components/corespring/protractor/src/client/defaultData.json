@@ -1,6 +1,7 @@
 {
   "title": "Protractor",
   "componentType": "corespring-protractor",
+  "weight": 0,
   "model": {
     "config": {}
   }
