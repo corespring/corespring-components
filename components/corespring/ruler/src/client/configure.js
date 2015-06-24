@@ -20,34 +20,37 @@ var main = [
       '           </label>',
       '         </div>',
       '       </div>',
-
       '       <div class="form-group">',
       '         <label class="col-sm-5 control-label">Label</label>',
-      '         <div class="col-sm-2">',
+      '         <div class="col-sm-3">',
       '           <select class="form-control" ng-model="model.config.label" ng-switch on="model.config.units">',
-      '             <option value="none">None</option>',
-      '             <option value="inches" ng-switch-when="imperial">Inches</option>',
-      '             <option value="feet" ng-switch-when="imperial">Feet</option>',
-      '             <option value="yards" ng-switch-when="imperial">Yards</option>',
-      '             <option value="miles" ng-switch-when="imperial">Miles</option>',
-      '             <option value="millimeters" ng-switch-when="metric">Millimeters</option>',
-      '             <option value="centimeters" ng-switch-when="metric">Centimeters</option>',
-      '             <option value="meters" ng-switch-when="metric">Meters</option>',
-      '             <option value="kilometers" ng-switch-when="metric">Kilometers</option>',
+      '             <option value="">None</option>',
+      '             <option value="in" ng-switch-when="imperial">Inches</option>',
+      '             <option value="ft" ng-switch-when="imperial">Feet</option>',
+      '             <option value="yd" ng-switch-when="imperial">Yards</option>',
+      '             <option value="mi" ng-switch-when="imperial">Miles</option>',
+      '             <option value="mm" ng-switch-when="metric">Millimeters</option>',
+      '             <option value="cm" ng-switch-when="metric">Centimeters</option>',
+      '             <option value="m" ng-switch-when="metric">Meters</option>',
+      '             <option value="km" ng-switch-when="metric">Kilometers</option>',
       '           </select>',
       '         </div>',
       '       </div>',
-
       '       <div class="form-group">',
       '         <label class="col-sm-5 control-label">Length</label>',
-      '         <div class="col-sm-1">',
+      '         <div class="col-sm-2">',
       '           <input class="form-control" type="number" ng-model="model.config.length" />',
       '         </div>',
       '       </div>',
-
+      '       <div class="form-group">',
+      '         <label class="col-sm-5 control-label">Pixels per unit</label>',
+      '         <div class="col-sm-2">',
+      '           <input class="form-control" type="number" ng-model="model.config.pixelsPerUnit" />',
+      '         </div>',
+      '       </div>',
       '       <div class="form-group">',
       '         <label class="col-sm-5 control-label">Number of Ticks</label>',
-      '         <div class="col-sm-1">',
+      '         <div class="col-sm-2">',
       '           <select class="form-control" ng-model="model.config.ticks">',
       '             <option value="1">1</option>',
       '             <option value="2">2</option>',
@@ -58,7 +61,6 @@ var main = [
       '           </select>',
       '         </div>',
       '       </div>',
-
       '     </div>',
       '   </div>',
       ' </div>',
@@ -86,7 +88,7 @@ var main = [
               "metric": ["none", "millimeters", "centimeters", "meters", "kilometers"]
             };
             scope.handleUnitsChange = function() {
-              scope.model.config.label = "none";
+              scope.model.config.label = "";
             }
           }
         };
