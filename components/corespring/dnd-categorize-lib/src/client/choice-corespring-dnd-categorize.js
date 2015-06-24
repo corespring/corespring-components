@@ -241,7 +241,6 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       '    </div>',
       '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
-      '      <div class="remove-choice"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
       '    <div class="correctness-display">',
       '      <div class="background fa"></div>',
