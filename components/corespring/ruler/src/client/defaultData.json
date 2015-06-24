@@ -5,8 +5,9 @@
   "model": {
     "config": {
       "units": "imperial",
-      "label": "none",
+      "label": "",
       "length": 10,
+      "pixelsPerUnit": 40,
       "ticks": 10
     }
   }

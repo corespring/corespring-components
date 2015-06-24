@@ -26,6 +26,10 @@
               "description": "A value defining length in units of ruler",
               "type": "integer"
             },
+            "pixelsPerUnit": {
+              "description": "A value indicating how many pixels represent one unit in the ruler",
+              "type": "integer"
+            },
             "ticks": {
               "description": "Number of ruler ticks",
               "type": "integer"
