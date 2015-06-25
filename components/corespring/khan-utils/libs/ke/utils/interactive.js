@@ -3545,6 +3545,7 @@ function Ruler(graphie, options) {
         ticksPerUnit: 10,   // 10 or power of 2
         units: 10,          // the length the ruler can measure
         label: "",          // e.g "cm" (the shorter, the better)
+        movablePointColor: KhanUtil.ORANGE,
         style: {
             fill: null,
             stroke: KhanUtil.GRAY
@@ -3674,14 +3675,14 @@ function Ruler(graphie, options) {
     var movablePoint = graphie.addMovablePoint({
         coord: leftBottom,
         normalStyle: {
-            fill: KhanUtil.ORANGE,
+            fill: options.movablePointColor,
             "fill-opacity": 0,
-            stroke: KhanUtil.ORANGE
+            stroke: options.movablePointColor
         },
         highlightStyle: {
-            fill: KhanUtil.ORANGE,
+            fill: options.movablePointColor,
             "fill-opacity": 0.1,
-            stroke: KhanUtil.ORANGE
+            stroke: options.movablePointColor
         },
         pointSize: 6, // or 8 maybe?
         onMove: function(x, y) {

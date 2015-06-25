@@ -1,0 +1,35 @@
+.component-placeholder {
+  .cs-ruler {
+    position: relative;
+    width: 220px;
+    height: 205px;
+    background: url('/client/icon/corespring-ruler') no-repeat center;
+    .cs-ruler-toggle,
+    .cs-ruler-widget {
+      display: none;
+    }
+  }
+}
+.cs-ruler {
+    .cs-ruler-toggle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+    .cs-ruler-widget {
+        position: absolute!important;
+        top: 0;
+        left: 0;
+        svg {
+            position: absolute!important;
+            overflow: visible!important;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            image, path, circle {
+                pointer-events: auto;
+            }
+        }
+    }
+}

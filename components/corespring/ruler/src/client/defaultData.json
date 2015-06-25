@@ -1,0 +1,14 @@
+{
+  "title": "Ruler",
+  "componentType": "corespring-ruler",
+  "weight": 0,
+  "model": {
+    "config": {
+      "units": "imperial",
+      "label": "",
+      "length": 10,
+      "pixelsPerUnit": 40,
+      "ticks": 10
+    }
+  }
+}
