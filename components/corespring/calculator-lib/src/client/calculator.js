@@ -47,7 +47,7 @@ var calculator = [
         }
         self.clickOperand(button.symbol);
         self.operandContinue = true;
-      }
+      };
 
       this.clickConstant = function(button) {
         // check if there are no operator
@@ -66,7 +66,7 @@ var calculator = [
         // make sure new input is treated as a new operand
         this.operandContinue = false;
         self.previousOperator = 'multiply';
-      }
+      };
 
       this.clickOperand = function(button) {
         if (this.operandContinue) {
@@ -180,7 +180,7 @@ var calculator = [
             var newValue = (self.operandContinue) ? input.val().slice(0, - 1) : '';
 
             if(self.operandContinue) {
-              newValue = input.val().slice(0, - 1)              
+              newValue = input.val().slice(0, - 1);
             } else {
             }            
             if(newValue === '') {
@@ -223,7 +223,7 @@ var calculator = [
           'operandContinue': self.operandContinue
         });
         self.resetOperationStatus();
-      }
+      };
 
       this.pullSubresult = function() {
         if(self.operationStatus.length > 0) {
@@ -232,11 +232,9 @@ var calculator = [
           } else {
             self.solveOperation(scope.buttons.equals);
             if(self.operandContinue) {
-              value = self.storedValue;
               self.lastPressedIsBinary = false;
             } else {
               if(self.storedValue === '') {
-                console.log(input.val());
                 self.storedValue = input.val();
               }
             }
@@ -245,17 +243,17 @@ var calculator = [
           input.val(self.storedValue);
 
           var status = self.operationStatus.pop();
-          self.storedValue = status['storedValue'];
-          self.previousOperator = status['previousOperator'];
-          self.pendingOperationIsBinary = status['pendingOperationIsBinary'];
+          self.storedValue = status.storedValue;
+          self.previousOperator = status.previousOperator;
+          self.pendingOperationIsBinary = status.pendingOperationIsBinary;
           self.lastPressedIsBinary = false;
-          self.operandContinue = status['operandContinue'];
+          self.operandContinue = status.operandContinue;
 
           if(self.previousOperator === '' && self.storedValue === '') {
             self.storedValue = input.val();
           }
         }        
-      }
+      };
 
       this.resetOperationStatus = function() {
         self.storedValue = '';
@@ -263,7 +261,7 @@ var calculator = [
         self.pendingOperationIsBinary = false;
         self.lastPressedIsBinary = false;
         self.operandContinue = false;
-      }
+      };
 
       this.solveOperation = function(button) {
         var inputValue = parseFloat(input.val());
@@ -316,7 +314,7 @@ var calculator = [
         } else {
           return num * this.factorial( num - 1 );
         }
-      }      
+      };      
     }
 
     return Calculator;
