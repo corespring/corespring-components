@@ -196,7 +196,10 @@ var calculator = [
             input.val('');
             break;
           case 'store':
-            this.memory = input.val();
+            var value = input.val();
+            if(value !== '') {
+              this.memory = input.val();
+            }
             break;
           case 'recall':
             input.val(this.memory);
@@ -282,6 +285,9 @@ var calculator = [
               break;
             case 'power':
               self.storedValue = Math.pow(self.storedValue, inputValue);
+              break;
+            default:
+              self.storedValue = input.val();
               break;
           }
         }
