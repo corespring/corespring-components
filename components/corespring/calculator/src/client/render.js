@@ -8,9 +8,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       return [
         '<div class="cs-calculator" ng-switch on="model.config.type" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="draggableOptions()" >',
         '  <calculator-basic-template ng-switch-default></calculator-basic-template>',
-        '  <calculator-scientific-template ng-switch-when="scientific"></calculator-scientific-template>',
-        '  <calculator-graphing-template ng-switch-when="graphing"></calculator-graphing-template>',
+        '  <calculator-scientific-template ng-switch-when="scientific" calculator-type="{{ model.config.type }}"></calculator-scientific-template>',
         '</div>'
+        // '<div class="cs-calculator" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="draggableOptions()" >',
+        // '  <calculator-template calculator-type="{{ model.config.type }}"></calculator-template>',
+        // '</div>'
       ].join("\n");
     };
 
