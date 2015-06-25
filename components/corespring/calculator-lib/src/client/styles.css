@@ -3,24 +3,109 @@
   min-height: 50px;
 }
 
+/****** Basic ****************/
+
 .basic {
   width: 235px;
   height: 215px;
 }
 
-.scientific {
-  
-}
-
-.graphing {
-  
-}
-
-.results {	
+.basic .results {	
 	padding-bottom: 10px;
 	width: 215px;
 	margin: 0;
 }
+
+.basic .basic-function-button {
+	width: 48px;
+	height: 25px;
+	margin-bottom: 10px;	
+}
+
+/****** Scientific ****************/
+
+.scientific {
+	width: 290px;
+  height: 395px;  
+}
+
+.scientific .results {	
+	padding-bottom: 10px;
+	width: 270px;
+	margin: 0;
+}
+
+.scientific .deg-rad-button {
+	width: 50px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+.scientific .memory-pad {
+	float: right;
+	width: 105px;
+	margin-top: 0;
+}
+
+.scientific .memory-pad .recall-button {
+	width: 50px;
+	margin: 0;
+}
+
+ /* Clear pad */
+.scientific .clear-pad {
+	width: 165px;
+	margin: 0;
+	float: left ;
+}
+
+/* Numbers pad */
+.scientific .numbers-pad {
+	width: 165px;
+	margin-top: 10px;
+	float: left;
+}
+
+/* Basic functions pad */
+.scientific .scientific_basic-pad {
+	float: right;
+	width: 105px;	
+	margin-top: 10px;
+}
+
+.scientific .scientific_basic-pad .basic-function-button {
+	width: 50px;
+	margin-bottom: 10px;	
+}
+
+.scientific .scientific_basic-pad .basic-function-button:nth-child(odd) {
+	width: 50px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+.scientific .deg-rad-pad {
+	width: 280px;
+	/*margin-bottom: 10px;	*/
+}
+
+.scientific .scientific_advanced-pad {
+
+}
+
+.scientific .scientific_advanced-pad .advanced-button {
+	width: 60px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+}
+
+.scientific .scientific_advanced-pad .advanced-button:nth-child(4n) {
+	width: 60px;
+	margin-bottom: 10px;
+	margin-right: 0;
+}
+
+/***********************************/
 
 .results input {	
 	width: 100%;
@@ -50,6 +135,24 @@
 	width: 50px;
 }
 
+.memory-pad {
+	height: 25px;	
+	width: 165px;
+	margin-top: 10px;
+}
+
+.store-button {
+	width: 50px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+.recall-button {
+	width: 50px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
 .numbers-pad {
 	width: 165px;
 	margin-top: 10px;
@@ -65,10 +168,4 @@
 	float: right;
 	width: 50px;
 	margin-top: 0;
-}
-
-.basic-function-button {
-	width: 48px;
-	height: 25px;
-	margin-bottom: 10px;	
 }

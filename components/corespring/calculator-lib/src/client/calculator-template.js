@@ -1,4 +1,4 @@
-var calculatorScientificTemplate = [
+var calculatorTemplate = [
   'Calculator',
   function(Calculator) {
 
@@ -26,10 +26,10 @@ var calculatorScientificTemplate = [
         '  <div class="buttons-panel">',
         '    <div class="{{ region }}-pad" ng-repeat="region in types[calculatorType].regions">',
         '      <button ng-repeat="button in regions[region].buttons" ',
-        '         id="{{button}}-button"',
-        '         class="{{buttons[button].cssClass}}-button"',
-        '         title="{{buttons[button].name}}"',
-        '         ng-click="click(buttons[button], this)"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
+        '					id="{{button}}-button"',
+        '					class="{{buttons[button].cssClass}}-button"',
+        '					title="{{buttons[button].name}}"',
+        '					ng-click="click(buttons[button], this)"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
         '    </div>',
         '</div>'
       ].join('');
@@ -40,7 +40,7 @@ var calculatorScientificTemplate = [
       replace: true,
       link: link,
       scope: {
-        calculatorType: '@'
+      	calculatorType: '@'
       },
       template: template()
     };
@@ -49,6 +49,6 @@ var calculatorScientificTemplate = [
 
 exports.framework = 'angular';
 exports.directive = {
-  name: "calculatorScientificTemplate",
-  directive: calculatorScientificTemplate
+  name: "calculatorTemplate",
+  directive: calculatorTemplate
 };
