@@ -44,7 +44,8 @@ var main = [
                 label: rulerConfig.label,
                 pixelsPerUnit: rulerConfig.pixelsPerUnit,
                 ticksPerUnit: rulerConfig.ticks,
-                units: rulerConfig.length
+                units: rulerConfig.length,
+                movablePointColor: arrowFillColor
               });
               element.find('.cs-ruler-widget').height(0).width(0); // Prevents the ruler container of blocking underlying content
             }, 100);
