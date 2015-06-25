@@ -89,7 +89,7 @@ var main = [
             };
             scope.handleUnitsChange = function() {
               scope.model.config.label = "";
-            }
+            };
           }
         };
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
