@@ -16,9 +16,14 @@
 	margin: 0;
 }
 
-.basic .basic-function-button {
-	width: 48px;
-	height: 25px;
+/* Basic functions pad */
+.basic .basic-pad {
+	overflow: hidden;
+	width: 50px;
+}
+
+.basic .basic-pad .basic-function-button {
+	width: 50px;
 	margin-bottom: 10px;	
 }
 
@@ -35,12 +40,6 @@
 	margin: 0;
 }
 
-.scientific .deg-rad-button {
-	width: 50px;
-	margin-bottom: 10px;
-	margin-right: 5px;
-}
-
 .scientific .memory-pad {
 	float: right;
 	width: 105px;
@@ -52,25 +51,10 @@
 	margin: 0;
 }
 
- /* Clear pad */
-.scientific .clear-pad {
-	width: 165px;
-	margin: 0;
-	float: left ;
-}
-
-/* Numbers pad */
-.scientific .numbers-pad {
-	width: 165px;
-	margin-top: 10px;
-	float: left;
-}
-
 /* Basic functions pad */
 .scientific .scientific_basic-pad {
 	float: right;
 	width: 105px;	
-	margin-top: 10px;
 }
 
 .scientific .scientific_basic-pad .basic-function-button {
@@ -84,13 +68,18 @@
 	margin-right: 5px;
 }
 
+/* Deg-Rad pad */
 .scientific .deg-rad-pad {
 	width: 280px;
-	/*margin-bottom: 10px;	*/
+}
+
+.scientific .deg-rad-button {
+	width: 50px;
+	margin-bottom: 10px;
+	margin-right: 5px;
 }
 
 .scientific .scientific_advanced-pad {
-
 }
 
 .scientific .scientific_advanced-pad .advanced-button {
@@ -105,67 +94,68 @@
 	margin-right: 0;
 }
 
-/***********************************/
+/* Memory pad */
+.scientific .memory-pad {
+	height: 25px;	
+	width: 105px;
+	margin-bottom: 10px;
+}
 
-.results input {	
+.scientific .store-button {
+	width: 50px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+.scientific .recall-button {
+	width: 50px;
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+/****** Common ****************/
+/* Results */
+.results .input-results {
 	width: 100%;
 }
 
+/* Buttons panel */
 .buttons-panel {	
 	margin: 0;
 	padding: 0;
 }
 
-.left {
-	float: left;
+/* Clear pad */
+.buttons-panel .clear-pad {
 	width: 160px;
+	margin-right: 5px;
+	margin-bottom: 10px;
+	float: left;
 }
 
-.clear-pad {
-	width: 165px;
-	margin: 0;
-}
-
-.backspace-button {
+.clear-pad .backspace-button {
 	width: 105px;	
 	margin-right: 5px;
 }
 
-.clear-button {
+.clear-pad .clear-button {
 	width: 50px;
 }
 
-.memory-pad {
-	height: 25px;	
-	width: 165px;
-	margin-top: 10px;
+/* Numbers pad */
+.buttons-panel .numbers-pad {
+	clear: left;
+	width: 160px;
+	margin-right: 5px;
+	float: left;
 }
 
-.store-button {
+.buttons-panel .numbers-pad .number-button {
 	width: 50px;
 	margin-bottom: 10px;
 	margin-right: 5px;
 }
 
-.recall-button {
-	width: 50px;
-	margin-bottom: 10px;
-	margin-right: 5px;
-}
-
-.numbers-pad {
-	width: 165px;
-	margin-top: 10px;
-}
-
-.number-button {
-	width: 50px;
-	margin-bottom: 10px;
-	margin-right: 5px;
-}
-
-.basic-functions-pad {
-	float: right;
-	width: 50px;
-	margin-top: 0;
+.buttons-panel .numbers-pad .number-button:nth-child(3n) {
+	margin-right: 0px;
 }
