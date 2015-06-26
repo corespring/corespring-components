@@ -21,7 +21,7 @@
 .view-drag-and-drop-legacy .choice {
     vertical-align: top;
     background-color: #EFEFEF;
-    height: 100%;
+    height: auto!important;
     margin: 3px 3px 1px 1px;
     padding: 8px;
     text-align: center;
