@@ -34,7 +34,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
 
   function controller(scope) {
     try {
-      //optional injection
+      //optional injection, mini wiggi is only needed/available in config panel
       var MiniWiggiScopeExtension = $injector.get('MiniWiggiScopeExtension');
       scope.miniWiggiScopeExtension = new MiniWiggiScopeExtension();
       scope.miniWiggiScopeExtension.withExtraFeatureMath().postLink(scope);
@@ -63,8 +63,8 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
 
     scope.draggableJqueryOptions = {
       appendTo: scope.draggedParent,
-      delay: revertInvalidAnimationMs,
-      revert: alwaysRevertButAnimateIfInvalid
+      delay: 300,
+      revert: shouldChoiceRevert
     };
 
     scope.canDelete = canDelete;
@@ -94,17 +94,29 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       updateClasses();
     }
 
-    var revertValidAnimationMs = 0;
-    var revertInvalidAnimationMs = 300;
+    function shouldChoiceRevert(dropTarget) {
+      if(choiceDroppedOnCategory(dropTarget)) {
+        if (scope.model.moveOnDrag) {
+          return false;
+        } else {
+          setRevertDuration(0);
+          return true;
+        }
+      } else if(choiceHasBeenDraggedFromCategory()) {
+        setRevertDuration(0);
+        return true;
+      } else {
+        setRevertDuration(300);
+        return true;
+      }
 
-    function alwaysRevertButAnimateIfInvalid(dropTarget) {
-      var invalid = !choiceAcceptedBy(dropTarget);
-      setRevertDuration(invalid ? revertInvalidAnimationMs : revertValidAnimationMs);
-      return true;
-
-      function choiceAcceptedBy(dropTarget) {
-        //log('choiceAcceptedBy', dropTarget.has('.' + attrs.choiceId));
+      function choiceDroppedOnCategory(dropTarget) {
+        //log('choiceDroppedOnCategory', dropTarget.has('.' + attrs.choiceId));
         return dropTarget && dropTarget.is('.category');
+      }
+
+      function choiceHasBeenDraggedFromCategory(){
+        return isCategorized();
       }
     }
 
@@ -119,13 +131,17 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     }
 
     function setDraggableOption(name, value) {
-      if ($(elem).is('.ui-draggable')) {
+      try {
         $(elem).draggable('option', name, value);
+      }
+      catch(err){
+        console.error("setDraggableOption", err, elem, attrs.id);
       }
     }
 
+
     function onStart(event, ui) {
-      log('onStart', scope.dragAndDropScope);
+      log('onStart', scope.dragAndDropScope, attrs.choiceId, elem);
       scope.isDragging = true;
       scope.onDragStart({
         choiceId: attrs.choiceId
@@ -235,7 +251,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       '    </div>',
       '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
-      '      <div class="remove-choice"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
+      '      <div class="remove-choice" ng-hide="dragEnabled"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
       '    <div class="correctness-display">',
       '      <div class="background fa"></div>',

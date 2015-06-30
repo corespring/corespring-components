@@ -2,6 +2,7 @@
   "componentType": "corespring-inline-choice",
   "correctResponse": "",
   "title": "Short Answer - Drop Down",
+  "minimumWidth": 100,
   "feedback" :  [
     {
       "value": "mc_1",

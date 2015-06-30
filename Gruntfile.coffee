@@ -51,8 +51,6 @@ module.exports = (grunt) ->
             '<%= common.app %>/bower_components/angular-sanitize/angular-sanitize.js'
             '<%= common.app %>/bower_components/angular-ui-select/dist/select.js'
             '<%= common.app %>/bower_components/angular-mocks/angular-mocks.js'
-            # TODO : how to build out packages like this..
-            '<%= common.app %>/bower_components/ckeditor/ckeditor.js'
             '<%= common.app %>/bower_components/saxjs/lib/sax.js'
             '<%= common.corespringCore %>/core.js'
             '<%= common.corespringCore %>/lodash-mixins.js'

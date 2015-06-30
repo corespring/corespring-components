@@ -129,4 +129,38 @@ describe('corespring:text-entry:configure', function () {
     });
   });
 
+
+  describe('autoSaving', function(){
+    it('should add correct answer on blur', function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+      scope.onBlurCorrectResponse("new answer");
+      rootScope.$digest();
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.correctResponses.values).toContain('new answer');
+    });
+
+    it('should add partial answer on blur', function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+      scope.onBlurPartialResponse("new answer");
+      rootScope.$digest();
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.partialResponses.values).toContain('new answer');
+    });
+
+    it('should not add answer when text is empty', function(){
+      var testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+      scope.onBlurCorrectResponse("");
+      rootScope.$digest();
+      var resultModel = container.elements['1'].getModel();
+      expect(resultModel.correctResponses.values.length).toBe(3);
+    });
+  });
+
+
 });
