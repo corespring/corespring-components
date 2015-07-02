@@ -75,9 +75,17 @@ var main = [
       '              ng-click="removeChoice(choice)"></i>',
       '        </div>',
       '        <div class="col-md-9 col-xs-8">',
-      '          <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
-      '              image-service="imageService()" features="extraFeaturesForChoices"',
-      '              parent-selector=".modal-body">',
+      '            <div mini-wiggi-wiz="" ',
+      '              disable-auto-activation="true"',
+      '              active="active[choice.value]"',
+      '              dialog-launcher="external" ',
+      '              features="extraFeaturesForChoices"',
+      '              image-service="imageService()" ',
+      '              ng-click="activate(choice.value)"',
+      '              ng-model="choice.label" ',
+      '              parent-selector=".modal-body"',
+      '              placeholder="Enter a choice"',
+      '            >',
       '            <edit-pane-toolbar alignment="bottom">',
       '              <div class="btn-group pull-right">',
       '                <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">Done</button>',
@@ -321,6 +329,14 @@ var main = [
 
           // default to a...z
           return String.fromCharCode(65 + idx);
+        };
+
+        scope.active = {};
+
+        scope.activate = function(choiceId){
+          var newActive = {};
+          newActive[choiceId] = true;
+          scope.active = newActive;
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
