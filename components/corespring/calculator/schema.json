@@ -19,6 +19,10 @@
     "title" : {
       "description" : "A title for the interaction, displayed in the editor.",
       "type" : "string"
+    },
+    "isTool" : {
+      "description" : "Flag to indicate if the widget is a tool.",
+      "type" : "boolean"
     }
   },
   "required" : ["componentType", "model"]
