@@ -1,6 +1,8 @@
 {
   "title": "Calculator",
+  "isTool" : true,
   "componentType": "corespring-calculator",
+  "weight": 0,
   "model": {
     "config": {
       "type": "basic"      
