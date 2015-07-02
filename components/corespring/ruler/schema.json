@@ -43,6 +43,10 @@
     "title": {
       "description": "A title for the interaction, displayed in the editor.",
       "type": "string"
+    },
+    "isTool": {
+      "description": "A flag that indicates that the component is a tool",
+      "type": "boolean"
     }
   },
   "required": ["componentType", "model"]
