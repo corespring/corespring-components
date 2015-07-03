@@ -9,7 +9,6 @@
   background-color: #A8A8A8;
   color: #FFFFFF;
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px;
   z-index: 100;
 }
 
@@ -17,15 +16,11 @@
 
 .basic {
   width: 201px;
+  font-size: 18px;
 }
 
 .basic .results {	
-	margin-bottom: 10px;
 	width: 175px;
-	height: 40px;
-	border: 3px solid #9C9C9C;
-	border-radius: 5px;
-	color: #131F85;
 }
 
 /* Basic functions pad */
@@ -35,7 +30,6 @@
 }
 
 .basic .basic-pad .basic-function {
-	width: 40px;
 	margin-bottom: 5px;
 	font-size: 22px;	
 }
@@ -43,91 +37,89 @@
 /****** Scientific ****************/
 
 .scientific {
-	width: 292px;
-  height: 397px;  
+	width: 426px;
+	overflow: hidden;
+	font-size: 16px;
 }
 
 .scientific .results {	
-	padding-bottom: 10px;
-	width: 270px;
-	margin: 0;
-}
-
-.scientific .memory-pad {
-	float: right;
-	width: 105px;
-	margin-top: 0;
-}
-
-.scientific .memory-pad .recall {
-	width: 50px;
-	margin: 0;
+	width: 400px;
 }
 
 /* Basic functions pad */
 .scientific .scientific_basic-pad {
-	float: right;
-	width: 105px;	
+	float: left;
+	width: 85px;
 }
 
 .scientific .scientific_basic-pad .basic-function {
-	width: 50px;
-	margin-bottom: 10px;	
+	margin-bottom: 5px;
 }
 
 .scientific .scientific_basic-pad .basic-function:nth-child(odd) {
-	width: 50px;
-	margin-bottom: 10px;
 	margin-right: 5px;
 }
 
 /* Deg-Rad pad */
 .scientific .deg-rad-pad {
-	width: 280px;
+	width: 175px;
 }
 
-.scientific .deg-rad {
-	width: 50px;
-	margin-bottom: 10px;
+.scientific .deg, .scientific .rad {
+	width: 85px;
+	margin-bottom: 5px;
+}
+.scientific .deg {
 	margin-right: 5px;
 }
 
 .scientific .scientific_advanced-pad {
+	width: 175px;
+	margin-left: 5px;
+	float: left;
 }
 
-.scientific .scientific_advanced-pad .advanced {
-	width: 60px;
-	margin-bottom: 10px;
-	margin-right: 10px;
+.scientific .scientific_advanced-pad .advanced {	
+	margin-bottom: 5px;
+	margin-right: 5px;
+	font-size: 14px;
+	padding: 0;
 }
 
 .scientific .scientific_advanced-pad .advanced:nth-child(4n) {
-	width: 60px;
-	margin-bottom: 10px;
 	margin-right: 0;
 }
 
 /* Memory pad */
 .scientific .memory-pad {
-	height: 25px;	
-	width: 105px;
-	margin-bottom: 10px;
+	height: 40px;	
+	width: 90px;
+	margin-bottom: 5px;
+	float: left;
+	margin-top: 0;
 }
 
-.scientific .store {
-	width: 50px;
-	margin-bottom: 10px;
+.scientific .memory-pad .store {
+	margin-bottom: 5px;
 	margin-right: 5px;
 }
 
-.scientific .recall {
-	width: 50px;
-	margin-bottom: 10px;
+.scientific .memory-pad .recall {
+	margin: 0;
+	margin-bottom: 5px;
 	margin-right: 5px;
 }
 
 /****** Common ****************/
 /* Results */
+.results {	
+	margin-bottom: 10px;
+	height: 40px;
+	border: 3px solid #9C9C9C;
+	border-radius: 5px;
+	color: #131F85;
+}
+
 .results input {
 	width: 100%;
 	height: 100%;
@@ -146,6 +138,7 @@
 .button {
 	border: none;
 	height: 40px;
+	width: 40px;
 	background-color: #131F85;
 }
 
@@ -175,7 +168,6 @@
 }
 
 .buttons-panel .numbers-pad .number {
-	width: 40px;
 	background-color: #424C9D;
 	margin-bottom: 5px;
 	margin-right: 5px;
