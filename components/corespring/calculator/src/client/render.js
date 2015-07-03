@@ -6,12 +6,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var template = function() {      
       return [
-        // '<div class="cs-calculator" ng-switch on="model.config.type" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="draggableOptions()" >',
-        // '  <calculator-basic-template ng-switch-default></calculator-basic-template>',
-        // '  <calculator-scientific-template ng-switch-when="scientific" calculator-type="{{ model.config.type }}"></calculator-scientific-template>',
-        // '</div>'
-        '<div class="cs-calculator" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="draggableOptions()" >',
-        '  <calculator-template calculator-type="{{ model.config.type }}"></calculator-template>',
+        '<div class="cs-calculator">',
+        '  <div class="show-button">',
+        '    <i class="fa fa-film icon" ng-click="show = !show"></i>',
+        '  </div>',
+        '  <calculator-template ng-show="show" calculator-type="{{ model.config.type }}" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="draggableOptions()"></calculator-template>',
         '</div>'
       ].join("\n");
     };
@@ -28,6 +27,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         setDataAndSession: function(dataAndSession) {
           scope.model = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
+          scope.show = false;
         },
         getSession: function() {
           return {

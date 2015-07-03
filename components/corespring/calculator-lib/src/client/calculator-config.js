@@ -3,8 +3,8 @@ var calculatorConfig = [
 
     var buttons = [];
     // Clear section
-    buttons.clear = { id: 'clear', name: 'Clear', symbol: 'C', logic: 'core', type: 'Misc', cssClass: 'clear' };
-    buttons.backspace = { id: 'backspace', name: 'Backspace', symbol: 'Backspace', logic: 'core', type: 'Misc', cssClass: 'backspace' };
+    buttons.clear = { id: 'clear', name: 'Clear', symbol: 'clr', logic: 'core', type: 'Misc', cssClass: 'clear' };
+    buttons.backspace = { id: 'backspace', name: 'Backspace', symbol: 'bksp', logic: 'core', type: 'Misc', cssClass: 'backspace' };
     // Numbers
     buttons.one = { id: 'one', name: 'One', symbol: '1', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.two = { id: 'two', name: 'Two', symbol: '2', logic: 'core', type: 'Number', cssClass: 'number' };

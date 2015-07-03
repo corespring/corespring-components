@@ -27,7 +27,7 @@ var calculatorTemplate = [
         '    <div class="{{ region }}-pad" ng-repeat="region in types[calculatorType].regions">',
         '      <button ng-repeat="button in regions[region].buttons" ',
         '					id="{{button}}-button"',
-        '					class="{{buttons[button].cssClass}}-button"',
+        '					class="button {{buttons[button].cssClass}}"',
         '					title="{{buttons[button].name}}"',
         '					ng-click="click(buttons[button], this)"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
         '    </div>',
