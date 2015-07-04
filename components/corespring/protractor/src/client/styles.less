@@ -1,26 +1,22 @@
-.component-placeholder {
-  .cs-protractor {
-    position: relative;
-    width: 220px;
-    height: 205px;
-    background: url('/client/icon/corespring-protractor') no-repeat center;
-    .cs-protractor-toggle,
-    .cs-protractor-widget {
-      display: none;
-    }
-  }
-}
 .cs-protractor {
+    display: inline-block;
+    vertical-align: middle;
     .cs-protractor-toggle {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 10;
+        cursor: pointer;
+        background: url('/client/icon/corespring-protractor') no-repeat center center;
+        height: 60px;
+        width: 60px;        
+        -webkit-transition: opacity 0.3s ease-out;
+        transition: opacity 0.3s ease-out;
+        &.visible {
+            opacity: .5;
+        }
     }
     .cs-protractor-widget {
         position: absolute!important;
         top: 0;
         left: 0;
+        pointer-events: none;
         svg {
             position: absolute!important;
             overflow: visible!important;
