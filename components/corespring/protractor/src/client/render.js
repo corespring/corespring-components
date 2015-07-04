@@ -44,12 +44,12 @@ var main = [
           answerChangedHandler: function() {}
         };
 
-        scope.toggleVisibility = toggleVisibility;
-        scope.$emit('registerComponent', attrs.id, scope.containerBridge);
-
         function toggleVisibility() {
           scope.isVisible = !scope.isVisible;
         }
+
+        scope.toggleVisibility = toggleVisibility;
+        scope.$emit('registerComponent', attrs.id, scope.containerBridge);
       };
     };
 
@@ -60,7 +60,7 @@ var main = [
       link: link(),
       template: [
         '<div class="cs-protractor">',
-        '  <div class="cs-protractor-toggle"><button class="btn btn-primary" ng-click="toggleVisibility()">{{isVisible ? "Hide" : "Show"}} protractor</button></div>',
+        '  <div class="cs-protractor-toggle" ng-class="{visible: isVisible}" ng-click="toggleVisibility()" title="Click to {{isVisible ? \'hide\' : \'show\'}}"></div>',
         '  <div class="cs-protractor-widget" ng-show="isVisible"></div>',
         '</div>'
       ].join("\n")
