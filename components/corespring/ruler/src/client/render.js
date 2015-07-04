@@ -60,12 +60,12 @@ var main = [
           answerChangedHandler: function() {}
         };
 
-        scope.toggleVisibility = toggleVisibility;
-        scope.$emit('registerComponent', attrs.id, scope.containerBridge);
-
         function toggleVisibility() {
           scope.isVisible = !scope.isVisible;
         }
+
+        scope.toggleVisibility = toggleVisibility;
+        scope.$emit('registerComponent', attrs.id, scope.containerBridge);
       };
     };
 
@@ -76,7 +76,7 @@ var main = [
       link: link(),
       template: [
         '<div class="cs-ruler">',
-        '  <div class="cs-ruler-toggle"><button class="btn btn-primary" ng-click="toggleVisibility()">{{isVisible ? "Hide" : "Show"}} ruler</button></div>',
+        '  <div class="cs-ruler-toggle" ng-class="{visible: isVisible}" ng-click="toggleVisibility()" title="Click to {{isVisible ? \'hide\' : \'show\'}}"></div>',
         '  <div class="cs-ruler-widget" ng-show="isVisible"></div>',
         '</div>'
       ].join("\n")
