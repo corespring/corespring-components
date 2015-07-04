@@ -3,8 +3,8 @@ var calculatorConfig = [
 
     var buttons = [];
     // Clear section
-    buttons.clear = { id: 'clear', name: 'Clear', symbol: 'C', logic: 'core', type: 'Misc', cssClass: 'clear' };
-    buttons.backspace = { id: 'backspace', name: 'Backspace', symbol: 'Backspace', logic: 'core', type: 'Misc', cssClass: 'backspace' };
+    buttons.clear = { id: 'clear', name: 'Clear', symbol: 'clr', logic: 'core', type: 'Misc', cssClass: 'clear' };
+    buttons.backspace = { id: 'backspace', name: 'Backspace', symbol: 'bksp', logic: 'core', type: 'Misc', cssClass: 'backspace' };
     // Numbers
     buttons.one = { id: 'one', name: 'One', symbol: '1', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.two = { id: 'two', name: 'Two', symbol: '2', logic: 'core', type: 'Number', cssClass: 'number' };
@@ -16,35 +16,35 @@ var calculatorConfig = [
     buttons.eight = { id: 'eight', name: 'Eight', symbol: '8', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.nine = { id: 'nine', name: 'Nine', symbol: '9', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.zero = { id: 'zero', name: 'Zero', symbol: '0', logic: 'core', type: 'Number', cssClass: 'number' };
-    buttons.dot = { id: 'dot', name: 'Dot', symbol: '.', logic: 'core', type: 'Number', cssClass: 'number' };
-    buttons.equals = { id: 'equals', name: 'Equals', symbol: '=', logic: 'core', type: 'Operator', numOfOperands: '1', cssClass: 'number' };
+    buttons.dot = { id: 'dot', name: 'Dot', symbol: '.', logic: 'core', type: 'Number', cssClass: 'number dot' };
+    buttons.equals = { id: 'equals', name: 'Equals', symbol: '=', logic: 'core', type: 'Operator', numOfOperands: '1', cssClass: 'number equals' };
     // Basic functions
     buttons.sqrt = { id: 'sqrt', name: 'Square root', symbol: '√', logic: 'basic', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
     buttons.plus = { id: 'plus', name: 'Plus', symbol: '+', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
     buttons.minus = { id: 'minus', name: 'Minus', symbol: '-', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
     buttons.multiply = { id: 'multiply', name: 'Multiply', symbol: 'x', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
-    buttons.divide = { id: 'divide', name: 'Divide', symbol: ' /', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
+    buttons.divide = { id: 'divide', name: 'Divide', symbol: '÷', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
     buttons.change_sign = { id: 'change_sign', name: 'Divide', symbol: '+/-', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
     buttons.pi = { id: 'pi', name: 'Pi', symbol: 'π', logic: 'scientific', type: 'Constant', cssClass: 'basic-function' };
-    buttons.abs = { id: 'abs', name: 'Absolute value', symbol: 'ABS', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
+    buttons.abs = { id: 'abs', name: 'Absolute value', symbol: 'abs', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
 
     // Memory section
-    buttons.store = { id: 'store', name: 'Store', symbol: 'STO', logic: 'core', type: 'Misc', cssClass: 'store' };
-    buttons.recall = { id: 'recall', name: 'Recall', symbol: 'RCL', logic: 'core', type: 'Misc', cssClass: 'recall' };
+    buttons.store = { id: 'store', name: 'Store', symbol: 'sto', logic: 'core', type: 'Misc', cssClass: 'store' };
+    buttons.recall = { id: 'recall', name: 'Recall', symbol: 'rcl', logic: 'core', type: 'Misc', cssClass: 'recall' };
 
     // Deg Rad section
-    buttons.degrees = { id: 'degrees', name: 'Degrees', symbol: 'DEG', logic: 'scientific', type: 'Misc', cssClass: 'deg-rad' };
-    buttons.radians = { id: 'radians', name: 'Radians', symbol: 'RAD', logic: 'scientific', type: 'Misc', cssClass: 'deg-rad' };
+    buttons.degrees = { id: 'degrees', name: 'Degrees', symbol: 'deg', logic: 'scientific', type: 'Misc', cssClass: 'deg' };
+    buttons.radians = { id: 'radians', name: 'Radians', symbol: 'rad', logic: 'scientific', type: 'Misc', cssClass: 'rad' };
 
     // Advanced function buttons
     buttons.left_parenthesis = { id: 'left_parenthesis', name: 'Left parenthesis', symbol: '(', logic: 'core', type: 'Misc', cssClass: 'advanced' };
     buttons.right_parenthesis = { id: 'right_parenthesis', name: 'Right parenthesis', symbol: ')', logic: 'core', type: 'Misc', cssClass: 'advanced' };
-    buttons.sin = { id: 'sin', name: 'Sin', symbol: 'Sin', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.arcsin = { id: 'asin', name: 'Arcsin', symbol: 'Sin<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.cos = { id: 'cos', name: 'Cos', symbol: 'Cos', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.arccos = { id: 'acos', name: 'Arccos', symbol: 'Cos<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.tan = { id: 'tan', name: 'Tan', symbol: 'Tan', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.arctan = { id: 'atan', name: 'Arctan', symbol: 'Tan<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.sin = { id: 'sin', name: 'Sin', symbol: 'sin', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.arcsin = { id: 'asin', name: 'Arcsin', symbol: 'sin<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.cos = { id: 'cos', name: 'Cos', symbol: 'cos', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.arccos = { id: 'acos', name: 'Arccos', symbol: 'cos<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.tan = { id: 'tan', name: 'Tan', symbol: 'tan', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.arctan = { id: 'atan', name: 'Arctan', symbol: 'tan<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.ex = { id: 'ex', name: 'e^x', symbol: 'e<sup>x</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.ln = { id: 'ln', name: 'ln', symbol: 'ln', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.log = { id: 'log', name: 'log', symbol: 'log', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
@@ -92,7 +92,7 @@ var calculatorConfig = [
     };
     types.scientific = { 
       name: 'Scientific',
-      regions: ['clear', 'memory', 'numbers', 'scientific_basic', 'deg_rad', 'scientific_advanced']
+      regions: ['clear', 'memory', 'deg_rad', 'numbers', 'scientific_basic', 'scientific_advanced']
     };
     
     function CalculatorConfig() {

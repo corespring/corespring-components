@@ -1,122 +1,132 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat);
+
 .calculator {
   padding:10px;
   min-height: 50px;
+  border: 3px solid #666666;
+  border-radius: 5px;
+  cursor: move;
+  background-color: #A8A8A8;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  z-index: 100;
 }
 
 /****** Basic ****************/
 
 .basic {
-  width: 235px;
-  height: 215px;
+  width: 201px;
+  font-size: 18px;
 }
 
 .basic .results {	
-	padding-bottom: 10px;
-	width: 215px;
-	margin: 0;
+	width: 175px;
 }
 
 /* Basic functions pad */
 .basic .basic-pad {
 	overflow: hidden;
-	width: 50px;
+	width: 40px;
 }
 
-.basic .basic-pad .basic-function-button {
-	width: 50px;
-	margin-bottom: 10px;	
+.basic .basic-pad .basic-function {
+	margin-bottom: 5px;
+	font-size: 22px;	
 }
 
 /****** Scientific ****************/
 
 .scientific {
-	width: 290px;
-  height: 395px;  
+	width: 426px;
+	overflow: hidden;
+	font-size: 16px;
 }
 
 .scientific .results {	
-	padding-bottom: 10px;
-	width: 270px;
-	margin: 0;
-}
-
-.scientific .memory-pad {
-	float: right;
-	width: 105px;
-	margin-top: 0;
-}
-
-.scientific .memory-pad .recall-button {
-	width: 50px;
-	margin: 0;
+	width: 400px;
 }
 
 /* Basic functions pad */
 .scientific .scientific_basic-pad {
-	float: right;
-	width: 105px;	
+	float: left;
+	width: 85px;
 }
 
-.scientific .scientific_basic-pad .basic-function-button {
-	width: 50px;
-	margin-bottom: 10px;	
+.scientific .scientific_basic-pad .basic-function {
+	margin-bottom: 5px;
 }
 
-.scientific .scientific_basic-pad .basic-function-button:nth-child(odd) {
-	width: 50px;
-	margin-bottom: 10px;
+.scientific .scientific_basic-pad .basic-function:nth-child(odd) {
 	margin-right: 5px;
 }
 
 /* Deg-Rad pad */
 .scientific .deg-rad-pad {
-	width: 280px;
+	width: 175px;
 }
 
-.scientific .deg-rad-button {
-	width: 50px;
-	margin-bottom: 10px;
+.scientific .deg, .scientific .rad {
+	width: 85px;
+	margin-bottom: 5px;
+}
+.scientific .deg {
 	margin-right: 5px;
 }
 
 .scientific .scientific_advanced-pad {
+	width: 175px;
+	margin-left: 5px;
+	float: left;
 }
 
-.scientific .scientific_advanced-pad .advanced-button {
-	width: 60px;
-	margin-bottom: 10px;
-	margin-right: 10px;
+.scientific .scientific_advanced-pad .advanced {	
+	margin-bottom: 5px;
+	margin-right: 5px;
+	font-size: 14px;
+	padding: 0;
 }
 
-.scientific .scientific_advanced-pad .advanced-button:nth-child(4n) {
-	width: 60px;
-	margin-bottom: 10px;
+.scientific .scientific_advanced-pad .advanced:nth-child(4n) {
 	margin-right: 0;
 }
 
 /* Memory pad */
 .scientific .memory-pad {
-	height: 25px;	
-	width: 105px;
-	margin-bottom: 10px;
+	height: 40px;	
+	width: 90px;
+	margin-bottom: 5px;
+	float: left;
+	margin-top: 0;
 }
 
-.scientific .store-button {
-	width: 50px;
-	margin-bottom: 10px;
+.scientific .memory-pad .store {
+	margin-bottom: 5px;
 	margin-right: 5px;
 }
 
-.scientific .recall-button {
-	width: 50px;
-	margin-bottom: 10px;
+.scientific .memory-pad .recall {
+	margin: 0;
+	margin-bottom: 5px;
 	margin-right: 5px;
 }
 
 /****** Common ****************/
 /* Results */
-.results .input-results {
+.results {	
+	margin-bottom: 10px;
+	height: 40px;
+	border: 3px solid #9C9C9C;
+	border-radius: 5px;
+	color: #131F85;
+}
+
+.results input {
 	width: 100%;
+	height: 100%;
+}
+
+.results .input-results {
+	text-align: right;
 }
 
 /* Buttons panel */
@@ -125,37 +135,49 @@
 	padding: 0;
 }
 
+.button {
+	border: none;
+	height: 40px;
+	width: 40px;
+	background-color: #131F85;
+}
+
 /* Clear pad */
 .buttons-panel .clear-pad {
-	width: 160px;
+	width: 130px;
 	margin-right: 5px;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 	float: left;
 }
 
-.clear-pad .backspace-button {
-	width: 105px;	
-	margin-right: 5px;
+.clear-pad .backspace {
+	width: 62px;	
+	margin-right: 6px;
 }
 
-.clear-pad .clear-button {
-	width: 50px;
+.clear-pad .clear {
+	width: 62px;
 }
 
 /* Numbers pad */
 .buttons-panel .numbers-pad {
 	clear: left;
-	width: 160px;
+	width: 130px;
 	margin-right: 5px;
 	float: left;
 }
 
-.buttons-panel .numbers-pad .number-button {
-	width: 50px;
-	margin-bottom: 10px;
+.buttons-panel .numbers-pad .number {
+	background-color: #424C9D;
+	margin-bottom: 5px;
 	margin-right: 5px;
+	font-size: 22px;
 }
 
-.buttons-panel .numbers-pad .number-button:nth-child(3n) {
+.buttons-panel .numbers-pad .dot, .buttons-panel .numbers-pad .equals {
+	background-color: #131F85;
+}
+
+.buttons-panel .numbers-pad .number:nth-child(3n) {
 	margin-right: 0px;
 }
