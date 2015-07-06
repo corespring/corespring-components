@@ -250,20 +250,21 @@ var main = [
           };
 
           $scope.activate = function($index, $event) {
-            if(!isDragging){
-                $scope.deactivate();
-                if ($event) {
-                  $event.stopPropagation();
-                }
-                $scope.active[$index] = true;
-                $scope.choicesSortableOptions.disabled = true;
-                $timeout(function() {
-                  var $editable = $element.find($('.sortable-choice')[$index]).find('.wiggi-wiz-editable');
-                  $editable.click();
-                  angular.element($editable).scope().focusCaretAtEnd();
-                });
+            if (isDragging) {
+              return;
             }
 
+            $scope.deactivate();
+            if ($event) {
+              $event.stopPropagation();
+            }
+            $scope.active[$index] = true;
+            $scope.choicesSortableOptions.disabled = true;
+            $timeout(function() {
+              var $editable = $element.find($('.sortable-choice')[$index]).find('.wiggi-wiz-editable');
+              $editable.click();
+              angular.element($editable).scope().focusCaretAtEnd();
+            });
           };
 
           $scope.itemClick = function($event) {
