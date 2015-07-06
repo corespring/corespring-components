@@ -209,9 +209,12 @@ var main = [
             }
           };
 
+          var droppableFlag = false;
+
           $scope.droppableOptions = {
             accept: function() {
               var contains = _($scope.targets).pluck('id').contains($scope.draggging);
+              droppableFlag = true;
               return !$scope.targetDragging && !contains;
             }
           };
@@ -246,13 +249,19 @@ var main = [
             if ($event) {
               $event.stopPropagation();
             }
-            $scope.active[$index] = true;
-            $scope.choicesSortableOptions.disabled = true;
-            $timeout(function() {
-              var $editable = $element.find($('.sortable-choice')[$index]).find('.wiggi-wiz-editable');
-              $editable.click();
-              angular.element($editable).scope().focusCaretAtEnd();
-            });
+
+            if(!droppableFlag){
+
+                $scope.active[$index] = true;
+                $scope.choicesSortableOptions.disabled = true;
+                $timeout(function() {
+                  var $editable = $element.find($('.sortable-choice')[$index]).find('.wiggi-wiz-editable');
+                  $editable.click();
+                  angular.element($editable).scope().focusCaretAtEnd();
+                });
+            }
+
+            droppableFlag=false;
           };
 
           $scope.itemClick = function($event) {
