@@ -209,12 +209,11 @@ var main = [
             }
           };
 
-          var droppableFlag = false;
+          var isDragging = false;
 
           $scope.droppableOptions = {
             accept: function() {
               var contains = _($scope.targets).pluck('id').contains($scope.draggging);
-              droppableFlag = true;
               return !$scope.targetDragging && !contains;
             }
           };
@@ -228,9 +227,15 @@ var main = [
             start: function(event, ui) {
               var li = ui.item;
               $scope.draggging = li.data('choice-id');
+              isDragging = true;
               setRemoveAfterPlacingVisibility(ui, 'hidden');
             },
             stop: function(event,ui) {
+
+              //this is flag to not activate the mini-wiggi when the div is Dragging
+              $timeout(function() {
+                  isDragging = false;
+              },500);
               setRemoveAfterPlacingVisibility(ui, 'visible');
             }
           };
@@ -245,13 +250,11 @@ var main = [
           };
 
           $scope.activate = function($index, $event) {
-            $scope.deactivate();
-            if ($event) {
-              $event.stopPropagation();
-            }
-
-            if(!droppableFlag){
-
+            if(!isDragging){
+                $scope.deactivate();
+                if ($event) {
+                  $event.stopPropagation();
+                }
                 $scope.active[$index] = true;
                 $scope.choicesSortableOptions.disabled = true;
                 $timeout(function() {
@@ -261,7 +264,6 @@ var main = [
                 });
             }
 
-            droppableFlag=false;
           };
 
           $scope.itemClick = function($event) {
