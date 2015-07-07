@@ -1,8 +1,11 @@
 (function() {
 
     var kpoint = KhanUtil.kpoint;
+    var kvector = KhanUtil.kvector;
+
     $.fn["graphieLoad"] = function() {
         kpoint = KhanUtil.kpoint;
+        kvector = KhanUtil.kvector;
     };
 
     var Graphie = KhanUtil.Graphie = function() {
@@ -31,6 +34,16 @@
         }
         th = th * Math.PI / 180;
         return [r[0] * Math.cos(th), r[1] * Math.sin(th)];
+    }
+
+    // Keep track of all the intervalIDs created by setInterval.
+    // This lets us cancel all the intervals when cleaning up.
+    var intervalIDs = [];
+    function cleanupIntervals() {
+        _.each(intervalIDs, function(intervalID) {
+            window.clearInterval(intervalID);
+        });
+        intervalIDs.length = 0;
     }
 
     $.extend(KhanUtil, {
@@ -83,7 +96,9 @@
             } else {
                 return KhanUtil.findAngle(point1, vertex) - KhanUtil.findAngle(point2, vertex);
             }
-        }
+        },
+
+        graphs: {}
     });
 
 
@@ -181,28 +196,122 @@
         };
 
         var svgPath = function(points, alreadyScaled) {
-            // Bound a number by 1e-6 and 1e20 to avoid exponents after toString
-            function boundNumber(num) {
-                if (num === 0) {
-                    return num;
-                } else if (num < 0) {
-                    return -boundNumber(-num);
-                } else {
-                    return Math.max(1e-6, Math.min(num, 1e20));
-                }
-            }
-
             return $.map(points, function(point, i) {
                 if (point === true) {
                     return "z";
                 } else {
                     var scaled = alreadyScaled ? point : scalePoint(point);
-                    return (i === 0 ? "M" : "L") + boundNumber(scaled[0]) + " " + boundNumber(scaled[1]);
+                    return (i === 0 ? "M" : "L") + KhanUtil.bound(scaled[0]) + " " + KhanUtil.bound(scaled[1]);
                 }
             }).join("");
         };
 
-        $.extend(KhanUtil, {svgPath: svgPath});
+        var svgParabolaPath = function(a, b, c) {
+            var computeParabola = function(x) {
+                return (a * x + b) * x + c;
+            };
+
+            // If points are collinear, plot a line instead
+            if (a === 0) {
+                var points = _.map(xRange, function(x) {
+                    return [x, computeParabola(x)];
+                });
+                return svgPath(points);
+            }
+
+            // Calculate x coordinates of points on parabola
+            var xVertex = -b / (2 * a);
+            var distToEdge = Math.max(
+                Math.abs(xVertex - xRange[0]),
+                Math.abs(xVertex - xRange[1])
+            );
+
+            // To guarantee that drawn parabola to spans the viewport, use a point
+            // on the edge of the graph furtherest from the vertex
+            var xPoint = xVertex + distToEdge;
+
+            // Compute parabola and other point on the curve
+            var vertex = [xVertex, computeParabola(xVertex)];
+            var point = [xPoint, computeParabola(xPoint)];
+
+            // Calculate SVG 'control' point, defined by spec
+            var control = [vertex[0], vertex[1] - (point[1] - vertex[1])];
+
+            // Calculate mirror points across parabola's axis of symmetry
+            var dx = Math.abs(vertex[0] - point[0]);
+            var left = [vertex[0] - dx, point[1]];
+            var right = [vertex[0] + dx, point[1]];
+
+            // Scale and bound
+            var points = _.map([left, control, right], scalePoint);
+            var values = _.map(_.flatten(points), KhanUtil.bound);
+            return "M" + values[0] + "," + values[1] + " Q" + values[2] + "," +
+                values[3] + " " + values[4] + "," + values[5];
+        };
+
+        var svgSinusoidPath = function(a, b, c, d) {
+            // Plot a sinusoid of the form: f(x) = a * sin(b * x - c) + d
+            var quarterPeriod = Math.abs(Math.PI / (2 * b));
+
+            var computeSine = function(x) {
+                return a * Math.sin(b * x - c) + d;
+            };
+
+            var computeDerivative = function(x) {
+                return a * b * Math.cos(c - b * x);
+            };
+
+            var coordsForOffset = function(initial, i) {
+                // Return the cubic coordinates (including the two anchor and two
+                // control points) for the ith portion of the sinusoid.
+                var x0 = initial + quarterPeriod * i;
+                var x1 = x0 + quarterPeriod;
+
+                // Interpolate using derivative technique
+                // See: http://stackoverflow.com/questions/13932704/how-to-draw-sine-waves-with-svg-js
+                var xCoords = [
+                    x0,
+                    x0 * 2/3 + x1 * 1/3,
+                    x0 * 1/3 + x1 * 2/3,
+                    x1
+                ];
+                var yCoords = [
+                    computeSine(x0),
+                    computeSine(x0) + computeDerivative(x0) * (x1 - x0)/3,
+                    computeSine(x1) - computeDerivative(x1) * (x1 - x0)/3,
+                    computeSine(x1)
+                ];
+
+                // Zip and scale
+                return _.map(_.zip(xCoords, yCoords), scalePoint);
+            };
+
+            // How many quarter-periods do we need to span the graph?
+            var extent = xRange[1] - xRange[0];
+            var numQuarterPeriods = Math.ceil(extent / quarterPeriod) + 1;
+
+            // Find starting coordinate: first anchor point curve left of xRange[0]
+            var initial = c / b;
+            var distToEdge = initial - xRange[0];
+            initial -= quarterPeriod * Math.ceil(distToEdge / quarterPeriod);
+
+            // First portion of path is special-case, requiring move-to ('M')
+            var coords = coordsForOffset(initial, 0);
+            var path = "M" + coords[0][0] + "," + coords[0][1] + " C" +
+                coords[1][0] + "," + coords[1][1] + " " + coords[2][0] + "," +
+                coords[2][1] + " " + coords[3][0] + "," + coords[3][1];
+            for (var i = 1; i < numQuarterPeriods; i++) {
+                coords = coordsForOffset(initial, i);
+                path += " C" + coords[1][0] + "," + coords[1][1] + " " +
+                    coords[2][0] + "," + coords[2][1] + " " + coords[3][0] + "," +
+                    coords[3][1];
+            }
+
+            return path;
+        };
+
+        // `svgPath` is independent of graphie range, so we export on KhanUtil
+        $.extend(KhanUtil, { svgPath: svgPath });
 
         var processAttributes = function(attrs) {
             var transformers = {
@@ -216,18 +325,6 @@
 
                     // Update the canvas size
                     raphael.setSize((xRange[1] - xRange[0]) * xScale, (yRange[1] - yRange[0]) * yScale);
-
-                    // Safari requires an exception to be thrown in order for
-                    // .stack to be set
-                    var err;
-                    try {
-                        throw new Error();
-                    } catch (e) {
-                        err = e;
-                    }
-
-                    var errorString = "[" + scale[0] + ", " + scale[1] + "]\n\n" + err.stack;
-                    Khan.autoSubmitIssue("graphie.style:scale", errorString);
                 },
 
                 clipRect: function(pair) {
@@ -279,34 +376,26 @@
                 if (path.type === "path" && typeof path.arrowheadsDrawn === "undefined") {
                     var w = path.attr("stroke-width"), s = 0.6 + 0.4 * w;
                     var l = path.getTotalLength();
+                    var set = raphael.set();
+                    var head = raphael.path("M-3 4 C-2.75 2.5 0 0.25 0.75 0C0 -0.25 -2.75 -2.5 -3 -4");
+                    var end = path.getPointAtLength(l - 0.4);
+                    var almostTheEnd = path.getPointAtLength(l - 0.75 * s);
+                    var angle = Math.atan2(end.y - almostTheEnd.y, end.x - almostTheEnd.x) * 180 / Math.PI;
+                    var attrs = path.attr();
+                    delete attrs.path;
 
-                    if (l < 0.75 * s) {
-                        // You're weird because that's a *really* short path
-                        // Giving up now before I get more confused
+                    var subpath = path.getSubpath(0, l - 0.75 * s);
+                    subpath = raphael.path(subpath).attr(attrs);
+                    subpath.arrowheadsDrawn = true;
+                    path.remove();
 
-                    } else {
-                        // This makes a lot more sense
-                        var set = raphael.set();
-                        var head = raphael.path("M-3 4 C-2.75 2.5 0 0.25 0.75 0C0 -0.25 -2.75 -2.5 -3 -4");
-                        var end = path.getPointAtLength(l - 0.4);
-                        var almostTheEnd = path.getPointAtLength(l - 0.75 * s);
-                        var angle = Math.atan2(end.y - almostTheEnd.y, end.x - almostTheEnd.x) * 180 / Math.PI;
-                        var attrs = path.attr();
-                        delete attrs.path;
-
-                        var subpath = path.getSubpath(0, l - 0.75 * s);
-                        subpath = raphael.path(subpath).attr(attrs);
-                        subpath.arrowheadsDrawn = true;
-                        path.remove();
-
-                        head.rotate(angle, 0.75, 0).scale(s, s, 0.75, 0)
-                            .translate(almostTheEnd.x, almostTheEnd.y).attr(attrs)
-                            .attr({ "stroke-linejoin": "round", "stroke-linecap": "round" });
-                        head.arrowheadsDrawn = true;
-                        set.push(subpath);
-                        set.push(head);
-                        return set;
-                    }
+                    head.rotate(angle, 0.75, 0).scale(s, s, 0.75, 0)
+                        .translate(almostTheEnd.x, almostTheEnd.y).attr(attrs)
+                        .attr({ "stroke-linejoin": "round", "stroke-linecap": "round" });
+                    head.arrowheadsDrawn = true;
+                    set.push(subpath);
+                    set.push(head);
+                    return set;
                 }
             } else if (type === Raphael.st) {
                 for (var i = 0, l = path.items.length; i < l; i++) {
@@ -331,6 +420,45 @@
 
             ellipse: function(center, radii) {
                 return raphael.ellipse.apply(raphael, scalePoint(center).concat(scaleVector(radii)));
+            },
+
+            fixedEllipse: function(center, radii, maxScale) {
+                // Scale point and radius
+                var scaledPoint = scalePoint(center);
+                var scaledRadii = scaleVector(radii);
+
+                // Padding protects against clipping at the edges
+                var padding = 2;
+                var width = 2 * scaledRadii[0] * maxScale + padding;
+                var height = 2 * scaledRadii[1] * maxScale + padding;
+
+                // Calculate absolute left, top
+                var left = scaledPoint[0] - width / 2;
+                var top = scaledPoint[1] - height / 2;
+
+                // Wrap in <div>
+                var wrapper = document.createElement("div");
+                $(wrapper).css({
+                    position: "absolute",
+                    width: width + "px",
+                    height: height + "px",
+                    left: left + "px",
+                    top: top + "px"
+                });
+
+                // Create Raphael canvas
+                var localRaphael = Raphael(wrapper, width, height);
+                var visibleShape = localRaphael.ellipse(
+                    width / 2,
+                    height / 2,
+                    scaledRadii[0],
+                    scaledRadii[1]
+                );
+
+                return {
+                    wrapper: wrapper,
+                    visibleShape: visibleShape
+                };
             },
 
             arc: function(center, radius, startAngle, endAngle, sector) {
@@ -363,6 +491,65 @@
                 return p;
             },
 
+            fixedPath: function(points, center, createPath) {
+                points = _.map(points, scalePoint);
+                center = center ? scalePoint(center) : null;
+                createPath = createPath || svgPath;
+
+                var pathLeft = _.min(_.pluck(points, 0));
+                var pathRight = _.max(_.pluck(points, 0));
+                var pathTop = _.min(_.pluck(points, 1));
+                var pathBottom = _.max(_.pluck(points, 1));
+
+                // Apply padding to line
+                var padding = [4, 4];
+
+                // Calculate and apply additional offset
+                var extraOffset = [pathLeft, pathTop];
+
+                // Apply padding and offset to points
+                points = _.map(points, function(point) {
+                    return kvector.add(
+                        kvector.subtract(
+                            point,
+                            extraOffset
+                        ),
+                        kvector.scale(padding, 0.5)
+                    );
+                });
+
+                // Calculate <div> dimensions
+                var width = (pathRight - pathLeft) + padding[0];
+                var height = (pathBottom - pathTop) + padding[1];
+                var left = extraOffset[0] - padding[0]/2;
+                var top = extraOffset[1] - padding[1]/2;
+
+                // Create <div>
+                var wrapper = document.createElement("div");
+                $(wrapper).css({
+                    position: "absolute",
+                    width: width + "px",
+                    height: height + "px",
+                    left: left + "px",
+                    top: top + "px",
+                    // If user specified a center, set it
+                    transformOrigin: center ? (width/2 + center[0]) + "px " +
+                                              (height/2 + center[1]) + "px"
+                                            : null
+                });
+
+                // Create Raphael canvas
+                var localRaphael = Raphael(wrapper, width, height);
+
+                // Calculate path
+                var visibleShape = localRaphael.path(createPath(points));
+
+                return {
+                    wrapper: wrapper,
+                    visibleShape: visibleShape
+                };
+            },
+
             scaledPath: function(points) {
                 var p = raphael.path(svgPath(points, /* alreadyScaled */ true));
                 p.graphiePath = points;
@@ -371,6 +558,80 @@
 
             line: function(start, end) {
                 return this.path([start, end]);
+            },
+
+            parabola: function(a, b, c) {
+                // Plot a parabola of the form: f(x) = (a * x + b) * x + c
+                return raphael.path(svgParabolaPath(a, b, c));
+            },
+
+            fixedLine: function(start, end, thickness) {
+                // Apply padding to line
+                var padding = [thickness, thickness];
+
+                // Scale points to get values in pixels
+                start = scalePoint(start);
+                end = scalePoint(end);
+
+                // Calculate and apply additional offset
+                var extraOffset = [
+                    Math.min(start[0], end[0]),
+                    Math.min(start[1], end[1])
+                ];
+
+                // Apply padding and offset to start, end points
+                start = kvector.add(
+                    kvector.subtract(
+                        start,
+                        extraOffset
+                    ),
+                    kvector.scale(padding, 0.5)
+                );
+                end = kvector.add(
+                    kvector.subtract(
+                        end,
+                        extraOffset
+                    ),
+                    kvector.scale(padding, 0.5)
+                );
+
+                // Calculate <div> dimensions
+                var left = extraOffset[0] - padding[0]/2;
+                var top = extraOffset[1] - padding[1]/2;
+                var width = Math.abs(start[0] - end[0]) + padding[0];
+                var height = Math.abs(start[1] - end[1]) + padding[1];
+
+                // Create <div>
+                var wrapper = document.createElement("div");
+                $(wrapper).css({
+                    position: "absolute",
+                    width: width + "px",
+                    height: height + "px",
+                    left: left + "px",
+                    top: top + "px",
+                    // Outsiders should feel like the line's 'origin' (i.e., for
+                    // rotation) is the starting point
+                    transformOrigin: start[0] + "px " + start[1] + "px"
+                });
+
+                // Create Raphael canvas
+                var localRaphael = Raphael(wrapper, width, height);
+
+                // Calculate path
+                var path = "M" + start[0] + " " + start[1] + " " +
+                           "L" + end[0] + " " + end[1];
+                var visibleShape = localRaphael.path(path);
+                visibleShape.graphiePath = [start, end];
+
+                return {
+                    wrapper: wrapper,
+                    visibleShape: visibleShape
+                };
+            },
+
+            sinusoid: function(a, b, c, d) {
+                // Plot a sinusoid of the form: f(x) = a * sin(b * x - c) + d
+                return raphael.path(svgSinusoidPath(a, b, c, d));
             },
 
             grid: function(xr, yr) {
@@ -442,39 +703,74 @@
                 return $span;
             },
 
-            plotParametric: function(fn, range) {
+            plotParametric: function(fn, range, shade, fn2) {
+                // Note: fn2 should only be set if 'shade' is true, as it denotes
+                // the function between which fn should have its area shaded.
+                // In general, plotParametric shouldn't be used to shade the area
+                // between two arbitrary parametrics functions over an interval,
+                // as the method assumes that fn and fn2 are both of the form
+                // fn(t) = (t, fn'(t)) for some initial fn'.
+                fn2 = fn2 || function(t) { return [t, 0]; };
+
                 currentStyle.strokeLinejoin || (currentStyle.strokeLinejoin = "round");
                 currentStyle.strokeLinecap || (currentStyle.strokeLinecap = "round");
 
                 var min = range[0], max = range[1];
                 var step = (max - min) / (currentStyle["plot-points"] || 800);
+                if (step === 0) {
+                    step = 1;
+                }
 
-                var paths = raphael.set(), points = [], lastVal = fn(min);
+                var paths = raphael.set();
+                var points = [];
+                var lastDiff = KhanUtil.coordDiff(fn(min), fn2(min));
 
+                var lastFlip = min;
                 for (var t = min; t <= max; t += step) {
-                    var funcVal = fn(t);
+                    var top = fn(t);
+                    var bottom = fn2(t);
+                    var diff = KhanUtil.coordDiff(top, bottom);
 
+                    // Find points where it flips
+                    // Create path that sketches area between the two functions
                     if (
                         // if there is an asymptote here, meaning that the graph switches signs and has a large difference
-                        ((funcVal[1] < 0) !== (lastVal[1] < 0)) && Math.abs(funcVal[1] - lastVal[1]) > 2 * yScale ||
+                        ((diff[1] < 0) !== (lastDiff[1] < 0)) && Math.abs(diff[1] - lastDiff[1]) > 2 * yScale ||
                         // or the function value gets really high (which breaks raphael)
-                        Math.abs(funcVal[1]) > 1e7 ||
+                        Math.abs(diff[1]) > 1e7 ||
                         // or the function is undefined
-                        isNaN(funcVal[1])
+                        isNaN(diff[1])
                        ) {
                         // split the path at this point, and draw it
+                        if (shade) {
+                            points.push(top);
+
+                            // backtrack to draw paired function
+                            for (var u = t - step; u >= lastFlip; u -= step) {
+                                points.push(fn2(u));
+                            }
+                            lastFlip = t;
+                        }
                         paths.push(this.path(points));
                         // restart the path, excluding this point
                         points = [];
-
+                        if (shade) {
+                            points.push(top);
+                        }
                     } else {
                         // otherwise, just add the point to the path
-                        points.push(funcVal);
+                        points.push(top);
                     }
 
-                    lastVal = funcVal;
+                    lastDiff = diff;
                 }
 
+                if (shade) {
+                    // backtrack to draw paired function
+                    for (var u = max - step; u >= lastFlip; u -= step) {
+                        points.push(fn2(u));
+                    }
+                }
                 paths.push(this.path(points));
 
                 return paths;
@@ -491,13 +787,38 @@
                 }, range);
             },
 
-            plot: function(fn, range) {
+            plot: function(fn, range, swapAxes, shade, fn2) {
                 var min = range[0], max = range[1];
                 currentStyle["plot-points"] || (currentStyle["plot-points"] = 2 * (max - min) * xScale);
 
-                return this.plotParametric(function(x) {
-                    return [x, fn(x)];
-                }, range);
+                if (swapAxes) {
+                    if (fn2) {
+                        // TODO(charlie): support swapped axis area shading
+                        throw new Error(
+                            "Can't shade area between functions with swapped axes."
+                        );
+                    }
+                    return this.plotParametric(function(y) {
+                        return [fn(y), y];
+                    }, range, shade);
+                } else {
+                    if (fn2) {
+                        if (shade) {
+                            return this.plotParametric(function(x) {
+                                return [x, fn(x)];
+                            }, range, shade, function(x) {
+                                return [x, fn2(x)];
+                            });
+                        } else {
+                            throw new Error(
+                                "fn2 should only be set when 'shade' is True."
+                            );
+                        }
+                    }
+                    return this.plotParametric(function(x) {
+                        return [x, fn(x)];
+                    }, range, shade);
+                }
             },
 
             /**
@@ -605,6 +926,15 @@
                 return this;
             },
 
+            // Wrap window.setInterval to keep track of all the intervalIDs.
+            setInterval: function() {
+                var intervalID = Function.prototype.apply.call(window.setInterval,
+                                                               window,
+                                                               arguments);
+                intervalIDs.push(intervalID);
+                return intervalID;
+            },
+
             style: function(attrs, fn) {
                 var processed = processAttributes(attrs);
 
@@ -623,7 +953,13 @@
             scaleVector: scaleVector,
 
             unscalePoint: unscalePoint,
-            unscaleVector: unscaleVector
+            unscaleVector: unscaleVector,
+
+            // Custom SVG path functions that are dependent on graphie range
+            // `svgPath`, while independent of range, is exported for consistency
+            svgPath: svgPath,
+            svgParabolaPath: svgParabolaPath,
+            svgSinusoidPath: svgSinusoidPath
         });
 
         $.each(drawingTools, function(name) {
@@ -714,6 +1050,7 @@
                     Math.min(Math.max(range[0][0], 0), range[0][1]),
                     Math.min(Math.max(range[1][0], 0), range[1][1])
                 ],
+                axisLabels = options.axisLabels != null ? options.axisLabels : false,
                 ticks = options.ticks != null ? options.ticks : true,
                 tickStep = options.tickStep || [2, 2],
                 tickLen = options.tickLen || [5, 5],
@@ -765,7 +1102,7 @@
             if (axes) {
 
                 // this is a slight hack until <-> arrowheads work
-                if (axisArrows === "<->" || true) {
+                if (axisArrows === "<->" || axisArrows === true) {
                     this.style({
                         stroke: "#000000",
                         opacity: axisOpacity,
@@ -795,6 +1132,11 @@
                         this.path([[axisCenter[0], gridRange[1][0]], [axisCenter[0], gridRange[1][1]]]);
                     });
 
+                }
+
+                if (axisLabels && axisLabels.length === 2) {
+                    this.label([gridRange[0][1], axisCenter[1]], axisLabels[0], "right");
+                    this.label([axisCenter[0], gridRange[1][1]], axisLabels[1], "above");
                 }
 
             }
@@ -902,7 +1244,6 @@
                     }
                 });
             }
-
         };
 
         return graphie;
@@ -941,6 +1282,11 @@
                 }
                 graphie = KhanUtil.createGraphie(el);
                 $(el).data("graphie", graphie);
+
+                var id = $(el).attr("id");
+                if (id) {
+                    KhanUtil.graphs[id] = graphie;
+                }
             }
 
             // So we can write graph.bwahahaha = 17 to save stuff between updates
@@ -948,7 +1294,8 @@
                 graphie.graph = {};
             }
 
-            code = "(function() {" + code + "})()";
+            // Add newline in case code ends with a // comment
+            code = "(function() {" + code + "\n})()";
 
             // Execute the graph-specific code
             KhanUtil.currentGraph = graphie;
@@ -956,4 +1303,9 @@
             // delete KhanUtil.currentGraph;
         }).end();
     };
+
+    $.fn.graphieCleanup = function(problem) {
+        cleanupIntervals();
+    };
+
 })();
