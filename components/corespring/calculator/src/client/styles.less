@@ -7,11 +7,20 @@
 }
 
 .cs-calculator {
+  display: inline-block;
+  vertical-align: middle;
 	background-color: white;
-	cursor: pointer;
-  .show-button {    
-    font-size: 40px;
-  }	
+	.cs-calculator-toggle {
+    cursor: pointer;
+    background: url('/client/icon/corespring-calculator') no-repeat center center;
+    height: 60px;
+    width: 60px;        
+    -webkit-transition: opacity 0.3s ease-out;
+    transition: opacity 0.3s ease-out;
+    &.visible {
+      opacity: .5;
+    }
+  }
 }
 
 /* config */

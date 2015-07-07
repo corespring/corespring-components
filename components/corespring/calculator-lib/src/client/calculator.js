@@ -29,12 +29,13 @@ var calculator = [
       };
 
       this.click = function(button, ref) {        
-        // if(this.state !== 'error' || button === 'clear') {
-          var functionName, optionalArgs;
-          functionName = 'click' + button.type;
+        if(this.state === 'NaN') {
+          this.clickMisc(scope.buttons.clear);
+        }
 
-          this.executeFunctionByName(functionName, self, button, optionalArgs);          
-        // }
+        var functionName, optionalArgs;
+        functionName = 'click' + button.type;
+        this.executeFunctionByName(functionName, self, button, optionalArgs);
       };
 
       this.clickNumber = function(button) {
@@ -149,8 +150,11 @@ var calculator = [
 
         self.lastPressedIsBinary = false;
         self.operandContinue = false;
+        self.storedValue = value;
 
-        input.val(value);
+        if(self.checkNaN()){
+          input.val(value);
+        }
       };
 
       this.clickBinaryOperator = function(value, button) {
@@ -243,17 +247,19 @@ var calculator = [
             }
           }
 
-          input.val(self.storedValue);
+          if(self.checkNaN()){
+            input.val(self.storedValue);
 
-          var status = self.operationStatus.pop();
-          self.storedValue = status.storedValue;
-          self.previousOperator = status.previousOperator;
-          self.pendingOperationIsBinary = status.pendingOperationIsBinary;
-          self.lastPressedIsBinary = false;
-          self.operandContinue = status.operandContinue;
+            var status = self.operationStatus.pop();
+            self.storedValue = status.storedValue;
+            self.previousOperator = status.previousOperator;
+            self.pendingOperationIsBinary = status.pendingOperationIsBinary;
+            self.lastPressedIsBinary = false;
+            self.operandContinue = status.operandContinue;
 
-          if(self.previousOperator === '' && self.storedValue === '') {
-            self.storedValue = input.val();
+            if(self.previousOperator === '' && self.storedValue === '') {
+              self.storedValue = input.val();
+            }
           }
         }        
       };
@@ -294,7 +300,9 @@ var calculator = [
                 
         self.operandContinue = false;
         self.previousOperator = button.id === 'equals' ? '' : button.id;
-        input.val(self.storedValue);
+        if(self.checkNaN()){
+          input.val(self.storedValue);
+        }
       };
 
       this.executeFunctionByName = function(functionName, context /*, args */) {
@@ -320,7 +328,17 @@ var calculator = [
         } else {
           return num * this.factorial( num - 1 );
         }
-      };      
+      };
+
+      this.checkNaN = function(){
+        var isNumber = isFinite(self.storedValue);
+        if(!isNumber) {
+          this.state = 'NaN';
+          input.val('Error');
+        }
+
+        return isNumber;
+      };
     }
 
     return Calculator;
