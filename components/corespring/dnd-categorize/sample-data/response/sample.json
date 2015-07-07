@@ -1,0 +1,44 @@
+{
+  "correctness": "correct",
+  "correctClass": "correct",
+  "score": 1,
+  "feedback": "Correct!",
+  "detailedFeedback": {
+    "cat_1": {
+      "correctness": [
+        "correct"
+      ]
+    },
+    "cat_2": {
+      "answersExpected": false
+    },
+    "cat_3": {
+      "correctness": [
+        "correct",
+        "correct"
+      ]
+    },
+    "cat_4": {
+      "correctness": [
+        "correct",
+        "correct"
+      ]
+    }
+  },
+  "studentResponse": {
+    "cat_1": [
+      "choice_2"
+    ],
+    "cat_2": [
+
+    ],
+    "cat_3": [
+      "choice_1",
+      "choice_3"
+    ],
+    "cat_4": [
+      "choice_2",
+      "choice_4"
+    ]
+  }
+}
