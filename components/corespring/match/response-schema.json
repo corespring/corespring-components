@@ -31,10 +31,19 @@
           "matchset" : {
             "type" : "array",
             "items" : {
-              "description" : "An ordered array of booleans representing whether whether the correct response is selected or deselected.",
+              "description" : "An ordered array of objects representing whether whether the correct response is correct/selected.",
               "items" : {
-                "type" : "boolean",
-                "description" : "Boolean which specifies whether the column at the provided index was correct."
+                "type" : "object",
+                "properties" : {
+                  "correctness" : {
+                    "enum": ["correct", "unknown", "incorrect"],
+                    "description" : "An enumerated value that defines whether or not the response is correct."
+                  },
+                  "value" : {
+                    "type" : "boolean",
+                    "description" : "The correct value of the selection for the column."
+                  }
+                }
               }
             }
           }
@@ -45,6 +54,7 @@
       "type" : "array",
       "description" : "An array of objects representing the values by-row with which the student responded.",
       "items" : {
+        "type" : "object",
         "properties" : {
           "id" : {
             "type" : "string",
