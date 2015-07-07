@@ -1,55 +1,66 @@
 @import url(http://fonts.googleapis.com/css?family=Montserrat);
 
 .calculator {
-  padding:10px;
+  /*padding: 10px;*/
+  padding: 5px 5px 0px 5px;
   min-height: 50px;
-  border: 3px solid #666666;
+  /*border: 3px solid #666666;*/
+  border: 2px solid #666666;
   border-radius: 5px;
   cursor: move;
   background-color: #A8A8A8;
   color: #FFFFFF;
   font-family: 'Montserrat', sans-serif;
   z-index: 100;
+  position: absolute;
+  top:0;
+  right:0;
 }
 
 /****** Basic ****************/
 
 .basic {
-  width: 201px;
-  font-size: 18px;
+  /*width: 201px;*/
+  width: 149px;
+  font-size: 14px;
 }
 
 .basic .results {	
-	width: 175px;
+	width: 135px;
 }
 
 /* Basic functions pad */
 .basic .basic-pad {
 	overflow: hidden;
-	width: 40px;
+	/*width: 40px;*/
+	width: 30px;
 }
 
 .basic .basic-pad .basic-function {
 	margin-bottom: 5px;
-	font-size: 22px;	
+	font-size: 14px;	
 }
 
 /****** Scientific ****************/
 
 .scientific {
-	width: 426px;
+	/*width: 426px;*/
+	width: 324px;
 	overflow: hidden;
-	font-size: 16px;
+	font-size: 14px;
 }
 
 .scientific .results {	
-	width: 400px;
+	/*width: 400px;*/
+	width: 310px;
 }
 
 /* Basic functions pad */
 .scientific .scientific_basic-pad {
 	float: left;
-	width: 85px;
+	/*width: 85px;*/
+	width: 65px;
+	font-size: 12px;
 }
 
 .scientific .scientific_basic-pad .basic-function {
@@ -62,19 +73,21 @@
 
 /* Deg-Rad pad */
 .scientific .deg-rad-pad {
-	width: 175px;
+	/*width: 175px;*/
+	width: 135px;
 }
 
 .scientific .deg, .scientific .rad {
-	width: 85px;
-	margin-bottom: 5px;
+	/*width: 85px;*/
+	width: 65px;
 }
 .scientific .deg {
 	margin-right: 5px;
 }
 
 .scientific .scientific_advanced-pad {
-	width: 175px;
+	/*width: 175px;*/
+	width: 135px;
 	margin-left: 5px;
 	float: left;
 }
@@ -82,7 +95,7 @@
 .scientific .scientific_advanced-pad .advanced {	
 	margin-bottom: 5px;
 	margin-right: 5px;
-	font-size: 14px;
+	font-size: 12px;
 	padding: 0;
 }
 
@@ -92,28 +105,27 @@
 
 /* Memory pad */
 .scientific .memory-pad {
-	height: 40px;	
-	width: 90px;
+	/*width: 90px;*/
+	width: 70px;
 	margin-bottom: 5px;
 	float: left;
 	margin-top: 0;
 }
 
 .scientific .memory-pad .store {
-	margin-bottom: 5px;
 	margin-right: 5px;
 }
 
 .scientific .memory-pad .recall {
 	margin: 0;
-	margin-bottom: 5px;
 	margin-right: 5px;
 }
 
 /****** Common ****************/
 /* Results */
 .results {	
-	margin-bottom: 10px;
+	/*margin-bottom: 10px;*/
+	margin-bottom: 5px;
 	height: 40px;
 	border: 3px solid #9C9C9C;
 	border-radius: 5px;
@@ -137,32 +149,42 @@
 
 .button {
 	border: none;
-	height: 40px;
-	width: 40px;
+	/*height: 40px;
+	width: 40px;*/
+	height: 30px;
+	width: 30px;
 	background-color: #131F85;
+}
+
+.button:active {
+	background-color: #cc9900;
 }
 
 /* Clear pad */
 .buttons-panel .clear-pad {
-	width: 130px;
+	/*width: 130px;*/
+	width: 100px;
 	margin-right: 5px;
 	margin-bottom: 5px;
 	float: left;
 }
 
 .clear-pad .backspace {
-	width: 62px;	
+	/*width: 62px;*/
+	width: 47px;
 	margin-right: 6px;
 }
 
 .clear-pad .clear {
-	width: 62px;
+	/*width: 62px;*/
+	width: 47px;
 }
 
 /* Numbers pad */
 .buttons-panel .numbers-pad {
 	clear: left;
-	width: 130px;
+	/*width: 130px;*/
+	width: 100px;
 	margin-right: 5px;
 	float: left;
 }
@@ -171,7 +193,11 @@
 	background-color: #424C9D;
 	margin-bottom: 5px;
 	margin-right: 5px;
-	font-size: 22px;
+	font-size: 18px;
+}
+
+.buttons-panel .numbers-pad .number:active {
+	background-color: #cc9900;
 }
 
 .buttons-panel .numbers-pad .dot, .buttons-panel .numbers-pad .equals {
