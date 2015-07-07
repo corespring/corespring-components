@@ -1,0 +1,90 @@
+{
+  "title" : "CoreSpring Number Line Response Schema",
+  "type" : "object",
+  "properties" : {
+    "correctness" : {
+      "enum" : ["correct", "incorrect"],
+      "description" : "A string which represents whether the response is correct or incorrect."
+    },
+    "correctResponse" : {
+      "description" : "An array of objects representing the correct selections for the number line.",
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "description" : "The type of selection made by the student",
+            "enum" : ["point"]
+          },
+          "pointType" : {
+            "description" : "Describes the type of point selected (if applicable).",
+            "enum" : ["full"]
+          },
+          "domainPosition" : {
+            "description" : "The selected position on the number line",
+            "type" : "number"
+          }
+        }
+      }
+    },
+    "correctnessClass" : {
+      "enum" : ["correct", "partial", "incorrect"],
+      "description" : "A CSS classname to be applied to the answer"
+    },
+    "score" : {
+      "enum" : [0, 1],
+      "description" : "Represents the score for the interaction."
+    },
+    "feedback" : {
+      "description" : "Feedback for the student response",
+      "type": "object",
+      "properties" : {
+        "elements" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "type" : {
+                "description" : "The type of selection made by the student",
+                "enum" : ["point"]
+              },
+              "pointType" : {
+                "description" : "Describes the type of point selected (if applicable).",
+                "enum" : ["full"]
+              },
+              "domainPosition" : {
+                "description" : "The selected position on the number line",
+                "type" : "number"
+              },
+              "isCorrect" : {
+                "description" : "A boolean value signifying whether the selection is correct.",
+                "type" : "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "studentResponse" : {
+      "type" : "array",
+      "description" : "An array of points/rays/lines selected on the number line by the student",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "description" : "The type of selection made by the student",
+            "enum" : ["point"]
+          },
+          "pointType" : {
+            "description" : "Describes the type of point selected (if applicable).",
+            "enum" : ["full"]
+          },
+          "domainPosition" : {
+            "description" : "The selected position on the number line",
+            "type" : "number"
+          }
+        }
+      }
+    }
+  }
+}
