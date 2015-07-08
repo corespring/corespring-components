@@ -1,8 +1,6 @@
 /* global console,exports */
-var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function ($compile, $log, $modal, $rootScope, $timeout) {
-
-    "use strict";
+var main = [
+  function () {
 
     var template = function() {      
       return [
@@ -26,14 +24,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.model = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
           scope.isVisible = false;
-        },
-        getSession: function() {
-          return {
-          };
         }
       };
 
-      addEmptyFunctions(scope.containerBridge, ['setResponse', 'setMode', 'reset', 'answerChangedHandler', 'editable', 'isAnswerEmpty']);
+      addEmptyFunctions(scope.containerBridge, ['setResponse', 'setMode', 'reset', 'answerChangedHandler', 'editable', 'isAnswerEmpty', 'getSession']);
 
       scope.draggableOptions = function() {
         return {
@@ -46,7 +40,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       }
 
       scope.toggleVisibility = toggleVisibility;
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);      
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };    
 
     return {
@@ -60,8 +54,4 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 ];
 
 exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  }
-];
+exports.directive = main;

@@ -2,10 +2,9 @@ var calculator = [
   'CalculatorConfig',
   function(CalculatorConfig) {
 
-    function Calculator(_scope, _input) {
-      
+    function Calculator(_scope) {
+
       var self = this;
-      var input = _input;
       var scope = _scope;
 
       this.pendingOperationIsBinary = false;
@@ -18,9 +17,6 @@ var calculator = [
       this.state = '';
       this.memory = '';
       this.angularMeasure = 'degrees';
-      
-      // this.lazyEvaluation = false;
-      // this.lazyInputClearFlag = true;
 
       this.operationStatus = [];
 
@@ -28,7 +24,7 @@ var calculator = [
         new CalculatorConfig().postLink(scope);
       };
 
-      this.click = function(button, ref) {        
+      this.click = function(button) {
         if(this.state === 'NaN') {
           this.clickMisc(scope.buttons.clear);
         }
@@ -41,7 +37,7 @@ var calculator = [
       this.clickNumber = function(button) {
         // check for multiple dots or alone dots
         if(button.id === 'dot'){
-          var value = input.val();
+          var value = scope.results;
           if(!self.operandContinue || value.indexOf('.') !== -1){
             return;
           }          
@@ -71,15 +67,15 @@ var calculator = [
 
       this.clickOperand = function(button) {
         if (this.operandContinue) {
-          input.val(input.val() + button);
+          scope.results = scope.results + button;
         } else {
-          input.val(button);
+          scope.results = button;
         }
         self.lastPressedIsBinary = false;
       };
 
       this.clickOperator = function(button) {
-        var value = parseFloat(input.val());
+        var value = parseFloat(scope.results);
         if(button.numOfOperands === '1') {
           self.clickUnaryOperator(value, button);
         } else {
@@ -153,7 +149,7 @@ var calculator = [
         self.storedValue = value;
 
         if(self.checkNaN()){
-          input.val(value);
+          scope.results = value;
         }
       };
 
@@ -181,10 +177,10 @@ var calculator = [
       this.clickMisc = function(button) {
         switch(button.id){
           case 'backspace':
-            var newValue = (self.operandContinue) ? input.val().slice(0, - 1) : '';
+            var newValue = (self.operandContinue) ? scope.results.slice(0, - 1) : '';
 
             if(self.operandContinue) {
-              newValue = input.val().slice(0, - 1);
+              newValue = scope.results.slice(0, - 1);
             } else {
             }            
             if(newValue === '') {
@@ -192,21 +188,21 @@ var calculator = [
               self.pendingOperationIsBinary = self.previousOperator !== '';
               self.lastPressedIsBinary = self.previousOperator !== '';
             }
-            input.val(newValue);
+            scope.results = newValue;
             break;
           case 'clear':
             self.resetOperationStatus();
             self.operationStatus = [];
-            input.val('');
+            scope.results = '';
             break;
           case 'store':
-            var value = input.val();
+            var value = scope.results;
             if(value !== '') {
-              this.memory = input.val();
+              this.memory = scope.results;
             }
             break;
           case 'recall':
-            input.val(this.memory);
+            scope.results = this.memory;
             break;
           case 'left_parenthesis':
             self.pushSubresult();
@@ -218,7 +214,7 @@ var calculator = [
       };
 
       this.pushSubresult = function() {
-        if((!self.lastPressedIsBinary || self.previousOperator === '') && input.val() !== '') {
+        if((!self.lastPressedIsBinary || self.previousOperator === '') && scope.results !== '') {
           self.clickOperator(scope.buttons.multiply);
         }
 
@@ -235,20 +231,20 @@ var calculator = [
       this.pullSubresult = function() {
         if(self.operationStatus.length > 0) {
           if(self.previousOperator.length === 0) {
-            self.storedValue = input.val();
+            self.storedValue = scope.results;
           } else {
             self.solveOperation(scope.buttons.equals);
             if(self.operandContinue) {
               self.lastPressedIsBinary = false;
             } else {
               if(self.storedValue === '') {
-                self.storedValue = input.val();
+                self.storedValue = scope.results;
               }
             }
           }
 
           if(self.checkNaN()){
-            input.val(self.storedValue);
+            scope.results = self.storedValue;
 
             var status = self.operationStatus.pop();
             self.storedValue = status.storedValue;
@@ -258,7 +254,7 @@ var calculator = [
             self.operandContinue = status.operandContinue;
 
             if(self.previousOperator === '' && self.storedValue === '') {
-              self.storedValue = input.val();
+              self.storedValue = scope.results;
             }
           }
         }        
@@ -273,7 +269,7 @@ var calculator = [
       };
 
       this.solveOperation = function(button) {
-        var inputValue = parseFloat(input.val());
+        var inputValue = parseFloat(scope.results);
 
         if(!self.lastPressedIsBinary) {
           switch(self.previousOperator) {
@@ -293,7 +289,7 @@ var calculator = [
               self.storedValue = Math.pow(self.storedValue, inputValue);
               break;
             default:
-              self.storedValue = input.val();
+              self.storedValue = scope.results;
               break;
           }
         }
@@ -301,7 +297,7 @@ var calculator = [
         self.operandContinue = false;
         self.previousOperator = button.id === 'equals' ? '' : button.id;
         if(self.checkNaN()){
-          input.val(self.storedValue);
+          scope.results = self.storedValue;
         }
       };
 
@@ -334,7 +330,7 @@ var calculator = [
         var isNumber = isFinite(self.storedValue);
         if(!isNumber) {
           this.state = 'NaN';
-          input.val('Error');
+          scope.results = 'Error';
         }
 
         return isNumber;
