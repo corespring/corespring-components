@@ -123,7 +123,7 @@
         var xScale = 40, yScale = 40, xRange, yRange;
 
         $(el).css("position", "relative");
-        var raphael = Raphael(el);
+        var rapha = Rapha(el);
 
         // For a sometimes-reproducible IE8 bug; doesn't affect SVG browsers at all
         $(el).children("div").css("position", "absolute");
@@ -324,7 +324,7 @@
                     yScale = scale[1];
 
                     // Update the canvas size
-                    raphael.setSize((xRange[1] - xRange[0]) * xScale, (yRange[1] - yRange[0]) * yScale);
+                    rapha.setSize((xRange[1] - xRange[0]) * xScale, (yRange[1] - yRange[0]) * yScale);
                 },
 
                 clipRect: function(pair) {
@@ -372,12 +372,12 @@
         var addArrowheads = function arrows(path) {
             var type = path.constructor.prototype;
 
-            if (type === Raphael.el) {
+            if (type === Rapha.el) {
                 if (path.type === "path" && typeof path.arrowheadsDrawn === "undefined") {
                     var w = path.attr("stroke-width"), s = 0.6 + 0.4 * w;
                     var l = path.getTotalLength();
-                    var set = raphael.set();
-                    var head = raphael.path("M-3 4 C-2.75 2.5 0 0.25 0.75 0C0 -0.25 -2.75 -2.5 -3 -4");
+                    var set = rapha.set();
+                    var head = rapha.path("M-3 4 C-2.75 2.5 0 0.25 0.75 0C0 -0.25 -2.75 -2.5 -3 -4");
                     var end = path.getPointAtLength(l - 0.4);
                     var almostTheEnd = path.getPointAtLength(l - 0.75 * s);
                     var angle = Math.atan2(end.y - almostTheEnd.y, end.x - almostTheEnd.x) * 180 / Math.PI;
@@ -385,7 +385,7 @@
                     delete attrs.path;
 
                     var subpath = path.getSubpath(0, l - 0.75 * s);
-                    subpath = raphael.path(subpath).attr(attrs);
+                    subpath = rapha.path(subpath).attr(attrs);
                     subpath.arrowheadsDrawn = true;
                     path.remove();
 
@@ -397,7 +397,7 @@
                     set.push(head);
                     return set;
                 }
-            } else if (type === Raphael.st) {
+            } else if (type === Rapha.st) {
                 for (var i = 0, l = path.items.length; i < l; i++) {
                     arrows(path.items[i]);
                 }
@@ -407,7 +407,7 @@
 
         var drawingTools = {
             circle: function(center, radius) {
-                return raphael.ellipse.apply(raphael, scalePoint(center).concat(scaleVector([radius, radius])));
+                return rapha.ellipse.apply(rapha, scalePoint(center).concat(scaleVector([radius, radius])));
             },
 
             // (x, y) is coordinate of bottom left corner
@@ -415,11 +415,11 @@
                 // Raphael needs (x, y) to be coordinate of upper left corner
                 var corner = scalePoint([x, y + height]);
                 var dims = scaleVector([width, height]);
-                return raphael.rect.apply(raphael, corner.concat(dims));
+                return rapha.rect.apply(rapha, corner.concat(dims));
             },
 
             ellipse: function(center, radii) {
-                return raphael.ellipse.apply(raphael, scalePoint(center).concat(scaleVector(radii)));
+                return rapha.ellipse.apply(rapha, scalePoint(center).concat(scaleVector(radii)));
             },
 
             fixedEllipse: function(center, radii, maxScale) {
@@ -447,8 +447,8 @@
                 });
 
                 // Create Raphael canvas
-                var localRaphael = Raphael(wrapper, width, height);
-                var visibleShape = localRaphael.ellipse(
+                var localRapha = Rapha(wrapper, width, height);
+                var visibleShape = localRapha.ellipse(
                     width / 2,
                     height / 2,
                     scaledRadii[0],
@@ -475,7 +475,7 @@
 
                 var largeAngle = ((endAngle - startAngle) % 360 + 360) % 360 > 180;
 
-                return raphael.path(
+                return rapha.path(
                     "M" + startPoint.join(" ") +
                     "A" + radii.join(" ") +
                     " 0 " + // ellipse rotation
@@ -486,7 +486,7 @@
             },
 
             path: function(points) {
-                var p = raphael.path(svgPath(points));
+                var p = rapha.path(svgPath(points));
                 p.graphiePath = points;
                 return p;
             },
@@ -539,10 +539,10 @@
                 });
 
                 // Create Raphael canvas
-                var localRaphael = Raphael(wrapper, width, height);
+                var localRapha = Rapha(wrapper, width, height);
 
                 // Calculate path
-                var visibleShape = localRaphael.path(createPath(points));
+                var visibleShape = localRapha.path(createPath(points));
 
                 return {
                     wrapper: wrapper,
@@ -551,7 +551,7 @@
             },
 
             scaledPath: function(points) {
-                var p = raphael.path(svgPath(points, /* alreadyScaled */ true));
+                var p = rapha.path(svgPath(points, /* alreadyScaled */ true));
                 p.graphiePath = points;
                 return p;
             },
@@ -562,7 +562,7 @@
 
             parabola: function(a, b, c) {
                 // Plot a parabola of the form: f(x) = (a * x + b) * x + c
-                return raphael.path(svgParabolaPath(a, b, c));
+                return rapha.path(svgParabolaPath(a, b, c));
             },
 
             fixedLine: function(start, end, thickness) {
@@ -615,12 +615,12 @@
                 });
 
                 // Create Raphael canvas
-                var localRaphael = Raphael(wrapper, width, height);
+                var localRapha = Rapha(wrapper, width, height);
 
                 // Calculate path
                 var path = "M" + start[0] + " " + start[1] + " " +
                            "L" + end[0] + " " + end[1];
-                var visibleShape = localRaphael.path(path);
+                var visibleShape = localRapha.path(path);
                 visibleShape.graphiePath = [start, end];
 
                 return {
@@ -631,12 +631,12 @@
 
             sinusoid: function(a, b, c, d) {
                 // Plot a sinusoid of the form: f(x) = a * sin(b * x - c) + d
-                return raphael.path(svgSinusoidPath(a, b, c, d));
+                return rapha.path(svgSinusoidPath(a, b, c, d));
             },
 
             grid: function(xr, yr) {
                 var step = currentStyle.step || [1, 1];
-                var set = raphael.set();
+                var set = rapha.set();
 
                 var x = step[0] * Math.ceil(xr[0] / step[0]);
                 for (; x <= xr[1]; x += step[0]) {
@@ -721,7 +721,7 @@
                     step = 1;
                 }
 
-                var paths = raphael.set();
+                var paths = rapha.set();
                 var points = [];
                 var lastDiff = KhanUtil.coordDiff(fn(min), fn2(min));
 
@@ -834,7 +834,7 @@
              * @return {Raphael set}
              */
             plotPiecewise: function(fnArray, rangeArray) {
-                var paths = raphael.set();
+                var paths = rapha.set();
                 var self = this;
                 _.times(fnArray.length, function(i) {
                     var fn = fnArray[i];
@@ -859,7 +859,7 @@
              * @return {Raphael set}
              */
             plotEndpointCircles: function(endpointArray) {
-                var circles = raphael.set();
+                var circles = rapha.set();
                 var self = this;
 
                 _.each(endpointArray, function(coord, i) {
@@ -873,7 +873,7 @@
                 var min = range[0], max = range[1];
                 var step = (max - min) / (currentStyle["plot-points"] || 800);
 
-                var asymptotes = raphael.set(), lastVal = fn(min);
+                var asymptotes = rapha.set(), lastVal = fn(min);
 
                 for (var t = min; t <= max; t += step) {
                     var funcVal = fn(t);
@@ -893,7 +893,7 @@
 
         var graphie = new Graphie();
         _.extend(graphie, {
-            raphael: raphael,
+            rapha: rapha,
 
             init: function(options) {
                 var scale = options.scale || [40, 40];
@@ -910,7 +910,7 @@
                 yRange = options.range[1];
 
                 var w = (xRange[1] - xRange[0]) * xScale, h = (yRange[1] - yRange[0]) * yScale;
-                raphael.setSize(w, h);
+                rapha.setSize(w, h);
 
                 $(el).css({
                     "width": w,
@@ -982,7 +982,7 @@
 
                 // Bad heuristic for recognizing Raphael elements and sets
                 var type = result.constructor.prototype;
-                if (type === Raphael.el || type === Raphael.st) {
+                if (type === Rapha.el || type === Rapha.st) {
                     result.attr(currentStyle);
 
                     if (currentStyle.arrows) {
