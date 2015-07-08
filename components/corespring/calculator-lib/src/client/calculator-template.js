@@ -2,16 +2,12 @@ var calculatorTemplate = [
   'Calculator',
   function(Calculator) {
 
-    var calculator;
-
     var link = function(scope, elm, attrs, container) {
-
-      var inputResults = elm.find('.input-results');
-      calculator = new Calculator(scope, inputResults);
+      var calculator = new Calculator(scope);
       calculator.extendScope(scope, 'calculator-template');
 
-      function click(button, type, logic){
-        calculator.click(button, type, logic);
+      function click(button){
+        calculator.click(button);
       }
 
       scope.click = click;
@@ -21,7 +17,7 @@ var calculatorTemplate = [
       return [
         '<div class=\"calculator {{ calculatorType }}\">',
         '  <div class="results">',
-        '    <input id="results" class="input-results" ng-readonly="true" />',
+        '    <input class="input-results" ng-readonly="true" ng-model="results" />',
         '  </div>',
         '  <div class="buttons-panel">',
         '    <div class="{{ region }}-pad" ng-repeat="region in types[calculatorType].regions">',
@@ -29,7 +25,7 @@ var calculatorTemplate = [
         '					id="{{button}}-button"',
         '					class="button {{buttons[button].cssClass}}"',
         '					title="{{buttons[button].name}}"',
-        '					ng-click="click(buttons[button], this)"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
+        '					ng-click="click(buttons[button])"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
         '    </div>',
         '</div>'
       ].join('');
