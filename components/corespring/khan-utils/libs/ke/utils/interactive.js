@@ -239,7 +239,7 @@
             }, options);
 
             var mouselayerZIndex = 2;
-            graph.mouselayer = Raphael(graph.raphael.canvas.parentNode, graph.xpixels, graph.ypixels);
+            graph.mouselayer = Rapha(graph.rapha.canvas.parentNode, graph.xpixels, graph.ypixels);
             $(graph.mouselayer.canvas).css("z-index", mouselayerZIndex);
             if (options.onClick || options.onMouseDown || options.onMouseMove ||
                     options.onMouseOver || options.onMouseOut) {
@@ -309,7 +309,7 @@
                 top: 0
             });
 
-            var el = graph.raphael.canvas.parentNode;
+            var el = graph.rapha.canvas.parentNode;
             el.appendChild(graph._visiblelayerWrapper);
             el.appendChild(graph._mouselayerWrapper);
 
@@ -329,9 +329,9 @@
             var graphie = this;
 
             // mouse{X|Y} is in pixels relative to the SVG
-            var mouseX = event.pageX - $(graphie.raphael.
+            var mouseX = event.pageX - $(graphie.rapha.
                 canvas.parentNode).offset().left;
-            var mouseY = event.pageY - $(graphie.raphael.
+            var mouseY = event.pageY - $(graphie.rapha.
                 canvas.parentNode).offset().top;
 
             return [mouseX, mouseY];
@@ -1256,8 +1256,8 @@
             // Add mouse handlers to the polygon
             $(interactiveFn.mouseTarget[0]).bind("vmouseover vmouseout vmousemove", function(event) {
                 event.preventDefault();
-                var mouseX = event.pageX - $(graph.raphael.canvas.parentNode).offset().left;
-                var mouseY = event.pageY - $(graph.raphael.canvas.parentNode).offset().top;
+                var mouseX = event.pageX - $(graph.rapha.canvas.parentNode).offset().left;
+                var mouseY = event.pageY - $(graph.rapha.canvas.parentNode).offset().top;
                 // can't go beyond 10 pixels from the edge
                 mouseX = Math.max(10, Math.min(graph.xpixels - 10, mouseX));
                 mouseY = Math.max(10, Math.min(graph.ypixels - 10, mouseY));
@@ -1740,8 +1740,8 @@
                     } else if (event.type === "vmousedown" && (event.which === 1 || event.which === 0)) {
                         event.preventDefault();
                         // coord{X|Y} are the scaled coordinate values of the mouse position
-                        var coordX = (event.pageX - $(graph.raphael.canvas.parentNode).offset().left) / graph.scale[0] + graph.range[0][0];
-                        var coordY = graph.range[1][1] - (event.pageY - $(graph.raphael.canvas.parentNode).offset().top) / graph.scale[1];
+                        var coordX = (event.pageX - $(graph.rapha.canvas.parentNode).offset().left) / graph.scale[0] + graph.range[0][0];
+                        var coordY = graph.range[1][1] - (event.pageY - $(graph.rapha.canvas.parentNode).offset().top) / graph.scale[1];
                         if (lineSegment.snapX > 0) {
                             coordX = Math.round(coordX / lineSegment.snapX) * lineSegment.snapX;
                         }
@@ -1764,8 +1764,8 @@
                             KhanUtil.dragging = true;
 
                             // mouse{X|Y} are in pixels relative to the SVG
-                            var mouseX = event.pageX - $(graph.raphael.canvas.parentNode).offset().left;
-                            var mouseY = event.pageY - $(graph.raphael.canvas.parentNode).offset().top;
+                            var mouseX = event.pageX - $(graph.rapha.canvas.parentNode).offset().left;
+                            var mouseY = event.pageY - $(graph.rapha.canvas.parentNode).offset().top;
                             // no part of the line segment can go beyond 10 pixels from the edge
                             mouseX = Math.max(offsetLeft + 10, Math.min(graph.xpixels - 10 - offsetRight, mouseX));
                             mouseY = Math.max(offsetTop + 10, Math.min(graph.ypixels - 10 - offsetBottom, mouseY));
@@ -2103,7 +2103,7 @@
 
             polygon.update();
 
-            polygon.visibleShape = graphie.raphael.path(polygon.path);
+            polygon.visibleShape = graphie.rapha.path(polygon.path);
             polygon.visibleShape.attr(polygon.normalStyle);
 
             if (!polygon.fixed) {
@@ -2140,8 +2140,8 @@
                         });
 
                         // start{X|Y} are the scaled coordinate values of the starting mouse position
-                        var startX = (event.pageX - $(graphie.raphael.canvas.parentNode).offset().left) / graphie.scale[0] + graphie.range[0][0];
-                        var startY = graphie.range[1][1] - (event.pageY - $(graphie.raphael.canvas.parentNode).offset().top) / graphie.scale[1];
+                        var startX = (event.pageX - $(graphie.rapha.canvas.parentNode).offset().left) / graphie.scale[0] + graphie.range[0][0];
+                        var startY = graphie.range[1][1] - (event.pageY - $(graphie.rapha.canvas.parentNode).offset().top) / graphie.scale[1];
                         if (polygon.snapX > 0) {
                             startX = Math.round(startX / polygon.snapX) * polygon.snapX;
                         }
@@ -2166,8 +2166,8 @@
                             KhanUtil.dragging = true;
 
                             // mouse{X|Y} are in pixels relative to the SVG
-                            var mouseX = event.pageX - $(graphie.raphael.canvas.parentNode).offset().left;
-                            var mouseY = event.pageY - $(graphie.raphael.canvas.parentNode).offset().top;
+                            var mouseX = event.pageX - $(graphie.rapha.canvas.parentNode).offset().left;
+                            var mouseY = event.pageY - $(graphie.rapha.canvas.parentNode).offset().top;
 
                             // no part of the polygon can go beyond 10 pixels from the edge
                             if (polygon.constrainToGraph) {
@@ -2530,7 +2530,7 @@
                 getCoord: function() {
                     return [rect.getX(), rect.getY()];
                 },
-                getRaphaelParamsArr: function() {
+                getRaphaParamsArr: function() {
                     var width = rect.getWidth();
                     var height = rect.getHeight();
                     var x = rect.getX();
@@ -2539,8 +2539,8 @@
                     var dims = graphie.scaleVector([width, height]);
                     return point.concat(dims);
                 },
-                getRaphaelParams: function() {
-                    var arr = rect.getRaphaelParamsArr();
+                getRaphaParams: function() {
+                    var arr = rect.getRaphaParamsArr();
                     return {
                         x: arr[0],
                         y: arr[1],
@@ -2565,8 +2565,8 @@
                 });
 
             rect.render = function() {
-                rect.fillArea.attr(rect.getRaphaelParams());
-                rect.mouseTarget.attr(rect.getRaphaelParams());
+                rect.fillArea.attr(rect.getRaphaParams());
+                rect.mouseTarget.attr(rect.getRaphaParams());
             };
 
             rect.render(); // initialize
@@ -3175,7 +3175,7 @@
 
                 // Draw the double-headed arrow thing that shows users where to
                 // click and drag to rotate
-                return graphie.raphael.path(
+                return graphie.rapha.path(
                     // upper arrowhead
                     " M" + getRotateHandlePoint(lengthAngle, -halfWidth) +
                     " L" + getRotateHandlePoint(lengthAngle, -3 * halfWidth) +
@@ -3610,7 +3610,7 @@
 
 
     function Protractor(graph, center, arrowFillColor) {
-        this.set = graph.raphael.set();
+        this.set = graph.rapha.set();
 
         this.cx = center[0];
         this.cy = center[1];
@@ -3637,7 +3637,7 @@
         };
 
         // Draw the double-headed arrow thing that shows users where to click and drag to rotate
-        var arrow = graph.raphael.path(
+        var arrow = graph.rapha.path(
             " M" + arrowHelper(180, 6) +
             " L" + arrowHelper(180, 2) +
             " L" + arrowHelper(183, 10) +
@@ -3725,13 +3725,13 @@
 
             $(setNodes).bind("vmousedown", function(event) {
                 event.preventDefault();
-                var startx = event.pageX - $(graph.raphael.canvas.parentNode).offset().left;
-                var starty = event.pageY - $(graph.raphael.canvas.parentNode).offset().top;
+                var startx = event.pageX - $(graph.rapha.canvas.parentNode).offset().left;
+                var starty = event.pageY - $(graph.rapha.canvas.parentNode).offset().top;
 
                 $(document).bind("vmousemove.protractor", function(event) {
                     // mouse{X|Y} are in pixels relative to the SVG
-                    var mouseX = event.pageX - $(graph.raphael.canvas.parentNode).offset().left;
-                    var mouseY = event.pageY - $(graph.raphael.canvas.parentNode).offset().top;
+                    var mouseX = event.pageX - $(graph.rapha.canvas.parentNode).offset().left;
+                    var mouseY = event.pageY - $(graph.rapha.canvas.parentNode).offset().top;
                     // can't go beyond 10 pixels from the edge
                     mouseX = Math.max(10, Math.min(graph.xpixels - 10, mouseX));
                     mouseY = Math.max(10, Math.min(graph.ypixels - 10, mouseY));
@@ -3898,7 +3898,7 @@
 
         var numTicks = options.units * options.ticksPerUnit + 1;
 
-        var set = graphie.raphael.set();
+        var set = graphie.rapha.set();
 
         var px = 1 / graphie.scale[0]; // one pixel
         set.push(graphie.line([left - px, bottom], [right + px, bottom], bold));
@@ -3914,7 +3914,7 @@
 
             if (n % 1 === 0) {
                 // Graphie labels are difficult to rotate in IE8,
-                // so use raphael.text() instead
+                // so use rapha.text() instead
                 var coord = graphie.scalePoint([x, top]);
                 var text;
                 var offset;
@@ -3937,7 +3937,7 @@
                     text = n;
                     offset = -3 * (n.toString().length + 1);
                 }
-                var label = graphie.raphael.text(
+                var label = graphie.rapha.text(
                     coord[0] + offset,
                     coord[1] + 10,
                     text
@@ -3968,13 +3968,13 @@
 
         $(setNodes).bind("vmousedown", function(event) {
             event.preventDefault();
-            var startx = event.pageX - $(graphie.raphael.canvas.parentNode).offset().left;
-            var starty = event.pageY - $(graphie.raphael.canvas.parentNode).offset().top;
+            var startx = event.pageX - $(graphie.rapha.canvas.parentNode).offset().left;
+            var starty = event.pageY - $(graphie.rapha.canvas.parentNode).offset().top;
 
             $(document).bind("vmousemove.ruler", function(event) {
                 // mouse{X|Y} are in pixels relative to the SVG
-                var mouseX = event.pageX - $(graphie.raphael.canvas.parentNode).offset().left;
-                var mouseY = event.pageY - $(graphie.raphael.canvas.parentNode).offset().top;
+                var mouseX = event.pageX - $(graphie.rapha.canvas.parentNode).offset().left;
+                var mouseY = event.pageY - $(graphie.rapha.canvas.parentNode).offset().top;
                 // can't go beyond 10 pixels from the edge
                 mouseX = Math.max(10, Math.min(graphie.xpixels - 10, mouseX));
                 mouseY = Math.max(10, Math.min(graphie.ypixels - 10, mouseY));

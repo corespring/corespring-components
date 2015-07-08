@@ -3,6 +3,9 @@
  *
  * Copyright (c) 2010 Dmitry Baranovskiy (http://raphaeljs.com)
  * Licensed under the MIT (http://raphaeljs.com/license.html) license.
+ *
+ * Renamed Raphael to Rapha to make it runnable alongside version 2
+ *
  */
 (function () {
     var setAttr;
@@ -36,9 +39,9 @@
         has = "hasOwnProperty",
         doc = document,
         win = window,
-        oldRaphael = {
-            was: Object[proto][has].call(win, "Raphael"),
-            is: win.Raphael
+        oldRapha = {
+            was: Object[proto][has].call(win, "Rapha"),
+            is: win.Rapha
         },
         Paper = function () {
             this.customAttributes = {};
@@ -1497,7 +1500,7 @@
             this[0] = node;
             this.id = R._oid++;
             this.node = node;
-            node.raphael = this;
+            node.rapha = this;
             this.paper = svg;
             this.attrs = this.attrs || {};
             this.transformations = []; // rotate, translate, scale
@@ -2150,7 +2153,7 @@
             this[0] = node;
             this.id = R._oid++;
             this.node = node;
-            node.raphael = this;
+            node.rapha = this;
             this.X = 0;
             this.Y = 0;
             this.attrs = {};
@@ -2816,7 +2819,7 @@
     };
     paperproto.setSize = setSize;
     paperproto.top = paperproto.bottom = null;
-    paperproto.raphael = R;
+    paperproto.rapha = R;
     function x_y() {
         return this.x + S + this.y;
     }
@@ -3746,11 +3749,11 @@
         return token || E;
     };
     R.ninja = function () {
-        oldRaphael.was ? (win.Raphael = oldRaphael.is) : delete Raphael;
+        oldRapha.was ? (win.Rapha = oldRapha.is) : delete Rapha;
         return R;
     };
     R.el = elproto;
     R.st = Set[proto];
 
-    oldRaphael.was ? (win.Raphael = R) : (Raphael = R);
+    oldRapha.was ? (win.Rapha = R) : (Rapha = R);
 })();
