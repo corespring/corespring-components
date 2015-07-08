@@ -1,3 +1,4 @@
+@import '../../../../../less/common';
 /** editor placeholder */
 .component-placeholder {
 	.corespring-calculator {
@@ -13,12 +14,29 @@
 	.cs-calculator-toggle {
     cursor: pointer;
     background: url('/client/icon/corespring-calculator') no-repeat center center;
-    height: 60px;
-    width: 60px;        
+    height: 30px;
+    width: 30px;        
     -webkit-transition: opacity 0.3s ease-out;
     transition: opacity 0.3s ease-out;
+    position: relative;
     &.visible {
-      opacity: .5;
+      &:after {
+        display: block;
+        content: "\00d7";
+        opacity: 0.7;
+        position: absolute;
+        top: -5px;
+        right: -10px;
+        background-color: @warning-color;
+        color: #fff;
+        font-size: 15px;
+        border-radius: 100%;
+        background-clip: padding-box;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 18px;
+      }
     }
   }
 }
