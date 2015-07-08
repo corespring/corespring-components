@@ -5,25 +5,26 @@
   "libs": {
     "client": {
       "khan-utils": [
-        "ke/local-only/jed.js",
-        "ke/local-only/i18n.js",
         "khan-adapter.js",
-        "marked.js",
         "katex/katex.js",
-        "ke/local-only/jed.js",
-        "ke/utils/answer-types.js",
         "ke/utils/knumber.js",
         "ke/utils/kvector.js",
         "ke/utils/kpoint.js",
         "ke/utils/kray.js",
         "ke/utils/kline.js",
         "ke/utils/math.js",
+        "ke/utils/crc32.js",
         "ke/utils/tmpl.js",
+        "ke/utils/objective_.js",
+        "ke/utils/transform-helpers.js",
+        "ke/utils/wrapped-defaults.js",
+        "ke/utils/wrapped-ellipse.js",
+        "ke/utils/wrapped-line.js",
+        "ke/utils/wrapped-path.js",
         "ke/third_party/raphael.js",
         "ke/utils/graphie.js",
         "ke/third_party/jquery.mobile.vmouse.js",
         "ke/utils/interactive.js",
-        "ke/exercises-stub.js",
         "ke/utils/tex.js"
       ]
     }
