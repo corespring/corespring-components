@@ -39,12 +39,7 @@ var main = [
         scope.isVisible = !scope.isVisible;
       }
 
-      function test() {
-        alert('Test');
-      }
-
       scope.toggleVisibility = toggleVisibility;
-      scope.test = test;
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };    
 
