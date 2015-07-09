@@ -1,10 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Montserrat);
 
 .calculator {
-  /*padding: 10px;*/
   padding: 5px 5px 0px 5px;
-  min-height: 50px;
-  /*border: 3px solid #666666;*/
   border: 2px solid #666666;
   border-radius: 5px;
   cursor: move;
@@ -20,7 +17,6 @@
 /****** Basic ****************/
 
 .basic {
-  /*width: 201px;*/
   width: 149px;
   font-size: 14px;
 }
@@ -32,7 +28,6 @@
 /* Basic functions pad */
 .basic .basic-pad {
 	overflow: hidden;
-	/*width: 40px;*/
 	width: 30px;
 }
 
@@ -44,21 +39,18 @@
 /****** Scientific ****************/
 
 .scientific {
-	/*width: 426px;*/
 	width: 324px;
 	overflow: hidden;
 	font-size: 14px;
 }
 
-.scientific .results {	
-	/*width: 400px;*/
+.scientific .results {
 	width: 310px;
 }
 
 /* Basic functions pad */
 .scientific .scientific_basic-pad {
 	float: left;
-	/*width: 85px;*/
 	width: 65px;
 	font-size: 12px;
 }
@@ -73,12 +65,10 @@
 
 /* Deg-Rad pad */
 .scientific .deg-rad-pad {
-	/*width: 175px;*/
 	width: 135px;
 }
 
 .scientific .deg, .scientific .rad {
-	/*width: 85px;*/
 	width: 65px;
 }
 .scientific .deg {
@@ -86,7 +76,6 @@
 }
 
 .scientific .scientific_advanced-pad {
-	/*width: 175px;*/
 	width: 135px;
 	margin-left: 5px;
 	float: left;
@@ -105,7 +94,6 @@
 
 /* Memory pad */
 .scientific .memory-pad {
-	/*width: 90px;*/
 	width: 70px;
 	margin-bottom: 5px;
 	float: left;
@@ -124,7 +112,6 @@
 /****** Common ****************/
 /* Results */
 .results {	
-	/*margin-bottom: 10px;*/
 	margin-bottom: 5px;
 	height: 40px;
 	border: 3px solid #9C9C9C;
@@ -149,8 +136,6 @@
 
 .button {
 	border: none;
-	/*height: 40px;
-	width: 40px;*/
 	height: 30px;
 	width: 30px;
 	background-color: #131F85;
@@ -162,7 +147,6 @@
 
 /* Clear pad */
 .buttons-panel .clear-pad {
-	/*width: 130px;*/
 	width: 100px;
 	margin-right: 5px;
 	margin-bottom: 5px;
@@ -170,20 +154,17 @@
 }
 
 .clear-pad .backspace {
-	/*width: 62px;*/
 	width: 47px;
 	margin-right: 6px;
 }
 
 .clear-pad .clear {
-	/*width: 62px;*/
 	width: 47px;
 }
 
 /* Numbers pad */
 .buttons-panel .numbers-pad {
 	clear: left;
-	/*width: 130px;*/
 	width: 100px;
 	margin-right: 5px;
 	float: left;
