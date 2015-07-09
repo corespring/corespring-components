@@ -4,12 +4,17 @@ var main = [
   'KhanUtil',
   function($sce, $timeout, KhanUtilService) {
     var link = function(scope, element, attrs) {
+      /* This object contains the references to the graphie and ruler
+         objects, and is used to delete those objects when required */
+      var rulerObj = {
+        graphie: null,
+        ruler: null
+      };
       return function(scope, element, attrs) {
         scope.containerBridge = {
           setDataAndSession: function(dataAndSession) {
             scope.session = dataAndSession.session || {};
             scope.isVisible = false;
-            scope.ruler = null;
             var rulerConfig = dataAndSession.data.model.config,
                 defaultPlayerDimensions = [600, 450],
                 arrowFillColor = "#9ED343",
@@ -18,25 +23,33 @@ var main = [
             var player = $player.length ? $player[0] : null;
             // The $timeout is required due to player size changes during render
             $timeout(function() {
-              // if (player) {
-              //   defaultPlayerDimensions[0] = $player.width();
-              //   defaultPlayerDimensions[1] = $player.height();
-              // }
-              var graphie = KhanUtilService.KhanUtil.createGraphie(element.find('.cs-ruler-widget')[0]),
-                  scale = [40, 40],
-                  range = [
-                    [0, defaultPlayerDimensions[0] / scale[0]],
-                    [0, defaultPlayerDimensions[1] / scale[1]]
-                  ];
-              graphie.init({
+              if (player) {
+                var playerWidth = $player.width(),
+                    playerHeight = $player.height();
+                defaultPlayerDimensions[0] = playerWidth > defaultPlayerDimensions[0] ? playerWidth : defaultPlayerDimensions[0];
+                defaultPlayerDimensions[1] = playerHeight > defaultPlayerDimensions[1] ? playerHeight : defaultPlayerDimensions[1];
+              }
+              var scale = [40, 40],
+              range = [
+                [0, defaultPlayerDimensions[0] / scale[0]],
+                [0, defaultPlayerDimensions[1] / scale[1]]
+              ];
+              var $rulerWidget = element.find('.cs-ruler-widget');
+              if (rulerObj.graphie) {
+                $rulerWidget.empty();
+                delete rulerObj.graphie;
+              }
+              rulerObj.graphie = KhanUtilService.KhanUtil.createGraphie($rulerWidget[0]);
+              rulerObj.graphie.init({
                 range: range,
                 scale: scale
               });
-              graphie.addMouseLayer();
-              if (scope.ruler) {
-                scope.ruler.remove();
+              rulerObj.graphie.addMouseLayer();
+              if (rulerObj.ruler) {
+                rulerObj.ruler.remove();
+                delete rulerObj.ruler;
               }
-              scope.ruler = graphie.ruler({
+              rulerObj.ruler = rulerObj.graphie.ruler({
                 center: [
                   (range[0][0] + range[0][1]) / 2,
                   (range[1][0] + range[1][1]) / 2
