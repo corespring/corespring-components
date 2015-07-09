@@ -42,12 +42,27 @@
 }
 
 /* config */
+@preview-basic-width: 149px;
+@preview-basic-height: 229px;
+@preview-scientific-width: 324px;
+@preview-scientific-height: 229px;
+
 .cs-calculator-config {
-	.description {
+  .description {
     padding: 15px;
     margin-bottom: 10px;
   }
   .cs-calculator-row {
     margin-bottom: 5px;
+    .preview_basic {
+      width: @preview-basic-width;
+      height: @preview-basic-height;
+      background: data-uri('../../public/basic-calculator.png') no-repeat center;
+    }
+    .preview_scientific {
+      width: @preview-scientific-width;
+      height: @preview-scientific-height;
+      background: data-uri('../../public/scientific-calculator.png') no-repeat center;
+    }
 	}
 }
