@@ -1,0 +1,46 @@
+{
+  "title" : "CoreSpring Ordering Response Schema",
+  "type" : "object",
+  "properties" : {
+    "correctness" : {
+      "enum" : ["correct", "incorrect"],
+      "description" : "A string which represents whether the response is correct or incorrect."
+    },
+    "correctResponse" : {
+      "description" : "An array containing the ordered ids of the choices representative of a correct response.",
+      "type" : "array",
+      "items" : {
+        "description" : "The id of a choice.",
+        "type" : "string"
+      }
+    },
+    "answer" : {
+      "description" : "An array containing the choice ids in the order selected by the student.",
+      "type" : "array",
+      "items" : {
+        "description" : "The id of a choice.",
+        "type" : "string"
+      }
+    },
+    "score" : {
+      "enum" : [0, 1],
+      "description" : "Represents the score for the interaction."
+    },
+    "correctnessClass" : {
+      "enum" : ["correct", "partial", "incorrect"],
+      "description" : "A CSS classname to be applied to the answer"
+    },
+    "feedback" : {
+      "type" : "string",
+      "description" : "Feedback to be rendered as part of the response"
+    },
+    "studentResponse" : {
+      "description" : "An array containing the choice ids in the order selected by the student.",
+      "type" : "array",
+      "items" : {
+        "description" : "The id of a choice.",
+        "type" : "string"
+      }
+    }
+  }
+}

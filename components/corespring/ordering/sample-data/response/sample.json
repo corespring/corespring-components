@@ -1,0 +1,21 @@
+{
+  "correctness": "correct",
+  "correctResponse": [
+    "c",
+    "a",
+    "b"
+  ],
+  "answer": [
+    "c",
+    "a",
+    "b"
+  ],
+  "score": 1,
+  "correctClass": "correct",
+  "feedback": "Correct!",
+  "studentResponse": [
+    "c",
+    "a",
+    "b"
+  ]
+}
