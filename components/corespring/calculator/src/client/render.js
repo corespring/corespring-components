@@ -6,7 +6,7 @@ var main = [
       return [
         '<div class="cs-calculator">',
         '  <div class="cs-calculator-toggle" ng-class="{visible: isVisible}" ng-click="toggleVisibility()" title="Click to {{isVisible ? \'hide\' : \'show\'}}"></div>',
-        '  <calculator-template ng-show="isVisible" calculator-type="{{ model.config.type }}" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="draggableOptions()"></calculator-template>',
+        '  <calculator-template ng-show="isVisible" calculator-type="{{ model.config.type }}" on-close-callback="toggleVisibility()" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="draggableOptions()"></calculator-template>',        
         '</div>'
       ].join("\n");
     };
@@ -39,7 +39,12 @@ var main = [
         scope.isVisible = !scope.isVisible;
       }
 
+      function test() {
+        alert('Test');
+      }
+
       scope.toggleVisibility = toggleVisibility;
+      scope.test = test;
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };    
 
