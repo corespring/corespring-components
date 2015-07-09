@@ -1,0 +1,70 @@
+{
+  "title" : "CoreSpring Drag and Drop Inline Response Schema",
+  "type" : "object",
+  "properties" : {
+    "correctness" : {
+      "enum" : ["correct", "incorrect"],
+      "description" : "A string which represents whether the response is correct or incorrect."
+    },
+    "correctResponse" : {
+      "description" : "An object describing a mapping of choice area identifiers to a list of choice identifiers representing the correct answer.",
+      "type" : "object",
+      "patternProperties" : {
+        ".*" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "answer" : {
+      "description" : "An object describing a mapping of choice area identifiers to a list of choice identifiers representing the student's response.",
+      "type" : "object",
+      "patternProperties" : {
+        ".*" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "feedbackPerChoice" : {
+      "type" : "object",
+      "description" : "An object mapping choice area identifiers to an ordered array of feedback for each choice.",
+      "patternProperties" : {
+        ".*" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "score" : {
+      "enum" : [0, 1],
+      "description" : "Represents the score for the interaction."
+    },
+    "correctnessClass" : {
+      "enum" : ["correct", "partial", "incorrect"],
+      "description" : "A CSS classname to be applied to the answer"
+    },
+    "feedback" : {
+      "type" : "string",
+      "description" : "Feedback to be rendered as part of the response"
+    },
+    "studentResponse" : {
+      "description" : "An object describing a mapping of choice area identifiers to a list of choice identifiers representing the student's response.",
+      "type" : "object",
+      "patternProperties" : {
+        ".*" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
