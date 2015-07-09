@@ -15,7 +15,7 @@ var calculatorTemplate = [
 
     function template() {
       return [
-        '<div class=\"calculator {{ calculatorType }}\">',
+        '<div class="calculator" ng-class="calculatorType">',
         '  <div class="results">',
         '    <input class="input-results" ng-readonly="true" ng-model="results" />',
         '  </div>',
@@ -27,6 +27,7 @@ var calculatorTemplate = [
         '					title="{{buttons[button].name}}"',
         '					ng-click="click(buttons[button])"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
         '    </div>',
+        '  </div>',
         '</div>'
       ].join('');
     }
