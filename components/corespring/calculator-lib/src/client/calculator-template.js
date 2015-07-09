@@ -16,6 +16,7 @@ var calculatorTemplate = [
     function template() {
       return [
         '<div class="calculator" ng-class="calculatorType">',
+        '  <i class="close-icon fa fa-times-circle" ng-click="onCloseCallback()"></i>',
         '  <div class="results">',
         '    <input class="input-results" ng-readonly="true" ng-model="results" />',
         '  </div>',
@@ -37,7 +38,8 @@ var calculatorTemplate = [
       replace: true,
       link: link,
       scope: {
-      	calculatorType: '@'
+      	calculatorType: '@',
+        onCloseCallback: '&onCloseCallback'
       },
       template: template()
     };
