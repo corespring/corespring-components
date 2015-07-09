@@ -1,0 +1,26 @@
+{
+  "correctness": "correct",
+  "correctResponse": {
+    "aa_1": [
+      "c_1"
+    ]
+  },
+  "answer": {
+    "aa_1": [
+      "c_1"
+    ]
+  },
+  "feedbackPerChoice": {
+    "aa_1": [
+      "correct"
+    ]
+  },
+  "score": 1,
+  "correctClass": "correct",
+  "feedback": "Correct!",
+  "studentResponse": {
+    "aa_1": [
+      "c_1"
+    ]
+  }
+}
