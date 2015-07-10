@@ -3,6 +3,7 @@
   "componentType": "corespring-protractor",
   "weight": 0,
   "isTool": true,
+  "noEdit": true,
   "model": {
     "config": {}
   }
