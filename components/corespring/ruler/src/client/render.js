@@ -4,13 +4,9 @@ var main = [
   'KhanUtil',
   function($sce, $timeout, KhanUtilService) {
     var link = function(scope, element, attrs) {
-      /* This object contains the references to the graphie and ruler
-         objects, and is used to delete those objects when required */
-      var rulerObj = {
-        graphie: null,
-        ruler: null
-      };
       return function(scope, element, attrs) {
+        scope.graphie = null;
+        scope.ruler = null;
         scope.containerBridge = {
           setDataAndSession: function(dataAndSession) {
             scope.session = dataAndSession.session || {};
@@ -35,21 +31,21 @@ var main = [
                 [0, defaultPlayerDimensions[1] / scale[1]]
               ];
               var $rulerWidget = element.find('.cs-ruler-widget');
-              if (rulerObj.graphie) {
+              if (scope.graphie) {
                 $rulerWidget.empty();
-                delete rulerObj.graphie;
+                delete scope.graphie;
               }
-              rulerObj.graphie = KhanUtilService.KhanUtil.createGraphie($rulerWidget[0]);
-              rulerObj.graphie.init({
+              scope.graphie = KhanUtilService.KhanUtil.createGraphie($rulerWidget[0]);
+              scope.graphie.init({
                 range: range,
                 scale: scale
               });
-              rulerObj.graphie.addMouseLayer();
-              if (rulerObj.ruler) {
-                rulerObj.ruler.remove();
-                delete rulerObj.ruler;
+              scope.graphie.addMouseLayer();
+              if (scope.ruler) {
+                scope.ruler.remove();
+                delete scope.ruler;
               }
-              rulerObj.ruler = rulerObj.graphie.ruler({
+              scope.ruler = scope.graphie.ruler({
                 center: [
                   (range[0][0] + range[0][1]) / 2,
                   (range[1][0] + range[1][1]) / 2
