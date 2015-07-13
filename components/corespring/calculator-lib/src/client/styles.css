@@ -98,7 +98,6 @@
 	margin-bottom: 5px;
 	margin-right: 5px;
 	font-size: 12px;
-	padding: 0;
 }
 
 .scientific .scientific_advanced-pad .advanced:nth-child(4n) {
@@ -152,6 +151,7 @@
 	height: 30px;
 	width: 30px;
 	background-color: #131F85;
+	padding: 0;
 }
 
 .button:active {
@@ -187,7 +187,7 @@
 	background-color: #424C9D;
 	margin-bottom: 5px;
 	margin-right: 5px;
-	font-size: 18px;
+	
 }
 
 .buttons-panel .numbers-pad .number:active {
