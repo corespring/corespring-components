@@ -58,12 +58,12 @@ describe('corespring:multiple-choice-render', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   it('sets model', function() {
     container.elements['1'].setDataAndSession(testModel);
-    expect(scope.question).toNotBe(null);
+    expect(scope.question).not.toBe(null);
     expect(scope.inputType).toBe('radio');
     expect(scope.choices).not.toBe(null);
     expect(scope.choices.length).toBe(3);
