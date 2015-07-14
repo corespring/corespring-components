@@ -70,12 +70,12 @@ describe('corespring:match:render', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   it('sets model', function() {
     container.elements['1'].setDataAndSession(testModel);
-    expect(scope.question).toNotBe(null);
+    expect(scope.question).not.toBe(null);
     expect(scope.inputType).toBe('radiobutton');
   });
 

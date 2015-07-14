@@ -399,7 +399,6 @@ var interactiveGraph = [
         }
 
         function repositionElements(lastMovedElement) {
-          console.log("Repositioning", lastMovedElement);
 
           if (lastMovedElement) {
             while (intersectsWithAny(lastMovedElement)) {
