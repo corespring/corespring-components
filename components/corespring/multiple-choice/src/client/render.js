@@ -138,6 +138,10 @@ var main = [
             choices: {},
             choice: ""
           };
+
+          var incorrectColor = "#2233aa";
+          console.log(document.styleSheets);
+
           updateUi();
         },
 
