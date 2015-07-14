@@ -162,7 +162,7 @@ describe('corespring:match:configure', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   it('component is being registered by the container', function() {
