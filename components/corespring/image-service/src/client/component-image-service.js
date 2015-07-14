@@ -10,7 +10,8 @@ var def = [
     function ComponentImageService() {
 
       function addQueryParamsIfPresent(path) {
-        var href = $document.location.href;
+        var doc = $document[0];
+        var href = doc.location.href;
         return  path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
       }
 

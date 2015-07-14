@@ -15,11 +15,11 @@ describe('component-image-service', function() {
   var mockDocument;
 
   beforeEach(function() {
-    mockDocument = {
+    mockDocument = [{
       location: {
         href: '' 
       }
-    };
+    }];
 
     module(function($provide) {
       $provide.value('$document', mockDocument);
@@ -72,7 +72,7 @@ describe('component-image-service', function() {
         name: 'a.jpg'
       };
 
-      mockDocument.location.href = 'path?a=b&c=d';
+      mockDocument[0].location.href = 'path?a=b&c=d';
 
       service.addFile(file, function(err, url) {
         expect(url).toEqual('a.jpg?a=b&c=d');
