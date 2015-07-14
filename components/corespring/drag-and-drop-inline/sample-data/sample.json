@@ -1,63 +1,58 @@
 {
-  "components": {
-    "1": {
-      "componentType": "corespring-drag-and-drop-inline",
-      "title": "Get a Job",
-      "weight": 4,
-      "correctResponse": {
-        "aa_1": ["c_2"]
-      },
-      "feedback": [
-        {
-          "value": "c_1",
-          "feedback": "Incorrect"
-        },
-        {
-          "value": "c_2",
-          "feedback": "Correct",
-          "notChosenFeedback": "This would have been the correct one."
-        },
-        {
-          "value": "c_3",
-          "feedback": "Incorrect"
-        },
-        {
-          "value": "c_4",
-          "feedback": "Incorrect"
-        }
-      ],
-      "model": {
-        "answerAreas": [
-          {"id": "aa_1"}
-        ],
-        "answerAreaXhtml": "​<span mathjax=''>\\(w^1=15\\)</span>​<answer-area-inline-csdndi id='aa_1'></answer-area-inline-csdndi>",
-        "config": {
-          "orientation": "vertical",
-          "shuffle": false,
-          "isRegressionTest": true
-        },
-        "choices": [
-          {
-            "label": "first",
-            "id": "c_1"
-          },
-          {
-            "label": "second is correct",
-            "id": "c_2"
-          },
-          {
-            "label": "third",
-            "id": "c_3"
-          },
-          {
-            "label": "<span mathjax=''>\\(y=mx+5\\)</span>",
-            "id": "c_4",
-            "moveOnDrag": true
-          }
+  "xhtml" : "<div><div>Complete the equation for slope-intercept form below.</div><div><br /></div>​<div id=\"0\" corespring-drag-and-drop-inline=\"\"></div><br /><div>​<div></div></div></div>",
+  "components" : {
+    "0" : {
+      "weight" : 1,
+      "componentType" : "corespring-drag-and-drop-inline",
+      "title" : "Short Answer - Drag and Drop",
+      "correctResponse" : {
+        "aa_1" : [
+          "c_1"
         ]
-      }
+      },
+      "feedback" : {
+        "correctFeedbackType" : "default",
+        "partialFeedbackType" : "default",
+        "incorrectFeedbackType" : "default"
+      },
+      "model" : {
+        "answerAreaXhtml" : "​<span mathjax=\"\">\\(y=\\)</span>​​<answer-area-inline-csdndi id=\"aa_1\"></answer-area-inline-csdndi>​",
+        "answerAreas" : [
+          {
+            "id" : "aa_1"
+          }
+        ],
+        "choices" : [
+          {
+            "label" : "​<span mathjax=\"\">\\(mx+b\\)</span>​",
+            "labelType" : "text",
+            "id" : "c_1"
+          },
+          {
+            "label" : "​<span mathjax=\"\">\\(mx-b\\)</span>​",
+            "labelType" : "text",
+            "id" : "c_2"
+          },
+          {
+            "label" : "​<span mathjax=\"\">\\(b-mx\\)</span>​",
+            "labelType" : "text",
+            "id" : "c_3"
+          },
+          {
+            "label" : "​<span mathjax=\"\">\\(bx+m\\)</span>​",
+            "labelType" : "text",
+            "id" : "c_4"
+          }
+        ],
+        "config" : {
+          "shuffle" : false,
+          "choiceAreaLabel" : "​​",
+          "choiceAreaLayout" : "horizontal",
+          "choiceAreaPosition" : "below"
+        }
+      },
+      "minimumWidth" : 100
     }
   },
-  "xhtml": "<corespring-drag-and-drop-inline id=\"1\"></corespring-drag-and-drop-inline>",
   "summaryFeedback" : ""
 }

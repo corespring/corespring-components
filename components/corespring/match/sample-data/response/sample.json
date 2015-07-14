@@ -1,0 +1,90 @@
+{
+  "correctness": "correct",
+  "correctClass": "correct",
+  "score": 1,
+  "feedback": "Correct!",
+  "correctnessMatrix": [
+    {
+      "id": "row-1",
+      "matchSet": [
+        {
+          "correctness": "correct",
+          "value": true
+        },
+        {
+          "correctness": "unknown",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "row-2",
+      "matchSet": [
+        {
+          "correctness": "correct",
+          "value": true
+        },
+        {
+          "correctness": "unknown",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "row-3",
+      "matchSet": [
+        {
+          "correctness": "correct",
+          "value": true
+        },
+        {
+          "correctness": "unknown",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "row-4",
+      "matchSet": [
+        {
+          "correctness": "correct",
+          "value": true
+        },
+        {
+          "correctness": "unknown",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "studentResponse": [
+    {
+      "id": "row-1",
+      "matchSet": [
+        true,
+        false
+      ]
+    },
+    {
+      "id": "row-2",
+      "matchSet": [
+        true,
+        false
+      ]
+    },
+    {
+      "id": "row-3",
+      "matchSet": [
+        true,
+        false
+      ]
+    },
+    {
+      "id": "row-4",
+      "matchSet": [
+        true,
+        false
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "title" : "CoreSpring Drag and Drop Categorize Response Schema",
+  "type" : "object",
+  "properties" : {
+    "correctness" : {
+      "enum" : ["correct", "incorrect"],
+      "description" : "A string which represents whether the response is correct or incorrect."
+    },
+    "correctnessClass" : {
+      "enum" : ["correct", "partial", "incorrect"],
+      "description" : "A CSS classname to be applied to the answer"
+    },
+    "score" : {
+      "enum" : [0, 1],
+      "description" : "Represents the score for the interaction."
+    },
+    "feedback" : {
+      "type" : "string",
+      "description" : "Feedback to be rendered as part of the response"
+    },
+    "detailedFeedback" : {
+      "description" : "An object describing detailed feedback for each of category. The object contains fields representing the categories, keyed to feedback objects.",
+      "type" : "object",
+      "patternProperties" : {
+        ".*" : {
+          "oneOf" : [
+            {
+              "type": "object",
+              "properties" : {
+                "correctness" : {
+                  "description" : "An array representing which of the ordered selections was correct.",
+                  "items" : {
+                    "enum" : ["correct", "incorrect"]
+                  }
+                }
+              }
+            },
+            {
+              "type" : "object",
+              "properties" : {
+                "answersExpected" : {
+                  "description" : "This property is present for a category in which a user selected no answers. It describes whether there were expected, correct answers in the category or not.",
+                  "type" : "boolean"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "studentResponse" : {
+      "description" : "A keyed object of categories to arrays of choices that were selected by the student.",
+      "type" : "object",
+      "patternProperties" : {
+        ".*" : {
+          "type" : "array",
+          "description" : "An ordered array of choice identifiers added to the category by the student.",
+          "items" : {
+            "description" : "The identifier for the choice added to the category by the student.",
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
