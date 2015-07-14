@@ -14,13 +14,18 @@
 	background-color: white;
   .cs-calculator-toggle {
     cursor: pointer;
-    background: url('/client/icon/corespring-calculator') no-repeat center center;
-    height: 30px;
-    width: 30px;        
-    -webkit-transition: opacity 0.3s ease-out;
-    transition: opacity 0.3s ease-out;
+    background: data-uri('../../public/icon-calculator-black.png') no-repeat center transparent;
+    height: 34px;
+    width: 34px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-clip: padding-box;
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
     &.visible {
-      opacity: 0.5;    
+      background-color: #ccc;
+      background-image: data-uri('../../public/icon-calculator-white.png');
+      border-color: #888;
     }
   }
 }

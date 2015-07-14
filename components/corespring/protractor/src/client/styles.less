@@ -4,30 +4,19 @@
     vertical-align: middle;
     .cs-protractor-toggle {
         cursor: pointer;
-        background: url('/client/icon/corespring-protractor') no-repeat center center;
-        height: 30px;
-        width: 30px;        
-        -webkit-transition: opacity 0.3s ease-out;
-        transition: opacity 0.3s ease-out;
+        background: data-uri('../../public/icon-protractor-black.png') no-repeat center transparent;
+        height: 34px;
+        width: 34px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        background-clip: padding-box;
+        -webkit-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
         position: relative;
         &.visible {
-            &:after {
-                display: block;
-                content: "\00d7";
-                opacity: 0.7;
-                position: absolute;
-                top: -5px;
-                right: -10px;
-                background-color: @warning-color;
-                color: #fff;
-                font-size: 15px;
-                border-radius: 100%;
-                background-clip: padding-box;
-                width: 20px;
-                height: 20px;
-                text-align: center;
-                line-height: 18px;
-            }
+            background-color: #ccc;
+            background-image: data-uri('../../public/icon-protractor-white.png');
+            border-color: #888;
         }
     }
     .cs-protractor-widget {
