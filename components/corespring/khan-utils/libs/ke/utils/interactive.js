@@ -3638,17 +3638,17 @@
 
         // Draw the double-headed arrow thing that shows users where to click and drag to rotate
         var arrow = graph.rapha.path(
-            " M" + arrowHelper(180, 6) +
-            " L" + arrowHelper(180, 2) +
-            " L" + arrowHelper(183, 10) +
-            " L" + arrowHelper(180, 18) +
-            " L" + arrowHelper(180, 14) +
-            " A" + (graph.scaleVector(r)[0] + 10) + "," + (graph.scaleVector(r)[1] + 10) + ",0,0,1," + arrowHelper(170, 14) +
-            " L" + arrowHelper(170, 18) +
-            " L" + arrowHelper(167, 10) +
-            " L" + arrowHelper(170, 2) +
-            " L" + arrowHelper(170, 6) +
-            " A" + (graph.scaleVector(r)[0] + 10) + "," + (graph.scaleVector(r)[1] + 10) + ",0,0,0," + arrowHelper(180, 6) +
+            " M" + arrowHelper(180, 4) +
+            " L" + arrowHelper(180, 0) +
+            " L" + arrowHelper(183, 8) +
+            " L" + arrowHelper(180, 16) +
+            " L" + arrowHelper(180, 12) +
+            " A" + (graph.scaleVector(r)[0] + 10) + "," + (graph.scaleVector(r)[1] + 10) + ",0,0,1," + arrowHelper(170, 12) +
+            " L" + arrowHelper(170, 16) +
+            " L" + arrowHelper(167, 8) +
+            " L" + arrowHelper(170, 0) +
+            " L" + arrowHelper(170, 4) +
+            " A" + (graph.scaleVector(r)[0] + 10) + "," + (graph.scaleVector(r)[1] + 10) + ",0,0,0," + arrowHelper(180, 4) +
             " Z"
         ).attr({
             "stroke": null,
@@ -3666,8 +3666,8 @@
         // Use a movablePoint for rotation
         this.rotateHandle = graph.addMovablePoint({
             coord: [
-                Math.sin(275 * Math.PI / 180) * (r + 0.5) + this.cx,
-                Math.cos(275 * Math.PI / 180) * (r + 0.5) + this.cy
+                Math.sin(275 * Math.PI / 180) * (r) + this.cx,
+                Math.cos(275 * Math.PI / 180) * (r) + this.cy
             ],
             onMove: function(x, y) {
                 var angle = Math.atan2(pro.centerPoint.coord[1] - y, pro.centerPoint.coord[0] - x) * 180 / Math.PI;
@@ -3676,7 +3676,7 @@
         });
 
         // Add a constraint so the point moves in a circle
-        this.rotateHandle.constraints.fixedDistance.dist = r + 0.5;
+        this.rotateHandle.constraints.fixedDistance.dist = r;
         this.rotateHandle.constraints.fixedDistance.point = this.centerPoint;
 
         // Remove the default dot added by the movablePoint since we have our double-arrow thing
