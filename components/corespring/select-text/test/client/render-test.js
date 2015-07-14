@@ -41,8 +41,8 @@ describe('corespring:select-text:render', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
-    expect(element).toNotBe(undefined);
+    expect(element).not.toBe(null);
+    expect(element).not.toBe(undefined);
   });
 
   describe('isAnswerEmpty', function() {
