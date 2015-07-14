@@ -113,7 +113,7 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
 
 
   it('component is being registered by the container', function() {
-    expect(container.elements['1']).toNotBe(undefined);
+    expect(container.elements['1']).not.toBe(undefined);
     expect(container.elements['2']).toBeUndefined();
   });
 

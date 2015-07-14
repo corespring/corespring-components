@@ -1,17 +1,24 @@
 /* global com */
 var def = [
   '$log',
+  '$document',
   '$http',
   'ImageUtils',
   '$timeout',
-  function($log, $http, ImageUtils,$timeout) {
+  function($log, $document, $http, ImageUtils,$timeout) {
 
     function ComponentImageService() {
 
       function addQueryParamsIfPresent(path) {
-        var href = document.location.href;
+        var href = $document.location.href;
         return  path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
       }
+
+      function replaceHashIfPresent(url){
+        return url.replace(/#/g, '_');
+      }
+      
+      this.errorMessage = '<strong>Upload error</strong><br/>Your image was not uploaded. Please try again.';
 
       this.deleteFile = function(url) {
         $http['delete'](addQueryParamsIfPresent(url));
@@ -19,6 +26,7 @@ var def = [
 
       this.addFile = function(file, onComplete, onProgress) {
         var url = addQueryParamsIfPresent('' + file.name);
+        url = replaceHashIfPresent(url);
 
         if (ImageUtils.bytesToKb(file.size) > 500) {
           $timeout(function() {
@@ -38,8 +46,8 @@ var def = [
           },
           onUploadFailed: function() {
             $log.info('failed', arguments);
-            onComplete('<strong>Upload error</strong><br/>Your image was not uploaded. Please try again.');
-          }
+            onComplete(this.errorMessage);
+          }.bind(this)
         };
 
         var reader = new FileReader();
