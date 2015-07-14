@@ -79,17 +79,16 @@ describe('component-image-service', function() {
         expect(err).toEqual(null);
         done();
       }, jasmine.createSpy('onProgress'));
-
     });
 
-    it('calls onComplete with a url that has _ instead of #', function(done) {
-
+    it('calls onComplete with a url that has been uri encoded', function(done) {
+      
       var file = {
-        name: 'a#b.jpg'
+        name: 'a#b?c d.jpg'
       };
 
       service.addFile(file, function(err, url) {
-        expect(url).toEqual('a_b.jpg');
+        expect(url).toEqual('a%23b%3Fc%20d.jpg');
         expect(err).toEqual(null);
         done();
       }, jasmine.createSpy('onProgress'));

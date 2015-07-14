@@ -14,10 +14,6 @@ var def = [
         var href = doc.location.href;
         return  path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
       }
-
-      function replaceHashIfPresent(url){
-        return url.replace(/#/g, '_');
-      }
       
       this.errorMessage = '<strong>Upload error</strong><br/>Your image was not uploaded. Please try again.';
 
@@ -26,8 +22,7 @@ var def = [
       };
 
       this.addFile = function(file, onComplete, onProgress) {
-        var url = addQueryParamsIfPresent('' + file.name);
-        url = replaceHashIfPresent(url);
+        var url = addQueryParamsIfPresent('' + encodeURIComponent(file.name));
 
         if (ImageUtils.bytesToKb(file.size) > 500) {
           $timeout(function() {
