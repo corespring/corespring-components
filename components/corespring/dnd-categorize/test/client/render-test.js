@@ -56,6 +56,9 @@ describe('corespring:dnd-categorize:render', function() {
   });
 
   beforeEach(inject(function($compile, $rootScope) {
+
+    $.fn.draggable = jasmine.createSpy('draggable');
+
     container = new MockComponentRegister();
 
     $rootScope.$on('registerComponent', function(event, id, obj) {
@@ -71,7 +74,7 @@ describe('corespring:dnd-categorize:render', function() {
 
   it('constructs', function() {
     expect(element).toBeDefined();
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   function setModelAndDigest() {
