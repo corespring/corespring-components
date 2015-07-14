@@ -6,9 +6,14 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
       viewport: '@'
     },
     link: function(scope, element, attrs) {
+      scope.firstShow = true;
+      scope.originalContent = undefined;
       scope.$watch('response', function(response) {
         if (_.isUndefined(response)) {
           $(element).popover('destroy');
+          scope.originalContent = undefined;
+          scope.firstShow = true;
+          $(element).find('.math-prerender').html('');
         } else {
           var title, popoverClass;
           var content = typeof response.feedback === "object" ? response.feedback.message : response.feedback;
@@ -28,8 +33,11 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
             popoverClass = 'correct';
           }
 
-          var firstShow = true;
-
+          if ($(element).find('.math-prerender').length == 0) {
+            $(element).append('<div class="math-prerender" style="display: none">' + content + '</div>');
+          } else {
+            $(element).find('.math-prerender').html(content);
+          }
           $(element).popover('destroy');
           $(element).popover({
               title: title,
@@ -40,7 +48,9 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
                 '  <div class="popover-content"></div>',
                 '</div>'
               ].join('\n'),
-              content: content,
+              content: function() {
+                return scope.originalContent || $(element).find('.math-prerender').html();
+              },
               placement: function(popover, sender) {
                 var playerElement = $(element).parents('.corespring-player');
                 var playerTop = playerElement.offset().top;
@@ -58,23 +68,25 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
                   if ($popover.offset().left < $viewport.offset().left) {
                     var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left);
                     $popover.css('left', '+=' + deltaLeft + 'px');
-                    if (firstShow) {
+                    if (scope.firstShow) {
                       $('.arrow', $popover).css('left', "-=" + deltaLeft + 'px');
                     }
                   }
                   if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width()) {
                     var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width());
                     $popover.css('left', '-=' + deltaRight + 'px');
-                    if (firstShow) {
+                    if (scope.firstShow) {
                       $('.arrow', $popover).css('left', "+=" + deltaRight + 'px');
                     }
                   }
-                  firstShow = false;
+                  scope.firstShow = false;
                 }
               });
-
             }).on('shown.bs.popover', function() {
-              MathJaxService.parseDomForMath(0);
+              scope.originalContent = $(element).find('.math-prerender').html();
+              $(element).find('.math-prerender').html('');
+            }).on('hidden.bs.popover', function() {
+              $(element).find('.math-prerender').html(scope.originalContent);
             });
 
           $('html').click(function(e) {
