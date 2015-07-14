@@ -8,6 +8,7 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
     link: function(scope, element, attrs) {
       scope.firstShow = true;
       scope.originalContent = undefined;
+      $(element).append('<div class="math-prerender" style="display: none"></div>');
       scope.$watch('response', function(response) {
         if (_.isUndefined(response)) {
           $(element).popover('destroy');
@@ -33,16 +34,13 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
             popoverClass = 'correct';
           }
 
-          if ($(element).find('.math-prerender').length == 0) {
-            $(element).append('<div class="math-prerender" style="display: none">' + content + '</div>');
-          } else {
-            $(element).find('.math-prerender').html(content);
-          }
+          $(element).find('.math-prerender').html(content);
+          MathJaxService.parseDomForMath(0, $(element).find('.math-prerender')[0]);
           $(element).popover('destroy');
           $(element).popover({
               title: title,
               template: [
-                  '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip">',
+                '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip">',
                 '  <div class="arrow"></div>',
                 '  <h3 class="popover-title"></h3>',
                 '  <div class="popover-content"></div>',
@@ -57,7 +55,8 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
                 var elementTop = $(element).offset().top;
                 return (elementTop - playerTop > 100) ? "top" : "bottom";
               },
-              html: true}
+              html: true
+            }
           ).on('show.bs.popover', function(event) {
               $timeout(function() {
                 scope.viewport = scope.viewport || $(element).parents('.player-body');
