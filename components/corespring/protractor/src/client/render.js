@@ -5,6 +5,8 @@ var main = [
   function($sce, $timeout, KhanUtilService) {
     var link = function(scope, element, attrs) {
       return function(scope, element, attrs) {
+        scope.graphie = null;
+        scope.protractor = null;
         scope.containerBridge = {
           setDataAndSession: function(dataAndSession) {
             scope.session = dataAndSession.session || {};
@@ -17,21 +19,32 @@ var main = [
             // The $timeout is required due to player size changes during render
             $timeout(function() {
               if (player) {
-                defaultPlayerDimensions[0] = $player.width();
-                defaultPlayerDimensions[1] = $player.height();
+                var playerWidth = $player.width(),
+                    playerHeight = $player.height();
+                defaultPlayerDimensions[0] = playerWidth > defaultPlayerDimensions[0] ? playerWidth : defaultPlayerDimensions[0];
+                defaultPlayerDimensions[1] = playerHeight > defaultPlayerDimensions[1] ? playerHeight : defaultPlayerDimensions[1];
               }
-              var graphie = KhanUtilService.KhanUtil.createGraphie(element.find('.cs-protractor-widget')[0]),
-                  scale = [40, 40],
-                  range = [
-                    [0, defaultPlayerDimensions[0] / scale[0]],
-                    [0, defaultPlayerDimensions[1] / scale[1]]
-                  ];
-              graphie.init({
+              var scale = [40, 40],
+              range = [
+                [0, defaultPlayerDimensions[0] / scale[0]],
+                [0, defaultPlayerDimensions[1] / scale[1]]
+              ];
+              var $protractorWidget = element.find('.cs-protractor-widget');
+              if (scope.graphie) {
+                $protractorWidget.empty();
+                delete scope.graphie;
+              }
+              scope.graphie = KhanUtilService.KhanUtil.createGraphie($protractorWidget[0]);
+              scope.graphie.init({
                 range: range,
                 scale: scale
               });
-              graphie.addMouseLayer();
-              var protractor = graphie.protractor([6, 4], arrowFillColor);
+              scope.graphie.addMouseLayer();
+              if (scope.protractor) {
+                scope.protractor.remove();
+                delete scope.protractor;
+              }
+              scope.protractor = scope.graphie.protractor([6, 4], arrowFillColor);
             }, 100);
           },
           getSession: function() {return {};},
