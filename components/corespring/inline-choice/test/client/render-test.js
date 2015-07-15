@@ -75,6 +75,19 @@ describe('corespring:inline-choice', function() {
     expect(element).not.toBe(null);
   });
 
+  it('shuffles if shuffle is true', function() {
+    spyOn(_, 'shuffle');
+    container.elements['1'].setDataAndSession(testModel);
+    expect(_.shuffle).toHaveBeenCalled();
+  });
+
+  it('doesnt shuffle if shuffle is false', function() {
+    spyOn(_, 'shuffle');
+    testModel.data.model.config.shuffle = false;
+    container.elements['1'].setDataAndSession(testModel);
+    expect(_.shuffle).not.toHaveBeenCalled();
+  });
+
   describe('inline-choice render', function() {
     it('sets the session choice correctly', function() {
 
