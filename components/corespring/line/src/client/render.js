@@ -149,7 +149,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
       };
 
       scope.startOver = function() {
-        if (!scope.locked) {
+        //if (!scope.locked) {
           var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
           scope.points = {};
           if (_.isArray(initialValues)) {
@@ -170,7 +170,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
             };
           }
 
-        }
+        //}
       };
 
       scope.inputStyle = {
