@@ -260,7 +260,9 @@ var main = [
 
         scope.$watch('correctResponseView.responseModel', debounce(updateCorrectResponse), true);
 
-        scope.$watch('fullModel.model.config', debounce(updateNumberLineOptions), true);
+        scope.$watch(function() {
+          return _.omit(scope.fullModel.model.config, 'initialElements');
+        }, debounce(updateNumberLineOptions), true);
 
         scope.$watch('sampleNumberLine.model.config', debounce(updateTickLabels), true);
 
