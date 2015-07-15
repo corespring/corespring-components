@@ -3943,7 +3943,7 @@
                     text
                 );
                 label.attr({
-                    "font-family": "KaTeX_Main",
+                    "font-family": "serif",
                     "font-size": "12px",
                     "color": "#444"
                 });

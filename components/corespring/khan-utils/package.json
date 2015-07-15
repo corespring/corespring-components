@@ -6,7 +6,6 @@
     "client": {
       "khan-utils": [
         "khan-adapter.js",
-        "katex/katex.js",
         "ke/utils/knumber.js",
         "ke/utils/kvector.js",
         "ke/utils/kpoint.js",
@@ -24,8 +23,7 @@
         "ke/third_party/raphael.js",
         "ke/utils/graphie.js",
         "ke/third_party/jquery.mobile.vmouse.js",
-        "ke/utils/interactive.js",
-        "ke/utils/tex.js"
+        "ke/utils/interactive.js"
       ]
     }
   }
