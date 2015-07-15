@@ -63,7 +63,7 @@ exports.createOutcome = function(question, answer, settings) {
     if (!isCorrectForm) {
       response.outcome.push("lineEquationMatch");
     }
-    var defaults = _.extend(fb.defaults, getDefaultFeedback(correctResponse.equation));
+    var defaults = _.extend({}, fb.defaults, getDefaultFeedback(correctResponse.equation));
     response.feedback = fb.makeFeedback(question.feedback, response.correctness, defaults);
     response.comments = question.comments;
   }
