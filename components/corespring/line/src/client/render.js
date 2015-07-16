@@ -149,28 +149,25 @@ var main = ['$compile', '$rootScope', "LineUtils",
       };
 
       scope.startOver = function() {
-        //if (!scope.locked) {
-          var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
-          scope.points = {};
-          if (_.isArray(initialValues)) {
+        var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
+        scope.points = {};
+        if (_.isArray(initialValues)) {
             var pointA = initialValues[0];
             var pointB = initialValues[1];
             scope.points = {
-              A: {
-                x: pointA[0],
-                y: pointA[1],
-                isSet: true,
-                isVisible: false
-              },
-              B: {
-                x: pointB[0],
-                y: pointB[1],
-                isSet: true
-              }
+                A: {
+                    x: pointA[0],
+                    y: pointA[1],
+                    isSet: true,
+                    isVisible: false
+                },
+                B: {
+                    x: pointB[0],
+                    y: pointB[1],
+                    isSet: true
+                }
             };
-          }
-
-        //}
+        }
       };
 
       scope.inputStyle = {
