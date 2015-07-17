@@ -188,7 +188,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
           tickLabelFrequency: config.tickLabelFrequency,
           showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
           showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
-          showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : !config.exhibitOnly,
+          showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : true,
           pointLabels: "letters"
         };
       };
