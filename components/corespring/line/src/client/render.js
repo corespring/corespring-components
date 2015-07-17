@@ -189,7 +189,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
           showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
           showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
           showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : true,
-          pointLabels: "letters"
+          pointLabels: !!config.showInputs ? "letters" : "none"
         };
       };
 
