@@ -43,6 +43,7 @@
       "choiceAreaLayout": "vertical",
       "choiceAreaLabel": "",
       "answerAreaLabel": "",
+      "choiceAreaPosition": "above",
       "placementType": "inPlace"
     }
   },

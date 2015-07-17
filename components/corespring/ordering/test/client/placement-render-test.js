@@ -78,7 +78,8 @@ describe('corespring:placement ordering', function() {
         data: {
           model: {
             config: {
-              choiceAreaLayout: "horizontal"
+              choiceAreaLayout: "horizontal",
+              choiceAreaPosition: "above"
             }
           }
         }
@@ -239,6 +240,22 @@ describe('corespring:placement ordering', function() {
     it('ordering numbers are hidden', function() {
       setModelAndDigest(horizontalModel);
       expect($(element).find('.ordering-number').length).toBe(0);
+    });
+
+    it('should display choices area above answer area when above is selected as choices area position', function() {
+      setModelAndDigest(horizontalModel);
+      
+      var answer_area_prev = $(element).find('.placement-areas .answer-area').prev();
+      expect(answer_area_prev.hasClass('choice-area') && !answer_area_prev.hasClass('see-answer-area')).toBeTruthy();
+    });
+
+    it('should display choices area below answer area when below is selected as choices area position', function() {
+      var horizontalModelBelow = _.cloneDeep(horizontalModel);
+      horizontalModelBelow.data.model.config.choiceAreaPosition = "below";
+      setModelAndDigest(horizontalModelBelow);
+      
+      var answer_area_next = $(element).find('.placement-areas .answer-area').next();
+      expect(answer_area_next.hasClass('choice-area') && !answer_area_next.hasClass('see-answer-area')).toBeTruthy();
     });
   });
 

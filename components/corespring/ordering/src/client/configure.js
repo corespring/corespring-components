@@ -123,6 +123,13 @@ var main = [
         '            ng-options="layout.value as layout.name for layout in layouts"></select>',
         '      </div>',
         '    </div>',
+        '    <div class="row display-row" ng-show="model.config.placementType == \'placement\' && model.config.choiceAreaLayout === \'horizontal\'">',
+        '      <div class="col-xs-12">',
+        '        <label class="control-label">Choices position:</label>',
+        '        <select ng-model="model.config.choiceAreaPosition" class="form-control"',
+        '            ng-options="position.value as position.name for position in horizontal_choices_position"></select>',
+        '      </div>',
+        '    </div>',
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
@@ -178,6 +185,11 @@ var main = [
           $scope.layouts = [
             {name: "Horizontal", value: "horizontal"},
             {name: "Vertical", value: "vertical"}
+          ];
+
+          $scope.horizontal_choices_position = [
+            {name: "Above", value: "above"},
+            {name: "Below", value: "below"}
           ];
 
           $scope.targetDragging = false;
