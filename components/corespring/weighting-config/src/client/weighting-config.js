@@ -29,7 +29,6 @@ function WeightingConfig(LogFactory) {
 
     scope.$watch('categories.length', function(newValue) {
       scope.numberOfCategories = newValue || 0;
-      updateWeightingModel();
     });
 
     //--------------------------------------------------------------
@@ -68,23 +67,6 @@ function WeightingConfig(LogFactory) {
       if (scope.numberOfCategories > 1) {
         scope.allowWeighting = !scope.allowWeighting;
       }
-    }
-
-    function updateWeightingModel() {
-      if (!scope.categories) {
-        return;
-      }
-
-      var weighting = scope.model ? _.clone(scope.model) : [];
-      scope.model = _.map(scope.categories, function(cat) {
-        return _.find(weighting, {
-          id: cat.id
-        }) || {
-          id: cat.id,
-          weight: 1
-        };
-      });
-
     }
 
     function getPercentage(weight) {

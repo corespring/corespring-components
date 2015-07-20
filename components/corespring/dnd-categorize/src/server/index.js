@@ -28,12 +28,38 @@ function createOutcome(question, answer, settings) {
       //1 * 10% + 1 * 90% = 100%
       return 1;
     }
-    if(isPartiallyCorrect && question.allowPartialScoring){
-      evaluatePartialScoringSections(question, answer);
-      return calcMultiSectionPartialScoring(question) / 100;
+    if (isPartiallyCorrect && (question.allowPartialScoring || question.allowWeighting)) {
+      return calcWeightedScore(question, answer);
     }
     return 0;
   }
+}
+
+function calcWeightedScore(question, answers) {
+  var totalWeight = 0;
+  var sumOfWeightedScores = _.reduce(question.model.categories, function(acc, cat) {
+    var catId = cat.id;
+    var weight = getWeight(question, catId);
+    totalWeight += weight;
+    var numExpectedAnswers = question.correctResponse[catId].length;
+    var numActualAnswers = answers[catId].length;
+    var numCorrectAnswers = countCorrectAnswersInCategory(question.correctResponse[catId], answers[catId]);
+    var isCorrect = numExpectedAnswers === numActualAnswers && numExpectedAnswers == numCorrectAnswers;
+    var isPartiallyCorrect = !isCorrect && numCorrectAnswers > 0;
+    var score = 0;
+    if (isCorrect) {
+      score = 100;
+    } else if (isPartiallyCorrect) {
+      var section = _.find(question.partialScoring.sections, {
+        catId: catId
+      });
+      if(section) {
+        score = calcPartialScoring(section.partialScoring, numCorrectAnswers);
+      }
+    }
+    return acc + score * weight;
+  }, 0);
+  return sumOfWeightedScores / totalWeight / 100;
 }
 
 function countAnswers(answers) {
@@ -94,66 +120,14 @@ function createDetailedFeedback(question, answers) {
   }
 }
 
-//Update the sections with the results & weight per section
-function evaluatePartialScoringSections(question, answer) {
-  answer = answer || {};
-  _.forEach(question.partialScoring.sections, function(section) {
-    var catId = section.catId;
-    var answers = answer[catId] || [];
-    var correctResponses = question.correctResponse[catId];
-
-    section.weight = getWeight(question, catId);
-    section.numAnswers = answers.length;
-    section.numberOfCorrectResponses = correctResponses.length;
-    section.numAnsweredCorrectly = countCorrectAnswersInCategory(correctResponses, answers);
-  });
-}
-
-function getWeight(question, catId){
-  if(!question.allowWeighting){
+function getWeight(question, catId) {
+  if (!question.allowWeighting) {
     return 1;
   }
 
   var catWeight = question.weighting[catId] * 1;
   catWeight = isNaN(catWeight) ? 1 : catWeight;
   return catWeight;
-}
-
-/**
- * Calculate the score of every section and return the weighted average
- * If weighting is not allowed or equally distributed, the result will
- * be the same as the normal partial scoring. The simplest case ist
- * weight = 1 for all sections and so totalWeight = number of sections
- * @returns {number}
- */
-function calcMultiSectionPartialScoring(question) {
-  var sections = question.partialScoring.sections;
-  var numberOfSections = sections.length;
-  if (numberOfSections === 0) {
-    return 0;
-  }
-  var totalWeight = _.reduce(question.model.categories, function(acc,cat){
-    var weight = getWeight(question, cat.id);
-    return acc + weight;
-  }, 0);
-  var sumOfScores = _.reduce(sections, function(acc, section) {
-    return acc + calcSectionScore(section);
-  }, 0);
-  return sumOfScores / totalWeight;
-}
-
-function calcSectionScore(section) {
-  var isCorrect = section.numAnswers === section.numAnsweredCorrectly &&
-    section.numAnsweredCorrectly === section.numberOfCorrectResponses;
-  var isPartiallyCorrect = !isCorrect && section.numAnsweredCorrectly > 0;
-  var score = 0;
-  if (isCorrect) {
-    score = 100;
-  } else if (isPartiallyCorrect) {
-    score = calcPartialScoring(section.partialScoring, section.numAnsweredCorrectly);
-  }
-  var weight = isNaN(section.weight) ? 0 : section.weight;
-  return score * weight;
 }
 
 function calcPartialScoring(partialScoring, numAnsweredCorrectly) {
