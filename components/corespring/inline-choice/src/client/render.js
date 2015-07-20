@@ -19,12 +19,6 @@ link = function($sce, $timeout) {
       return _.union(ordered, missing);
     }
 
-    function stashOrder(choices) {
-      return _.map(choices, function(c) {
-        return c.value;
-      });
-    }
-
     function clearFeedback(choices) {
       _(choices).each(function(c) {
         delete c.feedback;
@@ -56,16 +50,11 @@ link = function($sce, $timeout) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
-        var stash = scope.session.stash = scope.session.stash || {};
         var model = scope.question;
         var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
 
-        if (stash.shuffledOrder && shuffle) {
-          scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
-        } else if (shuffle) {
+        if (shuffle) {
           scope.choices = layoutChoices(model.choices);
-          stash.shuffledOrder = stashOrder(scope.choices);
-          scope.$emit('saveStash', attrs.id, stash);
         } else {
           scope.choices = _.cloneDeep(scope.question.choices);
         }
@@ -85,8 +74,7 @@ link = function($sce, $timeout) {
         var answer = scope.selected ? scope.selected.value : null;
 
         return {
-          answers: answer,
-          stash: scope.session.stash
+          answers: answer
         };
       },
 
@@ -109,6 +97,12 @@ link = function($sce, $timeout) {
       reset: function() {
         scope.selected = undefined;
         scope.response = undefined;
+
+        var model = scope.question;
+        var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
+        if (shuffle) {
+          scope.choices = layoutChoices(model.choices);
+        }
         clearFeedback(scope.choices);
       },
 
