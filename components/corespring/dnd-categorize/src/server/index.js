@@ -44,7 +44,7 @@ function calcWeightedScore(question, answers) {
     var numExpectedAnswers = question.correctResponse[catId].length;
     var numActualAnswers = answers[catId].length;
     var numCorrectAnswers = countCorrectAnswersInCategory(question.correctResponse[catId], answers[catId]);
-    var isCorrect = numExpectedAnswers === numActualAnswers && numExpectedAnswers == numCorrectAnswers;
+    var isCorrect = numExpectedAnswers === numActualAnswers && numExpectedAnswers === numCorrectAnswers;
     var isPartiallyCorrect = !isCorrect && numCorrectAnswers > 0;
     var score = 0;
     if (isCorrect) {
