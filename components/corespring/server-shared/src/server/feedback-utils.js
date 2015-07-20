@@ -54,7 +54,7 @@ function makeFeedback(feedback, correctness, defaults) {
 }
 
 /**
- * Quite a few comps seem to have a similar if not the same
+ * Quite a few comps seem to have a similar, if not the same
  * createOutcome method apart from where they get the numbers
  * from. By passing the numbers in, we are able to factor
  * out the common behaviour into the method below.
@@ -65,6 +65,7 @@ function makeFeedback(feedback, correctness, defaults) {
  * @param numAnswers
  * @param numAnsweredCorrectly
  * @param totalCorrectAnswers
+ * @param scoreFn optional function to override the default score calculation
  * @returns {*}
  */
 function defaultCreateOutcome(
@@ -73,7 +74,8 @@ function defaultCreateOutcome(
   settings,
   numAnswers,
   numAnsweredCorrectly,
-  totalCorrectAnswers
+  totalCorrectAnswers,
+  scoreFn
 ) {
 
   settings = settings || {};
@@ -89,12 +91,7 @@ function defaultCreateOutcome(
   var isCorrect = totalCorrectAnswers === numAnsweredCorrectly && totalCorrectAnswers === numAnswers;
   var isPartiallyCorrect = !isCorrect && numAnsweredCorrectly > 0;
 
-  var score = 0;
-  if (isCorrect) {
-    score = 1;
-  } else if (isPartiallyCorrect && question.allowPartialScoring) {
-    score = calculatePartialScoring() / 100;
-  }
+  var score = (scoreFn || defaultScoreFn)(isCorrect, isPartiallyCorrect);
 
   var response = makeResponse(
     isCorrect ? 'correct' : 'incorrect',
@@ -125,45 +122,14 @@ function defaultCreateOutcome(
     return response;
   }
 
-  function calculatePartialScoring() {
-    return isMultiSectionPartialScoring() ? calcMultiSectionPartialScoring() : calcSimplePartialScoring();
-  }
-
-  function isMultiSectionPartialScoring(){
-    return question.partialScoring && _.isArray(question.partialScoring.sections);
-  }
-
-  /**
-   * Calculate the score of every section and return the average
-   * @returns {number}
-   */
-  function calcMultiSectionPartialScoring(){
-    var numberOfSections = question.partialScoring.sections.length;
-    if(numberOfSections === 0){
-      return 0;
+  function defaultScoreFn(isCorrect, isPartiallyCorrect){
+    if (isCorrect) {
+      return 1;
     }
-    var sumOfScores = _.reduce(question.partialScoring.sections, function(acc, section){
-      return acc + calcSectionScore(section);
-    }, 0);
-    return sumOfScores / numberOfSections;
-
-    function calcSectionScore(section){
-      var isCorrect = section.numAnswers === section.numAnsweredCorrectly &&
-        section.numAnsweredCorrectly === section.numberOfCorrectResponses;
-      var isPartiallyCorrect = !isCorrect && section.numAnsweredCorrectly > 0;
-      var score = 0;
-      if(isCorrect){
-        score = 100;
-      }
-      else if(isPartiallyCorrect){
-        score = calcPartialScoring(section.partialScoring, section.numAnsweredCorrectly);
-      }
-      return score;
+    if (isPartiallyCorrect && question.allowPartialScoring) {
+      return calcPartialScoring(question.partialScoring, numAnsweredCorrectly) / 100;
     }
-  }
-
-  function calcSimplePartialScoring(){
-    return calcPartialScoring(question.partialScoring, numAnsweredCorrectly);
+    return 0;
   }
 
   function calcPartialScoring(partialScoring, numAnsweredCorrectly) {
