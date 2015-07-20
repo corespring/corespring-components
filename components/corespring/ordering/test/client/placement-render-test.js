@@ -245,8 +245,8 @@ describe('corespring:placement ordering', function() {
     it('should display choices area above answer area when above is selected as choices area position', function() {
       setModelAndDigest(horizontalModel);
       
-      var answer_area_prev = $(element).find('.placement-areas .answer-area').prev();
-      expect(answer_area_prev.hasClass('choice-area') && !answer_area_prev.hasClass('see-answer-area')).toBeTruthy();
+      var answerAreaPrev = $(element).find('.placement-areas .answer-area').prev();
+      expect(answerAreaPrev.hasClass('choice-area') && !answerAreaPrev.hasClass('see-answer-area')).toBeTruthy();
     });
 
     it('should display choices area below answer area when below is selected as choices area position', function() {
@@ -254,8 +254,8 @@ describe('corespring:placement ordering', function() {
       horizontalModelBelow.data.model.config.choiceAreaPosition = "below";
       setModelAndDigest(horizontalModelBelow);
       
-      var answer_area_next = $(element).find('.placement-areas .answer-area').next();
-      expect(answer_area_next.hasClass('choice-area') && !answer_area_next.hasClass('see-answer-area')).toBeTruthy();
+      var answerAreaNext = $(element).find('.placement-areas .answer-area').next();
+      expect(answerAreaNext.hasClass('choice-area') && !answerAreaNext.hasClass('see-answer-area')).toBeTruthy();
     });
   });
 

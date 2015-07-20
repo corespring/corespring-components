@@ -127,7 +127,7 @@ var main = [
         '      <div class="col-xs-12">',
         '        <label class="control-label">Choices position:</label>',
         '        <select ng-model="model.config.choiceAreaPosition" class="form-control"',
-        '            ng-options="position.value as position.name for position in horizontal_choices_position"></select>',
+        '            ng-options="position.value as position.name for position in horizontalChoicesPosition"></select>',
         '      </div>',
         '    </div>',
         '  </div>',
@@ -187,7 +187,7 @@ var main = [
             {name: "Vertical", value: "vertical"}
           ];
 
-          $scope.horizontal_choices_position = [
+          $scope.horizontalChoicesPosition = [
             {name: "Above", value: "above"},
             {name: "Below", value: "below"}
           ];
