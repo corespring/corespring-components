@@ -13,21 +13,59 @@ describe('dnd-categorize', function() {
 
   var utils = null;
 
-  function question(categories, correctResponse) {
-    return {
-      correctResponse: _.cloneDeep(correctResponse),
+  function Question() {
+    var value = {
+      correctResponse: {},
+      allowPartialScoring: false,
       partialScoring: {
         sections: []
       },
+      allowWeighting: false,
+      weighting: {},
       model: {
-        categories: _.map(categories, function(id) {
-          return {
-            id: id,
-            label: 'label-' + id
-          };
-        })
+        categories: []
       }
     };
+
+    this.withCategories = function(categories) {
+      value.model.categories = _.map(categories, function(id) {
+        return {
+          id: id,
+          label: 'label-' + id
+        };
+      });
+      return this;
+    };
+
+    this.withCorrectResponse = function(correctResponse) {
+      value.correctResponse = _.cloneDeep(correctResponse);
+      return this;
+    };
+
+    this.withPartialScoring = function(allow, sections) {
+      value.allowPartialScoring = allow;
+      value.partialScoring = {
+        sections: sections
+      };
+      return this;
+    };
+
+    this.withWeighting = function(allow, weighting) {
+      value.allowWeighting = allow;
+      value.weighting = weighting;
+      return this;
+    };
+
+    this.getValue = function() {
+      return _.cloneDeep(value);
+    };
+  }
+
+  function question(categories, correctResponse) {
+    return new Question()
+      .withCategories(categories)
+      .withCorrectResponse(correctResponse)
+      .getValue();
   }
 
   function partialScoring(sections) {
@@ -341,7 +379,7 @@ describe('dnd-categorize', function() {
         outcome({
           correctness: 'incorrect',
           correctClass: 'partial',
-          score:0.1,
+          score: 0.1,
           correctResponse: {
             aa_1: ['c_1', 'c_2']
           },
@@ -379,14 +417,14 @@ describe('dnd-categorize', function() {
           score: 1,
           detailedFeedback: detailedFeedback({
             aa_1: {
-              correctness: ['correct','correct']
+              correctness: ['correct', 'correct']
             }
           })
         })
       );
     });
 
-    it('1/2 and 1/1 answers correct', function() {
+    it('1 of 2 and 1 of 1 answers correct', function() {
       assertPartial(
         question(
           ['aa_1', 'aa_2'], {
@@ -395,20 +433,20 @@ describe('dnd-categorize', function() {
           }),
         partialScoring(
           [{
-            catId: 'aa_1',
-            partialScoring: [
-              {
-                numberOfCorrect: 1,
-                scorePercentage: 10
+              catId: 'aa_1',
+              partialScoring: [
+                {
+                  numberOfCorrect: 1,
+                  scorePercentage: 10
               }
             ]
           },
-          {
-            catId: 'aa_2',
-            partialScoring: [
-              {
-                numberOfCorrect: 1,
-                scorePercentage: 0
+            {
+              catId: 'aa_2',
+              partialScoring: [
+                {
+                  numberOfCorrect: 1,
+                  scorePercentage: 0
               }
             ]
           }]
@@ -420,7 +458,7 @@ describe('dnd-categorize', function() {
         outcome({
           correctness: 'incorrect',
           correctClass: 'partial',
-          score:0.55,
+          score: 0.55,
           correctResponse: {
             aa_1: ['c_1', 'c_2'],
             aa_2: ['c_1']
@@ -486,6 +524,108 @@ describe('dnd-categorize', function() {
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
       detailedFeedback: {},
       warningClass: "answer-expected"
+    });
+  });
+
+  describe('weighting', function() {
+
+    function weightedScore(answer, allowed, weighting) {
+      var settings = {};
+      var question = new Question()
+        .withCategories(['aa_1', 'aa_2'])
+        .withCorrectResponse({
+          aa_1: ['c_1', 'c_2'],
+          aa_2: ['c_1', 'c_2']
+        })
+        .withPartialScoring(true, [{
+          catId: 'aa_1',
+          partialScoring: [
+            {
+              numberOfCorrect: 1,
+              scorePercentage: 50
+            }
+          ]
+        },
+          {
+            catId: 'aa_2',
+            partialScoring: [
+              {
+                numberOfCorrect: 1,
+                scorePercentage: 50
+              }
+            ]
+          }
+        ])
+        .withWeighting(allowed, weighting)
+        .getValue();
+
+      var outcome = server.createOutcome(question, answer, settings);
+      return outcome.score;
+    }
+
+    describe('correct answer', function() {
+      var correctAnswer;
+
+      beforeEach(function(){
+        correctAnswer = {
+          aa_1: ['c_1', 'c_2'],
+          aa_2: ['c_1', 'c_2']
+        };
+      });
+
+      it('should return 1, if weighting is not allowed', function() {
+        weightedScore(correctAnswer, false, {}).should.eql(1);
+      });
+
+      it('should return 1, if weighting is allowed but not configured', function() {
+        weightedScore(correctAnswer, true, {}).should.eql(1);
+      });
+
+      it('should return 1, if weighting is allowed and configured to equal weights', function() {
+        weightedScore(correctAnswer, true, {
+          aa_1: 5,
+          aa_2: 5
+        }).should.eql(1);
+      });
+
+      it('should return 1, if weighting is allowed and configured to different weights', function() {
+        weightedScore(correctAnswer, true, {
+          aa_1: 3,
+          aa_2: 7
+        }).should.eql(1);
+      });
+    });
+    describe('partially correct answer', function() {
+      var answer;
+
+      beforeEach(function(){
+        answer = {
+          aa_1: ['c_1', 'c_2'], //correct
+          aa_2: ['c_1']         //half correct
+        };
+      });
+
+      it('should return .75, if weighting is not allowed', function() {
+        weightedScore(answer, false, {}).should.eql(0.75);
+      });
+
+      it('should return .75, if weighting is allowed but not configured', function() {
+        weightedScore(answer, true, {}).should.eql(0.75);
+      });
+
+      it('should return .75, if weighting is allowed and configured to equal weights', function() {
+        weightedScore(answer, true, {
+          aa_1: 10,
+          aa_2: 10
+        }).should.eql(0.75);
+      });
+
+      it('should return 1, if weighting is allowed and configured to different weights', function() {
+        weightedScore(answer, true, {
+          aa_1: 9,
+          aa_2: 1
+        }).should.eql(0.95);
+      });
     });
   });
 

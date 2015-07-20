@@ -41,6 +41,7 @@ function configureCorespringDndCategorize(
     scope.$watch('editorModel.choicesLabel', updateChoicesLabel, true);
     scope.$watch('editorModel.categories', updateModel, true);
     scope.$watch('editorModel.partialScoring',  _.debounce(updatePartialScoring, 200), true);
+    scope.$watch('editorModel.weighting', _.debounce(updateWeighting, 200), true);
     scope.$watch('model', renderMath, true);
 
     scope.containerBridge = {
@@ -76,12 +77,14 @@ function configureCorespringDndCategorize(
       });
 
       var partialScoring = preparePartialScoringEditorModel(scope.fullModel.partialScoring);
+      var weighting = prepareWeightingEditorModel(scope.fullModel.weighting);
 
       return {
         choices: choices,
         choicesLabel: choicesLabel,
         categories: categories,
-        partialScoring: partialScoring
+        partialScoring: partialScoring,
+        weighting: weighting
       };
 
       function getChoiceForId(choiceId) {
@@ -89,6 +92,21 @@ function configureCorespringDndCategorize(
           id: choiceId
         });
       }
+    }
+
+    /**
+     * Return a weight item for every category
+     * Reuse the item, if it exists in inputWeighting, create a new one otherwise
+     * @param inputWeighting
+     */
+    function prepareWeightingEditorModel(inputWeighting){
+      var weighting = inputWeighting || {};
+      var result = _.map(scope.model.categories, function(cat){
+        var weight = weighting[cat.id] !== undefined ? weighting[cat.id] : 1;
+        var item = {id: cat.id, weight: weight, label: cat.label};
+        return item;
+      });
+      return result;
     }
 
     function preparePartialScoringEditorModel(inputPartialScoring){
@@ -120,6 +138,7 @@ function configureCorespringDndCategorize(
       updateCategories();
       updateCorrectResponse();
       updatePartialScoringEditorModel();
+      updateWeightingEditorModel();
 
       //--------------------------------------
 
@@ -162,6 +181,14 @@ function configureCorespringDndCategorize(
         });
         scope.editorModel.partialScoring = result;
       }
+
+      function updateWeightingEditorModel(){
+        //if categories have been changed
+        //add/remove weightings if a category has been added/removed
+        //update labels
+
+        scope.editorModel.weighting = prepareWeightingEditorModel(scope.fullModel.weighting);
+      }
     }
 
     function updateChoicesLabel(){
@@ -180,6 +207,14 @@ function configureCorespringDndCategorize(
         sections: sections
       };
     }
+
+    function updateWeighting(){
+      scope.fullModel.weighting = _.reduce(scope.editorModel.weighting, function(acc,item){
+        acc[item.id] = item.weight;
+        return acc;
+      },{});
+    }
+
 
     function countCorrectAnswers() {
       return _.reduce(scope.editorModel.categories, function (acc, category) {
@@ -377,6 +412,15 @@ function configureCorespringDndCategorize(
     function scoringPanel() {
       return [
         '<div class="container-fluid">',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <corespring-weighting-config ',
+        '         allow-weighting="fullModel.allowWeighting"',
+        '         categories="fullModel.model.categories"',
+        '         model="editorModel.weighting"',
+        '      ></corespring-partial-scoring-config>',
+        '    </div>',
+        '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
         '      <corespring-multi-partial-scoring-config ',
