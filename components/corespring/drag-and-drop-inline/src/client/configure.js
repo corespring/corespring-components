@@ -64,6 +64,7 @@ function main(
           addToEditor: function(editor, addContent) {
             var id = scope.addAnswerArea();
             addContent($('<answer-area-inline-csdndi id="' + id + '"/>'));
+            focusAnswerArea(id);
           },
           deleteNode: function($node, services) {
             var id = $node.attr('answer-area-id');
@@ -87,6 +88,17 @@ function main(
         new WiggiMathJaxFeatureDef()
       ]
     };
+
+    function focusAnswerArea(id) {
+      $timeout(function() {
+        var $editable = $('[answer-area-id="' + id + '"]').closest('.wiggi-wiz-editable');
+        if ($editable.length > 0) {
+          $editable.click();
+          angular.element($editable).scope().focusCaretAtEnd();
+        }
+      });
+    }
+
   }
 
   function link(scope, element, attrs) {
