@@ -64,6 +64,11 @@ function main(
           addToEditor: function(editor, addContent) {
             var id = scope.addAnswerArea();
             addContent($('<answer-area-inline-csdndi id="' + id + '"/>'));
+            $timeout(function() {
+              var $editable = $('[answer-area-id="' + id + '"]').closest('.wiggi-wiz-editable');
+              $editable.click();
+              angular.element($editable).scope().focusCaretAtEnd();
+            });
           },
           deleteNode: function($node, services) {
             var id = $node.attr('answer-area-id');
