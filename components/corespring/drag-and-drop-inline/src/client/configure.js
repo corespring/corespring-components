@@ -64,7 +64,11 @@ function main(
           addToEditor: function(editor, addContent) {
             var id = scope.addAnswerArea();
             addContent($('<answer-area-inline-csdndi id="' + id + '"/>'));
-            $timeout(scope.focusAnswerArea.bind(null, id));
+            $timeout(function() {
+              var $editable = $('[answer-area-id="' + id + '"]').closest('.wiggi-wiz-editable');
+              $editable.click();
+              angular.element($editable).scope().focusCaretAtEnd();
+            });
           },
           deleteNode: function($node, services) {
             var id = $node.attr('answer-area-id');
@@ -113,7 +117,6 @@ function main(
     scope.itemClick = itemClick;
     scope.removeAnswerArea = removeAnswerArea;
     scope.removeChoice = removeChoice;
-    scope.focusAnswerArea = focusAnswerArea;
 
     scope.$on('get-config-scope', onGetConfigScope);
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
@@ -336,14 +339,6 @@ function main(
       return function(choice) {
         return (choice.label || '').replace(wiggiCleanerRe, '');
       };
-    }
-
-    function focusAnswerArea(id) {
-      var $editable = $('[answer-area-id="' + id + '"]').closest('.wiggi-wiz-editable');
-      if ($editable.length > 0) {
-        $editable.click();
-        angular.element($editable).scope().focusCaretAtEnd();
-      }
     }
 
   }
