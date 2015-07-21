@@ -3,7 +3,7 @@ var functionUtils = require("corespring.function-utils.server");
 var fb = require('corespring.server-shared.server.feedback-utils');
 
 var CORRECT_ANSWER_PLACEHOLDER = "<correct answer>";
-var DEFAULT_INCORRECT_FEEDBACK = "Good try, but " + CORRECT_ANSWER_PLACEHOLDER + " is the correct answer.";
+var DEFAULT_INCORRECT_FEEDBACK = "Good try but the correct answer is y=" + CORRECT_ANSWER_PLACEHOLDER;
 exports.keys = _.cloneDeep(fb.keys);
 exports.keys.DEFAULT_INCORRECT_FEEDBACK = DEFAULT_INCORRECT_FEEDBACK;
 
