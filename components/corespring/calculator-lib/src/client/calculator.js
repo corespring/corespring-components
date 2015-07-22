@@ -211,6 +211,7 @@ var calculator = [
             break;
           case 'left_parenthesis':
             self.pushSubresult();
+            scope.results = button.symbol;
             break;
           case 'right_parenthesis':
             self.pullSubresult();
