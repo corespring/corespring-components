@@ -1,0 +1,32 @@
+{
+  "correctness": "correct",
+  "correctResponse": [
+    {
+      "type": "point",
+      "pointType": "full",
+      "domainPosition": 0.125
+    }
+  ],
+  "correctClass": "correct",
+  "score": 1,
+  "feedback": {
+    "elements": [
+      {
+        "type": "point",
+        "pointType": "full",
+        "domainPosition": 0.125,
+        "rangePosition": 0,
+        "isCorrect": true
+      }
+    ],
+    "message": "Correct!"
+  },
+  "studentResponse": [
+    {
+      "type": "point",
+      "pointType": "full",
+      "domainPosition": 0.125,
+      "rangePosition": 0
+    }
+  ]
+}

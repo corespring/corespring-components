@@ -137,6 +137,21 @@ describe('corespring:inline-choice', function() {
     });
   });
 
+  describe('shuffle', function() {
+    it('should shuffle options if shuffle is true', function() {
+      spyOn(_, 'shuffle');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(_.shuffle).toHaveBeenCalled();
+    });
+
+    it('shouldnt shuffle options if shuffle is false', function() {
+      spyOn(_, 'shuffle');
+      testModel.data.model.config.shuffle = false;
+      container.elements['1'].setDataAndSession(testModel);
+      expect(_.shuffle).not.toHaveBeenCalled();
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });

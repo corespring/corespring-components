@@ -211,20 +211,20 @@ var main = [
         var updateInitialElements = function(n) {
           scope.$apply(function() {
             scope.fullModel.model.config.initialElements = _.cloneDeep(n);
-            scope.initialView.model.config.initialElements = _.cloneDeep(n);
           });
         };
 
         var updateCorrectResponse = function(n) {
           scope.$apply(function() {
             scope.fullModel.correctResponse = _.cloneDeep(n);
-            scope.correctResponseView.model.config.initialElements = _.cloneDeep(n);
             scope.updateNumberOfCorrectResponses(scope.correctResponseView.responseModel.length);
           });
         };
 
         var updateNumberLineOptions = function(n, onlyFor) {
           if (n) {
+            scope.correctResponseView.model.config.initialElements = _.cloneDeep(scope.correctResponseView.responseModel);
+            scope.initialView.model.config.initialElements = _.cloneDeep(scope.initialView.responseModel);
             scope.$apply(function() {
               _(n).omit('initialElements','tickLabelOverrides','exhibitOnly').each(function(e, k) {
                 if (!_.isUndefined(n[k])) {
@@ -260,7 +260,9 @@ var main = [
 
         scope.$watch('correctResponseView.responseModel', debounce(updateCorrectResponse), true);
 
-        scope.$watch('fullModel.model.config', debounce(updateNumberLineOptions), true);
+        scope.$watch(function() {
+          return _.omit(scope.fullModel.model.config, 'initialElements');
+        }, debounce(updateNumberLineOptions), true);
 
         scope.$watch('sampleNumberLine.model.config', debounce(updateTickLabels), true);
 

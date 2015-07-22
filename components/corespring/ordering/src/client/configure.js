@@ -123,6 +123,14 @@ var main = [
         '            ng-options="layout.value as layout.name for layout in layouts"></select>',
         '      </div>',
         '    </div>',
+        '    <div class="row display-row" ng-show="model.config.placementType == \'placement\' && model.config.choiceAreaLayout === \'horizontal\'">',
+        '      <div class="col-xs-12">',
+        '        <label class="control-label">Show choices </label>',
+        '        <select ng-model="model.config.choiceAreaPosition" class="form-control"',
+        '            ng-options="position.value as position.name for position in horizontalChoicesPosition"></select> ',
+        '        <label class="control-label"> placement area</label>',
+        '      </div>',
+        '    </div>',
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
@@ -180,6 +188,11 @@ var main = [
             {name: "Vertical", value: "vertical"}
           ];
 
+          $scope.horizontalChoicesPosition = [
+            {name: "Above", value: "above"},
+            {name: "Below", value: "below"}
+          ];
+
           $scope.targetDragging = false;
 
           function initTargets() {
@@ -209,6 +222,8 @@ var main = [
             }
           };
 
+          var isDragging = false;
+
           $scope.droppableOptions = {
             accept: function() {
               var contains = _($scope.targets).pluck('id').contains($scope.draggging);
@@ -225,9 +240,15 @@ var main = [
             start: function(event, ui) {
               var li = ui.item;
               $scope.draggging = li.data('choice-id');
+              isDragging = true;
               setRemoveAfterPlacingVisibility(ui, 'hidden');
             },
             stop: function(event,ui) {
+
+              //this is flag to not activate the mini-wiggi when the div is Dragging
+              $timeout(function() {
+                  isDragging = false;
+              },500);
               setRemoveAfterPlacingVisibility(ui, 'visible');
             }
           };
@@ -242,6 +263,10 @@ var main = [
           };
 
           $scope.activate = function($index, $event) {
+            if (isDragging) {
+              return;
+            }
+
             $scope.deactivate();
             if ($event) {
               $event.stopPropagation();
