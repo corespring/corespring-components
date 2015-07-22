@@ -61,7 +61,7 @@ var calculatorConfig = [
     };
     regions.numbers = { 
       name: 'Numbers area',
-      buttons: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'zero', 'dot', 'equals']
+      buttons: ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'dot', 'equals']
     };
     regions.basic = { 
       name: 'Basic functions area', 
