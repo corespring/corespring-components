@@ -38,9 +38,14 @@ var calculator = [
         // check for multiple dots or alone dots
         if(button.id === 'dot'){
           var value = scope.results;
-          if(!self.operandContinue || value.indexOf('.') !== -1){
+          if (value && (!self.operandContinue || value.indexOf('.') !== -1)) {
             return;
-          }          
+          }
+          
+          if(!value) {
+            scope.results = "0";
+            this.operandContinue = true;
+          }
         }
         self.clickOperand(button.symbol);
         self.operandContinue = true;
