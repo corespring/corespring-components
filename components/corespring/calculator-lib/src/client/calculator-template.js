@@ -6,11 +6,22 @@ var calculatorTemplate = [
       var calculator = new Calculator(scope);
       calculator.extendScope(scope, 'calculator-template');
 
-      function click(button){
+      function mouseup(button){
+        scope.pressedButton = '';
         calculator.click(button);
       }
 
-      scope.click = click;
+      function mousedown(button){
+        scope.pressedButton = button;
+      }
+
+      function isPressed(button){
+        return scope.pressedButton === button;
+      }
+
+      scope.mouseup = mouseup;
+      scope.mousedown = mousedown;
+      scope.isPressed = isPressed;
     };
 
     function template() {
@@ -25,8 +36,10 @@ var calculatorTemplate = [
         '      <button ng-repeat="button in regions[region].buttons" ',
         '					id="{{button}}-button"',
         '					class="button {{buttons[button].cssClass}}"',
+        '         ng-class="{active : isPressed(button)}"',
         '					title="{{buttons[button].name}}"',
-        '					ng-click="click(buttons[button])"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
+        '					ng-mousedown="mousedown(button)"',
+        '         ng-mouseup="mouseup(buttons[button])"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
         '    </div>',
         '  </div>',
         '</div>'

@@ -154,10 +154,6 @@
 	padding: 0;
 }
 
-.button:active {
-	background-color: #cc9900;
-}
-
 /* Clear pad */
 .buttons-panel .clear-pad {
 	width: 100px;
@@ -190,7 +186,7 @@
 	
 }
 
-.buttons-panel .numbers-pad .number:active {
+.active, .buttons-panel .numbers-pad .active {
 	background-color: #cc9900;
 }
 
