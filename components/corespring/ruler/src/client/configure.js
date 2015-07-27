@@ -79,16 +79,28 @@ var main = [
       replace: true,
       template: panels,
       link: function(scope, element, attrs) {
+        var defaultImperialData = {
+          label: "in",
+          length: 12,
+          ticks: 16,
+          pixelsPerUnit: 40
+        },
+        defaultMetricData = {
+          label: "cm",
+          length: 20,
+          ticks: 10,
+          pixelsPerUnit: 30
+        };
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
             scope.model = scope.fullModel.model;
-            scope.labels = {
-              "imperial": ["none", "inches", "feet", "yards", "miles"],
-              "metric": ["none", "millimeters", "centimeters", "meters", "kilometers"]
-            };
             scope.handleUnitsChange = function() {
-              scope.model.config.label = "";
+              if (scope.model.config.units === "imperial") {
+                _.assign(scope.model.config, defaultImperialData);
+              } else {
+                _.assign(scope.model.config, defaultMetricData);
+              }
             };
           }
         };
