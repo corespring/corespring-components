@@ -35,14 +35,13 @@ var calculator = [
       };
 
       this.clickNumber = function(button) {
-        // check for multiple dots or alone dots
-        if(button.id === 'dot'){
-          var value = scope.results;
-          if (value && (!self.operandContinue || value.indexOf('.') !== -1)) {
+        // check for multiple or alone decimal points
+        if(button.id === 'decimal'){
+          if (self.operandContinue && scope.results.indexOf('.') !== -1) {
             return;
           }
           
-          if(!value) {
+          if(!self.operandContinue) {
             scope.results = "0";
             this.operandContinue = true;
           }
@@ -198,6 +197,7 @@ var calculator = [
           case 'clear':
             self.resetOperationStatus();
             self.operationStatus = [];
+            self.state = '';
             scope.results = '';
             break;
           case 'store':

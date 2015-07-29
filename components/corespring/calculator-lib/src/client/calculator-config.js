@@ -16,7 +16,7 @@ var calculatorConfig = [
     buttons.eight = { id: 'eight', name: 'Eight', symbol: '8', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.nine = { id: 'nine', name: 'Nine', symbol: '9', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.zero = { id: 'zero', name: 'Zero', symbol: '0', logic: 'core', type: 'Number', cssClass: 'number' };
-    buttons.dot = { id: 'dot', name: 'Dot', symbol: '.', logic: 'core', type: 'Number', cssClass: 'number dot' };
+    buttons.decimal = { id: 'decimal', name: 'Decimal', symbol: '.', logic: 'core', type: 'Number', cssClass: 'number decimal' };
     buttons.equals = { id: 'equals', name: 'Equals', symbol: '=', logic: 'core', type: 'Operator', numOfOperands: '1', cssClass: 'number equals' };
     // Basic functions
     buttons.sqrt = { id: 'sqrt', name: 'Square root', symbol: '√', logic: 'basic', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
@@ -24,7 +24,7 @@ var calculatorConfig = [
     buttons.minus = { id: 'minus', name: 'Minus', symbol: '-', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
     buttons.multiply = { id: 'multiply', name: 'Multiply', symbol: 'x', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
     buttons.divide = { id: 'divide', name: 'Divide', symbol: '÷', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
-    buttons.change_sign = { id: 'change_sign', name: 'Divide', symbol: '+/-', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
+    buttons.change_sign = { id: 'change_sign', name: 'Plus/minus', symbol: '+/-', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
     buttons.pi = { id: 'pi', name: 'Pi', symbol: 'π', logic: 'scientific', type: 'Constant', cssClass: 'basic-function' };
     buttons.abs = { id: 'abs', name: 'Absolute value', symbol: 'abs', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
 
@@ -61,7 +61,7 @@ var calculatorConfig = [
     };
     regions.numbers = { 
       name: 'Numbers area',
-      buttons: ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'dot', 'equals']
+      buttons: ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'decimal', 'equals']
     };
     regions.basic = { 
       name: 'Basic functions area', 
