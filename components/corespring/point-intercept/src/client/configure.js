@@ -155,6 +155,13 @@ var main = [
       '           fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
       '      ></div>',
       '      <div feedback-selector',
+      '           fb-sel-label="If partially correct, show"',
+      '           fb-sel-class="partial"',
+      '           fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+      '           fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+      '           fb-sel-default-feedback="{{defaultPartialFeedback}}"',
+      '      ></div>',
+      '      <div feedback-selector',
       '           fb-sel-label="If answered incorrectly, show"',
       '           fb-sel-class="incorrect"',
       '           fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
@@ -174,6 +181,7 @@ var main = [
         ChoiceTemplates.extendScope(scope, 'corespring-point-intercept');
         var server = ServerLogic.load('corespring-point-intercept');
         scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
+        scope.defaultPartialFeedback = server.keys.DEFAULT_PARTIAL_FEEDBACK;
         scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
         scope.containerBridge = {
           setModel: function(model) {

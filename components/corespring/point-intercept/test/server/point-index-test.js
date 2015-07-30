@@ -87,7 +87,7 @@ describe('server logic', function() {
     response.score.should.eql(0);
     
     response = server.createOutcome(clone, ["0,0", "3,1"], defaultSettings);
-    response.correctness.should.eql("incorrect");
+    response.correctness.should.eql("partial");
     response.score.should.eql(0.5);
 
     response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
