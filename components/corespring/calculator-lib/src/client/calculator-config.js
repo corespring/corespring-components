@@ -1,6 +1,10 @@
 var calculatorConfig = [
   function() {
 
+    var angularUnits = [];
+    angularUnits.DEGREES = 'degrees';
+    angularUnits.RADIANS = 'radians';      
+
     var buttons = [];
     // Clear section
     buttons.clear = { id: 'clear', name: 'Clear', symbol: 'clr', logic: 'core', type: 'Misc', cssClass: 'clear' };
@@ -33,18 +37,18 @@ var calculatorConfig = [
     buttons.recall = { id: 'recall', name: 'Recall', symbol: 'rcl', logic: 'core', type: 'Misc', cssClass: 'recall' };
 
     // Deg Rad section
-    buttons.degrees = { id: 'degrees', name: 'Degrees', symbol: 'deg', logic: 'scientific', type: 'Misc', cssClass: 'deg' };
-    buttons.radians = { id: 'radians', name: 'Radians', symbol: 'rad', logic: 'scientific', type: 'Misc', cssClass: 'rad' };
+    buttons.degrees = { id: angularUnits.DEGREES, name: 'Degrees', symbol: 'deg', logic: 'scientific', type: 'Misc', cssClass: 'deg' };
+    buttons.radians = { id: angularUnits.RADIANS, name: 'Radians', symbol: 'rad', logic: 'scientific', type: 'Misc', cssClass: 'rad' };
 
     // Advanced function buttons
     buttons.left_parenthesis = { id: 'left_parenthesis', name: 'Left parenthesis', symbol: '(', logic: 'core', type: 'Misc', cssClass: 'advanced' };
     buttons.right_parenthesis = { id: 'right_parenthesis', name: 'Right parenthesis', symbol: ')', logic: 'core', type: 'Misc', cssClass: 'advanced' };
     buttons.sin = { id: 'sin', name: 'Sin', symbol: 'sin', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.arcsin = { id: 'asin', name: 'Arcsin', symbol: 'sin<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.asin = { id: 'asin', name: 'Arcsin', symbol: 'sin<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.cos = { id: 'cos', name: 'Cos', symbol: 'cos', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.arccos = { id: 'acos', name: 'Arccos', symbol: 'cos<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.acos = { id: 'acos', name: 'Arccos', symbol: 'cos<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.tan = { id: 'tan', name: 'Tan', symbol: 'tan', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.arctan = { id: 'atan', name: 'Arctan', symbol: 'tan<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.atan = { id: 'atan', name: 'Arctan', symbol: 'tan<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.ex = { id: 'ex', name: 'e^x', symbol: 'e<sup>x</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.ln = { id: 'ln', name: 'ln', symbol: 'ln', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.log = { id: 'log', name: 'log', symbol: 'log', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
@@ -82,7 +86,7 @@ var calculatorConfig = [
 
     regions.scientific_advanced = { 
       name: 'Scientific advanced functions area',
-      buttons: ['left_parenthesis', 'right_parenthesis', 'ex', 'ln', 'sin', 'arcsin', 'log', 'factorial', 'cos', 'arccos', 'onex', 'power', 'tan', 'arctan', 'power_two', 'power_three']
+      buttons: ['left_parenthesis', 'right_parenthesis', 'ex', 'ln', 'sin', 'asin', 'log', 'factorial', 'cos', 'acos', 'onex', 'power', 'tan', 'atan', 'power_two', 'power_three']
     };
 
     var types = [];
@@ -101,6 +105,7 @@ var calculatorConfig = [
         scope.types = types;
         scope.regions = regions;
         scope.buttons = buttons;
+        scope.angularUnits = angularUnits;
       };      
     }
 

@@ -16,12 +16,13 @@ var calculator = [
       
       this.state = '';
       this.memory = '';
-      this.angularMeasure = 'degrees';
+      this.angularMeasure = '';
 
       this.operationStatus = [];
 
       this.extendScope = function(scope, componentType) {
         new CalculatorConfig().postLink(scope);
+        this.angularMeasure = scope.angularUnits.DEGREES;
       };
 
       this.click = function(button) {
@@ -108,22 +109,22 @@ var calculator = [
             value = Math.abs(inputValue);
             break;
           case 'sin':
-            value = Math.sin(this.trigonometricValue(inputValue));
+            value = Math.sin(this.trigonometricValue(inputValue, self.angularMeasure, scope.angularUnits.RADIANS));
             break;
           case 'asin':
-            value = Math.asin(this.trigonometricValue(inputValue));
+            value = this.trigonometricValue(Math.asin(inputValue), scope.angularUnits.RADIANS, self.angularMeasure);
             break;
           case 'cos':
-            value = Math.cos(this.trigonometricValue(inputValue));
+            value = Math.cos(this.trigonometricValue(inputValue, self.angularMeasure, scope.angularUnits.RADIANS));
             break;
           case 'acos':
-            value = Math.acos(this.trigonometricValue(inputValue));
+            value = this.trigonometricValue(Math.acos(inputValue), scope.angularUnits.RADIANS, self.angularMeasure);
             break;
           case 'tan':
-            value = Math.tan(this.trigonometricValue(inputValue));
+            value = Math.tan(this.trigonometricValue(inputValue, self.angularMeasure, scope.angularUnits.RADIANS));
             break;
           case 'atan':
-            value = Math.atan(this.trigonometricValue(inputValue));
+            value = this.trigonometricValue(Math.atan(inputValue), scope.angularUnits.RADIANS, self.angularMeasure);
             break;
           case 'ex':
             value = Math.exp(inputValue);
@@ -215,6 +216,10 @@ var calculator = [
             break;
           case 'right_parenthesis':
             self.pullSubresult();
+            break;
+          case 'degrees':
+          case 'radians':
+            self.angularMeasure = button.id;            
             break;
         }
       };
@@ -317,10 +322,25 @@ var calculator = [
         return context[func].apply(this, args);
       };
 
-      this.trigonometricValue = function(value){
-        if(self.angularMeasure === 'degrees'){
-          return value * (Math.PI/180);
+      this.toRadians = function(value) {
+        return value * (Math.PI/180);
+      };
+
+      this.toDegrees = function(value) {
+        return value * (180/Math.PI);
+      };
+
+      this.trigonometricValue = function(value, from, to){
+        if(from === to) {
+          return value;
+        } else {
+          if(to === scope.angularUnits.DEGREES) {
+            return this.toDegrees(value);
+          } else if(to === scope.angularUnits.RADIANS) {
+            return this.toRadians(value);
+          }
         }
+        
         return value;
       };
 
