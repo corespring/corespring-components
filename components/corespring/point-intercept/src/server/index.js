@@ -65,7 +65,7 @@ exports.createOutcome = function(question, answer, settings) {
   var isPartiallyCorrect = numberOfCorrectAnswers > 0 && numberOfCorrectAnswers < correctResponse.length;
   
   var res = {
-    correctness: isCorrect ? "correct" : "incorrect",
+    correctness: isCorrect ? "correct" : (isPartiallyCorrect && question.allowPartialScoring) ? "partial" : "incorrect",
     score: calculateScore(question, answer, correctResponse, orderMatters),
     correctResponse: correctResponse,
     correctClass: fbu.correctness(isCorrect, (isPartiallyCorrect && question.allowPartialScoring)),
@@ -73,7 +73,7 @@ exports.createOutcome = function(question, answer, settings) {
   };
 
   if (settings.showFeedback) {
-    res.outcome = [isCorrect ? "correct" : "incorrect"];
+    res.outcome = [isCorrect ? "correct" : (isPartiallyCorrect && question.allowPartialScoring) ? "partial" : "incorrect"];
     res.feedback = fbu.makeFeedback(question.feedback, fbu.correctness(isCorrect, (isPartiallyCorrect && question.allowPartialScoring)));
   }
 
