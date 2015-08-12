@@ -441,7 +441,8 @@ function main(
       return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <label class="control-label" style="margin-bottom: 10px;">Choices Area</label>',
+          '    <label class="control-label" style="margin-bottom: 10px;">Choices</label>',
+          '    <p><b>Add a label to choice area (optional).</b></p>',
           '  </div>',
           '</div>',
           '<div class="row">',
@@ -455,6 +456,7 @@ function main(
           '         parent-selector=".modal-body"',
           '         image-service="imageService()">',
           '    </div>',
+          '    <p><i class="legend">To set correct answer, drag choice to an answer blank in the problem area.</i></p>',
           '  </div>',
           '</div>',
           '<div class="row">',
