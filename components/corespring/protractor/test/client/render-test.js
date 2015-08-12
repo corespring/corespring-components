@@ -46,15 +46,19 @@ describe('corespring:protractor:render', function() {
     rootScope = $rootScope;
   }));
 
-  describe('initialization', function(){
+  describe('initialization', function() {
     it('constructs', function() {
       expect(element).toNotBe(null);
     });
 
     it('sets model', function() {
       container.elements['1'].setDataAndSession(testModel);
+      expect(scope.isVisible).toBe(false);
     });
-
   });
-  
+
+  it('should implement containerBridge',function(){
+    expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
 });
