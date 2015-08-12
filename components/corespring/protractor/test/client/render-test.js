@@ -30,6 +30,7 @@ describe('corespring:protractor:render', function() {
   beforeEach(function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
+      $provide.value('KhanUtil', {});
     });
   });
 
@@ -40,17 +41,20 @@ describe('corespring:protractor:render', function() {
       container.registerComponent(id, obj);
     });
 
-    element = $compile("<corespring-protractor id='1'></corespring-protractor>")($rootScope.$new());
+    element = $compile("<corespring-protractor-render id='1'></corespring-protractor-render>")($rootScope.$new());
     scope = element.scope().$$childHead;
     rootScope = $rootScope;
   }));
 
-  it('constructs', function() {
-    expect(element).toNotBe(null);
-  });
+  describe('initialization', function(){
+    it('constructs', function() {
+      expect(element).toNotBe(null);
+    });
 
-  it('sets model', function() {
-    container.elements['1'].setDataAndSession(testModel);
+    it('sets model', function() {
+      container.elements['1'].setDataAndSession(testModel);
+    });
+
   });
   
 });
