@@ -81,8 +81,8 @@ describe('corespring:match:render', function() {
 
   it('uses the column header if available', function() {
     container.elements['1'].setDataAndSession(testModel);
-    expect(scope.matchModel.columns[1].labelHtml).toEqual('Column 1');
-    expect(scope.matchModel.columns[2].labelHtml).toEqual('Column 2');
+    expect(scope.matchModel.columns[1].labelHtml).toEqual('');
+    expect(scope.matchModel.columns[2].labelHtml).toEqual('');
   });
 
   it('uses the default header if column header is empty', function() {
@@ -98,6 +98,16 @@ describe('corespring:match:render', function() {
     container.elements['1'].setDataAndSession(testModel);
     expect(scope.matchModel.columns[1].labelHtml).toEqual('Yes');
     expect(scope.matchModel.columns[2].labelHtml).toEqual('No');
+  });
+
+  it('uses not show the header if its the default', function() {
+    testModel.data.model.columns[0].labelHtml = 'Custom header';
+    testModel.data.model.columns[1].labelHtml = 'Column 1';
+    testModel.data.model.columns[2].labelHtml = 'Column 2';
+    container.elements['1'].setDataAndSession(testModel);
+    expect(scope.matchModel.columns[0].labelHtml).toEqual('');
+    expect(scope.matchModel.columns[1].labelHtml).toEqual('');
+    expect(scope.matchModel.columns[2].labelHtml).toEqual('');
   });
 
   it('builds the table correctly', function() {
