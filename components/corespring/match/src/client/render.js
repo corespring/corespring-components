@@ -207,7 +207,8 @@ var main = [
 
           _.forEach(columns, function(col, index){
             col.cssClass = index === 0 ? 'question-header' : 'answer-header';
-            col.labelHtml = removeUnexpectedTags(col.labelHtml);
+            var labelWithoutTags = removeUnexpectedTags(col.labelHtml);
+            col.labelHtml = (labelWithoutTags==="Custom header" || labelWithoutTags==="Column 1" || labelWithoutTags==="Column 2" ) ? '' : labelWithoutTags;
           });
 
           return columns;
