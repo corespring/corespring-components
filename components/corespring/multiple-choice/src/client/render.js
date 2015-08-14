@@ -131,6 +131,7 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
+          console.log("MC D&S");
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
           scope.session = dataAndSession.session || {};
@@ -147,6 +148,19 @@ var main = [
             answers: getAnswers(),
             stash: stash
           };
+        },
+
+        setInstructorData: function(data) {
+          console.log("Sid");
+          _.each(scope.choices, function(c) {
+            if (_.contains(data.correctResponse.value, c.value)) {
+              c.correct = true;
+            }
+          });
+          setTimeout(function() {
+            $(element).find(".feedback-panel.visible").slideDown(10);
+          }, 10);
+
         },
 
         // sets the server's response
@@ -179,6 +193,8 @@ var main = [
           }, 10);
         },
         setMode: function(newMode) {
+          console.log("MC setting mode to ", newMode);
+          scope.mode = newMode;
         },
         /**
          * Reset the ui back to an unanswered state
@@ -271,7 +287,7 @@ var main = [
           return res + "default";
         }
 
-        if (o.correct && scope.question.config.showCorrectAnswer === "inline") {
+        if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode == 'instructor')) {
           res = "selected ";
         }
 
@@ -319,7 +335,7 @@ var main = [
     ].join('');
 
     var verticalTemplate = [
-      '<div class="choices-container" ng-class="question.config.orientation">',
+      '<div class="choices-container" ng-class="question.config.orientation">{{mode}}',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
