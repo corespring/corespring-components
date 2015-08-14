@@ -1,5 +1,5 @@
 /*global describe,inject,beforeEach,it,expect,module*/
-describe('corespring:protractor:render', function() {
+describe('corespring:ruler:render', function() {
 
   var MockComponentRegister = function() {
     this.elements = {};
@@ -8,19 +8,24 @@ describe('corespring:protractor:render', function() {
     };
   };
 
-  var element, scope, rootScope, container, protractorWidget;
+  var element, scope, rootScope, container, rulerWidget;
 
   var testModel;
 
   var testModelTemplate = {
     data: {
-      "title": "Protractor",
-      "componentType": "corespring-protractor",
+      "title": "Ruler",
+      "componentType": "corespring-ruler",
       "weight": 0,
       "isTool": true,
-      "noEdit": true,
       "model": {
-        "config": {}
+        "config": {
+          "units": "imperial",
+          "label": "in",
+          "length": 12,
+          "pixelsPerUnit": 40,
+          "ticks": 16
+        }
       }
     }
   };
@@ -41,8 +46,8 @@ describe('corespring:protractor:render', function() {
       container.registerComponent(id, obj);
     });
 
-    element = $compile("<corespring-protractor-render id='1'></corespring-protractor-render>")($rootScope.$new());
-    protractorWidget = element.find('.cs-protractor-widget');
+    element = $compile("<corespring-ruler-render id='1'></corespring-ruler-render>")($rootScope.$new());
+    rulerWidget = element.find('.cs-ruler-widget');
     scope = element.scope().$$childHead;
     rootScope = $rootScope;
   }));
@@ -50,7 +55,7 @@ describe('corespring:protractor:render', function() {
   describe('initialization', function() {
     it('constructs', function() {
       expect(element).toNotBe(null);
-      expect(protractorWidget).toBeDefined();
+      expect(rulerWidget).toBeDefined();
     });
 
     it('sets model', function() {
@@ -59,7 +64,7 @@ describe('corespring:protractor:render', function() {
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
