@@ -1,0 +1,48 @@
+@import '../../../../../less/common';
+.cs-ruler-config {
+    .make-inline {
+        font-weight: bold;
+        padding-left: 0;
+    }
+}
+
+.cs-ruler {
+    display: inline-block;
+    vertical-align: middle;
+    .cs-ruler-toggle {
+        cursor: pointer;
+        background: data-uri('../../public/icon-ruler-black.png') no-repeat center transparent;
+        height: 34px;
+        width: 34px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        background-clip: padding-box;
+        -webkit-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+        position: relative;
+        &.visible {
+            background-color: #ccc;
+            background-image: data-uri('../../public/icon-ruler-white.png');
+            border-color: #888;
+        }
+    }
+    .cs-ruler-widget {
+        position: absolute!important;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        svg {
+            position: absolute!important;
+            overflow: visible!important;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            image, path, circle, ellipse {
+                pointer-events: auto;
+            }
+            circle, ellipse {
+                cursor: pointer!important;
+            }
+        }
+    }
+}
