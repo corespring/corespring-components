@@ -131,7 +131,6 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          console.log("MC D&S");
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
           scope.session = dataAndSession.session || {};
@@ -151,7 +150,6 @@ var main = [
         },
 
         setInstructorData: function(data) {
-          console.log("Sid");
           _.each(scope.choices, function(c) {
             if (_.contains(data.correctResponse.value, c.value)) {
               c.correct = true;
@@ -193,7 +191,6 @@ var main = [
           }, 10);
         },
         setMode: function(newMode) {
-          console.log("MC setting mode to ", newMode);
           scope.mode = newMode;
         },
         /**
@@ -335,7 +332,7 @@ var main = [
     ].join('');
 
     var verticalTemplate = [
-      '<div class="choices-container" ng-class="question.config.orientation">{{mode}}',
+      '<div class="choices-container" ng-class="question.config.orientation">',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
