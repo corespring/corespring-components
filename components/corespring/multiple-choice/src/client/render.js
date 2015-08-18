@@ -155,10 +155,6 @@ var main = [
               c.correct = true;
             }
           });
-          setTimeout(function() {
-            $(element).find(".feedback-panel.visible").slideDown(10);
-          }, 10);
-
         },
 
         // sets the server's response
