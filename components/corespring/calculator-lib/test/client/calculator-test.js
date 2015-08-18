@@ -308,11 +308,10 @@ describe('corespring:calculator-lib:calculator', function() {
       expect(scope.results).toBeCloseTo(1.60943791243, decimalPrecision);
     });
     
-    /*** TODO: Check this case, log function working on calculator, but not in tests ***/
-    xit('should allow to calculate log', function() {
+    it('should allow to calculate log', function() {
       calculator.click(scope.buttons.five);
       calculator.click(scope.buttons.log);
-      // expect(scope.results).toBeCloseTo(0.69897000433, 5);
+      expect(scope.results).toBeCloseTo(0.69897000433, 5);
     });
 
     it('should allow to calculate factorial', function() {

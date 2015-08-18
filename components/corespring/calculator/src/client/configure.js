@@ -19,7 +19,7 @@ var main = [
       '              <radio id="scientificRadio" value="scientific" ng-model="fullModel.model.config.type">Scientific</radio>',      
       '            </div>',
       '            <div class="col-sm-6">',
-      '              <div class="preview_{{ fullModel.model.config.type }}"></div>',
+      '              <div class="preview-{{ fullModel.model.config.type }}"></div>',
       '            </div>',
       '          </div>',
       '          <div class="cs-calculator-row note">',

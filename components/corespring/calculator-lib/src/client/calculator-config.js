@@ -1,11 +1,11 @@
 var calculatorConfig = [
   function() {
 
-    var angularUnits = [];
+    var angularUnits = {};
     angularUnits.DEGREES = 'degrees';
     angularUnits.RADIANS = 'radians';      
 
-    var buttons = [];
+    var buttons = {};
     // Clear section
     buttons.clear = { id: 'clear', name: 'Clear', symbol: 'clr', logic: 'core', type: 'Misc', cssClass: 'clear' };
     buttons.backspace = { id: 'backspace', name: 'Backspace', symbol: 'bksp', logic: 'core', type: 'Misc', cssClass: 'backspace' };
@@ -53,12 +53,12 @@ var calculatorConfig = [
     buttons.ln = { id: 'ln', name: 'ln', symbol: 'ln', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.log = { id: 'log', name: 'log', symbol: 'log', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.factorial = { id: 'factorial', name: 'Factorial', symbol: 'n!', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
-    buttons.onex = { id: 'onex', name: '1/x', symbol: '<sup>1</sup>/<sub>x</sub>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
+    buttons.onex = { id: 'onex', name: '1/x', symbol: '1/x', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.power = { id: 'power', name: 'x^y', symbol: 'x<sup>y</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '2', cssClass: 'advanced' };
     buttons.power_two = { id: 'power_two', name: 'x^2', symbol: 'x<sup>2</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.power_three = { id: 'power_three', name: 'x^3', symbol: 'x<sup>3</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
 
-    var regions = [];
+    var regions = {};
     regions.clear = { 
       name: 'Clear area',
       buttons: ['backspace', 'clear']
@@ -89,7 +89,7 @@ var calculatorConfig = [
       buttons: ['left_parenthesis', 'right_parenthesis', 'ex', 'ln', 'sin', 'asin', 'log', 'factorial', 'cos', 'acos', 'onex', 'power', 'tan', 'atan', 'power_two', 'power_three']
     };
 
-    var types = [];
+    var types = {};
     types.basic = { 
       name: 'Basic',
       regions: ['clear', 'numbers', 'basic']

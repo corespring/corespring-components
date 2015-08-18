@@ -2,10 +2,9 @@ var calculator = [
   'CalculatorConfig',
   function(CalculatorConfig) {
 
-    function Calculator(_scope) {
+    function Calculator(scope) {
 
       var self = this;
-      var scope = _scope;
 
       this.pendingOperationIsBinary = false;
       this.lastPressedIsBinary = false;
@@ -52,13 +51,12 @@ var calculator = [
       };
 
       this.clickConstant = function(button) {
-        // check if there are no operator
+        // if there are no operation in progress, it assumes a multiplication
         if(self.previousOperator === ''){
           self.previousOperator = 'multiply';
           this.operandContinue = false;
         }
 
-        // click operand with correct value
         switch(button.id) {
           case 'pi':
             self.clickOperand(Math.PI);
@@ -133,7 +131,7 @@ var calculator = [
             value = Math.log(inputValue);
             break;
           case 'log':
-            value = Math.log10(inputValue);
+            value = this.log10(inputValue);
             break;
           case 'factorial':
             value = this.factorial(Math.round(inputValue));
@@ -186,7 +184,6 @@ var calculator = [
 
             if(self.operandContinue) {
               newValue = scope.results.slice(0, - 1);
-            } else {
             }            
             if(newValue === '') {
               self.operandContinue = false;
@@ -224,6 +221,10 @@ var calculator = [
         }
       };
 
+      /* When a parenthesis is open, all the operation between the parenthesis is treated as new isolated operation
+       * so all the current operation status is saved until the parenthesis are closed.
+       * When the parenthesis operation is closed, the result is calculated and used as an operand for the parent operation       
+       */
       this.pushSubresult = function() {
         if((!self.lastPressedIsBinary || self.previousOperator === '') && scope.results !== '') {
           self.clickOperator(scope.buttons.multiply);
@@ -312,7 +313,7 @@ var calculator = [
         }
       };
 
-      this.executeFunctionByName = function(functionName, context /*, args */) {
+      this.executeFunctionByName = function(functionName, context) {
         var args = [].slice.call(arguments).splice(2);
         var namespaces = functionName.split(".");
         var func = namespaces.pop();
@@ -350,6 +351,10 @@ var calculator = [
         } else {
           return num * this.factorial( num - 1 );
         }
+      };
+
+      this.log10 = function(val) {
+        return Math.log(val) / Math.LN10;
       };
 
       this.checkNaN = function(){
