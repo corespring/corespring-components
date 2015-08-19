@@ -158,7 +158,7 @@ var main = [
       }
 
       function setInstructorData(data) {
-        console.log("corespring match: setInstructorData", data);
+        $log.debug("setInstructorData", data);
         var cr = _.cloneDeep(data.correctResponse);
         _.each(cr, function(r) {
           r.matchSet = _.map(r.matchSet, function(m) {
