@@ -6,29 +6,42 @@ var main = [
     var link = function(scope, element, attrs) {
       scope.graphie = null;
       scope.protractor = null;
+
+      var addEmptyFunctions = function(obj, fns) {
+        _.each(fns, function(fn) {
+          obj[fn] = function() {};
+        });
+      };
+
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
           scope.session = dataAndSession.session || {};
           scope.isVisible = false;
-          var defaultPlayerDimensions = [600, 450],
-            arrowFillColor = "#9ED343",
-            $player = element.closest('.corespring-player');
+
+          var defaultPlayerDimensions = [600, 450];
+          var arrowFillColor = "#9ED343";
+          var $player = element.closest('.corespring-player');
           $player = $player.length ? $player : element.closest('.player-body');
           var player = $player.length ? $player[0] : null;
+          var playerWidth = 0;
+          var playerHeight = 0;
+          var scale = [40, 40];
+          var range = null;
+          var $protractorWidget = null;
+
           // The $timeout is required due to player size changes during render
           $timeout(function() {
             if (player) {
-              var playerWidth = $player.width(),
-                playerHeight = $player.height();
+              playerWidth = $player.width();
+              playerHeight = $player.height();
               defaultPlayerDimensions[0] = playerWidth > defaultPlayerDimensions[0] ? playerWidth : defaultPlayerDimensions[0];
               defaultPlayerDimensions[1] = playerHeight > defaultPlayerDimensions[1] ? playerHeight : defaultPlayerDimensions[1];
             }
-            var scale = [40, 40],
-              range = [
-                [0, defaultPlayerDimensions[0] / scale[0]],
-                [0, defaultPlayerDimensions[1] / scale[1]]
-              ];
-            var $protractorWidget = element.find('.cs-protractor-widget');
+            range = [
+              [0, defaultPlayerDimensions[0] / scale[0]],
+              [0, defaultPlayerDimensions[1] / scale[1]]
+            ];
+            $protractorWidget = element.find('.cs-protractor-widget');
             if (scope.graphie) {
               $protractorWidget.empty();
               delete scope.graphie;
@@ -45,20 +58,10 @@ var main = [
             }
             scope.protractor = scope.graphie.protractor([6, 4], arrowFillColor);
           }, 100);
-        },
-        getSession: function() {
-          return {};
-        },
-        setResponse: function(response) {},
-        setMode: function(newMode) {},
-        reset: function() {},
-        resetStash: function() {},
-        isAnswerEmpty: function() {
-          return false;
-        },
-        editable: function(editable) {},
-        answerChangedHandler: function() {}
+        }
       };
+
+      addEmptyFunctions(scope.containerBridge, ['answerChangedHandler', 'editable', 'getSession', 'isAnswerEmpty', 'reset', 'setMode', 'setResponse']);
 
       function toggleVisibility() {
         scope.isVisible = !scope.isVisible;

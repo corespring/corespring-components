@@ -6,30 +6,43 @@ var main = [
     var link = function(scope, element, attrs) {
       scope.graphie = null;
       scope.ruler = null;
+
+      var addEmptyFunctions = function(obj, fns) {
+        _.each(fns, function(fn) {
+          obj[fn] = function() {};
+        });
+      };
+
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
           scope.session = dataAndSession.session || {};
           scope.isVisible = false;
-          var rulerConfig = dataAndSession.data.model.config,
-              defaultPlayerDimensions = [600, 450],
-              arrowFillColor = "#9ED343",
-              $player = element.closest('.corespring-player');
+
+          var rulerConfig = dataAndSession.data.model.config;
+          var defaultPlayerDimensions = [600, 450];
+          var arrowFillColor = "#9ED343";
+          var $player = element.closest('.corespring-player');
           $player = $player.length ? $player : element.closest('.player-body');
           var player = $player.length ? $player[0] : null;
+          var playerWidth = 0;
+          var playerHeight = 0;
+          var scale = [40, 40];
+          var range = null;
+          var $rulerWidget = null;
+
           // The $timeout is required due to player size changes during render
           $timeout(function() {
             if (player) {
-              var playerWidth = $player.width(),
-                  playerHeight = $player.height();
+              playerWidth = $player.width();
+              playerHeight = $player.height();
               defaultPlayerDimensions[0] = playerWidth > defaultPlayerDimensions[0] ? playerWidth : defaultPlayerDimensions[0];
               defaultPlayerDimensions[1] = playerHeight > defaultPlayerDimensions[1] ? playerHeight : defaultPlayerDimensions[1];
             }
-            var scale = [40, 40],
             range = [
               [0, defaultPlayerDimensions[0] / scale[0]],
               [0, defaultPlayerDimensions[1] / scale[1]]
             ];
-            var $rulerWidget = element.find('.cs-ruler-widget');
+            $rulerWidget = element.find('.cs-ruler-widget');
             if (scope.graphie) {
               $rulerWidget.empty();
               delete scope.graphie;
@@ -57,16 +70,10 @@ var main = [
             });
             element.find('.cs-ruler-widget').height(0).width(0); // Prevents the ruler container of blocking underlying content
           }, 100);
-        },
-        getSession: function() {return {};},
-        setResponse: function(response) {},
-        setMode: function(newMode) {},
-        reset: function() {},
-        resetStash: function() {},
-        isAnswerEmpty: function() { return false;},
-        editable: function(editable) {},
-        answerChangedHandler: function() {}
+        }
       };
+
+      addEmptyFunctions(scope.containerBridge, ['answerChangedHandler', 'editable', 'getSession', 'isAnswerEmpty', 'reset', 'setMode', 'setResponse']);
 
       function toggleVisibility() {
         scope.isVisible = !scope.isVisible;
