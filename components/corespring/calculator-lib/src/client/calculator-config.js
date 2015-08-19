@@ -21,15 +21,15 @@ var calculatorConfig = [
     buttons.nine = { id: 'nine', name: 'Nine', symbol: '9', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.zero = { id: 'zero', name: 'Zero', symbol: '0', logic: 'core', type: 'Number', cssClass: 'number' };
     buttons.decimal = { id: 'decimal', name: 'Decimal', symbol: '.', logic: 'core', type: 'Number', cssClass: 'number decimal' };
-    buttons.equals = { id: 'equals', name: 'Equals', symbol: '=', logic: 'core', type: 'Operator', numOfOperands: '1', cssClass: 'number equals' };
+    buttons.equals = { id: 'equals', name: 'Equals', symbol: '&#61;', logic: 'core', type: 'Operator', numOfOperands: '1', cssClass: 'number equals' };
     // Basic functions
-    buttons.sqrt = { id: 'sqrt', name: 'Square root', symbol: '√', logic: 'basic', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
-    buttons.plus = { id: 'plus', name: 'Plus', symbol: '+', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
-    buttons.minus = { id: 'minus', name: 'Minus', symbol: '-', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
-    buttons.multiply = { id: 'multiply', name: 'Multiply', symbol: 'x', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
-    buttons.divide = { id: 'divide', name: 'Divide', symbol: '÷', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
+    buttons.sqrt = { id: 'sqrt', name: 'Square root', symbol: '&#8730;', logic: 'basic', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
+    buttons.plus = { id: 'plus', name: 'Plus', symbol: '&#43;', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
+    buttons.minus = { id: 'minus', name: 'Minus', symbol: '&#45;', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
+    buttons.multiply = { id: 'multiply', name: 'Multiply', symbol: '&#120;', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
+    buttons.divide = { id: 'divide', name: 'Divide', symbol: '&#247;', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function' };
     buttons.change_sign = { id: 'change_sign', name: 'Plus/minus', symbol: '+/-', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
-    buttons.pi = { id: 'pi', name: 'Pi', symbol: 'π', logic: 'scientific', type: 'Constant', cssClass: 'basic-function' };
+    buttons.pi = { id: 'pi', name: 'Pi', symbol: '&#960;', logic: 'scientific', type: 'Constant', cssClass: 'basic-function' };
     buttons.abs = { id: 'abs', name: 'Absolute value', symbol: 'abs', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function' };
 
     // Memory section
@@ -41,8 +41,8 @@ var calculatorConfig = [
     buttons.radians = { id: angularUnits.RADIANS, name: 'Radians', symbol: 'rad', logic: 'scientific', type: 'Misc', cssClass: 'rad' };
 
     // Advanced function buttons
-    buttons.left_parenthesis = { id: 'left_parenthesis', name: 'Left parenthesis', symbol: '(', logic: 'core', type: 'Misc', cssClass: 'advanced' };
-    buttons.right_parenthesis = { id: 'right_parenthesis', name: 'Right parenthesis', symbol: ')', logic: 'core', type: 'Misc', cssClass: 'advanced' };
+    buttons.left_parenthesis = { id: 'left_parenthesis', name: 'Left parenthesis', symbol: '&#40;', logic: 'core', type: 'Misc', cssClass: 'advanced' };
+    buttons.right_parenthesis = { id: 'right_parenthesis', name: 'Right parenthesis', symbol: '&#41;', logic: 'core', type: 'Misc', cssClass: 'advanced' };
     buttons.sin = { id: 'sin', name: 'Sin', symbol: 'sin', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.asin = { id: 'asin', name: 'Arcsin', symbol: 'sin<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };
     buttons.cos = { id: 'cos', name: 'Cos', symbol: 'cos', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced' };

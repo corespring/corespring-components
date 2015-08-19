@@ -39,7 +39,7 @@ var calculatorTemplate = [
         '         ng-class="{active : isPressed(button)}"',
         '					title="{{buttons[button].name}}"',
         '					ng-mousedown="mousedown(button)"',
-        '         ng-mouseup="mouseup(buttons[button])"><div ng-bind-html-unsafe="buttons[button].symbol"></div></button>',
+        '         ng-mouseup="mouseup(buttons[button])"><div ng-bind-html="buttons[button].symbol"></div></button>',
         '    </div>',
         '  </div>',
         '</div>'
