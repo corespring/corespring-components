@@ -55,7 +55,7 @@ describe('corespring:ruler:configure', function() {
 
   describe('initialization', function() {
     it('constructs', function() {
-      expect(element).toNotBe(null);
+      expect(element).not.toBe(null);
     });
 
     it('sets model', function() {

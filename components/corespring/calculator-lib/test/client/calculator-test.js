@@ -26,6 +26,20 @@ describe('corespring:calculator-lib:calculator', function() {
 
   describe('numbers and constants', function(){
 
+    it('should be able to enter numbers from 0 to 9', function() {
+      calculator.click(scope.buttons.zero);
+      calculator.click(scope.buttons.one);
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.three);
+      calculator.click(scope.buttons.four);
+      calculator.click(scope.buttons.five);
+      calculator.click(scope.buttons.six);
+      calculator.click(scope.buttons.seven);
+      calculator.click(scope.buttons.eight);
+      calculator.click(scope.buttons.nine);
+      expect(scope.results).toEqual('0123456789');
+    });
+
     it('should be able to enter multiple digits numbers', function() {
       calculator.click(scope.buttons.five);
       calculator.click(scope.buttons.three);
@@ -50,6 +64,13 @@ describe('corespring:calculator-lib:calculator', function() {
     it('should allow to enter constants', function() {
       calculator.click(scope.buttons.pi);
       expect(scope.results).toEqual(3.141592653589793);
+    });
+
+    it('should assume multiply operation when constant is pressed after number', function() {
+      calculator.click(scope.buttons.two);      
+      calculator.click(scope.buttons.pi);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toBeCloseTo(2 * 3.141592653589793, 5);
     });
 
   });

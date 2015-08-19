@@ -54,7 +54,7 @@ describe('corespring:ruler:render', function() {
 
   describe('initialization', function() {
     it('constructs', function() {
-      expect(element).toNotBe(null);
+      expect(element).not.toBe(null);
       expect(rulerWidget).toBeDefined();
     });
 

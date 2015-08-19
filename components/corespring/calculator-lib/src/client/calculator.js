@@ -46,22 +46,18 @@ var calculator = [
             this.operandContinue = true;
           }
         }
-        self.clickOperand(button.symbol);
+        self.clickOperand(button.operand);
         self.operandContinue = true;
       };
 
       this.clickConstant = function(button) {
         // if there are no operation in progress, it assumes a multiplication
         if(self.previousOperator === ''){
-          self.previousOperator = 'multiply';
+          self.click(scope.buttons.multiply);
           this.operandContinue = false;
         }
 
-        switch(button.id) {
-          case 'pi':
-            self.clickOperand(Math.PI);
-            break;
-        }
+        self.clickOperand(button.operand);
 
         // make sure new input is treated as a new operand
         this.operandContinue = false;
@@ -90,6 +86,14 @@ var calculator = [
         var value = '';
 
         switch(button.id) {
+          case 'sin':
+          case 'asin':
+          case 'cos':
+          case 'acos':
+          case 'tan':
+          case 'atan':
+            value = button.operation(inputValue, self.angularMeasure);
+            break;
           case 'equals':
             while(self.operationStatus.length > 0) {
               self.pullSubresult();              
@@ -97,53 +101,8 @@ var calculator = [
             self.solveOperation(button);
             value = self.storedValue;
             break;
-          case 'sqrt':
-            value = Math.sqrt(inputValue);
-            break;
-          case 'change_sign':
-            value = inputValue * -1;
-            break;
-          case 'abs':
-            value = Math.abs(inputValue);
-            break;
-          case 'sin':
-            value = Math.sin(this.trigonometricValue(inputValue, self.angularMeasure, scope.angularUnits.RADIANS));
-            break;
-          case 'asin':
-            value = this.trigonometricValue(Math.asin(inputValue), scope.angularUnits.RADIANS, self.angularMeasure);
-            break;
-          case 'cos':
-            value = Math.cos(this.trigonometricValue(inputValue, self.angularMeasure, scope.angularUnits.RADIANS));
-            break;
-          case 'acos':
-            value = this.trigonometricValue(Math.acos(inputValue), scope.angularUnits.RADIANS, self.angularMeasure);
-            break;
-          case 'tan':
-            value = Math.tan(this.trigonometricValue(inputValue, self.angularMeasure, scope.angularUnits.RADIANS));
-            break;
-          case 'atan':
-            value = this.trigonometricValue(Math.atan(inputValue), scope.angularUnits.RADIANS, self.angularMeasure);
-            break;
-          case 'ex':
-            value = Math.exp(inputValue);
-            break;
-          case 'ln':
-            value = Math.log(inputValue);
-            break;
-          case 'log':
-            value = this.log10(inputValue);
-            break;
-          case 'factorial':
-            value = this.factorial(Math.round(inputValue));
-            break;
-          case 'onex':
-            value = 1 / inputValue;
-            break;
-          case 'power_two':
-            value = Math.pow(inputValue, 2);
-            break;
-          case 'power_three':
-            value = Math.pow(inputValue, 3);
+          default:
+            value = button.operation(inputValue);
             break;
         }        
 
@@ -284,26 +243,7 @@ var calculator = [
         var inputValue = parseFloat(scope.results);
 
         if(!self.lastPressedIsBinary) {
-          switch(self.previousOperator) {
-            case 'plus':
-              self.storedValue = self.storedValue + inputValue;
-              break;
-            case 'minus':
-              self.storedValue = self.storedValue - inputValue;
-              break;
-            case 'multiply':
-              self.storedValue = self.storedValue * inputValue;
-              break;
-            case 'divide':
-              self.storedValue = self.storedValue / inputValue;
-              break;
-            case 'power':
-              self.storedValue = Math.pow(self.storedValue, inputValue);
-              break;
-            default:
-              self.storedValue = scope.results;
-              break;
-          }
+          self.storedValue = scope.buttons[self.previousOperator].operation(self.storedValue, inputValue);
         }
                 
         self.operandContinue = false;
@@ -321,40 +261,6 @@ var calculator = [
           context = context[namespaces[i]];
         }
         return context[func].apply(this, args);
-      };
-
-      this.toRadians = function(value) {
-        return value * (Math.PI/180);
-      };
-
-      this.toDegrees = function(value) {
-        return value * (180/Math.PI);
-      };
-
-      this.trigonometricValue = function(value, from, to){
-        if(from === to) {
-          return value;
-        } else {
-          if(to === scope.angularUnits.DEGREES) {
-            return this.toDegrees(value);
-          } else if(to === scope.angularUnits.RADIANS) {
-            return this.toRadians(value);
-          }
-        }
-        
-        return value;
-      };
-
-      this.factorial = function(num){
-        if (num <= 0) {
-          return 1;
-        } else {
-          return num * this.factorial( num - 1 );
-        }
-      };
-
-      this.log10 = function(val) {
-        return Math.log(val) / Math.LN10;
       };
 
       this.checkNaN = function(){

@@ -26,7 +26,7 @@ describe('corespring:protractor:configure', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
 });

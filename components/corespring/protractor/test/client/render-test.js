@@ -49,7 +49,7 @@ describe('corespring:protractor:render', function() {
 
   describe('initialization', function() {
     it('constructs', function() {
-      expect(element).toNotBe(null);
+      expect(element).not.toBe(null);
       expect(protractorWidget).toBeDefined();
     });
 
