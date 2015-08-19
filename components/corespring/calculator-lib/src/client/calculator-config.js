@@ -61,32 +61,39 @@ var calculatorConfig = [
     var regions = {};
     regions.clear = { 
       name: 'Clear area',
-      buttons: ['backspace', 'clear']
+      buttons: ['backspace', 'clear'],
+      cssClass: 'clear'
     };
     regions.numbers = { 
       name: 'Numbers area',
-      buttons: ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'decimal', 'equals']
+      buttons: ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'decimal', 'equals'],
+      cssClass: 'numbers'
     };
     regions.basic = { 
       name: 'Basic functions area', 
-      buttons: ['sqrt', 'plus', 'minus', 'multiply', 'divide']
+      buttons: ['sqrt', 'plus', 'minus', 'multiply', 'divide'],
+      cssClass: 'basic'
     };    
     regions.memory = { 
       name: 'Memory area',
-      buttons: ['store', 'recall']
+      buttons: ['store', 'recall'],
+      cssClass: 'memory'
     };
     regions.scientific_basic = { 
       name: 'Scientific basic functions area',
-      buttons: ['plus', 'minus', 'multiply', 'divide', 'sqrt', 'change_sign', 'pi', 'abs']
+      buttons: ['plus', 'minus', 'multiply', 'divide', 'sqrt', 'change_sign', 'pi', 'abs'],
+      cssClass: 'scientific-basic'
     };
-    regions.deg_rad = { 
+    regions.angular_measure = { 
       name: 'Degrees/radians area',
-      buttons: ['degrees', 'radians']
+      buttons: ['degrees', 'radians'],
+      cssClass: 'angular-measure'
     };
 
     regions.scientific_advanced = { 
       name: 'Scientific advanced functions area',
-      buttons: ['left_parenthesis', 'right_parenthesis', 'ex', 'ln', 'sin', 'asin', 'log', 'factorial', 'cos', 'acos', 'onex', 'power', 'tan', 'atan', 'power_two', 'power_three']
+      buttons: ['left_parenthesis', 'right_parenthesis', 'ex', 'ln', 'sin', 'asin', 'log', 'factorial', 'cos', 'acos', 'onex', 'power', 'tan', 'atan', 'power_two', 'power_three'],
+      cssClass: 'scientific-advanced'
     };
 
     var types = {};
@@ -96,7 +103,7 @@ var calculatorConfig = [
     };
     types.scientific = { 
       name: 'Scientific',
-      regions: ['clear', 'memory', 'deg_rad', 'numbers', 'scientific_basic', 'scientific_advanced']
+      regions: ['clear', 'memory', 'angular_measure', 'numbers', 'scientific_basic', 'scientific_advanced']
     };
     
     function CalculatorConfig() {

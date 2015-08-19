@@ -32,7 +32,7 @@ var calculatorTemplate = [
         '    <input class="input-results" ng-readonly="true" ng-model="results" />',
         '  </div>',
         '  <div class="buttons-panel">',
-        '    <div class="{{ region }}-pad" ng-repeat="region in types[calculatorType].regions">',
+        '    <div class="{{ regions[region].cssClass }}-pad" ng-repeat="region in types[calculatorType].regions">',
         '      <button ng-repeat="button in regions[region].buttons" ',
         '					id="{{button}}-button"',
         '					class="button {{buttons[button].cssClass}}"',
