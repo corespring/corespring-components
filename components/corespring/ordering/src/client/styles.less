@@ -410,9 +410,9 @@
       margin-bottom: 10px;
       max-width: 595px;
       &.warning {
-        border-color: @warning-color;
+        border-color: @warning-color-border;
         ul {
-          border-color: @warning-color;
+          border-color: @warning-color-border;
         }
       }
     }
@@ -441,9 +441,9 @@
       display: table-cell;
       float: left;
       &.warning {
-        border-color: @warning-color;
+        border-color: @warning-color-border;
         ul {
-          border-color: @warning-color;
+          border-color: @warning-color-border;
         }
       }
     }
@@ -588,7 +588,7 @@
       .panel-body {
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
-        background-color: #F2DEDE;
+        background-color: @warning-color-background;
         color: @warning-color;
         border:1px solid @warning-color-border;
       }
