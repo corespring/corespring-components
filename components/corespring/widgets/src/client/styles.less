@@ -30,6 +30,13 @@
       background-color: @incorrect-color;
       color: #ffffff;
     }
+    &.popover-partial .popover-title {
+      background-color: @partial-color;
+      color: #ffffff;
+    }
+    &.popover.popover-partial > .arrow:after {
+      border-bottom-color: @partial-color;
+    }
   }
 }
 

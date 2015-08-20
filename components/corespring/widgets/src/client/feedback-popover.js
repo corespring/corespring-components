@@ -29,6 +29,9 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
           } else if (response.correctness === 'incorrect') {
             title = '&nbsp;';
             popoverClass = 'incorrect';
+            if (response.feedback.correctness === 'partial') {
+              popoverClass = 'partial';
+            }
           } else if (response.correctness === 'correct') {
             title = '&nbsp;';
             popoverClass = 'correct';
