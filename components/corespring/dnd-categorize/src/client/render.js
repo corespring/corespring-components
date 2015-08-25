@@ -186,7 +186,7 @@ function renderCorespringDndCategorize(
         })};
       });
 
-      setResponse({correctness: "correct", correctClass: "correct", score: 1, correctResponse: data.correctResponse, detailedFeedback: detailedFeedback});
+      scope.containerBridge.setResponse({correctness: "correct", correctClass: "correct", score: 1, correctResponse: data.correctResponse, detailedFeedback: detailedFeedback});
       scope.response = "dummy";
       scope.editable = false;
     }
