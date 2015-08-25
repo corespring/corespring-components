@@ -74,7 +74,8 @@ function renderCorespringDndCategorize(
       reset: reset,
       setDataAndSession: setDataAndSession,
       setMode: function(mode) {},
-      setResponse: setResponse
+      setResponse: setResponse,
+      setInstructorData: setInstructorData
     };
 
     scope.$watch('categoriesPerRow', updateView);
@@ -170,6 +171,24 @@ function renderCorespringDndCategorize(
 
     function isAnswerEmpty() {
       return 0 === getSession().numberOfAnswers;
+    }
+
+    function setInstructorData(data) {
+      log('setInstructorData', data);
+      scope.renderModel = prepareRenderModel(scope.data.model, {answers: data.correctResponse});
+      scope.renderModel.choices = [];
+
+      var detailedFeedback = {};
+      var categories = _.map(scope.data.model.categories, wrapCategoryModel);
+      _.forEach(categories, function(cat) {
+        detailedFeedback[cat.model.id] = {correctness: _.map(data.correctResponse[cat.model.id], function(c) {
+          return "correct";
+        })};
+      });
+
+      setResponse({correctness: "correct", correctClass: "correct", score: 1, correctResponse: data.correctResponse, detailedFeedback: detailedFeedback});
+      scope.response = "dummy";
+      scope.editable = false;
     }
 
     function setResponse(response) {
