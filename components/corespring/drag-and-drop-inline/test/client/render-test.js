@@ -60,6 +60,12 @@ describe('corespring:drag-and-drop-inline', function() {
     };
   }
 
+  var instructorData = {
+    correctResponse: {
+      "aa_1": ["c_0"]
+    }
+  };
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -617,6 +623,16 @@ describe('corespring:drag-and-drop-inline', function() {
         id: 'c_1'
       }];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  fdescribe('instructor view', function() {
+    it('ubruik', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      expect(scope.instructorData).toEqual(instructorData);
+      expect(scope.landingPlaceChoices["aa_1"][0].id).toEqual("c_0");
+      expect(scope.response).toEqual({feedbackPerChoice: {aa_1: ['correct']}});
     });
   });
 
