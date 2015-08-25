@@ -626,8 +626,8 @@ describe('corespring:drag-and-drop-inline', function() {
     });
   });
 
-  fdescribe('instructor view', function() {
-    it('ubruik', function() {
+  describe('instructor view', function() {
+    it('instructor data populates state with correct response', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);
       expect(scope.instructorData).toEqual(instructorData);
