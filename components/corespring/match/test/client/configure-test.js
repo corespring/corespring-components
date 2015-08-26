@@ -64,13 +64,16 @@ describe('corespring:match:configure', function() {
       model: {
         columns: [
           {
-            labelHtml: "Custom header"
+            labelHtml: "Custom header",
+            cssClass: "question-header"
               },
           {
-            labelHtml: "Column 1"
+            labelHtml: "Column 1",
+            cssClass: "answer-header"
               },
           {
-            labelHtml: "Column 2"
+            labelHtml: "Column 2",
+            cssClass: "answer-header"
               }
             ],
         rows: [
@@ -254,10 +257,16 @@ describe('corespring:match:configure', function() {
   });
 
   describe('onClickEdit', function() {
-    it("activates the editor with the given id", function() {
-      scope.onClickEdit(fakeEvent(), 4);
-      expect(scope.active[4]).toBeTruthy();
-    });
+      beforeEach(function() {
+        var testModel = createTestModel();
+        container.elements['1'].setModel(testModel);
+      });
+
+      it("activates the editor with the given id", function() {
+        scope.onClickEdit(fakeEvent(), 1, scope.matchModel.columns[0]);
+        expect(scope.active[1]).toBeTruthy();
+        expect(scope.matchModel.columns[0]).toBeDefined();
+     });
   });
 
   describe('deactivate', function() {

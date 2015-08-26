@@ -103,7 +103,6 @@ var main = [
       //-----------------------------------------------------------------------------
 
       function setModel(fullModel) {
-        console.log("setModel", fullModel);
         scope.fullModel = fullModel || {};
         scope.model = scope.fullModel.model;
         scope.config = getConfig(scope.model);
@@ -324,7 +323,6 @@ var main = [
           var correctRow = _.find(scope.fullModel.correctResponse, {
             id: sourceRow.id
           });
-          console.log("makeRow", sourceRow, correctRow, scope.fullModel.correctResponse);
           var matchSet = correctRow.matchSet.map(function(match) {
             return {
               value: match
@@ -354,7 +352,6 @@ var main = [
       }
 
       function onClickMatch(row, index) {
-        console.log("onClickMatch", row, index);
         if (isCheckBox(scope.config.inputType)) {
           row.matchSet[index].value = !row.matchSet[index].value;
         } else {
@@ -390,13 +387,22 @@ var main = [
         scope.active[$index] = true;
       }
 
-      function onClickEdit($event, index) {
+      function onClickEdit($event, index, $this) {
         $event.stopPropagation();
 
         if (!scope.active[index]) {
           $event.preventDefault();
           scope.active = [];
           scope.active[index] = true;
+        }
+
+        if ($this.column) {
+          var elementClass =  '.'+$this.column.cssClass,
+              elementHtml = $(elementClass).find('.wiggi-wiz-editable')[0].innerHTML;
+
+          if (elementHtml ==="Custom header" || elementHtml==="Column 1" || elementHtml==="Column 2" || elementHtml==="Column 3" || elementHtml==="Column 4" ){
+              $(elementClass).find('.wiggi-wiz-editable').html('');
+          }
         }
       }
 
@@ -536,7 +542,7 @@ var main = [
           '           ></i>',
           '        </td>',
           '        <td class="question-col"',
-          '           ng-click="onClickEdit($event, row.wiggiId)"',
+          '           ng-click="onClickEdit($event, row.wiggiId, this)"',
           '          >',
           '          <div class="content-holder" ',
           '            ng-hide="active[row.wiggiId]" ',
@@ -580,7 +586,7 @@ var main = [
       function headerColumns() {
         return [
           '<th ng-repeat="column in matchModel.columns"',
-          '  ng-click="onClickEdit($event, column.wiggiId)"',
+          '  ng-click="onClickEdit($event, column.wiggiId, this)"',
           '  ng-class="column.cssClass">',
           '  <div class="content-holder" ',
           '    ng-hide="active[column.wiggiId]" ',
