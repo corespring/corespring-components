@@ -7,8 +7,7 @@ link = function($sce, $timeout) {
 
     function layoutChoices(choices, order) {
       if (!order) {
-        var shuffled = _.shuffle(_.cloneDeep(choices));
-        return shuffled;
+        return shuffle(choices);
       }
       var ordered = _.map(order, function(v) {
         return _.find(choices, function(c) {
@@ -25,6 +24,34 @@ link = function($sce, $timeout) {
         delete c.correct;
       });
     }
+
+    function shuffle(choices) {
+      function newIndex(item, array) {
+          var t = _.find(array, function(el) {
+              return el.value === item.value;
+          });
+          return t ? array.indexOf(t) : -1;
+      }
+
+      var shuffled = _.shuffle(_.cloneDeep(choices));
+      _.each(choices, function(choice, index) {
+          var temp;
+          var remain = !_.isUndefined(choice.shuffle) && choice.shuffle === false;
+          if (remain) {
+              temp = shuffled[newIndex(choice, shuffled)];
+              shuffled[newIndex(choice, shuffled)] = shuffled[index];
+              shuffled[index] = temp;
+          }
+      });
+
+      return shuffled;
+    }
+
+    var stashOrder = function(choices) {
+      return _.map(choices, function(c) {
+          return c.value;
+      });
+    };
 
     function setFeedback(choices, response) {
       _(choices).each(function(c) {
@@ -44,24 +71,39 @@ link = function($sce, $timeout) {
       });
     }
 
+    var updateUi = function() {
+
+      if (!scope.question || !scope.session) {
+          return;
+      }
+
+      var model = scope.question;
+      var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
+
+      var stash = scope.session.stash = scope.session.stash || {};
+
+      if (stash.shuffledOrder && shuffle) {
+        scope.choices = layoutChoices(_.cloneDeep(model.choices), stash.shuffledOrder);
+      } else if (shuffle) {
+        scope.choices = layoutChoices(_.cloneDeep(model.choices));
+        stash.shuffledOrder = stashOrder(scope.choices);
+        scope.$emit('saveStash', attrs.id, stash);
+      } else {
+        scope.choices = _.cloneDeep(scope.question.choices);
+      }
+    };
+
+
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
-        var model = scope.question;
-        var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
-
-        if (shuffle) {
-          scope.choices = layoutChoices(model.choices);
-        } else {
-          scope.choices = _.cloneDeep(scope.question.choices);
-        }
-
+        updateUi ();
         if (dataAndSession.session && dataAndSession.session.answers) {
           var selectedChoice = _.find(scope.choices, function(c) {
-            return c.value === dataAndSession.session.answers;
+              return c.value === dataAndSession.session.answers;
           });
 
           scope.select(selectedChoice);
@@ -104,6 +146,10 @@ link = function($sce, $timeout) {
           scope.choices = layoutChoices(model.choices);
         }
         clearFeedback(scope.choices);
+      },
+
+      resetStash: function() {
+        scope.session.stash = {};
       },
 
       isAnswerEmpty: function() {
