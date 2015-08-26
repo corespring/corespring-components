@@ -350,7 +350,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
           } else if (response && response.correctness === 'warning') {
             scope.graphCallback({
               graphStyle: {
-                borderColor: "#B94A48",
+                borderColor: "#999",
                 borderWidth: "2px"
               }
             });

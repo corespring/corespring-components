@@ -211,7 +211,6 @@ main = [
         '        </li>',
         '      </ul>',
         '    </div>',
-        '    <span class="result-icon"></span>',
         '  </div>',
         '</div>'
       ].join("\n")
