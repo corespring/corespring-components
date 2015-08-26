@@ -273,6 +273,12 @@ var main = ['$compile', '$modal', '$rootScope',
           };
         },
 
+        setInstructorData: function(data) {
+          scope.renewResponse(data.correctResponse);
+          this.setResponse({correctness: "correct"});
+          scope.lockGraph();
+        },
+
         setResponse: function (response) {
           console.log(response);
           scope.feedback = response && response.feedback;
@@ -338,7 +344,7 @@ var main = ['$compile', '$modal', '$rootScope',
       };
 
       scope.$watch('editable', function (e) {
-        if (!_.isUndefined(e) && e === false) {
+        if (!_.isUndefined(e) && e === false && scope.graphCallback) {
           scope.graphCallback({
             lockGraph: true
           });
