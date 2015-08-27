@@ -28,7 +28,7 @@ var main = [
         },
 
         setInstructorData: function(data) {
-          scope.answer = "Open Ended Answers are not automatically scored, no correct answer is defined.";
+          scope.answer = "Open Ended Answers are not automatically scored. No correct answer is defined.";
           scope.received = true;
         },
 
