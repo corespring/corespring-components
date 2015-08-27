@@ -181,6 +181,20 @@ describe('corespring:number-line:render', function() {
     });
   });
 
+  describe('instructor data', function() {
+    it('should set up number line with correct answer', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse');
+      spyOn(container.elements['1'],'editable');
+      container.elements['1'].setInstructorData({correctResponse: [{}, {}]});
+      expect(container.elements['1'].editable).toHaveBeenCalledWith(false);
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'correct',
+        feedback: {elements: [{isCorrect: true}, {isCorrect: true}]}
+      });
+    });
+  });
+
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
