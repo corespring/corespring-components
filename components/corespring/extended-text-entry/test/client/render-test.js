@@ -92,7 +92,7 @@ describe('corespring', function() {
       container.elements['1'].setInstructorData({});
       rootScope.$digest();
       expect(scope.received).toEqual(true);
-      expect(scope.answer).toEqual("Open Ended Answers are not automatically scored, no correct answer is defined.");
+      expect(scope.answer).toEqual("Open Ended Answers are not automatically scored. No correct answer is defined.");
     });
   });
 
