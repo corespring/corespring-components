@@ -287,7 +287,7 @@ var main = ['$compile', '$modal', '$rootScope',
           var color = {
             correct: "#3c763d",
             incorrect: "#EC971F",
-            warning: "#a94442",
+            warning: "#999",
             none: ""
           }[(response && response.correctness) || "none"];
           scope.graphCallback({

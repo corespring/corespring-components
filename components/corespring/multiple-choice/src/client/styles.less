@@ -288,6 +288,11 @@
     background-color: #EC971F;
     color: #ffffff;
   }
+  .alert-danger {
+    background-color: @warning-color-background;
+    border-color: @warning-color-border;
+    color: @warning-color;
+  }
   .horizontal {
     display: table-cell;
     .choice-input {
@@ -388,7 +393,7 @@
     .checkbox-choice,
     .radio-choice,
     .radio-choice[disabled] {
-      border-color: @warning-color;
+      border-color: @warning-color-border;
       border-width: 2px;
       opacity: 1;
     }

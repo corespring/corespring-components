@@ -78,7 +78,6 @@ var main = [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder">',
         '    <textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="form-control text-input" />',
-        '    <i class="warning-icon fa fa-warning"></i>',
         '  </div>',
         '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
         '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
