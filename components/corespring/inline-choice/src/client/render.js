@@ -80,7 +80,7 @@ link = function($sce, $timeout) {
 
       setInstructorData: function(data) {
         var selectedChoice = _.find(scope.choices, function(c) {
-          return c.value === data.correctResponse;
+          return _([data.correctResponse]).flatten().contains(c.value);
         });
         scope.select(selectedChoice);
         scope.response = {correctness: 'correct'};
