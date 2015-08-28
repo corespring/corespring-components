@@ -151,7 +151,7 @@ var main = [
 
         setInstructorData: function(data) {
           _.each(scope.choices, function(c) {
-            if (_.contains(data.correctResponse.value, c.value)) {
+            if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
               c.correct = true;
             }
           });
