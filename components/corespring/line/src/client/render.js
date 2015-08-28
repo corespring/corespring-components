@@ -377,6 +377,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
         setMode: function(newMode) {},
 
         reset: function() {
+          console.log("Resetting");
           scope.feedback = undefined;
           scope.response = undefined;
           scope.correctClass = undefined;
