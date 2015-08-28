@@ -149,6 +149,14 @@ var main = [
           };
         },
 
+        setInstructorData: function(data) {
+          _.each(scope.choices, function(c) {
+            if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
+              c.correct = true;
+            }
+          });
+        },
+
         // sets the server's response
         setResponse: function(response) {
           $(element).find(".feedback-panel").hide();
@@ -179,6 +187,7 @@ var main = [
           }, 10);
         },
         setMode: function(newMode) {
+          scope.mode = newMode;
         },
         /**
          * Reset the ui back to an unanswered state
@@ -271,7 +280,7 @@ var main = [
           return res + "default";
         }
 
-        if (o.correct && scope.question.config.showCorrectAnswer === "inline") {
+        if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode == 'instructor')) {
           res = "selected ";
         }
 
