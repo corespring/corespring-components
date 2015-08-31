@@ -10,8 +10,10 @@ var def = ['Canvas',
       link: function(scope, elem, attr) {
         //global vars
         var canvasAttrs = {
-          domain: parseInt(attr.domain ? attr.domain : 10, 10),
-          range: parseInt(attr.range ? attr.range : 10, 10),
+          domainMin: parseInt(attr.domainmin ? attr.domainmin : -10, 10),
+          domainMax: parseInt(attr.domainmax ? attr.domainmax : 10, 10),
+          rangeMin: parseInt(attr.rangemin ? attr.rangemin : -10, 10),
+          rangeMax: parseInt(attr.rangemax ? attr.rangemax : 10, 10),
           scale: parseFloat(attr.scale ? attr.scale : 1, 10),
           maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
           domainLabel: attr.domainlabel,
