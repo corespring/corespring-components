@@ -72,10 +72,16 @@
                             "id": "#domainLabel",
                             "required": false
                         },
-                        "domain": {
+                        "domainMin": {
                             "type": "integer",
-                            "description": "The number to use for domain",
-                            "id": "#domain",
+                            "description": "The number to use for x axis min",
+                            "id": "#xMin",
+                            "required": false
+                        },
+                        "domainMax": {
+                            "type": "integer",
+                            "description": "The number to use for x axis max",
+                            "id": "#xMax",
                             "required": false
                         },
                         "graphHeight": {
@@ -96,10 +102,16 @@
                             "id": "#rangeLabel",
                             "required": false
                         },
-                        "range": {
+                        "rangeMin": {
                             "type": "integer",
-                            "description": "The number to use for range",
-                            "id": "#range",
+                            "description": "The number to use for y axis min",
+                            "id": "#yMin",
+                            "required": false
+                        },
+                        "rangeMax": {
+                            "type": "integer",
+                            "description": "The number to use for y axis max",
+                            "id": "#yMax",
                             "required": false
                         },
                         "showCoordinates": {

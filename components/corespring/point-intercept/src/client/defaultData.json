@@ -30,9 +30,11 @@
         "D"
       ],
       "domainLabel": "x",
-      "domain": 10,
+      "domainMin": -10,
+      "domainMax": 10,
       "rangeLabel": "y",
-      "range": 10,
+      "rangeMin": -10,
+      "rangeMax": 10,
       "tickLabelFrequency": 5,
       "scale": 1,
       "sigfigs": -1,

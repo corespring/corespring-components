@@ -52,11 +52,19 @@ var main = [
       '       </div>',
       '       <div class="config-form-row">',
       labelWithInput({
-        label: 'Domain:',
-        modelKey: 'domain',
+        label: 'Domain Minimum:',
+        modelKey: 'domainMin',
         inputType: "number",
-        placeholder: '{{defaults.domain}}'
+        placeholder: '{{defaults.domainMin}}'
       }),
+      labelWithInput({
+        label: 'Domain Maximum:',
+        modelKey: 'domainMax',
+        inputType: "number",
+        placeholder: '{{defaults.domainMax}}'
+      }),
+      '       </div>',
+      '       <div class="config-form-row">',
       labelWithInput({
         label: 'Domain Label:',
         modelKey: 'domainLabel',
@@ -65,11 +73,19 @@ var main = [
       '       </div>',
       '       <div class="config-form-row">',
       labelWithInput({
-        label: 'Range:',
-        modelKey: 'range',
+        label: 'Range Minimum:',
+        modelKey: 'rangeMin',
         inputType: "number",
-        placeholder: '{{defaults.range}}'
+        placeholder: '{{defaults.rangeMin}}'
       }),
+      labelWithInput({
+        label: 'Range Maximum:',
+        modelKey: 'rangeMax',
+        inputType: "number",
+        placeholder: '{{defaults.rangeMax}}'
+      }),
+      '       </div>',
+      '       <div class="config-form-row">',
       labelWithInput({
         label: 'Range Label:',
         modelKey: 'rangeLabel',

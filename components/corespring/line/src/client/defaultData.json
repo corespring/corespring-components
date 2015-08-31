@@ -12,8 +12,10 @@
     "config": {
       "graphWidth": "500",
       "graphHeight": "500",
-      "domain": 10,
-      "range": 10,
+      "domainMin": -10,
+      "domainMax": 10,
+      "rangeMin": -10,
+      "rangeMax": 10,
       "scale": 1,
       "domainLabel": "x",
       "rangeLabel": "y",

@@ -5,12 +5,7 @@ exports.service = ['$log',
   function($log) {
     function Canvas(id, attrs) {
       this.board = JXG.JSXGraph.initBoard(id, {
-        boundingbox: [0 - attrs.domain, attrs.range, attrs.domain, 0 - attrs.range],
-        grid: {
-          hasGrid: true,
-          gridX: attrs.scale,
-          gridY: attrs.scale
-        },
+        boundingbox: [attrs.domainMin, attrs.rangeMax, attrs.domainMax, attrs.rangeMin],
         showNavigation: false,
         showCopyright: false,
         zoom: false
@@ -104,6 +99,7 @@ exports.service = ['$log',
     };
 
     Canvas.prototype.addPoint = function(coords, ptName, ptOptions) {
+      console.log(coords);
       var pointAttrs = _.defaults({
         strokeColor: this.showPoints ? "blue" : "transparent",
         fillColor: this.showPoints ? "blue" : "transparent",
