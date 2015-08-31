@@ -63,8 +63,8 @@ function CorespringUndoStartOver() {
     return [
           '<div>',
           '  <div class="undo-start-over pull-right">',
-          '    <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="undoStack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
-          '    <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="undoStack.length < 2">Start over</button>',
+          '    <button type="button" class="btn-player btn-undo" ng-click="undo()" ng-class="{disabled: undoStack.length < 2}" ng-disabled="undoStack.length < 2"><i class="fa fa-angle-left"></i> Undo</button>',
+          '    <button type="button" class="btn-player" ng-click="startOver()" ng-class="{disabled: undoStack.length < 2}" ng-disabled="undoStack.length < 2"><i class="fa fa-angle-left"></i>Start over</button>',
           '  </div>',
           '  <div class="clearfix"></div>',
           '</div>'

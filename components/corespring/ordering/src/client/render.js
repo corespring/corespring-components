@@ -7,8 +7,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var buttonRow = function (attrs) {
       return [
         '  <div class="button-row btn-group-md pull-right {{model.config.choiceAreaLayout}}" ' + attrs + '>',
-        '  <button type="button" ng-hide="response" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
-        '    <button type="button" ng-hide="response" class="btn btn-default" ng-click="startOverAndClear()">Start over</button>',
+        '  <button type="button" ng-hide="response" class="btn-player btn-undo" ng-click="undo()"><i class="fa fa-angle-left"></i>  Undo</button>',
+        '    <button type="button" ng-hide="response" class="btn-player" ng-click="startOverAndClear()"><i class="fa fa-angle-left"></i> Start over</button>',
         '    <div class="btn btn-success show-correct-button" ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
         '      <i class="fa fa-eye-slash"></i>&nbsp;{{top.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer',
         '    </div>',

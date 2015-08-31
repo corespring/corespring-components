@@ -411,8 +411,8 @@ var main = [
       function undoStartOver() {
         return [
           '<div ng-show="editable" class="undo-start-over pull-right">',
-          '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="stack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
-          '  <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="stack.length < 2">Start over</button>',
+          '  <button type="button" class="btn-player btn-undo" ng-click="undo()" ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"><i class="fa fa-angle-left"></i> Undo</button>',
+          '  <button type="button" class="btn-player" ng-click="startOver()" ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"><i class="fa fa-angle-left"></i> Start over</button>',
           '</div>',
           '<div class="clearfix"></div>'
         ].join('');
