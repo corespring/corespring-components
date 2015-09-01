@@ -180,7 +180,7 @@ var interactiveGraph = [
         '<div class="interactive-graph">',
         '  <div class="undo-button-row" ng-show="editable">',
         '    <button class="btn-player btn-undo" ng-hide="options.undoDisabled" ng-click="undo()"><i class="fa fa-angle-left"></i> Undo</button>',
-        '    <button class="btn-player" ng-click="startOver()"><i class="fa fa-angle-left"></i> Start over</button>',
+        '    <button class="btn-player" ng-click="startOver()"><i class="fa start-over-icon">&nbsp;</i> Start over</button>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
