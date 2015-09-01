@@ -22,6 +22,8 @@ function renderCorespringDndCategorize(
   MathJaxService
 ) {
 
+  var defaultWidth;
+
   return {
     controller: ['$scope', controller],
     link: link,
@@ -38,8 +40,6 @@ function renderCorespringDndCategorize(
       imageService: '=?imageService'
     }
   };
-
-  var defaultWidth;
 
   function controller(scope) {
     scope.activate = function(id) {

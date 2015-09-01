@@ -280,7 +280,7 @@ var main = [
           return res + "default";
         }
 
-        if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode == 'instructor')) {
+        if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode === 'instructor')) {
           res = "selected ";
         }
 

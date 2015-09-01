@@ -165,7 +165,7 @@ describe('corespring:inline-choice', function() {
     it('setting instructor data selects correct answer and sets correctness to correct', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);
-      var correctChoice = _.find(scope.choices, function(c) { return c.value === 'mc_1' });
+      var correctChoice = _.find(scope.choices, function(c) { return c.value === 'mc_1';});
       expect(scope.selected).toEqual(correctChoice);
       expect(scope.response.correctness).toEqual('correct');
     });

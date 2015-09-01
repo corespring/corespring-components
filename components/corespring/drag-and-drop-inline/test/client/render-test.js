@@ -631,7 +631,7 @@ describe('corespring:drag-and-drop-inline', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);
       expect(scope.instructorData).toEqual(instructorData);
-      expect(scope.landingPlaceChoices["aa_1"][0].id).toEqual("c_0");
+      expect(scope.landingPlaceChoices.aa_1[0].id).toEqual("c_0");
       expect(scope.response).toEqual({feedbackPerChoice: {aa_1: ['correct']}});
     });
   });

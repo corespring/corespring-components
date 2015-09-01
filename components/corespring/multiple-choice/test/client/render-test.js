@@ -161,7 +161,7 @@ describe('corespring:multiple-choice-render', function() {
     it('setting instructor data marks correct answers as correct in the model', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);
-      var correctChoice = _.find(scope.choices, function(c) { return c.value === '1' });
+      var correctChoice = _.find(scope.choices, function(c) { return c.value === '1';});
       expect(correctChoice.correct).toEqual(true);
       _(scope.choices).without(correctChoice).each(function(c) {
          expect(c.correct).not.toEqual(true);
