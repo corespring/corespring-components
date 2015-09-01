@@ -274,9 +274,11 @@ var main = [
 
           reset('graphWidth', defaults.graphWidth);
           reset('graphHeight', defaults.graphHeight);
-          reset('domain', defaults.domain);
+          reset('domainMin', defaults.domainMin);
+          reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);
-          reset('range', defaults.range);
+          reset('rangeMin', defaults.rangeMin);
+          reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
           reset('tickLabelFrequency', defaults.tickLabelFrequency);
           reset('sigfigs', defaults.sigfigs);
