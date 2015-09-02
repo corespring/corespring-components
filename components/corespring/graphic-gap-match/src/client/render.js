@@ -275,8 +275,8 @@ var main = [
       template: [
         '<div class="view-graphic-gap-match">',
         '  <div class="button-row" ng-hide="response && response.correctness === \'instructor\'">',
-        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="undo()">Undo</button>',
-        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="startOver()">Start Over</button>',
+        '    <span cs-undo-button ng-disabled="!editable"></span>',
+        '    <span cs-start-over-button ng-disabled="!editable"></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="response && response.correctness === \'instructor\'">',
