@@ -119,7 +119,7 @@ describe('corespring', function() {
       spyOn(scope, 'graphCallback');
       container.elements[1].setResponse({correctness: 'warning', feedback: 'good'});
       scope.$digest();
-      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#a94442', borderWidth : '2px' }, pointsStyle : '#a94442' });
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : '#999' });
     });
   });
 
@@ -143,6 +143,19 @@ describe('corespring', function() {
       container.elements['1'].setDataAndSession(testModel);
       scope.pointResponse = ["0.1,0.6"];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  describe('set instructor data', function() {
+    it('set correct response in the graph and lock it', function() {
+      spyOn(scope, "renewResponse");
+      spyOn(scope, "lockGraph");
+      spyOn(container.elements['1'], "setResponse");
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData({correctResponse: ["0,0","1,1"]});
+      expect(scope.renewResponse).toHaveBeenCalledWith(['0,0', '1,1']);
+      expect(scope.lockGraph).toHaveBeenCalled();
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({correctness: 'correct'});
     });
   });
 

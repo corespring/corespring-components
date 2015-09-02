@@ -63,9 +63,9 @@ var main = [
                 (range[1][0] + range[1][1]) / 2
               ],
               label: rulerConfig.label,
-              pixelsPerUnit: rulerConfig.pixelsPerUnit,
-              ticksPerUnit: rulerConfig.ticks,
-              units: rulerConfig.length,
+              pixelsPerUnit: parseInt(rulerConfig.pixelsPerUnit, 10),
+              ticksPerUnit: parseInt(rulerConfig.ticks, 10),
+              units: parseInt(rulerConfig.length, 10),
               movablePointColor: arrowFillColor
             });
             element.find('.cs-ruler-widget').height(0).width(0); // Prevents the ruler container of blocking underlying content
