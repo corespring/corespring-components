@@ -12,6 +12,9 @@ exports.service = ['$log',
           ticks: {
             ticksDistance: 0
           },
+          strokeColor: "#3d3d3d",
+          highlightStrokeColor: "#3d3d3d",
+          strokeWidth: 2,
           name: name,
           withLabel: false,
           lastArrow: true,
@@ -30,7 +33,7 @@ exports.service = ['$log',
           ticksDistance: ticksDistance,
           minorTicks: 0,
           majorHeight: -1,
-          strokeColor:'#ccc',
+          strokeColor:'#cccccc',
           scale: scale
         };
 
