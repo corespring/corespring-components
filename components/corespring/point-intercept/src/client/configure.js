@@ -16,10 +16,11 @@ var main = [
     var labelWithInput = function(options) {
       options.size = options.size || 3;
       options.labelSize = options.labelSize || options.size;
+      options.labelClass = options.labelClass || "";
       options.inputType = options.inputType || "text";
       options.inputClass = options.inputClass || "default-input";
       return [
-        '<label class="col-sm-' + options.labelSize + '">' + options.label + '</label>',
+        '<label class="col-sm-' + options.labelSize+' '+options.labelClass+'">' + options.label + '</label>',
         '<div class="col-sm-' + options.size + ' ' + options.inputClass + '">',
         '  <input ',
         '    type="' + options.inputType + '" ',
@@ -56,11 +57,13 @@ var main = [
       '       <div class="config-form-row">',
       labelWithInput({
         label: 'Add padding to graph',
+        labelClass: 'input-number-label',
         modelKey: 'graphPadding',
         inputType: "number",
         placeholder: '{{defaults.graphPadding}}',
         extraProperties: "min='0' max= '100' step='25'"
       }),
+      '         <span class="col-sm-1 input-number-label">%</span>',
       '       </div>',
       '       <div class="config-form-row">',
       labelWithInput({

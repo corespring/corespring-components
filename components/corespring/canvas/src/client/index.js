@@ -27,9 +27,10 @@ exports.service = ['$log',
         ], axisAttrs);
       }
 
-      function createTicks(axis, ticksDistance, scale, scaleSymbol) {
+      function createTicks(axis, ticksDistance, scale, scaleSymbol, label) {
         var ticksAttrs = {
           drawLabels: true,
+          label: label,
           ticksDistance: ticksDistance,
           minorTicks: 0,
           majorHeight: -1,
@@ -61,9 +62,17 @@ exports.service = ['$log',
       });
 
       var domainAxis = createAxis(attrs.domainLabel, [0, 0], [1, 0]);
-      var domainTicks = createTicks(domainAxis, attrs.tickLabelFrequency, 1, '');
+      var domainTicks = createTicks(domainAxis, attrs.tickLabelFrequency, 1, '', {
+            offset: [0,0],
+            anchorX: 'middle',
+            anchorY: 'top'
+          });
       var rangeAxis = createAxis(attrs.rangeLabel, [0, 0], [0, 1]);
-      var rangeTicks = createTicks(rangeAxis, attrs.tickLabelFrequency, 1, '');
+      var rangeTicks = createTicks(rangeAxis, attrs.tickLabelFrequency, 1, '', {
+            offset: [-5,0],
+            anchorX: 'right',
+            anchorY: 'middle'
+          });
 
       if (attrs.domainLabel) {
         var xcoords = new JXG.Coords(JXG.COORDS_BY_USER, [attrs.domainMax, 0], this.board);
