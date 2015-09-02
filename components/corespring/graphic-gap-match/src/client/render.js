@@ -250,8 +250,8 @@ var main = [
       template: [
         '<div class="view-graphic-gap-match">',
         '  <div class="button-row">',
-        '    <button class="btn-player btn-undo" ng-class="{disabled: !editable}" ng-disabled="!editable" ng-click="undo()"><i class="fa fa-angle-left"></i> Undo</button>',
-        '    <button class="btn-player" ng-class="{disabled: !editable}" ng-disabled="!editable" ng-click="startOver()"><i class="fa start-over-icon">&nbsp;</i> Start Over</button>',
+        '    <span cs-undo-button ng-class="{disabled: !editable}" ng-disabled="!editable"></span>',
+        '    <span cs-start-over-button ng-class="{disabled: !editable}" ng-disabled="!editable"></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div class="main-container {{model.config.choiceAreaPosition}}">',
