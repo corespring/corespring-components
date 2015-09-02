@@ -26,6 +26,7 @@ var main = [
         '    class="form-control" ',
         '    ng-model="fullModel.model.config.' + options.modelKey + '" ',
         options.placeholder ? ('placeholder="' + options.placeholder + '"') : '',
+        options.extraProperties,
         '  />',
         '</div>'
       ].join('');
@@ -40,14 +41,25 @@ var main = [
       '     <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
       labelWithInput({
-        label: 'Width:',
+        label: 'Width',
         modelKey: 'graphWidth',
+        inputType: "number",
         placeholder: '{{defaults.graphWidth}}'
       }),
       labelWithInput({
-        label: 'Height:',
+        label: 'Height',
         modelKey: 'graphHeight',
+        inputType: "number",
         placeholder: '{{defaults.graphHeight}}'
+      }),
+      '       </div>',
+      '       <div class="config-form-row">',
+      labelWithInput({
+        label: 'Add padding to graph',
+        modelKey: 'graphPadding',
+        inputType: "number",
+        placeholder: '{{defaults.graphPadding}}',
+        extraProperties: "min='0' max= '100' step='25'"
       }),
       '       </div>',
       '       <div class="config-form-row">',
@@ -274,6 +286,7 @@ var main = [
 
           reset('graphWidth', defaults.graphWidth);
           reset('graphHeight', defaults.graphHeight);
+          reset('graphPadding', defaults.graphPadding);
           reset('domainMin', defaults.domainMin);
           reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);

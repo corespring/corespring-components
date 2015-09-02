@@ -10,6 +10,7 @@ var def = ['Canvas',
       link: function(scope, elem, attr) {
         //global vars
         var canvasAttrs = {
+          graphPadding: parseInt(attr.graphpadding ? attr.graphpadding : 25, 10),
           domainMin: parseInt(attr.domainmin ? attr.domainmin : -10, 10),
           domainMax: parseInt(attr.domainmax ? attr.domainmax : 10, 10),
           rangeMin: parseInt(attr.rangemin ? attr.rangemin : -10, 10),

@@ -4,8 +4,51 @@ exports.framework = "angular";
 exports.service = ['$log',
   function($log) {
     function Canvas(id, attrs) {
+
+      var self = this;
+
+      function createAxis(name, point1, point2) {
+        var axisAttrs = {
+          ticks: {
+            ticksDistance: 0
+          },
+          name: name,
+          withLabel: false,
+          lastArrow: true,
+          firstArrow: true
+        };
+
+        return self.board.create('axis', [
+          point1,
+          point2
+        ], axisAttrs);
+      }
+
+      function createTicks(axis, ticksDistance, scale, scaleSymbol) {
+        var ticksAttrs = {
+          drawLabels: true,
+          ticksDistance: ticksDistance,
+          minorTicks: 0,
+          majorHeight: -1,
+          strokeColor:'#ccc',
+          scale: scale
+        };
+
+        if(scaleSymbol) {
+          ticksAttrs.scaleSymbol = ' '+scaleSymbol;
+        }
+
+        self.board.create('ticks', [axis, ticksDistance], ticksAttrs);
+      }
+
+      var padding = attrs.tickLabelFrequency * attrs.graphPadding / 100;
+
       this.board = JXG.JSXGraph.initBoard(id, {
-        boundingbox: [attrs.domainMin, attrs.rangeMax, attrs.domainMax, attrs.rangeMin],
+        boundingbox: [
+          attrs.domainMin - padding,
+          attrs.rangeMax + padding,
+          attrs.domainMax + padding,
+          attrs.rangeMin - padding],
         showNavigation: false,
         showCopyright: false,
         zoom: false
@@ -13,31 +56,21 @@ exports.service = ['$log',
         width: attrs.width,
         height: attrs.height
       });
-      var axisAttrs = {
-        ticks: {
-          minorTicks: attrs.tickLabelFrequency - 1,
-          drawLabels: true
-        },
-        lastArrow: true,
-        firstArrow: true
-      };
-      this.board.create('axis', [
-        [0, 0],
-        [1, 0]
-      ], axisAttrs);
-      this.board.create('axis', [
-        [0, 0],
-        [0, 1]
-      ], axisAttrs);
+
+      var domainAxis = createAxis(attrs.domainLabel, [0, 0], [1, 0]);
+      var domainTicks = createTicks(domainAxis, attrs.tickLabelFrequency, 1, '');
+      var rangeAxis = createAxis(attrs.rangeLabel, [0, 0], [0, 1]);
+      var rangeTicks = createTicks(rangeAxis, attrs.tickLabelFrequency, 1, '');
+
       if (attrs.domainLabel) {
-        var xcoords = new JXG.Coords(JXG.COORDS_BY_USER, [attrs.domain, 0], this.board);
+        var xcoords = new JXG.Coords(JXG.COORDS_BY_USER, [attrs.domainMax, 0], this.board);
         var xoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [xcoords.scrCoords[1] - ((attrs.domainLabel.length * 4) + 10), xcoords.scrCoords[2] + 10], this.board);
         this.board.create('text', [xoffset.usrCoords[1], xoffset.usrCoords[2], attrs.domainLabel], {
           fixed: true
         });
       }
       if (attrs.rangeLabel) {
-        var ycoords = new JXG.Coords(JXG.COORDS_BY_USER, [0, attrs.range], this.board);
+        var ycoords = new JXG.Coords(JXG.COORDS_BY_USER, [0, attrs.rangeMax], this.board);
         var yoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [ycoords.scrCoords[1] - ((attrs.rangeLabel.length * 4) + 15), ycoords.scrCoords[2] + 10], this.board);
         this.board.create('text', [yoffset.usrCoords[1], yoffset.usrCoords[2], attrs.rangeLabel], {
           fixed: true
