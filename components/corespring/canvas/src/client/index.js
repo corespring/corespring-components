@@ -135,7 +135,6 @@ exports.service = ['$log',
     };
 
     Canvas.prototype.addPoint = function(coords, ptName, ptOptions) {
-      console.log(coords);
       var pointAttrs = _.defaults({
         strokeColor: this.showPoints ? "blue" : "transparent",
         fillColor: this.showPoints ? "blue" : "transparent",

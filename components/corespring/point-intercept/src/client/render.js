@@ -283,7 +283,6 @@ var main = ['$compile', '$modal', '$rootScope',
         },
 
         setResponse: function (response) {
-          console.log(response);
           scope.feedback = response && response.feedback;
           scope.response = response;
           scope.correctClass = response.correctness;
