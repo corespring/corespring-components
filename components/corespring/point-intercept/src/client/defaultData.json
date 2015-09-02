@@ -19,8 +19,9 @@
   },
   "model": {
     "config": {
-      "graphWidth": "500",
-      "graphHeight": "500",
+      "graphWidth": 500,
+      "graphHeight": 500,
+      "graphPadding": 25,
       "maxPoints": "",
       "labelsType": "present",
       "pointLabels": [

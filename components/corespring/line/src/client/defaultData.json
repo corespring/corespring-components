@@ -10,8 +10,9 @@
   },
   "model" : {
     "config": {
-      "graphWidth": "500",
-      "graphHeight": "500",
+      "graphWidth": 500,
+      "graphHeight": 500,
+      "graphPadding": 25,
       "domainMin": -10,
       "domainMax": 10,
       "rangeMin": -10,

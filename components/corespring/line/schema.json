@@ -84,15 +84,21 @@
                             "required": false
                         },
                         "graphHeight": {
-                            "type": "string",
+                            "type": "integer",
                             "description": "The height in pixels that should be used to display the graph",
                             "id": "#graphHeight",
                             "required": false
                         },
                         "graphWidth": {
-                            "type": "string",
+                            "type": "integer",
                             "description": "The width in pixels that should be used to display the graph",
                             "id": "#graphWidth",
+                            "required": false
+                        },
+                        "graphPadding": {
+                            "type": "integer",
+                            "description": "The padding in tick percentage that should be used to display the graph",
+                            "id": "#graphPadding",
                             "required": false
                         },
                         "rangeLabel": {
