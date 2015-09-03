@@ -159,7 +159,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
                     x: pointA[0],
                     y: pointA[1],
                     isSet: true,
-                    isVisible: true
+                    isVisible: false
                 },
                 B: {
                     x: pointB[0],
@@ -311,21 +311,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
           };
         },
 
-        setInstructorData: function(data) {
-          var cr = lineUtils.expressionize(data.correctResponse, "x");
-          scope.graphCallback({
-            clearBoard: true
-          });
-          scope.graphCallback({
-            drawShape: {
-              curve: function(x) {
-                return eval(cr);
-              }
-            }
-          });
-          this.setResponse({correctness: 'correct'});
-        },
-
         setResponse: function(response) {
           if (!response) {
             return;
@@ -381,7 +366,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
           scope.response = undefined;
           scope.correctClass = undefined;
           scope.graphCallback({
-            clearBoard: true,
             graphStyle: {}
           });
           scope.unlockGraph();
