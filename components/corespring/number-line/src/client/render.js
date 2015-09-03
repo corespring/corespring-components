@@ -32,7 +32,7 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          $log.debug("number line", dataAndSession);
+          console.log("number line", dataAndSession);
 
           scope.model = dataAndSession.data.model;
           scope.correctModel = dataAndSession.data.model;
@@ -51,18 +51,8 @@ var main = [
           };
         },
 
-        setInstructorData: function(data) {
-          console.log('sid', data);
-          var cr = _.cloneDeep(data.correctResponse);
-          _.each(cr, function(c) {
-            c.isCorrect = true;
-          });
-          this.setResponse({correctness: 'correct', feedback: {elements: cr}});
-          this.editable(false);
-        },
-
         setResponse: function(response) {
-          $log.debug('number line response ', response);
+          console.log('number line response ', response);
           scope.serverResponse = response;
 
           scope.correctModel = _.cloneDeep(scope.model);

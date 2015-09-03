@@ -106,17 +106,6 @@ describe('corespring:function-entry:render', function () {
     });
   });
 
-  describe('instructor data', function() {
-    it('should populate the textfield with correct answer and set response correctness to correct', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      spyOn(container.elements['1'],'setResponse');
-      container.elements['1'].setInstructorData({correctResponse: {equation: "apple"}});
-      rootScope.$digest();
-      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({correctness: 'correct'});
-      expect(scope.answer).toEqual("apple");
-    });
-  });
-
   it('should implement containerBridge', function () {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
