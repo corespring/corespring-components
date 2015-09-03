@@ -69,11 +69,6 @@ describe('corespring:ordering-in-place', function () {
     scope.$digest();
   }
 
-  function setInstructorDataAndDigest(data) {
-    container.elements['1'].setInstructorData(data);
-    scope.$digest();
-  }
-
   it('defaults to inplace ordering', function () {
     setModelAndDigest(verticalModel);
     expect($(element).find('.view-ordering').length).toBeGreaterThan(0);
@@ -329,15 +324,6 @@ describe('corespring:ordering-in-place', function () {
       setModelAndDigest(verticalModel);
       scope.local.choices.push(scope.local.choices.shift());
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
-    });
-  });
-
-  describe('instructor data', function () {
-    it('should call setResponse with correct response', function () {
-      spyOn(container.elements['1'], 'setResponse');
-      setModelAndDigest(verticalModel);
-      setInstructorDataAndDigest({correctResponse: ['a', 'c', 'b', 'd']});
-      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({ correctness: 'correct', correctResponse: [ 'a', 'c', 'b', 'd' ] });
     });
   });
 
