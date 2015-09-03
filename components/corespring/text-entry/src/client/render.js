@@ -37,23 +37,6 @@ var main = [
           };
         },
 
-        setInstructorData: function(data) {
-          scope.answer = data.correctResponses.values[0];
-
-          var hasMoreCorrectResponses = data.correctResponses.values.length > 1;
-          var hasPartialResponses = data.partialResponses && data.partialResponses.values.length > 0;
-
-          var message = (hasMoreCorrectResponses || hasPartialResponses) ? [
-            (hasMoreCorrectResponses) ? ("Additional correct answers:<br/>" + _.map(_.drop(data.correctResponses.values), function(c) {
-              return "<span style='border: 1px solid lightgrey; border-radius: 4px; padding: 3px;'>" + c + "</span>";
-            }).join('') + "<br/><br/>") : "",
-            (hasPartialResponses) ? "Partially correct answers:<br/>" + _.map(data.partialResponses.values, function(c) {
-              return "<span style='border: 1px solid lightgrey; border-radius: 4px; padding: 3px;'>" + c + "</span>";
-            }).join('') : ""
-          ].join("") : undefined;
-          this.setResponse({feedback: {correctness: 'correct', message: message}});
-        },
-
         // sets the server's response
         setResponse: function(response) {
           var inputElement = $(element).find('input');
