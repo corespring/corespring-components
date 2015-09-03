@@ -146,19 +146,6 @@ describe('corespring', function() {
     });
   });
 
-  describe('set instructor data', function() {
-    it('set correct response in the graph and lock it', function() {
-      spyOn(scope, "renewResponse");
-      spyOn(scope, "lockGraph");
-      spyOn(container.elements['1'], "setResponse");
-      container.elements['1'].setDataAndSession(testModel);
-      container.elements['1'].setInstructorData({correctResponse: ["0,0","1,1"]});
-      expect(scope.renewResponse).toHaveBeenCalledWith(['0,0', '1,1']);
-      expect(scope.lockGraph).toHaveBeenCalled();
-      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({correctness: 'correct'});
-    });
-  });
-
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
