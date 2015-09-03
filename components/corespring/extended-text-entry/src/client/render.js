@@ -27,11 +27,6 @@ var main = [
           };
         },
 
-        setInstructorData: function(data) {
-          scope.answer = "Open Ended Answers are not automatically scored. No correct answer is defined.";
-          scope.received = true;
-        },
-
         // sets the server's response
         setResponse: function (response) {
           console.log("Setting Response for extended text entry:");
