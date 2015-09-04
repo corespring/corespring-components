@@ -56,7 +56,7 @@ exports.createOutcome = function(question, answer, settings) {
   }
 
   function isIncorrectResponse(response) {
-    return response && response.score === 0;
+    return response && response.score === 0 && response.correctness !== "partial";
   }
 
   function isPartialResponse(response) {
@@ -111,7 +111,7 @@ exports.createOutcome = function(question, answer, settings) {
   if (exports.isCorrect(answer, question.correctResponses)) {
     response = createResponse("correct", 100);
   } else if (exports.isCorrect(answer, question.partialResponses)) {
-    response = createResponse("incorrect", question.partialResponses.award);
+    response = createResponse("partial", question.partialResponses.award);
   } else {
     response = createResponse("incorrect", 0);
   }

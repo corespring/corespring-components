@@ -107,10 +107,10 @@ describe('text entry server logic', function() {
     response.score.should.eql(expected.score);
   });
 
-  it('should respond with incorrect and score 0.25 if the answer is among partially correct ones', function() {
+  it('should respond with partial and score 0.25 if the answer is among partially correct ones', function() {
     response = server.createOutcome(_.cloneDeep(component), "lemon", helper.settings(false, true, true));
     expected = {
-      correctness: "incorrect",
+      correctness: "partial",
       score: 0.25
     };
     response.correctness.should.eql(expected.correctness);
@@ -120,49 +120,110 @@ describe('text entry server logic', function() {
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
     response = server.createOutcome(_.cloneDeep(component), "salami", helper.settings(false, true, true));
     expected = {
-      correctness: "incorrect",
-      score: 0
+        correctness: "incorrect",
+        score: 0
     };
     response.correctness.should.eql(expected.correctness);
     response.score.should.eql(expected.score);
   });
 
   describe('with only one correct value', function() {
-    it('should return correct and score 1 if the answer is correct', function() {
-      var component = {
-        "weight": 1,
-        "componentType": "corespring-text-entry",
-        "model": {
-          "answerBlankSize": 8,
-          "answerAlignment": "left"
-        },
-        "correctResponses": {
-          "award": 100,
-          "values": "15",
-          "ignoreWhitespace": true,
-          "ignoreCase": true,
-          "feedback": {
-            "type": "default"
-          }
-        },
-        "incorrectResponses": {
-          "award": 0,
-          "feedback": {
-            "type": "default"
-          }
+
+    var component = {
+      "weight": 1,
+      "componentType": "corespring-text-entry",
+      "model": {
+        "answerBlankSize": 8,
+        "answerAlignment": "left"
+      },
+      "correctResponses": {
+        "award": 100,
+        "values": "15",
+        "ignoreWhitespace": true,
+        "ignoreCase": true,
+        "feedback": {
+          "type": "default"
         }
-      };
+      },
+      "incorrectResponses": {
+        "award": 0,
+        "feedback": {
+          "type": "default"
+        }
+      }
+    };
 
-      var expected = {
-        correctness: "correct",
-        score: 1
-      };
-      var response = server.createOutcome(_.cloneDeep(component), "15", helper.settings(false, true, true));
+    var expected = {
+      correctness: "correct",
+      score: 1
+    };
 
+    var response;
+
+    beforeEach(function(){
+      response = server.createOutcome(_.cloneDeep(component), "15", helper.settings(true, true, true));
+    });
+
+    it('should return correct and score 1 if the answer is correct', function() {
       response.correctness.should.eql(expected.correctness);
+    });
+
+    it('should return score 1 if the answer is correct', function() {
       response.score.should.eql(expected.score);
+    });
+
+    it('should return correct for feedback correctness', function(){
+      response.feedback.correctness.should.eql('correct');
     });
   });
 
+  describe('CO-291 - partial feedback', function(){
 
+    var comp =  {
+      weight : 1,
+      componentType : "corespring-text-entry",
+      model : {
+        answerBlankSize : 15,
+        answerAlignment : "left"
+      },
+      feedback : {
+        correctFeedbackType : "default",
+        incorrectFeedbackType : "default"
+      },
+      correctResponses : {
+        award : 100,
+        values : [
+            "4.37"
+        ],
+        ignoreWhitespace : true,
+        ignoreCase : true,
+        feedback : {
+            type : "default"
+        }
+      },
+      incorrectResponses : {
+        award : 0,
+        feedback : {
+            type : "default"
+        }
+      },
+      partialResponses : {
+        award : 0,
+        values : [ "4.3", "4"],
+        feedback : {
+            type : "default"
+        }
+      }
+    };
+
+    var response;
+
+    beforeEach(function(){
+        response = server.createOutcome(_.cloneDeep(comp), "4", helper.settings(true, true, true));
+    });
+
+    it('should return correct for feedback correctness', function(){
+        response.feedback.correctness.should.eql('partial');
+    });
+  });
 });
