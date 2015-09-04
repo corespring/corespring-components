@@ -84,7 +84,64 @@ var main = [
 
       '     </form>',
       '   </div>',
-      '</div><hr />'
+      '</div>'
+    ].join('\n');
+
+    var graphAttributesBlock = [
+      '<div class="row">',
+      '  <div class="body col-md-8">',
+      '    <h3>Graph Attributes</h3>',
+      '    <p>Use this section to setup the graph area.</p>',
+      '    <form class="form-horizontal" role="form">',
+      '       <div class="config-form-row">',
+      '         <h4>x Axis</h4>',
+      '       </div>',
+      '       <div class="config-form-row">',
+      labelWithInput({
+        label: 'Minimum Value',
+        modelKey: 'domainMin',
+        inputType: "number",
+        placeholder: '{{defaults.domainMin}}' }),
+      labelWithInput({
+        label: 'Maximum Value',
+        modelKey: 'domainMax',
+        inputType: "number",
+        placeholder: '{{defaults.domainMax}}' }),
+      '       </div>',
+      '       <div class="config-form-row">',
+      labelWithInput({
+        label: 'Label',
+        modelKey: 'domainLabel',
+        placeholder: '{{defaults.domainLabel}}' }),
+      '       </div>',
+      '       <div class="config-form-row">',
+      '         <h4>y Axis</h4>',
+      '       </div>',
+      '       <div class="config-form-row">',
+      labelWithInput({
+        label: 'Minimum Value',
+        modelKey: 'rangeMin',
+        inputType: "number",
+        placeholder: '{{defaults.rangeMin}}' }),
+      labelWithInput({
+        label: 'Maximum Value',
+        modelKey: 'rangeMax',
+        inputType: "number",
+        placeholder: '{{defaults.rangeMax}}' }),
+      '       </div>',
+      '       <div class="config-form-row">',
+      labelWithInput({
+        label: 'Label',
+        modelKey: 'rangeLabel',
+        placeholder: "y" }),
+      '       </div><br />',
+      '       <div class="config-form-row">',
+      labelWithInput({ label: 'Tick Label Frequency:', modelKey: 'tickLabelFrequency', inputType: "number",
+        placeholder: '{{defaults.tickLabelFrequency}}' }),
+      '       </div>',
+      '     </form>',
+      '  </div>',
+      '</div>'
     ].join('\n');
 
     var displayBlock = [
@@ -124,64 +181,7 @@ var main = [
       '        </div>',
       '      </form>',
       '    </div>',
-      '  </div><hr />'].join('\n');
-
-    var graphAttributesBlock = [
-      '<div class="row">',
-      '  <div class="body col-md-8">',
-      '    <h3>Graph Attributes</h3>',
-      '    <p>Use this section to setup the graph area.</p>',
-      '    <form class="form-horizontal" role="form">',
-      '       <div class="config-form-row">',
-      '         <h4>x Axis</h4>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Minimum Value',
-        modelKey: 'domainMin',
-        inputType: "number",
-        placeholder: '{{defaults.domainMin}}' }),
-      labelWithInput({
-        label: 'Maximum Value',
-        modelKey: 'domainMax',
-        inputType: "number",
-        placeholder: '{{defaults.domainMax}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Label',
-        modelKey: 'domainLabel',
-        placeholder: '{{defaults.domainLabel}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <h4>y Axis</h4>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Minimum Value',
-        modelKey: 'rangeMin',
-        inputType: "number",
-        placeholder: '{{defaults.rangeMin}}' }),
-      labelWithInput({
-        label: 'Maximun Value',
-        modelKey: 'rangeMax',
-        inputType: "number",
-        placeholder: '{{defaults.rangeMax}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Label',
-        modelKey: 'rangeLabel',
-        placeholder: "y" }),
-      '       </div><br />',
-      '       <div class="config-form-row">',
-      labelWithInput({ label: 'Tick Label Frequency:', modelKey: 'tickLabelFrequency', inputType: "number",
-        placeholder: '{{defaults.tickLabelFrequency}}' }),
-      '       </div>',
-      '     </form>',
-      '  </div>',
-      '</div>'
-    ].join('\n');
+      '  </div>'].join('\n');
 
     var feedback = [
       '<div class="row"><div class="col-md-8">',
@@ -317,8 +317,10 @@ var main = [
         '        In Plot Points, students identify coordinates or plot points on a graph by clicking on the graph.',
         '      </p>',
                pointsBlock,
-               displayBlock,
+        '      <hr />',
                graphAttributesBlock,
+        '      <hr />',
+               displayBlock,
         '      <div class="row">',
         '        <div class="col-md-8">',
         '          <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',

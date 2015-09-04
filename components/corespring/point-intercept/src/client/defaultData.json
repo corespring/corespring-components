@@ -36,7 +36,7 @@
       "rangeLabel": "y",
       "rangeMin": -10,
       "rangeMax": 10,
-      "tickLabelFrequency": 5,
+      "tickLabelFrequency": 1,
       "scale": 1,
       "sigfigs": -1,
       "showCoordinates": false,
