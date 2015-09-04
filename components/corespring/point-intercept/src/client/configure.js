@@ -120,7 +120,7 @@ var main = [
       '              <div class="inline-error-message" ng-show="display.graphPadding.$error.min">Please enter a positive number</div>',
       '            </div>',
       '          </div>',
-      '          <span class="col-sm-1 input-number-label">%</span>',
+      '          <span class="row col-sm-1 input-number-label">%</span>',
       '        </div>',
       '      </form>',
       '    </div>',
