@@ -164,7 +164,7 @@ describe('text entry server logic', function() {
       response = server.createOutcome(_.cloneDeep(component), "15", helper.settings(true, true, true));
     });
 
-    it('should return correct and score 1 if the answer is correct', function() {
+    it('should return correct', function() {
       response.correctness.should.eql(expected.correctness);
     });
 
