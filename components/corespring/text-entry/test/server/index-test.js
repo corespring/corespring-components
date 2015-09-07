@@ -177,7 +177,7 @@ describe('text entry server logic', function() {
     });
   });
 
-  describe('CO-291 - partial feedback', function(){
+  describe('partial feedback logic', function(){
 
     var comp =  {
       weight : 1,
@@ -222,7 +222,7 @@ describe('text entry server logic', function() {
         response = server.createOutcome(_.cloneDeep(comp), "4", helper.settings(true, true, true));
     });
 
-    it('should return correct for feedback correctness', function(){
+    it('should return partial for feedback correctness', function(){
         response.feedback.correctness.should.eql('partial');
     });
   });
