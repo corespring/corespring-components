@@ -32,9 +32,9 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
           } else if (response.correctness === 'correct') {
             title = '&nbsp;';
             popoverClass = 'correct';
-          }else if (response.correctness === 'partial') {
-              title = '&nbsp;';
-              popoverClass = 'partial';
+          } else if (response.correctness === 'partial') {
+            title = '&nbsp;';
+            popoverClass = 'partial';
           }
 
           $(element).find('.math-prerender').html(content);
