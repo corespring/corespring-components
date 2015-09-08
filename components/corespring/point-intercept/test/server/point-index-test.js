@@ -19,7 +19,8 @@ var component = {
   ],
   "feedback": {
     "correctFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "incorrectFeedbackType": "default",
+    "partialFeedbackType": "default"
   },
   "model": {
     "config": {
@@ -69,10 +70,22 @@ describe('server logic', function() {
     response.score.should.eql(0);
   });
 
-  it('should respond with incorrect and score 0 if the answer is partially correct, but partial scoring is disabled', function() {
+  it('should respond with partial and score 0 if the answer is partially correct, but partial scoring is disabled', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "3,1"], defaultSettings);
-    response.correctness.should.eql("incorrect");
+    response.correctness.should.eql("partial");
     response.score.should.eql(0);
+  });
+
+  it('should respond with partial and score 0.5 if the answer is partially correct and partial scoring is enabled', function() {
+    var partialAllowedComponent = _.cloneDeep(component);
+    partialAllowedComponent.allowPartialScoring = true;
+    partialAllowedComponent.partialScoring = [{
+      numberOfCorrect: 1,
+      scorePercentage: 50
+    }];
+    var response = server.createOutcome(_.cloneDeep(partialAllowedComponent), ["0,0", "3,1"], defaultSettings);
+    response.correctness.should.eql("partial");
+    response.score.should.eql(0.5);
   });
 
   it('if partial scoring is allowed score should be calculated using it', function() {
@@ -129,8 +142,11 @@ describe('server logic', function() {
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
 
-    response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
+    response = server.createOutcome(clone, ["2,2", "2,1"], defaultSettings);
     response.feedback.should.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
+
+    response = server.createOutcome(clone, ["0,0", "2,2"], defaultSettings);
+    response.feedback.should.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
 
     clone.allowPartialScoring = true;
 
@@ -170,8 +186,11 @@ describe('server logic', function() {
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.feedback.should.eql("CustomCorrect");
 
-    response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
+    response = server.createOutcome(clone, ["2,2", "2,1"], defaultSettings);
     response.feedback.should.eql("CustomIncorrect");
+
+    response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
+    response.feedback.should.eql("CustomPartial");
 
     clone.allowPartialScoring = true;
 
