@@ -32,7 +32,8 @@ describe('corespring', function() {
       ],
       "feedback": {
         "correctFeedbackType": "default",
-        "incorrectFeedbackType": "default"
+        "incorrectFeedbackType": "default",
+        "partialFeedbackType": "default"
       },
       "model": {
         "config": {
