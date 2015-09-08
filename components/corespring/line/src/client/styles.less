@@ -9,6 +9,16 @@
     -webkit-border-radius: 10px;
     -ms-touch-action: none;
   }
+  .axis {
+    width: 100%;
+    text-align: center;
+    &.domain {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg); /* IE 9 */
+      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+      position: relative;
+    }
+  }
   .JXGtext {
     background-color: transparent;
     font-family: Arial, Helvetica, Geneva;
@@ -74,7 +84,7 @@
     }
   }
   .graph-container {
-    margin-top: 20px;
+    margin-top: 10px;
     margin-right: auto;
     margin-left: auto;
   }
@@ -103,7 +113,7 @@
     cursor: pointer;
   }
   .graph-interaction {
-    margin-top: 10px;
+    margin: 10px 20px 20px 0;
     padding: 10px;
     max-width: 600px;
     &.warning {

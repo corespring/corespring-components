@@ -8,6 +8,16 @@
     -webkit-border-radius:10px;
     -ms-touch-action: none;
   }
+  .axis {
+    width: 100%;
+    text-align: center;
+    &.domain {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg); /* IE 9 */
+      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+      position: relative;
+    }
+  }
   .JXGtext {
     background-color: transparent;
     font-family: Arial, Helvetica, Geneva;
@@ -62,12 +72,12 @@
   }
   .graph-interaction {
     background-color: #ffffff;
-    margin-top: 10px;
-    padding: 10px 10px 0 10px;
+    margin: 10px 20px 20px 0;
+    padding: 10px 10px 10px 10px;
     max-width: 600px;
   }
   .graph-container {
-    margin: 20px auto;
+    margin: 10px auto;
   }
   .point-display p, input {
     display: inline;

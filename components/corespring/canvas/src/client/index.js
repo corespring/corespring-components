@@ -39,20 +39,21 @@ exports.service = ['$log',
         };
 
         if(scaleSymbol) {
-          ticksAttrs.scaleSymbol = ' '+scaleSymbol;
+          ticksAttrs.scaleSymbol = scaleSymbol;
         }
 
         self.board.create('ticks', [axis, ticksDistance], ticksAttrs);
       }
 
-      var padding = attrs.tickLabelFrequency * attrs.graphPadding / 100;
+      var domainPadding = attrs.domainStepValue * attrs.graphPadding / 100;
+      var rangePadding = attrs.rangeStepValue * attrs.graphPadding / 100;
 
       this.board = JXG.JSXGraph.initBoard(id, {
         boundingbox: [
-          attrs.domainMin - padding,
-          attrs.rangeMax + padding,
-          attrs.domainMax + padding,
-          attrs.rangeMin - padding],
+          attrs.domainMin - domainPadding,
+          attrs.rangeMax + rangePadding,
+          attrs.domainMax + domainPadding,
+          attrs.rangeMin - rangePadding],
         showNavigation: false,
         showCopyright: false,
         zoom: false
@@ -62,32 +63,18 @@ exports.service = ['$log',
       });
 
       var domainAxis = createAxis(attrs.domainLabel, [0, 0], [1, 0]);
-      var domainTicks = createTicks(domainAxis, attrs.tickLabelFrequency, 1, '', {
+      var domainTicks = createTicks(domainAxis, attrs.domainStepValue, 1, attrs.domainLabelPattern, {
             offset: [0,0],
             anchorX: 'middle',
             anchorY: 'top'
           });
       var rangeAxis = createAxis(attrs.rangeLabel, [0, 0], [0, 1]);
-      var rangeTicks = createTicks(rangeAxis, attrs.tickLabelFrequency, 1, '', {
+      var rangeTicks = createTicks(rangeAxis, attrs.rangeStepValue, 1, attrs.rangeLabelPattern, {
             offset: [-5,0],
             anchorX: 'right',
             anchorY: 'middle'
           });
 
-      if (attrs.domainLabel) {
-        var xcoords = new JXG.Coords(JXG.COORDS_BY_USER, [attrs.domainMax, 0], this.board);
-        var xoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [xcoords.scrCoords[1] - ((attrs.domainLabel.length * 4) + 10), xcoords.scrCoords[2] + 10], this.board);
-        this.board.create('text', [xoffset.usrCoords[1], xoffset.usrCoords[2], attrs.domainLabel], {
-          fixed: true
-        });
-      }
-      if (attrs.rangeLabel) {
-        var ycoords = new JXG.Coords(JXG.COORDS_BY_USER, [0, attrs.rangeMax], this.board);
-        var yoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [ycoords.scrCoords[1] - ((attrs.rangeLabel.length * 4) + 15), ycoords.scrCoords[2] + 10], this.board);
-        this.board.create('text', [yoffset.usrCoords[1], yoffset.usrCoords[2], attrs.rangeLabel], {
-          fixed: true
-        });
-      }
       this.points = [];
       this.texts = [];
       this.shapes = [];

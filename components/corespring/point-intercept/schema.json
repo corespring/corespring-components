@@ -75,15 +75,27 @@
                         "domainMin": {
                             "type": "integer",
                             "description": "The number to use for x axis min",
-                            "id": "#xMin",
+                            "id": "#domainMin",
                             "required": false
                         },
                         "domainMax": {
                             "type": "integer",
                             "description": "The number to use for x axis max",
-                            "id": "#xMax",
+                            "id": "#domainMax",
                             "required": false
                         },
+                        "domainStepValue": {
+                            "type": "string",
+                            "description": "The step value to use x axis",
+                            "id": "#domainStepValue",
+                            "required": false
+                        },
+                        "domainLabelPattern": {
+                            "description": "Specifies the pattern for the ticks labels shown on the x axis",
+                            "type": "integer",
+                            "id": "#domainLabelPattern",
+                            "required": false
+                        }
                         "graphHeight": {
                             "type": "integer",
                             "description": "The height in pixels that should be used to display the graph",
@@ -111,13 +123,25 @@
                         "rangeMin": {
                             "type": "integer",
                             "description": "The number to use for y axis min",
-                            "id": "#yMin",
+                            "id": "#rangeMin",
                             "required": false
                         },
                         "rangeMax": {
                             "type": "integer",
                             "description": "The number to use for y axis max",
-                            "id": "#yMax",
+                            "id": "#rangeMax",
+                            "required": false
+                        },
+                        "rangeStepValue": {
+                            "type": "string",
+                            "description": "The step value to use y axis",
+                            "id": "#rangeStepValue",
+                            "required": false
+                        },
+                        "rangeLabelPattern": {
+                            "description": "Specifies the interval of ticks shown on the y axis",
+                            "type": "integer",
+                            "id": "#rangeLabelPattern",
                             "required": false
                         },
                         "showCoordinates": {

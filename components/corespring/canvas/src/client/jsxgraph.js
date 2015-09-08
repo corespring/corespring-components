@@ -13,8 +13,12 @@ var def = ['Canvas',
           graphPadding: parseInt(attr.graphpadding ? attr.graphpadding : 25, 10),
           domainMin: parseInt(attr.domainmin ? attr.domainmin : -10, 10),
           domainMax: parseInt(attr.domainmax ? attr.domainmax : 10, 10),
+          domainStepValue: parseFloat(attr.domainstepvalue ? attr.domainstepvalue : 1),
+          domainLabelPattern: attr.domainlabelpattern,
           rangeMin: parseInt(attr.rangemin ? attr.rangemin : -10, 10),
           rangeMax: parseInt(attr.rangemax ? attr.rangemax : 10, 10),
+          rangeStepValue: parseFloat(attr.rangestepvalue ? attr.rangestepvalue : 1),
+          rangeLabelPattern: attr.rangelabelpattern,
           scale: parseFloat(attr.scale ? attr.scale : 1, 10),
           maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
           domainLabel: attr.domainlabel,
@@ -28,13 +32,20 @@ var def = ['Canvas',
           showPoints: attr.showpoints
         };
 
-        function generateCanvasId() {
+        function setCanvasProperties() {
           var canvasId = Math.random().toString(36).substring(7);
-          elem.find(".jxgbox").attr("id", canvasId);
+          var jxgbox = elem.find(".jxgbox");
+          var offsetLeft = elem.width() / 2 + 10;
+          var offsetTop = elem.height() / 2 + 10;
+          jxgbox.attr("id", canvasId);
+          jxgbox.before('<div class="axis">'+attr.rangelabel+'</div>');
+          jxgbox.after('<div class="axis domain" style="left: '+offsetLeft+'px; top: -'+offsetTop+'px;">'+attr.domainlabel+'</div>');
+
           return canvasId;
         }
 
-        var canvas = new Canvas(generateCanvasId(), canvasAttrs);
+        var canvas = new Canvas(setCanvasProperties(), canvasAttrs);
+
         //define callbacks
         canvas.on('up', function(e) {
           if (lockGraph) {
