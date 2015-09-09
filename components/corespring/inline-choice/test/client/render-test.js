@@ -150,6 +150,13 @@ describe('corespring:inline-choice', function() {
       container.elements['1'].setDataAndSession(testModel);
       expect(_.shuffle).not.toHaveBeenCalled();
     });
+
+    it('should shuffle options if shuffle is true and the player is reset', function() {
+      spyOn(_, 'shuffle');
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].reset();
+      expect(_.shuffle).toHaveBeenCalled();
+    });
   });
 
   it('should implement containerBridge',function(){

@@ -49,7 +49,7 @@
 .config-corespring-match {
 
   .intro {
-    margin: 0 30px 0 20px;
+    margin: 0 30px 15px 20px;
   }
 
   .help {
@@ -93,7 +93,6 @@
 
     .remove-row {
       width: 20px;
-      border: none;
       padding: 0 7px 0 10px;
       text-align: center;
 
@@ -157,6 +156,8 @@
       border: none;
       vertical-align: middle;
       padding: 10px 5px;
+      max-width: 322px;
+      word-wrap: break-word;
     }
 
     .question-header,
@@ -217,9 +218,10 @@
       }
       .panel-body {
         color: @warning-color;
-        background-color: lighten(@warning-color, 40%);
-        border: 1px solid lighten(@warning-color, 30%);
+        background-color: @warning-color-border;
+        border: 1px solid @warning-color-border;
         border-radius: 4px;
+        padding: 15px;
       }
     }
   }
@@ -231,16 +233,28 @@
     min-width: 0;
   }
 
+  td {
+    border-top: solid 2px #cccccc;
+    max-width: 322px;
+    word-wrap: break-word;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
   .question-header {
-    color: black;
+    color: #999;
     background: none;
     text-align: left;
+    word-wrap: break-word;
   }
 
   .answer-header {
-    color: black;
+    color: #999;
     background: none;
     text-align: center;
+    word-wrap: break-word;
   }
 
   &.three-columns {

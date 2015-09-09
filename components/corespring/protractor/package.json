@@ -1,0 +1,17 @@
+{
+  "libraries": [
+    {
+      "name": "khan-utils",
+      "organization": "corespring"
+    }
+  ],
+  "dependencies" : {
+    "client" : {
+    }
+  },  
+  "name": "protractor",
+  "title": "Protractor",
+  "purpose" : "widget",
+  "organization": "corespring",
+  "released": true
+}

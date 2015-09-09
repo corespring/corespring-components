@@ -7,7 +7,6 @@ var main = [
       '<table class="attributes-table">',
       '  <tr>',
       '    <td>',
-      '    <checkbox ng-model="fullModel.model.config.exhibitOnly">Make exhibit</checkbox>',
       '    <div>',
       '       Domain = <input type="number" class="form-control" ng-model="fullModel.model.config.domain[0]"/> to <input type="number" class="form-control" ng-model="fullModel.model.config.domain[1]"/>',
       '    </div>',
@@ -30,24 +29,6 @@ var main = [
       '    </td>',
       '  </tr>',
       '</table>'
-    ].join('');
-
-    var initialView = [
-      '<div collapsable-panel collapsable-panel-title="Initial view / Make Exhibit">',
-      '  <p>Use this number line to set a starting point, line segment or ray. This is optional.</p>',
-      '  <p>This number line may also be used to make an exhibit number line, which can not be manipulated by a student.',
-      '  Be sure to check &ldquo;Make an Exhibit&rdquo; in the Number Line Attributes area above.</p>',
-      '  <div class="centered-graph-holder">',
-      '    <div class="centered-graph" interactive-graph',
-      '         ngModel="initialView.model"',
-      '         options="configGraphOptions"',
-      '         responseModel="initialView.responseModel"',
-      '         editable="initialView.editable"',
-      '         colors="initialView.colors">',
-      '     </div>',
-      '   </div>',
-      '</div>'
-
     ].join('');
 
     var correctResponseView = [
@@ -86,6 +67,24 @@ var main = [
       '    <button class="btn btn-default" ng-click="displayNone()">None</button>',
       '  </p>',
       '</div>'
+    ].join('');
+
+    var initialView = [
+      '<div class="exhibit-panel" collapsable-panel collapsable-panel-title="Initial view / Make Exhibit">',
+      '  <p>Use this number line to set a starting point, line segment or ray. This is optional.</p>',
+      '  <p>This number line may also be used to make an exhibit number line, which can not be manipulated by a student.</p>',
+      '  <checkbox ng-model="fullModel.model.config.exhibitOnly">Make exhibit</checkbox>',
+      '  <div class="centered-graph-holder">',
+      '    <div class="centered-graph" interactive-graph',
+      '         ngModel="initialView.model"',
+      '         options="configGraphOptions"',
+      '         responseModel="initialView.responseModel"',
+      '         editable="initialView.editable"',
+      '         colors="initialView.colors">',
+      '     </div>',
+      '   </div>',
+      '</div>'
+
     ].join('');
 
     var feedback = [
@@ -312,9 +311,9 @@ var main = [
         '    In this interaction, students plot points, line segments or rays on a number line.',
         '  </p>',
         attributes,
-        initialView,
         correctResponseView,
         display,
+        initialView,
         feedback,
         '  </div>',
         '  <div navigator-panel="Scoring">',

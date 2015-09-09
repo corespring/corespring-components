@@ -1,12 +1,12 @@
 @correct-color: #3c763d;
 @incorrect-color: #EC971F;
 @partial-color: #3a87ad;
-@warning-color: #a94442;
+@warning-color: #FFF;
 @learn-more-color: #008bc9;
 
 
-@warning-color-border: #ebccd1;
-@warning-color-background: #f2dede;
+@warning-color-border: #999;
+@warning-color-background: #999;
 
 @warning-character: '\f071';
 @correct-character: '\f058';
@@ -36,7 +36,7 @@
 }
 
 .warning-border() {
-  border: 2px solid @warning-color;
+  border: 2px solid @warning-color-border;
 }
 
 .warning-shadow(){
@@ -114,5 +114,4 @@
   input[type=number] {
     padding: 6px 12px;
   }
-
 }

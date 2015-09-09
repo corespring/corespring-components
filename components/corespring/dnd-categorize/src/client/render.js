@@ -22,6 +22,8 @@ function renderCorespringDndCategorize(
   MathJaxService
 ) {
 
+  var defaultWidth;
+
   return {
     controller: ['$scope', controller],
     link: link,
@@ -315,9 +317,19 @@ function renderCorespringDndCategorize(
       };
 
       scope.choiceWidth = calcChoiceWidth();
+
+      // setting defaultWidth for the first time
+      if(!defaultWidth){
+        defaultWidth=239;
+      }
+
       if(scope.choiceWidth === 0){
         $timeout(updateView, 100);
+        // uses the last set width
+        scope.choiceWidth = defaultWidth;
       }
+
+      defaultWidth = scope.choiceWidth;
 
       //in editor we need some space to show all the tools
       //so we limit the number of choices per row to 4
@@ -536,7 +548,7 @@ function renderCorespringDndCategorize(
   }
 
   function template() {
-    return [
+       return [
         '<div class="render-corespring-dnd-categorize">',
         undoStartOver(),
         interaction(),

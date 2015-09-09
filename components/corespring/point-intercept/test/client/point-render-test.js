@@ -32,7 +32,8 @@ describe('corespring', function() {
       ],
       "feedback": {
         "correctFeedbackType": "default",
-        "incorrectFeedbackType": "default"
+        "incorrectFeedbackType": "default",
+        "partialFeedbackType": "default"
       },
       "model": {
         "config": {
@@ -119,7 +120,7 @@ describe('corespring', function() {
       spyOn(scope, 'graphCallback');
       container.elements[1].setResponse({correctness: 'warning', feedback: 'good'});
       scope.$digest();
-      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#a94442', borderWidth : '2px' }, pointsStyle : '#a94442' });
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : '#999' });
     });
   });
 

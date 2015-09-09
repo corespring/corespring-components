@@ -17,6 +17,7 @@
     "expect" : true,
     "angular" : true,
     "beforeEach" : true,
+    "afterEach" : true,
     "exports" : true,
     "module" : true,
     "spyOn" : true,
