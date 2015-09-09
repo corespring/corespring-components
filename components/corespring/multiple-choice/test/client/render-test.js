@@ -37,6 +37,10 @@ describe('corespring:multiple-choice-render', function() {
     }
   };
 
+  var instructorData = {
+    "correctResponse" : { "value" : "1" }
+  };
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -151,6 +155,27 @@ describe('corespring:multiple-choice-render', function() {
     rootScope.$digest();
     expect($(element).find(".choice-holder.correct").length).toBe(2);
     expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+  });
+
+  describe('instructor mode', function() {
+    it('setting instructor data marks correct answers as correct in the model', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      var correctChoice = _.find(scope.choices, function(c) { return c.value === '1';});
+      expect(correctChoice.correct).toEqual(true);
+      _(scope.choices).without(correctChoice).each(function(c) {
+         expect(c.correct).not.toEqual(true);
+      });
+    });
+
+    it('setting instructor data marks correct answers as correct in the view in instructor mdoe', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      container.elements['1'].setMode('instructor');
+      rootScope.$digest();
+      expect($(element).find(".correct .choice-holder").length).toBe(2);
+    });
+
   });
 
   describe('isAnswerEmpty', function() {

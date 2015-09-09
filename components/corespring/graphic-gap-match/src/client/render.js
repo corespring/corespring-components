@@ -53,6 +53,10 @@ var main = [
           };
         },
 
+        setInstructorData: function(data) {
+          this.setResponse({correctness: 'instructor', correctResponse: data.correctResponse});
+        },
+
         setResponse: function (response) {
           $log.debug('[graphic gap match] setResponse: ', response);
           scope.response = response;
@@ -242,6 +246,27 @@ var main = [
       ].join('');
     };
 
+    var correctAnswer = [
+      '    <div class="background-image">',
+      '      <svg class="hotspots">',
+      '        <g ng-repeat="hotspot in model.hotspots">',
+      '          <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+      '          <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+      '        </g>',
+      '      </svg>',
+      '      <div ng-repeat="hotspot in model.hotspots"',
+      '           coords-for-hotspot="hotspot"',
+      '           populate="style"',
+      '           class="hotspot">',
+      '        <div class="choice correct"',
+      '             ng-repeat="choice in correctAnswerForHotspot(hotspot)"',
+      '             ng-bind-html-unsafe="choice.label">',
+      '        </div>',
+      '      </div>',
+      '      <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}" />',
+      '    </div>'
+    ].join("");
+
     def = {
       scope: {},
       replace: true,
@@ -249,12 +274,12 @@ var main = [
       link: link,
       template: [
         '<div class="view-graphic-gap-match">',
-        '  <div class="button-row">',
-        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="undo()">Undo</button>',
-        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="startOver()">Start Over</button>',
+        '  <div class="button-row" ng-hide="response && response.correctness === \'instructor\'">',
+        '    <span cs-undo-button ng-disabled="!editable"></span>',
+        '    <span cs-start-over-button ng-disabled="!editable"></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
-        '  <div class="main-container {{model.config.choiceAreaPosition}}">',
+        '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="response && response.correctness === \'instructor\'">',
         choices(['left', 'top']),
         '    <div class="answers">',
         '      <div class="background-image {{response.correctClass}}"',
@@ -281,24 +306,10 @@ var main = [
         '  </div>',
         '  <div feedback="response.feedback.message" correct-class="{{response.correctClass}}"></div>',
         '  <div see-answer-panel ng-if="response && response.correctness === \'incorrect\'">',
-        '    <div class="background-image">',
-        '      <svg class="hotspots">',
-        '        <g ng-repeat="hotspot in model.hotspots">',
-        '          <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
-        '          <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
-        '        </g>',
-        '      </svg>',
-        '      <div ng-repeat="hotspot in model.hotspots"',
-        '           coords-for-hotspot="hotspot"',
-        '           populate="style"',
-        '           class="hotspot">',
-        '        <div class="choice correct"',
-        '             ng-repeat="choice in correctAnswerForHotspot(hotspot)"',
-        '             ng-bind-html-unsafe="choice.label">',
-        '        </div>',
-        '      </div>',
-        '      <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}" />',
-        '    </div>',
+        correctAnswer,
+        '  </div>',
+        '  <div ng-if="response && response.correctness === \'instructor\'">',
+        correctAnswer,
         '  </div>',
         '</div>'
       ].join("\n")

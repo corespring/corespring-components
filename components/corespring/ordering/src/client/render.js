@@ -182,6 +182,25 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         scope.landingPlaceChoices[idx] = {};
       };
 
+      function restoreChoicesFromAnswer(answers) {
+        if (scope.model.config.placementType === 'placement') {
+          _.each(answers, function (k, idx) {
+            scope.landingPlaceChoices[idx] = scope.choiceForId(k) || {};
+          });
+        } else {
+          var choices = [];
+          _.each(answers, function (a) {
+            var choice = _.find(scope.local.choices, function (c) {
+              return c.id === a;
+            });
+            if (choice) {
+              choices.push(choice);
+            }
+          });
+          scope.local.choices = choices;
+        }
+      }
+
       _.extend(scope.containerBridge, {
         setDataAndSession: function (dataAndSession) {
           $log.debug("Placement Ordering setting session: ", dataAndSession);
@@ -189,11 +208,12 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
           scope.rawModel.config = _.defaults(scope.rawModel.config || {}, {choiceAreaLayout: 'vertical'});
-          scope.editable = true;
-          scope.landingPlaceChoices = scope.landingPlaceChoices || {};
-          scope.cardinality = 'ordered';
+
           scope.local = {};
           scope.resetChoices(scope.rawModel);
+
+          scope.landingPlaceChoices = scope.landingPlaceChoices || {};
+          scope.cardinality = 'ordered';
           scope.userHasInteracted = false;
 
           for (var i = 0; i < scope.rawModel.choices.length; i++) {
@@ -201,23 +221,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           }
 
           if (dataAndSession.session && dataAndSession.session.answers) {
-            if (scope.model.config.placementType === 'placement') {
-              // Build up the landing places with the selected choices
-              _.each(dataAndSession.session.answers, function (k, idx) {
-                scope.landingPlaceChoices[idx] = scope.choiceForId(k) || {};
-              });
-            } else {
-              var choices = [];
-              _.each(dataAndSession.session.answers, function (a) {
-                var choice = _.find(scope.local.choices, function (c) {
-                  return c.id === a;
-                });
-                if (choice) {
-                  choices.push(choice);
-                }
-              });
-              scope.local.choices = choices;
-            }
+            restoreChoicesFromAnswer(dataAndSession.session.answers);
           }
         },
 
@@ -253,6 +257,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.feedback = undefined;
           scope.top = {};
           scope.userHasInteracted = false;
+        },
+
+        setInstructorData: function (data) {
+          restoreChoicesFromAnswer(data.correctResponse);
+          this.setResponse({correctness: 'correct', correctResponse: data.correctResponse});
         },
 
         setResponse: function (response) {
@@ -291,6 +300,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       });
 
       scope.$watch('local.choices', function (n, o) {
+        if (!scope.local || !scope.local.choices) {
+          return;
+        }
         var state = { choices: _.cloneDeep(scope.local.choices),
           landingPlaces: []
         };

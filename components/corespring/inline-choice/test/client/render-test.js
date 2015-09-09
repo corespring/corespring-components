@@ -38,6 +38,8 @@ describe('corespring:inline-choice', function() {
     }
   };
 
+  var instructorData = {correctResponse: "mc_1"};
+
 
   beforeEach(angular.mock.module('test-app'));
 
@@ -156,6 +158,16 @@ describe('corespring:inline-choice', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].reset();
       expect(_.shuffle).toHaveBeenCalled();
+    });
+  });
+
+  describe('instructor mode', function() {
+    it('setting instructor data selects correct answer and sets correctness to correct', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      var correctChoice = _.find(scope.choices, function(c) { return c.value === 'mc_1';});
+      expect(scope.selected).toEqual(correctChoice);
+      expect(scope.response.correctness).toEqual('correct');
     });
   });
 

@@ -28,13 +28,14 @@ var main = [
       var YES_NO = 'YES_NO';
 
       scope.stack = [];
-      scope.editable = false;
+      scope.editable = true;
       scope.isSeeAnswerOpen = false;
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
         getSession: getSession,
         setResponse: setResponse,
+        setInstructorData: setInstructorData,
         setMode: function(newMode) {},
         reset: reset,
         resetStash: function() {},
@@ -65,7 +66,6 @@ var main = [
 
       function setDataAndSession(dataAndSession) {
         console.log("corespring match:setDataAndSession", dataAndSession);
-        scope.editable = true;
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
         setConfig(dataAndSession.data.model);
@@ -155,6 +155,20 @@ var main = [
         if (response.correctnessMatrix) {
           setCorrectnessOnAnswers(response.correctnessMatrix);
         }
+      }
+
+      function setInstructorData(data) {
+        $log.debug("setInstructorData", data);
+        var cr = _.cloneDeep(data.correctResponse);
+        _.each(cr, function(r) {
+          r.matchSet = _.map(r.matchSet, function(m) {
+            return {
+              correctness: m ? 'correct' : '',
+              value: m
+            };
+          });
+        });
+        scope.containerBridge.setResponse({correctness: "correct", correctClass: "correct", score: 1, feedback: undefined, correctnessMatrix: cr});
       }
 
       function reset() {
