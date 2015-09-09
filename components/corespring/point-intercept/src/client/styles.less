@@ -9,13 +9,14 @@
     -ms-touch-action: none;
   }
   .axis {
+    position: absolute;
     width: 100%;
     text-align: center;
+    margin-top: -20px;
     &.domain {
       transform: rotate(90deg);
       -ms-transform: rotate(90deg); /* IE 9 */
       -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-      position: relative;
     }
   }
   .JXGtext {
@@ -41,6 +42,10 @@
     .solution-container {
       margin-left: auto;
       margin-right: auto;
+      position: relative;
+    }
+    .panel-body {
+      padding: 20px 15px 15px 15px;
     }
   }
   .solution-panel.panelVisible {
@@ -77,7 +82,10 @@
     max-width: 600px;
   }
   .graph-container {
-    margin: 10px auto;
+    margin-top: 30px;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
   }
   .point-display p, input {
     display: inline;

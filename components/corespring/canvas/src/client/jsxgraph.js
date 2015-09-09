@@ -39,7 +39,7 @@ var def = ['Canvas',
           var offsetTop = elem.height() / 2 + 10;
           jxgbox.attr("id", canvasId);
           jxgbox.before('<div class="axis">'+attr.rangelabel+'</div>');
-          jxgbox.after('<div class="axis domain" style="left: '+offsetLeft+'px; top: -'+offsetTop+'px;">'+attr.domainlabel+'</div>');
+          jxgbox.after('<div class="axis domain" style="left: '+offsetLeft+'px; top: '+offsetTop+'px;">'+attr.domainlabel+'</div>');
 
           return canvasId;
         }
