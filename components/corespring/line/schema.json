@@ -89,10 +89,10 @@
                             "id": "#domainStepValue",
                             "required": false
                         },
-                        "domainLabelPattern": {
-                            "description": "Specifies the pattern for the ticks labels shown on the x axis",
+                        "domainLabelFrequency": {
+                            "description": "Specifies the frequency for the ticks labels shown on the x axis",
                             "type": "integer",
-                            "id": "#domainLabelPattern",
+                            "id": "#domainLabelFrequency",
                             "required": false
                         }
                         "graphHeight": {
@@ -137,10 +137,10 @@
                             "id": "#rangeStepValue",
                             "required": false
                         },
-                        "rangeLabelPattern": {
-                            "description": "Specifies the interval of ticks shown on the y axis",
+                        "rangeLabelFrequency": {
+                            "description": "Specifies the frequency for the ticks labels shown on the y axis",
                             "type": "integer",
-                            "id": "#rangeLabelPattern",
+                            "id": "#rangeLabelFrequency",
                             "required": false
                         },
                         "showCoordinates": {
@@ -153,12 +153,6 @@
                             "description": "When in exhibit mode, whether to show the points on the line",
                             "type": "boolean",
                             "id": "#showInputs",
-                            "required": false
-                        },
-                        "tickLabelFrequency": {
-                            "description": "Specifies the interval of ticks shown on the axes",
-                            "type": "integer",
-                            "id": "#tickLabelFrequency",
                             "required": false
                         }
                     }

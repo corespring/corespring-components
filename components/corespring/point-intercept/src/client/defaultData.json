@@ -21,7 +21,7 @@
     "config": {
       "graphWidth": 500,
       "graphHeight": 500,
-      "graphPadding": 25,
+      "graphPadding": 50,
       "maxPoints": "",
       "labelsType": "present",
       "pointLabels": [
@@ -34,12 +34,12 @@
       "domainMin": -10,
       "domainMax": 10,
       "domainStepValue": 1,
-      "domainLabelPattern": "",
+      "domainLabelFrequency": 1,
       "rangeLabel": "y",
       "rangeMin": -10,
       "rangeMax": 10,
       "rangeStepValue": 1,
-      "rangeLabelPattern": "",
+      "rangeLabelFrequency": 1,
       "scale": 1,
       "sigfigs": -1,
       "showCoordinates": false,

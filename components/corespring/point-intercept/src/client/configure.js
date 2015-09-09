@@ -121,8 +121,9 @@ var main = [
         placeholder: '{{defaults.domainLabel}}' }),
       labelWithInput({
         label: 'Label Pattern',
-        modelKey: 'domainLabelPattern',
-        placeholder: '{{defaults.domainLabelPattern}}' }),
+        modelKey: 'domainLabelFrequency',
+        inputType: "number",
+        placeholder: '{{defaults.domainLabelFrequency}}' }),
       '       </div>',
       '       <div class="config-form-row">',
       '         <h4>y Axis</h4>',
@@ -152,8 +153,9 @@ var main = [
         placeholder: "y" }),
       labelWithInput({
         label: 'Label Pattern',
-        modelKey: 'rangeLabelPattern',
-        placeholder: '{{defaults.rangeLabelPattern}}' }),
+        modelKey: 'rangeLabelFrequency',
+        inputType: "number",
+        placeholder: '{{defaults.rangeLabelFrequency}}' }),
       '       </div><br />',
       '     </form>',
       '  </div>',

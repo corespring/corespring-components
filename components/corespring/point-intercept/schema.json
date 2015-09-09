@@ -90,10 +90,10 @@
                             "id": "#domainStepValue",
                             "required": false
                         },
-                        "domainLabelPattern": {
-                            "description": "Specifies the pattern for the ticks labels shown on the x axis",
+                        "domainLabelFrequency": {
+                            "description": "Specifies the interval of ticks shown on the x axis",
                             "type": "integer",
-                            "id": "#domainLabelPattern",
+                            "id": "#domainLabelFrequency",
                             "required": false
                         }
                         "graphHeight": {
@@ -138,10 +138,10 @@
                             "id": "#rangeStepValue",
                             "required": false
                         },
-                        "rangeLabelPattern": {
+                        "rangeLabelFrequency": {
                             "description": "Specifies the interval of ticks shown on the y axis",
                             "type": "integer",
-                            "id": "#rangeLabelPattern",
+                            "id": "#rangeLabelFrequency",
                             "required": false
                         },
                         "showCoordinates": {
@@ -156,13 +156,7 @@
                             "id": "#showInputs",
                             "required": false
                         },
-                        "tickLabelFrequency": {
-                            "description": "Specifies the interval of ticks shown on the axes",
-                            "type": "integer",
-                            "id": "#tickLabelFrequency",
-                            "required": false
-                        },
-            						"labelsType": {
+                        "labelsType": {
             							"type":"string",
                           "description": "if set to 'present' then point labels will be shown",
             							"id": "#labelsType",

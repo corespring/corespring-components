@@ -27,22 +27,19 @@ exports.service = ['$log',
         ], axisAttrs);
       }
 
-      function createTicks(axis, ticksDistance, scale, scaleSymbol, label) {
+      function createTicks(axis, ticksDistance, scale, labelDistance, label) {
         var ticksAttrs = {
+          insertTicks: false,
           drawLabels: true,
           label: label,
-          ticksDistance: ticksDistance,
-          minorTicks: 0,
+          minorTicks: labelDistance - 1,
           majorHeight: -1,
+          minorHeight: -1,
           strokeColor:'#cccccc',
           scale: scale
         };
 
-        if(scaleSymbol) {
-          ticksAttrs.scaleSymbol = scaleSymbol;
-        }
-
-        self.board.create('ticks', [axis, ticksDistance], ticksAttrs);
+        self.board.create('ticks', [axis, labelDistance * ticksDistance], ticksAttrs);
       }
 
       var domainPadding = attrs.domainStepValue * attrs.graphPadding / 100;
@@ -63,13 +60,13 @@ exports.service = ['$log',
       });
 
       var domainAxis = createAxis(attrs.domainLabel, [0, 0], [1, 0]);
-      var domainTicks = createTicks(domainAxis, attrs.domainStepValue, 1, attrs.domainLabelPattern, {
+      var domainTicks = createTicks(domainAxis, attrs.domainStepValue, 1, attrs.domainLabelFrequency, {
             offset: [0,0],
             anchorX: 'middle',
             anchorY: 'top'
           });
       var rangeAxis = createAxis(attrs.rangeLabel, [0, 0], [0, 1]);
-      var rangeTicks = createTicks(rangeAxis, attrs.rangeStepValue, 1, attrs.rangeLabelPattern, {
+      var rangeTicks = createTicks(rangeAxis, attrs.rangeStepValue, 1, attrs.rangeLabelFrequency, {
             offset: [-5,0],
             anchorX: 'right',
             anchorY: 'middle'
