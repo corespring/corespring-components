@@ -52,7 +52,7 @@ describe('text entry server logic', function() {
     correctResponses: {
       values: ["carrot", "apple"],
       award: 100,
-      ignoreWhitespace: false,
+      ignoreWhitespace: true,
       ignoreCase: false
     },
     incorrectResponses: {
@@ -63,7 +63,7 @@ describe('text entry server logic', function() {
     partialResponses: {
       values: ["lemon", "orange"],
       award: 25,
-      ignoreWhitespace: false,
+      ignoreWhitespace: true,
       ignoreCase: false
     },
     model: {
