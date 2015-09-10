@@ -456,6 +456,20 @@ describe('corespring:match:configure', function() {
     it('updates numberOfCorrectResponses', function() {
       expect(scope.numberOfCorrectResponses).toEqual(4);
     });
+
+    describe('with no partialScoring', function() {
+      beforeEach(function() {
+        var testModel = createTestModel();
+        delete testModel.partialScoring;
+        container.elements[1].setModel(testModel);
+      });
+
+      it('sets one empty partialScoring entry', function() {
+        expect(scope.fullModel.partialScoring.length).toEqual(1);
+      });
+    });
+
+
   });
 
   describe('config', function() {
