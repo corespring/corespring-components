@@ -152,7 +152,7 @@ var main = [
         modelKey: 'rangeLabel',
         placeholder: "y" }),
       labelWithInput({
-        label: 'Label Pattern',
+        label: 'Label Frequency',
         modelKey: 'rangeLabelFrequency',
         inputType: "number",
         placeholder: '{{defaults.rangeLabelFrequency}}' }),

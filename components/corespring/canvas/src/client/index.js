@@ -202,7 +202,9 @@ exports.service = ['$log',
       var shape = this.board.create('line', pts, {
         strokeColor: '#0000ff',
         strokeWidth: 2,
-        fixed: true
+        fixed: true,
+        firstArrow: true,
+        lastArrow: true
       });
       this.shapes.push(shape);
       return shape;
