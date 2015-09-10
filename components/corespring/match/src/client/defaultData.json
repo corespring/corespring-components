@@ -34,7 +34,9 @@
     }
   ],
   "allowPartialScoring": false,
-  "partialScoring": [],
+  "partialScoring": [
+    {}
+  ],
   "feedback": {
     "correctFeedbackType": "none",
     "partialFeedbackType": "none",
