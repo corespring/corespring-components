@@ -99,7 +99,6 @@ function configureTextEntry(
     function getModel() {
       var result = _.cloneDeep(scope.editorModel);
 
-      console.log("getModel", scope.correctResponseInput);
       if (!_.isEmpty(scope.correctResponseInput)) {
 
       }
@@ -116,7 +115,7 @@ function configureTextEntry(
         values: [],
         award: award,
         ignoreCase: false,
-        ignoreWhitespace: false,
+        ignoreWhitespace: true,
         feedback: {
           type: 'default',
           custom: ''
