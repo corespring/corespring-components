@@ -198,14 +198,18 @@ exports.service = ['$log',
       return this.board.on(event, handler);
     };
 
-    Canvas.prototype.makeLine = function(pts) {
-      var shape = this.board.create('line', pts, {
+    Canvas.prototype.makeLine = function(pts, label) {
+      var shapeArgs = {
         strokeColor: '#0000ff',
         strokeWidth: 2,
         fixed: true,
         firstArrow: true,
-        lastArrow: true
-      });
+        lastArrow: true,
+        withLabel: true,
+        name: label
+      };
+
+      var shape = this.board.create('line', pts, shapeArgs);
       this.shapes.push(shape);
       return shape;
     };

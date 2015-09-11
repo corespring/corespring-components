@@ -65,6 +65,12 @@
                             "description": "The initial line to present. Should be in the format of 'y=mx+b'",
                             "required": false
                         },
+                        "curveLabel": {
+                            "type": "string",
+                            "description": "The label for the line",
+                            "id": "#curveLabel",
+                            "required": false
+                        },
                         "domainLabel": {
                             "type": "string",
                             "description": "The label to display for domain",

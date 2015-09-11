@@ -80,7 +80,8 @@ var main = ['$compile', '$rootScope', "LineUtils",
             scope.equation = "y=" + slope + "x+" + yintercept;
             scope.graphCallback({
               drawShape: {
-                line: ["A", "B"]
+                line: ["A", "B"],
+                name: scope.config.curveLabel
               }
             });
           } else {

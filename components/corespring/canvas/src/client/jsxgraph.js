@@ -152,7 +152,7 @@ var def = ['Canvas',
             var pt1 = canvas.getPoint(drawShape.line[0]);
             var pt2 = canvas.getPoint(drawShape.line[1]);
             if (pt1 && pt2) {
-              canvas.makeLine([pt1, pt2]);
+              canvas.makeLine([pt1, pt2], drawShape.name);
             }
           } else if (drawShape.curve) {
             canvas.makeCurve(drawShape.curve);
