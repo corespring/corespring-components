@@ -595,4 +595,41 @@ describe('corespring:match:configure', function() {
 
   });
 
+  describe('sumCorrectAnswers', function() {
+
+    function setCorrectResponse(correctResponse) {
+      var model = createTestModel();
+      model.correctResponse = correctResponse;
+      scope.fullModel = model;
+    }
+
+    it('does not count rows with no correct answers', function() {
+      setCorrectResponse([
+        {
+          "id" : "row1",
+          "matchSet" : [false, false, false]
+        }
+      ]);
+      expect(scope.sumCorrectAnswers()).toEqual(0);
+    });
+
+    it('counts rows with correct answers in different positions', function() {
+      setCorrectResponse([
+        {
+          "id": "row1",
+          "matchSet" : [false, true, false]
+        },
+        {
+          "id" : "row2",
+          "matchSet" : [true, false, false]
+        },
+        {
+          "id" : "row3",
+          "matchSet" : [false, false, true]
+        }
+      ]);
+      expect(scope.sumCorrectAnswers()).toEqual(3);
+    });
+  });
+
 });
