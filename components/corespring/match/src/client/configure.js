@@ -112,7 +112,7 @@ var main = [
 
       function setModel(fullModel) {
         scope.fullModel = fullModel || {};
-        if (!scope.fullModel.partialScoring || scope.fullModel.partialScoring.length == 0) {
+        if (!scope.fullModel.partialScoring || scope.fullModel.partialScoring.length === 0) {
           scope.fullModel.partialScoring = [{}];
         }
         scope.model = scope.fullModel.model;
@@ -266,7 +266,7 @@ var main = [
           slot++;
         }
         return slot;
-      };
+      }
 
       function addRow() {
         var index = findFreeRowSlot();
