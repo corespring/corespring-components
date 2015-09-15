@@ -2,86 +2,90 @@
 
 var main = [
   '$sce', '$log',
-  function ($sce, $log) {
+  function($sce, $log) {
     'use strict';
 
     $log = console;
 
     var def;
 
-    var idEquals = function (choice) {
-      return function (c) {
+    var idEquals = function(choice) {
+      return function(c) {
         return c.id === choice.id;
       };
     };
 
-    var choiceEquals = function (choice) {
-      return function (c) {
+    var choiceEquals = function(choice) {
+      return function(c) {
         return c === choice;
       };
     };
 
-    var link = function (scope, element, attrs) {
+    var link = function(scope, element, attrs) {
       scope.editable = true;
       scope.stack = [];
       scope.containerBridge = {
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
           scope.model = dataAndSession.data.model;
-          scope.model.config = _.defaults(scope.model.config || {}, {choiceAreaPosition: "top"});
+          scope.model.config = _.defaults(scope.model.config || {}, {
+            choiceAreaPosition: "top"
+          });
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
 
           if (dataAndSession.session && dataAndSession.session.answers) {
-            scope.droppedChoices = _.map(dataAndSession.session.answers, function (answer) {
+            scope.droppedChoices = _.map(dataAndSession.session.answers, function(answer) {
               var choiceForAnswer = _.find(scope.model.choices, idEquals(answer));
               return _.extend(answer, choiceForAnswer);
             });
-            scope.choices = _.reject(scope.choices, function (c) {
+            scope.choices = _.reject(scope.choices, function(c) {
               return _(dataAndSession.session.answers).pluck('id').contains(c.id);
             });
           }
 
-          scope.stack.push(_.cloneDeep({choices: scope.choices, droppedChoices: scope.droppedChoices}));
+          scope.stack.push(_.cloneDeep({
+            choices: scope.choices,
+            droppedChoices: scope.droppedChoices
+          }));
         },
 
-        getSession: function () {
+        getSession: function() {
           return {
-            answers: _(scope.droppedChoices).map(function (o) {
+            answers: _(scope.droppedChoices).map(function(o) {
               return _.pick(o, 'id', 'left', 'top', 'width', 'height');
             }).value()
           };
         },
 
-        setResponse: function (response) {
+        setResponse: function(response) {
           $log.debug('[graphic gap match] setResponse: ', response);
           scope.response = response;
         },
 
-        setMode: function (newMode) {
-        },
+        setMode: function(newMode) {},
 
-        reset: function () {
+        reset: function() {
           scope.droppedChoices = [];
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.response = undefined;
           scope.stack = [_.first(scope.stack)];
         },
 
-        isAnswerEmpty: function () {
+        isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
         },
 
-        answerChangedHandler: function (callback) {
+        answerChangedHandler: function(callback) {
           scope.answerChangeCallback = callback;
         },
 
-        editable: function (e) {
+        editable: function(e) {
           scope.editable = e;
         }
       };
 
-      scope.undo = function () {
+      scope.undo = function() {
         if (scope.stack.length > 1) {
           scope.stack.pop();
           var state = _.last(scope.stack);
@@ -90,16 +94,16 @@ var main = [
         }
       };
 
-      scope.startOver = function () {
+      scope.startOver = function() {
         scope.stack = [_.first(scope.stack)];
         var state = _.last(scope.stack);
         scope.choices = _.cloneDeep(state.choices);
         scope.droppedChoices = _.cloneDeep(state.droppedChoices);
       };
 
-      scope.correctClass = function (forChoice) {
+      scope.correctClass = function(forChoice) {
         if (scope.response && scope.response.feedback) {
-          var choice = _.find(scope.response.feedback.choices, function (c) {
+          var choice = _.find(scope.response.feedback.choices, function(c) {
             return (c.id === forChoice.id && c.left === forChoice.left && c.top === forChoice.top);
           });
           if (choice) {
@@ -110,24 +114,24 @@ var main = [
         return "";
       };
 
-      scope.correctAnswerForHotspot = function (hotspot) {
-        return _(scope.response.correctResponse).filter(function (c) {
+      scope.correctAnswerForHotspot = function(hotspot) {
+        return _(scope.response.correctResponse).filter(function(c) {
           return c.hotspot === hotspot.id;
-        }).map(function (c) {
-          var choice = _.find(scope.model.choices, function (ch) {
+        }).map(function(c) {
+          var choice = _.find(scope.model.choices, function(ch) {
             return c.id === ch.id;
           });
           return _.merge(c, choice);
         }).value();
       };
 
-      scope.getPlaceholderChoices = function () {
-        return _.reject(scope.model.choices, function (c) {
+      scope.getPlaceholderChoices = function() {
+        return _.reject(scope.model.choices, function(c) {
           return !_.isUndefined(_.find(scope.choices, idEquals(c)));
         });
       };
 
-      scope.onDragStart = function (ev, ui, choice) {
+      scope.onDragStart = function(ev, ui, choice) {
         scope.draggedChoice = choice;
       };
 
@@ -136,14 +140,14 @@ var main = [
       };
 
       scope.droppableJquiOptions = {
-        accept: function () {
+        accept: function() {
           return !_.contains(scope.choices, scope.draggedChoice);
         },
         activeClass: 'dropping'
       };
 
 
-      scope.dropChoice = function (draggedChoice, newChoice) {
+      scope.dropChoice = function(draggedChoice, newChoice) {
         scope.droppedChoices = _.reject(scope.droppedChoices, choiceEquals(draggedChoice));
         var numberOfDroppedChoices = _(scope.droppedChoices).filter(idEquals(draggedChoice)).size();
         var removeFromChoices = draggedChoice.matchMax && numberOfDroppedChoices >= draggedChoice.matchMax - 1;
@@ -158,7 +162,7 @@ var main = [
         scope.droppedChoices.push(newChoice);
       };
 
-      scope.onDrop = function (ev, ui) {
+      scope.onDrop = function(ev, ui) {
         var MARGIN = 1;
         var offsetX = ev.clientX - ui.helper.offset().left;
         var offsetY = ev.clientY - ui.helper.offset().top;
@@ -188,8 +192,8 @@ var main = [
         scope.dropChoice(scope.draggedChoice, newChoice);
       };
 
-      scope.onChoiceAreaDrop = function (ev, ui) {
-        scope.droppedChoices = _.reject(scope.droppedChoices, function (c) {
+      scope.onChoiceAreaDrop = function(ev, ui) {
+        scope.droppedChoices = _.reject(scope.droppedChoices, function(c) {
           return c === scope.draggedChoice;
         });
 
@@ -203,11 +207,14 @@ var main = [
         }
       };
 
-      scope.$watch('droppedChoices', function (n, prev) {
-        if (!_.isEqual(n, prev) && _.isFunction(scope.answerChangeHandler)) {
+      scope.$watch('droppedChoices', function(n, prev) {
+        if (!_.isEqual(n, prev) && _.isFunction(scope.answerChangeCallback)) {
           scope.answerChangeCallback(n);
         }
-        var state = _.cloneDeep({choices: scope.choices, droppedChoices: scope.droppedChoices});
+        var state = _.cloneDeep({
+          choices: scope.choices,
+          droppedChoices: scope.droppedChoices
+        });
         if (!_.isEqual(state, _.last(scope.stack))) {
           scope.stack.push(state);
         }
@@ -217,7 +224,7 @@ var main = [
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
-    var choices = function (positons) {
+    var choices = function(positons) {
       return [
         '<div ng-if="model.config.choiceAreaPosition == \'' + positons[0] + '\' || model.config.choiceAreaPosition == \'' + positons[1] + '\'"',
         '       class="choices {{model.config.choiceAreaPosition}}"',
@@ -310,12 +317,12 @@ var main = [
 
 var coordsForHotspot = [
   '$sce', '$log',
-  function ($sce, $log) {
+  function($sce, $log) {
     "use strict";
 
     var def;
-    var link = function (scope, element, attrs) {
-      scope.$watch('coordsForHotspot', function (hotspot) {
+    var link = function(scope, element, attrs) {
+      scope.$watch('coordsForHotspot', function(hotspot) {
         if (hotspot) {
           var populate = scope.populate || "tag";
           var coords = hotspot.coords;
@@ -327,7 +334,7 @@ var coordsForHotspot = [
               $(element).attr('height', coords.height);
             } else if (hotspot.shape === 'poly') {
               var points = [];
-              _.each(hotspot.coords, function (c) {
+              _.each(hotspot.coords, function(c) {
                 points.push(c.x);
                 points.push(c.y);
               });
@@ -341,8 +348,7 @@ var coordsForHotspot = [
                 "width: " + coords.width + "px",
                 "height: " + coords.height + "px"
               ].join(';');
-            }
-            else {
+            } else {
               var leftTopMostPoints = _.min(hotspot.coords, function(c) {
                 return c.x + c.y;
               });
