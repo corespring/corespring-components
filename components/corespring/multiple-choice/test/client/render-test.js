@@ -75,7 +75,7 @@ describe('corespring:multiple-choice-render', function() {
     expect(_.shuffle).toHaveBeenCalled();
   });
 
-  it('doesnt shuffle is shuffle is false', function() {
+  it('does not shuffle if shuffle is false', function() {
     spyOn(_, 'shuffle');
     testModel.data.model.config.shuffle = false;
     container.elements['1'].setDataAndSession(testModel);
@@ -175,5 +175,29 @@ describe('corespring:multiple-choice-render', function() {
 
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a choice is selected', function() {
+      scope.answer.choices['1'] = true;
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 });
