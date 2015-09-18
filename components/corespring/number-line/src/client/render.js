@@ -179,8 +179,8 @@ var interactiveGraph = [
       template: [
         '<div class="interactive-graph">',
         '  <div class="undo-button-row" ng-show="editable">',
-        '    <span cs-undo-button ng-hide="options.undoDisabled"></span>',
-        '    <span cs-start-over-button class="btn-player"></span>',
+        '    <span cs-undo-button ng-hide="options.undoDisabled" ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"></span>',
+        '    <span cs-start-over-button class="btn-player" ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
