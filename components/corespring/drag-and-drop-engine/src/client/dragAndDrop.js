@@ -149,14 +149,14 @@ var dragAndDropController = [
         };
 
         scope.startOver = function() {
-          if (scope && scope.originalChoices){
+          if (scope.originalChoices){
             scope.stack = [_.first(scope.stack)];
             scope.local.choices = _.cloneDeep(scope.originalChoices);
             _.each(scope.landingPlaceChoices, function(lpc, key) {
               scope.landingPlaceChoices[key] = [];
             });
-            scope.$emit('rerender-math', {delay: 10, element: element[0]});
           }
+          scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
         scope.undo = function() {

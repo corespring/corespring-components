@@ -34,6 +34,8 @@ describe('dragAndDropController', function() {
     it('should $emit a rerender-math event', function() {
       spyOn(scope, "$emit");
       scope.startOver();
+      scope.originalChoices =[];
+      expect(scope.originalChoices).toBeDefined();
       expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: jasmine.any(Number), element: jasmine.any(Object)});
     });
 
