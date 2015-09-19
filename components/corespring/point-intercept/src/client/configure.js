@@ -120,7 +120,7 @@ var main = [
         modelKey: 'domainLabel',
         placeholder: '{{defaults.domainLabel}}' }),
       labelWithInput({
-        label: 'Label Pattern',
+        label: 'Label Frequency',
         modelKey: 'domainLabelFrequency',
         inputType: "number",
         placeholder: '{{defaults.domainLabelFrequency}}' }),

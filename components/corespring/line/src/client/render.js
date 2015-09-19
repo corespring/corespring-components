@@ -176,23 +176,36 @@ var main = ['$compile', '$rootScope', "LineUtils",
       };
 
       var createGraphAttributes = function(config, graphCallback) {
+
+        function getModelValue(property, defaultValue, fallbackValue) {
+          if (typeof property !== 'undefined' && property !== null) {
+            return property;
+          } else {
+            if (typeof fallbackValue !== 'undefined' && property !== null) {
+              return fallbackValue;
+            } else {
+              return defaultValue;
+            }
+          }
+        }
+
         return {
           "jsx-graph": "",
           "graph-callback": graphCallback || "graphCallback",
           "interaction-callback": "interactionCallback",
           maxPoints: 2,
-          graphPadding: parseInt(typeof config.graphPadding !== 'undefined' ? config.graphPadding: 25, 10),
-          domainMin: parseInt(typeof config.domainMin !== 'undefined' ? config.domainMin: -10, 10),
-          domainMax: parseInt(typeof config.domainMax !== 'undefined' ? config.domainMax : 10, 10),
-          domainStepValue: parseFloat(typeof config.domainStepValue !== 'undefined' ? config.domainStepValue : 1),
-          domainLabelFrequency: parseFloat(config.domainLabelFrequency ? config.domainLabelFrequency : (config.tickLabelFrequency ? config.tickLabelFrequency : 1), 10),
-          rangeMin: parseInt(typeof config.rangeMin !== 'undefined' ? config.rangeMin : -10, 10),
-          rangeMax: parseInt(typeof config.rangeMax !== 'undefined' ? config.rangeMax : 10, 10),
-          rangeStepValue: parseFloat(typeof config.rangeStepValue !== 'undefined' ? config.rangeStepValue : 1),
-          rangeLabelFrequency: parseInt(config.rangeLabelFrequency ? config.rangeLabelFrequency : (config.tickLabelFrequency ? config.tickLabelFrequency : 1), 10),
-          scale: parseFloat(config.scale ? config.scale : 1),
+          graphPadding: parseInt(getModelValue(config.graphPadding, 25), 10),
           domainLabel: config.domainLabel,
+          domainMin: parseInt(getModelValue(config.domainMin, -10, config.domain * -1), 10),
+          domainMax: parseInt(getModelValue(config.domainMax, 10, config.domain), 10),
+          domainStepValue: parseFloat(getModelValue(config.domainStepValue)),
+          domainLabelFrequency: parseInt(getModelValue(config.domainLabelFrequency, 1, config.tickLabelFrequency), 10),
           rangeLabel: config.rangeLabel,
+          rangeMin: parseInt(getModelValue(config.rangeMin, -10, config.range * -1)),
+          rangeMax: parseInt(getModelValue(config.rangeMax, 10, config.range * 1)),
+          rangeStepValue: parseFloat(getModelValue(config.rangeStepValue)),
+          rangeLabelFrequency: parseInt(getModelValue(config.rangeLabelFrequency, 1, config.tickLabelFrequency, 10)),
+          scale: parseFloat(config.scale ? config.scale : 1),
           showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
           showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
           showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : true,
@@ -458,7 +471,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
         "          </div>",
         "      </div>",
         "      <div class='scale-display'>",
-        "        <span>scale={{scale}}</span>",
         "         <div class='action undo'>",
         "           <a title='Undo' ng-click='undo()'>",
         "             <i class='fa fa-undo'/>",

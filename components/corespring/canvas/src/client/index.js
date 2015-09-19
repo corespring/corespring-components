@@ -4,18 +4,15 @@ exports.framework = "angular";
 exports.service = ['$log',
   function($log) {
     function Canvas(id, attrs) {
-
       var self = this;
 
-      function createAxis(name, point1, point2) {
+      function createAxis(axisProperties, point1, point2, labelProperties) {
         var axisAttrs = {
-          ticks: {
-            ticksDistance: 0
-          },
+          ticks: getTicksProperties(axisProperties, labelProperties),
           strokeColor: "#3d3d3d",
           highlightStrokeColor: "#3d3d3d",
           strokeWidth: 2,
-          name: name,
+          name: axisProperties.label,
           withLabel: false,
           lastArrow: true,
           firstArrow: true
@@ -27,30 +24,36 @@ exports.service = ['$log',
         ], axisAttrs);
       }
 
-      function createTicks(axis, ticksDistance, scale, labelDistance, label) {
-        var ticksAttrs = {
-          insertTicks: false,
-          drawLabels: true,
-          label: label,
-          minorTicks: labelDistance - 1,
+      function getTicksProperties(axisProperties, labelProperties) {
+        var defaultValues = {
+          insertTicks: true,
           majorHeight: -1,
           minorHeight: -1,
-          strokeColor:'#cccccc',
-          scale: scale
+          drawLabels: true,
+          minorTicks: axisProperties.labelFrequency - 1,
+          label: labelProperties,
+          strokeColor:'#cccccc'
         };
 
-        self.board.create('ticks', [axis, labelDistance * ticksDistance], ticksAttrs);
+        if (axisProperties.stepValue) {
+          return _.defaults({
+            ticksDistance: axisProperties.stepValue * axisProperties.labelFrequency,
+            insertTicks: false
+          }, defaultValues);
+        } else {
+          return defaultValues;
+        }
       }
 
-      var domainPadding = attrs.domainStepValue * attrs.graphPadding / 100;
-      var rangePadding = attrs.rangeStepValue * attrs.graphPadding / 100;
+      var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.graphPadding / 100 : 0.5;
+      var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.graphPadding / 100 : 0.5;
 
       this.board = JXG.JSXGraph.initBoard(id, {
         boundingbox: [
-          attrs.domainMin - domainPadding,
-          attrs.rangeMax + rangePadding,
-          attrs.domainMax + domainPadding,
-          attrs.rangeMin - rangePadding],
+          attrs.domain.min - domainPadding,
+          attrs.range.max + rangePadding,
+          attrs.domain.max + domainPadding,
+          attrs.range.min - rangePadding],
         showNavigation: false,
         showCopyright: false,
         zoom: false
@@ -59,14 +62,12 @@ exports.service = ['$log',
         height: attrs.height
       });
 
-      var domainAxis = createAxis(attrs.domainLabel, [0, 0], [1, 0]);
-      var domainTicks = createTicks(domainAxis, attrs.domainStepValue, 1, attrs.domainLabelFrequency, {
+      var domainAxis = createAxis(attrs.domain, [0, 0], [1, 0], {
             offset: [0,0],
             anchorX: 'middle',
             anchorY: 'top'
           });
-      var rangeAxis = createAxis(attrs.rangeLabel, [0, 0], [0, 1]);
-      var rangeTicks = createTicks(rangeAxis, attrs.rangeStepValue, 1, attrs.rangeLabelFrequency, {
+      var rangeAxis = createAxis(attrs.range, [0, 0], [0, 1], {
             offset: [-5,0],
             anchorX: 'right',
             anchorY: 'middle'
