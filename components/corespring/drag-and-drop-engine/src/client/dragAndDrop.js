@@ -252,19 +252,21 @@ var dragAndDropController = [
         };
 
         scope.$watch('landingPlaceChoices', function(n, old) {
+          if(!scope.local || !scope.local.choices){
+            return;
+          }
+
           if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
             scope.answerChangeCallback();
           }
-          //console.log('scope.stack',scope);
 
-          if  (scope.local){
-            var state = {
-              choices: _.cloneDeep(scope.local.choices),
-              landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
-            };
-            if (!_.isEqual(state, _.last(scope.stack))) {
-              scope.stack.push(state);
-            }
+          var state = {
+            choices: _.cloneDeep(scope.local.choices),
+            landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
+          };
+
+          if (!_.isEqual(state, _.last(scope.stack))) {
+            scope.stack.push(state);
           }
         }, true);
 

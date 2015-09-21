@@ -293,18 +293,16 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.$watch('local.choices', function (n, o) {
 
-          //console.log('scope.stack ordering 1 ',scope.stack);
-        if  (scope.local){
+          if(!scope.local || !scope.local.choices){
+              return;
+          }
           var state = { choices: _.cloneDeep(scope.local.choices),
             landingPlaces: []
           };
 
           if (n && !_.isEqual(state, _.last(scope.stack))) {
-              //console.log('scope last ordering',_.last(scope.stack));
             scope.stack.push(state);
-              //console.log('state after push ', scope.stack);
           }
-        }
       }, true);
 
       scope.sortableOptions = {
