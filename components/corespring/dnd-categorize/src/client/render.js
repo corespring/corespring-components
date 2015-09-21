@@ -53,7 +53,6 @@ function renderCorespringDndCategorize(
     var layout;
 
     scope.correctAnswerRows = [[]];
-    scope.editable = false;
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
     scope.rows = [[]];
@@ -230,8 +229,6 @@ function renderCorespringDndCategorize(
 
     function reset() {
       scope.$broadcast('reset');
-
-      scope.editable = true;
       scope.isSeeAnswerPanelExpanded = false;
       scope.response = undefined;
 
@@ -521,6 +518,10 @@ function renderCorespringDndCategorize(
       return 'editable';
     }
 
+    scope.canEdit = function() {
+      return scope.editable && !scope.response;
+    };
+
     function revertToState(state) {
       scope.renderModel = _.cloneDeep(state);
       updateView();
@@ -557,7 +558,7 @@ function renderCorespringDndCategorize(
   function undoStartOver() {
     return [
         '<div corespring-undo-start-over="" ',
-        '    ng-show="editable"',
+        '    ng-show="canEdit()"',
         '    render-model="renderModel"',
         '    revert-to-state="revertToState(state)"',
         '></div>'
