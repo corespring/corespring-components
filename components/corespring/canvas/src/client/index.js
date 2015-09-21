@@ -31,8 +31,7 @@ exports.service = ['$log',
           minorHeight: -1,
           drawLabels: true,
           minorTicks: axisProperties.labelFrequency - 1,
-          label: labelProperties,
-          strokeColor:'#cccccc'
+          label: labelProperties
         };
 
         if (axisProperties.stepValue) {
