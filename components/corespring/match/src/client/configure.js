@@ -298,16 +298,19 @@ var main = [
         return matchModel;
 
         function makeHeaders() {
-          var questionHeaders = [];
+          var questionHeaders = [],
+              questionHeaderId = _.uniqueId();
+
           questionHeaders.push({
-            wiggiId: _.uniqueId(),
-            cssClass: 'question-header',
+            wiggiId: questionHeaderId,
+            cssClass: 'question-header header'+questionHeaderId,
             labelHtml: scope.model.columns[0].labelHtml
           });
           var answerHeaders = scope.model.columns.slice(1).map(function(col) {
+            var answerHeaderId = _.uniqueId();
             return {
-              wiggiId: _.uniqueId(),
-              cssClass: 'answer-header',
+              wiggiId: answerHeaderId,
+              cssClass: 'answer-header header'+answerHeaderId,
               labelHtml: col.labelHtml
             };
           });
@@ -398,7 +401,7 @@ var main = [
         }
 
         if ($this.column) {
-          var elementClass =  '.'+$this.column.cssClass,
+          var elementClass =  '.header'+$this.column.wiggiId,
               elementHtml = $(elementClass).find('.wiggi-wiz-editable')[0].innerHTML;
 
           if (elementHtml ==="Custom header" || elementHtml==="Column 1" || elementHtml==="Column 2" || elementHtml==="Column 3" || elementHtml==="Column 4" ){
