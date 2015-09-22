@@ -9,7 +9,6 @@ var def = function() {
     };
 };
 
-
 exports.framework = "angular";
 exports.directive = {
     name: "csUndoButton",

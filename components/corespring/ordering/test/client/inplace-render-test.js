@@ -232,7 +232,7 @@ describe('corespring:ordering-in-place', function () {
         scope.$digest();
         scope.local.choices = ['a', 'c', 'b', 'd'];
         scope.$digest();
-        scope.undo();
+        scope.undoModel.undo();
         scope.$digest();
         expect(scope.local.choices).toEqual(['c', 'a', 'b', 'd']);
       });
@@ -248,15 +248,15 @@ describe('corespring:ordering-in-place', function () {
         scope.local.choices = ['a', 'b', 'd', 'c'];
         scope.$digest();
 
-        scope.undo();
+        scope.undoModel.undo();
         scope.$digest();
         expect(scope.local.choices).toEqual(['a', 'b', 'c', 'd']);
 
-        scope.undo();
+        scope.undoModel.undo();
         scope.$digest();
         expect(scope.local.choices).toEqual(['a', 'c', 'b', 'd']);
 
-        scope.undo();
+        scope.undoModel.undo();
         scope.$digest();
         expect(scope.local.choices).toEqual(['c', 'a', 'b', 'd']);
       });
@@ -265,7 +265,7 @@ describe('corespring:ordering-in-place', function () {
         setModelAndDigest(verticalModel);
         scope.$digest();
         var originalChoices = scope.local.choices;
-        scope.undo();
+        scope.undoModel.undo();
         scope.$digest();
         expect(_.pluck(scope.local.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       });
@@ -283,7 +283,7 @@ describe('corespring:ordering-in-place', function () {
         scope.local.choices = ['a', 'b', 'd', 'c'];
         scope.$digest();
 
-        scope.startOver();
+        scope.undoModel.startOver();
         scope.$digest();
         expect(_.pluck(scope.local.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       });

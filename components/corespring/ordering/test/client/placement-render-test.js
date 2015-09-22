@@ -327,7 +327,7 @@ describe('corespring:placement ordering', function() {
         1: 'c1'
       };
       scope.$digest();
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(scope.landingPlaceChoices).toEqual({
         0: 'c1',
@@ -369,7 +369,7 @@ describe('corespring:placement ordering', function() {
       };
       scope.$digest();
 
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(scope.landingPlaceChoices).toEqual({
         0: 'c2',
@@ -378,7 +378,7 @@ describe('corespring:placement ordering', function() {
         3: 'c4'
       });
 
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(scope.landingPlaceChoices).toEqual({
         0: 'c2',
@@ -387,7 +387,7 @@ describe('corespring:placement ordering', function() {
         3: 'c4'
       });
 
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(scope.landingPlaceChoices).toEqual({
         0: 'c1',
@@ -401,7 +401,7 @@ describe('corespring:placement ordering', function() {
       setModelAndDigest(verticalModel);
       scope.$digest();
       var originalChoices = scope.landingPlaceChoices;
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(_.pluck(scope.landingPlaceChoices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
     });
@@ -438,7 +438,7 @@ describe('corespring:placement ordering', function() {
       };
       scope.$digest();
 
-      scope.startOver();
+      scope.undoModel.startOver();
       scope.$digest();
       expect(_.pluck(scope.landingPlaceChoices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
     });

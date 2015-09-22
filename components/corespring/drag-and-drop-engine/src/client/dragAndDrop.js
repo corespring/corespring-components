@@ -1,8 +1,10 @@
 /* global console,exports */
 var dragAndDropController = [
+  '$log',
   '$modal',
   '$timeout',
-  function($modal,$timeout) {
+  'CsUndoModel',
+  function($log, $modal, $timeout, CsUndoModel) {
 
     "use strict";
 
@@ -14,7 +16,34 @@ var dragAndDropController = [
         scope.playerWidth = 550;
         scope.maxWidth = 50;
         scope.maxHeight = 20;
-        scope.stack = [];
+
+        //---------------------------------------
+
+        scope.undoModel = new CsUndoModel($log);
+        scope.undoModel.setUndoCallback(revertToState);
+
+        function revertToState(state){
+          scope.local.choices = _.cloneDeep(state.choices);
+          scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+          scope.$emit('rerender-math', {delay: 10, element: element[0]});
+        }
+
+        function pushState(){
+          if(scope.local && scope.local.choices && scope.landingPlaceChoices){
+            var state = {
+              choices: scope.local.choices,
+              landingPlaces: scope.landingPlaceChoices
+            };
+            scope.undoModel.pushState(state);
+          }
+        }
+
+        scope.$watch('local.choices', pushState, true);
+        scope.$watch('landingPlaceChoices', pushState, true);
+
+        //---------------------------------------
+
+
 
         scope.onStart = function(event) {
           scope.isDragging = true;
@@ -55,7 +84,7 @@ var dragAndDropController = [
         var lastW, lastH, freq = 100;
 
         function updateLayout() {
-          if(freq < 1000){
+          if (freq < 1000) {
             freq += 100;
           }
           $timeout(updateLayout, freq);
@@ -64,7 +93,8 @@ var dragAndDropController = [
             return;
           }
 
-          var w = 0, h = 0;
+          var w = 0,
+            h = 0;
 
           var htmlHolders = $(element).find('.html-holder');
           htmlHolders.each(function(idx, e) {
@@ -78,8 +108,8 @@ var dragAndDropController = [
           });
 
           //CO-83 make sure the change applies to vertical placement only
-          if(scope.model.config.placementType === 'placement' && scope.model.config.choiceAreaLayout === 'vertical'){
-            w = Math.min( w + 8, (scope.playerWidth - 50) / 2);
+          if (scope.model.config.placementType === 'placement' && scope.model.config.choiceAreaLayout === 'vertical') {
+            w = Math.min(w + 8, (scope.playerWidth - 50) / 2);
           }
 
           if (lastW !== w || lastH !== h) {
@@ -119,7 +149,7 @@ var dragAndDropController = [
         }
 
         scope.resetChoices = function(model) {
-          scope.stack = [];
+          scope.undoModel.clear();
           scope.model = _.cloneDeep(model);
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = [];
@@ -138,7 +168,10 @@ var dragAndDropController = [
           }
 
           scope.originalChoices = _.cloneDeep(scope.local.choices);
-          scope.$emit('rerender-math', {delay: 10, element: element[0]});
+          scope.$emit('rerender-math', {
+            delay: 10,
+            element: element[0]
+          });
         };
 
         scope.choiceForId = function(id) {
@@ -146,26 +179,6 @@ var dragAndDropController = [
             return c.id === id;
           });
           return choice;
-        };
-
-        scope.startOver = function() {
-          scope.stack = [_.first(scope.stack)];
-          scope.local.choices = _.cloneDeep(scope.originalChoices);
-          _.each(scope.landingPlaceChoices, function(lpc, key) {
-            scope.landingPlaceChoices[key] = [];
-          });
-          scope.$emit('rerender-math', {delay: 10, element: element[0]});
-        };
-
-        scope.undo = function() {
-          if (scope.stack.length < 2) {
-            return;
-          }
-          scope.stack.pop();
-          var state = _.last(scope.stack);
-          scope.local.choices = _.cloneDeep(state.choices);
-          scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
-          scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
         scope.itemsPerRow = function() {
@@ -217,13 +230,14 @@ var dragAndDropController = [
             backdrop: true,
             scope: scope.solutionScope
           });
-          scope.$emit('rerender-math', {delay: 100});
+          scope.$emit('rerender-math', {
+            delay: 100
+          });
         };
 
         /* Common container bridge implementations */
         scope.containerBridge = {
-          setMode: function(newMode) {
-          },
+          setMode: function(newMode) {},
 
           reset: function() {
             scope.resetChoices(scope.rawModel);
@@ -246,15 +260,14 @@ var dragAndDropController = [
         };
 
         scope.$watch('landingPlaceChoices', function(n, old) {
-          if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
+          if (!_.isEmpty(old) && !_.isEmpty(n) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
             scope.answerChangeCallback();
           }
-          var state = {
-            choices: _.cloneDeep(scope.local.choices),
-            landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
-          };
-          if (!_.isEqual(state, _.last(scope.stack))) {
-            scope.stack.push(state);
+        }, true);
+
+        scope.$watch('local.choices', function(n, old) {
+          if (!_.isEmpty(old) && !_.isEmpty(n) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
+            scope.answerChangeCallback();
           }
         }, true);
 
