@@ -4,7 +4,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     "use strict";
 
-    function link(scope, element, attrs) {
+    function link (scope, element, attrs) {
+
+      function clearLandingPlaceChoices() {
+        _.each(scope.landingPlaceChoices, function (v, k) {
+          scope.landingPlaceChoices[k] = {};
+        });
+      }
 
       scope.top = {};
 
@@ -43,6 +49,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         };
       };
 
+
       scope.onDrop = function () {
         scope.dragging.isOut = false;
         for (var i = 0; i < scope.local.choices.length; i++) {
@@ -55,6 +62,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         hoverClass: 'drop-hover',
         onDrop: 'onDrop'
       };
+
 
       scope.classForChoice = function (id, idx) {
         if (_.isEmpty(id)) {
@@ -126,6 +134,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
               scope.local.choices = choices;
             }
           }
+
+          scope.undoModel.init();
         },
 
         getSession: function () {
@@ -151,6 +161,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
         reset: function () {
           scope.resetChoices(scope.rawModel);
+          clearLandingPlaceChoices();
           scope.correctResponse = undefined;
           scope.correctChoices = undefined;
           scope.correctClass = undefined;
@@ -159,6 +170,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.feedback = undefined;
           scope.top = {};
           scope.userHasInteracted = false;
+          scope.initUndo();
         },
 
         setResponse: function (response) {
@@ -218,6 +230,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
     }
 
     var buttonRow = function (attrs) {
@@ -234,7 +247,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var answerArea = [
       '<div class="answer-area-holder">',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"'),
-      '  <div class="clearfix" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"></div>',
+      '<div class="clearfix" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"></div>',
       '  <div class="answer-area-label" ng-show="answerLabelVisible()" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
       '  <div class="answer-area-table {{correctClass}}">',
       '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
@@ -269,8 +282,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '<div class="choices" >',
       '  <div class="choices-holder">',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'above\'"'),
-      '    <div class="clearfix"></div>',
-      '    <div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+      '<div class="clearfix"></div>',
+      '<div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
       '    <div class="choices-inner-holder clearfix">',
       '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
       '        <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
@@ -289,74 +302,74 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     ].join('');
 
     var placementOrder = [
-      '<div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout != \'horizontal\' || model.config.choiceAreaPosition != \'below\'">',
-      '  <div class="choice-area">', choices, '</div>',
-      '  <div class="answer-area">' + answerArea + '</div>',
-      '  <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
-      '</div>',
-      '<div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
-      '  <div class="answer-area">' + answerArea + '</div>',
-      '  <div class="choice-area">', choices, '</div>',
-      '  <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
-      '</div>'
+      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout != \'horizontal\' || model.config.choiceAreaPosition != \'below\'">',
+      '       <div class="choice-area">', choices, '</div>',
+      '       <div class="answer-area">' + answerArea + '</div>',
+      '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
+      '     </div>',
+      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
+      '       <div class="answer-area">' + answerArea + '</div>',
+      '       <div class="choice-area">', choices, '</div>',
+      '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
+      '     </div>'
     ].join('\n');
 
     var inplaceTemplate = [
-      '<div ng-if="model.config.placementType != \'placement\'" class="view-ordering {{model.config.choiceAreaLayout}}">',
+      '  <div ng-if="model.config.placementType != \'placement\'" class="view-ordering {{model.config.choiceAreaLayout}}">',
       buttonRow(),
-      '  <div class="clearfix"></div>',
-      '  <div ng-show="model.config.choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel" class="choice-area-label"></div>',
-      '  <div class="answer-area-container">',
-      '    <div class="container-border {{correctClass}}">',
-      '      <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
-      '        <li ng-repeat="choice in local.choices">',
-      '          <div class="choice {{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label"></div>',
-      '          <div class="sizerHolder">',
-      '            <div class="html-holder choice" ng-bind-html-unsafe="choice.label"></div>',
-      '          </div>',
-      '        </li>',
-      '      </ul>',
+      '    <div class="clearfix" />',
+      '    <div ng-show="model.config.choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel" class="choice-area-label"></div>',
+      '    <div class="answer-area-container">',
+      '      <div class="container-border {{correctClass}}">',
+      '        <ul class="clearfix" ng-model="local.choices" ui-sortable="sortableOptions">',
+      '          <li ng-repeat="choice in local.choices">',
+      '            <div class="choice {{classForChoice(choice.id, $index)}}" ng-bind-html-unsafe="choice.label"></div>',
+      '            <div class="sizerHolder">',
+      '              <div class="html-holder choice" ng-bind-html-unsafe="choice.label"></div>',
+      '            </div>',
+      '          </li>',
+      '        </ul>',
+      '      </div>',
+      '      <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse && top.correctAnswerVisible" class="see-correct-answer correct-answer">',
+      '        <ul class="clearfix">',
+      '          <li ng-repeat="choice in correctChoices">',
+      '            <div class="choice {{classForChoice(choice.id, $index)}}" ',
+      '              ng-bind-html-unsafe="choice.label">',
+      '          </li>',
+      '        </ul>',
+      '      </div>',
       '    </div>',
-      '    <div ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse && top.correctAnswerVisible" class="see-correct-answer correct-answer">',
+      '    <div class="clearfix" />',
+      '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '    <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
       '      <ul class="clearfix">',
       '        <li ng-repeat="choice in correctChoices">',
-      '          <div class="choice {{classForChoice(choice.id, $index)}}" ',
-      '            ng-bind-html-unsafe="choice.label">',
+      '          <div class="choice correct" ng-bind-html-unsafe="choice.label"></div>',
       '        </li>',
       '      </ul>',
       '    </div>',
-      '  </div>',
-      '  <div class="clearfix" />',
-      '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-      '  <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
-      '    <ul class="clearfix">',
-      '      <li ng-repeat="choice in correctChoices">',
-      '        <div class="choice correct" ng-bind-html-unsafe="choice.label"></div>',
-      '      </li>',
-      '    </ul>',
-      '  </div>',
-      '</div>'
+      '  </div>'
     ].join('\n');
 
     var dragAndDropTemplate = [
       '<div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
       buttonRow('ng-if="model.config.choiceAreaLayout == \'vertical\'"'),
-      '  <div class="main-row">',
-      '    <div ng-show="choiceLabelVisible()" class="label-row" ng-if="model.config.choiceAreaLayout == \'vertical\'">',
-      '      <div class="choice-area-label" ng-show="choiceLabelVisible()" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
-      '      <div class="answer-area-label" ng-show="answerLabelVisible()" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
-      '    </div>',
+      '   <div class="main-row">',
+      '     <div ng-show="choiceLabelVisible()" class="label-row" ng-if="model.config.choiceAreaLayout == \'vertical\'">',
+      '       <div class="choice-area-label" ng-show="choiceLabelVisible()" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+      '       <div class="answer-area-label" ng-show="answerLabelVisible()" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
+      '     </div>',
       placementOrder,
-      '    <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
-      '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '     <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
+      '       <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '     </div>',
+      '   </div>',
+      '   <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
+      '     <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '   </div>',
+      '    <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
+      '      <div class="choice-area">'+ correctAnswerArea() + '</div>',
       '    </div>',
-      '  </div>',
-      '  <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
-      '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-      '  </div>',
-      '  <div see-answer-panel="" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse" >',
-      '    <div class="choice-area">'+ correctAnswerArea() + '</div>',
-      '  </div>',
       '</div>'
     ].join('\n');
 

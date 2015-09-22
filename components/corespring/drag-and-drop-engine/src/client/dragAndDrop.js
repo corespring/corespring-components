@@ -12,6 +12,7 @@ var dragAndDropController = [
       scope: true,
       restrict: 'AE',
       link: function(scope, element, attrs) {
+
         scope.dragging = {};
         scope.playerWidth = 550;
         scope.maxWidth = 50;
@@ -19,31 +20,31 @@ var dragAndDropController = [
 
         //---------------------------------------
 
-        scope.undoModel = new CsUndoModel($log);
-        scope.undoModel.setUndoCallback(revertToState);
+        scope.undoModel = new CsUndoModel();
+        scope.undoModel.setGetState(getState);
+        scope.undoModel.setRevertState(revertState);
 
-        function revertToState(state){
-          scope.local.choices = _.cloneDeep(state.choices);
-          scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
-          scope.$emit('rerender-math', {delay: 10, element: element[0]});
-        }
-
-        function pushState(){
+        function getState(){
           if(scope.local && scope.local.choices && scope.landingPlaceChoices){
             var state = {
               choices: scope.local.choices,
               landingPlaces: scope.landingPlaceChoices
             };
-            scope.undoModel.pushState(state);
+            return state;
           }
+          return null;
         }
 
-        scope.$watch('local.choices', pushState, true);
-        scope.$watch('landingPlaceChoices', pushState, true);
+        function revertState(state){
+          scope.local.choices = _.cloneDeep(state.choices);
+          scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+          scope.$emit('rerender-math', {delay: 10, element: element[0]});
+        }
+
+        scope.$watch('local.choices', scope.undoModel.update, true);
+        scope.$watch('landingPlaceChoices', scope.undoModel.update, true);
 
         //---------------------------------------
-
-
 
         scope.onStart = function(event) {
           scope.isDragging = true;
@@ -149,7 +150,6 @@ var dragAndDropController = [
         }
 
         scope.resetChoices = function(model) {
-          scope.undoModel.clear();
           scope.model = _.cloneDeep(model);
           _.each(scope.landingPlaceChoices, function(lpc, key) {
             scope.landingPlaceChoices[key] = [];
@@ -244,6 +244,7 @@ var dragAndDropController = [
             scope.correctResponse = undefined;
             scope.feedback = undefined;
             scope.response = undefined;
+            scope.undoModel.init();
           },
 
           isAnswerEmpty: function() {

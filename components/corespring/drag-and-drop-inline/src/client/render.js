@@ -80,9 +80,7 @@ var main = [
           //get the scope of it
           var existingScope = angular.element($holder[0].childNodes[0]).scope();
           //and destroy the scope, if it is different from the one we are going to use
-          console.log(existingScope);
           if (existingScope !== scope) {
-            console.log("destroying existingScope");
             existingScope.$destroy();
           }
         }
@@ -132,6 +130,8 @@ var main = [
             // Remove choices that are in landing place area
             scope.local.choices = withoutPlacedChoices();
           }
+
+          scope.undoModel.init();
 
           renderAnswerArea(".answer-area-holder", scope.$new());
         },
@@ -189,6 +189,8 @@ var main = [
           scope.seeSolutionExpanded = false;
           scope.correctResponse = undefined;
           scope.response = undefined;
+
+          scope.undoModel.init();
         }
       });
 
@@ -259,8 +261,8 @@ var main = [
       return [
         '<div class="render-csdndi" drag-and-drop-controller>',
         '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
-        '    <span cs-undo-button></span>',
-        '    <span cs-start-over-button></span>',
+        '    <span cs-undo-button-with-model></span>',
+        '    <span cs-start-over-button-with-model></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
@@ -452,7 +454,6 @@ var answerAreaInline = ['$interval',
           };
 
           scope.$on("$destroy", function() {
-            console.log("answerAreaInline destroy");
             stopPollingHoverState();
           });
 

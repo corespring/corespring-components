@@ -1,5 +1,5 @@
-var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function($compile, $log, $modal, $rootScope, $timeout) {
+var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel',
+  function($compile, $log, $modal, $rootScope, $timeout, CsUndoModel) {
 
     var link = function(scope, element, attrs) {
 
@@ -10,7 +10,26 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       scope.maxWidth = 50;
       scope.maxHeight = 20;
       scope.expandHorizontal = true;
-      scope.stack = [];
+
+      scope.undoModel = new CsUndoModel();
+      scope.undoModel.setGetState(getState);
+      scope.undoModel.setRevertState(revertState);
+
+      function getState(){
+        if(scope.model && scope.model.choices && scope.landingPlaces){
+          var state = {
+            choices: scope.model.choices,
+            landingPlaces: scope.landingPlaceChoices
+          }
+          return state;
+        }
+      }
+
+      function revertState(state){
+        scope.model.choices = _.cloneDeep(state.choices);
+        scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+        scope.$emit('rerender-math', {delay: 20});
+      }
 
       scope.propagateDimension = function(w, h) {
         scope.$apply(function() {
@@ -69,7 +88,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         // TODO: rewrite this using stash
         var isNew = !scope.model;
 
-        scope.stack = [];
         scope.model = _.cloneDeep(model);
         _.each(scope.landingPlaceChoices, function(lpc, key) {
           scope.landingPlaceChoices[key] = [];
@@ -79,26 +97,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           // TODO: rewrite this using stash
           scope.model.choices = _.shuffle(scope.model.choices);
         }
-        scope.$emit('rerender-math', {delay: 20});
-      };
-
-      scope.startOver = function() {
-        scope.stack = [];
-        scope.model.choices = _.cloneDeep(scope.originalChoices);
-        _.each(scope.landingPlaceChoices, function(lpc, key) {
-          scope.landingPlaceChoices[key] = [];
-        });
-        scope.$emit('rerender-math', {delay: 20});
-      };
-
-      scope.undo = function() {
-        if (scope.stack.length < 2) {
-          return;
-        }
-        var o = scope.stack.pop();
-        var state = _.last(scope.stack);
-        scope.model.choices = _.cloneDeep(state.choices);
-        scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
         scope.$emit('rerender-math', {delay: 20});
       };
 
@@ -136,13 +134,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         if (!_.isEmpty(old) && !_.isEqual(n, old) && _.isFunction(scope.answerChangeCallback)) {
           scope.answerChangeCallback();
         }
-        var state = {
-          choices: _.cloneDeep(scope.model.choices),
-          landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
-        };
-        if (!_.isEqual(state, _.last(scope.stack))) {
-          scope.stack.push(state);
-        }
+        scope.undoModel.update();
       }, true);
 
       var choiceForId = function(id) {
@@ -151,7 +143,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         });
         return choice;
       };
-
 
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
@@ -188,6 +179,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
             $compile($answerArea)(scope.$new());
           });
 
+          scope.undoModel.init();
         },
         getSession: function() {
           var answer = {};
@@ -221,6 +213,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         reset: function() {
           scope.showSolution = false;
           scope.resetChoices(scope.rawModel);
+          scope.undoModel.init();
         },
 
         isAnswerEmpty: function() {
@@ -259,40 +252,40 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var answerArea = function() {
       return [
-        '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-        '        <div id="answer-area">',
-        '        </div>'
+        '<h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+        '<div id="answer-area">',
+        '</div>'
         ].join('');
 
     };
 
     var choiceArea = function() {
       return [
-        '        <div class="choices" >',
-        '          <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
-        '          <div class="choices-table">',
-        '            <div ng-repeat="row in getChoiceRows(model.choices.length)" class="choices-table-row">',
-        '              <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
-        '                   ng-style="choiceStyle"',
-        '                   data-drag="editable"',
-        '                   ng-disabled="!editable"',
-        '                   data-jqyoui-options="draggableOptions(o)"',
-        '                   ng-model="model.choices[$parent.$index * itemsPerRow + $index]"',
-        '                   jqyoui-draggable="draggableOptions(o)"',
-        '                   data-id="{{o.id}}">',
-        '               <div ng-bind-html-unsafe="o.content" />',
-        '               <div class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="o.content" />',
-        '              </div>',
-        '            </div>',
-        '          </div>',
-        '          </div>'
+        '<div class="choices" >',
+        '  <h5 ng-bind-html-unsafe="model.config.choiceAreaLabel"></h5>',
+        '  <div class="choices-table">',
+        '    <div ng-repeat="row in getChoiceRows(model.choices.length)" class="choices-table-row">',
+        '      <div ng-repeat="o in getChoicesForRow(row)" class="choice choices-table-cell" ',
+        '           ng-style="choiceStyle"',
+        '           data-drag="editable"',
+        '           ng-disabled="!editable"',
+        '           data-jqyoui-options="draggableOptions(o)"',
+        '           ng-model="model.choices[$parent.$index * itemsPerRow + $index]"',
+        '           jqyoui-draggable="draggableOptions(o)"',
+        '           data-id="{{o.id}}">',
+        '       <div ng-bind-html-unsafe="o.content" />',
+        '       <div class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="o.content" />',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '  </div>'
         ].join('');
     };
     var tmpl = [
     '<div class="view-drag-and-drop-legacy">',
     '  <div ng-show="!correctResponse" class="pull-right">',
-    '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
-    '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
+    '    <span cs-undo-button-with-model></span>',
+    '    <span cs-start-over-button-with-model></span>',
     '  </div> <div class="clearfix" />',
     '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
     '' + answerArea(),
@@ -417,7 +410,6 @@ var landingPlace = [
               scope.revertFunction();
             }
             scope.dragging.fromTarget = undefined;
-
           },
 
           out: scope.outCallback,
@@ -453,25 +445,25 @@ var landingPlace = [
 
       },
       template: [
-      '    <div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
-      '         data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="{{style}}" >',
-      '    <div class="label-holder"><div class="landingLabel">{{label}}</div>&nbsp;</div>',
-      '    <div',
-      '      ui-sortable="sortableOptions" ',
-      '      ng-model="landingPlaceChoices[id]"',
-      '      >',
-      '        <div ng-repeat-start="choice in landingPlaceChoices[id]"',
-      '             ng-style="choiceStyle" ',
-      '             jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
-      '             data-jqyoui-options=""',
-      '             ng-model="landingPlaceChoices[id][$index]"',
-      '             data-id="{{choice.id}}"',
-      '             class="choice {{classForChoice(choice, $index)}}"',
-      '             ng-bind-html-unsafe="choice.content">',
-      '        </div>',
-      '        <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
+      '<div data-drop="true" ng-model="landingPlaceChoices[id]" jqyoui-droppable="droppableOptions"',
+      '     data-jqyoui-options="droppableOptions" class="landing-place {{class}}" style="{{style}}" >',
+      '  <div class="label-holder"><div class="landingLabel">{{label}}</div>&nbsp;</div>',
+      '  <div',
+      '    ui-sortable="sortableOptions" ',
+      '    ng-model="landingPlaceChoices[id]"',
+      '    >',
+      '    <div ng-repeat-start="choice in landingPlaceChoices[id]"',
+      '         ng-style="choiceStyle" ',
+      '         jqyoui-draggable="{index: {{$index}}, placeholder: true}"',
+      '         data-jqyoui-options=""',
+      '         ng-model="landingPlaceChoices[id][$index]"',
+      '         data-id="{{choice.id}}"',
+      '         class="choice {{classForChoice(choice, $index)}}"',
+      '         ng-bind-html-unsafe="choice.content">',
       '    </div>',
-      '    </div>'].join("")
+      '    <div ng-repeat-end="" class="sizerHolder" style="display: none; position: absolute" ng-bind-html-unsafe="choice.content" />',
+      '  </div>',
+      '</div>'].join("")
 
     };
     return def;

@@ -2,14 +2,14 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
   function(DragAndDropTemplates, $compile, $log, $modal, $rootScope, $timeout) {
 
     var answerArea = [
-      '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-      '        <div ng-repeat="c in model.categories">',
-      '          <div answer-area landingId="{{c.id}}"',
-      '                          answer-area-label="{{c.hasLabel ? c.label : \'\'}}"',
-      '                          answer-area-layout="{{c.layout}}"',
-      '          >',
-      '          </div>',
-      '        </div>'
+      '<h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+      '  <div ng-repeat="c in model.categories">',
+      '    <div answer-area landingId="{{c.id}}"',
+      '         answer-area-label="{{c.hasLabel ? c.label : \'\'}}"',
+      '         answer-area-layout="{{c.layout}}"',
+      '    >',
+      '  </div>',
+      '</div>'
     ].join('');
 
     var link = function(scope, element, attrs) {
@@ -47,7 +47,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
             });
 
           }
-
+          scope.undoModel.init();
         },
         getSession: function() {
           var answer = {};
@@ -88,8 +88,8 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
     var tmpl = [
       '<div class="view-drag-and-drop-categorize view-drag-and-drop" drag-and-drop-controller>',
       '  <div ng-show="!correctResponse" class="pull-right">',
-      '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
-      '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
+      '    <span cs-undo-button-with-model></span>',
+      '    <span cs-start-over-button-with-model></span>',
       '  </div> <div class="clearfix" />',
       '  <div ng-if="model.config.answerAreaPosition != \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',
       answerArea,
