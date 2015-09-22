@@ -247,13 +247,9 @@ function renderCorespringDndCategorize(
       scope.answerChangedCallback = callback;
     }
 
-    var lastSession = null;
-
     function callAnswerChangedHandlerIfAnswersHaveChanged() {
       if (_.isFunction(scope.answerChangedCallback)) {
-        var session = getSession();
-        if (!_.isEqual(session, lastSession)) {
-          lastSession = session;
+        if(!isAnswerEmpty()){
           scope.answerChangedCallback();
         }
       }

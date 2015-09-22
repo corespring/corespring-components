@@ -456,6 +456,20 @@ describe('corespring:match:configure', function() {
     it('updates numberOfCorrectResponses', function() {
       expect(scope.numberOfCorrectResponses).toEqual(4);
     });
+
+    describe('with no partialScoring', function() {
+      beforeEach(function() {
+        var testModel = createTestModel();
+        delete testModel.partialScoring;
+        container.elements[1].setModel(testModel);
+      });
+
+      it('sets one empty partialScoring entry', function() {
+        expect(scope.fullModel.partialScoring.length).toEqual(1);
+      });
+    });
+
+
   });
 
   describe('config', function() {
@@ -579,6 +593,43 @@ describe('corespring:match:configure', function() {
       expect(scope.matchModel.columns.length).toEqual(3);
     });
 
+  });
+
+  describe('sumCorrectAnswers', function() {
+
+    function setCorrectResponse(correctResponse) {
+      var model = createTestModel();
+      model.correctResponse = correctResponse;
+      scope.fullModel = model;
+    }
+
+    it('does not count rows with no correct answers', function() {
+      setCorrectResponse([
+        {
+          "id" : "row1",
+          "matchSet" : [false, false, false]
+        }
+      ]);
+      expect(scope.sumCorrectAnswers()).toEqual(0);
+    });
+
+    it('counts rows with correct answers in different positions', function() {
+      setCorrectResponse([
+        {
+          "id": "row1",
+          "matchSet" : [false, true, false]
+        },
+        {
+          "id" : "row2",
+          "matchSet" : [true, false, false]
+        },
+        {
+          "id" : "row3",
+          "matchSet" : [false, false, true]
+        }
+      ]);
+      expect(scope.sumCorrectAnswers()).toEqual(3);
+    });
   });
 
 });

@@ -22,7 +22,7 @@ describe('corespring:text-entry:configure', function () {
           "1,500,000.00",
           "three/quarter"
         ],
-        "ignoreWhitespace": false,
+        "ignoreWhitespace": true,
         "ignoreCase": false,
         "feedback": {
           "type": "default",
@@ -45,7 +45,7 @@ describe('corespring:text-entry:configure', function () {
         "values": [],
         "award": 25,
         "ignoreCase": false,
-        "ignoreWhitespace": false,
+        "ignoreWhitespace": true,
         "feedback": {
           "type": "default",
           "custom": "",

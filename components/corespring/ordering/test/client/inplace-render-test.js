@@ -93,22 +93,6 @@ describe('corespring:ordering-in-place', function () {
       expect(_.pluck(element.scope().local.choices, 'id')).toEqual(modelWithSession.session.answers);
     });
 
-    it('change handler is called when answer changes', function () {
-      var mock = {
-        handler: function () {
-        }
-      };
-      spyOn(mock, 'handler');
-
-      container.elements['1'].answerChangedHandler(mock.handler);
-
-      setModelAndDigest(verticalModel);
-      scope.local.choices = ['c', 'a', 'b', 'd'];
-      scope.$apply();
-      expect(mock.handler).toHaveBeenCalled();
-    });
-
-
     describe('vertical layout', function () {
       it('renders by default', function () {
         setModelAndDigest(verticalModel);
@@ -329,5 +313,28 @@ describe('corespring:ordering-in-place', function () {
 
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      setModelAndDigest(verticalModel);
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when the answer is changed', function() {
+      scope.local.choices = ['c', 'a', 'b', 'd'];
+      rootScope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 });

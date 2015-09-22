@@ -193,6 +193,30 @@ describe('corespring:inline-choice', function() {
       rootScope.$digest();
       expect(element.attr('class').indexOf('correct') !== -1).toBe(true);
     });
+  
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      scope.graphCallback = null; //avoid accessing the canvas
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a point is selected', function() {
+      scope.selected = testModel.data.model.choices['1'];
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 
 });
