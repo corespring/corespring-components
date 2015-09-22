@@ -188,6 +188,20 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.comments = response.comments;
         },
 
+        answerChangedHandler: function (callback) {
+          scope.$watch("landingPlaceChoices", function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+              callback();
+            }
+          }, true);
+
+          scope.$watch("local.choices", function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+              callback();
+            }
+          }, true);
+        },
+
         editable: function (e) {
           scope.editable = e;
           scope.sortableOptions.disabled = !e;
