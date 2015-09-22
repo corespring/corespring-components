@@ -131,6 +131,7 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
+          console.log("DS",dataAndSession);
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
           scope.session = dataAndSession.session || {};
@@ -348,6 +349,12 @@ var main = [
       '    </div>',
       '  </div>',
       seeAnswer,
+      '  <div class="rationale-expander">',
+      '    <div class="rationale-expander-row">',
+      '      <span class="rationale-expander-show"></span>',
+      '      <span class="rationale-expander-label">Show Rationale</span>',
+      '    </div>',
+      '  </div>',
       '</div>'
     ].join("");
 
