@@ -6,6 +6,7 @@ var main = [
       restrict: 'AE',
       replace: true,
       link: function(scope, element, attrs) {
+        scope.visible = false;
         scope.open = false;
         scope.showHide = {true: "hide", false: "show"};
         scope.capShowHide = {true: "Hide", false: "Show"};
@@ -28,6 +29,7 @@ var main = [
           },
 
           setMode: function(newMode) {
+            scope.visible = newMode === 'instructor';
           },
 
           reset: function() {
@@ -51,7 +53,7 @@ var main = [
 
       },
       template: [
-        '<div class="view-teacher-instructions" ng-click="toggle()">',
+        '<div class="view-teacher-instructions" ng-click="toggle()" ng-show="visible">',
         '  <div class="toggle-row {{showHide[open]}}-state">',
         '    <span class="{{showHide[open]}}-icon"></span>',
         '    <span class="instructions">{{capShowHide[open]}} Instructions</span>',
