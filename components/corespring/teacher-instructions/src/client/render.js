@@ -17,7 +17,7 @@ var main = [
 
           setDataAndSession: function(dataAndSession) {
             console.log("DS: ", dataAndSession);
-            scope.instructions = dataAndSession.data.value;
+
           },
 
           getSession: function() {
@@ -26,6 +26,10 @@ var main = [
 
           // sets the server's response
           setResponse: function(response) {
+          },
+
+          setInstructorData: function(data) {
+            scope.instructions = data.teacherInstructions;
           },
 
           setMode: function(newMode) {
