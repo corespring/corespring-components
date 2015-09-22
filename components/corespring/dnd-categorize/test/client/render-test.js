@@ -166,17 +166,6 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
-  describe('answerChangedCallback', function() {
-    beforeEach(setModelAndDigest);
-    it('calls answerChangedCallback, when answer changes', function() {
-      var answerChangedCallback = jasmine.createSpy('answerChangedCallback');
-      container.elements['1'].answerChangedHandler(answerChangedCallback);
-      expect(answerChangedCallback).not.toHaveBeenCalled();
-      scope.onCategoryDrop('cat_1', 'choice_1');
-      expect(answerChangedCallback).toHaveBeenCalled();
-    });
-  });
-
   describe('setResponse', function() {
     beforeEach(setModelAndDigest);
     it('should set the response on the scope', function() {
@@ -276,6 +265,33 @@ describe('corespring:dnd-categorize:render', function() {
 
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      setModelAndDigest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a answer is selected', function() {
+      scope.renderModel.categories[0].choices = [{
+        model: {
+          id: 'choice_1'
+        }
+      }];
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 
   describe('getEditMode', function() {

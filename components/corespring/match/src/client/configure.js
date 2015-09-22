@@ -12,6 +12,8 @@ var main = [
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef) {
 
+    var $log = LogFactory.getLogger('corespring-match-configure');
+
     return {
       scope: {},
       restrict: 'E',
@@ -31,11 +33,17 @@ var main = [
           new WiggiMathJaxFeatureDef()
         ]
       };
+
+      scope.sumCorrectAnswers = function() {
+        var total = _.reduce(scope.fullModel.correctResponse, function(sum, row) {
+          return sum + ((row.matchSet && row.matchSet.indexOf(true) >= 0) ? 1 : 0);
+        }, 0);
+        $log.debug("sumCorrectAnswers", total, scope.fullModel.correctResponse);
+        return total;
+      };
     }
 
     function link(scope, element, attrs) {
-
-      var $log = LogFactory.getLogger('corespring-match-configure');
 
       var MIN_COLUMNS = 3;
       var MAX_COLUMNS = 5;
@@ -104,6 +112,9 @@ var main = [
 
       function setModel(fullModel) {
         scope.fullModel = fullModel || {};
+        if (!scope.fullModel.partialScoring || scope.fullModel.partialScoring.length === 0) {
+          scope.fullModel.partialScoring = [{}];
+        }
         scope.model = scope.fullModel.model;
         scope.config = getConfig(scope.model);
 
@@ -119,7 +130,7 @@ var main = [
       function updateEditorModels() {
         $log.debug("updateEditorModels in");
         scope.matchModel = createMatchModel();
-        scope.numberOfCorrectResponses = sumCorrectAnswers();
+        scope.numberOfCorrectResponses = scope.sumCorrectAnswers();
         $log.debug("updateEditorModels out");
       }
 
@@ -246,16 +257,6 @@ var main = [
           default:
             return MIN_COLUMNS;
         }
-      }
-
-      function sumCorrectAnswers() {
-        var total = _.reduce(scope.fullModel.correctResponse, function(sum, row) {
-          return sum + _.reduce(row.matchSet, function(match) {
-            return match ? 1 : 0;
-          });
-        }, 0);
-        $log.debug("sumCorrectAnswers", total, scope.fullModel.correctResponse);
-        return total;
       }
 
       function findFreeRowSlot() {

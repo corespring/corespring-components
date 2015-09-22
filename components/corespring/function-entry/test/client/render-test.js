@@ -120,4 +120,29 @@ describe('corespring:function-entry:render', function () {
   it('should implement containerBridge', function () {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      scope.graphCallback = null; //avoid accessing the canvas
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a answer is selected', function() {
+      scope.answer = "4+5";
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
+  });
 });

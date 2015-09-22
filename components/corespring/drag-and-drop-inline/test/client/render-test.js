@@ -640,4 +640,30 @@ describe('corespring:drag-and-drop-inline', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a answer is selected', function() {
+      scope.landingPlaceChoices.aa_1 = [{
+        id: 'c_1'
+      }];
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
+  });
+
 });

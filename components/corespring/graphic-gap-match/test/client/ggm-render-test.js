@@ -108,16 +108,30 @@ describe('corespring:graphic-gap-match:render', function() {
   });
 
 
-  it('answer change handler does not get called initially', function() {
-    container.elements['1'].setDataAndSession(testModel);
+  describe('answer change callback', function() {
     var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
     });
 
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(false);
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a choice is dropped', function() {
+      scope.droppedChoices.push(scope.choices[0]);
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
+
 
   describe('undo / start over', function() {
     it('undo undoes move between choice area and image', function() {
@@ -181,9 +195,11 @@ describe('corespring:graphic-gap-match:render', function() {
     });
   });
 
-describe('dragging choices', function() {
+  describe('dragging choices', function() {
     var cloneChoice = function(choice) {
-      return _.extend(_.cloneDeep(choice), {$$hashKey: undefined});
+      return _.extend(_.cloneDeep(choice), {
+        $$hashKey: undefined
+      });
     };
 
     it('choice remains available to drag  any number of times if matchMax is 0', function() {
@@ -243,7 +259,9 @@ describe('dragging choices', function() {
     });
     it('should return false if answer is set initially', function() {
       testModel.session = {
-        answers: [{id:"c1"}]
+        answers: [{
+          id: "c1"
+        }]
       };
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
@@ -251,7 +269,9 @@ describe('dragging choices', function() {
     });
     it('should return false if answer is selected', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.droppedChoices = [{id:"c1"}];
+      scope.droppedChoices = [{
+        id: "c1"
+      }];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });

@@ -139,4 +139,28 @@ describe('corespring:line:render', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      scope.graphCallback = null; //avoid accessing the canvas
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a point is selected', function() {
+      scope.points = {A:{x:0.1,y:0.2}};
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
+  });
 });

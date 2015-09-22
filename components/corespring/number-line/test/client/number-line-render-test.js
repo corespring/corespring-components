@@ -124,40 +124,33 @@ describe('corespring:number-line:render', function() {
     expect(element).not.toBe(null);
   });
 
-
-  it('answer change handler does not get called initially', function() {
-    container.elements['1'].setDataAndSession(testModel);
+  describe('answer changed handler', function() {
     var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+
+    beforeEach(function(){
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function (c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
     });
 
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(false);
-  });
-
-  it('answer change handler gets called when new response gets added', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+    it('does not get called initially', function () {
+      expect(changeHandlerCalled).toBe(false);
     });
-    scope.$digest();
-    scope.response.push('resp');
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(true);
-  });
 
-  it('answer change handler gets called when response gets removed', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+    it('is called when new response gets added', function () {
+      scope.response.push('resp');
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
     });
-    scope.$digest();
-    scope.response = _.initial(scope.response);
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(true);
+
+    it('is called when response gets removed', function () {
+      scope.response = _.initial(scope.response);
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
   });
 
   describe('isAnswerEmpty', function() {
