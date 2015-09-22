@@ -52,7 +52,7 @@ var main = [
       },
       template: [
         '<div class="view-teacher-instructions" ng-click="toggle()">',
-        '  <div class="toggle-row">',
+        '  <div class="toggle-row {{showHide[open]}}-state">',
         '    <span class="{{showHide[open]}}-icon"></span>',
         '    <span class="instructions">{{capShowHide[open]}} Instructions</span>',
         '  </div>',
