@@ -132,7 +132,6 @@ link = function($sce, $timeout) {
           r.correctness = 'warning';
         }
         scope.response = r;
-        scope.$apply();
       },
 
       setMode: function(newMode) {},
