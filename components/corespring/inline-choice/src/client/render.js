@@ -132,6 +132,7 @@ link = function($sce, $timeout) {
           r.correctness = 'warning';
         }
         scope.response = r;
+        scope.$apply();
       },
 
       setMode: function(newMode) {},
@@ -206,7 +207,6 @@ main = [
         '      </span>',
         '      <i ',
         '         class="fa result-icon" ',
-        '         ng-class="feedback.correctness" ',
         '         style="display: inline;"',
         '      ></i>',
         '      <ul class="dropdown-menu">',

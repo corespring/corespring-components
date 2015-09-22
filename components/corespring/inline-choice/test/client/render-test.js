@@ -10,6 +10,10 @@ describe('corespring:inline-choice', function() {
     this.setDataAndSession = function(id, dataAndSession) {
       this.elements[id].setDataAndSession(dataAndSession);
     };
+
+    this.setOutcomes = function(outcomes){
+      this.elements['1'].setResponse(outcomes['1']);
+    };
   };
 
   var testModelTemplate = {
@@ -45,7 +49,9 @@ describe('corespring:inline-choice', function() {
     module(function($provide) {
       var mockPopover = function() {
         return {
-          on: function() {},
+          on: function() {
+            return this;
+          },
           popover: mockPopover
         };
       };
@@ -54,7 +60,15 @@ describe('corespring:inline-choice', function() {
       });
       testModel = _.cloneDeep(testModelTemplate);
 
-      $provide.value('MathJaxService', function() {});
+      var mockMathJax = {
+        on: function(){
+
+        },
+        parseDomForMath: function(){
+        }
+      };
+
+      $provide.value('MathJaxService', mockMathJax);
     });
 
   });
@@ -73,6 +87,10 @@ describe('corespring:inline-choice', function() {
 
   it('constructs', function() {
     expect(element).not.toBe(null);
+  });
+
+  it('has a result-icon', function(){
+    expect(element.find('.result-icon').size()).toBe(1);
   });
 
   describe('inline-choice render', function() {
@@ -114,6 +132,7 @@ describe('corespring:inline-choice', function() {
       wrapper.append($(element));
       expect(wrapper.find(".incorrect").length).toBe(1);
     });
+
 
   });
 
@@ -161,6 +180,19 @@ describe('corespring:inline-choice', function() {
 
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('feedback', function(){
+
+    it('sets the correctness class on the directive', function(){
+      container.setDataAndSession('1', testModel);
+      scope.select(testModel.data.model.choices[0]);
+      container.setOutcomes({'1': {
+        correctness: 'correct' 
+      }});
+      rootScope.$digest();
+      expect(element.attr('class').indexOf('correct') !== -1).toBe(true);
+    });
   });
 
 });
