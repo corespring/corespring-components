@@ -231,7 +231,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
-    };
+    }
 
     var buttonRow = function (attrs) {
       return [
