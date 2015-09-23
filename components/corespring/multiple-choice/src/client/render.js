@@ -9,6 +9,9 @@ var main = [
       scope.inputType = 'checkbox';
       scope.editable = true;
       scope.bridge = {answerVisible: false};
+      scope.showHide = {false: 'show', true: 'hide'};
+      scope.capShowHide = {false: 'Show', true: 'Hide'};
+      scope.rationaleOpen = false;
 
       var getAnswers = function() {
         if (scope.answer.choice) {
@@ -132,6 +135,7 @@ var main = [
 
         setDataAndSession: function(dataAndSession) {
           console.log("DS",dataAndSession);
+          scope.rationales = dataAndSession.data.rationales;
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
           scope.session = dataAndSession.session || {};
@@ -350,9 +354,15 @@ var main = [
       '  </div>',
       seeAnswer,
       '  <div class="rationale-expander">',
-      '    <div class="rationale-expander-row">',
-      '      <span class="rationale-expander-show"></span>',
-      '      <span class="rationale-expander-label">Show Rationale</span>',
+      '    <div class="rationale-expander-row {{showHide[rationaleOpen]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
+      '      <span class="rationale-expander-{{showHide[rationaleOpen]}}"></span>',
+      '      <span class="rationale-expander-label">{{capShowHide[rationaleOpen]}} Rationale</span>',
+      '    </div>',
+      '    <div class="rationale-body" ng-show="rationaleOpen">',
+      '      <div ng-repeat="r in rationales">',
+      '        <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '        <span class="choice-label" ng-bind-html-unsafe="r.rationale"></span>',
+      '      </div>',
       '    </div>',
       '  </div>',
       '</div>'
