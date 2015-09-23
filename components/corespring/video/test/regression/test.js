@@ -13,7 +13,7 @@ describe('video component', function() {
     beforeEach(function() {
       browser
         .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video', browser.options.defaultTimeout);
+        .waitFor('.cs-video');
     });
 
     it('video is visible', function(done) {
@@ -40,7 +40,7 @@ describe('video component', function() {
     beforeEach(function() {
       browser
         .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video', browser.options.defaultTimeout);
+        .waitFor('.cs-video');
     });
 
     it('video is visible', function(done) {

@@ -48,7 +48,8 @@ module.exports = (grunt) ->
       bail: grunt.option('bail') || true
       grep: grunt.option('grep')
       timeoutInSeconds: 10
-      defaultTimeout: 100000
+      defaultTimeout: grunt.option('timeout') or 10000
+      waitForTimeout: grunt.option('timeout') or 10000
       # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
       logLevel: grunt.option('webDriverLogLevel') || 'silent'
       desiredCapabilities: getDesiredCapabilities()

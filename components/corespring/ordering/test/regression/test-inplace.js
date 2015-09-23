@@ -25,13 +25,13 @@ describe('inplace ordering', function() {
     beforeEach(function() {
       browser
         .url(browser.options.getUrl('ordering', itemJsonFilename))
-        .waitFor('.view-ordering', browser.options.defaultTimeout);
+        .waitFor('.view-ordering');
     });
 
     it('correct answer results in correct feedback', function(done) {
       browser
         .submitItem()
-        .waitFor('.feedback.correct', browser.options.defaultTimeout)
+        .waitFor('.feedback.correct')
         .call(done);
     });
 

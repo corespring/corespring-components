@@ -28,7 +28,7 @@ describe('evaluate expression', function() {
   beforeEach(function() {
     browser
       .url(browser.options.getUrl('function-entry', itemJsonFilename))
-      .waitFor('.view-function-entry', browser.options.defaultTimeout);
+      .waitFor('.view-function-entry');
   });
 
 

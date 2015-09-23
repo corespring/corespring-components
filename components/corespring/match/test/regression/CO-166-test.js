@@ -35,7 +35,7 @@ describe('match', function() {
     };
 
     browser.waitForWithTimeout = function(selector){
-      return browser.waitFor(selector, browser.options.defaultTimeout);
+      return browser.waitFor(selector);
     };
 
     browser

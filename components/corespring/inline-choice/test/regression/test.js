@@ -28,7 +28,7 @@ describe('inline-choice', function() {
   beforeEach(function() {
     browser
       .url(browser.options.getUrl('inline-choice', itemJsonFilename))
-      .waitFor('.dropdown-menu li', browser.options.defaultTimeout);
+      .waitFor('.dropdown-menu li');
   });
 
   it('feedbacks are positioned correctly', function(done) {

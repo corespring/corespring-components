@@ -31,7 +31,7 @@ describe('placement ordering', function() {
       beforeEach(function() {
         browser
           .url(browser.options.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering', browser.options.defaultTimeout);
+          .waitFor('.view-placement-ordering');
       });
 
       it('correct answer results in correct feedback', function(done) {
@@ -39,7 +39,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.correct', browser.options.defaultTimeout)
+          .waitFor('.feedback.correct')
           .call(done);
       });
 
@@ -48,7 +48,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Banana'), landingPlace(1))
           .dragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.incorrect', browser.options.defaultTimeout)
+          .waitFor('.feedback.incorrect')
           .call(done);
       });
 
@@ -57,7 +57,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial', browser.options.defaultTimeout)
+          .waitFor('.feedback.partial')
           .call(done);
       });
 
@@ -99,7 +99,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial', browser.options.defaultTimeout)
+          .waitFor('.feedback.partial')
           .resetItem()
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {

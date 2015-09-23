@@ -83,6 +83,7 @@ You can use the following test commands:
     --bail=true|false # end tests on first failure default: true
     --browserName=firefox # passed to webdriverio
     --webDriverLogLevel="silent|verbose|command|result|data" # log level for the webdriver runner
+    --timeout # sets defaultTimeout and waitForTimeout see: http://webdriver.io/guide/getstarted/configuration.html
 
     ## Saucelabs Options
     --sauceLabs # run via saucelabs (you'll need to specify a user/key) 
