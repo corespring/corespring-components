@@ -26,9 +26,43 @@ describe('inline-choice', function() {
   };
 
   beforeEach(function() {
+
+    browser.addCommand("getPseudoElementCss", function(selector, pseudo, prop, done) {
+      return this.executeAsync(function(selector, pseudo, prop, done){
+        var e = document.querySelector(selector);
+
+        if(!e){
+          throw new Error('not found: ' + selector);
+        } 
+        var s = window.getComputedStyle(e, pseudo);
+        var out = s.getPropertyValue(prop);
+        done(out);
+      }, selector, pseudo, prop).then(function(o){
+          done(null,  { selector: selector, pseudo: pseudo, prop: prop, value: o.value});
+      });
+    });
+
+
     browser
       .url(browser.options.getUrl('inline-choice', itemJsonFilename))
       .waitFor('.dropdown-menu li');
+  });
+
+ 
+
+  it('shows a result icon to the right of the comboboxes', function(done){
+
+    browser
+      .selectInlineChoice("1", "Banana")
+      .submitItem()
+      .waitFor('.result-icon')
+      .getPseudoElementCss('.warning .result-icon', ':after', 'color', function(err, result){
+        result.value.should.eql('rgb(153, 153, 153)');
+      })
+      .getPseudoElementCss('.incorrect .result-icon', ':after', 'color', function(err, result){
+        result.value.should.eql('rgb(236, 151, 31)');
+      })
+      .call(done);
   });
 
   it('feedbacks are positioned correctly', function(done) {
