@@ -2,16 +2,16 @@ describe('corespring:inline-choice', function() {
 
   var testModel, container, element, scope, rootScope;
 
-  var MockComponentRegister = function() {
+  var MockComponentRegister = function () {
     this.elements = {};
-    this.registerComponent = function(id, bridge) {
+    this.registerComponent = function (id, bridge) {
       this.elements[id] = bridge;
     };
-    this.setDataAndSession = function(id, dataAndSession) {
+    this.setDataAndSession = function (id, dataAndSession) {
       this.elements[id].setDataAndSession(dataAndSession);
     };
 
-    this.setOutcomes = function(outcomes){
+    this.setOutcomes = function (outcomes) {
       this.elements['1'].setResponse(outcomes['1']);
     };
   };
@@ -45,11 +45,11 @@ describe('corespring:inline-choice', function() {
 
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(function() {
-    module(function($provide) {
-      var mockPopover = function() {
+  beforeEach(function () {
+    module(function ($provide) {
+      var mockPopover = function () {
         return {
-          on: function() {
+          on: function () {
             return this;
           },
           popover: mockPopover
@@ -61,10 +61,10 @@ describe('corespring:inline-choice', function() {
       testModel = _.cloneDeep(testModelTemplate);
 
       var mockMathJax = {
-        on: function(){
+        on: function () {
 
         },
-        parseDomForMath: function(){
+        parseDomForMath: function () {
         }
       };
 
@@ -73,10 +73,10 @@ describe('corespring:inline-choice', function() {
 
   });
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function ($compile, $rootScope) {
     container = new MockComponentRegister();
 
-    $rootScope.$on('registerComponent', function(event, id, obj) {
+    $rootScope.$on('registerComponent', function (event, id, obj) {
       container.registerComponent(id, obj);
     });
 
@@ -85,16 +85,16 @@ describe('corespring:inline-choice', function() {
     rootScope = $rootScope;
   }));
 
-  it('constructs', function() {
+  it('constructs', function () {
     expect(element).not.toBe(null);
   });
 
-  it('has a result-icon', function(){
+  it('has a result-icon', function () {
     expect(element.find('.result-icon').size()).toBe(1);
   });
 
-  describe('inline-choice render', function() {
-    it('sets the session choice correctly', function() {
+  describe('inline-choice render', function () {
+    it('sets the session choice correctly', function () {
 
       testModel.session = {
         answers: 'mc_1'
@@ -108,7 +108,7 @@ describe('corespring:inline-choice', function() {
       });
     });
 
-    it('setting response shows correctness', function() {
+    it('setting response shows correctness', function () {
       testModel.session = {
         answers: "mc_1"
       };
@@ -136,12 +136,12 @@ describe('corespring:inline-choice', function() {
 
   });
 
-  describe('isAnswerEmpty', function() {
-    it('should return true initially', function() {
+  describe('isAnswerEmpty', function () {
+    it('should return true initially', function () {
       container.elements['1'].setDataAndSession(testModel);
       expect(container.elements['1'].isAnswerEmpty()).toBe(true);
     });
-    it('should return false if answer is set initially', function() {
+    it('should return false if answer is set initially', function () {
       testModel.session = {
         answers: 'mc_1'
       };
@@ -149,28 +149,28 @@ describe('corespring:inline-choice', function() {
       rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
-    it('should return false if answer is selected', function() {
+    it('should return false if answer is selected', function () {
       container.elements['1'].setDataAndSession(testModel);
       scope.selected = testModel.data.model.choices['1'];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
 
-  describe('shuffle', function() {
-    it('should shuffle options if shuffle is true', function() {
+  describe('shuffle', function () {
+    it('should shuffle options if shuffle is true', function () {
       spyOn(_, 'shuffle');
       container.elements['1'].setDataAndSession(testModel);
       expect(_.shuffle).toHaveBeenCalled();
     });
 
-    it('shouldnt shuffle options if shuffle is false', function() {
+    it('shouldnt shuffle options if shuffle is false', function () {
       spyOn(_, 'shuffle');
       testModel.data.model.config.shuffle = false;
       container.elements['1'].setDataAndSession(testModel);
       expect(_.shuffle).not.toHaveBeenCalled();
     });
 
-    it('should shuffle options if shuffle is true and the player is reset', function() {
+    it('should shuffle options if shuffle is true and the player is reset', function () {
       spyOn(_, 'shuffle');
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].reset();
@@ -178,45 +178,48 @@ describe('corespring:inline-choice', function() {
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function () {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
-  describe('feedback', function(){
+  describe('feedback', function () {
 
-    it('sets the correctness class on the directive', function(){
+    it('sets the correctness class on the directive', function () {
       container.setDataAndSession('1', testModel);
       scope.select(testModel.data.model.choices[0]);
-      container.setOutcomes({'1': {
-        correctness: 'correct' 
-      }});
+      container.setOutcomes({
+        '1': {
+          correctness: 'correct'
+        }
+      });
       rootScope.$digest();
       expect(element.attr('class').indexOf('correct') !== -1).toBe(true);
     });
-  
-  describe('answer change callback', function() {
-    var changeHandlerCalled = false;
 
-    beforeEach(function() {
-      changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
+    describe('answer change callback', function () {
+      var changeHandlerCalled = false;
+
+      beforeEach(function () {
+        changeHandlerCalled = false;
+        container.elements['1'].answerChangedHandler(function (c) {
+          changeHandlerCalled = true;
+        });
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+        scope.graphCallback = null; //avoid accessing the canvas
       });
-      container.elements['1'].setDataAndSession(testModel);
-      scope.$digest();
-      scope.graphCallback = null; //avoid accessing the canvas
-    });
 
-    it('does not get called initially', function() {
-      expect(changeHandlerCalled).toBe(false);
-    });
+      it('does not get called initially', function () {
+        expect(changeHandlerCalled).toBe(false);
+      });
 
-    it('does get called when a point is selected', function() {
-      scope.selected = testModel.data.model.choices['1'];
-      scope.$digest();
-      expect(changeHandlerCalled).toBe(true);
+      it('does get called when a point is selected', function () {
+        scope.selected = testModel.data.model.choices['1'];
+        scope.$digest();
+        expect(changeHandlerCalled).toBe(true);
+      });
+
     });
 
   });
-
 });
