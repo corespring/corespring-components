@@ -21,7 +21,7 @@ describe('cs undo model', function() {
   beforeEach(inject(function(CsUndoModel) {
     sut = new CsUndoModel();
     getState = jasmine.createSpy('getState').and.callFake(getDifferentState);
-    sut.setGetState(getState)
+    sut.setGetState(getState);
     revertState = jasmine.createSpy('revertState');
     sut.setRevertState(revertState);
     sut.init();

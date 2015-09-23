@@ -68,7 +68,7 @@ You can use the following test commands:
     --componentPath=path_to_comps (default: ../components) - the path to the components folder
     --keepWrapped=true|false (default: false) - keep the generated js files
 
-    # Run functional tests
+    # Run functional tests - you'll need to have corespring-container running at localhost:9000
     grunt regression
 
     # Run functional tests against SauceLabs with a non-local base URL

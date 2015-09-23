@@ -65,15 +65,15 @@ describe('corespring:match:configure', function() {
         columns: [
           {
             labelHtml: "Custom header",
-            cssClass: "question-header"
+            cssClass: "question-header header1"
               },
           {
             labelHtml: "Column 1",
-            cssClass: "answer-header"
+            cssClass: "answer-header header2"
               },
           {
             labelHtml: "Column 2",
-            cssClass: "answer-header"
+            cssClass: "answer-header header3"
               }
             ],
         rows: [

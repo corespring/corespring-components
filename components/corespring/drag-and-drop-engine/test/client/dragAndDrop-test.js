@@ -42,6 +42,8 @@ describe('dragAndDropController', function() {
       scope.undoModel.remember();
 
       scope.startOver();
+      scope.originalChoices =[];
+      expect(scope.originalChoices).toBeDefined();
       expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: jasmine.any(Number), element: jasmine.any(Object)});
     });
 
