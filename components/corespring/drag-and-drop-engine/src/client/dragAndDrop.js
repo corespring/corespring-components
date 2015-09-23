@@ -11,6 +11,7 @@ var dragAndDropController = [
       scope: true,
       restrict: 'AE',
       link: function(scope, element, attrs) {
+
         scope.dragging = {};
         scope.playerWidth = 550;
         scope.maxWidth = 50;
@@ -238,21 +239,21 @@ var dragAndDropController = [
           if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
             scope.answerChangeCallback();
           }
-          scope.rememberUndo();
+          scope.rememberUndoState();
         }, true);
 
         scope.$watch('local.choices', function(n, old) {
           if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
             scope.answerChangeCallback();
           }
-          scope.rememberUndo();
+          scope.rememberUndoState();
         }, true);
 
         scope.initUndo = function() {
           scope.undoModel.init();
         };
 
-        scope.rememberUndo = function(){
+        scope.rememberUndoState = function(){
           scope.undoModel.remember();
         };
 
