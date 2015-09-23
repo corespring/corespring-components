@@ -2,6 +2,36 @@ exports.framework = 'angular';
 exports.factory = ['$log', function($log) {
   return CsUndoModel;
 
+  /**
+   * The CsUndoModel can be used to implement undo in a component
+   * @example
+   *
+   //After creation you would set the functions
+   //to set/restore the state of your component
+   var undoModel = new CsUndoModel();
+   undoModel.setGetState(function(){
+    //return the current state of your component here
+    return {}
+    });
+   undoModel.setRevertState(function(state){
+    //set the current state of your component from the state
+    });
+
+   //When your component is in an initial state, eg at the
+   //end of setDataAndSession, you would typically capture
+   //this state by calling init
+   undoModel.init();
+
+   //When you want to save the current state because the user
+   //has changed something you would call
+   undoModel.remember();
+
+   //To undo one step
+   undoModel.undo();
+
+   //To go back to the first state
+   undoModel.startOver();
+   */
   function CsUndoModel() {
 
     $log.debug("[CsUndoModel] model created.");
