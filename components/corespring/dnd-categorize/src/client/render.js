@@ -237,7 +237,7 @@ function renderCorespringDndCategorize(
     }
 
     function setEditable(e) {
-      scope.editable = true;
+      scope.editable = e;
     }
 
     function saveAnswerChangedCallback(callback) {

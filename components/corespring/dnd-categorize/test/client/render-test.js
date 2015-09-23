@@ -425,6 +425,41 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
+  describe('canEdit', function(){
+    describe('without a response', function(){
 
+      beforeEach(function(){
+        scope.response = null;
+      });
+
+      it('should be true after editable(true) has been called', function(){
+        scope.containerBridge.editable(true);
+        expect(scope.canEdit()).toBe(true);
+      });
+
+      it('should be false after editable(false) has been called', function(){
+        scope.containerBridge.editable(false);
+        expect(scope.canEdit()).toBe(false);
+      });
+    });
+
+    describe('with response', function(){
+
+      beforeEach(function(){
+        scope.response = {};
+      });
+
+      it('should be false after editable(true) has been called', function(){
+        scope.containerBridge.editable(true);
+        expect(scope.canEdit()).toBe(false);
+      });
+
+      it('should be false after editable(false) has been called', function(){
+        scope.containerBridge.editable(false);
+        expect(scope.canEdit()).toBe(false);
+      });
+    });
+
+  });
 
 });
