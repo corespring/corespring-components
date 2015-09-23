@@ -43,7 +43,7 @@ exports.factory = ['$log', function($log) {
     }
 
     /**
-     * Set the function which gets the state from the client
+     * The undo model uses this function to get the state from the client
      * @param fn
      */
     function setGetState(fn) {
@@ -51,7 +51,7 @@ exports.factory = ['$log', function($log) {
     }
 
     /**
-     * Set the function which sets the state to the client
+     * The undo model uses this function to revert the state of the client
      * @param fn
      */
     function setRevertState(fn) {
