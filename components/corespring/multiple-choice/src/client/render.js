@@ -154,6 +154,15 @@ var main = [
           };
         },
 
+        setInstructorData: function(data) {
+          _.each(scope.choices, function(c) {
+            if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
+              c.correct = true;
+            }
+          });
+          scope.rationaleVisible = true;
+        },
+
         // sets the server's response
         setResponse: function(response) {
           $(element).find(".feedback-panel").hide();
@@ -184,6 +193,8 @@ var main = [
           }, 10);
         },
         setMode: function(newMode) {
+          scope.mode = newMode;
+          scope.rationaleVisible = newMode === 'instructor';
         },
         /**
          * Reset the ui back to an unanswered state
@@ -193,6 +204,7 @@ var main = [
           resetChoices();
           resetFeedback(scope.choices);
           scope.response = undefined;
+          scope.rationaleVisible = false;
         },
         resetStash: function() {
           scope.session.stash = {};
@@ -353,7 +365,7 @@ var main = [
       '    </div>',
       '  </div>',
       seeAnswer,
-      '  <div class="rationale-expander">',
+      '  <div class="rationale-expander" ng-show="rationaleVisible">',
       '    <div class="rationale-expander-row {{showHide[rationaleOpen]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
       '      <span class="rationale-expander-{{showHide[rationaleOpen]}}"></span>',
       '      <span class="rationale-expander-label">{{capShowHide[rationaleOpen]}} Rationale</span>',
