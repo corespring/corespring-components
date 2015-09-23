@@ -74,7 +74,7 @@ You can use the following test commands:
 
 ### Regression
 
-    # Run functional tests
+    # Run regression tests 
     grunt regression
 
     ## Options
