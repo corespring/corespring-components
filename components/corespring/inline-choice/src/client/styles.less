@@ -154,12 +154,8 @@
   }
 
   .result-icon {
-    position: relative;
-    left: 5px;
-  }
-
-  &.warning .result-icon {
-    right: -28px;
+    display: inline-block;
+    vertical-align: middle;
   }
 
   &.incorrect .result-icon:after {
@@ -180,7 +176,7 @@
     margin-left: 5px;
     font-family: "fontawesome";
     font-size: 24px;
-    color: @warning-color;
+    color: @warning-color-background;
     content: @warning-character;
   }
 }
