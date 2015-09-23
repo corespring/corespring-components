@@ -81,24 +81,6 @@ module.exports = (grunt) ->
       dev: 
         tests: ['components/**/regression/*.js']
 
-    # regressionTestRunner:
-    #   options:
-    #     tests: ['components/**/regression/*.js']
-    #   dev:
-    #     baseUrl: 'http://localhost:9000'
-    #     defaultTimeout: grunt.option('defaultTimeout') || 2000
-    #   saucelabs:
-    #     defaultTimeout: grunt.option('defaultTimeout') || 5000
-    #     local: false
-    #     #If local is false we have to provide the user/key for saucelabs
-    #     user: process.env.SAUCE_USERNAME
-    #     key: process.env.SAUCE_ACCESS_KEY
-    #     baseUrl: 'http://corespring-container-devt.herokuapp.com'
-    #     capabilities:
-    #       name: grunt.option('sauceJob') ? 'components tests'
-    #       recordVideo: grunt.option('sauceRecordVideo') ? false
-    #       recordScreenshots: grunt.option('sauceRecordScreenshots') ? false
-
     jasmine:
       unit:
         src: '<%= grunt.config("testClient.wrapped") %>'

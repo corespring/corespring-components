@@ -77,14 +77,28 @@ You can use the following test commands:
     # Run functional tests
     grunt regression
 
-    # Run functional tests against SauceLabs with a non-local base URL
-    # Make sure SAUCE_USERNAME and SAUCE_ACCESS_KEY are set in your env  
-    grunt regression --local=false --baseUrl=http://corespring-container-devt.herokuapp.com
-    
     ## Options
-    --browserName=firefox - passed to webdriverjs
-    --version="10.2" - passed to webdriverjs
-    --platform=windows - passed to webdriverjs
+    --baseUrl="url-to-container-app" # default: http://localhost:9000
+    --grep="some string" # only run specs whose description matches this grep 
+    --bail=true|false # end tests on first failure default: true
+    --browserName=firefox # passed to webdriverio
+    --webDriverLogLevel="silent|verbose|command|result|data" # log level for the webdriver runner
+
+    ## Saucelabs Options
+    --sauceLabs # run via saucelabs (you'll need to specify a user/key) 
+    --sauceJob="name of job" # label for run on sauce labs
+    --sauceUser="user" # or set the env var SAUCE_USERNAME
+    --sauceKey="key" # or set the env var SAUCE_ACCESS_KEY
+    --sauceRecordVideo # record video
+    --sauceRecordScreenshots # record screenshots
+    --platform=windows # passed to webdriverio
+    --version="10.2" # passed to webdriverio
+
+    ## Examples
+
+    # run via sauce
+    grunt regression --sauceLabs --baseUrl="http://container-app.com"
+    
 
 ## Validating an Item
 
