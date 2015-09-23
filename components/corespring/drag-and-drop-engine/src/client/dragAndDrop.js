@@ -149,11 +149,13 @@ var dragAndDropController = [
         };
 
         scope.startOver = function() {
-          scope.stack = [_.first(scope.stack)];
-          scope.local.choices = _.cloneDeep(scope.originalChoices);
-          _.each(scope.landingPlaceChoices, function(lpc, key) {
-            scope.landingPlaceChoices[key] = [];
-          });
+          if (scope.originalChoices){
+            scope.stack = [_.first(scope.stack)];
+            scope.local.choices = _.cloneDeep(scope.originalChoices);
+            _.each(scope.landingPlaceChoices, function(lpc, key) {
+              scope.landingPlaceChoices[key] = [];
+            });
+          }
           scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
@@ -162,9 +164,13 @@ var dragAndDropController = [
             return;
           }
           scope.stack.pop();
+
           var state = _.last(scope.stack);
-          scope.local.choices = _.cloneDeep(state.choices);
-          scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+
+          if  (state){
+            scope.local.choices = _.cloneDeep(state.choices);
+            scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
+          }
           scope.$emit('rerender-math', {delay: 10, element: element[0]});
         };
 
@@ -246,13 +252,19 @@ var dragAndDropController = [
         };
 
         scope.$watch('landingPlaceChoices', function(n, old) {
+          if(!scope.local || !scope.local.choices){
+            return;
+          }
+
           if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
             scope.answerChangeCallback();
           }
+
           var state = {
             choices: _.cloneDeep(scope.local.choices),
             landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
           };
+
           if (!_.isEqual(state, _.last(scope.stack))) {
             scope.stack.push(state);
           }

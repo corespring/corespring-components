@@ -7,8 +7,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var buttonRow = function (attrs) {
       return [
         '  <div class="button-row btn-group-md pull-right {{model.config.choiceAreaLayout}}" ' + attrs + '>',
-        '    <button type="button" ng-hide="response" class="btn-player btn-undo" ng-click="undo()"><i class="fa fa-angle-left"></i>  Undo</button>',
-        '    <button type="button" ng-hide="response" class="btn-player" ng-click="startOverAndClear()"><i class="fa start-over-icon">&nbsp;</i> Start over</button>',
+        '    <button type="button" ng-hide="response" class="btn-player btn-undo" ng-click="undo()" ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"><i class="fa fa-angle-left"></i>  Undo</button>',
+        '    <button type="button" ng-hide="response" class="btn-player" ng-click="startOverAndClear()" ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"><i class="fa start-over-icon">&nbsp;</i> Start over</button>',
         '    <div class="btn btn-success show-correct-button" ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
         '      <i class="fa fa-eye-slash"></i>&nbsp;{{top.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer',
         '    </div>',
@@ -253,6 +253,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.feedback = undefined;
           scope.top = {};
           scope.userHasInteracted = false;
+          scope.stack = [];
         },
 
         setResponse: function (response) {
@@ -291,12 +292,17 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       });
 
       scope.$watch('local.choices', function (n, o) {
-        var state = { choices: _.cloneDeep(scope.local.choices),
-          landingPlaces: []
-        };
-        if (n && !_.isEqual(state, _.last(scope.stack))) {
-          scope.stack.push(state);
-        }
+
+          if(!scope.local || !scope.local.choices){
+              return;
+          }
+          var state = { choices: _.cloneDeep(scope.local.choices),
+            landingPlaces: []
+          };
+
+          if (n && !_.isEqual(state, _.last(scope.stack))) {
+            scope.stack.push(state);
+          }
       }, true);
 
       scope.sortableOptions = {

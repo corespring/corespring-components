@@ -259,8 +259,8 @@ var main = [
       return [
         '<div class="render-csdndi" drag-and-drop-controller>',
         '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
-        '    <span cs-undo-button></span>',
-        '    <span cs-start-over-button></span>',
+        '    <span cs-undo-button ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"></span>',
+        '    <span cs-start-over-button ng-class="{disabled: stack.length < 2}" ng-disabled="stack.length < 2"></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',
