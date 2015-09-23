@@ -1,220 +1,92 @@
 /* global exports */
-
 var main = [
-  '$log',
-  '$timeout',
   'ChoiceTemplates',
-  'ServerLogic',
-  'TextProcessing',
-  function ($log, $timeout, ChoiceTemplates, ServerLogic, TextProcessing) {
-
+  function(ChoiceTemplates) {
     "use strict";
-
     var designPanel = [
-      '  <div class="input-holder root">',
-      '    <div class="body">',
-      '      <p class="info">',
-      '        In Select Text Evidence, a student is asked to highlight specific words or sentences from a',
-      '        passage to provide evidence to support their answer.',
-      '      </p>',
-      '      <div class="select-text-editor-container clearfix" ng-class="mode" ng-click="hidePopover()"',
-      '           popover-trigger="show" popover-placement="top"',
-      '           popover="Click the {{model.config.selectionUnit}}s you want to set as choices">',
-      '        <wiggi-wiz ng-show="mode == \'editor\'" ng-model="content.xhtml">',
-      '          <toolbar formatting="empty" positioning="empty"></toolbar>',
-      '        </wiggi-wiz>',
-      '        <div class="selection-editor" ng-show="mode == \'selection\'"',
-      '             ng-class="{words: model.config.selectionUnit == \'word\'}">',
-      '          <span class="selection" ng-repeat="choice in model.choices" ng-class="{correct: choice.correct}"',
-      '                ng-click="selectItem($index)" ng-bind-html-unsafe="choice.data"></span>',
+      '<div class="container-fluid">',
+      '  <div class="row">',
+      '    <div class="col-xs-8">',
+      '     <div mini-wiggi-wiz="" ng-model="model.config.label" placeholder="Passage label (optional)" core-features="bold italic" features=""></div>',
+      '    </div>',
+      '    <div class="col-xs-4">',
+      '      <div class="btn-group btn-group-sm btn-group-justified" role="group">',
+      '        <div class="btn-group btn-group-sm" role="group">',
+      '          <button type="button" class="btn btn-default active">Edit Passage</button>',
       '        </div>',
-      '        <button class="btn btn-sm toggle-choice" ng-click="toggleChoice($event)">',
-      '          {{mode == \'selection\' ? \'edit passage\' : \'done\'}}',
-      '        </button>',
-      '      </div>',
-      '      <div class="selection-unit property" ng-class="{disabled: mode != \'selection\'}">',
-      '        <p>',
-      '          Students must select',
-      '          <select class="form-control selection-unit" ng-disabled="mode != \'selection\'"',
-      '                  ng-model="model.config.selectionUnit">',
-      '            <option value="word">Words</option>',
-      '            <option value="sentence">Sentences</option>',
-      '          </select>',
-      '          from the passage above.',
-      '        </p>',
-      '        <p>Select all possible choices {{model.config.selectionUnit}}s.</p>',
-      '        <p>{{correctSelections()}} is the total number of correct selections identified.</p>',
-      '      </div>',
-      '      <div class="property response-type">',
-      '        <strong>Acceptable Responses</strong>',
-      '        <div class="response-type-selection">',
-      '          <p class="prompt">Students must respond by:</p>',
-      '          <radio ng-model="model.config.checkIfCorrect" ng-value="true">',
-      '            Selecting all of the {{model.config.selectionUnit}}s identified as correct',
-      '          </radio>',
-      '          <radio class="open-ended" ng-model="model.config.checkIfCorrect" ng-value="false">',
-      '            Selecting any number of {{model.config.selectionUnit}}s; the teacher will manually review',
-      '            the selections to determine correctness.',
-      '          </radio>',
+      '        <div class="btn-group btn-group-sm" role="group">',
+      '          <button type="button" class="btn btn-default">Set Answers</button>',
       '        </div>',
-      '      </div>',
-      '      <div class="additional-copyright-information">',
-      '        <additional-copyright-information copyrights="profile.contributorDetails.additionalCopyrights"',
-      '                                          prompt="Does this item contain any other copyrighted materials? E.g., book passage, image, etc.">',
-      '        </additional-copyright-information>',
+      '        <div class="btn-group btn-group-sm" role="group">',
+      '          <button type="button" class="btn btn-default">Delete</button>',
+      '        </div>',
       '      </div>',
       '    </div>',
       '  </div>',
-      '  <div class="input-holder">',
-      '    <div class="header">Feedback</div>',
-      '    <div ng-if="model.config.checkIfCorrect" class="body">',
-      '      <div class="well">',
+      '  <div class="row">',
+      '    <div class="col-xs-12">',
+      '     <wiggi-wiz ng-show="mode == \'editor\'" ng-model="model.config.xhtml">',
+      '       <toolbar basic="bold italic underline superscript subscript" positioning="justifyLeft justifyCenter justifyRight" formatting="" media=""></toolbar>',
+      '     </wiggi-wiz>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row">',
+      '    <div class="col-xs-12">',
+      '      <div feedback-panel>',
       '        <div feedback-selector',
-      '             fb-sel-label="If correct, show"',
-      '             fb-sel-class="correct"',
-      '             fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-      '             fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-      '             fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
-      '          ></div>',
-      '      </div>',
-      '      <div class="well">',
+      '            fb-sel-label="If correct, show"',
+      '            fb-sel-class="correct"',
+      '            fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+      '            fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+      '            fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
+      '        </div>',
       '        <div feedback-selector',
-      '             fb-sel-label="If partially correct, show"',
-      '             fb-sel-class="partial"',
-      '             fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-      '             fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-      '             fb-sel-default-feedback="{{defaultPartialFeedback}}"',
-      '          ></div>',
-      '      </div>',
-      '      <div class="well">',
+      '            fb-sel-label="If partially correct, show"',
+      '            fb-sel-class="partial"',
+      '            fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+      '            fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+      '            fb-sel-default-feedback="{{defaultPartialFeedback}}">',
+      '        </div>',
       '        <div feedback-selector',
-      '             fb-sel-label="If incorrect, show"',
-      '             fb-sel-class="incorrect"',
-      '             fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-      '             fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-      '             fb-sel-default-feedback="{{defaultIncorrectFeedback}}"',
-      '          ></div>',
+      '            fb-sel-label="If incorrect, show"',
+      '            fb-sel-class="incorrect"',
+      '            fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+      '            fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+      '            fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
+      '        </div>',
       '      </div>',
       '    </div>',
-      '    <div ng-if="!model.config.checkIfCorrect">',
-      '      <div class="well">',
-      '        <div feedback-selector',
-      '             fb-sel-label="When answer submitted, show"',
-      '             fb-sel-feedback-type="fullModel.feedback.feedbackType"',
-      '             fb-sel-custom-feedback="fullModel.feedback.feedback"',
-      '             fb-sel-default-feedback="{{defaultSubmittedFeedback}}"',
-      '          ></div>',
-      '      </div>',
-      '    </div>',
-      '  </div>'
+      '  </div>',
+      '</div>'
     ].join('');
+
+    var link = function ($scope, $element, $attrs) {
+
+      ChoiceTemplates.extendScope($scope, 'corespring-select-text');
+
+      $scope.mode = 'editor';
+
+      $scope.containerBridge = {
+        setModel: function (model) {
+          $scope.fullModel = model;
+          $scope.model = $scope.fullModel.model;
+        },
+        getModel: function () {
+          var model = _.cloneDeep($scope.fullModel);
+          return model;
+        }
+      };
+
+      $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
+    };
 
     return {
       scope: {},
       restrict: 'E',
       replace: true,
-      link: function ($scope, $element, $attrs) {
-
-        ChoiceTemplates.extendScope($scope, 'corespring-select-text');
-
-        $scope.mode = 'editor';
-
-        $scope.overrideFeatures = [
-          {
-            name: 'image',
-            action: undefined
-          }
-        ];
-
-        function setBoundaries(oldValue, newValue) {
-          // Don't run on init, when oldValue === newValue
-          if (oldValue !== newValue) {
-            if ($scope.model.config.selectionUnit === 'word') {
-              $scope.model.choices = TextProcessing.wordSplit($scope.content.xhtml);
-            } else if ($scope.model.config.selectionUnit === 'sentence') {
-              $scope.model.choices = TextProcessing.sentenceSplit($scope.content.xhtml);
-            } else {
-              $scope.model.choices = [$scope.content.xhtml];
-            }
-            $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-          }
-        }
-
-        $scope.$watch('content.xhtml', setBoundaries, true);
-        $scope.$watch('model.config.selectionUnit', setBoundaries, true);
-
-        function getNumberOfCorrectChoices() {
-          return ($scope.model && $scope.model.choices) ? _.filter($scope.model.choices, function (choice) {
-            return choice.correct === true;
-          }).length : 0;
-        }
-
-        $scope.selectItem = function (index) {
-          $scope.model.choices[index].correct = !$scope.model.choices[index].correct;
-          $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-        };
-
-        $scope.safeApply = function (fn) {
-          var phase = this.$root.$$phase;
-          if (phase === '$apply' || phase === '$digest') {
-            if (fn && (typeof(fn) === 'function')) {
-              fn();
-            }
-          } else {
-            this.$apply(fn);
-          }
-        };
-
-        $scope.toggleChoice = function ($event) {
-          $event.stopPropagation();
-
-          if ($scope.mode === 'editor') {
-            $scope.mode = 'selection';
-            $scope.safeApply(function () {
-              $timeout(function () {
-                $('.select-text-editor-container', $element).trigger('show');
-              }, 200);
-            });
-          } else {
-            $scope.mode = 'editor';
-            $scope.hidePopover();
-          }
-        };
-
-        $scope.hidePopover = function () {
-          $timeout(function () {
-            if ($('.popover-inner', $element).length !== 0) {
-              $('.select-text-editor-container', $element).trigger('show');
-            }
-          }, 200);
-        };
-
-        $scope.containerBridge = {
-          setModel: function (model) {
-            $scope.fullModel = model;
-            $scope.model = $scope.fullModel.model;
-            $scope.model.choices = $scope.model.choices || [];
-            $scope.content = {};
-            $scope.content.xhtml = _.pluck($scope.model.choices, 'data').join(' ');
-            $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-          },
-          getModel: function () {
-            var model = _.cloneDeep($scope.fullModel);
-            return model;
-          },
-          setProfile: function (profile) {
-            $scope.profile = _.defaults(profile, {
-              contributorDetails: {
-                additionalCopyrights: []
-              }
-            });
-          }
-        };
-
-        $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
-      },
+      link: link,
       template: [
-        '<div class="select-text-configuration">',
+        '<div class="cs-select-text-config">',
         '  <div navigator-panel="Design">',
         designPanel,
         '  </div>',
