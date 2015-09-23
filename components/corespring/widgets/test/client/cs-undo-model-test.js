@@ -40,7 +40,6 @@ describe('cs undo model', function() {
 
     it('undo is not enabled afterwards', function() {
       sut.init();
-      expect(sut.undoEnabled).toBe(false);
       expect(sut.undoDisabled).toBe(true);
     });
   });
@@ -60,7 +59,6 @@ describe('cs undo model', function() {
 
     it('should enable undo', function () {
       sut.remember();
-      expect(sut.undoEnabled).toBe(true);
       expect(sut.undoDisabled).toBe(false);
     });
   });
@@ -99,7 +97,7 @@ describe('cs undo model', function() {
     it('does call revertState when it is enabled', function(){
       revertState.calls.reset();
       sut.remember();
-      expect(sut.undoEnabled).toBe(true);
+      expect(sut.undoDisabled).toBe(false);
       sut.undo();
       expect(revertState).toHaveBeenCalled();
     });
@@ -112,7 +110,7 @@ describe('cs undo model', function() {
       sut.remember();
       sut.remember();
       sut.undo();
-      expect(sut.undoEnabled).toBe(true);
+      expect(sut.undoDisabled).toBe(false);
     });
   });
 
@@ -126,7 +124,7 @@ describe('cs undo model', function() {
     it('does call revertState, when it is enabled', function(){
       revertState.calls.reset();
       sut.remember();
-      expect(sut.undoEnabled).toBe(true);
+      expect(sut.undoDisabled).toBe(false);
       sut.startOver();
       expect(revertState).toHaveBeenCalled();
     });

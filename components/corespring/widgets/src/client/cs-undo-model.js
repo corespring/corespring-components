@@ -42,7 +42,6 @@ exports.factory = ['$log', function($log) {
     var revertState = nop;
 
     this.undoCount = 0;
-    this.undoEnabled = false;
     this.undoDisabled = true;
 
     this.init = init;
@@ -115,8 +114,7 @@ exports.factory = ['$log', function($log) {
 
     function updateUndoState() {
       self.undoCount = undoStack.length
-      self.undoEnabled = self.undoCount > 1;
-      self.undoDisabled = !self.undoEnabled;
+      self.undoDisabled = self.undoCount <= 1;
     }
 
     function pushState(newState) {
