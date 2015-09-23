@@ -25,6 +25,10 @@
           border: 1px solid #979797;
           background-color: #d8d8d8;
           border-radius: 4px;
+          &.ui-draggable-dragging {
+            cursor: move;
+            opacity: 0.75;
+          }
         }
       }
     }
@@ -380,7 +384,10 @@
           border: 1px solid #979797;
           background-color: #efefef;
           border-radius: 4px;
-
+          &.ui-draggable-dragging {
+            cursor: move;
+            opacity: 0.75;
+          }
         }
       }
     }
@@ -483,6 +490,8 @@
   .ui-sortable-helper .choice {
     background-color: #efefef !important;
     border: 1px dashed #9b9b9b !important;
+    cursor: move;
+    opacity: 0.75;
   }
 
   .see-correct-answer .choice.correct {
@@ -640,6 +649,11 @@
 
     &:hover {
       cursor: pointer;
+    }
+
+    &.ui-sortable-helper {
+      cursor: move;
+      opacity: 0.75;
     }
 
     .blocker {
