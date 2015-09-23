@@ -3,11 +3,6 @@
 var _ = require('lodash');
 var should = require('should');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('placement ordering', function() {
 
   var itemJsonFilename = 'placement-vertical.json';
@@ -35,8 +30,8 @@ describe('placement ordering', function() {
     describe('correctness', function() {
       beforeEach(function() {
         browser
-          .url(RegressionHelper.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering', regressionTestRunnerGlobals.defaultTimeout);
+          .url(browser.options.getUrl('ordering', itemJsonFilename))
+          .waitFor('.view-placement-ordering', browser.options.defaultTimeout);
       });
 
       it('correct answer results in correct feedback', function(done) {
@@ -44,7 +39,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.correct', browser.options.defaultTimeout)
           .call(done);
       });
 
@@ -53,7 +48,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Banana'), landingPlace(1))
           .dragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.incorrect', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.incorrect', browser.options.defaultTimeout)
           .call(done);
       });
 
@@ -62,7 +57,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.partial', browser.options.defaultTimeout)
           .call(done);
       });
 
@@ -104,7 +99,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.partial', browser.options.defaultTimeout)
           .resetItem()
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {

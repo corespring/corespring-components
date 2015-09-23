@@ -3,11 +3,6 @@
 var _ = require('lodash');
 var should = require('should');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('inplace ordering', function() {
 
   var itemJsonFilename = 'inplace.json';
@@ -29,14 +24,14 @@ describe('inplace ordering', function() {
   describe('correctness', function() {
     beforeEach(function() {
       browser
-        .url(RegressionHelper.getUrl('ordering', itemJsonFilename))
-        .waitFor('.view-ordering', regressionTestRunnerGlobals.defaultTimeout);
+        .url(browser.options.getUrl('ordering', itemJsonFilename))
+        .waitFor('.view-ordering', browser.options.defaultTimeout);
     });
 
     it('correct answer results in correct feedback', function(done) {
       browser
         .submitItem()
-        .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.feedback.correct', browser.options.defaultTimeout)
         .call(done);
     });
 

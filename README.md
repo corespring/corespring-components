@@ -46,7 +46,11 @@ First ensure that you have all the dependencies installed:
 If you want to run the functional tests, then ensure that you have a version of
 [corespring-container](https://github.com/corespring/corespring-container) running on your local machine at port 9000.
 Alternatively, you can run the regression tests against a different url by passing the `--baseUrl` argument.
-    
+
+
+## Testing    
+
+### Unit
 You can use the following test commands:
 
     # Test all components (server side and client side)
@@ -67,6 +71,8 @@ You can use the following test commands:
     ## Options
     --componentPath=path_to_comps (default: ../components) - the path to the components folder
     --keepWrapped=true|false (default: false) - keep the generated js files
+
+### Regression
 
     # Run functional tests
     grunt regression
