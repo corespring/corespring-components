@@ -4,11 +4,6 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 var inlineChoiceWithId = function(id) {
   return '//div[@id="' + id + '" and @class[contains(., "view-inline-choice")]]';
 };
@@ -32,8 +27,8 @@ describe('inline-choice', function() {
 
   beforeEach(function() {
     browser
-      .url(RegressionHelper.getUrl('inline-choice', itemJsonFilename))
-      .waitFor('.dropdown-menu li', regressionTestRunnerGlobals.defaultTimeout);
+      .url(browser.options.getUrl('inline-choice', itemJsonFilename))
+      .waitFor('.dropdown-menu li');
   });
 
   it('feedbacks are positioned correctly', function(done) {

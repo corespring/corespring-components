@@ -4,11 +4,6 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('feedback-block', function() {
 
   "use strict";
@@ -22,8 +17,8 @@ describe('feedback-block', function() {
 
   beforeEach(function() {
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
-      .url(RegressionHelper.getUrl('feedback-block', itemJsonFilename));
+      .timeouts('implicit', browser.options.defaultTimeout)
+      .url(browser.options.getUrl('feedback-block', itemJsonFilename));
   });
 
   function safeTrim(s){

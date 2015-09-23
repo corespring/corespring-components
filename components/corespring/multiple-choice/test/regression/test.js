@@ -4,17 +4,12 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('multiple-choice', function() {
 
   "use strict";
 
   var itemJsonFilename = 'one.json';
-  var itemJson = RegressionHelper.getItemJson('multiple-choice', itemJsonFilename);
+  var itemJson = browser.options.getItemJson('multiple-choice', itemJsonFilename);
 
   function findChoice(id){
     return _.find(itemJson.item.components['1'].model.choices, function(choice) {
@@ -76,8 +71,8 @@ describe('multiple-choice', function() {
 
   beforeEach(function() {
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
-      .url(RegressionHelper.getUrl('multiple-choice', itemJsonFilename))
+      .timeouts('implicit', browser.options.defaultTimeout)
+      .url(browser.options.getUrl('multiple-choice', itemJsonFilename))
       .waitFor('.choice-input .radio-choice');
   });
 
