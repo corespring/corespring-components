@@ -94,7 +94,7 @@ var main = [
       '    <p>Use this section to setup the graph area.</p>',
       '    <form class="form-horizontal" role="form">',
       '       <div class="config-form-row">',
-      '         <h4>Domain</h4>',
+      '         <h4>Domain (X)</h4>',
       '       </div>',
       '       <div class="config-form-row">',
       labelWithInput({
@@ -126,7 +126,7 @@ var main = [
         placeholder: '{{defaults.domainLabelFrequency}}' }),
       '       </div>',
       '       <div class="config-form-row">',
-      '         <h4>Range</h4>',
+      '         <h4>Range (Y)</h4>',
       '       </div>',
       '       <div class="config-form-row">',
       labelWithInput({

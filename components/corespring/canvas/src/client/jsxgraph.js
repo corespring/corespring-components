@@ -36,19 +36,49 @@ var def = ['Canvas',
           showPoints: attr.showpoints
         };
 
-        function setCanvasProperties() {
+        function generateCanvasId() {
           var canvasId = Math.random().toString(36).substring(7);
-          var jxgbox = elem.find(".jxgbox");
-          var offsetLeft = elem.width() / 2 + 10;
-          var offsetTop = elem.height() / 2 + 10;
-          jxgbox.attr("id", canvasId);
-          jxgbox.before('<div class="axis">'+attr.rangelabel+'</div>');
-          jxgbox.after('<div class="axis domain" style="left: '+offsetLeft+'px; top: '+offsetTop+'px;">'+attr.domainlabel+'</div>');
-
+          elem.find(".jxgbox").attr("id", canvasId);
           return canvasId;
         }
 
-        var canvas = new Canvas(setCanvasProperties(), canvasAttrs);
+        function setGraphLabels(canvas) {
+          var jxgbox = elem.find(".jxgbox");
+          var coords = canvas.getPointCoords(0, 0);
+          jxgbox.before('<div class="axis range-axis">'+canvasAttrs.range.label+'</div>');
+          jxgbox.after('<div class="axis domain-axis">'+canvasAttrs.domain.label+'</div>');
+
+          // domain
+          var graphVCenter = elem.height() / 2;
+
+          var domainAxis = elem.find('.domain-axis');
+          var domainAxisWidth = domainAxis.width();
+          domainAxis.css("left", elem.width() - (domainAxisWidth / 2) + (domainAxis.height() / 2));
+
+          if (coords.y <= graphVCenter) {
+            var offset = coords.y - domainAxis.height() / 4;
+            domainAxis.css("top", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
+          } else {
+            var offset = elem.height() - coords.y - domainAxis.height() / 2;
+            domainAxis.css("bottom", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
+          }
+
+          // range
+          var graphHCenter = elem.width() / 2;
+          var rangeAxis = elem.find('.range-axis');
+          var rangeAxisWidth = rangeAxis.width();
+
+          if (coords.x <= graphHCenter) {
+            var offset = coords.x - (rangeAxisWidth / 2);
+            rangeAxis.css("left", offset < 0 ? 0 : offset);
+          } else {
+            var offset = (canvasAttrs.width - coords.x) - (rangeAxisWidth / 2);
+            rangeAxis.css("right", offset < 0 ? 0 : offset);
+          }
+        }
+
+        var canvas = new Canvas(generateCanvasId(), canvasAttrs);
+        setGraphLabels(canvas);
 
         //define callbacks
         canvas.on('up', function(e) {

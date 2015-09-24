@@ -6,9 +6,9 @@ exports.service = ['$log',
     function Canvas(id, attrs) {
       var self = this;
 
-      function createAxis(axisProperties, point1, point2, labelProperties) {
+      function createAxis(axisProperties, point1, point2, tickProperties) {
         var axisAttrs = {
-          ticks: getTicksProperties(axisProperties, labelProperties),
+          ticks: getTicksProperties(axisProperties, tickProperties),
           strokeColor: "#3d3d3d",
           highlightStrokeColor: "#3d3d3d",
           strokeWidth: 2,
@@ -24,14 +24,14 @@ exports.service = ['$log',
         ], axisAttrs);
       }
 
-      function getTicksProperties(axisProperties, labelProperties) {
+      function getTicksProperties(axisProperties, tickProperties) {
         var defaultValues = {
           insertTicks: true,
           majorHeight: -1,
           minorHeight: -1,
           drawLabels: true,
           minorTicks: axisProperties.labelFrequency - 1,
-          label: labelProperties
+          label: tickProperties
         };
 
         if (axisProperties.stepValue) {
@@ -247,6 +247,14 @@ exports.service = ['$log',
       shape.setAttribute({
         strokeColor: color
       });
+    };
+
+    Canvas.prototype.getPointCoords = function(point1, point2) {
+      var coords = new JXG.Coords(JXG.COORDS_BY_USER, [point1, point2], this.board);
+      return {
+        x: coords.scrCoords[1],
+        y: coords.scrCoords[2]
+      };
     };
 
     return Canvas;
