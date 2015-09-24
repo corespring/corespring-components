@@ -16,14 +16,14 @@ var def = ['Canvas',
             min: parseFloat(attr.domainmin ? attr.domainmin : -10, 10),
             max: parseFloat(attr.domainmax ? attr.domainmax : 10, 10),
             stepValue: parseFloat(attr.domainstepvalue ? attr.domainstepvalue : 1),
-            labelFrequency: attr.domainlabelfrequency,
+            labelFrequency: attr.domainlabelfrequency
           },
           range: {
             label: attr.rangelabel,
             min: parseFloat(attr.rangemin ? attr.rangemin : -10, 10),
             max: parseFloat(attr.rangemax ? attr.rangemax : 10, 10),
             stepValue: parseFloat(attr.rangestepvalue ? attr.rangestepvalue : 1),
-            labelFrequency: attr.rangelabelfrequency,
+            labelFrequency: attr.rangelabelfrequency
           },
           scale: parseFloat(attr.scale ? attr.scale : 1, 10),
           maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
@@ -45,6 +45,7 @@ var def = ['Canvas',
         function setGraphLabels(canvas) {
           var jxgbox = elem.find(".jxgbox");
           var coords = canvas.getPointCoords(0, 0);
+          var offset;
           jxgbox.before('<div class="axis range-axis">'+canvasAttrs.range.label+'</div>');
           jxgbox.after('<div class="axis domain-axis">'+canvasAttrs.domain.label+'</div>');
 
@@ -56,10 +57,10 @@ var def = ['Canvas',
           domainAxis.css("left", elem.width() - (domainAxisWidth / 2) + (domainAxis.height() / 2));
 
           if (coords.y <= graphVCenter) {
-            var offset = coords.y - domainAxis.height() / 4;
+            offset = coords.y - domainAxis.height() / 4;
             domainAxis.css("top", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
           } else {
-            var offset = elem.height() - coords.y - domainAxis.height() / 2;
+            offset = elem.height() - coords.y - domainAxis.height() / 2;
             domainAxis.css("bottom", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
           }
 
@@ -69,10 +70,10 @@ var def = ['Canvas',
           var rangeAxisWidth = rangeAxis.width();
 
           if (coords.x <= graphHCenter) {
-            var offset = coords.x - (rangeAxisWidth / 2);
+            offset = coords.x - (rangeAxisWidth / 2);
             rangeAxis.css("left", offset < 0 ? 0 : offset);
           } else {
-            var offset = (canvasAttrs.width - coords.x) - (rangeAxisWidth / 2);
+            offset = (canvasAttrs.width - coords.x) - (rangeAxisWidth / 2);
             rangeAxis.css("right", offset < 0 ? 0 : offset);
           }
         }
