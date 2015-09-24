@@ -133,6 +133,7 @@ var main = [
             scope.local.choices = withoutPlacedChoices();
           }
 
+          scope.initUndo();
           renderAnswerArea(".answer-area-holder", scope.$new());
         },
 
@@ -205,6 +206,8 @@ var main = [
           scope.seeSolutionExpanded = false;
           scope.correctResponse = undefined;
           scope.response = undefined;
+
+          scope.initUndo();
         }
       });
 
@@ -275,8 +278,8 @@ var main = [
       return [
         '<div class="render-csdndi" drag-and-drop-controller>',
         '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
-        '    <span cs-undo-button></span>',
-        '    <span cs-start-over-button></span>',
+        '    <span cs-undo-button-with-model></span>',
+        '    <span cs-start-over-button-with-model></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',

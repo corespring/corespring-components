@@ -291,13 +291,11 @@ describe('multiple-choice server logic', function() {
         choices : [
           {
             label: 'a',
-            value: '1',
-            rationale: 'This should be stripped by preprocessing'
+            value: '1'
           },
           {
             label: 'b',
-            value: '2',
-            rationale: 'This should also be stripped by preprocessing'
+            value: '2'
           }
         ]
       }
@@ -307,13 +305,6 @@ describe('multiple-choice server logic', function() {
 
       var json = server.preprocess(preprocessComponent);
       json.model.config.choiceType.should.not.eql(undefined);
-    });
-
-    it('should remove rationale from choices', function() {
-      var json = server.preprocess(preprocessComponent);
-      _.forEach(json.model.choices, function(choice) {
-        (typeof choice.rationale).should.eql('undefined');
-      });
     });
 
   });

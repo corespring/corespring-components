@@ -5,11 +5,6 @@ var expect = require('chai').expect;
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('video component', function() {
 
   describe('youtube', function() {
@@ -17,8 +12,8 @@ describe('video component', function() {
 
     beforeEach(function() {
       browser
-        .url(RegressionHelper.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video', regressionTestRunnerGlobals.defaultTimeout);
+        .url(browser.options.getUrl('video', itemJsonFilename))
+        .waitFor('.cs-video');
     });
 
     it('video is visible', function(done) {
@@ -44,8 +39,8 @@ describe('video component', function() {
 
     beforeEach(function() {
       browser
-        .url(RegressionHelper.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video', regressionTestRunnerGlobals.defaultTimeout);
+        .url(browser.options.getUrl('video', itemJsonFilename))
+        .waitFor('.cs-video');
     });
 
     it('video is visible', function(done) {

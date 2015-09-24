@@ -9,8 +9,8 @@ var main = [
       scope.inputType = 'checkbox';
       scope.editable = true;
       scope.bridge = {answerVisible: false};
-      scope.showHide = {false: 'show', true: 'hide'};
-      scope.capShowHide = {false: 'Show', true: 'Hide'};
+      scope.showHide = {'false': 'show', 'true': 'hide'};
+      scope.capShowHide = {'false': 'Show', 'true': 'Hide'};
       scope.rationaleOpen = false;
 
       var getAnswers = function() {
@@ -365,9 +365,9 @@ var main = [
       '  </div>',
       seeAnswer,
       '  <div class="rationale-expander" ng-show="rationales">',
-      '    <div class="rationale-expander-row {{showHide[rationaleOpen]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
-      '      <span class="rationale-expander-{{showHide[rationaleOpen]}}"></span>',
-      '      <span class="rationale-expander-label">{{capShowHide[rationaleOpen]}} Rationale</span>',
+      '    <div class="rationale-expander-row {{showHide[rationaleOpen.toString()]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
+      '      <span class="rationale-expander-{{showHide[rationaleOpen.toString()]}}"></span>',
+      '      <span class="rationale-expander-label">{{capShowHide[rationaleOpen.toString()]}} Rationale</span>',
       '    </div>',
       '    <div class="rationale-body" ng-show="rationaleOpen">',
       '      <div ng-repeat="r in rationales">',

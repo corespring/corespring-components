@@ -4,88 +4,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     "use strict";
 
-    var buttonRow = function (attrs) {
-      return [
-        '  <div class="button-row btn-group-md pull-right {{model.config.choiceAreaLayout}}" ' + attrs + '>',
-        '    <button type="button" ng-hide="response" class="btn-player btn-undo" ng-click="undo()"><i class="fa fa-angle-left"></i>  Undo</button>',
-        '    <button type="button" ng-hide="response" class="btn-player" ng-click="startOverAndClear()"><i class="fa start-over-icon">&nbsp;</i> Start over</button>',
-        '    <div class="btn btn-success show-correct-button" ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
-        '      <i class="fa fa-eye-slash"></i>&nbsp;{{top.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer',
-        '    </div>',
-        '  </div>'
-      ].join('\n');
-    };
-    var answerArea = [
-      '<div class="answer-area-holder">',
-      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"'),
-      '<div class="clearfix" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"></div>',
-       '  <div class="answer-area-label" ng-show="answerLabelVisible()" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
-      '  <div class="answer-area-table {{correctClass}}">',
-      '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
-      '         ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
-      '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index].id}"',
-      '         data-drag="editable && landingPlaceChoices[$index].id" jqyoui-draggable="answerDragOptions($index)" data-jqyoui-options="answerDragOptions($index)" ng-model="landingPlaceChoices[$index]" >',
-      '        <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
-      '        <div class="ordering-number" ng-if="model.config.showOrdering" ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('');
-
-    var correctAnswerArea = function (attrs) {
-      return [
-          '<div class="choices" ' + attrs + '>',
-        '  <div class="choices-holder">',
-        '    <div class="choices-inner-holder clearfix">',
-        '      <div ng-repeat="o in correctChoices" class="choice-wrapper"> ',
-        '        <div class="choice correct">',
-        '          <div ng-bind-html-unsafe="o.label"></div>',
-        '        </div>',
-        '      </div>',
-        '    </div>',
-        '  </div>',
-        '</div>'
-      ].join('');
-    };
-
-    var choices = [
-      '<div class="choices" >',
-      '  <div class="choices-holder">',
-      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'above\'"'),
-      '<div class="clearfix"></div>',
-      '<div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
-      '    <div class="choices-inner-holder clearfix">',
-      '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
-      '        <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
-      '             data-drag="editable"',
-      '             ng-disabled="!editable"',
-      '             data-jqyoui-options="dragOptions(o)"',
-      '             ng-model="local.choices"',
-      '             jqyoui-draggable="dragOptions(o)"',
-      '             ng-bind-html-unsafe="o.label"',
-      '             data-id="{{o.id}}">',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('');
-
-    var placementOrder = [
-      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout != \'horizontal\' || model.config.choiceAreaPosition != \'below\'">',
-      '       <div class="choice-area">', choices, '</div>',
-      '       <div class="answer-area">' + answerArea + '</div>',
-      '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
-      '     </div>',
-      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
-      '       <div class="answer-area">' + answerArea + '</div>',
-      '       <div class="choice-area">', choices, '</div>',
-      '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
-      '     </div>'
-    ].join('\n');
-
-    var link = function (scope, element, attrs) {
+    function link (scope, element, attrs) {
 
       function clearLandingPlaceChoices() {
         _.each(scope.landingPlaceChoices, function (v, k) {
@@ -144,10 +63,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         onDrop: 'onDrop'
       };
 
-      scope.startOverAndClear = function () {
-        scope.startOver();
-        clearLandingPlaceChoices();
-      };
 
       scope.classForChoice = function (id, idx) {
         if (_.isEmpty(id)) {
@@ -223,6 +138,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           if (dataAndSession.session && dataAndSession.session.answers) {
             restoreChoicesFromAnswer(dataAndSession.session.answers);
           }
+
+          scope.initUndo();
         },
 
         getSession: function () {
@@ -257,6 +174,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.feedback = undefined;
           scope.top = {};
           scope.userHasInteracted = false;
+          scope.initUndo();
         },
 
         setInstructorData: function (data) {
@@ -299,18 +217,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       });
 
-      scope.$watch('local.choices', function (n, o) {
-        if (!scope.local || !scope.local.choices) {
-          return;
-        }
-        var state = { choices: _.cloneDeep(scope.local.choices),
-          landingPlaces: []
-        };
-        if (n && !_.isEqual(state, _.last(scope.stack))) {
-          scope.stack.push(state);
-        }
-      }, true);
-
       scope.sortableOptions = {
         disabled: false,
         start: function (e, ui) {
@@ -324,7 +230,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       };
 
-
       scope.$watch(function () {
         var h = element.find('.vertical .choices-inner-holder').outerHeight();
         if (h && scope.lastChoiceAreaHeight !== h) {
@@ -334,8 +239,88 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+    }
 
+    var buttonRow = function (attrs) {
+      return [
+        '  <div class="button-row btn-group-md pull-right {{model.config.choiceAreaLayout}}" ' + (attrs || "") + '>',
+        '    <span cs-undo-button-with-model ng-hide="response"></span>',
+        '    <span cs-start-over-button-with-model ng-hide="response"></span>',
+        '    <div class="btn btn-success show-correct-button" ng-if="model.config.choiceAreaLayout == \'vertical\'" ng-show="correctResponse" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
+        '      <i class="fa fa-eye-slash"></i>&nbsp;{{top.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer',
+        '    </div>',
+        '  </div>'
+      ].join('\n');
     };
+    var answerArea = [
+      '<div class="answer-area-holder">',
+      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"'),
+      '<div class="clearfix" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"></div>',
+      '  <div class="answer-area-label" ng-show="answerLabelVisible()" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
+      '  <div class="answer-area-table {{correctClass}}">',
+      '    <div ng-repeat="o in originalChoices" class="choice-wrapper" data-drop="true"',
+      '         ng-model="landingPlaceChoices[$index]" jqyoui-droppable="droppableOptions" data-jqyoui-options="droppableOptions">',
+      '      <div class="choice {{classForChoice(landingPlaceChoices[$index].id, $index)}}" ng-class="{choiceHolder: !landingPlaceChoices[$index].id}"',
+      '         data-drag="editable && landingPlaceChoices[$index].id" jqyoui-draggable="answerDragOptions($index)" data-jqyoui-options="answerDragOptions($index)" ng-model="landingPlaceChoices[$index]" >',
+      '        <div ng-bind-html-unsafe="landingPlaceChoices[$index].label"></div>',
+      '        <div class="ordering-number" ng-if="model.config.showOrdering" ng-hide="landingPlaceChoices[$index].label">{{$index+1}}</div>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join('');
+
+    var correctAnswerArea = function (attrs) {
+      return [
+        '<div class="choices" ' + attrs + '>',
+        '  <div class="choices-holder">',
+        '    <div class="choices-inner-holder clearfix">',
+        '      <div ng-repeat="o in correctChoices" class="choice-wrapper"> ',
+        '        <div class="choice correct">',
+        '          <div ng-bind-html-unsafe="o.label"></div>',
+        '        </div>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    };
+
+    var choices = [
+      '<div class="choices" >',
+      '  <div class="choices-holder">',
+      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'above\'"'),
+      '<div class="clearfix"></div>',
+      '<div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+      '    <div class="choices-inner-holder clearfix">',
+      '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
+      '        <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
+      '             data-drag="editable"',
+      '             ng-disabled="!editable"',
+      '             data-jqyoui-options="dragOptions(o)"',
+      '             ng-model="local.choices"',
+      '             jqyoui-draggable="dragOptions(o)"',
+      '             ng-bind-html-unsafe="o.label"',
+      '             data-id="{{o.id}}">',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join('');
+
+    var placementOrder = [
+      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout != \'horizontal\' || model.config.choiceAreaPosition != \'below\'">',
+      '       <div class="choice-area">', choices, '</div>',
+      '       <div class="answer-area">' + answerArea + '</div>',
+      '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
+      '     </div>',
+      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
+      '       <div class="answer-area">' + answerArea + '</div>',
+      '       <div class="choice-area">', choices, '</div>',
+      '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
+      '     </div>'
+    ].join('\n');
 
     var inplaceTemplate = [
       '  <div ng-if="model.config.placementType != \'placement\'" class="view-ordering {{model.config.choiceAreaLayout}}">',

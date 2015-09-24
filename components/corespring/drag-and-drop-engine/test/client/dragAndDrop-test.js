@@ -33,7 +33,17 @@ describe('dragAndDropController', function() {
 
     it('should $emit a rerender-math event', function() {
       spyOn(scope, "$emit");
+
+      //startOver does not call revertToUndoState, when there is are less than two states on the undo stack
+      //below we are adding fake states to enable it
+      var counter = 1;
+      scope.undoModel.setGetState(function(){ return counter++; });
+      scope.undoModel.init();
+      scope.undoModel.remember();
+
       scope.startOver();
+      scope.originalChoices =[];
+      expect(scope.originalChoices).toBeDefined();
       expect(scope.$emit).toHaveBeenCalledWith('rerender-math', {delay: jasmine.any(Number), element: jasmine.any(Object)});
     });
 

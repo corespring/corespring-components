@@ -52,6 +52,18 @@ describe('corespring:dnd-categorize:render', function() {
     }
   };
 
+  function ignoreAngularIds(obj){
+    var newObj = _.cloneDeep(obj);
+    for( var s in newObj){
+      if(s === '$$hashKey'){
+        delete newObj[s];
+      } else if(_.isObject(newObj[s])) {
+        newObj[s] = ignoreAngularIds(newObj[s]);
+      }
+    }
+    return newObj;
+  }
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -155,14 +167,6 @@ describe('corespring:dnd-categorize:render', function() {
       scope.renderModel = {};
       container.elements['1'].reset();
       expect(scope.renderModel).toEqual(ignoreAngularIds(saveRenderModel));
-
-      function ignoreAngularIds(renderModel) {
-        renderModel = _.cloneDeep(renderModel);
-        _.forEach(renderModel.categories, function(cat) {
-          delete cat.$$hashKey;
-        });
-        return renderModel;
-      }
     });
   });
 
@@ -226,14 +230,6 @@ describe('corespring:dnd-categorize:render', function() {
           correctness: 'correct'
         }]
       }]]);
-
-      function ignoreAngularIds(correctAnswerRows) {
-        correctAnswerRows = _.cloneDeep(correctAnswerRows);
-        _.forEach(correctAnswerRows[0], function(cat) {
-          delete cat.$$hashKey;
-        });
-        return correctAnswerRows;
-      }
     });
 
   });
@@ -399,13 +395,25 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
-  describe('revertToState', function() {
+  describe('undo', function(){
     beforeEach(setModelAndDigest);
-    it('should revert renderModel', function() {
-      var state = scope.renderModel;
-      scope.renderModel = null;
-      scope.revertToState(state);
-      expect(scope.renderModel).toEqual(state);
+    it('should revert renderModel', function(){
+      var saveState = _.cloneDeep(scope.renderModel);
+      scope.renderModel = {};
+      scope.$digest();
+      scope.undoModel.undo();
+      expect(scope.renderModel).toEqual(ignoreAngularIds(saveState));
+    });
+  });
+
+  describe('startOver', function(){
+    beforeEach(setModelAndDigest);
+    it('should revert renderModel', function(){
+      var saveState = _.cloneDeep(scope.renderModel);
+      scope.renderModel = {};
+      scope.$digest();
+      scope.undoModel.startOver();
+      expect(scope.renderModel).toEqual(ignoreAngularIds(saveState));
     });
   });
 
@@ -437,7 +445,6 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
-
   describe('instructor data', function() {
     it('should be false, if response has been set', function() {
       spyOn(container.elements['1'], 'setResponse');
@@ -461,6 +468,40 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
+  describe('canEdit', function(){
+    describe('without a response', function(){
+      beforeEach(function(){
+        scope.response = null;
+      });
 
+      it('should be true after editable(true) has been called', function(){
+        scope.containerBridge.editable(true);
+        expect(scope.canEdit()).toBe(true);
+      });
+
+      it('should be false after editable(false) has been called', function(){
+        scope.containerBridge.editable(false);
+        expect(scope.canEdit()).toBe(false);
+      });
+    });
+
+    describe('with response', function(){
+
+      beforeEach(function(){
+        scope.response = {};
+      });
+
+      it('should be false after editable(true) has been called', function(){
+        scope.containerBridge.editable(true);
+        expect(scope.canEdit()).toBe(false);
+      });
+
+      it('should be false after editable(false) has been called', function(){
+        scope.containerBridge.editable(false);
+        expect(scope.canEdit()).toBe(false);
+      });
+    });
+
+  });
 
 });

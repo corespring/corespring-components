@@ -158,8 +158,8 @@ var main = [
 ];
 
 var interactiveGraph = [
-  '$log', 'ScaleUtils', 'GraphHelper',
-  function($log, ScaleUtils, GraphHelper) {
+  '$log', 'ScaleUtils', 'GraphHelper','CsUndoModel',
+  function($log, ScaleUtils, GraphHelper,CsUndoModel) {
 
     "use strict";
 
@@ -189,8 +189,8 @@ var interactiveGraph = [
       template: [
         '<div class="interactive-graph">',
         '  <div class="undo-button-row" ng-show="editable">',
-        '    <span cs-undo-button ng-hide="options.undoDisabled"></span>',
-        '    <span cs-start-over-button class="btn-player"></span>',
+        '    <span cs-undo-button-with-model ng-hide="options.undoDisabled"></span>',
+        '    <span cs-start-over-button-with-model ></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
@@ -234,6 +234,10 @@ var interactiveGraph = [
       link: function(scope, elm, attr, ngModel) {
         var paperElement = $(elm).find('.paper');
 
+        scope.undoModel = new CsUndoModel();
+        scope.undoModel.setGetState(getState);
+        scope.undoModel.setRevertState(revertState);
+
         $(document).keydown(function(e) {
           var selectedCount = scope.graph.getSelectedElements().length;
           if (selectedCount > 0 && (e.keyCode === 8 || e.keyCode === 46)) {
@@ -253,7 +257,7 @@ var interactiveGraph = [
           }
           scope.responsemodel.push(element(elementType));
           rebuildGraph(_.last(scope.responsemodel));
-          scope.stack.push(_.cloneDeep(scope.responsemodel));
+          scope.undoModel.remember();
           scope.$apply();
 
           function element(elementType) {
@@ -448,7 +452,7 @@ var interactiveGraph = [
               });
               rebuildGraph(lastMovedElement);
               scope.$apply(function() {
-                scope.stack.push(_.cloneDeep(scope.responsemodel));
+                scope.undoModel.remember();
               });
             };
             switch (o.type) {
@@ -469,23 +473,22 @@ var interactiveGraph = [
 
         scope.startOver = function() {
           if (scope.options && scope.options.startOverClearsGraph) {
-            var emptyResponse = [];
-            scope.stack = [emptyResponse];
-            scope.responsemodel = _.cloneDeep(emptyResponse);
+            scope.responsemodel = _.cloneDeep([]);
           } else {
-            scope.stack = [_.first(scope.stack)];
             scope.responsemodel = _.cloneDeep(scope.model.config.initialElements);
           }
+          scope.undoModel.init();
           rebuildGraph();
         };
 
-        scope.undo = function() {
-          if (scope.stack.length > 1) {
-            scope.stack.pop();
-            scope.responsemodel = _.cloneDeep(_.last(scope.stack));
-            rebuildGraph();
-          }
-        };
+        function getState() {
+          return scope.responsemodel;
+        }
+
+        function revertState(state) {
+          scope.responsemodel = state;
+          rebuildGraph();
+        }
 
         scope.removeElement = function(element) {
           var idx = _.findIndex(scope.responsemodel, function(e) {
@@ -495,7 +498,7 @@ var interactiveGraph = [
             scope.responsemodel.splice(idx, 1);
           }
           rebuildGraph();
-          scope.stack.push(_.cloneDeep(scope.responsemodel));
+          scope.undoModel.remember();
         };
 
         scope.removeSelectedElements = function() {
@@ -550,7 +553,7 @@ var interactiveGraph = [
           });
 
           scope.responsemodel = _.cloneDeep(model.config.initialElements) || [];
-          scope.stack = [_.cloneDeep(scope.responsemodel)];
+          scope.undoModel.init();
           rebuildGraph();
 
           scope.selectedType = scope.selectedType || model.config.initialType;

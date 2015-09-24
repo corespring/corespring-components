@@ -144,8 +144,8 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.droppedChoices.push(scope.choices.pop());
       scope.$digest();
 
-      scope.undo();
-      scope.undo();
+      scope.undoModel.undo();
+      scope.undoModel.undo();
 
       expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
@@ -162,7 +162,7 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.droppedChoices[0].left = 150;
       scope.$digest();
 
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
 
       expect(scope.droppedChoices[0].left).toEqual(100);
@@ -177,7 +177,7 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.$digest();
       scope.droppedChoices.push(scope.choices.pop());
       scope.$digest();
-      scope.startOver();
+      scope.undoModel.startOver();
       scope.$digest();
       expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
@@ -191,7 +191,7 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.droppedChoices.push(scope.choices.pop());
       scope.$digest();
       container.elements['1'].reset();
-      expect(scope.stack.length).toEqual(1);
+      expect(scope.undoModel.undoDisabled).toBe(true);
     });
   });
 
