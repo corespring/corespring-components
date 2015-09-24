@@ -1,5 +1,5 @@
-var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function($compile, $log, $modal, $rootScope, $timeout) {
+var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout','CsUndoModel',
+  function($compile, $log, $modal, $rootScope, $timeout, CsUndoModel) {
 
     var link = function(scope, element, attrs) {
 
@@ -10,7 +10,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       scope.maxWidth = 50;
       scope.maxHeight = 20;
       scope.expandHorizontal = true;
-      scope.stack = [];
+
+      scope.undoModel = new CsUndoModel();
+      scope.undoModel.setGetState(getState);
+      scope.undoModel.setRevertState(revertState);
 
       scope.propagateDimension = function(w, h) {
         scope.$apply(function() {
@@ -69,7 +72,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         // TODO: rewrite this using stash
         var isNew = !scope.model;
 
-        scope.stack = [];
         scope.model = _.cloneDeep(model);
         _.each(scope.landingPlaceChoices, function(lpc, key) {
           scope.landingPlaceChoices[key] = [];
@@ -83,24 +85,26 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.startOver = function() {
-        scope.stack = [];
-        scope.model.choices = _.cloneDeep(scope.originalChoices);
-        _.each(scope.landingPlaceChoices, function(lpc, key) {
-          scope.landingPlaceChoices[key] = [];
-        });
-        scope.$emit('rerender-math', {delay: 20});
+        scope.undoModel.startOver();
       };
 
       scope.undo = function() {
-        if (scope.stack.length < 2) {
-          return;
-        }
-        var o = scope.stack.pop();
-        var state = _.last(scope.stack);
+        scope.undoModel.undo();
+      };
+
+      function getState(){
+        var state = {
+          choices: scope.model.choices,
+          landingPlaces: scope.landingPlaceChoices
+        };
+        return state;
+      }
+
+      function revertState(state){
         scope.model.choices = _.cloneDeep(state.choices);
         scope.landingPlaceChoices = _.cloneDeep(state.landingPlaces);
         scope.$emit('rerender-math', {delay: 20});
-      };
+      }
 
       scope.seeSolution = function() {
         scope.solutionScope.choiceStyle = scope.choiceStyle;
@@ -136,13 +140,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         if (!_.isEmpty(old) && !_.isEqual(n, old) && _.isFunction(scope.answerChangeCallback)) {
           scope.answerChangeCallback();
         }
-        var state = {
-          choices: _.cloneDeep(scope.model.choices),
-          landingPlaces: _.cloneDeep(scope.landingPlaceChoices)
-        };
-        if (!_.isEqual(state, _.last(scope.stack))) {
-          scope.stack.push(state);
-        }
+        scope.undoModel.remember();
       }, true);
 
       var choiceForId = function(id) {
@@ -151,7 +149,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         });
         return choice;
       };
-
 
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
@@ -188,6 +185,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
             $compile($answerArea)(scope.$new());
           });
 
+          scope.undoModel.init();
         },
         getSession: function() {
           var answer = {};
@@ -221,6 +219,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         reset: function() {
           scope.showSolution = false;
           scope.resetChoices(scope.rawModel);
+          scope.undoModel.init();
         },
 
         isAnswerEmpty: function() {
@@ -291,17 +290,16 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var tmpl = [
     '<div class="view-drag-and-drop-legacy">',
     '  <div ng-show="!correctResponse" class="pull-right">',
-    '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
-    '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
+    '    <span cs-undo-button-with-model></span>',
+    '    <span cs-start-over-button-with-model></span>',
     '  </div> <div class="clearfix" />',
     '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
-    '' + answerArea(),
+    answerArea(),
     '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
     '  <div class="pull-right" ng-show="showSolution"><a ng-click="seeSolution()">See solution</a></div>',
     '</div>'
 
-  ].join("");
-
+  ].join('');
 
     return {
       link: link,
@@ -449,7 +447,6 @@ var landingPlace = [
 
           return isCorrect ? "correct" : "incorrect";
         };
-
 
       },
       template: [

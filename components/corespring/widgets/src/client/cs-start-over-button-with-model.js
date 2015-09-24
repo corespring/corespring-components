@@ -6,7 +6,7 @@ var def = function() {
         template: [
             '<button ',
             '  class="btn-player" ',
-            '  ng-click="undoModel.startOver()"',
+            '  ng-click="startOver ? startOver() : undoModel.startOver()"',
             '  ng-class="{disabled:undoModel.undoDisabled}"',
             '  ng-disabled="undoModel.undoDisabled"',
             '  ><i class="fa start-over-icon">&nbsp;</i> Start Over</button>'

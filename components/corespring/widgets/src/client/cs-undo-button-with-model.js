@@ -6,7 +6,7 @@ var def = function() {
         template: [
           '<button ',
           '  class="btn-player btn-undo" ',
-          '  ng-click="undoModel.undo()"',
+          '  ng-click="undo ? undo() : undoModel.undo()"',
           '  ng-class="{disabled:undoModel.undoDisabled}"',
           '  ng-disabled="undoModel.undoDisabled"',
           '  ><i class="fa fa-angle-left"></i> Undo</button>'

@@ -1,8 +1,8 @@
 /* global console, exports */
 
 var main = [
-  '$sce', '$log',
-  function($sce, $log) {
+  '$sce', '$log','CsUndoModel',
+  function($sce, $log, CsUndoModel) {
     'use strict';
 
     $log = console;
@@ -23,7 +23,11 @@ var main = [
 
     var link = function(scope, element, attrs) {
       scope.editable = true;
-      scope.stack = [];
+
+      scope.undoModel = new CsUndoModel();
+      scope.undoModel.setGetState(getState);
+      scope.undoModel.setRevertState(revertState);
+
       scope.containerBridge = {
         setDataAndSession: function(dataAndSession) {
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
@@ -44,10 +48,7 @@ var main = [
             });
           }
 
-          scope.stack.push(_.cloneDeep({
-            choices: scope.choices,
-            droppedChoices: scope.droppedChoices
-          }));
+          scope.undoModel.init();
         },
 
         getSession: function() {
@@ -69,7 +70,7 @@ var main = [
           scope.droppedChoices = [];
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.response = undefined;
-          scope.stack = [_.first(scope.stack)];
+          scope.undoModel.init();
         },
 
         isAnswerEmpty: function() {
@@ -85,21 +86,21 @@ var main = [
         }
       };
 
-      scope.undo = function() {
-        if (scope.stack.length > 1) {
-          scope.stack.pop();
-          var state = _.last(scope.stack);
-          scope.choices = _.cloneDeep(state.choices);
-          scope.droppedChoices = _.cloneDeep(state.droppedChoices);
+      function getState() {
+        if(scope.choices && scope.droppedChoices) {
+          var state = {
+            choices: scope.choices,
+            droppedChoices: scope.droppedChoices
+          };
+          return state;
         }
-      };
+        return null;
+      }
 
-      scope.startOver = function() {
-        scope.stack = [_.first(scope.stack)];
-        var state = _.last(scope.stack);
+      function revertState(state){
         scope.choices = _.cloneDeep(state.choices);
         scope.droppedChoices = _.cloneDeep(state.droppedChoices);
-      };
+      }
 
       scope.correctClass = function(forChoice) {
         if (scope.response && scope.response.feedback) {
@@ -208,17 +209,10 @@ var main = [
       };
 
       scope.$watch('droppedChoices', function(n, prev) {
-        if (!_.isEqual(n, prev) && _.isFunction(scope.answerChangeCallback)) {
+        if (n && !_.isEqual(n, prev) && _.isFunction(scope.answerChangeCallback)) {
           scope.answerChangeCallback(n);
         }
-        var state = _.cloneDeep({
-          choices: scope.choices,
-          droppedChoices: scope.droppedChoices
-        });
-        if (!_.isEqual(state, _.last(scope.stack))) {
-          scope.stack.push(state);
-        }
-
+        scope.undoModel.remember();
       }, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
@@ -256,9 +250,9 @@ var main = [
       link: link,
       template: [
         '<div class="view-graphic-gap-match">',
-        '  <div class="button-row">',
-        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="undo()">Undo</button>',
-        '    <button class="btn btn-default" ng-disabled="!editable" ng-click="startOver()">Start Over</button>',
+        '  <div class="button-row" ng-hide="response">',
+        '    <span cs-undo-button-with-model></span>',
+        '    <span cs-start-over-button-with-model></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div class="main-container {{model.config.choiceAreaPosition}}">',

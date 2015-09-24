@@ -118,14 +118,31 @@ exports.factory = ['$log', function($log) {
     }
 
     function pushState(newState) {
-      if (newState && !_.isEqual(newState, _.last(undoStack))) {
-        undoStack.push(_.cloneDeep(newState));
+      if(newState){
+        if(_.isEqual(ignoreAngularIds(newState), ignoreAngularIds(_.last(undoStack)))){
+          undoStack.pop();
+          undoStack.push(_.cloneDeep(newState));
+        } else {
+          undoStack.push(_.cloneDeep(newState));
+        }
       }
       updateUndoState();
     }
 
     function nop(state) {
       $log.warn("[CsUndoModel] undoCallback is not set.");
+    }
+
+    function ignoreAngularIds(obj){
+      var newObj = _.cloneDeep(obj);
+      for( var s in newObj){
+        if(s === '$$hashKey'){
+          delete newObj[s];
+        } else if(_.isObject(newObj[s])) {
+          newObj[s] = ignoreAngularIds(newObj[s]);
+        }
+      }
+      return newObj;
     }
   }
 }];
