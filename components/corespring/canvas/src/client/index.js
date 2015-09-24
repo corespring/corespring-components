@@ -4,13 +4,55 @@ exports.framework = "angular";
 exports.service = ['$log',
   function($log) {
     function Canvas(id, attrs) {
+      var self = this;
+
+      function createAxis(axisProperties, point1, point2, tickProperties) {
+        var axisAttrs = {
+          ticks: getTicksProperties(axisProperties, tickProperties),
+          strokeColor: "#3d3d3d",
+          highlightStrokeColor: "#3d3d3d",
+          strokeWidth: 2,
+          name: axisProperties.label,
+          withLabel: false,
+          lastArrow: true,
+          firstArrow: true
+        };
+
+        return self.board.create('axis', [
+          point1,
+          point2
+        ], axisAttrs);
+      }
+
+      function getTicksProperties(axisProperties, tickProperties) {
+        var defaultValues = {
+          insertTicks: true,
+          majorHeight: -1,
+          minorHeight: -1,
+          drawLabels: true,
+          minorTicks: axisProperties.labelFrequency - 1,
+          label: tickProperties
+        };
+
+        if (axisProperties.stepValue) {
+          return _.defaults({
+            ticksDistance: axisProperties.stepValue * axisProperties.labelFrequency,
+            insertTicks: false
+          }, defaultValues);
+        } else {
+          return defaultValues;
+        }
+      }
+
+      var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.graphPadding / 100 : 0.5;
+      var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.graphPadding / 100 : 0.5;
+
       this.board = JXG.JSXGraph.initBoard(id, {
-        boundingbox: [0 - attrs.domain, attrs.range, attrs.domain, 0 - attrs.range],
-        grid: {
-          hasGrid: true,
-          gridX: attrs.scale,
-          gridY: attrs.scale
-        },
+        boundingbox: [
+          attrs.domain.min - domainPadding,
+          attrs.range.max + rangePadding,
+          attrs.domain.max + domainPadding,
+          attrs.range.min - rangePadding],
         showNavigation: false,
         showCopyright: false,
         zoom: false
@@ -18,36 +60,18 @@ exports.service = ['$log',
         width: attrs.width,
         height: attrs.height
       });
-      var axisAttrs = {
-        ticks: {
-          minorTicks: attrs.tickLabelFrequency - 1,
-          drawLabels: true
-        },
-        lastArrow: true,
-        firstArrow: true
-      };
-      this.board.create('axis', [
-        [0, 0],
-        [1, 0]
-      ], axisAttrs);
-      this.board.create('axis', [
-        [0, 0],
-        [0, 1]
-      ], axisAttrs);
-      if (attrs.domainLabel) {
-        var xcoords = new JXG.Coords(JXG.COORDS_BY_USER, [attrs.domain, 0], this.board);
-        var xoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [xcoords.scrCoords[1] - ((attrs.domainLabel.length * 4) + 10), xcoords.scrCoords[2] + 10], this.board);
-        this.board.create('text', [xoffset.usrCoords[1], xoffset.usrCoords[2], attrs.domainLabel], {
-          fixed: true
-        });
-      }
-      if (attrs.rangeLabel) {
-        var ycoords = new JXG.Coords(JXG.COORDS_BY_USER, [0, attrs.range], this.board);
-        var yoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [ycoords.scrCoords[1] - ((attrs.rangeLabel.length * 4) + 15), ycoords.scrCoords[2] + 10], this.board);
-        this.board.create('text', [yoffset.usrCoords[1], yoffset.usrCoords[2], attrs.rangeLabel], {
-          fixed: true
-        });
-      }
+
+      var domainAxis = createAxis(attrs.domain, [0, 0], [1, 0], {
+            offset: [0,0],
+            anchorX: 'middle',
+            anchorY: 'top'
+          });
+      var rangeAxis = createAxis(attrs.range, [0, 0], [0, 1], {
+            offset: [-5,0],
+            anchorX: 'right',
+            anchorY: 'middle'
+          });
+
       this.points = [];
       this.texts = [];
       this.shapes = [];
@@ -174,12 +198,18 @@ exports.service = ['$log',
       return this.board.on(event, handler);
     };
 
-    Canvas.prototype.makeLine = function(pts) {
-      var shape = this.board.create('line', pts, {
+    Canvas.prototype.makeLine = function(pts, label) {
+      var shapeArgs = {
         strokeColor: '#0000ff',
         strokeWidth: 2,
-        fixed: true
-      });
+        fixed: true,
+        firstArrow: true,
+        lastArrow: true,
+        withLabel: true,
+        name: label
+      };
+
+      var shape = this.board.create('line', pts, shapeArgs);
       this.shapes.push(shape);
       return shape;
     };
@@ -217,6 +247,14 @@ exports.service = ['$log',
       shape.setAttribute({
         strokeColor: color
       });
+    };
+
+    Canvas.prototype.getPointCoords = function(point1, point2) {
+      var coords = new JXG.Coords(JXG.COORDS_BY_USER, [point1, point2], this.board);
+      return {
+        x: coords.scrCoords[1],
+        y: coords.scrCoords[2]
+      };
     };
 
     return Canvas;

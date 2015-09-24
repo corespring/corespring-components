@@ -72,22 +72,46 @@
                             "id": "#domainLabel",
                             "required": false
                         },
-                        "domain": {
+                        "domainMin": {
                             "type": "integer",
-                            "description": "The number to use for domain",
-                            "id": "#domain",
+                            "description": "The number to use for x axis min",
+                            "id": "#domainMin",
                             "required": false
                         },
-                        "graphHeight": {
+                        "domainMax": {
+                            "type": "integer",
+                            "description": "The number to use for x axis max",
+                            "id": "#domainMax",
+                            "required": false
+                        },
+                        "domainStepValue": {
                             "type": "string",
+                            "description": "The step value to use x axis",
+                            "id": "#domainStepValue",
+                            "required": false
+                        },
+                        "domainLabelFrequency": {
+                            "description": "Specifies the interval of ticks shown on the x axis",
+                            "type": "integer",
+                            "id": "#domainLabelFrequency",
+                            "required": false
+                        }
+                        "graphHeight": {
+                            "type": "integer",
                             "description": "The height in pixels that should be used to display the graph",
                             "id": "#graphHeight",
                             "required": false
                         },
                         "graphWidth": {
-                            "type": "string",
+                            "type": "integer",
                             "description": "The width in pixels that should be used to display the graph",
                             "id": "#graphWidth",
+                            "required": false
+                        },
+                        "graphPadding": {
+                            "type": "integer",
+                            "description": "The padding in tick percentage that should be used to display the graph",
+                            "id": "#graphPadding",
                             "required": false
                         },
                         "rangeLabel": {
@@ -96,10 +120,28 @@
                             "id": "#rangeLabel",
                             "required": false
                         },
-                        "range": {
+                        "rangeMin": {
                             "type": "integer",
-                            "description": "The number to use for range",
-                            "id": "#range",
+                            "description": "The number to use for y axis min",
+                            "id": "#rangeMin",
+                            "required": false
+                        },
+                        "rangeMax": {
+                            "type": "integer",
+                            "description": "The number to use for y axis max",
+                            "id": "#rangeMax",
+                            "required": false
+                        },
+                        "rangeStepValue": {
+                            "type": "string",
+                            "description": "The step value to use y axis",
+                            "id": "#rangeStepValue",
+                            "required": false
+                        },
+                        "rangeLabelFrequency": {
+                            "description": "Specifies the interval of ticks shown on the y axis",
+                            "type": "integer",
+                            "id": "#rangeLabelFrequency",
                             "required": false
                         },
                         "showCoordinates": {
@@ -114,13 +156,7 @@
                             "id": "#showInputs",
                             "required": false
                         },
-                        "tickLabelFrequency": {
-                            "description": "Specifies the interval of ticks shown on the axes",
-                            "type": "integer",
-                            "id": "#tickLabelFrequency",
-                            "required": false
-                        },
-            						"labelsType": {
+                        "labelsType": {
             							"type":"string",
                           "description": "if set to 'present' then point labels will be shown",
             							"id": "#labelsType",

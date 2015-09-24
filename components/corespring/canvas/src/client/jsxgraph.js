@@ -10,13 +10,24 @@ var def = ['Canvas',
       link: function(scope, elem, attr) {
         //global vars
         var canvasAttrs = {
-          domain: parseInt(attr.domain ? attr.domain : 10, 10),
-          range: parseInt(attr.range ? attr.range : 10, 10),
+          graphPadding: parseInt(attr.graphpadding ? attr.graphpadding : 25, 10),
+          domain: {
+            label: attr.domainlabel,
+            min: parseFloat(attr.domainmin ? attr.domainmin : -10, 10),
+            max: parseFloat(attr.domainmax ? attr.domainmax : 10, 10),
+            stepValue: parseFloat(attr.domainstepvalue ? attr.domainstepvalue : 1),
+            labelFrequency: attr.domainlabelfrequency
+          },
+          range: {
+            label: attr.rangelabel,
+            min: parseFloat(attr.rangemin ? attr.rangemin : -10, 10),
+            max: parseFloat(attr.rangemax ? attr.rangemax : 10, 10),
+            stepValue: parseFloat(attr.rangestepvalue ? attr.rangestepvalue : 1),
+            labelFrequency: attr.rangelabelfrequency
+          },
           scale: parseFloat(attr.scale ? attr.scale : 1, 10),
           maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
-          domainLabel: attr.domainlabel,
-          rangeLabel: attr.rangelabel,
-          tickLabelFrequency: parseInt(attr.ticklabelfrequency ? attr.ticklabelfrequency : 5, 10),
+          tickLabelFrequency: parseFloat(attr.ticklabelfrequency ? attr.ticklabelfrequency : 1, 10),
           pointLabels: attr.pointlabels,
           width: elem.width(),
           height: elem.height(),
@@ -31,7 +42,45 @@ var def = ['Canvas',
           return canvasId;
         }
 
+        function setGraphLabels(canvas) {
+          var jxgbox = elem.find(".jxgbox");
+          var coords = canvas.getPointCoords(0, 0);
+          var offset;
+          jxgbox.before('<div class="axis range-axis">'+canvasAttrs.range.label+'</div>');
+          jxgbox.after('<div class="axis domain-axis">'+canvasAttrs.domain.label+'</div>');
+
+          // domain
+          var graphVCenter = elem.height() / 2;
+
+          var domainAxis = elem.find('.domain-axis');
+          var domainAxisWidth = domainAxis.width();
+          domainAxis.css("left", elem.width() - (domainAxisWidth / 2) + (domainAxis.height() / 2));
+
+          if (coords.y <= graphVCenter) {
+            offset = coords.y - domainAxis.height() / 4;
+            domainAxis.css("top", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
+          } else {
+            offset = elem.height() - coords.y - domainAxis.height() / 2;
+            domainAxis.css("bottom", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
+          }
+
+          // range
+          var graphHCenter = elem.width() / 2;
+          var rangeAxis = elem.find('.range-axis');
+          var rangeAxisWidth = rangeAxis.width();
+
+          if (coords.x <= graphHCenter) {
+            offset = coords.x - (rangeAxisWidth / 2);
+            rangeAxis.css("left", offset < 0 ? 0 : offset);
+          } else {
+            offset = (canvasAttrs.width - coords.x) - (rangeAxisWidth / 2);
+            rangeAxis.css("right", offset < 0 ? 0 : offset);
+          }
+        }
+
         var canvas = new Canvas(generateCanvasId(), canvasAttrs);
+        setGraphLabels(canvas);
+
         //define callbacks
         canvas.on('up', function(e) {
           if (lockGraph) {
@@ -138,7 +187,7 @@ var def = ['Canvas',
             var pt1 = canvas.getPoint(drawShape.line[0]);
             var pt2 = canvas.getPoint(drawShape.line[1]);
             if (pt1 && pt2) {
-              canvas.makeLine([pt1, pt2]);
+              canvas.makeLine([pt1, pt2], drawShape.name);
             }
           } else if (drawShape.curve) {
             canvas.makeCurve(drawShape.curve);

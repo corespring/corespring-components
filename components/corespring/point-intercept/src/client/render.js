@@ -154,16 +154,35 @@ var main = ['$compile', '$modal', '$rootScope',
     function link(scope, element, attrs) {
 
       var createGraphAttributes = function (config, graphCallback) {
+
+        function getModelValue(property, defaultValue, fallbackValue) {
+          if (typeof property !== 'undefined' && property !== null) {
+            return property;
+          } else {
+            if (typeof fallbackValue !== 'undefined' && property !== null) {
+              return fallbackValue;
+            } else {
+              return defaultValue;
+            }
+          }
+        }
+
         return {
           "jsx-graph": "",
           "graph-callback": graphCallback || "graphCallback",
           "interaction-callback": "interactionCallback",
-          domain: parseInt(config.domain ? config.domain : 10, 10),
-          range: parseInt(config.range ? config.range : 10, 10),
-          scale: parseFloat(config.scale ? config.scale : 1),
+          graphPadding: parseInt(getModelValue(config.graphPadding, 25), 10),
           domainLabel: config.domainLabel,
+          domainMin: parseFloat(getModelValue(config.domainMin, -10, config.domain * -1), 10),
+          domainMax: parseFloat(getModelValue(config.domainMax, 10, config.domain), 10),
+          domainStepValue: parseFloat(getModelValue(config.domainStepValue)),
+          domainLabelFrequency: parseFloat(getModelValue(config.domainLabelFrequency, 1, config.tickLabelFrequency), 10),
           rangeLabel: config.rangeLabel,
-          tickLabelFrequency: config.tickLabelFrequency,
+          rangeMin: parseFloat(getModelValue(config.rangeMin, -10, config.range * -1)),
+          rangeMax: parseFloat(getModelValue(config.rangeMax, 10, config.range * 1)),
+          rangeStepValue: parseFloat(getModelValue(config.rangeStepValue)),
+          rangeLabelFrequency: parseFloat(getModelValue(config.rangeLabelFrequency, 1, config.tickLabelFrequency, 10)),
+          scale: parseFloat(config.scale ? config.scale : 1),
           pointLabels: config.labelsType === 'present' ? config.pointLabels : "",
           maxPoints: config.maxPoints,
           showLabels: config.showLabels ? config.showLabels : "true",
@@ -274,7 +293,6 @@ var main = ['$compile', '$modal', '$rootScope',
         },
 
         setResponse: function (response) {
-          console.log(response);
           scope.feedback = response && response.feedback;
           scope.response = response;
           scope.correctClass = response.correctness;
@@ -356,7 +374,6 @@ var main = ['$compile', '$modal', '$rootScope',
         "     </div>",
         "     <div class='graph-controls' ng-show='showInputs' ng-hide='response'>",
         "        <div class='scale-display'>",
-        "          <span>scale={{scale}}</span>",
         "           <div class='action undo'>",
         "             <a title='Undo' ng-click='undo()'>",
         "               <i class='fa fa-undo'/>",
