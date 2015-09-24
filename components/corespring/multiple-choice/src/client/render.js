@@ -134,8 +134,6 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          console.log("DS",dataAndSession);
-          scope.rationales = dataAndSession.data.rationales;
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
           scope.session = dataAndSession.session || {};
@@ -160,7 +158,7 @@ var main = [
               c.correct = true;
             }
           });
-          scope.rationaleVisible = true;
+          scope.rationales = data.rationales;
         },
 
         // sets the server's response
@@ -194,7 +192,9 @@ var main = [
         },
         setMode: function(newMode) {
           scope.mode = newMode;
-          scope.rationaleVisible = newMode === 'instructor';
+          if (newMode !== 'instructor') {
+            scope.rationales = undefined;
+          }
         },
         /**
          * Reset the ui back to an unanswered state
@@ -204,7 +204,6 @@ var main = [
           resetChoices();
           resetFeedback(scope.choices);
           scope.response = undefined;
-          scope.rationaleVisible = false;
         },
         resetStash: function() {
           scope.session.stash = {};
@@ -365,7 +364,7 @@ var main = [
       '    </div>',
       '  </div>',
       seeAnswer,
-      '  <div class="rationale-expander" ng-show="rationaleVisible">',
+      '  <div class="rationale-expander" ng-show="rationales">',
       '    <div class="rationale-expander-row {{showHide[rationaleOpen]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
       '      <span class="rationale-expander-{{showHide[rationaleOpen]}}"></span>',
       '      <span class="rationale-expander-label">{{capShowHide[rationaleOpen]}} Rationale</span>',
