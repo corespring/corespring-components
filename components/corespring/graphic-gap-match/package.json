@@ -1,16 +1,16 @@
 {
   "libraries": [
     {
-      "name": "widgets",
-      "organization": "corespring"
-    },
-    {
       "name": "choice-templates",
       "organization": "corespring",
       "scope": "editor"
     },
     {
       "name": "feedback-templates",
+      "organization": "corespring"
+    },
+    {
+      "name": "widgets",
       "organization": "corespring"
     }
   ],
