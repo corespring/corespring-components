@@ -75,7 +75,8 @@ exports.service = ['$log',
       this.points = [];
       this.texts = [];
       this.shapes = [];
-      this.scale = attrs.scale;
+      this.domainScale = attrs.domain.stepValue;
+      this.rangeScale = attrs.range.stepValue;
       this.showLabels = attrs.showLabels === "true";
       this.showCoordinates = attrs.showCoordinates === "true";
       this.showPoints = _.isUndefined(attrs.showPoints) ? "true" :
@@ -132,8 +133,8 @@ exports.service = ['$log',
         strokeColor: this.showPoints ? "blue" : "transparent",
         fillColor: this.showPoints ? "blue" : "transparent",
         snapToGrid: true,
-        snapSizeX: this.scale,
-        snapSizeY: this.scale,
+        snapSizeX: this.domainScale,
+        snapSizeY: this.rangeScale,
         showInfobox: false,
         withLabel: false
       }, ptOptions);
@@ -164,13 +165,13 @@ exports.service = ['$log',
         var that = this;
         var text = this.board.create('text', [
           function() {
-            return point.X() + offset.usrCoords[1];
+            return (Math.round(point.X() * 100) / 100) + offset.usrCoords[1];
           },
           function() {
-            return point.Y() + offset.usrCoords[2];
+            return (Math.round(point.Y() * 100) / 100) + offset.usrCoords[2];
           },
           function() {
-            return name + (that.showCoordinates ? (' (' + point.X() + ',' + point.Y() + ')') : '');
+            return name + (that.showCoordinates ? (' (' + (Math.round(point.X() * 100) / 100) + ',' + (Math.round(point.Y() * 100) / 100) + ')') : '');
           }], {
           fixed: true
         });
