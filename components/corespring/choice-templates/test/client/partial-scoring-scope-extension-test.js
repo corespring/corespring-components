@@ -32,6 +32,28 @@ describe('partial-scoring-scope-extension', function(){
 
   });
 
+  describe('isPanelCollapsed', function(){
+    it('should exist', function(){
+        expect(scope.isPanelCollapsed).toBeDefined();
+    });
+    it('should collapse allowPartialScoring and numberOfCorrectResponses is 2 or more ', function(){
+        scope.numberOfCorrectResponses = 2;
+        scope.fullModel.allowPartialScoring = true;
+        scope.isPanelCollapsed();
+        scope.$digest();
+        expect(scope.fullModel.allowPartialScoring).toBe(true);
+        expect(scope.numberOfCorrectResponses).toEqual(2);
+    });
+    it('should not collapse, if not allowPartialScoring and numberOfCorrectResponses is 1 or less', function(){
+        scope.numberOfCorrectResponses = 1;
+        scope.fullModel.allowPartialScoring = false;
+        scope.isPanelCollapsed();
+        scope.$digest();
+        expect(scope.fullModel.allowPartialScoring).toBe(false);
+        expect(scope.numberOfCorrectResponses).toEqual(1);
+    });
+  });
+
   describe('togglePartialScoring', function(){
     it('should exist', function(){
       expect(scope.togglePartialScoring).toBeDefined();

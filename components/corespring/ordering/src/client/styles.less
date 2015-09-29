@@ -741,4 +741,26 @@
 
   .limit-image-size();
 
+  .panel {
+    .panel-heading {
+      .panel-title {
+       a {
+         text-decoration: none;
+         &:hover {
+           text-decoration: underline;
+         }
+       }
+      }
+    }
+  }
+
+  .panel.disabled {
+    .panel-heading {
+      .panel-title {
+        a:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
 }
