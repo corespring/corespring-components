@@ -309,7 +309,7 @@ var main = [
         '  <div see-answer-panel ng-if="response && response.correctness === \'incorrect\'">',
         correctAnswer,
         '  </div>',
-        '  <div ng-if="response && response.correctness === \'instructor\'">',
+        '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
         correctAnswer,
         '  </div>',
         '</div>'
