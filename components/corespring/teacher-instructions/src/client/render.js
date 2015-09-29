@@ -9,7 +9,6 @@ var main = [
         scope.visible = false;
         scope.open = false;
         scope.showHide = {'true': 'hide', 'false': 'show'};
-        scope.capShowHide = {'true': 'Hide', 'false': 'Show'};
         scope.toggle = function() {
           scope.open = !scope.open;
         };
@@ -60,7 +59,7 @@ var main = [
         '<div class="view-teacher-instructions" ng-click="toggle()" ng-show="visible">',
         '  <div class="toggle-row {{showHide[open.toString()]}}-state">',
         '    <span class="{{showHide[open]}}-icon"></span>',
-        '    <span class="instructions">{{capShowHide[open.toString()]}} Instructions</span>',
+        '    <span class="instructions">Instructions</span>',
         '  </div>',
         '  <div class="text" ng-show="open" ng-bind-html-unsafe="instructions">',
         '  </div>',

@@ -10,7 +10,6 @@ var main = [
       scope.editable = true;
       scope.bridge = {answerVisible: false};
       scope.showHide = {'false': 'show', 'true': 'hide'};
-      scope.capShowHide = {'false': 'Show', 'true': 'Hide'};
       scope.rationaleOpen = false;
 
       var getAnswers = function() {
@@ -114,7 +113,7 @@ var main = [
         var stash = scope.session.stash = scope.session.stash || {};
         var answers = scope.session.answers = scope.session.answers || {};
 
-        var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
+        var shuffle =  (model.config.shuffle === true || model.config.shuffle === "true") && scope.mode !== 'instructor';
 
         scope.inputType = model.config.choiceType;
 
@@ -158,7 +157,15 @@ var main = [
               c.correct = true;
             }
           });
-          scope.rationales = data.rationales;
+          var rationales = _.map(scope.choices, function(c) {
+             return {
+               choice: c.value,
+               rationale: (_.find(data.rationales, function(r) {
+                 return r.choice === c.value
+               }) || {}).rationale
+             }
+          });
+          scope.rationales = rationales;
         },
 
         // sets the server's response
@@ -367,7 +374,7 @@ var main = [
       '  <div class="rationale-expander" ng-show="rationales">',
       '    <div class="rationale-expander-row {{showHide[rationaleOpen.toString()]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
       '      <span class="rationale-expander-{{showHide[rationaleOpen.toString()]}}"></span>',
-      '      <span class="rationale-expander-label">{{capShowHide[rationaleOpen.toString()]}} Rationale</span>',
+      '      <span class="rationale-expander-label">Rationale</span>',
       '    </div>',
       '    <div class="rationale-body" ng-show="rationaleOpen">',
       '      <div ng-repeat="r in rationales">',
