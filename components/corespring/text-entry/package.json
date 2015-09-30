@@ -4,6 +4,7 @@
   "titleGroup": "Text Entry",
   "organization": "corespring",
   "released": true,
+  "insertInline" : true,
   "libraries": [
     {
       "name": "choice-templates",
