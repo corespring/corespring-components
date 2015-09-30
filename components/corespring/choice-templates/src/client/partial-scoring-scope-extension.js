@@ -33,6 +33,16 @@ exports.factory = [
           });
         };
 
+        scope.isPanelCollapsed = function() {
+
+          var collapsed = !(scope.fullModel.allowPartialScoring && scope.numberOfCorrectResponses > 1);
+          if(collapsed){
+            $('.partial-scoring').find('.panel-body').removeClass('collapsing').addClass('collapse');
+          }
+
+          return collapsed;
+        };
+
         scope.togglePartialScoring = function() {
           if( scope.numberOfCorrectResponses > 1 ) {
             scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
@@ -67,9 +77,15 @@ exports.factory = [
         };
 
         scope.$watch('fullModel.partialScoring.length', function(){
+          scope.fullModel.allowPartialScoring = false;
           scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
         });
 
+        scope.$watch('fullModel.correctResponse', function(){
+          if( scope.numberOfCorrectResponses <= 1 ) {
+              scope.fullModel.allowPartialScoring = false;
+          }
+        });
       };
     }
 
