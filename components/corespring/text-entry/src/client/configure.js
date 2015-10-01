@@ -57,11 +57,11 @@ function configureTextEntry(
       demoLabel: 'ABCDE',
       defaultLabel: ''
     }, {
-      size: 7 + 1,
+      size: 8 + 1,
       demoLabel: 'ABCDEFG',
       defaultLabel: '(Default)'
     }, {
-      size: 10 + 1,
+      size: 11 + 1,
       demoLabel: 'ABCDEFGHIJ',
       defaultLabel: ''
     }];
