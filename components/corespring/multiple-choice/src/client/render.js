@@ -161,9 +161,9 @@ var main = [
              return {
                choice: c.value,
                rationale: (_.find(data.rationales, function(r) {
-                 return r.choice === c.value
+                 return r.choice === c.value;
                }) || {}).rationale
-             }
+             };
           });
           scope.rationales = rationales;
         },

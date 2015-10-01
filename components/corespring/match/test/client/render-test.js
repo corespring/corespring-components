@@ -154,6 +154,7 @@ describe('corespring:match:render', function() {
 
   it('selects correctly radio buttons', function() {
     container.elements['1'].setDataAndSession(testModel);
+    container.elements['1'].editable(true);
     rootScope.$digest();
     var row = scope.matchModel.rows[0];
     var matchSet = row.matchSet;
@@ -191,6 +192,7 @@ describe('corespring:match:render', function() {
   it('returns session correctly', function() {
     var component = container.elements['1'];
     component.setDataAndSession(testModel);
+    container.elements['1'].editable(true);
     rootScope.$digest();
 
     var row = scope.matchModel.rows[0];
