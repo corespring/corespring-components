@@ -38,7 +38,22 @@ describe('corespring:multiple-choice-render', function() {
   };
 
   var instructorData = {
-    "correctResponse" : { "value" : "1" }
+    "correctResponse" : { "value" : "1" },
+    rationales: [
+      {
+        choice: "1",
+        rationale: "rationale1"
+      },
+      {
+        choice: "2",
+        rationale: "rationale2"
+      },
+      {
+        choice: "3",
+        rationale: "rationale3"
+      }
+    ]
+
   };
 
   beforeEach(angular.mock.module('test-app'));
@@ -158,6 +173,21 @@ describe('corespring:multiple-choice-render', function() {
   });
 
   describe('instructor mode', function() {
+    it('rationales are displayed if present', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      expect(scope.rationales).toBeDefined();
+      expect(scope.rationales.length).toEqual(3);
+    });
+
+    it('rationales are not displayed if not present', function() {
+      var cloneInstructorData = _.cloneDeep(instructorData);
+      delete cloneInstructorData.rationales;
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(cloneInstructorData);
+      expect(scope.rationales).not.toBeDefined();
+    });
+
     it('setting instructor data marks correct answers as correct in the model', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);

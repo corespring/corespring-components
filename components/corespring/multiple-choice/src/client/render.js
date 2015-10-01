@@ -157,15 +157,17 @@ var main = [
               c.correct = true;
             }
           });
-          var rationales = _.map(scope.choices, function(c) {
-             return {
-               choice: c.value,
-               rationale: (_.find(data.rationales, function(r) {
-                 return r.choice === c.value;
-               }) || {}).rationale
-             };
-          });
-          scope.rationales = rationales;
+          if (!_.isEmpty(data.rationales)) {
+            var rationales = _.map(scope.choices, function(c) {
+              return {
+                choice: c.value,
+                rationale: (_.find(data.rationales, function(r) {
+                  return r.choice === c.value;
+                }) || {}).rationale
+              };
+            });
+            scope.rationales = rationales;
+          }
         },
 
         // sets the server's response
