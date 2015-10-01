@@ -126,6 +126,15 @@ link = function($sce, $timeout) {
         });
         scope.select(selectedChoice);
         scope.response = {correctness: 'correct'};
+        if (!_.isEmpty(data.rationales)) {
+          var rationaleHtml = _.map(scope.choices, function(c) {
+            var rationale = _.find(data.rationales, function(r) {
+                return r.choice === c.value;
+              }) || {};
+            return "<div class='rationale-row'><span class='rationale-bold'>" + c.label + "</span> - " + rationale.rationale + "</div>";
+          }).join("\n");
+          scope.instructorResponse = {correctness: 'instructor', feedback: rationaleHtml};
+        }
       },
 
       // sets the server's response
@@ -147,6 +156,7 @@ link = function($sce, $timeout) {
       reset: function() {
         scope.selected = undefined;
         scope.response = undefined;
+        scope.instructorResponse = undefined;
 
         var model = scope.question;
         var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
@@ -202,8 +212,8 @@ main = [
       link: link($sce, $timeout),
       template: [
         '<div class="view-inline-choice" ng-class="response.correctness">',
-        '  <div feedback-popover="response" viewport="#{{playerId}}">',
-        '    <div class="dropdown" dropdown>',
+        '  <span feedback-popover="response" viewport="#{{playerId}}">',
+        '    <span class="dropdown" dropdown>',
         '      <span class="btn dropdown-toggle" dropdown-toggle ng-disabled="!editable">',
         '        <span ng-hide="selected">Choose...</span>',
         '        <span ng-switch="selected.labelType">',
@@ -219,8 +229,9 @@ main = [
         '          <a ng-click="select(choice)" ng-switch-default ng-bind-html-unsafe="choice.label"></a>',
         '        </li>',
         '      </ul>',
-        '    </div>',
-        '  </div>',
+        '    </span>',
+        '  </span>',
+        '  <span ng-if="instructorResponse" feedback-popover="instructorResponse" class="rationale-icon"></span>',
         '</div>'
       ].join("\n")
     };

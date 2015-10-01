@@ -35,6 +35,8 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
           } else if (response.correctness === 'partial') {
             title = '&nbsp;';
             popoverClass = 'partial';
+          } else if (response.correctness === 'instructor') {
+            popoverClass = 'instructor';
           }
 
           $(element).find('.math-prerender').html(content);

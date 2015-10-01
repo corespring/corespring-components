@@ -42,7 +42,23 @@ describe('corespring:inline-choice', function() {
     }
   };
 
-  var instructorData = {correctResponse: "mc_1"};
+  var instructorData = {
+    correctResponse: "mc_1",
+    rationales: [
+      {
+        choice: "mc_1",
+        rationale: "rationale1"
+      },
+      {
+        choice: "mc_2",
+        rationale: "rationale2"
+      },
+      {
+        choice: "mc_3",
+        rationale: "rationale3"
+      }
+    ]
+  };
 
 
   beforeEach(angular.mock.module('test-app'));
@@ -187,6 +203,10 @@ describe('corespring:inline-choice', function() {
       var correctChoice = _.find(scope.choices, function(c) { return c.value === 'mc_1';});
       expect(scope.selected).toEqual(correctChoice);
       expect(scope.response.correctness).toEqual('correct');
+      expect(scope.instructorResponse.correctness).toEqual('instructor');
+      expect(scope.instructorResponse.feedback).toContain('rationale1');
+      expect(scope.instructorResponse.feedback).toContain('rationale2');
+      expect(scope.instructorResponse.feedback).toContain('rationale3');
     });
   });
 
