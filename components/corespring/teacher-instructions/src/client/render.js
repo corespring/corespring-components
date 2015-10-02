@@ -12,27 +12,31 @@ var main = [
         scope.toggle = function() {
           scope.open = !scope.open;
         };
+
+        function updateVisible() {
+          scope.visible = (scope.mode === 'instructor') && (!_.isEmpty(scope.instructions));
+        }
+
         scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
-            console.log("DS: ", dataAndSession);
-
           },
 
           getSession: function() {
             return {};
           },
 
-          // sets the server's response
           setResponse: function(response) {
           },
 
           setInstructorData: function(data) {
             scope.instructions = data.teacherInstructions;
+            updateVisible();
           },
 
           setMode: function(newMode) {
-            scope.visible = newMode === 'instructor';
+            scope.mode = newMode;
+            updateVisible();
           },
 
           reset: function() {
