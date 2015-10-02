@@ -45,6 +45,13 @@ describe('corespring:dnd-categorize:render', function() {
     session: {}
   };
 
+  var instructorData = {
+    correctResponse: {
+      "cat_1": ["choice_1"],
+      "cat_2": ["choice_2"]
+    }
+  };
+
   function ignoreAngularIds(obj){
     var newObj = _.cloneDeep(obj);
     for( var s in newObj){
@@ -91,6 +98,11 @@ describe('corespring:dnd-categorize:render', function() {
 
   function setModelAndDigest() {
     container.elements['1'].setDataAndSession(testModel);
+    rootScope.$digest();
+  }
+
+  function setInstructorDataAndDigest() {
+    container.elements['1'].setInstructorData(instructorData);
     rootScope.$digest();
   }
 
@@ -433,9 +445,31 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
+  describe('instructor data', function() {
+    it('should be false, if response has been set', function() {
+      spyOn(container.elements['1'], 'setResponse');
+      setModelAndDigest();
+      setInstructorDataAndDigest();
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'correct',
+        correctClass: 'correct',
+        score: 1,
+        correctResponse: {
+          cat_1: [ 'choice_1' ],
+          cat_2: [ 'choice_2' ]
+        },
+        detailedFeedback: {
+          cat_1: { correctness: [ 'correct' ] },
+          cat_2: { correctness: [ 'correct' ] }
+        }
+      });
+      expect(scope.response).toEqual('dummy');
+      expect(scope.editable).toEqual(false);
+    });
+  });
+
   describe('canEdit', function(){
     describe('without a response', function(){
-
       beforeEach(function(){
         scope.response = null;
       });

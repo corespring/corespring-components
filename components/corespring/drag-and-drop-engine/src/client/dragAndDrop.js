@@ -236,6 +236,9 @@ var dragAndDropController = [
         };
 
         scope.$watch('landingPlaceChoices', function(n, old) {
+          if (!scope.local || !scope.local.choices) {
+            return;
+          }
           if (!_.isEmpty(old) && !_.isEqual(old, n) && _.isFunction(scope.answerChangeCallback)) {
             scope.answerChangeCallback();
           }

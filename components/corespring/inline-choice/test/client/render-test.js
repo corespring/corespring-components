@@ -42,6 +42,24 @@ describe('corespring:inline-choice', function() {
     }
   };
 
+  var instructorData = {
+    correctResponse: "mc_1",
+    rationales: [
+      {
+        choice: "mc_1",
+        rationale: "rationale1"
+      },
+      {
+        choice: "mc_2",
+        rationale: "rationale2"
+      },
+      {
+        choice: "mc_3",
+        rationale: "rationale3"
+      }
+    ]
+  };
+
 
   beforeEach(angular.mock.module('test-app'));
 
@@ -178,7 +196,21 @@ describe('corespring:inline-choice', function() {
     });
   });
 
-  it('should implement containerBridge', function () {
+  describe('instructor mode', function() {
+    it('setting instructor data selects correct answer and sets correctness to correct', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      var correctChoice = _.find(scope.choices, function(c) { return c.value === 'mc_1';});
+      expect(scope.selected).toEqual(correctChoice);
+      expect(scope.response.correctness).toEqual('correct');
+      expect(scope.instructorResponse.correctness).toEqual('instructor');
+      expect(scope.instructorResponse.feedback).toContain('rationale1');
+      expect(scope.instructorResponse.feedback).toContain('rationale2');
+      expect(scope.instructorResponse.feedback).toContain('rationale3');
+    });
+  });
+
+  it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 

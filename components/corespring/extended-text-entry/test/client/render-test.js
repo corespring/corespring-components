@@ -86,6 +86,16 @@ describe('corespring', function() {
     });
   });
 
+  describe('instructor view', function() {
+    it('set instructor data should show message', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData({});
+      rootScope.$digest();
+      expect(scope.received).toEqual(true);
+      expect(scope.answer).toEqual("Open Ended Answers are not automatically scored. No correct answer is defined.");
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });

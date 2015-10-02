@@ -67,6 +67,11 @@ var main = [
           };
         },
 
+        setInstructorData: function(data) {
+          scope.answer = data.correctResponse.equation;
+          this.setResponse({correctness: 'correct'});
+        },
+
         // sets the server's response
         setResponse: function(response) {
           $(element).find('.text-input').popover('destroy');

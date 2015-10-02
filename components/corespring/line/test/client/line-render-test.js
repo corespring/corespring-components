@@ -121,6 +121,20 @@ describe('corespring:line:render', function() {
     });
   });
 
+  describe('instructor data', function() {
+    it('should set up graph with correct answer', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      scope.graphCallback = jasmine.createSpy();
+      spyOn(container.elements['1'],'setResponse');
+      container.elements['1'].setInstructorData({correctResponse: "y=2x+3"});
+      rootScope.$digest();
+      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({clearBoard: true});
+      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({drawShape: {curve: jasmine.any(Function)}});
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({correctness: 'correct'});
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });

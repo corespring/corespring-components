@@ -110,6 +110,10 @@ describe('corespring:placement ordering', function() {
     scope.$digest();
   }
 
+  function setInstructorDataAndDigest(data) {
+    container.elements['1'].setInstructorData(data);
+    scope.$digest();
+  }
 
   it('constructs', function() {
     expect(element.html()).toBeDefined();
@@ -463,6 +467,16 @@ describe('corespring:placement ordering', function() {
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
+
+  describe('instructor data', function () {
+    it('should call setResponse with correct response', function () {
+      spyOn(container.elements['1'], 'setResponse');
+      setModelAndDigest(verticalModel);
+      setInstructorDataAndDigest({correctResponse: ['a', 'c', 'b', 'd']});
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({ correctness: 'correct', correctResponse: [ 'a', 'c', 'b', 'd' ] });
+    });
+  });
+
 
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');

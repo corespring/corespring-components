@@ -48,6 +48,40 @@ describe('corespring:match:render', function() {
     }
   };
 
+  var instructorData = {
+    "correctResponse": [
+      {
+        "id": "row-1",
+        "matchSet": [
+          false,
+          true
+        ]
+      },
+      {
+        "id": "row-2",
+        "matchSet": [
+          true,
+          false
+        ]
+      },
+      {
+        "id": "row-3",
+        "matchSet": [
+          false,
+          true
+        ]
+      },
+      {
+        "id": "row-4",
+        "matchSet": [
+          false,
+          true
+        ]
+      }
+    ]
+  };
+
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -120,6 +154,7 @@ describe('corespring:match:render', function() {
 
   it('selects correctly radio buttons', function() {
     container.elements['1'].setDataAndSession(testModel);
+    container.elements['1'].editable(true);
     rootScope.$digest();
     var row = scope.matchModel.rows[0];
     var matchSet = row.matchSet;
@@ -157,6 +192,7 @@ describe('corespring:match:render', function() {
   it('returns session correctly', function() {
     var component = container.elements['1'];
     component.setDataAndSession(testModel);
+    container.elements['1'].editable(true);
     rootScope.$digest();
 
     var row = scope.matchModel.rows[0];
@@ -169,6 +205,32 @@ describe('corespring:match:render', function() {
     expect(session.answers[0].id).toBe(testModel.data.model.rows[0].id);
     expect(session.answers[0].matchSet[0]).toBe(true);
     expect(session.answers[0].matchSet[1]).toBe(false);
+  });
+
+  describe('instructor mode', function() {
+    it('setting instructor data marks correct answers as correct in the model', function() {
+      spyOn(container.elements['1'], 'setResponse');
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      var mappedCorrectResponse = _.cloneDeep(instructorData.correctResponse);
+      _.each(mappedCorrectResponse, function(r) {
+        r.matchSet = _.map(r.matchSet, function(m) {
+          return {
+            correctness: m ? 'correct' : '',
+            value: m
+          };
+        });
+      });
+
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'correct',
+        correctClass: 'correct',
+        score: 1,
+        feedback: undefined,
+        correctnessMatrix: mappedCorrectResponse
+      });
+    });
+
   });
 
   describe('config', function() {

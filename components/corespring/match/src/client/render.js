@@ -42,6 +42,7 @@ var main = [
 
       scope.containerBridge = {
         answerChangedHandler: saveAnswerChangedCallback,
+        setInstructorData: setInstructorData,
         editable: setEditable,
         getSession: getSession,
         isAnswerEmpty: isAnswerEmpty,
@@ -59,7 +60,6 @@ var main = [
       //-----------------------------------------------------------------
 
       function setDataAndSession(dataAndSession) {
-        scope.editable = true;
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
         setConfig(dataAndSession.data.model);
@@ -149,6 +149,19 @@ var main = [
         if (response.correctnessMatrix) {
           setCorrectnessOnAnswers(response.correctnessMatrix);
         }
+      }
+
+      function setInstructorData(data) {
+        var cr = _.cloneDeep(data.correctResponse);
+        _.each(cr, function(r) {
+          r.matchSet = _.map(r.matchSet, function(m) {
+            return {
+              correctness: m ? 'correct' : '',
+              value: m
+            };
+          });
+        });
+        scope.containerBridge.setResponse({correctness: "correct", correctClass: "correct", score: 1, feedback: undefined, correctnessMatrix: cr});
       }
 
       function reset() {

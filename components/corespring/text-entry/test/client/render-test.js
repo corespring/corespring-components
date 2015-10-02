@@ -85,6 +85,36 @@ describe('corespring:text-entry:render', function() {
     });
   });
 
+  describe('instructor data', function() {
+    it('sets up popup with additional correct answer', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse');
+      container.elements['1'].setInstructorData({correctResponses: {values: ["apple", "pear"]}});
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        feedback: {
+          correctness: 'correct',
+          message: "Additional correct answers:<br/><span style='border: 1px solid lightgrey; border-radius: 4px; padding: 3px;'>pear</span><br/><br/>"
+        }
+      });
+    });
+    it('sets up popup with partially correct answers', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse');
+      container.elements['1'].setInstructorData({
+        correctResponses: {
+          values: ["apple"]
+        },
+        partialResponses: {values: ["pear"]}
+      });
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        feedback: {
+          correctness: 'correct',
+          message: "Partially correct answers:<br/><span style='border: 1px solid lightgrey; border-radius: 4px; padding: 3px;'>pear</span>"
+        }
+      });
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });

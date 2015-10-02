@@ -276,6 +276,21 @@ describe('corespring:graphic-gap-match:render', function() {
     });
   });
 
+  describe('instructor data', function() {
+    it('should set up interaction with correct answer', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse');
+      container.elements['1'].setInstructorData({correctResponse:  [
+        {"id": "c1", "hotspot": "h1"},
+        {"id": "c2", "hotspot": "h2"}
+      ]});
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'instructor',
+        correctResponse: [{id: 'c1', hotspot: 'h1'}, {id: 'c2', hotspot: 'h2'}]
+      });
+    });
+  });
+
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });

@@ -10,8 +10,4 @@ var component = {
 };
 
 describe('teacher-instructions server logic', function() {
-  it('should not return the value', function() {
-    var json = server.preprocess(component);
-    (typeof json.value).should.eql('undefined');
-  });
 });
