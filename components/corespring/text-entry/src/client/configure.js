@@ -49,7 +49,7 @@ function configureTextEntry(
     scope.partialResponsesPrompt = 'Enter answers here';
 
     scope.answerBlankSizeDataProvider = [{
-      size: 3,
+      size: 4,
       demoLabel: 'ABC',
       defaultLabel: ''
     }, {
@@ -91,9 +91,10 @@ function configureTextEntry(
       editorModel.partialResponses = editorModel.partialResponses || createResponsesModel(0);
       editorModel.incorrectResponses = editorModel.incorrectResponses || createResponsesModel(0);
       editorModel.model = editorModel.model || {};
-      editorModel.model.answerBlankSize = editorModel.model.answerBlankSize || 8;
+      editorModel.model.answerBlankSize = editorModel.model.answerBlankSize || '9';
       editorModel.model.answerAlignment = editorModel.model.answerAlignment || 'left';
       scope.editorModel = editorModel;
+
     }
 
     function getModel() {

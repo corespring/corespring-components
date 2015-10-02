@@ -17,7 +17,7 @@
     }
   },
   "model": {
-    "answerBlankSize": 8,
+    "answerBlankSize": "9",
     "answerAlignment": "left"
   }
 }
