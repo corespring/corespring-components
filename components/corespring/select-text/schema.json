@@ -48,17 +48,34 @@
       "description": "Contains configuration and select text params.",
       "type": "object",
       "properties": {
+        "choices": {
+          "description": "List of chosen correct answers",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "The tokenized text that represents a correct answer."
+              }
+            }
+          }
+        },
         "config": {
           "description": "Configuration for rendering select text evidence.",
           "type": "object",
           "properties": {
+            "availability": {
+              "description": "A value indicating the availability of selections in the passage (all available or specific selection)",
+              "enum": ["all", "specific"]
+            },
             "label": {
               "description": "Optional label field for instructions",
               "type": "string"
             },
             "selectionUnit": {
-              "description": "A value indicating the selection units in the passage",
-              "enum" : ["words", "sentences", "phrases", "paragraphs", "custom"]
+              "description": "A value indicating the selection unit in the passage",
+              "enum" : ["word", "sentence", "phrase", "paragraph", "custom"]
             },
             "xhtml": {
               "description": "A value that represents the HTML of the text passage",

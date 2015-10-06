@@ -14,8 +14,10 @@
   "model": {
     "config" : {
       "label": "",
-      "selectionUnit" : "words",
+      "selectionUnit" : "word",
+      "availability": "all",
       "xhtml": ""
-    }
+    },
+    "choices" : []
   }
 }

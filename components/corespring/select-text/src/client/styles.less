@@ -18,13 +18,38 @@
     .wiggi-wiz {
       margin-top: 10px;
     }
+    .instructions {
+      text-align: center;
+    }
+    .passage-preview {
+      padding: 5px;
+      border: 1px dashed #ccc;
+      border-radius: 5px;
+      background-clip: padding-box;
+      max-height: 350px;
+      overflow: auto;
+    }
+    .answer-summary {
+      line-height: 60px;
+      .badge {
+        line-height: 40px;
+        width: 40px;
+        border-radius: 100%;
+        padding: 0;
+      }
+    }
   }
 }
 
 .cs-select-text {
   .select-text-content {
     border: 1px dashed #ccc;
-    margin: 0 5px 5px;
+    border-radius: 5px;
+    background-clip: padding-box;
+    margin: 0 0 5px;
     padding: 5px;
+    .blast {
+      background-color: green;
+    }
   }
 }

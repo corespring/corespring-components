@@ -23,5 +23,12 @@
       "organization" : "corespring"
     }
   ],
-  "dependencies": {}
+  "dependencies": {
+    "client": {
+      "blast-text": {
+        "version": "2.0.0",
+        "file": "jquery.blast.js"
+      }
+    }
+  }
 }

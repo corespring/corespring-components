@@ -10,24 +10,74 @@ var main = [
       '     <div mini-wiggi-wiz="" ng-model="model.config.label" placeholder="Passage label (optional)" core-features="bold italic" features=""></div>',
       '    </div>',
       '    <div class="col-xs-4">',
-      '      <div class="btn-group btn-group-sm btn-group-justified" role="group">',
+      '      <div class="btn-group btn-group-sm btn-group-justified toggles" role="group">',
       '        <div class="btn-group btn-group-sm" role="group">',
-      '          <button type="button" class="btn btn-default active">Edit Passage</button>',
+      '          <button type="button" class="btn btn-default" ng-class="{active: mode === \'editor\'}"',
+      '           ng-click="toggleMode($event, \'editor\')">Edit Passage</button>',
       '        </div>',
       '        <div class="btn-group btn-group-sm" role="group">',
-      '          <button type="button" class="btn btn-default">Set Answers</button>',
+      '          <button type="button" class="btn btn-default" ng-class="{active: mode === \'answers\'}"',
+      '           ng-click="toggleMode($event, \'answers\')" ng-disabled="model.config.xhtml === \'\'">Set Answers</button>',
       '        </div>',
       '        <div class="btn-group btn-group-sm" role="group">',
-      '          <button type="button" class="btn btn-default">Delete</button>',
+      '          <button type="button" class="btn btn-danger" ng-class="{active: mode === \'delete\'}"',
+      '           ng-click="toggleMode($event, \'delete\')" ng-disabled="model.config.xhtml === \'\'">Delete</button>',
       '        </div>',
       '      </div>',
       '    </div>',
       '  </div>',
       '  <div class="row">',
       '    <div class="col-xs-12">',
-      '     <wiggi-wiz ng-show="mode == \'editor\'" ng-model="model.config.xhtml">',
+      '     <wiggi-wiz ng-show="mode === \'editor\'" ng-model="model.config.xhtml">',
       '       <toolbar basic="bold italic underline superscript subscript" positioning="justifyLeft justifyCenter justifyRight" formatting="" media=""></toolbar>',
       '     </wiggi-wiz>',
+      '     <div ng-show="mode === \'answers\'">',
+      '       <p>Students will select from:</p>',
+      '       <div class="btn-group btn-group-sm" role="group">',
+      '         <button type="button" class="btn btn-default" data-unit="word" ng-click="toggleSelectionUnit($event)"',
+      '           ng-class="{\'active btn-primary\': model.config.selectionUnit === \'word\'}">Words</button>',
+      '         <button type="button" class="btn btn-default" data-unit="sentence" ng-click="toggleSelectionUnit($event)"',
+      '           ng-class="{\'active btn-primary\': model.config.selectionUnit === \'sentence\'}">Sentences</button>',
+      '         <button type="button" class="btn btn-default" data-unit="paragraph" ng-click="toggleSelectionUnit($event)"',
+      '           ng-class="{\'active btn-primary\': model.config.selectionUnit === \'paragraph\'}" disabled>Paragraphs</button>',
+      '         <button type="button" class="btn btn-default" data-unit="custom" ng-click="toggleSelectionUnit($event)"',
+      '           ng-class="{\'active btn-primary\': model.config.selectionUnit === \'custom\'}" disabled>Custom</button>',
+      '       </div>',
+      '       <div class="radio">',
+      '         <label>',
+      '           <input type="radio" ng-model="model.config.availability" value="all">',
+      '           Make all selections available',
+      '         </label>',
+      '       </div>',
+      '       <div class="radio">',
+      '         <label>',
+      '           <input type="radio" ng-model="model.config.availability" value="specific">',
+      '           Make specific selections available',
+      '         </label>',
+      '       </div>',
+      '       <div class="instructions" ng-show="model.config.availability === \'specific\'">',
+      '         <p ng-show="selectionMode"><strong><em>Click selections to make available to students</em></strong></p>',
+      '         <p ng-show="!selectionMode"><strong><em>Click correct answers</em></strong></p>',
+      '       </div>',
+      '       <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
+      '       <div class="pull-left answer-summary" ng-show="model.config.availability === \'specific\'">',
+      '         <button class="btn btn-default" ng-class="{\'active btn-primary\': selectionMode}"',
+      '           ng-click="toggleSelectionMode()">Selections Available</button> <span class="badge">3</span>',
+      '       </div>',
+      '       <div class="pull-right answer-summary">',
+      '         Correct Answers <span class="badge">{{model.choices.length}}</span>',
+      '       </div>',
+      '     </div>',
+      '     <div ng-show="mode === \'delete\'">',
+      '       <div class="alert alert-danger" role="alert">',
+      '         <h4>Are you sure?</h4>',
+      '         <p>This will permanently delete the passage and any set of answers.</p>',
+      '         <p>',
+      '           <button class="btn btn-danger">Yes</button>',
+      '           <button class="btn btn-default">No</button>',
+      '         </p>',
+      '       </div>',
+      '     </div>',
       '    </div>',
       '  </div>',
       '  <div class="row">',
@@ -65,6 +115,7 @@ var main = [
       ChoiceTemplates.extendScope($scope, 'corespring-select-text');
 
       $scope.mode = 'editor';
+      $scope.selectionMode = true;
 
       $scope.containerBridge = {
         setModel: function (model) {
@@ -76,6 +127,19 @@ var main = [
           return model;
         }
       };
+
+      $scope.toggleMode = function($event, mode) {
+        $scope.mode = mode;
+      }
+
+      $scope.toggleSelectionUnit = function($event) {
+        var unit = $($event.currentTarget).data('unit');
+        $scope.model.config.selectionUnit = unit;
+      }
+
+      $scope.toggleSelectionMode = function() {
+        $scope.selectionMode = !$scope.selectionMode;
+      }
 
       $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
     };
