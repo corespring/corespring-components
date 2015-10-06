@@ -98,8 +98,8 @@ var def = ['Canvas',
             point.moveTo([coords.x, coords.y]);
           }
           points[point.name] = {
-            x: point.X(),
-            y: point.Y(),
+            x: (Math.round(point.X() * 100) / 100),
+            y: (Math.round(point.Y() * 100) / 100),
             index: point.canvasIndex
           };
           scope.interactionCallback({
