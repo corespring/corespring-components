@@ -73,8 +73,8 @@ var main = [
       '         <h4>Are you sure?</h4>',
       '         <p>This will permanently delete the passage and any set of answers.</p>',
       '         <p>',
-      '           <button class="btn btn-danger">Yes</button>',
-      '           <button class="btn btn-default">No</button>',
+      '           <button class="btn btn-danger" ng-click="deleteAll()">Yes</button>',
+      '           <button class="btn btn-default" ng-click="toggleMode($event, \'editor\')">No</button>',
       '         </p>',
       '       </div>',
       '     </div>',
@@ -114,7 +114,7 @@ var main = [
 
       ChoiceTemplates.extendScope($scope, 'corespring-select-text');
 
-      $scope.mode = 'editor';
+      $scope.mode = "editor";
       $scope.selectionMode = true;
 
       $scope.containerBridge = {
@@ -130,16 +130,25 @@ var main = [
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
-      }
+      };
 
       $scope.toggleSelectionUnit = function($event) {
         var unit = $($event.currentTarget).data('unit');
         $scope.model.config.selectionUnit = unit;
-      }
+      };
 
       $scope.toggleSelectionMode = function() {
         $scope.selectionMode = !$scope.selectionMode;
-      }
+      };
+
+      $scope.deleteAll = function() {
+        $scope.model.config.label = "";
+        $scope.model.config.selectionUnit = "word";
+        $scope.model.config.availability = "all";
+        $scope.model.config.xhtml = "";
+        $scope.model.choices = [];
+        $scope.mode = "editor";
+      };
 
       $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
     };
