@@ -169,7 +169,6 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         scope.plottedPoint = {};
         scope.lines = [];
         scope.pointsPerLine = {};
-        scope.history = [];
 
         _.each(scope.config.lines, function(line, index){
           scope.lines.push({
@@ -181,12 +180,13 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           scope.forcedNextLine = index;
           createInitialPoints(line.intialLine);
         });
+
         scope.forcedNextLine = -1;
+        scope.history = [];
       };
 
       scope.undo = function() {
-        // if (!scope.locked && ) {
-        if (scope.history.length > 0) {
+        if (!scope.locked && scope.history.length > 0) {
           var lastRecord = scope.history.pop();
 
           switch(lastRecord.action) {
@@ -233,6 +233,26 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         setPoint(point, false);
       };
 
+      scope.lockGraph = function() {
+        scope.locked = true;
+        if (scope.graphCallback) {
+          scope.graphCallback({
+            lockGraph: true
+          });
+        }
+      };
+
+      scope.unlockGraph = function() {
+        scope.locked = false;
+        if (_.isFunction(scope.graphCallback)) {
+          scope.graphCallback({
+            graphStyle: {},
+            pointsStyle: "blue",
+            unlockGraph: true
+          });
+        }
+      };
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -268,6 +288,13 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
             if(scope.graphCallback) {
               scope.startOver();
+            }
+
+            // lock/unlock the graph
+            if (config.exhibitOnly) {
+              scope.lockGraph();
+            } else {
+              scope.unlockGraph();
             }
           }, 100);
         },
