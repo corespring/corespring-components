@@ -13,6 +13,9 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
     function link(scope, element, attrs) {
       scope.lines = [];
+      scope.pointsPerLine = {};
+      scope.plottedPoint = {};
+      scope.forcedNextLine = -1;
 
       // set intitial state for jsxgraph directive
       var createGraphAttributes = function(config, graphCallback) {
@@ -54,6 +57,69 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       };
 
       scope.interactionCallback = function(params) {
+        setPoint(params.point);
+      };
+
+      scope.nextLine = function() {
+        if(scope.forcedNextLine != -1) {
+          return scope.forcedNextLine;
+        }
+        var index = -1;
+        scope.lines.every(function(line, lineIndex){
+          if(!line.isSet) {
+            index = lineIndex;
+            return false;
+          }
+          return true;
+        });
+        return index;
+      };
+
+      function setPoint(point) {
+        if(typeof(scope.pointsPerLine[point.name]) !== 'undefined') {
+          scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] = point;
+        } else if (scope.plottedPoint.name === point.name) {
+          scope.plottedPoint = point;
+        } else {
+          // if it's a new point
+          // and there was already a plotted point
+          if(scope.plottedPoint.name) {
+
+            // add line
+            var nextLine = scope.nextLine();
+            var line = scope.lines[nextLine];
+            line.points.A = scope.plottedPoint;
+            line.points.B = point;
+            line.points.A.isSet = line.points.B.isSet = true;
+
+            // create line on graph
+            if(!line.isSet) {
+
+              var slope = (scope.plottedPoint.y - point.y) / (scope.plottedPoint.x - point.x);
+              var yintercept = scope.plottedPoint.y - (scope.plottedPoint.x * slope);
+
+              scope.graphCallback({
+                drawShape: {
+                  line: [scope.plottedPoint.name, point.name],
+                  name: line.name
+                }
+              });
+
+              // map points per line
+              scope.pointsPerLine[scope.plottedPoint.name] = { line: nextLine, point: 'A'};
+              scope.pointsPerLine[point.name] = { line: nextLine, point: 'B'};
+
+              // delete plotted point
+              scope.plottedPoint = {};
+
+              // set line as plotted
+              line.isSet = true;
+            }
+          } else {
+            // if no plotted point, set it
+            scope.plottedPoint = point;
+          }
+        }
       };
 
       // set initial state for the graph
@@ -78,17 +144,17 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         scope.plottedPoint = {};
         scope.lines = [];
         scope.pointsPerLine = {};
-        _.each(scope.config.lines, function(line){
+        _.each(scope.config.lines, function(line, index){
           scope.lines.push({
             id: line.id,
             name: line.label,
             points: { A: { isSet: false }, B: { isSet: false } },
             isSet: false
           });
+          scope.forcedNextLine = index;
           createInitialPoints(line.intialLine);
         });
-
-        scope.nextLine = 0;
+        scope.forcedNextLine = -1;
       };
 
       scope.containerBridge = {
