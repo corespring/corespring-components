@@ -1,7 +1,78 @@
 @import '../../../../../less/common';
 
-.line-interaction-view {
+.multiple-line-interaction-view {
 
+  .jxgbox {
+    position: relative;
+    overflow: visible!important;
+    background-color: #ffffff;
+    -ms-touch-action: none;
+  }
+
+  .axis {
+    position: absolute;
+    width: auto;
+    text-align: center;
+    margin-top: -5px;
+    height: 20px;
+    white-space: nowrap;
+    &.domain-axis {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg); /* IE 9 */
+      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    }
+    &.range-axis {
+      top: -15px!important;
+    }
+  }
+  .JXGtext {
+    background-color: transparent;
+    font-family: Arial, Helvetica, Geneva;
+    padding: 0px;
+    margin: 0px;
+  }
+  .JXGinfobox {
+    border-style: none;
+    border-width: 1px;
+    border-color: black;
+  }
+  .JXGimage {
+    opacity: 1.0;
+  }
+  .JXGimageHighlight {
+    opacity: 0.6;
+  }
+
+  .graph-container {
+    margin-top: 30px;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+  }
+  .graph-controls {
+    background-color: #cccccc;
+    border-radius: 4px;
+    padding: 5px;
+    position: relative;
+    input:disabled {
+      background-color: #dddddd;
+    }
+  }
+
+  .graph-interaction {
+    margin: 10px 20px 20px 0;
+    padding: 10px;
+    max-width: 600px;
+    &.warning {
+      .jxgbox {
+        border-color: @warning-color-border;
+      }
+    }
+  }
+}
+
+.multiple-line-interaction-view .point-display p,.multiple-line-interaction-view .point-display input {
+  display: inline;
 }
 
 .multiple-line-interaction-configuration {

@@ -151,6 +151,15 @@ var def = ['Canvas',
           }
         };
 
+        var updateCallback = function(update) {
+          if (update.points) {
+            _.each(update.points, function(point) {
+              canvas.getPoint(point.name).moveTo([point.x, point.y]);
+            });
+          }
+        };
+
+
         var canvasAttrs = getCanvasAttributes();
         var lockGraph = false;
         var points = {};
@@ -174,6 +183,10 @@ var def = ['Canvas',
           if (params.add && canvas) {
             addCallback(params.add);
           }
+          if (params.update && canvas) {
+            updateCallback(params.update);
+          }
+
           if (params.points && canvas) {
             processPointsCallback(params.points);
           }

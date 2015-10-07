@@ -17,6 +17,10 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       scope.plottedPoint = {};
       scope.forcedNextLine = -1;
 
+      scope.inputStyle = {
+        width: "40px"
+      };
+
       // set intitial state for jsxgraph directive
       var createGraphAttributes = function(config, graphCallback) {
 
@@ -61,7 +65,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       };
 
       scope.nextLine = function() {
-        if(scope.forcedNextLine != -1) {
+        if(scope.forcedNextLine !== -1) {
           return scope.forcedNextLine;
         }
         var index = -1;
@@ -120,7 +124,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             scope.plottedPoint = point;
           }
         }
-      };
+      }
 
       // set initial state for the graph
       scope.startOver = function() {
@@ -155,6 +159,16 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           createInitialPoints(line.intialLine);
         });
         scope.forcedNextLine = -1;
+      };
+
+      scope.pointUpdate = function(point) {
+        scope.graphCallback({
+          update: {
+            points: [
+              point
+            ]
+          }
+        });
       };
 
       scope.containerBridge = {
@@ -230,8 +244,35 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
     function template() {
       return [
-        "<div class='line-interaction-view'>",
+        "<div class='multiple-line-interaction-view'>",
         "  <div class='graph-interaction'>",
+        "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
+        "      <div class='row line' ng-repeat='line in lines'>",
+        "        <div class='col-md-12'>",
+        "          <div class='row'>",
+        "            <div class='col-sm-2'>{{line.name}}</div>",
+        "            <div class='col-sm-1'>{{line.points.A.name}}</div>",
+        "            <div class='col-sm-2'>",
+        "              <label>x: </label>",
+        "              <input type='number' ng-style='inputStyle', ng-model='line.points.A.x' ng-disabled='locked || line.points.A.x === undefined' ng-change='pointUpdate(line.points.A)'>",
+        "            </div>",
+        "            <div class='col-sm-2'>",
+        "              <label>y: </label>",
+        "              <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-disabled='locked || line.points.A.y === undefined' ng-change='pointUpdate(line.points.A)'>",
+        "            </div>",
+        "            <div class='col-sm-1'>{{line.points.B.name}}</div>",
+        "            <div class='col-sm-2'>",
+        "              <label>x: </label>",
+        "              <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-disabled='locked || line.points.B.x === undefined' ng-change='pointUpdate(line.points.B)'>",
+        "            </div>",
+        "            <div class='col-sm-2'>",
+        "              <label>y: </label>",
+        "              <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B)'>",
+        "            </div>",
+        "          </div>",
+        "        </div>",
+        "      </div>",
+        "    </div>",
         "    <div id='graph-container' class='row-fluid graph-container'></div>",
         "  </div>",
         "</div>"
