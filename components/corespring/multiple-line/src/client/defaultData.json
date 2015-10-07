@@ -1,0 +1,34 @@
+{
+  "title": "Graph Multiple Lines",
+  "componentType" : "corespring-multiple-line",
+  "weight" : 1,
+  "minimumWidth": 500,
+  "correctResponse": "",
+  "feedback" :  {
+    "correctFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "model" : {
+    "config": {
+      "lines": [{ "id": 1, "function": "", "intialLine": "", "label": "" }],
+      "graphWidth": 500,
+      "graphHeight": 500,
+      "domainLabel": "x",
+      "domainMin": -10,
+      "domainMax": 10,
+      "domainStepValue": 1,
+      "domainLabelFrequency": 1,
+      "domainGraphPadding": 50,
+      "rangeLabel": "y",
+      "rangeMin": -10,
+      "rangeMax": 10,
+      "rangeStepValue": 1,
+      "rangeLabelFrequency": 1,
+      "rangeGraphPadding": 50,
+      "sigfigs": -1,
+      "showCoordinates": true,
+      "showInputs": true,
+      "showFeedback": true
+    }
+  }
+}
