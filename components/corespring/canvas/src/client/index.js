@@ -108,20 +108,21 @@ exports.service = ['$log',
 
     Canvas.prototype.pointCollision = function(coords) {
       var points = this.points,
-        scale = this.scale;
+        xScale = this.domainScale,
+        yScale = this.rangeScale;
 
-      function min(coord) {
-        return coord - scale;
+      function min(coord, scale) {
+        return coord - (scale / 2);
       }
 
-      function max(coord) {
-        return coord + scale;
+      function max(coord, scale) {
+        return coord + (scale / 2);
       }
 
       for (var i = 0; i < points.length; i++) {
         var point = points[i];
         //find area where coords might land that would constitute collision with point
-        if (point.X() >= min(coords.x) && point.X() <= max(coords.x) && point.Y() >= min(coords.y) && point.Y() <= max(coords.y)) {
+        if (point.X() >= min(coords.x, xScale) && point.X() <= max(coords.x, xScale) && point.Y() >= min(coords.y, yScale) && point.Y() <= max(coords.y, yScale)) {
           return point;
         }
       }
@@ -176,6 +177,7 @@ exports.service = ['$log',
           fixed: true
         });
         this.texts.push(text);
+        point.text = text;
       }
       return point;
     };
@@ -188,6 +190,16 @@ exports.service = ['$log',
     Canvas.prototype.removePoint = function(pointId) {
       for (var i = 0; i < this.points.length; i++) {
         if (this.points[i].id === pointId) {
+          this.board.removeObject(this.points[i].text);
+          this.board.removeObject(this.points[i]);
+          this.points.splice(i, 1);
+        }
+      }
+    };
+
+    Canvas.prototype.removePointByName = function(pointName) {
+      for (var i = 0; i < this.points.length; i++) {
+        if (this.points[i].name === pointName) {
           this.board.removeObject(this.points[i].text);
           this.board.removeObject(this.points[i]);
           this.points.splice(i, 1);
@@ -226,7 +238,7 @@ exports.service = ['$log',
     };
 
     Canvas.prototype.popShape = function() {
-      return this.board.removeObject(this.shapes.splice(0, 1));
+      return this.board.removeObject(this.shapes.splice(this.shapes.length - 1, 1));
     };
 
     Canvas.prototype.changePointColor = function(point, color) {

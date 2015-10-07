@@ -85,6 +85,7 @@ var def = ['Canvas',
           var point = canvas.addPoint(coords, ptName, ptOptions);
           point.on('up', function(e) {
             onPointMove(point);
+            return false;
           });
           return point;
         };
@@ -152,13 +153,23 @@ var def = ['Canvas',
         };
 
         var updateCallback = function(update) {
-          if (update.points) {
-            _.each(update.points, function(point) {
-              canvas.getPoint(point.name).moveTo([point.x, point.y]);
-            });
+          if (update.point) {
+            canvas.getPoint(update.point.name).moveTo([update.point.x, update.point.y]);
           }
         };
 
+        var removeCallback = function(remove) {
+          if (remove.line) {
+            canvas.popShape();
+          }
+          if (remove.points) {
+            _.each(remove.points, function(point) {
+              canvas.removePointByName(point.name);
+            });
+          } else if (remove.point) {
+            canvas.removePointByName(remove.point.name);
+          }
+        };
 
         var canvasAttrs = getCanvasAttributes();
         var lockGraph = false;
@@ -185,6 +196,9 @@ var def = ['Canvas',
           }
           if (params.update && canvas) {
             updateCallback(params.update);
+          }
+          if (params.remove && canvas) {
+            removeCallback(params.remove);
           }
 
           if (params.points && canvas) {

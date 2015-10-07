@@ -16,6 +16,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       scope.pointsPerLine = {};
       scope.plottedPoint = {};
       scope.forcedNextLine = -1;
+      scope.history = [];
 
       scope.inputStyle = {
         width: "40px"
@@ -79,15 +80,27 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         return index;
       };
 
-      function setPoint(point) {
+      function setPoint(point, trackHistory) {
+
+        trackHistory = (typeof trackHistory !== 'undefined') ? trackHistory : true;
+
         if(typeof(scope.pointsPerLine[point.name]) !== 'undefined') {
+          if(trackHistory) {
+            scope.history.push({ action: 'move', previousPoint: scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] });
+          }
           scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] = point;
         } else if (scope.plottedPoint.name === point.name) {
+          if(trackHistory) {
+            scope.history.push({ action: 'move', previousPoint: scope.plottedPoint });
+          }
           scope.plottedPoint = point;
         } else {
           // if it's a new point
           // and there was already a plotted point
           if(scope.plottedPoint.name) {
+            if(trackHistory) {
+              scope.history.push({ action: 'add_line', point: point });
+            }
 
             // add line
             var nextLine = scope.nextLine();
@@ -122,6 +135,9 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           } else {
             // if no plotted point, set it
             scope.plottedPoint = point;
+            if(trackHistory) {
+              scope.history.push({ action: 'add_point', point: point });
+            }
           }
         }
       }
@@ -144,10 +160,17 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           }
         }
 
+        // clear board
+        scope.graphCallback({
+          clearBoard: true
+        });
+
         // clean scope properties
         scope.plottedPoint = {};
         scope.lines = [];
         scope.pointsPerLine = {};
+        scope.history = [];
+
         _.each(scope.config.lines, function(line, index){
           scope.lines.push({
             id: line.id,
@@ -161,14 +184,53 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         scope.forcedNextLine = -1;
       };
 
+      scope.undo = function() {
+        // if (!scope.locked && ) {
+        if (scope.history.length > 0) {
+          var lastRecord = scope.history.pop();
+
+          switch(lastRecord.action) {
+            case 'move':
+              scope.pointUpdate(lastRecord.previousPoint);
+              break;
+            case 'add_point':
+              scope.graphCallback({
+                remove: { point: lastRecord.point }
+              });
+              scope.plottedPoint = {};
+              break;
+            case 'add_line':
+              var line = scope.lines[scope.pointsPerLine[lastRecord.point.name].line];
+
+              // remove point and line from graph
+              scope.graphCallback({
+                remove: { point: line.points.B, line: true }
+              });
+
+              // set the new plottedPoint
+              scope.plottedPoint = line.points.A;
+
+              // deletes the points-line mapping
+              delete scope.pointsPerLine[line.points.A.name];
+              delete scope.pointsPerLine[line.points.B.name];
+
+              // deletes the line
+              line.points.A = line.points.B = { isSet: false };
+              line.isSet = false;
+
+              break;
+          }
+        }
+      };
+
       scope.pointUpdate = function(point) {
         scope.graphCallback({
           update: {
-            points: [
-              point
-            ]
+            point: point
           }
         });
+
+        setPoint(point, false);
       };
 
       scope.containerBridge = {
@@ -270,6 +332,22 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "              <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B)'>",
         "            </div>",
         "          </div>",
+        "        </div>",
+        "      </div>",
+        "      <div class='row line'>",
+        "        <div class='col-md-12'>",
+        "          <div class='action undo'>",
+        "            <a title='Undo' ng-click='undo()'>",
+        "              <i class='fa fa-undo'/>",
+        "            </a>",
+        "          </div>",
+        "          <div class='action start-over'>",
+        "            <a title='Start Over' ng-click='startOver()'>",
+        "              <i class='fa fa-refresh'/>",
+        "            </a>",
+        "          </div>",
+        "          <div class='clearfix'> </div>",
+        "          <div class='clearfix'> </div>",
         "        </div>",
         "      </div>",
         "    </div>",
