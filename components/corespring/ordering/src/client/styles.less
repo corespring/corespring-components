@@ -183,10 +183,10 @@
     }
 
     .main-row {
-      margin-top: 20px;
-      margin-bottom: 10px;
+      margin: 10px;
       overflow: hidden;
       clear: both;
+      text-align: center;
     }
     .label-row{
       display: block;
@@ -194,17 +194,19 @@
       overflow: hidden;
 
       .choice-area-label,.answer-area-label{
-        width: 175px;
         display: inline-block;
-        margin-left: 2px;
-        margin-right: 18px;
+        margin: 0 2px;
         text-align: center;
         overflow: hidden;
       }
     }
+    .placement-areas  {
+      display: table!important;
+      margin: 0 auto;
+    }
     .choice-area {
-      width: 180px;
       float: left;
+      display: table-cell;
 
       .choices {
         padding-top: 0px;
@@ -219,8 +221,8 @@
     }
 
     .answer-area {
-      width: 180px;
       float: left;
+      display: table-cell;
 
       .choice {
         width: 150px;
@@ -242,7 +244,7 @@
     }
 
     .see-answer-area {
-      width: 180px;
+      display: table-cell;
       float: left;
       margin: 0;
       .choice {
@@ -261,6 +263,8 @@
 
     .main-row {
       display: table;
+      text-align: center;
+      margin: 10px;
     }
 
     .choice-area {
@@ -271,13 +275,13 @@
           display: inline-block;
           max-width: 585px;
           .choice-area-label {
-            text-align: left;
+            text-align: center;
             height: auto;
           }
         }
       }
       .choice-wrapper {
-        float: left;
+        display: inline-block;
       }
     }
     .answer-area {
@@ -287,7 +291,7 @@
         margin-top: 10px;
         height: auto;
         display: block;
-        text-align: left;
+        text-align: center;
       }
       .answer-area-holder {
         display: table-cell;
@@ -355,14 +359,17 @@
 }
 
 .view-ordering {
+  .choice-area-label {
+    text-align: center;
+  }
 
   ul {
     border: 1px solid #9B9B9B;
     background: #FFF;
-    padding: 5px 5px;
+    padding: 5px;
     margin-left: 0px;
     margin-bottom: 0px;
-
+    text-align: center;
     .choice {
       background: #efefef;
     }
@@ -393,6 +400,8 @@
           border: 1px solid #979797;
           background-color: #efefef;
           border-radius: 4px;
+          float: left;
+          word-break: break-all;
           &.ui-draggable-dragging {
             cursor: move;
             opacity: 0.75;
@@ -407,19 +416,24 @@
   }
 
   &.horizontal {
+    margin: 0 10px;
 
+    li {
+      display: inline-block;
+    }
     .choice {
-      // max-width: 150px;
+      max-width: 150px;
       min-width: 50px;
+      display: inline-block;
+      float: left;
     }
     .button-row {
       margin-bottom: 10px;
       float: right;
     }
     .answer-area-container{
-      display: table-cell;
       max-width: 595px;
-      float:left;
+      text-align: center;
     }
     .container-border {
       border-radius: 4px;
@@ -434,7 +448,6 @@
     }
 
     li {
-      float: left;
       margin-right: 6px;
       margin-bottom: 5px;
 
@@ -449,13 +462,13 @@
     .answer-area-container {
       display: table;
       width: 100%;
+      text-align: center;
     }
 
     .container-border {
       margin-bottom: 10px;
       max-width: 595px;
       display: table-cell;
-      float: left;
       &.warning {
         border-color: @warning-color-border;
         ul {
@@ -488,9 +501,11 @@
       max-width: 275px;
 
       .choice {
+        max-width: 150px;
         background: #efefef;
         width: auto;
         min-width: 50px;
+        word-break: break-all;
       }
     }
 
@@ -623,8 +638,11 @@
 }
 
 .ordering-config {
-  .mini-wiggi-wiz .wiggi-wiz-editable {
-    min-height: 30px;
+  .mini-wiggi-wiz {
+    word-break: break-all;
+    .wiggi-wiz-editable {
+      min-height: 30px;
+    }
   }
 
   .rounded-inputs;
