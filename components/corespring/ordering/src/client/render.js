@@ -310,12 +310,12 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     ].join('');
 
     var placementOrder = [
-      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout != \'horizontal\' || model.config.choiceAreaPosition != \'below\'">',
+      '     <div class="placement-areas" ng-if="model.config.choiceAreaLayout != \'horizontal\' || model.config.choiceAreaPosition != \'below\'">',
       '       <div class="choice-area">', choices, '</div>',
       '       <div class="answer-area">' + answerArea + '</div>',
       '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
       '     </div>',
-      '     <div class="placement-areas" style="clear:both;overflow:hidden;display:block;" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
+      '     <div class="placement-areas" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
       '       <div class="answer-area">' + answerArea + '</div>',
       '       <div class="choice-area">', choices, '</div>',
       '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="correctResponse && top.correctAnswerVisible"') + '</div>',
