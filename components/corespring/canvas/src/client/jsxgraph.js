@@ -139,7 +139,7 @@ var def = ['Canvas',
             var pt1 = canvas.getPoint(drawShape.line[0]);
             var pt2 = canvas.getPoint(drawShape.line[1]);
             if (pt1 && pt2) {
-              canvas.makeLine([pt1, pt2], drawShape.name);
+              canvas.makeLine([pt1, pt2], drawShape.name, drawShape.color);
             }
           } else if (drawShape.curve) {
             canvas.makeCurve(drawShape.curve);
@@ -148,7 +148,14 @@ var def = ['Canvas',
 
         var addCallback = function(add) {
           if (add.point) {
-            addUserPoint(add.point);
+            var options = {};
+
+            if(add.color) {
+              options.strokeColor = add.color;
+              options.fillColor = add.color;
+            }
+
+            addUserPoint(add.point, undefined, options);
           }
         };
 
@@ -169,6 +176,11 @@ var def = ['Canvas',
           } else if (remove.point) {
             canvas.removePointByName(remove.point.name);
           }
+        };
+
+        var pointColorCallback = function(pointColor) {
+          var point = canvas.getPoint(pointColor.point);
+          canvas.changePointColor(point, pointColor.color);
         };
 
         var canvasAttrs = getCanvasAttributes();
@@ -207,6 +219,10 @@ var def = ['Canvas',
           if (params.drawShape && canvas) {
             drawShapeCallback(params.drawShape);
           }
+          if (params.pointColor && canvas) {
+            pointColorCallback(params.pointColor);
+          }
+
           if (params.clearBoard && canvas) {
             clearBoard();
             scope.boxStyle = {

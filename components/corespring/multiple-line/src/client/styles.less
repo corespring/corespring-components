@@ -57,6 +57,11 @@
     input:disabled {
       background-color: #dddddd;
     }
+    .glowing-border {
+      outline: none;
+      border-color: #9ecaed;
+      box-shadow: 0 0 10px #9ecaed;
+    }
   }
 
   .graph-interaction {
@@ -105,5 +110,34 @@
 
   .delete-line {
     font-size: 20px;
+  }
+
+  .glowing-border {
+    outline: 0 none;
+    box-shadow: 0 0 5px;
+    &.line0 {
+      border-color: #993399;
+      box-shadow: #993399;
+    }
+    &.line1 {
+      border-color: #0033ff;
+      box-shadow: #0033ff;
+    }
+    &.line2 {
+      border-color: #666633;
+      box-shadow: #666633;
+    }
+    &.line3 {
+      border-color: #ffcc99;
+      box-shadow: #ffcc99;
+    }
+    &.line4 {
+      border-color: #663333;
+      box-shadow: #663333;
+    }
+    &.exhibit {
+      border-color: #000000;
+      box-shadow: #000000;
+    }
   }
 }

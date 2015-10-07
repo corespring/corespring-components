@@ -130,15 +130,20 @@ exports.service = ['$log',
     };
 
     Canvas.prototype.addPoint = function(coords, ptName, ptOptions) {
-      var pointAttrs = _.defaults({
-        strokeColor: this.showPoints ? "blue" : "transparent",
-        fillColor: this.showPoints ? "blue" : "transparent",
+      var pointAttrs = _.extend({
+        strokeColor: "blue",
+        fillColor: "blue",
         snapToGrid: true,
         snapSizeX: this.domainScale,
         snapSizeY: this.rangeScale,
         showInfobox: false,
         withLabel: false
       }, ptOptions);
+      if(!this.showPoints) {
+        pointAttrs.strokeColor = "transparent";
+        pointAttrs.fillColor = "transparent";
+      }
+
       var point = this.board.create('point', [coords.x, coords.y], pointAttrs);
       point.canvasIndex = this.points.length;
       this.points.push(point);
@@ -211,10 +216,10 @@ exports.service = ['$log',
       return this.board.on(event, handler);
     };
 
-    Canvas.prototype.makeLine = function(pts, label) {
+    Canvas.prototype.makeLine = function(pts, label, color) {
       var shapeArgs = {
-        strokeColor: '#0000ff',
-        strokeWidth: 2,
+        strokeColor: color ? color : '#0000ff',
+        strokeWidth: 3,
         fixed: true,
         firstArrow: true,
         lastArrow: true,
@@ -230,7 +235,7 @@ exports.service = ['$log',
     Canvas.prototype.makeCurve = function(fn) {
       var shape = this.board.create('functiongraph', [fn], {
         strokeColor: '#0000ff',
-        strokeWidth: 2,
+        strokeWidth: 3,
         fixed: true
       });
       this.shapes.push(shape);

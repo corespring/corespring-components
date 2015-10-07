@@ -17,6 +17,14 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       scope.plottedPoint = {};
       scope.forcedNextLine = -1;
       scope.history = [];
+      scope.colorPalette = {
+        0: '#993399',
+        1: '#0033ff',
+        2: '#666633',
+        3: '#ffcc99',
+        4: '#663333',
+        'exhibit': '#000000'
+      };
 
       scope.inputStyle = {
         width: "40px"
@@ -112,13 +120,30 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             // create line on graph
             if(!line.isSet) {
 
+              if(!scope.config.exhibitOnly) {
+                scope.graphCallback({
+                  pointColor: {
+                    point: scope.plottedPoint.name,
+                    color: scope.colorPalette[line.colorIndex]
+                  }
+                });
+
+                scope.graphCallback({
+                  pointColor: {
+                    point: point.name,
+                    color: scope.colorPalette[line.colorIndex]
+                  }
+                });
+              }
+
               var slope = (scope.plottedPoint.y - point.y) / (scope.plottedPoint.x - point.x);
               var yintercept = scope.plottedPoint.y - (scope.plottedPoint.x * slope);
 
               scope.graphCallback({
                 drawShape: {
                   line: [scope.plottedPoint.name, point.name],
-                  name: line.name
+                  name: line.name,
+                  color: scope.colorPalette[line.colorIndex]
                 }
               });
 
@@ -174,6 +199,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           scope.lines.push({
             id: line.id,
             name: line.label,
+            colorIndex: line.colorIndex,
             points: { A: { isSet: false }, B: { isSet: false } },
             isSet: false
           });
@@ -237,6 +263,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         scope.locked = true;
         if (scope.graphCallback) {
           scope.graphCallback({
+            pointsStyle: scope.colorPalette.exhibit,
+            shapesStyle: scope.colorPalette.exhibit,
             lockGraph: true
           });
         }
@@ -247,7 +275,6 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         if (_.isFunction(scope.graphCallback)) {
           scope.graphCallback({
             graphStyle: {},
-            pointsStyle: "blue",
             unlockGraph: true
           });
         }

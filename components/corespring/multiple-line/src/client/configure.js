@@ -51,7 +51,7 @@ var main = ['ComponentDefaultData',
       '      <div class="row" ng-repeat="line in fullModel.model.config.lines">',
       '        <div class="config-form-row">',
       '          <div class="col-md-3">',
-      '            <input type="text" class="form-control" ng-model="line.label" />',
+      '            <input type="text" class="form-control glowing-border" ng-model="line.label" ng-class="fullModel.model.config.exhibitOnly ? \'exhibit\' : \'line{{ line.colorIndex % 5 }}\'" />',
       '          </div>',
       '          <div class="col-md-4">',
       '            <div class="col-md-9 input-group">',
@@ -259,7 +259,7 @@ var main = ['ComponentDefaultData',
 
         scope.addNewLine = function() {
           var newLineNumber = scope.fullModel.model.config.lines.length + 1;
-          scope.fullModel.model.config.lines.push({ "id": newLineNumber, "function": "", "intialLine": "", "label": "" });
+          scope.fullModel.model.config.lines.push({ "id": newLineNumber, "function": "", "intialLine": "", "label": "", "colorIndex": scope.fullModel.model.config.lines.length % 5 });
         };
 
         scope.removeLine = function(lineId) {

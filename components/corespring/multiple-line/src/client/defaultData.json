@@ -10,7 +10,7 @@
   },
   "model" : {
     "config": {
-      "lines": [{ "id": 1, "function": "", "intialLine": "", "label": "" }],
+      "lines": [{ "id": 1, "function": "", "intialLine": "", "label": "", "colorIndex": 0 }],
       "graphWidth": 500,
       "graphHeight": 500,
       "domainLabel": "x",
