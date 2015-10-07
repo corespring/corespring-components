@@ -12,6 +12,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
     };
 
     function link(scope, element, attrs) {
+      scope.lines = [];
 
       // set intitial state for jsxgraph directive
       var createGraphAttributes = function(config, graphCallback) {
@@ -55,6 +56,41 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       scope.interactionCallback = function(params) {
       };
 
+      // set initial state for the graph
+      scope.startOver = function() {
+
+        function getPoint(point) {
+          return { x: point[0], y: point[1] };
+        }
+        function createInitialPoints(initialLine) {
+
+          var initialValues = lineUtils.pointsFromEquation(initialLine,
+            scope.graphAttrs.domainMin,
+            scope.graphCallback.domainStepValue);
+
+          if (typeof initialValues !== 'undefined') {
+            scope.graphCallback({ add: { point: getPoint(initialValues[0]) } });
+            scope.graphCallback({ add: { point: getPoint(initialValues[1]) } });
+          }
+        }
+
+        // clean scope properties
+        scope.plottedPoint = {};
+        scope.lines = [];
+        scope.pointsPerLine = {};
+        _.each(scope.config.lines, function(line){
+          scope.lines.push({
+            id: line.id,
+            name: line.label,
+            points: { A: { isSet: false }, B: { isSet: false } },
+            isSet: false
+          });
+          createInitialPoints(line.intialLine);
+        });
+
+        scope.nextLine = 0;
+      };
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -73,10 +109,10 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             containerHeight = containerWidth = graphContainer.width();
           }
 
-          var graphAttrs = createGraphAttributes(config);
+          scope.graphAttrs = createGraphAttributes(config);
           scope.showInputs = config.showInputs;
 
-          graphContainer.attr(graphAttrs);
+          graphContainer.attr(scope.graphAttrs);
           graphContainer.css({
             width: containerWidth,
             height: containerHeight
@@ -84,6 +120,14 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           scope.containerWidth = containerWidth;
           scope.containerHeight = containerHeight;
           $compile(graphContainer)(scope);
+
+          // this timeout is needed to wait for the callback to be defined
+          $timeout(function() {
+
+            if(scope.graphCallback) {
+              scope.startOver();
+            }
+          }, 100);
         },
 
         getSession: function() {
