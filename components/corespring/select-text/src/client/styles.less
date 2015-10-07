@@ -28,6 +28,26 @@
       background-clip: padding-box;
       max-height: 350px;
       overflow: auto;
+      .token {
+        cursor: pointer;
+        -webkit-transition: border-color 0.2s ease-out;
+        transition: border-color 0.2s ease-out;
+        &:hover {
+          border: 1px dotted #00CC16;
+          border-radius: 3px;
+          margin: -1px;
+        }
+        &.possible {
+          border: 2px solid #666666;
+          border-radius: 3px;
+          margin: -2px;
+        }
+        &.selected {
+          border: 2px solid #009E0F;
+          border-radius: 3px;
+          margin: -2px;
+        }
+      }
     }
     .answer-summary {
       line-height: 60px;
@@ -48,8 +68,20 @@
     background-clip: padding-box;
     margin: 0 0 5px;
     padding: 5px;
-    .blast {
-      background-color: green;
+    .token {
+      cursor: pointer;
+      -webkit-transition: border-color 0.2s ease-out;
+      transition: border-color 0.2s ease-out;
+      &:hover {
+        border: 1px dotted #00CC16;
+        border-radius: 3px;
+        margin: -1px;
+      }
+      &.selected {
+        border: 2px solid #009E0F;
+        border-radius: 3px;
+        margin: -2px;
+      }
     }
   }
 }

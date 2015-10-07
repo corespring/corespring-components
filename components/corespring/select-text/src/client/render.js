@@ -1,7 +1,13 @@
 var main = [
   '$sce',
-  function($sce) {
+  '$timeout',
+  function($sce, $timeout) {
+
     var link = function(scope, element, attrs) {
+
+      var blastOptions = {
+        customClass: 'token'
+      };
 
       var log = console.log.bind(console,'[select-text]');
 
@@ -21,6 +27,17 @@ var main = [
       function setDataAndSession(dataAndSession) {
         log("Setting data for Select Text: ", dataAndSession);
         scope.model = dataAndSession.data.model;
+        $timeout(function() {
+          blastOptions.delimiter = scope.model.config.selectionUnit;
+          var $theContent = element.find('.select-text-content');
+          $theContent.blast(blastOptions);
+          $theContent.off('click', '.token');
+          $theContent.on('click', '.token', function() {
+            var $token = $(this);
+            var index = $theContent.find('.token').index($token);
+            $token.toggleClass('selected');
+          });
+        }, 100);
       }
 
       function getSession() {
@@ -58,7 +75,7 @@ var main = [
       link: link,
       template: [
         '<div class="cs-select-text">',
-        '  <div ng-show="model.config.label" ng-bind-html-unsafe="model.config.label"></div>',
+        '  <div class="select-text-label" ng-show="model.config.label" ng-bind-html-unsafe="model.config.label"></div>',
         '  <div class="select-text-content" ng-bind-html-unsafe="model.config.xhtml"></div>',
         '</div>'
       ].join("\n")

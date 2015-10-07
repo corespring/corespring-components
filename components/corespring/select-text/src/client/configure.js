@@ -1,7 +1,8 @@
 /* global exports */
 var main = [
   'ChoiceTemplates',
-  function(ChoiceTemplates) {
+  '$timeout',
+  function(ChoiceTemplates, $timeout) {
     "use strict";
     var designPanel = [
       '<div class="container-fluid">',
@@ -51,7 +52,7 @@ var main = [
       '       </div>',
       '       <div class="radio">',
       '         <label>',
-      '           <input type="radio" ng-model="model.config.availability" value="specific">',
+      '           <input type="radio" ng-model="model.config.availability" value="specific" disabled>',
       '           Make specific selections available',
       '         </label>',
       '       </div>',
@@ -62,7 +63,7 @@ var main = [
       '       <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
       '       <div class="pull-left answer-summary" ng-show="model.config.availability === \'specific\'">',
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': selectionMode}"',
-      '           ng-click="toggleSelectionMode()">Selections Available</button> <span class="badge">3</span>',
+      '           ng-click="toggleSelectionMode()">Selections Available</button> <span class="badge">{{model.possibleChoices.length}}</span>',
       '       </div>',
       '       <div class="pull-right answer-summary">',
       '         Correct Answers <span class="badge">{{model.choices.length}}</span>',
@@ -114,19 +115,76 @@ var main = [
 
       ChoiceTemplates.extendScope($scope, 'corespring-select-text');
 
+      var blastOptions = {
+        customClass: 'token'
+      };
+
+      var $theContent = null;
+
       $scope.mode = "editor";
       $scope.selectionMode = true;
+
+      var blastTheContent = function() {
+        var delimiter = $scope.model.config.selectionUnit;
+        // var $theContent = $element.find('.passage-preview');
+        blastOptions.delimiter = delimiter;
+        // Removes any existing tokens
+        $theContent.blast(false);
+        // Tokenize the content
+        $theContent.blast(blastOptions);
+        // Render existing choices
+        if ($scope.model.choices.length > 0) {
+          for (var i = $scope.model.choices.length - 1; i >= 0; i--) {
+            var $matches = $theContent.find('.token:contains("' + $scope.model.choices[i].data + '"):not(.selected)');
+            if ($matches.length === 1) {
+              $matches.addClass('selected');
+            } else if ($matches.length > 1 && $scope.model.choices[i].index) {
+              for (var j = $matches.length - 1; j >= 0; j--) {
+                if ($theContent.find('.token').index($matches[j]) === $scope.model.choices[i].index) {
+                  $($matches[j]).addClass('selected');
+                  break;
+                }
+              }
+            }
+          }
+        }
+      };
 
       $scope.containerBridge = {
         setModel: function (model) {
           $scope.fullModel = model;
           $scope.model = $scope.fullModel.model;
+          $theContent = $element.find('.passage-preview');
+          $theContent.off('click', '.token');
+          $theContent.on('click', '.token', function() {
+            var $token = $(this);
+            var index = $theContent.find('.token').index($token);
+            $token.toggleClass('selected');
+            if ($token.hasClass('selected')) {
+              // Adds a new choice
+              $scope.model.choices.push({
+                data: $token.text(),
+                index: index
+              });
+            } else {
+              // Deletes an existing choice
+              _.remove($scope.model.choices, function(item) {
+                return item.data === $token.text() || item.index === index;
+              });
+            }
+          });
+          $timeout(function() {
+            blastTheContent();
+          }, 100);
         },
         getModel: function () {
           var model = _.cloneDeep($scope.fullModel);
           return model;
         }
       };
+
+      $scope.$watch('model.config.selectionUnit', blastTheContent);
+      $scope.$watch('model.config.xhtml', blastTheContent);
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
