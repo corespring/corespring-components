@@ -124,9 +124,8 @@ var main = [
       $scope.mode = "editor";
       $scope.selectionMode = true;
 
-      var blastTheContent = function() {
+      var blastThePassage = function() {
         var delimiter = $scope.model.config.selectionUnit;
-        // var $theContent = $element.find('.passage-preview');
         blastOptions.delimiter = delimiter;
         // Removes any existing tokens
         $theContent.blast(false);
@@ -138,12 +137,16 @@ var main = [
             var $matches = $theContent.find('.token:contains("' + $scope.model.choices[i].data + '"):not(.selected)');
             if ($matches.length === 1) {
               $matches.addClass('selected');
-            } else if ($matches.length > 1 && $scope.model.choices[i].index) {
-              for (var j = $matches.length - 1; j >= 0; j--) {
-                if ($theContent.find('.token').index($matches[j]) === $scope.model.choices[i].index) {
-                  $($matches[j]).addClass('selected');
-                  break;
+            } else if ($matches.length > 1) {
+              if ($scope.model.choices[i].index) {
+                for (var j = $matches.length - 1; j >= 0; j--) {
+                  if ($theContent.find('.token').index($matches[j]) === $scope.model.choices[i].index) {
+                    $($matches[j]).addClass('selected');
+                    break;
+                  }
                 }
+              } else {
+                $($matches[0]).addClass('selected');
               }
             }
           }
@@ -174,7 +177,7 @@ var main = [
             }
           });
           $timeout(function() {
-            blastTheContent();
+            blastThePassage();
           }, 100);
         },
         getModel: function () {
@@ -183,11 +186,14 @@ var main = [
         }
       };
 
-      $scope.$watch('model.config.selectionUnit', blastTheContent);
-      $scope.$watch('model.config.xhtml', blastTheContent);
+      $scope.$watch('model.config.selectionUnit', blastThePassage);
+      $scope.$watch('model.config.xhtml', blastThePassage);
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
+        if (mode === "answers") {
+          blastThePassage();
+        }
       };
 
       $scope.toggleSelectionUnit = function($event) {

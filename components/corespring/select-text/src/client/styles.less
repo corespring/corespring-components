@@ -1,3 +1,10 @@
+@choice-color-hover-opaque: rgb(161, 228, 242);
+@choice-color-hover: rgba(161, 228, 242, 0.5);
+@choice-color-opaque: rgb(92,255,160);
+@choice-color: rgba(92,255,160, 0.5);
+@possible-choice-color-opaque: rgb(187, 187, 187);
+@possible-choice-color: rgba(187, 187, 187, 0.5);
+
 .corespring-select-text {
   .component-placeholder {
     .holder {
@@ -30,22 +37,19 @@
       overflow: auto;
       .token {
         cursor: pointer;
-        -webkit-transition: border-color 0.2s ease-out;
-        transition: border-color 0.2s ease-out;
+        -webkit-transition: background-color 0.2s ease-out;
+        transition: background-color 0.2s ease-out;
         &:hover {
-          border: 1px dotted #00CC16;
-          border-radius: 3px;
-          margin: -1px;
+          background-color: @choice-color-hover-opaque;
+          background-color: @choice-color-hover;
         }
         &.possible {
-          border: 2px solid #666666;
-          border-radius: 3px;
-          margin: -2px;
+          background-color: @possible-choice-color-opaque;
+          background-color: @possible-choice-color;
         }
         &.selected {
-          border: 2px solid #009E0F;
-          border-radius: 3px;
-          margin: -2px;
+          background-color: @choice-color-opaque;
+          background-color: @choice-color;
         }
       }
     }
@@ -70,17 +74,15 @@
     padding: 5px;
     .token {
       cursor: pointer;
-      -webkit-transition: border-color 0.2s ease-out;
-      transition: border-color 0.2s ease-out;
+      -webkit-transition: background-color 0.2s ease-out;
+      transition: background-color 0.2s ease-out;
       &:hover {
-        border: 1px dotted #00CC16;
-        border-radius: 3px;
-        margin: -1px;
+        background-color: @choice-color-hover-opaque;
+        background-color: @choice-color-hover;
       }
       &.selected {
-        border: 2px solid #009E0F;
-        border-radius: 3px;
-        margin: -2px;
+        background-color: @choice-color-opaque;
+        background-color: @choice-color;
       }
     }
   }
