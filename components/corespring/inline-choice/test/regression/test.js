@@ -70,8 +70,8 @@ describe('inline-choice', function() {
       .selectInlineChoice("1", "Banana")
       .selectInlineChoice("2", "Apple")
       .submitItem()
-      .click(inlineChoiceWithId("1") + '//div')
-      .click(inlineChoiceWithId("2") + '//div')
+      .click(inlineChoiceWithId("1") + '//span')
+      .click(inlineChoiceWithId("2") + '//span')
       .getLocation(".player-body", function(err, playerPos) {
         this.getLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
           this.getLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
