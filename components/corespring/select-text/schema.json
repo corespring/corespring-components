@@ -83,6 +83,19 @@
             }
           },
           "required": ["selectionUnit", "xhtml"]
+        },
+        "possibleChoices": {
+          "description": "List of choices that can be or not be the correct answers",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "The tokenized text that represents a possible answer."
+              }
+            }
+          }
         }
       },
       "required": ["config"]

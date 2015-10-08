@@ -1,3 +1,10 @@
+@choice-color-hover-opaque: rgb(161, 228, 242);
+@choice-color-hover: rgba(161, 228, 242, 0.5);
+@choice-color-opaque: rgb(92,255,160);
+@choice-color: rgba(92,255,160, 0.5);
+@possible-choice-color-opaque: rgb(187, 187, 187);
+@possible-choice-color: rgba(187, 187, 187, 0.5);
+
 .corespring-select-text {
   .component-placeholder {
     .holder {
@@ -28,6 +35,23 @@
       background-clip: padding-box;
       max-height: 350px;
       overflow: auto;
+      .token {
+        cursor: pointer;
+        -webkit-transition: background-color 0.2s ease-out;
+        transition: background-color 0.2s ease-out;
+        &:hover {
+          background-color: @choice-color-hover-opaque;
+          background-color: @choice-color-hover;
+        }
+        &.possible {
+          background-color: @possible-choice-color-opaque;
+          background-color: @possible-choice-color;
+        }
+        &.selected {
+          background-color: @choice-color-opaque;
+          background-color: @choice-color;
+        }
+      }
     }
     .answer-summary {
       line-height: 60px;
@@ -48,8 +72,18 @@
     background-clip: padding-box;
     margin: 0 0 5px;
     padding: 5px;
-    .blast {
-      background-color: green;
+    .token {
+      cursor: pointer;
+      -webkit-transition: background-color 0.2s ease-out;
+      transition: background-color 0.2s ease-out;
+      &:hover {
+        background-color: @choice-color-hover-opaque;
+        background-color: @choice-color-hover;
+      }
+      &.selected {
+        background-color: @choice-color-opaque;
+        background-color: @choice-color;
+      }
     }
   }
 }
