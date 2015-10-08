@@ -84,18 +84,30 @@ var main = ['ComponentDefaultData',
       '  <div class="body col-md-8">',
       '    <h3>Graph Attributes</h3>',
       '    <p>Use this section to setup the graph area.</p>',
-      '    <form class="form-horizontal" role="form" name="attirbutesForm">',
-      '       <div class="config-form-row">',
-      '         <h4>Domain (X)</h4>',
-      '       </div>',
-      '       <div class="config-form-row">',
+      '    <form class="form-horizontal" role="form" name="attributesForm">',
+      '      <div class="config-form-row">',
+      '        <h4>Domain (X)</h4>',
+      '      </div>',
+      '      <div class="config-form-row">',
       labelWithInput({ label: 'Minimum Value', modelKey: 'domainMin', inputType: "number", placeholder: '{{defaults.domainMin}}' }),
       labelWithInput({ label: 'Maximum Value', modelKey: 'domainMax', inputType: "number", placeholder: '{{defaults.domainMax}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
+      '      </div>',
+      '      <div class="config-form-row">',
       labelWithInput({ label: 'Tick Value:', modelKey: 'domainStepValue', inputType: "number", placeholder: '{{defaults.domainStepValue}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
+      '        <label class="col-sm-3">Padding (%):</label>',
+      '        <div class="col-sm-3 default-input"',
+      '          ng-class="{ \'has-error\': attributesForm.domainGraphPadding.$error.min || attributesForm.domainGraphPadding.$error.number }">',
+      '          <input type="number" name="domainGraphPadding" ',
+      '            class="form-control" ',
+      '            ng-model="fullModel.model.config.domainGraphPadding" ',
+      '            data-toggle="tooltip" title="Hooray!"',
+      '            placeholder="{{defaults.domainGraphPadding}}" ',
+      '            min="0" step="25" />',
+      '            <div class="inline-error-message" ng-show="attributesForm.domainGraphPadding.$error.number">Please enter a valid number</div>',
+      '            <div class="inline-error-message" ng-show="attributesForm.domainGraphPadding.$error.min">Please enter a positive number</div>',
+      '        </div>',
+      '      </div>',
+      '      <div class="config-form-row">',
       labelWithInput({ label: 'Label', modelKey: 'domainLabel', placeholder: '{{defaults.domainLabel}}' }),
       labelWithInput({ label: 'Label Frequency:', modelKey: 'domainLabelFrequency', inputType: "number", placeholder: '{{defaults.domainLabelFrequency}}' }),
       '       </div><br />',
@@ -108,6 +120,17 @@ var main = ['ComponentDefaultData',
       '       </div>',
       '       <div class="config-form-row">',
       labelWithInput({ label: 'Tick Value:', modelKey: 'rangeStepValue', inputType: "number", placeholder: '{{defaults.rangeStepValue}}' }),
+      '        <label class="col-sm-3">Padding (%):</label>',
+      '        <div class="col-sm-3 default-input"',
+      '          ng-class="{ \'has-error\': attributesForm.rangeGraphPadding.$error.min || attributesForm.rangeGraphPadding.$error.number }">',
+      '          <input type="number" name="rangeGraphPadding" ',
+      '            class="form-control" ',
+      '            ng-model="fullModel.model.config.rangeGraphPadding" ',
+      '            placeholder="{{defaults.rangeGraphPadding}}" ',
+      '            min="0" step="25" />',
+      '            <div class="inline-error-message" ng-show="attributesForm.rangeGraphPadding.$error.number">Please enter a valid number</div>',
+      '            <div class="inline-error-message" ng-show="attributesForm.rangeGraphPadding.$error.min">Please enter a positive number</div>',
+      '        </div>',
       '       </div>',
       '        <div class="config-form-row">',
       labelWithInput({ label: 'Label', modelKey: 'rangeLabel', placeholder: "y" }),
@@ -134,22 +157,6 @@ var main = ['ComponentDefaultData',
       '        <div class="config-form-row">',
       labelWithInput({ label: 'Width', modelKey: 'graphWidth', inputType: "number", inputClass: 'input-number', placeholder: '{{defaults.graphWidth}}', labelSize: 1, size: 2 }),
       labelWithInput({ label: 'Height', modelKey: 'graphHeight', inputType: "number", inputClass: 'input-number', placeholder: '{{defaults.graphHeight}}', labelSize: 1, size: 2 }),
-      '        </div>',
-      '        <div class="config-form-row"><br />',
-      '          <label class="col-sm-4 input-number-label">Add padding to graph</label>',
-      '          <div class="col-sm-2" ',
-      '            ng-class="{ \'has-error\': display.graphPadding.$error.min || display.graphPadding.$error.number }">',
-      '            <input type="number" name="graphPadding" ',
-      '              class="form-control" ',
-      '              ng-model="fullModel.model.config.graphPadding" ',
-      '              placeholder="{{defaults.graphPadding}}" ',
-      '              min="0" step="25" />',
-      '            <div class="inline-error-messages">',
-      '              <div class="inline-error-message" ng-show="display.graphPadding.$error.number">Please enter a valid number</div>',
-      '              <div class="inline-error-message" ng-show="display.graphPadding.$error.min">Please enter a positive number</div>',
-      '            </div>',
-      '          </div>',
-      '          <span class="row col-sm-1 input-number-label">%</span>',
       '        </div>',
       '        <div class="config-form-row">',
       '          <div class="col-sm-6">',
@@ -254,12 +261,14 @@ var main = ['ComponentDefaultData',
           reset('domainLabel', defaults.domainLabel);
           reset('domainStepValue', defaults.domainStepValue);
           reset('domainLabelFrequency', defaults.domainLabelFrequency);
+          reset('domainGraphPadding', defaults.domainGraphPadding);
 
           reset('rangeMin', defaults.rangeMin);
           reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
           reset('rangeStepValue', defaults.rangeStepValue);
           reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
+          reset('rangeGraphPadding', defaults.rangeGraphPadding);
 
           // significant figures
           reset('sigfigs', defaults.sigfigs);
@@ -267,7 +276,6 @@ var main = ['ComponentDefaultData',
           // display
           reset('graphWidth', defaults.graphWidth);
           reset('graphHeight', defaults.graphHeight);
-          reset('graphPadding', defaults.graphPadding);
 
           reset('showCoordinates', defaults.showCoordinates);
           reset('showInputs', defaults.showInputs);

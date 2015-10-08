@@ -11,24 +11,23 @@ var def = ['Canvas',
 
         var getCanvasAttributes = function() {
           return {
-            graphPadding: parseInt(attr.graphpadding ? attr.graphpadding : 50, 10),
             domain: {
               label: attr.domainlabel,
               min: parseFloat(attr.domainmin ? attr.domainmin : -10, 10),
               max: parseFloat(attr.domainmax ? attr.domainmax : 10, 10),
               stepValue: parseFloat(attr.domainstepvalue ? attr.domainstepvalue : 1),
-              labelFrequency: attr.domainlabelfrequency
+              labelFrequency: attr.domainlabelfrequency,
+              graphPadding: parseInt(attr.domaingraphpadding ? attr.domaingraphpadding : 50, 10),
             },
             range: {
               label: attr.rangelabel,
               min: parseFloat(attr.rangemin ? attr.rangemin : -10, 10),
               max: parseFloat(attr.rangemax ? attr.rangemax : 10, 10),
               stepValue: parseFloat(attr.rangestepvalue ? attr.rangestepvalue : 1),
-              labelFrequency: attr.rangelabelfrequency
+              labelFrequency: attr.rangelabelfrequency,
+              graphPadding: parseInt(attr.rangegraphpadding ? attr.rangegraphpadding : 50, 10),
             },
-            scale: parseFloat(attr.scale ? attr.scale : 1, 10),
             maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
-            tickLabelFrequency: parseFloat(attr.ticklabelfrequency ? attr.ticklabelfrequency : 1, 10),
             pointLabels: attr.pointlabels,
             width: elem.width(),
             height: elem.height(),

@@ -44,8 +44,8 @@ exports.service = ['$log',
         }
       }
 
-      var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.graphPadding / 100 : 0.5;
-      var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.graphPadding / 100 : 0.5;
+      var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.domain.graphPadding / 100 : 0.5;
+      var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.range.graphPadding / 100 : 0.5;
 
       this.board = JXG.JSXGraph.initBoard(id, {
         boundingbox: [
