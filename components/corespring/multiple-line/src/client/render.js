@@ -328,6 +328,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         getSession: function() {
           return {
+            answers: scope.lines
           };
         },
 

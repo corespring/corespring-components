@@ -186,7 +186,7 @@ var main = ['ComponentDefaultData',
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
-        scope.defaults = ComponentDefaultData.getDefaultData('corespring-line', 'model.config');
+        scope.defaults = ComponentDefaultData.getDefaultData('corespring-multiple-line', 'model.config');
         scope.defaultCorrectFeedback = "Correct!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
         scope.containerBridge = {
@@ -244,17 +244,35 @@ var main = ['ComponentDefaultData',
             scope.fullModel.model.config[property] = value;
           }
 
-          reset('graphWidth', defaults.graphWidth);
-          reset('graphHeight', defaults.graphHeight);
-          reset('graphPadding', defaults.graphPadding);
+          // lines
+          reset('lines', defaults.lines);
+          reset('exhibitOnly', defaults.exhibitOnly);
+
+          // graph attributes
           reset('domainMin', defaults.domainMin);
           reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);
+          reset('domainStepValue', defaults.domainStepValue);
+          reset('domainLabelFrequency', defaults.domainLabelFrequency);
+
           reset('rangeMin', defaults.rangeMin);
           reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
-          reset('tickLabelFrequency', defaults.tickLabelFrequency);
+          reset('rangeStepValue', defaults.rangeStepValue);
+          reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
+
+          // significant figures
           reset('sigfigs', defaults.sigfigs);
+
+          // display
+          reset('graphWidth', defaults.graphWidth);
+          reset('graphHeight', defaults.graphHeight);
+          reset('graphPadding', defaults.graphPadding);
+
+          reset('showCoordinates', defaults.showCoordinates);
+          reset('showInputs', defaults.showInputs);
+          reset('showFeedback', defaults.showFeedback);
+
         };
 
         scope.addNewLine = function() {
