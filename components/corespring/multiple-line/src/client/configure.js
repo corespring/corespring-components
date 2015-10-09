@@ -1,5 +1,7 @@
-var main = ['ComponentDefaultData',
-  function(ComponentDefaultData) {
+var main = [
+  'ComponentDefaultData',
+  'ChoiceTemplates',
+  function(ComponentDefaultData, ChoiceTemplates) {
 
     this.inline = function(type, value, body, attrs) {
       return ['<label class="' + type + '-inline">',
@@ -178,6 +180,13 @@ var main = ['ComponentDefaultData',
       '          fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
       '          fb-sel-default-feedback="{{defaultCorrectFeedback}}"',
       '     ></div>',
+      '      <div feedback-selector',
+      '           fb-sel-label="If partially correct, show"',
+      '           fb-sel-class="partial"',
+      '           fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+      '           fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+      '           fb-sel-default-feedback="{{defaultPartialFeedback}}"',
+      '      ></div>',
       '     <div feedback-selector',
       '          fb-sel-label="If answered incorrectly, show"',
       '          fb-sel-class="incorrect"',
@@ -194,7 +203,9 @@ var main = ['ComponentDefaultData',
       replace: true,
       link: function(scope, element, attrs) {
         scope.defaults = ComponentDefaultData.getDefaultData('corespring-multiple-line', 'model.config');
+        ChoiceTemplates.extendScope(scope, 'corespring-point-intercept');
         scope.defaultCorrectFeedback = "Correct!";
+        scope.defaultPartialFeedback = "Almost!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
         scope.containerBridge = {
           setModel: function(model) {
@@ -202,20 +213,7 @@ var main = ['ComponentDefaultData',
             model.model = model.model || {};
             model.model.config = model.model.config || {};
 
-            scope.correctResponse = (scope.fullModel) ? scope.removeYEqualsPrefix(scope.fullModel.correctResponse) : undefined;
-            scope.initialCurve = (scope.fullModel && scope.fullModel.model && scope.fullModel.model.config && scope.fullModel.model.config.initialCurve) ?
-              scope.removeYEqualsPrefix(scope.fullModel.model.config.initialCurve) : undefined;
-
-            var labels = (model.model.config.pointLabels || []);
-
-            scope.points = [];
-            _.each(model.correctResponse, function(cr, idx) {
-              var cra = cr.split(",");
-              scope.points.push({
-                label: labels[idx],
-                correctResponse: cra
-              });
-            });
+            scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
           },
 
           getModel: function() {
@@ -223,26 +221,6 @@ var main = ['ComponentDefaultData',
             return model;
           }
         };
-
-        scope.removeYEqualsPrefix = function(expression) {
-          return expression.replace(/^y\s?=\s?/,'');
-        };
-
-        scope.prefixWithYEquals = function(expression) {
-          if(expression) {
-            return (expression.replace(/ /g, '').indexOf('y=') === 0) ? expression : ("y=" + expression);
-          } else {
-            return '';
-          }
-        };
-
-        scope.$watch('correctResponse', function(newValue) {
-          scope.fullModel.correctResponse = scope.prefixWithYEquals(newValue);
-        });
-
-        scope.$watch('initialCurve', function(newValue) {
-          scope.fullModel.model.config.initialCurve = scope.prefixWithYEquals(newValue);
-        });
 
         scope.resetDefaults = function() {
           var defaults = scope.defaults;
@@ -297,28 +275,40 @@ var main = ['ComponentDefaultData',
           scope.fullModel.model.config.lines = scope.fullModel.model.config.lines.filter(doesntMatchId);
         };
 
+        scope.$watch('fullModel.model.config.lines', function(n) {
+          if (n) {
+            scope.fullModel.correctResponse = _.pluck(scope.fullModel.model.config.lines, 'function');
+            scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
+          }
+        }, true);
+
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
       },
       template: [
         '<div class="multiple-line-interaction-configuration col-md-12">',
-        '  <p>',
-        '    This interaction asks a student to draw a line that meets specific criteria.',
-        '    The student will draw the line by clicking on two points on the graph.',
-        '  </p>',
-           linesBlock,
-        '  <hr />',
-           graphAttributesBlock,
-        '  <hr />',
-           displayBlock,
-        '  <div class="row">',
-        '    <div class="col-md-8">',
-        '      <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
+        '  <div navigator-panel="Design">',
+        '    <p>',
+        '      This interaction asks a student to draw a line that meets specific criteria.',
+        '      The student will draw the line by clicking on two points on the graph.',
+        '    </p>',
+               linesBlock,
+        '    <hr />',
+               graphAttributesBlock,
+        '    <hr />',
+               displayBlock,
+        '    <div class="row">',
+        '      <div class="col-md-8">',
+        '        <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
+        '      </div>',
         '    </div>',
+        '    <div class="row"><div class="col-md-8" ng-hide="fullModel.model.config.exhibitOnly">',
+               feedback,
+        '    </div></div>',
         '  </div>',
-        '  <div class="row"><div class="col-md-8" ng-hide="fullModel.model.config.exhibitOnly">',
-           feedback,
-        '  </div></div>',
+        '  <div navigator-panel="Scoring">',
+             ChoiceTemplates.scoring(),
+        '  </div>',
         '</div>'
       ].join('\n')
     };
