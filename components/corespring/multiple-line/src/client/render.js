@@ -16,6 +16,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       scope.pointsPerLine = {};
       scope.plottedPoint = {};
       scope.forcedNextLine = -1;
+      scope.hoveredLine = -1;
+
       scope.history = [];
       scope.colorPalette = {
         0: '#993399',
@@ -49,6 +51,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           "jsx-graph": "",
           "graph-callback": graphCallback || "graphCallback",
           "interaction-callback": "interactionCallback",
+          "selected-line": "hoveredLine",
           maxPoints: scope.config.lines.length * 2,
           domainLabel: config.domainLabel,
           domainMin: parseFloat(getModelValue(config.domainMin, -10, config.domain * -1), 10),
@@ -141,6 +144,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
               scope.graphCallback({
                 drawShape: {
+                  id: line.id,
                   line: [scope.plottedPoint.name, point.name],
                   name: line.name,
                   color: scope.colorPalette[line.colorIndex]
@@ -280,6 +284,10 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         }
       };
 
+      scope.isLineHovered = function(lineId) {
+        return lineId === scope.hoveredLine;
+      };
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -371,20 +379,20 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "            <div class='col-sm-1'>{{line.points.A.name}}</div>",
         "            <div class='col-sm-2'>",
         "              <label>x: </label>",
-        "              <input type='number' ng-style='inputStyle', ng-model='line.points.A.x' ng-disabled='locked || line.points.A.x === undefined' ng-change='pointUpdate(line.points.A)'>",
+        "              <input type='number' ng-style='inputStyle' ng-model='line.points.A.x' ng-disabled='locked || line.points.A.x === undefined' ng-change='pointUpdate(line.points.A)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' >",
         "            </div>",
         "            <div class='col-sm-2'>",
         "              <label>y: </label>",
-        "              <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-disabled='locked || line.points.A.y === undefined' ng-change='pointUpdate(line.points.A)'>",
+        "              <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-disabled='locked || line.points.A.y === undefined' ng-change='pointUpdate(line.points.A)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
         "            </div>",
         "            <div class='col-sm-1'>{{line.points.B.name}}</div>",
         "            <div class='col-sm-2'>",
         "              <label>x: </label>",
-        "              <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-disabled='locked || line.points.B.x === undefined' ng-change='pointUpdate(line.points.B)'>",
+        "              <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-disabled='locked || line.points.B.x === undefined' ng-change='pointUpdate(line.points.B)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
         "            </div>",
         "            <div class='col-sm-2'>",
         "              <label>y: </label>",
-        "              <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B)'>",
+        "              <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
         "            </div>",
         "          </div>",
         "        </div>",

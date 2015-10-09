@@ -219,6 +219,7 @@ exports.service = ['$log',
     Canvas.prototype.makeLine = function(pts, label, color) {
       var shapeArgs = {
         strokeColor: color ? color : '#0000ff',
+        highlightStrokeColor: '#9C9C9C',
         strokeWidth: 3,
         fixed: true,
         firstArrow: true,

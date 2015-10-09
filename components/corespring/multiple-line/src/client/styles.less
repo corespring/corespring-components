@@ -54,13 +54,44 @@
     border-radius: 4px;
     padding: 5px;
     position: relative;
-    input:disabled {
-      background-color: #dddddd;
+    input {
+      height: 24px;
+      padding: 2px;
+      font-size: 14px;
+      color: #555555;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      &:disabled {
+        background-color: #dddddd;
+      }
     }
     .glowing-border {
-      outline: none;
-      border-color: #9ecaed;
-      box-shadow: 0 0 10px #9ecaed;
+      outline: 0 none;
+      box-shadow: 0 0 5px;
+      &.line0 {
+        border-color: #993399;
+        box-shadow: #993399;
+      }
+      &.line1 {
+        border-color: #0033ff;
+        box-shadow: #0033ff;
+      }
+      &.line2 {
+        border-color: #666633;
+        box-shadow: #666633;
+      }
+      &.line3 {
+        border-color: #ffcc99;
+        box-shadow: #ffcc99;
+      }
+      &.line4 {
+        border-color: #663333;
+        box-shadow: #663333;
+      }
+      &.exhibit {
+        border-color: #000000;
+        box-shadow: #000000;
+      }
     }
   }
 

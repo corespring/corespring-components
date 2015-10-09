@@ -5,7 +5,8 @@ var def = ['Canvas',
       restrict: 'A',
       scope: {
         interactionCallback: '=',
-        graphCallback: '='
+        graphCallback: '=',
+        hoveredLine: '='
       },
       link: function(scope, elem, attr) {
 
@@ -17,7 +18,7 @@ var def = ['Canvas',
               max: parseFloat(attr.domainmax ? attr.domainmax : 10, 10),
               stepValue: parseFloat(attr.domainstepvalue ? attr.domainstepvalue : 1),
               labelFrequency: attr.domainlabelfrequency,
-              graphPadding: parseInt(attr.domaingraphpadding ? attr.domaingraphpadding : 50, 10),
+              graphPadding: parseInt(attr.domaingraphpadding ? attr.domaingraphpadding : 50, 10)
             },
             range: {
               label: attr.rangelabel,
@@ -25,7 +26,7 @@ var def = ['Canvas',
               max: parseFloat(attr.rangemax ? attr.rangemax : 10, 10),
               stepValue: parseFloat(attr.rangestepvalue ? attr.rangestepvalue : 1),
               labelFrequency: attr.rangelabelfrequency,
-              graphPadding: parseInt(attr.rangegraphpadding ? attr.rangegraphpadding : 50, 10),
+              graphPadding: parseInt(attr.rangegraphpadding ? attr.rangegraphpadding : 50, 10)
             },
             maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
             pointLabels: attr.pointlabels,
@@ -134,15 +135,24 @@ var def = ['Canvas',
         };
 
         var drawShapeCallback = function(drawShape) {
+          var shape;
           if (drawShape.line) {
             var pt1 = canvas.getPoint(drawShape.line[0]);
             var pt2 = canvas.getPoint(drawShape.line[1]);
             if (pt1 && pt2) {
-              canvas.makeLine([pt1, pt2], drawShape.name, drawShape.color);
+              shape = canvas.makeLine([pt1, pt2], drawShape.name, drawShape.color);
             }
           } else if (drawShape.curve) {
-            canvas.makeCurve(drawShape.curve);
+            shape = canvas.makeCurve(drawShape.curve);
           }
+
+          shape.lineId = drawShape.id;
+          shape.on('over', function(){
+            scope.hoveredLine = this.lineId;
+          });
+          shape.on('out', function(){
+            scope.hoveredLine = -1;
+          });
         };
 
         var addCallback = function(add) {
