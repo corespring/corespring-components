@@ -359,7 +359,22 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         setMode: function(newMode) {},
 
-        reset: function() {},
+        reset: function() {
+          scope.feedback = undefined;
+          scope.response = undefined;
+          scope.correctClass = undefined;
+          scope.unlockGraph();
+
+          scope.inputStyle = {
+            width: "40px"
+          };
+
+
+          scope.correctResponse = undefined;
+          scope.lines = [];
+
+          scope.startOver();
+        },
 
         isAnswerEmpty: function() {
           return false;
