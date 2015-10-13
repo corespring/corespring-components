@@ -1,16 +1,27 @@
+@import '../../../../../less/common';
 .point-interaction-view {
-  @warning-color: #FFF;
-  @warning-color-background: #999;
+  
   .jxgbox {
     position:relative;
-    overflow:hidden;
+    overflow: visible!important;
     background-color:#ffffff;
-    border-style:solid;
-    border-width:1px;
-    border-color:#356AA0;
-    border-radius:10px;
-    -webkit-border-radius:10px;
     -ms-touch-action: none;
+  }
+  .axis {
+    position: absolute;
+    width: auto;
+    text-align: center;
+    margin-top: -5px;
+    height: 20px;
+    white-space: nowrap;
+    &.domain-axis {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg); /* IE 9 */
+      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    }
+    &.range-axis {
+      top: -15px!important;
+    }
   }
   .JXGtext {
     background-color: transparent;
@@ -35,6 +46,11 @@
     .solution-container {
       margin-left: auto;
       margin-right: auto;
+      position: relative;
+      margin-top: 20px;
+    }
+    .panel-body {
+      padding: 20px 15px 15px 15px;
     }
   }
   .solution-panel.panelVisible {
@@ -50,8 +66,6 @@
     }
   }
   .graph-controls {
-    background-color: #cccccc;
-    border-radius: 4px;
     padding: 5px;
   }
   .scale-display {
@@ -66,12 +80,15 @@
   }
   .graph-interaction {
     background-color: #ffffff;
-    margin-top: 10px;
-    padding: 10px 10px 0 10px;
+    margin: 10px 20px 20px 0;
+    padding: 10px 10px 10px 10px;
     max-width: 600px;
   }
   .graph-container {
-    margin: 20px auto;
+    margin-top: 30px;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
   }
   .point-display p, input {
     display: inline;
@@ -150,5 +167,19 @@
   .graph-attributes-usage-section {
     margin: 0 0 15px 8px;
     font-style: italic;
+  }
+
+  .input-number-label {
+    margin-bottom: 0;
+    padding-top: 7px;
+  }
+
+  .inline-error-messages {
+    min-height: 35px;
+  }
+
+  .inline-error-message {
+    color: red;
+    font-size: 12px;
   }
 }

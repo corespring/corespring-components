@@ -133,6 +133,7 @@ var main = [
             scope.local.choices = withoutPlacedChoices();
           }
 
+          scope.initUndo();
           renderAnswerArea(".answer-area-holder", scope.$new());
         },
 
@@ -153,6 +154,21 @@ var main = [
 
         isAnswerEmpty: function(){
           return this.getSession().numberOfAnswers === 0;
+        },
+
+        setInstructorData: function(data) {
+          $log.debug("[DnD-inline] setInstructorData: ", data);
+          scope.instructorData = data;
+          _.each(data.correctResponse, function(v, k) {
+            scope.landingPlaceChoices[k] = _.map(v, scope.cleanChoiceForId);
+          });
+          var feedback = _.cloneDeep(data.correctResponse);
+          for (var f in feedback) {
+            feedback[f] = _.map(feedback[f], function() { return "correct"; });
+          }
+          scope.response = {
+            feedbackPerChoice: feedback
+          };
         },
 
         setResponse: function(response) {
@@ -186,9 +202,12 @@ var main = [
         reset: function() {
           scope.resetChoices(scope.rawModel);
 
+          scope.instructorData = undefined;
           scope.seeSolutionExpanded = false;
           scope.correctResponse = undefined;
           scope.response = undefined;
+
+          scope.initUndo();
         }
       });
 
@@ -238,7 +257,7 @@ var main = [
     function template() {
       function choiceArea() {
         return [
-          '<div class="choices-holder" >',
+          '<div class="choices-holder" ng-hide="instructorData" >',
           '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
           '    <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
           '  </div>',
@@ -259,8 +278,8 @@ var main = [
       return [
         '<div class="render-csdndi" drag-and-drop-controller>',
         '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
-        '    <span cs-undo-button></span>',
-        '    <span cs-start-over-button></span>',
+        '    <span cs-undo-button-with-model></span>',
+        '    <span cs-start-over-button-with-model></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">', choiceArea(), '</div>',

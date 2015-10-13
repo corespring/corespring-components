@@ -5,6 +5,7 @@ exports.directives = [{
     '$timeout',
     'ColumnLayout',
     'CompactLayout',
+    'CsUndoModel',
     'LayoutConfig',
     'LayoutRunner',
     'MathJaxService',
@@ -17,6 +18,7 @@ function renderCorespringDndCategorize(
   $timeout,
   ColumnLayout,
   CompactLayout,
+  CsUndoModel,
   LayoutConfig,
   LayoutRunner,
   MathJaxService
@@ -53,11 +55,14 @@ function renderCorespringDndCategorize(
     var layout;
 
     scope.correctAnswerRows = [[]];
-    scope.editable = false;
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
     scope.rows = [[]];
     scope.shouldFlip = false;
+
+    scope.undoModel = new CsUndoModel();
+    scope.undoModel.setGetState(getState);
+    scope.undoModel.setRevertState(revertState);
 
     scope.getEditMode = getEditMode;
     scope.isDragEnabled = isDragEnabled;
@@ -66,7 +71,6 @@ function renderCorespringDndCategorize(
     scope.onCategoryDrop = onCategoryDrop;
     scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
     scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
-    scope.revertToState = revertToState;
 
     scope.containerBridge = {
       answerChangedHandler: saveAnswerChangedCallback,
@@ -76,12 +80,13 @@ function renderCorespringDndCategorize(
       reset: reset,
       setDataAndSession: setDataAndSession,
       setMode: function(mode) {},
-      setResponse: setResponse
+      setResponse: setResponse,
+      setInstructorData: setInstructorData
     };
 
     scope.$watch('categoriesPerRow', updateView);
     scope.$watch('choicesPerRow', updateView);
-    scope.$watch('renderModel', callAnswerChangedHandlerIfAnswersHaveChanged, true);
+    scope.$watch('renderModel', onRenderModelChange, true);
     scope.$watch('renderModel.categories.length', updateView);
     scope.$watch('renderModel.choices.length', updateView);
     scope.$watch('shouldFlip', updateView);
@@ -114,6 +119,7 @@ function renderCorespringDndCategorize(
       scope.$broadcast('reset');
       scope.renderModel = prepareRenderModel(scope.data.model, scope.session);
       scope.saveRenderModel = _.cloneDeep(scope.renderModel);
+      scope.undoModel.init();
       updateView();
     }
 
@@ -174,6 +180,24 @@ function renderCorespringDndCategorize(
       return 0 === getSession().numberOfAnswers;
     }
 
+    function setInstructorData(data) {
+      log('setInstructorData', data);
+      scope.renderModel = prepareRenderModel(scope.data.model, {answers: data.correctResponse});
+      scope.renderModel.choices = [];
+
+      var detailedFeedback = {};
+      var categories = _.map(scope.data.model.categories, wrapCategoryModel);
+      _.forEach(categories, function(cat) {
+        detailedFeedback[cat.model.id] = {correctness: _.map(data.correctResponse[cat.model.id], function(c) {
+          return "correct";
+        })};
+      });
+
+      scope.containerBridge.setResponse({correctness: "correct", correctClass: "correct", score: 1, correctResponse: data.correctResponse, detailedFeedback: detailedFeedback});
+      scope.response = "dummy";
+      scope.editable = false;
+    }
+
     function setResponse(response) {
       log('setResponse', response);
       scope.response = response;
@@ -230,33 +254,38 @@ function renderCorespringDndCategorize(
 
     function reset() {
       scope.$broadcast('reset');
-
-      scope.editable = true;
       scope.isSeeAnswerPanelExpanded = false;
       scope.response = undefined;
 
       scope.renderModel = _.cloneDeep(scope.saveRenderModel);
+      scope.undoModel.init();
       updateView();
     }
 
     function setEditable(e) {
-      scope.editable = true;
+      scope.editable = e;
     }
 
     function saveAnswerChangedCallback(callback) {
       scope.answerChangedCallback = callback;
     }
 
-    var lastSession = null;
+    function getState(){
+      return scope.renderModel;
+    }
 
-    function callAnswerChangedHandlerIfAnswersHaveChanged() {
+    function revertState(state){
+      scope.renderModel = state;
+      updateView();
+    }
+
+    function onRenderModelChange() {
       if (_.isFunction(scope.answerChangedCallback)) {
-        var session = getSession();
-        if (!_.isEqual(session, lastSession)) {
-          lastSession = session;
+        if(!isAnswerEmpty()){
           scope.answerChangedCallback();
         }
       }
+      scope.undoModel.remember();
     }
 
     function initLayouts() {
@@ -525,10 +554,9 @@ function renderCorespringDndCategorize(
       return 'editable';
     }
 
-    function revertToState(state) {
-      scope.renderModel = _.cloneDeep(state);
-      updateView();
-    }
+    scope.canEdit = function() {
+      return scope.editable && !scope.response;
+    };
 
     function byModelId(id) {
       return function(object) {
@@ -560,18 +588,21 @@ function renderCorespringDndCategorize(
 
   function undoStartOver() {
     return [
-        '<div corespring-undo-start-over="" ',
-        '    ng-show="editable"',
-        '    render-model="renderModel"',
-        '    revert-to-state="revertToState(state)"',
-        '></div>'
+        '<div>',
+        '  <div class="undo-start-over pull-right" ng-show="canEdit()">',
+        '    <span cs-undo-button-with-model></span>',
+        '    <span cs-start-over-button-with-model></span>',
+        '  </div>',
+        '  <div class="clearfix"></div>',
+        '</div>'
       ].join('');
   }
 
   function itemFeedbackPanel() {
     return [
         '<div feedback="response.feedback"',
-        '   correct-class="{{response.correctClass}} {{response.warningClass}}"></div>'
+        '   correct-class="{{response.correctClass}} {{response.warningClass}}">',
+        '</div>'
       ].join('');
   }
 

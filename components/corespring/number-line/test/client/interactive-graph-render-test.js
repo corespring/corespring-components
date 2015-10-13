@@ -821,7 +821,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
 
     it('undo undoes adding point', function() {
       scope.addElement(1, "PF");
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([
         {
@@ -840,7 +840,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
         type: 'point'
       });
       scope.$digest();
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([
         {
@@ -856,7 +856,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
       nodeScope.responseModel[0].domainPosition = 5;
       scope.graph.elements[0].options.onMoveFinished('point', 5);
       scope.$digest();
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([
         {
@@ -869,6 +869,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
     });
 
     it('start over goes back to initial view, if startOverClearsGraph is false', function() {
+      nodeScope.graphOptions.startOverClearsGraph = false;
       scope.startOver();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([

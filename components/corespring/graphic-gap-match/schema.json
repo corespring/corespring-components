@@ -1,38 +1,27 @@
 {
-  "title" : "CoreSpring Number Line Question Schema",
+  "title" : "CoreSpring Graphic Gap Match Question Schema",
   "type" : "object",
   "properties" : {
     "componentType" : {
-      "description" : "A required value to indicate the component type. For number line, this must be 'corespring-number-line'.",
+      "description" : "A required value to indicate the component type. For number line, this must be 'corespring-graphic-gap-match'.",
       "type" : "string"
     },
     "correctResponse" : {
       "type" : "array",
       "description" : "Describes the correct response of points, rays, lines to be displayed on the number line.",
       "items" : {
+        "type" : "object",
         "properties" : {
-          "type" : {
-            "enum" : ["point", "line", "ray"],
-            "description" : "Describes whether the correct response is a point, line, or ray."
+          "id" : {
+            "type" : "string",
+            "description" : "The id of the correct choice"
           },
-          "pointType" : {
-            "enum" : ["full", "empty"],
-            "description" : "Describes whether the point of a ray are filled-in or empty. Only applies for ray element."
-          },
-          "leftPoint" : {
-            "enum" : ["full", "empty"],
-            "description" : "Describes whether the left point of a line is filled-in or empty. Only applies for line element."
-          },
-          "rightPoint" : {
-            "enum" : ["full", "empty"],
-            "description" : "Describes whether the right point of a line is filled-in or empty. Only applies for line element."
-          },
-          "domainPosition" : {
-            "type" : "number",
-            "description" : "The value on the number line which represents the correct answer."
+          "hotspot" : {
+            "type" : "string",
+            "description" : "The id of the hotspot to which the correct choice belongs"
           }
         },
-        "required" : ["type", "domainPosition"]
+        "required" : ["id", "hotspot"]
       }
     },
     "model" : {
@@ -42,94 +31,99 @@
           "type" : "object",
           "description" : "An object describing the various configuration properties of the component.",
           "properties" : {
-            "domain" : {
-              "type" : "array",
-              "description" : "A two-number array representing the minimum and maximum values to be displayed on the number line.",
-              "minItems" : 2,
-              "maxItems" : 2
-            },
-            "initialType" : {
-              "type" : "array",
-              "description" : "The initial type of point, line, or ray to be set by the component.",
-              "items" : {
-                "enum" : ["PF", "LEE", "LEF", "LFE", "LFF", "REP", "REN", "RFP", "RFN"]
-              }
-            },
-            "snapPerTick" : {
-              "type" : "number",
-              "description" : "The number of positions that are clickable between two ticks."
-            },
-            "showMinorTicks" : {
+            "shuffle" : {
               "type" : "boolean",
-              "description" : "If true, show minor tick labels in the component."
+              "description" : "If true, the choices will be shuffled."
             },
-            "exhibitOnly" : {
+            "choiceAreaPosition" : {
+              "enum" : ["top","left","bottom","right"],
+              "description" : "Defines the location of the choice area in relation to the placement area."
+            },
+            "showHotspots" : {
               "type" : "boolean",
-              "description" : "If true, the interacting with the component is disabled."
+              "description" : "If true, the hotspot areas will be marked on the background."
             },
-            "maxNumberOfPoints" : {
-              "type" : "number",
-              "description" : "The number of points which may be added to the component by the user."
-            },
-            "tickFrequency" : {
-              "type" : "number",
-              "description" : "The total number of major ticks on the number line."
-            },
-            "availableTypes" : {
+            "backgroundImage" : {
               "type" : "object",
-              "description" : "An object mapping point, ray, and line types to boolean values which specify whether or not the types are available for use in the component."
-            },
-            "initialElements" : {
-              "type" : "array",
-              "description" : "Describes the elements that are to be initially displayed on the number line.",
-              "items" : {
-                "properties" : {
-                  "type" : {
-                    "enum" : ["point", "line", "ray"],
-                    "description" : "Describes whether the correct response is a point, line, or ray."
-                  },
-                  "pointType" : {
-                    "enum" : ["full", "empty"],
-                    "description" : "Describes whether the point of a ray are filled-in or empty. Only applies for ray element."
-                  },
-                  "leftPoint" : {
-                    "enum" : ["full", "empty"],
-                    "description" : "Describes whether the left point of a line is filled-in or empty. Only applies for line element."
-                  },
-                  "rightPoint" : {
-                    "enum" : ["full", "empty"],
-                    "description" : "Describes whether the right point of a line is filled-in or empty. Only applies for line element."
-                  },
-                  "domainPosition" : {
-                    "type" : "number",
-                    "description" : "The domain (horizontal axis) position of the element."
-                  },
-                  "rangePosition" : {
-                    "type" : "number",
-                    "description" : "The range (vertical axis) position of the element."
-                  }
+              "description" : "Describes the background image of the placement area.",
+              "properties" : {
+                "path": {
+                  "type": "string",
+                  "description" : "The path of the image."
                 },
-                "required" : ["type", "domainPosition","rangePosition"]
-              }
-            },
-            "ticks" : {
-              "type" : "array",
-              "description" : "Describes the ticks that are to be displayed along the number line. If this is present tickFrequency will be ignored.",
-              "items" : {
-                "type" : "object",
-                "properties" : {
-                  "label" : {
-                    "type" : "string",
-                    "description" : "The label to be displayed above the tick."
-                  },
-                  "value" : {
-                    "type" : "number",
-                    "description" : "The value of the tick on the number line."
-                  }
+                "width": {
+                  "type": "number",
+                  "description" : "Width of the image in pixels."
                 },
-                "required" : ["label", "value"]
+                "height": {
+                  "type": "number",
+                  "description" : "Height of the image in pixels."
+                }
               }
             }
+          }
+        },
+        "hotspots": {
+          "type": "array",
+          "description" : "Describes the hotspot areas",
+          "items": {
+            "type" : "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description" : "Hotspot area id"
+              },
+              "shape": {
+                "enum": ["rect"],
+                "description" : "Shape of the hotspot area. Currently only rect is supported."
+              },
+              "coords": {
+                "type": "object",
+                "description" : "This object defines the boundaries of the hotspot area.",
+                "properties": {
+                  "left": {
+                    "type": "number",
+                    "description" : "Left side of hotspot area."
+                  },
+                  "top": {
+                    "type": "number",
+                    "description" : "Top side of hotspot area."
+                  },
+                  "width": {
+                    "type": "number",
+                    "description" : "Width of hotspot area."
+                  },
+                  "height": {
+                    "type": "number",
+                    "description" : "Height of hotspot area."
+                  }
+                },
+                "required" : ["left", "top","width","height"]
+              }
+            },
+            "required" : ["id", "shape","coords"]
+          }
+        },
+        "choices": {
+          "type": "array",
+          "description": "Describes the draggable choices of the interaction.",
+          "items": {
+            "type" : "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description" : "Id of the choice."
+              },
+              "label": {
+                "type": "string",
+                "description" : "HTML representing the choice, should be an img."
+              },
+              "matchMax": {
+                "type": "number",
+                "description" : "Governs how many times the choice can be dragged to the placement area. Default is 0 which means the choice can be dragged any number of times."
+              }
+            },
+            "required" : ["id", "label"]
           }
         }
       },

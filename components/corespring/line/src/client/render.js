@@ -80,7 +80,8 @@ var main = ['$compile', '$rootScope', "LineUtils",
             scope.equation = "y=" + slope + "x+" + yintercept;
             scope.graphCallback({
               drawShape: {
-                line: ["A", "B"]
+                line: ["A", "B"],
+                name: scope.config.curveLabel
               }
             });
           } else {
@@ -159,7 +160,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
                     x: pointA[0],
                     y: pointA[1],
                     isSet: true,
-                    isVisible: false
+                    isVisible: true
                 },
                 B: {
                     x: pointB[0],
@@ -175,17 +176,36 @@ var main = ['$compile', '$rootScope', "LineUtils",
       };
 
       var createGraphAttributes = function(config, graphCallback) {
+
+        function getModelValue(property, defaultValue, fallbackValue) {
+          if (typeof property !== 'undefined' && property !== null) {
+            return property;
+          } else {
+            if (typeof fallbackValue !== 'undefined' && property !== null) {
+              return fallbackValue;
+            } else {
+              return defaultValue;
+            }
+          }
+        }
+
         return {
           "jsx-graph": "",
           "graph-callback": graphCallback || "graphCallback",
           "interaction-callback": "interactionCallback",
           maxPoints: 2,
-          domain: parseInt(config.domain ? config.domain : 10, 10),
-          range: parseInt(config.range ? config.range : 10, 10),
-          scale: parseFloat(config.scale ? config.scale : 1),
+          graphPadding: parseInt(getModelValue(config.graphPadding, 25), 10),
           domainLabel: config.domainLabel,
+          domainMin: parseFloat(getModelValue(config.domainMin, -10, config.domain * -1), 10),
+          domainMax: parseFloat(getModelValue(config.domainMax, 10, config.domain), 10),
+          domainStepValue: parseFloat(getModelValue(config.domainStepValue)),
+          domainLabelFrequency: parseFloat(getModelValue(config.domainLabelFrequency, 1, config.tickLabelFrequency), 10),
           rangeLabel: config.rangeLabel,
-          tickLabelFrequency: config.tickLabelFrequency,
+          rangeMin: parseFloat(getModelValue(config.rangeMin, -10, config.range * -1)),
+          rangeMax: parseFloat(getModelValue(config.rangeMax, 10, config.range * 1)),
+          rangeStepValue: parseFloat(getModelValue(config.rangeStepValue)),
+          rangeLabelFrequency: parseFloat(getModelValue(config.rangeLabelFrequency, 1, config.tickLabelFrequency, 10)),
+          scale: parseFloat(config.scale ? config.scale : 1),
           showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
           showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
           showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : true,
@@ -311,6 +331,21 @@ var main = ['$compile', '$rootScope', "LineUtils",
           };
         },
 
+        setInstructorData: function(data) {
+          var cr = lineUtils.expressionize(data.correctResponse, "x");
+          scope.graphCallback({
+            clearBoard: true
+          });
+          scope.graphCallback({
+            drawShape: {
+              curve: function(x) {
+                return eval(cr);
+              }
+            }
+          });
+          this.setResponse({correctness: 'correct'});
+        },
+
         setResponse: function(response) {
           if (!response) {
             return;
@@ -366,6 +401,7 @@ var main = ['$compile', '$rootScope', "LineUtils",
           scope.response = undefined;
           scope.correctClass = undefined;
           scope.graphCallback({
+            clearBoard: true,
             graphStyle: {}
           });
           scope.unlockGraph();
@@ -435,7 +471,6 @@ var main = ['$compile', '$rootScope', "LineUtils",
         "          </div>",
         "      </div>",
         "      <div class='scale-display'>",
-        "        <span>scale={{scale}}</span>",
         "         <div class='action undo'>",
         "           <a title='Undo' ng-click='undo()'>",
         "             <i class='fa fa-undo'/>",

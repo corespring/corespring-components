@@ -124,40 +124,33 @@ describe('corespring:number-line:render', function() {
     expect(element).not.toBe(null);
   });
 
-
-  it('answer change handler does not get called initially', function() {
-    container.elements['1'].setDataAndSession(testModel);
+  describe('answer changed handler', function() {
     var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+
+    beforeEach(function(){
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function (c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
     });
 
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(false);
-  });
-
-  it('answer change handler gets called when new response gets added', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+    it('does not get called initially', function () {
+      expect(changeHandlerCalled).toBe(false);
     });
-    scope.$digest();
-    scope.response.push('resp');
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(true);
-  });
 
-  it('answer change handler gets called when response gets removed', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+    it('is called when new response gets added', function () {
+      scope.response.push('resp');
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
     });
-    scope.$digest();
-    scope.response = _.initial(scope.response);
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(true);
+
+    it('is called when response gets removed', function () {
+      scope.response = _.initial(scope.response);
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
   });
 
   describe('isAnswerEmpty', function() {
@@ -178,6 +171,20 @@ describe('corespring:number-line:render', function() {
       container.elements['1'].setDataAndSession(testModel);
       scope.response = [{ type : 'point', pointType : 'full', domainPosition : 3, rangePosition : 0 }];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  describe('instructor data', function() {
+    it('should set up number line with correct answer', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse');
+      spyOn(container.elements['1'],'editable');
+      container.elements['1'].setInstructorData({correctResponse: [{}, {}]});
+      expect(container.elements['1'].editable).toHaveBeenCalledWith(false);
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'correct',
+        feedback: {elements: [{isCorrect: true}, {isCorrect: true}]}
+      });
     });
   });
 

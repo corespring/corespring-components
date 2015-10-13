@@ -4,17 +4,12 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('match', function() {
 
   "use strict";
 
   var itemJsonFilename = 'CO-166.json';
-  var itemJson = RegressionHelper.getItemJson('match', itemJsonFilename);
+  var itemJson = browser.options.getItemJson('match', itemJsonFilename);
 
   function answerInput(questionId){
     return '.question-row[question-id="' + questionId + '"] .corespring-match-choice.input';
@@ -40,12 +35,12 @@ describe('match', function() {
     };
 
     browser.waitForWithTimeout = function(selector){
-      return browser.waitFor(selector, regressionTestRunnerGlobals.defaultTimeout);
+      return browser.waitFor(selector);
     };
 
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
-      .url(RegressionHelper.getUrl('match', itemJsonFilename))
+      .timeouts('implicit', browser.options.defaultTimeout)
+      .url(browser.options.getUrl('match', itemJsonFilename))
       .waitForWithTimeout(answerInput('Row3'))
       .call(done);
   });

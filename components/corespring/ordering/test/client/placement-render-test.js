@@ -110,6 +110,10 @@ describe('corespring:placement ordering', function() {
     scope.$digest();
   }
 
+  function setInstructorDataAndDigest(data) {
+    container.elements['1'].setInstructorData(data);
+    scope.$digest();
+  }
 
   it('constructs', function() {
     expect(element.html()).toBeDefined();
@@ -129,20 +133,6 @@ describe('corespring:placement ordering', function() {
     };
     setModelAndDigest(modelWithSession);
     expect(_(element.scope().landingPlaceChoices).pluck('id').reject(_.isEmpty).value()).toEqual(modelWithSession.session.answers);
-  });
-
-  it('change handler is called when answer changes', function() {
-    var mock = {
-      handler: function() {}
-    };
-    spyOn(mock, 'handler');
-
-    container.elements['1'].answerChangedHandler(mock.handler);
-
-    setModelAndDigest(verticalModel);
-    scope.landingPlaceChoices[0] = 'c1';
-    scope.$apply();
-    expect(mock.handler).toHaveBeenCalled();
   });
 
 
@@ -478,7 +468,40 @@ describe('corespring:placement ordering', function() {
     });
   });
 
+  describe('instructor data', function () {
+    it('should call setResponse with correct response', function () {
+      spyOn(container.elements['1'], 'setResponse');
+      setModelAndDigest(verticalModel);
+      setInstructorDataAndDigest({correctResponse: ['a', 'c', 'b', 'd']});
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({ correctness: 'correct', correctResponse: [ 'a', 'c', 'b', 'd' ] });
+    });
+  });
+
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      setModelAndDigest(verticalModel);
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when the answer is changed', function() {
+      scope.landingPlaceChoices[0] = 'c1';
+      rootScope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 });

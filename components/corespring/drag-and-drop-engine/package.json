@@ -11,6 +11,10 @@
     {
       "name": "server-shared",
       "organization": "corespring"
+    },
+    {
+      "name": "widgets",
+      "organization": "corespring"
     }
   ],
   "dependencies": {

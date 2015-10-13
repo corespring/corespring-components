@@ -19,8 +19,9 @@
   },
   "model": {
     "config": {
-      "graphWidth": "500",
-      "graphHeight": "500",
+      "graphWidth": 500,
+      "graphHeight": 500,
+      "graphPadding": 50,
       "maxPoints": "",
       "labelsType": "present",
       "pointLabels": [
@@ -30,10 +31,15 @@
         "D"
       ],
       "domainLabel": "x",
-      "domain": 10,
+      "domainMin": -10,
+      "domainMax": 10,
+      "domainStepValue": 1,
+      "domainLabelFrequency": 1,
       "rangeLabel": "y",
-      "range": 10,
-      "tickLabelFrequency": 5,
+      "rangeMin": -10,
+      "rangeMax": 10,
+      "rangeStepValue": 1,
+      "rangeLabelFrequency": 1,
       "scale": 1,
       "sigfigs": -1,
       "showCoordinates": false,

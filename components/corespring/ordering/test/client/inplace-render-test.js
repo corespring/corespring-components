@@ -69,6 +69,11 @@ describe('corespring:ordering-in-place', function () {
     scope.$digest();
   }
 
+  function setInstructorDataAndDigest(data) {
+    container.elements['1'].setInstructorData(data);
+    scope.$digest();
+  }
+
   it('defaults to inplace ordering', function () {
     setModelAndDigest(verticalModel);
     expect($(element).find('.view-ordering').length).toBeGreaterThan(0);
@@ -92,22 +97,6 @@ describe('corespring:ordering-in-place', function () {
       setModelAndDigest(modelWithSession);
       expect(_.pluck(element.scope().local.choices, 'id')).toEqual(modelWithSession.session.answers);
     });
-
-    it('change handler is called when answer changes', function () {
-      var mock = {
-        handler: function () {
-        }
-      };
-      spyOn(mock, 'handler');
-
-      container.elements['1'].answerChangedHandler(mock.handler);
-
-      setModelAndDigest(verticalModel);
-      scope.local.choices = ['c', 'a', 'b', 'd'];
-      scope.$apply();
-      expect(mock.handler).toHaveBeenCalled();
-    });
-
 
     describe('vertical layout', function () {
       it('renders by default', function () {
@@ -327,7 +316,39 @@ describe('corespring:ordering-in-place', function () {
     });
   });
 
+  describe('instructor data', function () {
+    it('should call setResponse with correct response', function () {
+      spyOn(container.elements['1'], 'setResponse');
+      setModelAndDigest(verticalModel);
+      setInstructorDataAndDigest({correctResponse: ['a', 'c', 'b', 'd']});
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({ correctness: 'correct', correctResponse: [ 'a', 'c', 'b', 'd' ] });
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      setModelAndDigest(verticalModel);
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when the answer is changed', function() {
+      scope.local.choices = ['c', 'a', 'b', 'd'];
+      rootScope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 });

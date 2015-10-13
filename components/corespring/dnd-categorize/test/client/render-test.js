@@ -45,6 +45,25 @@ describe('corespring:dnd-categorize:render', function() {
     session: {}
   };
 
+  var instructorData = {
+    correctResponse: {
+      "cat_1": ["choice_1"],
+      "cat_2": ["choice_2"]
+    }
+  };
+
+  function ignoreAngularIds(obj){
+    var newObj = _.cloneDeep(obj);
+    for( var s in newObj){
+      if(s === '$$hashKey'){
+        delete newObj[s];
+      } else if(_.isObject(newObj[s])) {
+        newObj[s] = ignoreAngularIds(newObj[s]);
+      }
+    }
+    return newObj;
+  }
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -79,6 +98,11 @@ describe('corespring:dnd-categorize:render', function() {
 
   function setModelAndDigest() {
     container.elements['1'].setDataAndSession(testModel);
+    rootScope.$digest();
+  }
+
+  function setInstructorDataAndDigest() {
+    container.elements['1'].setInstructorData(instructorData);
     rootScope.$digest();
   }
 
@@ -143,25 +167,6 @@ describe('corespring:dnd-categorize:render', function() {
       scope.renderModel = {};
       container.elements['1'].reset();
       expect(scope.renderModel).toEqual(ignoreAngularIds(saveRenderModel));
-
-      function ignoreAngularIds(renderModel) {
-        renderModel = _.cloneDeep(renderModel);
-        _.forEach(renderModel.categories, function(cat) {
-          delete cat.$$hashKey;
-        });
-        return renderModel;
-      }
-    });
-  });
-
-  describe('answerChangedCallback', function() {
-    beforeEach(setModelAndDigest);
-    it('calls answerChangedCallback, when answer changes', function() {
-      var answerChangedCallback = jasmine.createSpy('answerChangedCallback');
-      container.elements['1'].answerChangedHandler(answerChangedCallback);
-      expect(answerChangedCallback).not.toHaveBeenCalled();
-      scope.onCategoryDrop('cat_1', 'choice_1');
-      expect(answerChangedCallback).toHaveBeenCalled();
     });
   });
 
@@ -225,14 +230,6 @@ describe('corespring:dnd-categorize:render', function() {
           correctness: 'correct'
         }]
       }]]);
-
-      function ignoreAngularIds(correctAnswerRows) {
-        correctAnswerRows = _.cloneDeep(correctAnswerRows);
-        _.forEach(correctAnswerRows[0], function(cat) {
-          delete cat.$$hashKey;
-        });
-        return correctAnswerRows;
-      }
     });
 
   });
@@ -264,6 +261,33 @@ describe('corespring:dnd-categorize:render', function() {
 
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      setModelAndDigest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a answer is selected', function() {
+      scope.renderModel.categories[0].choices = [{
+        model: {
+          id: 'choice_1'
+        }
+      }];
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 
   describe('getEditMode', function() {
@@ -371,13 +395,25 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
-  describe('revertToState', function() {
+  describe('undo', function(){
     beforeEach(setModelAndDigest);
-    it('should revert renderModel', function() {
-      var state = scope.renderModel;
-      scope.renderModel = null;
-      scope.revertToState(state);
-      expect(scope.renderModel).toEqual(state);
+    it('should revert renderModel', function(){
+      var saveState = _.cloneDeep(scope.renderModel);
+      scope.renderModel = {};
+      scope.$digest();
+      scope.undoModel.undo();
+      expect(scope.renderModel).toEqual(ignoreAngularIds(saveState));
+    });
+  });
+
+  describe('startOver', function(){
+    beforeEach(setModelAndDigest);
+    it('should revert renderModel', function(){
+      var saveState = _.cloneDeep(scope.renderModel);
+      scope.renderModel = {};
+      scope.$digest();
+      scope.undoModel.startOver();
+      expect(scope.renderModel).toEqual(ignoreAngularIds(saveState));
     });
   });
 
@@ -409,6 +445,63 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
+  describe('instructor data', function() {
+    it('should be false, if response has been set', function() {
+      spyOn(container.elements['1'], 'setResponse');
+      setModelAndDigest();
+      setInstructorDataAndDigest();
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'correct',
+        correctClass: 'correct',
+        score: 1,
+        correctResponse: {
+          cat_1: [ 'choice_1' ],
+          cat_2: [ 'choice_2' ]
+        },
+        detailedFeedback: {
+          cat_1: { correctness: [ 'correct' ] },
+          cat_2: { correctness: [ 'correct' ] }
+        }
+      });
+      expect(scope.response).toEqual('dummy');
+      expect(scope.editable).toEqual(false);
+    });
+  });
 
+  describe('canEdit', function(){
+    describe('without a response', function(){
+      beforeEach(function(){
+        scope.response = null;
+      });
+
+      it('should be true after editable(true) has been called', function(){
+        scope.containerBridge.editable(true);
+        expect(scope.canEdit()).toBe(true);
+      });
+
+      it('should be false after editable(false) has been called', function(){
+        scope.containerBridge.editable(false);
+        expect(scope.canEdit()).toBe(false);
+      });
+    });
+
+    describe('with response', function(){
+
+      beforeEach(function(){
+        scope.response = {};
+      });
+
+      it('should be false after editable(true) has been called', function(){
+        scope.containerBridge.editable(true);
+        expect(scope.canEdit()).toBe(false);
+      });
+
+      it('should be false after editable(false) has been called', function(){
+        scope.containerBridge.editable(false);
+        expect(scope.canEdit()).toBe(false);
+      });
+    });
+
+  });
 
 });

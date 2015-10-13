@@ -1,17 +1,28 @@
+@import '../../../../../less/common';
+
 .line-interaction-view {
-  @warning-color: #FFF;
-  @warning-color-border: #999;
-  @warning-color-background: #999;
   .jxgbox {
     position: relative;
-    overflow: hidden;
+    overflow: visible!important;
     background-color: #ffffff;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #356AA0;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
     -ms-touch-action: none;
+  }
+
+  .axis {
+    position: absolute;
+    width: auto;
+    text-align: center;
+    margin-top: -5px;
+    height: 20px;
+    white-space: nowrap;
+    &.domain-axis {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg); /* IE 9 */
+      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    }
+    &.range-axis {
+      top: -15px!important;
+    }
   }
   .JXGtext {
     background-color: transparent;
@@ -57,6 +68,8 @@
     .solution-graph {
       margin-left: auto;
       margin-right: auto;
+      position: relative;
+      margin-top: 30px;
     }
   }
   .solution-panel.panelVisible {
@@ -78,9 +91,10 @@
     }
   }
   .graph-container {
-    margin-top: 20px;
+    margin-top: 30px;
     margin-right: auto;
     margin-left: auto;
+    position: relative;
   }
   .graph-controls {
     background-color: #cccccc;
@@ -107,7 +121,7 @@
     cursor: pointer;
   }
   .graph-interaction {
-    margin-top: 10px;
+    margin: 10px 20px 20px 0;
     padding: 10px;
     max-width: 600px;
     &.warning {
@@ -145,5 +159,19 @@
   .reset-defaults {
     margin: 20px 0 20px 0;
     font-style: italic;
+  }
+
+  .input-number-label {
+    margin-bottom: 0;
+    padding-top: 7px;
+  }
+
+  .inline-error-messages {
+    min-height: 35px;
+  }
+
+  .inline-error-message {
+    color: red;
+    font-size: 12px;
   }
 }

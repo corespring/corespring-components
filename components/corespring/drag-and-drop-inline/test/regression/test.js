@@ -4,12 +4,6 @@ var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('drag and drop inline', function() {
 
   "use strict";
@@ -43,16 +37,16 @@ describe('drag and drop inline', function() {
 
   beforeEach(function() {
     browser
-      .timeouts("implicit", regressionTestRunnerGlobals.defaultTimeout)
-      .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
+      .timeouts("implicit", browser.options.defaultTimeout)
+      .url(browser.options.getUrl(componentName, itemJsonFilename))
       .waitFor(landingPlace('aa_1'));
   });
 
-  it.only('correct answer results in correct feedback', function(done) {
+  it('correct answer results in correct feedback', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .pause(60000)
+      .pause(1000)
       .waitFor('.feedback.correct')
       .call(done);
   });

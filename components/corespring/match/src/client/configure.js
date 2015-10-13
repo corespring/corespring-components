@@ -12,6 +12,8 @@ var main = [
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef) {
 
+    var $log = LogFactory.getLogger('corespring-match-configure');
+
     return {
       scope: {},
       restrict: 'E',
@@ -31,11 +33,17 @@ var main = [
           new WiggiMathJaxFeatureDef()
         ]
       };
+
+      scope.sumCorrectAnswers = function() {
+        var total = _.reduce(scope.fullModel.correctResponse, function(sum, row) {
+          return sum + ((row.matchSet && row.matchSet.indexOf(true) >= 0) ? 1 : 0);
+        }, 0);
+        $log.debug("sumCorrectAnswers", total, scope.fullModel.correctResponse);
+        return total;
+      };
     }
 
     function link(scope, element, attrs) {
-
-      var $log = LogFactory.getLogger('corespring-match-configure');
 
       var MIN_COLUMNS = 3;
       var MAX_COLUMNS = 5;
@@ -104,6 +112,9 @@ var main = [
 
       function setModel(fullModel) {
         scope.fullModel = fullModel || {};
+        if (!scope.fullModel.partialScoring || scope.fullModel.partialScoring.length === 0) {
+          scope.fullModel.partialScoring = [{}];
+        }
         scope.model = scope.fullModel.model;
         scope.config = getConfig(scope.model);
 
@@ -119,7 +130,7 @@ var main = [
       function updateEditorModels() {
         $log.debug("updateEditorModels in");
         scope.matchModel = createMatchModel();
-        scope.numberOfCorrectResponses = sumCorrectAnswers();
+        scope.numberOfCorrectResponses = scope.sumCorrectAnswers();
         $log.debug("updateEditorModels out");
       }
 
@@ -248,16 +259,6 @@ var main = [
         }
       }
 
-      function sumCorrectAnswers() {
-        var total = _.reduce(scope.fullModel.correctResponse, function(sum, row) {
-          return sum + _.reduce(row.matchSet, function(match) {
-            return match ? 1 : 0;
-          });
-        }, 0);
-        $log.debug("sumCorrectAnswers", total, scope.fullModel.correctResponse);
-        return total;
-      }
-
       function findFreeRowSlot() {
         var slot = 1;
         var rows = _.pluck(scope.model.rows, 'id');
@@ -297,16 +298,19 @@ var main = [
         return matchModel;
 
         function makeHeaders() {
-          var questionHeaders = [];
+          var questionHeaders = [],
+              questionHeaderId = _.uniqueId();
+
           questionHeaders.push({
-            wiggiId: _.uniqueId(),
-            cssClass: 'question-header',
+            wiggiId: questionHeaderId,
+            cssClass: 'question-header header'+questionHeaderId,
             labelHtml: scope.model.columns[0].labelHtml
           });
           var answerHeaders = scope.model.columns.slice(1).map(function(col) {
+            var answerHeaderId = _.uniqueId();
             return {
-              wiggiId: _.uniqueId(),
-              cssClass: 'answer-header',
+              wiggiId: answerHeaderId,
+              cssClass: 'answer-header header'+answerHeaderId,
               labelHtml: col.labelHtml
             };
           });
@@ -397,7 +401,7 @@ var main = [
         }
 
         if ($this.column) {
-          var elementClass =  '.'+$this.column.cssClass,
+          var elementClass =  '.header'+$this.column.wiggiId,
               elementHtml = $(elementClass).find('.wiggi-wiz-editable')[0].innerHTML;
 
           if (elementHtml ==="Custom header" || elementHtml==="Column 1" || elementHtml==="Column 2" || elementHtml==="Column 3" || elementHtml==="Column 4" ){

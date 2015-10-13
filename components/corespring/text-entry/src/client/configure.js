@@ -81,6 +81,10 @@ function configureTextEntry(
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
+    scope.makeItBigEnough = function(n){
+      return n + 2;
+    };
+
     //-----------------------------------------------------------------
 
     function setModel(fullModel) {
@@ -91,7 +95,7 @@ function configureTextEntry(
       editorModel.partialResponses = editorModel.partialResponses || createResponsesModel(0);
       editorModel.incorrectResponses = editorModel.incorrectResponses || createResponsesModel(0);
       editorModel.model = editorModel.model || {};
-      editorModel.model.answerBlankSize = editorModel.model.answerBlankSize || 8;
+      editorModel.model.answerBlankSize = editorModel.model.answerBlankSize.toString() || 8;
       editorModel.model.answerAlignment = editorModel.model.answerAlignment || 'left';
       scope.editorModel = editorModel;
     }
@@ -310,7 +314,7 @@ function configureTextEntry(
       '        <label class="control-label">Answer blank size</label>',
       '        <div ng-repeat="o in answerBlankSizeDataProvider">',
       '          <radio value="{{o.size}}" ng-model="editorModel.model.answerBlankSize">',
-      '          <input type="text" readonly value="{{o.demoLabel}}" size="{{o.size}}"/> <span>{{o.defaultLabel}}</span>',
+      '          <input type="text" readonly value="{{o.demoLabel}}" size="{{makeItBigEnough(o.size)}}"/> <span>{{o.defaultLabel}}</span>',
       '          </radio>',
       '        </div>',
       '      </div>',

@@ -61,7 +61,13 @@ var main = [
         return _.isEmpty(getSession().answers);
       }
 
-      function answerChangedHandler(callback) {}
+      function answerChangedHandler(callback) {
+        scope.$watch("selectedTokens", function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            callback();
+          }
+        }, true);
+      }
 
       function editable(e) {
         scope.editable = e;

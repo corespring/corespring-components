@@ -68,9 +68,6 @@ exports.preprocess = function(json) {
   if (_.isUndefined(json.model.config.choiceType)) {
     json.model.config.choiceType = (json.correctResponse.value.length === 1) ? "radio" : "checkbox";
   }
-  _.forEach(json.model.choices, function(choice) {
-    delete choice.rationale;
-  });
   return json;
 };
 

@@ -72,7 +72,31 @@ exports.factory = [
                     [1, m + b]
                 ];
             };
+
+            this.expressionize = function(eq, varname) {
+                eq = trimSpaces(eq);
+                eq = replaceVarWithX(eq, varname);
+                eq = makeMultiplicationExplicit(eq);
+                return eq;
+            };
+
+            function trimSpaces(s) {
+                return s.replace(/\s+/g, "");
+            }
+
+            function replaceVarWithX(expression, variable) {
+                return expression.replace(new RegExp(variable, "g"), "(x)");
+            }
+
+            function makeMultiplicationExplicit(eq) {
+                return eq
+                  .replace(/([0-9)])\(/g, "$1*(")
+                  .replace(/\)([0-9(])/g, ")*$1");
+            }
+
         }
+
+
         return LineUtils;
     }
 ];

@@ -147,8 +147,45 @@ describe('corespring', function() {
     });
   });
 
+  describe('set instructor data', function() {
+    it('set correct response in the graph and lock it', function() {
+      spyOn(scope, "renewResponse");
+      spyOn(scope, "lockGraph");
+      spyOn(container.elements['1'], "setResponse");
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData({correctResponse: ["0,0","1,1"]});
+      expect(scope.renewResponse).toHaveBeenCalledWith(['0,0', '1,1']);
+      expect(scope.lockGraph).toHaveBeenCalled();
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({correctness: 'correct'});
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when the answer is changed', function() {
+      scope.pointResponse = ["0.1,0.6"];
+      rootScope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 
 });
