@@ -274,12 +274,12 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         setPoint(point, false);
       };
 
-      scope.lockGraph = function() {
+      scope.lockGraph = function(color) {
         scope.locked = true;
         if (scope.graphCallback) {
           scope.graphCallback({
-            pointsStyle: scope.colorPalette.exhibit,
-            shapesStyle: scope.colorPalette.exhibit,
+            pointsStyle: scope.config.exhibitOnly ? scope.colorPalette.exhibit : color ? color : scope.colorPalette.exhibit,
+            shapesStyle: scope.config.exhibitOnly ? scope.colorPalette.exhibit : color ? color : scope.colorPalette.exhibit,
             lockGraph: true
           });
         }
@@ -355,6 +355,30 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           if (!response) {
             return;
           }
+
+          var color = {
+            correct: "#3c763d",
+            partial: "#3a87ad",
+            incorrect: "#eea236",
+            warning: "#999999",
+            none: ""
+          }[(response && response.correctness) || "none"];
+
+          scope.feedback = response && response.feedback;
+          scope.response = response;
+          scope.correctClass = response.correctness;
+
+          if (response && response.correctness !== 'warning') {
+            scope.inputStyle = _.extend(scope.inputStyle, {
+              border: 'thin solid ' + color
+            });
+
+            if (response.correctness === "partial" || response.correctness === "incorrect") {
+              scope.correctResponse = response.correctResponse;
+            }
+          }
+
+          scope.lockGraph(color);
         },
 
         setMode: function(newMode) {},
@@ -441,6 +465,9 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "      </div>",
         "    </div>",
         "    <div id='graph-container' class='row-fluid graph-container'></div>",
+        "  </div>",
+        "  <div class='feedback-holder' ng-show='true'>",
+        "    <div ng-show='feedback' feedback='feedback' correct-class='{{correctClass}}'></div>",
         "  </div>",
         "</div>"
       ].join("");

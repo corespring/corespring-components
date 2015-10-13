@@ -33,6 +33,16 @@
           "id": "#correctFeedbackType",
           "required": false
         },
+        "partialFeedbackType": {
+          "description": "Determines which feedback should display for the response when partially correct.",
+          "enum": [
+            "custom",
+            "default",
+            "none"
+          ],
+          "id": "#partialFeedbackType",
+          "required": false
+        },
         "incorrectFeedbackType": {
           "description": "Determines which feedback should display for the response when incorrect.",
           "enum": [
@@ -46,6 +56,10 @@
         "correctFeedback": {
           "type": "string",
           "description": "the feedback to display for a correct answer if custom feedback is selected as feedback type"
+        },
+        "partialFeedback": {
+          "type": "string",
+          "description": "the feedback to display for a partially correct answer if custom feedback is selected as feedback type"
         },
         "incorrectFeedback": {
           "type": "string",

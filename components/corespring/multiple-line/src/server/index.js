@@ -107,7 +107,7 @@ exports.createOutcome = function(question, answer, settings) {
   var isPartiallyCorrect = exports.isPartiallyCorrect(answer, _.cloneDeep(question.correctResponse));
 
   var response = {
-    correctness: isCorrect ? "correct" : "incorrect",
+    correctness: isCorrect ? "correct" : isPartiallyCorrect ? "partial" : "incorrect",
     correctResponse: question.correctResponse,
     correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
     score: calculateScore(answer, question)
