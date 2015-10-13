@@ -15,7 +15,7 @@
   },
   "model" : {
     "config": {
-      "lines": [{ "id": 1, "function": "", "intialLine": "", "label": "", "colorIndex": 0 }],
+      "lines": [{ "id": 1, "equation": "", "intialLine": "", "label": "", "colorIndex": 0 }],
       "exhibitOnly": false,
       "graphWidth": 500,
       "graphHeight": 500,

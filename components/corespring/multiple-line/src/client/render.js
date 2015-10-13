@@ -99,7 +99,9 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           if(trackHistory) {
             scope.history.push({ action: 'move', previousPoint: scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] });
           }
+
           scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] = point;
+          setLineEquation(scope.lines[scope.pointsPerLine[point.name].line]);
         } else if (scope.plottedPoint.name === point.name) {
           if(trackHistory) {
             scope.history.push({ action: 'move', previousPoint: scope.plottedPoint });
@@ -113,54 +115,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
               scope.history.push({ action: 'add_line', point: point });
             }
 
-            // add line
-            var nextLine = scope.nextLine();
-            var line = scope.lines[nextLine];
-            line.points.A = scope.plottedPoint;
-            line.points.B = point;
-            line.points.A.isSet = line.points.B.isSet = true;
+            setLine(point);
 
-            // create line on graph
-            if(!line.isSet) {
-
-              if(!scope.config.exhibitOnly) {
-                scope.graphCallback({
-                  pointColor: {
-                    point: scope.plottedPoint.name,
-                    color: scope.colorPalette[line.colorIndex]
-                  }
-                });
-
-                scope.graphCallback({
-                  pointColor: {
-                    point: point.name,
-                    color: scope.colorPalette[line.colorIndex]
-                  }
-                });
-              }
-
-              var slope = (scope.plottedPoint.y - point.y) / (scope.plottedPoint.x - point.x);
-              var yintercept = scope.plottedPoint.y - (scope.plottedPoint.x * slope);
-
-              scope.graphCallback({
-                drawShape: {
-                  id: line.id,
-                  line: [scope.plottedPoint.name, point.name],
-                  name: line.name,
-                  color: scope.colorPalette[line.colorIndex]
-                }
-              });
-
-              // map points per line
-              scope.pointsPerLine[scope.plottedPoint.name] = { line: nextLine, point: 'A'};
-              scope.pointsPerLine[point.name] = { line: nextLine, point: 'B'};
-
-              // delete plotted point
-              scope.plottedPoint = {};
-
-              // set line as plotted
-              line.isSet = true;
-            }
           } else {
             // if no plotted point, set it
             scope.plottedPoint = point;
@@ -169,6 +125,61 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             }
           }
         }
+      }
+
+      function setLine(point) {
+        // add line
+        var nextLine = scope.nextLine();
+        var line = scope.lines[nextLine];
+        line.points.A = scope.plottedPoint;
+        line.points.B = point;
+        line.points.A.isSet = line.points.B.isSet = true;
+
+        setLineEquation(line);
+
+        // create line on graph
+        if(!line.isSet) {
+          if(!scope.config.exhibitOnly) {
+            scope.graphCallback({
+              pointColor: {
+                point: scope.plottedPoint.name,
+                color: scope.colorPalette[line.colorIndex]
+              }
+            });
+
+            scope.graphCallback({
+              pointColor: {
+                point: point.name,
+                color: scope.colorPalette[line.colorIndex]
+              }
+            });
+          }
+
+          scope.graphCallback({
+            drawShape: {
+              id: line.id,
+              line: [scope.plottedPoint.name, point.name],
+              name: line.name,
+              color: scope.colorPalette[line.colorIndex]
+            }
+          });
+
+          // map points per line
+          scope.pointsPerLine[scope.plottedPoint.name] = { line: nextLine, point: 'A'};
+          scope.pointsPerLine[point.name] = { line: nextLine, point: 'B'};
+
+          // delete plotted point
+          scope.plottedPoint = {};
+
+          // set line as plotted
+          line.isSet = true;
+        }
+      }
+
+      function setLineEquation(line) {
+        var slope = (line.points.B.y - line.points.A.y) / (line.points.B.x - line.points.A.x);
+        var yintercept = line.points.B.y - (line.points.B.x * slope);
+        line.equation = slope + "x+" + yintercept;
       }
 
       // set initial state for the graph

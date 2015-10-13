@@ -63,7 +63,7 @@
           "properties": {
             "lines": {
               "type": "array",
-              "description": "Indicates the correct lines information. ID, function, initial line label and color index",
+              "description": "Indicates the correct lines information. ID, equation, initial line label and color index",
               "id": "#lines",
               "required": false
             },

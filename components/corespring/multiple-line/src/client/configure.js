@@ -57,7 +57,7 @@ var main = [
       '          </div>',
       '          <div class="col-md-4">',
       '            <div class="col-md-9 input-group">',
-      '              <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="line.function" ng-disabled="fullModel.model.config.exhibitOnly" />',
+      '              <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="line.equation" ng-disabled="fullModel.model.config.exhibitOnly" />',
       '            </div>',
       '          </div>',
       '          <div class="col-md-4">',
@@ -263,7 +263,7 @@ var main = [
 
         scope.addNewLine = function() {
           var newLineNumber = scope.fullModel.model.config.lines.length + 1;
-          scope.fullModel.model.config.lines.push({ "id": newLineNumber, "function": "", "intialLine": "", "label": "", "colorIndex": scope.fullModel.model.config.lines.length % 5 });
+          scope.fullModel.model.config.lines.push({ "id": newLineNumber, "equation": "", "intialLine": "", "label": "", "colorIndex": scope.fullModel.model.config.lines.length % 5 });
         };
 
         scope.removeLine = function(lineId) {
@@ -277,7 +277,7 @@ var main = [
 
         scope.$watch('fullModel.model.config.lines', function(n) {
           if (n) {
-            scope.fullModel.correctResponse = _.pluck(scope.fullModel.model.config.lines, 'function');
+            scope.fullModel.correctResponse = _.pluck(scope.fullModel.model.config.lines, 'equation');
             scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
           }
         }, true);
