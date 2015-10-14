@@ -21,6 +21,7 @@ var main = [
         setDataAndSession: setDataAndSession,
         getSession: getSession,
         setResponse: setResponse,
+        setInstructorData: setInstructorData,
         setMode: setMode,
         reset: reset,
         isAnswerEmpty: isAnswerEmpty,
@@ -109,6 +110,17 @@ var main = [
         scope.feedback = response.feedback.message;
         scope.correctClass = response.correctClass;
         scope.comments = response.comments;
+      }
+
+      function setInstructorData(data) {
+        $(element).find('.token').each(function(idx, elem) {
+          var id = $(elem).attr('id');
+          var choice = data.correctResponse[idx];
+          if (choice && choice.correct) {
+            $(elem).addClass('correct');
+          }
+        });
+
       }
 
       function setMode(newMode) {}

@@ -16,8 +16,9 @@ exports.wrapTokensWithHtml = function(choices) {
 
 function correctIndexes(question) {
   var indexes = [];
+  var choicesWithCorrectnessInformation = question.correctResponse || question.model.choices;
   for (var i in question.model.choices) {
-    if (question.model.choices[i].correct) {
+    if (choicesWithCorrectnessInformation[i].correct) {
       indexes.push(i);
     }
   }
@@ -69,6 +70,10 @@ var buildFeedback = function(question, answer) {
 
 exports.preprocess = function(json) {
   json.wrappedText = exports.wrapTokensWithHtml(json.model.choices);
+  json.correctResponse = _.cloneDeep(json.model.choices);
+  _.each(json.model.choices, function(c) {
+    delete c.correct;
+  });
   return json;
 };
 
