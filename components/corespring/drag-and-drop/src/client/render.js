@@ -155,7 +155,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout','CsUndoModel'
           $log.debug("DnD setting session: ", dataAndSession);
 
           scope.rawModel = dataAndSession.data.model;
-          scope.editable = true;
           scope.resetChoices(scope.rawModel);
 
           scope.expandHorizontal = dataAndSession.data.model.config.expandHorizontal;
@@ -214,7 +213,18 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout','CsUndoModel'
           });
         },
 
-        setMode: function(newMode) {},
+        setInstructorData: function(data) {
+          _.each(data.correctResponse, function(v, k) {
+            scope.landingPlaceChoices[k] = _.map(v, function(r) {
+              return choiceForId(r);
+            });
+          });
+          scope.correctResponse = data.correctResponse;
+        },
+
+        setMode: function(newMode) {
+          scope.mode = newMode;
+        },
 
         reset: function() {
           scope.showSolution = false;
@@ -289,7 +299,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout','CsUndoModel'
     };
     var tmpl = [
     '<div class="view-drag-and-drop-legacy">',
-    '  <div ng-show="!correctResponse" class="pull-right">',
+    '  <div ng-show="!correctResponse && editable" class="pull-right">',
     '    <span cs-undo-button-with-model></span>',
     '    <span cs-start-over-button-with-model></span>',
     '  </div> <div class="clearfix" />',
@@ -297,6 +307,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout','CsUndoModel'
     answerArea(),
     '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
     '  <div class="pull-right" ng-show="showSolution"><a ng-click="seeSolution()">See solution</a></div>',
+    '  <div class="clearfix"></div>',
     '</div>'
 
   ].join('');
