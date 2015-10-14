@@ -159,7 +159,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             drawShape: {
               id: line.id,
               line: [scope.plottedPoint.name, point.name],
-              name: line.name,
+              label: line.name,
               color: scope.colorPalette[line.colorIndex]
             }
           });
@@ -192,7 +192,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
           var initialValues = lineUtils.pointsFromEquation(initialLine,
             scope.graphAttrs.domainMin,
-            scope.graphCallback.domainStepValue);
+            scope.graphAttrs.domainStepValue);
 
           if (typeof initialValues !== 'undefined') {
             scope.graphCallback({ add: { point: getPoint(initialValues[0]) } });
@@ -299,6 +299,51 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         return lineId === scope.hoveredLine;
       };
 
+      function renderSolution(response) {
+        var solutionScope = scope.$new();
+        var solutionContainer = element.find('.solution-graph');
+        var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
+        solutionGraphAttrs.showPoints = false;
+        solutionGraphAttrs.showLabels = false;
+
+        solutionContainer.attr(solutionGraphAttrs);
+        solutionContainer.css({
+          width: Math.min(scope.containerWidth, 500),
+          height: Math.min(scope.containerHeight, 500)
+        });
+        solutionScope.interactionCallback = function() {};
+
+        solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
+          if (solutionGraphCallback) {
+            _.each(response.correctResponse, function(line){
+
+              var initialValues = lineUtils.pointsFromEquation(line.equation,
+                solutionGraphAttrs.domainMin,
+                solutionGraphAttrs.domainStepValue);
+
+              var point1 = point2 = {};
+
+              if (typeof initialValues !== 'undefined') {
+                point1 = solutionGraphCallback({ add: { point: { x: initialValues[0][0], y: initialValues[0][1] } } });
+                point2 = solutionGraphCallback({ add: { point: { x: initialValues[1][0], y: initialValues[1][1] } } });
+              }
+
+              solutionGraphCallback({
+                drawShape: {
+                  id: line.id,
+                  line: [point1.name, point2.name],
+                  label: line.label,
+                  color: "#3C763D"
+                },
+                lockGraph: true
+              });
+            });
+          }
+        });
+
+        $compile(solutionContainer)(solutionScope);
+      }
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -375,6 +420,10 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
             if (response.correctness === "partial" || response.correctness === "incorrect") {
               scope.correctResponse = response.correctResponse;
+
+              if (response.correctResponse) {
+                renderSolution(response);
+              }
             }
           }
 
@@ -393,6 +442,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             width: "40px"
           };
 
+          var solutionContainer = element.find('.solution-graph');
+          solutionContainer.empty();
 
           scope.correctResponse = undefined;
           scope.lines = [];
@@ -401,7 +452,14 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         },
 
         isAnswerEmpty: function() {
-          return false;
+          var answer = this.getSession().answers;
+          var answersGiven = 0;
+          _.each(answer, function(line){
+            if(line.equation !== undefined && line.equation !== null && line.equation !== "") {
+              answersGiven++;
+            }
+          });
+          return _.isUndefined(answer) || _.isEmpty(answer) || answersGiven === 0;
         },
 
         answerChangedHandler: function(callback) {
@@ -468,6 +526,13 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "  </div>",
         "  <div class='feedback-holder' ng-show='true'>",
         "    <div ng-show='feedback' feedback='feedback' correct-class='{{correctClass}}'></div>",
+        "  </div>",
+        "  <div see-answer-panel see-answer-panel-expanded='true' class='solution-panel' ng-class='{panelVisible: correctResponse}'>",
+        "    <div class='solution-container'>",
+        "      <div>The correct equations are:</div>",
+        "      <div ng-repeat='response in correctResponse'><span ng-show='response.label'>- {{ response.label }}: </span>{{response.equation}}</div>",
+        "      <div class='solution-graph'></div>",
+        "    </div>",
         "  </div>",
         "</div>"
       ].join("");

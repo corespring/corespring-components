@@ -137,12 +137,9 @@ exports.service = ['$log',
         snapSizeX: this.domainScale,
         snapSizeY: this.rangeScale,
         showInfobox: false,
-        withLabel: false
+        withLabel: false,
+        visible: this.showPoints
       }, ptOptions);
-      if(!this.showPoints) {
-        pointAttrs.strokeColor = "transparent";
-        pointAttrs.fillColor = "transparent";
-      }
 
       var point = this.board.create('point', [coords.x, coords.y], pointAttrs);
       point.canvasIndex = this.points.length;
@@ -216,16 +213,16 @@ exports.service = ['$log',
       return this.board.on(event, handler);
     };
 
-    Canvas.prototype.makeLine = function(pts, label, color) {
+    Canvas.prototype.makeLine = function(pts, options) {
       var shapeArgs = {
-        strokeColor: color ? color : '#0000ff',
+        strokeColor: options.color ? options.color : '#0000ff',
         highlightStrokeColor: '#9C9C9C',
         strokeWidth: 3,
         fixed: true,
         firstArrow: true,
         lastArrow: true,
         withLabel: true,
-        name: label
+        name: options.label
       };
 
       var shape = this.board.create('line', pts, shapeArgs);

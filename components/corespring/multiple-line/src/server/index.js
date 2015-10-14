@@ -25,7 +25,7 @@ var countAnsweredCorrectly = function(answer, correctResponse) {
   options.sigfigs = correctResponse.sigfigs || 3;
 
   var sum = _.reduce(answer, function(sum, a, index) {
-    var isCorrect = (a.equation) ? functionUtils.isFunctionEqual(a.equation, correctResponse[index], options) : false;
+    var isCorrect = (a.equation) ? functionUtils.isFunctionEqual(a.equation, correctResponse[index].equation, options) : false;
     var newsum = sum + (isCorrect ? 1 : 0);
     return newsum;
   }, 0);
@@ -105,20 +105,26 @@ exports.createOutcome = function(question, answer, settings) {
   var correctResponse = question.correctResponse;
   var isCorrect = exports.isCorrect(answer, _.cloneDeep(question.correctResponse));
   var isPartiallyCorrect = exports.isPartiallyCorrect(answer, _.cloneDeep(question.correctResponse));
+  var response = {};
 
-  var response = {
-    correctness: isCorrect ? "correct" : isPartiallyCorrect ? "partial" : "incorrect",
-    correctResponse: question.correctResponse,
-    correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
-    score: calculateScore(answer, question)
-  };
-
-  if (addFeedback) {
-    // res.outcome = [isCorrect ? "correct" : "incorrect"];
-    response.feedback = fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect));
+  if (!question.model.config.exhibitOnly) {
+    response = {
+      correctness: isCorrect ? "correct" : isPartiallyCorrect ? "partial" : "incorrect",
+      score: calculateScore(answer, question),
+      correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
+      correctResponse: _.map(correctResponse, function(line){
+        return {
+          label: line.label,
+          equation: line.equation,
+          expression: functionUtils.expressionize(line.equation, 'x')
+        };
+      })
+    };
   }
 
-  console.log(response);
+  if (addFeedback) {
+    response.feedback = fb.makeFeedback(question.feedback, fb.correctness(isCorrect, isPartiallyCorrect));
+  }
 
   return response;
 };

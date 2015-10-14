@@ -277,7 +277,9 @@ var main = [
 
         scope.$watch('fullModel.model.config.lines', function(n) {
           if (n) {
-            scope.fullModel.correctResponse = _.pluck(scope.fullModel.model.config.lines, 'equation');
+            scope.fullModel.correctResponse = _.map(scope.fullModel.model.config.lines, function(line){
+              return { id: line.id, equation: line.equation, label: line.label };
+            });
             scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
           }
         }, true);

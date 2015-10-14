@@ -140,10 +140,13 @@ var def = ['Canvas',
             var pt1 = canvas.getPoint(drawShape.line[0]);
             var pt2 = canvas.getPoint(drawShape.line[1]);
             if (pt1 && pt2) {
-              shape = canvas.makeLine([pt1, pt2], drawShape.name, drawShape.color);
+              shape = canvas.makeLine([pt1, pt2], {
+                label: drawShape.label,
+                color: drawShape.color
+              });
             }
           } else if (drawShape.curve) {
-            shape = canvas.makeCurve(drawShape.curve);
+            shape = canvas.makeCurve(drawShape.curve, drawShape.label);
           }
 
           shape.lineId = drawShape.id;
@@ -157,14 +160,14 @@ var def = ['Canvas',
 
         var addCallback = function(add) {
           if (add.point) {
-            var options = {};
 
+            var options = {};
             if(add.color) {
               options.strokeColor = add.color;
               options.fillColor = add.color;
             }
 
-            addUserPoint(add.point, undefined, options);
+            return getPointData(addUserPoint(add.point, undefined, options));
           }
         };
 
@@ -213,7 +216,7 @@ var def = ['Canvas',
 
         scope.graphCallback = function(params) {
           if (params.add && canvas) {
-            addCallback(params.add);
+            return addCallback(params.add);
           }
           if (params.update && canvas) {
             updateCallback(params.update);
@@ -274,8 +277,7 @@ var def = ['Canvas',
           }
         };
 
-        /** TODO: check purpose of this
-         */
+        // still used on single line, plot point components
         function processPointsCallback(paramPoints) {
           var i, coordx, coordy, coords, canvasPoint;
           if (!lockGraph) {
