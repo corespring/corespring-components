@@ -60,7 +60,13 @@ var main = [
       '         <p ng-show="selectionMode"><strong><em>Click selections to make available to students</em></strong></p>',
       '         <p ng-show="!selectionMode"><strong><em>Click correct answers</em></strong></p>',
       '       </div>',
-      '       <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
+      '       <div class="passage-wrapper">',
+      '         <div class="history-buttons">',
+      '           <span cs-undo-button></span>',
+      '           <span cs-start-over-button></span>',
+      '         </div>',
+      '         <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
+      '       </div>',
       '       <div class="pull-left answer-summary" ng-show="model.config.availability === \'specific\'">',
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': selectionMode}"',
       '           ng-click="toggleSelectionMode()">Selections Available</button> <span class="badge">{{model.possibleChoices.length}}</span>',
@@ -212,6 +218,14 @@ var main = [
         $scope.model.config.xhtml = "";
         $scope.model.choices = [];
         $scope.mode = "editor";
+      };
+
+      $scope.undo = function() {
+        console.log("UNDO");
+      };
+
+      $scope.startOver = function() {
+        console.log("START OVER");
       };
 
       $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
