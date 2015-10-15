@@ -193,8 +193,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         function createInitialPoints(initialLine) {
 
           var initialValues = lineUtils.pointsFromEquation(initialLine,
-            scope.graphAttrs.domainMin,
-            scope.graphAttrs.domainStepValue);
+            scope.graphAttrs.domainStepValue * scope.graphAttrs.domainSnapValue);
 
           if (typeof initialValues !== 'undefined') {
             scope.graphCallback({ add: { point: getPoint(initialValues[0]) } });
@@ -320,8 +319,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             _.each(response.correctResponse, function(line){
 
               var initialValues = lineUtils.pointsFromEquation(line.equation,
-                solutionGraphAttrs.domainMin,
-                solutionGraphAttrs.domainStepValue);
+                solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapValue);
 
               var point1 = point2 = {};
 

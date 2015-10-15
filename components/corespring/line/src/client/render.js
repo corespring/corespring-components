@@ -150,7 +150,8 @@ var main = ['$compile', '$rootScope', "LineUtils",
       };
 
       scope.startOver = function() {
-        var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve);
+        var initialValues = lineUtils.pointsFromEquation(scope.config.initialCurve,
+          scope.config.domainStepValue * scope.config.domainSnapValue);
         scope.points = {};
         if (_.isArray(initialValues)) {
             var pointA = initialValues[0];

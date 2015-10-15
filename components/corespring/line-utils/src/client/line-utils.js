@@ -8,9 +8,8 @@ exports.factory = [
              * Ex for input y=-5x+2
              * returns [[0,2],[1,-3]]
              */
-            this.pointsFromEquation = function(equation, domainStartValue, stepValue) {
+            this.pointsFromEquation = function(equation, stepValue) {
 
-              domainStartValue = (typeof domainStartValue !== 'undefined') ? domainStartValue : 0;
               stepValue = (typeof stepValue !== 'undefined') ? stepValue : 1;
 
               equation = prefixWithYEquals(equation);
@@ -79,10 +78,9 @@ exports.factory = [
                 } else {
                     b = getSign(2) * getConstant(3);
                 }
-
                 return [
                     [0, b],
-                    [1, m + b]
+                    [stepValue, m * stepValue + b]
                 ];
             };
 
