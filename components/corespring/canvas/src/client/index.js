@@ -75,8 +75,8 @@ exports.service = ['$log',
       this.points = [];
       this.texts = [];
       this.shapes = [];
-      this.domainScale = attrs.domain.stepValue;
-      this.rangeScale = attrs.range.stepValue;
+      this.domainScale = attrs.domain.stepValue * attrs.domain.snapValue;
+      this.rangeScale = attrs.range.stepValue * attrs.range.snapValue;
       this.showLabels = attrs.showLabels === "true";
       this.showCoordinates = attrs.showCoordinates === "true";
       this.showPoints = _.isUndefined(attrs.showPoints) ? "true" :

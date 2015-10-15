@@ -96,6 +96,13 @@ var main = [
       '      </div>',
       '      <div class="config-form-row">',
       labelWithInput({ label: 'Tick Value:', modelKey: 'domainStepValue', inputType: "number", placeholder: '{{defaults.domainStepValue}}' }),
+      labelWithInput({ label: 'Snap Value:', modelKey: 'domainSnapValue', inputType: "number", placeholder: '{{defaults.domainSnapValue}}' }),
+      '      </div>',
+      '      <div class="config-form-row">',
+      labelWithInput({ label: 'Label', modelKey: 'domainLabel', placeholder: '{{defaults.domainLabel}}' }),
+      labelWithInput({ label: 'Label Frequency:', modelKey: 'domainLabelFrequency', inputType: "number", placeholder: '{{defaults.domainLabelFrequency}}' }),
+      '      </div>',
+      '      <div class="config-form-row">',
       '        <label class="col-sm-3">Padding (%):</label>',
       '        <div class="col-sm-3 default-input"',
       '          ng-class="{ \'has-error\': attributesForm.domainGraphPadding.$error.min || attributesForm.domainGraphPadding.$error.number }">',
@@ -108,20 +115,23 @@ var main = [
       '            <div class="inline-error-message" ng-show="attributesForm.domainGraphPadding.$error.number">Please enter a valid number</div>',
       '            <div class="inline-error-message" ng-show="attributesForm.domainGraphPadding.$error.min">Please enter a positive number</div>',
       '        </div>',
+      '      </div><br />',
+      '      <div class="config-form-row">',
+      '        <h4>Range (Y)</h4>',
       '      </div>',
       '      <div class="config-form-row">',
-      labelWithInput({ label: 'Label', modelKey: 'domainLabel', placeholder: '{{defaults.domainLabel}}' }),
-      labelWithInput({ label: 'Label Frequency:', modelKey: 'domainLabelFrequency', inputType: "number", placeholder: '{{defaults.domainLabelFrequency}}' }),
-      '       </div><br />',
-      '       <div class="config-form-row">',
-      '         <h4>Range (Y)</h4>',
-      '       </div>',
-      '       <div class="config-form-row">',
       labelWithInput({ label: 'Minimum Value', modelKey: 'rangeMin', inputType: "number", placeholder: '{{defaults.rangeMin}}' }),
       labelWithInput({ label: 'Maximum Value', modelKey: 'rangeMax', inputType: "number", placeholder: '{{defaults.rangeMax}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
+      '      </div>',
+      '      <div class="config-form-row">',
       labelWithInput({ label: 'Tick Value:', modelKey: 'rangeStepValue', inputType: "number", placeholder: '{{defaults.rangeStepValue}}' }),
+      labelWithInput({ label: 'Snap Value:', modelKey: 'rangeSnapValue', inputType: "number", placeholder: '{{defaults.rangeSnapValue}}' }),
+      '      </div>',
+      '      <div class="config-form-row">',
+      labelWithInput({ label: 'Label', modelKey: 'rangeLabel', placeholder: "y" }),
+      labelWithInput({ label: 'Label Frequency:', modelKey: 'rangeLabelFrequency', inputType: "number", placeholder: '{{defaults.rangeLabelFrequency}}' }),
+      '      </div>',
+      '      <div class="config-form-row">',
       '        <label class="col-sm-3">Padding (%):</label>',
       '        <div class="col-sm-3 default-input"',
       '          ng-class="{ \'has-error\': attributesForm.rangeGraphPadding.$error.min || attributesForm.rangeGraphPadding.$error.number }">',
@@ -130,19 +140,15 @@ var main = [
       '            ng-model="fullModel.model.config.rangeGraphPadding" ',
       '            placeholder="{{defaults.rangeGraphPadding}}" ',
       '            min="0" step="25" />',
-      '            <div class="inline-error-message" ng-show="attributesForm.rangeGraphPadding.$error.number">Please enter a valid number</div>',
-      '            <div class="inline-error-message" ng-show="attributesForm.rangeGraphPadding.$error.min">Please enter a positive number</div>',
+      '          <div class="inline-error-message" ng-show="attributesForm.rangeGraphPadding.$error.number">Please enter a valid number</div>',
+      '          <div class="inline-error-message" ng-show="attributesForm.rangeGraphPadding.$error.min">Please enter a positive number</div>',
       '        </div>',
-      '       </div>',
-      '        <div class="config-form-row">',
-      labelWithInput({ label: 'Label', modelKey: 'rangeLabel', placeholder: "y" }),
-      labelWithInput({ label: 'Label Frequency:', modelKey: 'rangeLabelFrequency', inputType: "number", placeholder: '{{defaults.rangeLabelFrequency}}' }),
-      '        </div><br />',
-      '       <div class="config-form-row">',
+      '      </div><br />',
+      '      <div class="config-form-row">',
       labelWithInput({ label: 'Significant Figures:', modelKey: 'sigfigs', inputType: "number",
         placeholder: '{{defaults.sigfigs}}' }),
-      '       </div>',
-      '     </form>',
+      '      </div>',
+      '    </form>',
       '  </div>',
       '</div>'
     ].join('\n');
@@ -234,6 +240,7 @@ var main = [
           reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);
           reset('domainStepValue', defaults.domainStepValue);
+          reset('domainSnapValue', defaults.domainStepValue);
           reset('domainLabelFrequency', defaults.domainLabelFrequency);
           reset('domainGraphPadding', defaults.domainGraphPadding);
 
@@ -241,6 +248,7 @@ var main = [
           reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
           reset('rangeStepValue', defaults.rangeStepValue);
+          reset('rangeSnapValue', defaults.rangeStepValue);
           reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
           reset('rangeGraphPadding', defaults.rangeGraphPadding);
 

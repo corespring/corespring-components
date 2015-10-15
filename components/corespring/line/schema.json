@@ -95,6 +95,12 @@
                             "id": "#domainStepValue",
                             "required": false
                         },
+                        "domainSnapValue": {
+                          "type": "string",
+                          "description": "The snap value to use on domain axis",
+                          "id": "#domainSnapValue",
+                          "required": false
+                        },
                         "domainLabelFrequency": {
                             "description": "Specifies the frequency for the ticks labels shown on the x axis",
                             "type": "integer",
@@ -142,6 +148,12 @@
                             "description": "The step value to use y axis",
                             "id": "#rangeStepValue",
                             "required": false
+                        },
+                        "rangeSnapValue": {
+                          "type": "string",
+                          "description": "The snap value to use on the range axis",
+                          "id": "#rangeSnapValue",
+                          "required": false
                         },
                         "rangeLabelFrequency": {
                             "description": "Specifies the frequency for the ticks labels shown on the y axis",
