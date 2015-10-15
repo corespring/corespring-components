@@ -229,10 +229,6 @@ var main = [
             scope.fullModel.model.config[property] = value;
           }
 
-          // lines
-          reset('lines', defaults.lines);
-          reset('exhibitOnly', defaults.exhibitOnly);
-
           // graph attributes
           reset('domainMin', defaults.domainMin);
           reset('domainMax', defaults.domainMax);
