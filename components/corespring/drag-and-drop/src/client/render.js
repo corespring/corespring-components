@@ -298,7 +298,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout','CsUndoModel'
         ].join('');
     };
     var tmpl = [
-    '<div class="view-drag-and-drop-legacy">',
+    '<div class="view-drag-and-drop-legacy" ng-class="{editable: editable}">',
     '  <div ng-show="!correctResponse && editable" class="pull-right">',
     '    <span cs-undo-button-with-model></span>',
     '    <span cs-start-over-button-with-model></span>',
