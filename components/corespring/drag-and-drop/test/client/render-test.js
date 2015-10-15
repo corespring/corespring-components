@@ -21,8 +21,7 @@ describe('corespring:drag-and-drop', function() {
       },
       "feedback": [
         {
-          "feedback": [
-          ],
+          "feedback": [],
           "landingPlace": "1"
         }
       ],
@@ -62,7 +61,8 @@ describe('corespring:drag-and-drop', function() {
   beforeEach(function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
-      $provide.value('MathJaxService', function() {});
+      $provide.value('MathJaxService', function() {
+      });
       $provide.value('$modal', {});
     });
   });
@@ -113,6 +113,47 @@ describe('corespring:drag-and-drop', function() {
     });
   });
 
+  describe('instructor mode', function() {
+    it('setting instructor data show the correct answer inline', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      var correctResponse = {
+        "1": ["egg", "pupa"],
+        "2": [],
+        "3": ["larva"],
+        "4": ["adult"]
+      };
+      container.elements['1'].setInstructorData({correctResponse: correctResponse});
+      expect(scope.landingPlaceChoices).toEqual({
+        "1": [
+          {
+            "content": "Egg",
+            "id": "egg",
+            "copyOnDrag": true
+          },
+          {
+            "content": "<b>Pupa</b>",
+            "id": "pupa"
+          }
+        ],
+        "2": [],
+        "3": [
+          {
+            "content": "Larva In The Shell",
+            "id": "larva"
+          }
+        ],
+        "4": [
+          {
+            "content": "Adult",
+            "id": "adult"
+          }
+        ]
+      });
+      expect(scope.correctResponse).toEqual(correctResponse);
+    });
+  });
+
   describe('isAnswerEmpty', function() {
     it('should return true initially', function() {
       container.elements['1'].setDataAndSession(testModel);
@@ -128,12 +169,12 @@ describe('corespring:drag-and-drop', function() {
     });
     it('should return false if answer is selected', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.landingPlaceChoices[0] = [{id:'pupa'}];
+      scope.landingPlaceChoices[0] = [{id: 'pupa'}];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
