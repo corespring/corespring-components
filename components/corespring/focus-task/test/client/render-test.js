@@ -12,7 +12,11 @@ describe('corespring:focus-task', function() {
   var testModelTemplate = {
     data: {
       model: {
-        choices: [],
+        "choices": [
+          {"label": "Banana", "value": "banana"},
+          {"label": "Carrot", "value": "carrot"},
+          {"label": "Apple", "value": "apple"}
+        ],
         config: {
           itemShape: ""
         }
@@ -45,6 +49,19 @@ describe('corespring:focus-task', function() {
     expect(element).not.toBe(null);
   });
 
+  describe('instructor view', function() {
+    it('correct choices are marked when instructor data is set', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData({
+        correctResponse: {
+          value: ["banana"]
+        }
+      });
+      expect(scope.choices[0].correct).toEqual("shouldHaveBeenSelected");
+    });
+
+  });
+
   describe('isAnswerEmpty', function() {
     it('should return true initially', function() {
       container.elements['1'].setDataAndSession(testModel);
@@ -65,7 +82,7 @@ describe('corespring:focus-task', function() {
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 });
