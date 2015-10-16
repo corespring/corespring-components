@@ -58,7 +58,7 @@ var calculateScore = function(answer, question) {
   } else {
     return (correctAnswerCount === definedAsCorrect) ? 1 : 0;
   }
-}
+};
 
 exports.createOutcome = function(question, answer, settings) {
 
@@ -70,7 +70,7 @@ exports.createOutcome = function(question, answer, settings) {
       }
     });
     return answersGiven;
-  }
+  };
 
   function validAnswer(answer) {
     return answer !== undefined && answer !== null;

@@ -321,7 +321,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
               var initialValues = lineUtils.pointsFromEquation(line.equation,
                 solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapValue);
 
-              var point1 = point2 = {};
+              var point1 = {}, point2 = {};
 
               if (typeof initialValues !== 'undefined') {
                 point1 = solutionGraphCallback({ add: { point: { x: initialValues[0][0], y: initialValues[0][1] } } });
