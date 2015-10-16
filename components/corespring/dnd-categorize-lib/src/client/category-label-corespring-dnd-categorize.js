@@ -6,6 +6,10 @@ exports.directive = {
     CategoryLabelCorespringDndCategorize]
 };
 
+/**
+ * The labels for the category containers need to be independent
+ * from the category containers bc. of the layout
+ */
 function CategoryLabelCorespringDndCategorize(
   $injector
 ) {

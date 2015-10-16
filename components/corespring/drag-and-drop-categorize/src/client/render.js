@@ -19,6 +19,9 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       };
 
       _.extend(scope.containerBridge, {
+        setInstructorData: function(data){
+          $log.warn("setInstructorData not implemented");
+        },
         setDataAndSession: function(dataAndSession) {
           $log.debug("DnD setting session: ", dataAndSession);
 
