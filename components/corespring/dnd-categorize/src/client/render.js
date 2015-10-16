@@ -133,13 +133,13 @@ function renderCorespringDndCategorize(
     function prepareRenderModel(model, session) {
       var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
 
-      var choices = _.cloneDeep(model.config.shuffle ? _.shuffle(model.choices) : model.choices);
+      var choices = model.config.shuffle ? _.shuffle(model.choices) : _.clone(model.choices);
       var choicesLabel = model.config.choicesLabel;
       var allChoices = _.clone(choices);
       var categories = _.map(model.categories, wrapCategoryModel);
       if (session.answers) {
-        initCategoriesWithAnswersFromSession(categories, session.answers);
-        choices = removePlacedChoicesWithMoveOnDragTrue(choices, categories);
+        placeAnswersInCategories(session.answers, categories);
+        choices = removePlacedAnswersFromChoices(choices, categories);
       }
       return {
         dragAndDropScope: dragAndDropScope,
@@ -149,7 +149,7 @@ function renderCorespringDndCategorize(
         categories: categories
       };
 
-      function initCategoriesWithAnswersFromSession(categories, answers){
+      function placeAnswersInCategories(answers, categories) {
         _.forEach(categories, function(cat) {
           var answersForCategory = answers[cat.model.id];
           if (_.isArray(answersForCategory)) {
@@ -158,8 +158,8 @@ function renderCorespringDndCategorize(
         });
       }
 
-      function removePlacedChoicesWithMoveOnDragTrue(choices,categories){
-        return _.filter(choices, function(choice){
+      function removePlacedAnswersFromChoices(choices, categories) {
+        return _.filter(choices, function(choice) {
           return !findInAllCategories(choice.id, categories);
         });
       }
@@ -211,13 +211,13 @@ function renderCorespringDndCategorize(
       scope.response = "dummy";
       scope.editable = false;
 
-      //----------------------------------
+      //-----------------------------------
 
-      function showAllChoicesRegardlessOfMoveOnDrag(renderModel){
-        renderModel.choices = _.clone(renderModel.allChoices);
+      function showAllChoicesRegardlessOfMoveOnDrag(renderModel) {
+        renderModel.choices = _.cloneDeep(renderModel.allChoices);
       }
 
-      function disableCorrectChoices(renderModel){
+      function disableCorrectChoices(renderModel) {
         _.forEach(renderModel.choices, function(choice) {
           choice.correctness = isChoicePlaced(choice.id) ? "instructor-mode-disabled" : "";
         });
@@ -465,7 +465,7 @@ function renderCorespringDndCategorize(
       _.remove(scope.renderModel.categories, byModelId(categoryId));
     }
 
-    function isChoicePlaced(choiceId){
+    function isChoicePlaced(choiceId) {
       return findInAllCategories(choiceId, scope.renderModel.categories);
     }
 
@@ -564,7 +564,7 @@ function renderCorespringDndCategorize(
 
       renderModel.choices = scope.attrChoices;
       renderModel.choicesLabel = scope.attrChoicesLabel;
-      renderModel.allChoices = _.clone(renderModel);
+      renderModel.allChoices = _.clone(renderModel.choices);
       renderModel.categories = scope.attrCategories;
 
       scope.renderModel = renderModel;
@@ -576,7 +576,7 @@ function renderCorespringDndCategorize(
 
     function isDragEnabled(choice) {
       return !scope.response &&
-        (choiceCanBePlacedMultipleTimes(choice) || !isChoicePlaced(choice));
+        (choiceCanBePlacedMultipleTimes(choice) || !isChoicePlaced(choice.id));
 
       function choiceCanBePlacedMultipleTimes(choice) {
         return !choice.moveOnDrag;
@@ -610,6 +610,9 @@ function renderCorespringDndCategorize(
       };
     }
 
+    function all() {
+      return true;
+    }
   }
 
   function template() {
@@ -683,8 +686,8 @@ function renderCorespringDndCategorize(
         '  </div>',
         '  <div class="choices-container">',
         '    <div choice-corespring-dnd-categorize="true" ',
-        '      choice-id="{{choice.id}}" ',
         '      correctness="{{choice.correctness}}"',
+        '      choice-id="{{choice.id}}" ',
         '      delete-after-placing="choice.moveOnDrag" ',
         '      drag-and-drop-scope="renderModel.dragAndDropScope"',
         '      drag-enabled="isDragEnabled(choice)"',
