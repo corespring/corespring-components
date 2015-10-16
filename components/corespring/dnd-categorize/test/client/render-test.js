@@ -32,6 +32,11 @@ describe('corespring:dnd-categorize:render', function() {
             "id": "choice_2",
             "label": "b",
             "moveOnDrag": false
+          },
+          {
+            "id": "choice_3",
+            "label": "c",
+            "moveOnDrag": false
           }
         ],
         "config": {
@@ -111,7 +116,7 @@ describe('corespring:dnd-categorize:render', function() {
       expect(scope.renderModel).toEqual({});
       setModelAndDigest();
       expect(scope.renderModel.dragAndDropScope).toMatch(/scope-\d+/);
-      expect(scope.renderModel.choices.length).toBe(2);
+      expect(scope.renderModel.choices.length).toBe(3);
       expect(scope.renderModel.allChoices).toEqual(scope.renderModel.choices);
       expect(scope.renderModel.categories.length).toBe(2);
     });
@@ -123,6 +128,16 @@ describe('corespring:dnd-categorize:render', function() {
       };
       setModelAndDigest();
       expect(scope.renderModel.categories[0].choices[0].model.id).toEqual('choice_1');
+    });
+    it('should remove answers with moveOnDrag = true from the choices', function() {
+      testModel.data.model.choices[0].moveOnDrag = true;
+      testModel.session = {
+        answers: {
+          cat_1: ['choice_1']
+        }
+      };
+      setModelAndDigest();
+      expect(scope.renderModel.choices.length).toEqual(2);
     });
   });
 
@@ -329,23 +344,23 @@ describe('corespring:dnd-categorize:render', function() {
       it('should remove the choice, if moveOnDrag is true and editMode is false', function() {
         scope.renderModel.choices[0].moveOnDrag = true;
         scope.isEditMode = false;
-        expect(scope.renderModel.choices.length).toBe(2);
+        expect(scope.renderModel.choices.length).toBe(3);
         expect(scope.renderModel.choices[0].id).toBe('choice_1');
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(1);
+        expect(scope.renderModel.choices.length).toBe(2);
         expect(scope.renderModel.choices[0].id).toBe('choice_2');
       });
       it('should not remove the choice, if moveOnDrag is false', function() {
         scope.renderModel.choices[0].moveOnDrag = false;
         scope.isEditMode = false;
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(2);
+        expect(scope.renderModel.choices.length).toBe(3);
       });
       it('should not remove the choice, if editMode is true', function() {
         scope.renderModel.choices[0].moveOnDrag = true;
         scope.isEditMode = true;
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(2);
+        expect(scope.renderModel.choices.length).toBe(3);
       });
     });
   });
@@ -353,9 +368,9 @@ describe('corespring:dnd-categorize:render', function() {
   describe('onChoiceDeleteClicked', function() {
     beforeEach(setModelAndDigest);
     it('should delete the choice from the available choices', function() {
-      expect(scope.renderModel.choices.length).toBe(2);
+      expect(scope.renderModel.choices.length).toBe(3);
       scope.onChoiceDeleteClicked('choice_1');
-      expect(scope.renderModel.choices.length).toBe(1);
+      expect(scope.renderModel.choices.length).toBe(2);
     });
     it('should delete the choice from all categories', function() {
       scope.onCategoryDrop('cat_1', 'choice_1');
@@ -387,10 +402,10 @@ describe('corespring:dnd-categorize:render', function() {
       scope.isEditMode = false;
       scope.renderModel.choices[0].moveOnDrag = true;
       scope.onCategoryDrop('cat_1', 'choice_1');
-      expect(scope.renderModel.choices.length).toBe(1);
+      expect(scope.renderModel.choices.length).toBe(2);
       expect(scope.renderModel.choices[0].id).toBe('choice_2');
       scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
-      expect(scope.renderModel.choices.length).toBe(2);
+      expect(scope.renderModel.choices.length).toBe(3);
       expect(scope.renderModel.choices[0].id).toBe('choice_1');
     });
   });
@@ -446,25 +461,44 @@ describe('corespring:dnd-categorize:render', function() {
   });
 
   describe('instructor data', function() {
-    it('should be false, if response has been set', function() {
+    beforeEach(function(){
       spyOn(container.elements['1'], 'setResponse');
       setModelAndDigest();
       setInstructorDataAndDigest();
+    });
+    it('should call setResponse', function() {
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         correctness: 'correct',
         correctClass: 'correct',
         score: 1,
         correctResponse: {
-          cat_1: [ 'choice_1' ],
-          cat_2: [ 'choice_2' ]
+          cat_1: ['choice_1'],
+          cat_2: ['choice_2']
         },
         detailedFeedback: {
-          cat_1: { correctness: [ 'correct' ] },
-          cat_2: { correctness: [ 'correct' ] }
+          cat_1: {correctness: ['correct']},
+          cat_2: {correctness: ['correct']}
         }
       });
+    });
+    it('should set response to dummy', function() {
       expect(scope.response).toEqual('dummy');
+    });
+    it('should set editable to false', function() {
       expect(scope.editable).toEqual(false);
+    });
+    it('should show all choices regardless of moveOndDrag', function(){
+      testModel.data.model.choices[0].moveOnDrag = true;
+      setModelAndDigest();
+      setInstructorDataAndDigest();
+      expect(scope.renderModel.choices.length).toEqual(3);
+    });
+    it('should set the correctness of correct choices to instructor-mode-disabled', function(){
+      expect(scope.renderModel.choices[0].correctness).toEqual('instructor-mode-disabled');
+      expect(scope.renderModel.choices[1].correctness).toEqual('instructor-mode-disabled');
+    });
+    it('should set the correctness of incorrect choices to empty string', function(){
+      expect(scope.renderModel.choices[2].correctness).toEqual('');
     });
   });
 

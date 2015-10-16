@@ -61,7 +61,7 @@ var main = [
         }
       };
 
-      addEmptyFunctions(scope.containerBridge, ['answerChangedHandler', 'editable', 'getSession', 'isAnswerEmpty', 'reset', 'setMode', 'setResponse']);
+      addEmptyFunctions(scope.containerBridge, ['answerChangedHandler', 'editable', 'getSession', 'isAnswerEmpty', 'reset', 'setMode', 'setResponse', 'setInstructorData']);
 
       function toggleVisibility() {
         scope.isVisible = !scope.isVisible;

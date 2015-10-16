@@ -53,14 +53,17 @@ exports.preroll = ->
         errors.push(name);
       }
     }
-    assertFunction('setDataAndSession');
-    assertFunction('getSession');
-    assertFunction('setResponse');
-    assertFunction('setMode');
-    assertFunction('reset');
-    assertFunction('isAnswerEmpty');
+
     assertFunction('answerChangedHandler');
     assertFunction('editable');
+    assertFunction('getSession');
+    assertFunction('isAnswerEmpty');
+    assertFunction('reset');
+    assertFunction('setDataAndSession');
+    assertFunction('setInstructorData');
+    assertFunction('setMode');
+    assertFunction('setResponse');
+
     if(errors.length){
        return 'Missing methods: ' + errors.join(',')
     } else {

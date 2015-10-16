@@ -99,7 +99,9 @@ module.exports = (grunt) ->
 
     grunt.config("testClient.wrapped", "#{componentPath}/**/*-wrapped.js")
 
-    grunt.config("testClient.specPath", "#{componentPath}/**/client/*-test.js")
+    compToTest = grunt.option('component') || "*";
+
+    grunt.config("testClient.specPath", "#{componentPath}/**/#{compToTest}/**/client/*-test.js")
 
     grunt.task.run("jasmine:unit")
 

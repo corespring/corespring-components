@@ -9,6 +9,9 @@ exports.directive = {
     CategoryChoicesCorespringDndCategorize]
 };
 
+/**
+ * The Category containers which hold the dropped choices
+ */
 function CategoryChoicesCorespringDndCategorize(
   $timeout,
   CompactLayout,
