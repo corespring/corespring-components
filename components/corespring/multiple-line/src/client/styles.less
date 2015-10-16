@@ -85,19 +85,26 @@
     position: relative;
   }
   .graph-controls {
-    background-color: #cccccc;
-    border-radius: 4px;
-    padding: 5px;
     position: relative;
-    input {
-      height: 24px;
-      padding: 2px;
-      font-size: 14px;
-      color: #555555;
-      border: 1px solid #cccccc;
-      border-radius: 4px;
-      &:disabled {
-        background-color: #dddddd;
+    .point-inputs {
+      padding-top: 5px;
+      border-bottom: 1px solid #ccc;
+      &:last-child {
+        border-bottom: none;
+      }
+      .point-label {
+        padding-right: 5px;
+      }
+      input {
+        height: 24px;
+        padding: 2px;
+        font-size: 14px;
+        color: #555555;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        &:disabled {
+          background-color: #dddddd;
+        }
       }
     }
     .glowing-border {
