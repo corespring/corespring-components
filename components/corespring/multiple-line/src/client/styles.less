@@ -86,15 +86,32 @@
   }
   .graph-controls {
     position: relative;
-    .point-inputs {
-      padding-top: 5px;
+    .line-input {
+      padding: 3px 0px;
       border-bottom: 1px solid #ccc;
       &:last-child {
         border-bottom: none;
       }
-      .point-label {
-        padding-right: 5px;
+
+      .delete-line-button {
+        font-size: 18px;
+        padding: 2px 7px;
+        margin-right: 5px;
+        &[disabled] {
+          background-color: #dddddd;
+        }
       }
+
+      .point-input {
+        height: 25px;
+        padding-top: 3px;
+        .point-label {
+          display: inline-block;
+          min-width: 16px;
+          padding-right: 5px;
+        }
+      }
+
       input {
         height: 24px;
         padding: 2px;

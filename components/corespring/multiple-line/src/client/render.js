@@ -196,8 +196,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             scope.graphAttrs.domainStepValue * scope.graphAttrs.domainSnapValue);
 
           if (typeof initialValues !== 'undefined') {
-            scope.graphCallback({ add: { point: getPoint(initialValues[0]) } });
-            scope.graphCallback({ add: { point: getPoint(initialValues[1]) } });
+            scope.graphCallback({ add: { point: getPoint(initialValues[0]), triggerCallback: true  } });
+            scope.graphCallback({ add: { point: getPoint(initialValues[1]), triggerCallback: true } });
           }
         }
 
@@ -246,7 +246,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
               // remove point and line from graph
               scope.graphCallback({
-                remove: { point: line.points.B, line: true }
+                remove: { point: line.points.B, line: line.id }
               });
 
               // set the new plottedPoint
@@ -260,6 +260,32 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
               line.points.A = line.points.B = { isSet: false };
               line.isSet = false;
 
+              break;
+            case 'remove_line':
+
+              var line = lastRecord.line;
+              // recreate points
+              scope.graphCallback({ add: { point: line.points.A, color: scope.colorPalette[line.colorIndex], name: line.points.A.name } });
+              scope.graphCallback({ add: { point: line.points.B, color: scope.colorPalette[line.colorIndex], name: line.points.B.name } });
+
+              // recreate the line, timeout is required to make sure the points are already created
+              $timeout(function() {
+                scope.graphCallback({
+                drawShape: {
+                  id: lastRecord.line.id,
+                  line: [lastRecord.line.points.A.name, lastRecord.line.points.B.name],
+                  label: lastRecord.line.name,
+                  color: scope.colorPalette[lastRecord.line.colorIndex]
+                }
+              });
+              }, 100);
+
+              // reset line in array
+              scope.lines[lastRecord.lineIndex] = lastRecord.line;
+
+              // map points per line
+              scope.pointsPerLine[lastRecord.line.points.A.name] = { line: lastRecord.lineIndex, point: 'A'};
+              scope.pointsPerLine[lastRecord.line.points.B.name] = { line: lastRecord.lineIndex, point: 'B'};
               break;
           }
         }
@@ -294,6 +320,26 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             unlockGraph: true
           });
         }
+      };
+
+      scope.removeLine = function(lineId) {
+        var line = getLineById(lineId);
+        scope.history.push({ action: 'remove_line', line: _.cloneDeep(line), lineIndex: scope.lines.indexOf(line) });
+
+        scope.graphCallback({
+          remove: {
+            points: [line.points.A, line.points.B],
+            line: line.id
+          }
+        });
+
+        // deletes the points-line mapping
+        delete scope.pointsPerLine[line.points.A.name];
+        delete scope.pointsPerLine[line.points.B.name];
+
+        // deletes the line
+        line.points.A = line.points.B = { isSet: false };
+        line.isSet = false;
       };
 
       scope.isLineHovered = function(lineId) {
@@ -343,6 +389,12 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         $compile(solutionContainer)(solutionScope);
       }
+
+      var getLineById = function(lineId) {
+        return _.find(scope.lines, function(line){
+          return line.id === lineId;
+        });
+      };
 
       scope.containerBridge = {
 
@@ -490,23 +542,27 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "      </div>",
         "    </div><br/>",
         "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
-        "      <div class='row point-inputs' ng-repeat='line in lines'>",
-        "        <div class='col-sm-2'>{{line.name}}</div>",
-        "        <div class='col-sm-5'>",
-        "          <span class='point-label'>{{line.points.A.name}}</span>",
-        "          <label>x: </label>",
-        "          <input type='number' ng-style='inputStyle' ng-model='line.points.A.x' ng-disabled='locked || line.points.A.x === undefined' ng-change='pointUpdate(line.points.A)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' >",
-        "          <label>y: </label>",
-        "          <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-disabled='locked || line.points.A.y === undefined' ng-change='pointUpdate(line.points.A)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
+        "      <div class='row line-input' ng-repeat='line in lines'>",
+        "        <div class='col-sm-3'>",
+        "          <a class='btn btn-default delete-line-button' ng-disabled='locked || line.points.A.x === undefined || line.points.B.x === undefined' ng-click='removeLine(line.id)'><span class='fa fa-trash-o'></span></a>",
+        "          {{line.name}}",
         "        </div>",
-        "        <div class='col-sm-5'>",
-        "          <span class='point-label'>{{line.points.B.name}}</span>",
-        "          <label>x: </label>",
-        "          <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-disabled='locked || line.points.B.x === undefined' ng-change='pointUpdate(line.points.B)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
-        "          <label>y: </label>",
-        "          <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
+        "        <div class='col-sm-9'>",
+        "          <div class='point-input pull-left'>",
+        "            <span class='point-label'>{{line.points.A.name}}</span>",
+        "            <label>x: </label>",
+        "            <input type='number' ng-style='inputStyle' ng-model='line.points.A.x' ng-disabled='locked || line.points.A.x === undefined' ng-change='pointUpdate(line.points.A)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' >",
+        "            <label>y: </label>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-disabled='locked || line.points.A.y === undefined' ng-change='pointUpdate(line.points.A)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
+        "          </div>",
+        "          <div class='point-input pull-right'>",
+        "            <span class='point-label'>{{line.points.B.name}}</span>",
+        "            <label>x: </label>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-disabled='locked || line.points.B.x === undefined' ng-change='pointUpdate(line.points.B)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
+        "            <label>y: </label>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B)' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}'>",
+        "          </div>",
         "        </div>",
-
         "      </div>",
         "    </div>",
         "    <div id='graph-container' class='row-fluid graph-container'></div>",

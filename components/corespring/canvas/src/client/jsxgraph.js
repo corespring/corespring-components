@@ -138,11 +138,13 @@ var def = ['Canvas',
 
         var drawShapeCallback = function(drawShape) {
           var shape;
+
           if (drawShape.line) {
             var pt1 = canvas.getPoint(drawShape.line[0]);
             var pt2 = canvas.getPoint(drawShape.line[1]);
             if (pt1 && pt2) {
               shape = canvas.makeLine([pt1, pt2], {
+                id: drawShape.id,
                 label: drawShape.label,
                 color: drawShape.color
               });
@@ -162,14 +164,20 @@ var def = ['Canvas',
 
         var addCallback = function(add) {
           if (add.point) {
-
             var options = {};
             if(add.color) {
               options.strokeColor = add.color;
               options.fillColor = add.color;
             }
+            if(add.name) {
+              options.name = add.name;
+            }
 
-            return getPointData(addUserPoint(add.point, undefined, options));
+            if(add.triggerCallback) {
+              return getPointData(addUserPoint(add.point, undefined, options));
+            } else {
+              return addPoint(add.point, undefined, options);
+            }
           }
         };
 
@@ -181,7 +189,7 @@ var def = ['Canvas',
 
         var removeCallback = function(remove) {
           if (remove.line) {
-            canvas.popShape();
+            canvas.removeShapeByCustomId(remove.line);
           }
           if (remove.points) {
             _.each(remove.points, function(point) {

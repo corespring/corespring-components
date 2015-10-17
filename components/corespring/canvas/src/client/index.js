@@ -226,6 +226,7 @@ exports.service = ['$log',
       };
 
       var shape = this.board.create('line', pts, shapeArgs);
+      shape.customId = options.id;
       this.shapes.push(shape);
       return shape;
     };
@@ -242,6 +243,14 @@ exports.service = ['$log',
 
     Canvas.prototype.popShape = function() {
       return this.board.removeObject(this.shapes.splice(this.shapes.length - 1, 1));
+    };
+
+    Canvas.prototype.removeShapeByCustomId = function(customId) {
+      for (var i = 0; i < this.shapes.length; i++) {
+        if (this.shapes[i].customId === customId) {
+          return this.board.removeObject(this.shapes.splice(i, 1));
+        }
+      }
     };
 
     Canvas.prototype.changePointColor = function(point, color) {
