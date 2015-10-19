@@ -102,7 +102,9 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             scope.history.push({ action: 'move', previousPoint: scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] });
           }
 
-          scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] = point;
+          var linePoint = scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point];
+          linePoint.x = point.x;
+          linePoint.y = point.y;
           setLineEquation(scope.lines[scope.pointsPerLine[point.name].line]);
         } else if (scope.plottedPoint.name === point.name) {
           if(trackHistory) {
@@ -269,8 +271,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
               scope.graphCallback({ add: { point: line.points.B, color: scope.colorPalette[line.colorIndex], name: line.points.B.name } });
 
               // recreate the line, timeout is required to make sure the points are already created
-              $timeout(function() {
-                scope.graphCallback({
+              scope.graphCallback({
                 drawShape: {
                   id: lastRecord.line.id,
                   line: [lastRecord.line.points.A.name, lastRecord.line.points.B.name],
@@ -278,7 +279,6 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
                   color: scope.colorPalette[lastRecord.line.colorIndex]
                 }
               });
-              }, 100);
 
               // reset line in array
               scope.lines[lastRecord.lineIndex] = lastRecord.line;
@@ -491,7 +491,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           scope.unlockGraph();
 
           scope.inputStyle = {
-            width: "40px"
+            width: "55px"
           };
 
           var solutionContainer = element.find('.solution-graph');

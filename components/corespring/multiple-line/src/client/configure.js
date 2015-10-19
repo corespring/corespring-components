@@ -251,6 +251,8 @@ var main = [
           reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
           reset('rangeGraphPadding', defaults.rangeGraphPadding);
 
+          reset('sigfigs', defaults.sigfigs);
+
           // significant figures
           reset('sigfigs', defaults.sigfigs);
 
