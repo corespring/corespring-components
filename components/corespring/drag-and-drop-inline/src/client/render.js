@@ -257,7 +257,7 @@ var main = [
     function template() {
       function choiceArea() {
         return [
-          '<div class="choices-holder" ng-hide="instructorData" >',
+          '<div class="choices-holder">',
           '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
           '    <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
           '  </div>',
