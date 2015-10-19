@@ -30,36 +30,35 @@ var main = ['ComponentDefaultData',
     var linesBlock = [
       '<div class="row">',
       '  <div class="body col-md-12">',
-      '    <h3>Lines</h3>',
-      '    <div class="row">',
-      '      <div class="col-md-12 intro-text"><strong>Line equations must be in y=mx+b form. Only whole number coordinates can be plotted.</strong></div>',
-      '    </div>',
-      '    <div class="row">',
-      '      <div class="col-md-4"><strong>Line Label (Optional)</strong></div>',
-      '      <div class="col-md-4"><strong>Correct Line</strong></div>',
-      '      <div class="col-md-4"><strong>Initial View (Optional)</strong></div>',
-      '    </div><br />',
-      '    <form class="form-horizontal" role="form">',
-      '    <div class="row">',
-      '      <div class="config-form-row" ng-hide="fullModel.model.config.exhibitOnly">',
-      '        <div class="col-md-4">',
-      '          <input type="text" class="form-control" ng-model="fullModel.model.config.curveLabel" />',
-      '        </div>',
-      '        <div class="col-md-4">',
-      '          <div class="col-md-9 input-group">',
-      '            <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="correctResponse" />',
-      '          </div>',
-      '        </div>',
-      '        <div class="col-md-4">',
-      '          <div class="col-md-9 input-group">',
-      '            <span class="input-group-addon">y = </span><input type="text" class="form-control" ng-model="initialCurve" />',
-      '          </div>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '    </form>',
+      '  <h3>Lines</h3>',
+       '  <div class="col-md-12 intro-text"><strong>Line equations must be in y=mx+b form. Only whole number coordinates can be plotted.</strong></div>',
+      '     <form class="form-horizontal" role="form">',
+      '       <div class="config-form-row">',
+      '         <div class="col-sm-8">',
+      '           <checkbox ng-model="fullModel.model.config.exhibitOnly">',
+      '             Make this graph an exhibit only',
+      '           </checkbox>',
+      '         </div>',
+      '       </div>',
+      '       <div class="config-form-row" ng-hide="fullModel.model.config.exhibitOnly">',
+      '         <div class="col-sm-2">',
+      '           <label class="control-label">Correct Answer</label>',
+      '         </div>',
+      '         <div class="col-sm-5 input-group">',
+      '             <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter correct answer in mx+b form." ng-model="correctResponse" />',
+      '         </div>',
+      '       </div>',
+      '       <div class="config-form-row">',
+      '         <div class="col-sm-2">',
+      '           <label class="control-label">Initial Line (optional)</label>',
+      '         </div>',
+      '         <div class="col-sm-5 input-group">',
+      '           <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter initial line equation in mx+b form." ng-model="initialCurve" />',
+      '         </div>',
+      '       </div>',
+      '     </form>',
       '  </div>',
-      '</div>'].join('\n');
+      '</div><hr />'].join('\n');
 
     var graphAttributesBlock = [
       '<div class="row">',
@@ -138,18 +137,7 @@ var main = ['ComponentDefaultData',
       '    <div class="body col-md-9">',
       '      <form class="form-horizontal" role="form" name="display">',
       '        <h3>Display</h3>',
-      '        <div class="config-form-row">',
-      '          <div class="col-sm-8">',
-      '          </div>',
-      '        </div><br/>',
-      '        <div class="config-form-row">',
-      '          <div class="col-sm-8">',
-      '            <checkbox ng-model="fullModel.model.config.exhibitOnly">',
-      '              Make this graph an exhibit only',
-      '            </checkbox>',
-      '          </div>',
-      '        </div>',
-      '        <div class="config-form-row">',
+      '        <br/><div class="config-form-row">',
       labelWithInput({ label: 'Width', modelKey: 'graphWidth', inputType: "number", inputClass: 'input-number', placeholder: '{{defaults.graphWidth}}', labelSize: 1, size: 2 }),
       labelWithInput({ label: 'Height', modelKey: 'graphHeight', inputType: "number", inputClass: 'input-number', placeholder: '{{defaults.graphHeight}}', labelSize: 1, size: 2 }),
       '        </div>',
@@ -246,17 +234,35 @@ var main = ['ComponentDefaultData',
             scope.fullModel.model.config[property] = value;
           }
 
-          reset('graphWidth', defaults.graphWidth);
-          reset('graphHeight', defaults.graphHeight);
-          reset('graphPadding', defaults.graphPadding);
+          // graph attributes
           reset('domainMin', defaults.domainMin);
           reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);
+          reset('domainStepValue', defaults.domainStepValue);
+          reset('domainSnapValue', defaults.domainStepValue);
+          reset('domainLabelFrequency', defaults.domainLabelFrequency);
+          reset('domainGraphPadding', defaults.domainGraphPadding);
+
           reset('rangeMin', defaults.rangeMin);
           reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
-          reset('tickLabelFrequency', defaults.tickLabelFrequency);
+          reset('rangeStepValue', defaults.rangeStepValue);
+          reset('rangeSnapValue', defaults.rangeStepValue);
+          reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
+          reset('rangeGraphPadding', defaults.rangeGraphPadding);
+
           reset('sigfigs', defaults.sigfigs);
+
+          // significant figures
+          reset('sigfigs', defaults.sigfigs);
+
+          // display
+          reset('graphWidth', defaults.graphWidth);
+          reset('graphHeight', defaults.graphHeight);
+
+          reset('showCoordinates', defaults.showCoordinates);
+          reset('showInputs', defaults.showInputs);
+          reset('showFeedback', defaults.showFeedback);
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);

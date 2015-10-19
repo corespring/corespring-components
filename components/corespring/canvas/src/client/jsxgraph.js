@@ -153,9 +153,8 @@ var def = ['Canvas',
             shape = canvas.makeCurve(drawShape.curve, drawShape.label);
           }
 
-          shape.lineId = drawShape.id;
           shape.on('over', function(){
-            scope.hoveredLine = this.lineId;
+            scope.hoveredLine = this.customId;
           });
           shape.on('out', function(){
             scope.hoveredLine = -1;
@@ -201,8 +200,13 @@ var def = ['Canvas',
         };
 
         var pointColorCallback = function(pointColor) {
-          var point = canvas.getPoint(pointColor.point);
-          canvas.changePointColor(point, pointColor.color);
+          if (pointColor.points) {
+            _.each(pointColor.points, function(point) {
+              canvas.changePointColor(canvas.getPoint(point), pointColor.color);
+            });
+          } else if (pointColor.point) {
+            canvas.changePointColor(canvas.getPoint(pointColor.point), pointColor.color);
+          }
         };
 
         var canvasAttrs = getCanvasAttributes();

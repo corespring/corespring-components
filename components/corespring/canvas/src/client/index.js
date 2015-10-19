@@ -221,7 +221,7 @@ exports.service = ['$log',
         fixed: true,
         firstArrow: true,
         lastArrow: true,
-        withLabel: true,
+        withLabel: options.label,
         name: options.label
       };
 
