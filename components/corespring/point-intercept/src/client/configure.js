@@ -331,17 +331,35 @@ var main = [
             scope.fullModel.model.config[property] = value;
           }
 
-          reset('graphWidth', defaults.graphWidth);
-          reset('graphHeight', defaults.graphHeight);
-          reset('graphPadding', defaults.graphPadding);
+          // graph attributes
           reset('domainMin', defaults.domainMin);
           reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);
+          reset('domainStepValue', defaults.domainStepValue);
+          reset('domainSnapValue', defaults.domainStepValue);
+          reset('domainLabelFrequency', defaults.domainLabelFrequency);
+          reset('domainGraphPadding', defaults.domainGraphPadding);
+
           reset('rangeMin', defaults.rangeMin);
           reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
-          reset('tickLabelFrequency', defaults.tickLabelFrequency);
+          reset('rangeStepValue', defaults.rangeStepValue);
+          reset('rangeSnapValue', defaults.rangeStepValue);
+          reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
+          reset('rangeGraphPadding', defaults.rangeGraphPadding);
+
           reset('sigfigs', defaults.sigfigs);
+
+          // significant figures
+          reset('sigfigs', defaults.sigfigs);
+
+          // display
+          reset('graphWidth', defaults.graphWidth);
+          reset('graphHeight', defaults.graphHeight);
+
+          reset('showCoordinates', defaults.showCoordinates);
+          reset('showInputs', defaults.showInputs);
+          reset('showFeedback', defaults.showFeedback);
         };
 
       },
