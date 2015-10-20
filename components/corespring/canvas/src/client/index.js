@@ -138,6 +138,7 @@ exports.service = ['$log',
         snapSizeY: this.rangeScale,
         showInfobox: false,
         withLabel: false,
+        size: 3,
         visible: this.showPoints
       }, ptOptions);
 
@@ -253,11 +254,17 @@ exports.service = ['$log',
       }
     };
 
-    Canvas.prototype.changePointColor = function(point, color) {
+    Canvas.prototype.changePointColor = function(point, color, symbol) {
       point.setAttribute({
         fillColor: color,
         strokeColor: color
       });
+      if(symbol) {
+        point.setAttribute({
+          face: symbol,
+          size: (symbol === 'square' || symbol === 'circle') ? 3 : 5
+        });
+      }
       var index = _.indexOf(_.map(this.points, function(p) {
         return p.id;
       }), point.id);

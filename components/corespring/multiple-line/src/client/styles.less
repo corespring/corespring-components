@@ -96,12 +96,39 @@
       .line-label {
         display: inline-block;
         height: 25px;
-        padding-top: 5px;
+        padding-top: 2px;
+      }
+
+      .symbol {
+        font-size: 10px;
+        padding-right: 2px;
+        &.diamond {
+          transform: rotate(45deg);
+        }
+        &.line0 {
+          color: #993399;
+        }
+        &.line1 {
+          color: #0033ff;
+        }
+        &.line2 {
+          color: #666633;
+        }
+        &.line3 {
+          color: #ffcc99;
+        }
+        &.line4 {
+          color: #663333;
+        }
+        &.exhibit {
+          color: #000000;
+        }
+
       }
 
       .point-input {
         height: 25px;
-        padding-top: 3px;
+        // padding-top: 3px;
         .point-label {
           display: inline-block;
           min-width: 16px;

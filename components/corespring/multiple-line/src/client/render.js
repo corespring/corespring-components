@@ -28,8 +28,26 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         'exhibit': '#000000'
       };
 
+      scope.symbols = {
+        0: 'circle',
+        1: 'square',
+        2: 'diamond',
+        3: 'cross',
+        4: 'plus',
+        'exhibit': 'circle'
+      };
+
+      scope.fa_symbols = {
+        0: 'circle',
+        1: 'stop',
+        2: 'stop diamond',
+        3: 'times',
+        4: 'plus',
+        'exhibit': 'circle'
+      };
+
       scope.inputStyle = {
-        width: "55px"
+        width: "50px"
       };
 
       // set intitial state for jsxgraph directive
@@ -146,15 +164,9 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           if(!scope.config.exhibitOnly) {
             scope.graphCallback({
               pointColor: {
-                point: scope.plottedPoint.name,
-                color: scope.colorPalette[line.colorIndex]
-              }
-            });
-
-            scope.graphCallback({
-              pointColor: {
-                point: point.name,
-                color: scope.colorPalette[line.colorIndex]
+                points: [scope.plottedPoint.name, point.name],
+                color: scope.colorPalette[line.colorIndex],
+                symbol: scope.symbols[line.colorIndex]
               }
             });
           }
@@ -496,7 +508,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           scope.unlockGraph();
 
           scope.inputStyle = {
-            width: "55px"
+            width: "50px"
           };
 
           var solutionContainer = element.find('.solution-graph');
@@ -548,7 +560,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "    </div><br/>",
         "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
         "      <div class='row line-input' ng-repeat='line in lines' ng-if='!locked && line.points.A.x !== undefined && line.points.B.x !== undefined'>",
-        "        <div class='col-sm-2'>",
+        "        <div class='col-sm-3'>",
+        "          <span class='fa fa-{{fa_symbols[line.colorIndex % 5]}} symbol line{{ line.colorIndex % 5 }}'></span>",
         "          <span class='line-label'>{{line.name}}</span>",
         "        </div>",
         "        <div class='col-sm-9'>",
@@ -565,10 +578,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.domainStepValue * graphAttrs.domainSnapValue }}'>",
         "            <label>y: </label>",
         "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.rangeStepValue * graphAttrs.rangeSnapValue }}'>",
-        "          </div>",
-        "        </div>",
-        "        <div class='col-sm-1'>",
         "          <a class='btn delete-line-button' ng-disabled='locked || line.points.A.x === undefined || line.points.B.x === undefined' ng-click='removeLine(line.id)'><span class='fa fa-trash-o'></span></a>",
+        "          </div>",
         "        </div>",
         "      </div>",
         "    </div>",

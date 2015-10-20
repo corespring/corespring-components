@@ -204,10 +204,10 @@ var def = ['Canvas',
         var pointColorCallback = function(pointColor) {
           if (pointColor.points) {
             _.each(pointColor.points, function(point) {
-              canvas.changePointColor(canvas.getPoint(point), pointColor.color);
+              canvas.changePointColor(canvas.getPoint(point), pointColor.color, pointColor.symbol);
             });
           } else if (pointColor.point) {
-            canvas.changePointColor(canvas.getPoint(pointColor.point), pointColor.color);
+            canvas.changePointColor(canvas.getPoint(pointColor.point), pointColor.color, pointColor.symbol);
           }
         };
 
