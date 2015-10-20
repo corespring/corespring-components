@@ -93,13 +93,10 @@
         border-bottom: none;
       }
 
-      .delete-line-button {
-        font-size: 18px;
-        padding: 2px 7px;
-        margin-right: 5px;
-        &[disabled] {
-          background-color: #dddddd;
-        }
+      .line-label {
+        display: inline-block;
+        height: 25px;
+        padding-top: 5px;
       }
 
       .point-input {
@@ -110,16 +107,24 @@
           min-width: 16px;
           padding-right: 5px;
         }
+        input {
+          height: 24px;
+          padding: 2px;
+          font-size: 14px;
+          color: #555555;
+          border: 1px solid #cccccc;
+          border-radius: 4px;
+          &:disabled {
+            background-color: #dddddd;
+          }
+        }
       }
 
-      input {
-        height: 24px;
-        padding: 2px;
-        font-size: 14px;
-        color: #555555;
-        border: 1px solid #cccccc;
-        border-radius: 4px;
-        &:disabled {
+      .delete-line-button {
+        font-size: 16px;
+        padding: 3px 7px;
+        color: #333333;
+        &:hover {
           background-color: #dddddd;
         }
       }
