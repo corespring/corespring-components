@@ -99,7 +99,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         if(typeof(scope.pointsPerLine[point.name]) !== 'undefined') {
           if(trackHistory) {
-            scope.history.push({ action: 'move', previousPoint: scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point] });
+            scope.history.push({ action: 'move', previousPoint: _.cloneDeep(scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point]) });
           }
 
           var linePoint = scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point];

@@ -150,7 +150,7 @@ var def = ['Canvas',
               });
             }
           } else if (drawShape.curve) {
-            shape = canvas.makeCurve(drawShape.curve, drawShape.label);
+            shape = canvas.makeCurve(drawShape.curve);
           }
 
           if(!_.isUndefined(scope.hoveredLine)) {

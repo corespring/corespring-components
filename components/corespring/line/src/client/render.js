@@ -178,9 +178,13 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
               scope.pointUpdate(lastRecord.previousPoint);
               break;
             case 'add_point':
+              // remove point and line from graph
               scope.graphCallback({
-                remove: { point: lastRecord.point }
+                remove: { point: lastRecord.point, line: scope.line.id }
               });
+              // deletes the line
+              scope.line.points[lastRecord.point.name] = { isSet: false };
+              scope.line.isSet = false;
               break;
           }
         }
