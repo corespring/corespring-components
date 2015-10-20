@@ -497,8 +497,8 @@ describe('corespring:dnd-categorize:render', function() {
       expect(scope.renderModel.choices[0].correctness).toEqual('instructor-mode-disabled');
       expect(scope.renderModel.choices[1].correctness).toEqual('instructor-mode-disabled');
     });
-    it('should set the correctness of incorrect choices to empty string', function(){
-      expect(scope.renderModel.choices[2].correctness).toEqual('');
+    it('should set the correctness of incorrect choices to instructor-mode-disabled', function(){
+      expect(scope.renderModel.choices[2].correctness).toEqual('instructor-mode-disabled');
     });
   });
 

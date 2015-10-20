@@ -199,7 +199,7 @@ function renderCorespringDndCategorize(
       });
 
       showAllChoicesRegardlessOfMoveOnDrag(scope.renderModel);
-      disableCorrectChoices(scope.renderModel);
+      disableAllChoices(scope.renderModel);
 
       scope.containerBridge.setResponse({
         correctness: "correct",
@@ -217,9 +217,9 @@ function renderCorespringDndCategorize(
         renderModel.choices = _.cloneDeep(renderModel.allChoices);
       }
 
-      function disableCorrectChoices(renderModel) {
+      function disableAllChoices(renderModel) {
         _.forEach(renderModel.choices, function(choice) {
-          choice.correctness = isChoicePlaced(choice.id) ? "instructor-mode-disabled" : "";
+          choice.correctness = "instructor-mode-disabled";
         });
       }
 
