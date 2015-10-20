@@ -232,6 +232,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       scope.undo = function() {
         if (!scope.locked && scope.history.length > 0) {
           var lastRecord = scope.history.pop();
+          var line;
 
           switch(lastRecord.action) {
             case 'move':
@@ -244,7 +245,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
               scope.plottedPoint = {};
               break;
             case 'add_line':
-              var line = scope.lines[scope.pointsPerLine[lastRecord.point.name].line];
+              line = scope.lines[scope.pointsPerLine[lastRecord.point.name].line];
 
               // remove point and line from graph
               scope.graphCallback({
@@ -265,7 +266,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
               break;
             case 'remove_line':
 
-              var line = lastRecord.line;
+              line = lastRecord.line;
               // recreate points
               scope.graphCallback({ add: { point: line.points.A, color: scope.colorPalette[line.colorIndex], name: line.points.A.name } });
               scope.graphCallback({ add: { point: line.points.B, color: scope.colorPalette[line.colorIndex], name: line.points.B.name } });
@@ -571,7 +572,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "    </div>",
         "    <div id='graph-container' class='row-fluid graph-container'></div>",
         "  </div>",
-        "  <div class='feedback-holder' ng-show='true'>",
+        "  <div class='feedback-holder' ng-show='config.showFeedback'>",
         "    <div ng-show='feedback' feedback='feedback' correct-class='{{correctClass}}'></div>",
         "  </div>",
         "  <div see-answer-panel see-answer-panel-expanded='true' class='solution-panel' ng-class='{panelVisible: correctResponse}'>",

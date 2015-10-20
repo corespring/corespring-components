@@ -153,12 +153,14 @@ var def = ['Canvas',
             shape = canvas.makeCurve(drawShape.curve, drawShape.label);
           }
 
-          shape.on('over', function(){
-            scope.hoveredLine = this.customId;
-          });
-          shape.on('out', function(){
-            scope.hoveredLine = -1;
-          });
+          if(!_.isUndefined(scope.hoveredLine)) {
+            shape.on('over', function(){
+              scope.hoveredLine = this.customId;
+            });
+            shape.on('out', function(){
+              scope.hoveredLine = -1;
+            });
+          }
         };
 
         var addCallback = function(add) {

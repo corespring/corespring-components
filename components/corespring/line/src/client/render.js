@@ -237,24 +237,23 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
           if (solutionGraphCallback) {
+            var initialValues = lineUtils.pointsFromEquation(response.correctResponse.equation,
+                  solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapValue);
+            var point1 = {}, point2 = {};
 
-              var initialValues = lineUtils.pointsFromEquation(scope.line.equation,
-                    solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapValue);
-              var point1 = {}, point2 = {};
+            if (typeof initialValues !== 'undefined') {
+              point1 = solutionGraphCallback({ add: { point: { x: initialValues[0][0], y: initialValues[0][1] } } });
+              point2 = solutionGraphCallback({ add: { point: { x: initialValues[1][0], y: initialValues[1][1] } } });
+            }
 
-              if (typeof initialValues !== 'undefined') {
-                point1 = solutionGraphCallback({ add: { point: { x: initialValues[0][0], y: initialValues[0][1] } } });
-                point2 = solutionGraphCallback({ add: { point: { x: initialValues[1][0], y: initialValues[1][1] } } });
-              }
-
-              solutionGraphCallback({
-                drawShape: {
-                  id: scope.line.id,
-                  line: [point1.name, point2.name],
-                  color: "#3C763D"
-                },
-                lockGraph: true
-              });
+            solutionGraphCallback({
+              drawShape: {
+                id: scope.line.id,
+                line: [point1.name, point2.name],
+                color: "#3C763D"
+              },
+              lockGraph: true
+            });
           }
         });
 
@@ -309,7 +308,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         getSession: function() {
           return {
-            answers: scope.line.points
+            answers: scope.line.equation
           };
         },
 
@@ -374,7 +373,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         isAnswerEmpty: function() {
           var answer = this.getSession().answers;
-          return _.isUndefined(answer) || _.isEmpty(answer) || answer.length === 0;
+          return _.isUndefined(answer) || _.isEmpty(answer);
         },
 
         answerChangedHandler: function(callback) {
@@ -426,7 +425,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "    </div>",
         "    <div id='graph-container' class='row-fluid graph-container'></div>",
         "  </div>",
-        "  <div class='feedback-holder' ng-show='true'>",
+        "  <div class='feedback-holder' ng-show='config.showFeedback'>",
         "    <div ng-show='feedback' feedback='feedback' correct-class='{{correctClass}}'></div>",
         "  </div>",
         "  <div see-answer-panel see-answer-panel-expanded='true' class='solution-panel' ng-class='{panelVisible: correctResponse}'>",
