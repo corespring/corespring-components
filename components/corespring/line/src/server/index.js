@@ -25,7 +25,7 @@ exports.isScoreable = function(question, answer, outcome) {
 exports.createOutcome = function(question, answer, settings) {
 
   function validAnswer(answer) {
-    return (answer !== undefined && answer !== null);
+    return (!_.isUndefined(answer) && !_.isNull(answer) && !_.isEmpty(answer));
   }
 
   if (!question || _.isEmpty(question)){

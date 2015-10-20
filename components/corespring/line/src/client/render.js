@@ -128,7 +128,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       function setLineEquation() {
         var slope = (scope.line.points.B.y - scope.line.points.A.y) / (scope.line.points.B.x - scope.line.points.A.x);
         var yintercept = scope.line.points.B.y - (scope.line.points.B.x * slope);
-        scope.line.equation = "y=" + slope + "x+" + yintercept;
+        scope.line.equation = slope + "x+" + yintercept;
       }
 
       // set initial state for the graph
@@ -316,6 +316,22 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           };
         },
 
+        setInstructorData: function(data) {
+          var cr = lineUtils.expressionize(data.correctResponse, "x");
+          scope.graphCallback({
+            clearBoard: true
+          });
+          scope.graphCallback({
+            drawShape: {
+              curve: function(x) {
+                return eval(cr);
+              }
+            }
+          });
+
+          this.setResponse({correctness: 'correct'});
+        },
+
         setResponse: function(response) {
           if (!response) {
             return;
@@ -381,7 +397,11 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         },
 
         answerChangedHandler: function(callback) {
-
+          scope.$watch("line.equation", function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+              callback();
+            }
+          }, true);
         },
 
         editable: function(e) {
