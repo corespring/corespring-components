@@ -32,6 +32,10 @@ var countAnsweredCorrectly = function(answer, correctResponse) {
   return sum;
 };
 
+var isAnswerCorrect = function(answer, correctResponse) {
+  return (answer) ? functionUtils.isFunctionEqual(answer, correctResponse) : false;
+};
+
 var calculateScore = function(answer, question) {
 
   var correctAnswerCount = countAnsweredCorrectly(answer, question.correctResponse);
@@ -112,11 +116,13 @@ exports.createOutcome = function(question, answer, settings) {
       correctness: isCorrect ? "correct" : isPartiallyCorrect ? "partial" : "incorrect",
       score: calculateScore(answer, question),
       correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
-      correctResponse: _.map(correctResponse, function(line){
+      correctResponse: _.map(correctResponse, function(line, index){
         return {
+          id: line.id,
           label: line.label,
           equation: line.equation,
-          expression: functionUtils.expressionize(line.equation, 'x')
+          expression: functionUtils.expressionize(line.equation, 'x'),
+          isCorrect: isAnswerCorrect(answer[index].equation, line.equation)
         };
       })
     };

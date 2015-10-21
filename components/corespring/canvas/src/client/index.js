@@ -106,6 +106,12 @@ exports.service = ['$log',
       });
     };
 
+    Canvas.prototype.getShape = function(customId) {
+      return _.find(this.shapes, function(s) {
+        return s.customId === customId;
+      });
+    };
+
     Canvas.prototype.pointCollision = function(coords) {
       var points = this.points,
         xScale = this.domainScale,
@@ -265,14 +271,9 @@ exports.service = ['$log',
           size: (symbol === 'square' || symbol === 'circle') ? 3 : 5
         });
       }
-      var index = _.indexOf(_.map(this.points, function(p) {
-        return p.id;
-      }), point.id);
-      if (this.texts[index]) { //check to see if exists as labels may be disabled
-        this.texts[index].setAttribute({
-          strokeColor: color
-        });
-      }
+      point.text.setAttribute({
+        strokeColor: color
+      });
     };
 
     Canvas.prototype.changeShapeColor = function(shape, color) {

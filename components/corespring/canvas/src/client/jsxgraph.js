@@ -211,6 +211,15 @@ var def = ['Canvas',
           }
         };
 
+        var shapeColorCallback = function(shapeColor) {
+          if (shapeColor.shape) {
+            var shape = canvas.getShape(shapeColor.shape);
+            canvas.changeShapeColor(shape, shapeColor.color);
+            canvas.changePointColor(shape.point1, shapeColor.color);
+            canvas.changePointColor(shape.point2, shapeColor.color);
+          }
+        };
+
         var canvasAttrs = getCanvasAttributes();
         var lockGraph = false;
         var points = {};
@@ -249,6 +258,9 @@ var def = ['Canvas',
           }
           if (params.pointColor && canvas) {
             pointColorCallback(params.pointColor);
+          }
+          if (params.shapeColor && canvas) {
+            shapeColorCallback(params.shapeColor);
           }
 
           if (params.clearBoard && canvas) {

@@ -320,12 +320,17 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
       scope.lockGraph = function(color) {
         scope.locked = true;
+        var options = {
+          lockGraph: true
+        };
+
+        if(color) {
+          options.pointsStyle = scope.config.exhibitOnly ? scope.colorPalette.exhibit : color;
+          options.shapesStyle = scope.config.exhibitOnly ? scope.colorPalette.exhibit : color;
+        }
+
         if (scope.graphCallback) {
-          scope.graphCallback({
-            pointsStyle: scope.config.exhibitOnly ? scope.colorPalette.exhibit : color ? color : scope.colorPalette.exhibit,
-            shapesStyle: scope.config.exhibitOnly ? scope.colorPalette.exhibit : color ? color : scope.colorPalette.exhibit,
-            lockGraph: true
-          });
+          scope.graphCallback(options);
         }
       };
 
@@ -476,7 +481,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             incorrect: "#eea236",
             warning: "#999999",
             none: ""
-          }[(response && response.correctness) || "none"];
+          };
 
           scope.feedback = response && response.feedback;
           scope.response = response;
@@ -484,7 +489,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
           if (response && response.correctness !== 'warning') {
             scope.inputStyle = _.extend(scope.inputStyle, {
-              border: 'thin solid ' + color
+              border: 'thin solid ' + color[(response && response.correctness) || "none"]
             });
 
             if (response.correctness === "partial" || response.correctness === "incorrect") {
@@ -496,7 +501,16 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             }
           }
 
-          scope.lockGraph(color);
+          scope.lockGraph();
+
+          _.each(response.correctResponse, function(line){
+            scope.graphCallback({
+              shapeColor: {
+                shape: line.id,
+                color: line.isCorrect ? color.correct : color.incorrect
+              }
+            });
+          });
         },
 
         setMode: function(newMode) {},
