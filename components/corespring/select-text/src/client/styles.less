@@ -52,6 +52,24 @@
           background-color: @choice-color;
         }
       }
+      &.select-possible {
+        .token {
+          cursor: default;
+          &:hover {
+            background-color: transparent;
+          }
+          &.possible {
+            cursor: pointer;
+            background-color: @possible-choice-color-opaque;
+            background-color: @possible-choice-color;
+          }
+          &.selected {
+            cursor: pointer;
+            background-color: @choice-color-opaque;
+            background-color: @choice-color;
+          }
+        }
+      }
     }
     .answer-summary {
       line-height: 60px;
@@ -60,6 +78,57 @@
         width: 40px;
         border-radius: 100%;
         padding: 0;
+        color: #555;
+        -webkit-transition: all 0.3s ease-in-out; 
+        transition: all 0.3s ease-in-out;
+        &#possible-count {
+          background-color: @possible-choice-color-opaque;
+          background-color: @possible-choice-color;
+        }
+        &#answers-count {
+          background-color: @choice-color-opaque;
+          background-color: @choice-color;
+        }
+        &.grow-add {
+          -webkit-transform: none;
+          -ms-transform: none;
+          transform: none;
+          &.grow-add-active {
+            -webkit-transform: scale(1.5);
+            -ms-transform: scale(1.5);
+            transform: scale(1.5);
+          }
+        }
+        &.grow-remove {
+          -webkit-transform: scale(1.5);
+          -ms-transform: scale(1.5);
+          transform: scale(1.5);
+          &.grow-remove-active {
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none;
+          }
+        }
+        &.shrink-add {
+          -webkit-transform: none;
+          -ms-transform: none;
+          transform: none;
+          &.shrink-add-active {
+            -webkit-transform: scale(0.5);
+            -ms-transform: scale(0.5);
+            transform: scale(0.5);
+          }
+        }
+        &.shrink-remove {
+          -webkit-transform: scale(0.5);
+          -ms-transform: scale(0.5);
+          transform: scale(0.5);
+          &.shrink-remove-active {
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none;
+          }
+        }
       }
     }
   }

@@ -2,7 +2,8 @@
 var main = [
   'ChoiceTemplates',
   '$timeout',
-  function(ChoiceTemplates, $timeout) {
+  '$animate',
+  function(ChoiceTemplates, $timeout, $animate) {
     "use strict";
     var designPanel = [
       '<div class="container-fluid">',
@@ -52,7 +53,7 @@ var main = [
       '       </div>',
       '       <div class="radio">',
       '         <label>',
-      '           <input type="radio" ng-model="model.config.availability" value="specific" disabled>',
+      '           <input type="radio" ng-model="model.config.availability" value="specific">',
       '           Make specific selections available',
       '         </label>',
       '       </div>',
@@ -63,10 +64,10 @@ var main = [
       '       <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
       '       <div class="pull-left answer-summary" ng-show="model.config.availability === \'specific\'">',
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': selectionMode}"',
-      '           ng-click="toggleSelectionMode()">Selections Available</button> <span class="badge">{{model.possibleChoices.length}}</span>',
+      '           ng-click="availableSelectionsToggle()">Selections Available</button> <span id="possible-count" class="badge">{{model.possibleChoices.length}}</span>',
       '       </div>',
       '       <div class="pull-right answer-summary">',
-      '         Correct Answers <span class="badge">{{model.choices.length}}</span>',
+      '         Correct Answers <span id="answers-count" class="badge">{{model.choices.length}}</span>',
       '       </div>',
       '     </div>',
       '     <div ng-show="mode === \'delete\'">',
@@ -124,6 +125,28 @@ var main = [
       $scope.mode = "editor";
       $scope.selectionMode = true;
 
+      var classifyTokens = function(collection, tokenClass) {
+        if (collection.length > 0) {
+          for (var i = collection.length - 1; i >= 0; i--) {
+            var $matches = $theContent.find('.token:contains("' + collection[i].data + '"):not(.' + tokenClass + ')');
+            if ($matches.length === 1) {
+              $matches.addClass(tokenClass);
+            } else if ($matches.length > 1) {
+              if (collection[i].index) {
+                for (var j = $matches.length - 1; j >= 0; j--) {
+                  if ($theContent.find('.token').index($matches[j]) === collection[i].index) {
+                    $($matches[j]).addClass(tokenClass);
+                    break;
+                  }
+                }
+              } else {
+                $($matches[0]).addClass(tokenClass);
+              }
+            }
+          }
+        }
+      };
+
       var blastThePassage = function() {
         var delimiter = $scope.model.config.selectionUnit;
         blastOptions.delimiter = delimiter;
@@ -132,36 +155,66 @@ var main = [
         // Tokenize the content
         $theContent.blast(blastOptions);
         // Render existing choices
-        if ($scope.model.choices.length > 0) {
-          for (var i = $scope.model.choices.length - 1; i >= 0; i--) {
-            var $matches = $theContent.find('.token:contains("' + $scope.model.choices[i].data + '"):not(.selected)');
-            if ($matches.length === 1) {
-              $matches.addClass('selected');
-            } else if ($matches.length > 1) {
-              if ($scope.model.choices[i].index) {
-                for (var j = $matches.length - 1; j >= 0; j--) {
-                  if ($theContent.find('.token').index($matches[j]) === $scope.model.choices[i].index) {
-                    $($matches[j]).addClass('selected');
-                    break;
-                  }
-                }
-              } else {
-                $($matches[0]).addClass('selected');
-              }
+        if ($scope.model.config.availability === "specific") {
+          classifyTokens($scope.model.possibleChoices, "possible");
+        }
+        classifyTokens($scope.model.choices, "selected");
+      };
+
+      var toggleSelectionMode = function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          if (newValue === "specific") {
+            if ($scope.model.choices.length > 0) {
+              $scope.model.possibleChoices = _.cloneDeep($scope.model.choices);
+              $scope.model.choices = [];
             }
+          } else {
+            $scope.model.possibleChoices = [];
           }
+          blastThePassage();
         }
       };
 
-      $scope.containerBridge = {
-        setModel: function (model) {
-          $scope.fullModel = model;
-          $scope.model = $scope.fullModel.model;
-          $theContent = $element.find('.passage-preview');
-          $theContent.off('click', '.token');
-          $theContent.on('click', '.token', function() {
-            var $token = $(this);
-            var index = $theContent.find('.token').index($token);
+      var deleteItemFromCollection = function(collection, text, index) {
+        _.remove(collection, function(item) {
+          return item.data === text || item.index === index;
+        });
+      };
+
+      var bindTokenEvents = function() {
+        $theContent.off('click', '.token');
+        $theContent.on('click', '.token', function() {
+          var $token = $(this);
+          var index = index = $theContent.find('.token').index($token);
+          if ($scope.model.config.availability === "specific") {
+            if ($theContent.hasClass('select-possible')) {
+              if ($token.hasClass('possible') && !$token.hasClass('selected')) {
+                $token.addClass('selected');
+                $scope.model.choices.push({
+                  data: $token.text(),
+                  index: index
+                });
+              } else if ($token.hasClass('possible') && $token.hasClass('selected')) {
+                $token.removeClass('selected');
+                deleteItemFromCollection($scope.model.choices, $token.text(), index);
+              }
+            } else {
+              $token.toggleClass('possible');
+              if ($token.hasClass('possible')) {
+                // Adds a new possible choice
+                $scope.model.possibleChoices.push({
+                  data: $token.text(),
+                  index: index
+                });
+              } else {
+                deleteItemFromCollection($scope.model.possibleChoices, $token.text(), index);
+                if ($token.hasClass('selected')) {
+                  deleteItemFromCollection($scope.model.choices, $token.text(), index);
+                  $token.removeClass('selected')
+                }
+              }
+            }
+          } else {
             $token.toggleClass('selected');
             if ($token.hasClass('selected')) {
               // Adds a new choice
@@ -170,12 +223,18 @@ var main = [
                 index: index
               });
             } else {
-              // Deletes an existing choice
-              _.remove($scope.model.choices, function(item) {
-                return item.data === $token.text() || item.index === index;
-              });
+              deleteItemFromCollection($scope.model.choices, $token.text(), index);
             }
-          });
+          }
+        });
+      };
+
+      $scope.containerBridge = {
+        setModel: function (model) {
+          $scope.fullModel = model;
+          $scope.model = $scope.fullModel.model;
+          $theContent = $element.find('.passage-preview');
+          bindTokenEvents();
           $timeout(function() {
             blastThePassage();
           }, 100);
@@ -186,8 +245,25 @@ var main = [
         }
       };
 
+      var animateBadge = function(nv, ov, badgeSelector) {
+        if (nv !== ov) {
+          var c = nv > ov ? 'grow' : 'shrink';
+          var badge = $element.find(badgeSelector);
+          $animate.addClass(badge, c, function() {
+            $timeout(function() { $animate.removeClass(badge, c); });
+          });
+        }
+      };
+
       $scope.$watch('model.config.selectionUnit', blastThePassage);
       $scope.$watch('model.config.xhtml', blastThePassage);
+      $scope.$watch('model.config.availability', toggleSelectionMode)
+      $scope.$watch('model.choices.length', function(newValue, oldValue) {
+        animateBadge(newValue, oldValue, "#answers-count");
+      });
+      $scope.$watch('model.possibleChoices.length', function(newValue, oldValue) {
+        animateBadge(newValue, oldValue, "#possible-count");
+      });
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
@@ -199,10 +275,14 @@ var main = [
       $scope.toggleSelectionUnit = function($event) {
         var unit = $($event.currentTarget).data('unit');
         $scope.model.config.selectionUnit = unit;
+        // Clean the answers
+        $scope.model.choices = [];
+        $scope.model.possibleChoices = [];
       };
 
-      $scope.toggleSelectionMode = function() {
+      $scope.availableSelectionsToggle = function() {
         $scope.selectionMode = !$scope.selectionMode;
+        $theContent.toggleClass('select-possible', !$scope.selectionMode);
       };
 
       $scope.deleteAll = function() {
