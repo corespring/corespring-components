@@ -22,8 +22,34 @@ function createOutcome(question, answer, settings) {
 
   var response = feedbackUtils.defaultCreateOutcome(question, answer, settings,
     numAnswers, numAnsweredCorrectly, totalCorrectAnswers);
+
+  if (question.model.config.inputType === 'checkbox' && !_.isEmpty(question.partialScoring)) {
+    amendResponseForCheckboxPartial(question, answer, response);
+  }
   response.correctnessMatrix = buildCorrectnessMatrix(question, answer);
   return response;
+}
+
+function amendResponseForCheckboxPartial(question, answer, response) {
+  var score = 0;
+  var numberOfRows = question.correctResponse.length;
+  _.each(question.model.rows, function(row) {
+    var answerForRow = _.find(answer, whereIdIsEqual(row.id));
+    var correctResponseForRow = _.find(question.correctResponse, whereIdIsEqual(row.id));
+    var numberOfCorrectForRow = _.reduce(answerForRow.matchSet, function(acc, val, idx) {
+      return acc + (correctResponseForRow.matchSet[idx] == val ? 1 : 0);
+    }, 0);
+    var partialScoreSection = _.findWhere(question.partialScoring.sections, {catId: row.id});
+    var partialScoreForRow = partialScoreSection && _.findWhere(partialScoreSection.partialScoring, {numberOfCorrect: numberOfCorrectForRow});
+    if (partialScoreForRow) {
+      score += (partialScoreForRow.scorePercentage / numberOfRows) / 100;
+    } else if (correctResponseForRow.matchSet.length == numberOfCorrectForRow) {
+      score += 1 / numberOfRows;
+    }
+  });
+  response.feedback = feedbackUtils.makeFeedback(question.feedback, 'partial');
+  response.correctClass = 'partial';
+  response.score = score;
 }
 
 function buildCorrectnessMatrix(question, answer) {

@@ -50,7 +50,7 @@ var componentTemplate = {
   ],
   feedback: {
     "correctFeedbackType": "default",
-    "partialFeedbackType": "default",
+    "partialFeedbackType": "Almost",
     "incorrectFeedbackType": "custom",
     "incorrectFeedback": "Everything is wrong !"
   },
@@ -84,6 +84,9 @@ var componentTemplate = {
         labelHtml: "Question text 4"
       }
     ],
+    config: {
+      inputType: "radiobutton"
+    },
     answerType: "MULTIPLE"
   }
 };
@@ -369,7 +372,8 @@ describe('match server logic', function() {
         incorrectAnswer("row-4")
       ];
 
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
+      var radioComponent = _.cloneDeep(component);
+      var response = server.createOutcome(radioComponent, answers, helper.settings(true, true, true));
 
       var expected = {
         correctness: "incorrect",
@@ -391,27 +395,51 @@ describe('match server logic', function() {
     it('should respond to partial result in MULTIPLE choice case ', function() {
       var answers = [
         superfluousAnswer("row-1"),
-        correctAnswer("row-2"),
+        noAnswer("row-2"),
         noAnswer("row-3"),
         noAnswer("row-4")
       ];
 
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
-
+      var checkboxComponent = _.merge(_.cloneDeep(component), {
+        partialScoring: {
+          sections: [
+            {
+              catId: "row-1",
+              "partialScoring": [
+                {
+                  "numberOfCorrect": 1,
+                  "scorePercentage": 10
+                }
+              ]
+            },
+            {
+              catId: "row-2",
+              "partialScoring": [
+                {
+                  "numberOfCorrect": 1,
+                  "scorePercentage": 20
+                }
+              ]
+            }
+          ]
+        },
+        model: {config: {inputType: 'checkbox'}}
+      });
+      var response = server.createOutcome(checkboxComponent, answers, helper.settings(true, true, true));
       var expected = {
         correctness: "incorrect",
         correctClass: "partial",
-        score: 0.1,
+        correctResponse: correctResponse,
+        feedback:"Almost!",
         correctnessMatrix: [
           correctIncorrect("row-1"),
-          correctUnknown("row-2"),
+          answerExpected("row-2"),
           answerExpected("row-3"),
           answerExpected("row-4")
-        ],
-        correctResponse: correctResponse,
-        feedback:"Almost!"
+        ]
       };
-      response.should.eql(expected);
+      expected.should.eql(_.omit(response, 'score'));
+      response.score.should.be.approximately(30/400, 0.000001);
     });
 
     it('should repond to partially correct result ( feedback - correct + user)', function() {
