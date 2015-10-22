@@ -52,14 +52,14 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           domainMin: parseFloat(getModelValue(config.domainMin, -10, config.domain * -1), 10),
           domainMax: parseFloat(getModelValue(config.domainMax, 10, config.domain), 10),
           domainStepValue: parseFloat(getModelValue(config.domainStepValue, 1)),
-          domainSnapValue: parseFloat(getModelValue(config.domainSnapValue, 1)),
+          domainSnapFrequency: parseFloat(getModelValue(config.domainSnapFrequency, 1)),
           domainLabelFrequency: parseFloat(getModelValue(config.domainLabelFrequency, 1, config.tickLabelFrequency), 10),
           domainGraphPadding: parseInt(getModelValue(config.domainGraphPadding, 50), 10),
           rangeLabel: config.rangeLabel,
           rangeMin: parseFloat(getModelValue(config.rangeMin, -10, config.range * -1)),
           rangeMax: parseFloat(getModelValue(config.rangeMax, 10, config.range * 1)),
           rangeStepValue: parseFloat(getModelValue(config.rangeStepValue, 1)),
-          rangeSnapValue: parseFloat(getModelValue(config.rangeSnapValue, 1)),
+          rangeSnapFrequency: parseFloat(getModelValue(config.rangeSnapFrequency, 1)),
           rangeLabelFrequency: parseFloat(getModelValue(config.rangeLabelFrequency, 1, config.tickLabelFrequency, 10)),
           rangeGraphPadding: parseInt(getModelValue(config.rangeGraphPadding, 50), 10),
           showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
@@ -141,7 +141,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         function createInitialPoints(initialLine) {
 
           var initialValues = lineUtils.pointsFromEquation(initialLine,
-            scope.graphAttrs.domainStepValue * scope.graphAttrs.domainSnapValue);
+            scope.graphAttrs.domainStepValue * scope.graphAttrs.domainSnapFrequency);
 
           if (typeof initialValues !== 'undefined') {
             scope.graphCallback({ add: { point: getPoint(initialValues[0]), triggerCallback: true  } });
@@ -242,7 +242,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
           if (solutionGraphCallback) {
             var initialValues = lineUtils.pointsFromEquation(response.correctResponse.equation,
-                  solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapValue);
+                  solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapFrequency);
             var point1 = {}, point2 = {};
 
             if (typeof initialValues !== 'undefined') {
@@ -433,16 +433,16 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
         "          <div class='point-input pull-left'>",
         "            <span class='point-label'>Point A:</span>",
         "            <label>x: </label>",
-        "            <input type='number' ng-style='inputStyle' ng-model='line.points.A.x' ng-disabled='locked || line.points.A.x === undefined' ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.domainStepValue * graphAttrs.domainSnapValue }}'>",
+        "            <input type='number' ng-style='inputStyle' ng-model='line.points.A.x' ng-disabled='locked || line.points.A.x === undefined' ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.domainStepValue * graphAttrs.domainSnapFrequency }}'>",
         "            <label>y: </label>",
-        "            <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-disabled='locked || line.points.A.y === undefined' ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.rangeStepValue * graphAttrs.rangeSnapValue }}''>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-disabled='locked || line.points.A.y === undefined' ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.rangeStepValue * graphAttrs.rangeSnapFrequency }}''>",
         "          </div>",
         "          <div class='point-input pull-right'>",
         "            <span class='point-label'>{{line.points.B.name}}</span>",
         "            <label>x: </label>",
-        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-disabled='locked || line.points.B.x === undefined' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.domainStepValue * graphAttrs.domainSnapValue }}'>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-disabled='locked || line.points.B.x === undefined' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.domainStepValue * graphAttrs.domainSnapFrequency }}'>",
         "            <label>y: </label>",
-        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.rangeStepValue * graphAttrs.rangeSnapValue }}'>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-disabled='locked || line.points.B.y === undefined' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.rangeStepValue * graphAttrs.rangeSnapFrequency }}'>",
         "          </div>",
         "        </div>",
         "      </div>",

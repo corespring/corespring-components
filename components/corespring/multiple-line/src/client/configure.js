@@ -96,7 +96,7 @@ var main = [
       '      </div>',
       '      <div class="config-form-row">',
       labelWithInput({ label: 'Tick Value:', modelKey: 'domainStepValue', inputType: "number", placeholder: '{{defaults.domainStepValue}}' }),
-      labelWithInput({ label: 'Snap Value:', modelKey: 'domainSnapValue', inputType: "number", placeholder: '{{defaults.domainSnapValue}}' }),
+      labelWithInput({ label: 'Snap Frequency:', modelKey: 'domainSnapFrequency', inputType: "number", placeholder: '{{defaults.domainSnapFrequency}}' }),
       '      </div>',
       '      <div class="config-form-row">',
       labelWithInput({ label: 'Label', modelKey: 'domainLabel', placeholder: '{{defaults.domainLabel}}' }),
@@ -125,7 +125,7 @@ var main = [
       '      </div>',
       '      <div class="config-form-row">',
       labelWithInput({ label: 'Tick Value:', modelKey: 'rangeStepValue', inputType: "number", placeholder: '{{defaults.rangeStepValue}}' }),
-      labelWithInput({ label: 'Snap Value:', modelKey: 'rangeSnapValue', inputType: "number", placeholder: '{{defaults.rangeSnapValue}}' }),
+      labelWithInput({ label: 'Snap Frequency:', modelKey: 'rangeSnapFrequency', inputType: "number", placeholder: '{{defaults.rangeSnapFrequency}}' }),
       '      </div>',
       '      <div class="config-form-row">',
       labelWithInput({ label: 'Label', modelKey: 'rangeLabel', placeholder: "y" }),
@@ -239,7 +239,7 @@ var main = [
           reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);
           reset('domainStepValue', defaults.domainStepValue);
-          reset('domainSnapValue', defaults.domainStepValue);
+          reset('domainSnapFrequency', defaults.domainSnapFrequency);
           reset('domainLabelFrequency', defaults.domainLabelFrequency);
           reset('domainGraphPadding', defaults.domainGraphPadding);
 
@@ -247,7 +247,7 @@ var main = [
           reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
           reset('rangeStepValue', defaults.rangeStepValue);
-          reset('rangeSnapValue', defaults.rangeStepValue);
+          reset('rangeSnapFrequency', defaults.rangeSnapFrequency);
           reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
           reset('rangeGraphPadding', defaults.rangeGraphPadding);
 
