@@ -238,11 +238,14 @@ exports.service = ['$log',
       return shape;
     };
 
-    Canvas.prototype.makeCurve = function(fn) {
+    Canvas.prototype.makeCurve = function(fn, options) {
       var shape = this.board.create('functiongraph', [fn], {
-        strokeColor: '#0000ff',
+        strokeColor: options.color ? options.color : '#0000ff',
+        highlightStrokeColor: '#9C9C9C',
         strokeWidth: 3,
-        fixed: true
+        fixed: true,
+        withLabel: options.label,
+        name: options.label
       });
       this.shapes.push(shape);
       return shape;

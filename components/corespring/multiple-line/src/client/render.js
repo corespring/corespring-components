@@ -386,20 +386,12 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
           if (solutionGraphCallback) {
             _.each(response.correctResponse, function(line){
 
-              var initialValues = lineUtils.pointsFromEquation(line.equation,
-                solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapFrequency);
-
-              var point1 = {}, point2 = {};
-
-              if (typeof initialValues !== 'undefined') {
-                point1 = solutionGraphCallback({ add: { point: { x: initialValues[0][0], y: initialValues[0][1] } } });
-                point2 = solutionGraphCallback({ add: { point: { x: initialValues[1][0], y: initialValues[1][1] } } });
-              }
-
               solutionGraphCallback({
                 drawShape: {
                   id: line.id,
-                  line: [point1.name, point2.name],
+                  curve: function(x) {
+                    return eval(line.expression);
+                  },
                   label: line.label,
                   color: "#3C763D"
                 },

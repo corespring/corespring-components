@@ -67,7 +67,7 @@ exports.createOutcome = function(question, answer, settings) {
       score: isCorrect ? 1 : 0,
       correctResponse: {
         equation: correctResponse,
-        expression: functionUtils.expressionize(correctResponse, 'x')
+        expression: functionUtils.expressionize(correctFunction, 'x')
       },
       comments: question.comments
     };

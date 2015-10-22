@@ -150,7 +150,11 @@ var def = ['Canvas',
               });
             }
           } else if (drawShape.curve) {
-            shape = canvas.makeCurve(drawShape.curve);
+            shape = canvas.makeCurve(drawShape.curve, {
+                id: drawShape.id,
+                label: drawShape.label,
+                color: drawShape.color
+              });
           }
 
           if(!_.isUndefined(scope.hoveredLine)) {

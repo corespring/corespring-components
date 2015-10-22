@@ -241,19 +241,12 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
           if (solutionGraphCallback) {
-            var initialValues = lineUtils.pointsFromEquation(response.correctResponse.equation,
-                  solutionGraphAttrs.domainStepValue * solutionGraphAttrs.domainSnapFrequency);
-            var point1 = {}, point2 = {};
-
-            if (typeof initialValues !== 'undefined') {
-              point1 = solutionGraphCallback({ add: { point: { x: initialValues[0][0], y: initialValues[0][1] } } });
-              point2 = solutionGraphCallback({ add: { point: { x: initialValues[1][0], y: initialValues[1][1] } } });
-            }
-
             solutionGraphCallback({
               drawShape: {
                 id: scope.line.id,
-                line: [point1.name, point2.name],
+                curve: function(x) {
+                  return eval(response.correctResponse.expression);
+                },
                 color: "#3C763D"
               },
               lockGraph: true
