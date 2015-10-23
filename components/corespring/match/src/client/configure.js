@@ -139,12 +139,11 @@ var main = [
               partialSection = {
                 "catId": row.id,
                 "label": "Row " + (idx+1),
-                "numberOfCorrectResponses": scope.fullModel.model.columns.length,
                 "partialScoring": []
               };
               scope.fullModel.partialScoring.sections.push(partialSection);
             }
-            partialSection.numberOfCorrectResponses = scope.fullModel.model.columns.length;
+            partialSection.numberOfCorrectResponses = scope.fullModel.model.columns.length - 1;
           });
           scope.fullModel.partialScoring.sections = _.filter(scope.fullModel.partialScoring.sections, function(section) {
             return _.findWhere(scope.fullModel.model.rows, {id: section.catId});
