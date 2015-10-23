@@ -44,10 +44,10 @@ function amendResponseForCheckboxPartial(question, answer, response) {
     }, 0);
     var partialScoreSection = _.findWhere(question.partialScoring.sections, {catId: row.id});
     var partialScoreForRow = partialScoreSection && _.findWhere(partialScoreSection.partialScoring, {numberOfCorrect: numberOfCorrectlySelectedForRow});
-    if (partialScoreForRow) {
-      score += (partialScoreForRow.scorePercentage / numberOfRows) / 100;
-    } else if (numberOfCorrectlySelectedForRow == numberOfCorrectForRow) {
+    if (numberOfCorrectlySelectedForRow == numberOfCorrectForRow) {
       score += 1 / numberOfRows;
+    } else if (partialScoreForRow) {
+      score += (partialScoreForRow.scorePercentage / numberOfRows) / 100;
     }
   });
   response.feedback = feedbackUtils.makeFeedback(question.feedback, 'partial');
