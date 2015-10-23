@@ -218,9 +218,11 @@ var def = ['Canvas',
         var shapeColorCallback = function(shapeColor) {
           if (shapeColor.shape) {
             var shape = canvas.getShape(shapeColor.shape);
-            canvas.changeShapeColor(shape, shapeColor.color);
-            canvas.changePointColor(shape.point1, shapeColor.color);
-            canvas.changePointColor(shape.point2, shapeColor.color);
+            if(shape) {
+              canvas.changeShapeColor(shape, shapeColor.color);
+              if(shape.point1) { canvas.changePointColor(shape.point1, shapeColor.color); }
+              if(shape.point2) { canvas.changePointColor(shape.point2, shapeColor.color); }
+            }
           }
         };
 

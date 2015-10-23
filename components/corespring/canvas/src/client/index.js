@@ -247,6 +247,7 @@ exports.service = ['$log',
         withLabel: options.label,
         name: options.label
       });
+      shape.customId = options.id;
       this.shapes.push(shape);
       return shape;
     };
