@@ -2,7 +2,7 @@ var main = [
   'ComponentDefaultData',
   'ServerLogic',
   'CanvasTemplates',
-  function(ComponentDefaultData) {
+  function(ComponentDefaultData, ServerLogic, CanvasTemplates) {
 
     var linesBlock = [
       '<div class="row">',

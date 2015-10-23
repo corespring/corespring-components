@@ -22,7 +22,7 @@ exports.factory = [
           reset('domainMax', defaults.domainMax);
           reset('domainLabel', defaults.domainLabel);
           reset('domainStepValue', defaults.domainStepValue);
-          reset('domainSnapFrequency', defaults.domainSnapFrequency);
+          reset('domainSnapValue', defaults.domainSnapValue);
           reset('domainLabelFrequency', defaults.domainLabelFrequency);
           reset('domainGraphPadding', defaults.domainGraphPadding);
 
@@ -30,7 +30,7 @@ exports.factory = [
           reset('rangeMax', defaults.rangeMax);
           reset('rangeLabel', defaults.rangeLabel);
           reset('rangeStepValue', defaults.rangeStepValue);
-          reset('rangeSnapFrequency', defaults.rangeSnapFrequency);
+          reset('rangeSnapValue', defaults.rangeSnapValue);
           reset('rangeLabelFrequency', defaults.rangeLabelFrequency);
           reset('rangeGraphPadding', defaults.rangeGraphPadding);
 

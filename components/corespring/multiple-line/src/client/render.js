@@ -169,8 +169,7 @@ var main = [
         }
         function createInitialPoints(initialLine) {
 
-          var initialValues = lineUtils.pointsFromEquation(initialLine,
-            scope.graphAttrs.domainStepValue * scope.graphAttrs.domainSnapFrequency);
+          var initialValues = lineUtils.pointsFromEquation(initialLine, scope.graphAttrs.domainSnapValue);
 
           if (typeof initialValues !== 'undefined') {
             scope.graphCallback({ add: { point: getPoint(initialValues[0]), triggerCallback: true  } });
@@ -538,16 +537,36 @@ var main = [
         "          <div class='point-input pull-left'>",
         "            <span class='point-label'>{{line.points.A.name}}</span>",
         "            <label>x: </label>",
-        "            <input type='number' ng-style='inputStyle' ng-model='line.points.A.x' ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.domainStepValue * graphAttrs.domainSnapFrequency }}'>",
+        "            <input type='number' ng-style='inputStyle' ng-model='line.points.A.x' ",
+        "               ng-disabled='locked || line.points.A.x === undefined' ",
+        "               ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ",
+        "               ng-class='{ \"glowing-border\": isLineHovered(line.id) }' ",
+        "               class='line{{ line.colorIndex % 5 }}' ",
+        "               step='{{ graphAttrs.domainSnapValue }}'>",
         "            <label>y: </label>",
-        "            <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.rangeStepValue * graphAttrs.rangeSnapFrequency }}'>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.A.y' ",
+        "               ng-disabled='locked || line.points.A.y === undefined' ",
+        "               ng-change='pointUpdate(line.points.A, {{ line.points.A }})' ",
+        "               ng-class='{ \"glowing-border\": isLineHovered(line.id) }' ",
+        "               class='line{{ line.colorIndex % 5 }}' ",
+        "               step='{{ graphAttrs.rangeSnapValue }}'>",
         "          </div>",
         "          <div class='point-input pull-right'>",
         "            <span class='point-label'>{{line.points.B.name}}</span>",
         "            <label>x: </label>",
-        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.domainStepValue * graphAttrs.domainSnapFrequency }}'>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ",
+        "               ng-disabled='locked || line.points.B.x === undefined' ",
+        "               ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ",
+        "               ng-class='{ \"glowing-border\": isLineHovered(line.id) }' ",
+        "               class='line{{ line.colorIndex % 5 }}' ",
+        "               step='{{ graphAttrs.domainSnapValue }}'>",
         "            <label>y: </label>",
-        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ng-class='{ \"glowing-border\": isLineHovered(line.id) }' class='line{{ line.colorIndex % 5 }}' step='{{ graphAttrs.rangeStepValue * graphAttrs.rangeSnapFrequency }}'>",
+        "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.y' ",
+        "               ng-disabled='locked || line.points.B.y === undefined' ",
+        "               ng-change='pointUpdate(line.points.B, {{ line.points.B }})' ",
+        "               ng-class='{ \"glowing-border\": isLineHovered(line.id) }' ",
+        "               class='line{{ line.colorIndex % 5 }}' ",
+        "               step='{{ graphAttrs.rangeSnapValue }}'>",
         "          <a class='btn delete-line-button' ng-disabled='locked || line.points.A.x === undefined || line.points.B.x === undefined' ng-click='removeLine(line.id)'><span class='fa fa-trash-o'></span></a>",
         "          </div>",
         "        </div>",
