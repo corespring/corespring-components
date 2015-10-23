@@ -1,6 +1,11 @@
 /* jshint evil: true */
-var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
-  function($compile, $rootScope, $timeout, LineUtils) {
+var main = [
+  '$compile',
+  '$rootScope',
+  '$timeout',
+  "LineUtils",
+  'CanvasTemplates',
+  function($compile, $rootScope, $timeout, LineUtils, CanvasTemplates) {
 
     var lineUtils = new LineUtils();
 
@@ -26,47 +31,6 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
       scope.inputStyle = {
         width: "55px"
-      };
-
-      // set intitial state for jsxgraph directive
-      var createGraphAttributes = function(config, graphCallback) {
-
-        function getModelValue(property, defaultValue, fallbackValue) {
-          if (typeof property !== 'undefined' && property !== null) {
-            return property;
-          } else {
-            if (typeof fallbackValue !== 'undefined' && property !== null) {
-              return fallbackValue;
-            } else {
-              return defaultValue;
-            }
-          }
-        }
-
-        return {
-          "jsx-graph": "",
-          "graph-callback": graphCallback || "graphCallback",
-          "interaction-callback": "interactionCallback",
-          maxPoints: 2,
-          domainLabel: config.domainLabel,
-          domainMin: parseFloat(getModelValue(config.domainMin, -10, config.domain * -1), 10),
-          domainMax: parseFloat(getModelValue(config.domainMax, 10, config.domain), 10),
-          domainStepValue: parseFloat(getModelValue(config.domainStepValue, 1)),
-          domainSnapFrequency: parseFloat(getModelValue(config.domainSnapFrequency, 1)),
-          domainLabelFrequency: parseFloat(getModelValue(config.domainLabelFrequency, 1, config.tickLabelFrequency), 10),
-          domainGraphPadding: parseInt(getModelValue(config.domainGraphPadding, 50), 10),
-          rangeLabel: config.rangeLabel,
-          rangeMin: parseFloat(getModelValue(config.rangeMin, -10, config.range * -1)),
-          rangeMax: parseFloat(getModelValue(config.rangeMax, 10, config.range * 1)),
-          rangeStepValue: parseFloat(getModelValue(config.rangeStepValue, 1)),
-          rangeSnapFrequency: parseFloat(getModelValue(config.rangeSnapFrequency, 1)),
-          rangeLabelFrequency: parseFloat(getModelValue(config.rangeLabelFrequency, 1, config.tickLabelFrequency, 10)),
-          rangeGraphPadding: parseInt(getModelValue(config.rangeGraphPadding, 50), 10),
-          showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
-          showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
-          showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : true,
-          pointLabels: !!config.showInputs ? "letters" : "none"
-        };
       };
 
       scope.interactionCallback = function(params) {
@@ -228,7 +192,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
       function renderSolution(response) {
         var solutionScope = scope.$new();
         var solutionContainer = element.find('.solution-graph');
-        var solutionGraphAttrs = createGraphAttributes(scope.config, "graphCallbackSolution");
+        var solutionGraphAttrs = createGraphAttributes(scope.config, 2, "graphCallbackSolution");
         solutionGraphAttrs.showPoints = false;
         solutionGraphAttrs.showLabels = false;
 
@@ -261,6 +225,8 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
 
         setDataAndSession: function(dataAndSession) {
 
+          CanvasTemplates.extendScope(scope, 'corespring-multiple-line');
+
           var config = dataAndSession.data.model.config || {};
           scope.config = _.defaults(config, {
             showFeedback: true
@@ -275,7 +241,7 @@ var main = ['$compile', '$rootScope', '$timeout', "LineUtils",
             containerHeight = containerWidth = graphContainer.width();
           }
 
-          scope.graphAttrs = createGraphAttributes(config);
+          scope.graphAttrs = createGraphAttributes(config, 2);
           scope.showInputs = config.showInputs;
 
           graphContainer.attr(scope.graphAttrs);
