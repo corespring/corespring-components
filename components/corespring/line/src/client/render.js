@@ -192,7 +192,7 @@ var main = [
       function renderSolution(response) {
         var solutionScope = scope.$new();
         var solutionContainer = element.find('.solution-graph');
-        var solutionGraphAttrs = createGraphAttributes(scope.config, 2, "graphCallbackSolution");
+        var solutionGraphAttrs = scope.createGraphAttributes(scope.config, 2, "graphCallbackSolution");
         solutionGraphAttrs.showPoints = false;
         solutionGraphAttrs.showLabels = false;
 
@@ -241,7 +241,7 @@ var main = [
             containerHeight = containerWidth = graphContainer.width();
           }
 
-          scope.graphAttrs = createGraphAttributes(config, 2);
+          scope.graphAttrs = scope.createGraphAttributes(config, 2);
           scope.showInputs = config.showInputs;
 
           graphContainer.attr(scope.graphAttrs);
