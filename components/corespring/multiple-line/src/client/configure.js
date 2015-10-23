@@ -1,7 +1,8 @@
 var main = [
   'ComponentDefaultData',
+  'ServerLogic',
   'ChoiceTemplates',
-  function(ComponentDefaultData, ChoiceTemplates) {
+  function(ComponentDefaultData, ServerLogic, ChoiceTemplates) {
 
     this.inline = function(type, value, body, attrs) {
       return ['<label class="' + type + '-inline">',
@@ -209,9 +210,11 @@ var main = [
       link: function(scope, element, attrs) {
         scope.defaults = ComponentDefaultData.getDefaultData('corespring-multiple-line', 'model.config');
         ChoiceTemplates.extendScope(scope, 'corespring-point-intercept');
-        scope.defaultCorrectFeedback = "Correct!";
-        scope.defaultPartialFeedback = "Almost!";
-        scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
+
+        var server = ServerLogic.load('corespring-multiple-line');
+        scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
+        scope.defaultPartialFeedback = server.keys.DEFAULT_PARTIAL_FEEDBACK;
+        scope.defaultIncorrectFeedback = server.keys.DEFAULT_INCORRECT_FEEDBACK;
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;

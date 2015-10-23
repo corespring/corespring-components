@@ -2,6 +2,8 @@ var _ = require('lodash');
 var functionUtils = require("corespring.function-utils.server");
 var fb = require('corespring.server-shared.server.feedback-utils');
 
+exports.keys = fb.keys;
+
 exports.isScoreable = function(question, answer, outcome) {
   if(!question || !question.model || !question.model.config){
     return true;
