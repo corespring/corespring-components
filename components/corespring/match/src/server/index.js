@@ -40,11 +40,11 @@ function amendResponseForCheckboxPartial(question, answer, response) {
       return acc + (correctResponseForRow.matchSet[idx] ? 1 : 0);
     }, 0);
     var numberOfCorrectlySelectedForRow = _.reduce(answerForRow.matchSet, function(acc, val, idx) {
-      return acc + ((val === true && correctResponseForRow.matchSet[idx] == val) ? 1 : 0);
+      return acc + ((val === true && correctResponseForRow.matchSet[idx] === val) ? 1 : 0);
     }, 0);
     var partialScoreSection = _.findWhere(question.partialScoring.sections, {catId: row.id});
     var partialScoreForRow = partialScoreSection && _.findWhere(partialScoreSection.partialScoring, {numberOfCorrect: numberOfCorrectlySelectedForRow});
-    if (numberOfCorrectlySelectedForRow == numberOfCorrectForRow) {
+    if (numberOfCorrectlySelectedForRow === numberOfCorrectForRow) {
       score += 1 / numberOfRows;
     } else if (partialScoreForRow) {
       score += (partialScoreForRow.scorePercentage / numberOfRows) / 100;
