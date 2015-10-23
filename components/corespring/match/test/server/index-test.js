@@ -439,7 +439,7 @@ describe('match server logic', function() {
         ]
       };
       expected.should.eql(_.omit(response, 'score'));
-      response.score.should.be.approximately(30/400, 0.000001);
+      response.score.should.be.approximately(10/400, 0.000001);
     });
 
     it('should repond to partially correct result ( feedback - correct + user)', function() {

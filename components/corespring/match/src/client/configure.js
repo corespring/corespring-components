@@ -143,7 +143,15 @@ var main = [
               };
               scope.fullModel.partialScoring.sections.push(partialSection);
             }
-            partialSection.numberOfCorrectResponses = scope.fullModel.model.columns.length - 1;
+            var correctResponseForRow = _.findWhere(scope.fullModel.correctResponse, {id: row.id});
+
+            var trueCount = _.reduce(correctResponseForRow.matchSet, function(acc, m) {
+              return acc + (m ? 1 : 0);
+            }, 0);
+            partialSection.numberOfCorrectResponses = Math.max(trueCount, 0);
+            partialSection.partialScoring = _.filter(partialSection.partialScoring, function(ps) {
+               return ps.numberOfCorrect < trueCount;
+            });
           });
           scope.fullModel.partialScoring.sections = _.filter(scope.fullModel.partialScoring.sections, function(section) {
             return _.findWhere(scope.fullModel.model.rows, {id: section.catId});

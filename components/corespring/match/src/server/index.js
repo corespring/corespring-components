@@ -37,13 +37,16 @@ function amendResponseForCheckboxPartial(question, answer, response) {
     var answerForRow = _.find(answer, whereIdIsEqual(row.id));
     var correctResponseForRow = _.find(question.correctResponse, whereIdIsEqual(row.id));
     var numberOfCorrectForRow = _.reduce(answerForRow.matchSet, function(acc, val, idx) {
-      return acc + (correctResponseForRow.matchSet[idx] == val ? 1 : 0);
+      return acc + (correctResponseForRow.matchSet[idx] ? 1 : 0);
+    }, 0);
+    var numberOfCorrectlySelectedForRow = _.reduce(answerForRow.matchSet, function(acc, val, idx) {
+      return acc + ((val === true && correctResponseForRow.matchSet[idx] == val) ? 1 : 0);
     }, 0);
     var partialScoreSection = _.findWhere(question.partialScoring.sections, {catId: row.id});
-    var partialScoreForRow = partialScoreSection && _.findWhere(partialScoreSection.partialScoring, {numberOfCorrect: numberOfCorrectForRow});
+    var partialScoreForRow = partialScoreSection && _.findWhere(partialScoreSection.partialScoring, {numberOfCorrect: numberOfCorrectlySelectedForRow});
     if (partialScoreForRow) {
       score += (partialScoreForRow.scorePercentage / numberOfRows) / 100;
-    } else if (correctResponseForRow.matchSet.length == numberOfCorrectForRow) {
+    } else if (numberOfCorrectlySelectedForRow == numberOfCorrectForRow) {
       score += 1 / numberOfRows;
     }
   });
