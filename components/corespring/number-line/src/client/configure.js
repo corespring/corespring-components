@@ -297,8 +297,18 @@ var main = [
         };
 
         scope.displayNone = function() {
+          function responseToType(response) {
+            return (response.type[0] +
+              (response.pointType ? response.pointType[0] : '') +
+              (response.leftPoint ? response.leftPoint[0] : '') +
+              (response.rightPoint ? response.rightPoint[0] : '') +
+              (response.direction ? response.direction[0] : '')).toUpperCase();
+          }
+
+          var requiredTypes = _.chain(scope.fullModel.correctResponse).map(responseToType).uniq().value();
+
           _.each(_.flatten([points, rays, lines]), function(key) {
-            scope.fullModel.model.config.availableTypes[key] = false;
+            scope.fullModel.model.config.availableTypes[key] = requiredTypes.indexOf(key) >= 0;
           });
         };
 
