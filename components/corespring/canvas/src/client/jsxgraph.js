@@ -51,35 +51,65 @@ var def = ['Canvas',
           var jxgbox = elem.find(".jxgbox");
           var coords = canvas.getPointCoords(0, 0);
           var offset;
-          jxgbox.before('<div class="axis range-axis">'+canvasAttrs.range.label+'</div>');
-          jxgbox.after('<div class="axis domain-axis">'+canvasAttrs.domain.label+'</div>');
 
-          // domain
+          jxgbox.before('<div class="axis range-axis-label">y</div>');
+          jxgbox.before('<div class="axis domain-label">'+canvasAttrs.domain.label+'</div>');
+          jxgbox.after('<div class="axis domain-axis-label">x</div>');
+          jxgbox.after('<div class="axis range-label">'+canvasAttrs.range.label+'</div>');
+
           var graphVCenter = elem.height() / 2;
+          var graphHCenter = elem.width() / 2;
 
-          var domainAxis = elem.find('.domain-axis');
-          var domainAxisWidth = domainAxis.width();
-          domainAxis.css("left", elem.width() - (domainAxisWidth / 2) + (domainAxis.height() / 2));
+          // domain axis label
+          var domainAxisLabel = elem.find('.domain-axis-label');
+          var domainAxisLabelWidth = domainAxisLabel.width();
+          domainAxisLabel.css("left", elem.width() - (domainAxisLabelWidth / 2) + (domainAxisLabel.height() / 2));
 
           if (coords.y <= graphVCenter) {
-            offset = coords.y - domainAxis.height() / 4;
-            domainAxis.css("top", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
+            offset = coords.y - domainAxisLabel.height() / 4;
+            domainAxisLabel.css("top", offset < domainAxisLabelWidth / 2 ? domainAxisLabelWidth / 2 : offset);
           } else {
-            offset = elem.height() - coords.y - domainAxis.height() / 2;
-            domainAxis.css("bottom", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
+            offset = elem.height() - coords.y - domainAxisLabel.height() / 2;
+            domainAxisLabel.css("bottom", offset < domainAxisLabelWidth / 2 ? domainAxisLabelWidth / 2 : offset);
           }
 
-          // range
-          var graphHCenter = elem.width() / 2;
-          var rangeAxis = elem.find('.range-axis');
-          var rangeAxisWidth = rangeAxis.width();
+          // range label
+          var domainLabel = elem.find('.range-label');
+          var domainLabelWidth = domainLabel.width();
+          domainLabel.css("left",  - (domainLabelWidth / 2) - (domainLabel.height() / 2));
+
+          if (coords.y <= graphVCenter) {
+            offset = coords.y - domainLabel.height() / 4;
+            domainLabel.css("top", offset < domainLabelWidth / 2 ? domainLabelWidth / 2 : offset);
+          } else {
+            offset = elem.height() - coords.y - domainLabel.height() / 2;
+            domainLabel.css("bottom", offset < domainLabelWidth / 2 ? domainLabelWidth / 2 : offset);
+          }
+
+          // range axis label
+          var rangeAxisLabel = elem.find('.range-axis-label');
+          var rangeAxisLabelWidth = rangeAxisLabel.width();
 
           if (coords.x <= graphHCenter) {
-            offset = coords.x - (rangeAxisWidth / 2);
-            rangeAxis.css("left", offset < 0 ? 0 : offset);
+            offset = coords.x - (rangeAxisLabelWidth / 2);
+            rangeAxisLabel.css("left", offset < 0 ? 0 : offset);
           } else {
-            offset = (canvasAttrs.width - coords.x) - (rangeAxisWidth / 2);
-            rangeAxis.css("right", offset < 0 ? 0 : offset);
+            offset = (canvasAttrs.width - coords.x) - (rangeAxisLabelWidth / 2);
+            rangeAxisLabel.css("right", offset < 0 ? 0 : offset);
+          }
+
+          // domain label
+          var domainLabel = elem.find('.domain-label');
+          var domainLabelWidth = domainLabel.width();
+
+          domainLabel.css("top",  elem.height() + 5);
+
+          if (coords.x <= graphHCenter) {
+            offset = coords.x - (domainLabelWidth / 2);
+            domainLabel.css("left", offset < 0 ? 0 : offset);
+          } else {
+            offset = (canvasAttrs.width - coords.x) - (domainLabelWidth / 2);
+            domainLabel.css("right", offset < 0 ? 0 : offset);
           }
         };
 
