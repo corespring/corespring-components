@@ -892,4 +892,41 @@ describe('corespring:number-line:interactive-graph-render', function() {
 
   });
 
+  describe('multipleInputTypes', function() {
+
+    beforeEach(function() {
+      scope.model = {
+        config: {
+          availableTypes: {
+            "PF": false,
+            "LEE": false,
+            "LEF": false,
+            "LFE": false,
+            "LFF": false,
+            "REP": false,
+            "REN": false,
+            "RFP": false,
+            "RFN": false
+          }
+        }
+      };
+    });
+
+    it('should return false for no input types', function() {
+      expect(scope.multipleInputTypes()).toBe(false);
+    });
+
+    it('should return false for 1 input type', function() {
+      scope.model.config.availableTypes.PF = true;
+      expect(scope.multipleInputTypes()).toBe(false);
+    });
+
+    it('should return true for multiple input types', function() {
+      scope.model.config.availableTypes.PF = true;
+      scope.model.config.availableTypes.LEE = true;
+      expect(scope.multipleInputTypes()).toBe(true);
+    });
+
+  });
+
 });

@@ -193,12 +193,12 @@ var interactiveGraph = [
         '    <span cs-start-over-button-with-model ></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
-        '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
+        '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills">',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Point\')" ng-class="{active: isGroupActive(\'Point\')}"  ng-mousedown="selectGroup(\'Point\')"><a>Point</a></li>',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Line\')" ng-class="{active: isGroupActive(\'Line\')}" ng-mousedown="selectGroup(\'Line\')"><a>Line</a></li>',
         '    <li role="presentation"  ng-show="isGroupEnabled(\'Ray\')" ng-class="{active: isGroupActive(\'Ray\')}" ng-mousedown="selectGroup(\'Ray\')"><a>Ray</a></li>',
         '  </ul>',
-        '  <div ng-show="editable && !config.exhibitOnly" class="element-selector" >',
+        '  <div ng-show="editable && !config.exhibitOnly && multipleInputTypes()" class="element-selector">',
         '    <span role="presentation" class="element-pf" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PF\')"   ng-mousedown="select(\'PF\')"><a ng-class="{active: isActive(\'PF\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-pe" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PE\')"   ng-mousedown="select(\'PE\')"><a ng-class="{active: isActive(\'PE\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-lff" ng-show="isGroupActive(\'Line\') && isTypeEnabled(\'LFF\')"  ng-mousedown="select(\'LFF\')"><a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a></span>',
@@ -515,6 +515,15 @@ var interactiveGraph = [
 
         scope.select = function(type) {
           scope.selectedType = type;
+        };
+
+        scope.multipleInputTypes = function() {
+          return (_.chain(scope.model.config.availableTypes)
+              .values()
+              .filter(function(value) {
+                return value === true;
+              })
+              .value().length) > 1;
         };
 
         scope.isGroupEnabled = function(group) {
