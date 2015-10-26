@@ -32,6 +32,7 @@ var def = ['Canvas',
             },
             maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
             pointLabels: attr.pointlabels,
+            graphTitle: attr.graphtitle,
             width: elem.width(),
             height: elem.height(),
             showLabels: attr.showlabels,
@@ -51,14 +52,19 @@ var def = ['Canvas',
         var setGraphLabels = function(canvas, canvasAttrs) {
           var jxgbox = elem.find(".jxgbox");
           var coords = canvas.getPointCoords(0, 0);
-          var offset;
-
-          jxgbox.before('<div class="axis domain-label">'+canvasAttrs.domain.label+'</div>');
-          jxgbox.after('<div class="axis range-label">'+canvasAttrs.range.label+'</div>');
-
           var graphVCenter = elem.height() / 2;
           var graphHCenter = elem.width() / 2;
           var offset = 0;
+
+          if(!_.isUndefined(canvasAttrs.graphTitle) && !_.isEmpty(canvasAttrs.graphTitle)) {
+            jxgbox.before('<div class="graph-label graph-title">'+canvasAttrs.graphTitle+'</div>');
+            var graphTitle = elem.find('.graph-title');
+            graphTitle.css("left", graphHCenter - (graphTitle.width() / 2));
+          }
+
+          jxgbox.before('<div class="graph-label domain-label">'+canvasAttrs.domain.label+'</div>');
+          jxgbox.after('<div class="graph-label range-label">'+canvasAttrs.range.label+'</div>');
+
 
           // domain label
           var domainLabel = elem.find('.domain-label');
@@ -72,7 +78,7 @@ var def = ['Canvas',
           if(canvasAttrs.showAxisLabels === true || canvasAttrs.showAxisLabels === 'true') {
 
             // domain axis label
-            jxgbox.after('<div class="axis domain-axis-label">x</div>');
+            jxgbox.after('<div class="graph-label domain-axis-label">x</div>');
             var domainAxisLabel = elem.find('.domain-axis-label');
             var domainAxisLabelHeight = domainAxisLabel.height();
             domainAxisLabel.css("right", 0 - domainAxisLabel.width());
@@ -86,7 +92,7 @@ var def = ['Canvas',
             }
 
             // range axis label
-            jxgbox.before('<div class="axis range-axis-label">y</div>');
+            jxgbox.before('<div class="graph-label range-axis-label">y</div>');
             var rangeAxisLabel = elem.find('.range-axis-label');
             var rangeAxisLabelWidth = rangeAxisLabel.width();
 

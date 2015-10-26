@@ -57,6 +57,12 @@
                     "type": "object",
                     "id": "#config",
                     "properties": {
+                        "graphTitle": {
+                            "type": "string",
+                            "description": "The title to display for the graph",
+                            "id": "#graphTitle",
+                            "required": false
+                        },
                         "exhibitOnly": {
                             "description": "Indicates if the graph should allow input, or only exhibit a line",
                             "required": false

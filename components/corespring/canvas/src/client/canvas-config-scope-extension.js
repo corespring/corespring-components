@@ -41,6 +41,7 @@ exports.factory = [
         scope.resetCanvasDisplayAttributes = function() {
 
           // display
+          reset('graphTitle', defaults.graphTitle);
           reset('graphWidth', defaults.graphWidth);
           reset('graphHeight', defaults.graphHeight);
 

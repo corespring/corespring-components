@@ -42,6 +42,7 @@ exports.factory = [
             rangeSnapValue: parseFloat(getModelValue(config.rangeSnapValue, 1)),
             rangeLabelFrequency: parseFloat(getModelValue(config.rangeLabelFrequency, 1, config.tickLabelFrequency, 10)),
             rangeGraphPadding: parseInt(getModelValue(config.rangeGraphPadding, 50), 10),
+            graphTitle: config.graphTitle,
             showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
             showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
             showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : true,

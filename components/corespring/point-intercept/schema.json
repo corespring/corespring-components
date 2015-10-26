@@ -102,22 +102,10 @@
                             "id": "#domainLabelFrequency",
                             "required": false
                         }
-                        "graphHeight": {
+                        "domainGraphPadding": {
                             "type": "integer",
-                            "description": "The height in pixels that should be used to display the graph",
-                            "id": "#graphHeight",
-                            "required": false
-                        },
-                        "graphWidth": {
-                            "type": "integer",
-                            "description": "The width in pixels that should be used to display the graph",
-                            "id": "#graphWidth",
-                            "required": false
-                        },
-                        "graphPadding": {
-                            "type": "integer",
-                            "description": "The padding in tick percentage that should be used to display the graph",
-                            "id": "#graphPadding",
+                            "description": "The padding in tick percentage that should be used to display the domain",
+                            "id": "#domainGraphPadding",
                             "required": false
                         },
                         "rangeLabel": {
@@ -154,6 +142,30 @@
                             "description": "Specifies the interval of ticks shown on the y axis",
                             "type": "integer",
                             "id": "#rangeLabelFrequency",
+                            "required": false
+                        },
+                        "rangeGraphPadding": {
+                            "type": "integer",
+                            "description": "The padding in tick percentage that should be used to display the range",
+                            "id": "#rangeGraphPadding",
+                            "required": false
+                        },
+                        "graphTitle": {
+                            "type": "string",
+                            "description": "The title to display for the graph",
+                            "id": "#graphTitle",
+                            "required": false
+                        },
+                        "graphHeight": {
+                            "type": "integer",
+                            "description": "The height in pixels that should be used to display the graph",
+                            "id": "#graphHeight",
+                            "required": false
+                        },
+                        "graphWidth": {
+                            "type": "integer",
+                            "description": "The width in pixels that should be used to display the graph",
+                            "id": "#graphWidth",
                             "required": false
                         },
                         "showCoordinates": {

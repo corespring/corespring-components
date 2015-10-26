@@ -19,6 +19,7 @@
   },
   "model": {
     "config": {
+      "graphTitle": "",
       "graphWidth": 500,
       "graphHeight": 500,
       "maxPoints": "",
