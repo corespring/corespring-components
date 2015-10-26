@@ -106,6 +106,7 @@ var main = [
             scope.fullModel = model;
             model.model = model.model || {};
             model.model.config = model.model.config || {};
+            model.model.config.showAxisLabels = model.model.config.showAxisLabels || true;
 
             var labels = (model.model.config.pointLabels || []);
 

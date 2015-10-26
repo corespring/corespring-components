@@ -188,6 +188,12 @@
               "type": "boolean",
               "id": "#showInputs",
               "required": false
+            },
+            "showAxisLabels": {
+              "description": "Display x and y labels for domain and range axes respectively",
+              "type": "boolean",
+              "id": "#showAxisLabels",
+              "required": false
             }
           }
         }

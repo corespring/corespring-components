@@ -36,6 +36,7 @@
       "sigfigs": -1,
       "showCoordinates": true,
       "showInputs": true,
+      "showAxisLabels": true,
       "showFeedback": true
     }
   }

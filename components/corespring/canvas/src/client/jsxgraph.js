@@ -36,7 +36,8 @@ var def = ['Canvas',
             height: elem.height(),
             showLabels: attr.showlabels,
             showCoordinates: attr.showcoordinates,
-            showPoints: attr.showpoints
+            showPoints: attr.showpoints,
+            showAxisLabels: attr.showaxislabels
           };
         };
 
@@ -47,53 +48,56 @@ var def = ['Canvas',
         };
 
         // add x and y axis outside the graph
-        var setGraphLabels = function(canvas) {
+        var setGraphLabels = function(canvas, canvasAttrs) {
           var jxgbox = elem.find(".jxgbox");
           var coords = canvas.getPointCoords(0, 0);
           var offset;
 
-          jxgbox.before('<div class="axis range-axis-label">y</div>');
           jxgbox.before('<div class="axis domain-label">'+canvasAttrs.domain.label+'</div>');
-          jxgbox.after('<div class="axis domain-axis-label">x</div>');
           jxgbox.after('<div class="axis range-label">'+canvasAttrs.range.label+'</div>');
 
           var graphVCenter = elem.height() / 2;
           var graphHCenter = elem.width() / 2;
           var offset = 0;
 
-          // // range axis label
-          var rangeAxisLabel = elem.find('.range-axis-label');
-          var rangeAxisLabelWidth = rangeAxisLabel.width();
-
-          if (coords.x <= graphHCenter) {
-            offset = coords.x - (rangeAxisLabelWidth / 2);
-            rangeAxisLabel.css("left", offset < 0 ? 0 : offset);
-          } else {
-            offset = (canvasAttrs.width - coords.x) - (rangeAxisLabelWidth / 2);
-            rangeAxisLabel.css("right", offset < 0 ? 0 : offset);
-          }
-
           // domain label
           var domainLabel = elem.find('.domain-label');
           domainLabel.css("left", graphHCenter - (domainLabel.width() / 2));
-
-          // domain axis label
-          var domainAxisLabel = elem.find('.domain-axis-label');
-          var domainAxisLabelHeight = domainAxisLabel.height();
-          domainAxisLabel.css("right", 0 - domainAxisLabel.width());
-
-          if (coords.y <= graphVCenter) {
-            offset = coords.y - domainAxisLabelHeight / 2;
-            domainAxisLabel.css("top", offset < domainAxisLabelHeight / 2 ? domainAxisLabelHeight / 2 : offset);
-          } else {
-            offset = elem.height() - coords.y - domainAxisLabel.height() / 2;
-            domainAxisLabel.css("bottom", offset < domainAxisLabelHeight / 2 ? domainAxisLabelHeight / 2 : offset);
-          }
 
           // range label
           var rangeLabel = elem.find('.range-label');
           rangeLabel.css("left",  - (rangeLabel.width() / 2) - rangeLabel.height() / 2);
           rangeLabel.css("top",  graphVCenter - rangeLabel.height() / 2);
+
+          if(canvasAttrs.showAxisLabels === true || canvasAttrs.showAxisLabels === 'true') {
+
+            // domain axis label
+            jxgbox.after('<div class="axis domain-axis-label">x</div>');
+            var domainAxisLabel = elem.find('.domain-axis-label');
+            var domainAxisLabelHeight = domainAxisLabel.height();
+            domainAxisLabel.css("right", 0 - domainAxisLabel.width());
+
+            if (coords.y <= graphVCenter) {
+              offset = coords.y - domainAxisLabelHeight / 2;
+              domainAxisLabel.css("top", offset < domainAxisLabelHeight / 2 ? domainAxisLabelHeight / 2 : offset);
+            } else {
+              offset = elem.height() - coords.y - domainAxisLabel.height() / 2;
+              domainAxisLabel.css("bottom", offset < domainAxisLabelHeight / 2 ? domainAxisLabelHeight / 2 : offset);
+            }
+
+            // range axis label
+            jxgbox.before('<div class="axis range-axis-label">y</div>');
+            var rangeAxisLabel = elem.find('.range-axis-label');
+            var rangeAxisLabelWidth = rangeAxisLabel.width();
+
+            if (coords.x <= graphHCenter) {
+              offset = coords.x - (rangeAxisLabelWidth / 2);
+              rangeAxisLabel.css("left", offset < 0 ? 0 : offset);
+            } else {
+              offset = (canvasAttrs.width - coords.x) - (rangeAxisLabelWidth / 2);
+              rangeAxisLabel.css("right", offset < 0 ? 0 : offset);
+            }
+          }
         };
 
         var addCanvasPoint = function(coords, ptName, ptOptions) {
@@ -245,7 +249,7 @@ var def = ['Canvas',
 
         // initialize canvas
         var canvas = new Canvas(generateCanvasId(), canvasAttrs);
-        setGraphLabels(canvas);
+        setGraphLabels(canvas, canvasAttrs);
 
         // define canvas callbacks
         canvas.on('up', function(e) {

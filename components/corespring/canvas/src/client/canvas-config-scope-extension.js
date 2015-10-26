@@ -46,6 +46,7 @@ exports.factory = [
 
           reset('showCoordinates', defaults.showCoordinates);
           reset('showInputs', defaults.showInputs);
+          reset('showAxisLabels', defaults.showAxisLabels);
           reset('showFeedback', defaults.showFeedback);
         };
       };
