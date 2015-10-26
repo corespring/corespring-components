@@ -35,7 +35,7 @@ var main = [
       '       </div>',
       '     </form>',
       '  </div>',
-      '</div><hr />'].join('\n');
+      '</div>'].join('\n');
 
     var feedback = [
       '<div ng-hide="fullModel.model.config.exhibitOnly" class="input-holder">',
