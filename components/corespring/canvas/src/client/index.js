@@ -229,6 +229,7 @@ exports.service = ['$log',
         firstArrow: true,
         lastArrow: true,
         withLabel: options.label,
+        label: { strokeColor: options.color ? options.color : '#0000ff', fontSize: 14 },
         name: options.label
       };
 
@@ -245,6 +246,7 @@ exports.service = ['$log',
         strokeWidth: 3,
         fixed: true,
         withLabel: options.label,
+        label: { strokeColor: options.color ? options.color : '#0000ff', fontSize: 14 },
         name: options.label
       });
       shape.customId = options.id;
