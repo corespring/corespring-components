@@ -38,7 +38,7 @@
       "rangeSnapValue": 1,
       "rangeLabelFrequency": 1,
       "rangeGraphPadding": 50,
-      "lines": [{ "id": 1, "equation": "", "intialLine": "", "label": "", "colorIndex": 0 }],
+      "lines": [{ "id": 1, "equation": "", "intialLine": "", "label": "", "colorIndex": 0 }]
     }
   }
 }

@@ -162,7 +162,7 @@ var main = [
         var graphContainer = element.find('.graph-container');
         containerHeight = containerWidth = graphContainer.width();
 
-        var graphAttrs = createGraphAttributes(scope.config, scope.config.maxPoints);
+        var graphAttrs = scope.createGraphAttributes(scope.config, scope.config.maxPoints);
         graphContainer.attr(graphAttrs);
         graphContainer.css({
           width: containerWidth,

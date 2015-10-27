@@ -140,7 +140,7 @@ exports.service = [
           '    </div>',
           '  </div>'
         ].join('\n');
-      }
+      };
     }
 
     return new CanvasTemplates();
