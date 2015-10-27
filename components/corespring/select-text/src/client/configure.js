@@ -64,10 +64,11 @@ var main = [
       '       <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
       '       <div class="pull-left answer-summary" ng-show="model.config.availability === \'specific\'">',
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': selectionMode}"',
-      '           ng-click="availableSelectionsToggle()">Selections Available</button> <span id="possible-count" class="badge">{{model.possibleChoices.length}}</span>',
+      '           ng-click="changeSelectionMode(false)">Selections Available</button> <span id="possible-count" class="badge">{{model.possibleChoices.length}}</span>',
       '       </div>',
       '       <div class="pull-right answer-summary">',
-      '         Correct Answers <span id="answers-count" class="badge">{{model.choices.length}}</span>',
+      '         <button class="btn btn-default" ng-class="{\'active btn-primary\': !selectionMode}" ng-show="model.config.availability === \'specific\'"' ,
+      '           ng-click="changeSelectionMode(true)" ng-disabled="model.possibleChoices.length === 0">Correct Answers</button> <span ng-show="model.config.availability === \'all\'">Correct Answers</span> <span id="answers-count" class="badge">{{model.choices.length}}</span>',
       '       </div>',
       '     </div>',
       '     <div ng-show="mode === \'delete\'">',
@@ -280,8 +281,8 @@ var main = [
         $scope.model.possibleChoices = [];
       };
 
-      $scope.availableSelectionsToggle = function() {
-        $scope.selectionMode = !$scope.selectionMode;
+      $scope.changeSelectionMode = function(areAnswers) {
+        $scope.selectionMode = !areAnswers;
         $theContent.toggleClass('select-possible', !$scope.selectionMode);
       };
 
