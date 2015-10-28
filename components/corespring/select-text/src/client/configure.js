@@ -62,8 +62,8 @@ var main = [
       '       </div>',
       '       <div class="passage-wrapper">',
       '         <div class="history-buttons">',
-      '           <span cs-undo-button></span>',
-      '           <span cs-start-over-button></span>',
+      '           <span cs-undo-button ng-class="{disabled: choicesHistory.length < 1}" ng-disabled="choicesHistory.length < 1"></span>',
+      '           <span cs-start-over-button ng-class="{disabled: choicesHistory.length < 1}" ng-disabled="choicesHistory.length < 1"></span>',
       '         </div>',
       '         <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
       '       </div>',
@@ -126,9 +126,12 @@ var main = [
       };
 
       var $theContent = null;
+      var ignoreChanges = false;
+      var initialChoices = [];
 
       $scope.mode = "editor";
       $scope.selectionMode = true;
+      $scope.choicesHistory = [];
 
       var blastThePassage = function() {
         var delimiter = $scope.model.config.selectionUnit;
@@ -159,6 +162,16 @@ var main = [
         }
       };
 
+      var handleChoicesChange = function(newVal, oldVal) {
+        if (!_.isEqual(newVal, oldVal) && !ignoreChanges) {
+          $scope.choicesHistory.push({
+            choices: _.cloneDeep(oldVal[0]),
+            possibleChoices: _.cloneDeep(oldVal[1])
+          });
+        }
+        ignoreChanges = false;
+      };
+
       $scope.containerBridge = {
         setModel: function (model) {
           $scope.fullModel = model;
@@ -185,6 +198,10 @@ var main = [
           $timeout(function() {
             blastThePassage();
           }, 100);
+          initialChoices = {
+            choices: _.cloneDeep($scope.model.choices),
+            possibleChoices: _.cloneDeep($scope.model.possibleChoices)
+          };
         },
         getModel: function () {
           var model = _.cloneDeep($scope.fullModel);
@@ -194,6 +211,7 @@ var main = [
 
       $scope.$watch('model.config.selectionUnit', blastThePassage);
       $scope.$watch('model.config.xhtml', blastThePassage);
+      $scope.$watch('[model.choices,model.possibleChoices]', handleChoicesChange, true);
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
@@ -221,11 +239,21 @@ var main = [
       };
 
       $scope.undo = function() {
-        console.log("UNDO");
+        if ($scope.choicesHistory.length > 0) {
+          var lastRecord = $scope.choicesHistory.pop();
+          $scope.model.choices = lastRecord.choices;
+          $scope.model.possibleChoices = lastRecord.possibleChoices;
+          ignoreChanges = true;
+        }
       };
 
       $scope.startOver = function() {
-        console.log("START OVER");
+        if (!_.isEmpty(initialChoices)) {
+          $scope.model.choices = initialChoices.choices;
+          $scope.model.possibleChoices = initialChoices.possibleChoices;
+          $scope.choicesHistory = [];
+          ignoreChanges = true;
+        }
       };
 
       $scope.$emit('registerConfigPanel', $attrs.id, $scope.containerBridge);
