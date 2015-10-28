@@ -28,28 +28,37 @@
     .instructions {
       text-align: center;
     }
-    .passage-preview {
-      padding: 5px;
-      border: 1px dashed #ccc;
-      border-radius: 5px;
-      background-clip: padding-box;
-      max-height: 350px;
-      overflow: auto;
-      .token {
-        cursor: pointer;
-        -webkit-transition: background-color 0.2s ease-out;
-        transition: background-color 0.2s ease-out;
-        &:hover {
-          background-color: @choice-color-hover-opaque;
-          background-color: @choice-color-hover;
-        }
-        &.possible {
-          background-color: @possible-choice-color-opaque;
-          background-color: @possible-choice-color;
-        }
-        &.selected {
-          background-color: @choice-color-opaque;
-          background-color: @choice-color;
+    .passage-wrapper {
+      position: relative;
+      .history-buttons {
+        position: absolute;
+        right: 0;
+        bottom: 100%;
+        padding-bottom: 4px;
+      }
+      .passage-preview {
+        padding: 5px;
+        border: 1px dashed #ccc;
+        border-radius: 5px;
+        background-clip: padding-box;
+        max-height: 350px;
+        overflow: auto;
+        .token {
+          cursor: pointer;
+          -webkit-transition: background-color 0.2s ease-out;
+          transition: background-color 0.2s ease-out;
+          &:hover {
+            background-color: @choice-color-hover-opaque;
+            background-color: @choice-color-hover;
+          }
+          &.possible {
+            background-color: @possible-choice-color-opaque;
+            background-color: @possible-choice-color;
+          }
+          &.selected {
+            background-color: @choice-color-opaque;
+            background-color: @choice-color;
+          }
         }
       }
       &.select-possible {
