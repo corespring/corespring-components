@@ -243,10 +243,14 @@ var main = [
         if (!_.isEqual(newVal, oldVal) && !ignoreChanges) {
           $scope.choicesHistory.push({
             choices: _.cloneDeep(oldVal[0]),
-            possibleChoices: _.cloneDeep(oldVal[1])
+            possibleChoices: _.cloneDeep(oldVal[1]),
+            selectionUnit: oldVal[2],
+            availability: oldVal[3]
           });
+        } else if (ignoreChanges) {
+          blastThePassage();
+          ignoreChanges = false;
         }
-        ignoreChanges = false;
       };
 
       $scope.containerBridge = {
@@ -260,7 +264,9 @@ var main = [
           }, 100);
           initialChoices = {
             choices: _.cloneDeep($scope.model.choices),
-            possibleChoices: _.cloneDeep($scope.model.possibleChoices)
+            possibleChoices: _.cloneDeep($scope.model.possibleChoices),
+            selectionUnit: $scope.model.config.selectionUnit,
+            availability: $scope.model.config.availability
           };
         },
         getModel: function () {
@@ -288,7 +294,7 @@ var main = [
       $scope.$watch('model.possibleChoices.length', function(newValue, oldValue) {
         animateBadge(newValue, oldValue, "#possible-count");
       });
-      $scope.$watch('[model.choices,model.possibleChoices]', handleChoicesChange, true);
+      $scope.$watch('[model.choices,model.possibleChoices,model.config.selectionUnit,model.config.availability]', handleChoicesChange, true);
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
@@ -324,6 +330,8 @@ var main = [
           var lastRecord = $scope.choicesHistory.pop();
           $scope.model.choices = lastRecord.choices;
           $scope.model.possibleChoices = lastRecord.possibleChoices;
+          $scope.model.config.selectionUnit = lastRecord.selectionUnit;
+          $scope.model.config.availability = lastRecord.availability;
           ignoreChanges = true;
         }
       };
@@ -333,6 +341,8 @@ var main = [
           $scope.model.choices = initialChoices.choices;
           $scope.model.possibleChoices = initialChoices.possibleChoices;
           $scope.choicesHistory = [];
+          $scope.model.config.selectionUnit = initialChoices.selectionUnit;
+          $scope.model.config.availability = initialChoices.availability;
           ignoreChanges = true;
         }
       };
