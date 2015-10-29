@@ -15,9 +15,31 @@ var def = [
       this.fileTooBigError = function(sizeInBytes, maxSizeInKb) {
         var sizeInKb = this.bytesToKb(sizeInBytes);
         return {
-          code: 'ERR_FILE_SIZE_EXCEEDED',
+          code: this.errors.FILE_SIZE_EXCEEDED,
           message: 'The file is too big (' + sizeInKb + 'kb), the maximum is: ' + maxSizeInKb + 'kb.'
         };
+      };
+
+      this.errors = {
+        UNACCEPTABLE_TYPE: 'ERR_UNACCEPTABLE_TYPE',
+        FILE_SIZE_EXCEEDED: 'ERR_FILE_SIZE_EXCEEDED'
+      };
+
+      this.acceptableType = function(fileType, acceptableTypes){
+        if(!fileType){
+          throw new Error('undefined fileType');
+        } 
+
+        if(!acceptableTypes){
+          throw new Error('undefined acceptableTypes');
+        }
+        
+        if(!_.contains(acceptableTypes, fileType)){
+          return {
+            code: this.errors.UNACCEPTABLE_TYPE,
+            message: 'The type: ' + fileType + ' is not acceptable must be one of: ' + acceptableTypes.join(', ')
+          };
+        } 
       };
     };
 

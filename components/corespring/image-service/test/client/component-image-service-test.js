@@ -69,7 +69,8 @@ describe('component-image-service', function() {
 
     it('adds queryParams', function(done){
       var file = {
-        name: 'a.jpg'
+        name: 'a.jpg',
+        type: 'image/jpg'
       };
 
       mockDocument[0].location.href = 'path?a=b&c=d';
@@ -84,7 +85,8 @@ describe('component-image-service', function() {
     it('calls onComplete with a url that has been uri encoded', function(done) {
       
       var file = {
-        name: 'a#b?c d.jpg'
+        name: 'a#b?c d.jpg',
+        type: 'image/jpg'
       };
 
       service.addFile(file, function(err, url) {
@@ -97,7 +99,8 @@ describe('component-image-service', function() {
     it('calls onComplete with an error message', function(done) {
 
       var file = {
-        name: 'bad.jpg'
+        name: 'bad.jpg',
+        type: 'image/jpg'
       };
 
       mockFileUploader.beginUpload.and.callFake(function() {

@@ -21,8 +21,19 @@ var def = [
         $http['delete'](addQueryParamsIfPresent(url));
       };
 
+      var acceptableTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+
       this.addFile = function(file, onComplete, onProgress) {
         var url = addQueryParamsIfPresent('' + encodeURIComponent(file.name));
+
+       var typeError = ImageUtils.acceptableType(file.type, acceptableTypes);
+
+       if(typeError){
+          $timeout(function() {
+            onComplete(typeError.message);
+          });
+          return;
+        }
 
         if (ImageUtils.bytesToKb(file.size) > 500) {
           $timeout(function() {
