@@ -33,11 +33,11 @@ var def = [
         if(!acceptableTypes){
           throw new Error('undefined acceptableTypes');
         }
-        
+
         if(!_.contains(acceptableTypes, fileType)){
           return {
             code: this.errors.UNACCEPTABLE_TYPE,
-            message: 'The type: ' + fileType + ' is not acceptable must be one of: ' + acceptableTypes.join(', ')
+            message: 'The fileType: ' + fileType + ' is not acceptable, it must be one of: ' + acceptableTypes.join(', ')
           };
         } 
       };
