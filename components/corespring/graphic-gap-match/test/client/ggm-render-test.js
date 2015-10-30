@@ -1,4 +1,4 @@
-fdescribe('corespring:graphic-gap-match:render', function() {
+describe('corespring:graphic-gap-match:render', function() {
 
   var testModel, scope, element, container, rootScope;
 
