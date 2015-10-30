@@ -55,8 +55,8 @@
     "config": {
       "shuffle": false,
       "answerAreaPosition": "below",
-      "categoriesPerRow" : 2,
-      "choicesPerRow" : 2,
+      "categoriesPerRow" : 1,
+      "choicesPerRow" : 1,
       "choicesLabel" : ""
     }
   }
