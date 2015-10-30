@@ -59,8 +59,8 @@ function configureCorespringDndCategorize(
       scope.fullModel.correctResponse = scope.fullModel.correctResponse || {};
 
       scope.model = scope.fullModel.model;
-      scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 2;
-      scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 4;
+      scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 1;
+      scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 1;
 
       scope.editorModel = prepareEditorModel();
       //log('setModel out', _.cloneDeep(fullModel), _.cloneDeep(scope.editorModel));
@@ -404,7 +404,7 @@ function configureCorespringDndCategorize(
         '    class="form-control"',
         '    ng-options="o for o in choicesPerRowOptions">',
         '  </select>',
-        '  <i>Display of number of choices per row may not reflect in editor </i>',
+        '  <i>A greater number of categories/choices per row may decrease available area for content display.</i>',
         '</div>'
       ].join('');
     }

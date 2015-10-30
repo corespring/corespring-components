@@ -69,8 +69,8 @@ describe('corespring:dnd-categorize:configure', function() {
         "config": {
           "shuffle": false,
           "answerAreaPosition": "below",
-          "categoriesPerRow": 2,
-          "choicesPerRow": 2
+          "categoriesPerRow": 1,
+          "choicesPerRow": 1
         }
       }
     };
