@@ -70,7 +70,7 @@ describe('component-image-service', function() {
     it('adds queryParams', function(done){
       var file = {
         name: 'a.jpg',
-        type: 'image/jpg'
+        type: 'image/jpeg'
       };
 
       mockDocument[0].location.href = 'path?a=b&c=d';
@@ -86,7 +86,7 @@ describe('component-image-service', function() {
       
       var file = {
         name: 'a#b?c d.jpg',
-        type: 'image/jpg'
+        type: 'image/jpeg'
       };
 
       service.addFile(file, function(err, url) {
@@ -100,7 +100,7 @@ describe('component-image-service', function() {
 
       var file = {
         name: 'bad.jpg',
-        type: 'image/jpg'
+        type: 'image/jpeg'
       };
 
       mockFileUploader.beginUpload.and.callFake(function() {

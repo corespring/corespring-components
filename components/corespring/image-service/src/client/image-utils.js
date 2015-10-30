@@ -20,19 +20,20 @@ var def = [
         };
       };
 
+      this.imageTypes = function(){
+        return ['image/png', 'image/gif', 'image/jpeg'];
+      };
+
       this.errors = {
         UNACCEPTABLE_TYPE: 'ERR_UNACCEPTABLE_TYPE',
         FILE_SIZE_EXCEEDED: 'ERR_FILE_SIZE_EXCEEDED'
       };
 
-      this.acceptableType = function(fileType, acceptableTypes){
-        if(!fileType){
-          throw new Error('undefined fileType');
-        } 
 
-        if(!acceptableTypes){
-          throw new Error('undefined acceptableTypes');
-        }
+      this.acceptableType = function(fileType, acceptableTypes){
+       
+        fileType = fileType || 'unknown-filetype'; 
+        acceptableTypes = acceptableTypes  || [];
 
         if(!_.contains(acceptableTypes, fileType)){
           return {

@@ -22,16 +22,14 @@ describe('component-image-service', function() {
       expect(utils.acceptableType('blah', ['blah'])).toBe(undefined);
     });
     
-    it('throws an error if type is falsey', function(){
-      expect( function(){
-        utils.acceptableType(null, ['blah']); 
-      }).toThrow(jasmine.any(Error));
+    it('returns an error if type is falsey', function(){
+      var error = utils.acceptableType(undefined, []); 
+      expect(error.code).toEqual(utils.errors.UNACCEPTABLE_TYPE);
     });
     
-    it('throws an error if types is falsey', function(){
-      expect( function(){
-        utils.acceptableType('blah', null); 
-      }).toThrow(jasmine.any(Error));
+    it('returns an error if acceptableTypes is falsey', function(){
+      var error = utils.acceptableType('blah', undefined); 
+      expect(error.code).toEqual(utils.errors.UNACCEPTABLE_TYPE);
     });
 
   });
