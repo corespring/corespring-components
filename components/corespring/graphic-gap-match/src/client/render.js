@@ -154,7 +154,7 @@ var main = [
         activeClass: 'dropping'
       };
 
-      function snapToClosestHotspot(choice) {
+      scope.snapToClosestHotspot = function(choice) {
         var closestHotspot = _.max(scope.model.hotspots, function(h) {
           return getOverlappingPercentage(choice, h.coords);
         });
@@ -162,7 +162,7 @@ var main = [
         if (percentWithClosest > scope.model.config.snapSensitivity) {
           snapRectIntoRect(choice, closestHotspot.coords);
         }
-      }
+      };
 
       scope.dropChoice = function(draggedChoice, newChoice) {
         scope.droppedChoices = _.reject(scope.droppedChoices, choiceEquals(draggedChoice));
@@ -176,7 +176,7 @@ var main = [
           scope.choices.splice(currentPosition, 0, _.pick(draggedChoice, 'id', 'label', 'matchMax'));
         }
         if (scope.model.config.snapEnabled) {
-          snapToClosestHotspot(newChoice);
+          scope.snapToClosestHotspot(newChoice);
         }
         scope.droppedChoices.push(newChoice);
       };
