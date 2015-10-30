@@ -110,7 +110,7 @@ module.exports = (grunt) ->
       test:
         options:
           reporter: 'spec'
-        src: ['<%= common.componentPath %>/**/test/server/**/*-test.js']
+        src: ["<%= common.componentPath %>/**/#{grunt.option('component') or '**'}/test/server/*-test.js"]
 
     jshint:
       options:

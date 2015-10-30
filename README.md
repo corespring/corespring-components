@@ -62,11 +62,9 @@ You can use the following test commands:
     # Test clientside
     grunt testclient
 
-    # Test comps for single org
-    grunt testclient:corespring
-
-    # Test single components for org
-    grunt testclient:corespring:multiple-choice --componentPath=../components
+    # Test a single component 
+    grunt testclient --component="multiple-choice"
+    grunt testserver --component="multiple-choice"
 
     ## Options
     --componentPath=path_to_comps (default: ../components) - the path to the components folder
