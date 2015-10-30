@@ -59,7 +59,9 @@
       "backgroundImage": "map.png",
       "shuffle": true,
       "choiceAreaPosition": "top",
-      "showHotspots": true
+      "showHotspots": true,
+      "snapEnabled": false,
+      "snapSensitivity": 0.2
     }
   },
   "weight": 1,
