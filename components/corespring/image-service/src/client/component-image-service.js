@@ -3,9 +3,53 @@ var def = [
   '$log',
   '$document',
   '$http',
-  'ImageUtils',
   '$timeout',
-  function($log, $document, $http, ImageUtils,$timeout) {
+  function($log, $document, $http, $timeout) {
+
+    //TODO - this is lifted from wiggi-wiz. Remove the duplication.
+    var ImageUtils = function() {
+
+      var byteToKBMultiplier = 0.000976563;
+
+      this.bytesToKb = function(bytes) {
+        var sizeInKb = bytes * byteToKBMultiplier;
+        var rounded = Math.floor(sizeInKb * 100) / 100;
+        return rounded;
+      };
+
+      this.fileTooBigError = function(sizeInBytes, maxSizeInKb) {
+        var sizeInKb = this.bytesToKb(sizeInBytes);
+        return {
+          code: this.errors.FILE_SIZE_EXCEEDED,
+          message: 'The file is too big (' + sizeInKb + 'kb), the maximum is: ' + maxSizeInKb + 'kb.'
+        };
+      };
+
+      this.imageTypes = function(){
+        return ['image/png', 'image/gif', 'image/jpeg'];
+      };
+
+      this.errors = {
+        UNACCEPTABLE_TYPE: 'ERR_UNACCEPTABLE_TYPE',
+        FILE_SIZE_EXCEEDED: 'ERR_FILE_SIZE_EXCEEDED'
+      };
+
+
+      this.acceptableType = function(fileType, acceptableTypes){
+       
+        fileType = fileType || 'unknown-filetype'; 
+        acceptableTypes = acceptableTypes  || [];
+
+        if(!_.contains(acceptableTypes, fileType)){
+          return {
+            code: this.errors.UNACCEPTABLE_TYPE,
+            message: 'The fileType: ' + fileType + ' is not acceptable, it must be one of: ' + acceptableTypes.join(', ')
+          };
+        } 
+      };
+    };
+
+    var imageUtils = new ImageUtils();
 
     function ComponentImageService() {
 
@@ -24,7 +68,7 @@ var def = [
       this.addFile = function(file, onComplete, onProgress) {
         var url = addQueryParamsIfPresent('' + encodeURIComponent(file.name));
 
-       var typeError = ImageUtils.acceptableType(file.type, ImageUtils.imageTypes());
+       var typeError = imageUtils.acceptableType(file.type, imageUtils.imageTypes());
 
        if(typeError){
           $timeout(function() {
@@ -33,9 +77,9 @@ var def = [
           return;
         }
 
-        if (ImageUtils.bytesToKb(file.size) > 500) {
+        if (imageUtils.bytesToKb(file.size) > 500) {
           $timeout(function() {
-            onComplete(ImageUtils.fileTooBigError(file.size, 500).message);
+            onComplete(imageUtils.fileTooBigError(file.size, 500).message);
           });
           return;
         }
