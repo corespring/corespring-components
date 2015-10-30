@@ -1,7 +1,7 @@
 /* global console, exports */
 
 var main = [
-  '$sce', '$log','CsUndoModel',
+  '$sce', '$log', 'CsUndoModel',
   function($sce, $log, CsUndoModel) {
     'use strict';
 
@@ -33,7 +33,9 @@ var main = [
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
           scope.model = dataAndSession.data.model;
           scope.model.config = _.defaults(scope.model.config || {}, {
-            choiceAreaPosition: "top"
+            choiceAreaPosition: "top",
+            snapEnabled: true,
+            snapSensitivity: 0.2
           });
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
@@ -63,12 +65,13 @@ var main = [
           this.setResponse({correctness: 'instructor', correctResponse: data.correctResponse});
         },
 
-        setResponse: function (response) {
+        setResponse: function(response) {
           $log.debug('[graphic gap match] setResponse: ', response);
           scope.response = response;
         },
 
-        setMode: function(newMode) {},
+        setMode: function(newMode) {
+        },
 
         reset: function() {
           scope.droppedChoices = [];
@@ -91,7 +94,7 @@ var main = [
       };
 
       function getState() {
-        if(scope.choices && scope.droppedChoices) {
+        if (scope.choices && scope.droppedChoices) {
           var state = {
             choices: scope.choices,
             droppedChoices: scope.droppedChoices
@@ -101,7 +104,7 @@ var main = [
         return null;
       }
 
-      function revertState(state){
+      function revertState(state) {
         scope.choices = _.cloneDeep(state.choices);
         scope.droppedChoices = _.cloneDeep(state.droppedChoices);
       }
@@ -151,6 +154,15 @@ var main = [
         activeClass: 'dropping'
       };
 
+      function snapToClosestHotspot(choice) {
+        var closestHotspot = _.max(scope.model.hotspots, function(h) {
+          return getOverlappingPercentage(choice, h.coords);
+        });
+        var percentWithClosest = getOverlappingPercentage(choice, closestHotspot.coords);
+        if (percentWithClosest > scope.model.config.snapSensitivity) {
+          snapRectIntoRect(choice, closestHotspot.coords);
+        }
+      }
 
       scope.dropChoice = function(draggedChoice, newChoice) {
         scope.droppedChoices = _.reject(scope.droppedChoices, choiceEquals(draggedChoice));
@@ -162,7 +174,9 @@ var main = [
           var currentPosition = _.findIndex(scope.choices, idEquals(draggedChoice));
           scope.choices = _.reject(scope.choices, idEquals(draggedChoice));
           scope.choices.splice(currentPosition, 0, _.pick(draggedChoice, 'id', 'label', 'matchMax'));
-
+        }
+        if (scope.model.config.snapEnabled) {
+          snapToClosestHotspot(newChoice);
         }
         scope.droppedChoices.push(newChoice);
       };
@@ -220,6 +234,72 @@ var main = [
       }, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+
+      function addBottomAndRight(rect) {
+        var r = _.cloneDeep(rect);
+        r.bottom = r.top + r.height;
+        r.right = r.left + r.width;
+        return r;
+      }
+
+      function getOverlappingRectangle(rect1, rect2) {
+        var r1 = addBottomAndRight(rect1);
+        var r2 = addBottomAndRight(rect2);
+        var overlappingRectangle = {left: NaN, top: NaN, width: 0, height: 0};
+
+        overlappingRectangle.right = Math.min(r1.right, r2.right);
+        if (r2.left >= r1.left && r2.left <= r1.right) {
+          overlappingRectangle.left = r2.left;
+        } else if (r1.left >= r2.left && r1.left <= r2.right) {
+          overlappingRectangle.left = r1.left;
+        }
+
+        overlappingRectangle.bottom = Math.min(r1.bottom, r2.bottom);
+        if (r2.top >= r1.top && r2.top <= r1.bottom) {
+          overlappingRectangle.top = r2.top;
+        } else if (r1.top >= r2.top && r1.top <= r2.bottom) {
+          overlappingRectangle.top = r1.top;
+        }
+
+        if (!isNaN(overlappingRectangle.left)) {
+          overlappingRectangle.width = overlappingRectangle.right - overlappingRectangle.left;
+        }
+        if (!isNaN(overlappingRectangle.top)) {
+          overlappingRectangle.height = overlappingRectangle.bottom - overlappingRectangle.top;
+        }
+        delete overlappingRectangle.right;
+        delete overlappingRectangle.bottom;
+        return overlappingRectangle;
+      }
+
+      function getOverlappingPercentage(rect1, rect2) {
+        var r1Area = rect1.width * rect1.height;
+        var r2Area = rect2.width * rect2.height;
+        var overlappingRectangle = getOverlappingRectangle(rect1, rect2);
+        var overlapArea = overlappingRectangle.width * overlappingRectangle.height;
+        var smallerRectArea = Math.min(r1Area, r2Area);
+        return overlapArea / smallerRectArea;
+      }
+
+      function snapRectIntoRect(rect1, rect2) {
+        var r1 = addBottomAndRight(rect1);
+        var r2 = addBottomAndRight(rect2);
+        if (r1.left < r2.left) {
+          r1.left = r2.left + 2;
+        }
+        if (r1.right > r2.right) {
+          r1.left -= (r1.right - r2.right + 2);
+        }
+        if (r1.top < r2.top) {
+          r1.top = r2.top + 2;
+        }
+        if (r1.bottom > r2.bottom) {
+          r1.top -= (r1.bottom - r2.bottom + 2);
+        }
+        rect1.left = r1.left + Math.random() / 2;
+        rect1.top = r1.top + Math.random() / 2;
+      }
+
     };
 
     var choices = function(positons) {
