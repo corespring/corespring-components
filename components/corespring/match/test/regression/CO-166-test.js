@@ -4,7 +4,7 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe.only('match', function() {
+describe('match', function() {
 
   "use strict";
 
@@ -24,7 +24,7 @@ describe.only('match', function() {
   }
 
   function solutionPanelHeader(){
-    return '.see-answer-panel .panel-heading';
+    return '.see-answer-panel .panel .panel-heading';
   }
 
   beforeEach(function(done) {
@@ -66,7 +66,7 @@ describe.only('match', function() {
     browser
       .click(answerInput('Row1'))
       .submitItem()
-      .waitForVisible(solutionPanelHeader())
+      .waitFor(solutionPanelHeader())
       .click(solutionPanelHeader())
       .isExistingWithWait(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
