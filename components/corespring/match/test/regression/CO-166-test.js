@@ -35,7 +35,7 @@ describe.only('match', function() {
     };
 
     browser.isExistingWithWait = function(selector,callback){
-      return this.waitFor(selector).isExisting(selector,callback)
+      return this.waitFor(selector).isExisting(selector,callback);
     };
 
     browser
