@@ -31,7 +31,7 @@ module.exports = (grunt) ->
     platform = grunt.option('platform') || ''
     capabilities.platform = platform if platform
     capabilities.timeoutInSeconds = 1;
-    capabilities.defaultTimeout =  2;
+    capabilities.defaultTimeout = 2;
     capabilities.name = grunt.option('sauceJob') || 'components-regression-test'
     capabilities.recordVideo = grunt.option('sauceRecordVideo') || false
     capabilities.recordScreenshots = grunt.option('sauceRecordScreenshots') || false
@@ -49,7 +49,7 @@ module.exports = (grunt) ->
       grep: grunt.option('grep')
       timeoutInSeconds: 10
       defaultTimeout: grunt.option('timeout') or 10000
-      waitForTimeout: grunt.option('timeout') or 10000
+      waitforTimeout: grunt.option('timeout') or 10000
       # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
       logLevel: grunt.option('webDriverLogLevel') || 'silent'
       desiredCapabilities: getDesiredCapabilities()
