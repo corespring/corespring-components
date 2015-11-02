@@ -46,7 +46,7 @@ describe('match', function() {
       .click(answerInput('Row2'))
       .click(answerInput('Row3'))
       .submitItem()
-      .waitFor(solutionPanelHeader())
+      .waitForVisible(solutionPanelHeader())
       .isExisting(answerEvaluated('Row1', 'correct'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })
@@ -63,7 +63,7 @@ describe('match', function() {
     browser
       .click(answerInput('Row1'))
       .submitItem()
-      .waitFor(solutionPanelHeader())
+      .waitForVisible(solutionPanelHeader())
       .click(solutionPanelHeader())
       .isExisting(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");

@@ -57,9 +57,8 @@
               "labelHtml" : "<em>g</em>(&#402;(<em>x</em>)) = <em>g</em>(3<em>x</em> &#8211; <table class=\"frac\"><tr><td class=\"nu\">1</td></tr><tr><td class=\"de\">2</td></tr></table>) = (<table class=\"frac\"><tr><td class=\"nu\">3<em>x</em> &#8211; <table class=\"frac\"><tr><td class=\"nu\">1</td></tr><tr><td class=\"de\">2</td></tr></table></td></tr><tr><td class=\"de\">3</td></tr></table> + <table class=\"frac\"><tr><td class=\"nu\">1</td></tr><tr><td class=\"de\">2</td></tr></table>)<br></br><em>g</em>(&#402;(<em>x</em>)) = <table class=\"frac\"><tr><td class=\"nu\">3<em>x</em></td></tr><tr><td class=\"de\">3</td></tr></table> &#8211; <table class=\"frac\"><tr><td class=\"nu\">1</td></tr><tr><td class=\"de\">6</td></tr></table> + <table class=\"frac\"><tr><td class=\"nu\">1</td></tr><tr><td class=\"de\">2</td></tr></table><br></br><em>g</em>(&#402;(<em>x</em>)) = <em>x</em> + <table class=\"frac\"><tr><td class=\"nu\">1</td></tr><tr><td class=\"de\">3</td></tr></table>"
             }
           ],
-          "answerType" : "YES_NO",
           "config" : {
-
+            "inputType" : "radio"
           }
         }
       }
