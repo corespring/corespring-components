@@ -37,6 +37,7 @@ var def = ['Canvas',
             height: elem.height(),
             showLabels: parseBool(attr.showlabels, true),
             showCoordinates: parseBool(attr.showcoordinates, true),
+            showPointLabels: parseBool(attr.showpointlabels, true),
             showPoints: parseBool(attr.showpoints, true),
             showAxisLabels: parseBool(attr.showaxislabels, true)
           };

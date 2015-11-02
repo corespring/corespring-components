@@ -46,6 +46,7 @@
       "rangeGraphPadding": 50,
       "sigfigs": -1,
       "showCoordinates": false,
+      "showPointLabels": true,
       "showInputs": true,
       "showAxisLabels": true,
       "showFeedback": true

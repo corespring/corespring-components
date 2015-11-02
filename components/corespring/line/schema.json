@@ -173,6 +173,12 @@
                             "id": "#showCoordinates",
                             "required": false
                         },
+                        "showPointLabels": {
+                          "description": "Display labels for the name of points placed on the graph",
+                          "type": "boolean",
+                          "id": "#showPointLabels",
+                          "required": false
+                        },
                         "showInputs": {
                             "description": "When in exhibit mode, whether to show the points on the line",
                             "type": "boolean",

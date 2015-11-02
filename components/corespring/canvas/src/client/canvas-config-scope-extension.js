@@ -46,9 +46,15 @@ exports.factory = [
           reset('graphHeight', defaults.graphHeight);
 
           reset('showCoordinates', defaults.showCoordinates);
+          reset('showPointLabels', defaults.showPointLabels);
           reset('showInputs', defaults.showInputs);
           reset('showAxisLabels', defaults.showAxisLabels);
           reset('showFeedback', defaults.showFeedback);
+        };
+
+        scope.checkUndefinedProperties = function(config) {
+          config.showAxisLabels = _.isUndefined(config.showAxisLabels) ? true : config.showAxisLabels;
+          config.showPointLabels = _.isUndefined(config.showPointLabels) ? true : config.showPointLabels;
         };
       };
     }

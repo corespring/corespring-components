@@ -80,6 +80,7 @@ exports.service = ['$log',
 
       this.showLabels = attrs.showLabels;
       this.showCoordinates = attrs.showCoordinates;
+      this.showPointLabels = attrs.showPointLabels;
       this.showPoints = attrs.showPoints;
       if (attrs.pointLabels) {
         this.pointLabels = attrs.pointLabels;
@@ -182,7 +183,7 @@ exports.service = ['$log',
             return (Math.round(point.Y() * 100) / 100) + offset.usrCoords[2];
           },
           function() {
-            return name + (that.showCoordinates ? (' (' + (Math.round(point.X() * 100) / 100) + ',' + (Math.round(point.Y() * 100) / 100) + ')') : '');
+            return ((that.showPointLabels) ? name+ ' ' : '') + (that.showCoordinates ? ('(' + (Math.round(point.X() * 100) / 100) + ',' + (Math.round(point.Y() * 100) / 100) + ')') : '');
           }], {
           fixed: true
         });

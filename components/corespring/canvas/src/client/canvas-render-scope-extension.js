@@ -46,6 +46,7 @@ exports.factory = [
             showLabels: !_.isUndefined(config.showLabels) ? config.showLabels : true,
             showCoordinates: !_.isUndefined(config.showCoordinates) ? config.showCoordinates : true,
             showPoints: !_.isUndefined(config.showPoints) ? config.showPoints : true,
+            showPointLabels: !_.isUndefined(config.showPointLabels) ? config.showPointLabels : true,
             showAxisLabels: !_.isUndefined(config.showAxisLabels) ? config.showAxisLabels : true,
             pointLabels: !!config.showInputs ? "letters" : "none"
           };
