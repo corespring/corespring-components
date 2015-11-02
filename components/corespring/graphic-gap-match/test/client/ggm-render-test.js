@@ -74,7 +74,8 @@ describe('corespring:graphic-gap-match:render', function() {
           "backgroundImage": "map.png",
           "shuffle": true,
           "choiceAreaPosition": "top",
-          "showHotspots": true
+          "showHotspots": true,
+          "snapEnabled": true
         }
       },
       "weight": 1
@@ -100,6 +101,7 @@ describe('corespring:graphic-gap-match:render', function() {
 
     element = $compile("<corespring-graphic-gap-match-render id='1'></corespring-graphic-gap-match-render>")($rootScope.$new());
     scope = element.isolateScope();
+    scope.snapToClosestHotspot = jasmine.createSpy();
     rootScope = $rootScope;
   }));
 
@@ -249,6 +251,30 @@ describe('corespring:graphic-gap-match:render', function() {
       expect(scope.choices.length).toEqual(2);
       expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(false);
     });
+
+    it('if snapEnabled is true choice gets snapped', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+
+      var choiceToDrag = scope.choices[1];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+
+      expect(scope.snapToClosestHotspot).toHaveBeenCalled();
+    });
+
+    it('if snapEnabled is false choice does not get snapped', function() {
+      testModel.data.model.config.snapEnabled = false;
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+
+      var choiceToDrag = scope.choices[1];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+
+      expect(scope.snapToClosestHotspot).not.toHaveBeenCalled();
+    });
+
   });
 
   describe('isAnswerEmpty', function() {
