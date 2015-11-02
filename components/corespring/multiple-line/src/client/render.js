@@ -193,6 +193,7 @@ var main = [
             name: line.label,
             colorIndex: line.colorIndex,
             points: { A: { isSet: false }, B: { isSet: false } },
+            equation: "",
             isSet: false
           });
           scope.forcedNextLine = index;
@@ -206,64 +207,72 @@ var main = [
       scope.undo = function() {
         if (!scope.locked && scope.history.length > 0) {
           var lastRecord = scope.history.pop();
-          var line;
 
           switch(lastRecord.action) {
             case 'move':
               scope.pointUpdate(lastRecord.previousPoint);
               break;
             case 'add_point':
-              scope.graphCallback({
-                remove: { point: lastRecord.point }
-              });
-              scope.plottedPoint = {};
+              scope.undoAddPoint(lastRecord.point);
               break;
             case 'add_line':
-              line = scope.lines[scope.pointsPerLine[lastRecord.point.name].line];
-
-              // remove point and line from graph
-              scope.graphCallback({
-                remove: { point: line.points.B, line: line.id }
-              });
-
-              // set the new plottedPoint
-              scope.plottedPoint = line.points.A;
-
-              // deletes the points-line mapping
-              delete scope.pointsPerLine[line.points.A.name];
-              delete scope.pointsPerLine[line.points.B.name];
-
-              // deletes the line
-              line.points.A = line.points.B = { isSet: false };
-              line.isSet = false;
-
+              scope.undoAddLine(lastRecord.point);
               break;
             case 'remove_line':
-
-              line = lastRecord.line;
-              // recreate points
-              scope.graphCallback({ add: { point: line.points.A, color: scope.colorPalette[line.colorIndex], name: line.points.A.name } });
-              scope.graphCallback({ add: { point: line.points.B, color: scope.colorPalette[line.colorIndex], name: line.points.B.name } });
-
-              // recreate the line, timeout is required to make sure the points are already created
-              scope.graphCallback({
-                drawShape: {
-                  id: lastRecord.line.id,
-                  line: [lastRecord.line.points.A.name, lastRecord.line.points.B.name],
-                  label: lastRecord.line.name,
-                  color: scope.colorPalette[lastRecord.line.colorIndex]
-                }
-              });
-
-              // reset line in array
-              scope.lines[lastRecord.lineIndex] = lastRecord.line;
-
-              // map points per line
-              scope.pointsPerLine[lastRecord.line.points.A.name] = { line: lastRecord.lineIndex, point: 'A'};
-              scope.pointsPerLine[lastRecord.line.points.B.name] = { line: lastRecord.lineIndex, point: 'B'};
+              scope.undoRemoveLine(lastRecord.line, lastRecord.lineIndex);
               break;
           }
         }
+      };
+
+      scope.undoAddPoint = function(point) {
+        scope.graphCallback({
+          remove: { point: point }
+        });
+        scope.plottedPoint = {};
+      };
+
+      scope.undoAddLine = function(point) {
+        var line = scope.lines[scope.pointsPerLine[point.name].line];
+
+        // remove point and line from graph
+        scope.graphCallback({
+          remove: { point: line.points.B, line: line.id }
+        });
+
+        // set the new plottedPoint
+        scope.plottedPoint = line.points.A;
+
+        // deletes the points-line mapping
+        delete scope.pointsPerLine[line.points.A.name];
+        delete scope.pointsPerLine[line.points.B.name];
+
+        // deletes the line
+        line.points.A = line.points.B = { isSet: false };
+        line.isSet = false;
+      };
+
+      scope.undoRemoveLine = function(line, lineIndex){
+        // recreate points
+        scope.graphCallback({ add: { point: line.points.A, color: scope.colorPalette[line.colorIndex], name: line.points.A.name } });
+        scope.graphCallback({ add: { point: line.points.B, color: scope.colorPalette[line.colorIndex], name: line.points.B.name } });
+
+        // recreate the line, timeout is required to make sure the points are already created
+        scope.graphCallback({
+          drawShape: {
+            id: line.id,
+            line: [line.points.A.name, line.points.B.name],
+            label: line.name,
+            color: scope.colorPalette[line.colorIndex]
+          }
+        });
+
+        // reset line in array
+        scope.lines[lineIndex] = line;
+
+        // map points per line
+        scope.pointsPerLine[line.points.A.name] = { line: lineIndex, point: 'A'};
+        scope.pointsPerLine[line.points.B.name] = { line: lineIndex, point: 'B'};
       };
 
       scope.pointUpdate = function(point, oldPoint) {
@@ -323,6 +332,7 @@ var main = [
 
         // deletes the line
         line.points.A = line.points.B = { isSet: false };
+        line.equation = "";
         line.isSet = false;
       };
 
@@ -420,9 +430,31 @@ var main = [
         },
 
         getSession: function() {
+          var lines = _.map(scope.lines, function(line){
+            return { id: line.id, equation: line.equation, name: line.name };
+          });
           return {
-            answers: scope.lines
+            answers: lines
           };
+        },
+
+        setInstructorData: function(data) {
+          scope.graphCallback({
+            clearBoard: true
+          });
+
+          _.each(data.correctResponse, function(line){
+            var cr = lineUtils.expressionize(line.equation, "x");
+            scope.graphCallback({
+              drawShape: {
+                curve: function(x) {
+                  return eval(cr);
+                }
+              }
+            });
+          });
+
+          this.setResponse({correctness: 'correct'});
         },
 
         setResponse: function(response) {

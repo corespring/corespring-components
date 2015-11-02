@@ -35,11 +35,15 @@ var def = ['Canvas',
             graphTitle: attr.graphtitle,
             width: elem.width(),
             height: elem.height(),
-            showLabels: attr.showlabels,
-            showCoordinates: attr.showcoordinates,
-            showPoints: attr.showpoints,
-            showAxisLabels: attr.showaxislabels
+            showLabels: parseBool(attr.showlabels, true),
+            showCoordinates: parseBool(attr.showcoordinates, true),
+            showPoints: parseBool(attr.showpoints, true),
+            showAxisLabels: parseBool(attr.showaxislabels, true)
           };
+        };
+
+        var parseBool = function(value, defaultValue) {
+          return _.isUndefined(value) || _.isEmpty(value) ? defaultValue : String(value).toLowerCase() === 'true';
         };
 
         var generateCanvasId = function() {

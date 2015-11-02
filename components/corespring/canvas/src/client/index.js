@@ -77,10 +77,10 @@ exports.service = ['$log',
       this.shapes = [];
       this.domainScale = attrs.domain.snapValue;
       this.rangeScale = attrs.range.snapValue;
-      this.showLabels = attrs.showLabels === "true";
-      this.showCoordinates = attrs.showCoordinates === "true";
-      this.showPoints = _.isUndefined(attrs.showPoints) ? "true" :
-        !(attrs.showPoints === 'false' || attrs.showPoints === false);
+
+      this.showLabels = attrs.showLabels;
+      this.showCoordinates = attrs.showCoordinates;
+      this.showPoints = attrs.showPoints;
       if (attrs.pointLabels) {
         this.pointLabels = attrs.pointLabels;
       } else {
@@ -151,6 +151,7 @@ exports.service = ['$log',
       var point = this.board.create('point', [coords.x, coords.y], pointAttrs);
       point.canvasIndex = this.points.length;
       this.points.push(point);
+
       if (this.showLabels) {
         var name = (function(labels, points) {
           if (ptName) {
@@ -277,9 +278,11 @@ exports.service = ['$log',
           size: (symbol === 'square' || symbol === 'circle') ? 3 : 5
         });
       }
-      point.text.setAttribute({
-        strokeColor: color
-      });
+      if (point.text) {
+        point.text.setAttribute({
+          strokeColor: color
+        });
+      }
     };
 
     Canvas.prototype.changeShapeColor = function(shape, color) {
