@@ -9,17 +9,30 @@
   }
 }
 
-.component-placeholder.corespring-inline-choice {
-  display: inline-block;
-  max-width: 200px;
-  margin-right: 10px;
+.corespring-inline-choice {
+  .component-placeholder {
+    display: inline-block;
+    margin-right: 10px;
+    max-width: 200px;
+    min-width: 170px;
+    .blocker {
+      .edit-controls {
+        padding: 0 0 0 10px;
+        top: 5px;
+        right: 10px;
+      }
+    }
+  }
 }
 
 .view-inline-choice {
+
+  .limit-image-size();
+
   display: inline-block;
   position: relative;
 
-  &.incorrect,  &.correct, &.warning {
+  &.incorrect, &.correct, &.warning {
     margin-right: 2px;
     cursor: pointer;
   }
@@ -214,12 +227,9 @@
     }
   }
 
-  #add-choice{
+  #add-choice {
     margin-bottom: 1em;
   }
 
 }
 
-.view-inline-choice {
-  .limit-image-size();
-}
