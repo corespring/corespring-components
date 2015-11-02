@@ -34,14 +34,9 @@ describe('match', function() {
       return this;
     };
 
-    browser.waitForWithTimeout = function(selector){
-      return browser.waitFor(selector);
-    };
-
     browser
-      .timeouts('implicit', browser.options.defaultTimeout)
       .url(browser.options.getUrl('match', itemJsonFilename))
-      .waitForWithTimeout(answerInput('Row3'))
+      .waitFor(answerInput('Row3'))
       .call(done);
   });
 
@@ -51,7 +46,7 @@ describe('match', function() {
       .click(answerInput('Row2'))
       .click(answerInput('Row3'))
       .submitItem()
-      .waitForWithTimeout(solutionPanelHeader())
+      .waitFor(solutionPanelHeader())
       .isExisting(answerEvaluated('Row1', 'correct'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })
@@ -68,7 +63,7 @@ describe('match', function() {
     browser
       .click(answerInput('Row1'))
       .submitItem()
-      .waitForWithTimeout(solutionPanelHeader())
+      .waitFor(solutionPanelHeader())
       .click(solutionPanelHeader())
       .isExisting(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
