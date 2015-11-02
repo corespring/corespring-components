@@ -10,6 +10,7 @@ describe('corespring:canvas:canvas-config-scope-extension', function() {
     "graphHeight": 500,
     "sigfigs": -1,
     "showCoordinates": true,
+    "showPointLabels": true,
     "showInputs": true,
     "showAxisLabels": true,
     "showFeedback": true,
@@ -44,6 +45,7 @@ describe('corespring:canvas:canvas-config-scope-extension', function() {
           "graphHeight": 400,
           "sigfigs": 0,
           "showCoordinates": false,
+          "showPointLabels": true,
           "showInputs": false,
           "showAxisLabels": false,
           "showFeedback": false,
@@ -123,6 +125,21 @@ describe('corespring:canvas:canvas-config-scope-extension', function() {
       expect(scope.fullModel.model.config.showInputs).toEqual(scope.defaults.showInputs);
       expect(scope.fullModel.model.config.showAxisLabels).toEqual(scope.defaults.showAxisLabels);
       expect(scope.fullModel.model.config.showFeedback).toEqual(scope.defaults.showFeedback);
+    });
+
+  });
+
+  describe('checkUndefinedProperties', function(){
+    it('should exist', function() {
+      expect(scope.checkUndefinedProperties).toBeDefined();
+    });
+
+    it('should give default values for undefined properties', function(){
+      var config = {};
+      scope.checkUndefinedProperties(config);
+
+      expect(config.showAxisLabels).toEqual(true);
+      expect(config.showPointLabels).toEqual(true);
     });
 
   });

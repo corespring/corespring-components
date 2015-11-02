@@ -85,6 +85,7 @@ describe('corespring:multiple-line:server', function() {
         "rangeGraphPadding": 50,
         "sigfigs": -1,
         "showCoordinates": true,
+        "showPointLabels": true,
         "showInputs": true,
         "showFeedback": true,
         "rangeSnapValue": 1,

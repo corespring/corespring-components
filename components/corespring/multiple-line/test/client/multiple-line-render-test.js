@@ -68,6 +68,7 @@ describe('corespring:multiple-line:render', function() {
           "graphHeight": 500,
           "sigfigs": -1,
           "showCoordinates": true,
+          "showPointLabels": true,
           "showInputs": true,
           "showAxisLabels": true,
           "showFeedback": true,

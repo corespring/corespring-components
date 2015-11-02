@@ -50,8 +50,8 @@ describe('corespring:canvas:index', function() {
         graphPadding: 50
       },
       maxPoints: 2,
-      // pointLabels: attr.pointlabels,
-      // graphTitle: attr.graphtitle,
+      pointLabels: [],
+      graphTitle: "Graph tiel",
       width: 500,
       height: 500,
       showLabels: true,
