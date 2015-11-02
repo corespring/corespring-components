@@ -157,9 +157,14 @@ var main = [
         }
       };
 
+      var getNestedProperty = function(obj, key) {
+        return key.split(".").reduce(function(o, x) {
+          return (typeof o == "undefined" || o === null) ? o : o[x];
+        }, obj);
+      };
+
       var blastThePassage = function() {
-        var delimiter = $scope.model.config.selectionUnit;
-        blastOptions.delimiter = delimiter;
+        blastOptions.delimiter = getNestedProperty($scope, 'model.config.selectionUnit') ? $scope.model.config.selectionUnit : 'word';
         // Removes any existing tokens
         $theContent.blast(false);
         // Tokenize the content

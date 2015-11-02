@@ -159,8 +159,26 @@
         background-color: @choice-color-hover;
       }
       &.selected {
-        background-color: @choice-color-opaque;
-        background-color: @choice-color;
+        background-color: @possible-choice-color-opaque;
+        background-color:@possible-choice-color;
+      }
+    }
+    &.specific {
+      .token {
+        cursor: default;
+        &:hover {
+          background-color: transparent;
+        }
+        &.possible {
+          cursor: pointer;
+          background-color: @choice-color-hover-opaque;
+          background-color: @choice-color-hover;
+        }
+        &.selected {
+          cursor: pointer;
+          background-color: @possible-choice-color-opaque;
+          background-color:@possible-choice-color;
+        }
       }
     }
   }

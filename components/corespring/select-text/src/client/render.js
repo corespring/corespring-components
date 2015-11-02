@@ -5,38 +5,96 @@ var main = [
 
     var link = function(scope, element, attrs) {
 
+      var log = console.log.bind(console, '[select-text]');
+
       var blastOptions = {
         customClass: 'token'
       };
 
-      var log = console.log.bind(console,'[select-text]');
+      var $theContent = null;
 
-      scope.containerBridge = {
-        setDataAndSession: setDataAndSession,
-        getSession: getSession,
-        setResponse: setResponse,
-        setMode: setMode,
-        reset: reset,
-        isAnswerEmpty: isAnswerEmpty,
-        answerChangedHandler: answerChangedHandler,
-        editable: editable
+      var getNestedProperty = function(obj, key) {
+        return key.split(".").reduce(function(o, x) {
+          return (typeof o == "undefined" || o === null) ? o : o[x];
+        }, obj);
       };
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+      var classifyTokens = function(collection, tokenClass) {
+        if (collection.length > 0) {
+          for (var i = collection.length - 1; i >= 0; i--) {
+            var $matches = $theContent.find('.token:contains("' + collection[i].data + '"):not(.' + tokenClass + ')');
+            if ($matches.length === 1) {
+              $matches.addClass(tokenClass);
+            } else if ($matches.length > 1) {
+              if (collection[i].index) {
+                for (var j = $matches.length - 1; j >= 0; j--) {
+                  if ($theContent.find('.token').index($matches[j]) === collection[i].index) {
+                    $($matches[j]).addClass(tokenClass);
+                    break;
+                  }
+                }
+              } else {
+                $($matches[0]).addClass(tokenClass);
+              }
+            }
+          }
+        }
+      };
+
+      var deleteItemFromCollection = function(collection, text, index) {
+        _.remove(collection, function(item) {
+          return item.data === text || item.index === index;
+        });
+      };
+
+      var bindTokenEvents = function() {
+        $theContent.off('click', '.token');
+        $theContent.on('click', '.token', function() {
+          var $token = $(this);
+          var index = $theContent.find('.token').index($token);
+          if (scope.model.config.availability === "specific") {
+            if ($token.hasClass('possible') && !$token.hasClass('selected')) {
+              $token.addClass('selected');
+              scope.local.choices.push({
+                data: $token.text(),
+                index: index
+              });
+            } else if ($token.hasClass('possible') && $token.hasClass('selected')) {
+              $token.removeClass('selected');
+              deleteItemFromCollection(scope.local.choices, $token.text(), index);
+            }
+          } else {
+            $token.toggleClass('selected');
+            if ($token.hasClass('selected')) {
+              // Adds a new choice
+              scope.local.choices.push({
+                data: $token.text(),
+                index: index
+              });
+            } else {
+              deleteItemFromCollection(scope.local.choices, $token.text(), index);
+            }
+          }
+        });
+      };
 
       function setDataAndSession(dataAndSession) {
-        log("Setting data for Select Text: ", dataAndSession);
+        // log("Setting data for Select Text: ", dataAndSession);
         scope.model = dataAndSession.data.model;
+        scope.local = {};
+        scope.local.choices = [];
+        $theContent = element.find('.select-text-content');
+        bindTokenEvents();
         $timeout(function() {
-          blastOptions.delimiter = scope.model.config.selectionUnit;
-          var $theContent = element.find('.select-text-content');
+          blastOptions.delimiter = getNestedProperty(scope, 'model.config.selectionUnit') ? scope.model.config.selectionUnit : 'word';
+          // Removes any existing tokens
+          $theContent.blast(false);
+          // Tokenize the content
           $theContent.blast(blastOptions);
-          $theContent.off('click', '.token');
-          $theContent.on('click', '.token', function() {
-            var $token = $(this);
-            var index = $theContent.find('.token').index($token);
-            $token.toggleClass('selected');
-          });
+          // Render existing choices
+          if (scope.model.config.availability === "specific") {
+            classifyTokens(scope.model.possibleChoices, "possible");
+          }
         }, 100);
       }
 
@@ -72,6 +130,19 @@ var main = [
       function editable(e) {
         scope.editable = e;
       }
+
+      scope.containerBridge = {
+        setDataAndSession: setDataAndSession,
+        getSession: getSession,
+        setResponse: setResponse,
+        setMode: setMode,
+        reset: reset,
+        isAnswerEmpty: isAnswerEmpty,
+        answerChangedHandler: answerChangedHandler,
+        editable: editable
+      };
+
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
     return {
@@ -82,7 +153,7 @@ var main = [
       template: [
         '<div class="cs-select-text">',
         '  <div class="select-text-label" ng-show="model.config.label" ng-bind-html-unsafe="model.config.label"></div>',
-        '  <div class="select-text-content" ng-bind-html-unsafe="model.config.xhtml"></div>',
+        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\'}" ng-bind-html-unsafe="model.config.xhtml"></div>',
         '</div>'
       ].join("\n")
     };
