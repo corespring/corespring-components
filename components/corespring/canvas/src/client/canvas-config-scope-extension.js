@@ -56,6 +56,38 @@ exports.factory = [
           config.showAxisLabels = _.isUndefined(config.showAxisLabels) ? true : config.showAxisLabels;
           config.showPointLabels = _.isUndefined(config.showPointLabels) ? true : config.showPointLabels;
         };
+
+        scope.$watch('fullModel.model.config.domainMin', function (newVal, oldVal) {
+          if (!_.isUndefined(newVal)) {
+            if(!_.isNumber(newVal) || newVal > 0 || newVal >= scope.fullModel.model.config.domainMax) {
+              scope.fullModel.model.config.domainMin = oldVal;
+            }
+          }
+        }, false);
+
+        scope.$watch('fullModel.model.config.domainMax', function (newVal, oldVal) {
+          if (!_.isUndefined(newVal)) {
+            if(!_.isNumber(newVal) || newVal < 0 || newVal <= scope.fullModel.model.config.domainMin) {
+              scope.fullModel.model.config.domainMax  = oldVal;
+            }
+          }
+        }, false);
+
+        scope.$watch('fullModel.model.config.rangeMin', function (newVal, oldVal) {
+          if (!_.isUndefined(newVal)) {
+            if(!_.isNumber(newVal) || newVal > 0 || newVal >= scope.fullModel.model.config.rangeMax) {
+              scope.fullModel.model.config.rangeMin = oldVal;
+            }
+          }
+        }, false);
+
+        scope.$watch('fullModel.model.config.rangeMax', function (newVal, oldVal) {
+          if (!_.isUndefined(newVal)) {
+            if(!_.isNumber(newVal) || newVal < 0 || newVal <= scope.fullModel.model.config.rangeMin) {
+              scope.fullModel.model.config.rangeMax = oldVal;
+            }
+          }
+        }, false);
       };
     }
 

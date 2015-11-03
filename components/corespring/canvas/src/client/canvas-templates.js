@@ -65,7 +65,7 @@ exports.service = [
           '          <input type="number" name="domainGraphPadding" ',
           '            class="form-control" ',
           '            ng-model="fullModel.model.config.domainGraphPadding" ',
-          '            data-toggle="tooltip" title="Hooray!"',
+          '            data-toggle="tooltip"',
           '            placeholder="{{defaults.domainGraphPadding}}" ',
           '            min="0" step="25" />',
           '            <div class="inline-error-message" ng-show="attributesForm.domainGraphPadding.$error.number">Please enter a valid number</div>',
