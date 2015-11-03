@@ -101,7 +101,7 @@ exports.service = [
           '        </div>',
           '      </div>',
           '      <div class="config-form-row">',
-          labelWithInput({ label: 'Label (Optional)', modelKey: 'rangeLabel', placeholder: "y" }),
+          labelWithInput({ label: 'Label (Optional)', modelKey: 'rangeLabel', placeholder: "{{defaults.rangeLabel}}" }),
           '      </div><br />',
           '      <div class="config-form-row">',
           labelWithInput({ label: 'Significant Figures:', modelKey: 'sigfigs', inputType: "number",
