@@ -94,12 +94,12 @@ describe('corespring:number-line:configure', function() {
             "type" : "point",
             "pointType" : "full"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['PF'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['PF']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.PF).toBe(true);
       });
 
     });
@@ -112,12 +112,12 @@ describe('corespring:number-line:configure', function() {
             "type" : "point",
             "pointType" : "empty"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['PE'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['PE']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.PE).toBe(true);
       });
 
     });
@@ -131,12 +131,12 @@ describe('corespring:number-line:configure', function() {
             "leftPoint" : "empty",
             "rightPoint" : "empty"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['LEE'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['LEE']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.LEE).toBe(true);
       });
 
     });
@@ -150,12 +150,12 @@ describe('corespring:number-line:configure', function() {
             "leftPoint" : "empty",
             "rightPoint" : "full"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['LEF'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['LEF']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.LEF).toBe(true);
       });
 
     });
@@ -169,12 +169,12 @@ describe('corespring:number-line:configure', function() {
             "leftPoint" : "full",
             "rightPoint" : "empty"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['LFE'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['LFE']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.LFE).toBe(true);
       });
 
     });
@@ -188,12 +188,12 @@ describe('corespring:number-line:configure', function() {
             "leftPoint" : "full",
             "rightPoint" : "full"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['LFF'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['LFF']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.LFF).toBe(true);
       });
 
     });
@@ -207,12 +207,12 @@ describe('corespring:number-line:configure', function() {
             "pointType" : "empty",
             "direction" : "positive"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['REP'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['REP']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.REP).toBe(true);
       });
 
     });
@@ -226,12 +226,12 @@ describe('corespring:number-line:configure', function() {
             "pointType" : "empty",
             "direction" : "negative"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['REN'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['REN']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.REN).toBe(true);
       });
 
     });
@@ -245,12 +245,12 @@ describe('corespring:number-line:configure', function() {
             "pointType" : "full",
             "direction" : "positive"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['RFP'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['RFP']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.RFP).toBe(true);
       });
 
     });
@@ -264,12 +264,12 @@ describe('corespring:number-line:configure', function() {
             "pointType" : "full",
             "direction" : "negative"
           }
-        ]
+        ];
       });
 
       it("should not set availableTypes['RFN'] to false", function() {
         scope.displayNone();
-        expect(scope.fullModel.model.config.availableTypes['RFN']).toBe(true);
+        expect(scope.fullModel.model.config.availableTypes.RFN).toBe(true);
       });
 
     });
