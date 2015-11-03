@@ -43,7 +43,8 @@ var def = [
         if(!_.contains(acceptableTypes, fileType)){
           return {
             code: this.errors.UNACCEPTABLE_TYPE,
-            message: 'The fileType: ' + fileType + ' is not acceptable, it must be one of: ' + acceptableTypes.join(', ')
+            fileType: fileType,
+            message: 'Only files in .jpeg, .jpg, .png or .gif formats can be uploaded.'
           };
         } 
       };
