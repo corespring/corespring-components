@@ -70,11 +70,11 @@ var main = [
       '       </div>',
       '       <div class="pull-left answer-summary" ng-show="model.config.availability === \'specific\'">',
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': selectionMode}"',
-      '           ng-click="changeSelectionMode(false)">Selections Available</button> <span id="possible-count" class="badge">{{model.possibleChoices.length}}</span>',
+      '           ng-click="changeSelectionMode(false)">Selections Available</button> <span class="badge choices-count">{{model.choices.length}}</span>',
       '       </div>',
       '       <div class="pull-right answer-summary">',
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': !selectionMode}" ng-show="model.config.availability === \'specific\'"' ,
-      '           ng-click="changeSelectionMode(true)" ng-disabled="model.possibleChoices.length === 0">Correct Answers</button> <span ng-show="model.config.availability === \'all\'">Correct Answers</span> <span id="answers-count" class="badge">{{model.choices.length}}</span>',
+      '           ng-click="changeSelectionMode(true)" ng-disabled="model.choices.length === 0">Correct Answers</button> <span ng-show="model.config.availability === \'all\'">Correct Answers</span> <span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span>',
       '       </div>',
       '     </div>',
       '     <div ng-show="mode === \'delete\'">',
@@ -170,21 +170,24 @@ var main = [
         // Tokenize the content
         $theContent.blast(blastOptions);
         // Render existing choices
-        if ($scope.model.config.availability === "specific") {
-          classifyTokens($scope.model.possibleChoices, "possible");
+        if ($scope.model.config.availability === "specific" && getNestedProperty($scope, 'model.choices')) {
+          classifyTokens($scope.model.choices, "choice");
         }
-        classifyTokens($scope.model.choices, "selected");
+        // Render existing answers
+        if (getNestedProperty($scope, 'fullModel.correctResponse.value')) {
+          classifyTokens($scope.fullModel.correctResponse.value, "selected");
+        }
       };
 
       var toggleSelectionMode = function(newValue, oldValue) {
         if (newValue !== oldValue) {
           if (newValue === "specific") {
-            if ($scope.model.choices.length > 0) {
-              $scope.model.possibleChoices = _.cloneDeep($scope.model.choices);
-              $scope.model.choices = [];
+            if (getNestedProperty($scope, 'fullModel.correctResponse.value') && $scope.fullModel.correctResponse.value.length > 0) {
+              $scope.model.choices = _.cloneDeep($scope.fullModel.correctResponse.value);
+              $scope.fullModel.correctResponse.value = [];
             }
           } else {
-            $scope.model.possibleChoices = [];
+            $scope.model.choices = [];
           }
           blastThePassage();
         }
@@ -202,29 +205,29 @@ var main = [
           var $token = $(this);
           var index = index = $theContent.find('.token').index($token);
           if ($scope.model.config.availability === "specific") {
-            if ($theContent.hasClass('select-possible')) {
-              if ($token.hasClass('possible') && !$token.hasClass('selected')) {
+            if ($theContent.hasClass('select-choices')) {
+              if ($token.hasClass('choice') && !$token.hasClass('selected')) {
                 $token.addClass('selected');
+                $scope.fullModel.correctResponse.value.push({
+                  data: $token.text(),
+                  index: index
+                });
+              } else if ($token.hasClass('choice') && $token.hasClass('selected')) {
+                $token.removeClass('selected');
+                deleteItemFromCollection($scope.fullModel.correctResponse.value, $token.text(), index);
+              }
+            } else {
+              $token.toggleClass('choice');
+              if ($token.hasClass('choice')) {
+                // Adds a new possible choice
                 $scope.model.choices.push({
                   data: $token.text(),
                   index: index
                 });
-              } else if ($token.hasClass('possible') && $token.hasClass('selected')) {
-                $token.removeClass('selected');
-                deleteItemFromCollection($scope.model.choices, $token.text(), index);
-              }
-            } else {
-              $token.toggleClass('possible');
-              if ($token.hasClass('possible')) {
-                // Adds a new possible choice
-                $scope.model.possibleChoices.push({
-                  data: $token.text(),
-                  index: index
-                });
               } else {
-                deleteItemFromCollection($scope.model.possibleChoices, $token.text(), index);
+                deleteItemFromCollection($scope.model.choices, $token.text(), index);
                 if ($token.hasClass('selected')) {
-                  deleteItemFromCollection($scope.model.choices, $token.text(), index);
+                  deleteItemFromCollection($scope.fullModel.correctResponse.value, $token.text(), index);
                   $token.removeClass('selected')
                 }
               }
@@ -233,12 +236,12 @@ var main = [
             $token.toggleClass('selected');
             if ($token.hasClass('selected')) {
               // Adds a new choice
-              $scope.model.choices.push({
+              $scope.fullModel.correctResponse.value.push({
                 data: $token.text(),
                 index: index
               });
             } else {
-              deleteItemFromCollection($scope.model.choices, $token.text(), index);
+              deleteItemFromCollection($scope.fullModel.correctResponse.value, $token.text(), index);
             }
           }
         });
@@ -247,8 +250,8 @@ var main = [
       var handleChoicesChange = function(newVal, oldVal) {
         if (!_.isEqual(newVal, oldVal) && !ignoreChanges) {
           $scope.choicesHistory.push({
-            choices: _.cloneDeep(oldVal[0]),
-            possibleChoices: _.cloneDeep(oldVal[1]),
+            answers: _.cloneDeep(oldVal[0]),
+            choices: _.cloneDeep(oldVal[1]),
             selectionUnit: oldVal[2],
             availability: oldVal[3]
           });
@@ -268,8 +271,8 @@ var main = [
             blastThePassage();
           }, 100);
           initialChoices = {
+            answers: _.cloneDeep($scope.fullModel.correctResponse.value),
             choices: _.cloneDeep($scope.model.choices),
-            possibleChoices: _.cloneDeep($scope.model.possibleChoices),
             selectionUnit: $scope.model.config.selectionUnit,
             availability: $scope.model.config.availability
           };
@@ -293,13 +296,13 @@ var main = [
       $scope.$watch('model.config.selectionUnit', blastThePassage);
       $scope.$watch('model.config.xhtml', blastThePassage);
       $scope.$watch('model.config.availability', toggleSelectionMode)
+      $scope.$watch('fullModel.correctResponse.value.length', function(newValue, oldValue) {
+        animateBadge(newValue, oldValue, ".answers-count");
+      });
       $scope.$watch('model.choices.length', function(newValue, oldValue) {
-        animateBadge(newValue, oldValue, "#answers-count");
+        animateBadge(newValue, oldValue, ".choices-count");
       });
-      $scope.$watch('model.possibleChoices.length', function(newValue, oldValue) {
-        animateBadge(newValue, oldValue, "#possible-count");
-      });
-      $scope.$watch('[model.choices,model.possibleChoices,model.config.selectionUnit,model.config.availability]', handleChoicesChange, true);
+      $scope.$watch('[fullModel.correctResponse.value,model.choices,model.config.selectionUnit,model.config.availability]', handleChoicesChange, true);
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
@@ -312,13 +315,13 @@ var main = [
         var unit = $($event.currentTarget).data('unit');
         $scope.model.config.selectionUnit = unit;
         // Clean the answers
+        $scope.fullModel.correctResponse.value = [];
         $scope.model.choices = [];
-        $scope.model.possibleChoices = [];
       };
 
       $scope.changeSelectionMode = function(areAnswers) {
         $scope.selectionMode = !areAnswers;
-        $theContent.toggleClass('select-possible', !$scope.selectionMode);
+        $theContent.toggleClass('select-choices', !$scope.selectionMode);
       };
 
       $scope.deleteAll = function() {
@@ -326,15 +329,15 @@ var main = [
         $scope.model.config.selectionUnit = "word";
         $scope.model.config.availability = "all";
         $scope.model.config.xhtml = "";
-        $scope.model.choices = [];
+        $scope.fullModel.correctResponse.value = [];
         $scope.mode = "editor";
       };
 
       $scope.undo = function() {
         if ($scope.choicesHistory.length > 0) {
           var lastRecord = $scope.choicesHistory.pop();
+          $scope.fullModel.correctResponse.value = lastRecord.answers;
           $scope.model.choices = lastRecord.choices;
-          $scope.model.possibleChoices = lastRecord.possibleChoices;
           $scope.model.config.selectionUnit = lastRecord.selectionUnit;
           $scope.model.config.availability = lastRecord.availability;
           ignoreChanges = true;
@@ -343,8 +346,8 @@ var main = [
 
       $scope.startOver = function() {
         if (!_.isEmpty(initialChoices)) {
+          $scope.fullModel.correctResponse.value = initialChoices.answers;
           $scope.model.choices = initialChoices.choices;
-          $scope.model.possibleChoices = initialChoices.possibleChoices;
           $scope.choicesHistory = [];
           $scope.model.config.selectionUnit = initialChoices.selectionUnit;
           $scope.model.config.availability = initialChoices.availability;

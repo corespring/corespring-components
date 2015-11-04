@@ -10,11 +10,28 @@
       "type": "string"
     },
     "correctResponse" : {
-      "description" : "An array of choice indexes representing the correct response for the interaction.",
-      "type" : "array",
-      "items" : {
-        "type" : "number"
-      }
+      "description" : "An object describing the correct responses for the select text evidence component.",
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "description" : "Array containing the correct values for the component. These correspond to the right selections.",
+          "type" : "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "The tokenized text that represents a correct answer."
+              },
+              "index": {
+                "type": "number",
+                "description": "Index representing the position of the token relative to the passage."
+              }
+            }
+          }
+        }
+      },
+      "required" : ["value"]
     },
     "feedback" : {
       "description" : "Describes feedback which should be presented to the user when the component is submitted.",
@@ -49,14 +66,18 @@
       "type": "object",
       "properties": {
         "choices": {
-          "description": "List of chosen correct answers",
+          "description": "List of choices that can be or not be the correct answers",
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "data": {
                 "type": "string",
-                "description": "The tokenized text that represents a correct answer."
+                "description": "The tokenized text that represents a possible choice."
+              },
+              "index": {
+                "type": "number",
+                "description": "Index representing the position of the token relative to the passage."
               }
             }
           }
@@ -82,20 +103,7 @@
               "type": "string"
             }
           },
-          "required": ["selectionUnit", "xhtml"]
-        },
-        "possibleChoices": {
-          "description": "List of choices that can be or not be the correct answers",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "string",
-                "description": "The tokenized text that represents a possible answer."
-              }
-            }
-          }
+          "required": ["availability", "selectionUnit", "xhtml"]
         }
       },
       "required": ["config"]

@@ -53,13 +53,13 @@ var main = [
           var $token = $(this);
           var index = $theContent.find('.token').index($token);
           if (scope.model.config.availability === "specific") {
-            if ($token.hasClass('possible') && !$token.hasClass('selected')) {
+            if ($token.hasClass('choice') && !$token.hasClass('selected')) {
               $token.addClass('selected');
               scope.local.choices.push({
                 data: $token.text(),
                 index: index
               });
-            } else if ($token.hasClass('possible') && $token.hasClass('selected')) {
+            } else if ($token.hasClass('choice') && $token.hasClass('selected')) {
               $token.removeClass('selected');
               deleteItemFromCollection(scope.local.choices, $token.text(), index);
             }
@@ -92,8 +92,8 @@ var main = [
           // Tokenize the content
           $theContent.blast(blastOptions);
           // Render existing choices
-          if (scope.model.config.availability === "specific") {
-            classifyTokens(scope.model.possibleChoices, "possible");
+          if (scope.model.config.availability === "specific" && getNestedProperty(scope, 'model.choices')) {
+            classifyTokens(scope.model.choices, "choice");
           }
         }, 100);
       }

@@ -2,6 +2,9 @@
   "componentType" : "corespring-select-text",
   "title": "Select Evidence in Text",
   "weight": 1,
+  "correctResponse": {
+    "value": []
+  },
   "feedback": {
     "correctFeedbackType": "default",
     "partialFeedbackType": "default",
@@ -18,7 +21,6 @@
       "availability": "all",
       "xhtml": ""
     },
-    "choices" : [],
-    "possibleChoices": []
+    "choices" : []
   }
 }
