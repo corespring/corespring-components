@@ -1,17 +1,30 @@
 var main = [
   '$sce',
   '$timeout',
-  function($sce, $timeout) {
+  'CsUndoModel',
+  function($sce, $timeout, CsUndoModel) {
 
     var link = function(scope, element, attrs) {
 
       var log = console.log.bind(console, '[select-text]');
+
+      scope.undoModel = new CsUndoModel();
+      scope.undoModel.setGetState(getState);
+      scope.undoModel.setRevertState(revertState);
 
       var blastOptions = {
         customClass: 'token'
       };
 
       var $theContent = null;
+
+      function getState(){
+        return {};
+      }
+
+      function revertState(state) {
+        
+      }
 
       var getNestedProperty = function(obj, key) {
         return key.split(".").reduce(function(o, x) {
@@ -55,24 +68,24 @@ var main = [
           if (scope.model.config.availability === "specific") {
             if ($token.hasClass('choice') && !$token.hasClass('selected')) {
               $token.addClass('selected');
-              scope.local.choices.push({
+              scope.userChoices.push({
                 data: $token.text(),
                 index: index
               });
             } else if ($token.hasClass('choice') && $token.hasClass('selected')) {
               $token.removeClass('selected');
-              deleteItemFromCollection(scope.local.choices, $token.text(), index);
+              deleteItemFromCollection(scope.userChoices, $token.text(), index);
             }
           } else {
             $token.toggleClass('selected');
             if ($token.hasClass('selected')) {
               // Adds a new choice
-              scope.local.choices.push({
+              scope.userChoices.push({
                 data: $token.text(),
                 index: index
               });
             } else {
-              deleteItemFromCollection(scope.local.choices, $token.text(), index);
+              deleteItemFromCollection(scope.userChoices, $token.text(), index);
             }
           }
         });
@@ -81,8 +94,7 @@ var main = [
       function setDataAndSession(dataAndSession) {
         // log("Setting data for Select Text: ", dataAndSession);
         scope.model = dataAndSession.data.model;
-        scope.local = {};
-        scope.local.choices = [];
+        scope.userChoices = [];
         $theContent = element.find('.select-text-content');
         bindTokenEvents();
         $timeout(function() {
@@ -99,7 +111,9 @@ var main = [
       }
 
       function getSession() {
-        return {};
+        return {
+          answers: scope.userChoices
+        };
       }
 
       function setResponse(response) {
@@ -153,6 +167,10 @@ var main = [
       template: [
         '<div class="cs-select-text">',
         '  <div class="select-text-label" ng-show="model.config.label" ng-bind-html-unsafe="model.config.label"></div>',
+        '  <div class="action-buttons">',
+        '    <span cs-undo-button-with-model></span>',
+        '    <span cs-start-over-button-with-model></span>',
+        '  </div>',
         '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\'}" ng-bind-html-unsafe="model.config.xhtml"></div>',
         '</div>'
       ].join("\n")
