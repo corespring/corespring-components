@@ -161,7 +161,7 @@ var main = [
         var overlapArea = overlappingRectangle.width * overlappingRectangle.height;
         var smallerRectArea = Math.min(r1Area, r2Area);
         return overlapArea / smallerRectArea;
-      }
+      };
 
       scope.snapRectIntoRect = function(rect1, rect2) {
         var r1 = addBottomAndRight(rect1);
