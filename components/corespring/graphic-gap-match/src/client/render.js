@@ -154,14 +154,42 @@ var main = [
         activeClass: 'dropping'
       };
 
+      scope.getOverlappingPercentage = function(rect1, rect2) {
+        var r1Area = rect1.width * rect1.height;
+        var r2Area = rect2.width * rect2.height;
+        var overlappingRectangle = getOverlappingRectangle(rect1, rect2);
+        var overlapArea = overlappingRectangle.width * overlappingRectangle.height;
+        var smallerRectArea = Math.min(r1Area, r2Area);
+        return overlapArea / smallerRectArea;
+      }
+
+      scope.snapRectIntoRect = function(rect1, rect2) {
+        var r1 = addBottomAndRight(rect1);
+        var r2 = addBottomAndRight(rect2);
+        if (r1.left < r2.left) {
+          r1.left = r2.left + 2;
+        }
+        if (r1.right > r2.right) {
+          r1.left -= (r1.right - r2.right + 2);
+        }
+        if (r1.top < r2.top) {
+          r1.top = r2.top + 2;
+        }
+        if (r1.bottom > r2.bottom) {
+          r1.top -= (r1.bottom - r2.bottom + 2);
+        }
+        rect1.left = r1.left + Math.random() / 2;
+        rect1.top = r1.top + Math.random() / 2;
+      };
+
       scope.snapToClosestHotspot = function(choice) {
         var closestHotspot = _.max(scope.model.hotspots, function(h) {
-          return (h.shape !== 'rect') ? -1 : getOverlappingPercentage(choice, h.coords);
+          return (h.shape !== 'rect') ? -1 : scope.getOverlappingPercentage(choice, h.coords);
         });
         if (closestHotspot.shape === 'rect') {
-          var percentWithClosest = getOverlappingPercentage(choice, closestHotspot.coords);
+          var percentWithClosest = scope.getOverlappingPercentage(choice, closestHotspot.coords);
           if (percentWithClosest > scope.model.config.snapSensitivity) {
-            snapRectIntoRect(choice, closestHotspot.coords);
+            scope.snapRectIntoRect(choice, closestHotspot.coords);
           }
         }
       };
@@ -272,34 +300,6 @@ var main = [
         delete overlappingRectangle.right;
         delete overlappingRectangle.bottom;
         return overlappingRectangle;
-      }
-
-      function getOverlappingPercentage(rect1, rect2) {
-        var r1Area = rect1.width * rect1.height;
-        var r2Area = rect2.width * rect2.height;
-        var overlappingRectangle = getOverlappingRectangle(rect1, rect2);
-        var overlapArea = overlappingRectangle.width * overlappingRectangle.height;
-        var smallerRectArea = Math.min(r1Area, r2Area);
-        return overlapArea / smallerRectArea;
-      }
-
-      function snapRectIntoRect(rect1, rect2) {
-        var r1 = addBottomAndRight(rect1);
-        var r2 = addBottomAndRight(rect2);
-        if (r1.left < r2.left) {
-          r1.left = r2.left + 2;
-        }
-        if (r1.right > r2.right) {
-          r1.left -= (r1.right - r2.right + 2);
-        }
-        if (r1.top < r2.top) {
-          r1.top = r2.top + 2;
-        }
-        if (r1.bottom > r2.bottom) {
-          r1.top -= (r1.bottom - r2.bottom + 2);
-        }
-        rect1.left = r1.left + Math.random() / 2;
-        rect1.top = r1.top + Math.random() / 2;
       }
 
     };

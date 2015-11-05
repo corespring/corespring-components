@@ -101,7 +101,8 @@ describe('corespring:graphic-gap-match:render', function() {
 
     element = $compile("<corespring-graphic-gap-match-render id='1'></corespring-graphic-gap-match-render>")($rootScope.$new());
     scope = element.isolateScope();
-    scope.snapToClosestHotspot = jasmine.createSpy();
+    scope.snapRectIntoRect = jasmine.createSpy('snapRectIntoRect');
+    scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(0);
     rootScope = $rootScope;
   }));
 
@@ -253,6 +254,7 @@ describe('corespring:graphic-gap-match:render', function() {
     });
 
     it('if snapEnabled is true choice gets snapped', function() {
+      scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(1);
       container.elements['1'].setDataAndSession(testModel);
       scope.$digest();
 
@@ -260,10 +262,25 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
       scope.$digest();
 
-      expect(scope.snapToClosestHotspot).toHaveBeenCalled();
+      expect(scope.snapRectIntoRect).toHaveBeenCalled();
+    });
+
+    it('if snapEnabled is true but hotpots are not rects choice wont get snapped', function() {
+      scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(1);
+      testModel.data.model.hotspots[0].shape = 'polygon';
+      testModel.data.model.hotspots[1].shape = 'polygon';
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+
+      var choiceToDrag = scope.choices[1];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+
+      expect(scope.snapRectIntoRect).not.toHaveBeenCalled();
     });
 
     it('if snapEnabled is false choice does not get snapped', function() {
+      scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(1);
       testModel.data.model.config.snapEnabled = false;
       container.elements['1'].setDataAndSession(testModel);
       scope.$digest();
@@ -272,7 +289,7 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
       scope.$digest();
 
-      expect(scope.snapToClosestHotspot).not.toHaveBeenCalled();
+      expect(scope.snapRectIntoRect).not.toHaveBeenCalled();
     });
 
   });
