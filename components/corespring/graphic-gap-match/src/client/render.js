@@ -156,11 +156,13 @@ var main = [
 
       scope.snapToClosestHotspot = function(choice) {
         var closestHotspot = _.max(scope.model.hotspots, function(h) {
-          return getOverlappingPercentage(choice, h.coords);
+          return (h.shape !== 'rect') ? -1 : getOverlappingPercentage(choice, h.coords);
         });
-        var percentWithClosest = getOverlappingPercentage(choice, closestHotspot.coords);
-        if (percentWithClosest > scope.model.config.snapSensitivity) {
-          snapRectIntoRect(choice, closestHotspot.coords);
+        if (closestHotspot.shape === 'rect') {
+          var percentWithClosest = getOverlappingPercentage(choice, closestHotspot.coords);
+          if (percentWithClosest > scope.model.config.snapSensitivity) {
+            snapRectIntoRect(choice, closestHotspot.coords);
+          }
         }
       };
 
