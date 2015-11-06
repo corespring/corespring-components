@@ -611,7 +611,7 @@ var main = [
         "  </div>",
         "  <div see-answer-panel see-answer-panel-expanded='true' class='solution-panel' ng-class='{panelVisible: correctResponse}'>",
         "    <div class='solution-container'>",
-        "      <div ng-repeat='response in correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>{{response.equation}}</div>",
+        "      <div ng-repeat='response in correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
         "      <div class='solution-graph'></div>",
         "    </div>",
         "  </div>",
