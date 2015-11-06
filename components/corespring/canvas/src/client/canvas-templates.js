@@ -42,9 +42,13 @@ exports.service = [
       this.configGraph = function() {
         return [
           '<div class="row">',
-          '  <div class="body col-md-8">',
+          '  <div class="body col-md-12">',
           '    <h3>Graph Attributes</h3>',
-          '    <p>Use this section to setup the graph area.</p>',
+          '    <p class="graph-instructions">Use this section to setup the graph area. <span class="note">Note: Minimum value may not be greater than 0. Maximum value may not be less than 0. Minimum and maximum values can not be equal.</span></p>',
+          '  </div>',
+          '</div>',
+          '<div class="row">',
+          '  <div class="body col-md-12">',
           '    <form class="form-horizontal" role="form" name="attributesForm">',
           '      <div class="config-form-row">',
           '        <h4>Domain (X)</h4>',
