@@ -43,7 +43,7 @@
         background-clip: padding-box;
         max-height: 350px;
         overflow: auto;
-        .token {
+        .cs-token {
           cursor: pointer;
           -webkit-transition: background-color 0.2s ease-out;
           transition: background-color 0.2s ease-out;
@@ -61,7 +61,7 @@
           }
         }
         &.select-choices {
-          .token {
+          .cs-token {
             cursor: default;
             &:hover {
               background-color: transparent;
@@ -159,7 +159,7 @@
     background-clip: padding-box;
     margin: 42px 0 5px;
     padding: 5px;
-    .token {
+    .cs-token {
       cursor: pointer;
       -webkit-transition: background-color 0.2s ease-out;
       transition: background-color 0.2s ease-out;
@@ -173,7 +173,7 @@
       }
     }
     &.specific {
-      .token {
+      .cs-token {
         cursor: default;
         &:hover {
           background-color: transparent;
@@ -187,6 +187,26 @@
           cursor: pointer;
           background-color: @choice-color-opaque;
           background-color:@choice-color;
+        }
+      }
+    }
+    &.blocked {
+      .cs-token {
+        cursor: default;
+        &:hover {
+          background-color: transparent;
+        }
+        &.choice {
+          &:hover {
+            background-color: @answer-color-hover-opaque;
+            background-color: @answer-color-hover;
+          }
+        }
+        &.selected {
+          &:hover {
+            background-color: @choice-color-opaque;
+            background-color:@choice-color;
+          }
         }
       }
     }

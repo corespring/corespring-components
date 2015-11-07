@@ -17,16 +17,8 @@
           "description" : "Array containing the correct values for the component. These correspond to the right selections.",
           "type" : "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "string",
-                "description": "The tokenized text that represents a correct answer."
-              },
-              "index": {
-                "type": "number",
-                "description": "Index representing the position of the token relative to the passage."
-              }
+            "type": "number",
+            "description": "Zero starting index of the token that represents a response."
             }
           }
         }
@@ -69,17 +61,8 @@
           "description": "List of choices that can be or not be the correct answers",
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "string",
-                "description": "The tokenized text that represents a possible choice."
-              },
-              "index": {
-                "type": "number",
-                "description": "Index representing the position of the token relative to the passage."
-              }
-            }
+            "type": "number",
+            "description": "Zero starting index of the token that represents a possible response."
           }
         },
         "config": {
@@ -98,12 +81,12 @@
               "description": "A value indicating the selection unit in the passage",
               "enum" : ["word", "sentence", "phrase", "paragraph", "custom"]
             },
-            "xhtml": {
+            "passage": {
               "description": "A value that represents the HTML of the text passage",
               "type": "string"
             }
           },
-          "required": ["availability", "selectionUnit", "xhtml"]
+          "required": ["availability", "selectionUnit", "passage"]
         }
       },
       "required": ["config"]

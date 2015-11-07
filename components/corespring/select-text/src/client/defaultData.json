@@ -16,10 +16,10 @@
   ],
   "model": {
     "config" : {
+      "availability": "all",
       "label": "",
       "selectionUnit" : "word",
-      "availability": "all",
-      "xhtml": ""
+      "passage": ""
     },
     "choices" : []
   }
