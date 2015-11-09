@@ -1,13 +1,9 @@
 {
-  "title": "Plot Points",
-  "componentType": "corespring-point-intercept",
+  "title": "Graph Multiple Lines",
+  "componentType" : "corespring-multiple-line",
+  "weight" : 1,
   "minimumWidth": 500,
-  "correctResponse": [
-    "0,0",
-    "1,1",
-    "2,2",
-    "3,3"
-  ],
+  "correctResponse": [],
   "allowPartialScoring": false,
   "partialScoring" : [
     {}
@@ -17,19 +13,18 @@
     "partialFeedbackType": "default",
     "incorrectFeedbackType": "default"
   },
-  "model": {
+  "model" : {
     "config": {
       "graphTitle": "",
       "graphWidth": 500,
       "graphHeight": 500,
-      "maxPoints": "",
-      "labelsType": "present",
-      "pointLabels": [
-        "A",
-        "B",
-        "C",
-        "D"
-      ],
+      "sigfigs": -1,
+      "showCoordinates": true,
+      "showPointLabels": true,
+      "showInputs": true,
+      "showAxisLabels": true,
+      "showFeedback": true,
+      "exhibitOnly": false,
       "domainLabel": "",
       "domainMin": -10,
       "domainMax": 10,
@@ -44,12 +39,7 @@
       "rangeSnapValue": 1,
       "rangeLabelFrequency": 1,
       "rangeGraphPadding": 50,
-      "sigfigs": -1,
-      "showCoordinates": false,
-      "showPointLabels": true,
-      "showInputs": true,
-      "showAxisLabels": true,
-      "showFeedback": true
+      "lines": [{ "id": 1, "equation": "", "intialLine": "", "label": "", "colorIndex": 0 }]
     }
   }
 }

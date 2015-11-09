@@ -3,35 +3,9 @@
 var main = [
   'ServerLogic',
   'ChoiceTemplates',
+  'CanvasTemplates',
   'ComponentDefaultData',
-  function(ServerLogic, ChoiceTemplates, ComponentDefaultData) {
-
-    this.inline = function(type, value, body, attrs) {
-      return ['<label class="' + type + '-inline">',
-        '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
-        '</label>'
-      ].join('\n');
-    };
-
-    var labelWithInput = function(options) {
-      options.size = options.size || 3;
-      options.labelSize = options.labelSize || options.size;
-      options.labelClass = options.labelClass || "";
-      options.inputType = options.inputType || "text";
-      options.inputClass = options.inputClass || "default-input";
-      return [
-        '<label class="col-sm-' + options.labelSize+' '+options.labelClass+'">' + options.label + '</label>',
-        '<div class="col-sm-' + options.size + ' ' + options.inputClass + '">',
-        '  <input ',
-        '    type="' + options.inputType + '" ',
-        '    class="form-control" ',
-        '    ng-model="fullModel.model.config.' + options.modelKey + '" ',
-        options.placeholder ? ('placeholder="' + options.placeholder + '"') : '',
-        options.extraProperties,
-        '  />',
-        '</div>'
-      ].join('');
-    };
+  function(ServerLogic, ChoiceTemplates, CanvasTemplates, ComponentDefaultData) {
 
     var pointsBlock = [
       '<div class="row">',
@@ -81,125 +55,10 @@ var main = [
       '       </div>',
       '         <button class="btn btn-default" ng-click="addPoint()"><i class="fa fa-plus"></i>  Add Another Point</button>',
       '       </div>',
-
       '     </form>',
       '   </div>',
       '</div>'
     ].join('\n');
-
-    var graphAttributesBlock = [
-      '<div class="row">',
-      '  <div class="body col-md-8">',
-      '    <h3>Graph Attributes</h3>',
-      '    <p>Use this section to setup the graph area.</p>',
-      '    <form class="form-horizontal" role="form">',
-      '       <div class="config-form-row">',
-      '         <h4>Domain (X)</h4>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Minimum Value',
-        modelKey: 'domainMin',
-        inputType: "number",
-        placeholder: '{{defaults.domainMin}}' }),
-      labelWithInput({
-        label: 'Maximum Value',
-        modelKey: 'domainMax',
-        inputType: "number",
-        placeholder: '{{defaults.domainMax}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({ label: 'Tick Value:',
-        modelKey: 'domainStepValue',
-        inputType: "number",
-        placeholder: '{{defaults.domainStepValue}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Label',
-        modelKey: 'domainLabel',
-        placeholder: '{{defaults.domainLabel}}' }),
-      labelWithInput({
-        label: 'Label Frequency',
-        modelKey: 'domainLabelFrequency',
-        inputType: "number",
-        placeholder: '{{defaults.domainLabelFrequency}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <h4>Range (Y)</h4>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Minimum Value',
-        modelKey: 'rangeMin',
-        inputType: "number",
-        placeholder: '{{defaults.rangeMin}}' }),
-      labelWithInput({
-        label: 'Maximum Value',
-        modelKey: 'rangeMax',
-        inputType: "number",
-        placeholder: '{{defaults.rangeMax}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({ label: 'Tick Value:',
-        modelKey: 'rangeStepValue',
-        inputType: "number",
-        placeholder: '{{defaults.rangeStepValue}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({
-        label: 'Label',
-        modelKey: 'rangeLabel',
-        placeholder: "y" }),
-      labelWithInput({
-        label: 'Label Frequency',
-        modelKey: 'rangeLabelFrequency',
-        inputType: "number",
-        placeholder: '{{defaults.rangeLabelFrequency}}' }),
-      '       </div><br />',
-      '     </form>',
-      '  </div>',
-      '</div>'
-    ].join('\n');
-
-    var displayBlock = [
-      '  <div class="row">',
-      '    <div class="body col-md-8">',
-      '      <form class="form-horizontal" role="form" name="display">',
-      '        <h3>Display</h3>',
-      '        <div class="config-form-row">',
-      labelWithInput({
-        label: 'Width',
-        modelKey: 'graphWidth',
-        inputType: "number",
-        placeholder: '{{defaults.graphWidth}}'
-      }),
-      labelWithInput({
-        label: 'Height',
-        modelKey: 'graphHeight',
-        inputType: "number",
-        placeholder: '{{defaults.graphHeight}}'
-      }),
-      '       </div>',
-      '        <div class="config-form-row">',
-      '          <label class="col-sm-3">Add padding to graph</label>',
-      '          <div class="col-sm-3" ',
-      '            ng-class="{ \'has-error\': display.graphPadding.$error.min || display.graphPadding.$error.number }">',
-      '            <input type="number" name="graphPadding" ',
-      '              class="form-control" ',
-      '              ng-model="fullModel.model.config.graphPadding" ',
-      '              placeholder="{{defaults.graphPadding}}" ',
-      '              min="0" step="25" />',
-      '            <div class="inline-error-messages">',
-      '              <div class="inline-error-message" ng-show="display.graphPadding.$error.number">Please enter a valid number</div>',
-      '              <div class="inline-error-message" ng-show="display.graphPadding.$error.min">Please enter a positive number</div>',
-      '            </div>',
-      '          </div>',
-      '          <span class="row col-sm-1 input-number-label">%</span>',
-      '        </div>',
-      '      </form>',
-      '    </div>',
-      '  </div>'].join('\n');
 
     var feedback = [
       '<div class="row"><div class="col-md-8">',
@@ -236,6 +95,8 @@ var main = [
       link: function(scope, element, attrs) {
         scope.defaults = ComponentDefaultData.getDefaultData('corespring-point-intercept', 'model.config');
         ChoiceTemplates.extendScope(scope, 'corespring-point-intercept');
+        CanvasTemplates.extendScope(scope, 'corespring-point-intercept');
+
         var server = ServerLogic.load('corespring-point-intercept');
         scope.defaultCorrectFeedback = server.keys.DEFAULT_CORRECT_FEEDBACK;
         scope.defaultPartialFeedback = server.keys.DEFAULT_PARTIAL_FEEDBACK;
@@ -245,6 +106,7 @@ var main = [
             scope.fullModel = model;
             model.model = model.model || {};
             model.model.config = model.model.config || {};
+            scope.checkUndefinedProperties(model.model.config);
 
             var labels = (model.model.config.pointLabels || []);
 
@@ -307,23 +169,8 @@ var main = [
         }, true);
 
         scope.resetDefaults = function() {
-          var defaults = scope.defaults;
-
-          function reset(property, value) {
-            scope.fullModel.model.config[property] = value;
-          }
-
-          reset('graphWidth', defaults.graphWidth);
-          reset('graphHeight', defaults.graphHeight);
-          reset('graphPadding', defaults.graphPadding);
-          reset('domainMin', defaults.domainMin);
-          reset('domainMax', defaults.domainMax);
-          reset('domainLabel', defaults.domainLabel);
-          reset('rangeMin', defaults.rangeMin);
-          reset('rangeMax', defaults.rangeMax);
-          reset('rangeLabel', defaults.rangeLabel);
-          reset('tickLabelFrequency', defaults.tickLabelFrequency);
-          reset('sigfigs', defaults.sigfigs);
+          scope.resetCanvasGraphAttributes();
+          scope.resetCanvasDisplayAttributes();
         };
 
       },
@@ -336,9 +183,9 @@ var main = [
         '      </p>',
                pointsBlock,
         '      <hr />',
-               graphAttributesBlock,
-        '      <hr />',
-               displayBlock,
+               CanvasTemplates.configGraph(),
+        '    <hr />',
+               CanvasTemplates.configDisplay(),
         '      <div class="row">',
         '        <div class="col-md-8">',
         '          <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',

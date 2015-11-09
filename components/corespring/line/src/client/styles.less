@@ -7,23 +7,6 @@
     background-color: #ffffff;
     -ms-touch-action: none;
   }
-
-  .axis {
-    position: absolute;
-    width: auto;
-    text-align: center;
-    margin-top: -5px;
-    height: 20px;
-    white-space: nowrap;
-    &.domain-axis {
-      transform: rotate(90deg);
-      -ms-transform: rotate(90deg); /* IE 9 */
-      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-    }
-    &.range-axis {
-      top: -15px!important;
-    }
-  }
   .JXGtext {
     background-color: transparent;
     font-family: Arial, Helvetica, Geneva;
@@ -69,7 +52,8 @@
       margin-left: auto;
       margin-right: auto;
       position: relative;
-      margin-top: 30px;
+      margin-top: 50px;
+      margin-bottom: 10px;
     }
   }
   .solution-panel.panelVisible {
@@ -91,9 +75,10 @@
     }
   }
   .graph-container {
-    margin-top: 30px;
+    margin-top: 50px;
     margin-right: auto;
     margin-left: auto;
+    margin-bottom: 20px;
     position: relative;
   }
   .graph-controls {
@@ -153,9 +138,6 @@
     font-style: italic;
     margin-bottom: 10px;
   }
-  .default-input {
-    max-width: 120px;
-  }
   .reset-defaults {
     margin: 20px 0 20px 0;
     font-style: italic;
@@ -166,12 +148,18 @@
     padding-top: 7px;
   }
 
-  .inline-error-messages {
-    min-height: 35px;
-  }
-
   .inline-error-message {
-    color: red;
+    display: inline-block;
+    position: absolute;
+    left: 115px;
+    top: 4px;
+    height: 26px;
+    color: white;
+    background-color: #B33A3A;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
     font-size: 12px;
+    white-space: nowrap;
   }
 }

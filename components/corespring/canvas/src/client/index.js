@@ -44,8 +44,8 @@ exports.service = ['$log',
         }
       }
 
-      var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.graphPadding / 100 : 0.5;
-      var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.graphPadding / 100 : 0.5;
+      var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.domain.graphPadding / 100 : 0.5;
+      var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.range.graphPadding / 100 : 0.5;
 
       this.board = JXG.JSXGraph.initBoard(id, {
         boundingbox: [
@@ -75,12 +75,13 @@ exports.service = ['$log',
       this.points = [];
       this.texts = [];
       this.shapes = [];
-      this.domainScale = attrs.domain.stepValue;
-      this.rangeScale = attrs.range.stepValue;
-      this.showLabels = attrs.showLabels === "true";
-      this.showCoordinates = attrs.showCoordinates === "true";
-      this.showPoints = _.isUndefined(attrs.showPoints) ? "true" :
-        !(attrs.showPoints === 'false' || attrs.showPoints === false);
+      this.domainScale = attrs.domain.snapValue;
+      this.rangeScale = attrs.range.snapValue;
+
+      this.showLabels = attrs.showLabels;
+      this.showCoordinates = attrs.showCoordinates;
+      this.showPointLabels = attrs.showPointLabels;
+      this.showPoints = attrs.showPoints;
       if (attrs.pointLabels) {
         this.pointLabels = attrs.pointLabels;
       } else {
@@ -106,22 +107,29 @@ exports.service = ['$log',
       });
     };
 
+    Canvas.prototype.getShape = function(customId) {
+      return _.find(this.shapes, function(s) {
+        return s.customId === customId;
+      });
+    };
+
     Canvas.prototype.pointCollision = function(coords) {
       var points = this.points,
-        scale = this.scale;
+        xScale = this.domainScale,
+        yScale = this.rangeScale;
 
-      function min(coord) {
-        return coord - scale;
+      function min(coord, scale) {
+        return coord - (scale / 2);
       }
 
-      function max(coord) {
-        return coord + scale;
+      function max(coord, scale) {
+        return coord + (scale / 2);
       }
 
       for (var i = 0; i < points.length; i++) {
         var point = points[i];
         //find area where coords might land that would constitute collision with point
-        if (point.X() >= min(coords.x) && point.X() <= max(coords.x) && point.Y() >= min(coords.y) && point.Y() <= max(coords.y)) {
+        if (point.X() >= min(coords.x, xScale) && point.X() <= max(coords.x, xScale) && point.Y() >= min(coords.y, yScale) && point.Y() <= max(coords.y, yScale)) {
           return point;
         }
       }
@@ -129,18 +137,22 @@ exports.service = ['$log',
     };
 
     Canvas.prototype.addPoint = function(coords, ptName, ptOptions) {
-      var pointAttrs = _.defaults({
-        strokeColor: this.showPoints ? "blue" : "transparent",
-        fillColor: this.showPoints ? "blue" : "transparent",
+      var pointAttrs = _.extend({
+        strokeColor: "blue",
+        fillColor: "blue",
         snapToGrid: true,
         snapSizeX: this.domainScale,
         snapSizeY: this.rangeScale,
         showInfobox: false,
-        withLabel: false
+        withLabel: false,
+        size: 3,
+        visible: this.showPoints
       }, ptOptions);
+
       var point = this.board.create('point', [coords.x, coords.y], pointAttrs);
       point.canvasIndex = this.points.length;
       this.points.push(point);
+
       if (this.showLabels) {
         var name = (function(labels, points) {
           if (ptName) {
@@ -171,11 +183,12 @@ exports.service = ['$log',
             return (Math.round(point.Y() * 100) / 100) + offset.usrCoords[2];
           },
           function() {
-            return name + (that.showCoordinates ? (' (' + (Math.round(point.X() * 100) / 100) + ',' + (Math.round(point.Y() * 100) / 100) + ')') : '');
+            return ((that.showPointLabels) ? name+ ' ' : '') + (that.showCoordinates ? ('(' + (Math.round(point.X() * 100) / 100) + ',' + (Math.round(point.Y() * 100) / 100) + ')') : '');
           }], {
           fixed: true
         });
         this.texts.push(text);
+        point.text = text;
       }
       return point;
     };
@@ -195,50 +208,79 @@ exports.service = ['$log',
       }
     };
 
+    Canvas.prototype.removePointByName = function(pointName) {
+      for (var i = 0; i < this.points.length; i++) {
+        if (this.points[i].name === pointName) {
+          this.board.removeObject(this.points[i].text);
+          this.board.removeObject(this.points[i]);
+          this.points.splice(i, 1);
+        }
+      }
+    };
+
     Canvas.prototype.on = function(event, handler) {
       return this.board.on(event, handler);
     };
 
-    Canvas.prototype.makeLine = function(pts, label) {
+    Canvas.prototype.makeLine = function(pts, options) {
       var shapeArgs = {
-        strokeColor: '#0000ff',
-        strokeWidth: 2,
+        strokeColor: options.color ? options.color : '#0000ff',
+        highlightStrokeColor: '#9C9C9C',
+        strokeWidth: 3,
         fixed: true,
         firstArrow: true,
         lastArrow: true,
-        withLabel: true,
-        name: label
+        withLabel: options.label,
+        label: { strokeColor: options.color ? options.color : '#0000ff', fontSize: 14 },
+        name: options.label
       };
 
       var shape = this.board.create('line', pts, shapeArgs);
+      shape.customId = options.id;
       this.shapes.push(shape);
       return shape;
     };
 
-    Canvas.prototype.makeCurve = function(fn) {
+    Canvas.prototype.makeCurve = function(fn, options) {
       var shape = this.board.create('functiongraph', [fn], {
-        strokeColor: '#0000ff',
-        strokeWidth: 2,
-        fixed: true
+        strokeColor: options.color ? options.color : '#0000ff',
+        highlightStrokeColor: '#9C9C9C',
+        strokeWidth: 3,
+        fixed: true,
+        withLabel: options.label,
+        label: { strokeColor: options.color ? options.color : '#0000ff', fontSize: 14 },
+        name: options.label
       });
+      shape.customId = options.id;
       this.shapes.push(shape);
       return shape;
     };
 
     Canvas.prototype.popShape = function() {
-      return this.board.removeObject(this.shapes.splice(0, 1));
+      return this.board.removeObject(this.shapes.splice(this.shapes.length - 1, 1));
     };
 
-    Canvas.prototype.changePointColor = function(point, color) {
+    Canvas.prototype.removeShapeByCustomId = function(customId) {
+      for (var i = 0; i < this.shapes.length; i++) {
+        if (this.shapes[i].customId === customId) {
+          return this.board.removeObject(this.shapes.splice(i, 1));
+        }
+      }
+    };
+
+    Canvas.prototype.changePointColor = function(point, color, symbol) {
       point.setAttribute({
         fillColor: color,
         strokeColor: color
       });
-      var index = _.indexOf(_.map(this.points, function(p) {
-        return p.id;
-      }), point.id);
-      if (this.texts[index]) { //check to see if exists as labels may be disabled
-        this.texts[index].setAttribute({
+      if(symbol) {
+        point.setAttribute({
+          face: symbol,
+          size: (symbol === 'square' || symbol === 'circle') ? 3 : 5
+        });
+      }
+      if (point.text) {
+        point.text.setAttribute({
           strokeColor: color
         });
       }

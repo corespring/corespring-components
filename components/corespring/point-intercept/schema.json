@@ -90,28 +90,22 @@
                             "id": "#domainStepValue",
                             "required": false
                         },
+                        "domainSnapValue": {
+                          "type": "string",
+                          "description": "The snap value to use on domain axis",
+                          "id": "#domainSnapValue",
+                          "required": false
+                        },
                         "domainLabelFrequency": {
                             "description": "Specifies the interval of ticks shown on the x axis",
                             "type": "integer",
                             "id": "#domainLabelFrequency",
                             "required": false
                         }
-                        "graphHeight": {
+                        "domainGraphPadding": {
                             "type": "integer",
-                            "description": "The height in pixels that should be used to display the graph",
-                            "id": "#graphHeight",
-                            "required": false
-                        },
-                        "graphWidth": {
-                            "type": "integer",
-                            "description": "The width in pixels that should be used to display the graph",
-                            "id": "#graphWidth",
-                            "required": false
-                        },
-                        "graphPadding": {
-                            "type": "integer",
-                            "description": "The padding in tick percentage that should be used to display the graph",
-                            "id": "#graphPadding",
+                            "description": "The padding in tick percentage that should be used to display the domain",
+                            "id": "#domainGraphPadding",
                             "required": false
                         },
                         "rangeLabel": {
@@ -138,10 +132,40 @@
                             "id": "#rangeStepValue",
                             "required": false
                         },
+                        "rangeSnapValue": {
+                          "type": "string",
+                          "description": "The snap value to use on the range axis",
+                          "id": "#rangeSnapValue",
+                          "required": false
+                        },
                         "rangeLabelFrequency": {
                             "description": "Specifies the interval of ticks shown on the y axis",
                             "type": "integer",
                             "id": "#rangeLabelFrequency",
+                            "required": false
+                        },
+                        "rangeGraphPadding": {
+                            "type": "integer",
+                            "description": "The padding in tick percentage that should be used to display the range",
+                            "id": "#rangeGraphPadding",
+                            "required": false
+                        },
+                        "graphTitle": {
+                            "type": "string",
+                            "description": "The title to display for the graph",
+                            "id": "#graphTitle",
+                            "required": false
+                        },
+                        "graphHeight": {
+                            "type": "integer",
+                            "description": "The height in pixels that should be used to display the graph",
+                            "id": "#graphHeight",
+                            "required": false
+                        },
+                        "graphWidth": {
+                            "type": "integer",
+                            "description": "The width in pixels that should be used to display the graph",
+                            "id": "#graphWidth",
                             "required": false
                         },
                         "showCoordinates": {
@@ -150,10 +174,22 @@
                             "id": "#showCoordinates",
                             "required": false
                         },
+                        "showPointLabels": {
+                          "description": "Display labels for the name of points placed on the graph",
+                          "type": "boolean",
+                          "id": "#showPointLabels",
+                          "required": false
+                        },
                         "showInputs": {
                             "description": "When in exhibit mode, whether to show the points on the line",
                             "type": "boolean",
                             "id": "#showInputs",
+                            "required": false
+                        },
+                        "showAxisLabels": {
+                            "description": "Display x and y labels for domain and range axes respectively",
+                            "type": "boolean",
+                            "id": "#showAxisLabels",
                             "required": false
                         },
                         "labelsType": {

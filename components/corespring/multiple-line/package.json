@@ -1,0 +1,48 @@
+{
+  "dependencies": {
+    "client": {
+      "angular-bootstrap": {
+        "angular-module": "ui.bootstrap",
+        "file": "ui-bootstrap-tpls.min.js",
+        "version": "~0.10.0"
+      },
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      }
+    }
+  },
+  "libraries": [
+    {
+      "name": "line-utils",
+      "organization": "corespring"
+    },
+    {
+      "name": "function-utils",
+      "organization": "corespring"
+    },
+    {
+      "name": "server-shared",
+      "organization": "corespring"
+    },
+    {
+      "name": "canvas",
+      "organization": "corespring"
+    },
+    {
+      "name": "widgets",
+      "organization": "corespring"
+    },
+    {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    }
+  ],
+  "name": "multiple-line",
+  "organization": "corespring",
+  "released": true,
+  "title": "Graph Multiple Lines",
+  "titleGroup": "Mathematics"
+}

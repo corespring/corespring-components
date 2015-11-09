@@ -19,19 +19,13 @@ exports.isScoreable = function(question, answer, outcome) {
     return true;
   }
 
-  return !question.model.config.exhibitOnly; 
+  return !question.model.config.exhibitOnly;
 };
 
 exports.createOutcome = function(question, answer, settings) {
 
   function validAnswer(answer) {
-    function hasPoints(answer) {
-      return (answer !== undefined && answer !== null) && answer.A !== undefined && answer.B !== undefined;
-    }
-    function hasXY(point) {
-      return point.x !== undefined && point.y !== undefined;
-    }
-    return hasPoints(answer) && hasXY(answer.A) && hasXY(answer.B);
+    return (!_.isUndefined(answer) && !_.isNull(answer) && !_.isEmpty(answer));
   }
 
   if (!question || _.isEmpty(question)){
@@ -49,7 +43,7 @@ exports.createOutcome = function(question, answer, settings) {
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 
   if (!validAnswer(answer)) {
-    var answerCorrectness = answer.A === undefined && answer.B === undefined ? 'warning' : 'incorrect';
+    var answerCorrectness = _.isUndefined(answer) || _.isEmpty(answer) ? 'warning' : 'incorrect';
     return {
       correctness: answerCorrectness,
       score: 0,
@@ -57,17 +51,13 @@ exports.createOutcome = function(question, answer, settings) {
     };
   }
 
-  var slope = (answer.B.y - answer.A.y) / (answer.B.x - answer.A.x);
-  var yintercept = answer.A.y - (slope * answer.A.x);
-  var eq = slope + "x+" + yintercept;
-
   var options = {};
   options.variable = (question.correctResponse.vars && question.correctResponse.vars.split(",")[0]) || 'x';
   options.sigfigs = question.correctResponse.sigfigs || 3;
 
   var correctResponse = question.correctResponse;
   var correctFunction = question.correctResponse.split("=")[1];
-  var isCorrect = functionUtils.isFunctionEqual(eq, correctFunction, options);
+  var isCorrect = functionUtils.isFunctionEqual(answer, correctFunction, options);
 
   var res = {};
 
@@ -77,7 +67,7 @@ exports.createOutcome = function(question, answer, settings) {
       score: isCorrect ? 1 : 0,
       correctResponse: {
         equation: correctResponse,
-        expression: functionUtils.expressionize(correctResponse, 'x')
+        expression: functionUtils.expressionize(correctFunction, 'x')
       },
       comments: question.comments
     };
