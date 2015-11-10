@@ -133,6 +133,19 @@ var main = [
         }).value();
       };
 
+      scope.incorrectChoices = function() {
+        var correctIds = (scope.response && scope.response.correctResponse) ?
+          _.pluck(scope.response.correctResponse, 'id') : [];
+
+        return _.filter(scope.model.choices, function(choice) {
+          if (!_.isEmpty(correctIds)) {
+            return !_.contains(correctIds, choice.id);
+          } else {
+            return false;
+          }
+        });
+      };
+
       scope.getPlaceholderChoices = function() {
         return _.reject(scope.model.choices, function(c) {
           return !_.isUndefined(_.find(scope.choices, idEquals(c)));
@@ -304,26 +317,37 @@ var main = [
 
     };
 
-    var choices = function(positons) {
+    var choices = function(positons, correctness) {
+      correctness = correctness || 'all';
+      var choices = (correctness === 'incorrect' ?
+        [
+          '<div class="choice-wrapper" ng-repeat="choice in incorrectChoices()">',
+          '  <div class="choice" ng-bind-html-unsafe="choice.label">',
+          '  </div>',
+          '</div>'
+        ] : [
+          '<div class="choice-wrapper" ng-repeat="choice in choices">',
+          '  <div class="choice"',
+          '       data-drag="editable"',
+          '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
+          '       data-jqyoui-options="draggableJquiOptions"',
+          '       ng-bind-html-unsafe="choice.label">',
+          '  </div>',
+          '</div>',
+          '<div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
+          '  <div class="choice placeholder"',
+          '       ng-bind-html-unsafe="choice.label">',
+          '  </div>',
+          '</div>'
+        ]).join('');
+
       return [
         '<div ng-if="model.config.choiceAreaPosition == \'' + positons[0] + '\' || model.config.choiceAreaPosition == \'' + positons[1] + '\'"',
         '       class="choices {{model.config.choiceAreaPosition}}"',
         '       data-drop="true"',
         '       jqyoui-droppable="{onDrop: \'onChoiceAreaDrop()\'}"',
         '       data-jqyoui-options="droppableJquiOptions">',
-        '  <div class="choice-wrapper" ng-repeat="choice in choices">',
-        '    <div class="choice"',
-        '         data-drag="editable"',
-        '         jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
-        '         data-jqyoui-options="draggableJquiOptions"',
-        '         ng-bind-html-unsafe="choice.label">',
-        '    </div>',
-        '  </div>',
-        '  <div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
-        '    <div class="choice placeholder"',
-        '         ng-bind-html-unsafe="choice.label">',
-        '    </div>',
-        '  </div>',
+        choices,
         '  <div class="clearfix"></div>',
         '</div>'
       ].join('');
@@ -392,7 +416,9 @@ var main = [
         correctAnswer,
         '  </div>',
         '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
+        choices(['left', 'top'], 'incorrect'),
         correctAnswer,
+        choices(['bottom', 'right'], 'incorrect'),
         '  </div>',
         '</div>'
       ].join("\n")
