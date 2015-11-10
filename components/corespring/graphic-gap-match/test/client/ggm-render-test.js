@@ -319,19 +319,65 @@ describe('corespring:graphic-gap-match:render', function() {
     });
   });
 
-  describe('instructor data', function() {
-    it('should set up interaction with correct answer', function() {
+  describe('incorrectChoices', function() {
+
+    beforeEach(function() {
       container.elements['1'].setDataAndSession(testModel);
-      spyOn(container.elements['1'],'setResponse');
-      container.elements['1'].setInstructorData({correctResponse:  [
-        {"id": "c1", "hotspot": "h1"},
-        {"id": "c2", "hotspot": "h2"}
-      ]});
+    });
+
+    it('should return empty (as correct response not set)', function() {
+      expect(scope.incorrectChoices()).toEqual([]);
+    });
+
+  });
+
+  describe('instructor data', function() {
+
+    var correctResponse = [
+      {"id": "c1", "hotspot": "h1"},
+      {"id": "c2", "hotspot": "h2"}
+    ];
+
+    var incorrectChoices = [
+      {"id" : "c3"},
+      {"id" : "c4"}
+    ];
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse').and.callThrough();
+      container.elements['1'].setInstructorData({correctResponse: correctResponse});
+      scope.model.choices = correctResponse.concat(incorrectChoices);
+    });
+
+    it('should set up interaction with correct answer', function() {
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         correctness: 'instructor',
-        correctResponse: [{id: 'c1', hotspot: 'h1'}, {id: 'c2', hotspot: 'h2'}]
+        correctResponse: correctResponse
       });
     });
+
+    describe('incorrectChoices', function() {
+
+      it('should return choices not set as correct response', function() {
+        expect(scope.incorrectChoices()).toEqual(incorrectChoices);
+      });
+
+      describe('there are no correct choices', function() {
+
+        beforeEach(function() {
+          container.elements['1'].setInstructorData({correctResponse: []});
+          scope.model.choices = correctResponse.concat(incorrectChoices);
+        });
+
+        it('should return empty', function() {
+          expect(scope.incorrectChoices()).toEqual([]);
+        });
+
+      });
+
+    });
+
   });
 
   it('should implement containerBridge', function() {
