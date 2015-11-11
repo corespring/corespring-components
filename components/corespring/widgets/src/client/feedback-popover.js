@@ -39,6 +39,7 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
             popoverClass = 'instructor';
           }
 
+          console.log("content = ",content);
           $(element).find('.math-prerender').html(content);
           MathJaxService.parseDomForMath(0, $(element).find('.math-prerender')[0]);
           $(element).popover('destroy');
@@ -52,6 +53,7 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
                 '</div>'
               ].join('\n'),
               content: function() {
+                console.log("Returning content: ", $(element).find('.math-prerender'));
                 return scope.originalContent || $(element).find('.math-prerender').html();
               },
               placement: function(popover, sender) {
