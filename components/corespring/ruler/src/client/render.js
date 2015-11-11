@@ -68,7 +68,6 @@ var main = [
               units: parseInt(rulerConfig.length, 10),
               movablePointColor: arrowFillColor
             });
-            element.find('.cs-ruler-widget').height(0).width(0); // Prevents the ruler container of blocking underlying content
           }, 100);
         }
       };
