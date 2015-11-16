@@ -2,6 +2,72 @@
 
 .view-multiple-choice {
 
+  font-family: 'Kameron' !important;
+  font-style: normal;
+
+  .icon-toggle {
+    display: table;
+    cursor: pointer;
+    .icon-holder {
+      display: table-cell;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      span {
+        position: absolute;
+      }
+    }
+    .toggle-label {
+      display: table-cell;
+      vertical-align: middle;
+      padding-left: 10px;
+    }
+    .show-state, .hide-state {
+      width: 20px;
+      height: 20px;
+    }
+
+    .hide-state.ng-leave-active {
+      opacity: 0;
+      -webkit-transform: translateX(-20px);
+    }
+    .hide-state.ng-leave {
+      transition:0.5s linear all;
+    }
+    .hide-state.ng-enter {
+      opacity: 0;
+      -webkit-transform: translateX(-20px);
+      transition:0.5s linear all;
+    }
+    .hide-state.ng-enter.ng-enter-active {
+      opacity: 1;
+      -webkit-transform: translateX(0);
+    }
+    .show-state.ng-leave {
+      opacity: 1;
+      -webkit-transform: translateX(0);
+      transition:0.5s linear all;
+    }
+    .show-state.ng-leave.ng-leave-active {
+      opacity: 0;
+      -webkit-transform: translateX(-20px);
+    }
+
+    .show-state.ng-enter {
+      opacity: 0;
+      -webkit-transform: translateX(-20px);
+      transition:0.5s linear all;
+    }
+    .show-state.ng-enter.ng-enter-active {
+      opacity: 1;
+      -webkit-transform: translateX(0);
+    }
+  }
+  .icon-toggle-correct {
+    padding-left: 36px;
+  }
+
+
   img {
     max-width: 100%;
     width: 100%;
@@ -217,13 +283,12 @@
     .radio-choice {
       display: inline-block;
       vertical-align: middle;
-      height: 31px;
+      height: 20px;
       .radio-button {
-        line-height: normal;
+        line-height: 0;
         .icon-holder {
           position: relative;
-          width: 31px;
-          height: 31px;
+          width: 20px;
           .icon {
             position: absolute;
 
@@ -245,7 +310,7 @@
 
 
         svg {
-          width: 31px;
+          width: 20px;
           .feedback {
             visibility: hidden;
           }
@@ -265,10 +330,10 @@
   }
 
   .choice-feedback {
-    line-height: normal;
+    line-height: 0px;
     svg {
-      height: 31px;
-      width: 31px;
+      height: 20px;
+      width: 20px;
     }
   }
   .choice-label {
@@ -287,8 +352,7 @@
     }
   }
   .choice-letter {
-    font-weight: normal;
-    font-size: 32px;
+    font-weight: bold;
     &.none {
       display: none;
     }
@@ -307,43 +371,6 @@
     color: #428bca;
     cursor: pointer;
   }
-  .correct-answer-toggle {
-    display: table;
-    cursor: pointer;
-    .icon-holder {
-      display: table-cell;
-      position: relative;
-      width: 31px;
-      height: 31px;
-      span {
-        position: absolute;
-      }
-    }
-    .toggle-label {
-      display: table-cell;
-      vertical-align: middle;
-      padding-left: 10px;
-    }
-    .hide-state.ng-enter {
-      opacity: 0;
-      -webkit-transform: translateX(-20px);
-      transition:0.5s linear all;
-    }
-    .hide-state.ng-enter.ng-enter-active {
-      opacity: 1;
-      -webkit-transform: translateX(0);
-    }
-    .show-state.ng-leave {
-      opacity: 1;
-      -webkit-transform: translateX(0);
-      transition:0.5s linear all;
-    }
-    .show-state.ng-leave.ng-leave-active {
-      opacity: 0;
-      -webkit-transform: translateX(-20px);
-    }
-
-  }
 
   .rightAlign {
     .choice-label {
@@ -355,8 +382,10 @@
   }
 
   .feedback-icon {
-    height: 31px;
-    display: none;
+    opacity: 0;
+    transition:0.5s linear all;
+    -webkit-transform: translateX(20px);
+
     &.hasFeedback {
       cursor: pointer;
     }
@@ -364,7 +393,9 @@
 
   &.correct, &.incorrect {
     .feedback-icon {
-      display: block;
+      opacity: 1;
+      width: 20px;
+      -webkit-transform: translateX(0);
     }
   }
 
@@ -379,11 +410,29 @@
     margin-top: 10px;
   }
 
-  .empty-response {
-    background-color: #CCCCCC;
-    color: #333333;
-    padding: 20px;
+  .empty-response-holder {
     margin: 20px;
+    .empty-response {
+      background-color: #CCCCCC;
+      color: #333333;
+      padding: 20px;
+      display: table;
+      width: 100%;
+      .empty-response-icon {
+        display: table-cell;
+        width: 40px;
+        line-height: 0px;
+        vertical-align: middle;
+        svg {
+          width: 31px;
+          height: 31px;
+        }
+      }
+      .empty-response-label {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
   }
 
   .summaryFeedbackPanel {

@@ -281,11 +281,7 @@ var main = [
       });
 
       scope.$watch('bridge.answerVisible', function(n) {
-        if (n) {
-          $(element).find('.answer-collapse').slideDown(400);
-        } else {
-          $(element).find('.answer-collapse').slideUp(400);
-        }
+        scope.bridge.viewMode = n ? 'correct' : 'normal';
       });
 
       scope.choiceClass = function(o) {
@@ -320,7 +316,7 @@ var main = [
 
     var verticalTemplate = [
       '<div class="choices-container">',
-      '  <div correct-answer-toggle ng-model="bridge" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'"></div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
@@ -352,10 +348,17 @@ var main = [
       '    </div>',
       '  </div>',
       '</div>',
-      '<div class="answer-holder" ng-show="response && response.correctness === \'warning\'">',
+      '<div class="empty-response-holder" ng-show="response && response.correctness === \'warning\'">',
       '  <div class="empty-response">',
-      '    ',
-      '    {{feedback && feedback.message ? feedback.message : \'Error\'}}',
+      '    <span class="empty-response-icon">',
+      '      <svg viewBox="-125 129 36 32">',
+      '      <polygon fill="#464146" points="-115.9,130 -124,138.1 -124,149.7 -115.9,158 -104.3,158 -96,149.7 -96,138.1 -104.3,130 				"/>',
+      '      <path fill="#ffffff" d="M-107.6,150.2h-4.8c-0.8,0-1.4-0.6-1.4-1.4v0c0-0.8,0.6-1.4,1.4-1.4h4.8c0.8,0,1.4,0.6,1.4,1.4v0C-106.2,149.6-106.8,150.2-107.6,150.2z"/>',
+      '      <rect x="-107.8" y="138.5" fill="#ffffff" width="3.5" height="4.4"/>',
+      '      <rect x="-115.7" y="138.5" fill="#ffffff" width="3.5" height="4.4"/>',
+      '      </svg>',
+      '    </span>',
+      '    <span class="empty-response-label">{{feedback && feedback.message ? feedback.message : \'Error\'}}</span>',
       '  </div>',
       '</div>'
 
@@ -369,24 +372,24 @@ var main = [
       template: [
         '<div class="view-multiple-choice" ng-class="response.correctness">',
         verticalTemplate,
-        '  <div class="summaryFeedbackPanel fade in ng-hide" ng-show="response.comments">',
-        '    <div class="">',
-        '      <div class="panel-group">',
-        '        <div class="panel panel-default">',
-        '          <div class="panel-heading">',
-        '            <h4 class="panel-title">',
-        '              <a class="learn-more-link" ng-click="panelOpen = !panelOpen">',
-        '              <i class="learnMoreIcon fa fa-lightbulb-o"></i>Learn More',
-        '              </a>',
-        '            </h4>',
-        '          </div>',
-        '          <div class="panel-collapse collapse">',
-        '            <div class="panel-body" ng-bind-html-unsafe="response.comments"></div>',
-        '          </div>',
-        '        </div>',
-        '      </div>',
-        '    </div>',
-        '  </div>',
+        //'  <div class="summaryFeedbackPanel fade in ng-hide" ng-show="response.comments">',
+        //'    <div class="">',
+        //'      <div class="panel-group">',
+        //'        <div class="panel panel-default">',
+        //'          <div class="panel-heading">',
+        //'            <h4 class="panel-title">',
+        //'              <a class="learn-more-link" ng-click="panelOpen = !panelOpen">',
+        //'              <i class="learnMoreIcon fa fa-lightbulb-o"></i>Learn More',
+        //'              </a>',
+        //'            </h4>',
+        //'          </div>',
+        //'          <div class="panel-collapse collapse">',
+        //'            <div class="panel-body" ng-bind-html-unsafe="response.comments"></div>',
+        //'          </div>',
+        //'        </div>',
+        //'      </div>',
+        //'    </div>',
+        //'  </div>',
         '</div>'
       ].join("\n")
 
@@ -405,10 +408,10 @@ var radioButton = ['$sce',
       template: [
         '<div class="radio-button">',
         '  <div class="icon-holder" >',
-        '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" style="width: 31px; height: 31px" ng-bind-html="glyphs[\'ready\']"></div>',
-        '    <div class="icon" ng-if="active == \'muted\'" style="width: 31px; height: 31px" ng-bind-html="glyphs[active]"></div>',
-        '    <div class="icon" ng-if="active == \'correct\'" style="width: 31px; height: 31px" ng-bind-html="glyphs[active]"></div>',
-        '    <div class="icon" ng-if="active == \'incorrect\'" style="width: 31px; height: 31px" ng-bind-html="glyphs[active]"></div>',
+        '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" ng-bind-html="glyphs[\'ready\']"></div>',
+        '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[active]"></div>',
+        '    <div class="icon" ng-if="active == \'correct\'"  ng-bind-html="glyphs[active]"></div>',
+        '    <div class="icon" ng-if="active == \'incorrect\'"  ng-bind-html="glyphs[active]"></div>',
         '  </div>',
         '</div>'
       ].join("\n"),
@@ -454,30 +457,30 @@ var radioButton = ['$sce',
             $scope.active = 'ready';
           }
         });
-
       }
     }
   }
 ];
 
-var correctAnswerToggle = ['$sce',
+var iconToggle = ['$sce',
   function($sce) {
     return {
       scope: {
-        ngModel: "="
+        ngModel: "=",
+        iconName: "@"
       },
       template: [
-        '<a ng-click="toggleCorrect()" class="correct-answer-toggle">',
+        '<a ng-click="toggleCorrect()" class="icon-toggle">',
         '  <div class="icon-holder">',
-        '    <span class="show-state" ng-if="active == \'show\'" style="width: 31px; height: 31px" ng-bind-html="glyphs[\'show\']"></span>',
-        '    <span class="hide-state" ng-if="active == \'hide\'" style="width: 31px; height: 31px" ng-bind-html="glyphs[\'hide\']"></span>',
+        '    <span class="show-state" ng-if="active == \'show\'" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
+        '    <span class="hide-state" ng-if="active == \'hide\'" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
         '  </div>',
-        '  <span class="toggle-label">{{showHide[active]}} correct</span>',
+        '  <span class="toggle-label">{{showHide[active]}} correct answer</span>',
         '</a>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
         $scope.glyphs = _.mapValues({
-          show: [
+          "show-correct": [
             '<svg viewBox="-129.5 127 34 35">',
             '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
             '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
@@ -486,11 +489,29 @@ var correctAnswerToggle = ['$sce',
             '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
             '</svg>'
           ].join(''),
-          hide: [
-            '<svg viewBox="-129.5 127 34 35">',
-            '<circle fill="#BCE2FF" cx="-114.2" cy="143.5" r="14"/>',
-            '<path fill="#BCE2FF" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-            '<polygon fill="#FFFFFF" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+          "hide-correct": [
+            '<svg viewBox="-283 359 34 35">',
+            '<circle class="st0" fill="#BCE2FF" cx="-266" cy="375.9" r="14"/>',
+            '<path class="st0" fill="#BCE2FF" d="M-280.5,375.9c0-8,6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5s-6.5,14.5-14.5,14.5S-280.5,383.9-280.5,375.9zM-279.5,375.9c0,7.4,6.1,13.5,13.5,13.5c7.4,0,13.5-6.1,13.5-13.5s-6.1-13.5-13.5-13.5C-273.4,362.4-279.5,368.5-279.5,375.9z" />',
+            '<polygon class="st1" fill="#FFFFFF" points="-265.4,383.1 -258.6,377.2 -261.2,374.2 -264.3,376.9 -268.9,368.7 -272.4,370.6 				"/>',
+            '</svg>'
+          ].join(''),
+          "show-learnMore": [
+            '<svg viewBox="-135 129 16 31">',
+            '<path fill="#D0CAC5" stroke="#E6E3E0" class="st0" d="M-120.7,142.4c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-121.6,146-120.7,144.3-120.7,142.4z"/>',
+            '<path fill="#D0CAC5" stroke="#E6E3E0" class="st0" d="M-124.4,154.3h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-123.6,153.9-123.9,154.3-124.4,154.3z"/>',
+            '<path fill="#B3ABA4" stroke="#CDC7C2" class="st1" d="M-121.3,141.8c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-122.2,145.3-121.3,143.7-121.3,141.8z"/>',
+            '<path fill="#B3ABA4" stroke="#CDC7C2" class="st1" d="M-125,153.7h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-124.2,153.3-124.6,153.7-125,153.7z"/>',
+            '<path fill="#1A9CFF" class="st2" d="M-122,141.1c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-122.8,144.7-122,143-122,141.1z"/>',
+            '<path fill="#1A9CFF" class="st2" d="M-125.7,153h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-124.9,152.7-125.2,153-125.7,153z"/>',
+            '<path fill="#BCE2FF" class="st3" d="M-130.4,142.1c0-2.1,1.7-3.9,3.9-3.9c0.3,0,0.5,0,0.8,0.1c-0.6-0.8-1.5-1.3-2.6-1.3c-1.8,0-3.3,1.5-3.3,3.3c0,1.1,0.5,2,1.3,2.6C-130.4,142.6-130.4,142.4-130.4,142.1z"/>',
+            '</svg>'
+          ].join(''),
+          "hide-learnMore": [
+            '<svg viewBox="-135 129 16 32">',
+            '<path fill="#6696AF" class="st0" d="M-122,141.1c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-122.8,144.7-122,143-122,141.1z"/>',
+            '<path fill="#6696AF" class="st0" d="M-125.7,153h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-124.9,152.7-125.2,153-125.7,153z"/>',
+            '<path fill="#C8D4DE" class="st1" d="M-130.4,142.1c0-2.1,1.7-3.9,3.9-3.9c0.3,0,0.5,0,0.8,0.1c-0.6-0.8-1.5-1.3-2.6-1.3c-1.8,0-3.3,1.5-3.3,3.3c0,1.1,0.5,2,1.3,2.6C-130.4,142.6-130.4,142.4-130.4,142.1z"/>',
             '</svg>'
           ].join('')
         }, function(o) {
@@ -502,7 +523,7 @@ var correctAnswerToggle = ['$sce',
 
         $scope.toggleCorrect = function() {
           $scope.active = $scope.active === 'show' ? 'hide' : 'show';
-          $scope.ngModel.viewMode = $scope.ngModel.viewMode === 'correct' ? 'normal' : 'correct';
+          $scope.ngModel = !$scope.ngModel;
         };
 
       }
@@ -579,7 +600,9 @@ var feedbackIcon = [
         feedbackIconClass: "@"
       },
       template: [
-        '<div class="feedback-icon" ng-class="{hasFeedback: feedback}" feedback-popover="feedback" viewport="#{{playerId}}"><div  ng-bind-html="glyph"></div></div>'
+        '<div class="feedback-icon" ng-class="{hasFeedback: feedback}" feedback-popover="feedback" viewport="#{{playerId}}">',
+        '  <div ng-if="!isEmpty" class="glyph" ng-bind-html="glyph"></div>',
+        '</div>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
 
@@ -600,10 +623,15 @@ var feedbackIcon = [
           var selected = $scope.feedbackIconClass.match(/selected/);
           var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
 
+          $scope.isEmpty = true;
           if (correctness == 'correct' && !selected) {
             $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyphs.emoji[feedbackSelector][correctness] : glyphs.nonSelectedCorrect);
+            $scope.isEmpty = false;
           } else {
-            $scope.glyph = $sce.trustAsHtml(glyphs.emoji[feedbackSelector][correctness] || glyphs.empty);
+            if (glyphs.emoji[feedbackSelector][correctness]) {
+              $scope.glyph = $sce.trustAsHtml(glyphs.emoji[feedbackSelector][correctness]);
+              $scope.isEmpty = false;
+            }
           }
 
           $scope.feedback = $scope.glyph == glyphs.empty ? undefined : {
@@ -632,8 +660,8 @@ exports.directives = [
     directive: radioButton
   },
   {
-    name: 'correctAnswerToggle',
-    directive: correctAnswerToggle
+    name: 'iconToggle',
+    directive: iconToggle
   }
 
 ];
