@@ -213,6 +213,7 @@ var main = [
           resetFeedback(scope.choices);
           scope.response = undefined;
           scope.bridge.viewMode = 'normal';
+          scope.bridge.answerVisible = false;
         },
         resetStash: function() {
           scope.session.stash = {};
@@ -323,7 +324,7 @@ var main = [
       '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" />',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div class="checkbox-button" />',
+      '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" />',
       '        </div>',
 
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
@@ -434,13 +435,15 @@ var radioButton = ['$sce',
             '<svg viewBox="-285 361 31 31">',
             '<circle fill="#86A785" cx="-269.5" cy="376.5" r="15"/>',
             '<circle fill="#C7E2C7" cx="-269.5" cy="376.5" r="13"/>',
-            '<circle fill="#86A785" cx="-269.5" cy="376.5" r="8"/>'
+            '<circle fill="#86A785" cx="-269.5" cy="376.5" r="8"/>',
+            '</svg>'
           ].join(''),
           incorrect: [
             '<svg viewBox="-285 361 31 31">',
             '<circle fill="#BEBEBE" cx="-269.5" cy="376.5" r="15"/>',
             '<circle fill="#FFFFFF" cx="-269.5" cy="376.5" r="13"/>',
-            '<circle fill="#BEBEBE" cx="-269.5" cy="376.5" r="8"/>'
+            '<circle fill="#BEBEBE" cx="-269.5" cy="376.5" r="8"/>',
+            '</svg>'
           ].join(''),
           disabled: [].join('')
         }, function(o) {
@@ -462,6 +465,69 @@ var radioButton = ['$sce',
   }
 ];
 
+var mcCheckbox = ['$sce',
+  function($sce) {
+    return {
+      scope: {
+        checkboxButtonState: "@"
+      },
+      template: [
+        '<div class="mc-checkbox">',
+        '  <div class="icon-holder" >',
+        '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" ng-bind-html="glyphs[\'ready\']"></div>',
+        '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[active]"></div>',
+        '    <div class="icon" ng-if="active == \'correct\'"  ng-bind-html="glyphs[active]"></div>',
+        '    <div class="icon" ng-if="active == \'incorrect\'"  ng-bind-html="glyphs[active]"></div>',
+        '  </div>',
+        '</div>'
+      ].join("\n"),
+      link: function($scope, $element, $attrs) {
+        $scope.glyphs = _.mapValues({
+          ready: [
+            '<svg viewBox="0 0 31 31">',
+            '<rect fill="#A2D4F2" x="0.5" y="0.5" class="st0" width="30" height="30"/>',
+            '<rect fill="#FFFFFF" x="2.5" y="2.5" class="st1" width="26" height="26"/>',
+            '<rect fill="#404B9B" class="inner-rect" x="8.5" y="8.5" class="st2" width="14" height="14"/>',
+            '</svg>'
+          ].join(''),
+          muted: [
+            '<svg viewBox="0 0 31 31">',
+            '<rect fill="#E0DEE0" x="0.5" y="0.5" class="st0" width="30" height="30"/>',
+            '<rect fill="#F8F6F6" x="2.5" y="2.5" class="st1" width="26" height="26"/>',
+            '</svg>'
+          ].join(''),
+          correct: [
+            '<svg viewBox="-285 361 31 31">',
+            '<rect fill="#86A785" x="-284.5" y="361.5" class="st0" width="30" height="30"/>',
+            '<rect fill="#C7E2C7" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
+            '<rect fill="#86A785" x="-276.5" y="369.5" class="st0" width="14" height="14"/>',
+            '</svg>'].join(''),
+          incorrect: [
+            '<svg viewBox="-285 361 31 31">',
+            '<rect fill="#BEBEBE" x="-284.5" y="361.5" class="st0" width="30" height="30"/>',
+            '<rect fill="#FFFFFF" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
+            '<rect fill="#BEBEBE" x="-276.5" y="369.5" class="st0" width="14" height="14"/>',
+            '</svg>'
+          ].join(''),
+          disabled: [].join('')
+        }, function(o) {
+          return $sce.trustAsHtml(o);
+        });
+
+        $scope.active = 'ready';
+
+        $attrs.$observe('checkboxButtonState', function(val) {
+          if (_(["selected",'correct','incorrect','muted']).contains(val)) {
+            $scope.active = val;
+          } else {
+            $scope.active = 'ready';
+          }
+        });
+      }
+    }
+  }
+];
+
 var iconToggle = ['$sce',
   function($sce) {
     return {
@@ -472,10 +538,10 @@ var iconToggle = ['$sce',
       template: [
         '<a ng-click="toggleCorrect()" class="icon-toggle">',
         '  <div class="icon-holder">',
-        '    <span class="show-state" ng-if="active == \'show\'" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
-        '    <span class="hide-state" ng-if="active == \'hide\'" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
+        '    <span class="show-state" ng-if="ngModel" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
+        '    <span class="hide-state" ng-if="!ngModel" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
         '  </div>',
-        '  <span class="toggle-label">{{showHide[active]}} correct answer</span>',
+        '  <span class="toggle-label">{{showHide[ngModel]}} correct answer</span>',
         '</a>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
@@ -519,10 +585,9 @@ var iconToggle = ['$sce',
         });
 
         $scope.active = 'show';
-        $scope.showHide = {show: 'Show', hide: 'Hide'};
+        $scope.showHide = {false: 'Show', true: 'Hide'};
 
         $scope.toggleCorrect = function() {
-          $scope.active = $scope.active === 'show' ? 'hide' : 'show';
           $scope.ngModel = !$scope.ngModel;
         };
 
@@ -634,7 +699,7 @@ var feedbackIcon = [
             }
           }
 
-          $scope.feedback = $scope.glyph == glyphs.empty ? undefined : {
+          $scope.feedback = $scope.isEmpty ? undefined : {
             correctness: correctness,
             feedback: $scope.feedbackIconChoice.feedback
           };
@@ -658,6 +723,10 @@ exports.directives = [
   {
     name: 'radioButton',
     directive: radioButton
+  },
+  {
+    name: 'mcCheckbox',
+    directive: mcCheckbox
   },
   {
     name: 'iconToggle',

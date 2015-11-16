@@ -253,38 +253,15 @@
     .checkbox-choice[disabled] {
       opacity: 0.65;
     }
-    .checkbox-choice {
-      display: inline-block;
-      vertical-align: middle;
-      width: 20px;
-      height: 20px;
-      left: 0px;
-      border: 1px solid #cccccc;
-      border-radius: 3px;
-      background-color: #fff;
-      -webkit-transition: border 0.15s ease-in-out;
-      -o-transition: border 0.15s ease-in-out;
-      transition: border 0.15s ease-in-out;
-      .checkbox-button {
-        -webkit-transform: scale(0, 0);
-        -ms-transform: scale(0, 0);
-        -o-transform: scale(0, 0);
-        transform: scale(0, 0);
-        -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
-        -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
-        -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
-        transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
-        position: relative;
-      }
-    }
     .radio-choice[disabled] {
       opacity: 0.65;
     }
-    .radio-choice {
+    .radio-choice, .checkbox-choice {
       display: inline-block;
       vertical-align: middle;
       height: 20px;
-      .radio-button {
+      width: 20px;
+      .radio-button, .mc-checkbox {
         line-height: 0;
         .icon-holder {
           position: relative;
@@ -293,13 +270,13 @@
             position: absolute;
 
             &.ready {
-              .inner-circle {
+              .inner-circle, .inner-rect {
                 opacity: 0;
                 transition: opacity .15s ease-in-out;
               }
             }
             &.selected {
-              .inner-circle {
+              .inner-circle, .inner-rect {
                 opacity: 1;
                 transition: opacity .15s ease-in-out;
               }
