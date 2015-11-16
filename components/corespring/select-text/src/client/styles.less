@@ -1,9 +1,13 @@
-@answer-color-hover-opaque: rgb(161, 228, 242);
-@answer-color-hover: rgba(161, 228, 242, 0.5);
-@answer-color-opaque: rgb(92,255,160);
-@answer-color: rgba(92,255,160, 0.5);
+@answer-color-opaque: rgb(204, 204, 204);
+@answer-color: rgba(204, 204, 204, 0.6);
 @choice-color-opaque: rgb(187, 187, 187);
 @choice-color: rgba(187, 187, 187, 0.5);
+@wrong-answer-bg-color-opaque: rgb(255, 255, 204);
+@wrong-answer-bg-color: rgba(255, 255, 204, 0.6);
+@wrong-answer-border-color: rgb(238, 162, 54);
+@correct-answer-bg-color-opaque: rgb(204, 255, 204);
+@correct-answer-bg-color: rgba(204, 255, 204, 0.6);
+@correct-answer-border-color: rgb(46, 102, 44);
 
 .corespring-select-text {
   .component-placeholder {
@@ -45,22 +49,19 @@
         overflow: auto;
         .cs-token {
           cursor: pointer;
-          -webkit-transition: background-color 0.2s ease-out;
-          transition: background-color 0.2s ease-out;
-          &:hover {
-            background-color: @answer-color-hover-opaque;
-            background-color: @answer-color-hover;
-          }
-          &.choice {
-            background-color: @choice-color-opaque;
-            background-color: @choice-color;
+          -webkit-transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
+          transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
+          &:hover, &.choice {
+            background-color: transparent;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
           }
           &.selected {
             background-color: @answer-color-opaque;
             background-color: @answer-color;
           }
         }
-        &.select-choices {
+        .select-choices {
           .cs-token {
             cursor: default;
             &:hover {
@@ -68,13 +69,15 @@
             }
             &.choice {
               cursor: pointer;
-              background-color: @choice-color-opaque;
-              background-color: @choice-color;
+              border: 1px dotted @answer-color-opaque;
+              margin: -1px;
             }
             &.selected {
               cursor: pointer;
               background-color: @answer-color-opaque;
-              background-color: @answer-color;
+              background-color: @answer-color-opaque;
+              border: 0;
+              margin: 0;
             }
           }
         }
@@ -91,12 +94,12 @@
         -webkit-transition: all 0.3s ease-in-out; 
         transition: all 0.3s ease-in-out;
         &.choices-count {
-          background-color: @choice-color-opaque;
-          background-color: @choice-color;
-        }
-        &.answers-count {
           background-color: @answer-color-opaque;
           background-color: @answer-color;
+        }
+        &.answers-count {
+          background-color: @correct-answer-bg-color-opaque;
+          background-color: @correct-answer-bg-color;
         }
         &.grow-add {
           -webkit-transform: none;
@@ -161,15 +164,16 @@
     padding: 5px;
     .cs-token {
       cursor: pointer;
-      -webkit-transition: background-color 0.2s ease-out;
-      transition: background-color 0.2s ease-out;
+      -webkit-transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
+      transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
       &:hover {
-        background-color: @answer-color-hover-opaque;
-        background-color: @answer-color-hover;
+        background-color: transparent;
+        border: 1px dotted @answer-color-opaque;
+        margin: -1px;
       }
       &.selected {
-        background-color: @choice-color-opaque;
-        background-color:@choice-color;
+        background-color: @answer-color-opaque;
+        background-color: @answer-color;
       }
     }
     &.specific {
@@ -177,16 +181,21 @@
         cursor: default;
         &:hover {
           background-color: transparent;
+          border: 1px dotted @answer-color-opaque;
+          margin: -1px;
         }
         &.choice {
           cursor: pointer;
-          background-color: @answer-color-hover-opaque;
-          background-color: @answer-color-hover;
+          background-color: transparent;
+          border: 1px dotted @answer-color-opaque;
+          margin: -1px;
         }
         &.selected {
           cursor: pointer;
-          background-color: @choice-color-opaque;
-          background-color:@choice-color;
+          background-color: @answer-color-opaque;
+          background-color: @answer-color;
+          border: 0;
+          margin: 0;
         }
       }
     }
@@ -198,14 +207,17 @@
         }
         &.choice {
           &:hover {
-            background-color: @answer-color-hover-opaque;
-            background-color: @answer-color-hover;
+            background-color: transparent;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
           }
         }
         &.selected {
           &:hover {
-            background-color: @choice-color-opaque;
-            background-color:@choice-color;
+            background-color: @answer-color-opaque;
+            background-color: @answer-color;
+            border: 0;
+            margin: 0;
           }
         }
       }
