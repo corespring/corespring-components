@@ -209,7 +209,7 @@ var main = [
 
         setDataAndSession: function (dataAndSession) {
 
-          CanvasTemplates.extendScope(scope, 'corespring-multiple-line');
+          CanvasTemplates.extendScope(scope, 'corespring-point-intercept');
 
           var config = dataAndSession.data.model.config || {};
           scope.config = _.defaults(config, {showFeedback: true});
@@ -349,16 +349,8 @@ var main = [
         "     </div>",
         "     <div class='graph-controls' ng-show='showInputs' ng-hide='response'>",
         "        <div class='scale-display'>",
-        "           <div class='action undo'>",
-        "             <a title='Undo' ng-click='undo()'>",
-        "               <i class='fa fa-undo'/>",
-        "             </a>",
-        "           </div>",
-        "           <div class='action start-over'>",
-        "             <a title='Start Over' ng-click='startOver()'>",
-        "               <i class='fa fa-refresh'/>",
-        "             </a>",
-        "           </div>",
+        "           <span cs-undo-button-with-model></span>",
+        "           <span cs-start-over-button-with-model></span>",
         "        </div>",
         "     </div>",
         "     <div class='graph-container'></div>",
