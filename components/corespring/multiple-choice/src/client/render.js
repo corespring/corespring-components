@@ -311,17 +311,20 @@ var main = [
         if (scope.response) return "muted";
       };
 
+      scope.iconset = 'emoji';
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     };
 
 
     var verticalTemplate = [
       '<div class="choices-container">',
+      '  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
       '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
-      '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" />',
+      '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" feedback-icon-set="{{iconset}}"/>',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
       '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" />',
@@ -694,25 +697,89 @@ var feedbackIcon = [
         }
       },
       check: {
-        nofeedback: {
-          correct: [
-            '<svg viewBox="-20 21 31 31">',
-            '</svg>'
-          ].join(''),
-          incorrect: [
-            '<svg viewBox="-20 21 31 31">',
-            '</svg>'
-          ].join('')
+        radio: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="-128 129 31 31">',
+              '<circle fill="#C7E2C7"  cx="-112.5" cy="144.5" r="15"/>',
+              '<polygon fill="#2E662C" points="-113,152.1 -119.5,146.6 -117.1,143.8 -114,146.4 -108.7,136.9 -105.5,138.6 		"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-128 129 31 31">',
+              '<circle fill="#FBE7B7" cx="-112.5" cy="144.5" r="15"/>',
+              '<rect x="-114.6" y="140.2" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -180.6316 -22.7256)" fill="#EEA236" width="10" height="3.8"/>',
+              '<rect x="-115.9" y="147.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -189.5706 -22.5582)" fill="#EEA236" width="3.9" height="3.8"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            correct: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-linejoin:round;stroke-miterlimit:10;" d="M-93,146c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0H-93l-4.5-3.8C-94.8,153.7-93,150-93,146z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;" d="M-94.8,145.1c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-96.5,152.8-94.8,149.2-94.8,145.1z"/>',
+              '<path style="fill:#C7E2C7;" d="M-96.5,143.5c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-98.2,151.2-96.5,147.5-96.5,143.5z"/>',
+              '<polygon style="fill:#2E662C;" points="-108.5,151.9 -114.5,146.7 -112.3,144.1 -109.4,146.6 -104.5,137.7 -101.5,139.4 				"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="138.7" x2="-109.9" y2="138.7"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="141.6" x2="-109.9" y2="141.6"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="144.6" x2="-114.9" y2="144.6"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-linejoin:round;stroke-miterlimit:10;" d="M-93,146c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0H-93l-4.5-3.8C-94.8,153.7-93,150-93,146z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;" d="M-94.8,145.1c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-96.5,152.8-94.8,149.2-94.8,145.1z"/>',
+              '<path style="fill:#FBE7B7;" d="M-96.5,143.5c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-98.2,151.2-96.5,147.5-96.5,143.5z"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="138.7" x2="-109.9" y2="138.7"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="141.6" x2="-109.9" y2="141.6"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="144.6" x2="-114.9" y2="144.6"/>',
+              '<rect x="-109.3" y="140.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -178.4842 -18.2273)" style="fill:#EEA236;" width="9.1" height="3.4"/>',
+              '<rect x="-110.4" y="147.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -186.6214 -18.1003)" style="fill:#EEA236;" width="3.5" height="3.4"/>',
+              '</svg>'
+            ].join('')
+          }
         },
-        feedback: {
-          incorrect: [
-            '<svg viewBox="-125 129 36 32">',
-            '</svg>'
-          ].join(''),
-          correct: [
-            '<svg viewBox="-125 129 36 32">',
-            '</svg>'
-          ].join('')
+        checkbox: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="0 0 31 31">',
+              '<rect x="0.5" y="0.5" fill="#C7E2C7" width="30" height="30"/>',
+              '<polygon fill="#2E662C" points="15,23.6 8.1,17.7 10.6,14.7 13.9,17.5 19.5,7.4 22.9,9.3 		"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="0 0 31 31">',
+              '<rect x="0.5" y="0.5" style="fill:#FBE7B7;" width="30" height="30"/>',
+              '<rect x="13.6" y="11" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 39.1218 2.8649)" style="fill:#EEA236;" width="10.3" height="3.9"/>',
+              '<rect x="12.2" y="18.9" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 39.4251 18.5392)" style="fill:#EEA236;" width="4" height="3.9"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            correct: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon style="fill:#C7E2C7;" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<polygon style="fill:#2E662C;" points="-108.1,151.9 -114.6,146.3 -112.2,143.6 -109.2,146.2 -103.9,136.7 -100.7,138.4 				"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="137.7" x2="-109.7" y2="137.7"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="140.9" x2="-109.7" y2="140.9"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="144" x2="-115.1" y2="144"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon style="fill:#FBE7B7;" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="137.7" x2="-109.4" y2="137.7"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="140.9" x2="-109.4" y2="140.9"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="144" x2="-112" y2="144"/>',
+              '<rect x="-109.3" y="140" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 -31.0528 301.9162)" style="fill:#EEA236;" width="9.7" height="3.7"/>',
+              '<rect x="-110.5" y="147.5" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 -30.7657 316.7093)" style="fill:#EEA236;" width="3.8" height="3.7"/>',
+              '</svg>'
+            ].join('')
+          }
         }
       }
     };
@@ -721,7 +788,8 @@ var feedbackIcon = [
       scope: {
         feedbackIconChoice: "=",
         feedbackIconClass: "@",
-        feedbackIconType: "@"
+        feedbackIconType: "@",
+        feedbackIconSet: "@"
       },
       template: [
         '<div class="feedback-icon" ng-class="{hasFeedback: feedback}" feedback-popover="feedback" viewport="#{{playerId}}">',
@@ -733,6 +801,7 @@ var feedbackIcon = [
         $scope.$watch('feedbackIconChoice', updateView, true);
         $attrs.$observe('feedbackIconClass', updateView);
         $attrs.$observe('feedbackIconType', updateView);
+        $attrs.$observe('feedbackIconSet', updateView);
 
         $scope.playerId = (function() {
           return $element.closest('.player-body').attr('id');
@@ -744,12 +813,13 @@ var feedbackIcon = [
           if (_.isUndefined($scope.feedbackIconChoice) || _.isUndefined($scope.feedbackIconClass) || _.isUndefined($scope.feedbackIconType)) {
             return;
           }
+          var iconSet = $scope.feedbackIconSet || 'emoji';
           var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
           var selected = $scope.feedbackIconClass.match(/selected/);
           var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
 
           $scope.isEmpty = true;
-          var glyph = glyphs.emoji[$scope.feedbackIconType][feedbackSelector][correctness];
+          var glyph = glyphs[iconSet][$scope.feedbackIconType][feedbackSelector][correctness];
           if (correctness == 'correct' && !selected) {
             $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyph : glyphs.nonSelectedCorrect);
             $scope.isEmpty = false;
