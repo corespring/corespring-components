@@ -373,7 +373,7 @@ var main = [
 
     function template() {
       return [
-        "<div class='multiple-line-interaction-view'>",
+        "<div class='line-interaction-view'>",
         "  <div class='graph-interaction'>",
         "    <div class='undo-start-over-controls container-fluid'>",
         "      <div class='row'>",
@@ -386,7 +386,7 @@ var main = [
         "      </div>",
         "    </div><br/>",
         "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
-        "      <div class='row line-input'>",
+        "      <div class='row points-input'>",
         "        <div class='col-sm-12'>",
         "          <div class='point-input pull-left'>",
         "            <span class='point-label'>Point A:</span>",
@@ -404,9 +404,7 @@ var main = [
         "               ng-class='{ \"glowing-border\": isLineHovered(line.id) }' ",
         "               class='line{{ line.colorIndex % 5 }}' ",
         "               step='{{ graphAttrs.rangeSnapValue }}'>",
-        "          </div>",
-        "          <div class='point-input pull-right'>",
-        "            <span class='point-label'>{{line.points.B.name}}</span>",
+        "            <span class='point-label point-b'>Point B</span>",
         "            <label>x: </label>",
         "            <input type='number' ng-style='inputStyle', ng-model='line.points.B.x' ",
         "               ng-disabled='locked || line.points.B.x === undefined' ",
