@@ -321,7 +321,7 @@ var main = [
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
-      '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" />',
+      '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" />',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
       '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" />',
@@ -454,7 +454,7 @@ var radioButton = ['$sce',
 
         $attrs.$observe('radioButtonState', function(val) {
           console.log("qqqq", val, val == 'selected');
-          if (_(["selected",'correct','incorrect','muted']).contains(val)) {
+          if (_(["selected", 'correct', 'incorrect', 'muted']).contains(val)) {
             $scope.active = val;
           } else {
             $scope.active = 'ready';
@@ -517,7 +517,7 @@ var mcCheckbox = ['$sce',
         $scope.active = 'ready';
 
         $attrs.$observe('checkboxButtonState', function(val) {
-          if (_(["selected",'correct','incorrect','muted']).contains(val)) {
+          if (_(["selected", 'correct', 'incorrect', 'muted']).contains(val)) {
             $scope.active = val;
           } else {
             $scope.active = 'ready';
@@ -608,51 +608,109 @@ var feedbackIcon = [
         '</svg>'
       ].join(''),
       emoji: {
+        radio: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="-20 21 31 31">',
+              '<circle fill="#C7E2C7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
+              '<path fill="#2E662C" class="feedback-icon-foreground" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
+              '<rect x="-2.3" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-20 21 31 31">',
+              '<circle fill="#FBE7B7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
+              '<rect x="-2.3" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '<rect x="-10.6" y="39.9" fill="#EEA236" class="feedback-icon-foreground" width="12.2" height="3.1"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path fill="#D0CAC5" d="M-91.5,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.2,153.9-91.5,150.3-91.5,146.2z"/>',
+              '<path fill="#B3ABA4" d="M-93.3,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95,153.1-93.3,149.5-93.3,145.4z"/>',
+              '<path fill="#FBE7B7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
+              '<rect x="-107.3" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '<rect x="-114.6" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '<rect x="-115" y="147" fill="#EEA236" class="feedback-icon-foreground" width="11.4" height="2.9"/>',
+              '</svg>'
+            ].join(''),
+            correct: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path fill="#D0CAC5" d="M-91.8,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.5,153.9-91.8,150.3-91.8,146.2z"/>',
+              '<path fill="#B3ABA4" class="st1" d="M-93.6,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95.3,153.1-93.6,149.5-93.6,145.4z"/>',
+              '<path fill="#C7E2C7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
+              '<path fill="#2E662C" class="feedback-icon-foreground" d="M-104.1,146.5c-1.3,1.5-3.2,2.4-5.2,2.4c-2,0-3.9-0.9-5.2-2.4l-2.4,1.4c1.8,2.3,4.6,3.8,7.6,3.8c3,0,5.8-1.4,7.6-3.8L-104.1,146.5z"/>',
+              '<rect x="-107.3" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '<rect x="-114.6" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '</svg>'
+            ].join('')
+          }
+        },
+        checkbox: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="-20 21 31 31">',
+              '<rect x="-19.5" y="21.5" fill="#C7E2C7" width="30" height="30"/>',
+              '<path fill="#2E662C" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
+              '<rect x="-2.3" y="30.9" fill="#2E662C" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#2E662C" width="3.5" height="4.4"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-20 21 31 31">',
+              '<rect x="-19.5" y="21.5" fill="#FBE7B7" width="30" height="30"/>',
+              '<rect x="-2.3" y="30.9" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-10.6" y="39.9" fill="#EEA236" width="12.2" height="3.1"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            correct: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon fill="#C7E2C7" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<path fill="#2E662C" class="feedback-icon-background" d="M-104.9,146.5c-1.4,1.6-3.4,2.5-5.5,2.5s-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L-104.9,146.5z"/>',
+              '<rect x="-108.3" y="138" fill="#2E662C" width="3.5" height="4.4"/>',
+              '<rect x="-116.2" y="138" fill="#2E662C" width="3.5" height="4.4"/>',
+            '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon fill="#FBE7B7" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<rect x="-108.3" y="138" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-116.2" y="138" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-116.6" y="146.9" fill="#EEA236" width="12.2" height="3.1"/>',
+              '</svg>'
+            ].join('')
+          }
+        }
+      },
+      check: {
         nofeedback: {
           correct: [
             '<svg viewBox="-20 21 31 31">',
-            '<circle fill="#C7E2C7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
-            '<path fill="#2E662C" class="feedback-icon-foreground" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
-            '<rect x="-2.3" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-            '<rect x="-10.2" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-            '</svg>'
-          ].join(''),
-          partial: [
-            '<svg viewBox="-20 21 31 31">',
-            '<circle fill="#C8E3E8" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
-            '<rect x="-2.4" y="30.9" fill="#3A87AD" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-            '<rect x="-10.2" y="30.9" fill="#3A87AD" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-            '<rect x="-10.8" y="40.5" transform="matrix(0.9794 -0.2019 0.2019 0.9794 -8.5847 -5.393555e-02)" fill="#3A87AD" class="feedback-icon-foreground" width="12.5" height="3.2"/>',
             '</svg>'
           ].join(''),
           incorrect: [
             '<svg viewBox="-20 21 31 31">',
-            '<circle fill="#FBE7B7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
-            '<rect x="-2.3" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-            '<rect x="-10.2" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-            '<rect x="-10.6" y="39.9" fill="#EEA236" class="feedback-icon-foreground" width="12.2" height="3.1"/>',
             '</svg>'
           ].join('')
         },
         feedback: {
           incorrect: [
             '<svg viewBox="-125 129 36 32">',
-            '<path fill="#D0CAC5" d="M-91.5,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.2,153.9-91.5,150.3-91.5,146.2z"/>',
-            '<path fill="#B3ABA4" d="M-93.3,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95,153.1-93.3,149.5-93.3,145.4z"/>',
-            '<path fill="#FBE7B7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
-            '<rect x="-107.3" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-            '<rect x="-114.6" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-            '<rect x="-115" y="147" fill="#EEA236" class="feedback-icon-foreground" width="11.4" height="2.9"/>',
             '</svg>'
           ].join(''),
           correct: [
             '<svg viewBox="-125 129 36 32">',
-            '<path fill="#D0CAC5" d="M-91.8,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.5,153.9-91.8,150.3-91.8,146.2z"/>',
-            '<path fill="#B3ABA4" class="st1" d="M-93.6,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95.3,153.1-93.6,149.5-93.6,145.4z"/>',
-            '<path fill="#C7E2C7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
-            '<path fill="#2E662C" class="feedback-icon-foreground" d="M-104.1,146.5c-1.3,1.5-3.2,2.4-5.2,2.4c-2,0-3.9-0.9-5.2-2.4l-2.4,1.4c1.8,2.3,4.6,3.8,7.6,3.8c3,0,5.8-1.4,7.6-3.8L-104.1,146.5z"/>',
-            '<rect x="-107.3" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-            '<rect x="-114.6" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
             '</svg>'
           ].join('')
         }
@@ -662,7 +720,8 @@ var feedbackIcon = [
     return {
       scope: {
         feedbackIconChoice: "=",
-        feedbackIconClass: "@"
+        feedbackIconClass: "@",
+        feedbackIconType: "@"
       },
       template: [
         '<div class="feedback-icon" ng-class="{hasFeedback: feedback}" feedback-popover="feedback" viewport="#{{playerId}}">',
@@ -673,6 +732,7 @@ var feedbackIcon = [
 
         $scope.$watch('feedbackIconChoice', updateView, true);
         $attrs.$observe('feedbackIconClass', updateView);
+        $attrs.$observe('feedbackIconType', updateView);
 
         $scope.playerId = (function() {
           return $element.closest('.player-body').attr('id');
@@ -681,7 +741,7 @@ var feedbackIcon = [
 
         function updateView() {
           console.log($scope.feedbackIconChoice, " ", $scope.feedbackIconClass);
-          if (_.isUndefined($scope.feedbackIconChoice) || _.isUndefined($scope.feedbackIconClass)) {
+          if (_.isUndefined($scope.feedbackIconChoice) || _.isUndefined($scope.feedbackIconClass) || _.isUndefined($scope.feedbackIconType)) {
             return;
           }
           var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
@@ -689,14 +749,13 @@ var feedbackIcon = [
           var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
 
           $scope.isEmpty = true;
+          var glyph = glyphs.emoji[$scope.feedbackIconType][feedbackSelector][correctness];
           if (correctness == 'correct' && !selected) {
-            $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyphs.emoji[feedbackSelector][correctness] : glyphs.nonSelectedCorrect);
+            $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyph : glyphs.nonSelectedCorrect);
             $scope.isEmpty = false;
-          } else {
-            if (glyphs.emoji[feedbackSelector][correctness]) {
-              $scope.glyph = $sce.trustAsHtml(glyphs.emoji[feedbackSelector][correctness]);
+          } else  if (glyph) {
+              $scope.glyph = $sce.trustAsHtml(glyph);
               $scope.isEmpty = false;
-            }
           }
 
           $scope.feedback = $scope.isEmpty ? undefined : {
