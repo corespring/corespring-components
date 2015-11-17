@@ -118,7 +118,7 @@ exports.service = [
       };
 
       this.configDisplay = function(showInputs) {
-        showInputs = (typeof showInputs !== 'undefined') ? showInputs : false;
+        showInputs = showInputs === true;
         return [
           '  <div class="row">',
           '    <div class="body col-md-9">',
