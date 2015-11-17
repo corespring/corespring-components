@@ -117,11 +117,12 @@ exports.service = [
         ].join('\n');
       };
 
-      this.configDisplay = function() {
+      this.configDisplay = function(showInputs) {
+        showInputs = showInputs === true;
         return [
           '  <div class="row">',
           '    <div class="body col-md-9">',
-          '      <form class="form-horizontal" role="form" name="display">',
+          '      <form class="form-horizontal" role="form" name="displayForm">',
           '        <h3>Display</h3>',
           '        <div class="config-form-row">',
           labelWithInput({ label: 'Graph Title (Optional)', modelKey: 'graphTitle', placeholder: '{{defaults.graphTitle}}' }),
@@ -144,7 +145,13 @@ exports.service = [
           '          <div class="col-sm-6">',
           '            <checkbox ng-model="fullModel.model.config.showAxisLabels">Show Axis Labels</checkbox>',
           '          </div>',
-          '        </div><br />',
+          '        </div>',
+          '        <div class="config-form-row show-inputs" ng-show="'+showInputs+'">',
+          '          <div class="col-sm-6">',
+          '            <checkbox ng-model="fullModel.model.config.showInputs">Show Points Input on the Graph</checkbox>',
+          '          </div>',
+          '        </div>',
+          '        <br />',
           '      </form>',
           '    </div>',
           '  </div>'

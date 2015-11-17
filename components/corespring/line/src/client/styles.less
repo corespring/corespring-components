@@ -1,12 +1,14 @@
 @import '../../../../../less/common';
 
 .line-interaction-view {
+
   .jxgbox {
     position: relative;
     overflow: visible!important;
     background-color: #ffffff;
     -ms-touch-action: none;
   }
+
   .JXGtext {
     background-color: transparent;
     font-family: Arial, Helvetica, Geneva;
@@ -24,6 +26,7 @@
   .JXGimageHighlight {
     opacity: 0.6;
   }
+
   .feedback-holder {
     .fa-warning {
       font-size: 22px;
@@ -45,6 +48,7 @@
       }
     }
   }
+
   .solution-panel {
     visibility: hidden;
     height: 0;
@@ -61,19 +65,6 @@
     height: auto;
   }
 
-  .correct-answer {
-    margin-top: 5px;
-    float: right;
-  }
-
-  .additional-text {
-    p {
-      font-family: 'Ubuntu' !important;
-      font-style: normal;
-      font-size: 13px;
-      padding-bottom: 17px;
-    }
-  }
   .graph-container {
     margin-top: 50px;
     margin-right: auto;
@@ -82,31 +73,51 @@
     position: relative;
   }
   .graph-controls {
-    background-color: #cccccc;
-    border-radius: 4px;
-    padding: 5px;
     position: relative;
+    .points-input {
+      padding: 3px 0px;
+      border-bottom: 1px solid #ccc;
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .point-input {
+        height: 25px;
+        .point-label {
+          display: inline-block;
+          min-width: 16px;
+          padding-right: 5px;
+        }
+        .point-b {
+          padding-left: 15px;
+        }
+        input {
+          height: 24px;
+          padding: 2px;
+          font-size: 14px;
+          color: #555555;
+          border: 1px solid #cccccc;
+          border-radius: 4px;
+          &:disabled {
+            background-color: #dddddd;
+          }
+        }
+      }
+
+      .delete-line-button {
+        font-size: 16px;
+        padding: 0px 5px;
+        color: #333333;
+        margin-top: -4px;
+        &:hover {
+          background-color: #dddddd;
+        }
+      }
+    }
   }
-  .scale-display {
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
-  }
-  .point-display-break {
-    margin-left: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-right: 8px;
-    border-color: #999999;
-  }
-  .action {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 20px;
-    cursor: pointer;
-  }
+
   .graph-interaction {
-    margin: 10px 20px 20px 0;
+    margin: 0px 20px 10px 20px;
     padding: 10px;
     max-width: 600px;
     &.warning {
@@ -116,9 +127,6 @@
     }
   }
 }
-.line-interaction-view .point-display p,.line-interaction-view .point-display input {
-  display: inline;
-}
 
 .line-interaction-configuration {
 
@@ -126,17 +134,6 @@
     margin: 0;
     margin-bottom: 10px;
     padding:0;
-  }
-  .navigator-toggle-button-row {
-    display: none;
-  }
-  .intro-text {
-    padding: 10px;
-  }
-  .informative-label {
-    font-size: small;
-    font-style: italic;
-    margin-bottom: 10px;
   }
   .reset-defaults {
     margin: 20px 0 20px 0;
@@ -161,5 +158,9 @@
     font-weight: bold;
     font-size: 12px;
     white-space: nowrap;
+  }
+
+  .delete-line {
+    font-size: 20px;
   }
 }

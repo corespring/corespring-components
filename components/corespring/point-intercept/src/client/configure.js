@@ -185,7 +185,7 @@ var main = [
         '      <hr />',
                CanvasTemplates.configGraph(),
         '    <hr />',
-               CanvasTemplates.configDisplay(),
+               CanvasTemplates.configDisplay(false),
         '      <div class="row">',
         '        <div class="col-md-8">',
         '          <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
