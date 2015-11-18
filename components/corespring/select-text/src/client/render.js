@@ -133,6 +133,7 @@ var main = [
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
         '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable}" ng-bind-html-unsafe="model.config.passage"></div>',
+        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>'
       ].join("\n")
     };
