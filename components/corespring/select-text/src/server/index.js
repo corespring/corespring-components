@@ -9,14 +9,14 @@ var buildFeedback = function(question, answer) {
   var feedback = {
     choices: []
   };
-  var fbSelector = isCorrect(question, answer) ? "correctFeedback" : (isPartiallyCorrect(question, answer) ? "partialFeedback" : "incorrectFeedback");
+  var fbSelector = isCorrect(question, answer) ? "correctFeedback" : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? "partialFeedback" : "incorrectFeedback") : "incorrectFeedback");
   var fbTypeSelector = fbSelector + "Type";
   var feedbackType = question.feedback && question.feedback[fbTypeSelector] ? question.feedback[fbTypeSelector] : "default";
 
   if (feedbackType === "custom") {
     feedback.message = question.feedback[fbSelector];
   } else if (feedbackType === "default") {
-    feedback.message = isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK : (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK);
+    feedback.message = isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK) : keys.DEFAULT_INCORRECT_FEEDBACK);
   }
 
   _.each(answer, function(answerIndex) {
@@ -33,9 +33,12 @@ function selectionCountIsFine(question, answer) {
   if (!answer) {
     return false;
   }
+
   var selectionCount = answer.length;
+  var maxSelections = question.model.config.maxSelections;
   var correctSelectionCount = question.correctResponse.value.length;
-  return selectionCount >= correctSelectionCount;
+
+  return maxSelections === 0 ? (selectionCount === correctSelectionCount) : (selectionCount === correctSelectionCount && selectionCount === maxSelections);
 }
 
 function areAllCorrectSelected(question, answer) {
@@ -100,7 +103,7 @@ exports.createOutcome = function(question, answer, settings) {
   }
 
   var res = {
-    correctness: isCorrect(question, answer) ? "correct" : (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect'),
+    correctness: isCorrect(question, answer) ? "correct" : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : 'incorrect'),
     score: score(question, answer)
   };
 
@@ -121,7 +124,7 @@ exports.createOutcome = function(question, answer, settings) {
 
     res.correctResponse = question.correctResponse.value;
 
-    res.correctClass = isCorrect(question, answer) ? 'correct' : (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect');
+    res.correctClass = isCorrect(question, answer) ? 'correct' : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : "incorrect");
   }
 
   return res;
