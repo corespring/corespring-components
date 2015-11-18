@@ -10,6 +10,7 @@ var main = [
       scope.undoModel = new CsUndoModel();
       scope.undoModel.setGetState(getState);
       scope.undoModel.setRevertState(revertState);
+      scope.answersVisible = false;
 
       var $theContent = null;
 
@@ -25,7 +26,7 @@ var main = [
 
       var getNestedProperty = function(obj, key) {
         return key.split(".").reduce(function(o, x) {
-          return (typeof o == "undefined" || o === null) ? o : o[x];
+          return (typeof o === "undefined" || o === null) ? o : o[x];
         }, obj);
       };
 
@@ -86,7 +87,7 @@ var main = [
       }
 
       function setResponse(response) {
-        log("Setting response", response);
+        // log("Setting response", response);
         scope.feedback = response.feedback.message;
         scope.correctClass = response.correctClass;
         var correctResponses = _.filter(response.feedback.choices, function(choice) {
@@ -95,8 +96,11 @@ var main = [
         var incorrectResponses = _.filter(response.feedback.choices, function(choice) {
           return choice.correct === false;
         });
-        classifyTokens(_.pluck(correctResponses, 'index'), 'correct');
-        classifyTokens(_.pluck(incorrectResponses, 'index'), 'incorrect');
+        var correctIndexes = _.pluck(correctResponses, 'index');
+        var incorrectIndexes = _.pluck(incorrectResponses, 'index');
+        scope.unselectedAnswers = _.difference(response.correctResponse, correctIndexes);
+        classifyTokens(correctIndexes, 'correct');
+        classifyTokens(incorrectIndexes, 'incorrect');
       }
 
       function setMode(newMode) {}
@@ -106,6 +110,7 @@ var main = [
         scope.correctClass = undefined;
         scope.userChoices = [];
         $theContent.find('.cs-token').attr('class', 'cs-token');
+        scope.answersVisible = false;
         scope.undoModel.init();
       }
 
@@ -130,6 +135,15 @@ var main = [
         editable: editable
       };
 
+      scope.toggleAnswersVisibility = function() {
+        scope.answersVisible = !scope.answersVisible;
+        if (scope.answersVisible) {
+          classifyTokens(scope.unselectedAnswers, 'correct-not-selected');
+        } else {
+          $theContent.find('.correct-not-selected').removeClass('correct-not-selected');
+        }
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
 
@@ -144,9 +158,9 @@ var main = [
         '  <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
         '    <span cs-undo-button-with-model ng-show="editable"></span>',
         '    <span cs-start-over-button-with-model ng-show="editable"></span>',
-        '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'"><i class="fa fa-eye"></i> Show Answer(s)</button>',
+        '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ng-click="toggleAnswersVisibility()"><i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> <span ng-show="!answersVisible">Show</span><span ng-show="answersVisible">Hide</span> Answer(s)</button>',
         '  </div>',
-        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable}" ng-bind-html-unsafe="model.config.passage"></div>',
+        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable, \'show-answers\': answersVisible}" ng-bind-html-unsafe="model.config.passage"></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>'
       ].join("\n")

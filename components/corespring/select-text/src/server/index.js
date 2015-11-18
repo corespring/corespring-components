@@ -70,7 +70,7 @@ function isPartiallyCorrect(question, answer) {
 
 function score(question, answer) {
   var scoreValue = 0;
-  var partialScore = undefined;
+  var partialScore = null;
   if (isCorrect(question, answer)) {
     scoreValue = 1;
   } else if (question.allowPartialScoring) {
@@ -118,6 +118,8 @@ exports.createOutcome = function(question, answer, settings) {
     } else if (!areAllCorrectSelected(question, answer)) {
       res.outcome.push("responsesIncorrect");
     }
+
+    res.correctResponse = question.correctResponse.value;
 
     res.correctClass = isCorrect(question, answer) ? 'correct' : (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect');
   }

@@ -173,6 +173,7 @@
     background-clip: padding-box;
     margin: 42px 0 5px;
     padding: 5px;
+    clear: both;
     .cs-token {
       cursor: pointer;
       -webkit-transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
@@ -196,6 +197,11 @@
         background-color: @incorrect-answer-bg-color-opaque;
         background-color: @incorrect-answer-bg-color;
         border: 1px solid @incorrect-answer-border-color;
+        margin: -1px;
+      }
+      &.correct-not-selected {
+        background-color: #fff;
+        border: 1px solid @correct-answer-border-color;
         margin: -1px;
       }
     }
@@ -260,6 +266,21 @@
             border: 1px solid @incorrect-answer-border-color;
             margin: -1px;
           }
+        }
+        &.correct-not-selected {
+          &:hover {
+            background-color: #fff;
+            border: 1px solid @correct-answer-border-color;
+            margin: -1px;
+          }
+        }
+      }
+    }
+    &.show-answers {
+      .cs-token {
+        color: #ccc;
+        &.selected, &.correct, &.incorrect, &.correct-not-selected {
+          color: inherit;
         }
       }
     }
