@@ -7,7 +7,7 @@ exports.keys = keys;
 
 var buildFeedback = function(question, answer) {
   var feedback = {
-    choices: {}
+    choices: []
   };
   var fbSelector = isCorrect(question, answer) ? "correctFeedback" : (isPartiallyCorrect(question, answer) ? "partialFeedback" : "incorrectFeedback");
   var fbTypeSelector = fbSelector + "Type";
@@ -20,9 +20,10 @@ var buildFeedback = function(question, answer) {
   }
 
   _.each(answer, function(answerIndex) {
-    feedback.choices[answerIndex] = {
+    feedback.choices.push({
+      index: answerIndex,
       correct: _.contains(question.correctResponse.value, answerIndex)
-    };
+    });
   });
 
   return feedback;

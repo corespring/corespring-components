@@ -2,9 +2,9 @@
 @answer-color: rgba(204, 204, 204, 0.6);
 @choice-color-opaque: rgb(187, 187, 187);
 @choice-color: rgba(187, 187, 187, 0.5);
-@wrong-answer-bg-color-opaque: rgb(255, 255, 204);
-@wrong-answer-bg-color: rgba(255, 255, 204, 0.6);
-@wrong-answer-border-color: rgb(238, 162, 54);
+@incorrect-answer-bg-color-opaque: rgb(255, 255, 204);
+@incorrect-answer-bg-color: rgba(255, 255, 204, 0.6);
+@incorrect-answer-border-color: rgb(238, 162, 54);
 @correct-answer-bg-color-opaque: rgb(204, 255, 204);
 @correct-answer-bg-color: rgba(204, 255, 204, 0.6);
 @correct-answer-border-color: rgb(46, 102, 44);
@@ -163,6 +163,9 @@
     border-bottom-color: white;
     border-bottom-style: solid;
     padding-top: 4px;
+    .answers-toggle {
+      margin: 1px 6px 2px;
+    }
   }
   .select-text-content {
     border: 1px dashed #ccc;
@@ -182,6 +185,18 @@
       &.selected {
         background-color: @answer-color-opaque;
         background-color: @answer-color;
+      }
+      &.correct {
+        background-color: @correct-answer-bg-color-opaque;
+        background-color: @correct-answer-bg-color;
+        border: 1px solid @correct-answer-border-color;
+        margin: -1px;
+      }
+      &.incorrect {
+        background-color: @incorrect-answer-bg-color-opaque;
+        background-color: @incorrect-answer-bg-color;
+        border: 1px solid @incorrect-answer-border-color;
+        margin: -1px;
       }
     }
     &.specific {
@@ -228,6 +243,22 @@
             background-color: @answer-color;
             border: 0;
             margin: 0;
+          }
+        }
+        &.correct {
+          &:hover {
+            background-color: @correct-answer-bg-color-opaque;
+            background-color: @correct-answer-bg-color;
+            border: 1px solid @correct-answer-border-color;
+            margin: -1px;
+          }
+        }
+        &.incorrect {
+          &:hover {
+            background-color: @incorrect-answer-bg-color-opaque;
+            background-color: @incorrect-answer-bg-color;
+            border: 1px solid @incorrect-answer-border-color;
+            margin: -1px;
           }
         }
       }

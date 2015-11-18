@@ -89,6 +89,14 @@ var main = [
         log("Setting response", response);
         scope.feedback = response.feedback.message;
         scope.correctClass = response.correctClass;
+        var correctResponses = _.filter(response.feedback.choices, function(choice) {
+          return choice.correct === true;
+        });
+        var incorrectResponses = _.filter(response.feedback.choices, function(choice) {
+          return choice.correct === false;
+        });
+        classifyTokens(_.pluck(correctResponses, 'index'), 'correct');
+        classifyTokens(_.pluck(incorrectResponses, 'index'), 'incorrect');
       }
 
       function setMode(newMode) {}
@@ -97,7 +105,7 @@ var main = [
         scope.feedback = undefined;
         scope.correctClass = undefined;
         scope.userChoices = [];
-        $theContent.find('.selected').removeClass('selected');
+        $theContent.find('.cs-token').attr('class', 'cs-token');
         scope.undoModel.init();
       }
 
@@ -133,9 +141,10 @@ var main = [
       template: [
         '<div class="cs-select-text">',
         '  <div class="select-text-label" ng-show="model.config.label" ng-bind-html-unsafe="model.config.label"></div>',
-        '  <div class="action-buttons">',
-        '    <span cs-undo-button-with-model></span>',
-        '    <span cs-start-over-button-with-model></span>',
+        '  <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
+        '    <span cs-undo-button-with-model ng-show="editable"></span>',
+        '    <span cs-start-over-button-with-model ng-show="editable"></span>',
+        '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'"><i class="fa fa-eye"></i> Show Answer(s)</button>',
         '  </div>',
         '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable}" ng-bind-html-unsafe="model.config.passage"></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
