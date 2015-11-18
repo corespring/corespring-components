@@ -109,7 +109,7 @@ describe('corespring:select-text:configure', function () {
       scope.content.xhtml = scope.model.choices.slice(1).join(' ');
     }
 
-    it('should automatically remove additional partial scoring scenarios after removing a correct choice', function () {
+    xit('should automatically remove additional partial scoring scenarios after removing a correct choice', function () {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       rootScope.$digest();
