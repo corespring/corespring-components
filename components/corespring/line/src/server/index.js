@@ -25,7 +25,7 @@ exports.isScoreable = function(question, answer, outcome) {
 exports.createOutcome = function(question, answer, settings) {
 
   function validAnswer(answer) {
-    return hasPoints(answer) && hasXY(answer.A) && hasXY(answer.B);
+    return hasPoints(answer) && isPointSet(answer.A) && isPointSet(answer.B) && hasXY(answer.A) && hasXY(answer.B);
   }
 
   function hasPoints(answer) {
