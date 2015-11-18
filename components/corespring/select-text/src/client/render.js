@@ -13,12 +13,14 @@ var main = [
 
       var $theContent = null;
 
-      function getState(){
-        return {};
+      function getState() {
+        return scope.userChoices;
       }
 
       function revertState(state) {
-        
+        scope.userChoices = state;
+        $theContent.find('.selected').removeClass('selected');
+        classifyTokens(scope.userChoices, "selected");
       }
 
       var getNestedProperty = function(obj, key) {
@@ -60,6 +62,7 @@ var main = [
                 _.remove(scope.userChoices, function(val) {return val !== index;});
               }
             }
+            scope.undoModel.remember();
           }
         });
       };
@@ -73,6 +76,7 @@ var main = [
         if (scope.model.config.availability === "specific" && getNestedProperty(scope, 'model.choices')) {
           classifyTokens(scope.model.choices, "choice");
         }
+        scope.undoModel.init();
       }
 
       function getSession() {
@@ -94,6 +98,7 @@ var main = [
         scope.correctClass = undefined;
         scope.userChoices = [];
         $theContent.find('.selected').removeClass('selected');
+        scope.undoModel.init();
       }
 
       function isAnswerEmpty() {
