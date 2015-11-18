@@ -63,8 +63,13 @@
       -webkit-transform: translateX(0);
     }
   }
+
   .icon-toggle-correct {
     padding-left: 36px;
+    margin-bottom: 10px;
+  }
+  .icon-toggle-correct-two {
+    float: right;
   }
 
 
@@ -117,14 +122,10 @@
     display: table;
     width: 100%;
     .choice-holder-background {
-      padding: 10px 0 10px 0;
+      padding: 10px 0 21px;
       margin-bottom: 10px;
       border: 1px solid #fff;
       border-bottom: 1px solid #E0DEE0;
-
-      &.correct {
-        background-color: #e0fbe0;
-      }
     }
     .popover {
       border: none;
@@ -167,79 +168,6 @@
           visibility: visible;
           fill: #84A783;
         }
-      }
-    }
-  }
-
-  .selected {
-    .choice-holder {
-      .choice-letter {
-      }
-      .checkbox-choice {
-        line-height: 25px;
-        .checkbox-button {
-          -webkit-transform: scale(1, 1);
-          -ms-transform: scale(1, 1);
-          -o-transform: scale(1, 1);
-          transform: scale(1, 1);
-
-          &:before {
-            font-family: 'FontAwesome';
-            content: "\f00c";
-            width: 10px;
-            height: 10px;
-            font-size: 19px;
-            color: #555555;
-            left: -0.5px;
-            top: -3px;
-            position: absolute;
-          }
-        }
-      }
-
-    }
-
-    &.correct {
-      .choice-holder {
-        .checkbox-choice {
-          background-color: @correct-color;
-          opacity: 1;
-          border: none;
-          width: 20px;
-          height: 20px;
-          .checkbox-button {
-            &:before {
-              color: #ffffff;
-              font-size: 20px;
-              left: 0px;
-              top: -2px;
-            }
-          }
-        }
-      }
-    }
-
-    &.incorrect {
-      .choice-holder {
-        .radio-choice .radio-button {
-          .feedback {
-            visibility: visible;
-            fill: #333333;
-          }
-        }
-        .checkbox-choice {
-          border: none;
-          background-color: @incorrect-color;
-          opacity: 1;
-          .checkbox-button {
-            &:before {
-              color: #ffffff;
-              content: "\f00d";
-              left: 2.5px;
-            }
-          }
-        }
-
       }
     }
   }
@@ -302,7 +230,7 @@
 
   .choice-feedback, .choice-input, .choice-letter, .choice-currency-symbol, .choice-label {
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: top;
     padding-left: 5px;
     padding-right: 5px;
   }
@@ -310,12 +238,11 @@
   .choice-feedback {
     line-height: 0px;
     svg {
-      height: 20px;
-      width: 20px;
+      height: 26px;
+      width: 26px;
     }
   }
   .choice-label {
-    vertical-align: middle;
     padding-right: 18px;
     p {
       padding: 0;
@@ -330,7 +257,7 @@
     }
   }
   .choice-letter {
-    font-weight: bold;
+    font-weight: normal;
     &.none {
       display: none;
     }
@@ -363,8 +290,7 @@
     opacity: 0;
     transition:0.5s linear all;
     -webkit-transform: translateX(20px);
-
-    &.hasFeedback {
+    .glyph.hasFeedback  {
       cursor: pointer;
     }
   }
@@ -391,11 +317,11 @@
   .empty-response-holder {
     margin: 20px;
     .empty-response {
-      background-color: #CCCCCC;
-      color: #333333;
+      color: #384599;
       padding: 20px;
       display: table;
-      width: 100%;
+      margin: 0 auto;
+
       .empty-response-icon {
         display: table-cell;
         width: 40px;

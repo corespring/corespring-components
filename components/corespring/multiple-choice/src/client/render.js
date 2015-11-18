@@ -302,12 +302,13 @@ var main = [
 
       scope.radioState = function(o) {
         var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+        var isCorrect = !_.isUndefined(o.correct) && o.correct == true;
         if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
           return scope.response ? "muted" : "";
         }
-        if (o.correct) return "correct";
         if (!_.isUndefined(o.correct) && o.correct == false) return "incorrect";
-        if (isSelected) return "selected";
+        if (isSelected) return isCorrect ? "correct" : "selected";
+        if (!_.isUndefined(o.correct) && o.correct == true) return isSelected ? "correct" : "correctUnselected";
         if (scope.response) return "muted";
       };
 
@@ -320,7 +321,7 @@ var main = [
     var verticalTemplate = [
       '<div class="choices-container">',
       '  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'"></div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
@@ -339,6 +340,8 @@ var main = [
       '     <div class="choice-label" ng-bind-html-unsafe="o.label"></div>',
       '    </div>',
       '  </div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct-two" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'radio\'"></div>',
+
       '  <div class="rationale-expander" ng-show="rationales">',
       '    <div class="rationale-expander-row {{showHide[rationaleOpen.toString()]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
       '      <span class="rationale-expander-{{showHide[rationaleOpen.toString()]}}"></span>',
@@ -356,7 +359,7 @@ var main = [
       '  <div class="empty-response">',
       '    <span class="empty-response-icon">',
       '      <svg viewBox="-125 129 36 32">',
-      '      <polygon fill="#464146" points="-115.9,130 -124,138.1 -124,149.7 -115.9,158 -104.3,158 -96,149.7 -96,138.1 -104.3,130 				"/>',
+      '      <polygon fill="#384599" points="-115.9,130 -124,138.1 -124,149.7 -115.9,158 -104.3,158 -96,149.7 -96,138.1 -104.3,130 				"/>',
       '      <path fill="#ffffff" d="M-107.6,150.2h-4.8c-0.8,0-1.4-0.6-1.4-1.4v0c0-0.8,0.6-1.4,1.4-1.4h4.8c0.8,0,1.4,0.6,1.4,1.4v0C-106.2,149.6-106.8,150.2-107.6,150.2z"/>',
       '      <rect x="-107.8" y="138.5" fill="#ffffff" width="3.5" height="4.4"/>',
       '      <rect x="-115.7" y="138.5" fill="#ffffff" width="3.5" height="4.4"/>',
@@ -478,9 +481,10 @@ var mcCheckbox = ['$sce',
         '<div class="mc-checkbox">',
         '  <div class="icon-holder" >',
         '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" ng-bind-html="glyphs[\'ready\']"></div>',
-        '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[active]"></div>',
-        '    <div class="icon" ng-if="active == \'correct\'"  ng-bind-html="glyphs[active]"></div>',
-        '    <div class="icon" ng-if="active == \'incorrect\'"  ng-bind-html="glyphs[active]"></div>',
+        '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[\'muted\']"></div>',
+        '    <div class="icon" ng-if="active == \'correct\'" ng-bind-html="glyphs[\'correct\']"></div>',
+        '    <div class="icon" ng-if="active == \'correctUnselected\'" ng-bind-html="glyphs[\'correctUnselected\']"></div>',
+        '    <div class="icon" ng-if="active == \'incorrect\'" ng-bind-html="glyphs[\'incorrect\']"></div>',
         '  </div>',
         '</div>'
       ].join("\n"),
@@ -505,14 +509,18 @@ var mcCheckbox = ['$sce',
             '<rect fill="#C7E2C7" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
             '<rect fill="#86A785" x="-276.5" y="369.5" class="st0" width="14" height="14"/>',
             '</svg>'].join(''),
+          correctUnselected: [
+            '<svg viewBox="-285 361 31 31">',
+            '<rect fill="#86A785" x="-284.5" y="361.5" class="st0" width="30" height="30"/>',
+            '<rect fill="#C7E2C7" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
+            '</svg>'].join(''),
           incorrect: [
             '<svg viewBox="-285 361 31 31">',
             '<rect fill="#BEBEBE" x="-284.5" y="361.5" class="st0" width="30" height="30"/>',
             '<rect fill="#FFFFFF" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
             '<rect fill="#BEBEBE" x="-276.5" y="369.5" class="st0" width="14" height="14"/>',
             '</svg>'
-          ].join(''),
-          disabled: [].join('')
+          ].join('')
         }, function(o) {
           return $sce.trustAsHtml(o);
         });
@@ -520,7 +528,7 @@ var mcCheckbox = ['$sce',
         $scope.active = 'ready';
 
         $attrs.$observe('checkboxButtonState', function(val) {
-          if (_(["selected", 'correct', 'incorrect', 'muted']).contains(val)) {
+          if (_(["selected", 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
           } else {
             $scope.active = 'ready';
@@ -541,8 +549,8 @@ var iconToggle = ['$sce',
       template: [
         '<a ng-click="toggleCorrect()" class="icon-toggle">',
         '  <div class="icon-holder">',
-        '    <span class="show-state" ng-if="ngModel" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
-        '    <span class="hide-state" ng-if="!ngModel" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
+        '    <span class="show-state" ng-if="!ngModel" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
+        '    <span class="hide-state" ng-if="ngModel" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
         '  </div>',
         '  <span class="toggle-label">{{showHide[ngModel]}} correct answer</span>',
         '</a>'
@@ -589,6 +597,7 @@ var iconToggle = ['$sce',
 
         $scope.active = 'show';
         $scope.showHide = {false: 'Show', true: 'Hide'};
+        $scope.ngModel = _.isUndefined($scope.ngModel) ? false : $scope.ngModel;
 
         $scope.toggleCorrect = function() {
           $scope.ngModel = !$scope.ngModel;
@@ -614,6 +623,15 @@ var feedbackIcon = [
         radio: {
           nofeedback: {
             correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
               '<svg viewBox="-20 21 31 31">',
               '<circle fill="#C7E2C7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
               '<path fill="#2E662C" class="feedback-icon-foreground" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
@@ -631,6 +649,25 @@ var feedbackIcon = [
             ].join('')
           },
           feedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path fill="#D0CAC5" d="M-91.8,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.5,153.9-91.8,150.3-91.8,146.2z"/>',
+              '<path fill="#B3ABA4" class="st1" d="M-93.6,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95.3,153.1-93.6,149.5-93.6,145.4z"/>',
+              '<path fill="#C7E2C7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
+              '<path fill="#2E662C" class="feedback-icon-foreground" d="M-104.1,146.5c-1.3,1.5-3.2,2.4-5.2,2.4c-2,0-3.9-0.9-5.2-2.4l-2.4,1.4c1.8,2.3,4.6,3.8,7.6,3.8c3,0,5.8-1.4,7.6-3.8L-104.1,146.5z"/>',
+              '<rect x="-107.3" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '<rect x="-114.6" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '</svg>'
+            ].join(''),
             incorrect: [
               '<svg viewBox="-125 129 36 32">',
               '<path fill="#D0CAC5" d="M-91.5,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.2,153.9-91.5,150.3-91.5,146.2z"/>',
@@ -640,22 +677,22 @@ var feedbackIcon = [
               '<rect x="-114.6" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
               '<rect x="-115" y="147" fill="#EEA236" class="feedback-icon-foreground" width="11.4" height="2.9"/>',
               '</svg>'
-            ].join(''),
-            correct: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path fill="#D0CAC5" d="M-91.8,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.5,153.9-91.8,150.3-91.8,146.2z"/>',
-              '<path fill="#B3ABA4" class="st1" d="M-93.6,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95.3,153.1-93.6,149.5-93.6,145.4z"/>',
-              '<path fill="#C7E2C7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
-              '<path fill="#2E662C" class="feedback-icon-foreground" d="M-104.1,146.5c-1.3,1.5-3.2,2.4-5.2,2.4c-2,0-3.9-0.9-5.2-2.4l-2.4,1.4c1.8,2.3,4.6,3.8,7.6,3.8c3,0,5.8-1.4,7.6-3.8L-104.1,146.5z"/>',
-              '<rect x="-107.3" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-              '<rect x="-114.6" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-              '</svg>'
             ].join('')
+
           }
         },
         checkbox: {
           nofeedback: {
             correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
               '<svg viewBox="-20 21 31 31">',
               '<rect x="-19.5" y="21.5" fill="#C7E2C7" width="30" height="30"/>',
               '<path fill="#2E662C" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
@@ -674,6 +711,15 @@ var feedbackIcon = [
           },
           feedback: {
             correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
               '<svg viewBox="-125 129 36 32">',
               '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
               '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
@@ -700,6 +746,15 @@ var feedbackIcon = [
         radio: {
           nofeedback: {
             correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
               '<svg viewBox="-128 129 31 31">',
               '<circle fill="#C7E2C7"  cx="-112.5" cy="144.5" r="15"/>',
               '<polygon fill="#2E662C" points="-113,152.1 -119.5,146.6 -117.1,143.8 -114,146.4 -108.7,136.9 -105.5,138.6 		"/>',
@@ -715,6 +770,15 @@ var feedbackIcon = [
           },
           feedback: {
             correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
               '<svg viewBox="-125 129 36 32">',
               '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-linejoin:round;stroke-miterlimit:10;" d="M-93,146c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0H-93l-4.5-3.8C-94.8,153.7-93,150-93,146z"/>',
               '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;" d="M-94.8,145.1c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-96.5,152.8-94.8,149.2-94.8,145.1z"/>',
@@ -742,6 +806,15 @@ var feedbackIcon = [
         checkbox: {
           nofeedback: {
             correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
               '<svg viewBox="0 0 31 31">',
               '<rect x="0.5" y="0.5" fill="#C7E2C7" width="30" height="30"/>',
               '<polygon fill="#2E662C" points="15,23.6 8.1,17.7 10.6,14.7 13.9,17.5 19.5,7.4 22.9,9.3 		"/>',
@@ -757,6 +830,15 @@ var feedbackIcon = [
           },
           feedback: {
             correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
+              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
+              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
+              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
               '<svg viewBox="-125 129 36 32">',
               '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
               '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
@@ -792,8 +874,8 @@ var feedbackIcon = [
         feedbackIconSet: "@"
       },
       template: [
-        '<div class="feedback-icon" ng-class="{hasFeedback: feedback}" feedback-popover="feedback" viewport="#{{playerId}}">',
-        '  <div ng-if="!isEmpty" class="glyph" ng-bind-html="glyph"></div>',
+        '<div class="feedback-icon" feedback-popover="feedback" viewport="#{{playerId}}">',
+        '  <div ng-class="{hasFeedback: feedback}" ng-if="!isEmpty" class="glyph" ng-bind-html="glyph"></div>',
         '</div>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
@@ -817,9 +899,9 @@ var feedbackIcon = [
           var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
           var selected = $scope.feedbackIconClass.match(/selected/);
           var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
-
+          var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
           $scope.isEmpty = true;
-          var glyph = glyphs[iconSet][$scope.feedbackIconType][feedbackSelector][correctness];
+          var glyph = glyphs[iconSet][$scope.feedbackIconType][feedbackSelector][correctnessSelector];
           if (correctness == 'correct' && !selected) {
             $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyph : glyphs.nonSelectedCorrect);
             $scope.isEmpty = false;
@@ -828,7 +910,7 @@ var feedbackIcon = [
               $scope.isEmpty = false;
           }
 
-          $scope.feedback = $scope.isEmpty ? undefined : {
+          $scope.feedback = ($scope.isEmpty || !$scope.feedbackIconChoice.feedback) ? undefined : {
             correctness: correctness,
             feedback: $scope.feedbackIconChoice.feedback
           };
