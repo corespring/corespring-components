@@ -18,6 +18,7 @@
     "config" : {
       "availability": "all",
       "label": "",
+      "maxSelections": 0,
       "selectionUnit" : "word",
       "passage": ""
     },

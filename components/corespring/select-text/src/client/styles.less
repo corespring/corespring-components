@@ -228,6 +228,32 @@
         }
       }
     }
+    &.no-more-selections {
+      .cs-token {
+        cursor: default;
+        &:hover {
+          background-color: transparent;
+          border: 0;
+          margin: 0;
+        }
+        &.choice {
+          &:hover {
+            background-color: transparent;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
+          }
+        }
+        &.selected {
+          &:hover {
+            background-color: @answer-color-opaque;
+            background-color: @answer-color;
+            cursor: pointer;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
+          }
+        }
+      }
+    }
     &.blocked {
       .cs-token {
         cursor: default;

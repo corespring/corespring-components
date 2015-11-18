@@ -46,21 +46,26 @@ var main = [
         $theContent.on('click', '.cs-token', function() {
           var $token = $(this);
           var index = $theContent.find('.cs-token').index($token);
+          var canSelectMore = scope.model.config.maxSelections === 0;
+          if (scope.model.config.maxSelections > 0) {
+            canSelectMore = scope.userChoices.length < scope.model.config.maxSelections;
+          }
           if (scope.editable) {
             if (scope.model.config.availability === "specific") {
-              if ($token.hasClass('choice') && !$token.hasClass('selected')) {
+              if ($token.hasClass('choice') && !$token.hasClass('selected') && canSelectMore) {
                 $token.addClass('selected');
                 scope.userChoices.push(index);
               } else if ($token.hasClass('choice') && $token.hasClass('selected')) {
                 $token.removeClass('selected');
-                _.remove(scope.userChoices, function(val) {return val !== index;});
+                scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
               }
             } else {
-              $token.toggleClass('selected');
-              if ($token.hasClass('selected')) {
+              if (canSelectMore && !$token.hasClass('selected')) {
+                $token.addClass('selected');
                 scope.userChoices.push(index);
-              } else {
-                _.remove(scope.userChoices, function(val) {return val !== index;});
+              } else if ($token.hasClass('selected')) {
+                $token.removeClass('selected');
+                scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
               }
             }
             scope.undoModel.remember();
@@ -160,7 +165,7 @@ var main = [
         '    <span cs-start-over-button-with-model ng-show="editable"></span>',
         '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ng-click="toggleAnswersVisibility()"><i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> <span ng-show="!answersVisible">Show</span><span ng-show="answersVisible">Hide</span> Answer(s)</button>',
         '  </div>',
-        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable, \'show-answers\': answersVisible}" ng-bind-html-unsafe="model.config.passage"></div>',
+        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>'
       ].join("\n")

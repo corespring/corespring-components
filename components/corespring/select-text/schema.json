@@ -77,6 +77,10 @@
               "description": "Optional label field for instructions",
               "type": "string"
             },
+            "maxSelections": {
+              "description": "A value representing the max amounts of selections that an user can perform",
+              "type": "number"
+            },
             "selectionUnit": {
               "description": "A value indicating the selection unit in the passage",
               "enum" : ["word", "sentence", "phrase", "paragraph", "custom"]
