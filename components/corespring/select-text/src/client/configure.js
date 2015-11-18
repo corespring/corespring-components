@@ -19,18 +19,18 @@ var main = [
       '        </div>',
       '        <div class="btn-group btn-group-sm" role="group">',
       '          <button type="button" class="btn btn-default" ng-class="{active: mode === \'answers\'}"',
-      '           ng-click="toggleMode($event, \'answers\')" ng-disabled="model.config.xhtml === \'\'">Set Answers</button>',
+      '           ng-click="toggleMode($event, \'answers\')" ng-disabled="model.config.passage === \'\'">Set Answers</button>',
       '        </div>',
       '        <div class="btn-group btn-group-sm" role="group">',
       '          <button type="button" class="btn btn-danger" ng-class="{active: mode === \'delete\'}"',
-      '           ng-click="toggleMode($event, \'delete\')" ng-disabled="model.config.xhtml === \'\'">Delete</button>',
+      '           ng-click="toggleMode($event, \'delete\')" ng-disabled="model.config.passage === \'\'">Delete</button>',
       '        </div>',
       '      </div>',
       '    </div>',
       '  </div>',
       '  <div class="row">',
       '    <div class="col-xs-12">',
-      '     <wiggi-wiz ng-show="mode === \'editor\'" ng-model="model.config.xhtml">',
+      '     <wiggi-wiz ng-show="mode === \'editor\'" ng-model="cleanPassage">',
       '       <toolbar basic="bold italic underline superscript subscript" positioning="justifyLeft justifyCenter justifyRight" formatting="" media=""></toolbar>',
       '     </wiggi-wiz>',
       '     <div ng-show="mode === \'answers\'">',
@@ -66,7 +66,7 @@ var main = [
       '           <span cs-undo-button ng-class="{disabled: choicesHistory.length < 1}" ng-disabled="choicesHistory.length < 1"></span>',
       '           <span cs-start-over-button ng-class="{disabled: choicesHistory.length < 1}" ng-disabled="choicesHistory.length < 1"></span>',
       '         </div>',
-      '         <div class="passage-preview" ng-bind-html-unsafe="model.config.xhtml"></div>',
+      '         <div class="passage-preview" ng-bind-html-unsafe="model.config.passage"></div>',
       '       </div>',
       '       <div class="pull-left answer-summary" ng-show="model.config.availability === \'specific\'">',
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': selectionMode}"',
@@ -124,51 +124,63 @@ var main = [
       ChoiceTemplates.extendScope($scope, 'corespring-select-text');
 
       var blastOptions = {
-        customClass: 'token'
+        aria: false,
+        customClass: 'cs-token'
       };
 
       var $theContent = null;
       var ignoreChanges = false;
+      var passageChanged = false;
       var initialChoices = [];
 
       $scope.mode = "editor";
       $scope.selectionMode = true;
       $scope.choicesHistory = [];
 
+      var getNestedProperty = function(obj, key) {
+        return key.split(".").reduce(function(o, x) {
+          return (typeof o === "undefined" || o === null) ? o : o[x];
+        }, obj);
+      };
+
+      var getNumberOfCorrectChoices = function() {
+        return getNestedProperty($scope, 'fullModel.correctResponse.value') ? $scope.fullModel.correctResponse.value.length : 0;
+      };
+
+      var cleanExistingPassage = function() {
+        if (getNestedProperty($scope, 'model.config.passage')) {
+          var $cleanPassage = $theContent.clone();
+          $cleanPassage.find('span.' + blastOptions.customClass).each(function() {
+            var innerHTML = $(this).html();
+            $(this).replaceWith(innerHTML);
+          });
+          $scope.cleanPassage = $cleanPassage.prop('innerHTML');
+          passageChanged = false;
+        }
+      };
+
       var classifyTokens = function(collection, tokenClass) {
         if (collection.length > 0) {
           for (var i = collection.length - 1; i >= 0; i--) {
-            var $matches = $theContent.find('.token:contains("' + collection[i].data + '"):not(.' + tokenClass + ')');
-            if ($matches.length === 1) {
-              $matches.addClass(tokenClass);
-            } else if ($matches.length > 1) {
-              if (collection[i].index) {
-                for (var j = $matches.length - 1; j >= 0; j--) {
-                  if ($theContent.find('.token').index($matches[j]) === collection[i].index) {
-                    $($matches[j]).addClass(tokenClass);
-                    break;
-                  }
-                }
-              } else {
-                $($matches[0]).addClass(tokenClass);
-              }
+            var $match = $theContent.find('.' + blastOptions.customClass + ':eq("' + collection[i] + '"):not(.' + tokenClass + ')');
+            if ($match.length === 1) {
+              $match.addClass(tokenClass);
             }
           }
         }
       };
 
-      var getNestedProperty = function(obj, key) {
-        return key.split(".").reduce(function(o, x) {
-          return (typeof o == "undefined" || o === null) ? o : o[x];
-        }, obj);
-      };
-
-      var blastThePassage = function() {
-        blastOptions.delimiter = getNestedProperty($scope, 'model.config.selectionUnit') ? $scope.model.config.selectionUnit : 'word';
-        // Removes any existing tokens
-        $theContent.blast(false);
-        // Tokenize the content
-        $theContent.blast(blastOptions);
+      var blastThePassage = function(blastAgain) {
+        if (blastAgain) {
+          blastOptions.delimiter = getNestedProperty($scope, 'model.config.selectionUnit') ? $scope.model.config.selectionUnit : 'word';
+          // Removes any existing tokens
+          $theContent.blast(false);
+          $theContent.prop('innerHTML', $scope.cleanPassage);
+          // Tokenize the content
+          // $theContent.blast(blastOptions);
+        }
+        // Clean passage classes
+        $theContent.find('.' + blastOptions.customClass).attr('class', blastOptions.customClass);
         // Render existing choices
         if ($scope.model.config.availability === "specific" && getNestedProperty($scope, 'model.choices')) {
           classifyTokens($scope.model.choices, "choice");
@@ -183,52 +195,40 @@ var main = [
         if (newValue !== oldValue) {
           if (newValue === "specific") {
             if (getNestedProperty($scope, 'fullModel.correctResponse.value') && $scope.fullModel.correctResponse.value.length > 0) {
-              $scope.model.choices = _.cloneDeep($scope.fullModel.correctResponse.value);
+              $scope.model.choices = _.clone($scope.fullModel.correctResponse.value);
               $scope.fullModel.correctResponse.value = [];
             }
           } else {
             $scope.model.choices = [];
           }
-          blastThePassage();
+          blastThePassage(true);
         }
       };
 
-      var deleteItemFromCollection = function(collection, text, index) {
-        _.remove(collection, function(item) {
-          return item.data === text || item.index === index;
-        });
-      };
-
       var bindTokenEvents = function() {
-        $theContent.off('click', '.token');
-        $theContent.on('click', '.token', function() {
+        $theContent.off('click', '.' + blastOptions.customClass);
+        $theContent.on('click', '.' + blastOptions.customClass, function() {
           var $token = $(this);
-          var index = index = $theContent.find('.token').index($token);
+          var index = $theContent.find('.' + blastOptions.customClass).index($token);
           if ($scope.model.config.availability === "specific") {
             if ($theContent.hasClass('select-choices')) {
               if ($token.hasClass('choice') && !$token.hasClass('selected')) {
                 $token.addClass('selected');
-                $scope.fullModel.correctResponse.value.push({
-                  data: $token.text(),
-                  index: index
-                });
+                $scope.fullModel.correctResponse.value.push(index);
               } else if ($token.hasClass('choice') && $token.hasClass('selected')) {
                 $token.removeClass('selected');
-                deleteItemFromCollection($scope.fullModel.correctResponse.value, $token.text(), index);
+                $scope.fullModel.correctResponse.value.splice($scope.fullModel.correctResponse.value.indexOf(index), 1);
               }
             } else {
               $token.toggleClass('choice');
               if ($token.hasClass('choice')) {
                 // Adds a new possible choice
-                $scope.model.choices.push({
-                  data: $token.text(),
-                  index: index
-                });
+                $scope.model.choices.push(index);
               } else {
-                deleteItemFromCollection($scope.model.choices, $token.text(), index);
+                $scope.model.choices.splice($scope.model.choices.indexOf(index), 1);
                 if ($token.hasClass('selected')) {
-                  deleteItemFromCollection($scope.fullModel.correctResponse.value, $token.text(), index);
-                  $token.removeClass('selected')
+                  $scope.fullModel.correctResponse.value.splice($scope.fullModel.correctResponse.value.indexOf(index), 1);
+                  $token.removeClass('selected');
                 }
               }
             }
@@ -236,14 +236,12 @@ var main = [
             $token.toggleClass('selected');
             if ($token.hasClass('selected')) {
               // Adds a new choice
-              $scope.fullModel.correctResponse.value.push({
-                data: $token.text(),
-                index: index
-              });
+              $scope.fullModel.correctResponse.value.push(index);
             } else {
-              deleteItemFromCollection($scope.fullModel.correctResponse.value, $token.text(), index);
+              $scope.fullModel.correctResponse.value.splice($scope.fullModel.correctResponse.value.indexOf(index), 1);
             }
           }
+          $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
         });
       };
 
@@ -256,7 +254,7 @@ var main = [
             availability: oldVal[3]
           });
         } else if (ignoreChanges) {
-          blastThePassage();
+          blastThePassage(!_.isEqual(newVal[2], oldVal[2]) || !_.isEqual(newVal[3], oldVal[3]));
           ignoreChanges = false;
         }
       };
@@ -265,10 +263,11 @@ var main = [
         setModel: function (model) {
           $scope.fullModel = model;
           $scope.model = $scope.fullModel.model;
-          $theContent = $element.find('.passage-preview');
+          $theContent = $element.find('.passage-preview .ng-binding');
           bindTokenEvents();
           $timeout(function() {
-            blastThePassage();
+            cleanExistingPassage();
+            // blastThePassage(false);
           }, 100);
           initialChoices = {
             answers: _.cloneDeep($scope.fullModel.correctResponse.value),
@@ -276,6 +275,7 @@ var main = [
             selectionUnit: $scope.model.config.selectionUnit,
             availability: $scope.model.config.availability
           };
+          $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
         },
         getModel: function () {
           var model = _.cloneDeep($scope.fullModel);
@@ -293,9 +293,17 @@ var main = [
         }
       };
 
-      $scope.$watch('model.config.selectionUnit', blastThePassage);
-      $scope.$watch('model.config.xhtml', blastThePassage);
-      $scope.$watch('model.config.availability', toggleSelectionMode)
+      $scope.$watch('model.config.selectionUnit', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          blastThePassage(true);
+        }
+      });
+      $scope.$watch('cleanPassage', function(newValue, oldValue) {
+        if (newValue !== oldValue && oldValue !== undefined) {
+          passageChanged = true;
+        }
+      });
+      $scope.$watch('model.config.availability', toggleSelectionMode);
       $scope.$watch('fullModel.correctResponse.value.length', function(newValue, oldValue) {
         animateBadge(newValue, oldValue, ".answers-count");
       });
@@ -307,7 +315,8 @@ var main = [
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
         if (mode === "answers") {
-          blastThePassage();
+          blastThePassage(passageChanged);
+          passageChanged = false;
         }
       };
 
@@ -328,7 +337,7 @@ var main = [
         $scope.model.config.label = "";
         $scope.model.config.selectionUnit = "word";
         $scope.model.config.availability = "all";
-        $scope.model.config.xhtml = "";
+        $scope.model.config.passage = "";
         $scope.fullModel.correctResponse.value = [];
         $scope.mode = "editor";
       };
