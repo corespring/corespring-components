@@ -132,26 +132,6 @@
   }
 }
 
-.match-table() {
-  margin: 0;
-  border-collapse: collapse;
-  border: none;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.match-row() {
-  border-bottom: solid 2px #cccccc;
-}
-
-.match-cell() {
-  border: none;
-  vertical-align: middle;
-  padding: 10px 5px;
-  max-width: 322px;
-  word-wrap: break-word;
-}
-
 .render-corespring-match {
   color: black;
   padding-top: 14px;
@@ -162,14 +142,22 @@
   }
 
   .corespring-match-table {
-    .match-table();
+    margin: 0;
+    border-collapse: collapse;
+    border: none;
+    width: 100%;
+    margin-bottom: 20px;
 
     tr {
-      .match-row();
+      border-bottom: solid 2px #cccccc;
     }
 
     td {
-      .match-cell();
+      border: none;
+      vertical-align: middle;
+      padding: 10px 5px;
+      max-width: 322px;
+      word-wrap: break-word;
     }
 
     .question-header,
@@ -283,7 +271,7 @@
   &.four-columns {
     .question-header,
     .question-cell {
-      max-width: 322px;
+      max-width: 265px;
     }
     .answer-header,
     .answer-cell {
@@ -545,14 +533,3 @@
   }
 }
 
-// 3rd party overrides
-.corespring-player .qti .render-corespring-match .corespring-match-table {
-  .match-table();
-  tr {
-    .match-row();
-    td {
-      .match-cell();
-    }
-  }
-
-}
