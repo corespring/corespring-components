@@ -161,7 +161,7 @@ var main = [
       link: link,
       template: [
         '<div class="cs-select-text">',
-        '  <div class="select-text-label" ng-show="model.config.label" ng-bind-html-unsafe="model.config.label"></div>',
+        '  <div class="select-text-label" ng-bind-html-unsafe="model.config.label"></div>',
         '  <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
         '    <span cs-undo-button-with-model ng-show="editable"></span>',
         '    <span cs-start-over-button-with-model ng-show="editable"></span>',
