@@ -93,19 +93,21 @@ var main = [
 
       function setResponse(response) {
         // log("Setting response", response);
-        scope.feedback = response.feedback.message;
-        scope.correctClass = response.correctClass;
-        var correctResponses = _.filter(response.feedback.choices, function(choice) {
-          return choice.correct === true;
-        });
-        var incorrectResponses = _.filter(response.feedback.choices, function(choice) {
-          return choice.correct === false;
-        });
-        var correctIndexes = _.pluck(correctResponses, 'index');
-        var incorrectIndexes = _.pluck(incorrectResponses, 'index');
-        scope.unselectedAnswers = _.difference(response.correctResponse, correctIndexes);
-        classifyTokens(correctIndexes, 'correct');
-        classifyTokens(incorrectIndexes, 'incorrect');
+        scope.feedback = getNestedProperty(response, 'feedback.message');
+        if (scope.feedback) {
+          scope.correctClass = response.correctClass;
+          var correctResponses = _.filter(response.feedback.choices, function(choice) {
+            return choice.correct === true;
+          });
+          var incorrectResponses = _.filter(response.feedback.choices, function(choice) {
+            return choice.correct === false;
+          });
+          var correctIndexes = _.pluck(correctResponses, 'index');
+          var incorrectIndexes = _.pluck(incorrectResponses, 'index');
+          scope.unselectedAnswers = _.difference(response.correctResponse, correctIndexes);
+          classifyTokens(correctIndexes, 'correct');
+          classifyTokens(incorrectIndexes, 'incorrect');
+        }
       }
 
       function setMode(newMode) {}
