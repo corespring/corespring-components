@@ -157,6 +157,7 @@ var main = [
               c.correct = true;
             }
           });
+          scope.response = {correctness: 'correct'};
           if (!_.isEmpty(data.rationales)) {
             var rationales = _.map(scope.choices, function(c) {
               return {
@@ -287,7 +288,12 @@ var main = [
 
       scope.choiceClass = function(o) {
         var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+        var isCorrect = !_.isUndefined(o.correct) && o.correct;
         var res = (isSelected) ? "selected " : "";
+
+        if (isCorrect && scope.mode == 'instructor') {
+          return "correct";
+        }
 
         if (_.isUndefined(o.correct)) {
           return res + "default";
@@ -303,6 +309,9 @@ var main = [
       scope.radioState = function(o) {
         var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
         var isCorrect = !_.isUndefined(o.correct) && o.correct == true;
+        if (isCorrect && scope.mode == 'instructor') {
+          return "correctUnselected";
+        }
         if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
           return scope.response ? "muted" : "";
         }
@@ -318,43 +327,7 @@ var main = [
     };
 
 
-    var verticalTemplate = [
-      '<div class="choices-container">',
-      '  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
-      '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
-      '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
-      '    <div class="choice-holder" >',
-      '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" feedback-icon-set="{{iconset}}"/>',
-      '      <span class="choice-input" ng-switch="inputType">',
-      '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" />',
-      '        </div>',
-
-      '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
-      '          <div radio-button radio-button-state="{{radioState(o)}}" />',
-      '        </div>',
-      '      </span>',
-      '     <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '     <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
-      '     <div class="choice-label" ng-bind-html-unsafe="o.label"></div>',
-      '    </div>',
-      '  </div>',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct-two" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'radio\'"></div>',
-
-      '  <div class="rationale-expander" ng-show="rationales">',
-      '    <div class="rationale-expander-row {{showHide[rationaleOpen.toString()]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
-      '      <span class="rationale-expander-{{showHide[rationaleOpen.toString()]}}"></span>',
-      '      <span class="rationale-expander-label">Rationale</span>',
-      '    </div>',
-      '    <div class="rationale-body" ng-show="rationaleOpen">',
-      '      <div ng-repeat="r in rationales">',
-      '        <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '        <span class="choice-label" ng-bind-html-unsafe="r.rationale"></span>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>',
+    var noResponseTemplate = [
       '<div class="empty-response-holder" ng-show="response && response.correctness === \'warning\'">',
       '  <div class="empty-response">',
       '    <span class="empty-response-icon">',
@@ -368,7 +341,48 @@ var main = [
       '    <span class="empty-response-label">{{feedback && feedback.message ? feedback.message : \'Error\'}}</span>',
       '  </div>',
       '</div>'
+    ].join('');
 
+    var learnMoreTemplate = [
+      '<div ng-if="response.comments">',
+      '  <div icon-toggle icon-name="learnMore" class="icon-toggle-learnMore" ng-model="bridge.learnMoreOpen" label="Learn more">',
+      '    <div class="learn-more-body" ng-bind-html-unsafe="response.comments"></div>',
+      '  </div>',
+      '</div>'
+    ].join('');
+
+    var rationalesTemplate = [
+      '<div ng-if="rationales" icon-toggle icon-name="rationale" class="icon-toggle-correct" ng-model="bridge.rationaleOpen" label="Rationales">',
+      '  <div ng-repeat="r in rationales">',
+      '    <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '    <span class="choice-label" ng-bind-html-unsafe="r.rationale"></span>',
+      '  </div>',
+      '</div>'
+    ].join('');
+
+    var choicesTemplate = [
+      '<div class="choices-container">',
+      '  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
+      '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
+      '    <div class="choice-holder" >',
+      '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" feedback-icon-set="{{iconset}}"/>',
+      '      <span class="choice-input" ng-switch="inputType">',
+      '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
+      '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" />',
+      '        </div>',
+      '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
+      '          <div radio-button radio-button-state="{{radioState(o)}}" />',
+      '        </div>',
+      '      </span>',
+      '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+      '      <div class="choice-label" ng-bind-html-unsafe="o.label"></div>',
+      '    </div>',
+      '  </div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct-two" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'radio\'"></div>',
+      '</div>'
     ].join("");
 
     def = {
@@ -378,26 +392,10 @@ var main = [
       link: link,
       template: [
         '<div class="view-multiple-choice" ng-class="response.correctness">',
-        verticalTemplate,
-        //'  <div class="summaryFeedbackPanel fade in ng-hide" ng-show="response.comments">',
-        //'    <div class="">',
-        //'      <div class="panel-group">',
-        //'        <div class="panel panel-default">',
-        //'          <div class="panel-heading">',
-        //'            <h4 class="panel-title">',
-        //'              <a class="learn-more-link" ng-click="panelOpen = !panelOpen">',
-        //'              <i class="learnMoreIcon fa fa-lightbulb-o"></i>Learn More',
-        //'              </a>',
-        //'            </h4>',
-        //'          </div>',
-        //'          <div class="panel-collapse collapse">',
-        //'            <div class="panel-body" ng-bind-html-unsafe="response.comments"></div>',
-        //'          </div>',
-        //'        </div>',
-        //'      </div>',
-        //'    </div>',
-        //'  </div>',
-        '</div>'
+        choicesTemplate,
+        rationalesTemplate,
+        noResponseTemplate,
+        learnMoreTemplate
       ].join("\n")
 
     };
@@ -418,6 +416,7 @@ var radioButton = ['$sce',
         '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" ng-bind-html="glyphs[\'ready\']"></div>',
         '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[active]"></div>',
         '    <div class="icon" ng-if="active == \'correct\'"  ng-bind-html="glyphs[active]"></div>',
+        '    <div class="icon" ng-if="active == \'correctUnselected\'"  ng-bind-html="glyphs[active]"></div>',
         '    <div class="icon" ng-if="active == \'incorrect\'"  ng-bind-html="glyphs[active]"></div>',
         '  </div>',
         '</div>'
@@ -444,6 +443,12 @@ var radioButton = ['$sce',
             '<circle fill="#86A785" cx="-269.5" cy="376.5" r="8"/>',
             '</svg>'
           ].join(''),
+          correctUnselected: [
+            '<svg viewBox="-285 361 31 31">',
+            '<circle fill="#86A785" cx="-269.5" cy="376.5" r="15"/>',
+            '<circle fill="#C7E2C7" cx="-269.5" cy="376.5" r="13"/>',
+            '</svg>'
+          ].join(''),
           incorrect: [
             '<svg viewBox="-285 361 31 31">',
             '<circle fill="#BEBEBE" cx="-269.5" cy="376.5" r="15"/>',
@@ -460,7 +465,7 @@ var radioButton = ['$sce',
 
         $attrs.$observe('radioButtonState', function(val) {
           console.log("qqqq", val, val == 'selected');
-          if (_(["selected", 'correct', 'incorrect', 'muted']).contains(val)) {
+          if (_(["selected", 'correct', 'incorrect', 'muted','correctUnselected']).contains(val)) {
             $scope.active = val;
           } else {
             $scope.active = 'ready';
@@ -544,16 +549,25 @@ var iconToggle = ['$sce',
     return {
       scope: {
         ngModel: "=",
-        iconName: "@"
+        iconName: "@",
+        label: "@",
+        closedLabel: "@",
+        openLabel: "@"
       },
+      transclude: true,
       template: [
-        '<a ng-click="toggleCorrect()" class="icon-toggle">',
-        '  <div class="icon-holder">',
-        '    <span class="show-state" ng-if="!ngModel" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
-        '    <span class="hide-state" ng-if="ngModel" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
-        '  </div>',
-        '  <span class="toggle-label">{{showHide[ngModel]}} correct answer</span>',
-        '</a>'
+        '<div>',
+        '  <a ng-click="toggleCorrect()" class="icon-toggle">',
+        '    <div class="icon-holder">',
+        '      <div class="icon-inner-holder">',
+        '        <span class="show-state" ng-if="!ngModel" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
+        '        <span class="hide-state" ng-if="ngModel" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
+        '      </div>',
+        '    </div>',
+        '    <span class="toggle-label" ng-bind-html-unsafe="currentLabel"></span>',
+        '  </a>',
+        '  <div ng-show="ngModel" ng-transclude></div>',
+        '</div>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
         $scope.glyphs = _.mapValues({
@@ -590,17 +604,35 @@ var iconToggle = ['$sce',
             '<path fill="#6696AF" class="st0" d="M-125.7,153h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-124.9,152.7-125.2,153-125.7,153z"/>',
             '<path fill="#C8D4DE" class="st1" d="M-130.4,142.1c0-2.1,1.7-3.9,3.9-3.9c0.3,0,0.5,0,0.8,0.1c-0.6-0.8-1.5-1.3-2.6-1.3c-1.8,0-3.3,1.5-3.3,3.3c0,1.1,0.5,2,1.3,2.6C-130.4,142.6-130.4,142.4-130.4,142.1z"/>',
             '</svg>'
+          ].join(''),
+          "show-rationale": [
+            '<svg viewBox="-129 128 34 34">',
+            '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-111.7,160.9c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-96.2,154-103.1,160.9-111.7,160.9z"/>',
+            '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-112,159.5c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-104,159.5-112,159.5z"/>',
+            '<circle style="fill:#FFFFFF;" cx="-113" cy="144" r="14"/>',
+            '<rect x="-115" y="136.7" style="fill:#1A9CFF;" width="3" height="3"/>',
+            '<polygon style="fill:#1A9CFF;" points="-112,147.7 -112,141.7 -115.8,141.7 -115.8,143.7 -114,143.7 -114,147.7 -116.2,147.7-116.2,149.7 -109.8,149.7 -109.8,147.7 					"/>',
+            '<path style="fill:#BCE2FF;" d="M-113,158.5c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105,158.5-113,158.5zM-113,130.5c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-105.6,130.5-113,130.5z"/>',
+            '</svg>'
+          ].join(''),
+          "hide-rationale": [
+            '<svg viewBox="-129 128 34 34">',
+            '<circle style="fill:#BCE2FF;" cx="-113" cy="144" r="14"/>',
+            '<rect x="-115" y="136.7" style="fill:#1A9CFF;" width="3" height="3"/>',
+            '<polygon style="fill:#1A9CFF;" points="-112,147.7 -112,141.7 -115.8,141.7 -115.8,143.7 -114,143.7 -114,147.7 -116.2,147.7-116.2,149.7 -109.8,149.7 -109.8,147.7 					"/>',
+            '<path style="fill:#BCE2FF;" d="M-113,158.5c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105,158.5-113,158.5zM-113,130.5c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-105.6,130.5-113,130.5z"/>',
+            '</svg>'
           ].join('')
         }, function(o) {
           return $sce.trustAsHtml(o);
         });
 
-        $scope.active = 'show';
-        $scope.showHide = {false: 'Show', true: 'Hide'};
         $scope.ngModel = _.isUndefined($scope.ngModel) ? false : $scope.ngModel;
+        $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
 
         $scope.toggleCorrect = function() {
           $scope.ngModel = !$scope.ngModel;
+          $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
         };
 
       }
@@ -901,6 +933,7 @@ var feedbackIcon = [
           var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
           var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
           $scope.isEmpty = true;
+          console.log(iconSet,$scope.feedbackIconType,feedbackSelector,correctnessSelector);
           var glyph = glyphs[iconSet][$scope.feedbackIconType][feedbackSelector][correctnessSelector];
           if (correctness == 'correct' && !selected) {
             $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyph : glyphs.nonSelectedCorrect);

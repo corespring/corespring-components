@@ -10,11 +10,17 @@
     cursor: pointer;
     .icon-holder {
       display: table-cell;
-      position: relative;
-      width: 20px;
-      height: 20px;
-      span {
-        position: absolute;
+      vertical-align: middle;
+      height: 40px;
+      .icon-inner-holder {
+        position: relative;
+        width: 20px;
+        height: 20px;
+
+
+        span {
+          position: absolute;
+        }
       }
     }
     .toggle-label {
@@ -70,6 +76,13 @@
   }
   .icon-toggle-correct-two {
     float: right;
+  }
+  .icon-toggle-learnMore {
+    padding-left: 36px;
+    margin-bottom: 10px;
+    .icon-toggle .icon-holder .icon-inner-holder {
+      height: 40px;
+    }
   }
 
 
@@ -357,19 +370,10 @@
     }
   }
 
-  .learnMoreIcon {
-    font-size: 30px;
-    margin-top: -5px;
+  .learn-more-body {
+    margin-bottom: 10px;
   }
 
-  .learn-more-link {
-    cursor: pointer;
-  }
-
-  .answerIcon, .learnMoreIcon {
-    font-size: 30px;
-    margin-right: 2%;
-  }
 
   &.warning {
     .checkbox-choice,
@@ -378,16 +382,6 @@
       border-color: @warning-color-border;
       border-width: 2px;
       opacity: 1;
-    }
-  }
-}
-
-.summaryFeedbackPanel {
-  .panel-group {
-    .panel-heading + .panel-collapse {
-      & > .panel-body {
-        border: 4px solid #008BC9;
-      }
     }
   }
 }
