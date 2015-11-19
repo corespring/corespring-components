@@ -352,7 +352,7 @@ var main = [
     ].join('');
 
     var rationalesTemplate = [
-      '<div ng-if="rationales" icon-toggle icon-name="rationale" class="icon-toggle-correct" ng-model="bridge.rationaleOpen" label="Rationales">',
+      '<div ng-if="rationales" icon-toggle icon-name="rationale" class="icon-toggle-rationales" ng-model="bridge.rationaleOpen" label="Rationales">',
       '  <div ng-repeat="r in rationales">',
       '    <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '    <span class="choice-label" ng-bind-html-unsafe="r.rationale"></span>',
@@ -363,7 +363,7 @@ var main = [
     var choicesTemplate = [
       '<div class="choices-container">',
       '  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct Answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
@@ -381,7 +381,7 @@ var main = [
       '      <div class="choice-label" ng-bind-html-unsafe="o.label"></div>',
       '    </div>',
       '  </div>',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct-two" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'radio\'"></div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct-two" closed-label="Show correct answer" open-label="Hide correct answer" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'radio\'"></div>',
       '</div>'
     ].join("");
 

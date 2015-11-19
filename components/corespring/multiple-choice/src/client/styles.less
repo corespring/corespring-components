@@ -1,4 +1,39 @@
+/* latin */
+@font-face {
+  font-family: 'Kameron';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Kameron'), url(https://fonts.gstatic.com/s/kameron/v7/Teu2HdJ0U7BWBhN9GzN8SALUuEpTyoUstqEm5AMlJo4.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Kameron';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Kameron Bold'), local('Kameron-Bold'), url(https://fonts.gstatic.com/s/kameron/v7/0Mk_Cjlc84dzSw97PDic4AzyDMXhdD8sAj6OAJTFsBI.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/8qcEw_nrk_5HEcCpYdJu8BTbgVql8nDJpwnrE27mub0.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/MDadn8DQ_3oT6kvnUq_2r_esZW2xOQ-xsNqO47m55DA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
 @import '../../../../../less/common';
+
 
 .view-multiple-choice {
 
@@ -77,6 +112,9 @@
   .icon-toggle-correct-two {
     float: right;
   }
+  .icon-toggle-rationales {
+    margin-bottom: 10px;
+  }
   .icon-toggle-learnMore {
     padding-left: 36px;
     margin-bottom: 10px;
@@ -141,6 +179,7 @@
       border-bottom: 1px solid #E0DEE0;
     }
     .popover {
+      font-family: 'Kameron' !important;
       border: none;
       .popover-title {
         padding: 0;
@@ -201,13 +240,13 @@
     .radio-choice, .checkbox-choice {
       display: inline-block;
       vertical-align: middle;
-      height: 20px;
-      width: 20px;
+      height: 24px;
+      width: 24px;
       .radio-button, .mc-checkbox {
         line-height: 0;
         .icon-holder {
           position: relative;
-          width: 20px;
+          width: 24px;
           .icon {
             position: absolute;
 
@@ -229,7 +268,7 @@
 
 
         svg {
-          width: 20px;
+          width: 24px;
           .feedback {
             visibility: hidden;
           }
@@ -246,13 +285,14 @@
     vertical-align: top;
     padding-left: 5px;
     padding-right: 5px;
+    font-family: 'Lato' !important;
   }
 
   .choice-feedback {
     line-height: 0px;
     svg {
-      height: 26px;
-      width: 26px;
+      height: 24px;
+      width: 24px;
     }
   }
   .choice-label {
