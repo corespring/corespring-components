@@ -50,7 +50,7 @@ var main = [
     var display = [
       '<div class="display-panel" ng-hide="fullModel.model.config.exhibitOnly" collapsable-panel collapsable-panel-title="Display" collapsable-panel-default-state="in">',
       '  <p>Click on the input options to display to students. All inputs display by default. Selecting none will display no icons and only allow students to plot a filled point.</p>',
-      '  <div  class="element-selector" >',
+      '  <div class="element-selector">',
       '    <span role="presentation" class="element-pf" ng-mousedown="select(\'PF\')"><a ng-class="{active: isActive(\'PF\')}">&nbsp;</a></span>',
       '    <span role="presentation" class="element-pe" ng-mousedown="select(\'PE\')"><a ng-class="{active: isActive(\'PE\')}">&nbsp;</a></span>',
       '    <span role="presentation" class="element-lff" ng-mousedown="select(\'LFF\')"><a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a></span>',
@@ -297,8 +297,18 @@ var main = [
         };
 
         scope.displayNone = function() {
+          function responseToType(response) {
+            return (response.type[0] +
+              (response.pointType ? response.pointType[0] : '') +
+              (response.leftPoint ? response.leftPoint[0] : '') +
+              (response.rightPoint ? response.rightPoint[0] : '') +
+              (response.direction ? response.direction[0] : '')).toUpperCase();
+          }
+
+          var requiredTypes = _.chain(scope.fullModel.correctResponse).map(responseToType).uniq().value();
+
           _.each(_.flatten([points, rays, lines]), function(key) {
-            scope.fullModel.model.config.availableTypes[key] = false;
+            scope.fullModel.model.config.availableTypes[key] = requiredTypes.indexOf(key) >= 0;
           });
         };
 

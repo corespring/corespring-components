@@ -25,42 +25,65 @@ describe('line interaction server logic', function() {
     "correctResponse": "y=2x+7",
     "model": {
       "config": {
-        "domain": "10",
-        "range": "10",
-        "scale": "1",
         "domainLabel": "x",
+        "domainMin": -10,
+        "domainMax": 10,
+        "domainStepValue": 1,
+        "domainSnapValue": 1,
+        "domainLabelFrequency": 1,
+        "domainGraphPadding": 50,
         "rangeLabel": "y",
-        "tickLabelFrequency": "5",
+        "rangeMin": -10,
+        "rangeMax": 10,
+        "rangeStepValue": 1,
+        "rangeSnapValue": 1,
+        "rangeLabelFrequency": 1,
+        "rangeGraphPadding": 50,
         "sigfigs": "-1"
       }
     }
   };
 
-  var correctAnswer = {
-    A: {
-      x: 0,
-      y: 7
-    },
-    B: {
-      x: 1,
-      y: 9
-    }
-  };
+  var correctAnswer = { A: { x:0, y: 7, isSet: true }, B: { x: 1, y: 9, isSet: true } };
 
-  var incorrectAnswer = {
-    A: {
-      x: -1,
-      y: -1
-    },
-    B: {
-      x: 1,
-      y: 1
-    }
-  };
+  var incorrectAnswer = { A: { x: 0, y: 3, isSet: true }, B: { x: 0, y: 0, isSet: true } };
 
-  var emptyAnswer = {};
+  var incompleteAnswer = { A: { x: 0, y: 3, isSet: true }, B: { isSet: false } };
 
-  it('returns warning outcome for an empty answer', function() {
+  var notDefinedAnswer = {};
+
+  var emptyAnswer = { A: { isSet: false }, B: { isSet: false } };
+
+  var malformedAnswer = { A: { isSet: true }, B: { isSet: true } };
+
+  it('returns warning outcome for a not defined answer ({})', function() {
+    var outcome = server.createOutcome(_.cloneDeep(component), notDefinedAnswer, helper.settings(true, true, true));
+    outcome.should.eql({
+      correctness: 'warning',
+      score: 0,
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+    });
+  });
+
+  it('returns warning outcome for an empty answer (isSet false)', function() {
+    var outcome = server.createOutcome(_.cloneDeep(component), emptyAnswer, helper.settings(true, true, true));
+    outcome.should.eql({
+      correctness: 'warning',
+      score: 0,
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+    });
+  });
+
+  it('returns warning outcome for an incomplete answer (only one point)', function() {
+    var outcome = server.createOutcome(_.cloneDeep(component), incompleteAnswer, helper.settings(true, true, true));
+    outcome.should.eql({
+      correctness: 'warning',
+      score: 0,
+      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+    });
+  });
+
+  it('returns warning outcome for a malformed answer (isSet true but no x or y)', function() {
     var outcome = server.createOutcome(_.cloneDeep(component), emptyAnswer, helper.settings(true, true, true));
     outcome.should.eql({
       correctness: 'warning',
@@ -104,41 +127,6 @@ describe('line interaction server logic', function() {
 
     it('should return null feedback', function() {
       (response.feedback === null).should.eql(true);
-    });
-
-  });
-
-  describe('with poorly defined points', function() {
-    var noA = {B: {x: 1, y: 2}};
-    var noB = {A: {x: 1, y: 2}};
-    var AmissingX = {A: {y: 1}, B: {x: 1, y: 2}};
-    var BmissingY = {A: {x: 1, y: 2}, B: {x: 1}};
-    var responses;
-
-    beforeEach(function() {
-      responses = [];
-      responses.push(server.createOutcome(_.cloneDeep(component), noA, helper.settings(false, true, true)));
-      responses.push(server.createOutcome(_.cloneDeep(component), noB, helper.settings(false, true, true)));
-      responses.push(server.createOutcome(_.cloneDeep(component), AmissingX, helper.settings(false, true, true)));
-      responses.push(server.createOutcome(_.cloneDeep(component), BmissingY, helper.settings(false, true, true)));
-    });
-
-    it('should return incorrect', function() {
-      _.each(responses, function(response) {
-        response.correctness.should.eql('incorrect');
-      });
-    });
-
-    it('should return a score of 0', function() {
-      _.each(responses, function(response) {
-        response.score.should.eql(0);
-      });
-    });
-
-    it('should return null feedback', function() {
-      _.each(responses, function(response) {
-        (response.feedback === null).should.eql(true);
-      });
     });
 
   });

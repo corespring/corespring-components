@@ -24,7 +24,7 @@ describe('match', function() {
   }
 
   function solutionPanelHeader(){
-    return '.see-answer-panel .panel-heading';
+    return '.see-answer-panel .panel .panel-heading';
   }
 
   beforeEach(function(done) {
@@ -34,14 +34,13 @@ describe('match', function() {
       return this;
     };
 
-    browser.waitForWithTimeout = function(selector){
-      return browser.waitFor(selector);
+    browser.isExistingWithWait = function(selector,callback){
+      return this.waitFor(selector).isExisting(selector,callback);
     };
 
     browser
-      .timeouts('implicit', browser.options.defaultTimeout)
       .url(browser.options.getUrl('match', itemJsonFilename))
-      .waitForWithTimeout(answerInput('Row3'))
+      .waitFor(answerInput('Row3'))
       .call(done);
   });
 
@@ -51,14 +50,13 @@ describe('match', function() {
       .click(answerInput('Row2'))
       .click(answerInput('Row3'))
       .submitItem()
-      .waitForWithTimeout(solutionPanelHeader())
-      .isExisting(answerEvaluated('Row1', 'correct'), function(err,res){
+      .isExistingWithWait(answerEvaluated('Row1', 'correct'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })
-      .isExisting(answerEvaluated('Row2', 'incorrect'), function(err,res){
+      .isExistingWithWait(answerEvaluated('Row2', 'incorrect'), function(err,res){
         [err,res].should.eql([undefined,true], "Row2");
       })
-      .isExisting(answerEvaluated('Row3', 'correct'), function(err,res){
+      .isExistingWithWait(answerEvaluated('Row3', 'correct'), function(err,res){
         [err,res].should.eql([undefined,true], "Row3");
       })
       .call(done);
@@ -68,15 +66,15 @@ describe('match', function() {
     browser
       .click(answerInput('Row1'))
       .submitItem()
-      .waitForWithTimeout(solutionPanelHeader())
+      .waitFor(solutionPanelHeader())
       .click(solutionPanelHeader())
-      .isExisting(correctAnswer('Row1'), function(err,res){
+      .isExistingWithWait(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })
-      .isExisting(correctAnswer('Row2'), function(err,res){
+      .isExistingWithWait(correctAnswer('Row2'), function(err,res){
         [err,res].should.eql([undefined,true], "Row2");
       })
-      .isExisting(correctAnswer('Row3'), function(err,res){
+      .isExistingWithWait(correctAnswer('Row3'), function(err,res){
         [err,res].should.eql([undefined,true], "Row3");
       })
       .call(done);

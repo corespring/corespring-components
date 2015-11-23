@@ -91,7 +91,6 @@ describe('corespring:drag-and-drop-inline:configure', function() {
   beforeEach(function() {
     module(function($provide) {
       $provide.value('ServerLogic', MockServerLogic);
-      $provide.value('ImageUtils', {});
       $provide.value('MathJaxService', {
         parseDomForMath: function() {}
       });
