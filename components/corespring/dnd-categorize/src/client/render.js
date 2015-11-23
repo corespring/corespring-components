@@ -393,7 +393,7 @@ function renderCorespringDndCategorize(
       }
 
       if (scope.choiceWidth === 0) {
-        $timeout(updateView, 100);
+        $timeout(updateView, 500);
         // uses the last set width
         scope.choiceWidth = defaultWidth;
       }
