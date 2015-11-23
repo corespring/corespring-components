@@ -19,19 +19,23 @@ exports.isScoreable = function(question, answer, outcome) {
     return true;
   }
 
-  return !question.model.config.exhibitOnly; 
+  return !question.model.config.exhibitOnly;
 };
 
 exports.createOutcome = function(question, answer, settings) {
 
   function validAnswer(answer) {
-    function hasPoints(answer) {
-      return (answer !== undefined && answer !== null) && answer.A !== undefined && answer.B !== undefined;
-    }
-    function hasXY(point) {
-      return point.x !== undefined && point.y !== undefined;
-    }
-    return hasPoints(answer) && hasXY(answer.A) && hasXY(answer.B);
+    return hasPoints(answer) && isPointSet(answer.A) && isPointSet(answer.B) && hasXY(answer.A) && hasXY(answer.B);
+  }
+
+  function hasPoints(answer) {
+    return (answer !== undefined && answer !== null) && answer.A !== undefined && answer.B !== undefined;
+  }
+  function hasXY(point) {
+    return point.x !== undefined && point.y !== undefined;
+  }
+  function isPointSet(point) {
+    return point.isSet;
   }
 
   if (!question || _.isEmpty(question)){
@@ -49,7 +53,7 @@ exports.createOutcome = function(question, answer, settings) {
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 
   if (!validAnswer(answer)) {
-    var answerCorrectness = answer.A === undefined && answer.B === undefined ? 'warning' : 'incorrect';
+    var answerCorrectness = !hasPoints(answer) || !isPointSet(answer.A) || !isPointSet(answer.B) || !hasXY(answer.A) || !hasXY(answer.B) ? 'warning' : 'incorrect';
     return {
       correctness: answerCorrectness,
       score: 0,
@@ -77,7 +81,7 @@ exports.createOutcome = function(question, answer, settings) {
       score: isCorrect ? 1 : 0,
       correctResponse: {
         equation: correctResponse,
-        expression: functionUtils.expressionize(correctResponse, 'x')
+        expression: functionUtils.expressionize(correctFunction, 'x')
       },
       comments: question.comments
     };

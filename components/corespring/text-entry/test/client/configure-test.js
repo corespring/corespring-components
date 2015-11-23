@@ -63,8 +63,6 @@ describe('corespring:text-entry:configure', function () {
     }
   };
 
-  function MockImageUtils() {
-  }
 
   function MockWiggiMathJaxFeatureDef() {
   }
@@ -72,7 +70,6 @@ describe('corespring:text-entry:configure', function () {
   beforeEach(function () {
     module(function ($provide) {
       $provide.value('ServerLogic', MockServerLogic);
-      $provide.value('ImageUtils', MockImageUtils);
       $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
       $provide.value('WiggiLinkFeatureDef', function () {
       });

@@ -30,6 +30,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_2"]')
       .submitItem()
+      .waitForText('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('Yes, this is correct');
       })
@@ -40,6 +41,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_3"]')
       .submitItem()
+      .waitForText('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct');
       })
@@ -49,6 +51,7 @@ describe('feedback-block', function() {
   it('does display wildcard feedback if no answer', function(done) {
     browser
       .submitItem()
+      .waitForText('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct. You did not choose an answer.');
       })

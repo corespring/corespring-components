@@ -51,31 +51,47 @@ var componentIgnoreCorrect = {
       "minSelections": 2,
       "maxSelections": 3
     },
-    "choices": [{
+    "choices": [
+      {
       data: "I"
-    }, {
-      data: "ate"
-    }, {
-      data: "some"
-    }, {
-      data: "banana"
-    }, {
-      data: "and"
-    }, {
-      data: "carrot"
-    }, {
-      data: "and"
-    }, {
-      data: "cheese"
-    }, {
-      data: "and"
-    }, {
-      data: "apple"
-    }]
+      },
+      {
+        data: "ate"
+      },
+      {
+        data: "some"
+      },
+      {
+        data: "banana"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "carrot"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "cheese"
+      },
+      {
+        data: "and"
+      },
+      {
+        data: "apple"
+      }
+    ]
   }
 };
 
 describe('select text server logic', function() {
+
+  xit('should strip off correctness information from the model', function() {
+    var json = server.preprocess(_.cloneDeep(component));
+    json.model.choices[3].should.not.have.property('correct');
+  });
 
   xit('should return an incorrect outcome if answer is empty', function() {
     var outcome = server.createOutcome(_.cloneDeep(component), null, helper.settings(true, true, true));

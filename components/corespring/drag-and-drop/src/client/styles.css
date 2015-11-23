@@ -28,7 +28,7 @@
     /*z-index: 1040;*/
 }
 
-.view-drag-and-drop-legacy .choice:hover {
+.view-drag-and-drop-legacy.editable .choice:hover {
     box-shadow: 0px 0px 5px #000;
     border: 1px solid #333;
     cursor: hand; cursor: pointer;

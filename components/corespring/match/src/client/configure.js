@@ -6,11 +6,11 @@ var main = [
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
   function($http,
-    $timeout,
-    ComponentImageService,
-    LogFactory,
-    WiggiLinkFeatureDef,
-    WiggiMathJaxFeatureDef) {
+           $timeout,
+           ComponentImageService,
+           LogFactory,
+           WiggiLinkFeatureDef,
+           WiggiMathJaxFeatureDef) {
 
     var $log = LogFactory.getLogger('corespring-match-configure');
 
@@ -100,10 +100,10 @@ var main = [
       scope.onChangeLayout = onChangeLayout;
       scope.onChangeInputType = onChangeInputType;
 
-      //the trottle is to avoid update problems of the editor models
+      //the throttle is to avoid update problems of the editor models
       scope.$watch('config.layout', _.throttle(onChangeLayout, 50));
 
-      //the trottle is to avoid update problems of the editor models
+      //the throttle is to avoid update problems of the editor models
       scope.$watch('config.inputType', _.throttle(onChangeInputType, 50));
 
       scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
@@ -122,15 +122,54 @@ var main = [
       }
 
       function getModel() {
-        console.log("getModel", scope.fullModel);
-        var fullModel = _.cloneDeep(scope.fullModel);
-        return fullModel;
+        return _.cloneDeep(scope.fullModel);
+      }
+
+      function updatePartialScoring() {
+        if (scope.fullModel.model.config.inputType === INPUT_TYPE_CHECKBOX) {
+          scope.fullModel.partialScoring = scope.fullModel.partialScoring || {sections: []};
+          if (_.isArray(scope.fullModel.partialScoring)) {
+            scope.fullModel.partialScoring = {
+              sections: []
+            };
+          }
+          _.each(scope.fullModel.model.rows, function(row, idx) {
+            var partialSection = _.findWhere(scope.fullModel.partialScoring.sections, {catId: row.id});
+            if (!partialSection) {
+              partialSection = {
+                "catId": row.id,
+                "label": "Row " + (idx+1),
+                "partialScoring": []
+              };
+              scope.fullModel.partialScoring.sections.push(partialSection);
+            }
+            var correctResponseForRow = _.findWhere(scope.fullModel.correctResponse, {id: row.id});
+
+            var trueCount = _.reduce(correctResponseForRow.matchSet, function(acc, m) {
+              return acc + (m ? 1 : 0);
+            }, 0);
+            partialSection.numberOfCorrectResponses = Math.max(trueCount, 0);
+            partialSection.partialScoring = _.filter(partialSection.partialScoring, function(ps) {
+               return ps.numberOfCorrect < trueCount;
+            });
+          });
+          scope.fullModel.partialScoring.sections = _.filter(scope.fullModel.partialScoring.sections, function(section) {
+            return _.findWhere(scope.fullModel.model.rows, {id: section.catId});
+          });
+        } else if (scope.fullModel.model.config.inputType === INPUT_TYPE_RADIOBUTTON) {
+          scope.fullModel.partialScoring = scope.fullModel.partialScoring || [];
+          if (!_.isArray(scope.fullModel.partialScoring)) {
+            scope.fullModel.partialScoring = [];
+          }
+        }
       }
 
       function updateEditorModels() {
         $log.debug("updateEditorModels in");
         scope.matchModel = createMatchModel();
         scope.numberOfCorrectResponses = scope.sumCorrectAnswers();
+        updatePartialScoring();
+
         $log.debug("updateEditorModels out");
       }
 
@@ -229,7 +268,7 @@ var main = [
       }
 
       function addRowToCorrectResponseMatrix(rowId) {
-        var matchSet = createEmptyMatchSet(scope.model.columns.length-1);
+        var matchSet = createEmptyMatchSet(scope.model.columns.length - 1);
         scope.fullModel.correctResponse.push({
           id: rowId,
           matchSet: matchSet
@@ -299,18 +338,18 @@ var main = [
 
         function makeHeaders() {
           var questionHeaders = [],
-              questionHeaderId = _.uniqueId();
+            questionHeaderId = _.uniqueId();
 
           questionHeaders.push({
             wiggiId: questionHeaderId,
-            cssClass: 'question-header header'+questionHeaderId,
+            cssClass: 'question-header header' + questionHeaderId,
             labelHtml: scope.model.columns[0].labelHtml
           });
           var answerHeaders = scope.model.columns.slice(1).map(function(col) {
             var answerHeaderId = _.uniqueId();
             return {
               wiggiId: answerHeaderId,
-              cssClass: 'answer-header header'+answerHeaderId,
+              cssClass: 'answer-header header' + answerHeaderId,
               labelHtml: col.labelHtml
             };
           });
@@ -351,7 +390,7 @@ var main = [
 
         function getInputTypeClass(inputType) {
           return 'match-' + (isCheckBox(inputType) ?
-            INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
+              INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
         }
       }
 
@@ -401,11 +440,11 @@ var main = [
         }
 
         if ($this.column) {
-          var elementClass =  '.header'+$this.column.wiggiId,
-              elementHtml = $(elementClass).find('.wiggi-wiz-editable')[0].innerHTML;
+          var elementClass = '.header' + $this.column.wiggiId,
+            elementHtml = $(elementClass).find('.wiggi-wiz-editable')[0].innerHTML;
 
-          if (elementHtml ==="Custom header" || elementHtml==="Column 1" || elementHtml==="Column 2" || elementHtml==="Column 3" || elementHtml==="Column 4" ){
-              $(elementClass).find('.wiggi-wiz-editable').html('');
+          if (elementHtml === "Custom header" || elementHtml === "Column 1" || elementHtml === "Column 2" || elementHtml === "Column 3" || elementHtml === "Column 4") {
+            $(elementClass).find('.wiggi-wiz-editable').html('');
           }
         }
       }
@@ -426,7 +465,7 @@ var main = [
         scope.model.rows[index].labelHtml = removeUnexpectedTags(scope.matchModel.rows[index].labelHtml);
       }
 
-      function removeUnexpectedTags(s){
+      function removeUnexpectedTags(s) {
         var node = $('<div>');
         node.html(s);
 
@@ -472,10 +511,15 @@ var main = [
           '  <div class="container-fluid">',
           '    <div class="row">',
           '      <div class="col-xs-12">',
-          '        <corespring-partial-scoring-config ',
+          '        <corespring-partial-scoring-config ng-if="fullModel.model.config.inputType == \'radiobutton\'"',
           '            full-model="fullModel"',
           '            number-of-correct-responses="numberOfCorrectResponses"',
-          '         ></corespring-partial-scoring-config>',
+          '        ></corespring-partial-scoring-config>',
+          '        <corespring-multi-partial-scoring-config ng-if="fullModel.model.config.inputType == \'checkbox\'"',
+          '            model="fullModel.partialScoring"',
+          '            header-text="If there is more than one correct answer per row, you may allow partial credit based on the number of correct answers submitted per row. This is optional."',
+          '            allow-partial-scoring="fullModel.allowPartialScoring"',
+          '         ></corespring-multi-partial-scoring-config>',
           '      </div>',
           '    </div>',
           '  </div>',
@@ -535,7 +579,7 @@ var main = [
           '      <tr>',
           '        <td class="no-border">',
           '        </td>',
-                   headerColumns(),
+          headerColumns(),
           '      </tr>',
           '      <tr ng-repeat="row in matchModel.rows">',
           '        <td class="remove-row">',

@@ -93,7 +93,7 @@ describe('corespring:text-entry:render', function() {
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         feedback: {
           correctness: 'correct',
-          message: "Additional correct answers:<br/><span style='border: 1px solid lightgrey; border-radius: 4px; padding: 3px;'>pear</span><br/><br/>"
+          message: "Additional correct answers:<br/> <div class='cs-text-entry__response'>pear</div> <br/><br/>"
         }
       });
     });
@@ -109,7 +109,7 @@ describe('corespring:text-entry:render', function() {
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         feedback: {
           correctness: 'correct',
-          message: "Partially correct answers:<br/><span style='border: 1px solid lightgrey; border-radius: 4px; padding: 3px;'>pear</span>"
+          message: "Partially correct answers:<br/> <div class='cs-text-entry__response'>pear</div> "
         }
       });
     });

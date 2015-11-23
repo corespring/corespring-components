@@ -152,6 +152,10 @@ var main = [
           };
         },
 
+        setMode: function(mode) {
+          scope.mode = mode;
+        },
+
         isAnswerEmpty: function(){
           return this.getSession().numberOfAnswers === 0;
         },
@@ -257,7 +261,7 @@ var main = [
     function template() {
       function choiceArea() {
         return [
-          '<div class="choices-holder" ng-hide="instructorData" >',
+          '<div class="choices-holder">',
           '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
           '    <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
           '  </div>',
@@ -276,7 +280,7 @@ var main = [
       }
 
       return [
-        '<div class="render-csdndi" drag-and-drop-controller>',
+        '<div class="render-csdndi {{mode}}" drag-and-drop-controller>',
         '  <div ng-show="canEdit()" class="undo-start-over pull-right">',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',

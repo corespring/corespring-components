@@ -8,6 +8,9 @@ exports.directive = {
     ChoiceCorespringDndCategorize]
 };
 
+/**
+ * A draggable choice
+ */
 function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
 
   return {

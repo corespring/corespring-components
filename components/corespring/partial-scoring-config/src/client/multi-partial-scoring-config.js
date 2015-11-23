@@ -36,7 +36,8 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
   return {
     scope: {
       model: '=',
-      allowPartialScoring: '='
+      allowPartialScoring: '=',
+      headerText: "@"
     },
     restrict: 'E',
     replace: true,
@@ -152,11 +153,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
   function template() {
     return [
         '<div class="corespring-partial-scoring">',
-        '  <div class="scoring-header-text">',
-        '  <p> If there is more than one correct answer in a category, ',
-        '   you may allow partial credit based on the number of correct ',
-        '   answers submitted to that category. This is optional.</p>',
-        '   <p>Categories with only one correct answer can not be given partial credit.</p>',
+        '  <div class="scoring-header-text" ng-bind-html-unsafe="headerText">',
         '  </div>',
         '  <div class="panel panel-default" ng-class="{disabled: !hasPartialScoringToConfigure()}">',
         '    <div class="panel-heading">',

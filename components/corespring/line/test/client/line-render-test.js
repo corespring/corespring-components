@@ -1,6 +1,6 @@
 describe('corespring:line:render', function() {
 
-  var testModel, scope, rootScope, container, element;
+  var testModel, scope, rootScope, container, element, timeout;
 
   window.JXG = {
     JSXGraph: {
@@ -26,25 +26,32 @@ describe('corespring:line:render', function() {
       "componentType": "corespring-line",
       "title": "Line interaction sample",
       "weight": 1,
-      "correctResponse": [
-        "0,6",
-        "-3,0"
-      ],
+      "correctResponse": "y=2x+7",
       "feedback": {
         "correctFeedbackType": "default",
         "incorrectFeedbackType": "default"
       },
       "model": {
         "config": {
-          "graphWidth": "300px",
-          "graphHeight": "300px",
           "maxPoints": 2,
-          "pointLabels": [
-            "label1",
-            "label2"
-          ],
-          "domainLabel": "domain",
-          "rangeLabel": "range"
+          "graphHeight": 500,
+          "domainLabel": "x",
+          "domainMin": -10,
+          "domainMax": 10,
+          "domainStepValue": 1,
+          "domainSnapValue": 1,
+          "domainLabelFrequency": 1,
+          "domainGraphPadding": 50,
+          "rangeLabel": "y",
+          "rangeMin": -10,
+          "rangeMax": 10,
+          "rangeStepValue": 1,
+          "rangeSnapValue": 1,
+          "rangeLabelFrequency": 1,
+          "rangeGraphPadding": 50,
+          "sigfigs": -1,
+          "showCoordinates": true,
+          "showInputs": true
         }
       }
     }
@@ -98,25 +105,43 @@ describe('corespring:line:render', function() {
   });
 
   describe('isAnswerEmpty', function() {
+    // beforeEach(inject(function($timeout) {
+    //   timeout = $timeout;
+    // }));
+
+    // beforeEach(function(done) {
+    //   done();
+    // });
+
     it('should return true initially', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(true);
     });
+
     xit('should return false if answer is set initially', function() {
       //Not sure how to set an initial value that
       //makes the component.isAnswerEmpty to return false
       //It seems like the interaction deletes the points in startOver
-      testModel.session = {
-        answers: {A:{x:0.1,y:0.2}}
-      };
+      testModel.data.model.config.initialCurve = "y=2x+1";
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
-      expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+      timeout(function() {
+        expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+        // done();
+      }, 150);
+      timeout.flush();
     });
-    it('should return false if answer is selected', function() {
+
+    it('should return true if only one point is plotted', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.points = {A:{x:0.1,y:0.2}};
+      scope.line.points = { A: { x:1, y: 1, isSet: true }, B: { isSet: false } };
+      expect(container.elements['1'].isAnswerEmpty()).toBe(true);
+    });
+
+    it('should return false if line is ploted', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.line.points = { A: { x:1, y: 1, isSet: true }, B: { x:2, y: 2, isSet: true } };
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
@@ -156,8 +181,8 @@ describe('corespring:line:render', function() {
       expect(changeHandlerCalled).toBe(false);
     });
 
-    it('does get called when a point is selected', function() {
-      scope.points = {A:{x:0.1,y:0.2}};
+    it('does get called when a line is plotted', function() {
+      scope.line.equation = "y=2x";
       scope.$digest();
       expect(changeHandlerCalled).toBe(true);
     });

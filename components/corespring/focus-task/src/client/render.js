@@ -83,7 +83,7 @@ var main = [
         var stash = scope.session.stash = scope.session.stash || {};
         var answers = scope.session.answers = scope.session.answers || {};
 
-        scope.inputType = !! model.config.singleChoice ? "radio" : "checkbox";
+        scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
 
         if (stash.shuffledOrder && model.config.shuffle) {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
@@ -137,7 +137,16 @@ var main = [
             console.log("choice: ", choice);
           });
         },
-        setMode: function(newMode) {},
+
+        setInstructorData: function(data) {
+          _.each(scope.choices, function(c) {
+            var isCorrect = _.contains(data.correctResponse.value, c.value);
+            c.correct = isCorrect ? "shouldHaveBeenSelected" : undefined;
+          });
+        },
+
+        setMode: function(newMode) {
+        },
         /**
          * Reset the ui back to an unanswered state
          */

@@ -17,8 +17,6 @@ describe('corespring:line:configure', function() {
 
   beforeEach(angular.mock.module('test-app'));
 
-  function MockImageUtils() {}
-
   function MockWiggiMathJaxFeatureDef() {}
 
   function MockComponentDefaultData(){

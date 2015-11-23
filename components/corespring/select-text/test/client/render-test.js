@@ -12,8 +12,20 @@ describe('corespring:select-text:render', function() {
   var testModelTemplate = {
     data: {
       model: {
+        choices: [
+          {
+            data: "I"
+          },
+          {
+            data: "am"
+          },
+          {
+            data: "green"
+          }
+        ],
         config: {}
-      }
+      },
+      wrappedText: "<span class='token' id='0'>I</span><span class='token' id='1'>am</span><span class='token' id='3'>green</span>"
     },
     session: {
       answers: null
@@ -68,6 +80,29 @@ describe('corespring:select-text:render', function() {
 
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('instructor data', function() {
+    it('setting instructor data should select correct answers', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+      container.elements['1'].setInstructorData({
+        correctResponse: [
+          {
+            data: "I"
+          },
+          {
+            data: "am",
+            correct: true
+          },
+          {
+            data: "green"
+          }
+        ]
+      });
+      scope.$digest();
+      expect(element.find('.correct').length).toEqual(1);
+    });
   });
 
   describe('answer change callback', function() {
