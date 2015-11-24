@@ -74,7 +74,9 @@ describe('corespring:dnd-categorize:render', function() {
   beforeEach(function() {
     module(function($provide) {
       $provide.value('MathJaxService', {
-        parseDomForMath: function() {}
+        parseDomForMath: function() {},
+        off: function() {},
+        onEndProcess: function() {}
       });
     });
   });
