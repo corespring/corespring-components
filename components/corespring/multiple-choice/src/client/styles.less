@@ -34,6 +34,7 @@
 
 @import '../../../../../less/common';
 
+@icon-size: 22px;
 
 .view-multiple-choice {
 
@@ -231,22 +232,16 @@
   }
 
   .choice-holder {
-    .checkbox-choice[disabled] {
-      opacity: 0.65;
-    }
-    .radio-choice[disabled] {
-      opacity: 0.65;
-    }
     .radio-choice, .checkbox-choice {
       display: inline-block;
       vertical-align: middle;
-      height: 24px;
-      width: 24px;
+      height: @icon-size;
+      width: @icon-size;
       .radio-button, .mc-checkbox {
         line-height: 0;
         .icon-holder {
           position: relative;
-          width: 24px;
+          width: @icon-size;
           .icon {
             position: absolute;
 
@@ -268,7 +263,7 @@
 
 
         svg {
-          width: 24px;
+          width: @icon-size;
           .feedback {
             visibility: hidden;
           }
@@ -291,8 +286,8 @@
   .choice-feedback {
     line-height: 0px;
     svg {
-      height: 24px;
-      width: 24px;
+      height: @icon-size;
+      width: @icon-size;
     }
   }
   .choice-label {

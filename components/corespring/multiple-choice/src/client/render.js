@@ -140,6 +140,7 @@ var main = [
             choices: {},
             choice: ""
           };
+          scope.iconset = scope.question.config.choiceType == 'checkbox' ? 'emoji' : 'check';
           updateUi();
         },
 
@@ -321,7 +322,6 @@ var main = [
         if (scope.response) return "muted";
       };
 
-      scope.iconset = 'emoji';
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     };
@@ -362,7 +362,7 @@ var main = [
 
     var choicesTemplate = [
       '<div class="choices-container">',
-      '  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
+      //'  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
       '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct Answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
@@ -370,7 +370,7 @@ var main = [
       '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" feedback-icon-set="{{iconset}}"/>',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" />',
+      '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
       '        </div>',
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
       '          <div radio-button radio-button-state="{{radioState(o)}}" />',
@@ -444,9 +444,10 @@ var radioButton = ['$sce',
             '</svg>'
           ].join(''),
           correctUnselected: [
-            '<svg viewBox="-285 361 31 31">',
-            '<circle fill="#86A785" cx="-269.5" cy="376.5" r="15"/>',
-            '<circle fill="#C7E2C7" cx="-269.5" cy="376.5" r="13"/>',
+            '<svg viewBox="0 0 31 31">',
+            '<circle fill="#E0DEE0" cx="15.5" cy="15.5" r="15"/>',
+            '<circle fill="#C7E2C7" cx="15.5" cy="15.5" r="13"/>',
+            '<polygon fill="#84A783" class="feedback-icon-foreground" points="15.4,22.7 8.6,16.8 11.2,13.8 14.3,16.5 18.9,8.3 22.4,10.2"/>',
             '</svg>'
           ].join(''),
           incorrect: [
@@ -465,7 +466,7 @@ var radioButton = ['$sce',
 
         $attrs.$observe('radioButtonState', function(val) {
           console.log("qqqq", val, val == 'selected');
-          if (_(["selected", 'correct', 'incorrect', 'muted','correctUnselected']).contains(val)) {
+          if (_(["selected", 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
           } else {
             $scope.active = 'ready';
@@ -480,10 +481,11 @@ var mcCheckbox = ['$sce',
   function($sce) {
     return {
       scope: {
-        checkboxButtonState: "@"
+        checkboxButtonState: "@",
+        checkboxButtonChoice: "="
       },
       template: [
-        '<div class="mc-checkbox">',
+        '<div class="mc-checkbox"  feedback-popover="feedback">',
         '  <div class="icon-holder" >',
         '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" ng-bind-html="glyphs[\'ready\']"></div>',
         '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[\'muted\']"></div>',
@@ -515,15 +517,16 @@ var mcCheckbox = ['$sce',
             '<rect fill="#86A785" x="-276.5" y="369.5" class="st0" width="14" height="14"/>',
             '</svg>'].join(''),
           correctUnselected: [
-            '<svg viewBox="-285 361 31 31">',
-            '<rect fill="#86A785" x="-284.5" y="361.5" class="st0" width="30" height="30"/>',
-            '<rect fill="#C7E2C7" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
+            '<svg viewBox="0 0 31 31">',
+            '<rect fill="#E0DEE0" x="0.5" y="0.5" width="30" height="30"/>',
+            '<rect fill="#C7E2C7" x="2.5" y="2.5" width="26" height="26"/>',
+            '<polygon fill="#84A783" class="feedback-icon-foreground" points="15.4,22.7 8.6,16.8 11.2,13.8 14.3,16.5 18.9,8.3 22.4,10.2"/>',
             '</svg>'].join(''),
           incorrect: [
             '<svg viewBox="-285 361 31 31">',
-            '<rect fill="#BEBEBE" x="-284.5" y="361.5" class="st0" width="30" height="30"/>',
-            '<rect fill="#FFFFFF" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
-            '<rect fill="#BEBEBE" x="-276.5" y="369.5" class="st0" width="14" height="14"/>',
+            '<rect fill="#FFCC99" x="-284.5" y="361.5" class="st0" width="30" height="30"/>',
+            '<rect fill="#FBE7B7" x="-282.5" y="363.5" class="st1" width="26" height="26"/>',
+            '<rect fill="#FFCC99" x="-276.5" y="369.5" class="st0" width="14" height="14"/>',
             '</svg>'
           ].join('')
         }, function(o) {
@@ -532,15 +535,297 @@ var mcCheckbox = ['$sce',
 
         $scope.active = 'ready';
 
+
         $attrs.$observe('checkboxButtonState', function(val) {
           if (_(["selected", 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
+            if (val == 'correctUnselected') {
+              $scope.feedback = {
+                correctness: 'correct',
+                feedback: $scope.checkboxButtonChoice.feedback
+              }
+            }
           } else {
             $scope.active = 'ready';
           }
         });
       }
     }
+  }
+];
+
+var feedbackIcon = [
+  '$sce', '$log',
+  function($sce) {
+
+    var glyphs = {
+      empty: '<svg viewBox="0 0 31 31"></svg>',
+      nonSelectedCorrect: [
+        '<svg viewBox="0 0 31 31">',
+        '<polygon fill="#2E662C" class="feedback-icon-foreground" points="15.4,22.7 8.6,16.8 11.2,13.8 14.3,16.5 18.9,8.3 22.4,10.2"/>',
+        '</svg>'
+      ].join(''),
+      emoji: {
+        radio: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-20 21 31 31">',
+              '<circle fill="#C7E2C7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
+              '<path fill="#2E662C" class="feedback-icon-foreground" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
+              '<rect x="-2.3" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-20 21 31 31">',
+              '<circle fill="#FBE7B7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
+              '<rect x="-2.3" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
+              '<rect x="-10.6" y="39.9" fill="#EEA236" class="feedback-icon-foreground" width="12.2" height="3.1"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path fill="#D0CAC5" d="M-91.8,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.5,153.9-91.8,150.3-91.8,146.2z"/>',
+              '<path fill="#B3ABA4" class="st1" d="M-93.6,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95.3,153.1-93.6,149.5-93.6,145.4z"/>',
+              '<path fill="#C7E2C7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
+              '<path fill="#2E662C" class="feedback-icon-foreground" d="M-104.1,146.5c-1.3,1.5-3.2,2.4-5.2,2.4c-2,0-3.9-0.9-5.2-2.4l-2.4,1.4c1.8,2.3,4.6,3.8,7.6,3.8c3,0,5.8-1.4,7.6-3.8L-104.1,146.5z"/>',
+              '<rect x="-107.3" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '<rect x="-114.6" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path fill="#D0CAC5" d="M-91.5,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.2,153.9-91.5,150.3-91.5,146.2z"/>',
+              '<path fill="#B3ABA4" d="M-93.3,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95,153.1-93.3,149.5-93.3,145.4z"/>',
+              '<path fill="#FBE7B7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
+              '<rect x="-107.3" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '<rect x="-114.6" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
+              '<rect x="-115" y="147" fill="#EEA236" class="feedback-icon-foreground" width="11.4" height="2.9"/>',
+              '</svg>'
+            ].join('')
+
+          }
+        },
+        checkbox: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-20 21 31 31">',
+              '<rect x="-19.5" y="21.5" fill="#C7E2C7" width="30" height="30"/>',
+              '<path fill="#2E662C" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
+              '<rect x="-2.3" y="30.9" fill="#2E662C" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#2E662C" width="3.5" height="4.4"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-20 21 31 31">',
+              '<rect x="-19.5" y="21.5" fill="#FBE7B7" width="30" height="30"/>',
+              '<rect x="-2.3" y="30.9" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-10.2" y="30.9" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-10.6" y="39.9" fill="#EEA236" width="12.2" height="3.1"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon fill="#C7E2C7" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<path fill="#2E662C" class="feedback-icon-background" d="M-104.9,146.5c-1.4,1.6-3.4,2.5-5.5,2.5s-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L-104.9,146.5z"/>',
+              '<rect x="-108.3" y="138" fill="#2E662C" width="3.5" height="4.4"/>',
+              '<rect x="-116.2" y="138" fill="#2E662C" width="3.5" height="4.4"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon fill="#FBE7B7" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<rect x="-108.3" y="138" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-116.2" y="138" fill="#EEA236" width="3.5" height="4.4"/>',
+              '<rect x="-116.6" y="146.9" fill="#EEA236" width="12.2" height="3.1"/>',
+              '</svg>'
+            ].join('')
+          }
+        }
+      },
+      check: {
+        radio: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-128 129 31 31">',
+              '<circle fill="#C7E2C7"  cx="-112.5" cy="144.5" r="15"/>',
+              '<polygon fill="#2E662C" points="-113,152.1 -119.5,146.6 -117.1,143.8 -114,146.4 -108.7,136.9 -105.5,138.6 		"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-128 129 31 31">',
+              '<circle fill="#FBE7B7" cx="-112.5" cy="144.5" r="15"/>',
+              '<rect x="-114.6" y="140.2" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -180.6316 -22.7256)" fill="#EEA236" width="10" height="3.8"/>',
+              '<rect x="-115.9" y="147.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -189.5706 -22.5582)" fill="#EEA236" width="3.9" height="3.8"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-linejoin:round;stroke-miterlimit:10;" d="M-93,146c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0H-93l-4.5-3.8C-94.8,153.7-93,150-93,146z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;" d="M-94.8,145.1c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-96.5,152.8-94.8,149.2-94.8,145.1z"/>',
+              '<path style="fill:#C7E2C7;" d="M-96.5,143.5c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-98.2,151.2-96.5,147.5-96.5,143.5z"/>',
+              '<polygon style="fill:#2E662C;" points="-108.5,151.9 -114.5,146.7 -112.3,144.1 -109.4,146.6 -104.5,137.7 -101.5,139.4 				"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="138.7" x2="-109.9" y2="138.7"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="141.6" x2="-109.9" y2="141.6"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="144.6" x2="-114.9" y2="144.6"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-linejoin:round;stroke-miterlimit:10;" d="M-93,146c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0H-93l-4.5-3.8C-94.8,153.7-93,150-93,146z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;" d="M-94.8,145.1c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-96.5,152.8-94.8,149.2-94.8,145.1z"/>',
+              '<path style="fill:#FBE7B7;" d="M-96.5,143.5c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-98.2,151.2-96.5,147.5-96.5,143.5z"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="138.7" x2="-109.9" y2="138.7"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="141.6" x2="-109.9" y2="141.6"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="144.6" x2="-114.9" y2="144.6"/>',
+              '<rect x="-109.3" y="140.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -178.4842 -18.2273)" style="fill:#EEA236;" width="9.1" height="3.4"/>',
+              '<rect x="-110.4" y="147.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -186.6214 -18.1003)" style="fill:#EEA236;" width="3.5" height="3.4"/>',
+              '</svg>'
+            ].join('')
+          }
+        },
+        checkbox: {
+          nofeedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="0 0 31 31">',
+              '<rect x="0.5" y="0.5" fill="#C7E2C7" width="30" height="30"/>',
+              '<polygon fill="#2E662C" points="15,23.6 8.1,17.7 10.6,14.7 13.9,17.5 19.5,7.4 22.9,9.3 		"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="0 0 31 31">',
+              '<rect x="0.5" y="0.5" style="fill:#FBE7B7;" width="30" height="30"/>',
+              '<rect x="13.6" y="11" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 39.1218 2.8649)" style="fill:#EEA236;" width="10.3" height="3.9"/>',
+              '<rect x="12.2" y="18.9" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 39.4251 18.5392)" style="fill:#EEA236;" width="4" height="3.9"/>',
+              '</svg>'
+            ].join('')
+          },
+          feedback: {
+            correct: [
+              '<svg viewBox="-129.5 127 34 35">',
+              '</svg>'
+            ].join(''),
+            correctSelected: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon style="fill:#C7E2C7;" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<polygon style="fill:#2E662C;" points="-108.1,151.9 -114.6,146.3 -112.2,143.6 -109.2,146.2 -103.9,136.7 -100.7,138.4 				"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="137.7" x2="-109.7" y2="137.7"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="140.9" x2="-109.7" y2="140.9"/>',
+              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="144" x2="-115.1" y2="144"/>',
+              '</svg>'
+            ].join(''),
+            incorrect: [
+              '<svg viewBox="-125 129 36 32">',
+              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
+              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
+              '<polygon style="fill:#FBE7B7;" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="137.7" x2="-109.4" y2="137.7"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="140.9" x2="-109.4" y2="140.9"/>',
+              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="144" x2="-112" y2="144"/>',
+              '<rect x="-109.3" y="140" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 -31.0528 301.9162)" style="fill:#EEA236;" width="9.7" height="3.7"/>',
+              '<rect x="-110.5" y="147.5" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 -30.7657 316.7093)" style="fill:#EEA236;" width="3.8" height="3.7"/>',
+              '</svg>'
+            ].join('')
+          }
+        }
+      }
+    };
+
+    return {
+      scope: {
+        feedbackIconChoice: "=",
+        feedbackIconClass: "@",
+        feedbackIconType: "@",
+        feedbackIconSet: "@"
+      },
+      template: [
+        '<div class="feedback-icon" feedback-popover="feedback" viewport="#{{playerId}}">',
+        '  <div ng-class="{hasFeedback: feedback}" ng-if="!isEmpty" class="glyph" ng-bind-html="glyph"></div>',
+        '</div>'
+      ].join("\n"),
+      link: function($scope, $element, $attrs) {
+
+        $scope.$watch('feedbackIconChoice', updateView, true);
+        $attrs.$observe('feedbackIconClass', updateView);
+        $attrs.$observe('feedbackIconType', updateView);
+        $attrs.$observe('feedbackIconSet', updateView);
+
+        $scope.playerId = (function() {
+          return $element.closest('.player-body').attr('id');
+        })();
+
+
+        function updateView() {
+          console.log($scope.feedbackIconChoice, " ", $scope.feedbackIconClass);
+          if (_.isUndefined($scope.feedbackIconChoice) || _.isUndefined($scope.feedbackIconClass) || _.isUndefined($scope.feedbackIconType)) {
+            return;
+          }
+          var iconSet = $scope.feedbackIconSet || 'emoji';
+          var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
+          var selected = $scope.feedbackIconClass.match(/selected/);
+          var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
+          var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
+          $scope.isEmpty = true;
+          console.log(iconSet, $scope.feedbackIconType, feedbackSelector, correctnessSelector);
+          var glyph = glyphs[iconSet][$scope.feedbackIconType][feedbackSelector][correctnessSelector];
+          if (correctness == 'correct' && !selected) {
+            $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyph : glyphs.nonSelectedCorrect);
+            $scope.isEmpty = false;
+          } else if (glyph) {
+            $scope.glyph = $sce.trustAsHtml(glyph);
+            $scope.isEmpty = false;
+          }
+
+          $scope.feedback = ($scope.isEmpty || !$scope.feedbackIconChoice.feedback || correctnessSelector == 'correct' ) ? undefined : {
+            correctness: correctness,
+            feedback: $scope.feedbackIconChoice.feedback
+          };
+
+        }
+      }
+    }
+
   }
 ];
 
@@ -630,9 +915,12 @@ var iconToggle = ['$sce',
         $scope.ngModel = _.isUndefined($scope.ngModel) ? false : $scope.ngModel;
         $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
 
+        $scope.$watch('ngModel', function() {
+          $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
+        });
+
         $scope.toggleCorrect = function() {
           $scope.ngModel = !$scope.ngModel;
-          $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
         };
 
       }
@@ -640,320 +928,6 @@ var iconToggle = ['$sce',
   }
 ];
 
-var feedbackIcon = [
-  '$sce', '$log',
-  function($sce) {
-
-    var glyphs = {
-      empty: '<svg viewBox="0 0 31 31"></svg>',
-      nonSelectedCorrect: [
-        '<svg viewBox="0 0 31 31">',
-        '<polygon fill="#2E662C" class="feedback-icon-foreground" points="15.4,22.7 8.6,16.8 11.2,13.8 14.3,16.5 18.9,8.3 22.4,10.2"/>',
-        '</svg>'
-      ].join(''),
-      emoji: {
-        radio: {
-          nofeedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="-20 21 31 31">',
-              '<circle fill="#C7E2C7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
-              '<path fill="#2E662C" class="feedback-icon-foreground" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
-              '<rect x="-2.3" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-              '<rect x="-10.2" y="30.9" fill="#2E662C" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-              '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="-20 21 31 31">',
-              '<circle fill="#FBE7B7" class="feedback-icon-background" cx="-4.5" cy="36.5" r="15"/>',
-              '<rect x="-2.3" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-              '<rect x="-10.2" y="30.9" fill="#EEA236" class="feedback-icon-foreground" width="3.5" height="4.4"/>',
-              '<rect x="-10.6" y="39.9" fill="#EEA236" class="feedback-icon-foreground" width="12.2" height="3.1"/>',
-              '</svg>'
-            ].join('')
-          },
-          feedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path fill="#D0CAC5" d="M-91.8,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.5,153.9-91.8,150.3-91.8,146.2z"/>',
-              '<path fill="#B3ABA4" class="st1" d="M-93.6,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95.3,153.1-93.6,149.5-93.6,145.4z"/>',
-              '<path fill="#C7E2C7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
-              '<path fill="#2E662C" class="feedback-icon-foreground" d="M-104.1,146.5c-1.3,1.5-3.2,2.4-5.2,2.4c-2,0-3.9-0.9-5.2-2.4l-2.4,1.4c1.8,2.3,4.6,3.8,7.6,3.8c3,0,5.8-1.4,7.6-3.8L-104.1,146.5z"/>',
-              '<rect x="-107.3" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-              '<rect x="-114.6" y="138.6" fill="#2E662C" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-              '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path fill="#D0CAC5" d="M-91.5,146.2c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-93.2,153.9-91.5,150.3-91.5,146.2z"/>',
-              '<path fill="#B3ABA4" d="M-93.3,145.4c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-95,153.1-93.3,149.5-93.3,145.4z"/>',
-              '<path fill="#FBE7B7" class="feedback-icon-background" d="M-95.3,143.8c0-7.7-6.3-14-14-14c-7.7,0-14,6.3-14,14c0,7.7,6.3,14,14,14c0.3,0,0.6,0,0.9,0v0h13.1l-4.5-3.8C-97,151.4-95.3,147.8-95.3,143.8z"/>',
-              '<rect x="-107.3" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-              '<rect x="-114.6" y="138.6" fill="#EEA236" class="feedback-icon-foreground" width="3.3" height="4.1"/>',
-              '<rect x="-115" y="147" fill="#EEA236" class="feedback-icon-foreground" width="11.4" height="2.9"/>',
-              '</svg>'
-            ].join('')
-
-          }
-        },
-        checkbox: {
-          nofeedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="-20 21 31 31">',
-              '<rect x="-19.5" y="21.5" fill="#C7E2C7" width="30" height="30"/>',
-              '<path fill="#2E662C" d="M1,39.5C-0.3,41.1-2.4,42-4.5,42c-2.1,0-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L1,39.5z"/>',
-              '<rect x="-2.3" y="30.9" fill="#2E662C" width="3.5" height="4.4"/>',
-              '<rect x="-10.2" y="30.9" fill="#2E662C" width="3.5" height="4.4"/>',
-              '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="-20 21 31 31">',
-              '<rect x="-19.5" y="21.5" fill="#FBE7B7" width="30" height="30"/>',
-              '<rect x="-2.3" y="30.9" fill="#EEA236" width="3.5" height="4.4"/>',
-              '<rect x="-10.2" y="30.9" fill="#EEA236" width="3.5" height="4.4"/>',
-              '<rect x="-10.6" y="39.9" fill="#EEA236" width="12.2" height="3.1"/>',
-              '</svg>'
-            ].join('')
-          },
-          feedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
-              '<polygon fill="#C7E2C7" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
-              '<path fill="#2E662C" class="feedback-icon-background" d="M-104.9,146.5c-1.4,1.6-3.4,2.5-5.5,2.5s-4.2-1-5.5-2.5l-2.6,1.5c1.9,2.5,4.9,4,8.2,4c3.2,0,6.2-1.5,8.2-4L-104.9,146.5z"/>',
-              '<rect x="-108.3" y="138" fill="#2E662C" width="3.5" height="4.4"/>',
-              '<rect x="-116.2" y="138" fill="#2E662C" width="3.5" height="4.4"/>',
-            '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
-              '<polygon fill="#FBE7B7" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
-              '<rect x="-108.3" y="138" fill="#EEA236" width="3.5" height="4.4"/>',
-              '<rect x="-116.2" y="138" fill="#EEA236" width="3.5" height="4.4"/>',
-              '<rect x="-116.6" y="146.9" fill="#EEA236" width="12.2" height="3.1"/>',
-              '</svg>'
-            ].join('')
-          }
-        }
-      },
-      check: {
-        radio: {
-          nofeedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="-128 129 31 31">',
-              '<circle fill="#C7E2C7"  cx="-112.5" cy="144.5" r="15"/>',
-              '<polygon fill="#2E662C" points="-113,152.1 -119.5,146.6 -117.1,143.8 -114,146.4 -108.7,136.9 -105.5,138.6 		"/>',
-              '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="-128 129 31 31">',
-              '<circle fill="#FBE7B7" cx="-112.5" cy="144.5" r="15"/>',
-              '<rect x="-114.6" y="140.2" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -180.6316 -22.7256)" fill="#EEA236" width="10" height="3.8"/>',
-              '<rect x="-115.9" y="147.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -189.5706 -22.5582)" fill="#EEA236" width="3.9" height="3.8"/>',
-              '</svg>'
-            ].join('')
-          },
-          feedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-linejoin:round;stroke-miterlimit:10;" d="M-93,146c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0H-93l-4.5-3.8C-94.8,153.7-93,150-93,146z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;" d="M-94.8,145.1c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-96.5,152.8-94.8,149.2-94.8,145.1z"/>',
-              '<path style="fill:#C7E2C7;" d="M-96.5,143.5c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-98.2,151.2-96.5,147.5-96.5,143.5z"/>',
-              '<polygon style="fill:#2E662C;" points="-108.5,151.9 -114.5,146.7 -112.3,144.1 -109.4,146.6 -104.5,137.7 -101.5,139.4 				"/>',
-              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="138.7" x2="-109.9" y2="138.7"/>',
-              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="141.6" x2="-109.9" y2="141.6"/>',
-              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120" y1="144.6" x2="-114.9" y2="144.6"/>',
-              '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-linejoin:round;stroke-miterlimit:10;" d="M-93,146c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0H-93l-4.5-3.8C-94.8,153.7-93,150-93,146z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;" d="M-94.8,145.1c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-96.5,152.8-94.8,149.2-94.8,145.1z"/>',
-              '<path style="fill:#FBE7B7;" d="M-96.5,143.5c0-7.7-6.3-14-14-14s-14,6.3-14,14s6.3,14,14,14c0.3,0,0.6,0,0.9,0l0,0h13.1l-4.5-3.8C-98.2,151.2-96.5,147.5-96.5,143.5z"/>',
-              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="138.7" x2="-109.9" y2="138.7"/>',
-              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="141.6" x2="-109.9" y2="141.6"/>',
-              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120" y1="144.6" x2="-114.9" y2="144.6"/>',
-              '<rect x="-109.3" y="140.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -178.4842 -18.2273)" style="fill:#EEA236;" width="9.1" height="3.4"/>',
-              '<rect x="-110.4" y="147.8" transform="matrix(0.4853 -0.8744 0.8744 0.4853 -186.6214 -18.1003)" style="fill:#EEA236;" width="3.5" height="3.4"/>',
-              '</svg>'
-            ].join('')
-          }
-        },
-        checkbox: {
-          nofeedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="0 0 31 31">',
-              '<rect x="0.5" y="0.5" fill="#C7E2C7" width="30" height="30"/>',
-              '<polygon fill="#2E662C" points="15,23.6 8.1,17.7 10.6,14.7 13.9,17.5 19.5,7.4 22.9,9.3 		"/>',
-              '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="0 0 31 31">',
-              '<rect x="0.5" y="0.5" style="fill:#FBE7B7;" width="30" height="30"/>',
-              '<rect x="13.6" y="11" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 39.1218 2.8649)" style="fill:#EEA236;" width="10.3" height="3.9"/>',
-              '<rect x="12.2" y="18.9" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 39.4251 18.5392)" style="fill:#EEA236;" width="4" height="3.9"/>',
-              '</svg>'
-            ].join('')
-          },
-          feedback: {
-            correct: [
-              '<svg viewBox="-129.5 127 34 35">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-              '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-              '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-              '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-              '</svg>'
-            ].join(''),
-            correctSelected: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
-              '<polygon style="fill:#C7E2C7;" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
-              '<polygon style="fill:#2E662C;" points="-108.1,151.9 -114.6,146.3 -112.2,143.6 -109.2,146.2 -103.9,136.7 -100.7,138.4 				"/>',
-              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="137.7" x2="-109.7" y2="137.7"/>',
-              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="140.9" x2="-109.7" y2="140.9"/>',
-              '<line style="fill:none;stroke:#2E662C;stroke-miterlimit:10;" x1="-120.5" y1="144" x2="-115.1" y2="144"/>',
-              '</svg>'
-            ].join(''),
-            incorrect: [
-              '<svg viewBox="-125 129 36 32">',
-              '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-93.5,154.7v-21.6c0-0.6-0.4-1-1-1h-26c-0.6,0-1,0.4-1,1v26c0,0.6,0.4,1,1,1h29.7c0.9,0,1.3-1.1,0.7-1.7l-3.1-3C-93.4,155.2-93.5,154.9-93.5,154.7z"/>',
-              '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-120.5,134.1v24c0,0.6,0.4,1,1,1h26.2c0.9,0,1.3-1.1,0.7-1.7l-1.3-1.3c-0.4-0.4-0.6-0.9-0.6-1.4v-20.6c0-0.6-0.4-1-1-1h-24C-120.1,133.1-120.5,133.5-120.5,134.1z"/>',
-              '<polygon style="fill:#FBE7B7;" points="-96.5,152.5 -96.5,129.5 -124.5,129.5 -124.5,157.5 -91.3,157.5 			"/>',
-              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="137.7" x2="-109.4" y2="137.7"/>',
-              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="140.9" x2="-109.4" y2="140.9"/>',
-              '<line style="fill:none;stroke:#EEA236;stroke-miterlimit:10;" x1="-120.3" y1="144" x2="-112" y2="144"/>',
-              '<rect x="-109.3" y="140" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 -31.0528 301.9162)" style="fill:#EEA236;" width="9.7" height="3.7"/>',
-              '<rect x="-110.5" y="147.5" transform="matrix(-0.4853 0.8744 -0.8744 -0.4853 -30.7657 316.7093)" style="fill:#EEA236;" width="3.8" height="3.7"/>',
-              '</svg>'
-            ].join('')
-          }
-        }
-      }
-    };
-
-    return {
-      scope: {
-        feedbackIconChoice: "=",
-        feedbackIconClass: "@",
-        feedbackIconType: "@",
-        feedbackIconSet: "@"
-      },
-      template: [
-        '<div class="feedback-icon" feedback-popover="feedback" viewport="#{{playerId}}">',
-        '  <div ng-class="{hasFeedback: feedback}" ng-if="!isEmpty" class="glyph" ng-bind-html="glyph"></div>',
-        '</div>'
-      ].join("\n"),
-      link: function($scope, $element, $attrs) {
-
-        $scope.$watch('feedbackIconChoice', updateView, true);
-        $attrs.$observe('feedbackIconClass', updateView);
-        $attrs.$observe('feedbackIconType', updateView);
-        $attrs.$observe('feedbackIconSet', updateView);
-
-        $scope.playerId = (function() {
-          return $element.closest('.player-body').attr('id');
-        })();
-
-
-        function updateView() {
-          console.log($scope.feedbackIconChoice, " ", $scope.feedbackIconClass);
-          if (_.isUndefined($scope.feedbackIconChoice) || _.isUndefined($scope.feedbackIconClass) || _.isUndefined($scope.feedbackIconType)) {
-            return;
-          }
-          var iconSet = $scope.feedbackIconSet || 'emoji';
-          var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
-          var selected = $scope.feedbackIconClass.match(/selected/);
-          var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
-          var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
-          $scope.isEmpty = true;
-          console.log(iconSet,$scope.feedbackIconType,feedbackSelector,correctnessSelector);
-          var glyph = glyphs[iconSet][$scope.feedbackIconType][feedbackSelector][correctnessSelector];
-          if (correctness == 'correct' && !selected) {
-            $scope.glyph = $sce.trustAsHtml($scope.feedbackIconChoice.feedback ? glyph : glyphs.nonSelectedCorrect);
-            $scope.isEmpty = false;
-          } else  if (glyph) {
-              $scope.glyph = $sce.trustAsHtml(glyph);
-              $scope.isEmpty = false;
-          }
-
-          $scope.feedback = ($scope.isEmpty || !$scope.feedbackIconChoice.feedback) ? undefined : {
-            correctness: correctness,
-            feedback: $scope.feedbackIconChoice.feedback
-          };
-
-        }
-      }
-    }
-
-  }
-];
 
 exports.framework = 'angular';
 exports.directives = [
