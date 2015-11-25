@@ -1,36 +1,27 @@
 {
   "componentType" : "corespring-select-text",
-  "correctResponse" : "",
   "title": "Select Evidence in Text",
-  "feedback" : {
-    "correctFeedbackType" : "default",
-    "partialFeedbackType" : "default",
-    "incorrectFeedbackType" : "default",
-    "feedbackType" : "default"
+  "weight": 1,
+  "correctResponse": {
+    "value": []
   },
-  "allowPartialScoring": false,
+  "feedback": {
+    "correctFeedbackType": "default",
+    "partialFeedbackType": "default",
+    "incorrectFeedbackType": "default"
+  },
+  "allowPartialScoring": true,
   "partialScoring" : [
     {}
   ],
   "model": {
     "config" : {
+      "availability": "all",
+      "label": "",
+      "maxSelections": 0,
       "selectionUnit" : "word",
-      "checkIfCorrect" : true,
-      "showFeedback": true
+      "passage": ""
     },
-    "choices" : [
-      {
-        "data": "Please"
-      },
-      {
-        "data": "enter"
-      },
-      {
-        "data": "some"
-      },
-      {
-        "data": "text."
-      }
-    ]
+    "choices" : []
   }
 }
