@@ -82,7 +82,14 @@ var main = [
         if (scope.model.config.availability === "specific" && getNestedProperty(scope, 'model.choices')) {
           classifyTokens(scope.model.choices, "choice");
         }
+        if (dataAndSession.session && dataAndSession.session.answers) {
+          scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
+        }
         scope.undoModel.init();
+      }
+
+      function setInstructorData(data) {
+        log("Setting Instructor Data", data);
       }
 
       function getSession() {
@@ -125,7 +132,13 @@ var main = [
         return _.isEmpty(getSession().answers);
       }
 
-      function answerChangedHandler() {}
+      function answerChangedHandler(callback) {
+        scope.$watch("userChoices", function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            callback();
+          }
+        }, true);
+      }
 
       function editable(e) {
         scope.editable = e;
@@ -134,6 +147,7 @@ var main = [
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
         getSession: getSession,
+        setInstructorData: setInstructorData,
         setResponse: setResponse,
         setMode: setMode,
         reset: reset,
