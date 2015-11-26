@@ -373,7 +373,7 @@ var main = [
       '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
       '        </div>',
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
-      '          <div radio-button radio-button-state="{{radioState(o)}}" />',
+      '          <div radio-button radio-button-state="{{radioState(o)}}" radio-button-choice="o" />',
       '        </div>',
       '      </span>',
       '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
@@ -408,11 +408,12 @@ var radioButton = ['$sce',
   function($sce) {
     return {
       scope: {
-        radioButtonState: "@"
+        radioButtonState: "@",
+        radioButtonChoice: "="
       },
       template: [
-        '<div class="radio-button">',
-        '  <div class="icon-holder" >',
+        '<div class="radio-button" ng-class="{hasFeedback: feedback}" feedback-popover="feedback">',
+        '  <div class="choice-icon-holder" >',
         '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" ng-bind-html="glyphs[\'ready\']"></div>',
         '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[active]"></div>',
         '    <div class="icon" ng-if="active == \'correct\'"  ng-bind-html="glyphs[active]"></div>',
@@ -468,6 +469,14 @@ var radioButton = ['$sce',
           console.log("qqqq", val, val == 'selected');
           if (_(["selected", 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
+            if (val == 'correctUnselected') {
+              $scope.feedback = {
+                correctness: 'correct',
+                feedback: $scope.radioButtonChoice.feedback
+              }
+            } else {
+              $scope.feedback = undefined;
+            }
           } else {
             $scope.active = 'ready';
           }
@@ -485,8 +494,8 @@ var mcCheckbox = ['$sce',
         checkboxButtonChoice: "="
       },
       template: [
-        '<div class="mc-checkbox"  feedback-popover="feedback">',
-        '  <div class="icon-holder" >',
+        '<div class="mc-checkbox" ng-class="{hasFeedback: feedback}" feedback-popover="feedback">',
+        '  <div class="choice-icon-holder" >',
         '    <div class="icon" ng-class="active" ng-if="active == \'ready\' || active == \'selected\'" ng-bind-html="glyphs[\'ready\']"></div>',
         '    <div class="icon" ng-if="active == \'muted\'" ng-bind-html="glyphs[\'muted\']"></div>',
         '    <div class="icon" ng-if="active == \'correct\'" ng-bind-html="glyphs[\'correct\']"></div>',
@@ -544,6 +553,8 @@ var mcCheckbox = ['$sce',
                 correctness: 'correct',
                 feedback: $scope.checkboxButtonChoice.feedback
               }
+            } else {
+              $scope.feedback = undefined;
             }
           } else {
             $scope.active = 'ready';
