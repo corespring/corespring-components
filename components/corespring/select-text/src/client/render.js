@@ -110,8 +110,10 @@ var main = [
       function setResponse(response) {
         // log("Setting response", response);
         scope.feedback = getNestedProperty(response, 'feedback.message');
-        if (scope.feedback) {
+        if (response.correctClass) {
           scope.correctClass = response.correctClass;
+        }
+        if (getNestedProperty(response, 'feedback.choices') && response.correctResponse) {
           var correctResponses = _.filter(response.feedback.choices, function(choice) {
             return choice.correct === true;
           });
