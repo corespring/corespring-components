@@ -388,7 +388,7 @@ var main = [
           $scope.$watch('fullModel.model.choices', function() {
             $scope.config.removeAllAfterPlacing = _.find($scope.fullModel.model.choices, function(choice) {
               return (choice.moveOnDrag !== true);
-            }) == undefined;
+            }) === undefined;
           }, true);
 
           $scope.init = function() {

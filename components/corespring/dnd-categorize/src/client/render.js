@@ -109,7 +109,7 @@ function renderCorespringDndCategorize(
       scope.$watch('renderModel.choices', function() {
         scope.config.removeAllAfterPlacing = _.find(scope.renderModel.choices, function(choice) {
           return (choice.moveOnDrag !== true);
-        }) == undefined;
+        }) === undefined;
       }, true);
     }
 
