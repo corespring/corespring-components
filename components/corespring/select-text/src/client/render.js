@@ -20,23 +20,35 @@ var main = [
 
       function revertState(state) {
         scope.userChoices = state;
-        $theContent.find('.selected').removeClass('selected');
-        classifyTokens(scope.userChoices, "selected");
       }
 
       var getNestedProperty = function(obj, key) {
         return key.split(".").reduce(function(o, x) {
-          return (typeof o === "undefined" || o === null) ? o : o[x];
+          return (typeof o === 'undefined' || o === null) ? o : o[x];
         }, obj);
       };
 
       var classifyTokens = function(choices, tokenClass) {
-        if (choices.length > 0) {
-          for (var i = choices.length - 1; i >= 0; i--) {
-            var $match = $theContent.find('.cs-token:eq("' + choices[i] + '"):not(.' + tokenClass + ')');
-            if ($match.length === 1) {
-              $match.addClass(tokenClass);
-            }
+        var $existingChoices = $theContent.find('.' + tokenClass);
+        var existingChoices = [];
+        var removedChoices = [];
+        if ($existingChoices.length > 0) {
+          $existingChoices.each(function() {
+            var index = $theContent.find('.cs-token').index(this);
+            existingChoices.push(index);
+          });
+          removedChoices = _.difference(existingChoices, choices);
+          choices = _.difference(choices, existingChoices);
+        }
+        if (removedChoices.length > 0) {
+          for (var i = removedChoices.length - 1; i >= 0; i--) {
+            $theContent.find('.cs-token:eq("' + removedChoices[i] + '")').removeClass(tokenClass);
+          }
+        }
+        for (var j = choices.length - 1; j >= 0; j--) {
+          var $match = $theContent.find('.cs-token:eq("' + choices[j] + '"):not(.' + tokenClass + ')');
+          if ($match.length === 1) {
+            $match.addClass(tokenClass);
           }
         }
       };
@@ -47,24 +59,21 @@ var main = [
           var $token = $(this);
           var index = $theContent.find('.cs-token').index($token);
           var canSelectMore = scope.model.config.maxSelections === 0;
+          var alreadyAnAnswer = scope.userChoices.indexOf(index) >= 0;
           if (scope.model.config.maxSelections > 0) {
             canSelectMore = scope.userChoices.length < scope.model.config.maxSelections;
           }
           if (scope.editable) {
-            if (scope.model.config.availability === "specific") {
-              if ($token.hasClass('choice') && !$token.hasClass('selected') && canSelectMore) {
-                $token.addClass('selected');
+            if (scope.model.config.availability === 'specific') {
+              if ($token.hasClass('choice') && !alreadyAnAnswer && canSelectMore) {
                 scope.userChoices.push(index);
-              } else if ($token.hasClass('choice') && $token.hasClass('selected')) {
-                $token.removeClass('selected');
+              } else if ($token.hasClass('choice') && alreadyAnAnswer) {
                 scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
               }
             } else {
-              if (canSelectMore && !$token.hasClass('selected')) {
-                $token.addClass('selected');
+              if (canSelectMore && !alreadyAnAnswer) {
                 scope.userChoices.push(index);
-              } else if ($token.hasClass('selected')) {
-                $token.removeClass('selected');
+              } else if (alreadyAnAnswer) {
                 scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
               }
             }
@@ -79,8 +88,8 @@ var main = [
         scope.userChoices = [];
         $theContent = element.find('.select-text-content');
         bindTokenEvents();
-        if (scope.model.config.availability === "specific" && getNestedProperty(scope, 'model.choices')) {
-          classifyTokens(scope.model.choices, "choice");
+        if (scope.model.config.availability === 'specific' && getNestedProperty(scope, 'model.choices')) {
+          classifyTokens(scope.model.choices, 'choice');
         }
         if (dataAndSession.session && dataAndSession.session.answers) {
           scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
@@ -89,7 +98,7 @@ var main = [
       }
 
       function setInstructorData(data) {
-        log("Setting Instructor Data", data);
+        // log("Setting Instructor Data", data);
       }
 
       function getSession() {
@@ -133,7 +142,7 @@ var main = [
       }
 
       function answerChangedHandler(callback) {
-        scope.$watch("userChoices", function(newValue, oldValue) {
+        scope.$watch('userChoices', function(newValue, oldValue) {
           if (newValue !== oldValue) {
             callback();
           }
@@ -164,6 +173,12 @@ var main = [
           $theContent.find('.correct-not-selected').removeClass('correct-not-selected');
         }
       };
+
+      scope.$watch('userChoices', function(newValue, oldValue) {
+        if (newValue !== oldValue && (!_.isEmpty(newValue) || !_.isEmpty(oldValue))) {
+          classifyTokens(scope.userChoices, 'selected');
+        }
+      }, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
