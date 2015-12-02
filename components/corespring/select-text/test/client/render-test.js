@@ -13,7 +13,12 @@ describe('corespring:select-text:render', function() {
     data: {
       model: {
         choices: [],
-        config: {}
+        config: {
+          availability: "all",
+          label: "",
+          selectionUnit: "custom",
+          passage: "<p><span class=\"cs-token\">As</span> <span class=\"cs-token\">became</span> <span class=\"cs-token\">a</span> <span class=\"cs-token\">real</span> <span class=\"cs-token\">ghost</span>.</p>"
+        }
       }
     },
     session: {
@@ -76,18 +81,9 @@ describe('corespring:select-text:render', function() {
       container.elements['1'].setDataAndSession(testModel);
       scope.$digest();
       container.elements['1'].setInstructorData({
-        correctResponse: [
-          {
-            data: "I"
-          },
-          {
-            data: "am",
-            correct: true
-          },
-          {
-            data: "green"
-          }
-        ]
+        correctResponse: {
+          value: [1]
+        }
       });
       scope.$digest();
       expect(element.find('.correct').length).toEqual(1);

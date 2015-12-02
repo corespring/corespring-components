@@ -98,7 +98,10 @@ var main = [
       }
 
       function setInstructorData(data) {
-        // log("Setting Instructor Data", data);
+        var answers = getNestedProperty(data, 'correctResponse.value');
+        if (answers) {
+          classifyTokens(answers, 'correct');
+        }
       }
 
       function getSession() {
