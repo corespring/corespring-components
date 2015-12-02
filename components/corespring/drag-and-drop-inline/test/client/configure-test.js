@@ -261,4 +261,86 @@ describe('corespring:drag-and-drop-inline:configure', function() {
     });
   });
 
+  describe('choices', function() {
+
+    beforeEach(function() {
+      var testModel = createTestModel();
+      _.each(testModel.model.choices, function(choice) {
+        choice.moveOnDrag = true;
+      });
+      container.elements['1'].setModel(testModel);
+      scope.$digest();
+    });
+
+
+    describe('config.removeAllAfterPlacing', function() {
+
+      it('should be true', function() {
+        expect(scope.config.removeAllAfterPlacing).toBe(true);
+      });
+
+    });
+
+
+    describe('with one false choice', function() {
+
+      beforeEach(function() {
+        scope.model.choices[0].moveOnDrag = false;
+        scope.$digest();
+      });
+
+      describe('config.removeAllAfterPlacing', function() {
+
+        it('should be false', function() {
+          expect(scope.config.removeAllAfterPlacing).toBe(false);
+        });
+
+      });
+
+    });
+
+  });
+
+  describe('config.removeAllAfterPlacing', function() {
+
+    beforeEach(function() {
+      var testModel = createTestModel();
+      _.each(testModel.model.choices, function(choice) {
+        choice.moveOnDrag = false;
+      });
+      container.elements['1'].setModel(testModel);
+    });
+
+    describe('set to true', function() {
+
+      beforeEach(function() {
+        scope.config.removeAllAfterPlacing = true;
+        scope.$digest();
+      });
+
+      it('should set moveOnDrag true on all choices', function() {
+        _.each(scope.fullModel.choices, function(choice) {
+          expect(choice.moveOnDrag).toBe(true);
+        });
+      });
+
+    });
+
+    describe('set to false', function() {
+
+      beforeEach(function() {
+        scope.config.removeAllAfterPlacing = true;
+        scope.$digest();
+      });
+
+      it('should not affect moveOnDrag values for choices', function() {
+        _.each(scope.fullModel.choices, function(choice) {
+          expect(choice.moveOnDrag).toBe(false);
+        });
+      });
+
+    });
+
+  });
+
 });

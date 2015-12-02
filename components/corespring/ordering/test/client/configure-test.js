@@ -104,6 +104,58 @@ describe('corespring:ordering:configure', function () {
     expect(element).not.toBe(null);
   });
 
+
+  describe('config.removeAllAfterPlacing', function() {
+
+    beforeEach(function() {
+      var testModel = createTestModel();
+      _.each(testModel.model.choices, function(choice) {
+        choice.moveOnDrag = false;
+      });
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+    });
+
+    describe('set to true', function() {
+
+      beforeEach(function() {
+        scope.config.removeAllAfterPlacing = true;
+        scope.$digest();
+      });
+
+      it('should set moveOnDrag true on all choices', function() {
+        _.each(scope.fullModel.choices, function(choice) {
+          expect(choice.moveOnDrag).toBe(true);
+        });
+      });
+
+    });
+
+    describe('set to false', function() {
+
+      beforeEach(function() {
+        scope.config.removeAllAfterPlacing = true;
+        scope.$digest();
+      });
+
+      it('should not affect moveOnDrag values for choices', function() {
+        _.each(scope.fullModel.choices, function(choice) {
+          expect(choice.moveOnDrag).toBe(false);
+        });
+      });
+
+    });
+
+    describe('when a choice.moveOnDrag is set to false', function() {
+
+      it('should be set to false', function() {
+        
+      });
+
+    });
+
+  });
+
   it('component is being registered by the container', function () {
     expect(container.elements['1']).not.toBeUndefined();
     expect(container.elements['2']).toBeUndefined();
