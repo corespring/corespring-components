@@ -125,8 +125,6 @@ function main(
     scope.removeAnswerArea = removeAnswerArea;
     scope.removeChoice = removeChoice;
 
-    scope.config = {};
-
     scope.$on('get-config-scope', onGetConfigScope);
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
     scope.$watch('correctAnswers', onChangeCorrectAnswers, true);

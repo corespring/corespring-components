@@ -221,8 +221,6 @@ var main = [
             {name: "Below", value: "below"}
           ];
 
-          $scope.config = {};
-
           $scope.targetDragging = false;
 
           function initTargets() {

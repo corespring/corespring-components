@@ -57,7 +57,6 @@ function renderCorespringDndCategorize(
     scope.correctAnswerRows = [[]];
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
-    scope.config = {};
     scope.rows = [[]];
     scope.shouldFlip = false;
 
