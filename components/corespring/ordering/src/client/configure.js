@@ -79,9 +79,8 @@ var main = [
         '  <div class="row choices-row">',
         '    <div class="col-xs-6">',
         '      <label class="control-label">Enter Choices</label>',
-        '      <checkbox ng-model="config.removeAllAfterPlacing" ng-show="model.config.placementType == \'placement\'">',
-        '        Remove <strong>all</strong> tiles after placing',
-        '      </checkbox>',
+        '      <remove-after-placing choices="fullModel.model.choices"',
+        '        ng-show="model.config.placementType == \'placement\'"></remove-after-placing>',
         '      <ul class="sortable-choices draggable-choices"',
         '          ui-sortable="choicesSortableOptions" ng-model="model.choices">',
         '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
@@ -376,20 +375,6 @@ var main = [
               $scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
             }
           });
-
-          $scope.$watch('config.removeAllAfterPlacing', function() {
-            if ($scope.config.removeAllAfterPlacing) {
-              _.each($scope.fullModel.model.choices, function(choice) {
-                choice.moveOnDrag = true;
-              });
-            }
-          });
-
-          $scope.$watch('fullModel.model.choices', function() {
-            $scope.config.removeAllAfterPlacing = _.find($scope.fullModel.model.choices, function(choice) {
-              return (choice.moveOnDrag !== true);
-            }) === undefined;
-          }, true);
 
           $scope.init = function() {
             $scope.active = [];

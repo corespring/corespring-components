@@ -99,18 +99,6 @@ function renderCorespringDndCategorize(
       scope.$watch('attrChoicesLabel', updateChoicesLabelFromEditor);
       scope.$watch('attrCategoriesPerRow', updateCategoriesPerRowFromEditor);
       scope.$watch('attrChoicesPerRow', updateChoicesPerRowFromEditor);
-      scope.$watch('config.removeAllAfterPlacing', function() {
-        if (scope.config.removeAllAfterPlacing) {
-          _.each(scope.renderModel.choices, function(choice) {
-            choice.moveOnDrag = true;
-          });
-        }
-      });
-      scope.$watch('renderModel.choices', function() {
-        scope.config.removeAllAfterPlacing = _.find(scope.renderModel.choices, function(choice) {
-          return (choice.moveOnDrag !== true);
-        }) === undefined;
-      }, true);
     }
 
     scope.$on('$destroy', onDestroy);
@@ -703,9 +691,7 @@ function renderCorespringDndCategorize(
         '      on-edit-clicked="activate(activeId)"',
         '   >',
         '  </div>',
-        '  <checkbox ng-model="config.removeAllAfterPlacing" class="control-label" ng-if="isEditMode">',
-        '    Remove <strong>all</strong> tiles after placing',
-        '  </checkbox>',
+        '  <remove-after-placing choices="renderModel.choices" ng-if="isEditMode"></remove-after-placing>',
         '  <div class="choices-container">',
         '    <div choice-corespring-dnd-categorize="true" ',
         '      correctness="{{choice.correctness}}"',

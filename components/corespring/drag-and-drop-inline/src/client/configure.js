@@ -131,20 +131,6 @@ function main(
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
     scope.$watch('correctAnswers', onChangeCorrectAnswers, true);
 
-    scope.$watch('config.removeAllAfterPlacing', function() {
-      if (scope.config.removeAllAfterPlacing) {
-        _.each(scope.fullModel.model.choices, function(choice) {
-          choice.moveOnDrag = true;
-        });
-      }
-    });
-
-    scope.$watch('fullModel.model.choices', function() {
-      scope.config.removeAllAfterPlacing = _.find(scope.fullModel.model.choices, function(choice) {
-          return (choice.moveOnDrag !== true);
-        }) === undefined;
-    }, true);
-
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
     //---------------------------------------------------
@@ -477,9 +463,7 @@ function main(
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <checkbox ng-model="config.removeAllAfterPlacing">',
-          '      Remove <strong>all</strong> choices after placing',
-          '    </checkbox>',
+          '    <remove-after-placing choices="fullModel.model.choices"></remove-after-placing>',
           '    <ul class="draggable-choices" ng-model="model.choices">',
           '      <li class="draggable-choice" ',
           '          data-choice-id="{{choice.id}}" ',
