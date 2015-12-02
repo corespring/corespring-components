@@ -76,12 +76,12 @@ var main = [
       '         <button class="btn btn-default" ng-class="{\'active btn-primary\': !selectionMode}" ng-show="model.config.availability === \'specific\'"' ,
       '           ng-click="changeSelectionMode(true)" ng-disabled="model.choices.length === 0">Correct Answers</button> <span ng-show="model.config.availability === \'all\'">Correct Answers</span> <span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span>',
       '       </div>',
-      '       <div class="max-selections form-inline">',
+      '       <div class="max-selections form-inline" ng-show="model.config.availability === \'all\'">',
       '         <div class="form-group">',
       '           <p class="form-control-static">Maximum number of selections student is allowed to choose (optional):</p>',
       '         </div>',
       '         <div class="form-group">',
-      '           <input type="number" class="form-control" ng-model="model.config.maxSelections" />',
+      '           <input type="number" name="userMaxSelections" class="form-control" ng-model="model.config.maxSelections" min="{{fullModel.correctResponse.value.length}}" /> {{userMaxSelections.$valid}} | {{userMaxSelections.$error}}',
       '         </div>',
       '       </div>',
       '     </div>',
@@ -208,6 +208,7 @@ var main = [
             }
           } else {
             $scope.model.choices = [];
+            $scope.model.config.maxSelections = 0;
           }
           blastThePassage(true);
         }
@@ -314,11 +315,21 @@ var main = [
       $scope.$watch('model.config.availability', toggleSelectionMode);
       $scope.$watch('fullModel.correctResponse.value.length', function(newValue, oldValue) {
         animateBadge(newValue, oldValue, ".answers-count");
+        if ($scope.model.config.maxSelections > 0 && $scope.model.config.maxSelections < newValue) {
+          $scope.model.config.maxSelections = newValue;
+        }
       });
       $scope.$watch('model.choices.length', function(newValue, oldValue) {
         animateBadge(newValue, oldValue, ".choices-count");
       });
       $scope.$watch('[fullModel.correctResponse.value,model.choices,model.config.selectionUnit,model.config.availability]', handleChoicesChange, true);
+      $scope.$watch('model.config.maxSelections', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          if (newValue !== 0 && newValue < $scope.fullModel.correctResponse.value.length) {
+            $scope.model.config.maxSelections = oldValue;
+          }
+        }
+      });
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
