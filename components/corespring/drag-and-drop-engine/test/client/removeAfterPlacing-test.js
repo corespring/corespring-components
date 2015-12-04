@@ -74,7 +74,7 @@ describe('removeAfterPlacing', function() {
       it('should have moveOnDrag = true for all choices', function() {
         _.each(scope.fullModel.model.choices, function(choice) {
           expect(choice.moveOnDrag).toBe(true);
-        })
+        });
       });
 
     });
@@ -86,8 +86,10 @@ describe('removeAfterPlacing', function() {
         scope.$digest();
       });
 
-      it('should have moveOnDrag unchanged for all choices', function() {
-        expect(scope.fullModel.model.choices).toEqual(choices());
+      it('should have moveOnDrag = false for all choices', function() {
+        _.each(scope.fullModel.model.choices, function(choice) {
+          expect(choice.moveOnDrag).toBe(false);
+        });
       });
 
     });

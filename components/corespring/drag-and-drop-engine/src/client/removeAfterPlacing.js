@@ -30,6 +30,10 @@ var removeAfterPlacing = [
             _.each(choices(), function(choice) {
               choice.moveOnDrag = true;
             });
+          } else {
+            _.each(choices(), function(choice) {
+              choice.moveOnDrag = false;
+            });
           }
         });
       },
