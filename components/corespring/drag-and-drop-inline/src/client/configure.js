@@ -461,6 +461,7 @@ function main(
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
+          '    <remove-after-placing choices="fullModel.model.choices"></remove-after-placing>',
           '    <ul class="draggable-choices" ng-model="model.choices">',
           '      <li class="draggable-choice" ',
           '          data-choice-id="{{choice.id}}" ',
@@ -580,6 +581,7 @@ function configAnswerAreaInline(
       scope.removeCorrectAnswer = removeCorrectAnswer;
       scope.targetSortableOptions = targetSortableOptions;
       scope.trackId = trackId;
+
 
       //---------------------------------------
 

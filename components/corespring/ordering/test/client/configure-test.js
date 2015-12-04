@@ -103,7 +103,7 @@ describe('corespring:ordering:configure', function () {
   it('constructs', function () {
     expect(element).not.toBe(null);
   });
-
+  
   it('component is being registered by the container', function () {
     expect(container.elements['1']).not.toBeUndefined();
     expect(container.elements['2']).toBeUndefined();

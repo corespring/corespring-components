@@ -79,6 +79,8 @@ var main = [
         '  <div class="row choices-row">',
         '    <div class="col-xs-6">',
         '      <label class="control-label">Enter Choices</label>',
+        '      <remove-after-placing choices="fullModel.model.choices"',
+        '        ng-show="model.config.placementType == \'placement\'"></remove-after-placing>',
         '      <ul class="sortable-choices draggable-choices"',
         '          ui-sortable="choicesSortableOptions" ng-model="model.choices">',
         '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
