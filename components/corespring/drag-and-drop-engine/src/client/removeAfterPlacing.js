@@ -13,7 +13,7 @@ var removeAfterPlacing = [
         function choices() {
           function getProp(obj, desc) {
             var arr = desc.split(".");
-            while (arr.length && (obj = obj[arr.shift()])) {};
+            while (arr.length && (obj = obj[arr.shift()])) {}
             return obj;
           }
           return getProp($scope, choiceKey);
