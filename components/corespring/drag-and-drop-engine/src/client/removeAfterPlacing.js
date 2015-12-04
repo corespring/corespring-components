@@ -6,14 +6,14 @@ var removeAfterPlacing = [
       scope: true,
       restrict: 'AE',
       link: function ($scope, $element, $attrs) {
-        var choiceKey = $attrs['choices'] || 'fullModel.model.choices';
+        var choiceKey = $attrs.choices || 'fullModel.model.choices';
 
         $scope.config = $scope.config || {};
 
         function choices() {
           function getProp(obj, desc) {
             var arr = desc.split(".");
-            while (arr.length && (obj = obj[arr.shift()]));
+            while (arr.length && (obj = obj[arr.shift()])) {};
             return obj;
           }
           return getProp($scope, choiceKey);

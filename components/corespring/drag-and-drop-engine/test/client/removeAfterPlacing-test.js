@@ -21,7 +21,7 @@ describe('removeAfterPlacing', function() {
       model: {
         choices: choices()
       }
-    }
+    };
     scope.$digest();
   });
 
