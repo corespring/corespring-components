@@ -1,7 +1,8 @@
 var main = [
   '$sce',
+  '$timeout',
   'CsUndoModel',
-  function($sce, CsUndoModel) {
+  function($sce, $timeout, CsUndoModel) {
 
     var link = function(scope, element, attrs) {
 
@@ -88,13 +89,15 @@ var main = [
         scope.userChoices = [];
         $theContent = element.find('.select-text-content');
         bindTokenEvents();
-        if (scope.model.config.availability === 'specific' && getNestedProperty(scope, 'model.choices')) {
-          classifyTokens(scope.model.choices, 'choice');
-        }
         if (dataAndSession.session && dataAndSession.session.answers) {
           scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
         }
-        scope.undoModel.init();
+        $timeout(function() {
+          if (scope.model.config.availability === 'specific' && getNestedProperty(scope, 'model.choices')) {
+            classifyTokens(scope.model.choices, 'choice');
+          }
+          scope.undoModel.init();
+        }, 100);
       }
 
       function setInstructorData(data) {
@@ -139,6 +142,9 @@ var main = [
         scope.userChoices = [];
         $theContent.find('.cs-token').attr('class', 'cs-token');
         scope.answersVisible = false;
+        if (scope.model.config.availability === 'specific' && getNestedProperty(scope, 'model.choices')) {
+          classifyTokens(scope.model.choices, 'choice');
+        }
         scope.undoModel.init();
       }
 
@@ -173,9 +179,11 @@ var main = [
       scope.toggleAnswersVisibility = function() {
         scope.answersVisible = !scope.answersVisible;
         if (scope.answersVisible) {
+          $theContent.find('.choice').removeClass('choice');
           classifyTokens(scope.unselectedAnswers, 'correct-not-selected');
         } else {
           $theContent.find('.correct-not-selected').removeClass('correct-not-selected');
+          classifyTokens(scope.model.choices, 'choice');
         }
       };
 

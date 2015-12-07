@@ -34,8 +34,38 @@
         margin-bottom: 3px;
       }
     }
-    .wiggi-wiz {
+    .editor-wrapper {
       margin-top: 10px;
+    }
+    .editor-wrapper,
+    .answers-config-wrapper {
+      position: relative;
+      z-index: 1;
+      .confirm-action {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        background-color: rgb(255, 255, 255);
+        background-color: rgba(255, 255, 255, 0.7);
+        .action-description {
+          background-color: rgb(255, 255, 255);
+          padding: 5px 15px;
+          border-radius: 6px;
+          background-clip: padding-box;
+          width: 50%;
+          -webkit-box-shadow: 0 0 10px #bbb;
+          box-shadow: 0 0 10px #bbb;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          -webkit-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+        }
+      }
     }
     .instructions {
       text-align: center;
@@ -187,8 +217,8 @@
     clear: both;
     .cs-token {
       cursor: pointer;
-      -webkit-transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
-      transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
+      -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+      transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
       &:hover {
         background-color: transparent;
         border: 1px dotted @answer-color-opaque;
@@ -218,11 +248,11 @@
     }
     &.specific {
       .cs-token {
-        cursor: default;
+        cursor: text;
         &:hover {
           background-color: transparent;
-          border: 1px dotted @answer-color-opaque;
-          margin: -1px;
+          border: 0;
+          margin: 0;
         }
         &.choice {
           cursor: pointer;
@@ -241,7 +271,7 @@
     }
     &.no-more-selections {
       .cs-token {
-        cursor: default;
+        cursor: text;
         &:hover {
           background-color: transparent;
           border: 0;
@@ -288,28 +318,25 @@
             margin: 0;
           }
         }
-        &.correct {
-          &:hover {
-            background-color: @correct-answer-bg-color-opaque;
-            background-color: @correct-answer-bg-color;
-            border: 1px solid @correct-answer-border-color;
-            margin: -1px;
-          }
+        &.correct,
+        &.correct:hover {
+          background-color: @correct-answer-bg-color-opaque;
+          background-color: @correct-answer-bg-color;
+          border: 1px solid @correct-answer-border-color;
+          margin: -1px;
         }
-        &.incorrect {
-          &:hover {
-            background-color: @incorrect-answer-bg-color-opaque;
-            background-color: @incorrect-answer-bg-color;
-            border: 1px solid @incorrect-answer-border-color;
-            margin: -1px;
-          }
+        &.incorrect,
+        &.incorrect:hover {
+          background-color: @incorrect-answer-bg-color-opaque;
+          background-color: @incorrect-answer-bg-color;
+          border: 1px solid @incorrect-answer-border-color;
+          margin: -1px;
         }
-        &.correct-not-selected {
-          &:hover {
-            background-color: #fff;
-            border: 1px solid @correct-answer-border-color;
-            margin: -1px;
-          }
+        &.correct-not-selected,
+        &.correct-not-selected:hover {
+          background-color: #fff;
+          border: 1px solid @correct-answer-border-color;
+          margin: -1px;
         }
       }
     }

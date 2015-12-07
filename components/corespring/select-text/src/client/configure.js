@@ -19,7 +19,7 @@ var main = [
       '        </div>',
       '        <div class="btn-group btn-group-sm" role="group">',
       '          <button type="button" class="btn btn-default" ng-class="{active: mode === \'answers\'}"',
-      '           ng-click="toggleMode($event, \'answers\')" ng-disabled="model.config.passage === \'\'">Set Answers</button>',
+      '           ng-click="toggleMode($event, \'answers\')" ng-disabled="model.cleanPassage === \'\'">Set Answers</button>',
       '        </div>',
       '        <div class="btn-group btn-group-sm" role="group">',
       '          <button type="button" class="btn btn-danger" ng-class="{active: mode === \'delete\'}"',
@@ -30,10 +30,34 @@ var main = [
       '  </div>',
       '  <div class="row">',
       '    <div class="col-xs-12">',
-      '     <wiggi-wiz ng-show="mode === \'editor\'" ng-model="cleanPassage">',
-      '       <toolbar basic="bold italic underline superscript subscript" positioning="justifyLeft justifyCenter justifyRight" formatting="" media=""></toolbar>',
-      '     </wiggi-wiz>',
-      '     <div ng-show="mode === \'answers\'">',
+      '     <div class="editor-wrapper" ng-show="mode === \'editor\'">',
+      '       <div class="confirm-action" ng-hide="allowPassageEditing">',
+      '         <div class="action-description">',
+      '           <h4>Important</h4>',
+      '           <p>If you decide to edit the passage, all the existing tokens as well as selected answers and/or possible selections will be lost.</p>',
+      '           <p>Do you want to proceed?</p>',
+      '           <p>',
+      '             <button class="btn btn-danger" ng-click="allowPassageEditing = true">Yes</button>',
+      '             <button class="btn btn-default" ng-click="toggleMode($event, \'answers\')">No</button>',
+      '           </p>',
+      '         </div>',
+      '       </div>',
+      '       <wiggi-wiz ng-model="model.cleanPassage">',
+      '         <toolbar basic="bold italic underline superscript subscript" positioning="justifyLeft justifyCenter justifyRight" formatting="" media=""></toolbar>',
+      '       </wiggi-wiz>',
+      '     </div>',
+      '     <div class="answers-config-wrapper" ng-show="mode === \'answers\'">',
+      '       <div class="confirm-action" ng-show="showSelectionUnitWarning">',
+      '         <div class="action-description">',
+      '           <h4>Important</h4>',
+      '           <p>If you change the selection unit, all the selected answers and/or possible selections will be lost.</p>',
+      '           <p>Do you want to proceed?</p>',
+      '           <p>',
+      '             <button class="btn btn-danger" ng-click="allowSelectionUnitChange()">Yes</button>',
+      '             <button class="btn btn-default" ng-click="revertSelectionUnitChange()">No</button>',
+      '           </p>',
+      '         </div>',
+      '       </div>',
       '       <p>Students will select from:</p>',
       '       <div class="btn-group btn-group-sm" role="group">',
       '         <button type="button" class="btn btn-default" data-unit="word" ng-click="toggleSelectionUnit($event)"',
@@ -63,8 +87,8 @@ var main = [
       '       </div>',
       '       <div class="passage-wrapper">',
       '         <div class="history-buttons">',
-      '           <span cs-undo-button ng-class="{disabled: choicesHistory.length < 1}" ng-disabled="choicesHistory.length < 1"></span>',
-      '           <span cs-start-over-button ng-class="{disabled: choicesHistory.length < 1}" ng-disabled="choicesHistory.length < 1"></span>',
+      '           <span cs-undo-button ng-class="{disabled: modelHistory.length < 1}" ng-disabled="modelHistory.length < 1"></span>',
+      '           <span cs-start-over-button ng-class="{disabled: modelHistory.length < 1}" ng-disabled="modelHistory.length < 1"></span>',
       '         </div>',
       '         <div class="passage-preview" ng-bind-html-unsafe="model.config.passage"></div>',
       '       </div>',
@@ -81,7 +105,7 @@ var main = [
       '           <p class="form-control-static">Maximum number of selections student is allowed to choose (optional):</p>',
       '         </div>',
       '         <div class="form-group">',
-      '           <input type="number" name="userMaxSelections" class="form-control" ng-model="model.config.maxSelections" min="{{fullModel.correctResponse.value.length}}" /> {{userMaxSelections.$valid}} | {{userMaxSelections.$error}}',
+      '           <input type="number" name="userMaxSelections" class="form-control" ng-model="model.config.maxSelections" min="{{fullModel.correctResponse.value.length}}" />',
       '         </div>',
       '       </div>',
       '     </div>',
@@ -91,7 +115,7 @@ var main = [
       '         <p>This will permanently delete the passage and any set of answers.</p>',
       '         <p>',
       '           <button class="btn btn-danger" ng-click="deleteAll()">Yes</button>',
-      '           <button class="btn btn-default" ng-click="toggleMode($event, \'editor\')">No</button>',
+      '           <button class="btn btn-default" ng-click="toggleMode($event, \'answers\')">No</button>',
       '         </p>',
       '       </div>',
       '     </div>',
@@ -138,12 +162,13 @@ var main = [
 
       var $theContent = null;
       var ignoreChanges = false;
-      var passageChanged = false;
-      var initialChoices = [];
+      var initialData = [];
 
       $scope.mode = "editor";
       $scope.selectionMode = true;
-      $scope.choicesHistory = [];
+      $scope.modelHistory = [];
+      $scope.allowPassageEditing = true;
+      $scope.showSelectionUnitWarning = false;
 
       var getNestedProperty = function(obj, key) {
         return key.split(".").reduce(function(o, x) {
@@ -162,33 +187,45 @@ var main = [
             var innerHTML = $(this).html();
             $(this).replaceWith(innerHTML);
           });
-          $scope.cleanPassage = $cleanPassage.prop('innerHTML');
-          passageChanged = false;
+          $scope.model.cleanPassage = $cleanPassage.prop('innerHTML');
         }
       };
 
       var classifyTokens = function(collection, tokenClass) {
-        if (collection.length > 0) {
-          for (var i = collection.length - 1; i >= 0; i--) {
-            var $match = $theContent.find('.' + blastOptions.customClass + ':eq("' + collection[i] + '"):not(.' + tokenClass + ')');
-            if ($match.length === 1) {
-              $match.addClass(tokenClass);
-            }
+        var $existingChoices = $theContent.find('.' + tokenClass);
+        var existingChoices = [];
+        var removedChoices = [];
+        if ($existingChoices.length > 0) {
+          $existingChoices.each(function() {
+            var index = $theContent.find('.' + blastOptions.customClass).index(this);
+            existingChoices.push(index);
+          });
+          removedChoices = _.difference(existingChoices, collection);
+          collection = _.difference(collection, existingChoices);
+        }
+        if (removedChoices.length > 0) {
+          for (var i = removedChoices.length - 1; i >= 0; i--) {
+            $theContent.find('.' + blastOptions.customClass + ':eq("' + removedChoices[i] + '")').removeClass(tokenClass);
+          }
+        }
+        for (var j = collection.length - 1; j >= 0; j--) {
+          var $match = $theContent.find('.' + blastOptions.customClass + ':eq("' + collection[j] + '")');
+          if ($match.length === 1) {
+            $match.addClass(tokenClass);
           }
         }
       };
 
-      var blastThePassage = function(blastAgain) {
-        if (blastAgain) {
-          blastOptions.delimiter = getNestedProperty($scope, 'model.config.selectionUnit') ? $scope.model.config.selectionUnit : 'word';
-          // Removes any existing tokens
-          $theContent.blast(false);
-          $theContent.prop('innerHTML', $scope.cleanPassage);
-          // Tokenize the content
-          // $theContent.blast(blastOptions);
-        }
+      var blastThePassage = function() {
+        blastOptions.delimiter = getNestedProperty($scope, 'model.config.selectionUnit') ? $scope.model.config.selectionUnit : 'word';
+        // Removes any existing tokens
+        $theContent.blast(false);
+        $theContent.prop('innerHTML', $scope.model.cleanPassage);
+        // Tokenize the content
+        $theContent.blast(blastOptions);
         // Clean passage classes
         $theContent.find('.' + blastOptions.customClass).attr('class', blastOptions.customClass);
+        $scope.model.config.passage = $theContent.prop('innerHTML');
         // Render existing choices
         if ($scope.model.config.availability === "specific" && getNestedProperty($scope, 'model.choices')) {
           classifyTokens($scope.model.choices, "choice");
@@ -210,7 +247,7 @@ var main = [
             $scope.model.choices = [];
             $scope.model.config.maxSelections = 0;
           }
-          blastThePassage(true);
+          blastThePassage();
         }
       };
 
@@ -219,31 +256,28 @@ var main = [
         $theContent.on('click', '.' + blastOptions.customClass, function() {
           var $token = $(this);
           var index = $theContent.find('.' + blastOptions.customClass).index($token);
+          var alreadySelected = $scope.fullModel.correctResponse.value.indexOf(index) >= 0;
+          var alreadyAChoice = $scope.model.choices.indexOf(index) >= 0;
           if ($scope.model.config.availability === "specific") {
             if ($theContent.hasClass('select-choices')) {
-              if ($token.hasClass('choice') && !$token.hasClass('selected')) {
-                $token.addClass('selected');
+              if (alreadyAChoice && !alreadySelected) {
                 $scope.fullModel.correctResponse.value.push(index);
-              } else if ($token.hasClass('choice') && $token.hasClass('selected')) {
-                $token.removeClass('selected');
+              } else if (alreadyAChoice && alreadySelected) {
                 $scope.fullModel.correctResponse.value.splice($scope.fullModel.correctResponse.value.indexOf(index), 1);
               }
             } else {
-              $token.toggleClass('choice');
-              if ($token.hasClass('choice')) {
+              if (!alreadyAChoice) {
                 // Adds a new possible choice
                 $scope.model.choices.push(index);
               } else {
                 $scope.model.choices.splice($scope.model.choices.indexOf(index), 1);
-                if ($token.hasClass('selected')) {
+                if (alreadySelected) {
                   $scope.fullModel.correctResponse.value.splice($scope.fullModel.correctResponse.value.indexOf(index), 1);
-                  $token.removeClass('selected');
                 }
               }
             }
           } else {
-            $token.toggleClass('selected');
-            if ($token.hasClass('selected')) {
+            if (!alreadySelected) {
               // Adds a new choice
               $scope.fullModel.correctResponse.value.push(index);
             } else {
@@ -254,41 +288,32 @@ var main = [
         });
       };
 
-      var handleChoicesChange = function(newVal, oldVal) {
+      var handleModelChange = function(newVal, oldVal) {
         if (!_.isEqual(newVal, oldVal) && !ignoreChanges) {
-          $scope.choicesHistory.push({
+          $scope.modelHistory.push({
             answers: _.cloneDeep(oldVal[0]),
             choices: _.cloneDeep(oldVal[1]),
             selectionUnit: oldVal[2],
-            availability: oldVal[3]
+            availability: oldVal[3],
+            passage: oldVal[4]
           });
+          $scope.allowPassageEditing = false; // This prevents the user from editing passage and delete the answers/selections
+          if (newVal[2] !== oldVal[2]) {
+            $scope.showSelectionUnitWarning = true;
+          }
+          if (newVal[4] !== oldVal[4]) {
+            classifyTokens($scope.model.choices, 'choice');
+            classifyTokens($scope.fullModel.correctResponse.value, 'selected');
+            return;
+          }
         } else if (ignoreChanges) {
-          blastThePassage(!_.isEqual(newVal[2], oldVal[2]) || !_.isEqual(newVal[3], oldVal[3]));
           ignoreChanges = false;
         }
-      };
-
-      $scope.containerBridge = {
-        setModel: function (model) {
-          $scope.fullModel = model;
-          $scope.model = $scope.fullModel.model;
-          $theContent = $element.find('.passage-preview .ng-binding');
-          bindTokenEvents();
-          $timeout(function() {
-            cleanExistingPassage();
-            // blastThePassage(false);
-          }, 100);
-          initialChoices = {
-            answers: _.cloneDeep($scope.fullModel.correctResponse.value),
-            choices: _.cloneDeep($scope.model.choices),
-            selectionUnit: $scope.model.config.selectionUnit,
-            availability: $scope.model.config.availability
-          };
-          $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-        },
-        getModel: function () {
-          var model = _.cloneDeep($scope.fullModel);
-          return model;
+        if (newVal[1] !== oldVal[1] && (!_.isEmpty(newVal[1]) || !_.isEmpty(oldVal[1]))) {
+          classifyTokens($scope.model.choices, 'choice');
+        }
+        if (newVal[0] !== oldVal[0] && (!_.isEmpty(newVal[0]) || !_.isEmpty(oldVal[0]))) {
+          classifyTokens($scope.fullModel.correctResponse.value, 'selected');
         }
       };
 
@@ -302,27 +327,64 @@ var main = [
         }
       };
 
-      $scope.$watch('model.config.selectionUnit', function(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          blastThePassage(true);
+      $scope.containerBridge = {
+        setModel: function (model) {
+          $scope.fullModel = model;
+          $scope.model = $scope.fullModel.model;
+          $theContent = $element.find('.passage-preview .ng-binding');
+          bindTokenEvents();
+          $timeout(function() {
+            if ($scope.model.config.availability === "specific") {
+              classifyTokens($scope.model.choices, "choice");
+            }
+            classifyTokens($scope.fullModel.correctResponse.value, "selected");
+            if ($theContent.find('.' + blastOptions.customClass).length > 0) {
+              $scope.allowPassageEditing = false;
+              cleanExistingPassage();
+              $scope.mode = 'answers';
+            }
+          }, 100);
+          initialData = {
+            answers: _.cloneDeep($scope.fullModel.correctResponse.value),
+            choices: _.cloneDeep($scope.model.choices),
+            selectionUnit: $scope.model.config.selectionUnit,
+            availability: $scope.model.config.availability,
+            passage: $scope.model.config.passage
+          };
+          $scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
+        },
+        getModel: function () {
+          var model = _.cloneDeep($scope.fullModel);
+          delete model.cleanPassage;
+          return model;
         }
-      });
-      $scope.$watch('cleanPassage', function(newValue, oldValue) {
-        if (newValue !== oldValue && oldValue !== undefined) {
-          passageChanged = true;
-        }
-      });
+      };
+
+      $scope.$watch('model.cleanPassage', _.debounce(function(newValue, oldValue) {
+        $scope.$apply(function(){
+          if (newValue !== oldValue && oldValue !== undefined) {
+            $scope.model.choices = [];
+            $scope.fullModel.correctResponse.value = [];
+            blastThePassage();
+          }
+        });
+      }, 1500));
+
       $scope.$watch('model.config.availability', toggleSelectionMode);
+
       $scope.$watch('fullModel.correctResponse.value.length', function(newValue, oldValue) {
         animateBadge(newValue, oldValue, ".answers-count");
         if ($scope.model.config.maxSelections > 0 && $scope.model.config.maxSelections < newValue) {
           $scope.model.config.maxSelections = newValue;
         }
       });
+
       $scope.$watch('model.choices.length', function(newValue, oldValue) {
         animateBadge(newValue, oldValue, ".choices-count");
       });
-      $scope.$watch('[fullModel.correctResponse.value,model.choices,model.config.selectionUnit,model.config.availability]', handleChoicesChange, true);
+
+      $scope.$watch('[fullModel.correctResponse.value,model.choices,model.config.selectionUnit,model.config.availability,model.config.passage]', handleModelChange, true);
+
       $scope.$watch('model.config.maxSelections', function(newValue, oldValue) {
         if (newValue !== oldValue) {
           if (newValue !== 0 && newValue < $scope.fullModel.correctResponse.value.length) {
@@ -333,10 +395,6 @@ var main = [
 
       $scope.toggleMode = function($event, mode) {
         $scope.mode = mode;
-        if (mode === "answers") {
-          blastThePassage(passageChanged);
-          passageChanged = false;
-        }
       };
 
       $scope.toggleSelectionUnit = function($event) {
@@ -357,28 +415,45 @@ var main = [
         $scope.model.config.selectionUnit = "word";
         $scope.model.config.availability = "all";
         $scope.model.config.passage = "";
+        $scope.model.config.maxSelections = 0;
         $scope.fullModel.correctResponse.value = [];
         $scope.mode = "editor";
+        $scope.allowPassageEditing = true;
+      };
+
+      $scope.allowSelectionUnitChange = function() {
+        $scope.showSelectionUnitWarning = false;
+        ignoreChanges = false;
+        blastThePassage();
+      };
+
+      $scope.revertSelectionUnitChange = function() {
+        ignoreChanges = true;
+        $scope.undo();
+        $scope.showSelectionUnitWarning = false;
+        blastThePassage();
       };
 
       $scope.undo = function() {
-        if ($scope.choicesHistory.length > 0) {
-          var lastRecord = $scope.choicesHistory.pop();
+        if ($scope.modelHistory.length > 0) {
+          var lastRecord = $scope.modelHistory.pop();
           $scope.fullModel.correctResponse.value = lastRecord.answers;
           $scope.model.choices = lastRecord.choices;
-          $scope.model.config.selectionUnit = lastRecord.selectionUnit;
           $scope.model.config.availability = lastRecord.availability;
+          $scope.model.config.selectionUnit = lastRecord.selectionUnit;
+          $scope.model.config.passage = lastRecord.passage;
           ignoreChanges = true;
         }
       };
 
       $scope.startOver = function() {
-        if (!_.isEmpty(initialChoices)) {
-          $scope.fullModel.correctResponse.value = initialChoices.answers;
-          $scope.model.choices = initialChoices.choices;
-          $scope.choicesHistory = [];
-          $scope.model.config.selectionUnit = initialChoices.selectionUnit;
-          $scope.model.config.availability = initialChoices.availability;
+        if (!_.isEmpty(initialData)) {
+          $scope.fullModel.correctResponse.value = initialData.answers;
+          $scope.model.choices = initialData.choices;
+          $scope.modelHistory = [];
+          $scope.model.config.selectionUnit = initialData.selectionUnit;
+          $scope.model.config.availability = initialData.availability;
+          $scope.model.config.passage = initialData.passage;
           ignoreChanges = true;
         }
       };
