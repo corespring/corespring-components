@@ -19,6 +19,13 @@ var main = [
           scope.answer = scope.session.answers;
           scope.rows = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLines) || 4;
           scope.cols = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLength) || 60;
+          var width = (Math.min(scope.cols * 7 + 16, 555) + 'px');
+          var height = scope.rows * 20 + 'px';
+          element.find('.wiggi-wiz').css({ width: width });
+          element.find('.wiggi-wiz-editable').css({
+            height: height,
+            width: width
+          });
         },
 
         getSession: function () {
@@ -77,7 +84,9 @@ var main = [
       return [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder">',
-        '    <textarea ng-model="answer" rows="{{rows}}" cols="{{cols}}" ng-disabled="!editable" class="form-control text-input" />',
+        '    <wiggi-wiz ng-model="answer" enabled="editable" style="{{style}}">',
+        '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" />',
+        '    </wiggi-wiz>',
         '  </div>',
         '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
         '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
