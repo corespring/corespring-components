@@ -1,3 +1,4 @@
+var t = {};
 var main = [
   function () {
 
@@ -10,6 +11,14 @@ var main = [
 
     function link(scope, element, attrs) {
 
+      function editable() {
+        return element.find('.wiggi-wiz-editable');
+      }
+
+      function toolbar() {
+        return element.find('.wiggi-wiz-toolbar');
+      }
+
       scope.editable = true;
       scope.containerBridge = {
 
@@ -19,10 +28,11 @@ var main = [
           scope.answer = scope.session.answers;
           scope.rows = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLines) || 4;
           scope.cols = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLength) || 60;
+
           var width = (Math.min(scope.cols * 7 + 16, 555) + 'px');
           var height = scope.rows * 20 + 'px';
           element.find('.wiggi-wiz').css({ width: width });
-          element.find('.wiggi-wiz-editable').css({
+          editable().css({
             height: height,
             width: width
           });
@@ -71,12 +81,29 @@ var main = [
           }, true);
         },
 
-        editable: function (e) {
+        editable: function(e) {
           scope.editable = e;
         }
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
+      editable().on('focus', function() {
+        toolbar().show();
+      });
+
+      function hasFocus() {
+        return $.contains(element[0], document.activeElement);
+      }
+
+      function maybeHide() {
+        if (!scope.editable || !hasFocus()) {
+          toolbar().hide();
+        }
+      }
+
+      $(document).on('click', maybeHide);
+      scope.$watch('editable', maybeHide);
 
     }
 
