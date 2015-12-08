@@ -60,12 +60,12 @@ var main = [
       };
 
       scope.nextLine = function() {
-        if(scope.forcedNextLine !== -1) {
+        if (scope.forcedNextLine !== -1) {
           return scope.forcedNextLine;
         }
         var index = -1;
-        scope.lines.every(function(line, lineIndex){
-          if(!line.isSet) {
+        scope.lines.every(function(line, lineIndex) {
+          if (!line.isSet) {
             index = lineIndex;
             return false;
           }
@@ -78,9 +78,12 @@ var main = [
 
         trackHistory = (typeof trackHistory !== 'undefined') ? trackHistory : true;
 
-        if(typeof(scope.pointsPerLine[point.name]) !== 'undefined') {
-          if(trackHistory) {
-            scope.history.push({ action: 'move', previousPoint: _.cloneDeep(scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point]) });
+        if (typeof(scope.pointsPerLine[point.name]) !== 'undefined') {
+          if (trackHistory) {
+            scope.history.push({
+              action: 'move',
+              previousPoint: _.cloneDeep(scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point])
+            });
           }
 
           var linePoint = scope.lines[scope.pointsPerLine[point.name].line].points[scope.pointsPerLine[point.name].point];
@@ -88,16 +91,16 @@ var main = [
           linePoint.y = point.y;
           setLineEquation(scope.lines[scope.pointsPerLine[point.name].line]);
         } else if (scope.plottedPoint.name === point.name) {
-          if(trackHistory) {
-            scope.history.push({ action: 'move', previousPoint: scope.plottedPoint });
+          if (trackHistory) {
+            scope.history.push({action: 'move', previousPoint: scope.plottedPoint});
           }
           scope.plottedPoint = point;
         } else {
           // if it's a new point
           // and there was already a plotted point
-          if(scope.plottedPoint.name) {
-            if(trackHistory) {
-              scope.history.push({ action: 'add_line', point: point });
+          if (scope.plottedPoint.name) {
+            if (trackHistory) {
+              scope.history.push({action: 'add_line', point: point});
             }
 
             setLine(point);
@@ -105,8 +108,8 @@ var main = [
           } else {
             // if no plotted point, set it
             scope.plottedPoint = point;
-            if(trackHistory) {
-              scope.history.push({ action: 'add_point', point: point });
+            if (trackHistory) {
+              scope.history.push({action: 'add_point', point: point});
             }
           }
         }
@@ -123,8 +126,8 @@ var main = [
         setLineEquation(line);
 
         // create line on graph
-        if(!line.isSet) {
-          if(!scope.config.exhibitOnly) {
+        if (!line.isSet) {
+          if (!scope.config.exhibitOnly) {
             scope.graphCallback({
               pointColor: {
                 points: [scope.plottedPoint.name, point.name],
@@ -144,8 +147,8 @@ var main = [
           });
 
           // map points per line
-          scope.pointsPerLine[scope.plottedPoint.name] = { line: nextLine, point: 'A'};
-          scope.pointsPerLine[point.name] = { line: nextLine, point: 'B'};
+          scope.pointsPerLine[scope.plottedPoint.name] = {line: nextLine, point: 'A'};
+          scope.pointsPerLine[point.name] = {line: nextLine, point: 'B'};
 
           // delete plotted point
           scope.plottedPoint = {};
@@ -165,15 +168,16 @@ var main = [
       scope.startOver = function() {
 
         function getPoint(point) {
-          return { x: point[0], y: point[1] };
+          return {x: point[0], y: point[1]};
         }
+
         function createInitialPoints(initialLine) {
 
           var initialValues = lineUtils.pointsFromEquation(initialLine, scope.graphAttrs.domainSnapValue);
 
           if (typeof initialValues !== 'undefined') {
-            scope.graphCallback({ add: { point: getPoint(initialValues[0]), triggerCallback: true  } });
-            scope.graphCallback({ add: { point: getPoint(initialValues[1]), triggerCallback: true } });
+            scope.graphCallback({add: {point: getPoint(initialValues[0]), triggerCallback: true}});
+            scope.graphCallback({add: {point: getPoint(initialValues[1]), triggerCallback: true}});
           }
         }
 
@@ -187,12 +191,12 @@ var main = [
         scope.lines = [];
         scope.pointsPerLine = {};
 
-        _.each(scope.config.lines, function(line, index){
+        _.each(scope.config.lines, function(line, index) {
           scope.lines.push({
             id: line.id,
             name: line.label,
             colorIndex: line.colorIndex,
-            points: { A: { isSet: false }, B: { isSet: false } },
+            points: {A: {isSet: false}, B: {isSet: false}},
             equation: "",
             isSet: false
           });
@@ -208,7 +212,7 @@ var main = [
         if (!scope.locked && scope.history.length > 0) {
           var lastRecord = scope.history.pop();
 
-          switch(lastRecord.action) {
+          switch (lastRecord.action) {
             case 'move':
               scope.pointUpdate(lastRecord.previousPoint);
               break;
@@ -227,7 +231,7 @@ var main = [
 
       scope.undoAddPoint = function(point) {
         scope.graphCallback({
-          remove: { point: point }
+          remove: {point: point}
         });
         scope.plottedPoint = {};
       };
@@ -237,7 +241,7 @@ var main = [
 
         // remove point and line from graph
         scope.graphCallback({
-          remove: { point: line.points.B, line: line.id }
+          remove: {point: line.points.B, line: line.id}
         });
 
         // set the new plottedPoint
@@ -248,14 +252,26 @@ var main = [
         delete scope.pointsPerLine[line.points.B.name];
 
         // deletes the line
-        line.points.A = line.points.B = { isSet: false };
+        line.points.A = line.points.B = {isSet: false};
         line.isSet = false;
       };
 
-      scope.undoRemoveLine = function(line, lineIndex){
+      scope.undoRemoveLine = function(line, lineIndex) {
         // recreate points
-        scope.graphCallback({ add: { point: line.points.A, color: scope.colorPalette[line.colorIndex], name: line.points.A.name } });
-        scope.graphCallback({ add: { point: line.points.B, color: scope.colorPalette[line.colorIndex], name: line.points.B.name } });
+        scope.graphCallback({
+          add: {
+            point: line.points.A,
+            color: scope.colorPalette[line.colorIndex],
+            name: line.points.A.name
+          }
+        });
+        scope.graphCallback({
+          add: {
+            point: line.points.B,
+            color: scope.colorPalette[line.colorIndex],
+            name: line.points.B.name
+          }
+        });
 
         // recreate the line, timeout is required to make sure the points are already created
         scope.graphCallback({
@@ -271,13 +287,13 @@ var main = [
         scope.lines[lineIndex] = line;
 
         // map points per line
-        scope.pointsPerLine[line.points.A.name] = { line: lineIndex, point: 'A'};
-        scope.pointsPerLine[line.points.B.name] = { line: lineIndex, point: 'B'};
+        scope.pointsPerLine[line.points.A.name] = {line: lineIndex, point: 'A'};
+        scope.pointsPerLine[line.points.B.name] = {line: lineIndex, point: 'B'};
       };
 
       scope.pointUpdate = function(point, oldPoint) {
-        if(oldPoint) {
-          scope.history.push({ action: 'move', previousPoint: oldPoint });
+        if (oldPoint) {
+          scope.history.push({action: 'move', previousPoint: oldPoint});
         }
 
         scope.graphCallback({
@@ -295,7 +311,7 @@ var main = [
           lockGraph: true
         };
 
-        if(color) {
+        if (color) {
           options.pointsStyle = scope.config.exhibitOnly ? scope.colorPalette.exhibit : color;
           options.shapesStyle = scope.config.exhibitOnly ? scope.colorPalette.exhibit : color;
         }
@@ -317,7 +333,7 @@ var main = [
 
       scope.removeLine = function(lineId) {
         var line = getLineById(lineId);
-        scope.history.push({ action: 'remove_line', line: _.cloneDeep(line), lineIndex: scope.lines.indexOf(line) });
+        scope.history.push({action: 'remove_line', line: _.cloneDeep(line), lineIndex: scope.lines.indexOf(line)});
 
         scope.graphCallback({
           remove: {
@@ -331,7 +347,7 @@ var main = [
         delete scope.pointsPerLine[line.points.B.name];
 
         // deletes the line
-        line.points.A = line.points.B = { isSet: false };
+        line.points.A = line.points.B = {isSet: false};
         line.equation = "";
         line.isSet = false;
       };
@@ -352,11 +368,12 @@ var main = [
           width: Math.min(scope.containerWidth, 500),
           height: Math.min(scope.containerHeight, 500)
         });
-        solutionScope.interactionCallback = function() {};
+        solutionScope.interactionCallback = function() {
+        };
 
         solutionScope.$watch('graphCallbackSolution', function(solutionGraphCallback) {
           if (solutionGraphCallback) {
-            _.each(response.correctResponse, function(line){
+            _.each(response.correctResponse, function(line) {
               solutionGraphCallback({
                 drawShape: {
                   id: line.id,
@@ -376,10 +393,30 @@ var main = [
       }
 
       var getLineById = function(lineId) {
-        return _.find(scope.lines, function(line){
+        return _.find(scope.lines, function(line) {
           return line.id === lineId;
         });
       };
+
+      function showCorrectAnswer() {
+        scope.graphCallback({
+          clearBoard: true
+        });
+
+
+        _.each(scope.instructorData.correctResponse, function(line) {
+          var cr = lineUtils.expressionize(line.equation, "x");
+          scope.graphCallback({
+            drawShape: {
+              curve: function(x) {
+                return eval(cr);
+              },
+              color: "#3c763d",
+              label: line.label
+            }
+          });
+        });
+      }
 
       scope.containerBridge = {
 
@@ -416,22 +453,27 @@ var main = [
           // this timeout is needed to wait for the callback to be defined
           $timeout(function() {
 
-            if(scope.graphCallback) {
-              scope.startOver();
-            }
 
-            // lock/unlock the graph
-            if (config.exhibitOnly) {
-              scope.lockGraph();
+            if (scope.instructorData) {
+              showCorrectAnswer();
             } else {
-              scope.unlockGraph();
+              if (scope.graphCallback) {
+                scope.startOver();
+              }
+
+              // lock/unlock the graph
+              if (config.exhibitOnly) {
+                scope.lockGraph();
+              } else {
+                scope.unlockGraph();
+              }
             }
           }, 100);
         },
 
         getSession: function() {
-          var lines = _.map(scope.lines, function(line){
-            return { id: line.id, equation: line.equation, name: line.name };
+          var lines = _.map(scope.lines, function(line) {
+            return {id: line.id, equation: line.equation, name: line.name};
           });
           return {
             answers: lines
@@ -439,22 +481,8 @@ var main = [
         },
 
         setInstructorData: function(data) {
-          scope.graphCallback({
-            clearBoard: true
-          });
-
-          _.each(data.correctResponse, function(line){
-            var cr = lineUtils.expressionize(line.equation, "x");
-            scope.graphCallback({
-              drawShape: {
-                curve: function(x) {
-                  return eval(cr);
-                }
-              }
-            });
-          });
-
-          this.setResponse({correctness: 'correct'});
+          scope.instructorData = data;
+          showCorrectAnswer();
         },
 
         setResponse: function(response) {
@@ -490,21 +518,24 @@ var main = [
 
           scope.lockGraph();
 
-          _.each(response.correctResponse, function(line){
+          _.each(response.correctResponse, function(line) {
+            var isCorrect = true//response.correctness === "correct" || line.isCorrect;
             scope.graphCallback({
               shapeColor: {
                 shape: line.id,
-                color: line.isCorrect ? color.correct : color.incorrect
+                color: isCorrect ? color.correct : color.incorrect
               }
             });
           });
         },
 
-        setMode: function(newMode) {},
+        setMode: function(newMode) {
+        },
 
         reset: function() {
           scope.feedback = undefined;
           scope.response = undefined;
+          scope.instructorData = undefined;
           scope.correctClass = undefined;
           scope.unlockGraph();
 
@@ -524,8 +555,8 @@ var main = [
         isAnswerEmpty: function() {
           var answer = this.getSession().answers;
           var answersGiven = 0;
-          _.each(answer, function(line){
-            if(line.equation !== undefined && line.equation !== null && line.equation !== "") {
+          _.each(answer, function(line) {
+            if (line.equation !== undefined && line.equation !== null && line.equation !== "") {
               answersGiven++;
             }
           });
