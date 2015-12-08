@@ -16,6 +16,10 @@
     {
       "name": "widgets",
       "organization": "corespring"
+    },
+    {
+      "name": "mini-wiggi-lib",
+      "organization": "corespring"
     }
   ]
 }

@@ -9,6 +9,8 @@ describe('corespring', function() {
     };
   };
 
+  var answer = "Little test text";
+
   var testModelTemplate = {
     data: {
       model: {
@@ -17,7 +19,7 @@ describe('corespring', function() {
       }
     },
     session: {
-      answers: "Little test text"
+      answers: answer
     }
   };
 
@@ -56,9 +58,14 @@ describe('corespring', function() {
       expect(container.elements['1']).toBeDefined();
       container.elements['1'].setDataAndSession(testModel);
       scope.$digest();
-      var text = $(element).find('textarea').val();
-      expect(text).toBe("Little test text");
+      var text = $(element).find('.wiggi-wiz-editable').text();
+      expect(text).toBe(answer);
     });
+
+    it('binds', function() {
+      expect(true).toBe(true);
+    });
+
   });
 
   describe('isAnswerEmpty', function() {
