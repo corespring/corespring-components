@@ -590,6 +590,7 @@ var main = [
         "        </div>",
         "      </div>",
         "    </div><br/>",
+        "    <div ng-if='instructorData' ng-repeat='response in instructorData.correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
         "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
         "      <div class='row line-input' ng-repeat='line in lines' ng-if='!locked && line.points.A.x !== undefined && line.points.B.x !== undefined'>",
         "        <div class='col-sm-3'>",
