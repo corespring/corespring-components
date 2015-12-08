@@ -220,6 +220,25 @@ var main = [
         $compile(solutionContainer)(solutionScope);
       }
 
+      function showCorrectAnswer() {
+        if (!scope.instructorData) {
+          return;
+        }
+        var cr = lineUtils.expressionize(scope.instructorData.correctResponse, "x");
+        scope.graphCallback({
+          clearBoard: true
+        });
+        scope.graphCallback({
+          drawShape: {
+            curve: function(x) {
+              return eval(cr);
+            }
+          }
+        });
+
+        scope.containerBridge.setResponse({correctness: 'correct'});
+      }
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -255,15 +274,19 @@ var main = [
           // this timeout is needed to wait for the callback to be defined
           $timeout(function() {
 
-            if(scope.graphCallback) {
-              scope.startOver();
-            }
-
-            // lock/unlock the graph
-            if (config.exhibitOnly) {
-              scope.lockGraph();
+            if (scope.instructorData) {
+              showCorrectAnswer();
             } else {
-              scope.unlockGraph();
+              if (scope.graphCallback) {
+                scope.startOver();
+              }
+
+              // lock/unlock the graph
+              if (config.exhibitOnly) {
+                scope.lockGraph();
+              } else {
+                scope.unlockGraph();
+              }
             }
           }, 100);
         },
@@ -275,19 +298,8 @@ var main = [
         },
 
         setInstructorData: function(data) {
-          var cr = lineUtils.expressionize(data.correctResponse, "x");
-          scope.graphCallback({
-            clearBoard: true
-          });
-          scope.graphCallback({
-            drawShape: {
-              curve: function(x) {
-                return eval(cr);
-              }
-            }
-          });
-
-          this.setResponse({correctness: 'correct'});
+          scope.instructorData = data;
+          showCorrectAnswer();
         },
 
         setResponse: function(response) {
