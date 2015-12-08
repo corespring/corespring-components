@@ -340,6 +340,7 @@ var main = [
         reset: function() {
           scope.feedback = undefined;
           scope.response = undefined;
+          scope.instructorData = undefined;
           scope.correctClass = undefined;
           scope.unlockGraph();
 
@@ -397,6 +398,7 @@ var main = [
         "        </div>",
         "      </div>",
         "    </div><br/>",
+        "    <div ng-if='instructorData'>{{instructorData.correctResponse}}</div>",
         "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
         "      <div class='row points-input'>",
         "        <div class='col-sm-12'>",
