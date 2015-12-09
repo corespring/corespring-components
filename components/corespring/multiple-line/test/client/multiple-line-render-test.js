@@ -354,9 +354,8 @@ describe('corespring:multiple-line:render', function() {
       ]});
       rootScope.$digest();
       expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({clearBoard: true});
-      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({drawShape: {curve: jasmine.any(Function)}});
-      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({drawShape: {curve: jasmine.any(Function)}});
-      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({correctness: 'correct'});
+      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({drawShape: {label: 'Line 1', color: '#3c763d', curve: jasmine.any(Function)}});
+      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({drawShape: {color: '#3c763d', label: 'Line 1', curve: jasmine.any(Function)}});
     });
   });
 

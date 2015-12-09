@@ -519,7 +519,7 @@ var main = [
           scope.lockGraph();
 
           _.each(response.correctResponse, function(line) {
-            var isCorrect = true//response.correctness === "correct" || line.isCorrect;
+            var isCorrect = response.correctness === "correct" || line.isCorrect;
             scope.graphCallback({
               shapeColor: {
                 shape: line.id,
