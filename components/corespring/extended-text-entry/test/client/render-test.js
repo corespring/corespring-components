@@ -54,12 +54,12 @@ describe('corespring', function() {
       expect(element).toBeDefined();
     });
 
-    it('answer in session renders in text area', function() {
+    it('answer in session renders in wiggi-wiz', function() {
       expect(container.elements['1']).toBeDefined();
       container.elements['1'].setDataAndSession(testModel);
       scope.$digest();
-      var text = $(element).find('.wiggi-wiz-editable').text();
-      expect(text).toBe(answer);
+      var el = $(element).find('wiggi-wiz');
+      expect(el.attr('ng-model')).toBe('answer');
     });
 
     it('binds', function() {
