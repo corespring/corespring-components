@@ -21,7 +21,7 @@
   "dependencies" : {
     "client" : {
       "wiggi-wiz" : {
-        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.79",
+        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.81",
         "js" : "dist/wiggi-wiz.js",
         "css" : "dist/wiggi-wiz.css",
         "angular-module" : "corespring.wiggi-wiz"
