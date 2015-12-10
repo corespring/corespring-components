@@ -59,7 +59,11 @@ function getFirstCorrectResponse(question) {
 function getDefaultFeedback(question, answer, getPlaceHolderReplacement) {
   return isCorrectResponse(question, answer) ?
     exports.keys.DEFAULT_CORRECT_FEEDBACK :
-    DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, getPlaceHolderReplacement(question));
+    DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, [
+      '<div class="correct-response-placeholder">',
+        getPlaceHolderReplacement(question),
+      '</div>'
+    ].join(''));
 }
 
 function defaultFeedback(question, answer){
