@@ -1,6 +1,11 @@
 var main = [
   function () {
 
+    var MAX_WIDTH = 555;
+    var PIXELS_PER_ROW = 20;
+    var PIXELS_PER_COL = 7;
+    var BASE_COL_PIXELS = 16;
+
     return {
       scope: {},
       restrict: 'AE',
@@ -14,10 +19,6 @@ var main = [
         return element.find('.wiggi-wiz-editable');
       }
 
-      function toolbar() {
-        return element.find('.wiggi-wiz-toolbar');
-      }
-
       scope.editable = true;
       scope.containerBridge = {
 
@@ -28,8 +29,8 @@ var main = [
           scope.rows = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLines) || 4;
           scope.cols = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLength) || 60;
 
-          var width = (Math.min(scope.cols * 7 + 16, 555) + 'px');
-          var height = scope.rows * 20 + 'px';
+          var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
+          var height = scope.rows * PIXELS_PER_ROW + 'px';
           element.find('.wiggi-wiz').css({ width: width });
           editable().css({
             height: height,
@@ -87,30 +88,13 @@ var main = [
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
-      editable().on('focus', function() {
-        toolbar().show();
-      });
-
-      function hasFocus() {
-        return $.contains(element[0], document.activeElement);
-      }
-
-      function maybeHide() {
-        if (!scope.editable || !hasFocus()) {
-          toolbar().hide();
-        }
-      }
-
-      $(document).on('click', maybeHide);
-      scope.$watch('editable', maybeHide);
-
     }
 
     function template() {
       return [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder">',
-        '    <wiggi-wiz ng-model="answer" enabled="editable" style="{{style}}">',
+        '    <wiggi-wiz ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
         '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" />',
         '    </wiggi-wiz>',
         '  </div>',
