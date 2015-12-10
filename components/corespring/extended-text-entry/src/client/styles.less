@@ -5,40 +5,17 @@
   width: 100%;
   max-width: @component-width;
 
-  textarea {
-    display: block;
-    margin: 0 0 10px;
-    padding: 7px;
-    text-align: left;
-    color: #333;
-    resize: none;
-    max-width: 100%;
-    border-radius: 4px;
-  }
-
   .textarea-holder {
     position: relative;
     width: 100%;
-
-    textarea {
-      width: initial;
-    }
-
   }
 
-  textarea[disabled] {
-    cursor: not-allowed;
-    background-color: #eeeeee;
-    color: #999;
+  .wiggi-wiz {
+    margin-bottom: 20px;
+    min-height: inherit;
   }
 
-  &.received textarea {
-    border: 1px solid #3A87AD;
-    -moz-box-shadow: 0px 0px 6px 0px #3A87AD, inset 0px 1px 0px 0px #ECECEC;
-    box-shadow: 0px 0px 6px 0px #3A87AD, inset 0px 1px 0px 0px #ECECEC;
-  }
-
-  &.received.incorrect textarea {
+  &.received.incorrect .wiggi-wiz {
     border: 2px solid @warning-color-border;
     box-shadow: none;
   }
