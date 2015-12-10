@@ -15,25 +15,25 @@
       {
         "label": "",
         "labelType": "text",
-        "id": "c1",
+        "id": "id_1",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c2",
+        "id": "id_2",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c3",
+        "id": "id_3",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c4",
+        "id": "id_4",
         "moveOnDrag": true
       }
     ],
