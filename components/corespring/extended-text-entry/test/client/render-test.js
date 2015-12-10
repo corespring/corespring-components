@@ -62,10 +62,6 @@ describe('corespring', function() {
       expect(el.attr('ng-model')).toBe('answer');
     });
 
-    it('binds', function() {
-      expect(true).toBe(true);
-    });
-
   });
 
   describe('isAnswerEmpty', function() {
