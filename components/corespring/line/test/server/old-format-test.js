@@ -22,7 +22,7 @@ describe('line interaction server logic', function() {
 
   var component = {
     "componentType": "corespring-line",
-    "correctResponse": "y=-0.5x+1",
+    "correctResponse": "y=2x+7",
     "model": {
       "config": {
         "domainLabel": "X",
@@ -63,13 +63,72 @@ describe('line interaction server logic', function() {
     }
   };
 
+  var correctAnswer = { A: { x:0, y: 7, isSet: true }, B: { x: 1, y: 9, isSet: true } };
+
+  var incorrectAnswer = { A: { x: 0, y: 3, isSet: true }, B: { x: 0, y: 0, isSet: true } };
+
+  var incompleteAnswer = { A: { x: 0, y: 3, isSet: true }, B: { isSet: false } };
+
+  var notDefinedAnswer = {};
+
+  var emptyAnswer = { A: { isSet: false }, B: { isSet: false } };
+
+  var malformedAnswer = { A: { isSet: true }, B: { isSet: true } };
+
   describe('prior points response format', function () {
 
-    it('should return a score', function () {
+    it('returns warning outcome for a not defined answer ({})', function() {
+      var outcome = server.createOutcome(_.cloneDeep(component), notDefinedAnswer, helper.settings(true, true, true));
+      outcome.should.eql({
+        correctness: 'warning',
+        score: 0,
+        feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+      });
+    });
 
-      var outcome = server.createOutcome(_.cloneDeep(component), pointsResponse, helper.settings(true, true, true));
-      outcome.correctness.should.eql('incorrect');
-      outcome.score.should.eql(0);
+    it('returns warning outcome for an empty answer (isSet false)', function() {
+      var outcome = server.createOutcome(_.cloneDeep(component), emptyAnswer, helper.settings(true, true, true));
+      outcome.should.eql({
+        correctness: 'warning',
+        score: 0,
+        feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+      });
+    });
+
+    it('returns warning outcome for an incomplete answer (only one point)', function() {
+      var outcome = server.createOutcome(_.cloneDeep(component), incompleteAnswer, helper.settings(true, true, true));
+      outcome.should.eql({
+        correctness: 'warning',
+        score: 0,
+        feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+      });
+    });
+
+    it('returns warning outcome for a malformed answer (isSet true but no x or y)', function() {
+      var outcome = server.createOutcome(_.cloneDeep(component), malformedAnswer, helper.settings(true, true, true));
+      outcome.should.eql({
+        correctness: 'warning',
+        score: 0,
+        feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
+      });
+    });
+
+    it('respond incorrect', function() {
+      var spy = sinon.spy(serverObj, 'isFunctionEqual');
+      var response = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
+      response.correctness.should.eql('incorrect');
+      response.score.should.eql(0);
+      // check if it was called with the right options
+      spy.getCall(0).args[2].should.eql({
+        variable: 'x',
+        sigfigs: 3
+      });
+    });
+
+    it('respond correct', function() {
+      var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(false, true, true));
+      response.correctness.should.eql('correct');
+      response.score.should.eql(1);
     });
 
   });
