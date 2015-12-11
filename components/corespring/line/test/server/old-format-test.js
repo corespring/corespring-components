@@ -68,9 +68,8 @@ describe('line interaction server logic', function() {
     it('should return a score', function () {
 
       var outcome = server.createOutcome(_.cloneDeep(component), pointsResponse, helper.settings(true, true, true));
-      outcome.correctness.should.eql('correct');
-      outcome.score.should.eql(1);
-
+      outcome.correctness.should.eql('incorrect');
+      outcome.score.should.eql(0);
     });
 
   });
