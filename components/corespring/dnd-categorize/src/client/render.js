@@ -690,6 +690,7 @@ function renderCorespringDndCategorize(
         '      on-edit-clicked="activate(activeId)"',
         '   >',
         '  </div>',
+        '  <remove-after-placing choices="renderModel.choices" ng-if="isEditMode"></remove-after-placing>',
         '  <div class="choices-container">',
         '    <div choice-corespring-dnd-categorize="true" ',
         '      correctness="{{choice.correctness}}"',

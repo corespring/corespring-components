@@ -220,6 +220,25 @@ var main = [
         $compile(solutionContainer)(solutionScope);
       }
 
+      function showCorrectAnswer() {
+        if (!scope.instructorData) {
+          return;
+        }
+        var cr = lineUtils.expressionize(scope.instructorData.correctResponse, "x");
+        scope.graphCallback({
+          clearBoard: true
+        });
+        scope.graphCallback({
+          drawShape: {
+            curve: function(x) {
+              return eval(cr);
+            }
+          }
+        });
+
+        scope.containerBridge.setResponse({correctness: 'correct'});
+      }
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -255,39 +274,32 @@ var main = [
           // this timeout is needed to wait for the callback to be defined
           $timeout(function() {
 
-            if(scope.graphCallback) {
-              scope.startOver();
-            }
-
-            // lock/unlock the graph
-            if (config.exhibitOnly) {
-              scope.lockGraph();
+            if (scope.instructorData) {
+              showCorrectAnswer();
             } else {
-              scope.unlockGraph();
+              if (scope.graphCallback) {
+                scope.startOver();
+              }
+
+              // lock/unlock the graph
+              if (config.exhibitOnly) {
+                scope.lockGraph();
+              } else {
+                scope.unlockGraph();
+              }
             }
           }, 100);
         },
 
         getSession: function() {
           return {
-            answers: scope.line.points
+            answers: scope.line.equation
           };
         },
 
         setInstructorData: function(data) {
-          var cr = lineUtils.expressionize(data.correctResponse, "x");
-          scope.graphCallback({
-            clearBoard: true
-          });
-          scope.graphCallback({
-            drawShape: {
-              curve: function(x) {
-                return eval(cr);
-              }
-            }
-          });
-
-          this.setResponse({correctness: 'correct'});
+          scope.instructorData = data;
+          showCorrectAnswer();
         },
 
         setResponse: function(response) {
@@ -328,6 +340,7 @@ var main = [
         reset: function() {
           scope.feedback = undefined;
           scope.response = undefined;
+          scope.instructorData = undefined;
           scope.correctClass = undefined;
           scope.unlockGraph();
 
@@ -351,7 +364,7 @@ var main = [
 
         isAnswerEmpty: function() {
           var answer = this.getSession().answers;
-          return _.isUndefined(answer) || _.isEmpty(answer) || !answer.A || !answer.B || !answer.A.isSet || !answer.B.isSet;
+          return _.isUndefined(answer) || _.isEmpty(answer);
         },
 
         answerChangedHandler: function(callback) {
@@ -385,6 +398,7 @@ var main = [
         "        </div>",
         "      </div>",
         "    </div><br/>",
+        "    <div ng-if='instructorData'>{{instructorData.correctResponse}}</div>",
         "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
         "      <div class='row points-input'>",
         "        <div class='col-sm-12'>",

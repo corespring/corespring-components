@@ -133,15 +133,15 @@ describe('corespring:line:render', function() {
       timeout.flush();
     });
 
-    it('should return true if only one point is plotted', function() {
+    it('should return true no line is plotted', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.line.points = { A: { x:1, y: 1, isSet: true }, B: { isSet: false } };
+      scope.line.equation = null;
       expect(container.elements['1'].isAnswerEmpty()).toBe(true);
     });
 
     it('should return false if line is ploted', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.line.points = { A: { x:1, y: 1, isSet: true }, B: { x:2, y: 2, isSet: true } };
+      scope.line.equation = "2x+7";
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });

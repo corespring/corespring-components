@@ -44,46 +44,13 @@ describe('line interaction server logic', function() {
     }
   };
 
-  var correctAnswer = { A: { x:0, y: 7, isSet: true }, B: { x: 1, y: 9, isSet: true } };
+  var correctAnswer = "2x+7";
 
-  var incorrectAnswer = { A: { x: 0, y: 3, isSet: true }, B: { x: 0, y: 0, isSet: true } };
+  var incorrectAnswer = "x-2";
 
-  var incompleteAnswer = { A: { x: 0, y: 3, isSet: true }, B: { isSet: false } };
+  var emptyAnswer = "";
 
-  var notDefinedAnswer = {};
-
-  var emptyAnswer = { A: { isSet: false }, B: { isSet: false } };
-
-  var malformedAnswer = { A: { isSet: true }, B: { isSet: true } };
-
-  it('returns warning outcome for a not defined answer ({})', function() {
-    var outcome = server.createOutcome(_.cloneDeep(component), notDefinedAnswer, helper.settings(true, true, true));
-    outcome.should.eql({
-      correctness: 'warning',
-      score: 0,
-      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
-    });
-  });
-
-  it('returns warning outcome for an empty answer (isSet false)', function() {
-    var outcome = server.createOutcome(_.cloneDeep(component), emptyAnswer, helper.settings(true, true, true));
-    outcome.should.eql({
-      correctness: 'warning',
-      score: 0,
-      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
-    });
-  });
-
-  it('returns warning outcome for an incomplete answer (only one point)', function() {
-    var outcome = server.createOutcome(_.cloneDeep(component), incompleteAnswer, helper.settings(true, true, true));
-    outcome.should.eql({
-      correctness: 'warning',
-      score: 0,
-      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
-    });
-  });
-
-  it('returns warning outcome for a malformed answer (isSet true but no x or y)', function() {
+  it('returns warning outcome for an empty answer', function() {
     var outcome = server.createOutcome(_.cloneDeep(component), emptyAnswer, helper.settings(true, true, true));
     outcome.should.eql({
       correctness: 'warning',

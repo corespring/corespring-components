@@ -23,7 +23,7 @@ function createOutcome(question, answer, settings) {
   var response = feedbackUtils.defaultCreateOutcome(question, answer, settings,
     numAnswers, numAnsweredCorrectly, totalCorrectAnswers);
 
-  if (question.model.config.inputType === 'checkbox' && !_.isEmpty(question.partialScoring)) {
+  if (question.model.config && question.model.config.inputType === 'checkbox' && !_.isEmpty(question.partialScoring)) {
     amendResponseForCheckboxPartial(question, answer, response);
   }
   response.correctnessMatrix = buildCorrectnessMatrix(question, answer);
