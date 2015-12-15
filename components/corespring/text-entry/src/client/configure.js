@@ -206,20 +206,6 @@ function configureTextEntry(
   function template() {
     return [
       '<div class="config-text-entry">',
-      '  <div navigator="">',
-      '    <div navigator-panel="Design">',
-      designPanel(),
-      '    </div>',
-      '    <div navigator-panel="Display">',
-      displayPanel(),
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('\n');
-  }
-
-  function designPanel() {
-    return [
       '  <div class="container-fluid">',
       '    <div class="row">',
       '      <div class="col-xs-12">',
@@ -269,12 +255,33 @@ function configureTextEntry(
       '        % of full credit for a partially correct answer',
       '      </div>',
       '    </div>',
+      '    <div class="row text-field-size-row">',
+      '      <div class="col-xs-12">',
+      '        <label class="control-label">Answer blank size</label>',
+      '        <div ng-repeat="o in answerBlankSizeDataProvider">',
+      '          <radio value="{{o.size}}" ng-model="editorModel.model.answerBlankSize">',
+      '          <input type="text" readonly value="{{o.demoLabel}}" size="{{makeItBigEnough(o.size)}}"/> <span>{{o.defaultLabel}}</span>',
+      '          </radio>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '    <div class="row align-row">',
+      '      <div class="col-xs-12">',
+      '        <label class="control-label">Align text in answer blank:</label>',
+      '        <select class="form-control" ng-model="editorModel.model.answerAlignment">',
+      '          <option value="left">Left</option>',
+      '          <option value="center">Center</option>',
+      '          <option value="right">Right</option>',
+      '        </select>',
+      '      </div>',
+      '    </div>',
       '    <div class="row">',
       '      <div class="col-xs-8">',
       feedbackConfigPanel(),
       '      </div>',
       '    </div>',
-      '  </div>'
+      '  </div>',
+      '</div>'
     ].join('\n');
   }
 
@@ -303,33 +310,6 @@ function configureTextEntry(
       '      fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
       '  </div>',
       '</div>'
-    ].join('\n');
-  }
-
-  function displayPanel() {
-    return [
-      '  <div class="container-fluid">',
-      '    <div class="row text-field-size-row">',
-      '      <div class="col-xs-12">',
-      '        <label class="control-label">Answer blank size</label>',
-      '        <div ng-repeat="o in answerBlankSizeDataProvider">',
-      '          <radio value="{{o.size}}" ng-model="editorModel.model.answerBlankSize">',
-      '          <input type="text" readonly value="{{o.demoLabel}}" size="{{makeItBigEnough(o.size)}}"/> <span>{{o.defaultLabel}}</span>',
-      '          </radio>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '    <div class="row align-row">',
-      '      <div class="col-xs-12">',
-      '        <label class="control-label">Align text in answer blank:</label>',
-      '        <select class="form-control" ng-model="editorModel.model.answerAlignment">',
-      '          <option value="left">Left</option>',
-      '          <option value="center">Center</option>',
-      '          <option value="right">Right</option>',
-      '        </select>',
-      '      </div>',
-      '    </div>',
-      '  </div>'
     ].join('\n');
   }
 }
