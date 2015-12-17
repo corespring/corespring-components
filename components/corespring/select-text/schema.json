@@ -1,0 +1,128 @@
+{
+  "type": "object",
+  "title": "CoreSpring Select Evidence in Text Schema",
+  "properties" : {
+    "allowPartialScoring" : {
+      "type" : "boolean"
+    },
+    "componentType": {
+      "description": "A required value to indicate the component type. For select text, this must be 'corespring-select-text'.",
+      "type": "string"
+    },
+    "correctResponse" : {
+      "description" : "An object describing the correct responses for the select text evidence component.",
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "description" : "Array containing the correct values for the component. These correspond to the right selections.",
+          "type" : "array",
+          "items": {
+            "type": "number",
+            "description": "Zero starting index of the token that represents a response."
+            }
+          }
+        }
+      },
+      "required" : ["value"]
+    },
+    "feedback" : {
+      "description" : "Describes feedback which should be presented to the user when the component is submitted.",
+      "type" : "object",
+      "correctFeedback" : {
+        "description" : "A feedback string that will be shown for a correct response if correctFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "correctFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if all of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "incorrectFeedback" : {
+        "description" : "A feedback string that will be shown for a incorrect response if incorrectFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "incorrectFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if no correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      },
+      "partialFeedback" : {
+        "description" : "A feedback string that will be shown for a partially correct response if partialFeedbackType is set to 'custom'.",
+        "type" : "string"
+      },
+      "partialFeedbackType" : {
+        "description" : "Describes the type of feedback that will be shown if some of the correct choices are entered.",
+        "enum" : ["custom", "default", "none"]
+      }
+    },
+    "model": {
+      "description": "Contains configuration and select text params.",
+      "type": "object",
+      "properties": {
+        "choices": {
+          "description": "List of choices that can be or not be the correct answers",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Zero starting index of the token that represents a possible response."
+          }
+        },
+        "config": {
+          "description": "Configuration for rendering select text evidence.",
+          "type": "object",
+          "properties": {
+            "availability": {
+              "description": "A value indicating the availability of selections in the passage (all available or specific selection)",
+              "enum": ["all", "specific"]
+            },
+            "label": {
+              "description": "Optional label field for instructions",
+              "type": "string"
+            },
+            "maxSelections": {
+              "description": "A value representing the max amounts of selections that an user can perform",
+              "type": "number"
+            },
+            "selectionUnit": {
+              "description": "A value indicating the selection unit in the passage",
+              "enum" : ["word", "sentence", "phrase", "paragraph", "custom"]
+            },
+            "passage": {
+              "description": "A value that represents the HTML of the text passage",
+              "type": "string"
+            }
+          },
+          "required": ["availability", "selectionUnit", "passage"]
+        }
+      },
+      "required": ["config"]
+    },
+    "partialScoring" : {
+      "description" : "A description of the partial scoring to be used by the interaction.",
+      "type" : "array",
+      "items" : {
+        "description" : "A configuration object which maps the number of correct responses to the percentage to be awarded.",
+        "type" : "object",
+        "properties" : {
+          "numberOfCorrect" : {
+            "description" : "The number of correct responses.",
+            "type" : "number"
+          },
+          "scorePercentage" : {
+            "description" : "The percentage of the score to be awarded for the number of correct responses.",
+            "type" : "number",
+            "maximum" : 100,
+            "minimum" : 0
+          }
+        }
+      }
+    },
+    "title": {
+      "description": "A title for the interaction, displayed in the editor.",
+      "type": "string"
+    },
+    "weight" : {
+      "description" : "The weighting to be assigned to the interaction in the context of the overall item.",
+      "type" : "number"
+    }
+  },
+  "required": ["componentType", "correctResponse", "model"]
+}

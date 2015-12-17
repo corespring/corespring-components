@@ -1,0 +1,353 @@
+@answer-color-opaque: rgb(171, 171, 171);
+@answer-color: rgba(171, 171, 171, 0.6);
+@choice-color-opaque: rgb(187, 187, 187);
+@choice-color: rgba(187, 187, 187, 0.5);
+@incorrect-answer-bg-color-opaque: rgb(255, 255, 204);
+@incorrect-answer-bg-color: rgba(255, 255, 204, 0.6);
+@incorrect-answer-border-color: rgb(238, 162, 54);
+@correct-answer-bg-color-opaque: rgb(204, 255, 204);
+@correct-answer-bg-color: rgba(204, 255, 204, 0.6);
+@correct-answer-border-color: rgb(46, 102, 44);
+
+.corespring-select-text {
+  .component-placeholder {
+    .holder {
+      padding: 10px;
+      .cs-select-text {
+        .action-buttons {
+          display: none;
+        }
+        .select-text-content {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+}
+
+.cs-select-text-config {
+  .row {
+    margin-bottom: 10px;
+    .mini-wiggi-wiz {
+      .wiggi-wiz-editable {
+        padding: 5px 5px 0;
+        margin-bottom: 3px;
+      }
+    }
+    .editor-wrapper {
+      margin-top: 10px;
+    }
+    .editor-wrapper,
+    .answers-config-wrapper {
+      position: relative;
+      z-index: 1;
+      .confirm-action {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        background-color: rgb(255, 255, 255);
+        background-color: rgba(255, 255, 255, 0.7);
+        .action-description {
+          background-color: rgb(255, 255, 255);
+          padding: 5px 15px;
+          border-radius: 6px;
+          background-clip: padding-box;
+          width: 50%;
+          -webkit-box-shadow: 0 0 10px #bbb;
+          box-shadow: 0 0 10px #bbb;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          -webkit-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+    .instructions {
+      text-align: center;
+    }
+    .passage-wrapper {
+      position: relative;
+      .history-buttons {
+        position: absolute;
+        right: 0;
+        bottom: 100%;
+        padding-bottom: 4px;
+      }
+      .passage-preview {
+        padding: 5px;
+        border: 1px dashed #ccc;
+        border-radius: 5px;
+        background-clip: padding-box;
+        max-height: 350px;
+        overflow: auto;
+        .cs-token {
+          cursor: pointer;
+          -webkit-transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
+          transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
+          &:hover, &.choice {
+            background-color: transparent;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
+          }
+          &.selected {
+            background-color: @answer-color-opaque;
+            background-color: @answer-color;
+          }
+        }
+        .select-choices {
+          .cs-token {
+            cursor: default;
+            &:hover {
+              background-color: transparent;
+            }
+            &.choice {
+              cursor: pointer;
+              border: 1px dotted @answer-color-opaque;
+              margin: -1px;
+            }
+            &.selected {
+              cursor: pointer;
+              background-color: @answer-color-opaque;
+              background-color: @answer-color-opaque;
+              border: 0;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+    .answer-summary {
+      line-height: 60px;
+      .badge {
+        line-height: 40px;
+        width: 40px;
+        border-radius: 100%;
+        padding: 0;
+        color: #555;
+        -webkit-transition: all 0.3s ease-in-out; 
+        transition: all 0.3s ease-in-out;
+        &.choices-count {
+          background-color: @answer-color-opaque;
+          background-color: @answer-color;
+        }
+        &.answers-count {
+          background-color: @correct-answer-bg-color-opaque;
+          background-color: @correct-answer-bg-color;
+        }
+        &.grow-add {
+          -webkit-transform: none;
+          -ms-transform: none;
+          transform: none;
+          &.grow-add-active {
+            -webkit-transform: scale(1.5);
+            -ms-transform: scale(1.5);
+            transform: scale(1.5);
+          }
+        }
+        &.grow-remove {
+          -webkit-transform: scale(1.5);
+          -ms-transform: scale(1.5);
+          transform: scale(1.5);
+          &.grow-remove-active {
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none;
+          }
+        }
+        &.shrink-add {
+          -webkit-transform: none;
+          -ms-transform: none;
+          transform: none;
+          &.shrink-add-active {
+            -webkit-transform: scale(0.5);
+            -ms-transform: scale(0.5);
+            transform: scale(0.5);
+          }
+        }
+        &.shrink-remove {
+          -webkit-transform: scale(0.5);
+          -ms-transform: scale(0.5);
+          transform: scale(0.5);
+          &.shrink-remove-active {
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none;
+          }
+        }
+      }
+    }
+    .max-selections {
+      clear: both;
+      .form-control {
+        width: 50px;
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+    }
+  }
+}
+
+.cs-select-text {
+  .select-text-label {
+    min-height: 1px;
+  }
+  .action-buttons {
+    float: right;
+    margin-bottom: -42px;
+    border: 1px dashed #ccc;
+    border-radius: 5px 5px 0 0;
+    border-bottom-color: white;
+    border-bottom-style: solid;
+    padding-top: 4px;
+    .answers-toggle {
+      margin: 1px 6px 2px;
+    }
+  }
+  .select-text-content {
+    border: 1px dashed #ccc;
+    border-radius: 5px 0 5px 5px;
+    background-clip: padding-box;
+    margin: 42px 0 5px;
+    padding: 5px;
+    clear: both;
+    .cs-token {
+      cursor: pointer;
+      -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+      transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+      &:hover {
+        background-color: transparent;
+        border: 1px dotted @answer-color-opaque;
+        margin: -1px;
+      }
+      &.selected {
+        background-color: @answer-color-opaque;
+        background-color: @answer-color;
+      }
+      &.correct {
+        background-color: @correct-answer-bg-color-opaque;
+        background-color: @correct-answer-bg-color;
+        border: 1px solid @correct-answer-border-color;
+        margin: -1px;
+      }
+      &.incorrect {
+        background-color: @incorrect-answer-bg-color-opaque;
+        background-color: @incorrect-answer-bg-color;
+        border: 1px solid @incorrect-answer-border-color;
+        margin: -1px;
+      }
+      &.correct-not-selected {
+        background-color: #fff;
+        border: 1px solid @correct-answer-border-color;
+        margin: -1px;
+      }
+    }
+    &.specific {
+      .cs-token {
+        cursor: text;
+        &:hover {
+          background-color: transparent;
+          border: 0;
+          margin: 0;
+        }
+        &.choice {
+          cursor: pointer;
+          background-color: transparent;
+          border: 1px dotted @answer-color-opaque;
+          margin: -1px;
+        }
+        &.selected {
+          cursor: pointer;
+          background-color: @answer-color-opaque;
+          background-color: @answer-color;
+          border: 0;
+          margin: 0;
+        }
+      }
+    }
+    &.no-more-selections {
+      .cs-token {
+        cursor: text;
+        &:hover {
+          background-color: transparent;
+          border: 0;
+          margin: 0;
+        }
+        &.choice {
+          &:hover {
+            background-color: transparent;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
+          }
+        }
+        &.selected {
+          &:hover {
+            background-color: @answer-color-opaque;
+            background-color: @answer-color;
+            cursor: pointer;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
+          }
+        }
+      }
+    }
+    &.blocked {
+      .cs-token {
+        cursor: default;
+        &:hover {
+          background-color: transparent;
+          border: 0;
+          margin: 0;
+        }
+        &.choice {
+          &:hover {
+            background-color: transparent;
+            border: 1px dotted @answer-color-opaque;
+            margin: -1px;
+          }
+        }
+        &.selected {
+          &:hover {
+            background-color: @answer-color-opaque;
+            background-color: @answer-color;
+            border: 0;
+            margin: 0;
+          }
+        }
+        &.correct,
+        &.correct:hover {
+          background-color: @correct-answer-bg-color-opaque;
+          background-color: @correct-answer-bg-color;
+          border: 1px solid @correct-answer-border-color;
+          margin: -1px;
+        }
+        &.incorrect,
+        &.incorrect:hover {
+          background-color: @incorrect-answer-bg-color-opaque;
+          background-color: @incorrect-answer-bg-color;
+          border: 1px solid @incorrect-answer-border-color;
+          margin: -1px;
+        }
+        &.correct-not-selected,
+        &.correct-not-selected:hover {
+          background-color: #fff;
+          border: 1px solid @correct-answer-border-color;
+          margin: -1px;
+        }
+      }
+    }
+    &.show-answers {
+      color: #ccc;
+      .cs-token {
+        color: #ccc;
+        &.selected, &.correct, &.incorrect, &.correct-not-selected {
+          color: #333;
+        }
+      }
+    }
+  }
+}
