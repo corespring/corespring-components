@@ -24,8 +24,15 @@ exports.isScoreable = function(question, answer, outcome) {
 
 exports.createOutcome = function(question, answer, settings) {
 
+  // string answer mean is equation base answer
+  var isEquationAnswer = _.isString(answer);
+
   function validAnswer(answer) {
-    return hasPoints(answer) && isPointSet(answer.A) && isPointSet(answer.B) && hasXY(answer.A) && hasXY(answer.B);
+    if(isEquationAnswer){
+      return (!_.isUndefined(answer) && !_.isNull(answer) && !_.isEmpty(answer));
+    } else {
+      return hasPoints(answer) && hasXY(answer.A) && hasXY(answer.B);
+    }
   }
 
   function hasPoints(answer) {
@@ -53,7 +60,12 @@ exports.createOutcome = function(question, answer, settings) {
   var addFeedback = (settings.showFeedback && question.model && question.model.config && !question.model.config.exhibitOnly);
 
   if (!validAnswer(answer)) {
-    var answerCorrectness = !hasPoints(answer) || !isPointSet(answer.A) || !isPointSet(answer.B) || !hasXY(answer.A) || !hasXY(answer.B) ? 'warning' : 'incorrect';
+    var answerCorrectness;
+    if(isEquationAnswer) {
+      answerCorrectness = _.isUndefined(answer) || _.isEmpty(answer) ? 'warning' : 'incorrect';
+    } else {
+      answerCorrectness = !hasPoints(answer) || !isPointSet(answer.A) || !isPointSet(answer.B) || !hasXY(answer.A) || !hasXY(answer.B) ? 'warning' : 'incorrect';
+    }
     return {
       correctness: answerCorrectness,
       score: 0,
@@ -61,9 +73,15 @@ exports.createOutcome = function(question, answer, settings) {
     };
   }
 
-  var slope = (answer.B.y - answer.A.y) / (answer.B.x - answer.A.x);
-  var yintercept = answer.A.y - (slope * answer.A.x);
-  var eq = slope + "x+" + yintercept;
+  var eq;
+  if(isEquationAnswer) {
+    eq = answer;
+  } else {
+    var slope = (answer.B.y - answer.A.y) / (answer.B.x - answer.A.x);
+    var yintercept = answer.A.y - (slope * answer.A.x);
+    eq = slope + "x+" + yintercept;
+
+  }
 
   var options = {};
   options.variable = (question.correctResponse.vars && question.correctResponse.vars.split(",")[0]) || 'x';

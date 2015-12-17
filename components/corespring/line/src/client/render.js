@@ -270,7 +270,7 @@ var main = [
 
         getSession: function() {
           return {
-            answers: scope.line.points
+            answers: scope.line.equation
           };
         },
 
@@ -351,7 +351,7 @@ var main = [
 
         isAnswerEmpty: function() {
           var answer = this.getSession().answers;
-          return _.isUndefined(answer) || _.isEmpty(answer) || !answer.A || !answer.B || !answer.A.isSet || !answer.B.isSet;
+          return _.isUndefined(answer) || _.isEmpty(answer);
         },
 
         answerChangedHandler: function(callback) {
