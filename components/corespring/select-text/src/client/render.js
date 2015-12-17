@@ -91,6 +91,9 @@ var main = [
         bindTokenEvents();
         if (dataAndSession.session && dataAndSession.session.answers) {
           scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
+          for (var i = scope.userChoices.length - 1; i >= 0; i--) {
+            scope.userChoices[i] = parseInt(scope.userChoices[i], 10);
+          }
         }
         $timeout(function() {
           if (scope.model.config.availability === 'specific' && getNestedProperty(scope, 'model.choices')) {

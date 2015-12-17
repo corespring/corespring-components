@@ -76,20 +76,6 @@ describe('corespring:select-text:render', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
-  describe('instructor data', function() {
-    xit('setting instructor data should select correct answers', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      scope.$digest();
-      container.elements['1'].setInstructorData({
-        correctResponse: {
-          value: [1]
-        }
-      });
-      scope.$digest();
-      expect(element.find('.correct').length).toEqual(1);
-    });
-  });
-
   describe('answer change callback', function() {
     var changeHandlerCalled = false;
     beforeEach(function() {
