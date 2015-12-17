@@ -78,7 +78,7 @@ exports.factory = [
           if( scope.numberOfCorrectResponses <= 1 ) {
               scope.fullModel.allowPartialScoring = false;
           }
-        });
+        }, true);
       };
     }
 

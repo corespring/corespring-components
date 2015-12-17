@@ -12,20 +12,14 @@ describe('corespring:select-text:render', function() {
   var testModelTemplate = {
     data: {
       model: {
-        choices: [
-          {
-            data: "I"
-          },
-          {
-            data: "am"
-          },
-          {
-            data: "green"
-          }
-        ],
-        config: {}
-      },
-      wrappedText: "<span class='token' id='0'>I</span><span class='token' id='1'>am</span><span class='token' id='3'>green</span>"
+        choices: [],
+        config: {
+          availability: "all",
+          label: "",
+          selectionUnit: "custom",
+          passage: "<p><span class=\"cs-token\">As</span> <span class=\"cs-token\">became</span> <span class=\"cs-token\">a</span> <span class=\"cs-token\">real</span> <span class=\"cs-token\">ghost</span>.</p>"
+        }
+      }
     },
     session: {
       answers: null
@@ -65,7 +59,7 @@ describe('corespring:select-text:render', function() {
     });
     it('should return false if answer is set initially', function() {
       testModel.session = {
-        answers: ["one"]
+        answers: [0]
       };
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
@@ -73,7 +67,7 @@ describe('corespring:select-text:render', function() {
     });
     it('should return false if answer is selected', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.selectedTokens = ["one"];
+      scope.userChoices = [4];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
@@ -82,32 +76,8 @@ describe('corespring:select-text:render', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
-  describe('instructor data', function() {
-    it('setting instructor data should select correct answers', function() {
-      container.elements['1'].setDataAndSession(testModel);
-      scope.$digest();
-      container.elements['1'].setInstructorData({
-        correctResponse: [
-          {
-            data: "I"
-          },
-          {
-            data: "am",
-            correct: true
-          },
-          {
-            data: "green"
-          }
-        ]
-      });
-      scope.$digest();
-      expect(element.find('.correct').length).toEqual(1);
-    });
-  });
-
   describe('answer change callback', function() {
     var changeHandlerCalled = false;
-
     beforeEach(function() {
       changeHandlerCalled = false;
       container.elements['1'].answerChangedHandler(function(c) {
@@ -122,11 +92,10 @@ describe('corespring:select-text:render', function() {
     });
 
     it('does get called when a token is selected', function() {
-      scope.selectedTokens = ["one"];
+      scope.userChoices = [2];
       scope.$digest();
       expect(changeHandlerCalled).toBe(true);
     });
-
   });
 
 });
