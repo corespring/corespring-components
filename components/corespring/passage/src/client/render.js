@@ -22,7 +22,6 @@ var main = [
         $scope.containerBridge = {
 
           setDataAndSession: function(dataAndSession) {
-            console.log('this is being triggered.');
             $scope.displayed = dataAndSession.data.model.config.displayed !== false;
             setSrc(dataAndSession.data.id);
           }

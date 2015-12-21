@@ -2,14 +2,13 @@ describe('corespring', function() {
 
   describe('passage render', function() {
 
+    var testModel;
+    var passageId = '5678065a67b47243f6087ee1:0';
+
     var MockComponentRegister = function() {
       this.elements = {};
       this.registerComponent = function(id, bridge) {
-        console.log('registering component');
         this.elements[id] = bridge;
-      };
-      this.setDataAndSession = function (id, dataAndSession) {
-        this.elements[id].setDataAndSession(dataAndSession);
       };
     };
 
@@ -24,20 +23,81 @@ describe('corespring', function() {
         container.registerComponent(id, obj);
       });
 
-      element = $compile("<corespring-passage id='1'></corespring-passage>")($rootScope.$new());
-      scope = element.scope();
+      element = $compile("<corespring-passage-render id='1'></corespring-passage-render>")($rootScope.$new());
+      scope = element.scope().$$childHead;
       rootScope = $rootScope;
     }));
 
-    it('constructs', function() {
-      var testModel = {
-        model : {
-          config : {
-            display: true
+    describe('passageRoute', function() {
+
+      beforeEach(function() {
+        testModel = {
+          data: {
+            id : passageId,
+            model : {
+              config : {
+                displayed: true
+              }
+            }
           }
-        }
-      };
-      container.elements['1'].setModel(testModel);
+        };
+        container.elements['1'].setDataAndSession(testModel);
+      });
+
+      it('is set to v2 passage endpoint containing passage id', function() {
+        expect(scope.passageRoute.toString()).toEqual('/api/v2/passages/' + passageId);
+      });
+
+    });
+
+    describe('displayed', function() {
+
+      describe('set to true', function() {
+
+        beforeEach(function() {
+          testModel = {
+            data: {
+              id : passageId,
+              model : {
+                config : {
+                  displayed: true
+                }
+              }
+            }
+          };
+          container.elements['1'].setDataAndSession(testModel);
+          scope.$digest();
+        });
+
+        it('renders passage iframe', function() {
+          expect(element.find('iframe')[0]).toBeDefined();
+        });
+
+      });
+
+      describe('set to false', function() {
+
+        beforeEach(function() {
+          testModel = {
+            data: {
+              id : passageId,
+              model : {
+                config : {
+                  displayed: false
+                }
+              }
+            }
+          };
+          container.elements['1'].setDataAndSession(testModel);
+          scope.$digest();
+        });
+
+        it('does not render passage iframe', function() {
+          expect(element.find('iframe')[0]).not.toBeDefined();
+        });
+
+      })
+
     });
 
   });
