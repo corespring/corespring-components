@@ -34,13 +34,7 @@ exports.factory = [
         };
 
         scope.isPanelCollapsed = function() {
-
-          var collapsed = !(scope.fullModel.allowPartialScoring && scope.numberOfCorrectResponses > 1);
-          if(collapsed){
-            $('.partial-scoring').find('.panel-body').removeClass('collapsing').addClass('collapse');
-          }
-
-          return collapsed;
+          return !(scope.fullModel.allowPartialScoring && scope.numberOfCorrectResponses > 1);
         };
 
         scope.togglePartialScoring = function() {
@@ -77,7 +71,6 @@ exports.factory = [
         };
 
         scope.$watch('fullModel.partialScoring.length', function(){
-          scope.fullModel.allowPartialScoring = false;
           scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
         });
 
@@ -85,7 +78,7 @@ exports.factory = [
           if( scope.numberOfCorrectResponses <= 1 ) {
               scope.fullModel.allowPartialScoring = false;
           }
-        });
+        }, true);
       };
     }
 
