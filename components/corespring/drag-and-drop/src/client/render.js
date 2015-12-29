@@ -398,7 +398,7 @@ var landingPlace = [
             if (scope.cardinality === 'single' && scope.landingPlaceChoices[scope.id].length > 0) {
               return false;
             }
-            if (_.find(scope.landingPlaceChoices[scope.id], function(el) { return el.id === scope.dragging.id })) {
+            if (_.find(scope.landingPlaceChoices[scope.id], function(el) { return el.id === scope.dragging.id; })) {
               return false;
             }
             return scope.dragging && (scope.dragging.fromTarget !== scope.id);
