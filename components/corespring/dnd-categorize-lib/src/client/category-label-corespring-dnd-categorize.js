@@ -99,22 +99,23 @@ function CategoryLabelCorespringDndCategorize(
         '    </div>',
         '    <div class="html-wrapper" ng-bind-html-unsafe="category.model.label" ng-if="!isEditMode"></div>',
         '    <ul class="edit-controls" ng-if="showTools">',
-               deleteTool(),
+        '      <li class="edit-icon-button"' +
+        '          ng-click="onLabelEditClicked()"',
+        '          tooltip="edit"',
+        '          tooltip-append-to-body="true"',
+        '          tooltip-placement="bottom">',
+        '        <i class="fa fa-pencil"></i>',
+        '      </li>',
+        '      <li class="delete-icon-button" ',
+        '          ng-click="onDeleteClicked()" ',
+        '          tooltip="delete" ',
+        '          tooltip-append-to-body="true" ',
+        '          tooltip-placement="bottom">',
+        '        <i class="fa fa-trash-o"></i>',
+        '      </li>',
         '    </ul>',
         '  </div>',
         '</div>'
-      ].join('');
-  }
-
-  function deleteTool() {
-    return [
-        '<li class="delete-icon-button" ',
-        '    ng-click="onDeleteClicked()" ' +
-        '    tooltip="delete" ',
-        '    tooltip-append-to-body="true" ',
-        '    tooltip-placement="bottom">',
-        '  <i class="fa fa-trash-o"></i>',
-        '</li>'
       ].join('');
   }
 

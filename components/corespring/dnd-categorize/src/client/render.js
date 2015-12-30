@@ -667,7 +667,7 @@ function renderCorespringDndCategorize(
         '<div class="interaction-corespring-dnd-categorize">',
         choicesTemplate("shouldFlip"),
         categoriesTemplate("!shouldFlip", "rows"),
-        '  <hr/>',
+        '  <hr ng-if="!isEditMode"/>',
         '  <h3 ng-if="isEditMode">Choices</h3>',
         '  <span ng-if="isEditMode" class="choice-area-label">',
         '    Enter choices below and drag to correct categories above. ',
