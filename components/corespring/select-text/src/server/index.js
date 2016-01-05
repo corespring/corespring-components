@@ -4,8 +4,9 @@ var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 var keys = feedbackUtils.keys;
 
 exports.keys = keys;
+exports.createOutcome = createOutcome;
 
-var buildFeedback = function(question, answer) {
+function buildFeedback(question, answer) {
   var feedback = {
     choices: []
   };
@@ -27,7 +28,7 @@ var buildFeedback = function(question, answer) {
   });
 
   return feedback;
-};
+}
 
 function selectionCountIsFine(question, answer) {
   if (!answer) {
@@ -38,7 +39,8 @@ function selectionCountIsFine(question, answer) {
   var maxSelections = question.model.config.maxSelections;
   var correctSelectionCount = question.correctResponse.value.length;
 
-  return maxSelections === 0 ? (selectionCount === correctSelectionCount) : (selectionCount === correctSelectionCount && selectionCount === maxSelections);
+  return (maxSelections === 0 && selectionCount === correctSelectionCount) ||
+    (selectionCount === correctSelectionCount && selectionCount === maxSelections);
 }
 
 function areAllCorrectSelected(question, answer) {
@@ -53,13 +55,15 @@ function numberOfCorrectAnswers(question, answers) {
   var correctCount = _(answers)
     .filter(function(answer) {
       return _.contains(question.correctResponse.value, answer);
-    }).value().length;
+    })
+    .value()
+    .length;
   return correctCount;
 }
 
 function isCorrect(question, answer) {
-  var correct = selectionCountIsFine(question, answer);
-  correct &= areAllCorrectSelected(question, answer);
+  var correct = selectionCountIsFine(question, answer) &&
+    areAllCorrectSelected(question, answer);
   return correct;
 }
 
@@ -87,7 +91,7 @@ function score(question, answer) {
   return scoreValue;
 }
 
-exports.createOutcome = function(question, answer, settings) {
+function createOutcome(question, answer, settings) {
   if(!question || _.isEmpty(question)){
     throw new Error('question should never be empty or null');
   }
@@ -128,4 +132,4 @@ exports.createOutcome = function(question, answer, settings) {
   }
 
   return res;
-};
+}
