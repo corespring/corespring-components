@@ -77,6 +77,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
     scope.isDragEnabled = isDragEnabled;
     scope.onChangeActive = onChangeActive;
     scope.onChoiceEditClicked = onChoiceEditClicked;
+    scope.showPlaceholder = showPlaceholder;
     scope.onDeleteClicked = onDeleteClicked;
     scope.onDrag = onDrag;
     scope.onStart = onStart;
@@ -181,6 +182,10 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       });
     }
 
+    function showPlaceholder(label) {
+      return _.isEmpty(label) && scope.editMode;
+    }
+
     function onDeleteClicked() {
       scope.notifyDeleteClicked({
         choiceId: attrs.choiceId
@@ -260,6 +265,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       choiceEditorTemplate(),
       '    </div>',
       '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
+      '      <span ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</span>',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice" ng-hide="dragEnabled"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
@@ -285,7 +291,6 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
         '   image-service="imageService()" ',
         '   mini-wiggi-wiz="" ',
         '   ng-model="model.label" ',
-        '   placeholder="Enter choice here"',
         '></div>'
       ].join('');
     }
