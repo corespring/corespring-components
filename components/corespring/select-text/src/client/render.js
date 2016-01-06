@@ -1,19 +1,51 @@
-var main = [
+exports.framework = 'angular';
+exports.directive = [
   '$sce',
   '$timeout',
   'CsUndoModel',
-  function($sce, $timeout, CsUndoModel) {
+  function(
+    $sce,
+    $timeout,
+    CsUndoModel
+  ) {
 
-    var link = function(scope, element, attrs) {
+    return {
+      scope: {},
+      restrict: 'AE',
+      replace: true,
+      link: link,
+      template: template()
+    };
+
+    function link(scope, element, attrs) {
 
       var log = console.log.bind(console, '[select-text]');
+      var $theContent = null;
 
       scope.undoModel = new CsUndoModel();
       scope.undoModel.setGetState(getState);
       scope.undoModel.setRevertState(revertState);
-      scope.answersVisible = false;
 
-      var $theContent = null;
+      scope.answersVisible = false;
+      scope.toggleAnswersVisibility = toggleAnswersVisibility;
+
+      scope.containerBridge = {
+        answerChangedHandler: answerChangedHandler,
+        editable: editable,
+        getSession: getSession,
+        isAnswerEmpty: isAnswerEmpty,
+        reset: reset,
+        setDataAndSession: setDataAndSession,
+        setInstructorData: setInstructorData,
+        setMode: setMode,
+        setResponse: setResponse
+      };
+
+      scope.$watch('userChoices', watchUserChoices, true);
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+
+      //------------------------------------------------------------------------
+
 
       function getState() {
         return scope.userChoices;
@@ -23,16 +55,21 @@ var main = [
         scope.userChoices = state;
       }
 
-      var getNestedProperty = function(obj, key) {
+      function getNestedProperty(obj, key) {
         return key.split(".").reduce(function(o, x) {
           return (typeof o === 'undefined' || o === null) ? o : o[x];
         }, obj);
-      };
+      }
 
-      var classifyTokens = function(choices, tokenClass) {
-        var $existingChoices = $theContent.find('.' + tokenClass);
+      function specificAvailability(){
+        return scope.model.config.availability === 'specific';
+      }
+
+      function classifyTokens(choices, tokenClass) {
         var existingChoices = [];
         var removedChoices = [];
+        var $existingChoices = $theContent.find('.' + tokenClass);
+
         if ($existingChoices.length > 0) {
           $existingChoices.each(function() {
             var index = $theContent.find('.cs-token').index(this);
@@ -52,36 +89,41 @@ var main = [
             $match.addClass(tokenClass);
           }
         }
-      };
+      }
 
-      var bindTokenEvents = function() {
+      function bindTokenEvents() {
         $theContent.off('click', '.cs-token');
-        $theContent.on('click', '.cs-token', function() {
-          var $token = $(this);
-          var index = $theContent.find('.cs-token').index($token);
-          var canSelectMore = scope.model.config.maxSelections === 0;
-          var alreadyAnAnswer = scope.userChoices.indexOf(index) >= 0;
-          if (scope.model.config.maxSelections > 0) {
-            canSelectMore = scope.userChoices.length < scope.model.config.maxSelections;
-          }
-          if (scope.editable) {
-            if (scope.model.config.availability === 'specific') {
-              if ($token.hasClass('choice') && !alreadyAnAnswer && canSelectMore) {
-                scope.userChoices.push(index);
-              } else if ($token.hasClass('choice') && alreadyAnAnswer) {
-                scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-              }
-            } else {
-              if (canSelectMore && !alreadyAnAnswer) {
-                scope.userChoices.push(index);
-              } else if (alreadyAnAnswer) {
-                scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-              }
+        $theContent.on('click', '.cs-token', onClickToken);
+      }
+
+      function onClickToken() {
+        if (!scope.editable) {
+          return;
+        }
+        var $token = $(this);
+        var index = $theContent.find('.cs-token').index($token);
+        var alreadyAnAnswer = scope.userChoices.indexOf(index) >= 0;
+        var canSelectMore = scope.model.config.maxSelections === 0 ||
+          scope.model.config.maxSelections > 0 &&
+          scope.userChoices.length < scope.model.config.maxSelections;
+
+        if (specificAvailability()) {
+          if ($token.hasClass('choice')) {
+            if (alreadyAnAnswer) {
+              scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
+            } else if (canSelectMore) {
+              scope.userChoices.push(index);
             }
-            scope.undoModel.remember();
           }
-        });
-      };
+        } else {
+          if (alreadyAnAnswer) {
+            scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
+          } else if (canSelectMore) {
+            scope.userChoices.push(index);
+          }
+        }
+        scope.undoModel.remember();
+      }
 
       function setDataAndSession(dataAndSession) {
         // log("Setting data for Select Text: ", dataAndSession);
@@ -89,18 +131,22 @@ var main = [
         scope.userChoices = [];
         $theContent = element.find('.select-text-content');
         bindTokenEvents();
+
         if (dataAndSession.session && dataAndSession.session.answers) {
           scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
           for (var i = scope.userChoices.length - 1; i >= 0; i--) {
             scope.userChoices[i] = parseInt(scope.userChoices[i], 10);
           }
         }
-        $timeout(function() {
-          if (scope.model.config.availability === 'specific' && getNestedProperty(scope, 'model.choices')) {
-            classifyTokens(scope.model.choices, 'choice');
-          }
-          scope.undoModel.init();
-        }, 100);
+
+        $timeout(initUi, 100);
+      }
+
+      function initUi() {
+        if (specificAvailability() && getNestedProperty(scope, 'model.choices')) {
+          classifyTokens(scope.model.choices, 'choice');
+        }
+        scope.undoModel.init();
       }
 
       function setInstructorData(data) {
@@ -119,9 +165,11 @@ var main = [
       function setResponse(response) {
         // log("Setting response", response);
         scope.feedback = getNestedProperty(response, 'feedback.message');
+
         if (response.correctClass) {
           scope.correctClass = response.correctClass;
         }
+
         if (getNestedProperty(response, 'feedback.choices') && response.correctResponse) {
           var correctResponses = _.filter(response.feedback.choices, function(choice) {
             return choice.correct === true;
@@ -145,10 +193,7 @@ var main = [
         scope.userChoices = [];
         $theContent.find('.cs-token').attr('class', 'cs-token');
         scope.answersVisible = false;
-        if (scope.model.config.availability === 'specific' && getNestedProperty(scope, 'model.choices')) {
-          classifyTokens(scope.model.choices, 'choice');
-        }
-        scope.undoModel.init();
+        initUi();
       }
 
       function isAnswerEmpty() {
@@ -167,20 +212,9 @@ var main = [
         scope.editable = e;
       }
 
-      scope.containerBridge = {
-        setDataAndSession: setDataAndSession,
-        getSession: getSession,
-        setInstructorData: setInstructorData,
-        setResponse: setResponse,
-        setMode: setMode,
-        reset: reset,
-        isAnswerEmpty: isAnswerEmpty,
-        answerChangedHandler: answerChangedHandler,
-        editable: editable
-      };
-
-      scope.toggleAnswersVisibility = function() {
+      function toggleAnswersVisibility() {
         scope.answersVisible = !scope.answersVisible;
+
         if (scope.answersVisible) {
           $theContent.find('.choice').removeClass('choice');
           classifyTokens(scope.unselectedAnswers, 'correct-not-selected');
@@ -188,23 +222,17 @@ var main = [
           $theContent.find('.correct-not-selected').removeClass('correct-not-selected');
           classifyTokens(scope.model.choices, 'choice');
         }
-      };
+      }
 
-      scope.$watch('userChoices', function(newValue, oldValue) {
+      function watchUserChoices(newValue, oldValue) {
         if (newValue !== oldValue && (!_.isEmpty(newValue) || !_.isEmpty(oldValue))) {
           classifyTokens(scope.userChoices, 'selected');
         }
-      }, true);
+      }
+    }
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge);
-    };
-
-    return {
-      scope: {},
-      restrict: 'AE',
-      replace: true,
-      link: link,
-      template: [
+    function template() {
+      return [
         '<div class="cs-select-text">',
         '  <div class="select-text-label" ng-bind-html-unsafe="model.config.label"></div>',
         '  <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
@@ -215,10 +243,7 @@ var main = [
         '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>'
-      ].join("\n")
-    };
+      ].join("\n");
+    }
   }
 ];
-
-exports.framework = 'angular';
-exports.directive = main;
