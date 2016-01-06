@@ -93,6 +93,7 @@ describe('corespring:dnd-categorize:configure', function() {
         parseDomForMath: function() {}
       });
       $provide.value('ServerLogic', MockServerLogic);
+      $provide.value('Msgr', {send:function(){}});
     });
   });
 

@@ -78,6 +78,7 @@ describe('corespring:dnd-categorize:render', function() {
         off: function() {},
         onEndProcess: function() {}
       });
+      $provide.value('Msgr', {send:function(){}});
     });
   });
 
