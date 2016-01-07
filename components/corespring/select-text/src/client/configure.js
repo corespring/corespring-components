@@ -42,8 +42,10 @@ exports.directive = [
       scope.changeSelectionMode = changeSelectionMode;
       scope.deleteAll = deleteAll;
       scope.revertSelectionUnitChange = revertSelectionUnitChange;
+      scope.setAnswersMode = setMode('answers');
+      scope.setDeleteMode = setMode('delete');
+      scope.setEditorMode = setMode('editor');
       scope.startOver = startOver;
-      scope.setMode = setMode;
       scope.toggleSelectionUnit = toggleSelectionUnit;
       scope.undo = undo;
 
@@ -312,8 +314,10 @@ exports.directive = [
         }
       }
 
-      function setMode($event, mode) {
-        scope.mode = mode;
+      function setMode(mode) {
+        return function() {
+          scope.mode = mode;
+        }
       }
 
       function toggleSelectionUnit($event) {
@@ -419,7 +423,7 @@ exports.directive = [
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-class="{active: mode === \'editor\'}"',
-        '              ng-click="setMode($event, \'editor\')">Edit Content',
+        '              ng-click="setEditorMode()">Edit Content',
         '          </button>',
         '        </div>',
         '        <div class="btn-group btn-group-sm"',
@@ -427,7 +431,7 @@ exports.directive = [
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-class="{active: mode === \'answers\'}"',
-        '              ng-click="setMode($event, \'answers\')"',
+        '              ng-click="setAnswersMode()"',
         '              ng-disabled="model.cleanPassage === \'\'">Set Answers',
         '          </button>',
         '        </div>',
@@ -449,7 +453,7 @@ exports.directive = [
         '                  ng-click="allowPassageEditing = true">Yes',
         '              </button>',
         '              <button class="btn btn-default"',
-        '                  ng-click="setMode($event, \'answers\')">No',
+        '                  ng-click="setAnswersMode()">No',
         '              </button>',
         '            </p>',
         '          </div>',
@@ -588,13 +592,13 @@ exports.directive = [
         '                ng-click="deleteAll()">Yes',
         '            </button>',
         '            <button class="btn btn-default"',
-        '                ng-click="setMode($event, \'editor\')">No',
+        '                ng-click="setEditorMode()">No',
         '            </button>',
         '          </p>',
         '        </div>',
         '      </div>',
         '      <div class="pull-right delete-icon-button"',
-        '          ng-click="setMode($event, \'delete\')"',
+        '          ng-click="setDeleteMode()"',
         '          ng-disabled="model.config.passage === \'\'"',
         '          ng-show="mode === \'editor\'">',
         '       <span tooltip="delete"',
