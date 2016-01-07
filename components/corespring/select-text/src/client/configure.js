@@ -43,7 +43,7 @@ exports.directive = [
       scope.deleteAll = deleteAll;
       scope.revertSelectionUnitChange = revertSelectionUnitChange;
       scope.startOver = startOver;
-      scope.toggleMode = toggleMode;
+      scope.setMode = setMode;
       scope.toggleSelectionUnit = toggleSelectionUnit;
       scope.undo = undo;
 
@@ -312,7 +312,7 @@ exports.directive = [
         }
       }
 
-      function toggleMode($event, mode) {
+      function setMode($event, mode) {
         scope.mode = mode;
       }
 
@@ -406,6 +406,7 @@ exports.directive = [
         '    <div class="col-xs-8">',
         '      <div mini-wiggi-wiz=""',
         '          ng-model="model.config.label"',
+        '          ng-show="mode === \'editor\'"',
         '          placeholder="Passage label (optional)"',
         '          core-features="bold italic"',
         '          features=""></div>',
@@ -418,7 +419,7 @@ exports.directive = [
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-class="{active: mode === \'editor\'}"',
-        '              ng-click="toggleMode($event, \'editor\')">Edit Content',
+        '              ng-click="setMode($event, \'editor\')">Edit Content',
         '          </button>',
         '        </div>',
         '        <div class="btn-group btn-group-sm"',
@@ -426,7 +427,7 @@ exports.directive = [
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-class="{active: mode === \'answers\'}"',
-        '              ng-click="toggleMode($event, \'answers\')"',
+        '              ng-click="setMode($event, \'answers\')"',
         '              ng-disabled="model.cleanPassage === \'\'">Set Answers',
         '          </button>',
         '        </div>',
@@ -441,15 +442,14 @@ exports.directive = [
         '            ng-hide="allowPassageEditing">',
         '          <div class="action-description">',
         '            <h4>Important</h4>',
-        '            <p>If you decide to edit the passage, all the existing tokens as well as selected answers and/or possible',
-        '              selections will be lost.</p>',
+        '            <p>If you edit the content, selections and correct answers will be lost.</p>',
         '            <p>Do you want to proceed?</p>',
         '            <p>',
         '              <button class="btn btn-danger"',
         '                  ng-click="allowPassageEditing = true">Yes',
         '              </button>',
         '              <button class="btn btn-default"',
-        '                  ng-click="toggleMode($event, \'answers\')">No',
+        '                  ng-click="setMode($event, \'answers\')">No',
         '              </button>',
         '            </p>',
         '          </div>',
@@ -467,7 +467,7 @@ exports.directive = [
         '            ng-show="showSelectionUnitWarning">',
         '          <div class="action-description">',
         '            <h4>Important</h4>',
-        '            <p>If you change the selection unit, all the selected answers and/or possible selections will be lost.</p>',
+        '            <p>f you make this change, selections and correct answers will be lost.</p>',
         '            <p>Do you want to proceed?</p>',
         '            <p>',
         '              <button class="btn btn-danger"',
@@ -518,23 +518,6 @@ exports.directive = [
         '            Make specific content available',
         '          </label>',
         '        </div>',
-        '        <div class="instructions"',
-        '            ng-show="model.config.availability === \'specific\'">',
-        '          <p ng-show="selectionMode"><strong><em>Click selections to make available to students</em></strong></p>',
-        '          <p ng-show="!selectionMode"><strong><em>Click correct answers</em></strong></p>',
-        '        </div>',
-        '        <div class="passage-wrapper">',
-        '          <div class="history-buttons">',
-        '            <span cs-undo-button',
-        '                ng-class="{disabled: modelHistory.length < 1}"',
-        '                ng-disabled="modelHistory.length < 1"></span>',
-        '            <span cs-start-over-button',
-        '                ng-class="{disabled: modelHistory.length < 1}"',
-        '                ng-disabled="modelHistory.length < 1"></span>',
-        '          </div>',
-        '          <div class="passage-preview"',
-        '              ng-bind-html-unsafe="model.config.passage"></div>',
-        '        </div>',
         '        <div class="answer-summary">',
         '          <table ng-show="model.config.availability === \'specific\'">',
         '            <tr>',
@@ -569,6 +552,18 @@ exports.directive = [
         '            </tr>',
         '          </table>',
         '        </div>',
+        '        <div class="passage-wrapper">',
+        '          <div class="history-buttons">',
+        '            <span cs-undo-button',
+        '                ng-class="{disabled: modelHistory.length < 1}"',
+        '                ng-disabled="modelHistory.length < 1"></span>',
+        '            <span cs-start-over-button',
+        '                ng-class="{disabled: modelHistory.length < 1}"',
+        '                ng-disabled="modelHistory.length < 1"></span>',
+        '          </div>',
+        '          <div class="passage-preview"',
+        '              ng-bind-html-unsafe="model.config.passage"></div>',
+        '        </div>',
         '        <div class="max-selections form-inline"',
         '            ng-show="model.config.availability === \'all\'">',
         '          <div class="form-group">',
@@ -593,13 +588,13 @@ exports.directive = [
         '                ng-click="deleteAll()">Yes',
         '            </button>',
         '            <button class="btn btn-default"',
-        '                ng-click="toggleMode($event, \'answers\')">No',
+        '                ng-click="setMode($event, \'editor\')">No',
         '            </button>',
         '          </p>',
         '        </div>',
         '      </div>',
         '      <div class="pull-right delete-icon-button"',
-        '          ng-click="toggleMode($event, \'delete\')"',
+        '          ng-click="setMode($event, \'delete\')"',
         '          ng-disabled="model.config.passage === \'\'"',
         '          ng-show="mode === \'editor\'">',
         '       <span tooltip="delete"',
