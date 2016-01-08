@@ -35,13 +35,17 @@ exports.directive = [
       scope.allowPassageEditing = true;
       scope.mode = "editor";
       scope.modelHistory = [];
-      scope.selectionMode = true;
+      scope.selectChoices = false;
+      scope.showPassageEditingWarning = false;
       scope.showSelectionUnitWarning = false;
 
       scope.allowSelectionUnitChange = allowSelectionUnitChange;
-      scope.changeSelectionMode = changeSelectionMode;
+      scope.setSelectChoices = setSelectChoices;
+      scope.confirmPassageEditing = confirmPassageEditing;
       scope.deleteAll = deleteAll;
-      scope.revertSelectionUnitChange = revertSelectionUnitChange;
+      scope.onClickEditContent = onClickEditContent;
+      scope.onClickSetAnswers = onClickSetAnswers;
+      scope.revertSelectionUnitChange = denySelectionUnitChange;
       scope.setAnswersMode = setMode('answers');
       scope.setDeleteMode = setMode('delete');
       scope.setEditorMode = setMode('editor');
@@ -65,25 +69,98 @@ exports.directive = [
 
       //-----------------------------------------------------------------------------
 
-      function getNestedProperty(obj, key) {
-        return key.split(".").reduce(function(o, x) {
-          return (typeof o === "undefined" || o === null) ? o : o[x];
-        }, obj);
+      function setModel(model) {
+        scope.fullModel = model;
+        scope.model = scope.fullModel.model;
+        $theContent = $element.find('.passage-preview .ng-binding');
+        bindTokenEvents();
+        initialData = {
+          answers: _.cloneDeep(scope.fullModel.correctResponse.value),
+          choices: _.cloneDeep(scope.model.choices),
+          selectionUnit: scope.model.config.selectionUnit,
+          availability: scope.model.config.availability,
+          passage: scope.model.config.passage
+        };
+        scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
+        scope.setEditorMode();
+        $timeout(initUi, 100);
       }
 
-      function getNumberOfCorrectChoices() {
-        return getNestedProperty(scope, 'fullModel.correctResponse.value') ? scope.fullModel.correctResponse.value.length : 0;
+      function bindTokenEvents() {
+        $theContent.off('click', '.' + blastOptions.customClass);
+        $theContent.on('click', '.' + blastOptions.customClass, onClickToken);
       }
 
-      function cleanExistingPassage() {
-        if (getNestedProperty(scope, 'model.config.passage')) {
-          var $cleanPassage = $theContent.clone();
-          $cleanPassage.find('span.' + blastOptions.customClass).each(function() {
-            var innerHTML = $(this).html();
-            $(this).replaceWith(innerHTML);
-          });
-          scope.model.cleanPassage = $cleanPassage.prop('innerHTML');
+      function onClickToken() {
+        var $token = $(this);
+        var index = $theContent.find('.' + blastOptions.customClass).index($token);
+        var alreadySelected = scope.fullModel.correctResponse.value.indexOf(index) >= 0;
+        var alreadyAChoice = scope.model.choices.indexOf(index) >= 0;
+        if (scope.model.config.availability === "specific") {
+          if ($theContent.hasClass('select-choices')) {
+            if (alreadyAChoice) {
+              if (alreadySelected) {
+                removeCorrectResponse(index);
+              } else {
+                addCorrectResponse(index);
+              }
+            }
+          } else {
+            if (alreadyAChoice) {
+              removeChoice(index);
+              if (alreadySelected) {
+                removeCorrectResponse(index);
+              }
+            } else {
+              addChoice(index);
+            }
+          }
+        } else {
+          if (alreadySelected) {
+            removeCorrectResponse(index);
+          } else {
+            addCorrectResponse(index);
+          }
         }
+        scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
+      }
+
+      function removeChoice(index) {
+        scope.model.choices.splice(
+          scope.model.choices.indexOf(index),
+          1);
+      }
+
+      function addChoice(index) {
+        scope.model.choices.push(index);
+      }
+
+      function removeCorrectResponse(index) {
+        scope.fullModel.correctResponse.value.splice(
+          scope.fullModel.correctResponse.value.indexOf(index),
+          1);
+      }
+
+      function addCorrectResponse(index) {
+        scope.fullModel.correctResponse.value.push(index);
+      }
+
+      function initUi() {
+        if (scope.model.config.availability === "specific") {
+          classifyTokens(scope.model.choices, "choice");
+          setSelectChoices(true);
+        }
+        classifyTokens(scope.fullModel.correctResponse.value, "selected");
+        if ($theContent.find('.' + blastOptions.customClass).length > 0) {
+          cleanExistingPassageHtml();
+        }
+        if(hasAnswers()){
+          scope.showPassageEditingWarning = true;
+        }
+      }
+
+      function hasAnswers(){
+        return scope.model.choices.length || scope.fullModel.correctResponse.value.length;
       }
 
       function classifyTokens(collection, tokenClass) {
@@ -109,6 +186,27 @@ exports.directive = [
             $match.addClass(tokenClass);
           }
         }
+      }
+
+      function cleanExistingPassageHtml() {
+        if (getNestedProperty(scope, 'model.config.passage')) {
+          var $cleanPassage = $theContent.clone();
+          $cleanPassage.find('span.' + blastOptions.customClass).each(function() {
+            var innerHTML = $(this).html();
+            $(this).replaceWith(innerHTML);
+          });
+          scope.model.cleanPassage = $cleanPassage.prop('innerHTML');
+        }
+      }
+
+      function getNestedProperty(obj, key) {
+        return key.split(".").reduce(function(o, x) {
+          return (typeof o === "undefined" || o === null) ? o : o[x];
+        }, obj);
+      }
+
+      function getNumberOfCorrectChoices() {
+        return getNestedProperty(scope, 'fullModel.correctResponse.value') ? scope.fullModel.correctResponse.value.length : 0;
       }
 
       function tokenizePassage() {
@@ -151,65 +249,6 @@ exports.directive = [
         }
       }
 
-      function bindTokenEvents() {
-        $theContent.off('click', '.' + blastOptions.customClass);
-        $theContent.on('click', '.' + blastOptions.customClass, onClickToken);
-      }
-
-      function removeChoice(index) {
-        scope.model.choices.splice(
-          scope.model.choices.indexOf(index),
-          1);
-      }
-
-      function addChoice(index) {
-        scope.model.choices.push(index);
-      }
-
-      function removeCorrectResponse(index) {
-        scope.fullModel.correctResponse.value.splice(
-          scope.fullModel.correctResponse.value.indexOf(index),
-          1);
-      }
-
-      function addCorrectResponse(index) {
-        scope.fullModel.correctResponse.value.push(index);
-      }
-
-      function onClickToken() {
-        var $token = $(this);
-        var index = $theContent.find('.' + blastOptions.customClass).index($token);
-        var alreadySelected = scope.fullModel.correctResponse.value.indexOf(index) >= 0;
-        var alreadyAChoice = scope.model.choices.indexOf(index) >= 0;
-        if (scope.model.config.availability === "specific") {
-          if ($theContent.hasClass('select-choices')) {
-            if (alreadyAChoice) {
-              if (alreadySelected) {
-                removeCorrectResponse(index);
-              } else {
-                addCorrectResponse(index);
-              }
-            }
-          } else {
-            if (alreadyAChoice) {
-              removeChoice(index);
-              if (alreadySelected) {
-                removeCorrectResponse(index);
-              }
-            } else {
-              addChoice(index);
-            }
-          }
-        } else {
-          if (alreadySelected) {
-            removeCorrectResponse(index);
-          } else {
-            addCorrectResponse(index);
-          }
-        }
-        scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-      }
-
       function handleModelChange(newVal, oldVal) {
         if (!_.isEqual(newVal, oldVal) && !ignoreChanges) {
           scope.modelHistory.push({
@@ -219,10 +258,6 @@ exports.directive = [
             availability: oldVal[3],
             passage: oldVal[4]
           });
-          scope.allowPassageEditing = false; // This prevents the user from editing passage and delete the answers/selections
-          if (newVal[2] !== oldVal[2]) {
-            scope.showSelectionUnitWarning = true;
-          }
           if (newVal[4] !== oldVal[4]) {
             classifyTokens(scope.model.choices, 'choice');
             classifyTokens(scope.fullModel.correctResponse.value, 'selected');
@@ -248,34 +283,6 @@ exports.directive = [
               $animate.removeClass(badge, c);
             });
           });
-        }
-      }
-
-      function setModel(model) {
-        scope.fullModel = model;
-        scope.model = scope.fullModel.model;
-        $theContent = $element.find('.passage-preview .ng-binding');
-        bindTokenEvents();
-        initialData = {
-          answers: _.cloneDeep(scope.fullModel.correctResponse.value),
-          choices: _.cloneDeep(scope.model.choices),
-          selectionUnit: scope.model.config.selectionUnit,
-          availability: scope.model.config.availability,
-          passage: scope.model.config.passage
-        };
-        scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-        $timeout(initUi, 100);
-      }
-
-      function initUi() {
-        if (scope.model.config.availability === "specific") {
-          classifyTokens(scope.model.choices, "choice");
-        }
-        classifyTokens(scope.fullModel.correctResponse.value, "selected");
-        if ($theContent.find('.' + blastOptions.customClass).length > 0) {
-          scope.allowPassageEditing = false;
-          cleanExistingPassage();
-          scope.mode = 'answers';
         }
       }
 
@@ -320,17 +327,15 @@ exports.directive = [
         }
       }
 
-      function toggleSelectionUnit($event) {
-        var unit = $($event.currentTarget).data('unit');
-        scope.model.config.selectionUnit = unit;
-        // Clean the answers
-        scope.fullModel.correctResponse.value = [];
-        scope.model.choices = [];
+      function setSelectChoices(selectChoices) {
+        scope.selectChoices = selectChoices;
+        $theContent.toggleClass('select-choices', !scope.selectChoices);
       }
 
-      function changeSelectionMode(areAnswers) {
-        scope.selectionMode = !areAnswers;
-        $theContent.toggleClass('select-choices', !scope.selectionMode);
+      function confirmPassageEditing(allow){
+        scope.showPassageEditingWarning = false;
+        scope.allowPassageEditing = allow === true;
+        scope.setEditorMode();
       }
 
       function deleteAll() {
@@ -341,21 +346,31 @@ exports.directive = [
         scope.model.config.passage = "";
         scope.model.config.maxSelections = 0;
         scope.fullModel.correctResponse.value = [];
-        scope.mode = "editor";
-        scope.allowPassageEditing = true;
+        scope.setEditorMode();
+      }
+
+      var unitToSetOnConfirmation = null;
+
+      function toggleSelectionUnit($event) {
+        unitToSetOnConfirmation = $($event.currentTarget).data('unit');
+        if(hasAnswers()){
+          scope.showSelectionUnitWarning = true;
+        } else {
+          allowSelectionUnitChange();
+        }
       }
 
       function allowSelectionUnitChange() {
         scope.showSelectionUnitWarning = false;
-        ignoreChanges = false;
+        scope.model.config.selectionUnit = unitToSetOnConfirmation;
+        // Clean the answers
+        scope.fullModel.correctResponse.value = [];
+        scope.model.choices = [];
         tokenizePassage();
       }
 
-      function revertSelectionUnitChange() {
-        ignoreChanges = true;
-        scope.undo();
+      function denySelectionUnitChange() {
         scope.showSelectionUnitWarning = false;
-        tokenizePassage();
       }
 
       function undo() {
@@ -379,6 +394,17 @@ exports.directive = [
         scope.model.config.availability = model.availability;
         scope.model.config.selectionUnit = model.selectionUnit;
         scope.model.config.passage = model.passage;
+      }
+
+      function onClickEditContent(){
+        scope.setEditorMode();
+        if(hasAnswers()){
+          scope.showPassageEditingWarning = true;
+        }
+      }
+
+      function onClickSetAnswers(){
+        scope.setAnswersMode();
       }
     }
 
@@ -423,7 +449,7 @@ exports.directive = [
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-class="{active: mode === \'editor\'}"',
-        '              ng-click="setEditorMode()">Edit Content',
+        '              ng-click="onClickEditContent()">Edit Content',
         '          </button>',
         '        </div>',
         '        <div class="btn-group btn-group-sm"',
@@ -431,7 +457,7 @@ exports.directive = [
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-class="{active: mode === \'answers\'}"',
-        '              ng-click="setAnswersMode()"',
+        '              ng-click="onClickSetAnswers()"',
         '              ng-disabled="model.cleanPassage === \'\'">Set Answers',
         '          </button>',
         '        </div>',
@@ -443,22 +469,22 @@ exports.directive = [
         '      <div class="editor-wrapper"',
         '          ng-show="mode === \'editor\'">',
         '        <div class="confirm-action"',
-        '            ng-hide="allowPassageEditing">',
+        '            ng-show="showPassageEditingWarning">',
         '          <div class="action-description">',
         '            <h4>Important</h4>',
         '            <p>If you edit the content, selections and correct answers will be lost.</p>',
         '            <p>Do you want to proceed?</p>',
         '            <p>',
         '              <button class="btn btn-danger"',
-        '                  ng-click="allowPassageEditing = true">Yes',
+        '                  ng-click="confirmPassageEditing(true)">Yes',
         '              </button>',
         '              <button class="btn btn-default"',
-        '                  ng-click="setAnswersMode()">No',
+        '                  ng-click="confirmPassageEditing(false)">No',
         '              </button>',
         '            </p>',
         '          </div>',
         '        </div>',
-        '        <wiggi-wiz ng-model="model.cleanPassage">',
+        '        <wiggi-wiz ng-model="model.cleanPassage" enabled="allowPassageEditing">',
         '          <toolbar basic="bold italic underline superscript subscript"',
         '              positioning="justifyLeft justifyCenter justifyRight"',
         '              formatting=""',
@@ -471,7 +497,7 @@ exports.directive = [
         '            ng-show="showSelectionUnitWarning">',
         '          <div class="action-description">',
         '            <h4>Important</h4>',
-        '            <p>f you make this change, selections and correct answers will be lost.</p>',
+        '            <p>If you make this change, selections and correct answers will be lost.</p>',
         '            <p>Do you want to proceed?</p>',
         '            <p>',
         '              <button class="btn btn-danger"',
@@ -518,8 +544,7 @@ exports.directive = [
         '            <input type="checkbox"',
         '                ng-model="model.config.availability"',
         '                ng-true-value="specific"',
-        '                ng-false-value="all">',
-        '            Make specific content available',
+        '                ng-false-value="all">Make specific content available',
         '          </label>',
         '        </div>',
         '        <div class="answer-summary">',
@@ -527,8 +552,8 @@ exports.directive = [
         '            <tr>',
         '              <td>',
         '                <button class="btn btn-default"',
-        '                    ng-class="{\'active btn-primary\': selectionMode}"',
-        '                    ng-click="changeSelectionMode(false)">Selections Available',
+        '                    ng-class="{\'active btn-primary\': selectChoices}"',
+        '                    ng-click="setSelectChoices(true)">Selections Available',
         '                </button>',
         '                <p class="help">Click to make selections</p>',
         '              </td>',
@@ -538,8 +563,8 @@ exports.directive = [
         '              </td>',
         '              <td>',
         '                <button class="btn btn-default"',
-        '                    ng-class="{\'active btn-primary\': !selectionMode}"',
-        '                    ng-click="changeSelectionMode(true)"',
+        '                    ng-class="{\'active btn-primary\': !selectChoices}"',
+        '                    ng-click="setSelectChoices(false)"',
         '                    ng-disabled="model.choices.length === 0">Correct Answers',
         '                </button>',
         '                <p class="help">Click to set correct answers</p>',
