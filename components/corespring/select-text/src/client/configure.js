@@ -154,12 +154,12 @@ exports.directive = [
         if ($theContent.find('.' + blastOptions.customClass).length > 0) {
           cleanExistingPassageHtml();
         }
-        if(hasAnswers()){
+        if (hasAnswers()) {
           scope.showPassageEditingWarning = true;
         }
       }
 
-      function hasAnswers(){
+      function hasAnswers() {
         return scope.model.choices.length || scope.fullModel.correctResponse.value.length;
       }
 
@@ -324,7 +324,7 @@ exports.directive = [
       function setMode(mode) {
         return function() {
           scope.mode = mode;
-        }
+        };
       }
 
       function setSelectChoices(selectChoices) {
@@ -332,7 +332,7 @@ exports.directive = [
         $theContent.toggleClass('select-choices', !scope.selectChoices);
       }
 
-      function confirmPassageEditing(allow){
+      function confirmPassageEditing(allow) {
         scope.showPassageEditingWarning = false;
         scope.allowPassageEditing = allow === true;
         scope.setEditorMode();
@@ -353,7 +353,7 @@ exports.directive = [
 
       function toggleSelectionUnit($event) {
         unitToSetOnConfirmation = $($event.currentTarget).data('unit');
-        if(hasAnswers()){
+        if (hasAnswers()) {
           scope.showSelectionUnitWarning = true;
         } else {
           allowSelectionUnitChange();
@@ -396,14 +396,14 @@ exports.directive = [
         scope.model.config.passage = model.passage;
       }
 
-      function onClickEditContent(){
+      function onClickEditContent() {
         scope.setEditorMode();
-        if(hasAnswers()){
+        if (hasAnswers()) {
           scope.showPassageEditingWarning = true;
         }
       }
 
-      function onClickSetAnswers(){
+      function onClickSetAnswers() {
         scope.setAnswersMode();
       }
     }
