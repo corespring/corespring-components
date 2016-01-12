@@ -6,6 +6,7 @@ var removeAfterPlacing = [
       scope: true,
       restrict: 'AE',
       link: function ($scope, $element, $attrs) {
+        var togglingIndividualChoice = false;
         var choiceKey = $attrs.choices || 'fullModel.model.choices';
 
         $scope.config = $scope.config || {};
@@ -20,21 +21,25 @@ var removeAfterPlacing = [
         }
 
         $scope.$watch(choiceKey, function() {
+          togglingIndividualChoice = true;
           $scope.config.removeAllAfterPlacing = _.find(choices(), function(choice) {
             return (choice.moveOnDrag !== true);
           }) === undefined;
         }, true);
 
         $scope.$watch('config.removeAllAfterPlacing', function() {
-          if ($scope.config.removeAllAfterPlacing) {
-            _.each(choices(), function(choice) {
-              choice.moveOnDrag = true;
-            });
-          } else {
-            _.each(choices(), function(choice) {
-              choice.moveOnDrag = false;
-            });
+          if (!togglingIndividualChoice) {
+            if ($scope.config.removeAllAfterPlacing) {
+              _.each(choices(), function(choice) {
+                choice.moveOnDrag = true;
+              });
+            } else {
+              _.each(choices(), function(choice) {
+                choice.moveOnDrag = false;
+              });
+            }
           }
+          togglingIndividualChoice = false;
         });
       },
       template: [
