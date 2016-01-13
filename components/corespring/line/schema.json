@@ -1,6 +1,6 @@
 {
     "type": "object",
-    "title": "CoreSpring Line Interaction",
+    "title": "CoreSpring Line (Single) Interaction",
     "properties": {
         "componentType": {
             "type": "string",
