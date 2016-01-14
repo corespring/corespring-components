@@ -92,10 +92,12 @@ describe('corespring:ordering-in-place', function () {
     it('order of choices are restored from existing session', function () {
       var modelWithSession = _.cloneDeep(verticalModel);
       modelWithSession.session = {
-        answers: ['c', 'a', 'b', 'd']
+        answers: {
+          choices: ['c', 'a', 'b', 'd']
+        }
       };
       setModelAndDigest(modelWithSession);
-      expect(_.pluck(element.scope().local.choices, 'id')).toEqual(modelWithSession.session.answers);
+      expect(_.pluck(element.scope().local.choices, 'id')).toEqual(modelWithSession.session.answers.choices);
     });
 
     describe('vertical layout', function () {
