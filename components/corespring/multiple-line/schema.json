@@ -14,10 +14,29 @@
       "required": true
     },
     "correctResponse": {
-      "type": "string",
-      "description": "TODO: UPDATE DESCRIPTION. The correct line equations. In 'mx+b' format",
-      "id": "#correctResponse",
-      "required": false
+      "type": "array",
+      "items": {
+        "description": "A list of correct response definitions",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Response identifier",
+            "type": "string"
+          },
+          "equation": {
+            "description": "The correct equation",
+            "type": "string"
+          },
+          "label": {
+            "description": "Label for the line",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "equation"
+        ]
+      }
     },
     "feedback": {
       "type": "object",

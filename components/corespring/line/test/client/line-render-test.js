@@ -146,6 +146,17 @@ describe('corespring:line:render', function() {
     });
   });
 
+  describe('restoring session', function() {
+    it('restores state from session when present', function() {
+      var model = _.cloneDeep(testModel);
+      model.session = {answers: "3x+4"};
+      container.elements['1'].setDataAndSession(model);
+      rootScope.$digest();
+      expect(scope.config.initialCurve).toEqual("3x+4");
+
+    });
+  });
+
   describe('instructor data', function() {
     it('should set up graph with correct answer', function() {
       container.elements['1'].setDataAndSession(testModel);
