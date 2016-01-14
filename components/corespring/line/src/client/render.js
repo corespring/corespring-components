@@ -271,6 +271,10 @@ var main = [
           scope.containerHeight = containerHeight;
           $compile(graphContainer)(scope);
 
+          if (dataAndSession.session && dataAndSession.session.answers) {
+            scope.config.initialCurve = dataAndSession.session.answers;
+          }
+
           // this timeout is needed to wait for the callback to be defined
           $timeout(function() {
 

@@ -13,6 +13,7 @@ exports.factory = [
               stepValue = (typeof stepValue !== 'undefined') ? stepValue : 1;
 
               equation = prefixWithYEquals(equation);
+              equation = fixSigns(equation);
 
                 if (!equation || !_.isString(equation)) {
                     return undefined;
@@ -59,6 +60,10 @@ exports.factory = [
 
                 function getConstant(index) {
                     return getDecimalRepresentation(captures[index] ? captures[index] : 0);
+                }
+
+                function fixSigns(expression) {
+                  return expression.replace(/\+-/g,'-').replace(/-\+/g,'-');
                 }
 
                 function prefixWithYEquals(expression) {
