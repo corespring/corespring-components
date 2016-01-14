@@ -79,21 +79,6 @@ describe('removeAfterPlacing', function() {
 
     });
 
-    describe('config.removeAllAfterPlacing set to false', function() {
-
-      beforeEach(function() {
-        scope.config.removeAllAfterPlacing = false;
-        scope.$digest();
-      });
-
-      it('should have moveOnDrag = false for all choices', function() {
-        _.each(scope.fullModel.model.choices, function(choice) {
-          expect(choice.moveOnDrag).toBe(false);
-        });
-      });
-
-    });
-
   });
 
 
