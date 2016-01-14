@@ -94,6 +94,12 @@ describe('corespring line component', function() {
             [0, 1],
             [1, 0.5]
         ]);
+
+        result = ob.pointsFromEquation("y=1x+-2");
+        expect(result).toEqual([
+            [0, -2],
+            [1, -1]
+        ]);
     });
 
 });
