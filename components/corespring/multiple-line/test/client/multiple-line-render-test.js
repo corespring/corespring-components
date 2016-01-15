@@ -306,6 +306,46 @@ describe('corespring:multiple-line:render', function() {
     });
   });
 
+  describe('restoring session', function() {
+    beforeEach(inject(function($timeout) {
+      timeout = $timeout;
+    }));
+
+    it('restores state from session when present', function() {
+      var model = _.cloneDeep(testModel);
+      model.session = {answers: [
+        {
+          equation: "3x+4",
+          id: 1,
+          name: 'a'
+        },
+        {
+          equation: "2x+1",
+          id: 2,
+          name: 'b'
+        }
+      ]};
+      container.elements['1'].setDataAndSession(model);
+      scope.graphCallback = function() {}
+      timeout.flush();
+      expect(scope.config.lines).toEqual([
+        {
+          id: 1,
+          label: 'a',
+          intialLine: '3x+4',
+          colorIndex: 0
+        },
+        {
+          id: 2,
+          label: 'b',
+          intialLine: '2x+1',
+          colorIndex: 1
+        }
+      ]);
+
+    });
+  });
+
   describe('isAnswerEmpty', function() {
     beforeEach(inject(function($timeout) {
       timeout = $timeout;
