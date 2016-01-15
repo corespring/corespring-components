@@ -450,6 +450,16 @@ var main = [
           scope.containerHeight = containerHeight;
           $compile(graphContainer)(scope);
 
+          if (dataAndSession.session && dataAndSession.session.answers) {
+            scope.config.lines = _.map(dataAndSession.session.answers, function(a, idx) {
+              return {
+                id: a.id,
+                label: a.name,
+                intialLine: a.equation,
+                colorIndex: idx
+              }
+            });
+          }
           // this timeout is needed to wait for the callback to be defined
           $timeout(function() {
 
