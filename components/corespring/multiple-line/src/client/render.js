@@ -592,7 +592,7 @@ var main = [
         "  <div class='graph-interaction'>",
         "    <div class='undo-start-over-controls container-fluid'>",
         "      <div class='row'>",
-        "        <div class='col-md-12'>",
+        "        <div class='col-md-12' ng-hide='response'>",
         "          <span cs-start-over-button class='btn-player pull-right' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
         "          <span cs-undo-button class='pull-right' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
         "          <div class='clearfix'> </div>",
