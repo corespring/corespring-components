@@ -27,10 +27,10 @@
         "angular-module": "corespring.wiggi-wiz"
       },
       "angular-bootstrap": {
-        "version" : "~0.10.0",
-        "file" : "ui-bootstrap-tpls.min.js",
-        "angular-module" : "ui.bootstrap"
-      },-
+        "angular-module": "ui.bootstrap",
+        "file": "ui-bootstrap-tpls.min.js",
+        "version": "~0.10.0"
+      },
       "undo.js": {
         "bower_target": "git@github.com:jzaefferer/undo.git",
         "js": "undo.js"
