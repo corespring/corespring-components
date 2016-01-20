@@ -116,7 +116,6 @@ exports.directive = [
         passageNeedsUpdate = false;
         scope.model.choices = [];
         scope.fullModel.correctResponse.value = [];
-        console.log("initPassageFromCleanPassage")
         scope.model.config.passage = plainTextToHtml(removeHtmlTags(scope.model.cleanPassage));
         $theContent.html(scope.model.config.passage);
       }
@@ -250,7 +249,7 @@ exports.directive = [
             scope.model.cleanPassage = oldValue;
             passageNeedsUpdate = false;
           }
-        }
+        };
       }
 
       function onClickEditContent() {
@@ -318,7 +317,7 @@ exports.directive = [
         var removedChoices = [];
 
         if ($existingChoices.length > 0) {
-          existingChoices = _.map($existingChoices, function($choice){
+          existingChoices = _.map($existingChoices, function(choice){
             $(choice).attr('id');
           });
           removedChoices = _.difference(existingChoices, collection);

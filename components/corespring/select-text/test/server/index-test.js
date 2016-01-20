@@ -54,11 +54,11 @@ describe('select text server logic', function() {
   it('should have incorrect selections in the feedback', function() {
     var response = server.createOutcome(_.cloneDeep(component), [1, 3], helper.settings(true, true, true));
     response.feedback.choices[0].should.eql({
-      index: 1,
+      tokenId: 1,
       correct: false
     });
     response.feedback.choices[1].should.eql({
-      index: 3,
+      tokenId: 3,
       correct: false
     });
   });
@@ -67,15 +67,15 @@ describe('select text server logic', function() {
     var response = server.createOutcome(_.cloneDeep(component), [1, 2, 3], helper.settings(true, true, true));
 
     response.feedback.choices[0].should.eql({
-      index: 1,
+      tokenId: 1,
       correct: false
     });
     response.feedback.choices[1].should.eql({
-      index: 2,
+      tokenId: 2,
       correct: true
     });
     response.feedback.choices[2].should.eql({
-      index: 3,
+      tokenId: 3,
       correct: false
     });
   });
