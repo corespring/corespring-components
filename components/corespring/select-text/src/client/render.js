@@ -61,30 +61,28 @@ exports.directive = [
         }, obj);
       }
 
-      function specificAvailability(){
-        return scope.model.config.availability === 'specific';
-      }
-
-      function classifyTokens(choices, tokenClass) {
+      function classifyTokens(collection, tokenClass) {
+        var $existingChoices = $theContent.find('.' + tokenClass);
         var existingChoices = [];
         var removedChoices = [];
-        var $existingChoices = $theContent.find('.' + tokenClass);
 
         if ($existingChoices.length > 0) {
           $existingChoices.each(function() {
-            var index = $theContent.find('.cs-token').index(this);
-            existingChoices.push(index);
+            var tokenId = $(this).attr('id');
+            existingChoices.push(tokenId);
           });
-          removedChoices = _.difference(existingChoices, choices);
-          choices = _.difference(choices, existingChoices);
+          removedChoices = _.difference(existingChoices, collection);
+          collection = _.difference(collection, existingChoices);
         }
+
         if (removedChoices.length > 0) {
           for (var i = removedChoices.length - 1; i >= 0; i--) {
-            $theContent.find('.cs-token:eq("' + removedChoices[i] + '")').removeClass(tokenClass);
+            $theContent.find('#' + removedChoices[i]).removeClass(tokenClass);
           }
         }
-        for (var j = choices.length - 1; j >= 0; j--) {
-          var $match = $theContent.find('.cs-token:eq("' + choices[j] + '"):not(.' + tokenClass + ')');
+
+        for (var j = collection.length - 1; j >= 0; j--) {
+          var $match = $theContent.find('#' + collection[j]);
           if ($match.length === 1) {
             $match.addClass(tokenClass);
           }
@@ -101,27 +99,18 @@ exports.directive = [
           return;
         }
         var $token = $(this);
-        var index = $theContent.find('.cs-token').index($token);
-        var alreadyAnAnswer = scope.userChoices.indexOf(index) >= 0;
+        var tokenId = $token.attr('id');
+        var alreadyAnAnswer = scope.userChoices.indexOf(tokenId) >= 0;
         var canSelectMore = scope.model.config.maxSelections === 0 ||
           scope.model.config.maxSelections > 0 &&
           scope.userChoices.length < scope.model.config.maxSelections;
 
-        if (specificAvailability()) {
-          if ($token.hasClass('choice')) {
-            if (alreadyAnAnswer) {
-              scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-            } else if (canSelectMore) {
-              scope.userChoices.push(index);
-            }
-          }
-        } else {
-          if (alreadyAnAnswer) {
-            scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-          } else if (canSelectMore) {
-            scope.userChoices.push(index);
-          }
+        if (alreadyAnAnswer) {
+          scope.userChoices.splice(scope.userChoices.indexOf(tokenId), 1);
+        } else if (canSelectMore) {
+          scope.userChoices.push(tokenId);
         }
+
         scope.undoModel.remember();
       }
 
@@ -143,7 +132,7 @@ exports.directive = [
       }
 
       function initUi() {
-        if (specificAvailability() && getNestedProperty(scope, 'model.choices')) {
+        if (getNestedProperty(scope, 'model.choices')) {
           classifyTokens(scope.model.choices, 'choice');
         }
         scope.undoModel.init();
@@ -177,8 +166,8 @@ exports.directive = [
           var incorrectResponses = _.filter(response.feedback.choices, function(choice) {
             return choice.correct === false;
           });
-          var correctIndexes = _.pluck(correctResponses, 'index');
-          var incorrectIndexes = _.pluck(incorrectResponses, 'index');
+          var correctIndexes = _.pluck(correctResponses, 'tokenId');
+          var incorrectIndexes = _.pluck(incorrectResponses, 'tokenId');
           scope.unselectedAnswers = _.difference(response.correctResponse, correctIndexes);
           classifyTokens(correctIndexes, 'correct');
           classifyTokens(incorrectIndexes, 'incorrect');
@@ -240,7 +229,7 @@ exports.directive = [
         '    <span cs-start-over-button-with-model ng-show="editable"></span>',
         '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ng-click="toggleAnswersVisibility()"><i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> <span ng-show="!answersVisible">Show</span><span ng-show="answersVisible">Hide</span> Correct Answer(s)</button>',
         '  </div>',
-        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
+        '  <div class="select-text-content specific" ng-class="{blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>'
       ].join("\n");

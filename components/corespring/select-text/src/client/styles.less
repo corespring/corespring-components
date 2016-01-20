@@ -39,8 +39,16 @@
     font-size: 16px;
     margin: 5px 5px 5px 5px;
   }
+  .help {
+    font-style: italic;
+  }
   .editor-wrapper {
     margin-top: 20px;
+
+    .plain-text-area {
+      width: 600px;
+      height: 200px;
+    }
   }
   .editor-wrapper,
   .answers-config-wrapper {
@@ -77,12 +85,15 @@
   }
   .passage-wrapper {
     position: relative;
+    margin-top:10px;
+
     .history-buttons {
       position: absolute;
       right: 0;
       bottom: 100%;
       padding-bottom: 4px;
     }
+
     .passage-preview {
       padding: 5px;
       border: 1px dashed #ccc;
@@ -128,9 +139,9 @@
       }
     }
   }
+
   .answer-summary {
     margin-top: 20px;
-    text-align: center;
 
     table {
       display: inline-table;
@@ -138,33 +149,27 @@
 
     td {
       text-align: center;
-      vertical-align: top;
-    }
-
-    .td-middle {
       vertical-align: middle;
+      padding-bottom: 5px;
+
+      &.text-label {
+        text-align: right;
+      }
     }
 
     .btn {
       width: 170px;
     }
 
-    .help {
+    .help-small {
       font-style: italic;
       font-size: 80%;
       color: #999;
     }
 
-    .vline {
-      height: 40px;
-      border-left: solid 1px black;
-      margin-left: 10px;
-      margin-right: 10px;
-    }
-
     .badge {
-      line-height: 40px;
-      width: 40px;
+      line-height: 30px;
+      width: 30px;
       border-radius: 100%;
       padding: 0;
       margin-left: 5px;
