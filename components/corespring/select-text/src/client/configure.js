@@ -3,11 +3,15 @@ exports.framework = 'angular';
 
 exports.directive = [
   '$animate',
+  '$document',
   '$timeout',
+  '$window',
   'ChoiceTemplates',
   function(
     $animate,
+    $document,
     $timeout,
+    $window,
     ChoiceTemplates
   ) {
 
@@ -33,7 +37,8 @@ exports.directive = [
       var passageNeedsUpdate = false;
       var allowAssigningCleanPassage = false;
 
-      scope.mode = "editor";
+      scope.mode = 'editor';
+      scope.passage = '';
       scope.showPassageEditingWarning = false;
 
       scope.deleteAll = deleteAll;
@@ -69,90 +74,129 @@ exports.directive = [
         //we have to use the fullModel bc. the outer scope is watching it for changes
         scope.fullModel = ensureModelStructure(fullModel);
         scope.model = scope.fullModel.model;
-        passageNeedsUpdate = _.isEmpty(scope.model.config.passage);
+        scope.passage = scope.model.config.passage || '';
+        passageNeedsUpdate = _.isEmpty(scope.passage);
 
         $theContent = $element.find('.passage-preview .ng-binding');
         bindTokenEvents();
 
         scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
-        setMode("editor");
+        setMode('editor');
 
         $timeout(initUi, 100);
       }
 
       function initUi() {
-        classifyTokens(scope.model.choices, "choice");
-        classifyTokens(scope.fullModel.correctResponse.value, "selected");
+        classifyTokens(scope.model.choices, 'choice');
+        classifyTokens(scope.fullModel.correctResponse.value, 'selected');
       }
 
       function bindTokenEvents() {
+        $theContent.off('click');
+        $theContent.on('click', onClickText);
         $theContent.off('click', csTokenSelector());
         $theContent.on('click', csTokenSelector(), onClickToken);
+      }
+
+      function onClickText(e) {
+        if (scope.mode === 'answers') {
+          if ($(e.currentTarget).is('div')) {
+            if (wrapSelection()) {
+              updatePassage();
+              updateChoices();
+              updateCorrectResponses();
+            }
+          }
+        }
+
+        function wrapSelection() {
+          var selection = $window.getSelection();
+          if (selection.isCollapsed || selection.rangeCount !== 1 || csTokenInSelection(selection)) {
+            return false;
+          }
+          var element = $('<span class="blast cs-token choice"/>');
+          selection.getRangeAt(0).surroundContents(element[0]);
+          return true;
+        }
+
+        function csTokenInSelection(selection) {
+          return $(selection.anchorNode.parentNode).hasClass('cs-token') ||
+            $(selection.focusNode.parentNode).hasClass('cs-token');
+        }
       }
 
       function onClickToken() {
         var $token = $(this);
 
-        if(scope.mode === "answers"){
-          $token.removeClass("selected");
-          $token.removeClass("choice");
+        if (scope.mode === 'answers') {
+          $token.removeClass('selected');
+          $token.removeClass('choice');
           $token.prop('outerHTML', $token.html());
+          updatePassage();
           updateChoices();
           updateCorrectResponses();
-        }
-        else if(scope.mode === "correct-answers") {
-          if ($token.hasClass("selected")) {
-            $token.removeClass("selected");
+        } else if (scope.mode === 'correct-answers') {
+          if ($token.hasClass('selected')) {
+            $token.removeClass('selected');
           } else {
-            $token.addClass("selected");
+            $token.addClass('selected');
           }
           updateCorrectResponses();
           scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
         }
       }
 
-      function updateChoices(){
-        var tokens = $theContent.find(csTokenSelector());
-        scope.model.choices = _.range(tokens.length-1);
+      function updatePassage() {
+        var $cleanPassage = $theContent.clone();
+        $cleanPassage.find(csTokenSelector()).each(function(index, token) {
+          $(token).removeClass('choice');
+          $(token).removeClass('selected');
+        });
+        scope.model.config.passage = $cleanPassage.prop('innerHTML');
       }
 
-      function updateCorrectResponses(){
+      function updateChoices() {
+        var tokens = $theContent.find(csTokenSelector());
+        scope.model.choices = _.range(tokens.length);
+      }
+
+      function updateCorrectResponses() {
         var tokens = $theContent.find(csTokenSelector());
         var result = [];
-        tokens.each(function(index,token){
-          if($(token).hasClass('selected')){
+        tokens.each(function(index, token) {
+          if ($(token).hasClass('selected')) {
             result.push(index);
           }
         });
         scope.fullModel.correctResponse.value = result;
       }
 
-      function ensureModelStructure(fullModel){
-        if(!_.isObject(fullModel.correctResponse)){
+      function ensureModelStructure(fullModel) {
+        if (!_.isObject(fullModel.correctResponse)) {
           fullModel.correctResponse = {};
         }
-        if(!_.isArray(fullModel.correctResponse.value)){
+        if (!_.isArray(fullModel.correctResponse.value)) {
           fullModel.correctResponse.value = [];
         }
-        if(!fullModel.model){
+        if (!fullModel.model) {
           fullModel.model = {};
         }
-        if(!_.isString(fullModel.model.cleanPassage)){
+        if (!_.isString(fullModel.model.cleanPassage)) {
           fullModel.model.cleanPassage = '';
         }
-        if(!_.isArray(fullModel.model.choices)){
+        if (!_.isArray(fullModel.model.choices)) {
           fullModel.model.choices = [];
         }
-        if(!_.isObject(fullModel.model.config)){
+        if (!_.isObject(fullModel.model.config)) {
           fullModel.model.config = {};
         }
-        if(isNaN(fullModel.model.config.maxSelections)){
+        if (isNaN(fullModel.model.config.maxSelections)) {
           fullModel.model.config.maxSelections = 0;
         }
-        if(!_.isString(fullModel.model.config.label)){
+        if (!_.isString(fullModel.model.config.label)) {
           fullModel.model.config.label = '';
         }
-        if(!_.isString(fullModel.model.config.passage)){
+        if (!_.isString(fullModel.model.config.passage)) {
           fullModel.model.config.passage = '';
         }
         return fullModel;
@@ -163,17 +207,18 @@ exports.directive = [
         scope.model.choices = [];
         scope.fullModel.correctResponse.value = [];
         scope.model.config.passage = plainTextToHtml(removeHtmlTags(scope.model.cleanPassage));
-        $theContent.html(scope.model.config.passage);
+        scope.passage = scope.model.config.passage;
+        $theContent.html(scope.passage);
       }
 
       function removeHtmlTags(content) {
         //replace p, div and h tags with double line break
-        content = content.replace(/<\/(p|div|h\d)>/gi, "\n\n");
+        content = content.replace(/<\/(p|div|h\d)>/gi, '\n\n');
         //replace br tags with single line break
-        content = content.replace(/<br>/gi, "\n");
-        content = content.replace(/<br\/>/gi, "\n");
+        content = content.replace(/<br>/gi, '\n');
+        content = content.replace(/<br\/>/gi, '\n');
         //remove all other tags
-        content = content.replace(/<[^\>]+>/g, "");
+        content = content.replace(/<[^\>]+>/g, '');
         return content;
       }
 
@@ -185,7 +230,7 @@ exports.directive = [
         return '.' + blastOptions.customClass;
       }
 
-      function getNumberOfCorrectResponses(){
+      function getNumberOfCorrectResponses() {
         return scope.fullModel.correctResponse.value.length;
       }
 
@@ -193,7 +238,7 @@ exports.directive = [
         if (newValue === oldValue || oldValue === undefined) {
           return;
         }
-        if(allowAssigningCleanPassage){
+        if (allowAssigningCleanPassage) {
           allowAssigningCleanPassage = false;
           return;
         }
@@ -219,33 +264,33 @@ exports.directive = [
       }
 
       function onClickEditContent() {
-        setMode("editor");
+        setMode('editor');
       }
 
       function onClickSetAnswers() {
         if (passageNeedsUpdate) {
           initPassageFromCleanPassage();
         }
-        setMode("answers");
+        setMode('answers');
       }
 
       function onClickSetCorrectAnswers() {
-        setMode("correct-answers");
+        setMode('correct-answers');
       }
 
-      function onClickWords(){
+      function onClickWords() {
         initPassageFromCleanPassage();
-        tokenize("word");
-        setMode("correct-answers");
+        tokenize('word');
+        setMode('correct-answers');
       }
 
-      function onClickSentences(){
+      function onClickSentences() {
         initPassageFromCleanPassage();
-        tokenize("sentence");
-        setMode("correct-answers");
+        tokenize('sentence');
+        setMode('correct-answers');
       }
 
-      function onClickClearSelections(){
+      function onClickClearSelections() {
         initPassageFromCleanPassage();
       }
 
@@ -271,13 +316,13 @@ exports.directive = [
         $timeout(renderChoices, 100);
       }
 
-      function renderChoices(){
-        classifyTokens(scope.model.choices, "choice");
+      function renderChoices() {
+        classifyTokens(scope.model.choices, 'choice');
       }
 
       function classifyTokens(collection, tokenClass) {
-        $theContent.find(csTokenSelector()).each(function(index,choice){
-          if(_.contains(collection, index)){
+        $theContent.find(csTokenSelector()).each(function(index, choice) {
+          if (_.contains(collection, index)) {
             $(choice).addClass(tokenClass);
           } else {
             $(choice).removeClass(tokenClass);
@@ -298,14 +343,14 @@ exports.directive = [
       }
 
       function watchCorrectResponseLength(newValue, oldValue) {
-        animateBadge(newValue, oldValue, ".answers-count");
+        animateBadge(newValue, oldValue, '.answers-count');
         if (scope.model.config.maxSelections > 0 && scope.model.config.maxSelections < newValue) {
           scope.model.config.maxSelections = newValue;
         }
       }
 
       function watchChoicesLength(newValue, oldValue) {
-        animateBadge(newValue, oldValue, ".choices-count");
+        animateBadge(newValue, oldValue, '.choices-count');
       }
 
       function watchMaxSelections(newValue, oldValue) {
@@ -318,14 +363,14 @@ exports.directive = [
 
       function deleteAll() {
         scope.model.choices = [];
-        scope.model.cleanPassage = "";
-        scope.model.config.label = "";
-        scope.model.config.selectionUnit = "word";
-        scope.model.config.availability = "all";
-        scope.model.config.passage = "";
+        scope.model.cleanPassage = '';
+        scope.model.config.label = '';
+        scope.model.config.selectionUnit = 'word';
+        scope.model.config.availability = 'all';
+        scope.model.config.passage = '';
         scope.model.config.maxSelections = 0;
         scope.fullModel.correctResponse.value = [];
-        setMode("editor");
+        setMode('editor');
       }
 
       function onPasteIntoContentArea(event) {
@@ -365,35 +410,43 @@ exports.directive = [
         '    <div class="col-xs-12">',
         '      <div class="btn-group toggles"',
         '          role="group">',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-class="{active: mode === \'editor\'}"',
-        '              ng-click="onClickEditContent()"',
-        '             >Edit Content',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-class="{active: mode === \'answers\'}"',
-        '              ng-click="onClickSetAnswers()"',
-        '              ng-show="mode === \'editor\'"',
-        '              ng-disabled="model.cleanPassage === \'\'"',
-        '             >Set Selections',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-class="{active: mode === \'answers\'}"',
-        '              ng-click="onClickSetAnswers()"',
-        '              ng-hide="mode === \'editor\'"',
-        '             >Set Selections',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-class="{active: mode === \'correct-answers\'}"',
-        '              ng-click="onClickSetCorrectAnswers()"',
-        '              ng-hide="mode === \'editor\'"',
-        '              ng-disabled="model.choices.length === 0"',
-        '             >Set Correct Answers',
-        '          </button>',
+        '        <button type="button"',
+        '            class="btn btn-default"',
+        '            ng-class="{active: mode === \'editor\'}"',
+        '            ng-click="onClickEditContent()"',
+        '            >Edit Content',
+        '        </button>',
+        '        <button type="button"',
+        '            class="btn btn-default"',
+        '            ng-class="{active: mode === \'answers\'}"',
+        '            ng-click="onClickSetAnswers()"',
+        '            ng-show="mode === \'editor\' && fullModel.correctAnswers.value.length === 0"',
+        '            ng-disabled="model.cleanPassage === \'\'"',
+        '            >Set Selections',
+        '        </button>',
+        '        <button type="button"',
+        '            class="btn btn-default"',
+        '            ng-class="{active: mode === \'answers\'}"',
+        '            ng-click="onClickSetCorrectAnswers()"',
+        '            ng-show="mode === \'editor\' && fullModel.correctAnswers.value.length !== 0"',
+        '            ng-disabled="model.cleanPassage === \'\'"',
+        '            >Set Selections',
+        '        </button>',
+        '        <button type="button"',
+        '            class="btn btn-default"',
+        '            ng-class="{active: mode === \'answers\'}"',
+        '            ng-click="onClickSetAnswers()"',
+        '            ng-hide="mode === \'editor\'"',
+        '            >Set Selections',
+        '        </button>',
+        '        <button type="button"',
+        '            class="btn btn-default"',
+        '            ng-class="{active: mode === \'correct-answers\'}"',
+        '            ng-click="onClickSetCorrectAnswers()"',
+        '            ng-hide="mode === \'editor\'"',
+        '            ng-disabled="model.choices.length === 0"',
+        '            >Set Correct Answers',
+        '        </button>',
         '      </div>',
         '    </div>',
         '  </div>',
@@ -417,11 +470,11 @@ exports.directive = [
         '            </p>',
         '          </div>',
         '        </div>',
-        '        <textarea ',
-        '          class="plain-text-area" ',
-        '          ng-model="model.cleanPassage" ',
-        '          ng-paste="onPasteIntoContentArea($event)" ',
-        '        ></textarea>',
+        '        <textarea',
+        '            class="plain-text-area"',
+        '            ng-model="model.cleanPassage"',
+        '            ng-paste="onPasteIntoContentArea($event)"',
+        '            ></textarea>',
         '      </div>',
         '      <div class="answers-config-wrapper"',
         '          ng-show="mode === \'answers\' || mode === \'correct-answers\'">',
@@ -447,30 +500,36 @@ exports.directive = [
         '              class="btn btn-default"',
         '              ng-click="onClickWords()"',
         '              ng-disabled="mode !== \'answers\'"',
-        '            >Words',
+        '              >Words',
         '          </button>',
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-click="onClickSentences()"',
         '              ng-disabled="mode !== \'answers\'"',
-        '            >Sentences',
+        '              >Sentences',
         '          </button>',
         '          <button type="button"',
         '              class="btn btn-default"',
         '              ng-click="onClickClearSelections()"',
         '              ng-disabled="mode !== \'answers\'"',
-        '            >Clear Selections',
+        '              >Clear Selections',
         '          </button>',
         '        </div>',
         '        <div class="passage-wrapper">',
         '          <div class="passage-preview"',
-        '              ng-bind-html-unsafe="model.config.passage"></div>',
+        '              ng-bind-html-unsafe="passage"></div>',
         '        </div>',
         '        <div class="answer-summary">',
-        '           <table>',
-        '             <tr><td class="text-label">Selections available: </td><td><span class="badge choices-count">{{model.choices.length}}</span></td></tr>',
-        '             <tr><td class="text-label">Correct answers: </td><td><span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span></td></tr>',
-        '           </table>',
+        '          <table>',
+        '            <tr>',
+        '              <td class="text-label">Selections available:</td>',
+        '              <td><span class="badge choices-count">{{model.choices.length}}</span></td>',
+        '            </tr>',
+        '            <tr>',
+        '              <td class="text-label">Correct answers:</td>',
+        '              <td><span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span></td>',
+        '            </tr>',
+        '          </table>',
         '        </div>',
         '        <div class="max-selections form-inline">',
         '          <div class="form-group">',
