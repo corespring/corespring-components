@@ -15,13 +15,12 @@
     {}
   ],
   "model": {
+    "choices" : [],
+    "cleanPassage": "",
     "config" : {
-      "availability": "all",
       "label": "",
       "maxSelections": 0,
-      "selectionUnit" : "word",
       "passage": ""
-    },
-    "choices" : []
+    }
   }
 }

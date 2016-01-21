@@ -61,34 +61,14 @@ exports.directive = [
         }, obj);
       }
 
-      function specificAvailability(){
-        return scope.model.config.availability === 'specific';
-      }
-
-      function classifyTokens(choices, tokenClass) {
-        var existingChoices = [];
-        var removedChoices = [];
-        var $existingChoices = $theContent.find('.' + tokenClass);
-
-        if ($existingChoices.length > 0) {
-          $existingChoices.each(function() {
-            var index = $theContent.find('.cs-token').index(this);
-            existingChoices.push(index);
-          });
-          removedChoices = _.difference(existingChoices, choices);
-          choices = _.difference(choices, existingChoices);
-        }
-        if (removedChoices.length > 0) {
-          for (var i = removedChoices.length - 1; i >= 0; i--) {
-            $theContent.find('.cs-token:eq("' + removedChoices[i] + '")').removeClass(tokenClass);
+      function classifyTokens(collection, tokenClass) {
+        $theContent.find('.cs-token').each(function(index,choice){
+          if(_.contains(collection, index)){
+            $(choice).addClass(tokenClass);
+          } else {
+            $(choice).removeClass(tokenClass);
           }
-        }
-        for (var j = choices.length - 1; j >= 0; j--) {
-          var $match = $theContent.find('.cs-token:eq("' + choices[j] + '"):not(.' + tokenClass + ')');
-          if ($match.length === 1) {
-            $match.addClass(tokenClass);
-          }
-        }
+        });
       }
 
       function bindTokenEvents() {
@@ -107,21 +87,12 @@ exports.directive = [
           scope.model.config.maxSelections > 0 &&
           scope.userChoices.length < scope.model.config.maxSelections;
 
-        if (specificAvailability()) {
-          if ($token.hasClass('choice')) {
-            if (alreadyAnAnswer) {
-              scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-            } else if (canSelectMore) {
-              scope.userChoices.push(index);
-            }
-          }
-        } else {
-          if (alreadyAnAnswer) {
-            scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-          } else if (canSelectMore) {
-            scope.userChoices.push(index);
-          }
+        if (alreadyAnAnswer) {
+          scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
+        } else if (canSelectMore) {
+          scope.userChoices.push(index);
         }
+
         scope.undoModel.remember();
       }
 
@@ -133,17 +104,16 @@ exports.directive = [
         bindTokenEvents();
 
         if (dataAndSession.session && dataAndSession.session.answers) {
-          scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
-          for (var i = scope.userChoices.length - 1; i >= 0; i--) {
-            scope.userChoices[i] = parseInt(scope.userChoices[i], 10);
-          }
+          scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
+            return parseInt(answer, 10);
+          });
         }
 
         $timeout(initUi, 100);
       }
 
       function initUi() {
-        if (specificAvailability() && getNestedProperty(scope, 'model.choices')) {
+        if (getNestedProperty(scope, 'model.choices')) {
           classifyTokens(scope.model.choices, 'choice');
         }
         scope.undoModel.init();
@@ -240,7 +210,7 @@ exports.directive = [
         '    <span cs-start-over-button-with-model ng-show="editable"></span>',
         '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ng-click="toggleAnswersVisibility()"><i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> <span ng-show="!answersVisible">Show</span><span ng-show="answersVisible">Hide</span> Correct Answer(s)</button>',
         '  </div>',
-        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
+        '  <div class="select-text-content specific" ng-class="{blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>'
       ].join("\n");
