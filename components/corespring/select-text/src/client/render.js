@@ -62,31 +62,13 @@ exports.directive = [
       }
 
       function classifyTokens(collection, tokenClass) {
-        var $existingChoices = $theContent.find('.' + tokenClass);
-        var existingChoices = [];
-        var removedChoices = [];
-
-        if ($existingChoices.length > 0) {
-          $existingChoices.each(function() {
-            var tokenId = $(this).attr('id');
-            existingChoices.push(tokenId);
-          });
-          removedChoices = _.difference(existingChoices, collection);
-          collection = _.difference(collection, existingChoices);
-        }
-
-        if (removedChoices.length > 0) {
-          for (var i = removedChoices.length - 1; i >= 0; i--) {
-            $theContent.find('#' + removedChoices[i]).removeClass(tokenClass);
+        $theContent.find('.cs-token').each(function(index,choice){
+          if(_.contains(collection, index)){
+            $(choice).addClass(tokenClass);
+          } else {
+            $(choice).removeClass(tokenClass);
           }
-        }
-
-        for (var j = collection.length - 1; j >= 0; j--) {
-          var $match = $theContent.find('#' + collection[j]);
-          if ($match.length === 1) {
-            $match.addClass(tokenClass);
-          }
-        }
+        });
       }
 
       function bindTokenEvents() {
@@ -99,16 +81,16 @@ exports.directive = [
           return;
         }
         var $token = $(this);
-        var tokenId = $token.attr('id');
-        var alreadyAnAnswer = scope.userChoices.indexOf(tokenId) >= 0;
+        var index = $theContent.find('.cs-token').index($token);
+        var alreadyAnAnswer = scope.userChoices.indexOf(index) >= 0;
         var canSelectMore = scope.model.config.maxSelections === 0 ||
           scope.model.config.maxSelections > 0 &&
           scope.userChoices.length < scope.model.config.maxSelections;
 
         if (alreadyAnAnswer) {
-          scope.userChoices.splice(scope.userChoices.indexOf(tokenId), 1);
+          scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
         } else if (canSelectMore) {
-          scope.userChoices.push(tokenId);
+          scope.userChoices.push(index);
         }
 
         scope.undoModel.remember();
@@ -122,10 +104,9 @@ exports.directive = [
         bindTokenEvents();
 
         if (dataAndSession.session && dataAndSession.session.answers) {
-          scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
-          for (var i = scope.userChoices.length - 1; i >= 0; i--) {
-            scope.userChoices[i] = parseInt(scope.userChoices[i], 10);
-          }
+          scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
+            return parseInt(answer, 10);
+          });
         }
 
         $timeout(initUi, 100);
@@ -166,8 +147,8 @@ exports.directive = [
           var incorrectResponses = _.filter(response.feedback.choices, function(choice) {
             return choice.correct === false;
           });
-          var correctIndexes = _.pluck(correctResponses, 'tokenId');
-          var incorrectIndexes = _.pluck(incorrectResponses, 'tokenId');
+          var correctIndexes = _.pluck(correctResponses, 'index');
+          var incorrectIndexes = _.pluck(incorrectResponses, 'index');
           scope.unselectedAnswers = _.difference(response.correctResponse, correctIndexes);
           classifyTokens(correctIndexes, 'correct');
           classifyTokens(incorrectIndexes, 'incorrect');

@@ -33,7 +33,6 @@ exports.directive = [
       var passageNeedsUpdate = false;
       var allowAssigningCleanPassage = false;
 
-
       scope.mode = "editor";
       scope.showPassageEditingWarning = false;
 
@@ -68,7 +67,7 @@ exports.directive = [
 
       function setModel(fullModel) {
         //we have to use the fullModel bc. the outer scope is watching it for changes
-        scope.fullModel = setDefaults(fullModel);
+        scope.fullModel = ensureModelStructure(fullModel);
         scope.model = scope.fullModel.model;
         passageNeedsUpdate = _.isEmpty(scope.model.config.passage);
 
@@ -81,7 +80,54 @@ exports.directive = [
         $timeout(initUi, 100);
       }
 
-      function setDefaults(fullModel){
+      function initUi() {
+        classifyTokens(scope.model.choices, "choice");
+        classifyTokens(scope.fullModel.correctResponse.value, "selected");
+      }
+
+      function bindTokenEvents() {
+        $theContent.off('click', csTokenSelector());
+        $theContent.on('click', csTokenSelector(), onClickToken);
+      }
+
+      function onClickToken() {
+        var $token = $(this);
+
+        if(scope.mode === "answers"){
+          $token.removeClass("selected");
+          $token.removeClass("choice");
+          $token.prop('outerHTML', $token.html());
+          updateChoices();
+          updateCorrectResponses();
+        }
+        else if(scope.mode === "correct-answers") {
+          if ($token.hasClass("selected")) {
+            $token.removeClass("selected");
+          } else {
+            $token.addClass("selected");
+          }
+          updateCorrectResponses();
+          scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
+        }
+      }
+
+      function updateChoices(){
+        var tokens = $theContent.find(csTokenSelector());
+        scope.model.choices = _.range(tokens.length-1);
+      }
+
+      function updateCorrectResponses(){
+        var tokens = $theContent.find(csTokenSelector());
+        var result = [];
+        tokens.each(function(index,token){
+          if($(token).hasClass('selected')){
+            result.push(index);
+          }
+        });
+        scope.fullModel.correctResponse.value = result;
+      }
+
+      function ensureModelStructure(fullModel){
         if(!_.isObject(fullModel.correctResponse)){
           fullModel.correctResponse = {};
         }
@@ -120,46 +166,6 @@ exports.directive = [
         $theContent.html(scope.model.config.passage);
       }
 
-      function indexOfCorrectAnswer(id) {
-        return scope.fullModel.correctResponse.value.indexOf(id);
-      }
-
-      function isCorrectAnswer(id) {
-        return indexOfCorrectAnswer(id) >= 0;
-      }
-
-      function addCorrectAnswer(id) {
-        if (!isCorrectAnswer(id)) {
-          scope.fullModel.correctResponse.value.push(id);
-        }
-      }
-
-      function removeCorrectAnswer(id) {
-        if (isCorrectAnswer(id)) {
-          scope.fullModel.correctResponse.value.splice(indexOfCorrectAnswer(id), 1);
-        }
-      }
-
-      function indexOfChoice(id) {
-        return scope.model.choices.indexOf(id);
-      }
-
-      function isChoice(id) {
-        return indexOfChoice(id) >= 0;
-      }
-
-      function addChoice(id) {
-        if (!isChoice(id)) {
-          scope.model.choices.push(id);
-        }
-      }
-
-      function removeChoice(id) {
-        if (isChoice(id)) {
-          scope.model.choices.splice(indexOfChoice(id), 1);
-        }
-      }
-
       function removeHtmlTags(content) {
         //replace p, div and h tags with double line break
         content = content.replace(/<\/(p|div|h\d)>/gi, "\n\n");
@@ -175,52 +181,12 @@ exports.directive = [
         return text.replace(/\n/g, '<br>');
       }
 
-      function getNestedProperty(obj, key, defaultValue) {
-        var result = key.split(".").reduce(function(o, x) {
-          return (typeof o === "undefined") ? o : o[x];
-        }, obj);
-        return typeof result === "undefined" ? (arguments.length > 2 ? defaultValue : result) : result;
-      }
-
       function csTokenSelector() {
         return '.' + blastOptions.customClass;
       }
 
       function getNumberOfCorrectResponses(){
         return scope.fullModel.correctResponse.value.length;
-      }
-
-      function bindTokenEvents() {
-        $theContent.off('click', csTokenSelector());
-        $theContent.on('click', csTokenSelector(), onClickToken);
-      }
-
-      function onClickToken() {
-        var $token = $(this);
-        var tokenId = $token.attr('id');
-
-        if(scope.mode === "answers"){
-          $token.removeClass("selected");
-          $token.removeClass("choice");
-          removeChoice(tokenId);
-          removeCorrectAnswer(tokenId);
-          $token.prop('outerHTML', $token.html());
-        }
-        else if(scope.mode === "correct-answers") {
-          if (isCorrectAnswer(tokenId)) {
-            $token.removeClass("selected");
-            removeCorrectAnswer(tokenId);
-          } else {
-            $token.addClass("selected");
-            addCorrectAnswer(tokenId);
-          }
-          scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
-        }
-      }
-
-      function initUi() {
-        classifyTokens(scope.model.choices, "choice");
-        classifyTokens(scope.fullModel.correctResponse.value, "selected");
       }
 
       function watchCleanPassage(newValue, oldValue) {
@@ -297,9 +263,7 @@ exports.directive = [
 
         $theContent.find(csTokenSelector()).each(
           function(index, token) {
-            var tokenId = "cs-token-" + index;
-            $(token).attr("id", tokenId);
-            scope.model.choices.push(tokenId);
+            scope.model.choices.push(index);
           }
         );
 
@@ -312,25 +276,12 @@ exports.directive = [
       }
 
       function classifyTokens(collection, tokenClass) {
-        var $existingChoices = $theContent.find('.' + tokenClass);
-        var existingChoices = [];
-        var removedChoices = [];
-
-        if ($existingChoices.length > 0) {
-          existingChoices = _.map($existingChoices, function(choice){
-            $(choice).attr('id');
-          });
-          removedChoices = _.difference(existingChoices, collection);
-          collection = _.difference(collection, existingChoices);
-        }
-
-        _.forEach(removedChoices, function(tokenId){
-          $theContent.find('#' + tokenId).removeClass(tokenClass);
-        });
-
-        _.forEach(collection, function(tokenId){
-          $theContent.find('#' + tokenId).addClass(tokenClass);
-          console.log(tokenId, $theContent.find('#' + tokenId).length, $theContent.find('#' + tokenId).attr("class"));
+        $theContent.find(csTokenSelector()).each(function(index,choice){
+          if(_.contains(collection, index)){
+            $(choice).addClass(tokenClass);
+          } else {
+            $(choice).removeClass(tokenClass);
+          }
         });
       }
 

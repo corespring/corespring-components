@@ -20,10 +20,10 @@ function buildFeedback(question, answer) {
     feedback.message = isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK) : keys.DEFAULT_INCORRECT_FEEDBACK);
   }
 
-  _.each(answer, function(tokenId) {
+  _.each(answer, function(answerIndex) {
     feedback.choices.push({
-      tokenId: tokenId,
-      correct: _.contains(question.correctResponse.value, tokenId)
+      index: answerIndex,
+      correct: _.contains(question.correctResponse.value, answerIndex)
     });
   });
 
