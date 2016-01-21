@@ -457,7 +457,7 @@ var main = [
                 label: a.name,
                 intialLine: a.equation,
                 colorIndex: idx
-              }
+              };
             });
           }
           // this timeout is needed to wait for the callback to be defined

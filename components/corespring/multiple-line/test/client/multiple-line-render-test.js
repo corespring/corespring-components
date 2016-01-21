@@ -326,7 +326,7 @@ describe('corespring:multiple-line:render', function() {
         }
       ]};
       container.elements['1'].setDataAndSession(model);
-      scope.graphCallback = function() {}
+      scope.graphCallback = function() {};
       timeout.flush();
       expect(scope.config.lines).toEqual([
         {
