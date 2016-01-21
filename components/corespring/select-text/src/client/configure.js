@@ -37,17 +37,19 @@ exports.directive = [
       var passageNeedsUpdate = false;
       var allowAssigningCleanPassage = false;
 
+      scope.formattedPassage = '';
       scope.mode = 'editor';
       scope.passage = '';
       scope.showPassageEditingWarning = false;
 
-      scope.deleteAll = deleteAll;
+      scope.onClickAddFormatting = onClickAddFormatting;
       scope.onClickEditContent = onClickEditContent;
       scope.onClickSetAnswers = onClickSetAnswers;
       scope.onClickSetCorrectAnswers = onClickSetCorrectAnswers;
       scope.onClickWords = onClickWords;
       scope.onClickSentences = onClickSentences;
       scope.onClickClearSelections = onClickClearSelections;
+      scope.onFormattedPassageChanged = onFormattedPassageChanged;
       scope.onPasteIntoContentArea = onPasteIntoContentArea;
 
 
@@ -271,11 +273,20 @@ exports.directive = [
         if (passageNeedsUpdate) {
           initPassageFromCleanPassage();
         }
-        setMode('answers');
+        if (scope.mode === 'editor' && getNumberOfCorrectResponses() > 0) {
+          setMode('correct-answers');
+        } else {
+          setMode('answers');
+        }
       }
 
       function onClickSetCorrectAnswers() {
         setMode('correct-answers');
+      }
+
+      function onClickAddFormatting() {
+        scope.formattedPassage = scope.passage;
+        setMode('add-formatting');
       }
 
       function onClickWords() {
@@ -361,20 +372,13 @@ exports.directive = [
         }
       }
 
-      function deleteAll() {
-        scope.model.choices = [];
-        scope.model.cleanPassage = '';
-        scope.model.config.label = '';
-        scope.model.config.selectionUnit = 'word';
-        scope.model.config.availability = 'all';
-        scope.model.config.passage = '';
-        scope.model.config.maxSelections = 0;
-        scope.fullModel.correctResponse.value = [];
-        setMode('editor');
-      }
-
       function onPasteIntoContentArea(event) {
         console.log(event.originalEvent.clipboardData.getData('text/plain'));
+      }
+
+      function onFormattedPassageChanged(event, editor) {
+        //console.log("onFormattedPassageChanged", event[1].getValue());
+        scope.model.config.passage = event[1].getValue();
       }
 
     }
@@ -420,15 +424,7 @@ exports.directive = [
         '            class="btn btn-default"',
         '            ng-class="{active: mode === \'answers\'}"',
         '            ng-click="onClickSetAnswers()"',
-        '            ng-show="mode === \'editor\' && fullModel.correctAnswers.value.length === 0"',
-        '            ng-disabled="model.cleanPassage === \'\'"',
-        '            >Set Selections',
-        '        </button>',
-        '        <button type="button"',
-        '            class="btn btn-default"',
-        '            ng-class="{active: mode === \'answers\'}"',
-        '            ng-click="onClickSetCorrectAnswers()"',
-        '            ng-show="mode === \'editor\' && fullModel.correctAnswers.value.length !== 0"',
+        '            ng-show="mode === \'editor\'"',
         '            ng-disabled="model.cleanPassage === \'\'"',
         '            >Set Selections',
         '        </button>',
@@ -440,12 +436,20 @@ exports.directive = [
         '            >Set Selections',
         '        </button>',
         '        <button type="button"',
-        '            class="btn btn-default"',
+        '            class="btn btn-default btn-correct-answers"',
         '            ng-class="{active: mode === \'correct-answers\'}"',
         '            ng-click="onClickSetCorrectAnswers()"',
         '            ng-hide="mode === \'editor\'"',
         '            ng-disabled="model.choices.length === 0"',
         '            >Set Correct Answers',
+        '        </button>',
+        '        <button type="button"',
+        '            class="btn btn-default"',
+        '            ng-class="{active: mode === \'add-formatting\'}"',
+        '            ng-click="onClickAddFormatting()"',
+        '            ng-hide="mode === \'editor\'"',
+        '            ng-disabled="fullModel.correctResponse.value.length === 0"',
+        '            >Add Formatting',
         '        </button>',
         '      </div>',
         '    </div>',
@@ -460,7 +464,7 @@ exports.directive = [
         '            <h4>Important</h4>',
         '            <p>If you edit the content, selections and correct answers will be lost.</p>',
         '            <p>Do you want to proceed?</p>',
-        '            <p>',
+        '            <p class="confirm-passage-editing-buttons">',
         '              <button class="btn btn-danger"',
         '                  ng-click="confirmPassageEditing(true)">Yes',
         '              </button>',
@@ -475,6 +479,17 @@ exports.directive = [
         '            ng-model="model.cleanPassage"',
         '            ng-paste="onPasteIntoContentArea($event)"',
         '            ></textarea>',
+        '      </div>',
+        '      <div ng-show="mode === \'add-formatting\'">',
+        '        <div ',
+        '          class="xhtml-pane"',
+        '          ng-model="formattedPassage"',
+        '          ui-ace="{mode: \'html\', useWrapMode : true, onChange: onFormattedPassageChanged}"',
+        '          ></div>',
+        '        <div ',
+        '          class="xhtml-preview"',
+        '          ng-bind-html-unsafe="formattedPassage"',
+        '          ></div>',
         '      </div>',
         '      <div class="answers-config-wrapper"',
         '          ng-show="mode === \'answers\' || mode === \'correct-answers\'">',
@@ -543,31 +558,6 @@ exports.directive = [
         '                min="{{fullModel.correctResponse.value.length}}"/>',
         '          </div>',
         '        </div>',
-        '      </div>',
-        '      <div ng-show="mode === \'delete\'">',
-        '        <div class="alert alert-danger"',
-        '            role="alert">',
-        '          <h4>Are you sure?</h4>',
-        '          <p>This will permanently delete the passage and any set of answers.</p>',
-        '          <p>',
-        '            <button class="btn btn-danger"',
-        '                ng-click="deleteAll()">Yes',
-        '            </button>',
-        '            <button class="btn btn-default"',
-        '                ng-click="setEditorMode()">No',
-        '            </button>',
-        '          </p>',
-        '        </div>',
-        '      </div>',
-        '      <div class="pull-right delete-icon-button"',
-        '          ng-click="setDeleteMode()"',
-        '          ng-disabled="model.config.passage === \'\'"',
-        '          ng-show="mode === \'editor\'">',
-        '       <span tooltip="delete"',
-        '           tooltip-append-to-body="true"',
-        '           tooltip-placement="bottom">',
-        '         <i class="fa fa-trash-o"></i>',
-        '       </span>',
         '      </div>',
         '    </div>',
         '  </div>',
