@@ -383,6 +383,7 @@ exports.directive = [
       function onFormattedPassageChanged(event, editor) {
         //console.log("onFormattedPassageChanged", event[1].getValue());
         scope.passage = scope.model.config.passage = event[1].getValue();
+        $theContent.html(scope.passage);
       }
 
     }
