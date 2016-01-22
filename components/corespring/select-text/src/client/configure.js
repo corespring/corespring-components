@@ -428,7 +428,15 @@ exports.directive = [
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        helpText(),
+        instructions(),
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-6">',
+        autoSelectButtons(),
+        '    </div>',
+        '    <div class="col-xs-6">',
+        clearSelectionButtons(),
         '    </div>',
         '  </div>',
         '  <div class="row">',
@@ -486,35 +494,6 @@ exports.directive = [
         '            </p>',
         '          </div>',
         '        </div>',
-        '        <div ',
-        '          ng-hide="mode === \'correct-answers\'"',
-        '          >',
-        '          <span class="help">Auto-select (optional): </span>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-click="onClickWords()"',
-        '              ng-disabled="mode !== \'answers\'"',
-        '              >Words',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-click="onClickSentences()"',
-        '              ng-disabled="mode !== \'answers\'"',
-        '              >Sentences',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-click="onClickClearSelections()"',
-        '              ng-disabled="mode !== \'answers\'"',
-        '              >Clear Selections',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-click="onClickClearCorrectAnswers()"',
-        '              ng-disabled="mode !== \'answers\'"',
-        '              >Clear Correct Answers',
-        '          </button>',
-        '        </div>',
         '        <div class="passage-wrapper">',
         '          <div class="passage-preview"',
         '              ng-bind-html-unsafe="passage"></div>',
@@ -563,7 +542,7 @@ exports.directive = [
       ].join('');
     }
 
-    function helpText() {
+    function instructions() {
       return [
         '<p class="help" ng-show="mode === \'editor\'">',
         '  Add content to window below by typing or cut and pasting. Text formatting will ',
@@ -577,15 +556,60 @@ exports.directive = [
         '  selection.',
         '</p>',
         '<p class="help" ng-show="mode === \'correct-answers\'">',
-        '  Indicate the correct answers by clicking on the appropriate selection. You can ',
-        '  unselect a correct answer by clicking again. (*or you can clear all correct answers ',
-        '  by clicking the clear answers button.*- see my question about adding this feature)',
+        '  Indicate the correct answers by clicking on the appropriate selection. A correct ',
+        '  answer may be unselected by clicking again. Use the \'clear correct answers\' button ',
+        '  to clear out all correct answers. ',
         '</p>',
         '<p class="help" ng-show="mode === \'add-formatting\'">',
-        '  To format text, please add HTML tags to content. For the selections to properly work ',
-        '  make sure, that the order and structure of the cs-token span tags is kept intact.',
+        '  To format text, add HTML tags to content window below. For selections to work ',
+        '  properly, be sure that the order and structure of the cs-token span tags is kept ',
+        '  intact. ',
         '</p>'
       ].join('\n');
+    }
+
+    function autoSelectButtons(){
+      return [
+        '<div ',
+        '  ng-show="mode === \'answers\'"',
+        '  >',
+        '  <span class="help">Auto-select (optional): </span>',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickWords()"',
+        '      ng-disabled="mode !== \'answers\'"',
+        '      >Words',
+        '  </button>',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickSentences()"',
+        '      ng-disabled="mode !== \'answers\'"',
+        '      >Sentences',
+        '  </button>',
+        '</div>'
+      ].join('');
+    }
+
+    function clearSelectionButtons(){
+      return [
+        '<div class="clear-selection-buttons"',
+        '  ng-show="mode === \'answers\' || mode === \'correct-answers\'"',
+        '  >',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickClearSelections()"',
+        '      ng-hide="mode === \'correct-answers\'"',
+        '      ng-disabled="mode !== \'answers\'"',
+        '      >Clear Selections',
+        '  </button>',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickClearCorrectAnswers()"',
+        '      ng-disabled="mode !== \'answers\' && mode !== \'correct-answers\'"',
+        '      >Clear Correct Answers',
+        '  </button>',
+        '</div>'
+      ].join('');
     }
 
     function modeButtons() {

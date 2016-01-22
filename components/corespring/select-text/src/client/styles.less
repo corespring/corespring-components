@@ -27,14 +27,6 @@
 
 .corespring-select-text-config {
 
-  .modal-lg {
-    width: 670px;
-  }
-
-  .confirm-passage-editing-buttons {
-    text-align: right;
-  }
-
   .btn-correct-answers {
     &.active {
       background-color: @correct-answer-bg-color;
@@ -46,6 +38,42 @@
       margin-left: 10px;
       margin-right: 10px;
     }
+  }
+
+  .clear-selection-buttons {
+    text-align: right;
+  }
+
+  .confirm-passage-editing-buttons {
+    text-align: right;
+  }
+
+  .editor-wrapper {
+    margin-top: 20px;
+
+    .plain-text-area {
+      width: 600px;
+      height: 200px;
+    }
+  }
+
+  .help {
+    font-style: italic;
+  }
+
+  .mini-wiggi-wiz {
+    .wiggi-wiz-editable {
+      padding: 5px 5px 0;
+      margin-bottom: 3px;
+    }
+  }
+
+  .modal-lg {
+    width: 670px;
+  }
+
+  .row {
+    margin-bottom: 10px;
   }
 
   .xhtml-editor {
@@ -62,26 +90,8 @@
     max-height: 350px;
     overflow: auto;
   }
-  .row {
-    margin-bottom: 10px;
-  }
-  .mini-wiggi-wiz {
-    .wiggi-wiz-editable {
-      padding: 5px 5px 0;
-      margin-bottom: 3px;
-    }
-  }
-  .help {
-    font-style: italic;
-  }
-  .editor-wrapper {
-    margin-top: 20px;
 
-    .plain-text-area {
-      width: 600px;
-      height: 200px;
-    }
-  }
+
   .editor-wrapper,
   .answers-config-wrapper {
     position: relative;
@@ -112,12 +122,10 @@
       }
     }
   }
-  .instructions {
-    text-align: center;
-  }
+
   .passage-wrapper {
     position: relative;
-    margin-top:10px;
+    margin-top: 10px;
 
     .history-buttons {
       position: absolute;
