@@ -48,6 +48,7 @@ exports.directive = [
       scope.onClickSetCorrectAnswers = onClickSetCorrectAnswers;
       scope.onClickWords = onClickWords;
       scope.onClickSentences = onClickSentences;
+      scope.onClickClearCorrectAnswers = onClickClearCorrectAnswers;
       scope.onClickClearSelections = onClickClearSelections;
       scope.onFormattedPassageChanged = onFormattedPassageChanged;
       scope.onPasteIntoContentArea = onPasteIntoContentArea;
@@ -127,12 +128,11 @@ exports.directive = [
         }
       }
 
+
       function onClickToken() {
         var $token = $(this);
 
         if (scope.mode === 'answers') {
-          $token.removeClass('selected');
-          $token.removeClass('choice');
           $token.prop('outerHTML', $token.html());
           updatePassage();
           updateChoices();
@@ -305,7 +305,19 @@ exports.directive = [
       }
 
       function onClickClearSelections() {
-        initPassageFromCleanPassage();
+        $theContent.find(csTokenSelector()).each(function (index, token) {
+          $(token).prop('outerHTML', $(token).html());
+        });
+        updatePassage();
+        updateChoices();
+        updateCorrectResponses();
+      }
+
+      function onClickClearCorrectAnswers() {
+        $theContent.find(csTokenSelector()).each(function (index, token) {
+          $(token).removeClass('selected');
+        });
+        updateCorrectResponses();
       }
 
       function setMode(mode) {
@@ -495,6 +507,12 @@ exports.directive = [
         '              ng-click="onClickClearSelections()"',
         '              ng-disabled="mode !== \'answers\'"',
         '              >Clear Selections',
+        '          </button>',
+        '          <button type="button"',
+        '              class="btn btn-default"',
+        '              ng-click="onClickClearCorrectAnswers()"',
+        '              ng-disabled="mode !== \'answers\'"',
+        '              >Clear Correct Answers',
         '          </button>',
         '        </div>',
         '        <div class="passage-wrapper">',
