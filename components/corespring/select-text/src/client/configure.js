@@ -148,13 +148,17 @@ exports.directive = [
         }
       }
 
-      function updatePassage() {
+      function getCleanPassage() {
         var $cleanPassage = $theContent.clone();
-        $cleanPassage.find(csTokenSelector()).each(function(index, token) {
+        $cleanPassage.find(csTokenSelector()).each(function (index, token) {
           $(token).removeClass('choice');
           $(token).removeClass('selected');
         });
-        scope.model.config.passage = $cleanPassage.prop('innerHTML');
+        return $cleanPassage.prop('innerHTML');
+      }
+
+      function updatePassage() {
+        scope.passage = scope.model.config.passage = $theContent.prop('innerHTML');
       }
 
       function updateChoices() {
@@ -208,8 +212,7 @@ exports.directive = [
         passageNeedsUpdate = false;
         scope.model.choices = [];
         scope.fullModel.correctResponse.value = [];
-        scope.model.config.passage = plainTextToHtml(removeHtmlTags(scope.model.cleanPassage));
-        scope.passage = scope.model.config.passage;
+        scope.passage = scope.model.config.passage = plainTextToHtml(removeHtmlTags(scope.model.cleanPassage));
         $theContent.html(scope.passage);
       }
 
@@ -285,7 +288,7 @@ exports.directive = [
       }
 
       function onClickAddFormatting() {
-        scope.formattedPassage = scope.passage;
+        scope.formattedPassage = getCleanPassage();
         setMode('add-formatting');
       }
 
@@ -332,6 +335,7 @@ exports.directive = [
       }
 
       function classifyTokens(collection, tokenClass) {
+        console.log("classifyTokens", collection, tokenClass);
         $theContent.find(csTokenSelector()).each(function(index, choice) {
           if (_.contains(collection, index)) {
             $(choice).addClass(tokenClass);
@@ -378,14 +382,14 @@ exports.directive = [
 
       function onFormattedPassageChanged(event, editor) {
         //console.log("onFormattedPassageChanged", event[1].getValue());
-        scope.model.config.passage = event[1].getValue();
+        scope.passage = scope.model.config.passage = event[1].getValue();
       }
 
     }
 
     function template() {
       return [
-          '<div class="cs-select-text-config">',
+          '<div class="corespring-select-text-config">',
           '  <div navigator-panel="Design">',
           designPanel(),
           '  </div>',
@@ -401,57 +405,17 @@ exports.directive = [
         '<div class="container-fluid">',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <p>',
-        '        In Select Text Evidence, a student is asked to highlight evidence to support their evidence.',
-        '      </p>',
-        '      <p class="intro">',
-        '        Highlight words, sentences or a combination to make available for selection by students',
-        '        Use the auto-select button to make all words or sentences available for selection',
-        '      </p>',
+        introText(),
         '    </div>',
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <div class="btn-group toggles"',
-        '          role="group">',
-        '        <button type="button"',
-        '            class="btn btn-default"',
-        '            ng-class="{active: mode === \'editor\'}"',
-        '            ng-click="onClickEditContent()"',
-        '            >Edit Content',
-        '        </button>',
-        '        <button type="button"',
-        '            class="btn btn-default"',
-        '            ng-class="{active: mode === \'answers\'}"',
-        '            ng-click="onClickSetAnswers()"',
-        '            ng-show="mode === \'editor\'"',
-        '            ng-disabled="model.cleanPassage === \'\'"',
-        '            >Set Selections',
-        '        </button>',
-        '        <button type="button"',
-        '            class="btn btn-default"',
-        '            ng-class="{active: mode === \'answers\'}"',
-        '            ng-click="onClickSetAnswers()"',
-        '            ng-hide="mode === \'editor\'"',
-        '            >Set Selections',
-        '        </button>',
-        '        <button type="button"',
-        '            class="btn btn-default btn-correct-answers"',
-        '            ng-class="{active: mode === \'correct-answers\'}"',
-        '            ng-click="onClickSetCorrectAnswers()"',
-        '            ng-hide="mode === \'editor\'"',
-        '            ng-disabled="model.choices.length === 0"',
-        '            >Set Correct Answers',
-        '        </button>',
-        '        <button type="button"',
-        '            class="btn btn-default"',
-        '            ng-class="{active: mode === \'add-formatting\'}"',
-        '            ng-click="onClickAddFormatting()"',
-        '            ng-hide="mode === \'editor\'"',
-        '            ng-disabled="fullModel.correctResponse.value.length === 0"',
-        '            >Add Formatting',
-        '        </button>',
-        '      </div>',
+        modeButtons(),
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        helpText(),
         '    </div>',
         '  </div>',
         '  <div class="row">',
@@ -482,13 +446,13 @@ exports.directive = [
         '      </div>',
         '      <div ng-show="mode === \'add-formatting\'">',
         '        <div ',
-        '          class="xhtml-pane"',
-        '          ng-model="formattedPassage"',
-        '          ui-ace="{mode: \'html\', useWrapMode : true, onChange: onFormattedPassageChanged}"',
-        '          ></div>',
-        '        <div ',
         '          class="xhtml-preview"',
         '          ng-bind-html-unsafe="formattedPassage"',
+        '          ></div>',
+        '        <div ',
+        '          class="xhtml-editor"',
+        '          ng-model="formattedPassage"',
+        '          ui-ace="{mode: \'html\', useWrapMode : true, onChange: onFormattedPassageChanged}"',
         '          ></div>',
         '      </div>',
         '      <div class="answers-config-wrapper"',
@@ -509,7 +473,9 @@ exports.directive = [
         '            </p>',
         '          </div>',
         '        </div>',
-        '        <div>',
+        '        <div ',
+        '          ng-hide="mode === \'correct-answers\'"',
+        '          >',
         '          <span class="help">Auto-select (optional): </span>',
         '          <button type="button"',
         '              class="btn btn-default"',
@@ -539,8 +505,7 @@ exports.directive = [
         '            <tr>',
         '              <td class="text-label">Selections available:</td>',
         '              <td><span class="badge choices-count">{{model.choices.length}}</span></td>',
-        '            </tr>',
-        '            <tr>',
+        '              <td class="spacer"> </td>',
         '              <td class="text-label">Correct answers:</td>',
         '              <td><span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span></td>',
         '            </tr>',
@@ -563,33 +528,113 @@ exports.directive = [
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <div feedback-panel>',
-        '        <div feedback-selector',
-        '            fb-sel-label="If correct, show"',
-        '            fb-sel-class="correct"',
-        '            fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-        '            fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-        '            fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
-        '        </div>',
-        '        <div feedback-selector',
-        '            fb-sel-label="If partially correct, show"',
-        '            fb-sel-class="partial"',
-        '            fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-        '            fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-        '            fb-sel-default-feedback="{{defaultPartialFeedback}}">',
-        '        </div>',
-        '        <div feedback-selector',
-        '            fb-sel-label="If incorrect, show"',
-        '            fb-sel-class="incorrect"',
-        '            fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-        '            fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-        '            fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
-        '        </div>',
-        '      </div>',
+        feedbackPanel(),
         '    </div>',
         '  </div>',
         '</div>'
-    ].join('');
+      ].join('');
+    }
+
+    function introText() {
+      return [
+        '<p>',
+        '  In Select Text Evidence, a student is asked to highlight evidence to support ',
+        '  their evidence.',
+        '</p>'
+      ].join('');
+    }
+
+    function helpText() {
+      return [
+        '<p class="help" ng-show="mode === \'editor\'">',
+        '  Add content to window below by typing or cut and pasting. Text formatting will ',
+        '  not be retained. To format text, please set your selections, then use the ',
+        '  formatting button to add HTML tags to content.',
+        '</p>',
+        '<p class="help" ng-show="mode === \'answers\'">',
+        '  Highlight words, sentences, or a combination to make available for selection by ',
+        '  students. Click again to unselect or use the clear selections button to start over. ',
+        '  Optionally, use the auto-select button to make all words or sentences available for ',
+        '  selection.',
+        '</p>',
+        '<p class="help" ng-show="mode === \'correct-answers\'">',
+        '  Indicate the correct answers by clicking on the appropriate selection. You can ',
+        '  unselect a correct answer by clicking again. (*or you can clear all correct answers ',
+        '  by clicking the clear answers button.*- see my question about adding this feature)',
+        '</p>',
+        '<p class="help" ng-show="mode === \'add-formatting\'">',
+        '  To format text, please add HTML tags to content. For the selections to properly work ',
+        '  make sure, that the order and structure of the cs-token span tags is kept intact.',
+        '</p>'
+      ].join('\n');
+    }
+
+    function modeButtons() {
+      return [
+        '<div class="btn-group content" role="group">',
+        '  <button type="button"',
+        '      class="btn btn-default"',
+        '      ng-class="{active: mode === \'editor\'}"',
+        '      ng-click="onClickEditContent()"',
+        '      >Edit Content',
+        '  </button>',
+        '</div>',
+        '<div class="btn-group selections" role="group">',
+        '  <button type="button"',
+        '      class="btn btn-default"',
+        '      ng-class="{active: mode === \'answers\'}"',
+        '      ng-click="onClickSetAnswers()"',
+        '      ng-disabled="model.cleanPassage === \'\'"',
+        '      >Set Selections',
+        '  </button>',
+        '  <button type="button"',
+        '      class="btn btn-default btn-correct-answers"',
+        '      ng-class="{active: mode === \'correct-answers\'}"',
+        '      ng-click="onClickSetCorrectAnswers()"',
+        '      ng-hide="mode === \'editor\'"',
+        '      ng-disabled="model.choices.length === 0"',
+        '      >Set Correct Answers',
+        '  </button>',
+        '</div>',
+        '<div class="btn-group formatting" role="group">',
+        '  <button type="button"',
+        '      class="btn btn-default"',
+        '      ng-class="{active: mode === \'add-formatting\'}"',
+        '      ng-click="onClickAddFormatting()"',
+        '      ng-disabled="fullModel.correctResponse.value.length === 0"',
+        '      >Add Formatting',
+        '  </button>',
+        '</div>'
+      ].join('');
+    }
+
+
+    function feedbackPanel() {
+      return [
+        '<div feedback-panel>',
+        '  <div feedback-selector',
+        '      fb-sel-label="If correct, show"',
+        '      fb-sel-class="correct"',
+        '      fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
+        '      fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
+        '      fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
+        '  </div>',
+        '  <div feedback-selector',
+        '      fb-sel-label="If partially correct, show"',
+        '      fb-sel-class="partial"',
+        '      fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
+        '      fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
+        '      fb-sel-default-feedback="{{defaultPartialFeedback}}">',
+        '  </div>',
+        '  <div feedback-selector',
+        '      fb-sel-label="If incorrect, show"',
+        '      fb-sel-class="incorrect"',
+        '      fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
+        '      fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
+        '      fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
+        '  </div>',
+        '</div>'
+      ].join('');
     }
   }
 ];

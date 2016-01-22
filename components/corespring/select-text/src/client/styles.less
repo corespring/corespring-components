@@ -25,7 +25,12 @@
   }
 }
 
-.cs-select-text-config {
+.corespring-select-text-config {
+
+  .modal-lg {
+    width: 670px;
+  }
+
   .confirm-passage-editing-buttons {
     text-align: right;
   }
@@ -35,12 +40,27 @@
       background-color: @correct-answer-bg-color;
     }
   }
-  .xhtml-pane {
+
+  .btn-group {
+    &.selections {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  .xhtml-editor {
     width: 600px;
     height: 200px;
+    margin-top: 20px;
   }
+
   .xhtml-preview {
-    width: 600px;
+    padding: 5px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    background-clip: padding-box;
+    max-height: 350px;
+    overflow: auto;
   }
   .row {
     margin-bottom: 10px;
@@ -166,16 +186,10 @@
       &.text-label {
         text-align: right;
       }
-    }
 
-    .btn {
-      width: 170px;
-    }
-
-    .help-small {
-      font-style: italic;
-      font-size: 80%;
-      color: #999;
+      &.spacer {
+        width: 20px;
+      }
     }
 
     .badge {
