@@ -2,12 +2,12 @@
 @answer-color: rgba(171, 171, 171, 0.6);
 @choice-color-opaque: rgb(187, 187, 187);
 @choice-color: rgba(187, 187, 187, 0.5);
-@incorrect-answer-bg-color-opaque: rgb(255, 255, 204);
-@incorrect-answer-bg-color: rgba(255, 255, 204, 0.6);
-@incorrect-answer-border-color: rgb(238, 162, 54);
 @correct-answer-bg-color-opaque: rgb(204, 255, 204);
 @correct-answer-bg-color: rgba(204, 255, 204, 0.6);
 @correct-answer-border-color: rgb(46, 102, 44);
+@incorrect-answer-bg-color-opaque: rgb(255, 255, 204);
+@incorrect-answer-bg-color: rgba(255, 255, 204, 0.6);
+@incorrect-answer-border-color: rgb(238, 162, 54);
 
 .corespring-select-text {
 
@@ -24,12 +24,18 @@
       }
     }
   }
-
-  .action-buttons {
-    text-align:right;
-    padding-top: 4px;
-    .answers-toggle {
-      margin: 1px 6px 2px;
+  .action-buttons-holder {
+    text-align: right;
+    .action-buttons {
+      border: 1px dashed #ccc;
+      border-radius: 5px 5px 0 0;
+      border-bottom-color: white;
+      border-bottom-style: solid;
+      display: inline-block;
+      padding: 4px;
+      .answers-toggle {
+        margin: 1px 6px 2px;
+      }
     }
   }
 
@@ -38,7 +44,7 @@
     border-radius: 5px 0 5px 5px;
     border: 1px dashed #ccc;
     clear: both;
-    margin: 15px 0 15px 0;
+    margin: 0 0 15px 0;
     padding: 5px;
 
     .cs-token {
@@ -51,17 +57,14 @@
         margin: -1px;
       }
       &.selected {
-        background-color: @answer-color-opaque;
         background-color: @answer-color;
       }
       &.correct {
-        background-color: @correct-answer-bg-color-opaque;
         background-color: @correct-answer-bg-color;
         border: 1px solid @correct-answer-border-color;
         margin: -1px;
       }
       &.incorrect {
-        background-color: @incorrect-answer-bg-color-opaque;
         background-color: @incorrect-answer-bg-color;
         border: 1px solid @incorrect-answer-border-color;
         margin: -1px;
@@ -81,16 +84,15 @@
           margin: 0;
         }
         &.choice {
-          cursor: pointer;
           background-color: transparent;
           border: 1px dotted @answer-color-opaque;
+          cursor: pointer;
           margin: -1px;
         }
         &.selected {
-          cursor: pointer;
-          background-color: @answer-color-opaque;
           background-color: @answer-color;
           border: 0;
+          cursor: pointer;
           margin: 0;
         }
       }
@@ -112,10 +114,9 @@
         }
         &.selected {
           &:hover {
-            background-color: @answer-color-opaque;
             background-color: @answer-color;
-            cursor: pointer;
             border: 1px dotted @answer-color-opaque;
+            cursor: pointer;
             margin: -1px;
           }
         }
@@ -138,7 +139,6 @@
         }
         &.selected {
           &:hover {
-            background-color: @answer-color-opaque;
             background-color: @answer-color;
             border: 0;
             margin: 0;
@@ -146,14 +146,12 @@
         }
         &.correct,
         &.correct:hover {
-          background-color: @correct-answer-bg-color-opaque;
           background-color: @correct-answer-bg-color;
           border: 1px solid @correct-answer-border-color;
           margin: -1px;
         }
         &.incorrect,
         &.incorrect:hover {
-          background-color: @incorrect-answer-bg-color-opaque;
           background-color: @incorrect-answer-bg-color;
           border: 1px solid @incorrect-answer-border-color;
           margin: -1px;
@@ -249,6 +247,7 @@
   .answers-config-wrapper {
     position: relative;
     z-index: 1;
+
     .confirm-action {
       position: absolute;
       top: 0;
@@ -256,22 +255,22 @@
       left: 0;
       right: 0;
       z-index: 2;
-      background-color: rgb(255, 255, 255);
       background-color: rgba(255, 255, 255, 0.7);
+
       .action-description {
-        background-color: rgb(255, 255, 255);
-        padding: 5px 15px;
-        border-radius: 6px;
-        background-clip: padding-box;
-        width: 50%;
+        -ms-transform: translate(-50%, -50%);
         -webkit-box-shadow: 0 0 10px #bbb;
+        -webkit-transform: translate(-50%, -50%);
+        background-clip: padding-box;
+        background-color: rgb(255, 255, 255);
+        border-radius: 6px;
         box-shadow: 0 0 10px #bbb;
+        left: 50%;
+        padding: 5px 15px;
         position: absolute;
         top: 50%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
+        width: 50%;
       }
     }
   }
@@ -288,15 +287,16 @@
     }
 
     .passage-preview {
-      padding: 5px;
-      border: 1px dashed #ccc;
-      border-radius: 5px;
       background-clip: padding-box;
+      border-radius: 5px;
+      border: 1px dashed #ccc;
       max-height: 350px;
       overflow: auto;
+      padding: 5px;
+
       .cs-token {
-        cursor: pointer;
         -webkit-transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
+        cursor: pointer;
         transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
         &:hover, &.choice {
           background-color: transparent;
@@ -316,15 +316,14 @@
             margin: 0;
           }
           &.choice {
-            cursor: pointer;
             border: 1px dotted @answer-color-opaque;
+            cursor: pointer;
             margin: -1px;
           }
           &.selected {
-            cursor: pointer;
-            background-color: @answer-color-opaque;
             background-color: @answer-color-opaque;
             border: 0;
+            cursor: pointer;
             margin: 0;
           }
         }
@@ -354,59 +353,58 @@
     }
 
     .badge {
-      line-height: 30px;
-      width: 30px;
-      border-radius: 100%;
-      padding: 0;
-      margin-left: 5px;
-      color: #555;
       -webkit-transition: all 0.3s ease-in-out;
+      border-radius: 100%;
+      color: #555;
+      line-height: 30px;
+      margin-left: 5px;
+      padding: 0;
       transition: all 0.3s ease-in-out;
+      width: 30px;
+
       &.choices-count {
-        background-color: @answer-color-opaque;
         background-color: @answer-color;
       }
       &.answers-count {
-        background-color: @correct-answer-bg-color-opaque;
         background-color: @correct-answer-bg-color;
       }
       &.grow-add {
-        -webkit-transform: none;
         -ms-transform: none;
+        -webkit-transform: none;
         transform: none;
         &.grow-add-active {
-          -webkit-transform: scale(1.5);
           -ms-transform: scale(1.5);
+          -webkit-transform: scale(1.5);
           transform: scale(1.5);
         }
       }
       &.grow-remove {
-        -webkit-transform: scale(1.5);
         -ms-transform: scale(1.5);
+        -webkit-transform: scale(1.5);
         transform: scale(1.5);
         &.grow-remove-active {
-          -webkit-transform: none;
           -ms-transform: none;
+          -webkit-transform: none;
           transform: none;
         }
       }
       &.shrink-add {
-        -webkit-transform: none;
         -ms-transform: none;
+        -webkit-transform: none;
         transform: none;
         &.shrink-add-active {
-          -webkit-transform: scale(0.5);
           -ms-transform: scale(0.5);
+          -webkit-transform: scale(0.5);
           transform: scale(0.5);
         }
       }
       &.shrink-remove {
-        -webkit-transform: scale(0.5);
         -ms-transform: scale(0.5);
+        -webkit-transform: scale(0.5);
         transform: scale(0.5);
         &.shrink-remove-active {
-          -webkit-transform: none;
           -ms-transform: none;
+          -webkit-transform: none;
           transform: none;
         }
       }
@@ -414,10 +412,11 @@
   }
   .max-selections {
     clear: both;
+
     .form-control {
-      width: 50px;
       padding-left: 6px;
       padding-right: 6px;
+      width: 50px;
     }
   }
 }

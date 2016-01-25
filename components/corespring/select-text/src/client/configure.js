@@ -463,7 +463,7 @@ exports.directive = [
         '            class="plain-text-area"',
         '            ng-model="model.cleanPassage"',
         '            ng-paste="onPasteIntoContentArea($event)"',
-        '            ></textarea>',
+        '        ></textarea>',
         '      </div>',
         '      <div ng-show="mode === \'add-formatting\'">',
         '        <div ',
