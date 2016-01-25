@@ -140,6 +140,10 @@ exports.directive = [
           scope.correctClass = response.correctClass;
         }
 
+        if (response.warningClass) {
+          scope.warningClass = response.warningClass;
+        }
+
         if (getNestedProperty(response, 'feedback.choices') && response.correctResponse) {
           var correctResponses = _.filter(response.feedback.choices, function(choice) {
             return choice.correct === true;
@@ -160,6 +164,7 @@ exports.directive = [
       function reset() {
         scope.feedback = undefined;
         scope.correctClass = undefined;
+        scope.warningClass = undefined;
         scope.userChoices = [];
         $theContent.find('.cs-token').attr('class', 'cs-token');
         scope.answersVisible = false;
@@ -203,15 +208,24 @@ exports.directive = [
 
     function template() {
       return [
-        '<div class="cs-select-text">',
-        '  <div class="select-text-label" ng-bind-html-unsafe="model.config.label"></div>',
+        '<div class="corespring-select-text">',
         '  <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
         '    <span cs-undo-button-with-model ng-show="editable"></span>',
         '    <span cs-start-over-button-with-model ng-show="editable"></span>',
-        '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ng-click="toggleAnswersVisibility()"><i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> <span ng-show="!answersVisible">Show</span><span ng-show="answersVisible">Hide</span> Correct Answer(s)</button>',
+        '    <button ',
+        '       class="btn btn-success answers-toggle" ',
+        '       ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ',
+        '       ng-click="toggleAnswersVisibility()">',
+        '      <i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> ',
+        '      <span ng-show="!answersVisible">Show</span>',
+        '      <span ng-show="answersVisible">Hide</span> Correct Answer(s)',
+        '    </button>',
         '  </div>',
-        '  <div class="select-text-content specific" ng-class="{blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
-        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '  <div class="select-text-content" ',
+        '     ng-class="{blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
+        '     ng-bind-html-unsafe="model.config.passage"',
+        '  ></div>',
+        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}} {{warningClass}}"></div>',
         '</div>'
       ].join("\n");
     }

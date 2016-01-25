@@ -6,6 +6,54 @@ var keys = feedbackUtils.keys;
 exports.keys = keys;
 exports.createOutcome = createOutcome;
 
+function createOutcome(question, answer, settings) {
+  if(_.isEmpty(question)){
+    throw new Error('question should never be empty');
+  }
+
+  if (_.isEmpty(answer)) {
+    return {
+      correctness: 'incorrect',
+      correctClass: 'warning',
+      warningClass: 'answer-expected',
+      score: 0,
+      feedback: settings.showFeedback ? {
+        emptyAnswer: true,
+        message: keys.DEFAULT_WARNING_FEEDBACK
+      } : null
+    };
+  }
+
+  var res = {
+    correctness: isCorrect(question, answer) ? "correct" :
+      (question.allowPartialScoring ?
+        (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : 'incorrect'),
+    score: score(question, answer)
+  };
+
+  var selectionCount = answer.length;
+
+  if (settings.showFeedback) {
+    res.feedback = buildFeedback(question, answer);
+    res.outcome = [];
+    res.comments = question.comments;
+
+    if (isCorrect(question, answer)) {
+      res.outcome.push("responsesCorrect");
+    } else if (areSomeSelectedCorrect(question, answer)) {
+      res.outcome.push("responsesPartiallyIncorrect");
+    } else if (!areAllCorrectSelected(question, answer)) {
+      res.outcome.push("responsesIncorrect");
+    }
+
+    res.correctResponse = question.correctResponse.value;
+    res.correctClass = isCorrect(question, answer) ? 'correct' : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : "incorrect");
+  }
+
+  return res;
+}
+
+
 function buildFeedback(question, answer) {
   var feedback = {
     choices: []
@@ -91,45 +139,3 @@ function score(question, answer) {
   return scoreValue;
 }
 
-function createOutcome(question, answer, settings) {
-  if(!question || _.isEmpty(question)){
-    throw new Error('question should never be empty or null');
-  }
-
-  if (!answer) {
-    return {
-      correctness: 'incorrect', 
-      score: 0,
-      feedback: settings.showFeedback ? buildFeedback(question, answer) : null,
-      outcome: [],
-      correctClass: settings.showFeedback ? 'incorrect' : null
-    };
-  }
-
-  var res = {
-    correctness: isCorrect(question, answer) ? "correct" : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : 'incorrect'),
-    score: score(question, answer)
-  };
-
-  var selectionCount = answer.length;
-
-  if (settings.showFeedback) {
-    res.feedback = buildFeedback(question, answer);
-    res.outcome = [];
-    res.comments = question.comments;
-
-    if (isCorrect(question, answer)) {
-      res.outcome.push("responsesCorrect");
-    } else if (areSomeSelectedCorrect(question, answer)) {
-      res.outcome.push("responsesPartiallyIncorrect");
-    } else if (!areAllCorrectSelected(question, answer)) {
-      res.outcome.push("responsesIncorrect");
-    }
-
-    res.correctResponse = question.correctResponse.value;
-
-    res.correctClass = isCorrect(question, answer) ? 'correct' : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : "incorrect");
-  }
-
-  return res;
-}

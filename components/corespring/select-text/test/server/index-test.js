@@ -28,13 +28,13 @@ describe('select text server logic', function() {
     var outcome = server.createOutcome(_.cloneDeep(component), null, helper.settings(true, true, true));
     var expected = {
       correctness: "incorrect",
+      correctClass: "warning",
+      warningClass: "answer-expected",
       score: 0,
       feedback: {
-        choices: [],
-        message: "Good try but that is not the correct answer."
-      },
-      outcome: [],
-      correctClass: "incorrect"
+        emptyAnswer: true,
+        message: "You did not enter a response."
+      }
     };
     outcome.should.eql(expected);
   });
