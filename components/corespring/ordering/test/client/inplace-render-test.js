@@ -1,8 +1,8 @@
-describe('corespring:ordering-in-place', function () {
+describe('corespring:ordering-in-place', function() {
 
-  var MockComponentRegister = function () {
+  var MockComponentRegister = function() {
     this.elements = {};
-    this.registerComponent = function (id, bridge) {
+    this.registerComponent = function(id, bridge) {
       this.elements[id] = bridge;
     };
   };
@@ -23,10 +23,22 @@ describe('corespring:ordering-in-place', function () {
           "shuffle": false
         },
         "choices": [
-          {"label": "A", "id": "a"},
-          {"label": "B", "id": "b"},
-          {"label": "C", "id": "c"},
-          {"label": "D", "id": "d"}
+          {
+            "label": "A",
+            "id": "a"
+          },
+          {
+            "label": "B",
+            "id": "b"
+          },
+          {
+            "label": "C",
+            "id": "c"
+          },
+          {
+            "label": "D",
+            "id": "d"
+          }
         ]
       }
     }
@@ -34,23 +46,29 @@ describe('corespring:ordering-in-place', function () {
 
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(function () {
-    module(function ($provide) {
+  beforeEach(function() {
+    module(function($provide) {
       verticalModel = _.cloneDeep(testModelTemplate);
-      horizontalModel = _.merge(_.cloneDeep(verticalModel), {data: {model: {config: {choiceAreaLayout: "horizontal"}}}});
-      $provide.value('DragAndDropTemplates', {
-        choiceArea: function () {
+      horizontalModel = _.merge(_.cloneDeep(verticalModel), {
+        data: {
+          model: {
+            config: {
+              choiceAreaLayout: "horizontal"
+            }
+          }
         }
       });
-      $provide.value('$modal', function () {
+      $provide.value('DragAndDropTemplates', {
+        choiceArea: function() {}
       });
+      $provide.value('$modal', function() {});
     });
   });
 
-  beforeEach(inject(function ($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope) {
     container = new MockComponentRegister();
 
-    $rootScope.$on('registerComponent', function (event, id, obj) {
+    $rootScope.$on('registerComponent', function(event, id, obj) {
       container.registerComponent(id, obj);
     });
 
@@ -74,54 +92,56 @@ describe('corespring:ordering-in-place', function () {
     scope.$digest();
   }
 
-  it('defaults to inplace ordering', function () {
+  it('defaults to inplace ordering', function() {
     setModelAndDigest(verticalModel);
     expect($(element).find('.view-ordering').length).toBeGreaterThan(0);
   });
 
-  describe('inplace ordering', function () {
-    it('constructs', function () {
+  describe('inplace ordering', function() {
+    it('constructs', function() {
       expect(element.html()).toBeDefined();
     });
 
-    it('feedback is hidden', function () {
+    it('feedback is hidden', function() {
       setModelAndDigest(verticalModel);
       expect($(element).find('.panel.feedback').length).toBe(0);
     });
 
-    it('order of choices are restored from existing session', function () {
+    it('order of choices are restored from existing session', function() {
       var modelWithSession = _.cloneDeep(verticalModel);
+      var answers = ['c', 'a', 'b', 'd'];
       modelWithSession.session = {
-        answers: {
-          choices: ['c', 'a', 'b', 'd']
-        }
+        answers: _.clone(answers)
       };
       setModelAndDigest(modelWithSession);
-      expect(_.pluck(element.scope().local.choices, 'id')).toEqual(modelWithSession.session.answers.choices);
+      expect(_.pluck(element.scope().local.choices, 'id')).toEqual(answers);
     });
 
-    describe('vertical layout', function () {
-      it('renders by default', function () {
+    describe('vertical layout', function() {
+      it('renders by default', function() {
         setModelAndDigest(verticalModel);
         expect($(element).find('.vertical').length).toBeGreaterThan(0);
         expect($(element).find('.horizontal').length).toBe(0);
       });
 
-      it('correct answer and show correct answer button are not visible before submitting', function () {
+      it('correct answer and show correct answer button are not visible before submitting', function() {
         setModelAndDigest(verticalModel);
         expect($(element).find('.show-correct-button').hasClass('ng-hide')).toBe(true);
         expect($(element).find('.correct-answer').hasClass('ng-hide')).toBe(true);
       });
 
-      it('show correct answer button are visible after submitting', function () {
+      it('show correct answer button are visible after submitting', function() {
         setModelAndDigest(verticalModel);
 
-        container.elements['1'].setResponse({correctness: 'incorrect', correctResponse: ['a', 'b', 'c', 'd']});
+        container.elements['1'].setResponse({
+          correctness: 'incorrect',
+          correctResponse: ['a', 'b', 'c', 'd']
+        });
         scope.$digest();
         expect($(element).find('.show-correct-button').hasClass('ng-hide')).toBe(false);
       });
 
-      it('correct answer is visible after submitting an incorrect answer', function () {
+      it('correct answer is visible after submitting an incorrect answer', function() {
         setModelAndDigest(horizontalModel);
         setResponseAndDigest({
           correctness: 'incorrect',
@@ -133,9 +153,9 @@ describe('corespring:ordering-in-place', function () {
 
     });
 
-    describe('horizontal layout', function () {
+    describe('horizontal layout', function() {
 
-      it('renders', function () {
+      it('renders', function() {
         container.elements['1'].setDataAndSession(horizontalModel);
 
         scope.$digest();
@@ -143,21 +163,24 @@ describe('corespring:ordering-in-place', function () {
         expect($(element).find('.vertical').length).toBe(0);
       });
 
-      it('correct answer and show correct answer button are not visible before submitting', function () {
+      it('correct answer and show correct answer button are not visible before submitting', function() {
         container.elements['1'].setDataAndSession(horizontalModel);
         scope.$digest();
         expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(true);
       });
 
-      it('show correct answer button are visible after submitting', function () {
+      it('show correct answer button are visible after submitting', function() {
         container.elements['1'].setDataAndSession(horizontalModel);
         scope.$digest();
-        container.elements['1'].setResponse({correctness: 'incorrect', correctResponse: ['a', 'b', 'c', 'd']});
+        container.elements['1'].setResponse({
+          correctness: 'incorrect',
+          correctResponse: ['a', 'b', 'c', 'd']
+        });
         scope.$digest();
         expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(false);
       });
 
-      it('correct answer is visible after submitting an incorrect answer', function () {
+      it('correct answer is visible after submitting an incorrect answer', function() {
         setModelAndDigest(horizontalModel);
         setResponseAndDigest({
           correctness: 'incorrect',
@@ -167,43 +190,67 @@ describe('corespring:ordering-in-place', function () {
         expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(false);
       });
 
-      it('correct answer is not visible after submitting a correct answer', function () {
+      it('correct answer is not visible after submitting a correct answer', function() {
         setModelAndDigest(horizontalModel);
-        setResponseAndDigest({correctness: 'correct', correctClass: 'correct', correctResponse: ['a', 'b', 'c', 'd']});
+        setResponseAndDigest({
+          correctness: 'correct',
+          correctClass: 'correct',
+          correctResponse: ['a', 'b', 'c', 'd']
+        });
         expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(true);
       });
 
     });
 
-    describe('feedback', function () {
-      it('correct feedback is shown after submitting the correct answer', function () {
+    describe('feedback', function() {
+      it('correct feedback is shown after submitting the correct answer', function() {
         setModelAndDigest(verticalModel);
-        setResponseAndDigest({correctness: 'correct', correctClass: 'correct', feedback: "Correct"});
+        setResponseAndDigest({
+          correctness: 'correct',
+          correctClass: 'correct',
+          feedback: "Correct"
+        });
         expect($(element).find('.panel.feedback.correct').length).toBe(1);
         expect(element.scope().feedback).toBe("Correct");
       });
-      it('incorrect feedback is shown after submitting an incorrect answer', function () {
+      it('incorrect feedback is shown after submitting an incorrect answer', function() {
         setModelAndDigest(verticalModel);
-        setResponseAndDigest({correctness: 'incorrect', correctClass: 'incorrect', feedback: "Incorrect"});
+        setResponseAndDigest({
+          correctness: 'incorrect',
+          correctClass: 'incorrect',
+          feedback: "Incorrect"
+        });
         expect($(element).find('.panel.feedback.incorrect').length).toBe(1);
         expect(element.scope().feedback).toBe("Incorrect");
       });
-      it('partial feedback is shown after submitting a partially correct answer', function () {
+      it('partial feedback is shown after submitting a partially correct answer', function() {
         setModelAndDigest(verticalModel);
-        setResponseAndDigest({correctness: 'incorrect', correctClass: 'partial', feedback: "Partial"});
+        setResponseAndDigest({
+          correctness: 'incorrect',
+          correctClass: 'partial',
+          feedback: "Partial"
+        });
         expect($(element).find('.panel.feedback.partial').length).toBe(1);
         expect(element.scope().feedback).toBe("Partial");
       });
     });
 
-    describe('evaluate', function () {
-      it('incorrect choices are marked as incorrect', function () {
+    describe('evaluate', function() {
+      it('incorrect choices are marked as incorrect', function() {
         setModelAndDigest(verticalModel);
         scope.local.choices = [
-          {id: 'a'},
-          {id: 'b'},
-          {id: 'c'},
-          {id: 'd'}
+          {
+            id: 'a'
+          },
+          {
+            id: 'b'
+          },
+          {
+            id: 'c'
+          },
+          {
+            id: 'd'
+          }
         ];
         setResponseAndDigest({
           correctness: 'incorrect',
@@ -213,13 +260,21 @@ describe('corespring:ordering-in-place', function () {
         });
         expect(element.find('.container-border .incorrect').length).toBe(2);
       });
-      it('correct choices are marked as correct', function () {
+      it('correct choices are marked as correct', function() {
         setModelAndDigest(verticalModel);
         scope.local.choices = [
-          {id: 'a'},
-          {id: 'b'},
-          {id: 'c'},
-          {id: 'd'}
+          {
+            id: 'a'
+          },
+          {
+            id: 'b'
+          },
+          {
+            id: 'c'
+          },
+          {
+            id: 'd'
+          }
         ];
         setResponseAndDigest({
           correctness: 'incorrect',
@@ -231,9 +286,9 @@ describe('corespring:ordering-in-place', function () {
       });
     });
 
-    describe('undo / start over', function () {
+    describe('undo / start over', function() {
 
-      it('undo undoes the last step', function () {
+      it('undo undoes the last step', function() {
         setModelAndDigest(verticalModel);
         scope.local.choices = ['c', 'a', 'b', 'd'];
         scope.$digest();
@@ -244,7 +299,7 @@ describe('corespring:ordering-in-place', function () {
         expect(scope.local.choices).toEqual(['c', 'a', 'b', 'd']);
       });
 
-      it('undo undoes multiple steps', function () {
+      it('undo undoes multiple steps', function() {
         setModelAndDigest(verticalModel);
         scope.local.choices = ['c', 'a', 'b', 'd'];
         scope.$digest();
@@ -268,7 +323,7 @@ describe('corespring:ordering-in-place', function () {
         expect(scope.local.choices).toEqual(['c', 'a', 'b', 'd']);
       });
 
-      it('undo has no effect if there has been no choice swapping', function () {
+      it('undo has no effect if there has been no choice swapping', function() {
         setModelAndDigest(verticalModel);
         scope.$digest();
         var originalChoices = scope.local.choices;
@@ -277,7 +332,7 @@ describe('corespring:ordering-in-place', function () {
         expect(_.pluck(scope.local.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       });
 
-      it('start over restores original state', function () {
+      it('start over restores original state', function() {
         setModelAndDigest(verticalModel);
         scope.$digest();
         var originalChoices = scope.local.choices;
@@ -298,36 +353,41 @@ describe('corespring:ordering-in-place', function () {
 
     });
   });
-  describe('isAnswerEmpty', function () {
-    it('should return false initially', function () {
+  describe('isAnswerEmpty', function() {
+    it('should return false initially', function() {
       setModelAndDigest(verticalModel);
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
-    it('should return false if answer is set initially', function () {
+    it('should return false if answer is set initially', function() {
       verticalModel.session = {
-        answers: ['a','b','c','d']
+        answers: ['a', 'b', 'c', 'd']
       };
       setModelAndDigest(verticalModel);
       rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
-    it('should return false if answer is selected', function () {
+    it('should return false if answer is selected', function() {
       setModelAndDigest(verticalModel);
       scope.local.choices.push(scope.local.choices.shift());
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
 
-  describe('instructor data', function () {
-    it('should call setResponse with correct response', function () {
+  describe('instructor data', function() {
+    it('should call setResponse with correct response', function() {
       spyOn(container.elements['1'], 'setResponse');
       setModelAndDigest(verticalModel);
-      setInstructorDataAndDigest({correctResponse: ['a', 'c', 'b', 'd']});
-      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({ correctness: 'correct', correctResponse: [ 'a', 'c', 'b', 'd' ] });
+      setInstructorDataAndDigest({
+        correctResponse: ['a', 'c', 'b', 'd']
+      });
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'correct',
+        correctResponse: ['a', 'c', 'b', 'd']
+      });
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
