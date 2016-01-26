@@ -537,7 +537,7 @@ exports.directive = [
       return [
         '<p>',
         '  In Select Text Evidence, a student is asked to highlight evidence to support ',
-        '  their evidence.',
+        '  their answer.',
         '</p>'
       ].join('');
     }
