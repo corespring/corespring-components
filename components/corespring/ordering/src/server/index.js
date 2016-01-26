@@ -13,21 +13,7 @@ exports.createOutcome = function(question, answer, settings) {
   }
 
   var correctResponse = _.isEmpty(question.correctResponse) ? _.pluck(question.model.choices, 'id') : question.correctResponse;
-
-  var checkForInteraction = _.has(answer, 'didInteract');
-
-  var userInteracted = answer ? answer.didInteract : null;
-
-  // The answer will be an object if it's an In Place Ordering item
-  answer = _.isArray(answer) ? answer : (answer ? answer.choices : null);
-
-  var isEmptyAnswer = _.isEmpty(answer) || _.every(answer, function(a) {
-    return _.isEmpty(a);
-  });
-
-  if (checkForInteraction) {
-    isEmptyAnswer = userInteracted ? isEmptyAnswer : (_.isEqual(answer, correctResponse) ? false : true);
-  }
+  var isEmptyAnswer = _.isEmpty(answer);
 
   if (isEmptyAnswer) {
     return {
@@ -51,7 +37,6 @@ exports.createOutcome = function(question, answer, settings) {
   var isPartiallyCorrect = numberOfCorrectAnswers > 0;
 
   var score = 0;
-
   if (isCorrect) {
     score = 1;
   } else if (question.allowPartialScoring) {
