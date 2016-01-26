@@ -104,7 +104,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           });
         } else {
           var choices = [];
-          _.each(answers.choices, function (a) {
+          _.each(answers, function (a) {
             var choice = _.find(scope.local.choices, function (c) {
               return c.id === a;
             });
@@ -155,10 +155,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
             };
           } else {
             return {
-              answers: {
-                choices: _.pluck(scope.local.choices, 'id'),
-                didInteract: scope.userHasInteracted
-              }
+              answers: scope.userHasInteracted ? _.pluck(scope.local.choices, 'id') : []
             };
           }
         },
@@ -175,6 +172,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.top = {};
           scope.userHasInteracted = false;
           scope.initUndo();
+        },
+
+        isAnswerEmpty: function() {
+          if(scope.model.config.placementType === 'placement') {
+            return _.isEmpty(this.getSession().answers);
+          } else {
+            return false;
+          }
         },
 
         setInstructorData: function (data) {
