@@ -25,9 +25,7 @@ function createOutcome(question, answer, settings) {
   }
 
   var res = {
-    correctness: isCorrect(question, answer) ? "correct" :
-      (question.allowPartialScoring ?
-        (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : 'incorrect'),
+    correctness: correctness(question, answer),
     score: score(question, answer)
   };
 
@@ -47,7 +45,7 @@ function createOutcome(question, answer, settings) {
     }
 
     res.correctResponse = question.correctResponse.value;
-    res.correctClass = isCorrect(question, answer) ? 'correct' : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect') : "incorrect");
+    res.correctClass = res.correctness;
   }
 
   return res;
@@ -121,6 +119,16 @@ function isPartiallyCorrect(question, answer) {
   }
   var partiallyCorrect = areSomeSelectedCorrect(question, answer);
   return partiallyCorrect;
+}
+
+function correctness(question, answer) {
+  if (isCorrect(question, answer)) {
+    return "correct";
+  }
+  if (isPartiallyCorrect(question, answer)) {
+    return "partial";
+  }
+  return "incorrect";
 }
 
 function score(question, answer) {

@@ -24,31 +24,97 @@ var component = {
 
 describe('select text server logic', function() {
 
-  it('should return an incorrect outcome if answer is empty', function() {
-    var outcome = server.createOutcome(_.cloneDeep(component), null, helper.settings(true, true, true));
-    var expected = {
-      correctness: "incorrect",
-      correctClass: "warning",
-      warningClass: "answer-expected",
-      score: 0,
-      feedback: {
-        emptyAnswer: true,
-        message: "You did not enter a response."
-      }
-    };
-    outcome.should.eql(expected);
+  describe('when answer is empty', function() {
+    var comp;
+    var expected;
+
+    beforeEach(function() {
+      comp = _.cloneDeep(component);
+      expected = {
+        correctness: "incorrect",
+        correctClass: "warning",
+        warningClass: "answer-expected",
+        score: 0,
+        feedback: {
+          emptyAnswer: true,
+          message: "You did not enter a response."
+        }
+      };
+    });
+
+    it('should return an incorrect outcome if answer is null', function() {
+      var outcome = server.createOutcome(comp, null, helper.settings(true, true, true));
+      outcome.should.eql(expected);
+    });
+
+    it('should return an incorrect outcome if answer is empty array', function() {
+      var outcome = server.createOutcome(comp, [], helper.settings(true, true, true));
+      outcome.should.eql(expected);
+    });
+
   });
 
-  it('should respond with correct true in answer is correct', function() {
-    var response = server.createOutcome(_.cloneDeep(component), [0, 2, 4], helper.settings(true, true, true));
-    response.correctness.should.eql('correct');
-    response.score.should.eql(1);
+  describe('when answer is correct', function() {
+    var response;
+
+    beforeEach(function(){
+      response = server.createOutcome(_.cloneDeep(component), [0, 2, 4], helper.settings(true, true, true));
+    });
+
+    it('should respond with correct', function() {
+      response.correctness.should.eql('correct');
+    });
+
+    it('should return a score of 1', function() {
+      response.score.should.eql(1);
+    });
+
   });
 
-  it('should respond with incorrect in answer is incorrect', function() {
-    var response = server.createOutcome(_.cloneDeep(component), [1, 2], helper.settings(false, true, true));
-    response.correctness.should.eql('incorrect');
-    response.score.should.eql(0);
+  describe('when answer is incorrect',function(){
+    var response;
+
+    beforeEach(function(){
+      response = server.createOutcome(_.cloneDeep(component), [1], helper.settings(true, true, true));
+    });
+
+    it('should respond with incorrect ', function() {
+      response.correctness.should.eql('incorrect');
+    });
+
+    it('should respond with score 0 ', function() {
+      response.score.should.eql(0);
+    });
+  });
+
+  describe('when some answers are correct',function(){
+    var response;
+
+    beforeEach(function(){
+      response = server.createOutcome(_.cloneDeep(component), [0], helper.settings(true, true, true));
+    });
+
+    it('should respond with partial', function() {
+      response.correctness.should.eql('partial');
+    });
+
+    it('should respond with score 0', function() {
+      response.score.should.eql(0);
+    });
+
+    it('should calculate partial score when allowPartialScoring is true', function() {
+      var comp = _.cloneDeep(component);
+      comp.allowPartialScoring = true;
+      comp.partialScoring = [{
+        numberOfCorrect: 1,
+        scorePercentage: 30
+      }];
+
+      var response = server.createOutcome(comp, [0], helper.settings(false, true, true));
+      response.correctness.should.eql('partial');
+      response.score.should.eql(0.3);
+    });
+
   });
 
   it('should have incorrect selections in the feedback', function() {
