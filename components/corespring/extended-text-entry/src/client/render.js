@@ -6,12 +6,59 @@ var main = [
     var PIXELS_PER_COL = 7;
     var BASE_COL_PIXELS = 16;
 
+    function MathInputWiggiFeatureDef() {
+      this.name = 'mathinput';
+      this.attributeName = 'mathinput';
+      this.iconclass = 'fa fa-calculator';
+      this.insertInline = true;
+      this.addToEditor = '<div mathinput-holder></div>';
+      this.compile = true;
+      this.draggable = true;
+      this.initialise = function($node, replaceWith) {
+        var content = $node.html() || '';
+        var newNode = $('<div mathinput-holder><math-input style="min-width: 50px;" editable="true" keypad-type="\'basic\'" ng-model="expr" expression="\''+content+'\'"></math-input></div>');
+        return replaceWith(newNode);
+      };
+
+      this.registerChangeNotifier = function(notifyEditorOfChange, node) {
+        var scope = $(node).find('.math-input.ng-scope').data('$scope');
+        scope && scope.$watch('ngModel', function(a,b) {
+          if (a && a !== b) {
+            notifyEditorOfChange();
+          }
+        });
+      };
+
+      this.onClick = function($node, $nodeScope, editor) {
+        $node.find('.mq').find('textarea').blur();
+        setTimeout(function() {
+          $node.find('.mq').find('textarea').focus();
+        }, 1);
+      };
+
+      this.getMarkUp = function($node, $scope) {
+        return '<span mathinput>' + ($scope.expr || '') + '</span>';
+      };
+    }
+
     return {
       scope: {},
       restrict: 'AE',
       link: link,
+      controller: function($scope) {
+        $scope.extraFeatures = {
+          definitions: [{
+            type: 'group',
+            name: 'math',
+            buttons: [new MathInputWiggiFeatureDef()]
+          }]
+        };
+
+      },
       template: template()
     };
+
+
 
     function link(scope, element, attrs) {
 
@@ -20,6 +67,7 @@ var main = [
       }
 
       scope.editable = true;
+
       scope.containerBridge = {
 
         setDataAndSession: function (dataAndSession) {
@@ -94,8 +142,8 @@ var main = [
       return [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder">',
-        '    <wiggi-wiz ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
-        '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" />',
+        '    <wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
+        '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
         '    </wiggi-wiz>',
         '  </div>',
         '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
@@ -104,5 +152,25 @@ var main = [
     }
   }];
 
+var mathinputHolder = ['$log', function($log) {
+  function link($scope, $element) {
+    $element.addClass('mathinput-holder');
+  }
+
+  return {
+    restrict: 'A',
+    link: link
+  };
+}];
+
 exports.framework = 'angular';
-exports.directive = main;
+exports.directives = [
+  {
+    directive: main
+  },
+  {
+    name: 'mathinputHolder',
+    directive: mathinputHolder
+  }
+];
+
