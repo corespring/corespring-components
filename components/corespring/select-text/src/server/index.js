@@ -54,17 +54,9 @@ function createOutcome(question, answer, settings) {
 
 function buildFeedback(correctness, question, answer) {
   var feedback = {
-    choices: []
+    choices: [],
+    message: feedbackUtils.makeFeedback(question.feedback, correctness)
   };
-  var fbSelector = correctness + "Feedback";
-  var fbTypeSelector = fbSelector + "Type";
-  var feedbackType = question.feedback && question.feedback[fbTypeSelector] ? question.feedback[fbTypeSelector] : "default";
-
-  if (feedbackType === "custom") {
-    feedback.message = question.feedback[fbSelector];
-  } else if (feedbackType === "default") {
-    feedback.message = feedbackUtils.defaults[correctness];
-  }
 
   _.each(answer, function(answerIndex) {
     feedback.choices.push({
