@@ -28,10 +28,10 @@ describe('inplace ordering', function() {
         .waitFor('.view-ordering');
     });
 
-    it('correct answer results in correct feedback', function(done) {
+    it('submitting without interaction results in warning feedback', function(done) {
       browser
         .submitItem()
-        .waitFor('.feedback.correct')
+        .waitFor('.feedback.warning')
         .call(done);
     });
 
