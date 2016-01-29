@@ -7,7 +7,7 @@ exports.keys = keys;
 exports.createOutcome = createOutcome;
 
 function createOutcome(question, answer, settings) {
-  if(_.isEmpty(question)){
+  if (_.isEmpty(question)) {
     throw new Error('question should never be empty');
   }
 
@@ -32,15 +32,15 @@ function createOutcome(question, answer, settings) {
   var selectionCount = answer.length;
 
   if (settings.showFeedback) {
-    res.feedback = buildFeedback(question, answer);
+    res.feedback = buildFeedback(res.correctness, question, answer);
     res.outcome = [];
     res.comments = question.comments;
 
-    if (isCorrect(question, answer)) {
+    if (res.correctness === 'correct') {
       res.outcome.push("responsesCorrect");
-    } else if (areSomeSelectedCorrect(question, answer)) {
+    } else if (res.correctness === 'partial') {
       res.outcome.push("responsesPartiallyIncorrect");
-    } else if (!areAllCorrectSelected(question, answer)) {
+    } else {
       res.outcome.push("responsesIncorrect");
     }
 
@@ -52,19 +52,11 @@ function createOutcome(question, answer, settings) {
 }
 
 
-function buildFeedback(question, answer) {
+function buildFeedback(correctness, question, answer) {
   var feedback = {
-    choices: []
+    choices: [],
+    message: feedbackUtils.makeFeedback(question.feedback, correctness)
   };
-  var fbSelector = isCorrect(question, answer) ? "correctFeedback" : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? "partialFeedback" : "incorrectFeedback") : "incorrectFeedback");
-  var fbTypeSelector = fbSelector + "Type";
-  var feedbackType = question.feedback && question.feedback[fbTypeSelector] ? question.feedback[fbTypeSelector] : "default";
-
-  if (feedbackType === "custom") {
-    feedback.message = question.feedback[fbSelector];
-  } else if (feedbackType === "default") {
-    feedback.message = isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK : (question.allowPartialScoring ? (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK) : keys.DEFAULT_INCORRECT_FEEDBACK);
-  }
 
   _.each(answer, function(answerIndex) {
     feedback.choices.push({
@@ -146,4 +138,3 @@ function score(question, answer) {
   }
   return scoreValue;
 }
-
