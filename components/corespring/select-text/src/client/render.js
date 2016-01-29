@@ -224,7 +224,7 @@ exports.directive = [
         '    </div>',
         '  </div>',
         '  <div class="select-text-content" ',
-        '     ng-class="{blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
+        '     ng-class="{editable: editable, blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': editable && model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
         '     ng-bind-html-unsafe="model.config.passage"',
         '  ></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}} {{warningClass}}"></div>',

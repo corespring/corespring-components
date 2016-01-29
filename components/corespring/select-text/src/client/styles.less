@@ -19,6 +19,8 @@
           display: none;
         }
         .select-text-content {
+          padding: 10px;
+          line-height: 1.5;
           margin-top: 5px;
         }
       }
@@ -45,133 +47,45 @@
     border: 1px dashed #ccc;
     clear: both;
     margin: 0 0 15px 0;
-    padding: 5px;
+    padding: 10px;
+    line-height: 1.5;
 
     .cs-token {
-      cursor: pointer;
-      -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
-      transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
-      &:hover {
-        background-color: transparent;
-        border: 1px dotted @answer-color-opaque;
-        margin: -1px;
-      }
+      cursor: default;
+
       &.selected {
-        background-color: @answer-color;
+        background-color: #CCCCCC;
       }
       &.correct {
-        background-color: @correct-answer-bg-color;
-        border: 1px solid @correct-answer-border-color;
-        margin: -1px;
+        color: white;
+        background-color: #3C763D;
       }
       &.incorrect {
-        background-color: @incorrect-answer-bg-color;
-        border: 1px solid @incorrect-answer-border-color;
-        margin: -1px;
+        color: white;
+        background-color: #EEA236;
       }
       &.correct-not-selected {
-        background-color: #fff;
-        border: 1px solid @correct-answer-border-color;
-        margin: -1px;
+        background-color: #C1E1AC;
       }
     }
-    &.specific {
+
+    &.editable {
       .cs-token {
-        cursor: text;
+        cursor: pointer;
+        -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+        transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+
         &:hover {
-          background-color: transparent;
-          border: 0;
-          margin: 0;
-        }
-        &.choice {
-          background-color: transparent;
-          border: 1px dotted @answer-color-opaque;
-          cursor: pointer;
-          margin: -1px;
-        }
-        &.selected {
-          background-color: @answer-color;
-          border: 0;
-          cursor: pointer;
-          margin: 0;
+          background-color: #eee;
         }
       }
     }
+
     &.no-more-selections {
-      .cs-token {
-        cursor: text;
-        &:hover {
-          background-color: transparent;
-          border: 0;
-          margin: 0;
-        }
-        &.choice {
-          &:hover {
-            background-color: transparent;
-            border: 1px dotted @answer-color-opaque;
-            margin: -1px;
-          }
-        }
-        &.selected {
-          &:hover {
-            background-color: @answer-color;
-            border: 1px dotted @answer-color-opaque;
-            cursor: pointer;
-            margin: -1px;
-          }
-        }
-      }
     }
     &.blocked {
-      .cs-token {
-        cursor: default;
-        &:hover {
-          background-color: transparent;
-          border: 0;
-          margin: 0;
-        }
-        &.choice {
-          &:hover {
-            background-color: transparent;
-            border: 1px dotted @answer-color-opaque;
-            margin: -1px;
-          }
-        }
-        &.selected {
-          &:hover {
-            background-color: @answer-color;
-            border: 0;
-            margin: 0;
-          }
-        }
-        &.correct,
-        &.correct:hover {
-          background-color: @correct-answer-bg-color;
-          border: 1px solid @correct-answer-border-color;
-          margin: -1px;
-        }
-        &.incorrect,
-        &.incorrect:hover {
-          background-color: @incorrect-answer-bg-color;
-          border: 1px solid @incorrect-answer-border-color;
-          margin: -1px;
-        }
-        &.correct-not-selected,
-        &.correct-not-selected:hover {
-          background-color: #fff;
-          border: 1px solid @correct-answer-border-color;
-          margin: -1px;
-        }
-      }
     }
     &.show-answers {
-      color: #ccc;
-      .cs-token {
-        color: #ccc;
-        &.selected, &.correct, &.incorrect, &.correct-not-selected {
-          color: #333;
-        }
-      }
     }
   }
 }
@@ -241,7 +155,6 @@
     max-height: 350px;
     overflow: auto;
   }
-
 
   .editor-wrapper,
   .answers-config-wrapper {
