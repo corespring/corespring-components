@@ -181,6 +181,8 @@ describe('select text server logic', function () {
           "incorrectFeedbackType": "none"
         };
       });
+
+      /* jshint expr:true */
       it('should return no feedback when everything is correct', function () {
         var response = server.createOutcome(comp, [0, 2, 4], helper.settings(true, true, true));
         expect(response.feedback.message).to.not.exist;
