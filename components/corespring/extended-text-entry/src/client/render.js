@@ -11,12 +11,13 @@ var main = [
       this.attributeName = 'mathinput';
       this.iconclass = 'fa fa-calculator';
       this.insertInline = true;
-      this.addToEditor = '<div mathinput-holder></div>';
+      this.addToEditor = '<div mathinput-holder-init></div>';
       this.compile = true;
       this.draggable = true;
       this.initialise = function($node, replaceWith) {
         var content = $node.html() || '';
-        var newNode = $('<div mathinput-holder><math-input style="min-width: 50px;" editable="true" keypad-type="\'basic\'" ng-model="expr" expression="\''+content+'\'"></math-input></div>');
+        var isNew = $node[0].outerHTML.indexOf('mathinput-holder-init') >= 0;
+        var newNode = $('<div mathinput-holder><math-input  style="min-width: 50px;" editable="true" keypad-auto-open="'+isNew+'" keypad-type="\'basic\'" ng-model="expr" expression="\''+content+'\'"></math-input></div>');
         return replaceWith(newNode);
       };
 
