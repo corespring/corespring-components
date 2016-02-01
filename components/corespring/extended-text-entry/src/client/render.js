@@ -1,5 +1,5 @@
 var main = [
-  function () {
+  function() {
 
     var MAX_WIDTH = 555;
     var PIXELS_PER_ROW = 20;
@@ -17,17 +17,19 @@ var main = [
       this.initialise = function($node, replaceWith) {
         var content = $node.html() || '';
         var isNew = $node[0].outerHTML.indexOf('mathinput-holder-init') >= 0;
-        var newNode = $('<div mathinput-holder><math-input  style="min-width: 50px;" editable="true" keypad-auto-open="'+isNew+'" keypad-type="\'basic\'" ng-model="expr" expression="\''+content+'\'"></math-input></div>');
+        var newNode = $('<div mathinput-holder><math-input  style="min-width: 50px;" editable="true" keypad-auto-open="' + isNew + '" keypad-type="\'basic\'" ng-model="expr" expression="\'' + content + '\'"></math-input></div>');
         return replaceWith(newNode);
       };
 
       this.registerChangeNotifier = function(notifyEditorOfChange, node) {
         var scope = node.scope().$$childHead;
-        scope && scope.$watch('ngModel', function(a,b) {
-          if (a && a !== b) {
-            notifyEditorOfChange();
-          }
-        });
+        if (scope) {
+          scope.$watch('ngModel', function(a, b) {
+            if (a && a !== b) {
+              notifyEditorOfChange();
+            }
+          });
+        }
       };
 
       this.onClick = function($node, $nodeScope, editor) {
@@ -60,7 +62,6 @@ var main = [
     };
 
 
-
     function link(scope, element, attrs) {
 
       function editable() {
@@ -71,7 +72,7 @@ var main = [
 
       scope.containerBridge = {
 
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {answers: ''};
           scope.answer = scope.session.answers;
@@ -80,14 +81,14 @@ var main = [
 
           var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
           var height = scope.rows * PIXELS_PER_ROW + 'px';
-          element.find('.wiggi-wiz').css({ width: width });
+          element.find('.wiggi-wiz').css({width: width});
           editable().css({
             height: height,
             width: width
           });
         },
 
-        getSession: function () {
+        getSession: function() {
           return {
             answers: scope.answer
           };
@@ -99,7 +100,7 @@ var main = [
         },
 
         // sets the server's response
-        setResponse: function (response) {
+        setResponse: function(response) {
           console.log("Setting Response for extended text entry:");
           console.log(response);
 
@@ -109,21 +110,21 @@ var main = [
           scope.received = true;
         },
 
-        setMode: function (newMode) {
+        setMode: function(newMode) {
         },
 
-        reset: function () {
+        reset: function() {
           scope.answer = undefined;
           scope.response = undefined;
           scope.received = false;
         },
 
-        isAnswerEmpty: function () {
+        isAnswerEmpty: function() {
           return _.isEmpty(this.getSession().answers);
         },
 
-        answerChangedHandler: function (callback) {
-          scope.$watch("answer", function (newValue, oldValue) {
+        answerChangedHandler: function(callback) {
+          scope.$watch("answer", function(newValue, oldValue) {
             if (newValue !== oldValue) {
               callback();
             }
