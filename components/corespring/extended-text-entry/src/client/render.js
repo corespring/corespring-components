@@ -21,7 +21,7 @@ var main = [
       };
 
       this.registerChangeNotifier = function(notifyEditorOfChange, node) {
-        var scope = $(node).find('.math-input.ng-scope').data('$scope');
+        var scope = node.scope().$$childHead;
         scope && scope.$watch('ngModel', function(a,b) {
           if (a && a !== b) {
             notifyEditorOfChange();
