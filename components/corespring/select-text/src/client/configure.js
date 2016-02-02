@@ -6,13 +6,11 @@ exports.directive = [
   '$document',
   '$timeout',
   '$window',
-  'ChoiceTemplates',
   function(
     $animate,
     $document,
     $timeout,
-    $window,
-    ChoiceTemplates
+    $window
   ) {
 
     return {
@@ -25,8 +23,6 @@ exports.directive = [
 
     function link(scope, $element, $attrs) {
 
-      ChoiceTemplates.extendScope(scope, 'corespring-select-text');
-
       var blastOptions = {
         aria: false,
         customClass: 'cst'
@@ -38,6 +34,7 @@ exports.directive = [
       var disableContentChangeWarning = false;
 
       scope.mode = 'editor';
+      scope.numberOfCorrectResponses = 0;
       scope.showPassageEditingWarning = false;
 
       scope.onClickClearCorrectAnswers = onClickClearCorrectAnswers;
@@ -179,7 +176,7 @@ exports.directive = [
       }
 
       function updatePartialScoring(){
-        scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
+        scope.numberOfCorrectResponses = getNumberOfCorrectResponses();
       }
 
       function getIdsOfSelectedTokensInContent(){
@@ -445,7 +442,7 @@ exports.directive = [
           designPanel(),
           '  </div>',
           '  <div navigator-panel="Scoring">',
-          ChoiceTemplates.scoring(),
+          partialScoring(),
           '  </div>',
           '</div>'
         ].join("");
@@ -591,7 +588,7 @@ exports.directive = [
       return [
         '<p class="help" ng-show="mode === \'editor\'">',
         '  Add content to window below by typing or cut and pasting. If you need to add ',
-        '  formatting, you’ll be able to do that later.',
+        '  formatting, you will be able to do that later.',
         '</p>',
         '<p class="help" ng-show="mode === \'answers\'">',
         '  Use the auto-select feature to make all words or sentences available for selection ',
@@ -697,32 +694,21 @@ exports.directive = [
       ].join('');
     }
 
+    function partialScoring(){
+      return [
+        '<corespring-partial-scoring-config ',
+        '   full-model="fullModel"',
+        '   number-of-correct-responses="numberOfCorrectResponses"',
+        '></corespring-partial-scoring-config>',
+      ].join('');
+    }
 
     function feedbackPanel() {
       return [
-        '<div feedback-panel>',
-        '  <div feedback-selector',
-        '      fb-sel-label="If correct, show"',
-        '      fb-sel-class="correct"',
-        '      fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-        '      fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-        '      fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
-        '  </div>',
-        '  <div feedback-selector',
-        '      fb-sel-label="If partially correct, show"',
-        '      fb-sel-class="partial"',
-        '      fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-        '      fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-        '      fb-sel-default-feedback="{{defaultPartialFeedback}}">',
-        '  </div>',
-        '  <div feedback-selector',
-        '      fb-sel-label="If incorrect, show"',
-        '      fb-sel-class="incorrect"',
-        '      fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-        '      fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-        '      fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
-        '  </div>',
-        '</div>'
+        '<corespring-feedback-config ',
+        '   full-model="fullModel"',
+        '   component-type="corespring-select-text"',
+        '></corespring-feedback-config>',
       ].join('');
     }
   }

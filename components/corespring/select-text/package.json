@@ -6,7 +6,7 @@
   "released": false,
   "libraries": [
     {
-      "name": "choice-templates",
+      "name": "feedback-config",
       "organization": "corespring",
       "scope": "editor"
     },
@@ -17,6 +17,11 @@
     {
       "name": "navigator",
       "organization": "corespring"
+    },
+    {
+      "name": "partial-scoring-config",
+      "organization": "corespring",
+      "scope": "editor"
     },
     {
       "name" : "server-shared",
