@@ -699,7 +699,7 @@ exports.directive = [
         '<corespring-partial-scoring-config ',
         '   full-model="fullModel"',
         '   number-of-correct-responses="numberOfCorrectResponses"',
-        '></corespring-partial-scoring-config>',
+        '></corespring-partial-scoring-config>'
       ].join('');
     }
 
@@ -708,7 +708,7 @@ exports.directive = [
         '<corespring-feedback-config ',
         '   full-model="fullModel"',
         '   component-type="corespring-select-text"',
-        '></corespring-feedback-config>',
+        '></corespring-feedback-config>'
       ].join('');
     }
   }
