@@ -107,7 +107,7 @@ function WeightingConfig(LogFactory) {
       '       <form class="weight-form">',
       '         <div class="weighting-item" ng-repeat="item in model">',
       '           <div class="label-cell right">',
-      '             <span class="control-label">{{item.label}} is worth</span>',
+      '             <span class="control-label"><span class="item-label" ng-bind-html="item.label"></span> is worth</span>',
       '           </div>',
       '           <div class="input-cell">',
       '             <div class="input-group">',
