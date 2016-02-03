@@ -367,12 +367,8 @@ function main(
         '<div class="container-fluid" ng-click="deactivate()">',
         introduction(),
         '  <div class="row choices-and-answers">',
-        '    <div class="col-xs-6">',
-        choices(),
-        '    </div>',
-        '    <div class="col-xs-6">',
         answerAreas(),
-        '    </div>',
+        choices(),
         '  </div>',
         feedback(),
         '</div>'
