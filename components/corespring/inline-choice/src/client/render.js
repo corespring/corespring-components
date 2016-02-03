@@ -215,7 +215,6 @@ main = [
         '  <span feedback-popover="response" viewport="#{{playerId}}">',
         '    <span class="dropdown" dropdown>',
         '      <span class="btn dropdown-toggle" ng-class="{initial: !selected}" dropdown-toggle ng-disabled="!editable">',
-        '        <span ng-hide="selected"></span>',
         '        <div style="height: 0px; overflow: hidden">',
         '          <li ng-repeat="choice in choices">',
         '            <a  ng-bind-html-unsafe="choice.label"></a>',
