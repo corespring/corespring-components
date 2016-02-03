@@ -396,11 +396,6 @@ function main(
           '      sentence, word, phrase or equation using context clues presented in the ',
           '      text that surrounds it.',
           '    </p>',
-          '    <p><i>',
-          '      The "Remove tile after placing" option removes the answer from the choice area after ',
-          '      a student places it in an answer area. <br>If you select this option on a choice, you ',
-          '      may not add it to more than one answer blank.',
-          '    </i></p>',
           '  </div>',
           '</div>'
         ].join('\n');
@@ -453,6 +448,11 @@ function main(
           '         image-service="imageService()">',
           '    </div>',
           '    <p><i class="legend">To set correct answer, drag choice to an answer blank in the problem area.</i></p>',
+          '    <p><i>',
+          '      The "Remove tile after placing" option removes the answer from the choice area after ',
+          '      a student places it in an answer area. If you select this option on a choice, you ',
+          '      may not add it to more than one answer blank.',
+          '    </i></p>',
           '  </div>',
           '</div>',
           '<div class="row">',
