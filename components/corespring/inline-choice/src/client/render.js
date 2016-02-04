@@ -221,7 +221,7 @@ main = [
         '          </li>',
         '        </div>',
         '        <span class="selected-label" ng-bind-html-unsafe="selected.label" style="display: inline-block"></span>',
-        '        <span class="caret"></span>',
+        '        <div class="caret-holder"><span class="caret"></span></div>',
         '      </span>',
         '      <i class="fa result-icon"></i>',
         '      <ul class="dropdown-menu">',
