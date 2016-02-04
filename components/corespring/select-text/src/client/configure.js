@@ -319,8 +319,12 @@ exports.directive = [
       }
 
       function onClickFormatSource() {
-        scope.model.formattedPassage = getCleanPassage();
-        setMode('format-source');
+        if(scope.mode === 'format-source'){
+          setMode('editor');
+        } else {
+          scope.model.formattedPassage = getCleanPassage();
+          setMode('format-source');
+        }
       }
 
       function onClickWords() {
@@ -653,7 +657,7 @@ exports.directive = [
     function formatSourceButton(){
       return [
         '<div class="format-source-button"',
-        '  ng-show="mode === \'editor\' && fullModel.correctResponse.value.length !== 0"',
+        '  ng-show="mode === \'editor\' || mode === \'format-source\' && fullModel.correctResponse.value.length !== 0"',
         '  >',
         '  <button type="button"',
         '      class="btn btn-default btn-sm"',
