@@ -5,6 +5,7 @@ exports.directives = [{
   directive: [
     "$compile",
     "$timeout",
+    "Msgr",
     "ChoiceTemplates",
     "ComponentImageService",
     "WiggiLinkFeatureDef",
@@ -23,6 +24,7 @@ exports.directives = [{
 function main(
   $compile,
   $timeout,
+  Msgr,
   ChoiceTemplates,
   ComponentImageService,
   WiggiLinkFeatureDef,
@@ -124,6 +126,7 @@ function main(
     scope.itemClick = itemClick;
     scope.removeAnswerArea = removeAnswerArea;
     scope.removeChoice = removeChoice;
+    scope.onDrag = onDrag;
 
     scope.$on('get-config-scope', onGetConfigScope);
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
@@ -145,6 +148,10 @@ function main(
       removeSuperfluousAnswerAreaModels();
       var fullModel = _.cloneDeep(scope.fullModel);
       return fullModel;
+    }
+
+    function onDrag(event, ui) {
+      Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
     }
 
     function getAnswer() {
@@ -283,7 +290,8 @@ function main(
     function choiceDraggableOptions(index) {
       return {
         index: index,
-        placeholder: 'keep'
+        placeholder: 'keep',
+        onDrag: 'onDrag'
       };
     }
 
