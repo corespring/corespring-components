@@ -290,6 +290,7 @@ exports.directive = [
         scope.confirmPassageEditing = function confirmPassageEditing(allow) {
           scope.showPassageEditingWarning = false;
           if (allow) {
+            initPassageFromCleanPassage();
             passageNeedsUpdate = true;
           } else {
             disableContentChangeWarning = true;
@@ -641,7 +642,7 @@ exports.directive = [
         '  <button type="button"',
         '      class="btn btn-default btn-sm"',
         '      ng-click="onClickClearSelections()"',
-        '      ng-show="model.choices.length > 0"',
+        '      ng-show="mode === \'answers\' && model.choices.length > 0"',
         '      >Clear Selections',
         '  </button>',
         '  <button type="button"',
@@ -657,7 +658,7 @@ exports.directive = [
     function formatSourceButton(){
       return [
         '<div class="format-source-button"',
-        '  ng-show="mode === \'editor\' || mode === \'format-source\' && fullModel.correctResponse.value.length !== 0"',
+        '  ng-show="(mode === \'editor\' || mode === \'format-source\') && model.cleanPassage !== \'\' && fullModel.correctResponse.value.length !== 0"',
         '  >',
         '  <button type="button"',
         '      class="btn btn-default btn-sm"',
@@ -688,7 +689,7 @@ exports.directive = [
         '      >Set Selections',
         '  </button>',
         '  <button type="button"',
-        '      class="btn btn-default btn-correct-answers"',
+        '      class="btn btn-default"',
         '      ng-class="{active: mode === \'correct-answers\'}"',
         '      ng-click="onClickSetCorrectAnswers()"',
         '      ng-hide="model.choices.length === 0"',
