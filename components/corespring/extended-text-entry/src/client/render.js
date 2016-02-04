@@ -9,7 +9,7 @@ var main = [
     function MathInputWiggiFeatureDef() {
       this.name = 'mathinput';
       this.attributeName = 'mathinput';
-      this.iconclass = 'fa fa-calculator';
+      this.iconclass = 'fa math-sum';
       this.insertInline = true;
       this.addToEditor = '<div mathinput-holder-init></div>';
       this.compile = true;
