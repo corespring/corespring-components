@@ -23,7 +23,9 @@ var main = [
 
           setDataAndSession: function(dataAndSession) {
             $scope.displayed = dataAndSession.data.model.config.displayed !== false;
-            setSrc(dataAndSession.data.id);
+            if (dataAndSession.data.id !== undefined) {
+              setSrc(dataAndSession.data.id);
+            }
           }
 
         };

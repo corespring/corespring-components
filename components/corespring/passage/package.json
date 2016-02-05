@@ -1,8 +1,7 @@
 {
   "name": "passage",
   "organization": "corespring",
-  "released": false,
   "title": "Passage",
-  "purpose" : "widget",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "released": true
 }
