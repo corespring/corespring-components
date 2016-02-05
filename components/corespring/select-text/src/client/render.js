@@ -46,6 +46,40 @@ exports.directive = [
 
       //------------------------------------------------------------------------
 
+      function setDataAndSession(dataAndSession) {
+        // log("Setting data for Select Text: ", dataAndSession);
+        scope.model = ensureModelStructure(dataAndSession.data.model);
+        scope.userChoices = [];
+        $theContent = element.find('.select-text-content');
+        bindTokenEvents();
+
+        if (dataAndSession.session && dataAndSession.session.answers) {
+          scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
+            return parseInt(answer, 10);
+          });
+        }
+
+        $timeout(initUi, 100);
+      }
+
+      function ensureModelStructure(model){
+        //legacy items have passage inside of config
+        var passage = getNestedProperty(model, 'config.passage') ||
+          getNestedProperty(model, 'passage') || '';
+
+        //legacy items are using the long class name
+        if(passage.indexOf('cs-token') >= 0){
+          model.passage = passage.replace(/cs-token/gi, 'cst');
+        }
+        return model;
+      }
+
+      function initUi() {
+        if (getNestedProperty(scope, 'model.choices')) {
+          classifyTokens(scope.model.choices, 'choice');
+        }
+        scope.undoModel.init();
+      }
 
       function getState() {
         return scope.userChoices;
@@ -61,39 +95,19 @@ exports.directive = [
         }, obj);
       }
 
-      function specificAvailability(){
-        return scope.model.config.availability === 'specific';
-      }
-
-      function classifyTokens(choices, tokenClass) {
-        var existingChoices = [];
-        var removedChoices = [];
-        var $existingChoices = $theContent.find('.' + tokenClass);
-
-        if ($existingChoices.length > 0) {
-          $existingChoices.each(function() {
-            var index = $theContent.find('.cs-token').index(this);
-            existingChoices.push(index);
-          });
-          removedChoices = _.difference(existingChoices, choices);
-          choices = _.difference(choices, existingChoices);
-        }
-        if (removedChoices.length > 0) {
-          for (var i = removedChoices.length - 1; i >= 0; i--) {
-            $theContent.find('.cs-token:eq("' + removedChoices[i] + '")').removeClass(tokenClass);
+      function classifyTokens(collection, tokenClass) {
+        $theContent.find('.cst').each(function(index,choice){
+          if(_.contains(collection, index)){
+            $(choice).addClass(tokenClass);
+          } else {
+            $(choice).removeClass(tokenClass);
           }
-        }
-        for (var j = choices.length - 1; j >= 0; j--) {
-          var $match = $theContent.find('.cs-token:eq("' + choices[j] + '"):not(.' + tokenClass + ')');
-          if ($match.length === 1) {
-            $match.addClass(tokenClass);
-          }
-        }
+        });
       }
 
       function bindTokenEvents() {
-        $theContent.off('click', '.cs-token');
-        $theContent.on('click', '.cs-token', onClickToken);
+        $theContent.off('click', '.cst');
+        $theContent.on('click', '.cst', onClickToken);
       }
 
       function onClickToken() {
@@ -101,52 +115,19 @@ exports.directive = [
           return;
         }
         var $token = $(this);
-        var index = $theContent.find('.cs-token').index($token);
+        var index = $theContent.find('.cst').index($token);
         var alreadyAnAnswer = scope.userChoices.indexOf(index) >= 0;
         var canSelectMore = scope.model.config.maxSelections === 0 ||
           scope.model.config.maxSelections > 0 &&
           scope.userChoices.length < scope.model.config.maxSelections;
 
-        if (specificAvailability()) {
-          if ($token.hasClass('choice')) {
-            if (alreadyAnAnswer) {
-              scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-            } else if (canSelectMore) {
-              scope.userChoices.push(index);
-            }
-          }
-        } else {
-          if (alreadyAnAnswer) {
-            scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
-          } else if (canSelectMore) {
-            scope.userChoices.push(index);
-          }
+        if (alreadyAnAnswer) {
+          scope.userChoices.splice(scope.userChoices.indexOf(index), 1);
+        } else if (canSelectMore) {
+          scope.userChoices.push(index);
         }
+
         scope.undoModel.remember();
-      }
-
-      function setDataAndSession(dataAndSession) {
-        // log("Setting data for Select Text: ", dataAndSession);
-        scope.model = dataAndSession.data.model;
-        scope.userChoices = [];
-        $theContent = element.find('.select-text-content');
-        bindTokenEvents();
-
-        if (dataAndSession.session && dataAndSession.session.answers) {
-          scope.userChoices = _.cloneDeep(dataAndSession.session.answers);
-          for (var i = scope.userChoices.length - 1; i >= 0; i--) {
-            scope.userChoices[i] = parseInt(scope.userChoices[i], 10);
-          }
-        }
-
-        $timeout(initUi, 100);
-      }
-
-      function initUi() {
-        if (specificAvailability() && getNestedProperty(scope, 'model.choices')) {
-          classifyTokens(scope.model.choices, 'choice');
-        }
-        scope.undoModel.init();
       }
 
       function setInstructorData(data) {
@@ -170,6 +151,10 @@ exports.directive = [
           scope.correctClass = response.correctClass;
         }
 
+        if (response.warningClass) {
+          scope.warningClass = response.warningClass;
+        }
+
         if (getNestedProperty(response, 'feedback.choices') && response.correctResponse) {
           var correctResponses = _.filter(response.feedback.choices, function(choice) {
             return choice.correct === true;
@@ -190,8 +175,9 @@ exports.directive = [
       function reset() {
         scope.feedback = undefined;
         scope.correctClass = undefined;
+        scope.warningClass = undefined;
         scope.userChoices = [];
-        $theContent.find('.cs-token').attr('class', 'cs-token');
+        $theContent.find('.cst').attr('class', 'cst');
         scope.answersVisible = false;
         initUi();
       }
@@ -233,15 +219,26 @@ exports.directive = [
 
     function template() {
       return [
-        '<div class="cs-select-text">',
-        '  <div class="select-text-label" ng-bind-html-unsafe="model.config.label"></div>',
-        '  <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
-        '    <span cs-undo-button-with-model ng-show="editable"></span>',
-        '    <span cs-start-over-button-with-model ng-show="editable"></span>',
-        '    <button class="btn btn-success answers-toggle" ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ng-click="toggleAnswersVisibility()"><i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> <span ng-show="!answersVisible">Show</span><span ng-show="answersVisible">Hide</span> Correct Answer(s)</button>',
+        '<div class="corespring-select-text">',
+        '  <div class="action-buttons-holder">',
+        '    <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
+        '      <span cs-undo-button-with-model ng-show="editable"></span>',
+        '      <span cs-start-over-button-with-model ng-show="editable"></span>',
+        '      <button ',
+        '         class="btn btn-success answers-toggle" ',
+        '         ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ',
+        '         ng-click="toggleAnswersVisibility()">',
+        '        <i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> ',
+        '        <span ng-show="!answersVisible">Show</span>',
+        '        <span ng-show="answersVisible">Hide</span> Correct Answer(s)',
+        '      </button>',
+        '    </div>',
         '  </div>',
-        '  <div class="select-text-content" ng-class="{specific: model.config.availability === \'specific\', blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ng-bind-html-unsafe="model.config.passage"></div>',
-        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '  <div class="select-text-content" ',
+        '     ng-class="{editable: editable, blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': editable && model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
+        '     ng-bind-html-unsafe="model.passage"',
+        '  ></div>',
+        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}} {{warningClass}}"></div>',
         '</div>'
       ].join("\n");
     }

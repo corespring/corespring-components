@@ -5,6 +5,7 @@ exports.directives = [{
   directive: [
     "$compile",
     "$timeout",
+    "Msgr",
     "ChoiceTemplates",
     "ComponentImageService",
     "WiggiLinkFeatureDef",
@@ -23,6 +24,7 @@ exports.directives = [{
 function main(
   $compile,
   $timeout,
+  Msgr,
   ChoiceTemplates,
   ComponentImageService,
   WiggiLinkFeatureDef,
@@ -124,6 +126,7 @@ function main(
     scope.itemClick = itemClick;
     scope.removeAnswerArea = removeAnswerArea;
     scope.removeChoice = removeChoice;
+    scope.onDrag = onDrag;
 
     scope.$on('get-config-scope', onGetConfigScope);
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
@@ -145,6 +148,10 @@ function main(
       removeSuperfluousAnswerAreaModels();
       var fullModel = _.cloneDeep(scope.fullModel);
       return fullModel;
+    }
+
+    function onDrag(event, ui) {
+      Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
     }
 
     function getAnswer() {
@@ -283,7 +290,8 @@ function main(
     function choiceDraggableOptions(index) {
       return {
         index: index,
-        placeholder: 'keep'
+        placeholder: 'keep',
+        onDrag: 'onDrag'
       };
     }
 
@@ -367,12 +375,8 @@ function main(
         '<div class="container-fluid" ng-click="deactivate()">',
         introduction(),
         '  <div class="row choices-and-answers">',
-        '    <div class="col-xs-6">',
-        choices(),
-        '    </div>',
-        '    <div class="col-xs-6">',
         answerAreas(),
-        '    </div>',
+        choices(),
         '  </div>',
         feedback(),
         '</div>'
@@ -400,11 +404,6 @@ function main(
           '      sentence, word, phrase or equation using context clues presented in the ',
           '      text that surrounds it.',
           '    </p>',
-          '    <p><i>',
-          '      The "Remove tile after placing" option removes the answer from the choice area after ',
-          '      a student places it in an answer area. <br>If you select this option on a choice, you ',
-          '      may not add it to more than one answer blank.',
-          '    </i></p>',
           '  </div>',
           '</div>'
         ].join('\n');
@@ -457,6 +456,11 @@ function main(
           '         image-service="imageService()">',
           '    </div>',
           '    <p><i class="legend">To set correct answer, drag choice to an answer blank in the problem area.</i></p>',
+          '    <p><i>',
+          '      The "Remove tile after placing" option removes the answer from the choice area after ',
+          '      a student places it in an answer area. If you select this option on a choice, you ',
+          '      may not add it to more than one answer blank.',
+          '    </i></p>',
           '  </div>',
           '</div>',
           '<div class="row">',

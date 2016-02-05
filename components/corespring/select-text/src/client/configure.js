@@ -3,12 +3,14 @@ exports.framework = 'angular';
 
 exports.directive = [
   '$animate',
+  '$document',
   '$timeout',
-  'ChoiceTemplates',
+  '$window',
   function(
     $animate,
+    $document,
     $timeout,
-    ChoiceTemplates
+    $window
   ) {
 
     return {
@@ -21,257 +23,378 @@ exports.directive = [
 
     function link(scope, $element, $attrs) {
 
-      ChoiceTemplates.extendScope(scope, 'corespring-select-text');
-
       var blastOptions = {
         aria: false,
-        customClass: 'cs-token'
+        customClass: 'cst'
       };
 
       var $theContent = null;
       var ignoreChanges = false;
-      var initialData = [];
+      var passageNeedsUpdate = false;
+      var disableContentChangeWarning = false;
 
-      scope.allowPassageEditing = true;
-      scope.mode = "editor";
-      scope.modelHistory = [];
-      scope.selectChoices = false;
+      scope.mode = 'editor';
+      scope.numberOfCorrectResponses = 0;
       scope.showPassageEditingWarning = false;
-      scope.showSelectionUnitWarning = false;
 
-      scope.allowSelectionUnitChange = allowSelectionUnitChange;
-      scope.setSelectChoices = setSelectChoices;
-      scope.confirmPassageEditing = confirmPassageEditing;
-      scope.deleteAll = deleteAll;
+      scope.onClickClearCorrectAnswers = onClickClearCorrectAnswers;
+      scope.onClickClearSelections = onClickClearSelections;
       scope.onClickEditContent = onClickEditContent;
+      scope.onClickFormatSource = onClickFormatSource;
+      scope.onClickSentences = onClickSentences;
       scope.onClickSetAnswers = onClickSetAnswers;
-      scope.revertSelectionUnitChange = denySelectionUnitChange;
-      scope.setAnswersMode = setMode('answers');
-      scope.setDeleteMode = setMode('delete');
-      scope.setEditorMode = setMode('editor');
-      scope.startOver = startOver;
-      scope.toggleSelectionUnit = toggleSelectionUnit;
-      scope.undo = undo;
+      scope.onClickSetCorrectAnswers = onClickSetCorrectAnswers;
+      scope.onClickWords = onClickWords;
+      scope.onFormattedPassageChanged = onFormattedPassageChanged;
+      scope.onPasteIntoContentArea = onPasteIntoContentArea;
 
       scope.containerBridge = {
         getModel: getModel,
         setModel: setModel
       };
 
-      scope.$watch('[fullModel.correctResponse.value,model.choices,model.config.selectionUnit,model.config.availability,model.config.passage]', handleModelChange, true);
+      scope.$watch('model.cleanPassage', watchCleanPassage);
       scope.$watch('fullModel.correctResponse.value.length', watchCorrectResponseLength);
       scope.$watch('model.choices.length', watchChoicesLength);
-      scope.$watch('model.cleanPassage', _.debounce(watchCleanPassage, 1500));
-      scope.$watch('model.config.availability', toggleSelectionMode);
       scope.$watch('model.config.maxSelections', watchMaxSelections);
 
       scope.$emit('registerConfigPanel', $attrs.id, scope.containerBridge);
 
       //-----------------------------------------------------------------------------
 
-      function setModel(model) {
-        scope.fullModel = model;
+      function getModel() {
+        var fullModel = _.cloneDeep(scope.fullModel);
+        return fullModel;
+      }
+
+      function setModel(fullModel) {
+        //we have to use the fullModel bc. the outer scope is watching it for changes
+        scope.fullModel = ensureModelStructure(fullModel);
         scope.model = scope.fullModel.model;
+        passageNeedsUpdate = _.isEmpty(scope.model.passage);
         $theContent = $element.find('.passage-preview .ng-binding');
         bindTokenEvents();
-        initialData = {
-          answers: _.cloneDeep(scope.fullModel.correctResponse.value),
-          choices: _.cloneDeep(scope.model.choices),
-          selectionUnit: scope.model.config.selectionUnit,
-          availability: scope.model.config.availability,
-          passage: scope.model.config.passage
-        };
-        scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-        scope.setEditorMode();
+        updatePartialScoring();
+        setMode('editor');
+
         $timeout(initUi, 100);
       }
 
+      function initUi() {
+        classifyTokens(scope.model.choices, 'choice');
+        classifyTokens(scope.fullModel.correctResponse.value, 'selected');
+      }
+
       function bindTokenEvents() {
-        $theContent.off('click', '.' + blastOptions.customClass);
-        $theContent.on('click', '.' + blastOptions.customClass, onClickToken);
+        $theContent.off('click');
+        $theContent.on('click', onClickText);
+        $theContent.off('click', '.cst');
+        $theContent.on('click', '.cst', onClickToken);
+      }
+
+      function onClickText(e) {
+        if (scope.mode === 'answers') {
+          if ($(e.currentTarget).is('div')) {
+            if (makeTokenFromSelection()) {
+              updatePassage();
+              updateChoices();
+              updateCorrectResponses();
+              updatePartialScoring();
+            }
+          }
+        }
+
+        function makeTokenFromSelection() {
+          var selection = $window.getSelection();
+          if (selection.isCollapsed || selection.rangeCount !== 1 || csTokenInSelection(selection)) {
+            return false;
+          }
+          var element = $('<span class="blast cst choice"/>');
+          selection.getRangeAt(0).surroundContents(element[0]);
+          return true;
+        }
+
+        function csTokenInSelection(selection) {
+          return $(selection.anchorNode.parentNode).hasClass('cst') ||
+            $(selection.focusNode.parentNode).hasClass('cst');
+        }
       }
 
       function onClickToken() {
         var $token = $(this);
-        var index = $theContent.find('.' + blastOptions.customClass).index($token);
-        var alreadySelected = scope.fullModel.correctResponse.value.indexOf(index) >= 0;
-        var alreadyAChoice = scope.model.choices.indexOf(index) >= 0;
-        if (scope.model.config.availability === "specific") {
-          if ($theContent.hasClass('select-choices')) {
-            if (alreadyAChoice) {
-              if (alreadySelected) {
-                removeCorrectResponse(index);
-              } else {
-                addCorrectResponse(index);
-              }
-            }
-          } else {
-            if (alreadyAChoice) {
-              removeChoice(index);
-              if (alreadySelected) {
-                removeCorrectResponse(index);
-              }
-            } else {
-              addChoice(index);
-            }
-          }
+
+        if (scope.mode === 'answers') {
+          removeToken($token);
+          updatePassage();
+          updateChoices();
+          updateCorrectResponses();
+          updatePartialScoring();
+        } else if (scope.mode === 'correct-answers') {
+          toggleCorrectness($token);
+          updateCorrectResponses();
+          updatePartialScoring();
+        }
+      }
+
+      function removeToken($token){
+        $token.prop('outerHTML', $token.html());
+      }
+
+      function toggleCorrectness($token){
+        if ($token.hasClass('selected')) {
+          $token.removeClass('selected');
         } else {
-          if (alreadySelected) {
-            removeCorrectResponse(index);
-          } else {
-            addCorrectResponse(index);
+          $token.addClass('selected');
+        }
+      }
+
+      function getCleanPassage() {
+        var $cleanPassage = $theContent.clone();
+        $cleanPassage.find('.cst').each(function (index, token) {
+          $(token).removeClass('blast');
+          $(token).removeClass('choice');
+          $(token).removeClass('selected');
+        });
+        return $cleanPassage.prop('innerHTML');
+      }
+
+      function updatePassage() {
+        scope.model.passage = $theContent.prop('innerHTML');
+      }
+
+      function updateChoices() {
+        scope.model.choices = getChoiceIdsFromContent();
+      }
+
+      function getChoiceIdsFromContent(){
+        var tokens = $theContent.find('.cst');
+        return _.range(tokens.length);
+      }
+
+      function updateCorrectResponses() {
+        scope.fullModel.correctResponse.value = getIdsOfSelectedTokensInContent();
+      }
+
+      function updatePartialScoring(){
+        scope.numberOfCorrectResponses = getNumberOfCorrectResponses();
+      }
+
+      function getIdsOfSelectedTokensInContent(){
+        var tokens = $theContent.find('.cst');
+        var result = [];
+        tokens.each(function(index, token) {
+          if ($(token).hasClass('selected')) {
+            result.push(index);
           }
+        });
+        return result;
+      }
+
+      function ensureModelStructure(fullModel) {
+        if (!_.isObject(fullModel.correctResponse)) {
+          fullModel.correctResponse = {};
         }
-        scope.updateNumberOfCorrectResponses(getNumberOfCorrectChoices());
-      }
-
-      function removeChoice(index) {
-        scope.model.choices.splice(
-          scope.model.choices.indexOf(index),
-          1);
-      }
-
-      function addChoice(index) {
-        scope.model.choices.push(index);
-      }
-
-      function removeCorrectResponse(index) {
-        scope.fullModel.correctResponse.value.splice(
-          scope.fullModel.correctResponse.value.indexOf(index),
-          1);
-      }
-
-      function addCorrectResponse(index) {
-        scope.fullModel.correctResponse.value.push(index);
-      }
-
-      function initUi() {
-        if (scope.model.config.availability === "specific") {
-          classifyTokens(scope.model.choices, "choice");
-          setSelectChoices(true);
+        if (!_.isArray(fullModel.correctResponse.value)) {
+          fullModel.correctResponse.value = [];
         }
-        classifyTokens(scope.fullModel.correctResponse.value, "selected");
-        if ($theContent.find('.' + blastOptions.customClass).length > 0) {
-          cleanExistingPassageHtml();
+        if (!fullModel.model) {
+          fullModel.model = {};
         }
-        if (hasAnswers()) {
-          scope.showPassageEditingWarning = true;
+
+        var model = fullModel.model;
+        if (!_.isString(model.cleanPassage)) {
+          model.cleanPassage = '';
         }
+        if (!_.isString(model.formattedPassage)) {
+          model.formattedPassage = '';
+        }
+        if (!_.isString(model.passage)) {
+          model.passage = '';
+        }
+        if (!_.isArray(model.choices)) {
+          model.choices = [];
+        }
+        if (!_.isObject(model.config)) {
+          model.config = {};
+        }
+
+        var config = model.config;
+        if (isNaN(config.maxSelections)) {
+          config.maxSelections = 0;
+        }
+
+        //legacy items might not have a cleanPassage
+        if(!model.cleanPassage && model.passage){
+          model.cleanPassage = removeHtmlTags(model.passage);
+        }
+
+        //legacy items might be using the old class name
+        if(model.passage.indexOf('cs-token') >= 0){
+          model.passage = model.passage.replace(/cs-token/gi, 'cst');
+        }
+
+        //legacy items might not have a formatted passage
+        if(!model.formattedPassage && model.passage){
+          model.formattedPassage = model.passage;
+        }
+
+        return fullModel;
+      }
+
+      function initPassageFromCleanPassage() {
+        passageNeedsUpdate = false;
+        scope.model.choices = [];
+        scope.fullModel.correctResponse.value = [];
+        updatePartialScoring();
+        scope.model.passage = plainTextToHtml(removeHtmlTags(scope.model.cleanPassage));
+        $theContent.html(scope.model.passage);
+      }
+
+      function removeHtmlTags(content) {
+        //replace p, div and h tags with double line break
+        content = content.replace(/<\/(p|div|h\d)>/gi, '\n\n');
+        //replace br tags with single line break
+        content = content.replace(/<br>/gi, '\n');
+        content = content.replace(/<br\/>/gi, '\n');
+        //remove all other tags
+        content = content.replace(/<[^\>]+>/g, '');
+        return content;
+      }
+
+      function plainTextToHtml(text) {
+        return text.replace(/\n/g, '<br>');
+      }
+
+      function getNumberOfCorrectResponses() {
+        return scope.fullModel.correctResponse.value.length;
+      }
+
+      function watchCleanPassage(newValue, oldValue) {
+        if (newValue === oldValue || oldValue === undefined) {
+          return;
+        }
+        if (disableContentChangeWarning) {
+          disableContentChangeWarning = false;
+          return;
+        }
+        if (!passageNeedsUpdate && hasAnswers()) {
+          warnAboutContentChange(oldValue);
+        } else {
+          passageNeedsUpdate = true;
+        }
+      }
+
+      function warnAboutContentChange(oldValue) {
+        scope.showPassageEditingWarning = true;
+
+        scope.confirmPassageEditing = function confirmPassageEditing(allow) {
+          scope.showPassageEditingWarning = false;
+          if (allow) {
+            initPassageFromCleanPassage();
+            passageNeedsUpdate = true;
+          } else {
+            disableContentChangeWarning = true;
+            scope.model.cleanPassage = oldValue;
+            passageNeedsUpdate = false;
+          }
+        };
+      }
+
+      function onClickEditContent() {
+        setMode('editor');
+      }
+
+      function onClickSetAnswers() {
+        if (passageNeedsUpdate) {
+          initPassageFromCleanPassage();
+        }
+        if (scope.mode === 'editor' && getNumberOfCorrectResponses() > 0) {
+          setMode('correct-answers');
+        } else {
+          setMode('answers');
+        }
+      }
+
+      function onClickSetCorrectAnswers() {
+        setMode('correct-answers');
+      }
+
+      function onClickFormatSource() {
+        if(scope.mode === 'format-source'){
+          setMode('editor');
+        } else {
+          scope.model.formattedPassage = getCleanPassage();
+          setMode('format-source');
+        }
+      }
+
+      function onClickWords() {
+        initPassageFromCleanPassage();
+        tokenize('word');
+        setMode('correct-answers');
+      }
+
+      function onClickSentences() {
+        initPassageFromCleanPassage();
+        tokenize('sentence');
+        setMode('correct-answers');
+      }
+
+      function onClickClearSelections() {
+        $theContent.find('.cst').each(function (index, token) {
+          removeToken($(token));
+        });
+        updatePassage();
+        updateChoices();
+        updateCorrectResponses();
+        updatePartialScoring();
+
+        setMode('answers');
+      }
+
+      function onClickClearCorrectAnswers() {
+        $theContent.find('.cst').each(function (index, token) {
+          $(token).removeClass('selected');
+        });
+        updateCorrectResponses();
+        updatePartialScoring();
+      }
+
+      function setMode(mode) {
+        scope.mode = mode;
       }
 
       function hasAnswers() {
         return scope.model.choices.length || scope.fullModel.correctResponse.value.length;
       }
 
-      function classifyTokens(collection, tokenClass) {
-        var $existingChoices = $theContent.find('.' + tokenClass);
-        var existingChoices = [];
-        var removedChoices = [];
-        if ($existingChoices.length > 0) {
-          $existingChoices.each(function() {
-            var index = $theContent.find('.' + blastOptions.customClass).index(this);
-            existingChoices.push(index);
-          });
-          removedChoices = _.difference(existingChoices, collection);
-          collection = _.difference(collection, existingChoices);
-        }
-        if (removedChoices.length > 0) {
-          for (var i = removedChoices.length - 1; i >= 0; i--) {
-            $theContent.find('.' + blastOptions.customClass + ':eq("' + removedChoices[i] + '")').removeClass(tokenClass);
-          }
-        }
-        for (var j = collection.length - 1; j >= 0; j--) {
-          var $match = $theContent.find('.' + blastOptions.customClass + ':eq("' + collection[j] + '")');
-          if ($match.length === 1) {
-            $match.addClass(tokenClass);
-          }
-        }
-      }
-
-      function cleanExistingPassageHtml() {
-        if (getNestedProperty(scope, 'model.config.passage')) {
-          var $cleanPassage = $theContent.clone();
-          $cleanPassage.find('span.' + blastOptions.customClass).each(function() {
-            var innerHTML = $(this).html();
-            $(this).replaceWith(innerHTML);
-          });
-          scope.model.cleanPassage = $cleanPassage.prop('innerHTML');
-        }
-      }
-
-      function getNestedProperty(obj, key) {
-        return key.split(".").reduce(function(o, x) {
-          return (typeof o === "undefined" || o === null) ? o : o[x];
-        }, obj);
-      }
-
-      function getNumberOfCorrectChoices() {
-        return getNestedProperty(scope, 'fullModel.correctResponse.value') ? scope.fullModel.correctResponse.value.length : 0;
-      }
-
-      function tokenizePassage() {
-        blastOptions.delimiter = getNestedProperty(scope, 'model.config.selectionUnit') ? scope.model.config.selectionUnit : 'word';
-
-        // Removes any existing tokens
-        $theContent.blast(false);
-        $theContent.prop('innerHTML', scope.model.cleanPassage);
-
-        // Tokenize the content
+      function tokenize(type) {
+        blastOptions.delimiter = type;
         $theContent.blast(blastOptions);
 
-        // Clean passage classes
-        $theContent.find('.' + blastOptions.customClass).attr('class', blastOptions.customClass);
-        scope.model.config.passage = $theContent.prop('innerHTML');
+        $theContent.find('.cst').each(
+          function(index, token) {
+            scope.model.choices.push(index);
+          }
+        );
 
-        // Render existing choices
-        if (scope.model.config.availability === "specific" && getNestedProperty(scope, 'model.choices')) {
-          classifyTokens(scope.model.choices, "choice");
-        }
-
-        // Render existing answers
-        if (getNestedProperty(scope, 'fullModel.correctResponse.value')) {
-          classifyTokens(scope.fullModel.correctResponse.value, "selected");
-        }
+        scope.model.passage = $theContent.prop('innerHTML');
+        $timeout(renderChoices, 100);
       }
 
-      function toggleSelectionMode(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          if (newValue === "specific") {
-            if (getNestedProperty(scope, 'fullModel.correctResponse.value') && scope.fullModel.correctResponse.value.length > 0) {
-              scope.model.choices = _.clone(scope.fullModel.correctResponse.value);
-              scope.fullModel.correctResponse.value = [];
-            }
+      function renderChoices() {
+        classifyTokens(scope.model.choices, 'choice');
+      }
+
+      function classifyTokens(collection, tokenClass) {
+        console.log("classifyTokens", collection, tokenClass);
+        $theContent.find('.cst').each(function(index, choice) {
+          if (_.contains(collection, index)) {
+            $(choice).addClass(tokenClass);
           } else {
-            scope.model.choices = [];
-            scope.model.config.maxSelections = 0;
+            $(choice).removeClass(tokenClass);
           }
-          tokenizePassage();
-        }
-      }
-
-      function handleModelChange(newVal, oldVal) {
-        if (!_.isEqual(newVal, oldVal) && !ignoreChanges) {
-          scope.modelHistory.push({
-            answers: _.cloneDeep(oldVal[0]),
-            choices: _.cloneDeep(oldVal[1]),
-            selectionUnit: oldVal[2],
-            availability: oldVal[3],
-            passage: oldVal[4]
-          });
-          if (newVal[4] !== oldVal[4]) {
-            classifyTokens(scope.model.choices, 'choice');
-            classifyTokens(scope.fullModel.correctResponse.value, 'selected');
-            return;
-          }
-        } else if (ignoreChanges) {
-          ignoreChanges = false;
-        }
-        if (newVal[1] !== oldVal[1] && (!_.isEmpty(newVal[1]) || !_.isEmpty(oldVal[1]))) {
-          classifyTokens(scope.model.choices, 'choice');
-        }
-        if (newVal[0] !== oldVal[0] && (!_.isEmpty(newVal[0]) || !_.isEmpty(oldVal[0]))) {
-          classifyTokens(scope.fullModel.correctResponse.value, 'selected');
-        }
+        });
       }
 
       function animateBadge(nv, ov, badgeSelector) {
@@ -286,31 +409,15 @@ exports.directive = [
         }
       }
 
-      function getModel() {
-        var model = _.cloneDeep(scope.fullModel);
-        delete model.cleanPassage;
-        return model;
-      }
-
-      function watchCleanPassage(newValue, oldValue) {
-        scope.$apply(function() {
-          if (newValue !== oldValue && oldValue !== undefined) {
-            scope.model.choices = [];
-            scope.fullModel.correctResponse.value = [];
-            tokenizePassage();
-          }
-        });
-      }
-
       function watchCorrectResponseLength(newValue, oldValue) {
-        animateBadge(newValue, oldValue, ".answers-count");
+        animateBadge(newValue, oldValue, '.answers-count');
         if (scope.model.config.maxSelections > 0 && scope.model.config.maxSelections < newValue) {
           scope.model.config.maxSelections = newValue;
         }
       }
 
       function watchChoicesLength(newValue, oldValue) {
-        animateBadge(newValue, oldValue, ".choices-count");
+        animateBadge(newValue, oldValue, '.choices-count');
       }
 
       function watchMaxSelections(newValue, oldValue) {
@@ -321,101 +428,26 @@ exports.directive = [
         }
       }
 
-      function setMode(mode) {
-        return function() {
-          scope.mode = mode;
-        };
+      function onPasteIntoContentArea(event) {
+        console.log(event.originalEvent.clipboardData.getData('text/plain'));
       }
 
-      function setSelectChoices(selectChoices) {
-        scope.selectChoices = selectChoices;
-        $theContent.toggleClass('select-choices', !scope.selectChoices);
+      function onFormattedPassageChanged(event, editor) {
+        //console.log("onFormattedPassageChanged", event[1].getValue());
+        scope.model.passage = event[1].getValue();
+        $theContent.html(scope.model.passage);
       }
 
-      function confirmPassageEditing(allow) {
-        scope.showPassageEditingWarning = false;
-        scope.allowPassageEditing = allow === true;
-        scope.setEditorMode();
-      }
-
-      function deleteAll() {
-        scope.model.cleanPassage = "";
-        scope.model.config.label = "";
-        scope.model.config.selectionUnit = "word";
-        scope.model.config.availability = "all";
-        scope.model.config.passage = "";
-        scope.model.config.maxSelections = 0;
-        scope.fullModel.correctResponse.value = [];
-        scope.setEditorMode();
-      }
-
-      var unitToSetOnConfirmation = null;
-
-      function toggleSelectionUnit($event) {
-        unitToSetOnConfirmation = $($event.currentTarget).data('unit');
-        if (hasAnswers()) {
-          scope.showSelectionUnitWarning = true;
-        } else {
-          allowSelectionUnitChange();
-        }
-      }
-
-      function allowSelectionUnitChange() {
-        scope.showSelectionUnitWarning = false;
-        scope.model.config.selectionUnit = unitToSetOnConfirmation;
-        // Clean the answers
-        scope.fullModel.correctResponse.value = [];
-        scope.model.choices = [];
-        tokenizePassage();
-      }
-
-      function denySelectionUnitChange() {
-        scope.showSelectionUnitWarning = false;
-      }
-
-      function undo() {
-        if (scope.modelHistory.length > 0) {
-          assignModel(scope.modelHistory.pop());
-          ignoreChanges = true;
-        }
-      }
-
-      function startOver() {
-        if (!_.isEmpty(initialData)) {
-          scope.modelHistory = [];
-          assignModel(initialData);
-          ignoreChanges = true;
-        }
-      }
-
-      function assignModel(model) {
-        scope.fullModel.correctResponse.value = model.answers;
-        scope.model.choices = model.choices;
-        scope.model.config.availability = model.availability;
-        scope.model.config.selectionUnit = model.selectionUnit;
-        scope.model.config.passage = model.passage;
-      }
-
-      function onClickEditContent() {
-        scope.setEditorMode();
-        if (hasAnswers()) {
-          scope.showPassageEditingWarning = true;
-        }
-      }
-
-      function onClickSetAnswers() {
-        scope.setAnswersMode();
-      }
     }
 
     function template() {
       return [
-          '<div class="cs-select-text-config">',
+          '<div class="corespring-select-text-config">',
           '  <div navigator-panel="Design">',
           designPanel(),
           '  </div>',
           '  <div navigator-panel="Scoring">',
-          ChoiceTemplates.scoring(),
+          partialScoring(),
           '  </div>',
           '</div>'
         ].join("");
@@ -426,243 +458,263 @@ exports.directive = [
         '<div class="container-fluid">',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <p>In Select Text Evidence, a student is asked to highlight content to support their answer.',
-        '        This interaction allows for either one or more correct answers. Setting more than one answer as correct',
-        '        allows for partial credit (see the scoring tab).',
-        '      </p>',
+        introText(),
         '    </div>',
         '  </div>',
         '  <div class="row">',
-        '    <div class="col-xs-8">',
-        '      <div mini-wiggi-wiz=""',
-        '          ng-model="model.config.label"',
-        '          ng-show="mode === \'editor\'"',
-        '          placeholder="Passage label (optional)"',
-        '          core-features="bold italic"',
-        '          features=""></div>',
+        '    <div class="col-xs-12">',
+        modeButtons(),
         '    </div>',
-        '    <div class="col-xs-4">',
-        '      <div class="btn-group btn-group-sm btn-group-justified toggles"',
-        '          role="group">',
-        '        <div class="btn-group btn-group-sm"',
-        '            role="group">',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-class="{active: mode === \'editor\'}"',
-        '              ng-click="onClickEditContent()">Edit Content',
-        '          </button>',
-        '        </div>',
-        '        <div class="btn-group btn-group-sm"',
-        '            role="group">',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              ng-class="{active: mode === \'answers\'}"',
-        '              ng-click="onClickSetAnswers()"',
-        '              ng-disabled="model.cleanPassage === \'\'">Set Answers',
-        '          </button>',
-        '        </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        instructions(),
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-6">',
+        formatSourceButton(),
+        autoSelectButtons(),
+        '    </div>',
+        '    <div class="col-xs-6">',
+        clearSelectionButtons(),
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <div class="editor-wrapper" ng-show="mode === \'editor\'">',
+        editContent(),
+        '      </div>',
+        '      <div class="answers-config-wrapper" ng-show="mode === \'answers\' || mode === \'correct-answers\'">',
+        setAnswers(),
+        '      </div>',
+        '      <div ng-show="mode === \'format-source\'">',
+        formatSource(),
         '      </div>',
         '    </div>',
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <div class="editor-wrapper"',
-        '          ng-show="mode === \'editor\'">',
-        '        <div class="confirm-action"',
-        '            ng-show="showPassageEditingWarning">',
-        '          <div class="action-description">',
-        '            <h4>Important</h4>',
-        '            <p>If you edit the content, selections and correct answers will be lost.</p>',
-        '            <p>Do you want to proceed?</p>',
-        '            <p>',
-        '              <button class="btn btn-danger"',
-        '                  ng-click="confirmPassageEditing(true)">Yes',
-        '              </button>',
-        '              <button class="btn btn-default"',
-        '                  ng-click="confirmPassageEditing(false)">No',
-        '              </button>',
-        '            </p>',
-        '          </div>',
-        '        </div>',
-        '        <wiggi-wiz ng-model="model.cleanPassage" enabled="allowPassageEditing">',
-        '          <toolbar basic="bold italic underline superscript subscript"',
-        '              positioning="justifyLeft justifyCenter justifyRight"',
-        '              formatting=""',
-        '              media=""></toolbar>',
-        '        </wiggi-wiz>',
-        '      </div>',
-        '      <div class="answers-config-wrapper"',
-        '          ng-show="mode === \'answers\'">',
-        '        <div class="confirm-action"',
-        '            ng-show="showSelectionUnitWarning">',
-        '          <div class="action-description">',
-        '            <h4>Important</h4>',
-        '            <p>If you make this change, selections and correct answers will be lost.</p>',
-        '            <p>Do you want to proceed?</p>',
-        '            <p>',
-        '              <button class="btn btn-danger"',
-        '                  ng-click="allowSelectionUnitChange()">Yes',
-        '              </button>',
-        '              <button class="btn btn-default"',
-        '                  ng-click="revertSelectionUnitChange()">No',
-        '              </button>',
-        '            </p>',
-        '          </div>',
-        '        </div>',
-        '        <p>Students will select from:</p>',
-        '        <div class="btn-group btn-group-sm"',
-        '            role="group">',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              data-unit="word"',
-        '              ng-click="toggleSelectionUnit($event)"',
-        '              ng-class="{\'active btn-primary\': model.config.selectionUnit === \'word\'}">Words',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              data-unit="sentence"',
-        '              ng-click="toggleSelectionUnit($event)"',
-        '              ng-class="{\'active btn-primary\': model.config.selectionUnit === \'sentence\'}">Sentences',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              data-unit="paragraph"',
-        '              ng-click="toggleSelectionUnit($event)"',
-        '              ng-class="{\'active btn-primary\': model.config.selectionUnit === \'paragraph\'}"',
-        '              disabled>Paragraphs',
-        '          </button>',
-        '          <button type="button"',
-        '              class="btn btn-default"',
-        '              data-unit="custom"',
-        '              ng-click="toggleSelectionUnit($event)"',
-        '              ng-class="{\'active btn-primary\': model.config.selectionUnit === \'custom\'}"',
-        '              disabled>Combination',
-        '          </button>',
-        '        </div>',
-        '        <div class="radio">',
-        '          <label>',
-        '            <input type="checkbox"',
-        '                ng-model="model.config.availability"',
-        '                ng-true-value="specific"',
-        '                ng-false-value="all">Make specific content available',
-        '          </label>',
-        '        </div>',
-        '        <div class="answer-summary">',
-        '          <table ng-show="model.config.availability === \'specific\'">',
-        '            <tr>',
-        '              <td>',
-        '                <button class="btn btn-default"',
-        '                    ng-class="{\'active btn-primary\': selectChoices}"',
-        '                    ng-click="setSelectChoices(true)">Selections Available',
-        '                </button>',
-        '                <p class="help">Click to make selections</p>',
-        '              </td>',
-        '              <td><span class="badge choices-count">{{model.choices.length}}</span></td>',
-        '              <td>',
-        '                <div class="vline"></div>',
-        '              </td>',
-        '              <td>',
-        '                <button class="btn btn-default"',
-        '                    ng-class="{\'active btn-primary\': !selectChoices}"',
-        '                    ng-click="setSelectChoices(false)"',
-        '                    ng-disabled="model.choices.length === 0">Correct Answers',
-        '                </button>',
-        '                <p class="help">Click to set correct answers</p>',
-        '              </td>',
-        '              <td><span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span></td>',
-        '            </tr>',
-        '          </table>',
-        '          <table ng-show="model.config.availability === \'all\'">',
-        '            <tr>',
-        '              <td class="td-middle">',
-        '                <span>Correct Answers</span>',
-        '              </td>',
-        '              <td><span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span></td>',
-        '            </tr>',
-        '          </table>',
-        '        </div>',
-        '        <div class="passage-wrapper">',
-        '          <div class="history-buttons">',
-        '            <span cs-undo-button',
-        '                ng-class="{disabled: modelHistory.length < 1}"',
-        '                ng-disabled="modelHistory.length < 1"></span>',
-        '            <span cs-start-over-button',
-        '                ng-class="{disabled: modelHistory.length < 1}"',
-        '                ng-disabled="modelHistory.length < 1"></span>',
-        '          </div>',
-        '          <div class="passage-preview"',
-        '              ng-bind-html-unsafe="model.config.passage"></div>',
-        '        </div>',
-        '        <div class="max-selections form-inline"',
-        '            ng-show="model.config.availability === \'all\'">',
-        '          <div class="form-group">',
-        '            <p class="form-control-static">Maximum number of selections student is allowed to choose (optional):</p>',
-        '          </div>',
-        '          <div class="form-group">',
-        '            <input type="number"',
-        '                name="userMaxSelections"',
-        '                class="form-control"',
-        '                ng-model="model.config.maxSelections"',
-        '                min="{{fullModel.correctResponse.value.length}}"/>',
-        '          </div>',
-        '        </div>',
-        '      </div>',
-        '      <div ng-show="mode === \'delete\'">',
-        '        <div class="alert alert-danger"',
-        '            role="alert">',
-        '          <h4>Are you sure?</h4>',
-        '          <p>This will permanently delete the passage and any set of answers.</p>',
-        '          <p>',
-        '            <button class="btn btn-danger"',
-        '                ng-click="deleteAll()">Yes',
-        '            </button>',
-        '            <button class="btn btn-default"',
-        '                ng-click="setEditorMode()">No',
-        '            </button>',
-        '          </p>',
-        '        </div>',
-        '      </div>',
-        '      <div class="pull-right delete-icon-button"',
-        '          ng-click="setDeleteMode()"',
-        '          ng-disabled="model.config.passage === \'\'"',
-        '          ng-show="mode === \'editor\'">',
-        '       <span tooltip="delete"',
-        '           tooltip-append-to-body="true"',
-        '           tooltip-placement="bottom">',
-        '         <i class="fa fa-trash-o"></i>',
-        '       </span>',
-        '      </div>',
-        '    </div>',
-        '  </div>',
-        '  <div class="row">',
-        '    <div class="col-xs-12">',
-        '      <div feedback-panel>',
-        '        <div feedback-selector',
-        '            fb-sel-label="If correct, show"',
-        '            fb-sel-class="correct"',
-        '            fb-sel-feedback-type="fullModel.feedback.correctFeedbackType"',
-        '            fb-sel-custom-feedback="fullModel.feedback.correctFeedback"',
-        '            fb-sel-default-feedback="{{defaultCorrectFeedback}}">',
-        '        </div>',
-        '        <div feedback-selector',
-        '            fb-sel-label="If partially correct, show"',
-        '            fb-sel-class="partial"',
-        '            fb-sel-feedback-type="fullModel.feedback.partialFeedbackType"',
-        '            fb-sel-custom-feedback="fullModel.feedback.partialFeedback"',
-        '            fb-sel-default-feedback="{{defaultPartialFeedback}}">',
-        '        </div>',
-        '        <div feedback-selector',
-        '            fb-sel-label="If incorrect, show"',
-        '            fb-sel-class="incorrect"',
-        '            fb-sel-feedback-type="fullModel.feedback.incorrectFeedbackType"',
-        '            fb-sel-custom-feedback="fullModel.feedback.incorrectFeedback"',
-        '            fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
-        '        </div>',
-        '      </div>',
+        feedbackPanel(),
         '    </div>',
         '  </div>',
         '</div>'
-    ].join('');
+      ].join('');
+    }
+
+    function editContent(){
+      return [
+        confirmEditingContentWillDestroySelections(),
+        '<textarea',
+        '    class="plain-text-area"',
+        '    ng-model="model.cleanPassage"',
+        '    ng-paste="onPasteIntoContentArea($event)"',
+        '></textarea>'
+      ].join('');
+    }
+
+    function confirmEditingContentWillDestroySelections(){
+      return [
+        '<div class="confirm-action"',
+        '    ng-show="showPassageEditingWarning">',
+        '  <div class="action-description">',
+        '    <h4>Important</h4>',
+        '    <p>If you edit the content, selections and correct answers will be lost.</p>',
+        '    <p>Do you want to proceed?</p>',
+        '    <p class="confirm-passage-editing-buttons">',
+        '      <button class="btn btn-danger"',
+        '          ng-click="confirmPassageEditing(true)">Yes',
+        '      </button>',
+        '      <button class="btn btn-default"',
+        '          ng-click="confirmPassageEditing(false)">No',
+        '      </button>',
+        '    </p>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    }
+
+    function setAnswers(){
+      return [
+        '<div class="passage-wrapper">',
+        '  <div class="passage-preview"',
+        '      ng-bind-html-unsafe="model.passage"></div>',
+        '</div>',
+        '<div class="answer-summary">',
+        '  <table>',
+        '    <tr>',
+        '      <td class="text-label">Selections available:</td>',
+        '      <td><span class="badge choices-count">{{model.choices.length}}</span></td>',
+        '      <td class="spacer"> </td>',
+        '      <td class="text-label">Correct answers:</td>',
+        '      <td><span class="badge answers-count">{{fullModel.correctResponse.value.length}}</span></td>',
+        '    </tr>',
+        '  </table>',
+        '</div>',
+        '<div class="max-selections form-inline">',
+        '  <div class="form-group">',
+        '    <p class="form-control-static">Maximum number of selections student is allowed to choose (optional):</p>',
+        '  </div>',
+        '  <div class="form-group">',
+        '    <input type="number"',
+        '        name="userMaxSelections"',
+        '        class="form-control"',
+        '        ng-model="model.config.maxSelections"',
+        '        min="{{fullModel.correctResponse.value.length}}"/>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    }
+
+    function formatSource(){
+      return [
+        '<div ',
+        '  class="xhtml-preview"',
+        '  ng-bind-html-unsafe="model.formattedPassage"',
+        '  ></div>',
+        '<div ',
+        '  class="xhtml-editor"',
+        '  ng-model="model.formattedPassage"',
+        '  ui-ace="{mode: \'html\', useWrapMode : true, onChange: onFormattedPassageChanged}"',
+        '  ></div>'
+      ].join('');
+    }
+
+    function introText() {
+      return [
+        '<p>',
+        '  In Select Text Evidence, a student is asked to highlight evidence to support ',
+        '  their answer.',
+        '</p>'
+      ].join('');
+    }
+
+    function instructions() {
+      return [
+        '<p class="help" ng-show="mode === \'editor\'">',
+        '  Add content to window below by typing or cut and pasting. If you need to add ',
+        '  formatting, you will be able to do that later.',
+        '</p>',
+        '<p class="help" ng-show="mode === \'answers\'">',
+        '  Use the auto-select feature to make all words or sentences available for selection ',
+        '  or use the mouse to make selections. ',
+        '</p>',
+        '<p class="help" ng-show="mode === \'correct-answers\'">',
+        '  Indicate the correct answers by clicking on the appropriate selection. A correct ',
+        '  answer may be unselected by clicking again. Use the \'clear correct answers\' button ',
+        '  to clear out all correct answers. ',
+        '</p>',
+        '<p class="help" ng-show="mode === \'format-source\'">',
+        '  To format text, add HTML tags to content window below. For selections to work ',
+        '  properly, be sure that the order and structure of the cst span tags is kept ',
+        '  intact. ',
+        '</p>'
+      ].join('');
+    }
+
+    function autoSelectButtons(){
+      return [
+        '<div ',
+        '  ng-show="mode === \'answers\'"',
+        '  >',
+        '  <span class="help">Auto-select: </span>',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickWords()"',
+        '      ng-disabled="mode !== \'answers\'"',
+        '      >Words',
+        '  </button>',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickSentences()"',
+        '      ng-disabled="mode !== \'answers\'"',
+        '      >Sentences',
+        '  </button>',
+        '</div>'
+      ].join('');
+    }
+
+    function clearSelectionButtons(){
+      return [
+        '<div class="clear-selection-buttons"',
+        '  ng-show="mode === \'answers\' || mode === \'correct-answers\'"',
+        '  >',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickClearSelections()"',
+        '      ng-show="mode === \'answers\' && model.choices.length > 0"',
+        '      >Clear Selections',
+        '  </button>',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-click="onClickClearCorrectAnswers()"',
+        '      ng-show="mode === \'correct-answers\' && fullModel.correctResponse.value.length > 0"',
+        '      >Clear Correct Answers',
+        '  </button>',
+        '</div>'
+      ].join('');
+    }
+
+    function formatSourceButton(){
+      return [
+        '<div class="format-source-button"',
+        '  ng-show="(mode === \'editor\' || mode === \'format-source\') && model.cleanPassage !== \'\' && fullModel.correctResponse.value.length !== 0"',
+        '  >',
+        '  <button type="button"',
+        '      class="btn btn-default btn-sm"',
+        '      ng-class="{active: mode === \'format-source\'}"',
+        '      ng-click="onClickFormatSource()"',
+        '      >Format Source',
+        '  </button>',
+        '</div>'
+      ].join('');
+    }
+
+    function modeButtons() {
+      return [
+        '<div class="btn-group content" role="group">',
+        '  <button type="button"',
+        '      class="btn btn-default"',
+        '      ng-class="{active: mode === \'editor\'}"',
+        '      ng-click="onClickEditContent()"',
+        '      >Edit Content',
+        '  </button>',
+        '</div>',
+        '<div class="btn-group selections" role="group">',
+        '  <button type="button"',
+        '      class="btn btn-default"',
+        '      ng-class="{active: mode === \'answers\'}"',
+        '      ng-click="onClickSetAnswers()"',
+        '      ng-hide="model.cleanPassage === \'\'"',
+        '      >Set Selections',
+        '  </button>',
+        '  <button type="button"',
+        '      class="btn btn-default"',
+        '      ng-class="{active: mode === \'correct-answers\'}"',
+        '      ng-click="onClickSetCorrectAnswers()"',
+        '      ng-hide="model.choices.length === 0"',
+        '      >Set Correct Answers',
+        '  </button>',
+        '</div>'
+      ].join('');
+    }
+
+    function partialScoring(){
+      return [
+        '<corespring-partial-scoring-config ',
+        '   full-model="fullModel"',
+        '   number-of-correct-responses="numberOfCorrectResponses"',
+        '></corespring-partial-scoring-config>'
+      ].join('');
+    }
+
+    function feedbackPanel() {
+      return [
+        '<corespring-feedback-config ',
+        '   full-model="fullModel"',
+        '   component-type="corespring-select-text"',
+        '></corespring-feedback-config>'
+      ].join('');
     }
   }
 ];

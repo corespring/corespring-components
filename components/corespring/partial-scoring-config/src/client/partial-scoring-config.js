@@ -53,6 +53,9 @@ var main = [
       function togglePartialScoring() {
         if (scope.numberOfCorrectResponses > 1) {
           scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
+          if (_.isEmpty(scope.fullModel.partialScoring)) {
+            scope.fullModel.partialScoring = [makeScenario(1,25)];
+          }
         }
       }
 
@@ -67,7 +70,7 @@ var main = [
           return;
         }
 
-        if (!scope.fullModel.partialScoring) {
+        if (_.isEmpty(scope.fullModel.partialScoring)) {
           scope.fullModel.partialScoring = [makeScenario(1,25)];
         }
         scope.numberOfCorrectResponses = Math.max(0, isNaN(numberOfCorrectResponses) ? 0 : numberOfCorrectResponses);
