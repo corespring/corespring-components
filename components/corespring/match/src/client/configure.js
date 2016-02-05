@@ -601,10 +601,8 @@ var main = [
           '              active="active[row.wiggiId]"',
           '              ng-model="row.labelHtml"',
           '              ng-change="rowLabelUpdated($index)"',
-          '              dialog-launcher="external"',
           '              features="extraFeaturesForMatch"',
-          '              parent-selector=".modal-body"',
-          '              image-service="imageService()">',
+          '              parent-selector=".modal-body">',
           '          </div>',
           '        </td>',
           '        <td class="answer-col" ng-repeat="match in row.matchSet">',
@@ -645,10 +643,8 @@ var main = [
           '      active="active[column.wiggiId]"',
           '      ng-model="column.labelHtml"',
           '      ng-change="columnLabelUpdated($index)"',
-          '      dialog-launcher="external"',
           '      features="extraFeaturesForMatch"',
-          '      parent-selector=".modal-body"',
-          '      image-service="imageService()">',
+          '      parent-selector=".modal-body">',
           '  </div>',
           '</th>'
         ].join('');

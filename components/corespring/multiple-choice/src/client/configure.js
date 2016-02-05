@@ -78,7 +78,6 @@ var main = [
       '            <div mini-wiggi-wiz="" ',
       '              disable-auto-activation="true"',
       '              active="active[choice.value]"',
-      '              dialog-launcher="external" ',
       '              features="extraFeaturesForChoices"',
       '              ng-click="activate(choice.value)"',
       '              ng-model="choice.label" ',

@@ -64,7 +64,6 @@ exports.directive = {
           '        features="extraFeaturesForFeedback"',
           '        class="form-control feedback-preview custom"',
           '        ng-model="fbSelCustomFeedback"',
-          '        image-service="imageService()"',
           '        features="extraFeatures"',
           '        placeholder="Enter customized feedback to be presented to the student"',
           '        parent-selector=".modal-body">',

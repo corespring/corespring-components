@@ -284,11 +284,9 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       return [
         '<div class="editor" ',
         '   active="active"',
-        '   dialog-launcher="external" ',
         '   disable-auto-activation="true"',
         '   feature-overrides="overrideFeatures"',
         '   features="extraFeatures" ',
-        '   image-service="imageService()" ',
         '   mini-wiggi-wiz="" ',
         '   ng-model="model.label" ',
         '></div>'
