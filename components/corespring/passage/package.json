@@ -3,5 +3,12 @@
   "organization": "corespring",
   "title": "Passage",
   "version": "0.0.1",
+  "libraries": [
+    {
+      "name": "passage-service",
+      "organization": "corespring",
+      "scope": "editor"
+    }
+  ],
   "released": true
 }
