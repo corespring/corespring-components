@@ -274,9 +274,6 @@ var main = [
       ].join(""),
 
       controller: ['$scope', function($scope) {
-        $scope.imageService = function() {
-          return ComponentImageService;
-        };
 
         $scope.extraFeaturesForChoices = {
           definitions: [

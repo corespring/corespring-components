@@ -23,11 +23,8 @@ exports.factory = [
         if (scope.hasMiniWiggiScopeExtension) {
           return;
         }
+        
         scope.hasMiniWiggiScopeExtension = true;
-
-        scope.imageService = function() {
-          return ComponentImageService;
-        };
 
         scope.overrideFeatures = [
           ImageFeature

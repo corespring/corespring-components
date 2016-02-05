@@ -204,9 +204,6 @@ var main = [
         '</div>'].join('\n'),
       controller: ['$scope',
         function($scope) {
-          $scope.imageService = function() {
-            return ComponentImageService;
-          };
         }
       ],
       replace: true,

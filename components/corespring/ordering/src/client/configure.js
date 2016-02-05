@@ -192,9 +192,6 @@ var main = [
         replace: true,
         controller: ['$scope',
           function($scope) {
-            $scope.imageService = function() {
-              return ComponentImageService;
-            };
 
             $scope.extraFeaturesForChoices = {
               definitions: [

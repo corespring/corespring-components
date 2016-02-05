@@ -42,9 +42,6 @@ function main(
 
 
   function controller(scope) {
-    scope.imageService = function() {
-      return ComponentImageService;
-    };
 
     scope.extraFeaturesForChoices = {
       definitions: [
