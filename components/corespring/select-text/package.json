@@ -3,7 +3,7 @@
   "title": "Select Evidence in Text",
   "titleGroup": "English Language Arts",
   "organization": "corespring",
-  "released": false,
+  "released": true,
   "libraries": [
     {
       "name": "feedback-config",
