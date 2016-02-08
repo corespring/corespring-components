@@ -1,5 +1,5 @@
-var main = [
-  function() {
+var main = ['$compile',
+  function($compile) {
 
     var MAX_WIDTH = 555;
     var PIXELS_PER_ROW = 20;
@@ -49,14 +49,6 @@ var main = [
       restrict: 'AE',
       link: link,
       controller: function($scope) {
-        $scope.extraFeatures = {
-          definitions: [{
-            type: 'group',
-            name: 'math',
-            buttons: [new MathInputWiggiFeatureDef()]
-          }]
-        };
-
       },
       template: template()
     };
@@ -81,11 +73,24 @@ var main = [
 
           var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
           var height = scope.rows * PIXELS_PER_ROW + 'px';
+
+          scope.extraFeatures = scope.question.config.showMathInput ? {
+            definitions: [{
+              type: 'group',
+              name: 'math',
+              buttons: [new MathInputWiggiFeatureDef()]
+            }]
+          } : {};
+
+          var compiledWiggi = $compile(wiggiTemplate())(scope);
+          element.find('.textarea-holder').html(compiledWiggi);
+
           element.find('.wiggi-wiz').css({width: width});
           editable().css({
             height: height,
             width: width
           });
+
         },
 
         getSession: function() {
@@ -140,13 +145,18 @@ var main = [
 
     }
 
+    function wiggiTemplate() {
+      return [
+        '    <wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
+        '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
+        '    </wiggi-wiz>'
+
+      ].join('\n');
+    }
     function template() {
       return [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder">',
-        '    <wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
-        '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
-        '    </wiggi-wiz>',
         '  </div>',
         '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
         '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
