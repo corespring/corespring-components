@@ -308,11 +308,7 @@ exports.directive = [
         if (passageNeedsUpdate) {
           initPassageFromCleanPassage();
         }
-        if (scope.mode === 'editor' && getNumberOfCorrectResponses() > 0) {
-          setMode('correct-answers');
-        } else {
-          setMode('answers');
-        }
+        setMode('answers');
       }
 
       function onClickSetCorrectAnswers() {
@@ -655,11 +651,11 @@ exports.directive = [
 
     function formatSourceButton(){
       return [
-        '<div class="format-source-button"',
+        '<div',
         '  ng-show="(mode === \'editor\' || mode === \'format-source\') && model.cleanPassage !== \'\' && fullModel.correctResponse.value.length !== 0"',
         '  >',
         '  <button type="button"',
-        '      class="btn btn-default btn-sm"',
+        '      class="btn btn-sm btn-default format-source-button"',
         '      ng-class="{active: mode === \'format-source\'}"',
         '      ng-click="onClickFormatSource()"',
         '      >Format Source',
