@@ -16,6 +16,11 @@
   },
   "libraries": [
     {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
       "name": "line-utils",
       "organization": "corespring"
     },
