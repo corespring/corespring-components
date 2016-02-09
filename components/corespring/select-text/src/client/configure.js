@@ -41,6 +41,7 @@ exports.directive = [
       scope.onClickClearSelections = onClickClearSelections;
       scope.onClickEditContent = onClickEditContent;
       scope.onClickFormatSource = onClickFormatSource;
+      scope.onClickFormattedTextPreview = onClickFormattedTextPreview;
       scope.onClickSentences = onClickSentences;
       scope.onClickSetAnswers = onClickSetAnswers;
       scope.onClickSetCorrectAnswers = onClickSetCorrectAnswers;
@@ -233,11 +234,6 @@ exports.directive = [
           model.passage = model.passage.replace(/cs-token/gi, 'cst');
         }
 
-        //legacy items might not have a formatted passage
-        if(!model.formattedPassage && model.passage){
-          model.formattedPassage = model.passage;
-        }
-
         return fullModel;
       }
 
@@ -247,6 +243,7 @@ exports.directive = [
         scope.fullModel.correctResponse.value = [];
         updatePartialScoring();
         scope.model.passage = plainTextToHtml(removeHtmlTags(scope.model.cleanPassage));
+        scope.model.formattedPassage = '';
         $theContent.html(scope.model.passage);
       }
 
@@ -294,7 +291,9 @@ exports.directive = [
             passageNeedsUpdate = true;
           } else {
             disableContentChangeWarning = true;
-            scope.model.cleanPassage = oldValue;
+            if(oldValue) {
+              scope.model.cleanPassage = oldValue;
+            }
             passageNeedsUpdate = false;
           }
         };
@@ -322,6 +321,10 @@ exports.directive = [
           scope.model.formattedPassage = getCleanPassage();
           setMode('format-source');
         }
+      }
+
+      function onClickFormattedTextPreview(){
+        warnAboutContentChange();
       }
 
       function onClickWords() {
@@ -503,7 +506,16 @@ exports.directive = [
         '    class="plain-text-area"',
         '    ng-model="model.cleanPassage"',
         '    ng-paste="onPasteIntoContentArea($event)"',
-        '></textarea>'
+        '    ng-hide="model.formattedPassage"',
+        '></textarea>',
+        '<div>',
+        '  <div',
+        '      class="formatted-text-preview"',
+        '      ng-bind-html-unsafe="model.formattedPassage"',
+        '      ng-click="onClickFormattedTextPreview()"',
+        '      ng-show="model.formattedPassage"',
+        '  ></div>',
+        '</div>'
       ].join('');
     }
 
@@ -513,7 +525,7 @@ exports.directive = [
         '    ng-show="showPassageEditingWarning">',
         '  <div class="action-description">',
         '    <h4>Important</h4>',
-        '    <p>If you edit the content, selections and correct answers will be lost.</p>',
+        '    <p>If you edit the content, selections, correct answers and formatting will be lost.</p>',
         '    <p>Do you want to proceed?</p>',
         '    <p class="confirm-passage-editing-buttons">',
         '      <button class="btn btn-danger"',
