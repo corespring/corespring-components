@@ -331,13 +331,11 @@ exports.directive = [
       function onClickWords() {
         initPassageFromCleanPassage();
         tokenize('word');
-        setMode('correct-answers');
       }
 
       function onClickSentences() {
         initPassageFromCleanPassage();
         tokenize('sentence');
-        setMode('correct-answers');
       }
 
       function onClickClearSelections() {
