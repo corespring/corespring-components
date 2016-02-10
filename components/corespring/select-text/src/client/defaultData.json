@@ -1,5 +1,5 @@
 {
-  "componentType" : "corespring-select-text",
+  "componentType": "corespring-select-text",
   "title": "Select Evidence in Text",
   "weight": 1,
   "correctResponse": {
@@ -10,17 +10,15 @@
     "partialFeedbackType": "none",
     "incorrectFeedbackType": "none"
   },
-  "allowPartialScoring": true,
-  "partialScoring" : [
-    {}
+  "allowPartialScoring": false,
+  "partialScoring": [
   ],
   "model": {
-    "choices" : [],
+    "choices": [],
     "cleanPassage": "",
-    "config" : {
-      "label": "",
-      "maxSelections": 0,
-      "passage": ""
+    "passage": "",
+    "config": {
+      "maxSelections": 0
     }
   }
 }

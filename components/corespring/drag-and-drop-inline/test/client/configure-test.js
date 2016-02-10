@@ -96,6 +96,7 @@ describe('corespring:drag-and-drop-inline:configure', function() {
       });
       $provide.value('WiggiMathJaxFeatureDef', function() {});
       $provide.value('WiggiLinkFeatureDef', function() {});
+      $provide.value('Msgr', {send: function(){}} );
     });
   });
 

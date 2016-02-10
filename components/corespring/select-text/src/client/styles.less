@@ -18,11 +18,6 @@
         .action-buttons {
           display: none;
         }
-        .select-text-content {
-          padding: 10px;
-          line-height: 1.5;
-          margin-top: 5px;
-        }
       }
     }
   }
@@ -50,30 +45,15 @@
     padding: 10px;
     line-height: 1.5;
 
-    .cs-token {
-      cursor: default;
-
-      &.selected {
-        background-color: #CCCCCC;
-      }
-      &.correct {
-        color: white;
-        background-color: #3C763D;
-      }
-      &.incorrect {
-        color: white;
-        background-color: #EEA236;
-      }
-      &.correct-not-selected {
-        background-color: #C1E1AC;
-      }
-    }
-
     &.editable {
-      .cs-token {
+      .cst {
         cursor: pointer;
         -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
         transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+
+        &.selected {
+          background-color: #CCCCCC;
+        }
 
         &:hover {
           background-color: #eee;
@@ -82,21 +62,41 @@
     }
 
     &.no-more-selections {
+
     }
+
     &.blocked {
+      .cst {
+        &.correct {
+          color: white;
+          background-color: #3C763D;
+        }
+        &.incorrect {
+          color: white;
+          background-color: #EEA236;
+        }
+      }
     }
     &.show-answers {
+      .cst {
+        &.correct {
+          color: white;
+          background-color: #3C763D;
+        }
+        &.incorrect {
+          color: black;
+          background-color: white;
+        }
+        &.correct-not-selected {
+          color: white;
+          background-color: #3C763D;
+        }
+      }
     }
   }
 }
 
 .corespring-select-text-config {
-
-  .btn-correct-answers {
-    &.active {
-      background-color: @correct-answer-bg-color;
-    }
-  }
 
   .btn-group {
     &.selections {
@@ -109,6 +109,14 @@
     text-align: right;
   }
 
+  .format-source-button {
+    background: white;
+
+    &.active, &:active {
+      background: #ccc;
+    }
+  }
+
   .confirm-passage-editing-buttons {
     text-align: right;
   }
@@ -119,6 +127,26 @@
     .plain-text-area {
       width: 600px;
       height: 200px;
+    }
+
+    .formatted-text-preview {
+      background-clip: padding-box;
+      border-radius: 5px 0 5px 5px;
+      border: 1px dashed #ccc;
+      clear: both;
+      margin: 0 0 15px 0;
+      padding: 10px;
+      line-height: 1.5;
+
+      .cst {
+        cursor: pointer;
+        -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+        transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+
+        &:hover {
+          background-color: #eee;
+        }
+      }
     }
   }
 
@@ -207,7 +235,7 @@
       overflow: auto;
       padding: 5px;
 
-      .cs-token {
+      .cst {
         -webkit-transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
         cursor: pointer;
         transition: background-color 0.2s ease-out, border-color 0.3s ease-out;
@@ -221,7 +249,7 @@
         }
       }
       .select-choices {
-        .cs-token {
+        .cst {
           cursor: default;
           &:hover {
             background-color: transparent;
@@ -279,7 +307,7 @@
         background-color: @answer-color;
       }
       &.answers-count {
-        background-color: @correct-answer-bg-color;
+        background-color: @answer-color;
       }
       &.grow-add {
         -ms-transform: none;

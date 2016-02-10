@@ -79,8 +79,20 @@
     -moz-border-radius: 4px;
     border-radius: 4px;
     max-width: 570px;
+    position: relative;
+    &.initial {
+      background: #eee;
+    }
     .selected-label {
       white-space: pre-line;
+    }
+    .caret-holder {
+      margin: auto;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 4px;
+      height: 20px;
     }
   }
 

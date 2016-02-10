@@ -16,7 +16,7 @@ describe('inline-choice', function() {
 
   browser.selectInlineChoice = function(id, choice) {
     browser.click(inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]');
-    browser.click(inlineChoiceWithId(id) + '//div[text()="' + choice + '"]');
+    browser.click(inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]');
     return this;
   };
 
