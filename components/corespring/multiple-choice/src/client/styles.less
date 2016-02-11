@@ -486,10 +486,15 @@
 }
 
 .config-multiple-choice {
+
   .remove-button {
     position: relative;
     right: 0px;
     top: 5px;
+  }
+
+  .choice-type-description {
+    font-size: 12px;
   }
 
   .score-table {
@@ -528,6 +533,33 @@
   .shuffle-choices {
     margin: 10px 0;
   }
+
+  .panel.choice-feedback {
+    margin-bottom: 5px;
+  }
+
+  .hide-shuffle {
+
+    .row.shuffle {
+      visibility: hidden;
+    }
+
+  }
+
+  .row.shuffle {
+
+    .checkbox-input {
+      margin-bottom: 8px;
+      font-size: 12px;
+
+      .checkbox-toggle {
+        font-size: 20px;
+      }
+
+    }
+
+  }
+
 }
 
 .config-multiple-choice .label-select, .select2-drop {
