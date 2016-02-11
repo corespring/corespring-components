@@ -518,12 +518,14 @@ var interactiveGraph = [
         };
 
         scope.multipleInputTypes = function() {
-          return (_.chain(scope.model.config.availableTypes)
-              .values()
-              .filter(function(value) {
-                return value === true;
-              })
-              .value().length) > 1;
+          if (scope.model) {
+            return (_.chain(scope.model.config.availableTypes)
+                .values()
+                .filter(function(value) {
+                  return value === true;
+                })
+                .value().length) > 1;
+          }
         };
 
         scope.isGroupEnabled = function(group) {

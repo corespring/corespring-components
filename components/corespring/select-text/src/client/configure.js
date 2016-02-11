@@ -41,6 +41,7 @@ exports.directive = [
       scope.onClickClearSelections = onClickClearSelections;
       scope.onClickEditContent = onClickEditContent;
       scope.onClickFormatSource = onClickFormatSource;
+      scope.onClickFormattedTextPreview = onClickFormattedTextPreview;
       scope.onClickSentences = onClickSentences;
       scope.onClickSetAnswers = onClickSetAnswers;
       scope.onClickSetCorrectAnswers = onClickSetCorrectAnswers;
@@ -233,11 +234,6 @@ exports.directive = [
           model.passage = model.passage.replace(/cs-token/gi, 'cst');
         }
 
-        //legacy items might not have a formatted passage
-        if(!model.formattedPassage && model.passage){
-          model.formattedPassage = model.passage;
-        }
-
         return fullModel;
       }
 
@@ -247,6 +243,7 @@ exports.directive = [
         scope.fullModel.correctResponse.value = [];
         updatePartialScoring();
         scope.model.passage = plainTextToHtml(removeHtmlTags(scope.model.cleanPassage));
+        scope.model.formattedPassage = '';
         $theContent.html(scope.model.passage);
       }
 
@@ -294,7 +291,9 @@ exports.directive = [
             passageNeedsUpdate = true;
           } else {
             disableContentChangeWarning = true;
-            scope.model.cleanPassage = oldValue;
+            if(oldValue) {
+              scope.model.cleanPassage = oldValue;
+            }
             passageNeedsUpdate = false;
           }
         };
@@ -308,11 +307,7 @@ exports.directive = [
         if (passageNeedsUpdate) {
           initPassageFromCleanPassage();
         }
-        if (scope.mode === 'editor' && getNumberOfCorrectResponses() > 0) {
-          setMode('correct-answers');
-        } else {
-          setMode('answers');
-        }
+        setMode('answers');
       }
 
       function onClickSetCorrectAnswers() {
@@ -328,16 +323,18 @@ exports.directive = [
         }
       }
 
+      function onClickFormattedTextPreview(){
+        warnAboutContentChange();
+      }
+
       function onClickWords() {
         initPassageFromCleanPassage();
         tokenize('word');
-        setMode('correct-answers');
       }
 
       function onClickSentences() {
         initPassageFromCleanPassage();
         tokenize('sentence');
-        setMode('correct-answers');
       }
 
       function onClickClearSelections() {
@@ -509,7 +506,16 @@ exports.directive = [
         '    class="plain-text-area"',
         '    ng-model="model.cleanPassage"',
         '    ng-paste="onPasteIntoContentArea($event)"',
-        '></textarea>'
+        '    ng-hide="model.formattedPassage"',
+        '></textarea>',
+        '<div>',
+        '  <div',
+        '      class="formatted-text-preview"',
+        '      ng-bind-html-unsafe="model.formattedPassage"',
+        '      ng-click="onClickFormattedTextPreview()"',
+        '      ng-show="model.formattedPassage"',
+        '  ></div>',
+        '</div>'
       ].join('');
     }
 
@@ -519,7 +525,7 @@ exports.directive = [
         '    ng-show="showPassageEditingWarning">',
         '  <div class="action-description">',
         '    <h4>Important</h4>',
-        '    <p>If you edit the content, selections and correct answers will be lost.</p>',
+        '    <p>If you edit the content, selections, correct answers and formatting will be lost.</p>',
         '    <p>Do you want to proceed?</p>',
         '    <p class="confirm-passage-editing-buttons">',
         '      <button class="btn btn-danger"',
@@ -657,11 +663,11 @@ exports.directive = [
 
     function formatSourceButton(){
       return [
-        '<div class="format-source-button"',
+        '<div',
         '  ng-show="(mode === \'editor\' || mode === \'format-source\') && model.cleanPassage !== \'\' && fullModel.correctResponse.value.length !== 0"',
         '  >',
         '  <button type="button"',
-        '      class="btn btn-default btn-sm"',
+        '      class="btn btn-sm btn-default format-source-button"',
         '      ng-class="{active: mode === \'format-source\'}"',
         '      ng-click="onClickFormatSource()"',
         '      >Format Source',
