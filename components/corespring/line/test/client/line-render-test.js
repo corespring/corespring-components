@@ -147,12 +147,20 @@ describe('corespring:line:render', function() {
   });
 
   describe('restoring session', function() {
-    it('restores state from session when present', function() {
+    it('restores state from curve based session when present', function() {
       var model = _.cloneDeep(testModel);
       model.session = {answers: "3x+4"};
       container.elements['1'].setDataAndSession(model);
       rootScope.$digest();
       expect(scope.config.initialCurve).toEqual("3x+4");
+    });
+
+    it('restores state from point based session when present', function() {
+      var model = _.cloneDeep(testModel);
+      model.session = {answers: {A: {x: 1, y:1}, B: {x:3, y:2}}};
+      container.elements['1'].setDataAndSession(model);
+      rootScope.$digest();
+      expect(scope.config.initialPoints).toEqual({A: {x: 1, y:1}, B: {x:3, y:2}});
 
     });
   });
