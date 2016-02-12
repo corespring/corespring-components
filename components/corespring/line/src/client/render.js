@@ -103,13 +103,16 @@ var main = [
         }
 
         function createInitialPoints(initialLine) {
-
           var initialValues = lineUtils.pointsFromEquation(initialLine, scope.graphAttrs.domainSnapValue);
-
           if (typeof initialValues !== 'undefined') {
-            scope.graphCallback({ add: { point: getPoint(initialValues[0]), triggerCallback: true  } });
-            scope.graphCallback({ add: { point: getPoint(initialValues[1]), triggerCallback: true } });
+            addInitialPoints({A: getPoint(initialValues[0]), B: getPoint(initialValues[1])});
           }
+        }
+
+        function addInitialPoints(initialPoints) {
+          scope.graphCallback({ add: { point: initialPoints.A, triggerCallback: true  } });
+          scope.graphCallback({ add: { point: initialPoints.B, triggerCallback: true } });
+
         }
 
         // clear board
@@ -125,7 +128,9 @@ var main = [
           isSet: false
         };
 
-        if(scope.config.initialCurve) {
+        if (scope.config.initialPoints) {
+          addInitialPoints(scope.config.initialPoints);
+        } else if(scope.config.initialCurve) {
           createInitialPoints(scope.config.initialCurve);
         }
 
@@ -271,8 +276,13 @@ var main = [
           scope.containerHeight = containerHeight;
           $compile(graphContainer)(scope);
 
+          // The model changed in 67d8ab7 so we have to accomodate for both
           if (dataAndSession.session && dataAndSession.session.answers) {
-            scope.config.initialCurve = dataAndSession.session.answers;
+            if (_.isString(dataAndSession.session.answers)) {
+              scope.config.initialCurve = dataAndSession.session.answers;
+            } else if (_.isObject(dataAndSession.session.answers)) {
+              scope.config.initialPoints = dataAndSession.session.answers;
+            }
           }
 
           // this timeout is needed to wait for the callback to be defined
