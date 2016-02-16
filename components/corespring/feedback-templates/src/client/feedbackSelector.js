@@ -51,7 +51,7 @@ exports.directive = {
           '<div class="feedback-selector-view">',
           '<div><label ng-bind-html-unsafe="fbSelLabel"></label></div>',
           '<div>',
-          inline("radio", "default", "Default Feedback", "ng-model='$parent.fbSelFeedbackType'", "ng-if=\"!hidden['default']\""),
+          inline("radio", "default", "Simple Feedback", "ng-model='$parent.fbSelFeedbackType'", "ng-if=\"!hidden['default']\""),
           inline("radio", "none", "No Feedback", "ng-model='$parent.fbSelFeedbackType'", "ng-if=\"!hidden['none']\""),
           inline("radio", "custom", "Customized Feedback", "ng-model='$parent.fbSelFeedbackType'", "ng-if=\"!hidden['custom']\""),
           '</div>',
