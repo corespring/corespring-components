@@ -107,7 +107,19 @@ describe('corespring:ordering-in-place', function() {
       expect($(element).find('.panel.feedback').length).toBe(0);
     });
 
-    it('order of choices are restored from existing session', function() {
+    it('order of choices are restored from existing session (model before 8e92194)', function() {
+      var modelWithSession = _.cloneDeep(verticalModel);
+      var answers = ['c', 'a', 'b', 'd'];
+      modelWithSession.session = {
+        answers: {
+         choices: _.clone(answers)
+        }
+      };
+      setModelAndDigest(modelWithSession);
+      expect(_.pluck(element.scope().local.choices, 'id')).toEqual(answers);
+    });
+
+    it('order of choices are restored from existing session (model after 8e92194)', function() {
       var modelWithSession = _.cloneDeep(verticalModel);
       var answers = ['c', 'a', 'b', 'd'];
       modelWithSession.session = {

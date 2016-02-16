@@ -104,7 +104,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           });
         } else {
           var choices = [];
-          _.each(answers, function (a) {
+          _.each(answers.choices || answers, function (a) {
             var choice = _.find(scope.local.choices, function (c) {
               return c.id === a;
             });
