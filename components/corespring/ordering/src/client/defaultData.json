@@ -2,9 +2,9 @@
   "componentType": "corespring-ordering",
   "title": "Ordering",
   "feedback": {
-    "correctFeedbackType": "default",
-    "partialFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "allowPartialScoring": true,
   "partialScoring" : [

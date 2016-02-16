@@ -6,19 +6,19 @@
   "feedback" :  [
     {
       "value": "mc_1",
-      "feedbackType" : "default"
+      "feedbackType" : "none"
     },
     {
       "value": "mc_2",
-      "feedbackType" : "default"
+      "feedbackType" : "none"
     },
     {
       "value": "mc_3",
-      "feedbackType" : "default"
+      "feedbackType" : "none"
     },
     {
       "value": "mc_4",
-      "feedbackType" : "default"
+      "feedbackType" : "none"
     }
   ],
   "model": {
