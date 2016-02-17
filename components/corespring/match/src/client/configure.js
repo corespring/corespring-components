@@ -68,11 +68,11 @@ var main = [
       scope.inputTypes = [
         {
           id: INPUT_TYPE_RADIOBUTTON,
-          label: 'Radio'
+          label: 'Radio - One Answer'
         },
         {
           id: INPUT_TYPE_CHECKBOX,
-          label: 'Checkbox'
+          label: 'Checkbox - Multiple Answers'
         }
       ];
 
@@ -224,7 +224,7 @@ var main = [
 
         while (columns.length < expectedNumberOfColumns) {
           columns.push({
-            labelHtml: "Column " + (columns.length)
+            labelHtml: "Column " + (columns.length + 1)
           });
           addColumnToCorrectResponseMatrix();
         }
@@ -443,7 +443,7 @@ var main = [
           var elementClass = '.header' + $this.column.wiggiId,
             elementHtml = $(elementClass).find('.wiggi-wiz-editable')[0].innerHTML;
 
-          if (elementHtml === "Custom header" || elementHtml === "Column 1" || elementHtml === "Column 2" || elementHtml === "Column 3" || elementHtml === "Column 4") {
+          if (elementHtml === "Column 1" || elementHtml === "Column 2" || elementHtml === "Column 3" || elementHtml === "Column 4" || elementHtml === "Column 5") {
             $(elementClass).find('.wiggi-wiz-editable').html('');
           }
         }
@@ -541,24 +541,16 @@ var main = [
           '      </div>',
           '    </div>',
           '    <div class="row option layout">',
-          '      <div class="col-xs-3">',
+          '      <div class="col-xs-4">',
           '        <span>Layout</span>',
           '        <select class="form-control" ng-model="config.layout" ng-options="c.id as c.label for c in layouts">',
           '        </select>',
           '      </div>',
-          '      <div class="col-xs-3">',
-          '        <span>Input Type</span>',
+          '      <div class="col-xs-5">',
+          '        <span>Response Type</span>',
           '        <select class="form-control" ng-model="config.inputType"',
           '            ng-options="c.id as c.label for c in inputTypes">',
           '        </select>',
-          '      </div>',
-          '      <div class="col-xs-6">',
-          '        <p class="help" ng-if="isRadioButton(config.inputType)">',
-          '          This option allows students to select one correct answer.',
-          '        </p>',
-          '        <p class="help" ng-if="isCheckBox(config.inputType)">',
-          '          This option allows students to select more than one correct answer.',
-          '        </p>',
           '      </div>',
           '    </div>',
           '    <div class="row table-intro">',
@@ -642,7 +634,7 @@ var main = [
           '      </div>',
           '    </div>',
           '    <div class="row">',
-          '      <div class="col-xs-12 feedback-panel-col">',
+          '      <div class="col-md-7 feedback-panel-col">',
           '        <corespring-feedback-config ',
           '            full-model="fullModel"',
           '            component-type="corespring-match">',
