@@ -117,7 +117,6 @@ function renderCorespringDndCategorize(
       setConfig(dataAndSession.data.model);
       initLayouts();
 
-      scope.$broadcast('reset');
       scope.renderModel = prepareRenderModel(scope.data.model, scope.session);
       scope.saveRenderModel = _.cloneDeep(scope.renderModel);
       scope.undoModel.init();
@@ -293,7 +292,6 @@ function renderCorespringDndCategorize(
     }
 
     function reset() {
-      scope.$broadcast('reset');
       scope.isSeeAnswerPanelExpanded = false;
       scope.response = undefined;
 
