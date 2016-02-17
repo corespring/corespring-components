@@ -80,9 +80,9 @@ function renderCorespringDndCategorize(
       isAnswerEmpty: isAnswerEmpty,
       reset: reset,
       setDataAndSession: setDataAndSession,
+      setInstructorData: setInstructorData,
       setMode: function(mode) {},
-      setResponse: setResponse,
-      setInstructorData: setInstructorData
+      setResponse: setResponse
     };
 
     scope.$watch('categoriesPerRow', updateView);
@@ -319,11 +319,12 @@ function renderCorespringDndCategorize(
       updateView();
     }
 
-    function onRenderModelChange() {
+    function onRenderModelChange(newValue, oldValue) {
+      if(oldValue === undefined || _.isEqual(newValue,oldValue)){
+        return;
+      }
       if (_.isFunction(scope.answerChangedCallback)) {
-        if (!isAnswerEmpty()) {
-          scope.answerChangedCallback();
-        }
+        scope.answerChangedCallback();
       }
       scope.undoModel.remember();
     }
