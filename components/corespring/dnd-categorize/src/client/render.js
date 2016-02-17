@@ -171,8 +171,12 @@ function renderCorespringDndCategorize(
     }
 
     function getSession() {
+      return collectAnswers(scope.renderModel);
+    }
+
+    function collectAnswers(renderModel){
       var numberOfAnswers = 0;
-      var answers = _.reduce(scope.renderModel.categories, function(result, category) {
+      var answers = _.reduce(renderModel.categories, function(result, category) {
         var catId = category.model.id;
         result[catId] = _.map(category.choices, function(choice) {
           return choice.model.id;
@@ -318,7 +322,7 @@ function renderCorespringDndCategorize(
     }
 
     function onRenderModelChange(newValue, oldValue) {
-      if(oldValue === undefined || _.isEqual(newValue,oldValue)){
+      if (oldValue === undefined || _.isEqual(collectAnswers(newValue), collectAnswers(oldValue))) {
         return;
       }
       if (_.isFunction(scope.answerChangedCallback)) {
