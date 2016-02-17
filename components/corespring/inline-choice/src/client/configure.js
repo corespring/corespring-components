@@ -10,7 +10,7 @@ var main = [
       '  <div class="container-fluid">',
       '    <div class="row">',
       '      <div class="col-xs-12">',
-      '        <p class="intro-text">In Short Answer &mdash; Drop Down, students select the best response from a list of options ',
+      '        <p class="intro-text">In Inline Choice, students select the best response from a list of options ',
       '           presented. This interaction type may be embedded inline with other content such as text. To set the',
       '           correct answer, click the checkmark next to the choice.',
       '        </p>',
