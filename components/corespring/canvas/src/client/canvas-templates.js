@@ -150,7 +150,7 @@ exports.service = [
           '            <checkbox ng-model="fullModel.model.config.showAxisLabels">Show Axis Labels</checkbox>',
           '          </div>',
           '        </div>',
-          '        <div class="config-form-row show-inputs" ng-show="'+showInputs+'">',
+          '        <div class="config-form-row row show-inputs" ng-show="'+showInputs+'">',
           '          <div class="col-sm-12">',
           '            <checkbox ng-model="fullModel.model.config.showInputs">Show Points Input on the Graph</checkbox>',
           '          </div>',
