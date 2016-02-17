@@ -242,11 +242,12 @@
       box-shadow: none !important;
     }
 
-    .checkbox-input {
-      display: inline-block;
-      margin-left: 20px;
-    }
+  }
 
+  .ignore-row {
+    @vertical-margin: 10px;
+    margin-top: @vertical-margin;
+    margin-bottom: @vertical-margin;
   }
 
   .text-field-size-row {
@@ -268,6 +269,10 @@
       width: auto;
       margin-left: 5px;
     }
+  }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
   }
 
 }
