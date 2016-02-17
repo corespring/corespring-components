@@ -18,8 +18,9 @@
   },
   "partialResponses": {
     "feedback": {
-      "type" : "none"
-    }
+      "type": "none"
+    },
+    "values": []
   },
   "model": {
     "answerBlankSize": 8,
