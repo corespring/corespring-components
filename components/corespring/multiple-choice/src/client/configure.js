@@ -18,11 +18,6 @@ var main = [
 
     "use strict";
 
-    var choiceTypeDescriptions = {
-      radio: 'This option allows students to select one correct answer. You may, however, set more than one answer as correct if you choose.',
-      checkbox: 'This option allows students to select more than one correct answer. You may, however, set only one correct answer if you choose.'
-    };
-
     var designTemplate = [
       '<div class="form-horizontal" role="form">',
       '  <div class="container-fluid">',
@@ -36,20 +31,19 @@ var main = [
       '    </div>',
       '  </div>',
       '  <div class="container-fluid choice-config">',
-      '    <div class="row">',
-      '      <div class="col-xs-3 choice-config-label">',
-      '        <label class="control-label">Choice Type:</label>',
+      '    <div class="row choice-config-row">',
+      '      <div class="col-xs-4 choice-config-label">',
+      '        <label class="control-label">Response Type:</label>',
       '      </div>',
-      '      <div class="col-xs-3">',
+      '      <div class="col-xs-5">',
       '        <select ng-model="model.config.choiceType" class="choice-type form-control">',
-      '          <option value="radio">Radio</option>',
-      '          <option value="checkbox">Checkbox</option>',
+      '          <option value="radio">Radio - One Answer</option>',
+      '          <option value="checkbox">Checkbox - Multiple Answers</option>',
       '        </select>',
       '      </div>',
-      '      <div class="col-xs-6 choice-type-description">{{choiceTypeDescription}}</div>',
       '    </div>',
-      '    <div class="row">',
-      '      <div class="col-xs-3 choice-config-label">',
+      '    <div class="row choice-config-row">',
+      '      <div class="col-xs-4 choice-config-label">',
       '        <label class="control-label">Choice Labels:</label>',
       '      </div>',
       '      <div class="col-sm-3 col-xs-9">',
@@ -243,12 +237,6 @@ var main = [
           });
           scope.fullModel.correctResponse.value = res;
           scope.updateNumberOfCorrectResponses(res.length);
-        }, true);
-
-
-        scope.$watch('model', function(model) {
-          var choiceType = model.config.choiceType;
-          scope.choiceTypeDescription = choiceTypeDescriptions[choiceType];
         }, true);
 
         scope.$watch('feedback', function(newFeedback) {
