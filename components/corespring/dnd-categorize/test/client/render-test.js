@@ -303,7 +303,7 @@ describe('corespring:dnd-categorize:render', function() {
       setModelAndDigestWithSession({
         answers: {
           cat_1: ['choice_1'],
-          cat_2: ['choice_3'],
+          cat_2: ['choice_3']
         },
         numberOfAnswers: 2
       });
