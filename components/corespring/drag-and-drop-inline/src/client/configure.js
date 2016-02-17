@@ -400,7 +400,7 @@ function main(
           '<div class="row">',
           '  <div class="col-xs-12">',
           '    <p>',
-          '      In Short Answer &mdash; Drag and Drop, students are asked to complete a ',
+          '      In Fill in the Blank, students are asked to complete a ',
           '      sentence, word, phrase or equation using context clues presented in the ',
           '      text that surrounds it.',
           '    </p>',
