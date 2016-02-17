@@ -80,9 +80,9 @@ function renderCorespringDndCategorize(
       isAnswerEmpty: isAnswerEmpty,
       reset: reset,
       setDataAndSession: setDataAndSession,
+      setInstructorData: setInstructorData,
       setMode: function(mode) {},
-      setResponse: setResponse,
-      setInstructorData: setInstructorData
+      setResponse: setResponse
     };
 
     scope.$watch('categoriesPerRow', updateView);
@@ -117,7 +117,6 @@ function renderCorespringDndCategorize(
       setConfig(dataAndSession.data.model);
       initLayouts();
 
-      scope.$broadcast('reset');
       scope.renderModel = prepareRenderModel(scope.data.model, scope.session);
       scope.saveRenderModel = _.cloneDeep(scope.renderModel);
       scope.undoModel.init();
@@ -293,7 +292,6 @@ function renderCorespringDndCategorize(
     }
 
     function reset() {
-      scope.$broadcast('reset');
       scope.isSeeAnswerPanelExpanded = false;
       scope.response = undefined;
 
@@ -319,11 +317,12 @@ function renderCorespringDndCategorize(
       updateView();
     }
 
-    function onRenderModelChange() {
+    function onRenderModelChange(newValue, oldValue) {
+      if(oldValue === undefined || _.isEqual(newValue,oldValue)){
+        return;
+      }
       if (_.isFunction(scope.answerChangedCallback)) {
-        if (!isAnswerEmpty()) {
-          scope.answerChangedCallback();
-        }
+        scope.answerChangedCallback();
       }
       scope.undoModel.remember();
     }
