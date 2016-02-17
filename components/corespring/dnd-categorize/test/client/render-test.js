@@ -59,15 +59,19 @@ describe('corespring:dnd-categorize:render', function() {
 
 
   function ignoreAngularIds(obj) {
-    var newObj = _.cloneDeep(obj);
-    for (var s in newObj) {
-      if (s === '$$hashKey') {
-        delete newObj[s];
-      } else if (_.isObject(newObj[s])) {
-        newObj[s] = ignoreAngularIds(newObj[s]);
+
+    function removeIds(obj) {
+      for (var s in obj) {
+        if (s === '$$hashKey') {
+          delete obj[s];
+        } else if (typeof obj[s] === 'object') {
+          removeIds(obj[s]);
+        }
       }
+      return obj;
     }
-    return newObj;
+
+    return removeIds(_.cloneDeep(obj));
   }
 
   beforeEach(angular.mock.module('test-app'));
@@ -329,10 +333,11 @@ describe('corespring:dnd-categorize:render', function() {
           }
         }
       });
+      scope.$digest();
       expect(changeHandlerCalled).toBe(false);
     });
 
-    it('does get called when an answer is selected', function() {
+    it('does get called when an answer changes', function() {
       setModelAndDigest();
       scope.renderModel.categories[0].choices = [{
         model: {
@@ -341,6 +346,25 @@ describe('corespring:dnd-categorize:render', function() {
       }];
       scope.$digest();
       expect(changeHandlerCalled).toBe(true);
+    });
+
+    it('does not get called when an answer does not change', function() {
+      setModelAndDigest();
+      scope.renderModel.categories[0].choices = [{
+        model: {
+          id: 'choice_1'
+        }
+      }];
+      scope.$digest();
+      changeHandlerCalled = false;
+
+      //now set same answer again
+      scope.renderModel.categories[0].choices = [{
+        model: {
+          id: 'choice_1'
+        }
+      }];
+      expect(changeHandlerCalled).toBe(false);
     });
 
 
