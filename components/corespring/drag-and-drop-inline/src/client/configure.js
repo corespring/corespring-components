@@ -127,6 +127,7 @@ function main(
     scope.removeAnswerArea = removeAnswerArea;
     scope.removeChoice = removeChoice;
     scope.onDrag = onDrag;
+    scope.hasChoice = hasChoice;
 
     scope.$on('get-config-scope', onGetConfigScope);
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
@@ -152,6 +153,11 @@ function main(
 
     function onDrag(event, ui) {
       Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
+    }
+
+    function hasChoice($index) {
+      var choice = $(scope.model.choices[$index].label).text();
+      return !_.isEmpty(choice.trim());
     }
 
     function getAnswer() {
@@ -413,9 +419,15 @@ function main(
       return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <label class="control-label" style="margin-bottom: 10px;">Problem Area</label>',
-          '    <p class="answer-area-help-text">Begin typing and click "Add Answer Blank" to ',
-          '        insert an answer blank. Drag the correct answer(s) to the blank(s).</p>',
+          '    <h3>Problem Area</h3>',
+          '  </div>',
+          '</div>',
+          '<div class="row">',
+          '  <div class="col-xs-12">',
+          '    <p>',
+          '       Begin typing and click "Add Answer Blank" to insert an answer blank. Drag the correct answer(s)',
+          '       to the blank(s).',
+          '    </p>',
           '  </div>',
           '</div>',
           '<div class="row">',
@@ -440,8 +452,12 @@ function main(
       return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <label class="control-label" style="margin-bottom: 10px;">Choices</label>',
-          '    <p><b>Add a label to choice area (optional).</b></p>',
+          '    <h3>Choices</h3>',
+          '  </div>',
+          '</div>',
+          '<div class="row">',
+          '  <div class="col-xs-12">',
+          '    <p>Add a label to choice area</p>',
           '  </div>',
           '</div>',
           '<div class="row">',
@@ -458,16 +474,18 @@ function main(
           '  </div>',
           '  <div class="col-xs-12">',
           '    <p><i class="legend">To set correct answer, drag choice to an answer blank in the problem area.</i></p>',
-          '    <p><i>',
-          '      The "Remove tile after placing" option removes the answer from the choice area after ',
-          '      a student places it in an answer area. If you select this option on a choice, you ',
-          '      may not add it to more than one answer blank.',
-          '    </i></p>',
           '  </div>',
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <remove-after-placing choices="fullModel.model.choices"></remove-after-placing>',
+          '    <div class="col-xs-7 remove-container">',
+          '      <remove-after-placing',
+          '          tooltip=\'The "Remove tile after placing" option removes the answer from the choice area after a student places it in an answer area. If you select this option on a choice, you may not add it to more than one answer blank.\'',
+          '          tooltip-append-to-body="true"',
+          '          tooltip-placement="bottom"',
+          '          choices="fullModel.model.choices">',
+          '      </remove-after-placing>',
+          '    </div>',
           '    <ul class="draggable-choices" ng-model="model.choices">',
           '      <li class="draggable-choice" ',
           '          data-choice-id="{{choice.id}}" ',
@@ -478,7 +496,9 @@ function main(
           '          jqyoui-draggable="choiceDraggableOptions($index)"',
           '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
           '        <div class="blocker" ng-click="activate($event, $index)" ng-hide="active[$index]">',
-          '          <div class="bg"></div>',
+          '          <div class="bg">',
+          '            <span class="placeholder" ng-show="!hasChoice($index)">Enter a choice</span>',
+          '          </div>',
           '          <div class="content">',
           '            <ul class="edit-controls">',
           '              <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true"',
