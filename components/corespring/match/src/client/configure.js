@@ -616,8 +616,6 @@ var main = [
           '            </td>',
           '          </tr>',
           '          <tr>',
-          '            <td class="no-border">',
-          '            </td>',
           '            <td class="add-row" colspan="5">',
           '              <button type="button" class="add-row-button btn btn-default" ',
           '                  ng-click="addRow()">+ Add a row</button>',
