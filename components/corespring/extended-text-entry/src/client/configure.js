@@ -8,7 +8,7 @@ var main = [
 
     var design = [
       '<div class="form-group">',
-      '        <div class="feedback-label">Feedback</div>',
+      '        <h3>Feedback</h3>',
       '        <div class="well">',
       '          <div feedback-selector',
       '               fb-sel-label="When answer submitted, show"',
@@ -26,6 +26,9 @@ var main = [
       '       In an Open Ended interaction, students respond to a prompt in short or long form. These interactions ',
       '       are not automatically scored.',
       '     </p>',
+      '     <div>',
+      '       <h3>Display</h3>',
+      '     </div>',
       '     <div>Adjust the height and width of student response area below.</div>',
       '     <form class="form-horizontal" role="form" style="margin-top: 10px">',
       '       <div class="form-group" style="max-width: 80%">',
