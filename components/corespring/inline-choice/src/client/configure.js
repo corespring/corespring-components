@@ -75,7 +75,7 @@ var main = [
       '        </div>',
       '      </div>',
       '      <div class="row shuffle">',
-      '        <div class="col-md-10 col-xs-10 col-md-offset-1 col-xs-offset-1">',
+      '        <div class="col-md-10 col-md-offset-2-5">',
       '          <checkbox',
       '              ng-init="remain = choice.shuffle == undefined ? false : !choice.shuffle" ng-model="remain"',
       '              ng-change="choice.shuffle = !remain; resetStash()">Don\'t Shuffle</checkbox>',
