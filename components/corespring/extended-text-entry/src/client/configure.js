@@ -29,7 +29,7 @@ var main = [
       '     <div>',
       '       <h3>Display</h3>',
       '     </div>',
-      '     <div>Adjust the height and width of student response area below.</div>',
+      '     <div>Adjust the width and height of student response area below.</div>',
       '     <form class="form-horizontal" role="form" style="margin-top: 10px">',
       '       <div class="form-group" style="max-width: 80%">',
       '         <label class="col-sm-4 control-label narrow-form-label">Box width:</label>',

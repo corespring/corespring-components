@@ -466,7 +466,7 @@ function main(
           '    </div>',
           '  </div>',
           '  <div class="col-xs-12">',
-          '    <p><i class="legend">To set correct answer, drag choice to an answer blank in the problem area.</i></p>',
+          '    <p class="legend">To set correct answer, drag choice to an answer blank in the problem area.</p>',
           '  </div>',
           '</div>',
           '<div class="row">',
