@@ -60,8 +60,11 @@ var main = [
     var correctResponseView = [
       '<div ng-hide="fullModel.model.config.exhibitOnly">',
       '<h3>Correct Response</h3>',
-      '    <p>Select answer type and place it on the number line. Intersecting points, line segments and/or rays will appear above the number line.</p>',
-      '    <p><i>Note: A maximum of 20 points, line segments or rays may be plotted.</i></p>',
+      '    <p>',
+      '      Select answer type and place it on the number line. Intersecting points, line segments and/or rays',
+      '      will appear above the number line. <i>Note: A maximum of 20 points, line segments or rays may be',
+      '      plotted.</i>',
+      '    </p>',
       '    <div class="centered-graph-holder">',
       '      <div class="centered-graph" interactive-graph',
       '           ngModel="correctResponseView.model"',
