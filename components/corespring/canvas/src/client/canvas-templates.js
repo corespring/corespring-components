@@ -120,7 +120,7 @@ exports.service = [
           '        <h3>Display</h3>',
           '        <div class="row config-form-row graph-labels-label-row">',
           '          <label class="col-xs-12">',
-          '            Graph Labels (optional)',
+          '            Graph Labels',
           '          </label>',
           '        </div>',
           '        <div class="row config-form-row graph-labels-row">',
