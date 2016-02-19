@@ -73,7 +73,7 @@ function LabelEditorCorespringDndCategorize(
         '       image-service="imageService()" ',
         '       mini-wiggi-wiz="" ',
         '       ng-model="model.label" ',
-        '       placeholder="Enter a label (optional)"',
+        '       placeholder="Enter a label"',
         '    ></div>',
         '  </div>',
         '  <div class="html-wrapper" ng-bind-html-unsafe="model" ng-if="!editable"></div>',
