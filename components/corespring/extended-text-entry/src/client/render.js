@@ -17,7 +17,7 @@ var main = ['$compile',
       this.initialise = function($node, replaceWith) {
         var content = $node.html() || '';
         var isNew = $node[0].outerHTML.indexOf('mathinput-holder-init') >= 0;
-        var newNode = $('<div mathinput-holder><math-input  style="min-width: 50px;" editable="true" keypad-auto-open="' + isNew + '" keypad-type="\'basic\'" ng-model="expr" expression="\'' + content + '\'"></math-input></div>');
+        var newNode = $('<div mathinput-holder><math-input editable="true" keypad-auto-open="' + isNew + '" keypad-type="\'basic\'" ng-model="expr" expression="\'' + content + '\'"></math-input></div>');
         return replaceWith(newNode);
       };
 
