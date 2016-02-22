@@ -466,7 +466,7 @@ function main(
           '         mini-wiggi-wiz=""',
           '         dialog-launcher="external"',
           '         ng-model="model.config.choiceAreaLabel"',
-          '         placeholder="Choice Label"',
+          '         placeholder="Enter a label or leave blank"',
           '         features="extraFeaturesForChoiceLabel"',
           '         parent-selector=".modal-body"',
           '         image-service="imageService()">',
