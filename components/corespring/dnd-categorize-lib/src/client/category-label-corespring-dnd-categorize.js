@@ -94,7 +94,7 @@ function CategoryLabelCorespringDndCategorize(
         '         image-service="imageService()" ',
         '         mini-wiggi-wiz="" ',
         '         ng-model="category.model.label" ',
-        '         placeholder="Enter a label"',
+        '         placeholder="Enter a label or leave blank"',
         '      ></div>',
         '    </div>',
         '    <div class="html-wrapper" ng-bind-html-unsafe="category.model.label" ng-if="!isEditMode"></div>',
