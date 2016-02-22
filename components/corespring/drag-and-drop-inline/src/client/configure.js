@@ -460,7 +460,7 @@ function main(
           '    <div id="choiceLabelWiggi" ',
           '         mini-wiggi-wiz=""',
           '         ng-model="model.config.choiceAreaLabel"',
-          '         placeholder="Choice Label"',
+          '         placeholder="Enter a label or leave blank"',
           '         features="extraFeaturesForChoiceLabel"',
           '         parent-selector=".modal-body">',
           '    </div>',
