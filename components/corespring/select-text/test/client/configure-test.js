@@ -115,24 +115,5 @@ describe('corespring:select-text:configure', function () {
     expect(scope.model.passage).toEqual('line1<br>line2<br>line3');
   });
 
-  describe('partialScoring', function () {
-    function removeChoice(){
-      scope.content.xhtml = scope.model.choices.slice(1).join(' ');
-    }
-
-    xit('should automatically remove additional partial scoring scenarios after removing a correct choice', function () {
-      var testModel = createTestModel();
-      container.elements['1'].setModel(testModel);
-      rootScope.$digest();
-      expect(scope.numberOfCorrectResponses).toEqual(3);
-      expect(scope.maxNumberOfScoringScenarios).toEqual(2);
-      scope.addScoringScenario();
-      expect(scope.fullModel.partialScoring.length).toEqual(2);
-      removeChoice();
-      rootScope.$digest();
-      expect(scope.fullModel.partialScoring.length).toEqual(1);
-    });
-  });
-
 
 });
