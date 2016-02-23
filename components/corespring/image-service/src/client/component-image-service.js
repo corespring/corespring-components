@@ -57,7 +57,8 @@ var def = [
       function addQueryParamsIfPresent(path) {
         var doc = $document[0];
         var href = doc.location.href;
-        return  path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
+        path = path.indexOf('?') === -1 ? path : path.split('?')[0];
+        return path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
       }
       
       this.errorMessage = '<strong>Upload error</strong><br/>Your image was not uploaded. Please try again.';
