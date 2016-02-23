@@ -33,10 +33,6 @@
   },
   "libraries": [
     {
-      "name": "dnd-categorize-lib",
-      "organization": "corespring"
-    },
-    {
       "name": "drag-and-drop-engine",
       "organization": "corespring"
     },
