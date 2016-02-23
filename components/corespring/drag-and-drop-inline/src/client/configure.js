@@ -44,9 +44,6 @@ function main(
 
 
   function controller(scope) {
-    scope.imageService = function() {
-      return ComponentImageService;
-    };
 
     scope.extraFeaturesForChoices = {
       definitions: [
@@ -435,10 +432,8 @@ function main(
           '    <div id="answerAreaWiggi"',
           '      active="true"',
           '      class="answer-area-wiggi"',
-          '      dialog-launcher="external"',
           '      disable-auto-activation="true"',
           '      features="extraFeaturesForAnswerArea"',
-          '      image-service="imageService()"',
           '      mini-wiggi-wiz=""',
           '      ng-model="model.answerAreaXhtml"',
           '      parent-selector=".modal-body">',
@@ -464,12 +459,10 @@ function main(
           '  <div class="col-md-7">',
           '    <div id="choiceLabelWiggi" ',
           '         mini-wiggi-wiz=""',
-          '         dialog-launcher="external"',
           '         ng-model="model.config.choiceAreaLabel"',
           '         placeholder="Enter a label or leave blank"',
           '         features="extraFeaturesForChoiceLabel"',
-          '         parent-selector=".modal-body"',
-          '         image-service="imageService()">',
+          '         parent-selector=".modal-body">',
           '    </div>',
           '  </div>',
           '  <div class="col-xs-12">',
@@ -524,10 +517,8 @@ function main(
           '            active="active[$index]"',
           '            mini-wiggi-wiz=""',
           '            ng-model="choice.label"',
-          '            dialog-launcher="external"',
           '            features="extraFeaturesForChoices"',
-          '            parent-selector=".modal-body"',
-          '            image-service="imageService()">',
+          '            parent-selector=".modal-body">',
           '        </div>',
           '      </li>',
           '    </ul>',

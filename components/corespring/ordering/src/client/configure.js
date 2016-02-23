@@ -91,10 +91,9 @@ var main = [
         '            </checkbox>',
         '          </div>',
         '          <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
-        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external"',
+        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz=""',
         '              features="extraFeaturesForChoices"',
-        '              parent-selector=".modal-body"',
-        '              image-service="imageService()">',
+        '              parent-selector=".modal-body">',
         '            <edit-pane-toolbar alignment="bottom">',
         '              <div class="btn-group pull-right">',
         '                <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">',
@@ -146,9 +145,7 @@ var main = [
         '    <div class="row">',
         '      <div class="col-xs-6" ng-class="{\'hidden\': model.config.placementType == \'inPlace\'}">',
         '         <div mini-wiggi-wiz="" ',
-        '             dialog-launcher="external" ',
         '             features="extraFeaturesForChoices"',
-        '             image-service="imageService()" ',
         '             ng-model="model.config.answerAreaLabel" ',
         '             placeholder="Enter a label or leave blank"',
         '             feature-overrides="overrideFeatures">',
@@ -192,9 +189,6 @@ var main = [
         replace: true,
         controller: ['$scope',
           function($scope) {
-            $scope.imageService = function() {
-              return ComponentImageService;
-            };
 
             $scope.extraFeaturesForChoices = {
               definitions: [

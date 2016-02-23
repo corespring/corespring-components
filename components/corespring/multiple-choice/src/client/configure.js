@@ -5,8 +5,8 @@ var main = [
   '$timeout',
   '$http',
   'ChoiceTemplates',
-  "ComponentImageService",
-  "WiggiMathJaxFeatureDef",
+  'ComponentImageService',
+  'WiggiMathJaxFeatureDef',
   function(
     $log,
     $timeout,
@@ -69,9 +69,7 @@ var main = [
       '              <div mini-wiggi-wiz="" ',
       '                disable-auto-activation="true"',
       '                active="active[choice.value]"',
-      '                dialog-launcher="external" ',
       '                features="extraFeaturesForChoices"',
-      '                image-service="imageService()" ',
       '                ng-click="activate(choice.value)"',
       '                ng-model="choice.label" ',
       '                parent-selector=".modal-body"',
@@ -340,9 +338,6 @@ var main = [
       ].join(""),
 
       controller: ['$scope', function($scope) {
-        $scope.imageService = function() {
-          return ComponentImageService;
-        };
 
         $scope.extraFeaturesForChoices = {
           definitions: [

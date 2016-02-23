@@ -1,6 +1,10 @@
 exports.framework = "angular";
 exports.factory = [
   'ComponentImageService',
+  /**
+   * TODO: Untangle - This feature 'ImageFeature' belongs the main editor.
+   * It is not safe to use it in this context.
+   */
   'ImageFeature',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
@@ -23,11 +27,8 @@ exports.factory = [
         if (scope.hasMiniWiggiScopeExtension) {
           return;
         }
+        
         scope.hasMiniWiggiScopeExtension = true;
-
-        scope.imageService = function() {
-          return ComponentImageService;
-        };
 
         scope.overrideFeatures = [
           ImageFeature

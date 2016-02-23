@@ -29,7 +29,6 @@ function configureCorespringDndCategorize(
     scope.answerAreaOptions = ['above', 'below'];
     scope.categoriesPerRowOptions = _.range(1, MAX_CATEGORIES_PER_ROW + 1);
     scope.choicesPerRowOptions = _.range(1, MAX_CHOICES_PER_ROW + 1);
-    scope.imageService = ComponentImageService;
     scope.leftPanelClosed = false;
     scope.numberOfCorrectAnswers = 0;
 

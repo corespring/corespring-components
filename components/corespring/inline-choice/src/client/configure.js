@@ -27,8 +27,8 @@ var main = [
       '              ng-click="toggleCorrectResponse(choice)"></i>',
       '        </div>',
       '        <div class="col-md-7">',
-      '          <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
-      '              image-service="imageService()" features="extraFeaturesForChoices" ',
+      '          <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
+      '              features="extraFeaturesForChoices" ',
       '              parent-selector=".modal-body">',
       '            <edit-pane-toolbar alignment="bottom">',
       '              <div class="btn-group pull-right">',
@@ -272,9 +272,6 @@ var main = [
       ].join(""),
 
       controller: ['$scope', function($scope) {
-        $scope.imageService = function() {
-          return ComponentImageService;
-        };
 
         $scope.extraFeaturesForChoices = {
           definitions: [
