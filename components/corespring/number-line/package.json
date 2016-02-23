@@ -20,6 +20,10 @@
     {
       "name" : "server-shared",
       "organization" : "corespring"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
     }
   ],
   "dependencies": {

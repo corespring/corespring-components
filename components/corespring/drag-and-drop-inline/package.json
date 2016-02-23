@@ -33,6 +33,10 @@
   },
   "libraries": [
     {
+      "name": "dnd-categorize-lib",
+      "organization": "corespring"
+    },
+    {
       "name": "drag-and-drop-engine",
       "organization": "corespring"
     },
@@ -53,6 +57,10 @@
       "name": "choice-templates",
       "organization": "corespring",
       "scope": "editor"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
     }
 
   ]
