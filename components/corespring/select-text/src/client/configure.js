@@ -279,6 +279,9 @@ exports.directive = [
         } else {
           passageNeedsUpdate = true;
         }
+
+        //CO-490 Update passage before the selections have been set
+        scope.fullModel.model.passage = plainTextToHtml(removeHtmlTags(newValue));
       }
 
       function warnAboutContentChange(oldValue) {

@@ -66,6 +66,7 @@ describe('corespring:select-text:configure', function () {
   function MockWiggiMathJaxFeatureDef() {
   }
 
+
   beforeEach(function () {
     module(function ($provide) {
       $provide.value('ServerLogic', MockServerLogic);
@@ -87,10 +88,15 @@ describe('corespring:select-text:configure', function () {
       container.registerConfigPanel(id, b);
     };
     element = $compile("<div navigator=''><corespring-select-text-configure id='1'></corespring-select-text-configure></div>")(scope);
-    element = element.find('.select-text-configuration');
+    element = element.find('.corespring-select-text-config');
     scope = element.isolateScope();
     rootScope = $rootScope;
   }));
+
+  function setModelAndDigest(){
+    container.elements['1'].setModel(createTestModel());
+    scope.$digest();
+  }
 
   it('constructs', function () {
     expect(element).not.toBe(null);
@@ -99,6 +105,14 @@ describe('corespring:select-text:configure', function () {
   it('component is being registered by the container', function () {
     expect(container.elements['1']).not.toBe(undefined);
     expect(container.elements['2']).toBeUndefined();
+  });
+
+  it('should update the passage when the plainText is changed', function(){
+    setModelAndDigest();
+    scope.model.passage = '';
+    scope.model.cleanPassage = 'line1\nline2\nline3';
+    scope.$digest();
+    expect(scope.model.passage).toEqual('line1<br>line2<br>line3');
   });
 
   describe('partialScoring', function () {
