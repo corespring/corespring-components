@@ -12,7 +12,13 @@ describe('removeAfterPlacing', function() {
 
   function choices() {
     return [
-      { moveOnDrag: false }, { moveOnDrag: true }, { moveOnDrag: false }
+      {
+        moveOnDrag: false
+      }, {
+        moveOnDrag: true
+      }, {
+        moveOnDrag: false
+      }
     ];
   }
 
@@ -35,8 +41,8 @@ describe('removeAfterPlacing', function() {
       beforeEach(function() {
         _.each(scope.fullModel.model.choices, function(choice) {
           choice.moveOnDrag = true;
-          scope.$digest();
         });
+        scope.$digest();
       });
 
       it('should be true', function() {
@@ -45,21 +51,18 @@ describe('removeAfterPlacing', function() {
 
     });
 
-    describe('when all choices have moveOnDrag = false', function() {
+    describe('when at least one choice has moveOnDrag = false', function() {
       beforeEach(function() {
         _.each(scope.fullModel.model.choices, function(choice) {
           choice.moveOnDrag = false;
-          scope.$digest();
         });
+        scope.$digest();
       });
 
-      it('should be true', function() {
+      it('should be false', function() {
         expect(scope.config.removeAllAfterPlacing).toBe(false);
       });
-
-
     });
-
   });
 
   describe('choices', function() {
@@ -74,6 +77,21 @@ describe('removeAfterPlacing', function() {
       it('should have moveOnDrag = true for all choices', function() {
         _.each(scope.fullModel.model.choices, function(choice) {
           expect(choice.moveOnDrag).toBe(true);
+        });
+      });
+
+    });
+
+    describe('config.removeAllAfterPlacing set to false', function() {
+
+      beforeEach(function() {
+        scope.config.removeAllAfterPlacing = false;
+        scope.$digest();
+      });
+
+      it('should have moveOnDrag = false for all choices', function() {
+        _.each(scope.fullModel.model.choices, function(choice) {
+          expect(choice.moveOnDrag).toBe(false);
         });
       });
 
