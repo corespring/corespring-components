@@ -40,6 +40,7 @@ function configureCorespringDndCategorize(
     scope.$watch('editorModel.choicesLabel', updateChoicesLabel, true);
     scope.$watch('editorModel.categories', updateModel, true);
     scope.$watch('editorModel.partialScoring',  _.debounce(updatePartialScoring, 200), true);
+    scope.$watch('editorModel.removeAllAfterPlacing', updateRemoveAllAfterPlacing, true);
     scope.$watch('editorModel.weighting', _.debounce(updateWeighting, 200), true);
     scope.$watch('model', renderMath, true);
 
@@ -58,8 +59,10 @@ function configureCorespringDndCategorize(
       scope.fullModel.correctResponse = scope.fullModel.correctResponse || {};
 
       scope.model = scope.fullModel.model;
+      scope.model.config = scope.model.config || {};
       scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 1;
       scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 1;
+      scope.model.config.removeAllAfterPlacing = scope.model.config.removeAllAfterPlacing || false;
 
       scope.editorModel = prepareEditorModel();
       //log('setModel out', _.cloneDeep(fullModel), _.cloneDeep(scope.editorModel));
@@ -76,6 +79,7 @@ function configureCorespringDndCategorize(
       });
 
       var partialScoring = preparePartialScoringEditorModel(scope.fullModel.partialScoring);
+      var removeAllAfterPlacing = {value:scope.model.config.removeAllAfterPlacing};
       var weighting = prepareWeightingEditorModel(scope.fullModel.weighting);
 
       return {
@@ -83,6 +87,7 @@ function configureCorespringDndCategorize(
         choicesLabel: choicesLabel,
         categories: categories,
         partialScoring: partialScoring,
+        removeAllAfterPlacing: removeAllAfterPlacing,
         weighting: weighting
       };
 
@@ -137,6 +142,7 @@ function configureCorespringDndCategorize(
       updateCategories();
       updateCorrectResponse();
       updatePartialScoringEditorModel();
+      updateRemoveAllAfterPlacing();
       updateWeightingEditorModel();
 
       //--------------------------------------
@@ -191,7 +197,14 @@ function configureCorespringDndCategorize(
     }
 
     function updateChoicesLabel(){
+      console.log("updateChoicesLabel",  scope.editorModel.choicesLabel);
       scope.fullModel.model.config.choicesLabel = scope.editorModel.choicesLabel.label;
+    }
+
+
+    function updateRemoveAllAfterPlacing(){
+      console.log("updateRemoveAllAfterPlacing",  scope.editorModel.removeAllAfterPlacing);
+      scope.fullModel.model.config.removeAllAfterPlacing = scope.editorModel.removeAllAfterPlacing.value;
     }
 
     function updatePartialScoring(){
@@ -226,7 +239,7 @@ function configureCorespringDndCategorize(
       scope.editorModel.choices.push({
         id: makeChoiceId(idx),
         label: "",
-        moveOnDrag: false
+        moveOnDrag: scope.editorModel.removeAllAfterPlacing.value === true
       });
     }
 
@@ -336,6 +349,7 @@ function configureCorespringDndCategorize(
         '           choices-per-row="model.config.choicesPerRow" ',
         '           choices="editorModel.choices"',
         '           choices-label="editorModel.choicesLabel"',
+        '           remove-all-after-placing="editorModel.removeAllAfterPlacing"',
         '           image-service="imageService"',
         '           mode="edit">',
         '         <div class="container-fluid">',
