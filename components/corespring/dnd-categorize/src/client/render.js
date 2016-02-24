@@ -40,6 +40,7 @@ function renderCorespringDndCategorize(
       attrChoicesLabel: '=?choicesLabel',
       attrCategoriesPerRow: '=?categoriesPerRow',
       attrChoicesPerRow: '=?choicesPerRow',
+      attrRemoveAllAfterPlacing: '=?removeAllAfterPlacing',
       imageService: '=?imageService'
     }
   };
@@ -73,6 +74,8 @@ function renderCorespringDndCategorize(
     scope.onCategoryDrop = onCategoryDrop;
     scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
     scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
+    scope.onToggleMoveOnDrag = onToggleMoveOnDrag;
+    scope.onToggleRemoveAllAfterPlacing = onToggleRemoveAllAfterPlacing;
 
     scope.containerBridge = {
       answerChangedHandler: saveAnswerChangedCallback,
@@ -99,6 +102,7 @@ function renderCorespringDndCategorize(
       scope.$watch('attrChoicesLabel', updateChoicesLabelFromEditor);
       scope.$watch('attrCategoriesPerRow', updateCategoriesPerRowFromEditor);
       scope.$watch('attrChoicesPerRow', updateChoicesPerRowFromEditor);
+      scope.$watch('attrRemoveAllAfterPlacing', updateRemoveAllAfterPlacingFromEditor);
     }
 
     scope.$on('$destroy', onDestroy);
@@ -134,9 +138,10 @@ function renderCorespringDndCategorize(
       var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
 
       var choices = model.config.shuffle ? _.shuffle(model.choices) : _.clone(model.choices);
-      var choicesLabel = model.config.choicesLabel;
       var allChoices = _.clone(choices);
+      var choicesLabel = model.config.choicesLabel;
       var categories = _.map(model.categories, wrapCategoryModel);
+
       if (session.answers) {
         placeAnswersInCategories(session.answers, categories);
         choices = removePlacedAnswersFromChoices(choices, categories);
@@ -563,19 +568,24 @@ function renderCorespringDndCategorize(
       scope.renderModel.choicesLabel = scope.attrChoicesLabel;
     }
 
+    function updateRemoveAllAfterPlacingFromEditor(newValue, oldValue) {
+      console.log("updateRemoveAllAfterPlacingFromEditor", scope.attrRemoveAllAfterPlacing);
+      scope.renderModel.removeAllAfterPlacing = scope.attrRemoveAllAfterPlacing;
+    }
+
     function setRenderModelFromEditor() {
       if (!layout) {
         initLayouts();
       }
 
       var renderModel = {
-        dragAndDropScope: 'scope-' + Math.floor(Math.random() * 10000)
+        dragAndDropScope: 'scope-' + Math.floor(Math.random() * 10000),
+        choices: scope.attrChoices,
+        choicesLabel: scope.attrChoicesLabel,
+        allChoices: _.clone(scope.attrChoices),
+        categories: scope.attrCategories,
+        removeAllAfterPlacing: scope.attrRemoveAllAfterPlacing
       };
-
-      renderModel.choices = scope.attrChoices;
-      renderModel.choicesLabel = scope.attrChoicesLabel;
-      renderModel.allChoices = _.clone(renderModel.choices);
-      renderModel.categories = scope.attrCategories;
 
       scope.renderModel = renderModel;
     }
@@ -623,6 +633,24 @@ function renderCorespringDndCategorize(
     function all() {
       return true;
     }
+
+    function onToggleMoveOnDrag(choice){
+      console.log("onToggleMoveOnDrag", choice);
+
+      if(!choice.moveOnDrag){
+        scope.renderModel.removeAllAfterPlacing.value = false;
+      }
+    }
+
+    function onToggleRemoveAllAfterPlacing(newValue){
+      //why does the checkbox not update the scope variable?
+
+      _.forEach(scope.renderModel.choices, function(choice){
+        choice.moveOnDrag = scope.renderModel.removeAllAfterPlacing.value;
+        console.log("onToggleRemoveAllAfterPlacing", choice);
+      });
+    }
+
   }
 
   function template() {
@@ -697,11 +725,16 @@ function renderCorespringDndCategorize(
         '  </div>',
         '  <div class="row remove-all-row">',
         '    <div class="col-xs-7 remove-container">',
-        '      <remove-after-placing choices="renderModel.choices" ng-if="isEditMode",',
-        '          tooltip=\'The "Remove tile after placing" option removes the answer from the choice area after a student places it in a category. If you select this option on a choice, you may not add it to more than one category.\'',
-        '          tooltip-append-to-body="true"',
-        '          tooltip-placement="bottom">',
-        '      </remove-after-placing>',
+        '      <checkbox ',
+        '         class="control-label"',
+        '         ng-change="onToggleRemoveAllAfterPlacing()"',
+        '         ng-model="renderModel.removeAllAfterPlacing.value"',
+        '         tooltip=\'The "Remove tile after placing" option removes the answer from the choice area after a student places it in a category. If you select this option on a choice, you may not add it to more than one category.\'',
+        '         tooltip-append-to-body="true"',
+        '         tooltip-placement="bottom"',
+        '      >',
+        '        Remove <strong>all</strong> tiles after placing',
+        '      </checkbox>',
         '    </div>',
         '  </div>',
         '  <div class="choices-container">',
@@ -718,6 +751,7 @@ function renderCorespringDndCategorize(
         '      ng-style="choiceStyle"',
         '      on-delete-clicked="onChoiceDeleteClicked(choiceId)" ',
         '      on-edit-clicked="activate(choiceId)" ',
+        '      on-move-on-drag-clicked="onToggleMoveOnDrag(choice)" ',
         '    ></div>',
         '  </div>',
         '</div>'
