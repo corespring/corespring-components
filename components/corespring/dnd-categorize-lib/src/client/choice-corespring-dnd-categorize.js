@@ -27,7 +27,6 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       dragAndDropScope: '=',
       dragEnabled: '=',
       editMode: '=?editMode',
-      imageService: "=?",
       model: '=',
       notifyDeleteClicked: '&onDeleteClicked',
       notifyEditClicked: '&onEditClicked',

@@ -40,8 +40,7 @@ function renderCorespringDndCategorize(
       attrChoicesLabel: '=?choicesLabel',
       attrCategoriesPerRow: '=?categoriesPerRow',
       attrChoicesPerRow: '=?choicesPerRow',
-      attrRemoveAllAfterPlacing: '=?removeAllAfterPlacing',
-      imageService: '=?imageService'
+      attrRemoveAllAfterPlacing: '=?removeAllAfterPlacing'
     }
   };
 
@@ -745,7 +744,6 @@ function renderCorespringDndCategorize(
         '      drag-and-drop-scope="renderModel.dragAndDropScope"',
         '      drag-enabled="isDragEnabled(choice)"',
         '      edit-mode="getEditMode(choice)" ',
-        '      image-service="imageService"',
         '      model="choice" ',
         '      ng-repeat="choice in renderModel.choices track by choice.id" ',
         '      ng-style="choiceStyle"',

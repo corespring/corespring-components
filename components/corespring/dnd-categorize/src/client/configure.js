@@ -1,14 +1,12 @@
 exports.framework = 'angular';
 exports.directives = [{
   directive: [
-    'ComponentImageService',
     'MathJaxService',
     configureCorespringDndCategorize
   ]
 }];
 
 function configureCorespringDndCategorize(
-  ComponentImageService,
   MathJaxService
 ) {
 
@@ -350,7 +348,6 @@ function configureCorespringDndCategorize(
         '           choices="editorModel.choices"',
         '           choices-label="editorModel.choicesLabel"',
         '           remove-all-after-placing="editorModel.removeAllAfterPlacing"',
-        '           image-service="imageService"',
         '           mode="edit">',
         '         <div class="container-fluid">',
         '           <div class="row add-category-row">',
