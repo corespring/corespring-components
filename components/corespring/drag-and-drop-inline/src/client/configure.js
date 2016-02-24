@@ -311,7 +311,7 @@ function main(
         helper: function() {
           return $(dragHelperTemplate(choice));
         },
-        appendTo: ".modal",
+        appendTo: ".config-csdndi",
         cursorAt: {
           bottom: 10,
           right: 10
