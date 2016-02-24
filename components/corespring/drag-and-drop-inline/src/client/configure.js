@@ -120,15 +120,17 @@ function main(
     scope.choiceDraggableOptions = choiceDraggableOptions;
     scope.cleanLabel = makeCleanLabelFunction();
     scope.deactivate = deactivate;
+    scope.hasChoice = hasChoice;
     scope.itemClick = itemClick;
+    scope.onDrag = onDrag;
+    scope.onToggleMoveOnDrag = onToggleMoveOnDrag;
+    scope.onToggleRemoveAllAfterPlacing = onToggleRemoveAllAfterPlacing;
     scope.removeAnswerArea = removeAnswerArea;
     scope.removeChoice = removeChoice;
-    scope.onDrag = onDrag;
-    scope.hasChoice = hasChoice;
 
     scope.$on('get-config-scope', onGetConfigScope);
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
-    scope.$watch('correctAnswers', onChangeCorrectAnswers, true);
+    scope.$watch('correctAnswers', watchCorrectAnswers, true);
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -221,7 +223,7 @@ function main(
       return correctResponse;
     }
 
-    function onChangeCorrectAnswers(newCorrectAnswers) {
+    function watchCorrectAnswers(newCorrectAnswers) {
       if (newCorrectAnswers) {
         scope.fullModel.correctResponse = correctAnswersToCorrectResponse(newCorrectAnswers);
         scope.updateNumberOfCorrectResponses(sumCorrectAnswers());
@@ -258,7 +260,7 @@ function main(
         id: findFreeChoiceSlot(),
         labelType: "text",
         label: "",
-        moveOnDrag: false
+        moveOnDrag: scope.model.config.removeAllAfterPlacing
       });
     }
 
@@ -357,6 +359,18 @@ function main(
       return function(choice) {
         return (choice.label || '').replace(wiggiCleanerRe, '');
       };
+    }
+
+    function onToggleMoveOnDrag(choice){
+      if(!choice.moveOnDrag){
+        scope.model.config.removeAllAfterPlacing = false;
+      }
+    }
+
+    function onToggleRemoveAllAfterPlacing(){
+      _.forEach(scope.model.choices, function(choice){
+        choice.moveOnDrag = scope.model.config.removeAllAfterPlacing;
+      });
     }
 
   }
@@ -472,12 +486,16 @@ function main(
           '<div class="row">',
           '  <div class="col-xs-12">',
           '    <div class="col-xs-7 remove-container">',
-          '      <remove-after-placing',
-          '          tooltip=\'The "Remove tile after placing" option removes the answer from the choice area after a student places it in an answer area. If you select this option on a choice, you may not add it to more than one answer blank.\'',
-          '          tooltip-append-to-body="true"',
-          '          tooltip-placement="bottom"',
-          '          choices="fullModel.model.choices">',
-          '      </remove-after-placing>',
+          '      <checkbox ',
+          '         class="control-label"',
+          '         ng-change="onToggleRemoveAllAfterPlacing()"',
+          '         ng-model="model.config.removeAllAfterPlacing"',
+          '         tooltip=\'The "Remove tile after placing" option removes the answer from the choice area after a student places it in an answer area. If you select this option on a choice, you may not add it to more than one answer blank.\'',
+          '         tooltip-append-to-body="true"',
+          '         tooltip-placement="bottom"',
+          '      >',
+          '        Remove <strong>all</strong> tiles after placing',
+          '      </checkbox>',
           '    </div>',
           '    <ul class="draggable-choices" ng-model="model.choices">',
           '      <li class="draggable-choice" ',
@@ -506,7 +524,10 @@ function main(
           '          </div>',
           '        </div>',
           '        <div class="remove-after-placing">',
-          '          <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">',
+          '          <checkbox id="moveOnDrag{{$index}}" ',
+          '            ng-change="onToggleMoveOnDrag(choice)"',
+          '            ng-model="choice.moveOnDrag"',
+          '          >',
           '            Remove tile after placing',
           '          </checkbox>',
           '        </div>',
