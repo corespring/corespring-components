@@ -56,7 +56,7 @@ var main = [
       '      <input type="number" class="max-points form-control" ng-model="fullModel.model.config.maxPoints" />',
       '    </div>',
       '  </div>',
-      '</form>',
+      '</form>'
     ].join('\n');
 
     var feedback = [
