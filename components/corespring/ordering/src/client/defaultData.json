@@ -38,13 +38,14 @@
       }
     ],
     "config": {
-      "shuffle": true,
-      "showOrdering": false,
-      "choiceAreaLayout": "vertical",
-      "choiceAreaLabel": "",
       "answerAreaLabel": "",
+      "choiceAreaLabel": "",
+      "choiceAreaLayout": "vertical",
       "choiceAreaPosition": "above",
-      "placementType": "inPlace"
+      "placementType": "inPlace",
+      "removeAllAfterPlacing": true,
+      "showOrdering": false,
+      "shuffle": true
     }
   },
   "weight": 1,
