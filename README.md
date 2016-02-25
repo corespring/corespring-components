@@ -108,3 +108,4 @@ to validate an item in the path `~/Downloads/item.json`, then you would run the 
 
 This will return warnings if there are components within the item for which a schema has not been defined, and the
 grunt task will fail for any components which do not validate against their `schema.json` file.
+-
