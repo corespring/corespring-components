@@ -45,13 +45,13 @@
   "model": {
     "columns": [
       {
-        "labelHtml": "Custom header"
-      },
-      {
         "labelHtml": "Column 1"
       },
       {
         "labelHtml": "Column 2"
+      },
+      {
+        "labelHtml": "Column 3"
       }
     ],
     "rows": [

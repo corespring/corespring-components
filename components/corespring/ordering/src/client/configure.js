@@ -20,77 +20,61 @@ var main = [
         '      <p>In Ordering, a student is asked to sequence events or inputs in a specific order.</p>',
         '    </div>',
         '  </div>',
-        '  <div class="row placement-row">',
-        '    <div class="col-xs-2">',
-        '      <radio ng-model="model.config.placementType" value="inPlace">In Place</radio>',
-        '    </div>',
-        '    <div class="col-xs-2">',
-        '      <radio ng-model="model.config.placementType" value="placement">Placement</radio>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <p>',
+        '        After setting up the choices, drag and drop them into the correct order. Students will see a',
+        '        shuffled version of the choices. Students will order the choices in place, unless the <i>include',
+        '        placement area</i> option is selected.',
+        '      </p>',
         '    </div>',
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <p ng-if="model.config.placementType == \'placement\'">',
-        '        Placement area ordering requires the student to drag their choices to a placement area to order. Not',
-        '        all tiles must be used.</br>Drag & drop the tiles to the placement area to set the correct order.',
-        '        Students will see a shuffled version of the choices.',
-        '      </p>',
-        '      <p ng-if="model.config.placementType != \'placement\'">',
-        '        In place ordering asks the student to order within a list. The student must order all of the choices.',
-        '        <br>Drag & drop the tiles to set the correct order. Students will see a shuffled version of the',
-        '        choices.',
-        '      </p>',
+        '      <h3>Choices</h3>',
         '    </div>',
         '  </div>',
         '  <div class="row">',
-        '    <div class="col-xs-6">',
-        '      <label class="control-label">Choices</label>',
-        '      <p>Add a label to choice area (optional).</p>',
-        '    </div>',
-        '    <div class="col-xs-6" ng-class="{\'hidden\': model.config.placementType == \'inPlace\'}">',
-        '      <label class="control-label">Placement Area</label>',
-        '      <p>Add a label to placement area (optional)</p>',
+        '    <div class="col-md-12">',
+        '      <p>Add a label to choice area</p>',
         '    </div>',
         '  </div>',
         '  <div class="row">',
-        '    <div class="col-xs-6">',
-        '        <div class="prompt" mini-wiggi-wiz="" ',
-        '           dialog-launcher="external" ',
-        '           features="extraFeaturesForChoices"',
-        '           image-service="imageService()" ',
-        '           ng-model="model.config.choiceAreaLabel" ',
-        '           placeholder="Enter a label or leave blank"',
-        '           feature-overrides="overrideFeatures"',
-        '        >',
-        '        </div>',
-        '    </div>',
-        '    <div class="col-xs-6" ng-class="{\'hidden\': model.config.placementType == \'inPlace\'}">',
-        '       <div mini-wiggi-wiz="" ',
-        '           dialog-launcher="external" ',
-        '           features="extraFeaturesForChoices"',
-        '           image-service="imageService()" ',
-        '           ng-model="model.config.answerAreaLabel" ',
-        '           placeholder="Enter a label or leave blank"',
-        '           feature-overrides="overrideFeatures"',
-        '        >',
+        '    <div class="col-md-7">',
+        '        <div class="prompt" mini-wiggi-wiz=""',
+        '            features="extraFeaturesForChoices"',
+        '            ng-model="model.config.choiceAreaLabel"',
+        '            placeholder="Enter a label or leave blank"',
+        '            feature-overrides="overrideFeatures">',
         '        </div>',
         '    </div>',
         '  </div>',
-        '  <div class="row choices-row">',
-        '    <div class="col-xs-6">',
-        '      <label class="control-label">Enter Choices</label>',
-        '      <remove-after-placing choices="fullModel.model.choices"',
-        '        ng-show="model.config.placementType == \'placement\'"></remove-after-placing>',
-        '      <ul class="sortable-choices draggable-choices"',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <div ng-style="{\'visibility\': config.placementToggle ? \'visible\':\'hidden\'}">',
+        '        <remove-after-placing choices="fullModel.model.choices"></remove-after-placing>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <ul class="sortable-choices draggable-choices clearfix"',
         '          ui-sortable="choicesSortableOptions" ng-model="model.choices">',
-        '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in model.choices"',
+        '        <li class="sortable-choice col-md-7 col-md-offset-2-5" data-choice-id="{{choice.id}}"',
+        '            ng-repeat="choice in model.choices"',
         '            ng-model="model.choices[$index]" ng-click="itemClick($event)"',
         '            jqyoui-draggable="{index: {{$index}}, placeholder: \'keep\'}"',
         '            data-jqyoui-options="{revert: \'invalid\'}">',
         '          <div class="blocker" ng-click="activate($index, $event)" ng-hide="active[$index]">',
-        '            <div class="bg"></div>',
+        '            <div class="bg">',
+        '              <span class="placeholder" ng-show="!hasChoice($index)">Enter a choice</span>',
+        '            </div>',
         '            <div class="content">',
         '              <ul class="edit-controls">',
+        '                <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true" ',
+        '                    tooltip-placement="bottom">',
+        '                  <i class="fa fa-pencil"></i>',
+        '                </li>',
         '                <li class="delete-icon-button" tooltip="delete" tooltip-append-to-body="true"',
         '                    tooltip-placement="bottom">',
         '                  <i ng-click="removeChoice($index)" class="fa fa-trash-o"></i>',
@@ -98,15 +82,16 @@ var main = [
         '              </ul>',
         '            </div>',
         '          </div>',
-        '          <div class="remove-after-placing" ng-show="model.config.placementType == \'placement\'">',
+        '          <div class="remove-after-placing"',
+        '              ng-style="{\'visibility\': config.placementToggle ? \'visible\':\'hidden\'}">',
         '            <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">',
         '              Remove tile after placing',
         '            </checkbox>',
         '          </div>',
         '          <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
-        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz="" dialog-launcher="external" features="extraFeaturesForChoices"',
-        '              parent-selector=".modal-body"',
-        '              image-service="imageService()">',
+        '          <div ng-show="active[$index]" ng-model="choice.label" mini-wiggi-wiz=""',
+        '              features="extraFeaturesForChoices"',
+        '              parent-selector=".modal-body">',
         '            <edit-pane-toolbar alignment="bottom">',
         '              <div class="btn-group pull-right">',
         '                <button ng-click="closePane()" class="btn btn-sm btn-success" style="float:right;">',
@@ -119,27 +104,9 @@ var main = [
         '      </ul>',
         '      <button class="btn btn-default" ng-click="addChoice()">Add a Choice</button>',
         '    </div>',
-        '    <div class="col-xs-6" ng-show="model.config.placementType == \'placement\'">',
-        '      <label class="control-label">Drag to Placement Area:</label>',
-        '      <ul class="sorted-choices draggable-choices" ui-sortable="targetSortableOptions" ng-model="targets"',
-        '          data-drop="true" jqyoui-droppable="" data-jqyoui-options="droppableOptions">',
-        '        <li class="sortable-choice" data-choice-id="{{choice.id}}" ng-repeat="choice in targets">',
-        '          <div class="delete-icon">',
-        '            <i ng-click="removeTarget(choice)" class="fa fa-close"></i>',
-        '          </div>',
-        '          <span ng-bind-html-unsafe="choice.label"></span>',
-        '        </li>',
-        '      </ul>',
-        '      <div class="zero-state" ng-show="targets.length == 0">',
-        '        Drag and order correct answers here.',
-        '      </div>',
-        '      <div>',
-        '        <checkbox class="show-ordering" ng-model="model.config.showOrdering">Show numbered guides</checkbox>',
-        '      </div>',
-        '    </div>',
         '  </div>',
-        '  <div class="placement-row-group" >',
-        '    <div class="row" ng-show="model.config.placementType == \'placement\'">',
+        '  <div class="placement-row-group">',
+        '    <div class="row placement-row" ng-style="{\'visibility\': config.placementToggle ? \'visible\':\'hidden\'}">',
         '      <div class="col-xs-12">',
         '        <checkbox class="shuffle" ng-model="model.config.shuffle">Shuffle Tiles</checkbox>',
         '      </div>',
@@ -151,7 +118,8 @@ var main = [
         '            ng-options="layout.value as layout.name for layout in layouts"></select>',
         '      </div>',
         '    </div>',
-        '    <div class="row display-row" ng-show="model.config.placementType == \'placement\' && model.config.choiceAreaLayout === \'horizontal\'">',
+        '    <div class="row display-row"',
+        '        ng-show="model.config.placementType == \'placement\' && model.config.choiceAreaLayout === \'horizontal\'">',
         '      <div class="col-xs-12">',
         '        <label class="control-label">Show choices </label>',
         '        <select ng-model="model.config.choiceAreaPosition" class="form-control"',
@@ -159,9 +127,32 @@ var main = [
         '        <label class="control-label"> placement area</label>',
         '      </div>',
         '    </div>',
+        '    <div class="row">',
+        '      <div class="col-xs-4">',
+        '        <checkbox ng-model="config.placementToggle">Include placement area</checkbox>',
+        '      </div>',
+        '      <div class="col-xs-4" ng-style="{\'visibility\': config.placementToggle ? \'visible\':\'hidden\'}">',
+        '        <checkbox class="show-ordering" ng-model="model.config.showOrdering">Show numbered guides</checkbox>',
+        '      </div>',
+        '    </div>',
+        '    <div class="row placement-row">',
+        '      <div class="col-xs-12" ng-class="{\'hidden\': model.config.placementType == \'inPlace\'}">',
+        '        <p>Add a label to placement area</p>',
+        '      </div>',
+        '    </div>',
+        '    <div class="row">',
+        '      <div class="col-xs-6" ng-class="{\'hidden\': model.config.placementType == \'inPlace\'}">',
+        '         <div mini-wiggi-wiz="" ',
+        '             features="extraFeaturesForChoices"',
+        '             ng-model="model.config.answerAreaLabel" ',
+        '             placeholder="Enter a label or leave blank"',
+        '             feature-overrides="overrideFeatures">',
+        '         </div>',
+        '      </div>',
+        '    </div>',
         '  </div>',
-        '  <div class="row">',
-        '    <div class="col-xs-12">',
+        '  <div class="row feedback-row">',
+        '    <div class="col-md-7">',
         '      <div feedback-panel>',
         '        <div feedback-selector',
         '            fb-sel-label="If correct, show"',
@@ -196,9 +187,6 @@ var main = [
         replace: true,
         controller: ['$scope',
           function($scope) {
-            $scope.imageService = function() {
-              return ComponentImageService;
-            };
 
             $scope.extraFeaturesForChoices = {
               definitions: [
@@ -239,6 +227,8 @@ var main = [
             setModel: function(model) {
               $scope.fullModel = model;
               $scope.model = $scope.fullModel.model;
+              $scope.config = {};
+              $scope.config.placementToggle = $scope.model.config.placementType === 'placement';
               initTargets();
             },
             getModel: function() {
@@ -259,17 +249,12 @@ var main = [
             }
           };
 
-          function setRemoveAfterPlacingVisibility(ui, visibility){
-            ui.item.find('.remove-after-placing').css('visibility', visibility);
-          }
-
           $scope.choicesSortableOptions = {
             disabled: false,
             start: function(event, ui) {
               var li = ui.item;
               $scope.draggging = li.data('choice-id');
               isDragging = true;
-              setRemoveAfterPlacingVisibility(ui, 'hidden');
             },
             stop: function(event,ui) {
 
@@ -277,7 +262,6 @@ var main = [
               $timeout(function() {
                   isDragging = false;
               },500);
-              setRemoveAfterPlacingVisibility(ui, 'visible');
             }
           };
 
@@ -306,6 +290,11 @@ var main = [
               $editable.click();
               angular.element($editable).scope().focusCaretAtEnd();
             });
+          };
+
+          $scope.hasChoice = function($index) {
+            var choice = $($scope.model.choices[$index].label).text();
+            return !_.isEmpty(choice.trim());
           };
 
           $scope.itemClick = function($event) {
@@ -373,6 +362,10 @@ var main = [
               $scope.updateNumberOfCorrectResponses(getNumberOfCorrectResponses());
             }
           });
+
+          $scope.$watch('config.placementToggle', function() {
+            $scope.fullModel.model.config.placementType = $scope.config.placementToggle ? 'placement' : 'inPlace';
+          }, true);
 
           $scope.init = function() {
             $scope.active = [];

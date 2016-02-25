@@ -4,25 +4,55 @@
   text-align: center;
   height: 20px;
   white-space: nowrap;
+
   &.graph-title {
     font-weight: bold;
     top: -40px;
   }
+
   &.range-axis-label {
     top: -20px;
   }
+
   &.range-label {
     transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg); /* IE 9 */
-    -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
   }
+
   &.domain-label {
     bottom: -20px;
   }
 }
 
 .graph-instructions {
+
   .note {
     font-style: italic;
   }
+  
+}
+
+form[name=attributesForm] {
+
+  .form-control {
+    width: 78px;
+  }
+
+}
+
+form[name=displayForm] {
+
+  .dimensions-row {
+    margin-bottom: 15px;
+  }
+
+  .graph-labels-label-row {
+    margin: 15px -15px 0 -15px;
+  }
+
+  .graph-labels-row {
+    margin-bottom: 20px;
+  }
+
 }

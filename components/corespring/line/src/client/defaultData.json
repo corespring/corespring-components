@@ -5,8 +5,8 @@
   "minimumWidth": 500,
   "correctResponse": "",
   "feedback" :  {
-    "correctFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "model" : {
     "config": {

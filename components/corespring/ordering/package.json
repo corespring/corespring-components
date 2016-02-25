@@ -21,6 +21,10 @@
       "name": "choice-templates",
       "organization": "corespring",
       "scope": "editor"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
     }
   ],
   "dependencies": {

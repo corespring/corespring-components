@@ -127,15 +127,13 @@ var main = [
 
         // create line on graph
         if (!line.isSet) {
-          if (!scope.config.exhibitOnly) {
-            scope.graphCallback({
-              pointColor: {
-                points: [scope.plottedPoint.name, point.name],
-                color: scope.colorPalette[line.colorIndex],
-                symbol: scope.symbols[line.colorIndex]
-              }
-            });
-          }
+          scope.graphCallback({
+            pointColor: {
+              points: [scope.plottedPoint.name, point.name],
+              color: scope.colorPalette[line.colorIndex],
+              symbol: scope.symbols[line.colorIndex]
+            }
+          });
 
           scope.graphCallback({
             drawShape: {

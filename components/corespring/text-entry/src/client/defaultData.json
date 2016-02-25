@@ -7,14 +7,20 @@
     "ignoreWhitespace": true,
     "ignoreCase": true,
     "feedback": {
-      "type": "default"
+      "type": "none"
     }
   },
   "incorrectResponses": {
     "award": 0,
     "feedback": {
-      "type": "default"
+      "type": "none"
     }
+  },
+  "partialResponses": {
+    "feedback": {
+      "type": "none"
+    },
+    "values": []
   },
   "model": {
     "answerBlankSize": 8,

@@ -61,6 +61,14 @@ exports.directive = [
 
       scope.$emit('registerConfigPanel', $attrs.id, scope.containerBridge);
 
+      $('textarea', $element)
+        .on('focus', function() {
+          $(this).data('placeholder',$(this).attr('placeholder')).attr('placeholder','');
+        })
+        .on('blur', function() {
+          $(this).attr('placeholder',$(this).data('placeholder'));
+        });
+
       //-----------------------------------------------------------------------------
 
       function getModel() {
@@ -279,6 +287,9 @@ exports.directive = [
         } else {
           passageNeedsUpdate = true;
         }
+
+        //CO-490 Update passage before the selections have been set
+        scope.fullModel.model.passage = plainTextToHtml(removeHtmlTags(newValue));
       }
 
       function warnAboutContentChange(oldValue) {
@@ -507,7 +518,8 @@ exports.directive = [
         '    ng-model="model.cleanPassage"',
         '    ng-paste="onPasteIntoContentArea($event)"',
         '    ng-hide="model.formattedPassage"',
-        '></textarea>',
+        '    placeholder="Enter content here">',
+        '</textarea>',
         '<div>',
         '  <div',
         '      class="formatted-text-preview"',
