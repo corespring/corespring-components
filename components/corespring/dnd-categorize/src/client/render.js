@@ -568,7 +568,6 @@ function renderCorespringDndCategorize(
     }
 
     function updateRemoveAllAfterPlacingFromEditor(newValue, oldValue) {
-      console.log("updateRemoveAllAfterPlacingFromEditor", scope.attrRemoveAllAfterPlacing);
       scope.renderModel.removeAllAfterPlacing = scope.attrRemoveAllAfterPlacing;
     }
 
@@ -634,19 +633,14 @@ function renderCorespringDndCategorize(
     }
 
     function onToggleMoveOnDrag(choice){
-      console.log("onToggleMoveOnDrag", choice);
-
       if(!choice.moveOnDrag){
         scope.renderModel.removeAllAfterPlacing.value = false;
       }
     }
 
     function onToggleRemoveAllAfterPlacing(newValue){
-      //why does the checkbox not update the scope variable?
-
       _.forEach(scope.renderModel.choices, function(choice){
         choice.moveOnDrag = scope.renderModel.removeAllAfterPlacing.value;
-        console.log("onToggleRemoveAllAfterPlacing", choice);
       });
     }
 
@@ -727,6 +721,7 @@ function renderCorespringDndCategorize(
         '      <checkbox ',
         '         class="control-label"',
         '         ng-change="onToggleRemoveAllAfterPlacing()"',
+        '         ng-if="isEditMode"',
         '         ng-model="renderModel.removeAllAfterPlacing.value"',
         '         tooltip=\'The "Remove tile after placing" option removes the answer from the choice area after a student places it in a category. If you select this option on a choice, you may not add it to more than one category.\'',
         '         tooltip-append-to-body="true"',
