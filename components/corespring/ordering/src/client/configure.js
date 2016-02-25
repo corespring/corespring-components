@@ -51,8 +51,8 @@ var main = [
         {
           name: "Vertical",
           value: "vertical"
-          }
-          ];
+        }
+      ];
 
       scope.horizontalChoicesPosition = [
         {
@@ -62,8 +62,8 @@ var main = [
         {
           name: "Below",
           value: "below"
-          }
-          ];
+        }
+      ];
 
       scope.choicesSortableOptions = {
         disabled: false,
@@ -73,10 +73,10 @@ var main = [
           isDragging = true;
         },
         stop: function(event, ui) {
-
           //this is flag to not activate the mini-wiggi when the div is Dragging
           $timeout(function() {
             isDragging = false;
+            updateCorrectResponse();
           }, 500);
         }
       };
