@@ -226,7 +226,7 @@ var main = [
           scope.showCoordinates = config.showCoordinates;
           scope.pointLabels = config.labelsType === 'present' ? config.pointLabels : "";
           scope.maxPoints = config.maxPoints;
-          scope.showInputs = true;//(config.showInputs ? config.showInputs : 'true') === 'true';
+          scope.showInputs = true;
 
           var containerWidth, containerHeight;
           var graphContainer = element.find('.graph-container');
