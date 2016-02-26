@@ -10,6 +10,10 @@
   background: data-uri('../../public/elements-sprite.png') (-@idx * @icon-width) 0px;
   cursor: pointer;
 
+  &.solution {
+    background-position: (-@idx * @icon-width) (-3 * @icon-height)
+  }
+
   &.active, &.active:hover {
     background-position: (-@idx * @icon-width) (-2 * @icon-height)
   }
@@ -22,6 +26,11 @@
 
 .element-selector-template() {
   white-space: nowrap;
+
+  .element-container {
+    display: inline;
+  }
+
   span.element-pf a {
     .style-element(0);
   }

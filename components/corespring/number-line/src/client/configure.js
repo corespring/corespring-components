@@ -85,34 +85,34 @@ var main = [
       '  <p>Click on the input options to be displayed to the students. All inputs will display by default.</p>',
       '  <div class="element-selector text-center">',
       '    <span role="presentation" class="element-pf" ng-mousedown="select(\'PF\')">',
-      '      <a ng-class="{active: isActive(\'PF\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'PF\'), solution: isSelectable(\'PF\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-pe" ng-mousedown="select(\'PE\')">',
-      '      <a ng-class="{active: isActive(\'PE\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'PE\'), solution: isSelectable(\'PE\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-lff" ng-mousedown="select(\'LFF\')">',
-      '      <a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'LFF\'), solution: isSelectable(\'LFF\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-lef" ng-mousedown="select(\'LEF\')">',
-      '      <a ng-class="{active: isActive(\'LEF\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'LEF\'), solution: isSelectable(\'LEF\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-lfe" ng-mousedown="select(\'LFE\')">',
-      '      <a ng-class="{active: isActive(\'LFE\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'LFE\'), solution: isSelectable(\'LFE\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-lee" ng-mousedown="select(\'LEE\')">',
-      '      <a ng-class="{active: isActive(\'LEE\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'LEE\'), solution: isSelectable(\'LEE\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-rfn" ng-mousedown="select(\'RFN\')">',
-      '      <a ng-class="{active: isActive(\'RFN\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'RFN\'), solution: isSelectable(\'RFN\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-rfp" ng-mousedown="select(\'RFP\')">',
-      '      <a ng-class="{active: isActive(\'RFP\')}" >&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'RFP\'), solution: isSelectable(\'RFP\')}" >&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-ren" ng-mousedown="select(\'REN\')">',
-      '      <a ng-class="{active: isActive(\'REN\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'REN\'), solution: isSelectable(\'REN\')}">&nbsp;</a>',
       '    </span>',
       '    <span role="presentation" class="element-rep" ng-mousedown="select(\'REP\')">',
-      '      <a ng-class="{active: isActive(\'REP\')}">&nbsp;</a>',
+      '      <a ng-class="{active: isActive(\'REP\'), solution: isSelectable(\'REP\')}">&nbsp;</a>',
       '    </span>',
       '  </div>',
       '  <p>',
@@ -178,6 +178,8 @@ var main = [
       restrict: 'E',
       replace: true,
       link: function(scope, element, attrs) {
+        var highlightedTypes = {};
+
         scope.defaults = ComponentDefaultData.getDefaultData('corespring-number-line', 'model.config');
         ChoiceTemplates.extendScope(scope, 'corespring-number-line');
         scope.top = {};
@@ -253,6 +255,7 @@ var main = [
             scope.correctResponseView.model.config.initialElements = _.cloneDeep(model.correctResponse) || [];
             scope.updateNumberOfCorrectResponses(model.correctResponse.length);
             scope.sampleNumberLine.model.config.tickLabelOverrides = _.cloneDeep(model.model.config.tickLabelOverrides);
+            setHighlightedTypes();
           },
 
           getModel: function() {
@@ -308,6 +311,14 @@ var main = [
           });
         }
 
+        function responseToType(response) {
+          return (response.type[0] +
+            (response.pointType ? response.pointType[0] : '') +
+            (response.leftPoint ? response.leftPoint[0] : '') +
+            (response.rightPoint ? response.rightPoint[0] : '') +
+            (response.direction ? response.direction[0] : '')).toUpperCase();
+        }
+
         scope.$watch('initialView.responseModel', debounce(updateInitialElements), true);
 
         scope.$watch('correctResponseView.responseModel', debounce(updateCorrectResponse), true);
@@ -336,32 +347,54 @@ var main = [
         };
 
         scope.isActive = function(type) {
-          return scope.fullModel.model.config.availableTypes[type] === true;
+          return highlightedTypes[type];
         };
 
+        scope.isSolution = function(type) {
+          return _.include(
+            _.chain(scope.fullModel.correctResponse).map(responseToType).uniq().value(),
+            type);
+        };
+
+        scope.isSelectable = function(type) {
+          if (type === 'PF' && (_.find(scope.fullModel.model.config.availableTypes, function(available) {
+              return available;
+            }) === undefined)) {
+            return true;
+          } else {
+            return scope.isSolution(type);
+          }
+        };
+
+        function setHighlightedTypes() {
+          _.each(scope.fullModel.model.config.availableTypes, function(available, type) {
+            highlightedTypes[type] = available;
+          });
+        }
+
         scope.select = function(type) {
-          scope.fullModel.model.config.availableTypes[type] = !!!scope.fullModel.model.config.availableTypes[type];
+          var isSelected = !!scope.fullModel.model.config.availableTypes[type];
+          if (isSelected && !highlightedTypes[type]) {
+            highlightedTypes[type] = true;
+          } else if (scope.isSolution(type)) {
+            highlightedTypes[type] = !highlightedTypes[type];
+          } else {
+            scope.fullModel.model.config.availableTypes[type] = !isSelected;
+            highlightedTypes[type] = !isSelected;
+          }
         };
 
         scope.displayAll = function() {
-          _.each(_.flatten([points, rays, lines]), function(key) {
-            scope.fullModel.model.config.availableTypes[key] = true;
+          _.each(_.flatten([points, rays, lines]), function(type) {
+            scope.fullModel.model.config.availableTypes[type] = true;
+            highlightedTypes[type] = true;
           });
         };
 
         scope.displayNone = function() {
-          function responseToType(response) {
-            return (response.type[0] +
-              (response.pointType ? response.pointType[0] : '') +
-              (response.leftPoint ? response.leftPoint[0] : '') +
-              (response.rightPoint ? response.rightPoint[0] : '') +
-              (response.direction ? response.direction[0] : '')).toUpperCase();
-          }
-
-          var requiredTypes = _.chain(scope.fullModel.correctResponse).map(responseToType).uniq().value();
-
-          _.each(_.flatten([points, rays, lines]), function(key) {
-            scope.fullModel.model.config.availableTypes[key] = requiredTypes.indexOf(key) >= 0;
+          _.each(_.flatten([points, rays, lines]), function(type) {
+            scope.fullModel.model.config.availableTypes[type] = scope.isSolution(type);
+            highlightedTypes[type] = false;
           });
         };
 
