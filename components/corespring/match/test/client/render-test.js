@@ -180,6 +180,14 @@ describe('corespring:match:render', function() {
       expect(row.labelHtml).toEqual('<div style="">some text</div>');
     });
 
+    it('does not removes size settings from img', function() {
+      testModel.data.model.rows[0].labelHtml = '<img width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">';
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      var row = scope.matchModel.rows[0];
+      expect(row.labelHtml).toEqual('<img width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">');
+    });
+
     it('does not remove other settings', function() {
       testModel.data.model.rows[0].labelHtml = '<div class="someClass" style="border:none;">some text</div>';
       container.elements['1'].setDataAndSession(testModel);
