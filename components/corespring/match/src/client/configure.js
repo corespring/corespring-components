@@ -466,15 +466,16 @@ var main = [
         var node = $('<div>');
         node.html(s);
 
-        node.find('*').css('width', '');
-        node.find('*').css('min-width', '');
-        node.find('*').css('height', '');
-        node.find('*').css('min-height', '');
+        var sel = ":not(img)";
+        node.find(sel).css('width', '');
+        node.find(sel).css('min-width', '');
+        node.find(sel).css('height', '');
+        node.find(sel).css('min-height', '');
 
-        node.find('*').removeAttr('width');
-        node.find('*').removeAttr('min-width');
-        node.find('*').removeAttr('height');
-        node.find('*').removeAttr('min-height');
+        node.find(sel).removeAttr('width');
+        node.find(sel).removeAttr('min-width');
+        node.find(sel).removeAttr('height');
+        node.find(sel).removeAttr('min-height');
 
         var out = node.html();
         $log.debug(["removeUnexpectedTags", s, out].join('\n'));
