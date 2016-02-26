@@ -27,10 +27,10 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       dragAndDropScope: '=',
       dragEnabled: '=',
       editMode: '=?editMode',
-      imageService: "=?",
       model: '=',
       notifyDeleteClicked: '&onDeleteClicked',
       notifyEditClicked: '&onEditClicked',
+      notifyMoveOnDragClicked: '&onMoveOnDragClicked',
       onDragEnd: '&onDragEnd',
       onDragStart: '&onDragStartNow'
     }
@@ -76,6 +76,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
     scope.canEdit = canEdit;
     scope.isDragEnabled = isDragEnabled;
     scope.onChangeActive = onChangeActive;
+    scope.onChangeMoveOnDrag = onChangeMoveOnDrag;
     scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.showPlaceholder = showPlaceholder;
     scope.onDeleteClicked = onDeleteClicked;
@@ -99,6 +100,10 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       }
       scope.active = id === attrs.choiceId;
       updateClasses();
+    }
+
+    function onChangeMoveOnDrag(){
+      scope.notifyMoveOnDragClicked({choice: scope.model});
     }
 
     function shouldChoiceRevert(dropTarget) {
@@ -275,7 +280,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       '    </div>',
       '  </div>',
       '  <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
-      '    <checkbox ng-model="model.moveOnDrag" class="control-label">Remove after placing</checkbox>',
+      '    <checkbox ng-model="model.moveOnDrag" ng-change="onChangeMoveOnDrag()" class="control-label">Remove after placing</checkbox>',
       '  </div>',
       '</div>'
     ].join('');
@@ -284,11 +289,9 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       return [
         '<div class="editor" ',
         '   active="active"',
-        '   dialog-launcher="external" ',
         '   disable-auto-activation="true"',
         '   feature-overrides="overrideFeatures"',
         '   features="extraFeatures" ',
-        '   image-service="imageService()" ',
         '   mini-wiggi-wiz="" ',
         '   ng-model="model.label" ',
         '></div>'

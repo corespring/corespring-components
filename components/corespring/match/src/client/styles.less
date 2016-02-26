@@ -48,9 +48,7 @@
 
 .config-corespring-match {
 
-  .intro {
-    margin: 0 30px 15px 20px;
-  }
+  @row-padding: 20px;
 
   .help {
     font-style: italic;
@@ -64,13 +62,19 @@
 
   .row {
     &.option {
-      margin-top: 10px;
+      margin-top: @row-padding;
+      margin-bottom: @row-padding;
 
       &.input-type {
         .help {
           margin-top: 5px;
         }
       }
+    }
+
+    &.table-intro {
+      margin-top: @row-padding + 10px;
+      margin-bottom: @row-padding;
     }
   }
 
@@ -127,9 +131,14 @@
   }
 
   .feedback-panel-col {
-    margin: 0 0 0 12px;
-    width: 680px;
+    margin-top: @row-padding;
+    margin-bottom: @row-padding;
   }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
 }
 
 .render-corespring-match {

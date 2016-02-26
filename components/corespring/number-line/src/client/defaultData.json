@@ -6,9 +6,9 @@
   "correctResponse": [
   ],
   "feedback": {
-    "correctFeedbackType": "default",
-    "partialFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "allowPartialScoring": false,
   "partialScoring" : [
