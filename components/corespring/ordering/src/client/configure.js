@@ -131,6 +131,7 @@ var main = [
           id: "id_" + findFreeChoiceSlot(),
           moveOnDrag: !!scope.model.config.removeAllAfterPlacing
         });
+        updateCorrectResponse();
       }
 
       function removeChoice(index) {
