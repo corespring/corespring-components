@@ -86,10 +86,10 @@ exports.directive = [
         updatePartialScoring();
         setMode('editor');
 
-        $timeout(initUi, 100);
+        $timeout(setTokenCssClasses, 100);
       }
 
-      function initUi() {
+      function setTokenCssClasses() {
         classifyTokens(scope.model.choices, 'choice');
         classifyTokens(scope.fullModel.correctResponse.value, 'selected');
       }
@@ -443,7 +443,10 @@ exports.directive = [
       function onFormattedPassageChanged(event, editor) {
         //console.log("onFormattedPassageChanged", event[1].getValue());
         scope.model.passage = event[1].getValue();
+
+        //CO-513 add selections back in to preview of passage
         $theContent.html(scope.model.passage);
+        $timeout(setTokenCssClasses, 100);
       }
 
     }
