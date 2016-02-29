@@ -215,7 +215,8 @@ var main = [
                 "REN": true,
                 "RFP": true,
                 "RFN": true
-              }
+              },
+              "alwaysDisplayInputs": false
             }
           }
         };
@@ -272,7 +273,11 @@ var main = [
         var updateCorrectResponse = function(n) {
           scope.$apply(function() {
             scope.fullModel.correctResponse = _.cloneDeep(n);
+            _.each(scope.fullModel.correctResponse, function(response) {
+              scope.fullModel.model.config.availableTypes[responseToType(response)] = true;
+            });
             scope.updateNumberOfCorrectResponses(scope.correctResponseView.responseModel.length);
+            setHighlightedTypes();
           });
         };
 
@@ -353,7 +358,8 @@ var main = [
         scope.isSolution = function(type) {
           return _.include(
             _.chain(scope.fullModel.correctResponse).map(responseToType).uniq().value(),
-            type);
+            type
+          );
         };
 
         scope.isSelectable = function(type) {
@@ -367,20 +373,28 @@ var main = [
         };
 
         function setHighlightedTypes() {
-          _.each(scope.fullModel.model.config.availableTypes, function(available, type) {
-            highlightedTypes[type] = available;
+          var types = _.filter(scope.fullModel.model.config.availableTypes, function(available) {
+            return available;
           });
+          if (types.length >= 2 || scope.fullModel.model.config.alwaysDisplayInputs) {
+            _.each(scope.fullModel.model.config.availableTypes, function(available, type) {
+              highlightedTypes[type] = available || scope.isSolution(type);
+            });
+          }
         }
 
         scope.select = function(type) {
-          var isSelected = !!scope.fullModel.model.config.availableTypes[type];
-          if (isSelected && !highlightedTypes[type]) {
-            highlightedTypes[type] = true;
-          } else if (scope.isSolution(type)) {
+          var isSelected = !!!scope.fullModel.model.config.availableTypes[type];
+          scope.fullModel.model.config.availableTypes[type] = isSelected;
+
+          if (scope.isSolution(type)) {
             highlightedTypes[type] = !highlightedTypes[type];
+            scope.fullModel.model.config.alwaysDisplayInputs = highlightedTypes[type];
+          } else if (scope.isSelectable(type)) {
+            highlightedTypes[type] = isSelected;
+            scope.fullModel.model.config.alwaysDisplayInputs = highlightedTypes[type];
           } else {
-            scope.fullModel.model.config.availableTypes[type] = !isSelected;
-            highlightedTypes[type] = !isSelected;
+            highlightedTypes[type] = isSelected;
           }
         };
 
@@ -396,6 +410,7 @@ var main = [
             scope.fullModel.model.config.availableTypes[type] = scope.isSolution(type);
             highlightedTypes[type] = false;
           });
+          scope.fullModel.model.config.alwaysDisplayInputs = false;
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);

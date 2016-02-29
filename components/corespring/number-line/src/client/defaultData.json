@@ -36,6 +36,7 @@
         "REN": true,
         "REP": true
       },
+      "alwaysDisplayInputs" : false,
       "initialElements": [
       ]
     }
