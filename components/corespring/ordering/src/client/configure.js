@@ -198,6 +198,7 @@ var main = [
 
       function watchPlacementToggle() {
         scope.fullModel.model.config.placementType = scope.config.placementToggle ? PlacementType.placement : PlacementType.inPlace;
+        scope.disableScoring = !scope.config.placementToggle;
       }
 
       function onToggleMoveOnDrag(choice){
