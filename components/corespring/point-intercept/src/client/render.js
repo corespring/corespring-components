@@ -214,7 +214,7 @@ var main = [
 
       function pointsColors(response) {
         if (response.correctness === 'correct') {
-          return correctnessColors['correct']
+          return correctnessColors.correct;
         } else {
           return _(response.studentResponse)
             .map(function (point, index) {
