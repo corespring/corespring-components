@@ -137,14 +137,14 @@ var main = [
             label: getLetterForIndex(scope.points.length),
             correctResponse: [0, 0]
           });
-          scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.value.length);
+          scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
         };
 
         scope.removePoint = function(p) {
           scope.points = _.filter(scope.points, function(sp) {
             return sp !== p;
           });
-          scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.value.length);
+          scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
         };
 
 
