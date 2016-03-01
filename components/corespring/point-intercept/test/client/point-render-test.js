@@ -102,7 +102,7 @@ describe('corespring', function() {
       spyOn(scope, 'graphCallback');
       container.elements[1].setResponse({correctness: 'incorrect', feedback: 'not good'});
       scope.$digest();
-      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#EC971F', borderWidth : '2px' }, pointsStyle : '#EC971F' });
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#EC971F', borderWidth : '2px' }, pointsStyle : [] });
     });
 
     it('graph outline has correct color if correct answer is submitted', function() {
@@ -111,7 +111,7 @@ describe('corespring', function() {
       spyOn(scope, 'graphCallback');
       container.elements[1].setResponse({correctness: 'correct', feedback: 'good'});
       scope.$digest();
-      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#3c763d', borderWidth : '2px' }, pointsStyle : '#3c763d' });
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#3c763d', borderWidth : '2px' }, pointsStyle : [] });
     });
 
     it('graph outline has warning color if no answer is submitted', function() {
@@ -120,8 +120,59 @@ describe('corespring', function() {
       spyOn(scope, 'graphCallback');
       container.elements[1].setResponse({correctness: 'warning', feedback: 'good'});
       scope.$digest();
-      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : '#999' });
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [] });
     });
+  });
+
+  describe('pointsStyle', function() {
+    it('graphs incorrect colors for incorrect response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1'], correctResponse: ['1,2']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#EC971F' ] });
+    });
+
+    it('graphs correct colors for correct response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1'], correctResponse: ['1,1']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#3c763d' ] });
+    });
+
+    it('graphs some correct/incorrect colors for mixed response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1', '2,2'], correctResponse: ['0,0', '1,1']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#3c763d', '#EC971F' ] });
+    });
+
+    it('graphs correct colors for order-independent correct response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1', '0,0'], correctResponse: ['0,0', '1,1']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#3c763d', '#3c763d' ] });
+    });
+
+    describe('config.orderMatters = true', function() {
+      it('graphs incorrect colors for order-independent correct response', function() {
+        container.elements[1].setDataAndSession(testModel);
+        scope.config.orderMatters = true;
+        scope.$digest();
+        spyOn(scope, 'graphCallback');
+        container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1', '0,0'], correctResponse: ['0,0', '1,1']});
+        scope.$digest();
+        expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#EC971F', '#EC971F' ] });
+      });
+    });
+
   });
 
   describe('isAnswerEmpty', function() {
