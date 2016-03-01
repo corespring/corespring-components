@@ -212,6 +212,24 @@ var main = [
         $compile(solutionContainer)(solutionScope);
       }
 
+      function pointsColors(response) {
+        if (response.correctness === 'correct') {
+          return correctnessColors['correct']
+        } else {
+          return _(response.studentResponse)
+            .map(function (point, index) {
+              if (scope.config.orderMatters === true) {
+                return response.correctResponse[index] === point ? 'correct' : 'incorrect';
+              } else {
+                return _.include(response.correctResponse, point) ? 'correct' : 'incorrect';
+              }
+            })
+            .map(function (correctness) {
+              return correctnessColors[correctness];
+            }).value();
+        }
+      }
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -280,24 +298,13 @@ var main = [
           scope.correctClass = response.correctness;
 
           var borderColor = correctnessColors[(response && response.correctness) || "none"];
-          var pointsColors = _(response.studentResponse)
-            .map(function(point, index) {
-              if (scope.config.orderMatters === true) {
-                return response.correctResponse[index] === point ? 'correct' : 'incorrect';
-              } else {
-                return _.include(response.correctResponse, point) ? 'correct' : 'incorrect';
-              }
-            })
-            .map(function(correctness) {
-              return correctnessColors[correctness];
-            }).value();
 
           scope.graphCallback({
             graphStyle: {
               borderColor: borderColor,
               borderWidth: "2px"
             },
-            pointsStyle: pointsColors
+            pointsStyle: pointsColors(response)
           });
           if (response && response.correctness !== "correct") {
             scope.correctResponse = response.correctResponse;

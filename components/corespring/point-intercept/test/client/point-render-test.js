@@ -173,6 +173,18 @@ describe('corespring', function() {
       });
     });
 
+    describe('correctness is explicitly "correct"', function() {
+      it('graphs points with correct color', function() {
+        container.elements[1].setDataAndSession(testModel);
+        scope.config.orderMatters = true;
+        scope.$digest();
+        spyOn(scope, 'graphCallback');
+        container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1', '0,0'], correctResponse: ['0,0', '1,1']});
+        scope.$digest();
+        expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : '#3c763d' });
+      });
+    });
+
   });
 
   describe('isAnswerEmpty', function() {
