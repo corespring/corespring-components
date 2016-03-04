@@ -30,10 +30,33 @@ describe('corespring:number-line:configure', function() {
     }
   };
 
+  function createModel(){
+    return {
+      correctResponse: [],
+      model: {
+        config: {
+          availableTypes: {
+            "PF": true,
+            "PE": true,
+            "LEE": true,
+            "LEF": true,
+            "LFE": true,
+            "LFF": true,
+            "REP": true,
+            "REN": true,
+            "RFP": true,
+            "RFN": true
+          }
+        }
+      }
+    };
+  }
+
   beforeEach(function() {
     module(function($provide) {
       $provide.value('ServerLogic', MockServerLogic);
       $provide.value('ComponentDefaultData', MockComponentDefaultData);
+      $provide.value('interactiveGraphDirective', function(){return function () {};});
     });
   });
 
@@ -51,32 +74,13 @@ describe('corespring:number-line:configure', function() {
     element = $compile("<div navigator=''><corespring-number-line-configure id='1'></corespring-number-line-configure></div>")(scope);
     element = element.find('.config-number-line');
     scope = element.scope();
-    console.log(scope);
     rootScope = $rootScope;
   }));
 
   describe('displayNone', function() {
 
     beforeEach(function() {
-      scope.fullModel = {
-        correctResponse: [],
-        model: {
-          config: {
-            availableTypes: {
-              "PF": true,
-              "PE": true,
-              "LEE": true,
-              "LEF": true,
-              "LFE": true,
-              "LFF": true,
-              "REP": true,
-              "REN": true,
-              "RFP": true,
-              "RFN": true
-            }
-          }
-        }
-      };
+      scope.fullModel = createModel();
     });
 
     it('should set all availableTypes to false', function() {
@@ -272,6 +276,28 @@ describe('corespring:number-line:configure', function() {
         expect(scope.fullModel.model.config.availableTypes.RFN).toBe(true);
       });
 
+    });
+
+  });
+
+  describe('tickLabelClick', function(){
+    beforeEach(function() {
+      scope.fullModel = createModel();
+      scope.tickLabelClick(2, 144);
+    });
+    it('should set isEditingTickLabel to true', function(){
+      expect(scope.isEditingTickLabel).toBe(true);
+    });
+    it('should set tickBeingEdited', function(){
+      expect(scope.tickBeingEdited).toEqual({ tick: 2, label: '2.00' });
+    });
+    it('should add the tick to overrides', function(){
+      expect(scope.sampleNumberLine.model.config.tickLabelOverrides.pop()).toEqual({ tick: 2, label: '2.00' });
+    });
+    it('should use the label from the override', function(){
+      scope.sampleNumberLine.model.config.tickLabelOverrides[0].label = '';
+      scope.tickLabelClick(2, 144);
+      expect(scope.sampleNumberLine.model.config.tickLabelOverrides.pop()).toEqual({ tick: 2, label: '' });
     });
 
   });
