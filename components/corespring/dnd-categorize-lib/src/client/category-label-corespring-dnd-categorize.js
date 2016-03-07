@@ -72,8 +72,10 @@ function CategoryLabelCorespringDndCategorize(
       });
     }
 
-    function onLabelEditClicked(event) {
-      event.stopPropagation();
+    function onLabelEditClicked($event) {
+      if($event) {
+        $event.stopPropagation();
+      }
       scope.notifyEditClicked({
         categoryId: getCategoryId()
       });
@@ -96,7 +98,7 @@ function CategoryLabelCorespringDndCategorize(
         '      ></div>',
         '    </div>',
         '    <div class="html-wrapper" ng-bind-html-unsafe="category.model.label" ng-if="!isEditMode"></div>',
-        '    <ul class="edit-controls" ng-if="showTools">',
+        '    <ul class="edit-controls" ng-if="showTools" ng-hide="active">',
         '      <li class="edit-icon-button"' +
         '          ng-click="onLabelEditClicked()"',
         '          tooltip="edit"',
