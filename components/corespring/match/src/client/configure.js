@@ -5,12 +5,14 @@ var main = [
   'LogFactory',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
-  function($http,
-           $timeout,
-           ComponentImageService,
-           LogFactory,
-           WiggiLinkFeatureDef,
-           WiggiMathJaxFeatureDef) {
+  function(
+    $http,
+    $timeout,
+    ComponentImageService,
+    LogFactory,
+    WiggiLinkFeatureDef,
+    WiggiMathJaxFeatureDef
+  ) {
 
     var $log = LogFactory.getLogger('corespring-match-configure');
 
@@ -124,34 +126,42 @@ var main = [
 
       function updatePartialScoring() {
         if (scope.fullModel.model.config.inputType === INPUT_TYPE_CHECKBOX) {
-          scope.fullModel.partialScoring = scope.fullModel.partialScoring || {sections: []};
+          scope.fullModel.partialScoring = scope.fullModel.partialScoring || {
+            sections: []
+          };
           if (_.isArray(scope.fullModel.partialScoring)) {
             scope.fullModel.partialScoring = {
               sections: []
             };
           }
           _.each(scope.fullModel.model.rows, function(row, idx) {
-            var partialSection = _.findWhere(scope.fullModel.partialScoring.sections, {catId: row.id});
+            var partialSection = _.findWhere(scope.fullModel.partialScoring.sections, {
+              catId: row.id
+            });
             if (!partialSection) {
               partialSection = {
                 "catId": row.id,
-                "label": "Row " + (idx+1),
+                "label": "Row " + (idx + 1),
                 "partialScoring": []
               };
               scope.fullModel.partialScoring.sections.push(partialSection);
             }
-            var correctResponseForRow = _.findWhere(scope.fullModel.correctResponse, {id: row.id});
+            var correctResponseForRow = _.findWhere(scope.fullModel.correctResponse, {
+              id: row.id
+            });
 
             var trueCount = _.reduce(correctResponseForRow.matchSet, function(acc, m) {
               return acc + (m ? 1 : 0);
             }, 0);
             partialSection.numberOfCorrectResponses = Math.max(trueCount, 0);
             partialSection.partialScoring = _.filter(partialSection.partialScoring, function(ps) {
-               return ps.numberOfCorrect < trueCount;
+              return ps.numberOfCorrect < trueCount;
             });
           });
           scope.fullModel.partialScoring.sections = _.filter(scope.fullModel.partialScoring.sections, function(section) {
-            return _.findWhere(scope.fullModel.model.rows, {id: section.catId});
+            return _.findWhere(scope.fullModel.model.rows, {
+              id: section.catId
+            });
           });
         } else if (scope.fullModel.model.config.inputType === INPUT_TYPE_RADIOBUTTON) {
           scope.fullModel.partialScoring = scope.fullModel.partialScoring || [];
@@ -387,7 +397,7 @@ var main = [
 
         function getInputTypeClass(inputType) {
           return 'match-' + (isCheckBox(inputType) ?
-              INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
+            INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
         }
       }
 

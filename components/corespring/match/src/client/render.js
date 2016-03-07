@@ -161,7 +161,13 @@ var main = [
             };
           });
         });
-        scope.containerBridge.setResponse({correctness: "correct", correctClass: "correct", score: 1, feedback: undefined, correctnessMatrix: cr});
+        scope.containerBridge.setResponse({
+          correctness: "correct",
+          correctClass: "correct",
+          score: 1,
+          feedback: undefined,
+          correctnessMatrix: cr
+        });
       }
 
       function reset() {
@@ -212,13 +218,27 @@ var main = [
             }
           }
 
-          _.forEach(columns, function(col, index){
+          _.forEach(columns, function(col, index) {
             col.cssClass = index === 0 ? 'question-header' : 'answer-header';
             var labelWithoutTags = removeUnexpectedTags(col.labelHtml);
-            col.labelHtml = (labelWithoutTags==="Custom header" || labelWithoutTags==="Column 1" || labelWithoutTags==="Column 2" || labelWithoutTags==="Column 3" || labelWithoutTags==="Column 4" ) ? '' : labelWithoutTags;
+            col.labelHtml = isDefaultLabel(labelWithoutTags) ? '' : labelWithoutTags;
           });
 
           return columns;
+        }
+
+        function isDefaultLabel(s){
+          switch(s){
+            case "Custom header":
+            case "Column 1":
+            case "Column 2":
+            case "Column 3":
+            case "Column 4":
+            case "Column 5":
+              return true;
+            default:
+              return false;
+          }
         }
 
         function prepareRows() {
@@ -254,12 +274,12 @@ var main = [
         }
       }
 
-      function saveAnswerChangedCallback(callback){
+      function saveAnswerChangedCallback(callback) {
         scope.answerChangedCallback = callback;
       }
 
-      function onChangeMatchModelRows(newValue, oldValue){
-        if(_.isFunction(scope.answerChangedCallback)) {
+      function onChangeMatchModelRows(newValue, oldValue) {
+        if (_.isFunction(scope.answerChangedCallback)) {
           if (!_.isEqual(newValue, oldValue)) {
             scope.answerChangedCallback();
           }
@@ -267,7 +287,7 @@ var main = [
         scope.undoModel.remember();
       }
 
-      function removeUnexpectedTags(s){
+      function removeUnexpectedTags(s) {
         var node = $('<div>');
         node.html(s);
 
@@ -289,9 +309,9 @@ var main = [
 
       function classForChoice(row, index) {
         var classes = [getInputTypeClass(scope.inputType)];
-        if(scope.editable){
+        if (scope.editable) {
           classes.push('input');
-          if(row.matchSet[index].value){
+          if (row.matchSet[index].value) {
             classes.push('selected');
           }
         } else {
@@ -358,8 +378,8 @@ var main = [
         return node.text();
       }
 
-      function getState(){
-        if(scope.matchModel && scope.matchModel.rows){
+      function getState() {
+        if (scope.matchModel && scope.matchModel.rows) {
           return scope.matchModel.rows;
         }
       }
