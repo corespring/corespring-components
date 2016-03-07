@@ -100,7 +100,7 @@ function CategoryLabelCorespringDndCategorize(
         '    <div class="html-wrapper" ng-bind-html-unsafe="category.model.label" ng-if="!isEditMode"></div>',
         '    <ul class="edit-controls" ng-if="showTools" ng-hide="active">',
         '      <li class="edit-icon-button"' +
-        '          ng-click="onLabelEditClicked()"',
+        '          ng-click="onLabelEditClicked($event)"',
         '          tooltip="edit"',
         '          tooltip-append-to-body="true"',
         '          tooltip-placement="bottom">',
