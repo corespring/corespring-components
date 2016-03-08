@@ -634,7 +634,7 @@ var main = [
           '      </div>',
           '    </div>',
           '    <div class="row">',
-          '      <div class="col-md-7 feedback-panel-col">',
+          '      <div class="col-xs-12 feedback-panel-col">',
           '        <corespring-feedback-config ',
           '            full-model="fullModel"',
           '            component-type="corespring-match">',

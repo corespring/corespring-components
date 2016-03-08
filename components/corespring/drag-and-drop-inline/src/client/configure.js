@@ -570,7 +570,7 @@ function main(
     function feedback() {
       return [
         '<div class="row">',
-        '  <div class="col-md-7">',
+        '  <div class="col-xs-12">',
         '    <corespring-feedback-config ',
         '       full-model="fullModel"',
         '       component-type="corespring-drag-and-drop-inline"',
