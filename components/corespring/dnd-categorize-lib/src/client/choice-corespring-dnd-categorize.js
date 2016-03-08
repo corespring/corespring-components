@@ -270,7 +270,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       choiceEditorTemplate(),
       '    </div>',
       '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
-      '      <span ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</span>',
+      '      <div ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</div>',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice" ng-hide="dragEnabled"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
