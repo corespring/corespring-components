@@ -6,6 +6,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     function link (scope, element, attrs) {
 
+      var PlacementType = {
+        inPlace: 'inPlace',
+        placement: 'placement'
+      };
+
       function clearLandingPlaceChoices() {
         _.each(scope.landingPlaceChoices, function (v, k) {
           scope.landingPlaceChoices[k] = {};
@@ -98,7 +103,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       function restoreChoicesFromAnswer(answers) {
-        if (scope.model.config.placementType === 'placement') {
+        if (scope.model.config.placementType === PlacementType.placement) {
           _.each(answers, function (k, idx) {
             scope.landingPlaceChoices[idx] = scope.choiceForId(k) || {};
           });
@@ -143,7 +148,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         getSession: function () {
-          if (scope.model.config.placementType === 'placement') {
+          if (scope.model.config.placementType === PlacementType.placement) {
             var choices = [];
             for (var i = 0; i < scope.originalChoices.length; i++) {
               if (scope.landingPlaceChoices[i] && scope.landingPlaceChoices[i].id) {
@@ -175,7 +180,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         isAnswerEmpty: function() {
-          if(scope.model.config.placementType === 'placement') {
+          if(scope.model.config.placementType === PlacementType.placement) {
             return _.isEmpty(this.getSession().answers);
           } else {
             return false;

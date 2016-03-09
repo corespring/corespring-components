@@ -41,6 +41,10 @@
     {
       "name": "server-shared",
       "organization": "corespring"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
     }
   ],
   "name": "point-intercept",

@@ -607,4 +607,45 @@ describe('corespring:dnd-categorize:render', function() {
 
   });
 
+  describe('removeAllAfterPlacing', function(){
+    beforeEach(function() {
+      setModelAndDigest();
+    });
+
+    function setRemoveAllAfterPlacing(value){
+      //set the value like the checkbox would do
+      scope.renderModel.removeAllAfterPlacing = {value: value};
+
+      //set one choice to have the opposite value to be able to verify the action
+      scope.renderModel.choices[0].moveOnDrag = !value;
+
+      //call the toggle function that the checkbox would be calling
+      scope.onToggleRemoveAllAfterPlacing();
+      scope.$digest();
+    }
+
+    it('should set moveOnDrag to true for all choices if it is set to true', function(){
+      setRemoveAllAfterPlacing(true);
+      _.forEach(scope.renderModel.choices, function(choice){
+        expect(choice.moveOnDrag).toBe(true);
+      });
+    });
+
+    it('should set moveOnDrag to false for all choices if it is set to false', function(){
+      setRemoveAllAfterPlacing(false);
+      _.forEach(scope.renderModel.choices, function(choice){
+        expect(choice.moveOnDrag).toBe(false);
+      });
+    });
+
+    it('should be set to false if a choice toggles its moveOnDrag to false', function(){
+      setRemoveAllAfterPlacing(true);
+      var choice = scope.renderModel.choices[0];
+      choice.moveOnDrag = false;
+      scope.onToggleMoveOnDrag(choice);
+      expect(scope.renderModel.removeAllAfterPlacing.value).toBe(false);
+    });
+  });
+
+
 });

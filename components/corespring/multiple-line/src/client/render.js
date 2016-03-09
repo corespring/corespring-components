@@ -127,15 +127,13 @@ var main = [
 
         // create line on graph
         if (!line.isSet) {
-          if (!scope.config.exhibitOnly) {
-            scope.graphCallback({
-              pointColor: {
-                points: [scope.plottedPoint.name, point.name],
-                color: scope.colorPalette[line.colorIndex],
-                symbol: scope.symbols[line.colorIndex]
-              }
-            });
-          }
+          scope.graphCallback({
+            pointColor: {
+              points: [scope.plottedPoint.name, point.name],
+              color: scope.colorPalette[line.colorIndex],
+              symbol: scope.symbols[line.colorIndex]
+            }
+          });
 
           scope.graphCallback({
             drawShape: {
@@ -590,18 +588,17 @@ var main = [
       return [
         "<div class='multiple-line-interaction-view'>",
         "  <div class='graph-interaction'>",
-        "    <div class='undo-start-over-controls container-fluid'>",
+        "    <div class='undo-start-over-controls container-fluid' ng-hide='config.exhibitOnly'>",
         "      <div class='row'>",
         "        <div class='col-md-12' ng-hide='response'>",
         "          <span cs-start-over-button class='btn-player pull-right' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
         "          <span cs-undo-button class='pull-right' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
         "          <div class='clearfix'> </div>",
-        "          <div class='clearfix'> </div>",
         "        </div>",
         "      </div>",
         "    </div><br/>",
         "    <div ng-if='instructorData' ng-repeat='response in instructorData.correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
-        "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
+        "    <div class='graph-controls container-fluid' ng-show='showInputs' ng-hide='config.exhibitOnly'>",
         "      <div class='row line-input' ng-repeat='line in lines' ng-if='!locked && line.points.A.x !== undefined && line.points.B.x !== undefined'>",
         "        <div class='col-sm-3'>",
         "          <span class='fa fa-{{fa_symbols[line.colorIndex % 5]}} symbol line{{ line.colorIndex % 5 }}'></span>",

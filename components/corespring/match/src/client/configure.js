@@ -5,12 +5,14 @@ var main = [
   'LogFactory',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
-  function($http,
-           $timeout,
-           ComponentImageService,
-           LogFactory,
-           WiggiLinkFeatureDef,
-           WiggiMathJaxFeatureDef) {
+  function(
+    $http,
+    $timeout,
+    ComponentImageService,
+    LogFactory,
+    WiggiLinkFeatureDef,
+    WiggiMathJaxFeatureDef
+  ) {
 
     var $log = LogFactory.getLogger('corespring-match-configure');
 
@@ -24,9 +26,6 @@ var main = [
     };
 
     function controller(scope) {
-      scope.imageService = function() {
-        return ComponentImageService;
-      };
 
       scope.extraFeaturesForMatch = {
         definitions: [
@@ -68,11 +67,11 @@ var main = [
       scope.inputTypes = [
         {
           id: INPUT_TYPE_RADIOBUTTON,
-          label: 'Radio'
+          label: 'Radio - One Answer'
         },
         {
           id: INPUT_TYPE_CHECKBOX,
-          label: 'Checkbox'
+          label: 'Checkbox - Multiple Answers'
         }
       ];
 
@@ -127,34 +126,42 @@ var main = [
 
       function updatePartialScoring() {
         if (scope.fullModel.model.config.inputType === INPUT_TYPE_CHECKBOX) {
-          scope.fullModel.partialScoring = scope.fullModel.partialScoring || {sections: []};
+          scope.fullModel.partialScoring = scope.fullModel.partialScoring || {
+            sections: []
+          };
           if (_.isArray(scope.fullModel.partialScoring)) {
             scope.fullModel.partialScoring = {
               sections: []
             };
           }
           _.each(scope.fullModel.model.rows, function(row, idx) {
-            var partialSection = _.findWhere(scope.fullModel.partialScoring.sections, {catId: row.id});
+            var partialSection = _.findWhere(scope.fullModel.partialScoring.sections, {
+              catId: row.id
+            });
             if (!partialSection) {
               partialSection = {
                 "catId": row.id,
-                "label": "Row " + (idx+1),
+                "label": "Row " + (idx + 1),
                 "partialScoring": []
               };
               scope.fullModel.partialScoring.sections.push(partialSection);
             }
-            var correctResponseForRow = _.findWhere(scope.fullModel.correctResponse, {id: row.id});
+            var correctResponseForRow = _.findWhere(scope.fullModel.correctResponse, {
+              id: row.id
+            });
 
             var trueCount = _.reduce(correctResponseForRow.matchSet, function(acc, m) {
               return acc + (m ? 1 : 0);
             }, 0);
             partialSection.numberOfCorrectResponses = Math.max(trueCount, 0);
             partialSection.partialScoring = _.filter(partialSection.partialScoring, function(ps) {
-               return ps.numberOfCorrect < trueCount;
+              return ps.numberOfCorrect < trueCount;
             });
           });
           scope.fullModel.partialScoring.sections = _.filter(scope.fullModel.partialScoring.sections, function(section) {
-            return _.findWhere(scope.fullModel.model.rows, {id: section.catId});
+            return _.findWhere(scope.fullModel.model.rows, {
+              id: section.catId
+            });
           });
         } else if (scope.fullModel.model.config.inputType === INPUT_TYPE_RADIOBUTTON) {
           scope.fullModel.partialScoring = scope.fullModel.partialScoring || [];
@@ -224,7 +231,7 @@ var main = [
 
         while (columns.length < expectedNumberOfColumns) {
           columns.push({
-            labelHtml: "Column " + (columns.length)
+            labelHtml: "Column " + (columns.length + 1)
           });
           addColumnToCorrectResponseMatrix();
         }
@@ -390,7 +397,7 @@ var main = [
 
         function getInputTypeClass(inputType) {
           return 'match-' + (isCheckBox(inputType) ?
-              INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
+            INPUT_TYPE_CHECKBOX : INPUT_TYPE_RADIOBUTTON);
         }
       }
 
@@ -443,7 +450,7 @@ var main = [
           var elementClass = '.header' + $this.column.wiggiId,
             elementHtml = $(elementClass).find('.wiggi-wiz-editable')[0].innerHTML;
 
-          if (elementHtml === "Custom header" || elementHtml === "Column 1" || elementHtml === "Column 2" || elementHtml === "Column 3" || elementHtml === "Column 4") {
+          if (elementHtml === "Column 1" || elementHtml === "Column 2" || elementHtml === "Column 3" || elementHtml === "Column 4" || elementHtml === "Column 5") {
             $(elementClass).find('.wiggi-wiz-editable').html('');
           }
         }
@@ -469,15 +476,16 @@ var main = [
         var node = $('<div>');
         node.html(s);
 
-        node.find('*').css('width', '');
-        node.find('*').css('min-width', '');
-        node.find('*').css('height', '');
-        node.find('*').css('min-height', '');
+        var sel = ":not(img)";
+        node.find(sel).css('width', '');
+        node.find(sel).css('min-width', '');
+        node.find(sel).css('height', '');
+        node.find(sel).css('min-height', '');
 
-        node.find('*').removeAttr('width');
-        node.find('*').removeAttr('min-width');
-        node.find('*').removeAttr('height');
-        node.find('*').removeAttr('min-height');
+        node.find(sel).removeAttr('width');
+        node.find(sel).removeAttr('min-width');
+        node.find(sel).removeAttr('height');
+        node.find(sel).removeAttr('min-height');
 
         var out = node.html();
         $log.debug(["removeUnexpectedTags", s, out].join('\n'));
@@ -532,13 +540,105 @@ var main = [
           '<div class="form-horizontal" role="form">',
           '  <div class="container-fluid">',
           '    <div class="row">',
-          '      <div class="col-xs-9">',
-          header(),
-          mainEditorPanel(),
-          feedback(),
+          '      <div class="col-xs-12">',
+          '        <p class="intro">',
+          '          In Choice Matrix, students associate choices in the first column with options in the adjacent',
+          '          rows. This interaction allows for either one or more correct answers. Setting more than one',
+          '          answer as correct allows for partial credit (<i>see the Scoring tab</i>).',
+          '        </p>',
           '      </div>',
-          '      <div class="col-xs-3">',
-          optionsPanel(),
+          '    </div>',
+          '    <div class="row option layout">',
+          '      <div class="col-xs-4">',
+          '        <span>Layout</span>',
+          '        <select class="form-control" ng-model="config.layout" ng-options="c.id as c.label for c in layouts">',
+          '        </select>',
+          '      </div>',
+          '      <div class="col-xs-5">',
+          '        <span>Response Type</span>',
+          '        <select class="form-control" ng-model="config.inputType"',
+          '            ng-options="c.id as c.label for c in inputTypes">',
+          '        </select>',
+          '      </div>',
+          '    </div>',
+          '    <div class="row table-intro">',
+          '      <div class="col-xs-12">',
+          '        Click on the labels to edit or remove. Set the correct answers by clicking each correct answer',
+          '        per row.',
+          '      </div>',
+          '    </div>',
+          '    <div class="row">',
+          '      <div class="col-xs-12">',
+          '        <table class="corespring-match-table" ng-class="config.layout">',
+          '          <tr>',
+          '            <th ng-repeat="column in matchModel.columns"',
+          '                ng-click="onClickEdit($event, column.wiggiId, this)"',
+          '                ng-class="column.cssClass">',
+          '              <div class="content-holder" ',
+          '                  ng-hide="active[column.wiggiId]" ',
+          '                  ng-bind-html-unsafe="cleanLabel(column)">',
+          '              </div>',
+          '              <div mini-wiggi-wiz=""',
+          '                  ng-show="active[column.wiggiId]"',
+          '                  active="active[column.wiggiId]"',
+          '                  ng-model="column.labelHtml"',
+          '                  ng-change="columnLabelUpdated($index)"',
+          '                  features="extraFeaturesForMatch"',
+          '                  parent-selector=".modal-body">',
+          '              </div>',
+          '            </th>',
+          '          </tr>',
+          '          <tr ng-repeat="row in matchModel.rows">',
+          '            <td class="question-col"',
+          '                ng-click="onClickEdit($event, row.wiggiId, this)">',
+          '              <div class="content-holder" ',
+          '                  ng-hide="active[row.wiggiId]" ',
+          '                  ng-bind-html-unsafe="cleanLabel(row)"></div>',
+          '              <div mini-wiggi-wiz=""',
+          '                  ng-show="active[row.wiggiId]"',
+          '                  active="active[row.wiggiId]"',
+          '                  ng-model="row.labelHtml"',
+          '                  ng-change="rowLabelUpdated($index)"',
+          '                  features="extraFeaturesForMatch"',
+          '                  parent-selector=".modal-body">',
+          '              </div>',
+          '            </td>',
+          '            <td class="answer-col" ng-repeat="match in row.matchSet">',
+          '              <div class="corespring-match-choice"',
+          '                  ng-class="classForChoice(row, $index)"',
+          '                  ng-click="onClickMatch(row, $index)">',
+          '                <div class="background fa"></div>',
+          '                <div class="foreground fa"></div>',
+          '              </div>',
+          '            </td>',
+          '            <td class="remove-row">',
+          '              <i class="remove-row-button fa fa-trash-o fa-lg" ',
+          '                  tooltip="Remove Row"',
+          '                  tooltip-append-to-body="true"',
+          '                  ng-click="removeRow($index)">',
+          '              </i>',
+          '            </td>',
+          '          </tr>',
+          '          <tr>',
+          '            <td class="add-row" colspan="5">',
+          '              <button type="button" class="add-row-button btn btn-default" ',
+          '                  ng-click="addRow()">+ Add a row</button>',
+          '            </td>',
+          '          </tr>',
+          '        </table>',
+          '      </div>',
+          '    </div>',
+          '    <div class="row">',
+          '      <div class="col-xs-12">',
+          '        <checkbox class="shuffle-choices" ng-model="config.shuffle">Shuffle Choices</checkbox>',
+          '      </div>',
+          '    </div>',
+          '    <div class="row">',
+          '      <div class="col-md-7 feedback-panel-col">',
+          '        <corespring-feedback-config ',
+          '            full-model="fullModel"',
+          '            component-type="corespring-match">',
+          '        </corespring-feedback-config>',
           '      </div>',
           '    </div>',
           '  </div>',
@@ -546,166 +646,6 @@ var main = [
         ].join('');
       }
 
-      function header() {
-        return [
-          '<div class="row">',
-          '  <div class="col-xs-12">',
-          '    <p class="intro">In Choice Matrix, students associate choices in the ',
-          '       first column with options in the adjacent rows. This ',
-          '       interaction allows for either one or more correct answers. ',
-          '       Setting more than one answer as correct ',
-          '       allows for partial credit (<i>see the Scoring tab</i>).',
-          '    </p>',
-          '  </div>',
-          '</div>'
-        ].join('');
-      }
-
-      function mainEditorPanel() {
-        return [
-          '<div class="row">',
-          '  <div class="col-xs-12">',
-          '    <table class="corespring-match-table" ng-class="config.layout">',
-          '      <tr>',
-          '        <td class="remove-row no-border">',
-          '        </td>',
-          '        <td class="help no-border">',
-          '         <p>Click on labels to edit or remove</p>',
-          '        </td>',
-          '        <td class="help no-border" colspan="4">',
-          '         <p class="text-right">Click on correct answer(s)</p>',
-          '        </td>',
-          '      </tr>',
-          '      <tr>',
-          '        <td class="no-border">',
-          '        </td>',
-          headerColumns(),
-          '      </tr>',
-          '      <tr ng-repeat="row in matchModel.rows">',
-          '        <td class="remove-row">',
-          '          <i class="remove-row-button fa fa-trash-o fa-lg" ',
-          '             tooltip="Remove Row"',
-          '             tooltip-append-to-body="true"',
-          '             ng-click="removeRow($index)" ',
-          '           ></i>',
-          '        </td>',
-          '        <td class="question-col"',
-          '           ng-click="onClickEdit($event, row.wiggiId, this)"',
-          '          >',
-          '          <div class="content-holder" ',
-          '            ng-hide="active[row.wiggiId]" ',
-          '            ng-bind-html-unsafe="cleanLabel(row)"',
-          '           ></div>',
-          '          <div mini-wiggi-wiz=""',
-          '              ng-show="active[row.wiggiId]"',
-          '              active="active[row.wiggiId]"',
-          '              ng-model="row.labelHtml"',
-          '              ng-change="rowLabelUpdated($index)"',
-          '              dialog-launcher="external"',
-          '              features="extraFeaturesForMatch"',
-          '              parent-selector=".modal-body"',
-          '              image-service="imageService()">',
-          '          </div>',
-          '        </td>',
-          '        <td class="answer-col" ng-repeat="match in row.matchSet">',
-          '          <div class="corespring-match-choice"',
-          '             ng-class="classForChoice(row, $index)"',
-          '             ng-click="onClickMatch(row, $index)"',
-          '            >',
-          '            <div class="background fa"></div>',
-          '            <div class="foreground fa"></div>',
-          '          </div>',
-          '        </td>',
-          '      </tr>',
-          '      <tr>',
-          '        <td class="no-border">',
-          '        </td>',
-          '        <td class="add-row" colspan="5">',
-          '          <button type="button" class="add-row-button btn btn-default" ',
-          '            ng-click="addRow()">+ Add a row</button>',
-          '        </td>',
-          '      </tr>',
-          '    </table>',
-          '  </div>',
-          '</div>'
-        ].join('');
-      }
-
-      function headerColumns() {
-        return [
-          '<th ng-repeat="column in matchModel.columns"',
-          '  ng-click="onClickEdit($event, column.wiggiId, this)"',
-          '  ng-class="column.cssClass">',
-          '  <div class="content-holder" ',
-          '    ng-hide="active[column.wiggiId]" ',
-          '    ng-bind-html-unsafe="cleanLabel(column)"',
-          '   ></div>',
-          '  <div mini-wiggi-wiz=""',
-          '      ng-show="active[column.wiggiId]"',
-          '      active="active[column.wiggiId]"',
-          '      ng-model="column.labelHtml"',
-          '      ng-change="columnLabelUpdated($index)"',
-          '      dialog-launcher="external"',
-          '      features="extraFeaturesForMatch"',
-          '      parent-selector=".modal-body"',
-          '      image-service="imageService()">',
-          '  </div>',
-          '</th>'
-        ].join('');
-      }
-
-      function feedback() {
-        return [
-          '<div class="row">',
-          '  <div class="col-xs-12 feedback-panel-col">',
-          '    <corespring-feedback-config ',
-          '       full-model="fullModel"',
-          '       component-type="corespring-match"',
-          '    ></corespring-feedback-config>',
-          '  </div>',
-          '</div>'
-        ].join("\n");
-      }
-
-      function optionsPanel() {
-        return [
-          '<div class="row option shuffle">',
-          '  <div class="col-xs-12">',
-          '  </div>',
-          '</div>',
-          '<div class="row">',
-          '  <div class="col-xs-12">',
-          '    <checkbox class="shuffle-choices" ng-model="config.shuffle">Shuffle Choices</checkbox>',
-          '  </div>',
-          '</div>',
-          '<div class="row option layout">',
-          '  <div class="col-xs-12">',
-          '    <span>Layout</span>',
-          '    <select class="form-control" ng-model="config.layout"',
-          '       ng-options="c.id as c.label for c in layouts">',
-          '    </select>',
-          '  </div>',
-          '</div>',
-          '<div class="row option input-type">',
-          '  <div class="col-xs-12">',
-          '    <span>Input Type</span>',
-          '    <select class="form-control" ng-model="config.inputType"',
-          '       ng-options="c.id as c.label for c in inputTypes">',
-          '    </select>',
-          '    <p class="help" ng-if="isRadioButton(config.inputType)">',
-          '       This option allows students to select one',
-          '       correct answer. You may, however, set more',
-          '       than one answer as correct if you choose',
-          '    </p>',
-          '    <p class="help" ng-if="isCheckBox(config.inputType)">',
-          '       This option allows students to select more than',
-          '       one correct answer. You may, however, set only',
-          '       one correct answer if you choose.',
-          '    </p>',
-          '  </div>',
-          '</div>'
-        ].join('');
-      }
     }
 
   }

@@ -49,7 +49,11 @@ function getResponseLabel(question, uid){
 }
 
 function getRandomCorrectResponse(question) {
-  return getResponseLabel(question, _.sample(question.correctResponse));
+  return [
+    '<div class="correct-response-placeholder">',
+    getResponseLabel(question, _.sample(question.correctResponse)),
+    '</div>'
+  ].join('');
 }
 
 function getFirstCorrectResponse(question) {
@@ -59,11 +63,7 @@ function getFirstCorrectResponse(question) {
 function getDefaultFeedback(question, answer, getPlaceHolderReplacement) {
   return isCorrectResponse(question, answer) ?
     exports.keys.DEFAULT_CORRECT_FEEDBACK :
-    DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, [
-      '<div class="correct-response-placeholder">',
-        getPlaceHolderReplacement(question),
-      '</div>'
-    ].join(''));
+    DEFAULT_INCORRECT_FEEDBACK.replace(CORRECT_ANSWER_PLACEHOLDER, getPlaceHolderReplacement(question));
 }
 
 function defaultFeedback(question, answer){

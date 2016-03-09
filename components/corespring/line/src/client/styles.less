@@ -4,7 +4,7 @@
 
   .jxgbox {
     position: relative;
-    overflow: visible!important;
+    overflow: visible !important;
     background-color: #ffffff;
     -ms-touch-action: none;
   }
@@ -15,11 +15,13 @@
     padding: 0px;
     margin: 0px;
   }
+
   .JXGinfobox {
     border-style: none;
     border-width: 1px;
     border-color: black;
   }
+
   .JXGimage {
     opacity: 1.0;
   }
@@ -28,16 +30,21 @@
   }
 
   .feedback-holder {
+
     .fa-warning {
       font-size: 22px;
       line-height: 31px;
       color: @warning-color;
     }
+
     .feedback {
+
       &.warning {
+
         .panel-heading {
           display: none;
         }
+
         .panel-body {
           background-color: @warning-color-background;
           border-color: @warning-color-border;
@@ -45,52 +52,57 @@
           border-top-left-radius: 4px;
           border-top-right-radius: 4px;
         }
+
       }
+
     }
   }
 
   .solution-panel {
     visibility: hidden;
     height: 0;
+
     .solution-graph {
-      margin-left: auto;
-      margin-right: auto;
       position: relative;
-      margin-top: 50px;
-      margin-bottom: 10px;
+      margin: 50px auto 10px auto;
     }
+
   }
+
   .solution-panel.panelVisible {
     visibility: visible;
     height: auto;
   }
 
   .graph-container {
-    margin-top: 50px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: 20px;
+    margin: 50px auto 20px auto;
     position: relative;
   }
+
   .graph-controls {
     position: relative;
+
     .points-input {
       padding: 3px 0px;
       border-bottom: 1px solid #ccc;
+
       &:last-child {
         border-bottom: none;
       }
 
       .point-input {
         height: 25px;
+
         .point-label {
           display: inline-block;
           min-width: 16px;
           padding-right: 5px;
         }
+
         .point-b {
           padding-left: 15px;
         }
+
         input {
           height: 24px;
           padding: 2px;
@@ -98,10 +110,12 @@
           color: #555555;
           border: 1px solid #cccccc;
           border-radius: 4px;
+
           &:disabled {
             background-color: #dddddd;
           }
         }
+
       }
 
       .delete-line-button {
@@ -109,9 +123,11 @@
         padding: 0px 5px;
         color: #333333;
         margin-top: -4px;
+
         &:hover {
           background-color: #dddddd;
         }
+
       }
     }
   }
@@ -120,23 +136,33 @@
     margin: 0px 20px 10px 20px;
     padding: 10px;
     max-width: 600px;
+
     &.warning {
       .jxgbox {
         border-color: @warning-color-border;
       }
     }
+
   }
 }
 
 .line-interaction-configuration {
 
-  h3{
-    margin: 0;
-    margin-bottom: 10px;
-    padding:0;
+  h3 {
+    margin: 0 0 10px 0;
+    padding: 0;
   }
+
+  .intro-text {
+    margin-bottom: 26px;
+  }
+
+  .exhibit-row {
+    margin-top: 5px;
+  }
+
   .reset-defaults {
-    margin: 20px 0 20px 0;
+    margin: 0 0 20px 0;
     font-style: italic;
   }
 
@@ -163,4 +189,9 @@
   .delete-line {
     font-size: 20px;
   }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
 }

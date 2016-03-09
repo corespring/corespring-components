@@ -44,9 +44,6 @@ function main(
 
 
   function controller(scope) {
-    scope.imageService = function() {
-      return ComponentImageService;
-    };
 
     scope.extraFeaturesForChoices = {
       definitions: [
@@ -123,14 +120,17 @@ function main(
     scope.choiceDraggableOptions = choiceDraggableOptions;
     scope.cleanLabel = makeCleanLabelFunction();
     scope.deactivate = deactivate;
+    scope.hasChoice = hasChoice;
     scope.itemClick = itemClick;
+    scope.onDrag = onDrag;
+    scope.onToggleMoveOnDrag = onToggleMoveOnDrag;
+    scope.onToggleRemoveAllAfterPlacing = onToggleRemoveAllAfterPlacing;
     scope.removeAnswerArea = removeAnswerArea;
     scope.removeChoice = removeChoice;
-    scope.onDrag = onDrag;
 
     scope.$on('get-config-scope', onGetConfigScope);
     scope.$on('remove-correct-answer', onRemoveCorrectAnswer);
-    scope.$watch('correctAnswers', onChangeCorrectAnswers, true);
+    scope.$watch('correctAnswers', watchCorrectAnswers, true);
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -152,6 +152,11 @@ function main(
 
     function onDrag(event, ui) {
       Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
+    }
+
+    function hasChoice($index) {
+      var choice = $(scope.model.choices[$index].label).text();
+      return !_.isEmpty(choice.trim());
     }
 
     function getAnswer() {
@@ -218,7 +223,7 @@ function main(
       return correctResponse;
     }
 
-    function onChangeCorrectAnswers(newCorrectAnswers) {
+    function watchCorrectAnswers(newCorrectAnswers) {
       if (newCorrectAnswers) {
         scope.fullModel.correctResponse = correctAnswersToCorrectResponse(newCorrectAnswers);
         scope.updateNumberOfCorrectResponses(sumCorrectAnswers());
@@ -255,7 +260,7 @@ function main(
         id: findFreeChoiceSlot(),
         labelType: "text",
         label: "",
-        moveOnDrag: false
+        moveOnDrag: scope.model.config.removeAllAfterPlacing
       });
     }
 
@@ -311,7 +316,7 @@ function main(
         helper: function() {
           return $(dragHelperTemplate(choice));
         },
-        appendTo: ".modal",
+        appendTo: ".config-csdndi",
         cursorAt: {
           bottom: 10,
           right: 10
@@ -354,6 +359,18 @@ function main(
       return function(choice) {
         return (choice.label || '').replace(wiggiCleanerRe, '');
       };
+    }
+
+    function onToggleMoveOnDrag(choice){
+      if(!choice.moveOnDrag){
+        scope.model.config.removeAllAfterPlacing = false;
+      }
+    }
+
+    function onToggleRemoveAllAfterPlacing(){
+      _.forEach(scope.model.choices, function(choice){
+        choice.moveOnDrag = scope.model.config.removeAllAfterPlacing;
+      });
     }
 
   }
@@ -400,7 +417,7 @@ function main(
           '<div class="row">',
           '  <div class="col-xs-12">',
           '    <p>',
-          '      In Short Answer &mdash; Drag and Drop, students are asked to complete a ',
+          '      In Fill in the Blank, students are asked to complete a ',
           '      sentence, word, phrase or equation using context clues presented in the ',
           '      text that surrounds it.',
           '    </p>',
@@ -413,20 +430,24 @@ function main(
       return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <label class="control-label" style="margin-bottom: 10px;">Problem Area</label>',
-          '    <p class="answer-area-help-text">Begin typing and click "Add Answer Blank" to ',
-          '        insert an answer blank. Drag the correct answer(s) to the blank(s).</p>',
+          '    <h3>Problem Area</h3>',
           '  </div>',
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
+          '    <p>',
+          '       Begin typing and click "Add Answer Blank" to insert an answer blank. Drag the correct answer(s)',
+          '       to the blank(s).',
+          '    </p>',
+          '  </div>',
+          '</div>',
+          '<div class="row">',
+          '  <div class="col-xs-10 col-xs-offset-1">',
           '    <div id="answerAreaWiggi"',
           '      active="true"',
           '      class="answer-area-wiggi"',
-          '      dialog-launcher="external"',
           '      disable-auto-activation="true"',
           '      features="extraFeaturesForAnswerArea"',
-          '      image-service="imageService()"',
           '      mini-wiggi-wiz=""',
           '      ng-model="model.answerAreaXhtml"',
           '      parent-selector=".modal-body">',
@@ -440,32 +461,42 @@ function main(
       return [
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <label class="control-label" style="margin-bottom: 10px;">Choices</label>',
-          '    <p><b>Add a label to choice area (optional).</b></p>',
+          '    <h3>Choices</h3>',
           '  </div>',
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
+          '    <p>Add a label to choice area</p>',
+          '  </div>',
+          '</div>',
+          '<div class="row">',
+          '  <div class="col-md-7">',
           '    <div id="choiceLabelWiggi" ',
           '         mini-wiggi-wiz=""',
-          '         dialog-launcher="external"',
           '         ng-model="model.config.choiceAreaLabel"',
-          '         placeholder="Choice Label"',
+          '         placeholder="Enter a label or leave blank"',
           '         features="extraFeaturesForChoiceLabel"',
-          '         parent-selector=".modal-body"',
-          '         image-service="imageService()">',
+          '         parent-selector=".modal-body">',
           '    </div>',
-          '    <p><i class="legend">To set correct answer, drag choice to an answer blank in the problem area.</i></p>',
-          '    <p><i>',
-          '      The "Remove tile after placing" option removes the answer from the choice area after ',
-          '      a student places it in an answer area. If you select this option on a choice, you ',
-          '      may not add it to more than one answer blank.',
-          '    </i></p>',
+          '  </div>',
+          '  <div class="col-xs-12">',
+          '    <p class="legend">To set correct answer, drag choice to an answer blank in the problem area.</p>',
           '  </div>',
           '</div>',
           '<div class="row">',
           '  <div class="col-xs-12">',
-          '    <remove-after-placing choices="fullModel.model.choices"></remove-after-placing>',
+          '    <div class="col-xs-7 remove-container">',
+          '      <checkbox ',
+          '         class="control-label"',
+          '         ng-change="onToggleRemoveAllAfterPlacing()"',
+          '         ng-model="model.config.removeAllAfterPlacing"',
+          '         tooltip=\'The "Remove tile after placing" option removes the answer from the choice area after a student places it in an answer area. If you select this option on a choice, you may not add it to more than one answer blank.\'',
+          '         tooltip-append-to-body="true"',
+          '         tooltip-placement="bottom"',
+          '      >',
+          '        Remove <strong>all</strong> tiles after placing',
+          '      </checkbox>',
+          '    </div>',
           '    <ul class="draggable-choices" ng-model="model.choices">',
           '      <li class="draggable-choice" ',
           '          data-choice-id="{{choice.id}}" ',
@@ -476,7 +507,9 @@ function main(
           '          jqyoui-draggable="choiceDraggableOptions($index)"',
           '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
           '        <div class="blocker" ng-click="activate($event, $index)" ng-hide="active[$index]">',
-          '          <div class="bg"></div>',
+          '          <div class="bg">',
+          '            <span class="placeholder" ng-show="!hasChoice($index)">Enter a choice</span>',
+          '          </div>',
           '          <div class="content">',
           '            <ul class="edit-controls">',
           '              <li class="edit-icon-button" tooltip="edit" tooltip-append-to-body="true"',
@@ -491,7 +524,10 @@ function main(
           '          </div>',
           '        </div>',
           '        <div class="remove-after-placing">',
-          '          <checkbox id="moveOnDrag{{$index}}" ng-model="choice.moveOnDrag">',
+          '          <checkbox id="moveOnDrag{{$index}}" ',
+          '            ng-change="onToggleMoveOnDrag(choice)"',
+          '            ng-model="choice.moveOnDrag"',
+          '          >',
           '            Remove tile after placing',
           '          </checkbox>',
           '        </div>',
@@ -502,10 +538,8 @@ function main(
           '            active="active[$index]"',
           '            mini-wiggi-wiz=""',
           '            ng-model="choice.label"',
-          '            dialog-launcher="external"',
           '            features="extraFeaturesForChoices"',
-          '            parent-selector=".modal-body"',
-          '            image-service="imageService()">',
+          '            parent-selector=".modal-body">',
           '        </div>',
           '      </li>',
           '    </ul>',
@@ -536,7 +570,7 @@ function main(
     function feedback() {
       return [
         '<div class="row">',
-        '  <div class="col-xs-12">',
+        '  <div class="col-md-7">',
         '    <corespring-feedback-config ',
         '       full-model="fullModel"',
         '       component-type="corespring-drag-and-drop-inline"',

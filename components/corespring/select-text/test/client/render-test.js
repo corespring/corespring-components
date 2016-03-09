@@ -17,7 +17,7 @@ describe('corespring:select-text:render', function() {
           availability: "all",
           label: "",
           selectionUnit: "custom",
-          passage: "<p><span class=\"cs-token\">As</span> <span class=\"cs-token\">became</span> <span class=\"cs-token\">a</span> <span class=\"cs-token\">real</span> <span class=\"cs-token\">ghost</span>.</p>"
+          passage: "<p><span class=\"cst\">As</span> <span class=\"cst\">became</span> <span class=\"cst\">a</span> <span class=\"cst\">real</span> <span class=\"cst\">ghost</span>.</p>"
         }
       }
     },

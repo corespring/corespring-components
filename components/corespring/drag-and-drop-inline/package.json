@@ -1,6 +1,6 @@
 {
   "name": "drag-and-drop-inline",
-  "title": "Short Answer - Drag and Drop",
+  "title": "Fill in the Blank",
   "titleGroup": "Fixed Choice",
   "organization": "corespring",
   "version": "2.0.1",
@@ -53,6 +53,10 @@
       "name": "choice-templates",
       "organization": "corespring",
       "scope": "editor"
+    },
+    {
+      "name": "navigator",
+      "organization": "corespring"
     }
 
   ]
