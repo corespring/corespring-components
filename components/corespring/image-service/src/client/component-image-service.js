@@ -101,14 +101,7 @@ var def = [
           }.bind(this)
         };
 
-        var reader = new FileReader();
-
-        reader.onloadend = function() {
-          var uploader = new com.ee.RawFileUploader(file, reader.result, url, name, opts);
-          uploader.beginUpload();
-        };
-
-        reader.readAsBinaryString(file);
+        new com.ee.v2.RawFileUploader(file, url, name, opts);
       };
     }
 
