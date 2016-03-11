@@ -10,8 +10,6 @@ describe('component-image-service', function() {
   var uploadOpts;
   var service;
   var fileUploader;
-  var fileReader;
-
   var mockDocument;
 
   beforeEach(function() {
@@ -28,37 +26,19 @@ describe('component-image-service', function() {
 
 
   beforeEach(function() {
-    fileReader = window.FileReader;
 
-    mockFileUploader = {
-      beginUpload: jasmine.createSpy('beginUpload').and.callFake(function() {
-        uploadOpts.onUploadComplete({}, 200);
-      })
-    };
-
-    mockFileReader = {
-      onloadend: null,
-      readAsBinaryString: jasmine.createSpy('readAsBinaryString').and.callFake(function() {
-        mockFileReader.onloadend();
-      })
-    };
-
-    window.FileReader = function() {
-      return mockFileReader;
-    };
-
+    mockFileUploader = {};
+    
     window.com = {
       ee: {
-        RawFileUploader: jasmine.createSpy('RawFileUploader::constructor').and.callFake(function(file, result, url, name, opts) {
-          uploadOpts = opts;
-          return mockFileUploader;
-        })
+        v2: {
+          RawFileUploader: jasmine.createSpy('RawFileUploader::constructor').and.callFake(function(file, url, name, opts) {
+            uploadOpts = opts;
+            return mockFileUploader;
+          })
+        }
       }
     };
-  });
-
-  afterEach(function() {
-    window.FileReader = fileReader;
   });
 
   beforeEach(inject(function(ComponentImageService) {
@@ -80,6 +60,8 @@ describe('component-image-service', function() {
         expect(err).toEqual(null);
         done();
       }, jasmine.createSpy('onProgress'));
+
+      uploadOpts.onUploadComplete();
     });
 
     it('calls onComplete with a url that has been uri encoded', function(done) {
@@ -94,6 +76,8 @@ describe('component-image-service', function() {
         expect(err).toEqual(null);
         done();
       }, jasmine.createSpy('onProgress'));
+
+      uploadOpts.onUploadComplete();
     });
 
     it('calls onComplete with an error message', function(done) {
@@ -103,15 +87,13 @@ describe('component-image-service', function() {
         type: 'image/jpeg'
       };
 
-      mockFileUploader.beginUpload.and.callFake(function() {
-        uploadOpts.onUploadFailed();
-      });
-
       service.addFile(file, function(err, url) {
         expect(err).toEqual(service.errorMessage);
         expect(url).toBe(undefined);
         done();
       }, jasmine.createSpy('onProgress'));
+
+      uploadOpts.onUploadFailed();
 
     });
   });
