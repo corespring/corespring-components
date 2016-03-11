@@ -108,7 +108,7 @@ var def = [
           uploader.beginUpload();
         };
 
-        reader.readAsBinaryString(file);
+        reader.readAsArrayBuffer(file);
       };
     }
 
