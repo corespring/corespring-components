@@ -38,7 +38,7 @@ describe('component-image-service', function() {
 
     mockFileReader = {
       onloadend: null,
-      readAsBinaryString: jasmine.createSpy('readAsBinaryString').and.callFake(function() {
+      readAsArrayBuffer: jasmine.createSpy('readAsArrayBuffer').and.callFake(function() {
         mockFileReader.onloadend();
       })
     };
