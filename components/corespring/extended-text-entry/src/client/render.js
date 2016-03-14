@@ -22,7 +22,7 @@ var main = ['$compile',
       };
 
       this.registerChangeNotifier = function(notifyEditorOfChange, node) {
-        var scope = node.scope().$$childHead;
+        var scope = node.scope() && node.scope().$$childHead;
         if (scope) {
           scope.$watch('ngModel', function(a, b) {
             if (a && a !== b) {
