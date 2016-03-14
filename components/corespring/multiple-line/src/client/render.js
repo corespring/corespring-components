@@ -376,7 +376,7 @@ var main = [
                 drawShape: {
                   id: line.id,
                   curve: function(x) {
-                    return eval(line.expression);
+                    return eval(line.expression) || 0;
                   },
                   label: line.label,
                   color: "#3C763D"

@@ -213,7 +213,7 @@ var main = [
               drawShape: {
                 id: scope.line.id,
                 curve: function(x) {
-                  return eval(response.correctResponse.expression);
+                  return eval(response.correctResponse.expression) || 0;
                 },
                 color: "#3C763D"
               },

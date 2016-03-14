@@ -363,7 +363,7 @@ var main = [
          '    </div>',
          '  </div>',
          '  <div class="row feedback-row">',
-         '    <div class="col-md-7">',
+         '    <div class="col-xs-12">',
          '      <div feedback-panel>',
          '        <div feedback-selector',
          '            fb-sel-label="If correct, show"',

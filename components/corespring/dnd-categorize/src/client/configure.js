@@ -404,7 +404,7 @@ function configureCorespringDndCategorize(
         '    </div>',
         '  </div>',
         '  <div class="row">',
-        '    <div class="col-md-7">',
+        '    <div class="col-xs-12">',
         '      <corespring-feedback-config full-model="fullModel" component-type="corespring-dnd-categorize">',
         '      </corespring-feedback-config>',
         '    </div>',
