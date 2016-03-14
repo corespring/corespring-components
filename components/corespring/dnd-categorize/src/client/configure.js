@@ -60,7 +60,7 @@ function configureCorespringDndCategorize(
       scope.model.config = scope.model.config || {};
       scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 1;
       scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 1;
-      scope.model.config.removeAllAfterPlacing = scope.model.config.removeAllAfterPlacing || false;
+      scope.model.config.removeAllAfterPlacing = scope.model.config.removeAllAfterPlacing || true;
 
       scope.editorModel = prepareEditorModel();
       //log('setModel out', _.cloneDeep(fullModel), _.cloneDeep(scope.editorModel));
