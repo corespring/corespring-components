@@ -60,7 +60,7 @@ var main = [
     ].join('\n');
 
     var feedback = [
-      '<div class="row"><div class="col-md-8">',
+      '<div class="row"><div class="col-xs-12">',
       '  <div feedback-panel>',
       '      <div feedback-selector',
       '           fb-sel-label="If answered correctly, show"',

@@ -267,7 +267,7 @@ function configureTextEntry(
       '      </div>',
       '    </div>',
       '    <div class="row">',
-      '      <div class="col-xs-8">',
+      '      <div class="col-xs-12">',
       feedbackConfigPanel(),
       '      </div>',
       '    </div>',

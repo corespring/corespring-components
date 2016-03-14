@@ -167,7 +167,7 @@ var main = [
         '        <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
         '      </div>',
         '    </div>',
-        '    <div class="row"><div class="col-md-8" ng-hide="fullModel.model.config.exhibitOnly">',
+        '    <div class="row"><div class="col-xs-12" ng-hide="fullModel.model.config.exhibitOnly">',
                feedback,
         '    </div></div>',
         '  </div>',
