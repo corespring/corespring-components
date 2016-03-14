@@ -18,6 +18,7 @@ function makeMultiplicationExplicit(eq) {
 }
 
 exports.expressionize = function(eq, varname) {
+  eq = eq || '';
   eq = trimSpaces(eq);
   eq = replaceVarWithX(eq, varname);
   eq = makeMultiplicationExplicit(eq);

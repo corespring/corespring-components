@@ -40,6 +40,16 @@ describe('random point generator', function() {
 });
 
 describe('expressionize', function() {
+  it('accepts null', function(){
+    var result = server.expressionize(null, 'x');
+    result.should.eql('');
+  });
+
+  it('accepts undefined', function(){
+    var result = server.expressionize(undefined, 'x');
+    result.should.eql('');
+  });
+
   it('trims spaces', function() {
     var eq = "  12x +   3   ";
     var result = server.expressionize(eq, 'x');
