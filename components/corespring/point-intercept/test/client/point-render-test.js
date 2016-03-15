@@ -1,13 +1,20 @@
-describe('corespring', function() {
+describe('point-intercept', function() {
 
   var testModel, scope, rootScope, container, element;
+
+  function Point (){
+    this.on = jasmine.createSpy('on'); 
+    this.X = jasmine.createSpy('x').and.returnValue(1);
+    this.Y = jasmine.createSpy('y').and.returnValue(1);
+    this.setAttribute = jasmine.createSpy('setAttribute');
+  }
 
   window.JXG = {
     JSXGraph: {
       initBoard: function() {
         return {
-          create: function() {},
-          on: function() {}
+          create: jasmine.createSpy('create').and.returnValue(new Point()),
+          on: jasmine.createSpy('on').and.returnValue({})
         };
       }
     },
@@ -23,29 +30,29 @@ describe('corespring', function() {
 
   var testModelTemplate = {
     data: {
-      "componentType": "corespring-point-intercept",
-      "title": "Point interaction sample",
-      "weight": 1,
-      "correctResponse": [
+      componentType: "corespring-point-intercept",
+      title: "Point interaction sample",
+      weight: 1,
+      correctResponse: [
         "0,6",
         "-3,0"
       ],
-      "feedback": {
-        "correctFeedbackType": "default",
-        "incorrectFeedbackType": "default",
-        "partialFeedbackType": "default"
+      feedback: {
+        correctFeedbackType: "default",
+        incorrectFeedbackType: "default",
+        partialFeedbackType: "default"
       },
-      "model": {
-        "config": {
-          "graphWidth": "300px",
-          "graphHeight": "300px",
-          "maxPoints": 2,
-          "pointLabels": [
+      model: {
+        config: {
+          graphWidth: "300px",
+          graphHeight: "300px",
+          maxPoints: 2,
+          pointLabels: [
             "label1",
             "label2"
           ],
-          "domainLabel": "domain",
-          "rangeLabel": "range"
+          domainLabel: "domain",
+          rangeLabel: "range"
         }
       }
     }
@@ -74,6 +81,31 @@ describe('corespring', function() {
 
   it('constructs', function() {
     expect(element).not.toBe(null);
+  });
+
+  describe('set + get data', function(){
+
+    beforeEach(function(){
+      var model = _.cloneDeep(testModel);
+      model.session = {
+        answers: ['0,6', '-3,0']
+      };
+      container.elements[1].setDataAndSession(model);
+      scope.$digest();
+
+    });
+
+    it('get data after some user changes returns the entire model', function(){
+
+      scope.interactionCallback({
+        points: [
+          {x: 3, y: 3}
+        ]
+      });
+
+      var session = container.elements[1].getSession();
+      expect(session).toEqual(['0,6', '-3,0', '3,3']);
+    });
   });
 
   describe('feedback', function() {
