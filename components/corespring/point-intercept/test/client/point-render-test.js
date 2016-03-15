@@ -83,6 +83,20 @@ describe('point-intercept', function() {
     expect(element).not.toBe(null);
   });
 
+
+  describe('setDataAndSession', function(){
+
+    it('sets pointResponse', function(){
+      var m = _.cloneDeep(testModel);
+      m.session = {
+        answers: ['1,0', '2,0']
+      };
+      container.elements[1].setDataAndSession(m);
+      scope.$digest();
+      expect(container.elements[1].getSession()).toEqual({answers: ['1,0', '2,0']});
+    }); 
+  });
+
   describe('feedback', function() {
     it('shows feedback by default', function() {
       container.elements[1].setDataAndSession(testModel);
@@ -223,25 +237,29 @@ describe('point-intercept', function() {
   });
 
   describe('answer change callback', function() {
-    var changeHandlerCalled = false;
+    var handler;
 
     beforeEach(function() {
-      changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
-      });
-      container.elements['1'].setDataAndSession(testModel);
+      var model = _.cloneDeep(testModel);
+
+      model.session = {
+        answers: ['0,1', '0.2']
+      };
+
+      handler = jasmine.createSpy('handler');
+      container.elements['1'].answerChangedHandler(handler);
+      container.elements['1'].setDataAndSession(model);
       scope.$digest();
     });
 
     it('does not get called initially', function() {
-      expect(changeHandlerCalled).toBe(false);
+      expect(handler).not.toHaveBeenCalled();
     });
 
     it('does get called when the answer is changed', function() {
       scope.pointResponse = ["0.1,0.6"];
       rootScope.$digest();
-      expect(changeHandlerCalled).toBe(true);
+      expect(handler).toHaveBeenCalled();
     });
 
   });
