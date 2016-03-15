@@ -83,31 +83,6 @@ describe('point-intercept', function() {
     expect(element).not.toBe(null);
   });
 
-  describe('set + get data', function(){
-
-    beforeEach(function(){
-      var model = _.cloneDeep(testModel);
-      model.session = {
-        answers: ['0,6', '-3,0']
-      };
-      container.elements[1].setDataAndSession(model);
-      scope.$digest();
-
-    });
-
-    it('get data after some user changes returns the entire model', function(){
-
-      scope.interactionCallback({
-        points: [
-          {x: 3, y: 3}
-        ]
-      });
-
-      var session = container.elements[1].getSession();
-      expect(session).toEqual(['0,6', '-3,0', '3,3']);
-    });
-  });
-
   describe('feedback', function() {
     it('shows feedback by default', function() {
       container.elements[1].setDataAndSession(testModel);

@@ -122,6 +122,7 @@ var def = ['Canvas',
 
         var addPoint = function(coords, ptName, ptOptions) {
           var point = addCanvasPoint(coords, ptName, ptOptions);
+          points[point.name] = getPointData(point);
           return getPointData(point);
         };
 
