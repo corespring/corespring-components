@@ -1,13 +1,20 @@
-describe('corespring', function() {
+describe('point-intercept', function() {
 
   var testModel, scope, rootScope, container, element;
+
+  function Point (){
+    this.on = jasmine.createSpy('on'); 
+    this.X = jasmine.createSpy('x').and.returnValue(1);
+    this.Y = jasmine.createSpy('y').and.returnValue(1);
+    this.setAttribute = jasmine.createSpy('setAttribute');
+  }
 
   window.JXG = {
     JSXGraph: {
       initBoard: function() {
         return {
-          create: function() {},
-          on: function() {}
+          create: jasmine.createSpy('create').and.returnValue(new Point()),
+          on: jasmine.createSpy('on').and.returnValue({})
         };
       }
     },
@@ -23,29 +30,29 @@ describe('corespring', function() {
 
   var testModelTemplate = {
     data: {
-      "componentType": "corespring-point-intercept",
-      "title": "Point interaction sample",
-      "weight": 1,
-      "correctResponse": [
+      componentType: "corespring-point-intercept",
+      title: "Point interaction sample",
+      weight: 1,
+      correctResponse: [
         "0,6",
         "-3,0"
       ],
-      "feedback": {
-        "correctFeedbackType": "default",
-        "incorrectFeedbackType": "default",
-        "partialFeedbackType": "default"
+      feedback: {
+        correctFeedbackType: "default",
+        incorrectFeedbackType: "default",
+        partialFeedbackType: "default"
       },
-      "model": {
-        "config": {
-          "graphWidth": "300px",
-          "graphHeight": "300px",
-          "maxPoints": 2,
-          "pointLabels": [
+      model: {
+        config: {
+          graphWidth: "300px",
+          graphHeight: "300px",
+          maxPoints: 2,
+          pointLabels: [
             "label1",
             "label2"
           ],
-          "domainLabel": "domain",
-          "rangeLabel": "range"
+          domainLabel: "domain",
+          rangeLabel: "range"
         }
       }
     }
@@ -74,6 +81,20 @@ describe('corespring', function() {
 
   it('constructs', function() {
     expect(element).not.toBe(null);
+  });
+
+
+  describe('setDataAndSession', function(){
+
+    it('sets pointResponse', function(){
+      var m = _.cloneDeep(testModel);
+      m.session = {
+        answers: ['1,0', '2,0']
+      };
+      container.elements[1].setDataAndSession(m);
+      scope.$digest();
+      expect(container.elements[1].getSession()).toEqual({answers: ['1,0', '2,0']});
+    }); 
   });
 
   describe('feedback', function() {
@@ -216,25 +237,29 @@ describe('corespring', function() {
   });
 
   describe('answer change callback', function() {
-    var changeHandlerCalled = false;
+    var handler;
 
     beforeEach(function() {
-      changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
-      });
-      container.elements['1'].setDataAndSession(testModel);
+      var model = _.cloneDeep(testModel);
+
+      model.session = {
+        answers: ['0,1', '0.2']
+      };
+
+      handler = jasmine.createSpy('handler');
+      container.elements['1'].answerChangedHandler(handler);
+      container.elements['1'].setDataAndSession(model);
       scope.$digest();
     });
 
     it('does not get called initially', function() {
-      expect(changeHandlerCalled).toBe(false);
+      expect(handler).not.toHaveBeenCalled();
     });
 
     it('does get called when the answer is changed', function() {
       scope.pointResponse = ["0.1,0.6"];
       rootScope.$digest();
-      expect(changeHandlerCalled).toBe(true);
+      expect(handler).toHaveBeenCalled();
     });
 
   });
