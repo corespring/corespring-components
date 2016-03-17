@@ -44,7 +44,7 @@ var main = [
       '         <label class="control-label">rows</label>',
       '       </div>',
       '     </form>',
-      '     <checkbox ng-model="fullModel.model.config.showMathInput">Allow students to include math</checkbox>',
+      '     <checkbox ng-model="fullModel.model.config.showMathInput">Student responses can include math notation</checkbox>',
       '</div>'].join('\n');
 
     return {
