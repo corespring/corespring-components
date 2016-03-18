@@ -1,7 +1,7 @@
 /* global exports */
 var main = [
-  '$log', 'ChoiceTemplates', 'ServerLogic', 'ComponentImageService', 'WiggiMathJaxFeatureDef',
-  function($log, ChoiceTemplates, ServerLogic, ComponentImageService, WiggiMathJaxFeatureDef) {
+  '$log', 'ChoiceTemplates', 'ServerLogic', 'WiggiMathJaxFeatureDef',
+  function($log, ChoiceTemplates, ServerLogic, WiggiMathJaxFeatureDef) {
 
     "use strict";
 

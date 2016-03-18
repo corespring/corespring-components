@@ -1,6 +1,5 @@
 exports.framework = "angular";
 exports.factory = [
-  'ComponentImageService',
   /**
    * TODO: Untangle - This feature 'ImageFeature' belongs the main editor.
    * It is not safe to use it in this context.
@@ -9,7 +8,6 @@ exports.factory = [
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
   function(
-    ComponentImageService,
     ImageFeature,
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef
