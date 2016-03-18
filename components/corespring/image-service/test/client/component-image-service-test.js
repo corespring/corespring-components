@@ -47,54 +47,38 @@ describe('component-image-service', function() {
 
   describe('addFile', function() {
 
-    it('adds queryParams', function(done){
-      var file = {
-        name: 'a.jpg',
+    var onSuccess, file;
+
+    beforeEach(function(){
+      
+      file = {
+        name: 'a b.jpg',
         type: 'image/jpeg'
       };
+
+      onSuccess = jasmine.createSpy('onSuccess');
 
       mockDocument[0].location.href = 'path?a=b&c=d';
-
-      service.addFile(file, function(err, url) {
-        expect(url).toEqual('a.jpg?a=b&c=d');
-        expect(err).toEqual(null);
-        done();
-      }, jasmine.createSpy('onProgress'));
-
-      uploadOpts.onUploadComplete();
+      service.addFile(file, onSuccess, jasmine.createSpy('onProgress'));
+    });
+    
+    it('adds queryParams and encodes', function(){
+      expect(com.ee.v2.RawFileUploader).toHaveBeenCalledWith(
+        file,
+        'a%20b.jpg?a=b&c=d',
+        file.name,
+        jasmine.any(Object)
+        );
     });
 
-    it('calls onComplete with a url that has been uri encoded', function(done) {
-      
-      var file = {
-        name: 'a#b?c d.jpg',
-        type: 'image/jpeg'
-      };
-
-      service.addFile(file, function(err, url) {
-        expect(url).toEqual('a%23b%3Fc%20d.jpg');
-        expect(err).toEqual(null);
-        done();
-      }, jasmine.createSpy('onProgress'));
-
-      uploadOpts.onUploadComplete();
+    it('calls onComplete with url from the server', function() {
+      uploadOpts.onUploadComplete('the-url-from-the-server');
+      expect(onSuccess).toHaveBeenCalledWith(null, 'the-url-from-the-server');
     });
 
-    it('calls onComplete with an error message', function(done) {
-
-      var file = {
-        name: 'bad.jpg',
-        type: 'image/jpeg'
-      };
-
-      service.addFile(file, function(err, url) {
-        expect(err).toEqual(service.errorMessage);
-        expect(url).toBe(undefined);
-        done();
-      }, jasmine.createSpy('onProgress'));
-
-      uploadOpts.onUploadFailed();
-
+    it('calls onComplete with an error message', function() {
+      uploadOpts.onUploadFailed('error');
+      expect(onSuccess).toHaveBeenCalledWith(service.errorMessage);
     });
   });
 
