@@ -392,7 +392,7 @@ function renderCorespringDndCategorize(
         return {
           id: rowIdCounter++,
           categories: row
-        }
+        };
       });
 
       scope.categoryStyle = {
