@@ -102,7 +102,7 @@ var def = [
           }.bind(this)
         };
 
-        new com.ee.v2.RawFileUploader(file, url, name, opts);
+        new com.ee.v2.RawFileUploader(file, url, file.name, opts);
       };
     }
 
