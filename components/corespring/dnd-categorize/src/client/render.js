@@ -388,7 +388,14 @@ function renderCorespringDndCategorize(
         return;
       }
 
-      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
+      var rowIdCounter = 0;
+
+      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function(row){
+        return {
+          id: rowIdCounter++,
+          categories: row
+        }
+      })
       scope.categoryStyle = {
         width: 100 / categoriesPerRow + '%'
       };
@@ -755,11 +762,11 @@ function renderCorespringDndCategorize(
     return [
         '<div class="categories-holder" ng-if="#flip#">',
         '  <div class="categories">',
-        '    <div class="row" ng-repeat-start="row in #rowsModel#">',
+        '    <div class="row" ng-repeat-start="row in #rowsModel# track by row.id">',
         '      <div category-label-corespring-dnd-categorize="true" ',
         '        category="category" ',
         '        edit-mode="isEditMode" ',
-        '        ng-repeat="category in row"',
+        '        ng-repeat="category in row.categories"',
         '        ng-style="categoryStyle"',
         '        on-edit-clicked="activate(categoryId)" ',
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
@@ -773,7 +780,7 @@ function renderCorespringDndCategorize(
         '        drag-enabled="isDragEnabledFromCategory()"',
         '        edit-mode="isEditMode" ',
         '        ng-class="response.warningClass"',
-        '        ng-repeat="category in row"',
+        '        ng-repeat="category in row.categories"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId,index)" ',
         '        on-edit-clicked="activate(categoryId)" ',
