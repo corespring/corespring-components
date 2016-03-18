@@ -24,8 +24,6 @@ function renderCorespringDndCategorize(
   MathJaxService
 ) {
 
-  var defaultWidth;
-
   return {
     controller: ['$scope', controller],
     link: link,
@@ -388,34 +386,30 @@ function renderCorespringDndCategorize(
         return;
       }
 
-      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
+      var rowIdCounter = 0;
+
+      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function (row) {
+        return {
+          id: rowIdCounter++,
+          categories: row
+        }
+      });
+
       scope.categoryStyle = {
         width: 100 / categoriesPerRow + '%'
       };
 
+      $timeout(updateChoices, 100);
+    }
+
+    function updateChoices(){
+      if(elem.width() === 0){
+        $timeout(updateChoices, 100);
+        return;
+      }
+
       scope.choiceWidth = calcChoiceWidth();
 
-      // setting defaultWidth for the first time
-      if (!defaultWidth) {
-        defaultWidth = 239;
-      }
-
-      if (scope.choiceWidth === 0) {
-        $timeout(updateView, 500);
-        // uses the last set width
-        scope.choiceWidth = defaultWidth;
-
-        var onMathjaxRendered = function() {
-          MathJaxService.off(onMathjaxRendered, elem);
-          updateView();
-        };
-        MathJaxService.onEndProcess(onMathjaxRendered, elem);
-      }
-
-      defaultWidth = scope.choiceWidth;
-
-      //in editor we need some space to show all the tools
-      //so we limit the number of choices per row to 4
       scope.choiceStyle = {
         width: scope.choiceWidth + 'px'
       };
@@ -424,15 +418,6 @@ function renderCorespringDndCategorize(
       renderMath();
     }
 
-    /**
-     * We start with a total width for the categories
-     * which holds numberOfCategories plus some paddings
-     * The choices should fit into the categories without
-     * resizing. They have to take paddings inside of
-     * the categories into account.
-     *
-     * @returns {number}
-     */
     function calcChoiceWidth() {
       var maxChoiceWidth = elem.find('.choice-container').width();
       maxChoiceWidth -= 2 * 3; //margin of choice.border
@@ -755,11 +740,11 @@ function renderCorespringDndCategorize(
     return [
         '<div class="categories-holder" ng-if="#flip#">',
         '  <div class="categories">',
-        '    <div class="row" ng-repeat-start="row in #rowsModel#">',
+        '    <div class="row" ng-repeat-start="row in #rowsModel# track by row.id">',
         '      <div category-label-corespring-dnd-categorize="true" ',
         '        category="category" ',
         '        edit-mode="isEditMode" ',
-        '        ng-repeat="category in row"',
+        '        ng-repeat="category in row.categories"',
         '        ng-style="categoryStyle"',
         '        on-edit-clicked="activate(categoryId)" ',
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
@@ -773,7 +758,7 @@ function renderCorespringDndCategorize(
         '        drag-enabled="isDragEnabledFromCategory()"',
         '        edit-mode="isEditMode" ',
         '        ng-class="response.warningClass"',
-        '        ng-repeat="category in row"',
+        '        ng-repeat="category in row.categories"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId,index)" ',
         '        on-edit-clicked="activate(categoryId)" ',
