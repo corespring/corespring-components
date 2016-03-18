@@ -89,7 +89,8 @@ var def = [
         var opts = {
           onUploadComplete: function(body, status) {
             $log.info('done: ', body, status);
-            onComplete(null, url);
+            var uploadedUrl = body && body.url ? body.url : body;
+            onComplete(null, uploadedUrl);
           },
           onUploadProgress: function(progress) {
             $log.info('progress', arguments);
@@ -101,7 +102,7 @@ var def = [
           }.bind(this)
         };
 
-        new com.ee.v2.RawFileUploader(file, url, name, opts);
+        new com.ee.v2.RawFileUploader(file, url, file.name, opts);
       };
     }
 
