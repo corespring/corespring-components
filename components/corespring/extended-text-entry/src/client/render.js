@@ -33,7 +33,8 @@ var main = [
           var height = scope.rows * PIXELS_PER_ROW + 'px';
           element.find('.wiggi-wiz').css({width: width});
           editable().css({
-            height: height
+            height: height,
+            width: width
           });
         },
 
