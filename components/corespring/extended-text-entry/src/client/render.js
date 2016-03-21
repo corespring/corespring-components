@@ -25,7 +25,7 @@ var main = ['$compile',
         var scope = node.scope() && node.scope().$$childHead;
         if (scope) {
           scope.$watch('ngModel', function(a, b) {
-            if (a && a !== b) {
+            if (a && b && a !== b) {
               notifyEditorOfChange();
             }
           });
