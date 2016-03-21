@@ -96,6 +96,7 @@ describe('corespring:drag-and-drop-inline:configure', function() {
       });
       $provide.value('WiggiMathJaxFeatureDef', function() {});
       $provide.value('WiggiLinkFeatureDef', function() {});
+      $provide.value('Msgr', {send: function(){}} );
     });
   });
 
@@ -258,6 +259,66 @@ describe('corespring:drag-and-drop-inline:configure', function() {
       testModel.model.answerAreaXhtml = '<answer-area-inline-csdndi id="aa_1"></answer-area-inline-csdndi>';
       var resultModel = container.elements['1'].getModel();
       expect(resultModel.model.answerAreas.length).toBe(1);
+    });
+  });
+
+  describe('removeAllAfterPlacing', function(){
+    var testModel;
+
+    beforeEach(function(){
+      testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      scope.$digest();
+    });
+
+    function setRemoveAllAfterPlacing(value){
+      //set the model like the checkbox would do
+      testModel.model.config.removeAllAfterPlacing = value;
+
+      //set one choice to have the opposite value so we can proove the action
+      testModel.model.choices[0].moveOnDrag = !value;
+
+      //call the onToggle like the checkbox would do
+      scope.onToggleRemoveAllAfterPlacing();
+      scope.$digest();
+    }
+
+    it('should set moveOnDrag=true for all choices when set to true', function(){
+      setRemoveAllAfterPlacing(true);
+
+      var resultModel = container.elements['1'].getModel();
+      _.forEach(resultModel.model.choices, function(choice){
+        expect(choice.moveOnDrag).toBe(true);
+      });
+    });
+
+    it('should set moveOnDrag=false for all choices when set to false', function(){
+      setRemoveAllAfterPlacing(false);
+
+      var resultModel = container.elements['1'].getModel();
+      _.forEach(resultModel.model.choices, function(choice){
+        expect(choice.moveOnDrag).toBe(false);
+      });
+    });
+
+    it('should be set to false, when one choice toggles moveOnDrag to false', function(){
+      setRemoveAllAfterPlacing(true);
+      var choice = testModel.model.choices[0];
+      choice.moveOnDrag = false;
+      scope.onToggleMoveOnDrag(choice);
+      scope.$digest();
+
+      expect(testModel.model.config.removeAllAfterPlacing).toBe(false);
+    });
+
+    it('should not change, when one choice toggles moveOnDrag to true', function(){
+      setRemoveAllAfterPlacing(false);
+      var choice = testModel.model.choices[0];
+      choice.moveOnDrag = true;
+      scope.onToggleMoveOnDrag(choice);
+      scope.$digest();
+
+      expect(testModel.model.config.removeAllAfterPlacing).toBe(false);
     });
   });
 

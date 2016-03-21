@@ -204,6 +204,7 @@ exports.service = ['$log',
           this.board.removeObject(this.points[i].text);
           this.board.removeObject(this.points[i]);
           this.points.splice(i, 1);
+          this.texts.splice(i, 1);
         }
       }
     };
@@ -211,9 +212,7 @@ exports.service = ['$log',
     Canvas.prototype.removePointByName = function(pointName) {
       for (var i = 0; i < this.points.length; i++) {
         if (this.points[i].name === pointName) {
-          this.board.removeObject(this.points[i].text);
-          this.board.removeObject(this.points[i]);
-          this.points.splice(i, 1);
+          this.removePoint(this.points[i].id);
         }
       }
     };

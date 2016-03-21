@@ -72,8 +72,10 @@ function CategoryLabelCorespringDndCategorize(
       });
     }
 
-    function onLabelEditClicked(event) {
-      event.stopPropagation();
+    function onLabelEditClicked($event) {
+      if($event) {
+        $event.stopPropagation();
+      }
       scope.notifyEditClicked({
         categoryId: getCategoryId()
       });
@@ -87,20 +89,18 @@ function CategoryLabelCorespringDndCategorize(
         '    <div ng-click="onLabelEditClicked($event)" ng-if="isEditMode">',
         '      <div class="editor" ',
         '         active="active"',
-        '         dialog-launcher="external" ',
         '         disable-auto-activation="true"  ',
         '         feature-overrides="overrideFeatures"',
         '         features="extraFeatures" ',
-        '         image-service="imageService()" ',
         '         mini-wiggi-wiz="" ',
         '         ng-model="category.model.label" ',
-        '         placeholder="Enter a label"',
+        '         placeholder="Enter a label or leave blank"',
         '      ></div>',
         '    </div>',
         '    <div class="html-wrapper" ng-bind-html-unsafe="category.model.label" ng-if="!isEditMode"></div>',
-        '    <ul class="edit-controls" ng-if="showTools">',
+        '    <ul class="edit-controls" ng-if="showTools" ng-hide="active">',
         '      <li class="edit-icon-button"' +
-        '          ng-click="onLabelEditClicked()"',
+        '          ng-click="onLabelEditClicked($event)"',
         '          tooltip="edit"',
         '          tooltip-append-to-body="true"',
         '          tooltip-placement="bottom">',

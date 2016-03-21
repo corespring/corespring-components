@@ -84,11 +84,9 @@ var main = ['$compile',
 
           var compiledWiggi = $compile(wiggiTemplate())(scope);
           element.find('.textarea-holder').html(compiledWiggi);
-
           element.find('.wiggi-wiz').css({width: width});
           editable().css({
-            height: height,
-            width: width
+            height: height
           });
 
         },

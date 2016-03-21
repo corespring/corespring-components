@@ -134,14 +134,18 @@ describe('corespring:match:render', function() {
     expect(scope.matchModel.columns[2].labelHtml).toEqual('No');
   });
 
-  it('uses not show the header if its the default', function() {
-    testModel.data.model.columns[0].labelHtml = 'Custom header';
-    testModel.data.model.columns[1].labelHtml = 'Column 1';
-    testModel.data.model.columns[2].labelHtml = 'Column 2';
-    container.elements['1'].setDataAndSession(testModel);
-    expect(scope.matchModel.columns[0].labelHtml).toEqual('');
-    expect(scope.matchModel.columns[1].labelHtml).toEqual('');
-    expect(scope.matchModel.columns[2].labelHtml).toEqual('');
+  it('should not show the default headers', function() {
+    function runTest(header){
+      testModel.data.model.columns[0].labelHtml = header;
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.matchModel.columns[0].labelHtml).toEqual('');
+    }
+    runTest('Custom header');
+    runTest('Column 1');
+    runTest('Column 2');
+    runTest('Column 3');
+    runTest('Column 4');
+    runTest('Column 5');
   });
 
   it('builds the table correctly', function() {
@@ -178,6 +182,14 @@ describe('corespring:match:render', function() {
       rootScope.$digest();
       var row = scope.matchModel.rows[0];
       expect(row.labelHtml).toEqual('<div style="">some text</div>');
+    });
+
+    it('does not removes size settings from img', function() {
+      testModel.data.model.rows[0].labelHtml = '<img width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">';
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      var row = scope.matchModel.rows[0];
+      expect(row.labelHtml).toEqual('<img width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">');
     });
 
     it('does not remove other settings', function() {

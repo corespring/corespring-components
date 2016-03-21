@@ -4,7 +4,7 @@
 
   .jxgbox {
     position: relative;
-    overflow: visible!important;
+    overflow: visible !important;
     background-color: #ffffff;
     -ms-touch-action: none;
   }
@@ -15,23 +15,29 @@
     padding: 0px;
     margin: 0px;
   }
+
   .JXGinfobox {
     border-style: none;
     border-width: 1px;
     border-color: black;
   }
+
   .JXGimage {
     opacity: 1.0;
   }
+
   .JXGimageHighlight {
     opacity: 0.6;
   }
+
   .feedback-holder {
+
     .fa-warning {
       font-size: 22px;
       line-height: 31px;
       color: @warning-color;
     }
+
     .feedback {
       &.warning {
         .panel-heading {
@@ -47,9 +53,11 @@
       }
     }
   }
+
   .solution-panel {
     visibility: hidden;
     height: 0;
+
     .solution-graph {
       margin-left: auto;
       margin-right: auto;
@@ -58,23 +66,24 @@
       margin-bottom: 10px;
     }
   }
+
   .solution-panel.panelVisible {
     visibility: visible;
     height: auto;
   }
 
   .graph-container {
-    margin-top: 50px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: 20px;
+    margin: 50px auto 20px auto;
     position: relative;
   }
+
   .graph-controls {
     position: relative;
+
     .line-input {
       padding: 3px 0px;
       border-bottom: 1px solid #ccc;
+
       &:last-child {
         border-bottom: none;
       }
@@ -88,24 +97,31 @@
       .symbol {
         font-size: 10px;
         padding-right: 2px;
+
         &.diamond {
           transform: rotate(45deg);
         }
+
         &.line0 {
           color: #993399;
         }
+
         &.line1 {
           color: #0033ff;
         }
+
         &.line2 {
           color: #666633;
         }
+
         &.line3 {
           color: #ffcc99;
         }
+
         &.line4 {
           color: #663333;
         }
+
         &.exhibit {
           color: #000000;
         }
@@ -114,12 +130,13 @@
 
       .point-input {
         height: 25px;
-        // padding-top: 3px;
+
         .point-label {
           display: inline-block;
           min-width: 16px;
           padding-right: 5px;
         }
+
         input {
           height: 24px;
           padding: 2px;
@@ -127,6 +144,7 @@
           color: #555555;
           border: 1px solid #cccccc;
           border-radius: 4px;
+
           &:disabled {
             background-color: #dddddd;
           }
@@ -138,6 +156,7 @@
         padding: 0px 5px;
         color: #333333;
         margin-top: -4px;
+
         &:hover {
           background-color: #dddddd;
         }
@@ -146,26 +165,32 @@
     .glowing-border {
       outline: 0 none;
       box-shadow: 0 0 5px;
+
       &.line0 {
         border-color: #993399;
         box-shadow: #993399;
       }
+
       &.line1 {
         border-color: #0033ff;
         box-shadow: #0033ff;
       }
+
       &.line2 {
         border-color: #666633;
         box-shadow: #666633;
       }
+
       &.line3 {
         border-color: #ffcc99;
         box-shadow: #ffcc99;
       }
+
       &.line4 {
         border-color: #663333;
         box-shadow: #663333;
       }
+
       &.exhibit {
         border-color: #000000;
         box-shadow: #000000;
@@ -177,6 +202,7 @@
     margin: 0px 20px 10px 20px;
     padding: 10px;
     max-width: 600px;
+
     &.warning {
       .jxgbox {
         border-color: @warning-color-border;
@@ -186,13 +212,23 @@
 }
 
 .multiple-line-interaction-configuration {
-  h3{
+
+  h3 {
     margin: 0;
     margin-bottom: 10px;
     padding:0;
   }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
+  .intro-text {
+    margin-bottom: 26px;
+  }
+
   .reset-defaults {
-    margin: 20px 0 20px 0;
+    margin: 0 0 20px 0;
     font-style: italic;
   }
 
@@ -217,32 +253,44 @@
   }
 
   .delete-line {
-    font-size: 20px;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 6px 6px 6px 0;
+  }
+
+  .remove-line {
+    padding: 0;
   }
 
   .glowing-border {
     outline: 0 none;
     box-shadow: 0 0 5px;
+
     &.line0 {
       border-color: #993399;
       box-shadow: #993399;
     }
+
     &.line1 {
       border-color: #0033ff;
       box-shadow: #0033ff;
     }
+
     &.line2 {
       border-color: #666633;
       box-shadow: #666633;
     }
+
     &.line3 {
       border-color: #ffcc99;
       box-shadow: #ffcc99;
     }
+
     &.line4 {
       border-color: #663333;
       box-shadow: #663333;
     }
+
     &.exhibit {
       border-color: #000000;
       box-shadow: #000000;

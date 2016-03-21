@@ -75,7 +75,6 @@
       position: absolute;
       right: 0;
       top: 0;
-      z-index: 10000;
 
       .edit-icon-button, .delete-icon-button {
         display: inline-block;
@@ -308,7 +307,6 @@
             position: absolute;
             right: 1px;
             top: 2px;
-            z-index: 10000;
 
             .edit-icon-button, .delete-icon-button {
               display: inline-block;
@@ -340,6 +338,18 @@
 }
 
 .config-corespring-dnd-categorize {
+
+  .interaction-corespring-dnd-categorize {
+    .row {
+      margin-left: -30px;
+
+      &.choices-label-row,
+      &.remove-all-row {
+        margin-left: -20px;
+      }
+    }
+
+  }
 
   .rounded-inputs();
 
@@ -387,20 +397,6 @@
     margin-bottom: 10px;
   }
 
-  .player-col {
-    width: 630px;
-    display: inline-block;
-    float: left;
-  }
-
-  .settings-col {
-    width: 220px;
-    padding-left: 20px;
-    padding-top: 58px;
-    display: inline-block;
-    float: left;
-  }
-
   .feedback-row {
     margin-top: 20px;
   }
@@ -426,27 +422,53 @@
     }
   }
 
-  .categories-per-row {
-    margin-bottom: 45px;
+  .add-category-row {
+    @vertical-margin: 20px;
+    margin-top: @vertical-margin;
+    margin-bottom: @vertical-margin;
   }
 
-  .choice-area {
-    margin-top: 85px;
+  .add-choice-row {
+    margin: 10px 0;
   }
 
-  hr {
-    margin-left: -650px;
+  .categories-per-row,
+  .choices-per-row {
+    @vertical-margin: 15px;
+    margin-top: @vertical-margin;
+    margin-bottom: @vertical-margin;
+
+    select {
+      margin-left: -20px;
+      width: 60px;
+    }
+
   }
 
   h3 {
-    margin-top: 40px;
+    margin-top: 20px;
   }
 
-  .placeholder {
-    display: inline-block;
-    padding: 6px;
-    font-weight: bold;
-    color: #7a7a7a;
+  .choice-corespring-dnd-categorize {
+    .placeholder {
+      display: inline-block;
+      padding: 6px;
+      font-weight: bold;
+      color: #7a7a7a;
+    }
+  }
+
+  .category {
+    .placeholder {
+      font-style: italic;
+      color: #7a7a7a;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
   }
 
 }

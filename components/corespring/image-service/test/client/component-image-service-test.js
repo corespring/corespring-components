@@ -10,8 +10,6 @@ describe('component-image-service', function() {
   var uploadOpts;
   var service;
   var fileUploader;
-  var fileReader;
-
   var mockDocument;
 
   beforeEach(function() {
@@ -28,37 +26,19 @@ describe('component-image-service', function() {
 
 
   beforeEach(function() {
-    fileReader = window.FileReader;
 
-    mockFileUploader = {
-      beginUpload: jasmine.createSpy('beginUpload').and.callFake(function() {
-        uploadOpts.onUploadComplete({}, 200);
-      })
-    };
-
-    mockFileReader = {
-      onloadend: null,
-      readAsBinaryString: jasmine.createSpy('readAsBinaryString').and.callFake(function() {
-        mockFileReader.onloadend();
-      })
-    };
-
-    window.FileReader = function() {
-      return mockFileReader;
-    };
-
+    mockFileUploader = {};
+    
     window.com = {
       ee: {
-        RawFileUploader: jasmine.createSpy('RawFileUploader::constructor').and.callFake(function(file, result, url, name, opts) {
-          uploadOpts = opts;
-          return mockFileUploader;
-        })
+        v2: {
+          RawFileUploader: jasmine.createSpy('RawFileUploader::constructor').and.callFake(function(file, url, name, opts) {
+            uploadOpts = opts;
+            return mockFileUploader;
+          })
+        }
       }
     };
-  });
-
-  afterEach(function() {
-    window.FileReader = fileReader;
   });
 
   beforeEach(inject(function(ComponentImageService) {
@@ -67,52 +47,38 @@ describe('component-image-service', function() {
 
   describe('addFile', function() {
 
-    it('adds queryParams', function(done){
-      var file = {
-        name: 'a.jpg',
+    var onSuccess, file;
+
+    beforeEach(function(){
+      
+      file = {
+        name: 'a b.jpg',
         type: 'image/jpeg'
       };
+
+      onSuccess = jasmine.createSpy('onSuccess');
 
       mockDocument[0].location.href = 'path?a=b&c=d';
-
-      service.addFile(file, function(err, url) {
-        expect(url).toEqual('a.jpg?a=b&c=d');
-        expect(err).toEqual(null);
-        done();
-      }, jasmine.createSpy('onProgress'));
+      service.addFile(file, onSuccess, jasmine.createSpy('onProgress'));
+    });
+    
+    it('adds queryParams and encodes', function(){
+      expect(com.ee.v2.RawFileUploader).toHaveBeenCalledWith(
+        file,
+        'a%20b.jpg?a=b&c=d',
+        file.name,
+        jasmine.any(Object)
+        );
     });
 
-    it('calls onComplete with a url that has been uri encoded', function(done) {
-      
-      var file = {
-        name: 'a#b?c d.jpg',
-        type: 'image/jpeg'
-      };
-
-      service.addFile(file, function(err, url) {
-        expect(url).toEqual('a%23b%3Fc%20d.jpg');
-        expect(err).toEqual(null);
-        done();
-      }, jasmine.createSpy('onProgress'));
+    it('calls onComplete with url from the server', function() {
+      uploadOpts.onUploadComplete('the-url-from-the-server');
+      expect(onSuccess).toHaveBeenCalledWith(null, 'the-url-from-the-server');
     });
 
-    it('calls onComplete with an error message', function(done) {
-
-      var file = {
-        name: 'bad.jpg',
-        type: 'image/jpeg'
-      };
-
-      mockFileUploader.beginUpload.and.callFake(function() {
-        uploadOpts.onUploadFailed();
-      });
-
-      service.addFile(file, function(err, url) {
-        expect(err).toEqual(service.errorMessage);
-        expect(url).toBe(undefined);
-        done();
-      }, jasmine.createSpy('onProgress'));
-
+    it('calls onComplete with an error message', function() {
+      uploadOpts.onUploadFailed('error');
+      expect(onSuccess).toHaveBeenCalledWith(service.errorMessage);
     });
   });
 

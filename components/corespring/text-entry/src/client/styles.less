@@ -181,7 +181,6 @@
 
     //Overwrite position:relative bc. that displaces the input field
     .ui-select-container {
-      width: 40%;
       display: inline-block;
       &.dropdown {
         position: inherit;
@@ -243,11 +242,12 @@
       box-shadow: none !important;
     }
 
-    .checkbox-input {
-      display: inline-block;
-      margin-left: 20px;
-    }
+  }
 
+  .ignore-row {
+    @vertical-margin: 10px;
+    margin-top: @vertical-margin;
+    margin-bottom: @vertical-margin;
   }
 
   .text-field-size-row {
@@ -268,6 +268,17 @@
       display: inline-block;
       width: auto;
       margin-left: 5px;
+    }
+  }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
+  .answer-options {
+    .checkbox-input {
+      display: inline-block;
+      margin-right: 20px;
     }
   }
 

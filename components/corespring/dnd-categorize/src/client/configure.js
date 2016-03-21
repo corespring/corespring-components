@@ -1,14 +1,12 @@
 exports.framework = 'angular';
 exports.directives = [{
   directive: [
-    'ComponentImageService',
     'MathJaxService',
     configureCorespringDndCategorize
   ]
 }];
 
 function configureCorespringDndCategorize(
-  ComponentImageService,
   MathJaxService
 ) {
 
@@ -29,7 +27,6 @@ function configureCorespringDndCategorize(
     scope.answerAreaOptions = ['above', 'below'];
     scope.categoriesPerRowOptions = _.range(1, MAX_CATEGORIES_PER_ROW + 1);
     scope.choicesPerRowOptions = _.range(1, MAX_CHOICES_PER_ROW + 1);
-    scope.imageService = ComponentImageService;
     scope.leftPanelClosed = false;
     scope.numberOfCorrectAnswers = 0;
 
@@ -41,6 +38,7 @@ function configureCorespringDndCategorize(
     scope.$watch('editorModel.choicesLabel', updateChoicesLabel, true);
     scope.$watch('editorModel.categories', updateModel, true);
     scope.$watch('editorModel.partialScoring',  _.debounce(updatePartialScoring, 200), true);
+    scope.$watch('editorModel.removeAllAfterPlacing', updateRemoveAllAfterPlacing, true);
     scope.$watch('editorModel.weighting', _.debounce(updateWeighting, 200), true);
     scope.$watch('model', renderMath, true);
 
@@ -59,8 +57,10 @@ function configureCorespringDndCategorize(
       scope.fullModel.correctResponse = scope.fullModel.correctResponse || {};
 
       scope.model = scope.fullModel.model;
+      scope.model.config = scope.model.config || {};
       scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 1;
       scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 1;
+      scope.model.config.removeAllAfterPlacing = scope.model.config.removeAllAfterPlacing || true;
 
       scope.editorModel = prepareEditorModel();
       //log('setModel out', _.cloneDeep(fullModel), _.cloneDeep(scope.editorModel));
@@ -77,6 +77,7 @@ function configureCorespringDndCategorize(
       });
 
       var partialScoring = preparePartialScoringEditorModel(scope.fullModel.partialScoring);
+      var removeAllAfterPlacing = {value:scope.model.config.removeAllAfterPlacing};
       var weighting = prepareWeightingEditorModel(scope.fullModel.weighting);
 
       return {
@@ -84,6 +85,7 @@ function configureCorespringDndCategorize(
         choicesLabel: choicesLabel,
         categories: categories,
         partialScoring: partialScoring,
+        removeAllAfterPlacing: removeAllAfterPlacing,
         weighting: weighting
       };
 
@@ -138,6 +140,7 @@ function configureCorespringDndCategorize(
       updateCategories();
       updateCorrectResponse();
       updatePartialScoringEditorModel();
+      updateRemoveAllAfterPlacing();
       updateWeightingEditorModel();
 
       //--------------------------------------
@@ -192,7 +195,14 @@ function configureCorespringDndCategorize(
     }
 
     function updateChoicesLabel(){
+      console.log("updateChoicesLabel",  scope.editorModel.choicesLabel);
       scope.fullModel.model.config.choicesLabel = scope.editorModel.choicesLabel.label;
+    }
+
+
+    function updateRemoveAllAfterPlacing(){
+      console.log("updateRemoveAllAfterPlacing",  scope.editorModel.removeAllAfterPlacing);
+      scope.fullModel.model.config.removeAllAfterPlacing = scope.editorModel.removeAllAfterPlacing.value;
     }
 
     function updatePartialScoring(){
@@ -226,8 +236,8 @@ function configureCorespringDndCategorize(
       var idx = findFreeChoiceSlot();
       scope.editorModel.choices.push({
         id: makeChoiceId(idx),
-        label: "&#8203;",
-        moveOnDrag: false
+        label: "",
+        moveOnDrag: scope.editorModel.removeAllAfterPlacing.value === true
       });
     }
 
@@ -324,68 +334,79 @@ function configureCorespringDndCategorize(
       return [
         '<div class="container-fluid">',
         '  <div class="row">',
-        '    <div class="player-col">',
-        '      <div class="row">',
-        '        <p>',
-        '          In Categorize, students may drag & drop answer tiles to ',
-        '          the appropriate category area(s).',
-        '        </p>',
-        '      </div>',
-        '      <div class="row" >',
-        '        <corespring-dnd-categorize',
+        '    <p>',
+        '      In Categorize, students may drag & drop answer tiles to the appropriate category area(s).',
+        '    </p>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <corespring-dnd-categorize',
         '           id="chooser" ',
         '           categories-per-row="model.config.categoriesPerRow" ',
         '           categories="editorModel.categories"',
         '           choices-per-row="model.config.choicesPerRow" ',
         '           choices="editorModel.choices"',
         '           choices-label="editorModel.choicesLabel"',
-        '           image-service="imageService"',
-        '           mode="edit"',
-        '         ></corespring-dnd-categorize>',
-        '      </div>',
-        '      <div class="row">',
-        '        <corespring-feedback-config ',
-        '           full-model="fullModel"',
-        '           component-type="corespring-dnd-categorize"',
-        '        ></corespring-feedback-config>',
-        '      </div>',
+        '           remove-all-after-placing="editorModel.removeAllAfterPlacing"',
+        '           mode="edit">',
+        '         <div class="container-fluid">',
+        '           <div class="row add-category-row">',
+        '             <div class="col-xs-12">',
+        '               <button type="button" id="add-choice" class="btn btn-default" ng-click="addCategory()">',
+        '                 Add a Category',
+        '               </button>',
+        '             </div>',
+        '           </div>',
+        '           <div class="row categories-per-row">',
+        '             <div class="col-xs-4">',
+        '               Number of categories per row (maximum 4)',
+        '             </div>',
+        '             <div class="col-xs-8">',
+        '               <select ng-model="model.config.categoriesPerRow" class="form-control"',
+        '                   ng-options="o for o in categoriesPerRowOptions">',
+        '               </select>',
+        '             </div>',
+        '           </div>',
+        '         </div>',
+        '         <hr/>',
+        '      </corespring-dnd-categorize>',
         '    </div>',
-        '    <div class="settings-col">',
-        '      <div class="row">',
-        '        <button type="button" id="add-choice" class="btn btn-default" ',
-        '          ng-click="addCategory()">Add a Category</button>',
-        '      </div>',
-        '      <div class="row categories-per-row">',
-        '        Number of categories per row (maximum 4)',
-        '        <select ng-model="model.config.categoriesPerRow" ',
-        '           class="form-control" ',
-        '           ng-options="o for o in categoriesPerRowOptions">',
-        '        </select>',
-        '      </div>',
-        '      <hr/>',
-        '      <div class="row choice-area">',
-        '        Choice area is',
-        '        <select ng-model="model.config.answerAreaPosition" ',
-        '           class="form-control" ',
-        '           ng-options="o for o in answerAreaOptions"/>',
-        '        </select>',
-        '      </div>',
-        '      <div class="row">',
-        '        <button type="button" class="btn btn-default" ',
-        '           ng-click="addChoice()">Add a Choice</button>',
-        '      </div>',
-        '      <div class="row">',
-        '        <checkbox ng-model="model.config.shuffle" ',
-        '           class="control-label">Shuffle Tiles</checkbox>',
-        '      </div>',
-        '      <div class="row">',
-        '        Number of choices per row (maximum 12)',
-        '        <select ng-model="model.config.choicesPerRow" ',
-        '          class="form-control"',
-        '          ng-options="o for o in choicesPerRowOptions">',
-        '        </select>',
-        '        <i>A greater number of categories/choices per row may decrease available area for content display.</i>',
-        '      </div>',
+        '  </div>',
+        '  <div class="row add-choice-row">',
+        '    <div class="col-xs-12">',
+        '      <button type="button" class="btn btn-default" ng-click="addChoice()">Add a Choice</button>',
+        '    </div>',
+        '  </div>',
+        '  <div class="row choices-per-row">',
+        '    <div class="col-xs-4">',
+        '      Number of choices per row (maximum 12)',
+        '    </div>',
+        '    <div class="col-xs-8">',
+        '      <select ng-model="model.config.choicesPerRow" class="form-control"',
+        '          ng-options="o for o in choicesPerRowOptions"',
+        '          tooltip="A greater number of categories/choices per row may decrease available area for content display."',
+        '          tooltip-append-to-body="true"',
+        '          tooltip-placement="bottom">',
+        '      </select>',
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <checkbox ng-model="model.config.shuffle" class="control-label">Shuffle Tiles</checkbox>',
+        '    </div>',
+        '  </div>',
+        '  <div class="row choice-area-row">',
+        '    <div class="col-xs-3">',
+        '      Choice area is',
+        '      <select ng-model="model.config.answerAreaPosition" class="form-control" ',
+        '         ng-options="o for o in answerAreaOptions"/>',
+        '      </select>',
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xs-12">',
+        '      <corespring-feedback-config full-model="fullModel" component-type="corespring-dnd-categorize">',
+        '      </corespring-feedback-config>',
         '    </div>',
         '  </div>',
         '</div>'
@@ -407,11 +428,10 @@ function configureCorespringDndCategorize(
         '  </div>',
         '  <div class="row">',
         '    <div class="col-xs-12">',
-        '      <corespring-multi-partial-scoring-config ',
-        '         model="editorModel.partialScoring"',
-        '         header-text="<p>If there is more than one correct answer in a category, you may allow partial credit based on the number of correct answers submitted to that category. This is optional.</p><p>Categories with only one correct answer can not be given partial credit.</p>"',
-        '         allow-partial-scoring="fullModel.allowPartialScoring"',
-        '      ></corespring-partial-scoring-config>',
+        '      <corespring-multi-partial-scoring-config model="editorModel.partialScoring"',
+        '          header-text="<p>If there is more than one correct answer in a category, you may allow partial credit based on the number of correct answers submitted to that category. This is optional.</p><p>Categories with only one correct answer can not be given partial credit.</p>"',
+        '          allow-partial-scoring="fullModel.allowPartialScoring">',
+        '      </corespring-partial-scoring-config>',
         '    </div>',
         '  </div>',
         '</div>'

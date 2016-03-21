@@ -57,7 +57,8 @@ var def = [
       function addQueryParamsIfPresent(path) {
         var doc = $document[0];
         var href = doc.location.href;
-        return  path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
+        path = path.indexOf('?') === -1 ? path : path.split('?')[0];
+        return path + (href.indexOf('?') === -1 ? '' :  '?' + href.split('?')[1]);
       }
       
       this.errorMessage = '<strong>Upload error</strong><br/>Your image was not uploaded. Please try again.';
@@ -88,7 +89,8 @@ var def = [
         var opts = {
           onUploadComplete: function(body, status) {
             $log.info('done: ', body, status);
-            onComplete(null, url);
+            var uploadedUrl = body && body.url ? body.url : body;
+            onComplete(null, uploadedUrl);
           },
           onUploadProgress: function(progress) {
             $log.info('progress', arguments);
@@ -100,14 +102,7 @@ var def = [
           }.bind(this)
         };
 
-        var reader = new FileReader();
-
-        reader.onloadend = function() {
-          var uploader = new com.ee.RawFileUploader(file, reader.result, url, name, opts);
-          uploader.beginUpload();
-        };
-
-        reader.readAsBinaryString(file);
+        new com.ee.v2.RawFileUploader(file, url, file.name, opts);
       };
     }
 

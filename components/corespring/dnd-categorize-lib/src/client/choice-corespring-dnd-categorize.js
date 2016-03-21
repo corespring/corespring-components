@@ -27,10 +27,10 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       dragAndDropScope: '=',
       dragEnabled: '=',
       editMode: '=?editMode',
-      imageService: "=?",
       model: '=',
       notifyDeleteClicked: '&onDeleteClicked',
       notifyEditClicked: '&onEditClicked',
+      notifyMoveOnDragClicked: '&onMoveOnDragClicked',
       onDragEnd: '&onDragEnd',
       onDragStart: '&onDragStartNow'
     }
@@ -76,6 +76,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
     scope.canEdit = canEdit;
     scope.isDragEnabled = isDragEnabled;
     scope.onChangeActive = onChangeActive;
+    scope.onChangeMoveOnDrag = onChangeMoveOnDrag;
     scope.onChoiceEditClicked = onChoiceEditClicked;
     scope.showPlaceholder = showPlaceholder;
     scope.onDeleteClicked = onDeleteClicked;
@@ -99,6 +100,10 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       }
       scope.active = id === attrs.choiceId;
       updateClasses();
+    }
+
+    function onChangeMoveOnDrag(){
+      scope.notifyMoveOnDragClicked({choice: scope.model});
     }
 
     function shouldChoiceRevert(dropTarget) {
@@ -265,7 +270,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       choiceEditorTemplate(),
       '    </div>',
       '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
-      '      <span ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</span>',
+      '      <div ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</div>',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice" ng-hide="dragEnabled"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
@@ -275,7 +280,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       '    </div>',
       '  </div>',
       '  <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
-      '    <checkbox ng-model="model.moveOnDrag" class="control-label">Remove after placing</checkbox>',
+      '    <checkbox ng-model="model.moveOnDrag" ng-change="onChangeMoveOnDrag()" class="control-label">Remove after placing</checkbox>',
       '  </div>',
       '</div>'
     ].join('');
@@ -284,11 +289,9 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       return [
         '<div class="editor" ',
         '   active="active"',
-        '   dialog-launcher="external" ',
         '   disable-auto-activation="true"',
         '   feature-overrides="overrideFeatures"',
         '   features="extraFeatures" ',
-        '   image-service="imageService()" ',
         '   mini-wiggi-wiz="" ',
         '   ng-model="model.label" ',
         '></div>'

@@ -46,6 +46,40 @@ exports.directive = [
 
       //------------------------------------------------------------------------
 
+      function setDataAndSession(dataAndSession) {
+        // log("Setting data for Select Text: ", dataAndSession);
+        scope.model = ensureModelStructure(dataAndSession.data.model);
+        scope.userChoices = [];
+        $theContent = element.find('.select-text-content');
+        bindTokenEvents();
+
+        if (dataAndSession.session && dataAndSession.session.answers) {
+          scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
+            return parseInt(answer, 10);
+          });
+        }
+
+        $timeout(initUi, 100);
+      }
+
+      function ensureModelStructure(model){
+        //legacy items have passage inside of config
+        var passage = getNestedProperty(model, 'config.passage') ||
+          getNestedProperty(model, 'passage') || '';
+
+        //legacy items are using the long class name
+        if(passage.indexOf('cs-token') >= 0){
+          model.passage = passage.replace(/cs-token/gi, 'cst');
+        }
+        return model;
+      }
+
+      function initUi() {
+        if (getNestedProperty(scope, 'model.choices')) {
+          classifyTokens(scope.model.choices, 'choice');
+        }
+        scope.undoModel.init();
+      }
 
       function getState() {
         return scope.userChoices;
@@ -62,7 +96,7 @@ exports.directive = [
       }
 
       function classifyTokens(collection, tokenClass) {
-        $theContent.find('.cs-token').each(function(index,choice){
+        $theContent.find('.cst').each(function(index,choice){
           if(_.contains(collection, index)){
             $(choice).addClass(tokenClass);
           } else {
@@ -72,8 +106,8 @@ exports.directive = [
       }
 
       function bindTokenEvents() {
-        $theContent.off('click', '.cs-token');
-        $theContent.on('click', '.cs-token', onClickToken);
+        $theContent.off('click', '.cst');
+        $theContent.on('click', '.cst', onClickToken);
       }
 
       function onClickToken() {
@@ -81,7 +115,7 @@ exports.directive = [
           return;
         }
         var $token = $(this);
-        var index = $theContent.find('.cs-token').index($token);
+        var index = $theContent.find('.cst').index($token);
         var alreadyAnAnswer = scope.userChoices.indexOf(index) >= 0;
         var canSelectMore = scope.model.config.maxSelections === 0 ||
           scope.model.config.maxSelections > 0 &&
@@ -94,29 +128,6 @@ exports.directive = [
         }
 
         scope.undoModel.remember();
-      }
-
-      function setDataAndSession(dataAndSession) {
-        // log("Setting data for Select Text: ", dataAndSession);
-        scope.model = dataAndSession.data.model;
-        scope.userChoices = [];
-        $theContent = element.find('.select-text-content');
-        bindTokenEvents();
-
-        if (dataAndSession.session && dataAndSession.session.answers) {
-          scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
-            return parseInt(answer, 10);
-          });
-        }
-
-        $timeout(initUi, 100);
-      }
-
-      function initUi() {
-        if (getNestedProperty(scope, 'model.choices')) {
-          classifyTokens(scope.model.choices, 'choice');
-        }
-        scope.undoModel.init();
       }
 
       function setInstructorData(data) {
@@ -166,7 +177,7 @@ exports.directive = [
         scope.correctClass = undefined;
         scope.warningClass = undefined;
         scope.userChoices = [];
-        $theContent.find('.cs-token').attr('class', 'cs-token');
+        $theContent.find('.cst').attr('class', 'cst');
         scope.answersVisible = false;
         initUi();
       }
@@ -224,8 +235,8 @@ exports.directive = [
         '    </div>',
         '  </div>',
         '  <div class="select-text-content" ',
-        '     ng-class="{blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
-        '     ng-bind-html-unsafe="model.config.passage"',
+        '     ng-class="{editable: editable, blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': editable && model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
+        '     ng-bind-html-unsafe="model.passage"',
         '  ></div>',
         '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}} {{warningClass}}"></div>',
         '</div>'

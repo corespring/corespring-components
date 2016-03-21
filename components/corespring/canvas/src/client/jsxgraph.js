@@ -122,6 +122,7 @@ var def = ['Canvas',
 
         var addPoint = function(coords, ptName, ptOptions) {
           var point = addCanvasPoint(coords, ptName, ptOptions);
+          points[point.name] = getPointData(point);
           return getPointData(point);
         };
 
@@ -306,9 +307,17 @@ var def = ['Canvas',
             lockGraph = false;
           }
           if (params.pointsStyle && canvas) {
-            _.each(canvas.points, function(p) {
-              canvas.changePointColor(p, params.pointsStyle);
-            });
+            if (Array.isArray(params.pointsStyle)) {
+              _.each(_.zip(canvas.points, params.pointsStyle), function(pair) {
+                var point = pair[0];
+                var style = pair[1];
+                canvas.changePointColor(point, style);
+              });
+            } else {
+              _.each(canvas.points, function(p) {
+                canvas.changePointColor(p, params.pointsStyle);
+              });
+            }
           }
           if (params.graphStyle) {
             scope.boxStyle = _.extend({
