@@ -7,7 +7,6 @@ exports.directives = [{
     "$timeout",
     "Msgr",
     "ChoiceTemplates",
-    "ComponentImageService",
     "WiggiLinkFeatureDef",
     "WiggiMathJaxFeatureDef",
     main
@@ -26,7 +25,6 @@ function main(
   $timeout,
   Msgr,
   ChoiceTemplates,
-  ComponentImageService,
   WiggiLinkFeatureDef,
   WiggiMathJaxFeatureDef
 ) {
