@@ -12,7 +12,7 @@ function getFeedback(question) {
 
 exports.isScoreable = function(){
   return false;
-}
+};
 
 exports.feedback = {
   NO_ANSWER: 'You did not enter a response'
