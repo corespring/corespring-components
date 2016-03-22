@@ -1,10 +1,12 @@
-var assert, component, server, settings, should, _;
+var assert, component, expect, server, settings, should, _;
 
 server = require('../../src/server');
 
 assert = require('assert');
 
 should = require('should');
+
+expect = require('expect');
 
 _ = require('lodash');
 
@@ -37,6 +39,15 @@ settings = function(feedback, userResponse, correctResponse) {
 
 describe('extended text entry server logic', function() {
 
+  describe('isScoreable', function(){
+    it('should exist as method', function(){
+      expect(server.isScoreable).toBeA('function');
+    });
+
+    it('should return false', function(){
+      expect(server.isScoreable()).toBe(false);
+    });
+  });
 
   it('should return an incorrect response for a null answer', function(){
     var outcome = server.createOutcome({}, null, settings(true));
