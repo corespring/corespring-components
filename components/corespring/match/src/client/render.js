@@ -317,7 +317,6 @@ var main = [
         } else {
           classes.push(getCorrectClass(row, row.matchSet[index].correct));
         }
-        console.log("classForChoice", classes, row, index);
         return classes.join(' ');
 
         function getInputTypeClass(inputType) {
