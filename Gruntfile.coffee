@@ -20,7 +20,10 @@ module.exports = (grunt) ->
     grunt.log.debug("sauce key: #{sauceKey}")
     grunt.log.debug("baseUrl: #{baseUrl}")
     grunt.fail.fatal('saucelabs error - you must define both user and key') if( (sauceUser and !sauceKey) or (!sauceUser and sauceKey))
-    grunt.fail.fatal('saucelabs error - you must use a remote url as the base url') if(sauceUser and baseUrl == 'http://localhost:9000') 
+    grunt.fail.fatal('saucelabs error - you must use a remote url as the base url') if(sauceUser and baseUrl == 'http://localhost:9000')
+
+  getTimeout = ->
+    grunt.option('timeout') or 10000
 
   getDesiredCapabilities = ->
     capabilities = 
@@ -30,8 +33,9 @@ module.exports = (grunt) ->
     capabilities.version = browserVersion if browserVersion
     platform = grunt.option('platform') || ''
     capabilities.platform = platform if platform
-    capabilities.timeoutInSeconds = (grunt.option('timeout') / 10) or 10000
-    capabilities.defaultTimeout = grunt.option('timeout') or 10000
+    capabilities.timeoutInSeconds = getTimeout() / 10
+    capabilities.defaultTimeout = getTimeout()
+    capabilities.waitforTimeout = getTimeout()
     capabilities.name = grunt.option('sauceJob') || 'components-regression-test'
     capabilities.recordVideo = grunt.option('sauceRecordVideo') || false
     capabilities.recordScreenshots = grunt.option('sauceRecordScreenshots') || false
@@ -47,9 +51,9 @@ module.exports = (grunt) ->
       baseUrl: baseUrl
       bail: grunt.option('bail') || true
       grep: grunt.option('grep')
-      timeoutInSeconds: grunt.option('timeout') or 10
-      defaultTimeout: grunt.option('timeout') or 10000
-      waitforTimeout: grunt.option('timeout') or 10000
+      timeoutInSeconds: getTimeout() / 10
+      defaultTimeout: getTimeout()
+      waitforTimeout: getTimeout()
       # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
       logLevel: grunt.option('webDriverLogLevel') || 'silent'
       desiredCapabilities: getDesiredCapabilities()

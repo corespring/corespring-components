@@ -17,8 +17,11 @@ describe('feedback-block', function() {
 
   beforeEach(function() {
     browser
-      .timeouts('implicit', browser.options.defaultTimeout)
-      .url(browser.options.getUrl('feedback-block', itemJsonFilename));
+      .url(browser.options.getUrl('feedback-block', itemJsonFilename))
+      .waitFor('[value="mc_1"]')
+      .waitFor('[value="mc_2"]')
+      .waitFor('[value="mc_3"]')
+      .waitFor('[value="mc_4"]');
   });
 
   function safeTrim(s){
