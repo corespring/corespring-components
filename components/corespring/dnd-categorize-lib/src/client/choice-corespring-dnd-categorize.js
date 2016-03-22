@@ -266,7 +266,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       '        <i class="fa fa-trash-o"></i>',
       '      </li>',
       '    </ul>',
-      '    <div class="shell" ng-if="canEdit()" ng-show="active" ng-click="$event.stopPropagation()">',
+      '    <div class="shell" ng-if="canEdit()" cs-absolute-visible="active" ng-click="$event.stopPropagation()">',
       choiceEditorTemplate(),
       '    </div>',
       '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',

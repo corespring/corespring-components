@@ -534,7 +534,7 @@ function main(
           '        <span class="content-holder" ',
           '           ng-hide="active[$index]" ',
           '           ng-bind-html-unsafe="cleanLabel(choice)"></span>',
-          '        <div ng-show="active[$index]"',
+          '        <div cs-absolute-visible="active[$index]"',
           '            active="active[$index]"',
           '            mini-wiggi-wiz=""',
           '            ng-model="choice.label"',
