@@ -53,10 +53,10 @@ function renderCorespringDndCategorize(
     var log = console.log.bind(console, '[dnd-categorize]');
     var layout;
 
-    scope.correctAnswerRows = [[]];
+    scope.correctAnswerRows = [{}];
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
-    scope.rows = [[]];
+    scope.rows = [{}];
     scope.shouldFlip = false;
 
     scope.undoModel = new CsUndoModel();
@@ -177,7 +177,7 @@ function renderCorespringDndCategorize(
       return collectAnswers(scope.renderModel);
     }
 
-    function collectAnswers(renderModel){
+    function collectAnswers(renderModel) {
       var numberOfAnswers = 0;
       var answers = _.reduce(renderModel.categories, function(result, category) {
         var catId = category.model.id;
@@ -273,18 +273,26 @@ function renderCorespringDndCategorize(
       if (!response.correctResponse) {
         return;
       }
+      var correctAnswerRowId = 0;
       var categoriesPerRow = scope.categoriesPerRow;
-      scope.correctAnswerRows = [[]];
+      scope.correctAnswerRows = [makeRow()];
 
       _.forEach(scope.renderModel.categories, function(category) {
         var lastRow = _.last(scope.correctAnswerRows);
-        if (lastRow.length === categoriesPerRow) {
-          scope.correctAnswerRows.push(lastRow = []);
+        if (lastRow.categories.length === categoriesPerRow) {
+          scope.correctAnswerRows.push(lastRow = makeRow());
         }
         var correctChoices = response.correctResponse[category.model.id];
         var categoryModel = createCategoryModelForSolution(category, correctChoices);
-        lastRow.push(categoryModel);
+        lastRow.categories.push(categoryModel);
       });
+
+      function makeRow() {
+        return {
+          id: "correct-answer-row-" + correctAnswerRowId++,
+          categories: []
+        };
+      }
     }
 
     function createCategoryModelForSolution(category, correctChoices) {
@@ -388,7 +396,7 @@ function renderCorespringDndCategorize(
 
       var rowIdCounter = 0;
 
-      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function (row) {
+      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function(row) {
         return {
           id: rowIdCounter++,
           categories: row
@@ -402,8 +410,8 @@ function renderCorespringDndCategorize(
       $timeout(updateChoices, 100);
     }
 
-    function updateChoices(){
-      if(elem.width() === 0){
+    function updateChoices() {
+      if (elem.width() === 0) {
         $timeout(updateChoices, 100);
         return;
       }
@@ -617,14 +625,14 @@ function renderCorespringDndCategorize(
       return true;
     }
 
-    function onToggleMoveOnDrag(choice){
-      if(!choice.moveOnDrag){
+    function onToggleMoveOnDrag(choice) {
+      if (!choice.moveOnDrag) {
         scope.renderModel.removeAllAfterPlacing.value = false;
       }
     }
 
-    function onToggleRemoveAllAfterPlacing(newValue){
-      _.forEach(scope.renderModel.choices, function(choice){
+    function onToggleRemoveAllAfterPlacing(newValue) {
+      _.forEach(scope.renderModel.choices, function(choice) {
         choice.moveOnDrag = scope.renderModel.removeAllAfterPlacing.value;
       });
     }
