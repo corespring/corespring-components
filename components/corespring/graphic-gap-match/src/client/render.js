@@ -39,6 +39,8 @@ var main = [
           });
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
+          scope.fixedWidth =
+            scope.model.config.backgroundImage.fixedWidth === undefined ? true : scope.model.config.backgroundImage.fixedWidth;
 
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.droppedChoices = _.map(dataAndSession.session.answers, function(answer) {
@@ -354,7 +356,7 @@ var main = [
     };
 
     var correctAnswer = [
-      '    <div class="background-image">',
+      '    <div class="background-image" ng-class="{\'fixed-width\': fixedWidth}">',
       '      <svg class="hotspots">',
       '        <g ng-repeat="hotspot in model.hotspots">',
       '          <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
@@ -389,7 +391,7 @@ var main = [
         '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="response && response.correctness === \'instructor\'">',
         choices(['left', 'top']),
         '    <div class="answers">',
-        '      <div class="background-image {{response.correctClass}}"',
+        '      <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
         '           data-drop="true"',
         '           jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
         '        <svg ng-if="model.config.showHotspots" class="hotspots">',
