@@ -152,6 +152,27 @@ describe('corespring:dnd-categorize:render', function() {
       });
       expect(scope.renderModel.choices.length).toEqual(2);
     });
+    it('should put the categories into rows', function() {
+      setModelAndDigest();
+      expect(ignoreAngularIds(scope.rows)).toEqual(
+      [{
+          id: 0,
+          categories: [{
+            model: {
+              id: 'cat_1',
+              label: 'Category 1'
+            },
+            choices: []
+          }, {
+            model: {
+              id: 'cat_2',
+              label: 'Category 2'
+            },
+            choices: []
+          }]
+        }]
+      );
+    });
   });
 
   describe('getSession', function() {
@@ -229,33 +250,36 @@ describe('corespring:dnd-categorize:render', function() {
           cat_2: ['choice_2']
         }
       });
-      expect(ignoreAngularIds(scope.correctAnswerRows)).toEqual([[{
-        model: {
-          id: 'cat_1',
-          label: 'Category 1'
-        },
-        choices: [{
+      expect(ignoreAngularIds(scope.correctAnswerRows)).toEqual([{
+        id: "correct-answer-row-0",
+        categories: [{
           model: {
-            id: 'choice_1',
-            label: 'a',
-            moveOnDrag: false
+            id: 'cat_1',
+            label: 'Category 1'
           },
-          correctness: 'correct'
+          choices: [{
+            model: {
+              id: 'choice_1',
+              label: 'a',
+              moveOnDrag: false
+            },
+            correctness: 'correct'
         }]
       }, {
-        model: {
-          id: 'cat_2',
-          label: 'Category 2'
-        },
-        choices: [{
           model: {
-            id: 'choice_2',
-            label: 'b',
-            moveOnDrag: false
+            id: 'cat_2',
+            label: 'Category 2'
           },
-          correctness: 'correct'
+          choices: [{
+            model: {
+              id: 'choice_2',
+              label: 'b',
+              moveOnDrag: false
+            },
+            correctness: 'correct'
         }]
-      }]]);
+      }]
+    }]);
     });
 
   });
@@ -607,14 +631,16 @@ describe('corespring:dnd-categorize:render', function() {
 
   });
 
-  describe('removeAllAfterPlacing', function(){
+  describe('removeAllAfterPlacing', function() {
     beforeEach(function() {
       setModelAndDigest();
     });
 
-    function setRemoveAllAfterPlacing(value){
+    function setRemoveAllAfterPlacing(value) {
       //set the value like the checkbox would do
-      scope.renderModel.removeAllAfterPlacing = {value: value};
+      scope.renderModel.removeAllAfterPlacing = {
+        value: value
+      };
 
       //set one choice to have the opposite value to be able to verify the action
       scope.renderModel.choices[0].moveOnDrag = !value;
@@ -624,21 +650,21 @@ describe('corespring:dnd-categorize:render', function() {
       scope.$digest();
     }
 
-    it('should set moveOnDrag to true for all choices if it is set to true', function(){
+    it('should set moveOnDrag to true for all choices if it is set to true', function() {
       setRemoveAllAfterPlacing(true);
-      _.forEach(scope.renderModel.choices, function(choice){
+      _.forEach(scope.renderModel.choices, function(choice) {
         expect(choice.moveOnDrag).toBe(true);
       });
     });
 
-    it('should set moveOnDrag to false for all choices if it is set to false', function(){
+    it('should set moveOnDrag to false for all choices if it is set to false', function() {
       setRemoveAllAfterPlacing(false);
-      _.forEach(scope.renderModel.choices, function(choice){
+      _.forEach(scope.renderModel.choices, function(choice) {
         expect(choice.moveOnDrag).toBe(false);
       });
     });
 
-    it('should be set to false if a choice toggles its moveOnDrag to false', function(){
+    it('should be set to false if a choice toggles its moveOnDrag to false', function() {
       setRemoveAllAfterPlacing(true);
       var choice = scope.renderModel.choices[0];
       choice.moveOnDrag = false;
