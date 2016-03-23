@@ -299,7 +299,7 @@ var main = [
          '              Remove tile after placing',
          '            </checkbox>',
          '          </div>',
-         '          <span ng-hide="active[$index]" ng-bind-html-unsafe="choice.label"></span>',
+         '          <span cs-absolute-visible="!active[$index]" ng-bind-html-unsafe="choice.label"></span>',
          '          <div cs-absolute-visible="active[$index]" ng-model="choice.label" mini-wiggi-wiz=""',
          '              features="extraFeaturesForChoices"',
          '              parent-selector=".modal-body">',

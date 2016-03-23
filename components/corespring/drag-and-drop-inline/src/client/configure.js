@@ -532,7 +532,7 @@ function main(
           '          </checkbox>',
           '        </div>',
           '        <span class="content-holder" ',
-          '           ng-hide="active[$index]" ',
+          '           cs-absolute-visible="!active[$index]" ',
           '           ng-bind-html-unsafe="cleanLabel(choice)"></span>',
           '        <div cs-absolute-visible="active[$index]"',
           '            active="active[$index]"',
