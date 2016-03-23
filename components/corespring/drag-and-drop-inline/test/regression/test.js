@@ -4,7 +4,7 @@ var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe('drag and drop inline', function() {
+describe.only('drag and drop inline', function() {
 
   "use strict";
 
@@ -38,6 +38,10 @@ describe('drag and drop inline', function() {
   beforeEach(function() {
     browser
       .url(browser.options.getUrl(componentName, itemJsonFilename))
+      .waitFor(choice('c_1'))
+      .waitFor(choice('c_2'))
+      .waitFor(choice('c_3'))
+      .waitFor(choice('c_4'))
       .waitFor(landingPlace('aa_1'));
   });
 
