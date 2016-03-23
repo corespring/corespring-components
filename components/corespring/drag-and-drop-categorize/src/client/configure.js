@@ -1,10 +1,8 @@
 var main = [
   'ChoiceTemplates',
   'MathJaxService',
-  'ComponentImageService',
   function(ChoiceTemplates,
-    MathJaxService,
-    ComponentImageService) {
+    MathJaxService) {
 
     var displayPanel = [
       '<form class="form-horizontal" role="form">',

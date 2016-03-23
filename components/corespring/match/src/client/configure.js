@@ -1,14 +1,12 @@
 var main = [
   '$http',
   '$timeout',
-  'ComponentImageService',
   'LogFactory',
   'WiggiLinkFeatureDef',
   'WiggiMathJaxFeatureDef',
   function(
     $http,
     $timeout,
-    ComponentImageService,
     LogFactory,
     WiggiLinkFeatureDef,
     WiggiMathJaxFeatureDef

@@ -37,7 +37,7 @@ describe('inplace ordering', function() {
 
     it('MathJax Renders', function(done) {
       browser
-        .waitFor('.choice')
+        .waitFor('.choice .MathJax_Preview')
         .getHTML(divContaining('Third'), function(err, html) {
           html.should.match(/MathJax_Preview/);
         })
@@ -48,6 +48,7 @@ describe('inplace ordering', function() {
       browser
         .submitItem()
         .resetItem()
+        .waitFor('.choice .MathJax_Preview')
         .getHTML(divContaining('Third'), function(err, html) {
           html.should.match(/MathJax_Preview/);
         })
