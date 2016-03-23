@@ -430,26 +430,32 @@ describe('corespring:dnd-categorize:render', function() {
       expect(scope.renderModel.categories[0].choices[1].model.id).toBe('choice_1');
     });
     describe('available choices', function() {
-      it('should remove the choice, if moveOnDrag is true and editMode is false', function() {
+      var placedId;
+
+      beforeEach(function() {
+        placedId = "not placed";
+        scope.$on('placed', function(ev, id) {
+          placedId = id;
+        });
+      });
+
+      it('should "place" the choice, if moveOnDrag is true and editMode is false', function() {
         scope.renderModel.choices[0].moveOnDrag = true;
         scope.isEditMode = false;
-        expect(scope.renderModel.choices.length).toBe(3);
-        expect(scope.renderModel.choices[0].id).toBe('choice_1');
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(2);
-        expect(scope.renderModel.choices[0].id).toBe('choice_2');
+        expect(placedId).toBe('choice_1');
       });
       it('should not remove the choice, if moveOnDrag is false', function() {
         scope.renderModel.choices[0].moveOnDrag = false;
         scope.isEditMode = false;
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(3);
+        expect(placedId).toBe('not placed');
       });
       it('should not remove the choice, if editMode is true', function() {
         scope.renderModel.choices[0].moveOnDrag = true;
         scope.isEditMode = true;
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(3);
+        expect(placedId).toBe('not placed');
       });
     });
   });
@@ -487,15 +493,39 @@ describe('corespring:dnd-categorize:render', function() {
       scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
       expect(scope.renderModel.categories[0].choices.length).toBe(1);
     });
-    it('should add the choice back in to available choices at the same position', function() {
-      scope.isEditMode = false;
-      scope.renderModel.choices[0].moveOnDrag = true;
-      scope.onCategoryDrop('cat_1', 'choice_1');
-      expect(scope.renderModel.choices.length).toBe(2);
-      expect(scope.renderModel.choices[0].id).toBe('choice_2');
-      scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
-      expect(scope.renderModel.choices.length).toBe(3);
-      expect(scope.renderModel.choices[0].id).toBe('choice_1');
+    describe('unplace', function() {
+      var unplacedId;
+
+      beforeEach(function() {
+        unplacedId = "still placed";
+        scope.$on('unplaced', function(ev, id) {
+          unplacedId = id;
+        });
+      });
+
+      it('should "unplace" the choice', function() {
+        scope.isEditMode = false;
+        scope.renderModel.choices[0].moveOnDrag = true;
+        scope.onCategoryDrop('cat_1', 'choice_1');
+        scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
+        expect(unplacedId).toBe('choice_1');
+      });
+
+      it('should not "unplace" the choice when isEditMode is true', function() {
+        scope.isEditMode = true;
+        scope.renderModel.choices[0].moveOnDrag = true;
+        scope.onCategoryDrop('cat_1', 'choice_1');
+        scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
+        expect(unplacedId).toBe('still placed');
+      });
+
+      it('should not "unplace" the choice when moveOnDrag is false', function() {
+        scope.isEditMode = false;
+        scope.renderModel.choices[0].moveOnDrag = false;
+        scope.onCategoryDrop('cat_1', 'choice_1');
+        scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
+        expect(unplacedId).toBe('still placed');
+      });
     });
   });
 
