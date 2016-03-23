@@ -89,6 +89,9 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
     scope.$watch('model.label', triggerResize);
 
     scope.$on('activate', onChangeActive);
+    scope.$on('placed', onPlaced);
+    scope.$on('unplaced', onUnplaced);
+
 
     updateClasses();
 
@@ -100,6 +103,20 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       }
       scope.active = id === attrs.choiceId;
       updateClasses();
+    }
+
+    function onPlaced(event, id){
+      if(id === attrs.choiceId) {
+        scope.placed = true;
+        updateClasses();
+      }
+    }
+
+    function onUnplaced(event, id){
+      if(id === attrs.choiceId) {
+        scope.placed = false;
+        updateClasses();
+      }
     }
 
     function onChangeMoveOnDrag(){
@@ -234,6 +251,9 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       }
       if (scope.active) {
         classes.push('active');
+      }
+      if(scope.placed){
+        classes.push('placed');
       }
 
       scope.classes = classes;

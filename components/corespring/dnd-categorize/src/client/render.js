@@ -312,6 +312,7 @@ function renderCorespringDndCategorize(
 
       scope.renderModel = _.cloneDeep(scope.saveRenderModel);
       scope.undoModel.init();
+      updatePlacedChoices();
       updateView();
     }
 
@@ -329,7 +330,22 @@ function renderCorespringDndCategorize(
 
     function revertState(state) {
       scope.renderModel = state;
+      updatePlacedChoices();
       updateView();
+    }
+
+    function updatePlacedChoices() {
+      if (!scope.isEditMode) {
+        _.forEach(scope.renderModel.allChoices, function(choice) {
+          if (choice.moveOnDrag) {
+            if (isChoicePlaced(choice.id)) {
+              scope.$broadcast('placed', choice.id);
+            } else {
+              scope.$broadcast('unplaced', choice.id);
+            }
+          }
+        });
+      }
     }
 
     function onRenderModelChange(newValue, oldValue) {
@@ -456,13 +472,11 @@ function renderCorespringDndCategorize(
 
     function onCategoryDrop(categoryId, choiceId) {
       var category = _.find(scope.renderModel.categories, byModelId(categoryId));
-      var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
+      var choice = _.find(scope.renderModel.allChoices, byId(choiceId));
 
       scope.$apply(function() {
         category.choices.push(wrapChoiceModel(choice));
-        if (choice.moveOnDrag && !scope.isEditMode) {
-          _.remove(scope.renderModel.choices, byId(choiceId));
-        }
+        updatePlacedChoices();
       });
 
       updateView();
@@ -486,13 +500,7 @@ function renderCorespringDndCategorize(
       var category = _.find(scope.renderModel.categories, byModelId(categoryId));
       if (category) {
         category.choices.splice(index, 1);
-
-        if (!scope.isEditMode) {
-          var choice = _.find(scope.renderModel.allChoices, byId(choiceId));
-          if (choice && choice.moveOnDrag && !isChoicePlaced(choiceId)) {
-            addChoiceBackIn(choice);
-          }
-        }
+        updatePlacedChoices();
       }
     }
 
