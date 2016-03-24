@@ -197,7 +197,7 @@ function renderCorespringDndCategorize(
     function setInstructorData(data) {
       log('setInstructorData', data);
 
-      scope.renderModel = prepareRenderModel(_.cloneDeep(data).model, {
+      scope.renderModel = prepareRenderModel(_.cloneDeep(scope.data.model), {
         answers: data.correctResponse
       });
 
