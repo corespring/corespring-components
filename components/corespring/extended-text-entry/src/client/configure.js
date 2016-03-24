@@ -24,7 +24,8 @@ var main = [
       '<div class="form-group">',
       '     <p class="info">',
       '       In an Open Ended interaction, students respond to a prompt in short or long form. These interactions ',
-      '       are not automatically scored.',
+      '       are not automatically scored. Students will have formatting options available (bold, italic, etc) when ',
+      '       entering their response. An optional keypad may be included to allow students to enter math notation.',
       '     </p>',
       '     <div>',
       '       <h3>Display</h3>',
@@ -46,6 +47,7 @@ var main = [
       '         <label class="control-label">rows</label>',
       '       </div>',
       '     </form>',
+      '     <checkbox ng-model="fullModel.model.config.showMathInput">Student responses can include math notation</checkbox>',
       '</div>'].join('\n');
 
     return {
