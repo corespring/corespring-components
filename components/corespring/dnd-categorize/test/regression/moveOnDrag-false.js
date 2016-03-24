@@ -8,20 +8,8 @@ describe('dnd-categorize', function() {
 
   "use strict";
 
-  var itemJsonFilename = 'one.json';
+  var itemJsonFilename = 'moveOnDrag-false.json';
   var itemJson = browser.options.getItemJson('dnd-categorize', itemJsonFilename);
-
-  function landingPlace(id) {
-    return "#" + id + " > div";
-  }
-
-  function choice(id) {
-    return ".choice[data-choice-id='" + id + "']";
-  }
-
-  function selectedChoice(id) {
-    return ".selected-choice[data-choice-id='" + id + "']";
-  }
 
   browser.dragAndDropWithOffset = function(fromSelector, toSelector){
     return this.moveToObject(fromSelector, 20, 4)
@@ -43,7 +31,7 @@ describe('dnd-categorize', function() {
     console.log("setInstructorMode");
     this.execute('window.setMode("instructor")');
     return this;
-  }
+  };
 
   beforeEach(function(done) {
     browser
@@ -57,6 +45,27 @@ describe('dnd-categorize', function() {
       .waitForVisible('.cat_3')
       .waitForVisible('.cat_4')
       .call(done);
+  });
+
+  describe('instructor mode', function(){
+
+    beforeEach(function(done){
+      browser
+        .setInstructorMode()
+        .call(done);
+
+    });
+
+    it('displays correct answers', function(done) {
+      browser
+        .waitForVisible('.cat_1 .choice_2.correct')
+        .waitForVisible('.cat_3 .choice_1.correct')
+        .waitForVisible('.cat_3 .choice_3.correct')
+        .waitForVisible('.cat_4 .choice_2.correct')
+        .waitForVisible('.cat_4 .choice_4.correct')
+        .call(done);
+    });
+
   });
 
   describe('see solution', function(){
@@ -238,25 +247,5 @@ describe('dnd-categorize', function() {
     });
   });
 
-  describe('instructor mode', function(){
-
-    beforeEach(function(done){
-      browser
-        .setInstructorMode()
-        .call(done);
-
-    });
-
-    it('displays correct answers', function(done) {
-      browser
-        .waitForVisible('.cat_1 .choice_2.correct')
-        .waitForVisible('.cat_3 .choice_1.correct')
-        .waitForVisible('.cat_3 .choice_3.correct')
-        .waitForVisible('.cat_4 .choice_2.correct')
-        .waitForVisible('.cat_4 .choice_4.correct')
-        .call(done);
-    });
-
-  });
 
 });

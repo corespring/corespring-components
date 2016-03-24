@@ -143,14 +143,14 @@ describe('corespring:dnd-categorize:render', function() {
       });
       expect(scope.renderModel.categories[0].choices[0].model.id).toEqual('choice_1');
     });
-    it('should remove answers with moveOnDrag = true from the choices', function() {
+    it('should not remove answers with moveOnDrag = true from the choices', function() {
       testModel.data.model.choices[0].moveOnDrag = true;
       setModelAndDigestWithSession({
         answers: {
           cat_1: ['choice_1']
         }
       });
-      expect(scope.renderModel.choices.length).toEqual(2);
+      expect(scope.renderModel.choices.length).toEqual(3);
     });
     it('should put the categories into rows', function() {
       setModelAndDigest();

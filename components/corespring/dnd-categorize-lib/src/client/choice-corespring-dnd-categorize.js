@@ -106,7 +106,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
     }
 
     function onPlaced(event, id){
-      if(id === attrs.choiceId) {
+      if(id === attrs.choiceId && !isCategorized()) {
         scope.placed = true;
         updateClasses();
       }

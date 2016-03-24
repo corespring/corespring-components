@@ -5,7 +5,7 @@ var def = function() {
         replace: true,
         template: [
             '<button ',
-            '  class="btn-player" ',
+            '  class="btn-player btn-start-over" ',
             '  ng-click="startOver ? startOver() : undoModel.startOver()"',
             '  ng-class="{disabled:undoModel.undoDisabled}"',
             '  ng-disabled="undoModel.undoDisabled"',
