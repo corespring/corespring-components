@@ -134,14 +134,16 @@ function renderCorespringDndCategorize(
     function prepareRenderModel(model, session) {
       var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
 
-      var choices = model.config.shuffle ? _.shuffle(model.choices) : _.clone(model.choices);
+      var choices = _.clone(model.choices);
+      if( model.config.shuffle ) {
+        choices = _.shuffle(choices);
+      }
       var allChoices = _.clone(choices);
       var choicesLabel = model.config.choicesLabel;
       var categories = _.map(model.categories, wrapCategoryModel);
 
       if (session.answers) {
         placeAnswersInCategories(session.answers, categories);
-        choices = removePlacedAnswersFromChoices(choices, categories);
       }
       return {
         dragAndDropScope: dragAndDropScope,
@@ -157,12 +159,6 @@ function renderCorespringDndCategorize(
           if (_.isArray(answersForCategory)) {
             cat.choices = _(answersForCategory).map(getChoiceForId).map(wrapChoiceModel).value();
           }
-        });
-      }
-
-      function removePlacedAnswersFromChoices(choices, categories) {
-        return _.filter(choices, function(choice) {
-          return !findInAllCategories(choice.id, categories);
         });
       }
 
@@ -200,9 +196,12 @@ function renderCorespringDndCategorize(
 
     function setInstructorData(data) {
       log('setInstructorData', data);
-      scope.renderModel = prepareRenderModel(scope.data.model, {
+
+      scope.renderModel = prepareRenderModel(_.cloneDeep(data).model, {
         answers: data.correctResponse
       });
+
+      updateView();
 
       disableAllChoices(scope.renderModel);
 
