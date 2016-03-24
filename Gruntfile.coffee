@@ -84,7 +84,7 @@ module.exports = (grunt) ->
       options: getWebDriverOptions()
 
       dev: 
-        tests: ["components/#{'**/' + grunt.option('component') + '/**' or '**'}/regression/*.js"]
+        tests: ["components/#{ if (grunt.option('component')) then '**/' + grunt.option('component') + '/**' else '**' }/regression/*.js"]
 
     jasmine:
       unit:
