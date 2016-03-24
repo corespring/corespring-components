@@ -41,7 +41,7 @@ module.exports = (grunt) ->
     capabilities.recordScreenshots = grunt.option('sauceRecordScreenshots') || false
     capabilities
 
-  getOptions = ->
+  getWebDriverOptions = ->
     basic = 
       getUrl: (componentType, jsonFile) ->
         url = "#{baseUrl}/client/rig/corespring-#{componentType}/index.html?data=regression_#{jsonFile}"
@@ -81,10 +81,10 @@ module.exports = (grunt) ->
     common: commonConfig
 
     webdriver:
-      options: getOptions()
+      options: getWebDriverOptions()
 
       dev: 
-        tests: ['components/**/regression/*.js']
+        tests: ["components/#{'**/' + grunt.option('component') + '/**' or '**'}/regression/*.js"]
 
     jasmine:
       unit:

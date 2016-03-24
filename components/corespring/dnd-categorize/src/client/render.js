@@ -204,7 +204,6 @@ function renderCorespringDndCategorize(
         answers: data.correctResponse
       });
 
-      showAllChoicesRegardlessOfMoveOnDrag(scope.renderModel);
       disableAllChoices(scope.renderModel);
 
       scope.containerBridge.setResponse({
@@ -218,10 +217,6 @@ function renderCorespringDndCategorize(
       scope.editable = false;
 
       //-----------------------------------
-
-      function showAllChoicesRegardlessOfMoveOnDrag(renderModel) {
-        renderModel.choices = _.cloneDeep(renderModel.allChoices);
-      }
 
       function disableAllChoices(renderModel) {
         _.forEach(renderModel.choices, function(choice) {
@@ -773,7 +768,7 @@ function renderCorespringDndCategorize(
         '        drag-and-drop-scope="renderModel.dragAndDropScope"',
         '        drag-enabled="isDragEnabledFromCategory()"',
         '        edit-mode="isEditMode" ',
-        '        ng-class="response.warningClass"',
+        '        ng-class="[response.warningClass, category.model.id]"',
         '        ng-repeat="category in row.categories"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId,index)" ',
