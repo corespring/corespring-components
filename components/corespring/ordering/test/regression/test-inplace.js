@@ -21,40 +21,31 @@ describe('inplace ordering', function() {
     return this;
   };
 
+  beforeEach(function(done) {
+    browser.url(browser.getTestUrl('ordering', itemJsonFilename));
+    browser.waitForVisible('.choice');
+    browser.call(done);
+  });
+
   describe('correctness', function() {
-    beforeEach(function() {
-      browser
-        .url(browser.options.getUrl('ordering', itemJsonFilename))
-        .waitFor('.view-ordering');
-    });
 
     it('submitting without interaction results in warning feedback', function(done) {
-      browser
-        .submitItem()
-        .waitFor('.feedback.warning')
-        .call(done);
+      browser.submitItem();
+      browser.waitForVisible('.feedback.warning');
+      browser.call(done);
     });
 
     it('MathJax Renders', function(done) {
-      browser
-        .waitFor('.choice .MathJax_Preview')
-        .getHTML(divContaining('Third'), function(err, html) {
-          html.should.match(/MathJax_Preview/);
-        })
-        .call(done);
+      browser.waitForExist('.choice .MathJax_Preview');
+      browser.call(done);
     });
 
     it('MathJax Renders after Reset', function(done) {
-      browser
-        .submitItem()
-        .resetItem()
-        .waitFor('.choice .MathJax_Preview')
-        .getHTML(divContaining('Third'), function(err, html) {
-          html.should.match(/MathJax_Preview/);
-        })
-        .call(done);
+      browser.submitItem();
+      browser.resetItem();
+      browser.waitForExist('.choice .MathJax_Preview');
+      browser.call(done);
     });
-
 
   });
 
