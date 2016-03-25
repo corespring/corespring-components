@@ -20,6 +20,18 @@
   ],
   "dependencies" : {
     "client": {
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      },
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
+      },
       "wiggi-wiz": {
         "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.87",
         "js": "dist/wiggi-wiz.js",
