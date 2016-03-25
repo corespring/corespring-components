@@ -10,7 +10,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './components/corespring/**/test/regression/*'
+        './components/**/regression/**.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -81,12 +81,12 @@ exports.config = {
     // Mocha: `$ npm install mocha`
     // Jasmine: `$ npm install jasmine`
     // Cucumber: `$ npm install cucumber`
-    framework: 'mocha',
+    framework: 'jasmine',
     //
     // Test reporter for stdout.
     // The following are supported: dot (default), spec and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporter: 'dot',
+    reporter: 'spec',
     
     //
     // Options to be passed to Mocha.
@@ -110,7 +110,16 @@ exports.config = {
     // Gets executed before test execution begins. At this point you will have access to all global
     // variables like `browser`. It is the perfect place to define custom commands.
     before: function() {
-        // do something
+      browser.getTestUrl = function(componentType, jsonFile) {
+        var url = "/client/rig/corespring-" + componentType + "/index.html?data=regression_" + jsonFile;
+        //console.log('getTestUrl: ', url);
+        return url;
+      };
+      browser.getItemJson = function(componentType, jsonFile) {
+        var json = require("./components/corespring/" + componentType + "/regression-data/" + jsonFile);
+        //console.log("getItemJson", json);
+        return json;
+      };
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from

@@ -43,20 +43,16 @@ module.exports = (grunt) ->
 
   getWebDriverOptions = ->
     basic = 
-      getUrl: (componentType, jsonFile) ->
-        url = "#{baseUrl}/client/rig/corespring-#{componentType}/index.html?data=regression_#{jsonFile}"
-        grunt.log.debug('getUrl: ', url)
-        url
-      getItemJson: (componentType, jsonFile) -> require "./components/corespring/#{componentType}/regression-data/#{jsonFile}"
-      baseUrl: baseUrl
       bail: grunt.option('bail') || true
-      grep: grunt.option('grep')
-      timeoutInSeconds: getTimeout() / 1000
+      baseUrl: baseUrl
+      configFile: './wdio.conf.js'
       defaultTimeout: getTimeout()
-      waitforTimeout: getTimeout()
+      desiredCapabilities: getDesiredCapabilities()
+      grep: grunt.option('grep')
       # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
       logLevel: grunt.option('webDriverLogLevel') || 'silent'
-      desiredCapabilities: getDesiredCapabilities()
+      timeoutInSeconds: getTimeout() / 1000
+      waitforTimeout: getTimeout()
       
     sauce =
       host: 'ondemand.saucelabs.com' 
@@ -84,7 +80,7 @@ module.exports = (grunt) ->
       options: getWebDriverOptions()
 
       dev: 
-        tests: ["components/#{ if (grunt.option('component')) then '**/' + grunt.option('component') + '/**' else '**' }/regression/*.js"]
+        specs: ["components/#{ if (grunt.option('component')) then '**/' + grunt.option('component') + '/**' else '**' }/regression/*.js"]
 
     jasmine:
       unit:
