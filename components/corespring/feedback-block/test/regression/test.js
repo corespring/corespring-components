@@ -10,11 +10,6 @@ describe('feedback-block', function() {
 
   var itemJsonFilename = 'one.json';
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
-
   beforeEach(function(done) {
     browser.url(browser.getTestUrl('feedback-block', itemJsonFilename));
     browser.waitForVisible('[value="mc_1"]');

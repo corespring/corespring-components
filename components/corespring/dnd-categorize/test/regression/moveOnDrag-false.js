@@ -19,18 +19,6 @@ describe('dnd-categorize', function() {
       return this;
     };
 
-    browser.submitItem = function() {
-      console.log("submitItem");
-      this.execute('window.submit()');
-      return this;
-    };
-
-    browser.setInstructorMode = function() {
-      console.log("setInstructorMode");
-      this.execute('window.setMode("instructor")');
-      return this;
-    };
-
     beforeEach(function() {
       browser.url(browser.getTestUrl('dnd-categorize', itemJsonFilename));
       browser.waitForVisible('.choice_1');

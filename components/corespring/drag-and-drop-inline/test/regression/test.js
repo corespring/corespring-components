@@ -23,11 +23,6 @@ describe('drag and drop inline', function() {
     return ".selected-choice[data-choice-id='" + id + "']";
   }
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
-
   browser.dragAndDropWithOffset = function(fromSelector, toSelector) {
     this.moveToObject(fromSelector, 20, 4);
     this.buttonDown(0);

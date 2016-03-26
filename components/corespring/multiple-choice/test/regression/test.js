@@ -33,12 +33,6 @@ describe('multiple-choice', function() {
   var incorrectAnswer = findOtherChoice(correctAnswer).value;
   var notChosenFeedback = findFeedback(correctAnswer).notChosenFeedback;
 
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
-
   beforeEach(function(done) {
     browser.url(browser.getTestUrl('multiple-choice', itemJsonFilename));
     browser.waitForVisible('.choice-input .radio-choice');

@@ -28,11 +28,6 @@ describe('match', function() {
 
   beforeEach(function(done) {
 
-    browser.submitItem = function() {
-      this.execute('window.submit()');
-      return this;
-    };
-
     browser.url(browser.getTestUrl('match', itemJsonFilename));
     browser.waitForExist(answerInput('Row3'));
     browser.call(done);

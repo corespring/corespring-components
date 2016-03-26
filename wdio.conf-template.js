@@ -9,7 +9,7 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
-    specs: ["components/**/regression/*.js"],
+    specs: @@GRUNT_SPECS_ARRAY_OF_STRING,
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -27,7 +27,7 @@ exports.config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [{"browserName":"firefox","timeoutInSeconds":10,"defaultTimeout":10000,"waitforTimeout":10000,"name":"components-regression-test","recordVideo":false,"recordScreenshots":false}],
+    capabilities: @@GRUNT_CAPABILITIES_ARRAY_OF_OBJECT,
     //
     // ===================
     // Test Configurations
@@ -45,7 +45,7 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", the base url gets prepended.
-    baseUrl: "http://localhost:9000",
+    baseUrl: "@@GRUNT_BASE_URL_STRING",
     //
     // Default timeout for all waitForXXX commands.
     waitforTimeout: 10000,

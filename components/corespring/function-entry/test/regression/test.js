@@ -19,12 +19,6 @@ describe('evaluate expression', function() {
     return this;
   };
 
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
-
   beforeEach(function(done) {
     browser.url(browser.getTestUrl('function-entry', itemJsonFilename));
     browser.waitForVisible('.view-function-entry');

@@ -15,16 +15,6 @@ describe('placement ordering', function() {
     return '//div[@class[contains(., "answer-area-table")]]//div[@class[contains(., "choice-wrapper")]][' + index + ']';
   };
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
-
-  browser.resetItem = function() {
-    this.execute('window.reset()');
-    return this;
-  };
-
   beforeEach(function(done) {
     browser.url(browser.getTestUrl('ordering', itemJsonFilename));
     browser.waitForVisible('.view-placement-ordering');
