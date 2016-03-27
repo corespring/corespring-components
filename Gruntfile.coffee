@@ -57,8 +57,9 @@ module.exports = (grunt) ->
     sauce =
       #host: 'ondemand.saucelabs.com'
       #port: 80
-      user: sauceUser 
-      key: sauceKey 
+      #user: sauceUser
+      #key: sauceKey
+      dummy: "dummy"
 
     if(runOnSauceLabs)
       _.merge(basic, sauce)
