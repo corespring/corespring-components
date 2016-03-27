@@ -43,15 +43,15 @@ module.exports = (grunt) ->
 
   getWebDriverOptions = ->
     basic = 
-      bail: grunt.option('bail') || true
-      baseUrl: baseUrl
+      #bail: grunt.option('bail') || true
+      #baseUrl: baseUrl
       configFile: './wdio.conf.js'
-      defaultTimeout: getTimeout()
-      desiredCapabilities: getDesiredCapabilities()
-      grep: grunt.option('grep')
+      #defaultTimeout: getTimeout()
+      #desiredCapabilities: getDesiredCapabilities()
+      #grep: grunt.option('grep')
       # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
-      logLevel: grunt.option('webDriverLogLevel') || 'silent'
-      timeoutInSeconds: getTimeout() / 1000
+      #logLevel: grunt.option('webDriverLogLevel') || 'silent'
+      #timeoutInSeconds: getTimeout() / 1000
       #waitforTimeout: getTimeout()
       
     sauce =
