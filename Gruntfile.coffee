@@ -55,8 +55,8 @@ module.exports = (grunt) ->
       waitforTimeout: getTimeout()
       
     sauce =
-      host: 'ondemand.saucelabs.com' 
-      port: 80 
+      #host: 'ondemand.saucelabs.com'
+      #port: 80
       user: sauceUser 
       key: sauceKey 
 
