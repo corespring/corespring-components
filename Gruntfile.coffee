@@ -81,6 +81,14 @@ module.exports = (grunt) ->
         options:
           patterns: [
             {
+              match: 'GRUNT_SAUCE_USER_STRING',
+              replacement: sauceUser
+            },
+            {
+              match: 'GRUNT_SAUCE_KEY_STRING',
+              replacement: sauceKey
+            },
+            {
               match: 'GRUNT_BASE_URL_STRING',
               replacement: baseUrl
             },

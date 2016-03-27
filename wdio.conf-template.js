@@ -1,5 +1,7 @@
 exports.config = {
-    
+    //sauce labs config
+    user: "@@GRUNT_SAUCE_USER_STRING",
+    key: "@@GRUNT_SAUCE_KEY_STRING",
     //
     // ==================
     // Specify Test Files
