@@ -37,6 +37,7 @@
     "sax": "~0.6.0",
     "should": "~4.0.4",
     "sinon": "~1.10.2",
-    "webdriverio": "^4.0.5"
+    "wdio-jasmine-framework":"~0.1.8",
+    "webdriverio": "~4.0.5"
   }
 }
