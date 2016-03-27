@@ -35,7 +35,7 @@ module.exports = (grunt) ->
     capabilities.platform = platform if platform
     capabilities.timeoutInSeconds = getTimeout() / 1000
     capabilities.defaultTimeout = getTimeout()
-    capabilities.waitforTimeout = getTimeout()
+    #capabilities.waitforTimeout = getTimeout()
     capabilities.name = grunt.option('sauceJob') || 'components-regression-test'
     capabilities.recordVideo = grunt.option('sauceRecordVideo') || false
     capabilities.recordScreenshots = grunt.option('sauceRecordScreenshots') || false
@@ -52,7 +52,7 @@ module.exports = (grunt) ->
       # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
       logLevel: grunt.option('webDriverLogLevel') || 'silent'
       timeoutInSeconds: getTimeout() / 1000
-      waitforTimeout: getTimeout()
+      #waitforTimeout: getTimeout()
       
     sauce =
       #host: 'ondemand.saucelabs.com'
@@ -82,14 +82,6 @@ module.exports = (grunt) ->
         options:
           patterns: [
             {
-              match: 'GRUNT_SAUCE_USER_STRING',
-              replacement: sauceUser
-            },
-            {
-              match: 'GRUNT_SAUCE_KEY_STRING',
-              replacement: sauceKey
-            },
-            {
               match: 'GRUNT_BASE_URL_STRING',
               replacement: baseUrl
             },
@@ -98,9 +90,25 @@ module.exports = (grunt) ->
               replacement: [getDesiredCapabilities()]
             },
             {
+              match: 'GRUNT_LOG_LEVEL_STRING',
+              replacement: grunt.option('webDriverLogLevel') || 'silent'
+            },
+            {
+              match: 'GRUNT_SAUCE_USER_STRING',
+              replacement: sauceUser
+            },
+            {
+              match: 'GRUNT_SAUCE_KEY_STRING',
+              replacement: sauceKey
+            },
+            {
               match: 'GRUNT_SPECS_ARRAY_OF_STRING',
               replacement: ["components/#{ if (grunt.option('component')) then '**/' + grunt.option('component') + '/**' else '**' }/regression/*.js"]
             },
+            {
+              match: 'GRUNT_WAIT_FOR_TIMEOUT',
+              replacement: getTimeout()
+            }
           ]
 
         files: [

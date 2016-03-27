@@ -37,7 +37,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: 'silent',
+    logLevel: "@@GRUNT_LOG_LEVEL_STRING",
     //
     // Enables colors for log output.
     coloredLogs: true,
@@ -50,7 +50,7 @@ exports.config = {
     baseUrl: "@@GRUNT_BASE_URL_STRING",
     //
     // Default timeout for all waitForXXX commands.
-    waitforTimeout: 10000,
+    waitforTimeout: @@GRUNT_WAIT_FOR_TIMEOUT,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as property. Make sure you have
