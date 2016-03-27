@@ -1,5 +1,7 @@
 exports.config = {
     //sauce labs config
+    host: "ondemand.saucelabs.com",
+    port: 80,
     user: "@@GRUNT_SAUCE_USER_STRING",
     key: "@@GRUNT_SAUCE_KEY_STRING",
     //
