@@ -4,11 +4,6 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 var inlineChoiceWithId = function(id) {
   return '//div[@id="' + id + '" and @class[contains(., "view-inline-choice")]]';
 };
@@ -21,7 +16,7 @@ describe('inline-choice', function() {
 
   browser.selectInlineChoice = function(id, choice) {
     browser.click(inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]');
-    browser.click(inlineChoiceWithId(id) + '//div[text()="' + choice + '"]');
+    browser.click(inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]');
     return this;
   };
 
@@ -31,9 +26,43 @@ describe('inline-choice', function() {
   };
 
   beforeEach(function() {
+
+    browser.addCommand("getPseudoElementCss", function(selector, pseudo, prop, done) {
+      return this.executeAsync(function(selector, pseudo, prop, done){
+        var e = document.querySelector(selector);
+
+        if(!e){
+          throw new Error('not found: ' + selector);
+        } 
+        var s = window.getComputedStyle(e, pseudo);
+        var out = s.getPropertyValue(prop);
+        done(out);
+      }, selector, pseudo, prop).then(function(o){
+          done(null,  { selector: selector, pseudo: pseudo, prop: prop, value: o.value});
+      });
+    });
+
+
     browser
-      .url(RegressionHelper.getUrl('inline-choice', itemJsonFilename))
-      .waitFor('.dropdown-menu li', regressionTestRunnerGlobals.defaultTimeout);
+      .url(browser.options.getUrl('inline-choice', itemJsonFilename))
+      .waitFor('.dropdown-menu li');
+  });
+
+ 
+
+  it('shows a result icon to the right of the comboboxes', function(done){
+
+    browser
+      .selectInlineChoice("1", "Banana")
+      .submitItem()
+      .waitFor('.result-icon')
+      .getPseudoElementCss('.warning .result-icon', ':after', 'color', function(err, result){
+        result.value.should.eql('rgb(153, 153, 153)');
+      })
+      .getPseudoElementCss('.incorrect .result-icon', ':after', 'color', function(err, result){
+        result.value.should.eql('rgb(236, 151, 31)');
+      })
+      .call(done);
   });
 
   it('feedbacks are positioned correctly', function(done) {
@@ -41,8 +70,8 @@ describe('inline-choice', function() {
       .selectInlineChoice("1", "Banana")
       .selectInlineChoice("2", "Apple")
       .submitItem()
-      .click(inlineChoiceWithId("1") + '//div')
-      .click(inlineChoiceWithId("2") + '//div')
+      .click(inlineChoiceWithId("1") + '//span')
+      .click(inlineChoiceWithId("2") + '//span')
       .getLocation(".player-body", function(err, playerPos) {
         this.getLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
           this.getLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {

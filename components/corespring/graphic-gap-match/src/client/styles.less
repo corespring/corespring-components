@@ -52,10 +52,10 @@
     }
 
     &.warning {
-      border: 2px solid @warning-color;
+      border: 2px solid @warning-color-border;
     }
 
-    img {
+    .fixed-width img {
       max-width: 430px;
     }
 
@@ -102,7 +102,7 @@
     }
   }
 
-  .see-answer-panel {
+  .see-answer-panel, .instructor-response-holder {
     .choice {
       margin-right: 6px;
       margin-bottom: 6px;
@@ -122,9 +122,9 @@
         .panel-body {
           border-radius: 4px;
           padding: 15px;
-          background-color: #f2dede;
-          border-color: #eed3d7;
-          color: #b94a48;
+          background-color: @warning-color-background;
+          border-color: @warning-color-border;
+          color: @warning-color;
         }
       }
     }

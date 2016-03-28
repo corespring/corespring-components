@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "title": "CoreSpring Ruler Component",
+  "properties": {
+    "componentType": {
+      "description": "A required value to indicate the component type. For ruler, this must be 'corespring-ruler'.",
+      "type": "string"
+    },
+    "model": {
+      "description": "Contains configuration and ruler params.",
+      "type": "object",
+      "properties": {
+        "config": {
+          "description": "Configuration for rendering the ruler.",
+          "type": "object",
+          "properties": {
+            "units": {
+              "description": "A value indicating the ruler units",
+              "enum" : ["imperial", "metric"]
+            },
+            "label": {
+              "description": "A value indicating the label to be shown in the ruler",
+              "type": "string"
+            },
+            "length": {
+              "description": "A value defining length in units of ruler",
+              "type": "integer"
+            },
+            "pixelsPerUnit": {
+              "description": "A value indicating how many pixels represent one unit in the ruler",
+              "type": "integer"
+            },
+            "ticks": {
+              "description": "Number of ruler ticks",
+              "type": "integer"
+            }
+          },
+          "required": ["units", "label", "ticks"]
+        }
+      },
+      "required": ["config"]
+    },
+    "title": {
+      "description": "A title for the interaction, displayed in the editor.",
+      "type": "string"
+    },
+    "isTool": {
+      "description": "A flag that indicates that the component is a tool",
+      "type": "boolean"
+    }
+  },
+  "required": ["componentType", "model"]
+}

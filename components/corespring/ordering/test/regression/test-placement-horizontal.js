@@ -3,11 +3,6 @@
 var _ = require('lodash');
 var should = require('should');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('placement ordering', function() {
 
   var itemJsonFilename = 'placement-horizontal.json';
@@ -39,8 +34,8 @@ describe('placement ordering', function() {
     describe('correctness', function() {
       beforeEach(function() {
         browser
-          .url(RegressionHelper.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering', regressionTestRunnerGlobals.defaultTimeout);
+          .url(browser.options.getUrl('ordering', itemJsonFilename))
+          .waitFor('.view-placement-ordering');
       });
 
       it('correct answer results in correct feedback', function(done) {
@@ -48,7 +43,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.correct')
           .call(done);
       });
 
@@ -57,7 +52,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Banana'), landingPlace(1))
           .dragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.incorrect', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.incorrect')
           .call(done);
       });
 
@@ -66,7 +61,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.partial')
           .call(done);
       });
 
@@ -77,8 +72,8 @@ describe('placement ordering', function() {
           .submitItem()
           .waitFor('.see-answer-panel')
           .click('.see-answer-panel .panel-heading')
-          .waitFor(divWithClass('see-answer-panel')+divContaining('Apple'), regressionTestRunnerGlobals.defaultTimeout)
-          .waitFor(divWithClass('see-answer-panel')+divContaining('Pear'), regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor(divWithClass('see-answer-panel')+divContaining('Apple'))
+          .waitFor(divWithClass('see-answer-panel')+divContaining('Pear'))
           .call(done);
       });
 
@@ -87,7 +82,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial', regressionTestRunnerGlobals.defaultTimeout)
+          .waitFor('.feedback.partial')
           .resetItem()
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {
@@ -117,7 +112,7 @@ describe('placement ordering', function() {
     describe('MathJax', function() {
       it('renders', function(done) {
         browser
-          .waitFor('.choice')
+          .waitFor('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })
@@ -127,6 +122,7 @@ describe('placement ordering', function() {
         browser
           .submitItem()
           .resetItem()
+          .waitFor('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })

@@ -72,7 +72,7 @@ describe('feedback popover', function() {
       scope.$digest();
       expect(element).toBeDefined();
       var popoverCall = findPopoverCall();
-      expect(popoverCall.content).toBe("Hello");
+      expect(popoverCall.content()).toBe("Hello");
       resetSpy();
 
       scope.response = {
@@ -81,7 +81,7 @@ describe('feedback popover', function() {
       scope.$digest();
       expect(element).toBeDefined();
       popoverCall = findPopoverCall();
-      expect(popoverCall.content).toBe("You did not enter a response.");
+      expect(popoverCall.content()).toBe("You did not enter a response.");
     });
 
     it('popover class is according to correctness', function() {

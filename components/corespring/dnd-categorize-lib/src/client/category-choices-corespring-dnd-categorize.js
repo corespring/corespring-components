@@ -9,6 +9,9 @@ exports.directive = {
     CategoryChoicesCorespringDndCategorize]
 };
 
+/**
+ * The Category containers which hold the dropped choices
+ */
 function CategoryChoicesCorespringDndCategorize(
   $timeout,
   CompactLayout,
@@ -154,6 +157,7 @@ function CategoryChoicesCorespringDndCategorize(
         '  >',
         '  <div class="border">',
         '    <div class="categorized choices">',
+        '      <div class="placeholder" ng-if="choiceEditMode" ng-hide="category.choices.length">Drag correct answer(s) here.</div>',
         '      <div class="choice-container">',
         '        <div choice-corespring-dnd-categorize="true" ',
         '           choice-id="{{choice.model.id}}" ',

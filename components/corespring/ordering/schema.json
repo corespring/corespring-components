@@ -91,6 +91,10 @@
               "description" : "Determines whether the choices should be laid out vertically or horizontally",
               "enum" : ["horizontal", "vertical"]
             },
+            "choiceAreaPosition" : {
+              "description" : "Determines whether the choices should be placed above or below the placemente area. Only applies for horizontal placement interactions",
+              "enum" : ["above", "below"]
+            },
             "placementType" : {
               "description" : "Determines whether the interaction pertains to ordering in-place or whether choices are placed into an answer area.",
               "enum" : ["inPlace", "placement"]

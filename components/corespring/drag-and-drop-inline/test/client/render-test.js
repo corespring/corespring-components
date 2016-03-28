@@ -60,6 +60,12 @@ describe('corespring:drag-and-drop-inline', function() {
     };
   }
 
+  var instructorData = {
+    correctResponse: {
+      "aa_1": ["c_0"]
+    }
+  };
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -620,8 +626,44 @@ describe('corespring:drag-and-drop-inline', function() {
     });
   });
 
+  describe('instructor view', function() {
+    it('instructor data populates state with correct response', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      expect(scope.instructorData).toEqual(instructorData);
+      expect(scope.landingPlaceChoices.aa_1[0].id).toEqual("c_0");
+      expect(scope.response).toEqual({feedbackPerChoice: {aa_1: ['correct']}});
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a answer is selected', function() {
+      scope.landingPlaceChoices.aa_1 = [{
+        id: 'c_1'
+      }];
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 
 });

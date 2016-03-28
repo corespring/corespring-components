@@ -37,6 +37,25 @@ describe('corespring:multiple-choice-render', function() {
     }
   };
 
+  var instructorData = {
+    "correctResponse" : { "value" : "1" },
+    rationales: [
+      {
+        choice: "1",
+        rationale: "rationale1"
+      },
+      {
+        choice: "2",
+        rationale: "rationale2"
+      },
+      {
+        choice: "3",
+        rationale: "rationale3"
+      }
+    ]
+
+  };
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -58,12 +77,12 @@ describe('corespring:multiple-choice-render', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   it('sets model', function() {
     container.elements['1'].setDataAndSession(testModel);
-    expect(scope.question).toNotBe(null);
+    expect(scope.question).not.toBe(null);
     expect(scope.inputType).toBe('radio');
     expect(scope.choices).not.toBe(null);
     expect(scope.choices.length).toBe(3);
@@ -75,7 +94,7 @@ describe('corespring:multiple-choice-render', function() {
     expect(_.shuffle).toHaveBeenCalled();
   });
 
-  it('doesnt shuffle is shuffle is false', function() {
+  it('does not shuffle if shuffle is false', function() {
     spyOn(_, 'shuffle');
     testModel.data.model.config.shuffle = false;
     container.elements['1'].setDataAndSession(testModel);
@@ -153,6 +172,42 @@ describe('corespring:multiple-choice-render', function() {
     expect($(element).find(".incorrect .choice-holder").length).toBe(1);
   });
 
+  describe('instructor mode', function() {
+    it('rationales are displayed if present', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      expect(scope.rationales).toBeDefined();
+      expect(scope.rationales.length).toEqual(3);
+    });
+
+    it('rationales are not displayed if not present', function() {
+      var cloneInstructorData = _.cloneDeep(instructorData);
+      delete cloneInstructorData.rationales;
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(cloneInstructorData);
+      expect(scope.rationales).not.toBeDefined();
+    });
+
+    it('setting instructor data marks correct answers as correct in the model', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      var correctChoice = _.find(scope.choices, function(c) { return c.value === '1';});
+      expect(correctChoice.correct).toEqual(true);
+      _(scope.choices).without(correctChoice).each(function(c) {
+         expect(c.correct).not.toEqual(true);
+      });
+    });
+
+    it('setting instructor data marks correct answers as correct in the view in instructor mdoe', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      container.elements['1'].setMode('instructor');
+      rootScope.$digest();
+      expect($(element).find(".correct .choice-holder").length).toBe(2);
+    });
+
+  });
+
   describe('isAnswerEmpty', function() {
     it('should return true initially', function() {
       container.elements['1'].setDataAndSession(testModel);
@@ -175,5 +230,29 @@ describe('corespring:multiple-choice-render', function() {
 
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a choice is selected', function() {
+      scope.answer.choices['1'] = true;
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 });

@@ -6,9 +6,13 @@ function getFeedback(question) {
   if (feedbackType === "custom") {
     return question.feedback.feedback;
   } else if (feedbackType === "default") {
-    return "<b>Submitted Successfully.</b> Your answer was submitted.";
+    return "Your answer was submitted.";
   }
 }
+
+exports.isScoreable = function(){
+  return false;
+};
 
 exports.feedback = {
   NO_ANSWER: 'You did not enter a response'

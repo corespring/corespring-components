@@ -81,6 +81,10 @@ function configureTextEntry(
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
+    scope.makeItBigEnough = function(n){
+      return n + 2;
+    };
+
     //-----------------------------------------------------------------
 
     function setModel(fullModel) {
@@ -91,7 +95,7 @@ function configureTextEntry(
       editorModel.partialResponses = editorModel.partialResponses || createResponsesModel(0);
       editorModel.incorrectResponses = editorModel.incorrectResponses || createResponsesModel(0);
       editorModel.model = editorModel.model || {};
-      editorModel.model.answerBlankSize = editorModel.model.answerBlankSize || 8;
+      editorModel.model.answerBlankSize = editorModel.model.answerBlankSize.toString() || 8;
       editorModel.model.answerAlignment = editorModel.model.answerAlignment || 'left';
       scope.editorModel = editorModel;
     }
@@ -99,7 +103,6 @@ function configureTextEntry(
     function getModel() {
       var result = _.cloneDeep(scope.editorModel);
 
-      console.log("getModel", scope.correctResponseInput);
       if (!_.isEmpty(scope.correctResponseInput)) {
 
       }
@@ -116,7 +119,7 @@ function configureTextEntry(
         values: [],
         award: award,
         ignoreCase: false,
-        ignoreWhitespace: false,
+        ignoreWhitespace: true,
         feedback: {
           type: 'default',
           custom: ''
@@ -203,20 +206,6 @@ function configureTextEntry(
   function template() {
     return [
       '<div class="config-text-entry">',
-      '  <div navigator="">',
-      '    <div navigator-panel="Design">',
-      designPanel(),
-      '    </div>',
-      '    <div navigator-panel="Display">',
-      displayPanel(),
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('\n');
-  }
-
-  function designPanel() {
-    return [
       '  <div class="container-fluid">',
       '    <div class="row">',
       '      <div class="col-xs-12">',
@@ -227,37 +216,27 @@ function configureTextEntry(
       '      </div>',
       '    </div>',
       '    <div class="row correct-answers">',
-      '      <div class="col-xs-9">',
+      '      <div class="col-xs-12">',
       '        <label class="control-label">Correct Answers</label>',
       '        <p>Additional correct answers may be added by clicking <b>tab</b> or <b>enter/return</b> between answers.</p>',
       '      </div>',
       '    </div>',
-      '    <div class="row">',
-      '      <div class="col-xs-9">',
-      '        <div cs-text-entry-response-input ',
-      '           model="editorModel.correctResponses" ',
-      '           prompt="correctResponsesPrompt"',
-      '           on-blur="onBlurCorrectResponse(text)"',
-      '         />',
-      '      </div>',
-      '    </div>',
+      '    <div cs-text-entry-response-input ',
+      '        model="editorModel.correctResponses" ',
+      '        prompt="correctResponsesPrompt"',
+      '        on-blur="onBlurCorrectResponse(text)"/>',
       '    <div class="row partially-correct-answers">',
-      '      <div class="col-xs-9">',
+      '      <div class="col-xs-12">',
       '        <label class="control-label">Partially Correct Answers (optional)</label>',
       '        <p>Additional partially correct answers may be added by clicking <b>tab</b> or <b>enter/return</b> between answers.</p>',
       '      </div>',
       '    </div>',
-      '    <div class="row">',
-      '      <div class="col-xs-9">',
-      '        <div cs-text-entry-response-input ',
-      '           model="editorModel.partialResponses" ',
-      '           prompt="partialResponsesPrompt"',
-      '           on-blur="onBlurPartialResponse(text)"',
-      '         />',
-      '      </div>',
-      '    </div>',
+      '    <div cs-text-entry-response-input ',
+      '        model="editorModel.partialResponses" ',
+      '        prompt="partialResponsesPrompt"',
+      '        on-blur="onBlurPartialResponse(text)"/>',
       '    <div class="row award-row">',
-      '      <div class="col-xs-9">',
+      '      <div class="col-xs-12">',
       '        Award ',
       '        <input class="award-percent" type="number" ',
       '           ng-model="editorModel.partialResponses.award" ',
@@ -266,12 +245,34 @@ function configureTextEntry(
       '        % of full credit for a partially correct answer',
       '      </div>',
       '    </div>',
+      '    <hr/>',
+      '    <div class="row text-field-size-row">',
+      '      <div class="col-xs-12">',
+      '        <label class="control-label">Answer blank size</label>',
+      '        <div ng-repeat="o in answerBlankSizeDataProvider">',
+      '          <radio value="{{o.size}}" ng-model="editorModel.model.answerBlankSize">',
+      '          <input type="text" readonly value="{{o.demoLabel}}" size="{{makeItBigEnough(o.size)}}"/> <span>{{o.defaultLabel}}</span>',
+      '          </radio>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '    <div class="row align-row">',
+      '      <div class="col-xs-12">',
+      '        <label class="control-label">Align text in answer blank:</label>',
+      '        <select class="form-control" ng-model="editorModel.model.answerAlignment">',
+      '          <option value="left">Left</option>',
+      '          <option value="center">Center</option>',
+      '          <option value="right">Right</option>',
+      '        </select>',
+      '      </div>',
+      '    </div>',
       '    <div class="row">',
-      '      <div class="col-xs-8">',
+      '      <div class="col-xs-12">',
       feedbackConfigPanel(),
       '      </div>',
       '    </div>',
-      '  </div>'
+      '  </div>',
+      '</div>'
     ].join('\n');
   }
 
@@ -300,33 +301,6 @@ function configureTextEntry(
       '      fb-sel-default-feedback="{{defaultIncorrectFeedback}}">',
       '  </div>',
       '</div>'
-    ].join('\n');
-  }
-
-  function displayPanel() {
-    return [
-      '  <div class="container-fluid">',
-      '    <div class="row text-field-size-row">',
-      '      <div class="col-xs-12">',
-      '        <label class="control-label">Answer blank size</label>',
-      '        <div ng-repeat="o in answerBlankSizeDataProvider">',
-      '          <radio value="{{o.size}}" ng-model="editorModel.model.answerBlankSize">',
-      '          <input type="text" readonly value="{{o.demoLabel}}" size="{{o.size}}"/> <span>{{o.defaultLabel}}</span>',
-      '          </radio>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '    <div class="row align-row">',
-      '      <div class="col-xs-12">',
-      '        <label class="control-label">Align text in answer blank:</label>',
-      '        <select class="form-control" ng-model="editorModel.model.answerAlignment">',
-      '          <option value="left">Left</option>',
-      '          <option value="center">Center</option>',
-      '          <option value="right">Right</option>',
-      '        </select>',
-      '      </div>',
-      '    </div>',
-      '  </div>'
     ].join('\n');
   }
 }
@@ -359,30 +333,37 @@ function csTextEntryResponseInput($log) {
 
   function template() {
     return [
-      '<div class="response-input">',
-      '  <ui-select ',
-      '      multiple',
-      '      ng-disabled="disabled"',
-      '      ng-model="model.values"',
-      '      tagging',
-      '      tagging-label="false"',
-      '      tagging-tokens="ENTER"',
-      '      theme="bootstrap"',
-      '      title="prompt"',
-      '     >',
-      '    <ui-select-match placeholder="{{prompt}}" data-on-change-search="{{saveSearch($select.search)}}">{{$item}}</ui-select-match>',
-      '    <ui-select-choices repeat="c in model.values">{{c}}</ui-select-choices>',
-      '  </ui-select>',
-      '  <checkbox value="ignore-case"',
-      '      ng-init="model.caseSensitive = !model.ignoreCase"',
-      '      ng-model="model.caseSensitive"',
-      '      ng-change="model.ignoreCase = !model.caseSensitive"',
-      '      >Case sensitive?',
-      '  </checkbox>',
-      '  <checkbox value="ignore-whitespace"',
-      '      ng-model="model.ignoreWhitespace"',
-      '      >Ignore spacing?',
-      '  </checkbox>',
+      '<div>',
+      '  <div class="row response-input">',
+      '    <div class="col-xs-9">',
+      '      <ui-select ',
+      '          multiple',
+      '          ng-disabled="disabled"',
+      '          ng-model="model.values"',
+      '          tagging',
+      '          tagging-label="false"',
+      '          tagging-tokens="ENTER"',
+      '          theme="bootstrap"',
+      '          title="prompt">',
+      '        <ui-select-match placeholder="{{prompt}}" data-on-change-search="{{saveSearch($select.search)}}">{{$item}}</ui-select-match>',
+      '        <ui-select-choices repeat="c in model.values">{{c}}</ui-select-choices>',
+      '      </ui-select>',
+      '    </div>',
+      '  </div>',
+      '  <div class="row ignore-row">',
+      '    <div class="col-xs-12 answer-options">',
+      '      <checkbox value="ignore-case"',
+      '          ng-init="model.caseSensitive = !model.ignoreCase"',
+      '          ng-model="model.caseSensitive"',
+      '          ng-change="model.ignoreCase = !model.caseSensitive">',
+      '        Case sensitive?',
+      '      </checkbox>',
+      '      <checkbox value="ignore-whitespace"',
+      '          ng-model="model.ignoreWhitespace">',
+      '        Ignore spacing?',
+      '      </checkbox>',
+      '    </div>',
+      '  </div>',
       '</div>'
     ].join('\n');
   }

@@ -4,12 +4,11 @@
   "purpose": "library",
   "libraries": [
     {
-      "name": "image-service",
-      "organization": "corespring",
-      "scope": "editor"
+      "name": "server-shared",
+      "organization": "corespring"
     },
     {
-      "name": "server-shared",
+      "name": "widgets",
       "organization": "corespring"
     }
   ],

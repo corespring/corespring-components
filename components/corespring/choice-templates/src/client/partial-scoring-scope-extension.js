@@ -33,6 +33,10 @@ exports.factory = [
           });
         };
 
+        scope.isPanelCollapsed = function() {
+          return !(scope.fullModel.allowPartialScoring && scope.numberOfCorrectResponses > 1);
+        };
+
         scope.togglePartialScoring = function() {
           if( scope.numberOfCorrectResponses > 1 ) {
             scope.fullModel.allowPartialScoring = !scope.fullModel.allowPartialScoring;
@@ -70,6 +74,11 @@ exports.factory = [
           scope.updateNumberOfCorrectResponses(scope.numberOfCorrectResponses);
         });
 
+        scope.$watch('fullModel.correctResponse', function(){
+          if( scope.numberOfCorrectResponses <= 1 ) {
+              scope.fullModel.allowPartialScoring = false;
+          }
+        }, true);
       };
     }
 

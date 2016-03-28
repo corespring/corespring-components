@@ -74,7 +74,8 @@ describe('corespring:graphic-gap-match:render', function() {
           "backgroundImage": "map.png",
           "shuffle": true,
           "choiceAreaPosition": "top",
-          "showHotspots": true
+          "showHotspots": true,
+          "snapEnabled": true
         }
       },
       "weight": 1
@@ -100,24 +101,40 @@ describe('corespring:graphic-gap-match:render', function() {
 
     element = $compile("<corespring-graphic-gap-match-render id='1'></corespring-graphic-gap-match-render>")($rootScope.$new());
     scope = element.isolateScope();
+    scope.snapRectIntoRect = jasmine.createSpy('snapRectIntoRect');
+    scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(0);
     rootScope = $rootScope;
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
 
-  it('answer change handler does not get called initially', function() {
-    container.elements['1'].setDataAndSession(testModel);
+  describe('answer change callback', function() {
     var changeHandlerCalled = false;
-    container.elements['1'].answerChangedHandler(function(c) {
-      changeHandlerCalled = true;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
     });
 
-    scope.$digest();
-    expect(changeHandlerCalled).toBe(false);
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a choice is dropped', function() {
+      scope.droppedChoices.push(scope.choices[0]);
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
+
 
   describe('undo / start over', function() {
     it('undo undoes move between choice area and image', function() {
@@ -130,8 +147,8 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.droppedChoices.push(scope.choices.pop());
       scope.$digest();
 
-      scope.undo();
-      scope.undo();
+      scope.undoModel.undo();
+      scope.undoModel.undo();
 
       expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
@@ -148,7 +165,7 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.droppedChoices[0].left = 150;
       scope.$digest();
 
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
 
       expect(scope.droppedChoices[0].left).toEqual(100);
@@ -163,7 +180,7 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.$digest();
       scope.droppedChoices.push(scope.choices.pop());
       scope.$digest();
-      scope.startOver();
+      scope.undoModel.startOver();
       scope.$digest();
       expect(_.pluck(scope.choices, 'id')).toEqual(_.pluck(originalChoices, 'id'));
       expect(_.pluck(scope.droppedChoices, 'id')).toEqual(_.pluck(originalDroppedChoices, 'id'));
@@ -177,13 +194,15 @@ describe('corespring:graphic-gap-match:render', function() {
       scope.droppedChoices.push(scope.choices.pop());
       scope.$digest();
       container.elements['1'].reset();
-      expect(scope.stack.length).toEqual(1);
+      expect(scope.undoModel.undoDisabled).toBe(true);
     });
   });
 
-describe('dragging choices', function() {
+  describe('dragging choices', function() {
     var cloneChoice = function(choice) {
-      return _.extend(_.cloneDeep(choice), {$$hashKey: undefined});
+      return _.extend(_.cloneDeep(choice), {
+        $$hashKey: undefined
+      });
     };
 
     it('choice remains available to drag  any number of times if matchMax is 0', function() {
@@ -233,6 +252,46 @@ describe('dragging choices', function() {
       expect(scope.choices.length).toEqual(2);
       expect(_.contains(_.pluck(scope.choices, 'id'), choiceToDrag.id)).toEqual(false);
     });
+
+    it('if snapEnabled is true choice gets snapped', function() {
+      scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(1);
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+
+      var choiceToDrag = scope.choices[1];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+
+      expect(scope.snapRectIntoRect).toHaveBeenCalled();
+    });
+
+    it('if snapEnabled is true but hotpots are not rects choice wont get snapped', function() {
+      scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(1);
+      testModel.data.model.hotspots[0].shape = 'polygon';
+      testModel.data.model.hotspots[1].shape = 'polygon';
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+
+      var choiceToDrag = scope.choices[1];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+
+      expect(scope.snapRectIntoRect).not.toHaveBeenCalled();
+    });
+
+    it('if snapEnabled is false choice does not get snapped', function() {
+      scope.getOverlappingPercentage = jasmine.createSpy('getOverlappingPercentage').and.returnValue(1);
+      testModel.data.model.config.snapEnabled = false;
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+
+      var choiceToDrag = scope.choices[1];
+      scope.dropChoice(choiceToDrag, cloneChoice(choiceToDrag));
+      scope.$digest();
+
+      expect(scope.snapRectIntoRect).not.toHaveBeenCalled();
+    });
+
   });
 
   describe('isAnswerEmpty', function() {
@@ -243,7 +302,9 @@ describe('dragging choices', function() {
     });
     it('should return false if answer is set initially', function() {
       testModel.session = {
-        answers: [{id:"c1"}]
+        answers: [{
+          id: "c1"
+        }]
       };
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
@@ -251,9 +312,122 @@ describe('dragging choices', function() {
     });
     it('should return false if answer is selected', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.droppedChoices = [{id:"c1"}];
+      scope.droppedChoices = [{
+        id: "c1"
+      }];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
+  });
+
+  describe('incorrectChoices', function() {
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+    });
+
+    it('should return empty (as correct response not set)', function() {
+      expect(scope.incorrectChoices()).toEqual([]);
+    });
+
+  });
+
+  describe('instructor data', function() {
+
+    var correctResponse = [
+      {"id": "c1", "hotspot": "h1"},
+      {"id": "c2", "hotspot": "h2"}
+    ];
+
+    var incorrectChoices = [
+      {"id" : "c3"},
+      {"id" : "c4"}
+    ];
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse').and.callThrough();
+      container.elements['1'].setInstructorData({correctResponse: correctResponse});
+      scope.model.choices = correctResponse.concat(incorrectChoices);
+    });
+
+    it('should set up interaction with correct answer', function() {
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'instructor',
+        correctResponse: correctResponse
+      });
+    });
+
+    describe('incorrectChoices', function() {
+
+      it('should return choices not set as correct response', function() {
+        expect(scope.incorrectChoices()).toEqual(incorrectChoices);
+      });
+
+      describe('there are no correct choices', function() {
+
+        beforeEach(function() {
+          container.elements['1'].setInstructorData({correctResponse: []});
+          scope.model.choices = correctResponse.concat(incorrectChoices);
+        });
+
+        it('should return empty', function() {
+          expect(scope.incorrectChoices()).toEqual([]);
+        });
+
+      });
+
+    });
+
+  });
+
+  describe('fixedWidth', function() {
+
+    describe('undefined', function() {
+
+      beforeEach(function() {
+        testModel.data.model.config.backgroundImage = {};
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+      });
+
+      it("set 'fixed-width' class on .background-image", function() {
+        expect(element.find('.background-image').hasClass('fixed-width')).toBe(true);
+      });
+
+    });
+
+    describe('set to false', function() {
+
+      beforeEach(function() {
+        testModel.data.model.config.backgroundImage = {
+          fixedWidth: false
+        };
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+      });
+
+      it("not set 'fixed-width' class on .background-image", function() {
+        expect(element.find('.background-image').hasClass('fixed-width')).toBe(false);
+      });
+
+    });
+
+    describe('set to true', function() {
+
+      beforeEach(function() {
+        testModel.data.model.config.backgroundImage = {
+          fixedWidth: true
+        };
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+      });
+
+      it("set 'fixed-width' class on .background-image", function() {
+        expect(element.find('.background-image').hasClass('fixed-width')).toBe(true);
+      });
+
+    });
+
   });
 
   it('should implement containerBridge', function() {

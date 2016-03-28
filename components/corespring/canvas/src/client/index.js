@@ -4,13 +4,55 @@ exports.framework = "angular";
 exports.service = ['$log',
   function($log) {
     function Canvas(id, attrs) {
+      var self = this;
+
+      function createAxis(axisProperties, point1, point2, tickProperties) {
+        var axisAttrs = {
+          ticks: getTicksProperties(axisProperties, tickProperties),
+          strokeColor: "#3d3d3d",
+          highlightStrokeColor: "#3d3d3d",
+          strokeWidth: 2,
+          name: axisProperties.label,
+          withLabel: false,
+          lastArrow: true,
+          firstArrow: true
+        };
+
+        return self.board.create('axis', [
+          point1,
+          point2
+        ], axisAttrs);
+      }
+
+      function getTicksProperties(axisProperties, tickProperties) {
+        var defaultValues = {
+          insertTicks: true,
+          majorHeight: -1,
+          minorHeight: -1,
+          drawLabels: true,
+          minorTicks: axisProperties.labelFrequency - 1,
+          label: tickProperties
+        };
+
+        if (axisProperties.stepValue) {
+          return _.defaults({
+            ticksDistance: axisProperties.stepValue * axisProperties.labelFrequency,
+            insertTicks: false
+          }, defaultValues);
+        } else {
+          return defaultValues;
+        }
+      }
+
+      var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.domain.graphPadding / 100 : 0.5;
+      var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.range.graphPadding / 100 : 0.5;
+
       this.board = JXG.JSXGraph.initBoard(id, {
-        boundingbox: [0 - attrs.domain, attrs.range, attrs.domain, 0 - attrs.range],
-        grid: {
-          hasGrid: true,
-          gridX: attrs.scale,
-          gridY: attrs.scale
-        },
+        boundingbox: [
+          attrs.domain.min - domainPadding,
+          attrs.range.max + rangePadding,
+          attrs.domain.max + domainPadding,
+          attrs.range.min - rangePadding],
         showNavigation: false,
         showCopyright: false,
         zoom: false
@@ -18,44 +60,28 @@ exports.service = ['$log',
         width: attrs.width,
         height: attrs.height
       });
-      var axisAttrs = {
-        ticks: {
-          minorTicks: attrs.tickLabelFrequency - 1,
-          drawLabels: true
-        },
-        lastArrow: true,
-        firstArrow: true
-      };
-      this.board.create('axis', [
-        [0, 0],
-        [1, 0]
-      ], axisAttrs);
-      this.board.create('axis', [
-        [0, 0],
-        [0, 1]
-      ], axisAttrs);
-      if (attrs.domainLabel) {
-        var xcoords = new JXG.Coords(JXG.COORDS_BY_USER, [attrs.domain, 0], this.board);
-        var xoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [xcoords.scrCoords[1] - ((attrs.domainLabel.length * 4) + 10), xcoords.scrCoords[2] + 10], this.board);
-        this.board.create('text', [xoffset.usrCoords[1], xoffset.usrCoords[2], attrs.domainLabel], {
-          fixed: true
-        });
-      }
-      if (attrs.rangeLabel) {
-        var ycoords = new JXG.Coords(JXG.COORDS_BY_USER, [0, attrs.range], this.board);
-        var yoffset = new JXG.Coords(JXG.COORDS_BY_SCREEN, [ycoords.scrCoords[1] - ((attrs.rangeLabel.length * 4) + 15), ycoords.scrCoords[2] + 10], this.board);
-        this.board.create('text', [yoffset.usrCoords[1], yoffset.usrCoords[2], attrs.rangeLabel], {
-          fixed: true
-        });
-      }
+
+      var domainAxis = createAxis(attrs.domain, [0, 0], [1, 0], {
+            offset: [0,0],
+            anchorX: 'middle',
+            anchorY: 'top'
+          });
+      var rangeAxis = createAxis(attrs.range, [0, 0], [0, 1], {
+            offset: [-5,0],
+            anchorX: 'right',
+            anchorY: 'middle'
+          });
+
       this.points = [];
       this.texts = [];
       this.shapes = [];
-      this.scale = attrs.scale;
-      this.showLabels = attrs.showLabels === "true";
-      this.showCoordinates = attrs.showCoordinates === "true";
-      this.showPoints = _.isUndefined(attrs.showPoints) ? "true" :
-        !(attrs.showPoints === 'false' || attrs.showPoints === false);
+      this.domainScale = attrs.domain.snapValue;
+      this.rangeScale = attrs.range.snapValue;
+
+      this.showLabels = attrs.showLabels;
+      this.showCoordinates = attrs.showCoordinates;
+      this.showPointLabels = attrs.showPointLabels;
+      this.showPoints = attrs.showPoints;
       if (attrs.pointLabels) {
         this.pointLabels = attrs.pointLabels;
       } else {
@@ -81,22 +107,29 @@ exports.service = ['$log',
       });
     };
 
+    Canvas.prototype.getShape = function(customId) {
+      return _.find(this.shapes, function(s) {
+        return s.customId === customId;
+      });
+    };
+
     Canvas.prototype.pointCollision = function(coords) {
       var points = this.points,
-        scale = this.scale;
+        xScale = this.domainScale,
+        yScale = this.rangeScale;
 
-      function min(coord) {
-        return coord - scale;
+      function min(coord, scale) {
+        return coord - (scale / 2);
       }
 
-      function max(coord) {
-        return coord + scale;
+      function max(coord, scale) {
+        return coord + (scale / 2);
       }
 
       for (var i = 0; i < points.length; i++) {
         var point = points[i];
         //find area where coords might land that would constitute collision with point
-        if (point.X() >= min(coords.x) && point.X() <= max(coords.x) && point.Y() >= min(coords.y) && point.Y() <= max(coords.y)) {
+        if (point.X() >= min(coords.x, xScale) && point.X() <= max(coords.x, xScale) && point.Y() >= min(coords.y, yScale) && point.Y() <= max(coords.y, yScale)) {
           return point;
         }
       }
@@ -104,18 +137,22 @@ exports.service = ['$log',
     };
 
     Canvas.prototype.addPoint = function(coords, ptName, ptOptions) {
-      var pointAttrs = _.defaults({
-        strokeColor: this.showPoints ? "blue" : "transparent",
-        fillColor: this.showPoints ? "blue" : "transparent",
+      var pointAttrs = _.extend({
+        strokeColor: "blue",
+        fillColor: "blue",
         snapToGrid: true,
-        snapSizeX: this.scale,
-        snapSizeY: this.scale,
+        snapSizeX: this.domainScale,
+        snapSizeY: this.rangeScale,
         showInfobox: false,
-        withLabel: false
+        withLabel: false,
+        size: 3,
+        visible: this.showPoints
       }, ptOptions);
+
       var point = this.board.create('point', [coords.x, coords.y], pointAttrs);
       point.canvasIndex = this.points.length;
       this.points.push(point);
+
       if (this.showLabels) {
         var name = (function(labels, points) {
           if (ptName) {
@@ -140,17 +177,18 @@ exports.service = ['$log',
         var that = this;
         var text = this.board.create('text', [
           function() {
-            return point.X() + offset.usrCoords[1];
+            return (Math.round(point.X() * 100) / 100) + offset.usrCoords[1];
           },
           function() {
-            return point.Y() + offset.usrCoords[2];
+            return (Math.round(point.Y() * 100) / 100) + offset.usrCoords[2];
           },
           function() {
-            return name + (that.showCoordinates ? (' (' + point.X() + ',' + point.Y() + ')') : '');
+            return ((that.showPointLabels) ? name+ ' ' : '') + (that.showCoordinates ? ('(' + (Math.round(point.X() * 100) / 100) + ',' + (Math.round(point.Y() * 100) / 100) + ')') : '');
           }], {
           fixed: true
         });
         this.texts.push(text);
+        point.text = text;
       }
       return point;
     };
@@ -166,6 +204,15 @@ exports.service = ['$log',
           this.board.removeObject(this.points[i].text);
           this.board.removeObject(this.points[i]);
           this.points.splice(i, 1);
+          this.texts.splice(i, 1);
+        }
+      }
+    };
+
+    Canvas.prototype.removePointByName = function(pointName) {
+      for (var i = 0; i < this.points.length; i++) {
+        if (this.points[i].name === pointName) {
+          this.removePoint(this.points[i].id);
         }
       }
     };
@@ -174,40 +221,65 @@ exports.service = ['$log',
       return this.board.on(event, handler);
     };
 
-    Canvas.prototype.makeLine = function(pts) {
-      var shape = this.board.create('line', pts, {
-        strokeColor: '#0000ff',
-        strokeWidth: 2,
-        fixed: true
-      });
+    Canvas.prototype.makeLine = function(pts, options) {
+      var shapeArgs = {
+        strokeColor: options.color ? options.color : '#0000ff',
+        highlightStrokeColor: '#9C9C9C',
+        strokeWidth: 3,
+        fixed: true,
+        firstArrow: true,
+        lastArrow: true,
+        withLabel: options.label,
+        label: { strokeColor: options.color ? options.color : '#0000ff', fontSize: 14 },
+        name: options.label
+      };
+
+      var shape = this.board.create('line', pts, shapeArgs);
+      shape.customId = options.id;
       this.shapes.push(shape);
       return shape;
     };
 
-    Canvas.prototype.makeCurve = function(fn) {
+    Canvas.prototype.makeCurve = function(fn, options) {
       var shape = this.board.create('functiongraph', [fn], {
-        strokeColor: '#0000ff',
-        strokeWidth: 2,
-        fixed: true
+        strokeColor: options.color ? options.color : '#0000ff',
+        highlightStrokeColor: '#9C9C9C',
+        strokeWidth: 3,
+        fixed: true,
+        withLabel: options.label,
+        label: { strokeColor: options.color ? options.color : '#0000ff', fontSize: 14 },
+        name: options.label
       });
+      shape.customId = options.id;
       this.shapes.push(shape);
       return shape;
     };
 
     Canvas.prototype.popShape = function() {
-      return this.board.removeObject(this.shapes.splice(0, 1));
+      return this.board.removeObject(this.shapes.splice(this.shapes.length - 1, 1));
     };
 
-    Canvas.prototype.changePointColor = function(point, color) {
+    Canvas.prototype.removeShapeByCustomId = function(customId) {
+      for (var i = 0; i < this.shapes.length; i++) {
+        if (this.shapes[i].customId === customId) {
+          return this.board.removeObject(this.shapes.splice(i, 1));
+        }
+      }
+    };
+
+    Canvas.prototype.changePointColor = function(point, color, symbol) {
       point.setAttribute({
         fillColor: color,
         strokeColor: color
       });
-      var index = _.indexOf(_.map(this.points, function(p) {
-        return p.id;
-      }), point.id);
-      if (this.texts[index]) { //check to see if exists as labels may be disabled
-        this.texts[index].setAttribute({
+      if(symbol) {
+        point.setAttribute({
+          face: symbol,
+          size: (symbol === 'square' || symbol === 'circle') ? 3 : 5
+        });
+      }
+      if (point.text) {
+        point.text.setAttribute({
           strokeColor: color
         });
       }
@@ -217,6 +289,14 @@ exports.service = ['$log',
       shape.setAttribute({
         strokeColor: color
       });
+    };
+
+    Canvas.prototype.getPointCoords = function(point1, point2) {
+      var coords = new JXG.Coords(JXG.COORDS_BY_USER, [point1, point2], this.board);
+      return {
+        x: coords.scrCoords[1],
+        y: coords.scrCoords[2]
+      };
     };
 
     return Canvas;

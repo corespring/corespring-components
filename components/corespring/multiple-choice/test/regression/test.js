@@ -4,17 +4,12 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('multiple-choice', function() {
 
   "use strict";
 
   var itemJsonFilename = 'one.json';
-  var itemJson = RegressionHelper.getItemJson('multiple-choice', itemJsonFilename);
+  var itemJson = browser.options.getItemJson('multiple-choice', itemJsonFilename);
 
   function findChoice(id){
     return _.find(itemJson.item.components['1'].model.choices, function(choice) {
@@ -76,8 +71,7 @@ describe('multiple-choice', function() {
 
   beforeEach(function() {
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
-      .url(RegressionHelper.getUrl('multiple-choice', itemJsonFilename))
+      .url(browser.options.getUrl('multiple-choice', itemJsonFilename))
       .waitFor('.choice-input .radio-choice');
   });
 
@@ -108,7 +102,7 @@ describe('multiple-choice', function() {
       .selectAnswer(incorrectAnswer)
       .submitItem()
       .showAnswer()
-      .pause(500)
+      .waitForText('.answer-holder .choice-holder.correct .choice-label')
       .getText('.answer-holder .choice-holder.correct .choice-label', function(err, message) {
         message.should.eql(correctAnswerLabel);
       })
@@ -117,11 +111,7 @@ describe('multiple-choice', function() {
 
   it('MathJax renders', function(done) {
     browser
-      .getHTML('.choice-label', function(err, message) {
-        message[0].should.match(/MathJax_Preview/);
-        message[2].should.match(/MathJax_Preview/);
-        message[3].should.match(/MathJax_Preview/);
-      })
+      .waitFor('.choice-label .MathJax_Preview')
       .call(done);
   });
 

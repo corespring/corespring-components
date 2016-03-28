@@ -821,7 +821,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
 
     it('undo undoes adding point', function() {
       scope.addElement(1, "PF");
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([
         {
@@ -840,7 +840,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
         type: 'point'
       });
       scope.$digest();
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([
         {
@@ -856,7 +856,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
       nodeScope.responseModel[0].domainPosition = 5;
       scope.graph.elements[0].options.onMoveFinished('point', 5);
       scope.$digest();
-      scope.undo();
+      scope.undoModel.undo();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([
         {
@@ -869,6 +869,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
     });
 
     it('start over goes back to initial view, if startOverClearsGraph is false', function() {
+      nodeScope.graphOptions.startOverClearsGraph = false;
       scope.startOver();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([
@@ -887,6 +888,43 @@ describe('corespring:number-line:interactive-graph-render', function() {
       scope.startOver();
       scope.$digest();
       expect(nodeScope.responseModel).toEqual([]);
+    });
+
+  });
+
+  describe('multipleInputTypes', function() {
+
+    beforeEach(function() {
+      scope.model = {
+        config: {
+          availableTypes: {
+            "PF": false,
+            "LEE": false,
+            "LEF": false,
+            "LFE": false,
+            "LFF": false,
+            "REP": false,
+            "REN": false,
+            "RFP": false,
+            "RFN": false
+          }
+        }
+      };
+    });
+
+    it('should return false for no input types', function() {
+      expect(scope.multipleInputTypes()).toBe(false);
+    });
+
+    it('should return false for 1 input type', function() {
+      scope.model.config.availableTypes.PF = true;
+      expect(scope.multipleInputTypes()).toBe(false);
+    });
+
+    it('should return true for multiple input types', function() {
+      scope.model.config.availableTypes.PF = true;
+      scope.model.config.availableTypes.LEE = true;
+      expect(scope.multipleInputTypes()).toBe(true);
     });
 
   });

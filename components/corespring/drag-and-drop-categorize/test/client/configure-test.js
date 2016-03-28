@@ -74,14 +74,11 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
     }
   };
 
-  function MockImageUtils() {}
-
   function MockWiggiMathJaxFeatureDef() {}
 
   beforeEach(function() {
     module(function($provide) {
       $provide.value('ServerLogic', MockServerLogic);
-      $provide.value('ImageUtils', MockImageUtils);
       $provide.value('MathJaxService', {
         parseDomForMath: function() {}
       });
@@ -113,7 +110,7 @@ describe('corespring:drag-and-drop-categorize:configure', function() {
 
 
   it('component is being registered by the container', function() {
-    expect(container.elements['1']).toNotBe(undefined);
+    expect(container.elements['1']).not.toBe(undefined);
     expect(container.elements['2']).toBeUndefined();
   });
 

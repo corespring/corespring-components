@@ -9,6 +9,8 @@ describe('corespring', function() {
     };
   };
 
+  var answer = "Little test text";
+
   var testModelTemplate = {
     data: {
       model: {
@@ -17,7 +19,7 @@ describe('corespring', function() {
       }
     },
     session: {
-      answers: "Little test text"
+      answers: answer
     }
   };
 
@@ -52,13 +54,14 @@ describe('corespring', function() {
       expect(element).toBeDefined();
     });
 
-    it('answer in session renders in text area', function() {
+    it('answer in session renders in wiggi-wiz', function() {
       expect(container.elements['1']).toBeDefined();
       container.elements['1'].setDataAndSession(testModel);
       scope.$digest();
-      var text = $(element).find('textarea').val();
-      expect(text).toBe("Little test text");
+      var el = $(element).find('wiggi-wiz');
+      expect(el.attr('ng-model')).toBe('answer');
     });
+
   });
 
   describe('isAnswerEmpty', function() {
@@ -83,6 +86,16 @@ describe('corespring', function() {
       scope.answer = "Ho";
       rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
+    });
+  });
+
+  describe('instructor view', function() {
+    it('set instructor data should show message', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData({});
+      rootScope.$digest();
+      expect(scope.received).toEqual(true);
+      expect(scope.answer).toEqual("Open Ended Answers are not automatically scored. No correct answer is defined.");
     });
   });
 

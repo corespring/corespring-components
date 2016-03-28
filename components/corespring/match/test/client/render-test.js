@@ -48,6 +48,40 @@ describe('corespring:match:render', function() {
     }
   };
 
+  var instructorData = {
+    "correctResponse": [
+      {
+        "id": "row-1",
+        "matchSet": [
+          false,
+          true
+        ]
+      },
+      {
+        "id": "row-2",
+        "matchSet": [
+          true,
+          false
+        ]
+      },
+      {
+        "id": "row-3",
+        "matchSet": [
+          false,
+          true
+        ]
+      },
+      {
+        "id": "row-4",
+        "matchSet": [
+          false,
+          true
+        ]
+      }
+    ]
+  };
+
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -70,19 +104,19 @@ describe('corespring:match:render', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   it('sets model', function() {
     container.elements['1'].setDataAndSession(testModel);
-    expect(scope.question).toNotBe(null);
+    expect(scope.question).not.toBe(null);
     expect(scope.inputType).toBe('radiobutton');
   });
 
   it('uses the column header if available', function() {
     container.elements['1'].setDataAndSession(testModel);
-    expect(scope.matchModel.columns[1].labelHtml).toEqual('Column 1');
-    expect(scope.matchModel.columns[2].labelHtml).toEqual('Column 2');
+    expect(scope.matchModel.columns[1].labelHtml).toEqual('');
+    expect(scope.matchModel.columns[2].labelHtml).toEqual('');
   });
 
   it('uses the default header if column header is empty', function() {
@@ -100,6 +134,20 @@ describe('corespring:match:render', function() {
     expect(scope.matchModel.columns[2].labelHtml).toEqual('No');
   });
 
+  it('should not show the default headers', function() {
+    function runTest(header){
+      testModel.data.model.columns[0].labelHtml = header;
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.matchModel.columns[0].labelHtml).toEqual('');
+    }
+    runTest('Custom header');
+    runTest('Column 1');
+    runTest('Column 2');
+    runTest('Column 3');
+    runTest('Column 4');
+    runTest('Column 5');
+  });
+
   it('builds the table correctly', function() {
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
@@ -110,6 +158,7 @@ describe('corespring:match:render', function() {
 
   it('selects correctly radio buttons', function() {
     container.elements['1'].setDataAndSession(testModel);
+    container.elements['1'].editable(true);
     rootScope.$digest();
     var row = scope.matchModel.rows[0];
     var matchSet = row.matchSet;
@@ -135,6 +184,14 @@ describe('corespring:match:render', function() {
       expect(row.labelHtml).toEqual('<div style="">some text</div>');
     });
 
+    it('does not removes size settings from img', function() {
+      testModel.data.model.rows[0].labelHtml = '<img width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">';
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      var row = scope.matchModel.rows[0];
+      expect(row.labelHtml).toEqual('<img width="1px" height="2px" min-width="3px" min-height="4px" style="width:5px; min-width:6px; height:7px; min-height:8px; ">');
+    });
+
     it('does not remove other settings', function() {
       testModel.data.model.rows[0].labelHtml = '<div class="someClass" style="border:none;">some text</div>';
       container.elements['1'].setDataAndSession(testModel);
@@ -147,6 +204,7 @@ describe('corespring:match:render', function() {
   it('returns session correctly', function() {
     var component = container.elements['1'];
     component.setDataAndSession(testModel);
+    container.elements['1'].editable(true);
     rootScope.$digest();
 
     var row = scope.matchModel.rows[0];
@@ -159,6 +217,32 @@ describe('corespring:match:render', function() {
     expect(session.answers[0].id).toBe(testModel.data.model.rows[0].id);
     expect(session.answers[0].matchSet[0]).toBe(true);
     expect(session.answers[0].matchSet[1]).toBe(false);
+  });
+
+  describe('instructor mode', function() {
+    it('setting instructor data marks correct answers as correct in the model', function() {
+      spyOn(container.elements['1'], 'setResponse');
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      var mappedCorrectResponse = _.cloneDeep(instructorData.correctResponse);
+      _.each(mappedCorrectResponse, function(r) {
+        r.matchSet = _.map(r.matchSet, function(m) {
+          return {
+            correctness: m ? 'correct' : '',
+            value: m
+          };
+        });
+      });
+
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        correctness: 'correct',
+        correctClass: 'correct',
+        score: 1,
+        feedback: undefined,
+        correctnessMatrix: mappedCorrectResponse
+      });
+    });
+
   });
 
   describe('config', function() {
@@ -399,6 +483,30 @@ describe('corespring:match:render', function() {
 
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a choice is selected', function() {
+      scope.matchModel.rows[0].matchSet[0].value = true;
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
   });
 
 });

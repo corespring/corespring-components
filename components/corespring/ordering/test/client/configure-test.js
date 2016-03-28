@@ -70,8 +70,6 @@ describe('corespring:ordering:configure', function () {
     }
   };
 
-  function MockImageUtils() {
-  }
 
   function MockWiggiMathJaxFeatureDef() {
   }
@@ -79,7 +77,6 @@ describe('corespring:ordering:configure', function () {
   beforeEach(function () {
     module(function ($provide) {
       $provide.value('ServerLogic', MockServerLogic);
-      $provide.value('ImageUtils', MockImageUtils);
       $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
       $provide.value('WiggiLinkFeatureDef', function () {
       });
@@ -104,9 +101,9 @@ describe('corespring:ordering:configure', function () {
   }));
 
   it('constructs', function () {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
-
+  
   it('component is being registered by the container', function () {
     expect(container.elements['1']).not.toBeUndefined();
     expect(container.elements['2']).toBeUndefined();
@@ -125,6 +122,30 @@ describe('corespring:ordering:configure', function () {
   });
 
   describe('partialScoring', function () {
+    var testModel;
+
+    beforeEach(function(){
+      testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      rootScope.$digest();
+    });
+
+    describe('numberOfCorrectResponses', function(){
+      it('should be initialised to the number of choices', function(){
+        expect(scope.numberOfCorrectResponses).toBe(3);
+      });
+      it('should be increased when a choice is added', function(){
+        scope.addChoice();
+        scope.$digest();
+        expect(scope.numberOfCorrectResponses).toBe(4);
+      });
+      it('should be decreased when a choice is removed', function(){
+        scope.removeChoice(testModel.model.choices[0]);
+        scope.$digest();
+        expect(scope.numberOfCorrectResponses).toBe(2);
+      });
+    });
+
     it('should automatically remove additional partial scoring scenarios after removing a correct choice', function () {
       var testModel = createTestModel();
       container.elements['1'].setModel(testModel);
@@ -175,7 +196,94 @@ describe('corespring:ordering:configure', function () {
     it('should activate the active index', function() {
       expect(scope.activate).toHaveBeenCalledWith(activeIndex);
     });
+  });
 
+  describe('addChoice', function(){
+    var testModel;
+
+    beforeEach(function(){
+      testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      scope.$digest();
+    });
+
+    it('should add a choice', function(){
+      var numberBefore = testModel.model.choices.length;
+      scope.addChoice();
+      expect(testModel.model.choices.length).toBe(numberBefore + 1);
+    });
+
+    it('should set moveOnDrag to true when removeAllAfterPlacing is true', function(){
+      scope.model.config.removeAllAfterPlacing = true;
+      scope.addChoice();
+      expect(testModel.model.choices.pop().moveOnDrag).toBe(true);
+    });
+
+    it('should set moveOnDrag to false when removeAllAfterPlacing is false', function(){
+      scope.model.config.removeAllAfterPlacing = false;
+      scope.addChoice();
+      expect(testModel.model.choices.pop().moveOnDrag).toBe(false);
+    });
+  });
+
+  describe('removeAllAfterPlacing', function(){
+    var testModel;
+
+    beforeEach(function(){
+      testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      scope.$digest();
+    });
+
+    function setRemoveAllAfterPlacing(value){
+      //set the model like the checkbox would do
+      testModel.model.config.removeAllAfterPlacing = value;
+
+      //set one choice to have the opposite value so we can proove the action
+      testModel.model.choices[0].moveOnDrag = !value;
+
+      //call the onToggle like the checkbox would do
+      scope.onToggleRemoveAllAfterPlacing();
+      scope.$digest();
+    }
+
+    it('should set moveOnDrag=true for all choices when set to true', function(){
+      setRemoveAllAfterPlacing(true);
+
+      var resultModel = container.elements['1'].getModel();
+      _.forEach(resultModel.model.choices, function(choice){
+        expect(choice.moveOnDrag).toBe(true);
+      });
+    });
+
+    it('should set moveOnDrag=false for all choices when set to false', function(){
+      setRemoveAllAfterPlacing(false);
+
+      var resultModel = container.elements['1'].getModel();
+      _.forEach(resultModel.model.choices, function(choice){
+        expect(choice.moveOnDrag).toBe(false);
+      });
+    });
+
+    it('should be set to false, when one choice toggles moveOnDrag to false', function(){
+      setRemoveAllAfterPlacing(true);
+      var choice = testModel.model.choices[0];
+      choice.moveOnDrag = false;
+      scope.onToggleMoveOnDrag(choice);
+      scope.$digest();
+
+      expect(testModel.model.config.removeAllAfterPlacing).toBe(false);
+    });
+
+    it('should not change, when one choice toggles moveOnDrag to true', function(){
+      setRemoveAllAfterPlacing(false);
+      var choice = testModel.model.choices[0];
+      choice.moveOnDrag = true;
+      scope.onToggleMoveOnDrag(choice);
+      scope.$digest();
+
+      expect(testModel.model.config.removeAllAfterPlacing).toBe(false);
+    });
   });
 
 });

@@ -1,10 +1,20 @@
-var main = [
+exports.framework = 'angular';
+exports.directive = [
   '$sce', '$log',
 
   function($sce, $log) {
-    var def;
 
-    var link = function(scope, element, attrs) {
+    return {
+      scope: {},
+      restrict: 'EA',
+      replace: true,
+      link: link,
+      template: template()
+    };
+
+    function link(scope, element, attrs) {
+
+      var MAX_CHOICES_PER_ROW = 5;
 
       scope.inputType = 'checkbox';
       scope.editable = true;
@@ -12,16 +22,36 @@ var main = [
         choices: {}
       };
 
-      var getAnswers = function() {
-        var isTrue = function(k) {
+      scope.containerBridge = {
+        setDataAndSession: setDataAndSession,
+        getSession: getSession,
+        setResponse: setResponse,
+        setInstructorData: setInstructorData,
+        setMode: setMode,
+        reset: reset,
+        isAnswerEmpty: isAnswerEmpty,
+        answerChangedHandler: answerChangedHandler,
+        editable: setEditable
+      };
+
+      scope.getRows = getRows;
+      scope.getChoicesForRow = getChoicesForRow;
+      scope.getChoiceClass = getChoiceClass;
+      scope.toggleChoice = toggleChoice;
+      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
+      //------------------------------------------------------------------------
+
+      function getAnswers() {
+        function isTrue(k) {
           return scope.answer.choices[k] === true;
-        };
+        }
         var allKeys = _.keys(scope.answer.choices);
         var keys = _.filter(allKeys, isTrue);
         return keys;
-      };
+      }
 
-      var applyChoices = function() {
+      function applyChoices() {
         if (!scope.question || !scope.session.answers) {
           return;
         }
@@ -31,23 +61,23 @@ var main = [
           var key = answers[i];
           scope.answer.choices[key] = true;
         }
-      };
+      }
 
-      var resetFeedback = function(choices) {
+      function resetFeedback(choices) {
         _.each(choices, function(c) {
           if (c) {
             delete c.feedback;
             delete c.correct;
           }
         });
-      };
+      }
 
-      var resetChoices = function() {
+      function resetChoices() {
         scope.answer.choices = {};
         scope.answer.choice = "";
-      };
+      }
 
-      var layoutChoices = function(choices, order) {
+      function layoutChoices(choices, order) {
         if (!order) {
           var shuffled = _.shuffle(_.cloneDeep(choices));
           return shuffled;
@@ -63,16 +93,15 @@ var main = [
           var missing = _.difference(choices, ordered);
           return _.union(ordered, missing);
         }
-      };
+      }
 
-      var stashOrder = function(choices) {
+      function stashOrder(choices) {
         return _.map(choices, function(c) {
           return c.value;
         });
-      };
+      }
 
-      var updateUi = function() {
-
+      function updateUi() {
         if (!scope.question || !scope.session) {
           return;
         }
@@ -83,7 +112,7 @@ var main = [
         var stash = scope.session.stash = scope.session.stash || {};
         var answers = scope.session.answers = scope.session.answers || {};
 
-        scope.inputType = !! model.config.singleChoice ? "radio" : "checkbox";
+        scope.inputType = !!model.config.singleChoice ? "radio" : "checkbox";
 
         if (stash.shuffledOrder && model.config.shuffle) {
           scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
@@ -96,80 +125,90 @@ var main = [
         }
 
         applyChoices();
-      };
+      }
 
-      scope.containerBridge = {
+      function setDataAndSession(dataAndSession) {
+        $log.debug("focus-task setDataAndSession", dataAndSession);
+        scope.question = dataAndSession.data.model;
+        scope.session = dataAndSession.session || {};
+        scope.itemShape = dataAndSession.data.model.config.itemShape || "circle";
+        updateUi();
+      }
 
-        setDataAndSession: function(dataAndSession) {
-          $log.debug("focus-task setDataAndSession", dataAndSession);
-          scope.question = dataAndSession.data.model;
-          scope.session = dataAndSession.session || {};
-          scope.itemShape = dataAndSession.data.model.config.itemShape || "circle";
-          updateUi();
-        },
+      function getSession() {
+        var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
 
-        getSession: function() {
+        return {
+          answers: getAnswers(),
+          stash: stash
+        };
+      }
 
-          var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
+      // sets the server's response
+      function setResponse(response) {
+        console.log(scope.$id, "set response for focus-task", response);
+        console.log(scope.$id, "choices", scope.choices);
 
-          return {
-            answers: getAnswers(),
-            stash: stash
-          };
-        },
+        resetFeedback(scope.choices);
 
-        // sets the server's response
-        setResponse: function(response) {
-          console.log(scope.$id, "set response for focus-task", response);
-          console.log(scope.$id, "choices", scope.choices);
-
-          resetFeedback(scope.choices);
-
-          scope.response = response;
-          _.each(response.feedback, function(v, k) {
-            var choice = _.find(scope.choices, function(c) {
-              return c.value === k;
-            });
-
-            if (choice !== null) {
-              choice.correct = v;
-            }
-            console.log("choice: ", choice);
+        scope.response = response;
+        _.each(response.feedback, function(v, k) {
+          var choice = _.find(scope.choices, function(c) {
+            return c.value === k;
           });
-        },
-        setMode: function(newMode) {},
-        /**
-         * Reset the ui back to an unanswered state
-         */
-        reset: function() {
-          resetChoices();
-          resetFeedback(scope.choices);
-        },
-        isAnswerEmpty: function() {
-          return _.isEmpty(this.getSession().answers);
-        },
-        answerChangedHandler: function(callback) {
-          scope.$watch("answer", function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              callback();
-            }
-          }, true);
-        },
-        editable: function(e) {
-          scope.editable = e;
-        }
-      };
 
-      scope.getRows = function() {
-        var numRows = scope.choices ? scope.choices.length / 5 : 0;
+          if (choice !== null) {
+            choice.correct = v;
+          }
+          console.log("choice: ", choice);
+        });
+      }
+
+      function setInstructorData(data) {
+        _.each(scope.choices, function(c) {
+          var isCorrect = _.contains(data.correctResponse.value, c.value);
+          c.correct = isCorrect ? "shouldHaveBeenSelected" : undefined;
+        });
+      }
+
+      function setMode(newMode) {}
+
+      /**
+       * Reset the ui back to an unanswered state
+       */
+      function reset() {
+        resetChoices();
+        resetFeedback(scope.choices);
+      }
+
+      function isAnswerEmpty() {
+        return _.isEmpty(this.getSession().answers);
+      }
+
+      function answerChangedHandler(callback) {
+        scope.$watch("answer", function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            callback();
+          }
+        }, true);
+      }
+
+      function setEditable(e) {
+        scope.editable = e;
+      }
+
+      function getRows() {
+        var numRows = scope.choices ? scope.choices.length / MAX_CHOICES_PER_ROW : 0;
         return _.range(numRows);
-      };
+      }
 
-      scope.getChoicesForRow = function(row) {
-        return scope.choices.slice(row * 5, row * 5 + 5);
-      };
+      function getChoicesForRow(row) {
+        return scope.choices.slice(
+          row * MAX_CHOICES_PER_ROW,
+          row * MAX_CHOICES_PER_ROW + MAX_CHOICES_PER_ROW);
+      }
 
-      scope.getChoiceClass = function(o) {
+      function getChoiceClass(o) {
         var cl = scope.itemShape + " ";
         if (scope.answer.choices[o.value]) {
           cl += "selected ";
@@ -178,24 +217,17 @@ var main = [
           cl += o.correct;
         }
         return cl;
-      };
+      }
 
-      scope.toggleChoice = function(choice) {
+      function toggleChoice(choice) {
         if (scope.editable) {
           scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
         }
-      };
+      }
+    }
 
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-    };
-
-
-    def = {
-      scope: {},
-      restrict: 'EA',
-      replace: true,
-      link: link,
-      template: [
+    function template() {
+      return [
         '<div>',
         '  <div class="focus-container">',
         '    <div ng-repeat="row in getRows()">',
@@ -209,12 +241,7 @@ var main = [
         '     </div>',
         '  </div>',
         '</div>'
-      ].join("\n")
-    };
-
-    return def;
+      ].join("\n");
+    }
   }
 ];
-
-exports.framework = 'angular';
-exports.directive = main;

@@ -72,13 +72,11 @@ describe('corespring:multiple-choice:configure', function() {
       return {defaults: {}, keys: {}};
     }
   };
-  function MockImageUtils() {}
   function MockWiggiMathJaxFeatureDef() {}
 
   beforeEach(function() {
     module(function($provide) {
       $provide.value('ServerLogic', MockServerLogic);
-      $provide.value('ImageUtils', MockImageUtils);
       $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
       $provide.value('WiggiLinkFeatureDef', function(){});
     });
@@ -102,11 +100,11 @@ describe('corespring:multiple-choice:configure', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   it('component is being registered by the container', function() {
-    expect(container.elements['1']).toNotBe(undefined);
+    expect(container.elements['1']).not.toBe(undefined);
     expect(container.elements['2']).toBeUndefined();
   });
 

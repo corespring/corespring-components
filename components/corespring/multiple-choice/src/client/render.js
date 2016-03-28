@@ -9,6 +9,8 @@ var main = [
       scope.inputType = 'checkbox';
       scope.editable = true;
       scope.bridge = {answerVisible: false};
+      scope.showHide = {'false': 'show', 'true': 'hide'};
+      scope.rationaleOpen = false;
 
       var getAnswers = function() {
         if (scope.answer.choice) {
@@ -111,7 +113,7 @@ var main = [
         var stash = scope.session.stash = scope.session.stash || {};
         var answers = scope.session.answers = scope.session.answers || {};
 
-        var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
+        var shuffle =  (model.config.shuffle === true || model.config.shuffle === "true") && scope.mode !== 'instructor';
 
         scope.inputType = model.config.choiceType;
 
@@ -153,6 +155,25 @@ var main = [
           };
         },
 
+        setInstructorData: function(data) {
+          _.each(scope.choices, function(c) {
+            if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
+              c.correct = true;
+            }
+          });
+          if (!_.isEmpty(data.rationales)) {
+            var rationales = _.map(scope.choices, function(c) {
+              return {
+                choice: c.value,
+                rationale: (_.find(data.rationales, function(r) {
+                  return r.choice === c.value;
+                }) || {}).rationale
+              };
+            });
+            scope.rationales = rationales;
+          }
+        },
+
         // sets the server's response
         setResponse: function(response) {
           $(element).find(".feedback-panel").hide();
@@ -183,6 +204,10 @@ var main = [
           }, 10);
         },
         setMode: function(newMode) {
+          scope.mode = newMode;
+          if (newMode !== 'instructor') {
+            scope.rationales = undefined;
+          }
         },
         /**
          * Reset the ui back to an unanswered state
@@ -275,7 +300,7 @@ var main = [
           return res + "default";
         }
 
-        if (o.correct && scope.question.config.showCorrectAnswer === "inline") {
+        if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode === 'instructor')) {
           res = "selected ";
         }
 
@@ -352,6 +377,18 @@ var main = [
       '    </div>',
       '  </div>',
       seeAnswer,
+      '  <div class="rationale-expander" ng-show="rationales">',
+      '    <div class="rationale-expander-row {{showHide[rationaleOpen.toString()]}}-state" ng-click="rationaleOpen = !rationaleOpen">',
+      '      <span class="rationale-expander-{{showHide[rationaleOpen.toString()]}}"></span>',
+      '      <span class="rationale-expander-label">Rationale</span>',
+      '    </div>',
+      '    <div class="rationale-body" ng-show="rationaleOpen">',
+      '      <div ng-repeat="r in rationales">',
+      '        <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '        <span class="choice-label" ng-bind-html-unsafe="r.rationale"></span>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
       '</div>'
     ].join("");
 

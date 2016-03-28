@@ -4,7 +4,12 @@
   "titleGroup": "Text Entry",
   "organization": "corespring",
   "released": true,
+  "insertInline" : true,
   "libraries": [
+    {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    },
     {
       "name": "choice-templates",
       "organization": "corespring",

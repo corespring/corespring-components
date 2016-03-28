@@ -1,6 +1,15 @@
 {
   "libraries": [
     {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
+      "name": "feedback-templates",
+      "organization": "corespring"
+    },
+    {
       "name": "graph-utils",
       "organization": "corespring"
     },
@@ -9,12 +18,11 @@
       "organization": "corespring"
     },
     {
-      "name": "choice-templates",
-      "organization": "corespring",
-      "scope": "editor"
+      "name" : "server-shared",
+      "organization" : "corespring"
     },
     {
-      "name": "feedback-templates",
+      "name": "navigator",
       "organization": "corespring"
     }
   ],

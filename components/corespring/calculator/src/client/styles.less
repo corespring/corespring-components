@@ -1,0 +1,62 @@
+@import '../../../../../less/common';
+
+/** editor placeholder */
+.component-placeholder {
+	.corespring-calculator {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}
+
+.cs-calculator {
+  display: inline-block;
+  vertical-align: middle;
+	background-color: white;
+  .cs-calculator-toggle {
+    cursor: pointer;
+    background: data-uri('../../public/icon-calculator-black.png') no-repeat center transparent;
+    height: 34px;
+    width: 34px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-clip: padding-box;
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    &.visible {
+      background-color: #ccc;
+      background-image: data-uri('../../public/icon-calculator-white.png');
+      border-color: #888;
+    }
+  }
+}
+
+/* config */
+@preview-basic-width: 149px;
+@preview-basic-height: 229px;
+@preview-scientific-width: 324px;
+@preview-scientific-height: 229px;
+
+.cs-calculator-config {
+  .description {
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  .cs-calculator-row {
+    margin-bottom: 5px;
+    .preview-basic {
+      width: @preview-basic-width;
+      height: @preview-basic-height;
+      background: data-uri('../../public/basic-calculator.png') no-repeat center;
+    }
+    .preview-scientific {
+      width: @preview-scientific-width;
+      height: @preview-scientific-height;
+      background: data-uri('../../public/scientific-calculator.png') no-repeat center;
+    }
+    &.note {
+      font-size: 13px;
+      padding-top: 30px;
+      padding-left: 15px;
+    }
+	}
+}

@@ -32,7 +32,7 @@ var main = [
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
-          console.log("number line", dataAndSession);
+          $log.debug("number line", dataAndSession);
 
           scope.model = dataAndSession.data.model;
           scope.correctModel = dataAndSession.data.model;
@@ -51,8 +51,18 @@ var main = [
           };
         },
 
+        setInstructorData: function(data) {
+          console.log('sid', data);
+          var cr = _.cloneDeep(data.correctResponse);
+          _.each(cr, function(c) {
+            c.isCorrect = true;
+          });
+          this.setResponse({correctness: 'correct', feedback: {elements: cr}});
+          this.editable(false);
+        },
+
         setResponse: function(response) {
-          console.log('number line response ', response);
+          $log.debug('number line response ', response);
           scope.serverResponse = response;
 
           scope.correctModel = _.cloneDeep(scope.model);
@@ -148,8 +158,8 @@ var main = [
 ];
 
 var interactiveGraph = [
-  '$log', 'ScaleUtils', 'GraphHelper',
-  function($log, ScaleUtils, GraphHelper) {
+  '$log', 'ScaleUtils', 'GraphHelper','CsUndoModel',
+  function($log, ScaleUtils, GraphHelper,CsUndoModel) {
 
     "use strict";
 
@@ -179,16 +189,16 @@ var interactiveGraph = [
       template: [
         '<div class="interactive-graph">',
         '  <div class="undo-button-row" ng-show="editable">',
-        '    <btn class="btn btn-default" ng-hide="options.undoDisabled" ng-click="undo()">Undo</btn>',
-        '    <btn class="btn btn-default" ng-click="startOver()">Start over</btn>',
+        '    <span cs-undo-button-with-model ng-hide="options.undoDisabled"></span>',
+        '    <span cs-start-over-button-with-model ></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
-        '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills" >',
+        '  <ul ng-show="editable && config.groupingEnabled" class="nav nav-pills">',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Point\')" ng-class="{active: isGroupActive(\'Point\')}"  ng-mousedown="selectGroup(\'Point\')"><a>Point</a></li>',
         '    <li role="presentation" ng-show="isGroupEnabled(\'Line\')" ng-class="{active: isGroupActive(\'Line\')}" ng-mousedown="selectGroup(\'Line\')"><a>Line</a></li>',
         '    <li role="presentation"  ng-show="isGroupEnabled(\'Ray\')" ng-class="{active: isGroupActive(\'Ray\')}" ng-mousedown="selectGroup(\'Ray\')"><a>Ray</a></li>',
         '  </ul>',
-        '  <div ng-show="editable && !config.exhibitOnly" class="element-selector" >',
+        '  <div ng-show="editable && !config.exhibitOnly && multipleInputTypes()" class="element-selector">',
         '    <span role="presentation" class="element-pf" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PF\')"   ng-mousedown="select(\'PF\')"><a ng-class="{active: isActive(\'PF\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-pe" ng-show="isGroupActive(\'Point\') && isTypeEnabled(\'PE\')"   ng-mousedown="select(\'PE\')"><a ng-class="{active: isActive(\'PE\')}">&nbsp;</a></span>',
         '    <span role="presentation" class="element-lff" ng-show="isGroupActive(\'Line\') && isTypeEnabled(\'LFF\')"  ng-mousedown="select(\'LFF\')"><a ng-class="{active: isActive(\'LFF\')}">&nbsp;</a></span>',
@@ -224,6 +234,10 @@ var interactiveGraph = [
       link: function(scope, elm, attr, ngModel) {
         var paperElement = $(elm).find('.paper');
 
+        scope.undoModel = new CsUndoModel();
+        scope.undoModel.setGetState(getState);
+        scope.undoModel.setRevertState(revertState);
+
         $(document).keydown(function(e) {
           var selectedCount = scope.graph.getSelectedElements().length;
           if (selectedCount > 0 && (e.keyCode === 8 || e.keyCode === 46)) {
@@ -243,7 +257,7 @@ var interactiveGraph = [
           }
           scope.responsemodel.push(element(elementType));
           rebuildGraph(_.last(scope.responsemodel));
-          scope.stack.push(_.cloneDeep(scope.responsemodel));
+          scope.undoModel.remember();
           scope.$apply();
 
           function element(elementType) {
@@ -399,7 +413,6 @@ var interactiveGraph = [
         }
 
         function repositionElements(lastMovedElement) {
-          console.log("Repositioning", lastMovedElement);
 
           if (lastMovedElement) {
             while (intersectsWithAny(lastMovedElement)) {
@@ -439,7 +452,7 @@ var interactiveGraph = [
               });
               rebuildGraph(lastMovedElement);
               scope.$apply(function() {
-                scope.stack.push(_.cloneDeep(scope.responsemodel));
+                scope.undoModel.remember();
               });
             };
             switch (o.type) {
@@ -460,23 +473,22 @@ var interactiveGraph = [
 
         scope.startOver = function() {
           if (scope.options && scope.options.startOverClearsGraph) {
-            var emptyResponse = [];
-            scope.stack = [emptyResponse];
-            scope.responsemodel = _.cloneDeep(emptyResponse);
+            scope.responsemodel = _.cloneDeep([]);
           } else {
-            scope.stack = [_.first(scope.stack)];
             scope.responsemodel = _.cloneDeep(scope.model.config.initialElements);
           }
+          scope.undoModel.init();
           rebuildGraph();
         };
 
-        scope.undo = function() {
-          if (scope.stack.length > 1) {
-            scope.stack.pop();
-            scope.responsemodel = _.cloneDeep(_.last(scope.stack));
-            rebuildGraph();
-          }
-        };
+        function getState() {
+          return scope.responsemodel;
+        }
+
+        function revertState(state) {
+          scope.responsemodel = state;
+          rebuildGraph();
+        }
 
         scope.removeElement = function(element) {
           var idx = _.findIndex(scope.responsemodel, function(e) {
@@ -486,7 +498,7 @@ var interactiveGraph = [
             scope.responsemodel.splice(idx, 1);
           }
           rebuildGraph();
-          scope.stack.push(_.cloneDeep(scope.responsemodel));
+          scope.undoModel.remember();
         };
 
         scope.removeSelectedElements = function() {
@@ -503,6 +515,17 @@ var interactiveGraph = [
 
         scope.select = function(type) {
           scope.selectedType = type;
+        };
+
+        scope.multipleInputTypes = function() {
+          if (scope.model) {
+            return (_.chain(scope.model.config.availableTypes)
+                .values()
+                .filter(function(value) {
+                  return value === true;
+                })
+                .value().length) > 1;
+          }
         };
 
         scope.isGroupEnabled = function(group) {
@@ -541,7 +564,7 @@ var interactiveGraph = [
           });
 
           scope.responsemodel = _.cloneDeep(model.config.initialElements) || [];
-          scope.stack = [_.cloneDeep(scope.responsemodel)];
+          scope.undoModel.init();
           rebuildGraph();
 
           scope.selectedType = scope.selectedType || model.config.initialType;

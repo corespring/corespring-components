@@ -5,10 +5,14 @@ exports.directive = {
     '$injector',
     '$sce',
     '$timeout',
+    'Msgr',
     ChoiceCorespringDndCategorize]
 };
 
-function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
+/**
+ * A draggable choice
+ */
+function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
 
   return {
     restrict: 'EA',
@@ -23,10 +27,10 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       dragAndDropScope: '=',
       dragEnabled: '=',
       editMode: '=?editMode',
-      imageService: "=?",
       model: '=',
       notifyDeleteClicked: '&onDeleteClicked',
       notifyEditClicked: '&onEditClicked',
+      notifyMoveOnDragClicked: '&onMoveOnDragClicked',
       onDragEnd: '&onDragEnd',
       onDragStart: '&onDragStartNow'
     }
@@ -54,6 +58,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
 
     scope.draggableOptions = {
       animate: true,
+      onDrag: 'onDrag',
       onStart: 'onStart',
       onStop: 'onStop',
       placeholder: true,
@@ -71,8 +76,11 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     scope.canEdit = canEdit;
     scope.isDragEnabled = isDragEnabled;
     scope.onChangeActive = onChangeActive;
+    scope.onChangeMoveOnDrag = onChangeMoveOnDrag;
     scope.onChoiceEditClicked = onChoiceEditClicked;
+    scope.showPlaceholder = showPlaceholder;
     scope.onDeleteClicked = onDeleteClicked;
+    scope.onDrag = onDrag;
     scope.onStart = onStart;
     scope.onStop = onStop;
 
@@ -81,28 +89,49 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     scope.$watch('model.label', triggerResize);
 
     scope.$on('activate', onChangeActive);
+    scope.$on('placed', onPlaced);
+    scope.$on('unplaced', onUnplaced);
+
 
     updateClasses();
 
     //------------------------------------------------
 
     function onChangeActive(event, id) {
-      if(!scope.miniWiggiScopeExtension){
+      if (!scope.miniWiggiScopeExtension) {
         throw "Expected miniWiggiScopeExtension to be available";
       }
       scope.active = id === attrs.choiceId;
       updateClasses();
     }
 
+    function onPlaced(event, id){
+      if(id === attrs.choiceId && !isCategorized()) {
+        scope.placed = true;
+        updateClasses();
+      }
+    }
+
+    function onUnplaced(event, id){
+      if(id === attrs.choiceId) {
+        scope.placed = false;
+        updateClasses();
+      }
+    }
+
+    function onChangeMoveOnDrag(){
+      scope.notifyMoveOnDragClicked({choice: scope.model});
+    }
+
     function shouldChoiceRevert(dropTarget) {
-      if(choiceDroppedOnCategory(dropTarget)) {
+      if (choiceDroppedOnCategory(dropTarget)) {
         if (scope.model.moveOnDrag) {
           return false;
         } else {
           setRevertDuration(0);
           return true;
         }
-      } else if(choiceHasBeenDraggedFromCategory()) {
+      } else if (choiceHasBeenDraggedFromCategory()) {
         setRevertDuration(0);
         return true;
       } else {
@@ -115,7 +144,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
         return dropTarget && dropTarget.is('.category');
       }
 
-      function choiceHasBeenDraggedFromCategory(){
+      function choiceHasBeenDraggedFromCategory() {
         return isCategorized();
       }
     }
@@ -133,12 +162,15 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
     function setDraggableOption(name, value) {
       try {
         $(elem).draggable('option', name, value);
-      }
-      catch(err){
+      } catch (err) {
         console.error("setDraggableOption", err, elem, attrs.id);
       }
     }
 
+
+    function onDrag(event, ui){
+      Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
+    }
 
     function onStart(event, ui) {
       log('onStart', scope.dragAndDropScope, attrs.choiceId, elem);
@@ -146,6 +178,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       scope.onDragStart({
         choiceId: attrs.choiceId
       });
+
     }
 
     function onStop(event, ui) {
@@ -156,19 +189,23 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       //small timeout to avoid activating
       //the wiggi when dragging a choice into
       //a category inside the config panel
-      $timeout(function(){
+      $timeout(function() {
         scope.isDragging = false;
       }, 200);
     }
 
     function onChoiceEditClicked(event) {
       event.stopPropagation();
-      if(!scope.canEdit() || scope.isDragging){
+      if (!scope.canEdit() || scope.isDragging) {
         return;
       }
       scope.notifyEditClicked({
         choiceId: attrs.choiceId
       });
+    }
+
+    function showPlaceholder(label) {
+      return _.isEmpty(label) && scope.editMode;
     }
 
     function onDeleteClicked() {
@@ -212,8 +249,11 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       if (scope.isDragEnabled()) {
         classes.push('draggable');
       }
-      if(scope.active){
+      if (scope.active) {
         classes.push('active');
+      }
+      if(scope.placed){
+        classes.push('placed');
       }
 
       scope.classes = classes;
@@ -246,10 +286,11 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       '        <i class="fa fa-trash-o"></i>',
       '      </li>',
       '    </ul>',
-      '    <div class="shell" ng-if="canEdit()" ng-show="active" ng-click="$event.stopPropagation()">',
+      '    <div class="shell" ng-if="canEdit()" cs-absolute-visible="active" ng-click="$event.stopPropagation()">',
       choiceEditorTemplate(),
       '    </div>',
-      '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
+      '    <div class="shell" cs-absolute-visible="!active" ng-click="onChoiceEditClicked($event)">',
+      '      <div ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</div>',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice" ng-hide="dragEnabled"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',
@@ -259,7 +300,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       '    </div>',
       '  </div>',
       '  <div class="delete-after-placing" ng-click="onDeleteAfterPlacingClicked()" ng-if="showTools">',
-      '    <checkbox ng-model="model.moveOnDrag" class="control-label">Remove after placing</checkbox>',
+      '    <checkbox ng-model="model.moveOnDrag" ng-change="onChangeMoveOnDrag()" class="control-label">Remove after placing</checkbox>',
       '  </div>',
       '</div>'
     ].join('');
@@ -268,14 +309,11 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout) {
       return [
         '<div class="editor" ',
         '   active="active"',
-        '   dialog-launcher="external" ',
         '   disable-auto-activation="true"',
         '   feature-overrides="overrideFeatures"',
         '   features="extraFeatures" ',
-        '   image-service="imageService()" ',
         '   mini-wiggi-wiz="" ',
         '   ng-model="model.label" ',
-        '   placeholder="Enter choice here"',
         '></div>'
       ].join('');
     }

@@ -25,7 +25,7 @@ should = require('should');
 component = {
   componentType: "corespring-function-entry",
   correctResponse: {
-    equation: "y=2x+4"
+    equation: "2x+4"
   },
   model: {
     config: {
@@ -52,26 +52,27 @@ describe('function entry server logic', function() {
 
   it('should respond with correct and score 1 if the answer is correct', function() {
     var expected, response;
-    response = server.createOutcome(_.cloneDeep(component), "y=2x+4", helper.settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "2x+4", helper.settings(true, true, true));
     expected = {
       correctness: "correct",
-      score: 1
+      score: 1,
+      feedback: "Correct!"
     };
     response.correctness.should.eql(expected.correctness);
     response.score.should.eql(expected.score);
+    response.feedback.should.eql(expected.feedback);
   });
 
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
     var expected, response;
-    response = server.createOutcome(_.cloneDeep(component), "y=3x+2", helper.settings(false, true, true));
+    response = server.createOutcome(_.cloneDeep(component), "3x+2", helper.settings(true, true, true));
     expected = {
       correctness: "incorrect",
-      score: 0
+      score: 0,
+      feedback: "Good try but the correct answer is y=2x+4"
     };
     response.correctness.should.eql(expected.correctness);
     response.score.should.eql(expected.score);
+    response.feedback.should.eql(expected.feedback);
   });
-
-
-
 });

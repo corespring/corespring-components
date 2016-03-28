@@ -7,8 +7,7 @@ link = function($sce, $timeout) {
 
     function layoutChoices(choices, order) {
       if (!order) {
-        var shuffled = _.shuffle(_.cloneDeep(choices));
-        return shuffled;
+        return shuffle(choices);
       }
       var ordered = _.map(order, function(v) {
         return _.find(choices, function(c) {
@@ -19,18 +18,40 @@ link = function($sce, $timeout) {
       return _.union(ordered, missing);
     }
 
-    function stashOrder(choices) {
-      return _.map(choices, function(c) {
-        return c.value;
-      });
-    }
-
     function clearFeedback(choices) {
       _(choices).each(function(c) {
         delete c.feedback;
         delete c.correct;
       });
     }
+
+    function shuffle(choices) {
+      function newIndex(item, array) {
+          var t = _.find(array, function(el) {
+              return el.value === item.value;
+          });
+          return t ? array.indexOf(t) : -1;
+      }
+
+      var shuffled = _.shuffle(_.cloneDeep(choices));
+      _.each(choices, function(choice, index) {
+          var temp;
+          var remain = !_.isUndefined(choice.shuffle) && choice.shuffle === false;
+          if (remain) {
+              temp = shuffled[newIndex(choice, shuffled)];
+              shuffled[newIndex(choice, shuffled)] = shuffled[index];
+              shuffled[index] = temp;
+          }
+      });
+
+      return shuffled;
+    }
+
+    var stashOrder = function(choices) {
+      return _.map(choices, function(c) {
+          return c.value;
+      });
+    };
 
     function setFeedback(choices, response) {
       _(choices).each(function(c) {
@@ -50,28 +71,39 @@ link = function($sce, $timeout) {
       });
     }
 
+    var updateUi = function() {
+
+      if (!scope.question || !scope.session) {
+          return;
+      }
+
+      var model = scope.question;
+      var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
+
+      var stash = scope.session.stash = scope.session.stash || {};
+
+      if (stash.shuffledOrder && shuffle) {
+        scope.choices = layoutChoices(_.cloneDeep(model.choices), stash.shuffledOrder);
+      } else if (shuffle) {
+        scope.choices = layoutChoices(_.cloneDeep(model.choices));
+        stash.shuffledOrder = stashOrder(scope.choices);
+        scope.$emit('saveStash', attrs.id, stash);
+      } else {
+        scope.choices = _.cloneDeep(scope.question.choices);
+      }
+    };
+
+
     scope.containerBridge = {
 
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
 
-        var stash = scope.session.stash = scope.session.stash || {};
-        var model = scope.question;
-
-        if (stash.shuffledOrder && model.config.shuffle === 'true') {
-          scope.choices = layoutChoices(model.choices, stash.shuffledOrder);
-        } else if (model.config.shuffle === 'true') {
-          scope.choices = layoutChoices(model.choices);
-          stash.shuffledOrder = stashOrder(scope.choices);
-          scope.$emit('saveStash', attrs.id, stash);
-        } else {
-          scope.choices = _.cloneDeep(scope.question.choices);
-        }
-
+        updateUi ();
         if (dataAndSession.session && dataAndSession.session.answers) {
           var selectedChoice = _.find(scope.choices, function(c) {
-            return c.value === dataAndSession.session.answers;
+              return c.value === dataAndSession.session.answers;
           });
 
           scope.select(selectedChoice);
@@ -84,9 +116,25 @@ link = function($sce, $timeout) {
         var answer = scope.selected ? scope.selected.value : null;
 
         return {
-          answers: answer,
-          stash: scope.session.stash
+          answers: answer
         };
+      },
+
+      setInstructorData: function(data) {
+        var selectedChoice = _.find(scope.choices, function(c) {
+          return _([data.correctResponse]).flatten().contains(c.value);
+        });
+        scope.select(selectedChoice);
+        scope.response = {correctness: 'correct'};
+        if (!_.isEmpty(data.rationales)) {
+          var rationaleHtml = _.map(scope.choices, function(c) {
+            var rationale = _.find(data.rationales, function(r) {
+                return r.choice === c.value;
+              }) || {};
+            return "<div class='rationale-row'><span class='rationale-bold'>" + c.label + "</span> - " + rationale.rationale + "</div>";
+          }).join("\n");
+          scope.instructorResponse = {correctness: 'instructor', feedback: rationaleHtml};
+        }
       },
 
       // sets the server's response
@@ -108,7 +156,18 @@ link = function($sce, $timeout) {
       reset: function() {
         scope.selected = undefined;
         scope.response = undefined;
+        scope.instructorResponse = undefined;
+
+        var model = scope.question;
+        var shuffle = model.config.shuffle === true || model.config.shuffle === "true";
+        if (shuffle) {
+          scope.choices = layoutChoices(model.choices);
+        }
         clearFeedback(scope.choices);
+      },
+
+      resetStash: function() {
+        scope.session.stash = {};
       },
 
       isAnswerEmpty: function() {
@@ -153,23 +212,26 @@ main = [
       link: link($sce, $timeout),
       template: [
         '<div class="view-inline-choice" ng-class="response.correctness">',
-        '  <div feedback-popover="response" viewport="#{{playerId}}">',
-        '    <div class="dropdown" dropdown>',
-        '      <span class="btn dropdown-toggle" dropdown-toggle ng-disabled="!editable"><span ng-hide="selected">Choose...</span>',
-        '        <span ng-switch="selected.labelType">',
-        '          <img ng-switch-when="image" ng-src="{{selected.imageName}}"></img>',
-        '          <span ng-switch-default ng-bind-html-unsafe="selected.label" style="display: inline-block"></span> <span class="caret"></span>',
-        '        </span>',
+        '  <span feedback-popover="response" viewport="#{{playerId}}">',
+        '    <span class="dropdown" dropdown>',
+        '      <span class="btn dropdown-toggle" ng-class="{initial: !selected}" dropdown-toggle ng-disabled="!editable">',
+        '        <div style="height: 0px; overflow: hidden">',
+        '          <li ng-repeat="choice in choices">',
+        '            <a  ng-bind-html-unsafe="choice.label"></a>',
+        '          </li>',
+        '        </div>',
+        '        <span class="selected-label" ng-bind-html-unsafe="selected.label" style="display: inline-block"></span>',
+        '        <div class="caret-holder"><span class="caret"></span></div>',
         '      </span>',
+        '      <i class="fa result-icon"></i>',
         '      <ul class="dropdown-menu">',
         '        <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
-        '          <a ng-click="select(choice)" ng-switch-when="image"><img class="choice-image" ng-src="{{choice.imageName}}"></img></a>',
-        '          <a ng-click="select(choice)" ng-switch-default ng-bind-html-unsafe="choice.label"></a>',
+        '          <a ng-click="select(choice)" ng-bind-html-unsafe="choice.label"></a>',
         '        </li>',
         '      </ul>',
-        '    </div>',
-        '    <span class="result-icon"></span>',
-        '  </div>',
+        '    </span>',
+        '  </span>',
+        '  <span ng-if="instructorResponse" feedback-popover="instructorResponse" class="rationale-icon"></span>',
         '</div>'
       ].join("\n")
     };

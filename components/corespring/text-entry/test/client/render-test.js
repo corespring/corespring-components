@@ -59,7 +59,7 @@ describe('corespring:text-entry:render', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
 
@@ -85,9 +85,62 @@ describe('corespring:text-entry:render', function() {
     });
   });
 
+  describe('instructor data', function() {
+    it('sets up popup with additional correct answer', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse');
+      container.elements['1'].setInstructorData({correctResponses: {values: ["apple", "pear"]}});
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        feedback: {
+          correctness: 'correct',
+          message: "Additional correct answers:<br/> <div class='cs-text-entry__response'>pear</div> <br/><br/>"
+        }
+      });
+    });
+    it('sets up popup with partially correct answers', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'],'setResponse');
+      container.elements['1'].setInstructorData({
+        correctResponses: {
+          values: ["apple"]
+        },
+        partialResponses: {values: ["pear"]}
+      });
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        feedback: {
+          correctness: 'correct',
+          message: "Partially correct answers:<br/> <div class='cs-text-entry__response'>pear</div> "
+        }
+      });
+    });
+  });
+
   it('should implement containerBridge',function(){
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when the answer is changed', function() {
+      scope.answer = "Ho";
+      rootScope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+
+  });
 
 });

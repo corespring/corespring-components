@@ -3,11 +3,6 @@
 var _ = require('lodash');
 var should = require('should');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('inplace ordering', function() {
 
   var itemJsonFilename = 'inplace.json';
@@ -29,20 +24,20 @@ describe('inplace ordering', function() {
   describe('correctness', function() {
     beforeEach(function() {
       browser
-        .url(RegressionHelper.getUrl('ordering', itemJsonFilename))
-        .waitFor('.view-ordering', regressionTestRunnerGlobals.defaultTimeout);
+        .url(browser.options.getUrl('ordering', itemJsonFilename))
+        .waitFor('.view-ordering');
     });
 
-    it('correct answer results in correct feedback', function(done) {
+    it('submitting without interaction results in warning feedback', function(done) {
       browser
         .submitItem()
-        .waitFor('.feedback.correct', regressionTestRunnerGlobals.defaultTimeout)
+        .waitFor('.feedback.warning')
         .call(done);
     });
 
     it('MathJax Renders', function(done) {
       browser
-        .waitFor('.choice')
+        .waitFor('.choice .MathJax_Preview')
         .getHTML(divContaining('Third'), function(err, html) {
           html.should.match(/MathJax_Preview/);
         })
@@ -53,6 +48,7 @@ describe('inplace ordering', function() {
       browser
         .submitItem()
         .resetItem()
+        .waitFor('.choice .MathJax_Preview')
         .getHTML(divContaining('Third'), function(err, html) {
           html.should.match(/MathJax_Preview/);
         })

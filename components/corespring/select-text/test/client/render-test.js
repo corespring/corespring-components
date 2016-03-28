@@ -12,7 +12,13 @@ describe('corespring:select-text:render', function() {
   var testModelTemplate = {
     data: {
       model: {
-        config: {}
+        choices: [],
+        config: {
+          availability: "all",
+          label: "",
+          selectionUnit: "custom",
+          passage: "<p><span class=\"cst\">As</span> <span class=\"cst\">became</span> <span class=\"cst\">a</span> <span class=\"cst\">real</span> <span class=\"cst\">ghost</span>.</p>"
+        }
       }
     },
     session: {
@@ -41,8 +47,8 @@ describe('corespring:select-text:render', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
-    expect(element).toNotBe(undefined);
+    expect(element).not.toBe(null);
+    expect(element).not.toBe(undefined);
   });
 
   describe('isAnswerEmpty', function() {
@@ -53,7 +59,7 @@ describe('corespring:select-text:render', function() {
     });
     it('should return false if answer is set initially', function() {
       testModel.session = {
-        answers: ["one"]
+        answers: [0]
       };
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
@@ -61,7 +67,7 @@ describe('corespring:select-text:render', function() {
     });
     it('should return false if answer is selected', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.selectedTokens = ["one"];
+      scope.userChoices = [4];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
@@ -70,5 +76,26 @@ describe('corespring:select-text:render', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
+  describe('answer change callback', function() {
+    var changeHandlerCalled = false;
+    beforeEach(function() {
+      changeHandlerCalled = false;
+      container.elements['1'].answerChangedHandler(function(c) {
+        changeHandlerCalled = true;
+      });
+      container.elements['1'].setDataAndSession(testModel);
+      scope.$digest();
+    });
+
+    it('does not get called initially', function() {
+      expect(changeHandlerCalled).toBe(false);
+    });
+
+    it('does get called when a token is selected', function() {
+      scope.userChoices = [2];
+      scope.$digest();
+      expect(changeHandlerCalled).toBe(true);
+    });
+  });
 
 });

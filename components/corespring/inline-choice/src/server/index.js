@@ -49,7 +49,11 @@ function getResponseLabel(question, uid){
 }
 
 function getRandomCorrectResponse(question) {
-  return getResponseLabel(question, _.sample(question.correctResponse));
+  return [
+    '<div class="correct-response-placeholder">',
+    getResponseLabel(question, _.sample(question.correctResponse)),
+    '</div>'
+  ].join('');
 }
 
 function getFirstCorrectResponse(question) {

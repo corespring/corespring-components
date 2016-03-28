@@ -22,6 +22,11 @@
   },
   "libraries": [
     {
+      "name": "choice-templates",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
       "name": "feedback-templates",
       "organization": "corespring"
     },
@@ -35,6 +40,10 @@
     },
     {
       "name": "server-shared",
+      "organization": "corespring"
+    },
+    {
+      "name": "navigator",
       "organization": "corespring"
     }
   ],

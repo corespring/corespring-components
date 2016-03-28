@@ -4,11 +4,6 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
 describe('feedback-block', function() {
 
   "use strict";
@@ -22,8 +17,11 @@ describe('feedback-block', function() {
 
   beforeEach(function() {
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
-      .url(RegressionHelper.getUrl('feedback-block', itemJsonFilename));
+      .url(browser.options.getUrl('feedback-block', itemJsonFilename))
+      .waitFor('[value="mc_1"]')
+      .waitFor('[value="mc_2"]')
+      .waitFor('[value="mc_3"]')
+      .waitFor('[value="mc_4"]');
   });
 
   function safeTrim(s){
@@ -35,6 +33,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_2"]')
       .submitItem()
+      .waitForText('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('Yes, this is correct');
       })
@@ -45,6 +44,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_3"]')
       .submitItem()
+      .waitForText('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct');
       })
@@ -54,6 +54,7 @@ describe('feedback-block', function() {
   it('does display wildcard feedback if no answer', function(done) {
     browser
       .submitItem()
+      .waitForText('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct. You did not choose an answer.');
       })

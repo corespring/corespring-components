@@ -1,46 +1,50 @@
+@import '../../../../../less/common';
+
 .line-interaction-view {
-  @warning-color: #B94A48;
-  @warning-color-border: #EED3D7;
-  @warning-color-background: #F2DEDE; 
+
   .jxgbox {
     position: relative;
-    overflow: hidden;
+    overflow: visible !important;
     background-color: #ffffff;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #356AA0;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
     -ms-touch-action: none;
   }
+
   .JXGtext {
     background-color: transparent;
     font-family: Arial, Helvetica, Geneva;
     padding: 0px;
     margin: 0px;
   }
+
   .JXGinfobox {
     border-style: none;
     border-width: 1px;
     border-color: black;
   }
+
   .JXGimage {
     opacity: 1.0;
   }
   .JXGimageHighlight {
     opacity: 0.6;
   }
+
   .feedback-holder {
+
     .fa-warning {
       font-size: 22px;
       line-height: 31px;
       color: @warning-color;
     }
+
     .feedback {
+
       &.warning {
+
         .panel-heading {
           display: none;
         }
+
         .panel-body {
           background-color: @warning-color-background;
           border-color: @warning-color-border;
@@ -48,98 +52,146 @@
           border-top-left-radius: 4px;
           border-top-right-radius: 4px;
         }
+
       }
+
     }
   }
+
   .solution-panel {
     visibility: hidden;
     height: 0;
+
+    .solution-graph {
+      position: relative;
+      margin: 50px auto 10px auto;
+    }
+
   }
+
   .solution-panel.panelVisible {
     visibility: visible;
     height: auto;
   }
 
-  .correct-answer {
-    margin-top: 5px;
-    float: right;
-  }
-
-  .additional-text {
-    p {
-      font-family: 'Ubuntu' !important;
-      font-style: normal;
-      font-size: 13px;
-      padding-bottom: 17px;
-    }
-  }
   .graph-container {
-    margin-top: 20px;
-    margin-right: auto;
-    margin-left: auto;
-  }
-  .graph-controls {
-    background-color: #cccccc;
-    border-radius: 4px;
-    padding: 5px;
+    margin: 50px auto 20px auto;
     position: relative;
   }
-  .scale-display {
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
-  }
-  .point-display-break {
-    margin-left: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-right: 8px;
-    border-color: #999999;
-  }
-  .action {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  .graph-interaction {
-    margin-top: 10px;
-    padding: 10px;
-    max-width: 600px;
-    &.warning {
-      .jxgbox {
-        border-color: @warning-color;
+
+  .graph-controls {
+    position: relative;
+
+    .points-input {
+      padding: 3px 0px;
+      border-bottom: 1px solid #ccc;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .point-input {
+        height: 25px;
+
+        .point-label {
+          display: inline-block;
+          min-width: 16px;
+          padding-right: 5px;
+        }
+
+        .point-b {
+          padding-left: 15px;
+        }
+
+        input {
+          height: 24px;
+          padding: 2px;
+          font-size: 14px;
+          color: #555555;
+          border: 1px solid #cccccc;
+          border-radius: 4px;
+
+          &:disabled {
+            background-color: #dddddd;
+          }
+        }
+
+      }
+
+      .delete-line-button {
+        font-size: 16px;
+        padding: 0px 5px;
+        color: #333333;
+        margin-top: -4px;
+
+        &:hover {
+          background-color: #dddddd;
+        }
+
       }
     }
   }
-}
-.line-interaction-view .point-display p,.line-interaction-view .point-display input {
-  display: inline;
+
+  .graph-interaction {
+    margin: 0px 20px 10px 20px;
+    padding: 10px;
+    max-width: 600px;
+
+    &.warning {
+      .jxgbox {
+        border-color: @warning-color-border;
+      }
+    }
+
+  }
 }
 
 .line-interaction-configuration {
 
-  h3{
-    margin: 0;
-    margin-bottom: 10px;
-    padding:0;
+  h3 {
+    margin: 0 0 10px 0;
+    padding: 0;
   }
-  .navigator-toggle-button-row {
-    display: none;
-  }
+
   .intro-text {
-    padding: 10px;
+    margin-bottom: 26px;
   }
-  .informative-label {
-    font-size: small;
-    font-style: italic;
-    margin-bottom: 10px;
+
+  .exhibit-row {
+    margin-top: 5px;
   }
-  .default-input {
-    max-width: 120px;
-  }
+
   .reset-defaults {
-    margin: 20px 0 20px 0;
+    margin: 0 0 20px 0;
     font-style: italic;
   }
+
+  .input-number-label {
+    margin-bottom: 0;
+    padding-top: 7px;
+  }
+
+  .inline-error-message {
+    display: inline-block;
+    position: absolute;
+    left: 115px;
+    top: 4px;
+    height: 26px;
+    color: white;
+    background-color: #B33A3A;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .delete-line {
+    font-size: 20px;
+  }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
 }

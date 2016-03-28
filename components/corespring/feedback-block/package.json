@@ -1,5 +1,10 @@
 {
   "libraries": [
+    {
+      "name": "multiple-choice",
+      "organization": "corespring",
+      "usage": "needed for regression test"
+    }
   ],
   "dependencies": {
     "client": {

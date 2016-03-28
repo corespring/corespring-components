@@ -12,9 +12,9 @@
     }
   ],
   "feedback": {
-    "correctFeedbackType": "default",
-    "partialFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "allowPartialScoring": true,
   "partialScoring": [],
@@ -59,7 +59,9 @@
       "backgroundImage": "map.png",
       "shuffle": true,
       "choiceAreaPosition": "top",
-      "showHotspots": true
+      "showHotspots": true,
+      "snapEnabled": false,
+      "snapSensitivity": 0.2
     }
   },
   "weight": 1,

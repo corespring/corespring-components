@@ -1,8 +1,18 @@
 
-.component-placeholder.corespring-text-entry {
+.corespring-text-entry {
+  .component-placeholder {
+    display: inline-block;
+    max-width: 200px;
+    margin-right: 10px;
+  }
+}
+
+.cs-text-entry__response {
+  border: 1px solid lightgrey;
+  border-radius: 4px;
+  padding: 3px;
+  margin-bottom: 3px;
   display: inline-block;
-  max-width: 200px;
-  margin-right: 10px;
 }
 
 .cs-text-entry {
@@ -103,9 +113,6 @@
   i.fa.partial:before {
     content: @partial-character;
   }
-  i.fa.warning:before {
-    content: @warning-character;
-  }
 }
 
 .cs-text-entry__text-input-holder.incorrect .popover,
@@ -173,7 +180,6 @@
 
     //Overwrite position:relative bc. that displaces the input field
     .ui-select-container {
-      width: 40%;
       display: inline-block;
       &.dropdown {
         position: inherit;
@@ -235,11 +241,12 @@
       box-shadow: none !important;
     }
 
-    .checkbox-input {
-      display: inline-block;
-      margin-left: 20px;
-    }
+  }
 
+  .ignore-row {
+    @vertical-margin: 10px;
+    margin-top: @vertical-margin;
+    margin-bottom: @vertical-margin;
   }
 
   .text-field-size-row {
@@ -254,11 +261,23 @@
 
   .align-row {
     margin-top: 20px;
+    margin-bottom: 40px;
 
     select {
       display: inline-block;
       width: auto;
       margin-left: 5px;
+    }
+  }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
+  .answer-options {
+    .checkbox-input {
+      display: inline-block;
+      margin-right: 20px;
     }
   }
 

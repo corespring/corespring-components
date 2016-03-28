@@ -37,6 +37,23 @@ var main = [
           };
         },
 
+        setInstructorData: function(data) {
+          scope.answer = data.correctResponses.values[0];
+
+          var hasMoreCorrectResponses = data.correctResponses.values.length > 1;
+          var hasPartialResponses = data.partialResponses && data.partialResponses.values.length > 0;
+
+          function wrapAnswer(c){
+            return " <div class='cs-text-entry__response'>" + c + "</div> ";
+          }
+
+          var message = (hasMoreCorrectResponses || hasPartialResponses) ? [
+            (hasMoreCorrectResponses) ? "Additional correct answers:<br/>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('') + "<br/><br/>" : "",
+            (hasPartialResponses) ? "Partially correct answers:<br/>" + _.map(data.partialResponses.values, wrapAnswer).join('') : ""
+          ].join("") : undefined;
+          this.setResponse({feedback: {correctness: 'correct', message: message}});
+        },
+
         // sets the server's response
         setResponse: function(response) {
           var inputElement = $(element).find('input');
@@ -48,7 +65,6 @@ var main = [
           scope.response = response;
           scope.feedback = response.feedback;
           scope.correctClass = response.feedback && response.correctness;
-
         },
 
         setMode: function(newMode) {},
@@ -83,20 +99,20 @@ var main = [
 
     function template() {
       return [
-        '<div class="cs-text-entry" ng-class="{popupFeedback: feedback}">',
+        '<div class="cs-text-entry" ng-class="{popupFeedback: feedback.message}">',
         '  <div class="cs-text-entry__text-input-holder" ',
-        '     ng-class="response.correctness" ',
+        '     ng-class="feedback.correctness" ',
         '     feedback-popover="response">',
         '    <input type="text" ',
         '       ng-model="answer" ',
         '       ng-readonly="!editable" ',
-        '       ng-class="response.correctness"',
+        '       ng-class="feedback.correctness"',
         '       class="input-sm form-control" ',
         '       size="{{question.answerBlankSize}}"',
         '       style="text-align: {{question.answerAlignment}}"/>',
         '    <i ng-show="feedback" ',
         '       class="fa result-icon" ',
-        '       ng-class="response.correctness" ',
+        '       ng-class="feedback.correctness" ',
         '       style="display: inline;"',
         '      ></i>',
         '  </div>',

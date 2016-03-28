@@ -36,7 +36,8 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
   return {
     scope: {
       model: '=',
-      allowPartialScoring: '='
+      allowPartialScoring: '=',
+      headerText: "@"
     },
     restrict: 'E',
     replace: true,
@@ -152,10 +153,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
   function template() {
     return [
         '<div class="corespring-partial-scoring">',
-        '  <div class="scoring-header-text">',
-        '   If there is more than one correct answer to this ',
-        '   question, you may allow partial credit based on the ',
-        '   number of correct answers submitted. This is optional.',
+        '  <div class="scoring-header-text" ng-bind-html-unsafe="headerText">',
         '  </div>',
         '  <div class="panel panel-default" ng-class="{disabled: !hasPartialScoringToConfigure()}">',
         '    <div class="panel-heading">',
@@ -176,7 +174,7 @@ function corespringMultiPartialScoringConfig($sce,LogFactory) {
         '            <li class="scoring-item" ng-repeat="scenario in section.partialScoring">',
         '              If',
         '              <input class="form-control" type="number" min="1" max="{{section.maxNumberOfScoringScenarios}}" ng-model="scenario.numberOfCorrect"/>',
-        '              of correct answers is selected, award',
+        '              of correct answers is/are selected, award',
         '              <input class="form-control" type="number" min="0" max="99" ng-model="scenario.scorePercentage"/>',
         '              % of full credit.',
         '              <i class="fa fa-trash-o remove-item" ng-show="section.canRemoveScoringScenario" ng-click="removeScoringScenario(section, $index)"></i>',

@@ -1,7 +1,7 @@
 var main = [
-  '$sce', '$log',
+  '$sce', '$log', 'CsUndoModel',
 
-  function($sce, $log) {
+  function($sce, $log, CsUndoModel) {
 
     return {
       scope: {},
@@ -27,50 +27,45 @@ var main = [
       var YES_LABEL = 'Yes';
       var YES_NO = 'YES_NO';
 
-      scope.stack = [];
       scope.editable = false;
       scope.isSeeAnswerOpen = false;
 
-      scope.containerBridge = {
-        setDataAndSession: setDataAndSession,
-        getSession: getSession,
-        setResponse: setResponse,
-        setMode: function(newMode) {},
-        reset: reset,
-        resetStash: function() {},
-        isAnswerEmpty: isAnswerEmpty,
-        editable: setEditable,
-        answerChangedHandler: function(callback) {
-          scope.$watch("matchModel.rows", function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              callback();
-            }
-          }, true);
-        }
-      };
+      scope.undoModel = new CsUndoModel();
+      scope.undoModel.setGetState(getState);
+      scope.undoModel.setRevertState(revertState);
 
       scope.classForChoice = classForChoice;
       scope.classForSolution = classForSolution;
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
       scope.onClickMatch = onClickMatch;
-      scope.startOver = startOver;
-      scope.undo = undo;
 
-      scope.$watch("matchModel", watchMatchModel, true);
+      scope.containerBridge = {
+        answerChangedHandler: saveAnswerChangedCallback,
+        setInstructorData: setInstructorData,
+        editable: setEditable,
+        getSession: getSession,
+        isAnswerEmpty: isAnswerEmpty,
+        reset: reset,
+        resetStash: function() {},
+        setDataAndSession: setDataAndSession,
+        setMode: function(newMode) {},
+        setResponse: setResponse
+      };
+
+      scope.$watch("matchModel.rows", onChangeMatchModelRows, true);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
       //-----------------------------------------------------------------
 
       function setDataAndSession(dataAndSession) {
-        console.log("corespring match:setDataAndSession", dataAndSession);
-        scope.editable = true;
         scope.session = dataAndSession.session;
         scope.data = dataAndSession.data;
         setConfig(dataAndSession.data.model);
         scope.matchModel = prepareModel(dataAndSession.data.model, scope.session);
         scope.saveMatchModel = _.cloneDeep(scope.matchModel);
+        scope.undoModel.init();
         renderMath();
       }
 
@@ -149,7 +144,6 @@ var main = [
       }
 
       function setResponse(response) {
-        console.log("corespring match: setResponse", response);
         scope.response = response;
 
         if (response.correctnessMatrix) {
@@ -157,13 +151,32 @@ var main = [
         }
       }
 
+      function setInstructorData(data) {
+        var cr = _.cloneDeep(data.correctResponse);
+        _.each(cr, function(r) {
+          r.matchSet = _.map(r.matchSet, function(m) {
+            return {
+              correctness: m ? 'correct' : '',
+              value: m
+            };
+          });
+        });
+        scope.containerBridge.setResponse({
+          correctness: "correct",
+          correctClass: "correct",
+          score: 1,
+          feedback: undefined,
+          correctnessMatrix: cr
+        });
+      }
+
       function reset() {
         scope.editable = true;
-        scope.stack = [];
         scope.session = {};
         scope.isSeeAnswerOpen = false;
         delete scope.response;
         scope.matchModel = _.cloneDeep(scope.saveMatchModel);
+        scope.undoModel.init();
       }
 
       function setCorrectnessOnAnswers(correctnessRows) {
@@ -205,12 +218,27 @@ var main = [
             }
           }
 
-          _.forEach(columns, function(col, index){
+          _.forEach(columns, function(col, index) {
             col.cssClass = index === 0 ? 'question-header' : 'answer-header';
-            col.labelHtml = removeUnexpectedTags(col.labelHtml);
+            var labelWithoutTags = removeUnexpectedTags(col.labelHtml);
+            col.labelHtml = isDefaultLabel(labelWithoutTags) ? '' : labelWithoutTags;
           });
 
           return columns;
+        }
+
+        function isDefaultLabel(s){
+          switch(s){
+            case "Custom header":
+            case "Column 1":
+            case "Column 2":
+            case "Column 3":
+            case "Column 4":
+            case "Column 5":
+              return true;
+            default:
+              return false;
+          }
         }
 
         function prepareRows() {
@@ -246,19 +274,33 @@ var main = [
         }
       }
 
-      function removeUnexpectedTags(s){
+      function saveAnswerChangedCallback(callback) {
+        scope.answerChangedCallback = callback;
+      }
+
+      function onChangeMatchModelRows(newValue, oldValue) {
+        if (_.isFunction(scope.answerChangedCallback)) {
+          if (!_.isEqual(newValue, oldValue)) {
+            scope.answerChangedCallback();
+          }
+        }
+        scope.undoModel.remember();
+      }
+
+      function removeUnexpectedTags(s) {
         var node = $('<div>');
         node.html(s);
 
-        node.find('*').css('width', '');
-        node.find('*').css('min-width', '');
-        node.find('*').css('height', '');
-        node.find('*').css('min-height', '');
+        var sel = ":not(img)";
+        node.find(sel).css('width', '');
+        node.find(sel).css('min-width', '');
+        node.find(sel).css('height', '');
+        node.find(sel).css('min-height', '');
 
-        node.find('*').removeAttr('width');
-        node.find('*').removeAttr('min-width');
-        node.find('*').removeAttr('height');
-        node.find('*').removeAttr('min-height');
+        node.find(sel).removeAttr('width');
+        node.find(sel).removeAttr('min-width');
+        node.find(sel).removeAttr('height');
+        node.find(sel).removeAttr('min-height');
 
         var out = node.html();
         $log.debug(["removeUnexpectedTags", s, out].join('\n'));
@@ -267,9 +309,9 @@ var main = [
 
       function classForChoice(row, index) {
         var classes = [getInputTypeClass(scope.inputType)];
-        if(scope.editable){
+        if (scope.editable) {
           classes.push('input');
-          if(row.matchSet[index].value){
+          if (row.matchSet[index].value) {
             classes.push('selected');
           }
         } else {
@@ -319,7 +361,6 @@ var main = [
       }
 
       function onClickMatch(row, index) {
-        console.log("onClickMatch", row, index);
         if (scope.editable) {
           if (isRadioButton(scope.inputType)) {
             _.forEach(row.matchSet, function(match, i) {
@@ -337,32 +378,19 @@ var main = [
         return node.text();
       }
 
-      function watchMatchModel(newValue, oldValue) {
-        //console.log("watchMatchModel", newValue);
-        if (newValue && !_.isEqual(newValue.rows, _.last(scope.stack))) {
-          scope.stack.push(_.cloneDeep(newValue.rows));
+      function getState() {
+        if (scope.matchModel && scope.matchModel.rows) {
+          return scope.matchModel.rows;
         }
       }
 
-      function startOver() {
-        scope.stack = [_.first(scope.stack)];
-        revertToState(_.first(scope.stack));
-      }
-
-      function undo() {
-        if (scope.stack.length < 2) {
-          return;
-        }
-        scope.stack.pop();
-        revertToState(_.last(scope.stack));
-      }
-
-      function revertToState(state) {
+      function revertState(state) {
         _.forEach(scope.matchModel.rows, function(row, i) {
           _.forEach(row.matchSet, function(match, j) {
             match.value = state[i].matchSet[j].value;
           });
         });
+        renderMath();
       }
 
       function renderMath() {
@@ -377,7 +405,6 @@ var main = [
       }
 
       function setEditable(e) {
-        console.log("setEditable", e, scope.editable);
         scope.editable = e;
       }
 
@@ -410,8 +437,8 @@ var main = [
       function undoStartOver() {
         return [
           '<div ng-show="editable" class="undo-start-over pull-right">',
-          '  <button type="button" class="btn btn-default" ng-click="undo()" ng-disabled="stack.length < 2"><i class="fa fa-undo"></i> Undo</button>',
-          '  <button type="button" class="btn btn-default" ng-click="startOver()" ng-disabled="stack.length < 2">Start over</button>',
+          '  <span cs-undo-button-with-model></span>',
+          '  <span cs-start-over-button-with-model></span>',
           '</div>',
           '<div class="clearfix"></div>'
         ].join('');

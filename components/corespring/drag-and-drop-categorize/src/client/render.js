@@ -19,6 +19,9 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       };
 
       _.extend(scope.containerBridge, {
+        setInstructorData: function(data){
+          $log.warn("setInstructorData not implemented");
+        },
         setDataAndSession: function(dataAndSession) {
           $log.debug("DnD setting session: ", dataAndSession);
 
@@ -48,6 +51,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
           }
 
+          scope.initUndo();
         },
         getSession: function() {
           var answer = {};
@@ -87,9 +91,9 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
 
     var tmpl = [
       '<div class="view-drag-and-drop-categorize view-drag-and-drop" drag-and-drop-controller>',
-      '  <div ng-show="!correctResponse" class="pull-right">',
-      '    <button type="button" class="btn btn-default" ng-click="undo()"><i class="fa fa-undo"></i>  Undo</button>',
-      '    <button type="button" class="btn btn-default" ng-click="startOver()">Start over</button>',
+      '  <div ng-hide="response" class="pull-right">',
+      '    <span cs-undo-button-with-model></span>',
+      '    <span cs-start-over-button-with-model></span>',
       '  </div> <div class="clearfix" />',
       '  <div ng-if="model.config.answerAreaPosition != \'above\'">', DragAndDropTemplates.choiceArea(), '</div>',
       answerArea,

@@ -3,34 +3,40 @@
   "title": "Select Evidence in Text",
   "titleGroup": "English Language Arts",
   "organization": "corespring",
-  "released": false,
+  "released": true,
   "libraries": [
     {
-      "name": "choice-templates",
+      "name": "feedback-config",
       "organization": "corespring",
       "scope": "editor"
     },
     {
-      "name": "image-service",
-      "organization": "corespring",
-      "scope": "editor"
+      "name": "feedback-templates",
+      "organization": "corespring"
     },
     {
       "name": "navigator",
       "organization": "corespring"
     },
     {
+      "name": "partial-scoring-config",
+      "organization": "corespring",
+      "scope": "editor"
+    },
+    {
       "name" : "server-shared",
       "organization" : "corespring"
+    },
+    {
+      "name": "widgets",
+      "organization": "corespring"
     }
   ],
   "dependencies": {
     "client": {
-      "corespring-radio": {
-        "bower_target": "git@github.com:corespring/radio.git",
-        "version": "0.0.6",
-        "file": "src/directive.js",
-        "angular-module": "corespring.input.radio"
+      "blast-text": {
+        "version": "2.0.0",
+        "file": "jquery.blast.js"
       }
     }
   }

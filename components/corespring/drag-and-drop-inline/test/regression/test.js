@@ -4,13 +4,7 @@ var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
-describe('drag and drop inline', function() {
+describe.only('drag and drop inline', function() {
 
   "use strict";
 
@@ -43,16 +37,18 @@ describe('drag and drop inline', function() {
 
   beforeEach(function() {
     browser
-      .timeouts("implicit", regressionTestRunnerGlobals.defaultTimeout)
-      .url(RegressionHelper.getUrl(componentName, itemJsonFilename))
+      .url(browser.options.getUrl(componentName, itemJsonFilename))
+      .waitFor(choice('c_1'))
+      .waitFor(choice('c_2'))
+      .waitFor(choice('c_3'))
+      .waitFor(choice('c_4'))
       .waitFor(landingPlace('aa_1'));
   });
 
-  it.only('correct answer results in correct feedback', function(done) {
+  it('correct answer results in correct feedback', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .pause(60000)
       .waitFor('.feedback.correct')
       .call(done);
   });
@@ -122,11 +118,11 @@ describe('drag and drop inline', function() {
   it('shows warning when no item is selected', function(done) {
     browser
       .submitItem()
-      .waitFor('.feedback.warning')
+      .waitFor('.empty-answer-area-warning')
+      .waitForText('.feedback.warning')
       .getText('.feedback.warning', function(err,res){
         expect(res).toEqual('You did not enter a response.');
       })
-      .waitFor('.empty-answer-area-warning')
       .call(done);
   });
 

@@ -85,8 +85,6 @@
   }
 
   .no-response {
-    border: 2px solid @warning-color;
-    border-radius: 5px;
     text-align: center;
     margin-bottom: 20px;
     width: 90%;
@@ -117,9 +115,9 @@
         .panel-body {
           border-radius: 4px;
           padding: 15px;
-          background-color: #f2dede;
-          border-color: #eed3d7;
-          color: #b94a48;
+          background-color: @warning-color-background;
+          border-color: @warning-color-border;
+          color: @warning-color;
         }
       }
     }
@@ -130,10 +128,14 @@
 
 .config-number-line {
 
-  margin-left: 17px;
+  .reset-defaults {
+    margin: 15px 0;
+  }
 
   .interactive-graph {
-    max-width: 530px;
+    width: 540px;
+    max-width: 540px;
+    margin: auto;
   }
 
   .tick-label-override-input-holder {
@@ -163,8 +165,9 @@
   }
 
   .centered-graph-holder {
-    width: 85%;
+    width: 540px;
     text-align: center;
+    margin: 0 auto;
 
     .centered-graph {
       display: inline-block;
@@ -183,6 +186,10 @@
     }
   }
 
+  .exhibit-panel {
+    margin-top: 20px;
+  }
+
   div.element-selector {
     .element-selector-template();
   }
@@ -191,16 +198,17 @@
     margin-bottom: 20px;
   }
 
-  .attributes-table {
-    margin: 0;
-    line-height: 40px;
-    input {
-      max-width: 70px;
-      display: inline-block;
-    }
+  .row {
+    margin: 10px -15px;
 
-    td {
-      border: none;
+    &.domain-row {
+      margin-bottom: 20px;
     }
   }
+
+  .form-control {
+    width: 70px;
+    display: inline-block;
+  }
+
 }

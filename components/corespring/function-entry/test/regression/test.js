@@ -4,12 +4,6 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-var RegressionHelper = (function() {
-  var RegressionHelperDef = require('./../../../../../helper-libs/regression-helper');
-  return new RegressionHelperDef(regressionTestRunnerGlobals.baseUrl);
-})();
-
-
 describe('evaluate expression', function() {
 
   "use strict";
@@ -33,8 +27,8 @@ describe('evaluate expression', function() {
 
   beforeEach(function() {
     browser
-      .url(RegressionHelper.getUrl('function-entry', itemJsonFilename))
-      .waitFor('.view-function-entry', regressionTestRunnerGlobals.defaultTimeout);
+      .url(browser.options.getUrl('function-entry', itemJsonFilename))
+      .waitFor('.view-function-entry');
   });
 
 

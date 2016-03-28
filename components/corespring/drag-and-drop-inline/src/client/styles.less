@@ -1,5 +1,5 @@
 
-@component-width: 600px;
+@component-width: 570px;
 @max-width-choice-content: 421px;
 @max-width-height-image: 200px;
 @line-height-answer-area: 250%;
@@ -32,6 +32,10 @@
       visibility: hidden;
     }
   }
+}
+
+.corespring-drag-and-drop-inline-config .modal-dialog {
+  width: 670px;
 }
 
 .drag-helper-csdndi {
@@ -228,6 +232,7 @@
     padding: 1em;
     border: 1px solid #cccccc;
     border-radius: 4px;
+    text-align: center;
 
     .choice {
       display: inline;
@@ -261,6 +266,12 @@
     }
   }
 
+  &.instructor {
+    .choice-content {
+      opacity: 0.4;
+    }
+  }
+
   .see-answer-panel {
     &.answer-holder {
       max-width: initial;
@@ -277,6 +288,11 @@
 }
 
 .config-csdndi {
+
+  .row {
+    margin-right: 0;
+    margin-left: 0;
+  }
 
   .rounded-inputs;
 
@@ -298,13 +314,14 @@
 
   .draggable-choice {
     position: relative;
-    display: block;
+    display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin: 5px 0 45px 0;
+    margin: 5px 30px 45px 0;
     min-height: 47px;
     padding: 1em;
     background: #efefef;
+    width: 45%;
 
     .blocker {
       position: absolute;
@@ -321,6 +338,13 @@
         position: absolute;
         width: 100%;
         height: 100%;
+
+        .placeholder {
+          display: inline-block;
+          padding: 13px;
+          font-weight: 700;
+          color: #7a7a7a;
+        }
       }
 
       .content {
@@ -377,12 +401,24 @@
 
   .choices-and-answers {
     margin-bottom: 30px;
+    margin-left: 0;
+
+    .legend {
+      font-size: 13px;
+    }
+
+    .remove-container {
+      padding: 0;
+    }
+
   }
 
   .answer-area-wiggi {
     .wiggi-wiz-editable {
       line-height: @line-height-answer-area;
+      min-height: 240px;
     }
+    margin-bottom: 15px;
   }
 
   .answer-area-inline-active {
@@ -414,11 +450,12 @@
       right: 5px;
       cursor: pointer;
       font-size: 1.25em;
+      color: #0099cc;
     }
 
     .sortable-choices {
       margin-bottom: 0;
-      border-bottom: 1px solid black;
+      border-bottom: 1px solid #0099cc;
       padding: 5px 10px;
       min-height: 20px;
 
@@ -474,5 +511,10 @@
   .checkbox-toggle {
     cursor: pointer;
   }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
 
 }

@@ -19,7 +19,6 @@
 
 .choice-corespring-dnd-categorize {
   display: inline-block;
-  -webkit-user-select: none;
 
   .delete-after-placing {
 
@@ -47,9 +46,9 @@
     min-height: 40px;
     padding: 3px 15px 3px 3px;
     position: relative;
-    text-align: center;
 
     .mini-wiggi-wiz {
+      text-align: center;
       border: none;
       box-shadow: none;
       margin-bottom: 0;
@@ -74,7 +73,6 @@
       position: absolute;
       right: 0;
       top: 0;
-      z-index: 10000;
 
       .edit-icon-button, .delete-icon-button {
         display: inline-block;
@@ -106,6 +104,10 @@
         top:0;
       }
     }
+  }
+
+  &.instructor-mode-disabled {
+    opacity: 0.4;
   }
 
   &.correct {
@@ -179,12 +181,16 @@
 
   }
 
+  &.placed {
+    visibility: hidden;
+  }
+
 }
 
 .render-corespring-dnd-categorize {
 
   .html-wrapper {
-    word-wrap: break-word;
+    text-align: center;
     img {
       max-width: 100%;
     }
@@ -230,6 +236,8 @@
       .remove-choice {
         display: none;
       }
+
+
     }
   }
 
@@ -274,7 +282,7 @@
         &.answer-expected {
           .border {
             .categorized.choices {
-              border-color: #af4442;
+              border-color: @warning-color-border;
             }
           }
         }
@@ -301,7 +309,6 @@
             position: absolute;
             right: 1px;
             top: 2px;
-            z-index: 10000;
 
             .edit-icon-button, .delete-icon-button {
               display: inline-block;
@@ -333,6 +340,18 @@
 }
 
 .config-corespring-dnd-categorize {
+
+  .interaction-corespring-dnd-categorize {
+    .row {
+      margin-left: -30px;
+
+      &.choices-label-row,
+      &.remove-all-row {
+        margin-left: -20px;
+      }
+    }
+
+  }
 
   .rounded-inputs();
 
@@ -380,20 +399,6 @@
     margin-bottom: 10px;
   }
 
-  .player-col {
-    width: 630px;
-    display: inline-block;
-    float: left;
-  }
-
-  .settings-col {
-    width: 220px;
-    padding-left: 20px;
-    padding-top: 58px;
-    display: inline-block;
-    float: left;
-  }
-
   .feedback-row {
     margin-top: 20px;
   }
@@ -419,7 +424,54 @@
     }
   }
 
+  .add-category-row {
+    @vertical-margin: 20px;
+    margin-top: @vertical-margin;
+    margin-bottom: @vertical-margin;
+  }
 
+  .add-choice-row {
+    margin: 10px 0;
+  }
+
+  .categories-per-row,
+  .choices-per-row {
+    @vertical-margin: 15px;
+    margin-top: @vertical-margin;
+    margin-bottom: @vertical-margin;
+
+    select {
+      margin-left: -20px;
+      width: 60px;
+    }
+
+  }
+
+  h3 {
+    margin-top: 20px;
+  }
+
+  .choice-corespring-dnd-categorize {
+    .placeholder {
+      display: inline-block;
+      padding: 6px;
+      font-weight: bold;
+      color: #7a7a7a;
+    }
+  }
+
+  .category {
+    .placeholder {
+      font-style: italic;
+      color: #7a7a7a;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
 
 }
 

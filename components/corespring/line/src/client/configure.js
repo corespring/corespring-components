@@ -1,97 +1,47 @@
-var main = ['ComponentDefaultData',
-  function(ComponentDefaultData) {
-
-    this.inline = function(type, value, body, attrs) {
-      return ['<label class="' + type + '-inline">',
-          '  <input type="' + type + '" value="' + value + '" ' + attrs + '>' + body,
-        '</label>'].join('\n');
-    };
-
-    var labelWithInput = function(options) {
-      options.size = options.size || 3;
-      options.labelSize = options.labelSize || options.size;
-      options.inputType = options.inputType || "text";
-      options.inputClass = options.inputClass || "default-input";
-      return [
-          '<label class="col-sm-' + options.labelSize + '">' + options.label + '</label>',
-          '<div class="col-sm-' + options.size + ' ' + options.inputClass + '">',
-          '  <input ',
-          '    type="' + options.inputType + '" ',
-          '    class="form-control" ',
-          '    ng-model="fullModel.model.config.' + options.modelKey + '" ',
-          options.placeholder ? ('placeholder="' + options.placeholder + '"') : '',
-          '  />',
-        '</div>'
-      ].join('');
-    };
-
-    var graphAttributes = [
-      '<div class="row">',
-      '  <div class="body col-md-8">',
-      '  <h3>Graph Attributes</h3>',
-      '     <p>Use this section to setup the graph area.</p>',
-      '     <form class="form-horizontal" role="form">',
-      '       <div class="config-form-row">',
-      labelWithInput({ label: 'Width:', modelKey: 'graphWidth', placeholder: '{{defaults.graphWidth}}' }),
-      labelWithInput({ label: 'Height:', modelKey: 'graphHeight', placeholder: '{{defaults.graphHeight}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({ label: 'Domain:', modelKey: 'domain', inputType: "number", placeholder: '{{defaults.domain}}' }),
-      labelWithInput({ label: 'Domain Label:', modelKey: 'domainLabel', placeholder: '{{defaults.domainLabel}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({ label: 'Range:', modelKey: 'range', inputType: "number", placeholder: '{{defaults.range}}' }),
-      labelWithInput({ label: 'Range Label:', modelKey: 'rangeLabel', placeholder: "y" }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      labelWithInput({ label: 'Tick Label Frequency:', modelKey: 'tickLabelFrequency', inputType: "number",
-        placeholder: '{{defaults.tickLabelFrequency}}' }),
-      labelWithInput({ label: 'Significant Figures:', modelKey: 'sigfigs', inputType: "number",
-        placeholder: '{{defaults.sigfigs}}' }),
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-6"><br />',
-      '           <checkbox ng-model="fullModel.model.config.showCoordinates">Show Point Coordinates</checkbox>',
-      '           <checkbox ng-model="fullModel.model.config.showInputs">Show Point Inputs on the Graph</checkbox>',
-      '         </div>',
-      '       </div>',
-      '     </form>',
-      '  </div>',
-      '</div>'
-    ].join('\n');
+var main = [
+  'ComponentDefaultData',
+  'CanvasTemplates',
+  function(ComponentDefaultData, CanvasTemplates) {
 
     var linesBlock = [
       '<div class="row">',
       '  <div class="body col-md-12">',
-      '  <h3>Lines</h3>',
-       '  <div class="col-md-12 intro-text"><strong>Line equations must be in y=mx+b form. Only whole number coordinates can be plotted.</strong></div>',
-      '     <form class="form-horizontal" role="form">',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-8">',
-      '           <checkbox ng-model="fullModel.model.config.exhibitOnly">',
-      '             Make this graph an exhibit only',
-      '           </checkbox>',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row" ng-hide="fullModel.model.config.exhibitOnly">',
-      '         <div class="col-sm-2">',
-      '           <label class="control-label">Correct Answer</label>',
-      '         </div>',
-      '         <div class="col-sm-5 input-group">',
-      '             <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter correct answer in mx+b form." ng-model="correctResponse" />',
-      '         </div>',
-      '       </div>',
-      '       <div class="config-form-row">',
-      '         <div class="col-sm-2">',
-      '           <label class="control-label">Initial Line (optional)</label>',
-      '         </div>',
-      '         <div class="col-sm-5 input-group">',
-      '           <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="Enter initial line equation in mx+b form." ng-model="initialCurve" />',
-      '         </div>',
-      '       </div>',
-      '     </form>',
+      '    <h3>Lines</h3>',
       '  </div>',
-      '</div><hr />'].join('\n');
+      '</div>',
+      '<div class="row">',
+      '  <div class="col-md-12 intro-text">',
+      '    Line equations must be in y=mx+b form. Only whole number coordinates can be plotted.',
+      '  </div>',
+      '</div>',
+      '<div class="row equation-labels">',
+      '  <div class="col-md-6" ng-hide="fullModel.model.config.exhibitOnly"><strong>Correct Line</strong></div>',
+      '  <div class="col-md-6"><strong>Initial View</strong></div>',
+      '</div>',
+      '<form class="form-horizontal" role="form">',
+      '  <div class="config-form-row row">',
+      '    <div class="col-md-6" ng-hide="fullModel.model.config.exhibitOnly">',
+      '      <div class="input-group">',
+      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="correctResponse" />',
+      '      </div>',
+      '    </div>',
+      '    <div class="col-md-6">',
+      '      <div class="input-group">',
+      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="initialCurve" />',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '  <div class="config-form-row exhibit-row row">',
+      '    <div class="col-sm-6">',
+      '      <checkbox ng-model="fullModel.model.config.exhibitOnly"',
+      '          tooltip="An exhibit graph is view only and can not be manipulated by the student."',
+      '          tooltip-append-to-body="true"',
+      '          tooltip-placement="bottom">',
+      '        Make this graph an exhibit only',
+      '      </checkbox>',
+      '    </div>',
+      '  </div>',
+      '</form>'].join('\n');
 
     var feedback = [
       '<div ng-hide="fullModel.model.config.exhibitOnly" class="input-holder">',
@@ -119,13 +69,17 @@ var main = ['ComponentDefaultData',
       replace: true,
       link: function(scope, element, attrs) {
         scope.defaults = ComponentDefaultData.getDefaultData('corespring-line', 'model.config');
+        CanvasTemplates.extendScope(scope, 'corespring-line');
+
         scope.defaultCorrectFeedback = "Correct!";
         scope.defaultIncorrectFeedback = "Good try but that is not the correct answer.";
+
         scope.containerBridge = {
           setModel: function(model) {
             scope.fullModel = model;
             model.model = model.model || {};
             model.model.config = model.model.config || {};
+            scope.checkUndefinedProperties(model.model.config);
 
             scope.correctResponse = (scope.fullModel) ? scope.removeYEqualsPrefix(scope.fullModel.correctResponse) : undefined;
             scope.initialCurve = (scope.fullModel && scope.fullModel.model && scope.fullModel.model.config && scope.fullModel.model.config.initialCurve) ?
@@ -170,20 +124,8 @@ var main = ['ComponentDefaultData',
         });
 
         scope.resetDefaults = function() {
-          var defaults = scope.defaults;
-
-          function reset(property, value) {
-            scope.fullModel.model.config[property] = value;
-          }
-
-          reset('graphWidth', defaults.graphWidth);
-          reset('graphHeight', defaults.graphHeight);
-          reset('domain', defaults.domain);
-          reset('domainLabel', defaults.domainLabel);
-          reset('range', defaults.range);
-          reset('rangeLabel', defaults.rangeLabel);
-          reset('tickLabelFrequency', defaults.tickLabelFrequency);
-          reset('sigfigs', defaults.sigfigs);
+          scope.resetCanvasGraphAttributes();
+          scope.resetCanvasDisplayAttributes();
         };
 
         scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
@@ -196,15 +138,18 @@ var main = ['ComponentDefaultData',
         '    The student will draw the line by clicking on two points on the graph.',
         '  </p>',
            linesBlock,
-           graphAttributes,
+        '  <hr />',
+           CanvasTemplates.configGraph(),
+        '    <hr />',
+           CanvasTemplates.configDisplay(true),
         '  <div class="row">',
         '   <div class="col-md-8">',
         '     <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
         '   </div>',
         '  </div>',
-        '<div class="row"><div class="col-md-8">',
+        '  <div class="row"><div class="col-xs-12">',
            feedback,
-        '</div></div>',
+        '  </div></div>',
         '</div>'
       ].join('\n')
     };

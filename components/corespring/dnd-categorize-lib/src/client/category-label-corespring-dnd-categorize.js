@@ -6,6 +6,10 @@ exports.directive = {
     CategoryLabelCorespringDndCategorize]
 };
 
+/**
+ * The labels for the category containers need to be independent
+ * from the category containers bc. of the layout
+ */
 function CategoryLabelCorespringDndCategorize(
   $injector
 ) {
@@ -68,8 +72,10 @@ function CategoryLabelCorespringDndCategorize(
       });
     }
 
-    function onLabelEditClicked(event) {
-      event.stopPropagation();
+    function onLabelEditClicked($event) {
+      if($event) {
+        $event.stopPropagation();
+      }
       scope.notifyEditClicked({
         categoryId: getCategoryId()
       });
@@ -83,34 +89,33 @@ function CategoryLabelCorespringDndCategorize(
         '    <div ng-click="onLabelEditClicked($event)" ng-if="isEditMode">',
         '      <div class="editor" ',
         '         active="active"',
-        '         dialog-launcher="external" ',
         '         disable-auto-activation="true"  ',
         '         feature-overrides="overrideFeatures"',
         '         features="extraFeatures" ',
-        '         image-service="imageService()" ',
         '         mini-wiggi-wiz="" ',
         '         ng-model="category.model.label" ',
-        '         placeholder="Enter a label"',
+        '         placeholder="Enter a label or leave blank"',
         '      ></div>',
         '    </div>',
         '    <div class="html-wrapper" ng-bind-html-unsafe="category.model.label" ng-if="!isEditMode"></div>',
-        '    <ul class="edit-controls" ng-if="showTools">',
-               deleteTool(),
+        '    <ul class="edit-controls" ng-if="showTools" ng-hide="active">',
+        '      <li class="edit-icon-button"' +
+        '          ng-click="onLabelEditClicked($event)"',
+        '          tooltip="edit"',
+        '          tooltip-append-to-body="true"',
+        '          tooltip-placement="bottom">',
+        '        <i class="fa fa-pencil"></i>',
+        '      </li>',
+        '      <li class="delete-icon-button" ',
+        '          ng-click="onDeleteClicked()" ',
+        '          tooltip="delete" ',
+        '          tooltip-append-to-body="true" ',
+        '          tooltip-placement="bottom">',
+        '        <i class="fa fa-trash-o"></i>',
+        '      </li>',
         '    </ul>',
         '  </div>',
         '</div>'
-      ].join('');
-  }
-
-  function deleteTool() {
-    return [
-        '<li class="delete-icon-button" ',
-        '    ng-click="onDeleteClicked()" ' +
-        '    tooltip="delete" ',
-        '    tooltip-append-to-body="true" ',
-        '    tooltip-placement="bottom">',
-        '  <i class="fa fa-trash-o"></i>',
-        '</li>'
       ].join('');
   }
 

@@ -1,10 +1,8 @@
 var main = [
   'ChoiceTemplates',
   'MathJaxService',
-  'ComponentImageService',
   function(ChoiceTemplates,
-    MathJaxService,
-    ComponentImageService) {
+    MathJaxService) {
 
     var displayPanel = [
       '<form class="form-horizontal" role="form">',
@@ -118,8 +116,8 @@ var main = [
       '            ng-click="removeChoice(choice)"></i>',
       '      </div>',
       '      <div class="col-md-7 col-xs-6">',
-      '        <div mini-wiggi-wiz="" dialog-launcher="external" ng-model="choice.label" placeholder="Enter a choice"',
-      '            image-service="imageService()" features="extraFeatures" feature-overrides="overrideFeatures"',
+      '        <div mini-wiggi-wiz="" ng-model="choice.label" placeholder="Enter a choice"',
+      '            features="extraFeatures" feature-overrides="overrideFeatures"',
       '            parent-selector=".modal-body">',
       '          <edit-pane-toolbar alignment="bottom">',
       '            <div class="btn-group pull-right">',
@@ -204,9 +202,6 @@ var main = [
         '</div>'].join('\n'),
       controller: ['$scope',
         function($scope) {
-          $scope.imageService = function() {
-            return ComponentImageService;
-          };
         }
       ],
       replace: true,

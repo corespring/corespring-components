@@ -123,7 +123,6 @@ function CompactLayout(initialConfig, layoutRunner) {
     config = _.assign({
       paddingBottom: 0
     }, config, newConfig);
-    console.log("updateConfig", config.cellWidth, config.container.width());
   }
 
   function startRunner() {

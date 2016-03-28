@@ -64,13 +64,16 @@ describe('corespring:match:configure', function() {
       model: {
         columns: [
           {
-            labelHtml: "Custom header"
+            labelHtml: "Custom header",
+            cssClass: "question-header header1"
               },
           {
-            labelHtml: "Column 1"
+            labelHtml: "Column 1",
+            cssClass: "answer-header header2"
               },
           {
-            labelHtml: "Column 2"
+            labelHtml: "Column 2",
+            cssClass: "answer-header header3"
               }
             ],
         rows: [
@@ -118,14 +121,12 @@ describe('corespring:match:configure', function() {
     }
   };
 
-  function MockImageUtils() {}
 
   function MockWiggiMathJaxFeatureDef() {}
 
   beforeEach(function() {
     module(function($provide) {
       $provide.value('ServerLogic', MockServerLogic);
-      $provide.value('ImageUtils', MockImageUtils);
       $provide.value('WiggiMathJaxFeatureDef', MockWiggiMathJaxFeatureDef);
       $provide.value('WiggiLinkFeatureDef', function() {});
       $provide.value('LogFactory', {
@@ -162,7 +163,7 @@ describe('corespring:match:configure', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   it('component is being registered by the container', function() {
@@ -254,10 +255,16 @@ describe('corespring:match:configure', function() {
   });
 
   describe('onClickEdit', function() {
-    it("activates the editor with the given id", function() {
-      scope.onClickEdit(fakeEvent(), 4);
-      expect(scope.active[4]).toBeTruthy();
-    });
+      beforeEach(function() {
+        var testModel = createTestModel();
+        container.elements['1'].setModel(testModel);
+      });
+
+      it("activates the editor with the given id", function() {
+        scope.onClickEdit(fakeEvent(), 1, scope.matchModel.columns[0]);
+        expect(scope.active[1]).toBeTruthy();
+        expect(scope.matchModel.columns[0]).toBeDefined();
+     });
   });
 
   describe('deactivate', function() {
@@ -447,6 +454,20 @@ describe('corespring:match:configure', function() {
     it('updates numberOfCorrectResponses', function() {
       expect(scope.numberOfCorrectResponses).toEqual(4);
     });
+
+    describe('with no partialScoring', function() {
+      beforeEach(function() {
+        var testModel = createTestModel();
+        delete testModel.partialScoring;
+        container.elements[1].setModel(testModel);
+      });
+
+      it('sets one empty partialScoring entry', function() {
+        expect(scope.fullModel.partialScoring.length).toEqual(1);
+      });
+    });
+
+
   });
 
   describe('config', function() {
@@ -570,6 +591,43 @@ describe('corespring:match:configure', function() {
       expect(scope.matchModel.columns.length).toEqual(3);
     });
 
+  });
+
+  describe('sumCorrectAnswers', function() {
+
+    function setCorrectResponse(correctResponse) {
+      var model = createTestModel();
+      model.correctResponse = correctResponse;
+      scope.fullModel = model;
+    }
+
+    it('does not count rows with no correct answers', function() {
+      setCorrectResponse([
+        {
+          "id" : "row1",
+          "matchSet" : [false, false, false]
+        }
+      ]);
+      expect(scope.sumCorrectAnswers()).toEqual(0);
+    });
+
+    it('counts rows with correct answers in different positions', function() {
+      setCorrectResponse([
+        {
+          "id": "row1",
+          "matchSet" : [false, true, false]
+        },
+        {
+          "id" : "row2",
+          "matchSet" : [true, false, false]
+        },
+        {
+          "id" : "row3",
+          "matchSet" : [false, false, true]
+        }
+      ]);
+      expect(scope.sumCorrectAnswers()).toEqual(3);
+    });
   });
 
 });

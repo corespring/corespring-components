@@ -17,17 +17,24 @@
     }
 
     &.popover-warning .popover-title {
-      background-color: @warning-color;
-      color: #ffffff;
+      background-color: @warning-color-border;
+      color: @warning-color;
     }
 
     &.popover.popover-warning > .arrow:after {
-      border-bottom-color: @warning-color;
+      border-bottom-color: @warning-color-border;
     }
 
     &.popover-incorrect .popover-title {
       background-color: @incorrect-color;
       color: #ffffff;
+    }
+    &.popover-partial .popover-title {
+      background-color: @partial-color;
+      color: #ffffff;
+    }
+    &.popover.popover-partial > .arrow:after {
+      border-bottom-color: @partial-color;
     }
   }
 }
@@ -90,6 +97,47 @@
       font-size: 30px;
       margin-right: 2%;
     }
+  }
+}
+
+.btn-player {
+  width: 105px;
+  font-size: 9pt;
+  color: #939393;
+  border: none;
+  background-color: #FFF;
+  text-transform: lowercase;
+  .fa {
+    color: #1a9cff;
+    border: 1px solid #bce2ff;
+    background-color: #fff;
+    width:32px;
+    height:32px;
+    border-radius:50px;
+    text-align:center;
+    padding: 5px 0 0 0;
+    margin: 0 5px 0 0;
+    font-size: 14pt;
+    font-weight: bold;
+  }
+
+  .start-over-icon {
+    background: data-uri('../../public/player_startover_icon_active.png') no-repeat center transparent;
+  }
+}
+
+.btn-player.btn-undo {
+  width: 85px;
+}
+
+.btn-player.disabled {
+  .fa {
+    color: #e0dee0;
+    border-color: #e0dee0;
+  }
+
+  .start-over-icon {
+    background: data-uri('../../public/player_startover_icon_inactive.png') no-repeat center transparent;
   }
 }
 

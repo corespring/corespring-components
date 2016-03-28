@@ -5,22 +5,33 @@
   "minimumWidth": 500,
   "correctResponse": "",
   "feedback" :  {
-    "correctFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "model" : {
     "config": {
-      "graphWidth": "500",
-      "graphHeight": "500",
-      "domain": 10,
-      "range": 10,
-      "scale": 1,
-      "domainLabel": "x",
-      "rangeLabel": "y",
-      "tickLabelFrequency": 5,
+      "graphTitle": "",
+      "graphWidth": 500,
+      "graphHeight": 500,
+      "domainLabel": "",
+      "domainMin": -10,
+      "domainMax": 10,
+      "domainStepValue": 1,
+      "domainSnapValue": 1,
+      "domainLabelFrequency": 1,
+      "domainGraphPadding": 50,
+      "rangeLabel": "",
+      "rangeMin": -10,
+      "rangeMax": 10,
+      "rangeStepValue": 1,
+      "rangeSnapValue": 1,
+      "rangeLabelFrequency": 1,
+      "rangeGraphPadding": 50,
       "sigfigs": -1,
       "showCoordinates": true,
+      "showPointLabels": true,
       "showInputs": true,
+      "showAxisLabels": true,
       "showFeedback": true
     }
   }

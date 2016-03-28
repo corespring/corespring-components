@@ -17,8 +17,6 @@ describe('corespring:line:configure', function() {
 
   beforeEach(angular.mock.module('test-app'));
 
-  function MockImageUtils() {}
-
   function MockWiggiMathJaxFeatureDef() {}
 
   function MockComponentDefaultData(){
@@ -60,7 +58,7 @@ describe('corespring:line:configure', function() {
   }));
 
   it('constructs', function() {
-    expect(element).toNotBe(null);
+    expect(element).not.toBe(null);
   });
 
   describe('removeYEqualsPrefix', function() {

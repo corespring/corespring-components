@@ -1,18 +1,19 @@
 
 /** editor placeholder */
-.component-placeholder.corespring-function-entry {
-  display: inline-block;
-  max-width: 200px;
-  margin-right: 10px;
+.corespring-function-entry {
+  .component-placeholder {
+    display: inline-block;
+    max-width: 200px;
+    margin-right: 10px;
+  }
 }
-
 
 .view-function-entry {
   display: inline-block;
   margin: 0 8px 0 3px;
 
   &.popupFeedback {
-    .correct,.incorrect,.warning {
+    .correct, .incorrect, .warning {
       cursor: pointer;
     }
 
@@ -73,7 +74,6 @@
 
   .warning:after {
     color: @warning-color;
-    content: @warning-character;
   }
 
   .hidden-math {
@@ -91,6 +91,10 @@
 
 /* Config Panel */
 .cs-function-entry-cfg {
+
+  .intro-text {
+    margin-bottom: 20px;
+  }
 
   .description {
     margin-bottom: 10px;
@@ -126,7 +130,11 @@
   }
 
   .formatting-help.popoverOpen {
-    margin-bottom: 230px;
+    margin-bottom: 280px;
+  }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
   }
 
 }
