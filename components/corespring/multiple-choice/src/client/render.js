@@ -129,6 +129,9 @@ var main = [
       };
 
       scope.containerBridge = {
+        setPlayerSkin: function(playerSkin) {
+          console.log("[MC] Setting Skin", playerSkin);
+        },
 
         setDataAndSession: function(dataAndSession) {
           scope.question = dataAndSession.data.model;
