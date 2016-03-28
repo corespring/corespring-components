@@ -1,6 +1,7 @@
 {
-  "name": "ficon",
+  "name": "icon",
   "organization": "corespring",
   "purpose": "library",
-  "libraries": []
+  "libraries": [],
+  "released": true
 }

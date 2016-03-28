@@ -442,6 +442,7 @@ var main = [
       link: link,
       template: [
         '<div class="view-multiple-choice" ng-class="response.correctness">',
+        '  Icon: <icon key="correct"></icon>',
           '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
           '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
           '  <div ng-if="isTile()">' + tileTemplate + '</div>',
