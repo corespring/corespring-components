@@ -35,7 +35,7 @@ module.exports = (grunt) ->
     capabilities.platform = platform if platform
     capabilities.timeoutInSeconds = getTimeout() / 1000
     capabilities.defaultTimeout = getTimeout()
-    #capabilities.waitforTimeout = getTimeout()
+    capabilities.waitforTimeout = getTimeout()
     capabilities.name = grunt.option('sauceJob') || 'components-regression-test'
     capabilities.recordVideo = grunt.option('sauceRecordVideo') || false
     capabilities.recordScreenshots = grunt.option('sauceRecordScreenshots') || false
@@ -47,7 +47,7 @@ module.exports = (grunt) ->
       #baseUrl: baseUrl
       configFile: './wdio.conf.js'
       #defaultTimeout: getTimeout()
-      #desiredCapabilities: getDesiredCapabilities()
+      desiredCapabilities: getDesiredCapabilities()
       #grep: grunt.option('grep')
       # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
       #logLevel: grunt.option('webDriverLogLevel') || 'silent'
@@ -95,11 +95,11 @@ module.exports = (grunt) ->
             },
             {
               match: 'GRUNT_SAUCE_USER_STRING',
-              replacement: sauceUser
+              replacement: if runOnSauceLabs then sauceUser else ''
             },
             {
               match: 'GRUNT_SAUCE_KEY_STRING',
-              replacement: sauceKey
+              replacement: if runOnSauceLabs then sauceKey else ''
             },
             {
               match: 'GRUNT_SPECS_ARRAY_OF_STRING',
