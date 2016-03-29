@@ -4,7 +4,7 @@ var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe.only('drag and drop inline', function() {
+describe('drag and drop inline', function() {
 
   "use strict";
 
@@ -23,213 +23,187 @@ describe.only('drag and drop inline', function() {
     return ".selected-choice[data-choice-id='" + id + "']";
   }
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
+  browser.dragAndDropWithOffset = function(fromSelector, toSelector) {
+    this.moveToObject(fromSelector, 20, 4);
+    this.buttonDown(0);
+    this.pause(500);
+    this.moveToObject(toSelector, 20, 10);
+    this.pause(500);
+    this.buttonUp();
+    this.pause(500);
     return this;
   };
 
-  browser.dragAndDropWithOffset = function(fromSelector, toSelector){
-    return this.moveToObject(fromSelector, 20, 4)
-      .buttonDown(0)
-      .moveToObject(toSelector, 20, 10)
-      .buttonUp();
-  };
-
-  beforeEach(function() {
-    browser
-      .url(browser.options.getUrl(componentName, itemJsonFilename))
-      .waitFor(choice('c_1'))
-      .waitFor(choice('c_2'))
-      .waitFor(choice('c_3'))
-      .waitFor(choice('c_4'))
-      .waitFor(landingPlace('aa_1'));
+  beforeEach(function(done) {
+    browser.url(browser.getTestUrl(componentName, itemJsonFilename));
+    browser.waitForVisible(choice('c_1'));
+    browser.waitForVisible(choice('c_2'));
+    browser.waitForVisible(choice('c_3'));
+    browser.waitForVisible(choice('c_4'));
+    browser.waitForVisible(landingPlace('aa_1'));
+    browser.call(done);
   });
 
   it('correct answer results in correct feedback', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.feedback.correct')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.feedback.correct');
+    browser.call(done);
   });
 
   it('superfluous answer results in partial feedback', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.feedback.partial')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.feedback.partial');
+    browser.call(done);
   });
 
   it('incorrect answer results in incorrect feedback', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.feedback.incorrect')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.feedback.incorrect');
+    browser.call(done);
   });
 
   it('incorrect answer is marked as incorrect', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.selected-choice.incorrect')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.selected-choice.incorrect');
+    browser.call(done);
   });
 
   it('correct answer is marked as correct', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.selected-choice.correct')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.selected-choice.correct');
+    browser.call(done);
   });
 
   it('correct answer in wrong position is marked as incorrect', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.selected-choice.incorrect')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'));
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.selected-choice.incorrect');
+    browser.call(done);
   });
 
   it('superfluous answer is marked as incorrect', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.selected-choice.incorrect')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.selected-choice.incorrect');
+    browser.call(done);
   });
 
   it('selected choices are marked correctly', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.selected-choice.correct .fa-check-circle')
-      .waitFor('.selected-choice.incorrect .fa-times-circle')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.selected-choice.correct .fa-check-circle');
+    browser.waitForVisible('.selected-choice.incorrect .fa-times-circle');
+    browser.call(done);
   });
 
   it('shows warning when no item is selected', function(done) {
-    browser
-      .submitItem()
-      .waitFor('.empty-answer-area-warning')
-      .waitForText('.feedback.warning')
-      .getText('.feedback.warning', function(err,res){
-        expect(res).toEqual('You did not enter a response.');
-      })
-      .call(done);
+    browser.submitItem();
+    browser.waitForVisible('.empty-answer-area-warning');
+    browser.waitForText('.feedback.warning');
+    expect(browser.getText('.feedback.warning')).toBe('You did not enter a response.');
+    browser.call(done);
   });
 
   it("removes choice when moveOnDrag is true and choice has been placed", function(done){
-    browser
-      .isExisting(choice('c_4'), function(err,res){
-        expect(res).toBe(true, "Expected choice to exist before moving");
-      })
-      .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-      .isExisting(choice('c_4'), function(err,res){
-        expect(res).toBe(false, "expected choice to be removed");
-      })
-      .call(done);
+    var waitForNotVisible;
+
+    browser.waitForVisible(choice('c_4'));
+    browser.dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'));
+    browser.waitForVisible(choice('c_4'), 2000, waitForNotVisible=true);
+    browser.call(done);
   });
 
   describe('correct answer area', function(){
     it("is shown, if answer is incorrect", function(done){
-      browser
-        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-        .submitItem()
-        .waitFor('.see-solution')
-        .isVisible('.see-solution')
-        .call(done);
+      browser.dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'));
+      browser.submitItem();
+      browser.waitForVisible('.see-solution');
+      browser.call(done);
     });
 
     it("is hidden, if answer is correct", function(done){
-      browser
-        .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-        .submitItem()
-        .waitFor('.see-solution')
-        .isVisible('.see-solution', function(err,res){
-          expect(res).toBe(false);
-        })
-        .call(done);
+      var waitForNotVisible;
+
+      browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+      browser.submitItem();
+      browser.waitForVisible('.see-solution', 2000, waitForNotVisible = true);
+      browser.call(done);
     });
 
     it("renders correct answer if answer is incorrect", function(done){
-      browser
-        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-        .submitItem()
-        .waitFor('.see-solution')
-        .click('.see-solution .panel-heading')
-        .waitFor('.correct-answer-area-holder .answer-area-inline')
-        .waitFor(selectedChoice('c_2'), function(err){
-          expect(err).toBe(undefined, "Expected correct choice c_2 to exist, timeout: " + browser.options.waitforTimeout + " err:" + err);
-        })
-        .call(done);
+      browser.dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'));
+      browser.submitItem();
+      browser.waitForVisible('.see-solution .panel-heading');
+      browser.click('.see-solution .panel-heading');
+      browser.waitForVisible('.correct-answer-area-holder .answer-area-inline');
+      browser.waitForVisible(selectedChoice('c_2'));
+      browser.call(done);
     });
   });
 
   describe("math", function(){
     it("renders math in choice", function(done){
-      browser
-        .isExisting(choice('c_4') + ' .MathJax_Preview')
-        .call(done);
+      browser.waitForExist(choice('c_4') + ' .MathJax_Preview');
+      browser.call(done);
     });
+
     it("renders math in answer area text", function(done){
-      browser
-        .isExisting('.answer-area-holder .MathJax_Preview')
-        .call(done);
+      browser.waitForExist('.answer-area-holder .MathJax_Preview');
+     browser.call(done);
     });
+
     it("renders math in selected choice", function(done){
-      browser
-        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-        .isExisting('.answer-area-holder .selected-choice .MathJax_Preview')
-        .call(done);
+      browser.dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'));
+     browser.waitForExist('.answer-area-holder .selected-choice .MathJax_Preview');
+     browser.call(done);
     });
+
     it("renders math in correct answer area", function(done){
-      browser
-        .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-        .submitItem()
-        .click('h4.panel-title')
-        .isExisting('.correct-answer-area-holder .MathJax_Preview')
-        .call(done);
+      browser.dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'));
+     browser.submitItem();
+     browser.click('h4.panel-title');
+     browser.waitForExist('.correct-answer-area-holder .MathJax_Preview');
+     browser.call(done);
     });
 
   });
 
   it("allows drag and drop inside one answer area", function(done){
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.feedback.correct')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.feedback.correct');
+    browser.call(done);
   });
 
   it("allows drag and drop between answer areas", function(done){
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'))
-      .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
-      .submitItem()
-      .waitFor('.feedback.correct')
-      .call(done);
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'));
+    browser.dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'));
+    browser.submitItem();
+    browser.waitForVisible('.feedback.correct');
+    browser.call(done);
   });
 
   it("allows removing a choice by dragging it out of answer area", function(done){
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .moveToObject(selectedChoice('c_2'), 2, 2)
-      .buttonDown()
-      .moveTo(null, 0, 200)
-      .buttonUp()
-      .isExisting(selectedChoice('c_2'), function(err,res){
-        expect(res).toBe(false, "expected selected choice to be removed");
-      })
-      .call(done);
+    var waitForNotVisible;
+
+    browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
+    browser.moveToObject(selectedChoice('c_2'), 2, 2);
+    browser.buttonDown();
+    browser.moveTo(null, 0, 200);
+    browser.buttonUp();
+    browser.waitForVisible(selectedChoice('c_2'), 2000, waitForNotVisible=true);
+    browser.call(done);
   });
 
 });

@@ -43,26 +43,23 @@ module.exports = (grunt) ->
 
   getWebDriverOptions = ->
     basic = 
-      getUrl: (componentType, jsonFile) ->
-        url = "#{baseUrl}/client/rig/corespring-#{componentType}/index.html?data=regression_#{jsonFile}"
-        grunt.log.debug('getUrl: ', url)
-        url
-      getItemJson: (componentType, jsonFile) -> require "./components/corespring/#{componentType}/regression-data/#{jsonFile}"
-      baseUrl: baseUrl
-      bail: grunt.option('bail') || true
-      grep: grunt.option('grep')
-      timeoutInSeconds: getTimeout() / 1000
-      defaultTimeout: getTimeout()
-      waitforTimeout: getTimeout()
-      # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
-      logLevel: grunt.option('webDriverLogLevel') || 'silent'
+      #bail: grunt.option('bail') || true
+      #baseUrl: baseUrl
+      configFile: './wdio.conf.js'
+      #defaultTimeout: getTimeout()
       desiredCapabilities: getDesiredCapabilities()
+      #grep: grunt.option('grep')
+      # see: http://webdriver.io/guide/getstarted/configuration.html silent|verbose|command|data|result
+      #logLevel: grunt.option('webDriverLogLevel') || 'silent'
+      #timeoutInSeconds: getTimeout() / 1000
+      #waitforTimeout: getTimeout()
       
     sauce =
-      host: 'ondemand.saucelabs.com' 
-      port: 80 
-      user: sauceUser 
-      key: sauceKey 
+      #host: 'ondemand.saucelabs.com'
+      #port: 80
+      #user: sauceUser
+      #key: sauceKey
+      dummy: "dummy"
 
     if(runOnSauceLabs)
       _.merge(basic, sauce)
@@ -80,11 +77,49 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
 
+    replace:
+      wdioconf:
+        options:
+          patterns: [
+            {
+              match: 'GRUNT_BASE_URL_STRING',
+              replacement: baseUrl
+            },
+            {
+              match: 'GRUNT_CAPABILITIES_ARRAY_OF_OBJECT',
+              replacement: [getDesiredCapabilities()]
+            },
+            {
+              match: 'GRUNT_LOG_LEVEL_STRING',
+              replacement: grunt.option('webDriverLogLevel') || 'silent'
+            },
+            {
+              match: 'GRUNT_SAUCE_USER_STRING',
+              replacement: if runOnSauceLabs then sauceUser else ''
+            },
+            {
+              match: 'GRUNT_SAUCE_KEY_STRING',
+              replacement: if runOnSauceLabs then sauceKey else ''
+            },
+            {
+              match: 'GRUNT_SPECS_ARRAY_OF_STRING',
+              replacement: ["components/#{ if (grunt.option('component')) then '**/' + grunt.option('component') + '/**' else '**' }/regression/*.js"]
+            },
+            {
+              match: 'GRUNT_WAIT_FOR_TIMEOUT',
+              replacement: getTimeout()
+            }
+          ]
+
+        files: [
+          {src: ['wdio.conf-template.js'], dest: 'wdio.conf.js'}
+        ]
+
     webdriver:
       options: getWebDriverOptions()
 
-      dev: 
-        tests: ["components/#{ if (grunt.option('component')) then '**/' + grunt.option('component') + '/**' else '**' }/regression/*.js"]
+      dev:
+        dummy: 'dummy property'
 
     jasmine:
       unit:
@@ -173,19 +208,20 @@ module.exports = (grunt) ->
   grunt.initConfig(config)
 
   npmTasks = [
-    'grunt-contrib-jasmine'
     'grunt-contrib-clean'
-    'grunt-mocha-test'
-    'grunt-contrib-watch'
-    'grunt-contrib-less'
+    'grunt-contrib-jasmine'
     'grunt-contrib-jshint'
+    'grunt-contrib-less'
+    'grunt-contrib-watch'
     'grunt-jsbeautifier',
+    'grunt-mocha-test'
+    'grunt-replace'
     'grunt-webdriver'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
   grunt.loadTasks('tasks')
-  grunt.registerTask('regression', ['webdriver:dev'])
+  grunt.registerTask('regression', ['replace:wdioconf', 'webdriver:dev'])
   grunt.registerTask('test', 'test client side js', ['clean:test', 'testserver', 'testclient'])
   grunt.registerTask('testClientRunner', 'test client side js', testClient(grunt))
   grunt.registerTask('testclient', 'test client side js', ['clean:test', 'testClientRunner'])

@@ -19,42 +19,31 @@ describe('evaluate expression', function() {
     return this;
   };
 
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
-
-  beforeEach(function() {
-    browser
-      .url(browser.options.getUrl('function-entry', itemJsonFilename))
-      .waitFor('.view-function-entry');
-  });
-
-
-  it('correct feedback when correct answer is given', function(done) {
-    browser
-      .enterExpression("1", "2x+4")
-      .submitItem()
-      .waitFor("span.correct")
-      .call(done);
+  beforeEach(function(done) {
+    browser.url(browser.getTestUrl('function-entry', itemJsonFilename));
+    browser.waitForVisible('.view-function-entry');
+    browser.call(done);
   });
 
   it('correct feedback when correct answer is given', function(done) {
-    browser
-      .enterExpression("1", "y-4=2x")
-      .submitItem()
-      .waitFor("span.correct")
-      .call(done);
+    browser.enterExpression("1", "2x+4");
+    browser.submitItem();
+    browser.waitForVisible("span.correct");
+    browser.call(done);
+  });
+
+  it('correct feedback when correct answer is given', function(done) {
+    browser.enterExpression("1", "y-4=2x");
+    browser.submitItem();
+    browser.waitForVisible("span.correct");
+    browser.call(done);
   });
 
   it('incorrect feedback when incorrect answer is given', function(done) {
-    browser
-      .enterExpression("1", "2x+7")
-      .submitItem()
-      .waitFor("span.incorrect")
-      .call(done);
-
+    browser.enterExpression("1", "2x+7");
+    browser.submitItem();
+    browser.waitForVisible("span.incorrect");
+    browser.call(done);
   });
 
 });

@@ -10,56 +10,46 @@ describe('feedback-block', function() {
 
   var itemJsonFilename = 'one.json';
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
-
-  beforeEach(function() {
-    browser
-      .url(browser.options.getUrl('feedback-block', itemJsonFilename))
-      .waitFor('[value="mc_1"]')
-      .waitFor('[value="mc_2"]')
-      .waitFor('[value="mc_3"]')
-      .waitFor('[value="mc_4"]');
+  beforeEach(function(done) {
+    browser.url(browser.getTestUrl('feedback-block', itemJsonFilename));
+    browser.waitForVisible('[value="mc_1"]');
+    browser.waitForVisible('[value="mc_2"]');
+    browser.waitForVisible('[value="mc_3"]'),
+    browser.waitFor('[value="mc_4"]');
+    browser.call(done);
   });
 
   function safeTrim(s){
     return (s || '').trim();
   }
 
-
   it('does display correct feedback', function(done) {
-    browser
-      .click('[value="mc_2"]')
-      .submitItem()
-      .waitForText('.view-feedback-container')
-      .getText('.view-feedback-container', function(err,res){
+    browser.click('[value="mc_2"]');
+    browser.submitItem();
+    browser.waitForText('.view-feedback-container');
+    browser.getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('Yes, this is correct');
-      })
-      .call(done);
+      });
+    browser.call(done);
   });
 
   it('does display incorrect feedback', function(done) {
-    browser
-      .click('[value="mc_3"]')
-      .submitItem()
-      .waitForText('.view-feedback-container')
-      .getText('.view-feedback-container', function(err,res){
+    browser.click('[value="mc_3"]');
+    browser.submitItem();
+    browser.waitForText('.view-feedback-container');
+    browser.getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct');
-      })
-      .call(done);
+      });
+    browser.call(done);
   });
 
   it('does display wildcard feedback if no answer', function(done) {
-    browser
-      .submitItem()
-      .waitForText('.view-feedback-container')
-      .getText('.view-feedback-container', function(err,res){
+    browser.submitItem();
+    browser.waitForText('.view-feedback-container');
+    browser.getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct. You did not choose an answer.');
-      })
-      .call(done);
+      });
+    browser.call(done);
   });
-
 
 });

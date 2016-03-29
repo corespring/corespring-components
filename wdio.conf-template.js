@@ -1,5 +1,7 @@
 exports.config = {
-    
+    //sauce labs config
+    user: "@@GRUNT_SAUCE_USER_STRING",
+    key: "@@GRUNT_SAUCE_KEY_STRING",
     //
     // ==================
     // Specify Test Files
@@ -9,9 +11,7 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
-    specs: [
-        './components/corespring/**/test/regression/*'
-    ],
+    specs: @@GRUNT_SPECS_ARRAY_OF_STRING,
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -29,9 +29,7 @@ exports.config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [{
-        browserName: 'firefox'
-    }],
+    capabilities: @@GRUNT_CAPABILITIES_ARRAY_OF_OBJECT,
     //
     // ===================
     // Test Configurations
@@ -39,20 +37,20 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: 'silent',
+    logLevel: "@@GRUNT_LOG_LEVEL_STRING",
     //
     // Enables colors for log output.
     coloredLogs: true,
     //
     // Saves a screenshot to a given path if a command fails.
-    screenshotPath: './errorShots/',
+    //screenshotPath: './errorShots/',
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", the base url gets prepended.
-    baseUrl: 'http://localhost:9000',
+    baseUrl: "@@GRUNT_BASE_URL_STRING",
     //
     // Default timeout for all waitForXXX commands.
-    waitforTimeout: 10000,
+    waitforTimeout: @@GRUNT_WAIT_FOR_TIMEOUT,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as property. Make sure you have
@@ -81,12 +79,12 @@ exports.config = {
     // Mocha: `$ npm install mocha`
     // Jasmine: `$ npm install jasmine`
     // Cucumber: `$ npm install cucumber`
-    framework: 'mocha',
+    framework: 'jasmine',
     //
     // Test reporter for stdout.
     // The following are supported: dot (default), spec and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporter: 'dot',
+    reporter: 'spec',
     
     //
     // Options to be passed to Mocha.
@@ -94,7 +92,24 @@ exports.config = {
     mochaOpts: {
         ui: 'bdd'
     },
-    
+    // Options to be passed to Jasmine.
+    jasmineNodeOpts: {
+      //
+      // Jasmine default timeout, this should be much bigger than any webdriver timeout
+      // bc. otherwise jasmine will timeout before   
+      defaultTimeoutInterval: 1000 * 60 * 10,
+      //
+      // The Jasmine framework allows it to intercept each assertion in order to log the state of the application
+      // or website depending on the result. For example it is pretty handy to take a screenshot everytime
+      // an assertion fails.
+      expectationResultHandler: function(passed, assertion) {
+        // do something
+      },
+      //
+      // Make use of jasmine specific grep functionality
+      grep: null,
+        invertGrep: null
+    },
     //
     // =====
     // Hooks
@@ -110,7 +125,34 @@ exports.config = {
     // Gets executed before test execution begins. At this point you will have access to all global
     // variables like `browser`. It is the perfect place to define custom commands.
     before: function() {
-        // do something
+      browser.getTestUrl = function(componentType, jsonFile) {
+        var url = "/client/rig/corespring-" + componentType + "/index.html?data=regression_" + jsonFile;
+        //console.log('getTestUrl: ', url);
+        return url;
+      };
+      browser.getItemJson = function(componentType, jsonFile) {
+        var json = require("./components/corespring/" + componentType + "/regression-data/" + jsonFile);
+        //console.log("getItemJson", json);
+        return json;
+      };
+
+      browser.resetItem = function() {
+        console.log("resetItem");
+        this.execute('window.reset()');
+        return this;
+      };
+
+      browser.submitItem = function() {
+        console.log("submitItem");
+        this.execute('window.submit()');
+        return this;
+      };
+
+      browser.setInstructorMode = function() {
+        console.log("setInstructorMode");
+        this.execute('window.setMode("instructor")');
+        return this;
+      };
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from
