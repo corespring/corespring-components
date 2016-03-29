@@ -1,0 +1,84 @@
+@correct-dark: #8fa783;
+@correct-light: #c7e2c7;
+@incorrect-dark: #eea236;
+@incorrect-light: #fbe7b7;
+@nothing-submitted-dark: #464146;
+@nothing-submitted-light: #ffffff;
+@nothing-submitted-accent: #e0dee0;
+@partially-correct-dark: #3a86ad;
+@partially-correct-light: #c8e3e8;
+
+.cs-icon {
+  margin: 10px;
+  display: inline-block;
+
+  .correct-dark {
+    fill: @correct-dark;
+  }
+
+  .correct-light {
+    fill: @correct-light;
+  }
+
+  .incorrect-dark {
+    fill: @incorrect-dark;
+  }
+
+  .incorrect-light {
+    fill: @incorrect-light;
+  }
+
+  .nothing-submitted-dark {
+    fill: @nothing-submitted-dark;
+  }
+
+  .nothing-submitted-light {
+    fill: @nothing-submitted-light;
+  }
+
+  .nothing-submitted-accent {
+    fill: @nothing-submitted-accent;
+  }
+
+  .partially-correct-dark {
+    fill: @partially-correct-dark;
+  }
+
+  .partially-correct-light {
+    fill: @partially-correct-light;
+  }
+
+  .feedback {
+    -webkit-filter: drop-shadow(2px 2px 1px #b3aca4);
+    filter: drop-shadow(2px 2px 1px #b3aca4);
+  }
+
+}
+
+.correct-feedback .popover {
+  background: @correct-light;
+  .arrow:after {
+    border-top-color: @correct-light;
+  }
+}
+
+.incorrect-feedback .popover {
+  background: @incorrect-light;
+  .arrow:after {
+    border-top-color: @incorrect-light;
+  }
+}
+
+.nothing-submitted-feedback .popover {
+  background: @nothing-submitted-accent;
+  .arrow:after {
+    border-top-color: @nothing-submitted-accent;
+  }
+}
+
+.partially-correct-feedback .popover {
+  background: @partially-correct-light;
+  .arrow:after {
+    border-top-color: @partially-correct-light;
+  }
+}
