@@ -92,7 +92,24 @@ exports.config = {
     mochaOpts: {
         ui: 'bdd'
     },
-    
+    // Options to be passed to Jasmine.
+    jasmineNodeOpts: {
+      //
+      // Jasmine default timeout, this should be much bigger than any webdriver timeout
+      // bc. otherwise jasmine will timeout before   
+      defaultTimeoutInterval: 1000 * 60 * 10,
+      //
+      // The Jasmine framework allows it to intercept each assertion in order to log the state of the application
+      // or website depending on the result. For example it is pretty handy to take a screenshot everytime
+      // an assertion fails.
+      expectationResultHandler: function(passed, assertion) {
+        // do something
+      },
+      //
+      // Make use of jasmine specific grep functionality
+      grep: null,
+        invertGrep: null
+    },
     //
     // =====
     // Hooks

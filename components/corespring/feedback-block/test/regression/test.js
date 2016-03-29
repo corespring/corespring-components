@@ -33,7 +33,6 @@ describe('feedback-block', function() {
     browser.call(done);
   });
 
-  /*
   it('does display incorrect feedback', function(done) {
     browser.click('[value="mc_3"]');
     browser.submitItem();
@@ -52,6 +51,5 @@ describe('feedback-block', function() {
       });
     browser.call(done);
   });
-*/
 
 });
