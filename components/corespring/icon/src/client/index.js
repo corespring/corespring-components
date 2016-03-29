@@ -1,20 +1,30 @@
 var main = [function() {
   return {
     restrict: 'E',
-    scope : {},
+    scope : {
+      'key': '@'
+    },
     template: [
       '<span class="{{key}}">',
-      ' {{key}}',
+      '  <span popover="{{text}}" popover-position="top" popover-trigger="{{text ? \'mouseover\' : \'\'}}">',
+      '    <div style="width: 30px;" class="cs-icon">',
+      '      <ng-include src="template"/>',
+      '    </div>',
+      '  </span>',
       '</span>'
     ].join('\n'),
     link: function($scope, $element, $attrs) {
       var iconSet = 'emoji';
-      $scope.feedback = $attrs.feedback;
-      $scope.key = $attrs.key + ($scope.feedback ? '-feedback' : '');
-      //$scope.template = 'images/' + [iconSet, $scope.key].join('-') + ($attrs.shape ? '-' + $attrs.shape : '') + '.svg';
+      $scope.text = $attrs.text;
+      $scope.key = $attrs.key + ($scope.text ? '-feedback' : '');
+      $scope.template = '../../../images/feedback/' + [iconSet, $scope.key].join('-') + ($attrs.shape ? '-' + $attrs.shape : '') + '.svg';
+      console.log('$scope.template', $scope.template);
     }
   }
 }];
 
 exports.framework = 'angular';
-exports.directive = main;
+exports.directives = [{
+  name: 'icon',
+  directive: main
+}];
