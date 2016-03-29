@@ -14,18 +14,18 @@ describe('inline-choice', function() {
 
   var itemJsonFilename = 'one.json';
 
-  browser.selectInlineChoice = function(id, choice) {
-    browser.click(inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]');
-    browser.click(inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]');
-    return this;
-  };
+  beforeEach(function(done) {
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
+    browser.selectInlineChoice = function(id, choice) {
+      browser.click(inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]');
+      browser.click(inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]');
+      return this;
+    };
 
-  beforeEach(function() {
+    browser.submitItem = function() {
+      this.execute('window.submit()');
+      return this;
+    };
 
     browser.addCommand("getPseudoElementCss", function(selector, pseudo, prop, done) {
       return this.executeAsync(function(selector, pseudo, prop, done){
@@ -45,7 +45,8 @@ describe('inline-choice', function() {
 
     browser
       .url(browser.options.getUrl('inline-choice', itemJsonFilename))
-      .waitFor('.dropdown-menu li');
+      .waitFor('.dropdown-menu li')
+      .call(done);
   });
 
  

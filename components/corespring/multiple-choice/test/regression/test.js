@@ -34,45 +34,48 @@ describe('multiple-choice', function() {
   var incorrectAnswer = findOtherChoice(correctAnswer).value;
   var notChosenFeedback = findFeedback(correctAnswer).notChosenFeedback;
 
-  browser.selectAnswer = function(answer) {
 
-    function clickIfAnswer(element) {
-      browser.elementIdAttribute(element, 'value', function(err, res) {
-        if (res.value === answer) {
-          browser.elementIdClick(element);
+  beforeEach(function(done) {
+
+    browser.selectAnswer = function(answer) {
+
+      function clickIfAnswer(element) {
+        browser.elementIdAttribute(element, 'value', function(err, res) {
+          if (res.value === answer) {
+            browser.elementIdClick(element);
+          }
+        });
+      }
+
+      this.elements('.choice-input .radio-choice', function(err, results) {
+        for (var i = 0; i < results.value.length; i++) {
+          clickIfAnswer(results.value[i].ELEMENT);
         }
       });
-    }
 
-    this.elements('.choice-input .radio-choice', function(err, results) {
-      for (var i = 0; i < results.value.length; i++) {
-        clickIfAnswer(results.value[i].ELEMENT);
-      }
-    });
+      return this;
+    };
 
-    return this;
-  };
+    browser.showAnswer = function() {
+      browser.elements('.answer-holder .panel-title', function(err, results) {
+        for (var i = 0; i < results.value.length; i++) {
+          browser.elementIdClick(results.value[i].ELEMENT);
+        }
+      });
+      return this;
 
-  browser.showAnswer = function() {
-    browser.elements('.answer-holder .panel-title', function(err, results) {
-      for (var i = 0; i < results.value.length; i++) {
-        browser.elementIdClick(results.value[i].ELEMENT);
-      }
-    });
-    return this;
+    };
 
-  };
+    browser.submitItem = function() {
+      console.log("submitting");
+      this.execute('window.submit()');
+      return this;
+    };
 
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
-
-  beforeEach(function() {
     browser
       .url(browser.options.getUrl('multiple-choice', itemJsonFilename))
-      .waitFor('.choice-input .radio-choice');
+      .waitFor('.choice-input .radio-choice')
+      .call(done);
   });
 
 

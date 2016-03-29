@@ -14,21 +14,22 @@ describe('evaluate expression', function() {
     return '//div[@id="' + id + '" and @class[contains(., "view-function-entry")]]';
   };
 
-  browser.enterExpression = function(id, expression) {
-    browser.setValue(withId(id) + "//input", expression);
-    return this;
-  };
+  beforeEach(function(done) {
+    browser.enterExpression = function(id, expression) {
+      browser.setValue(withId(id) + "//input", expression);
+      return this;
+    };
 
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
+    browser.submitItem = function() {
+      console.log("submitting");
+      this.execute('window.submit()');
+      return this;
+    };
 
-  beforeEach(function() {
     browser
       .url(browser.options.getUrl('function-entry', itemJsonFilename))
-      .waitFor('.view-function-entry');
+      .waitFor('.view-function-entry')
+      .call(done);
   });
 
 

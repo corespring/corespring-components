@@ -16,26 +16,30 @@ describe('placement ordering', function() {
   };
 
   var landingPlace = function(index) {
-    return divWithClass('answer-area-table')+divWithClass('choice-wrapper')+'['+index+']';
+    return divWithClass('answer-area-table') + divWithClass('choice-wrapper') + '[' + index + ']';
   };
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
+  beforeEach(function(done) {
+    browser.submitItem = function() {
+      this.execute('window.submit()');
+      return this;
+    };
 
-  browser.resetItem = function() {
-    this.execute('window.reset()');
-    return this;
-  };
+    browser.resetItem = function() {
+      this.execute('window.reset()');
+      return this;
+    };
+    browser.call(done);
+  });
 
   describe('horizontal', function() {
 
     describe('correctness', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         browser
           .url(browser.options.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering');
+          .waitFor('.view-placement-ordering')
+          .call(done)
       });
 
       it('correct answer results in correct feedback', function(done) {
@@ -72,8 +76,8 @@ describe('placement ordering', function() {
           .submitItem()
           .waitFor('.see-answer-panel')
           .click('.see-answer-panel .panel-heading')
-          .waitFor(divWithClass('see-answer-panel')+divContaining('Apple'))
-          .waitFor(divWithClass('see-answer-panel')+divContaining('Pear'))
+          .waitFor(divWithClass('see-answer-panel') + divContaining('Apple'))
+          .waitFor(divWithClass('see-answer-panel') + divContaining('Pear'))
           .call(done);
       });
 
@@ -112,7 +116,7 @@ describe('placement ordering', function() {
     describe('MathJax', function() {
       it('renders', function(done) {
         browser
-          .waitFor('.choice .MathJax_Preview')
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })
@@ -122,7 +126,8 @@ describe('placement ordering', function() {
         browser
           .submitItem()
           .resetItem()
-          .waitFor('.choice .MathJax_Preview')
+          .pause(500)
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })

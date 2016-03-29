@@ -11,52 +11,53 @@ describe('inplace ordering', function() {
     return "//div[text()[contains(., '" + s + "')]]";
   };
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
+  beforeEach(function(done) {
 
-  browser.resetItem = function() {
-    this.execute('window.reset()');
-    return this;
-  };
+    browser.submitItem = function() {
+      this.execute('window.submit()');
+      return this;
+    };
 
-  describe('correctness', function() {
-    beforeEach(function() {
-      browser
-        .url(browser.options.getUrl('ordering', itemJsonFilename))
-        .waitFor('.view-ordering');
-    });
+    browser.resetItem = function() {
+      this.execute('window.reset()');
+      return this;
+    };
 
-    it('submitting without interaction results in warning feedback', function(done) {
-      browser
-        .submitItem()
-        .waitFor('.feedback.warning')
-        .call(done);
-    });
-
-    it('MathJax Renders', function(done) {
-      browser
-        .waitFor('.choice .MathJax_Preview')
-        .getHTML(divContaining('Third'), function(err, html) {
-          html.should.match(/MathJax_Preview/);
-        })
-        .call(done);
-    });
-
-    it('MathJax Renders after Reset', function(done) {
-      browser
-        .submitItem()
-        .resetItem()
-        .waitFor('.choice .MathJax_Preview')
-        .getHTML(divContaining('Third'), function(err, html) {
-          html.should.match(/MathJax_Preview/);
-        })
-        .call(done);
-    });
-
-
+    browser
+      .url(browser.options.getUrl('ordering', itemJsonFilename))
+      .waitFor('.view-ordering')
+      .call(done);
   });
+
+  it('submitting without interaction results in warning feedback', function(done) {
+    browser
+      .submitItem()
+      .waitFor('.feedback.warning')
+      .call(done);
+  });
+
+  it('MathJax Renders', function(done) {
+    browser
+      .waitForVisible('.choice .MathJax_Preview')
+      .getHTML(divContaining('Third'), function(err, html) {
+        html.should.match(/MathJax_Preview/);
+      })
+      .call(done);
+  });
+
+  it('MathJax Renders after Reset', function(done) {
+    browser
+      .submitItem()
+      .resetItem()
+      .pause(500)
+      .waitForVisible('.choice .MathJax_Preview')
+      .getHTML(divContaining('Third'), function(err, html) {
+        html.should.match(/MathJax_Preview/);
+      })
+      .call(done);
+  });
+
+
 
 
 });

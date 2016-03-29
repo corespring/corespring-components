@@ -10,10 +10,11 @@ describe('video component', function() {
   describe('youtube', function() {
     var itemJsonFilename = 'youtube.json';
 
-    beforeEach(function() {
+    beforeEach(function(done) {
       browser
         .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video');
+        .waitFor('.cs-video')
+        .call(done);
     });
 
     it('video is visible', function(done) {
@@ -37,10 +38,11 @@ describe('video component', function() {
   describe('vimeo', function() {
     var itemJsonFilename = 'vimeo.json';
 
-    beforeEach(function() {
+    beforeEach(function(done) {
       browser
         .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video');
+        .waitFor('.cs-video')
+        .call(done);
     });
 
     it('video is visible', function(done) {

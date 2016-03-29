@@ -4,7 +4,7 @@ var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe.only('drag and drop inline', function() {
+describe('drag and drop inline', function() {
 
   "use strict";
 
@@ -23,26 +23,27 @@ describe.only('drag and drop inline', function() {
     return ".selected-choice[data-choice-id='" + id + "']";
   }
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
+  beforeEach(function(done) {
+    browser.dragAndDropWithOffset = function(fromSelector, toSelector) {
+      return this.moveToObject(fromSelector, 20, 4)
+        .buttonDown(0)
+        .moveToObject(toSelector, 20, 10)
+        .buttonUp();
+    };
 
-  browser.dragAndDropWithOffset = function(fromSelector, toSelector){
-    return this.moveToObject(fromSelector, 20, 4)
-      .buttonDown(0)
-      .moveToObject(toSelector, 20, 10)
-      .buttonUp();
-  };
+    browser.submitItem = function() {
+      this.execute('window.submit()');
+      return this;
+    };
 
-  beforeEach(function() {
     browser
       .url(browser.options.getUrl(componentName, itemJsonFilename))
       .waitFor(choice('c_1'))
       .waitFor(choice('c_2'))
       .waitFor(choice('c_3'))
       .waitFor(choice('c_4'))
-      .waitFor(landingPlace('aa_1'));
+      .waitFor(landingPlace('aa_1'))
+      .call(done);
   });
 
   it('correct answer results in correct feedback', function(done) {
@@ -120,26 +121,26 @@ describe.only('drag and drop inline', function() {
       .submitItem()
       .waitFor('.empty-answer-area-warning')
       .waitForText('.feedback.warning')
-      .getText('.feedback.warning', function(err,res){
+      .getText('.feedback.warning', function(err, res) {
         expect(res).toEqual('You did not enter a response.');
       })
       .call(done);
   });
 
-  it("removes choice when moveOnDrag is true and choice has been placed", function(done){
+  it("removes choice when moveOnDrag is true and choice has been placed", function(done) {
     browser
-      .isExisting(choice('c_4'), function(err,res){
+      .isExisting(choice('c_4'), function(err, res) {
         expect(res).toBe(true, "Expected choice to exist before moving");
       })
       .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-      .isExisting(choice('c_4'), function(err,res){
+      .isExisting(choice('c_4'), function(err, res) {
         expect(res).toBe(false, "expected choice to be removed");
       })
       .call(done);
   });
 
-  describe('correct answer area', function(){
-    it("is shown, if answer is incorrect", function(done){
+  describe('correct answer area', function() {
+    it("is shown, if answer is incorrect", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
@@ -148,49 +149,49 @@ describe.only('drag and drop inline', function() {
         .call(done);
     });
 
-    it("is hidden, if answer is correct", function(done){
+    it("is hidden, if answer is correct", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
         .submitItem()
         .waitFor('.see-solution')
-        .isVisible('.see-solution', function(err,res){
+        .isVisible('.see-solution', function(err, res) {
           expect(res).toBe(false);
         })
         .call(done);
     });
 
-    it("renders correct answer if answer is incorrect", function(done){
+    it("renders correct answer if answer is incorrect", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
         .waitFor('.see-solution')
         .click('.see-solution .panel-heading')
         .waitFor('.correct-answer-area-holder .answer-area-inline')
-        .waitFor(selectedChoice('c_2'), function(err){
+        .waitFor(selectedChoice('c_2'), function(err) {
           expect(err).toBe(undefined, "Expected correct choice c_2 to exist, timeout: " + browser.options.waitforTimeout + " err:" + err);
         })
         .call(done);
     });
   });
 
-  describe("math", function(){
-    it("renders math in choice", function(done){
+  describe("math", function() {
+    it("renders math in choice", function(done) {
       browser
         .isExisting(choice('c_4') + ' .MathJax_Preview')
         .call(done);
     });
-    it("renders math in answer area text", function(done){
+    it("renders math in answer area text", function(done) {
       browser
         .isExisting('.answer-area-holder .MathJax_Preview')
         .call(done);
     });
-    it("renders math in selected choice", function(done){
+    it("renders math in selected choice", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .isExisting('.answer-area-holder .selected-choice .MathJax_Preview')
         .call(done);
     });
-    it("renders math in correct answer area", function(done){
+    it("renders math in correct answer area", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
@@ -201,7 +202,7 @@ describe.only('drag and drop inline', function() {
 
   });
 
-  it("allows drag and drop inside one answer area", function(done){
+  it("allows drag and drop inside one answer area", function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
@@ -210,7 +211,7 @@ describe.only('drag and drop inline', function() {
       .call(done);
   });
 
-  it("allows drag and drop between answer areas", function(done){
+  it("allows drag and drop between answer areas", function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
@@ -219,14 +220,14 @@ describe.only('drag and drop inline', function() {
       .call(done);
   });
 
-  it("allows removing a choice by dragging it out of answer area", function(done){
+  it("allows removing a choice by dragging it out of answer area", function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .moveToObject(selectedChoice('c_2'), 2, 2)
       .buttonDown()
       .moveTo(null, 0, 200)
       .buttonUp()
-      .isExisting(selectedChoice('c_2'), function(err,res){
+      .isExisting(selectedChoice('c_2'), function(err, res) {
         expect(res).toBe(false, "expected selected choice to be removed");
       })
       .call(done);

@@ -10,18 +10,20 @@ describe('feedback-block', function() {
 
   var itemJsonFilename = 'one.json';
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
-
-  beforeEach(function() {
+  beforeEach(function(done) {
+    
+    browser.submitItem = function() {
+      this.execute('window.submit()');
+      return this;
+    };
+    
     browser
       .url(browser.options.getUrl('feedback-block', itemJsonFilename))
       .waitFor('[value="mc_1"]')
       .waitFor('[value="mc_2"]')
       .waitFor('[value="mc_3"]')
-      .waitFor('[value="mc_4"]');
+      .waitFor('[value="mc_4"]')
+      .call(done);
   });
 
   function safeTrim(s){
@@ -33,7 +35,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_2"]')
       .submitItem()
-      .waitForText('.view-feedback-container')
+      .waitForVisible('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('Yes, this is correct');
       })
@@ -44,7 +46,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_3"]')
       .submitItem()
-      .waitForText('.view-feedback-container')
+      .waitForVisible('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct');
       })
@@ -54,7 +56,7 @@ describe('feedback-block', function() {
   it('does display wildcard feedback if no answer', function(done) {
     browser
       .submitItem()
-      .waitForText('.view-feedback-container')
+      .waitForVisible('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct. You did not choose an answer.');
       })

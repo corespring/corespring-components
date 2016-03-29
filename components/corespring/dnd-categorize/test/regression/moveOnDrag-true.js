@@ -11,29 +11,31 @@ describe('dnd-categorize', function() {
   var itemJsonFilename = 'moveOnDrag-true.json';
   var itemJson = browser.options.getItemJson('dnd-categorize', itemJsonFilename);
 
-  browser.dragAndDropWithOffset = function(fromSelector, toSelector){
-    return this.moveToObject(fromSelector, 20, 4)
-      .buttonDown(0)
-      .pause(500)
-      .moveToObject(toSelector, 20, 10)
-      .pause(500)
-      .buttonUp()
-      .pause(500);
-  };
-
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
-
-  browser.setInstructorMode = function() {
-    console.log("setInstructorMode");
-    this.execute('window.setMode("instructor")');
-    return this;
-  };
+  console.log("dnd-categorize moveOnDrag.true");
 
   beforeEach(function(done) {
+    browser.dragAndDropWithOffset = function(fromSelector, toSelector){
+      return this.moveToObject(fromSelector, 20, 4)
+        .buttonDown(0)
+        .pause(500)
+        .moveToObject(toSelector, 20, 10)
+        .pause(500)
+        .buttonUp()
+        .pause(500);
+    };
+
+    browser.submitItem = function() {
+      console.log("submitting");
+      this.execute('window.submit()');
+      return this;
+    };
+
+    browser.setInstructorMode = function() {
+      console.log("setInstructorMode");
+      this.execute('window.setMode("instructor")');
+      return this;
+    };
+
     browser
       .url(browser.options.getUrl('dnd-categorize', itemJsonFilename))
       .waitForVisible('.choice_1')

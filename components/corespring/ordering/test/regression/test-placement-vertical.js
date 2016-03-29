@@ -15,23 +15,28 @@ describe('placement ordering', function() {
     return '//div[@class[contains(., "answer-area-table")]]//div[@class[contains(., "choice-wrapper")]][' + index + ']';
   };
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
+  beforeEach(function(done) {
+    browser.submitItem = function() {
+      this.execute('window.submit()');
+      return this;
+    };
 
-  browser.resetItem = function() {
-    this.execute('window.reset()');
-    return this;
-  };
+    browser.resetItem = function() {
+      this.execute('window.reset()');
+      return this;
+    };
+
+    browser.call(done);
+  });
 
   describe('vertical', function() {
 
     describe('correctness', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         browser
           .url(browser.options.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering');
+          .waitFor('.view-placement-ordering')
+          .call(done);
       });
 
       it('correct answer results in correct feedback', function(done) {
@@ -129,7 +134,7 @@ describe('placement ordering', function() {
     describe('MathJax', function() {
       it('renders', function(done) {
         browser
-          .waitFor('.choice .MathJax_Preview')
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })
@@ -139,7 +144,8 @@ describe('placement ordering', function() {
         browser
           .submitItem()
           .resetItem()
-          .waitFor('.choice .MathJax_Preview')
+          .pause(500)
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })

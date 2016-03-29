@@ -11,29 +11,29 @@ describe('dnd-categorize', function() {
   var itemJsonFilename = 'moveOnDrag-false.json';
   var itemJson = browser.options.getItemJson('dnd-categorize', itemJsonFilename);
 
-  browser.dragAndDropWithOffset = function(fromSelector, toSelector){
-    return this.moveToObject(fromSelector, 20, 4)
-      .buttonDown(0)
-      .pause(500)
-      .moveToObject(toSelector, 20, 10)
-      .pause(500)
-      .buttonUp()
-      .pause(500);
-  };
-
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
-
-  browser.setInstructorMode = function() {
-    console.log("setInstructorMode");
-    this.execute('window.setMode("instructor")');
-    return this;
-  };
-
   beforeEach(function(done) {
+    browser.dragAndDropWithOffset = function(fromSelector, toSelector) {
+      return this.moveToObject(fromSelector, 20, 4)
+        .buttonDown(0)
+        .pause(500)
+        .moveToObject(toSelector, 20, 10)
+        .pause(500)
+        .buttonUp()
+        .pause(500);
+    };
+
+    browser.submitItem = function() {
+      console.log("submitting");
+      this.execute('window.submit()');
+      return this;
+    };
+
+    browser.setInstructorMode = function() {
+      console.log("setInstructorMode");
+      this.execute('window.setMode("instructor")');
+      return this;
+    };
+    
     browser
       .url(browser.options.getUrl('dnd-categorize', itemJsonFilename))
       .waitForVisible('.choice_1')
@@ -47,9 +47,9 @@ describe('dnd-categorize', function() {
       .call(done);
   });
 
-  describe('instructor mode', function(){
+  describe('instructor mode', function() {
 
-    beforeEach(function(done){
+    beforeEach(function(done) {
       browser
         .setInstructorMode()
         .call(done);
@@ -68,8 +68,8 @@ describe('dnd-categorize', function() {
 
   });
 
-  describe('see solution', function(){
-    beforeEach(function(done){
+  describe('see solution', function() {
+    beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
         .submitItem()
@@ -95,8 +95,8 @@ describe('dnd-categorize', function() {
     });
   });
 
-  describe('fully correct', function(){
-    beforeEach(function(done){
+  describe('fully correct', function() {
+    beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_1')
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_3')
@@ -125,10 +125,10 @@ describe('dnd-categorize', function() {
 
   });
 
-  describe('partially correct', function(){
+  describe('partially correct', function() {
 
-    describe('categorize choice_2 incorrectly as cat_2', function(){
-      beforeEach(function(done){
+    describe('categorize choice_2 incorrectly as cat_2', function() {
+      beforeEach(function(done) {
         browser
           .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
           .submitItem()
@@ -154,8 +154,8 @@ describe('dnd-categorize', function() {
       });
     });
 
-    describe('categorize choice_2 correctly as cat_1', function(){
-      beforeEach(function(done){
+    describe('categorize choice_2 correctly as cat_1', function() {
+      beforeEach(function(done) {
         browser
           .dragAndDropWithOffset('.choices-container .choice_2', '.cat_1')
           .submitItem()
@@ -183,8 +183,8 @@ describe('dnd-categorize', function() {
 
   });
 
-  describe('categorize choice_1 as cat_2', function(){
-    beforeEach(function(done){
+  describe('categorize choice_1 as cat_2', function() {
+    beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_2')
         .call(done);
@@ -197,8 +197,8 @@ describe('dnd-categorize', function() {
     });
   });
 
-  describe('categorize multiple choices as cat_2', function(){
-    beforeEach(function(done){
+  describe('categorize multiple choices as cat_2', function() {
+    beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_2')
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
@@ -217,8 +217,8 @@ describe('dnd-categorize', function() {
     });
   });
 
-  describe('categorize choice_1 as cat_2 firstly and then change to cat_1', function(){
-    beforeEach(function(done){
+  describe('categorize choice_1 as cat_2 firstly and then change to cat_1', function() {
+    beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_2')
         .dragAndDropWithOffset('.cat_2 .choice_1', '.cat_1')
@@ -232,8 +232,8 @@ describe('dnd-categorize', function() {
     });
   });
 
-  describe('no answer', function(){
-    beforeEach(function(done){
+  describe('no answer', function() {
+    beforeEach(function(done) {
       browser
         .submitItem()
         .call(done);
