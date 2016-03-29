@@ -4,7 +4,7 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe('dnd-categorize', function() {
+describe('dnd-categorize moveOnDrag true', function() {
 
   "use strict";
 
@@ -165,10 +165,11 @@ describe('dnd-categorize', function() {
       browser
         .waitForVisible('.see-answer-panel .panel-heading')
         .click('.see-answer-panel .panel-heading')
-        .waitForVisible('.see-answer-panel .panel-body .cat_1 .choice_2.correct')
-        .waitForVisible('.see-answer-panel .panel-body .cat_3 .choice_1.correct')
-        .waitForVisible('.see-answer-panel .panel-body .cat_3 .choice_3.correct')
-        .waitForVisible('.see-answer-panel .panel-body .cat_4 .choice_4.correct')
+        .pause(500)
+        .waitForVisible('.see-answer-panel .cat_1 .choice_2.correct')
+        .waitForVisible('.see-answer-panel .cat_3 .choice_1.correct')
+        .waitForVisible('.see-answer-panel .cat_3 .choice_3.correct')
+        .waitForVisible('.see-answer-panel .cat_4 .choice_4.correct')
         .call(done);
     });
   });
