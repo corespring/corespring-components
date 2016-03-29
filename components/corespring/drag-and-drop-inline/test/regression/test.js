@@ -36,6 +36,12 @@ describe('drag and drop inline', function() {
       return this;
     };
 
+    browser.setInstructorMode = function() {
+      console.log("setInstructorMode");
+      this.execute('window.setMode("instructor")');
+      return this;
+    };
+
     browser
       .url(browser.options.getUrl(componentName, itemJsonFilename))
       .waitFor(choice('c_1'))
@@ -44,6 +50,39 @@ describe('drag and drop inline', function() {
       .waitFor(choice('c_4'))
       .waitFor(landingPlace('aa_1'))
       .call(done);
+  });
+
+  describe('instructor mode', function(){
+
+    beforeEach(function(done){
+      browser
+        .setInstructorMode()
+        .call(done);
+
+    });
+
+    it('displays correct answer', function(done) {
+      browser
+        .waitForExist(selectedChoice("c_2"))
+        .call(done);
+    });
+
+    it('does not display see-solution', function(done) {
+      var invertCallAndWaitForHidden;
+      browser
+        .waitForVisible('.see-solution', 2000, invertCallAndWaitForHidden = true)
+        .call(done);
+    });
+
+    it('displays all choices as disabled', function(done) {
+      browser
+        .waitForVisible(choice('c_1') + '.ui-draggable-disabled')
+        .waitForVisible(choice('c_2') + '.ui-draggable-disabled')
+        .waitForVisible(choice('c_3') + '.ui-draggable-disabled')
+        .waitForVisible(choice('c_4') + '.ui-draggable-disabled')
+        .call(done);
+    });
+
   });
 
   it('correct answer results in correct feedback', function(done) {
