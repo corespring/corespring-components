@@ -38,13 +38,18 @@ describe('drag and drop inline', function() {
     };
 
     browser.submitItem = function() {
+      console.log("submitItem");
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
     browser.setInstructorMode = function() {
       console.log("setInstructorMode");
+      this.pause(500);
       this.execute('window.setMode("instructor")');
+      this.pause(500);
       return this;
     };
 
@@ -91,7 +96,7 @@ describe('drag and drop inline', function() {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.correct')
+      .waitForExist('.feedback.correct')
       .call(done);
   });
 
@@ -100,7 +105,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.partial')
+      .waitForExist('.feedback.partial')
       .call(done);
   });
 
@@ -108,7 +113,7 @@ describe('drag and drop inline', function() {
     browser
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.incorrect')
+      .waitForExist('.feedback.incorrect')
       .call(done);
   });
 
@@ -116,7 +121,7 @@ describe('drag and drop inline', function() {
     browser
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.incorrect')
+      .waitForExist('.selected-choice.incorrect')
       .call(done);
   });
 
@@ -125,7 +130,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.correct')
+      .waitForExist('.selected-choice.correct')
       .call(done);
   });
 
@@ -134,7 +139,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.incorrect')
+      .waitForExist('.selected-choice.incorrect')
       .call(done);
   });
 
@@ -143,7 +148,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.incorrect')
+      .waitForExist('.selected-choice.incorrect')
       .call(done);
   });
 
@@ -152,15 +157,15 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.selected-choice.correct .fa-check-circle')
-      .waitFor('.selected-choice.incorrect .fa-times-circle')
+      .waitForExist('.selected-choice.correct .fa-check-circle')
+      .waitForExist('.selected-choice.incorrect .fa-times-circle')
       .call(done);
   });
 
   it('shows warning when no item is selected', function(done) {
     browser
       .submitItem()
-      .waitFor('.empty-answer-area-warning')
+      .waitForExist('.empty-answer-area-warning')
       .waitForText('.feedback.warning')
       .getText('.feedback.warning', function(err, res) {
         expect(res).toEqual('You did not enter a response.');
@@ -185,7 +190,7 @@ describe('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .waitFor('.see-solution')
+        .waitForExist('.see-solution')
         .isVisible('.see-solution')
         .call(done);
     });
@@ -194,7 +199,7 @@ describe('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
         .submitItem()
-        .waitFor('.see-solution')
+        .waitForExist('.see-solution')
         .isVisible('.see-solution', function(err, res) {
           expect(res).toBe(false);
         })
@@ -205,10 +210,10 @@ describe('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .waitFor('.see-solution')
+        .waitForExist('.see-solution')
         .click('.see-solution .panel-heading')
-        .waitFor('.correct-answer-area-holder .answer-area-inline')
-        .waitFor(selectedChoice('c_2'), function(err) {
+        .waitForExist('.correct-answer-area-holder .answer-area-inline')
+        .waitForExist(selectedChoice('c_2'), function(err) {
           expect(err).toBe(undefined, "Expected correct choice c_2 to exist, timeout: " + browser.options.waitforTimeout + " err:" + err);
         })
         .call(done);
@@ -248,7 +253,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.correct')
+      .waitForExist('.feedback.correct')
       .call(done);
   });
 
@@ -257,7 +262,7 @@ describe('drag and drop inline', function() {
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitFor('.feedback.correct')
+      .waitForExist('.feedback.correct')
       .call(done);
   });
 

@@ -27,13 +27,17 @@ describe('dnd-categorize moveOnDrag false', function() {
 
     browser.submitItem = function() {
       console.log("submitting");
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
     browser.setInstructorMode = function() {
       console.log("setInstructorMode");
+      this.pause(500);
       this.execute('window.setMode("instructor")');
+      this.pause(500);
       return this;
     };
 

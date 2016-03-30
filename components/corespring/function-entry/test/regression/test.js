@@ -16,13 +16,19 @@ describe('evaluate expression', function() {
 
   beforeEach(function(done) {
     browser.enterExpression = function(id, expression) {
-      browser.setValue(withId(id) + "//input", expression);
+      this.pause(500);
+      this.waitForExist(withId(id));
+      this.waitForExist(withId(id) + "//input");
+      this.setValue(withId(id) + "//input", expression);
+      this.pause(500);
       return this;
     };
 
     browser.submitItem = function() {
       console.log("submitting");
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
@@ -37,7 +43,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "2x+4")
       .submitItem()
-      .waitFor("span.correct")
+      .waitForExist("span.correct")
       .call(done);
   });
 
@@ -45,7 +51,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "y-4=2x")
       .submitItem()
-      .waitFor("span.correct")
+      .waitForExist("span.correct")
       .call(done);
   });
 
@@ -53,7 +59,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "2x+7")
       .submitItem()
-      .waitFor("span.incorrect")
+      .waitForExist("span.incorrect")
       .call(done);
 
   });

@@ -21,12 +21,16 @@ describe('inplace ordering', function() {
     };
 
     browser.submitItem = function() {
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
     browser.resetItem = function() {
+      this.pause(500);
       this.execute('window.reset()');
+      this.pause(500);
       return this;
     };
 
@@ -39,7 +43,7 @@ describe('inplace ordering', function() {
   it('submitting without interaction results in warning feedback', function(done) {
     browser
       .submitItem()
-      .waitFor('.feedback.warning')
+      .waitForExist('.feedback.warning')
       .call(done);
   });
 

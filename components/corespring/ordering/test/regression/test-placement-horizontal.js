@@ -28,12 +28,16 @@ describe('placement ordering', function() {
     };
 
     browser.submitItem = function() {
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
     browser.resetItem = function() {
+      this.pause(500);
       this.execute('window.reset()');
+      this.pause(500);
       return this;
     };
     browser.call(done);
@@ -54,7 +58,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.correct')
+          .waitForExist('.feedback.correct')
           .call(done);
       });
 
@@ -63,7 +67,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Banana'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.incorrect')
+          .waitForExist('.feedback.incorrect')
           .call(done);
       });
 
@@ -72,7 +76,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .call(done);
       });
 
@@ -81,10 +85,10 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.see-answer-panel')
+          .waitForExist('.see-answer-panel')
           .click('.see-answer-panel .panel-heading')
-          .waitFor(divWithClass('see-answer-panel') + divContaining('Apple'))
-          .waitFor(divWithClass('see-answer-panel') + divContaining('Pear'))
+          .waitForExist(divWithClass('see-answer-panel') + divContaining('Apple'))
+          .waitForExist(divWithClass('see-answer-panel') + divContaining('Pear'))
           .call(done);
       });
 
@@ -93,7 +97,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .resetItem()
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {

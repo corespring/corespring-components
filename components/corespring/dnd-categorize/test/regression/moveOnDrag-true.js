@@ -29,13 +29,17 @@ describe('dnd-categorize moveOnDrag true', function() {
 
     browser.submitItem = function() {
       console.log("submitting");
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
     browser.setInstructorMode = function() {
       console.log("setInstructorMode");
+      this.pause(500);
       this.execute('window.setMode("instructor")');
+      this.pause(500);
       return this;
     };
 
@@ -57,13 +61,16 @@ describe('dnd-categorize moveOnDrag true', function() {
 
     it('should render the choice_2 as visible in the choices container', function(done){
       browser
-        .waitForVisible('.choices-container .choice_2')
+        .waitForExist('.choices-container .choice_2')
+        .isVisible('.choices-container .choice_2', function(err,res){
+          expect(res).toBe(true);
+        })
         .call(done);
     });
 
     it('should render the choice_1 as placed in the choices container', function(done){
       browser
-        .waitFor('.choices-container .choice_1.placed')
+        .waitForExist('.choices-container .choice_1.placed')
         .call(done);
     });
 
@@ -97,7 +104,7 @@ describe('dnd-categorize moveOnDrag true', function() {
 
     it('should render the empty space as placed', function(done){
       browser
-        .waitFor('.choices-container .choice_2.placed')
+        .waitForExist('.choices-container .choice_2.placed')
         .call(done);
     });
 
@@ -218,13 +225,13 @@ describe('dnd-categorize moveOnDrag true', function() {
 
       it('displays partial feedback', function(done) {
         browser
-          .waitForVisible('.feedback.incorrect')
+          .waitForExist('.feedback.incorrect')
           .call(done);
       });
 
       it('displays "show correct answer"', function(done) {
         browser
-          .waitForVisible('.see-answer-panel')
+          .waitForExist('.see-answer-panel')
           .call(done);
       });
     });

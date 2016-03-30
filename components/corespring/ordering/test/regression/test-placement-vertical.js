@@ -24,12 +24,16 @@ describe('placement ordering', function() {
     };
     
     browser.submitItem = function() {
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
     browser.resetItem = function() {
+      this.pause(500);
       this.execute('window.reset()');
+      this.pause(500);
       return this;
     };
 
@@ -51,7 +55,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.correct')
+          .waitForExist('.feedback.correct')
           .call(done);
       });
 
@@ -60,7 +64,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Banana'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.incorrect')
+          .waitForExist('.feedback.incorrect')
           .call(done);
       });
 
@@ -69,7 +73,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .call(done);
       });
 
@@ -111,7 +115,7 @@ describe('placement ordering', function() {
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .resetItem()
           .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {
@@ -151,7 +155,6 @@ describe('placement ordering', function() {
         browser
           .submitItem()
           .resetItem()
-          .pause(500)
           .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);

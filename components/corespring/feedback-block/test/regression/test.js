@@ -13,13 +13,16 @@ describe('feedback-block', function() {
   beforeEach(function(done) {
     
     browser.submitItem = function() {
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
     
     browser
       .url(browser.options.getUrl('feedback-block', itemJsonFilename))
       .waitForExist('.player-rendered')
+      .pause(1000)
       .call(done);
   });
 
@@ -32,7 +35,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_2"]')
       .submitItem()
-      .waitForVisible('.view-feedback-container')
+      .waitForExist('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('Yes, this is correct');
       })
@@ -43,7 +46,7 @@ describe('feedback-block', function() {
     browser
       .click('[value="mc_3"]')
       .submitItem()
-      .waitForVisible('.view-feedback-container')
+      .waitForExist('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct');
       })
@@ -53,7 +56,7 @@ describe('feedback-block', function() {
   it('does display wildcard feedback if no answer', function(done) {
     browser
       .submitItem()
-      .waitForVisible('.view-feedback-container')
+      .waitForExist('.view-feedback-container')
       .getText('.view-feedback-container', function(err,res){
         safeTrim(res).should.equal('No, this is not correct. You did not choose an answer.');
       })

@@ -35,7 +35,7 @@ describe('match', function() {
     };
 
     browser.isExistingWithWait = function(selector,callback){
-      return this.waitFor(selector).isExisting(selector,callback);
+      return this.waitForExist(selector).isExisting(selector,callback);
     };
 
     browser
@@ -66,7 +66,7 @@ describe('match', function() {
     browser
       .click(answerInput('Row1'))
       .submitItem()
-      .waitFor(solutionPanelHeader())
+      .waitForExist(solutionPanelHeader())
       .click(solutionPanelHeader())
       .isExistingWithWait(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");

@@ -41,7 +41,7 @@ describe('video component', function() {
     beforeEach(function(done) {
       browser
         .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video')
+        .waitForExist('.cs-video')
         .call(done);
     });
 

@@ -68,7 +68,9 @@ describe('multiple-choice', function() {
 
     browser.submitItem = function() {
       console.log("submitting");
+      this.pause(500);
       this.execute('window.submit()');
+      this.pause(500);
       return this;
     };
 
@@ -114,7 +116,7 @@ describe('multiple-choice', function() {
 
   it('MathJax renders', function(done) {
     browser
-      .waitFor('.choice-label .MathJax_Preview')
+      .waitForExist('.choice-label .MathJax_Preview')
       .call(done);
   });
 

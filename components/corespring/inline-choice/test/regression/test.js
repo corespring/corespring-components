@@ -17,8 +17,12 @@ describe('inline-choice', function() {
   beforeEach(function(done) {
 
     browser.selectInlineChoice = function(id, choice) {
-      browser.click(inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]');
-      browser.click(inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]');
+      var toggle = inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]';
+      var option = inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]';
+
+      browser.click(toggle);
+      browser.waitForVisible(option);
+      browser.click(option);
       return this;
     };
 
@@ -56,7 +60,7 @@ describe('inline-choice', function() {
     browser
       .selectInlineChoice("1", "Banana")
       .submitItem()
-      .waitFor('.result-icon')
+      .waitForExist('.result-icon')
       .getPseudoElementCss('.warning .result-icon', ':after', 'color', function(err, result){
         result.value.should.eql('rgb(153, 153, 153)');
       })
