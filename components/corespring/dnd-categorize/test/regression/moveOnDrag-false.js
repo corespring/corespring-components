@@ -51,11 +51,11 @@ describe('dnd-categorize moveOnDrag false', function() {
 
     it('displays correct answers', function(done) {
       browser
-        .waitForVisible('.cat_1 .choice_2.correct')
-        .waitForVisible('.cat_3 .choice_1.correct')
-        .waitForVisible('.cat_3 .choice_3.correct')
-        .waitForVisible('.cat_4 .choice_2.correct')
-        .waitForVisible('.cat_4 .choice_4.correct')
+        .waitForExist('.cat_1 .choice_2.correct')
+        .waitForExist('.cat_3 .choice_1.correct')
+        .waitForExist('.cat_3 .choice_3.correct')
+        .waitForExist('.cat_4 .choice_2.correct')
+        .waitForExist('.cat_4 .choice_4.correct')
         .call(done);
     });
 
@@ -79,11 +79,12 @@ describe('dnd-categorize moveOnDrag false', function() {
       browser
         .waitForVisible('.see-answer-panel .panel-heading')
         .click('.see-answer-panel .panel-heading')
-        .waitForVisible('.see-answer-panel .cat_1 .choice_2.correct')
-        .waitForVisible('.see-answer-panel .cat_3 .choice_1.correct')
-        .waitForVisible('.see-answer-panel .cat_3 .choice_3.correct')
-        .waitForVisible('.see-answer-panel .cat_4 .choice_2.correct')
-        .waitForVisible('.see-answer-panel .cat_4 .choice_4.correct')
+        .pause(500)
+        .waitForExist('.see-answer-panel .cat_1 .choice_2.correct')
+        .waitForExist('.see-answer-panel .cat_3 .choice_1.correct')
+        .waitForExist('.see-answer-panel .cat_3 .choice_3.correct')
+        .waitForExist('.see-answer-panel .cat_4 .choice_2.correct')
+        .waitForExist('.see-answer-panel .cat_4 .choice_4.correct')
         .call(done);
     });
   });
@@ -102,11 +103,11 @@ describe('dnd-categorize moveOnDrag false', function() {
 
     it('displays choices as categorized and correct', function(done) {
       browser
-        .waitForVisible('.cat_1 .choice_2.correct')
-        .waitForVisible('.cat_3 .choice_1.correct')
-        .waitForVisible('.cat_3 .choice_3.correct')
-        .waitForVisible('.cat_4 .choice_2.correct')
-        .waitForVisible('.cat_4 .choice_4.correct')
+        .waitForExist('.cat_1 .choice_2.correct')
+        .waitForExist('.cat_3 .choice_1.correct')
+        .waitForExist('.cat_3 .choice_3.correct')
+        .waitForExist('.cat_4 .choice_2.correct')
+        .waitForExist('.cat_4 .choice_4.correct')
         .call(done);
     });
 
@@ -130,7 +131,7 @@ describe('dnd-categorize moveOnDrag false', function() {
 
       it('displays choice as categorized and correct', function(done) {
         browser
-          .waitForVisible('.cat_2 .choice_2.incorrect')
+          .waitForExist('.cat_2 .choice_2.incorrect')
           .call(done);
       });
 
@@ -157,7 +158,7 @@ describe('dnd-categorize moveOnDrag false', function() {
 
       it('displays choice as categorized and correct', function(done) {
         browser
-          .waitForVisible('.cat_1 .choice_2.correct')
+          .waitForExist('.cat_1 .choice_2.correct')
           .call(done);
       });
 

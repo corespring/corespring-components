@@ -48,6 +48,7 @@ describe('dnd-categorize moveOnDrag true', function() {
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
         .click('.btn-undo')
+        .pause(500)
         .call(done);
     });
 
@@ -71,6 +72,7 @@ describe('dnd-categorize moveOnDrag true', function() {
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
         .click('.btn-start-over')
+        .pause(500)
         .call(done);
     });
 
@@ -131,10 +133,10 @@ describe('dnd-categorize moveOnDrag true', function() {
 
     it('displays correct answers', function(done) {
       browser
-        .waitForVisible('.cat_1 .choice_2.correct')
-        .waitForVisible('.cat_3 .choice_1.correct')
-        .waitForVisible('.cat_3 .choice_3.correct')
-        .waitForVisible('.cat_4 .choice_4.correct')
+        .waitForExist('.cat_1 .choice_2.correct')
+        .waitForExist('.cat_3 .choice_1.correct')
+        .waitForExist('.cat_3 .choice_3.correct')
+        .waitForExist('.cat_4 .choice_4.correct')
         .call(done);
     });
 
@@ -159,10 +161,10 @@ describe('dnd-categorize moveOnDrag true', function() {
         .waitForVisible('.see-answer-panel .panel-heading')
         .click('.see-answer-panel .panel-heading')
         .pause(500)
-        .waitForVisible('.see-answer-panel .cat_1 .choice_2.correct')
-        .waitForVisible('.see-answer-panel .cat_3 .choice_1.correct')
-        .waitForVisible('.see-answer-panel .cat_3 .choice_3.correct')
-        .waitForVisible('.see-answer-panel .cat_4 .choice_4.correct')
+        .waitForExist('.see-answer-panel .cat_1 .choice_2.correct')
+        .waitForExist('.see-answer-panel .cat_3 .choice_1.correct')
+        .waitForExist('.see-answer-panel .cat_3 .choice_3.correct')
+        .waitForExist('.see-answer-panel .cat_4 .choice_4.correct')
         .call(done);
     });
   });
@@ -180,10 +182,10 @@ describe('dnd-categorize moveOnDrag true', function() {
 
     it('displays choices as categorized and correct', function(done) {
       browser
-        .waitForVisible('.cat_1 .choice_2.correct')
-        .waitForVisible('.cat_3 .choice_1.correct')
-        .waitForVisible('.cat_3 .choice_3.correct')
-        .waitForVisible('.cat_4 .choice_4.correct')
+        .waitForExist('.cat_1 .choice_2.correct')
+        .waitForExist('.cat_3 .choice_1.correct')
+        .waitForExist('.cat_3 .choice_3.correct')
+        .waitForExist('.cat_4 .choice_4.correct')
         .call(done);
     });
 
@@ -207,7 +209,7 @@ describe('dnd-categorize moveOnDrag true', function() {
 
       it('displays choice as categorized and correct', function(done) {
         browser
-          .waitForVisible('.cat_2 .choice_2.incorrect')
+          .waitForExist('.cat_2 .choice_2.incorrect')
           .call(done);
       });
 
@@ -234,7 +236,7 @@ describe('dnd-categorize moveOnDrag true', function() {
 
       it('displays choice as categorized and correct', function(done) {
         browser
-          .waitForVisible('.cat_1 .choice_2.correct')
+          .waitForExist('.cat_1 .choice_2.correct')
           .call(done);
       });
 
