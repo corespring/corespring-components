@@ -44,11 +44,7 @@ describe('drag and drop inline', function() {
 
     browser
       .url(browser.options.getUrl(componentName, itemJsonFilename))
-      .waitFor(choice('c_1'))
-      .waitFor(choice('c_2'))
-      .waitFor(choice('c_3'))
-      .waitFor(choice('c_4'))
-      .waitFor(landingPlace('aa_1'))
+      .waitForVisible('.player-rendered')
       .call(done);
   });
 

@@ -19,10 +19,7 @@ describe('feedback-block', function() {
     
     browser
       .url(browser.options.getUrl('feedback-block', itemJsonFilename))
-      .waitFor('[value="mc_1"]')
-      .waitFor('[value="mc_2"]')
-      .waitFor('[value="mc_3"]')
-      .waitFor('[value="mc_4"]')
+      .waitForVisible('.player-rendered')
       .call(done);
   });
 

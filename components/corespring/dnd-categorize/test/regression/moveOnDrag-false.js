@@ -36,14 +36,7 @@ describe('dnd-categorize moveOnDrag false', function() {
 
     browser
       .url(browser.options.getUrl('dnd-categorize', itemJsonFilename))
-      .waitForVisible('.choice_1')
-      .waitForVisible('.choice_2')
-      .waitForVisible('.choice_3')
-      .waitForVisible('.choice_4')
-      .waitForVisible('.cat_1')
-      .waitForVisible('.cat_2')
-      .waitForVisible('.cat_3')
-      .waitForVisible('.cat_4')
+      .waitForVisible('.player-rendered')
       .call(done);
   });
 

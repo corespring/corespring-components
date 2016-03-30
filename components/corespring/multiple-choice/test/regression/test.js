@@ -74,7 +74,7 @@ describe('multiple-choice', function() {
 
     browser
       .url(browser.options.getUrl('multiple-choice', itemJsonFilename))
-      .waitFor('.choice-input .radio-choice')
+      .waitForVisible('.player-rendered')
       .call(done);
   });
 

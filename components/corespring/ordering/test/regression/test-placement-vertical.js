@@ -35,7 +35,7 @@ describe('placement ordering', function() {
       beforeEach(function(done) {
         browser
           .url(browser.options.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering')
+          .waitForVisible('.player-rendered')
           .call(done);
       });
 

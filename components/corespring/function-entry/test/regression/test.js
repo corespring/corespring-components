@@ -28,7 +28,7 @@ describe('evaluate expression', function() {
 
     browser
       .url(browser.options.getUrl('function-entry', itemJsonFilename))
-      .waitFor('.view-function-entry')
+      .waitForVisible('.player-rendered')
       .call(done);
   });
 

@@ -25,7 +25,7 @@ describe('inplace ordering', function() {
 
     browser
       .url(browser.options.getUrl('ordering', itemJsonFilename))
-      .waitFor('.view-ordering')
+      .waitForVisible('.player-rendered')
       .call(done);
   });
 
