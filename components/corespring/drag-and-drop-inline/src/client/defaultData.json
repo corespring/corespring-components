@@ -1,13 +1,13 @@
 {
   "componentType": "corespring-drag-and-drop-inline",
-  "title": "Short Answer - Drag and Drop",
+  "title": "Fill in the Blank",
   "correctResponse": {
     "aa_1": []
   },
   "feedback": {
-    "correctFeedbackType": "default",
-    "partialFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "allowPartialScoring": false,
   "partialScoring": [

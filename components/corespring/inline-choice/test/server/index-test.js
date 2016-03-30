@@ -88,7 +88,7 @@ describe('inline-choice server logic', function() {
     });
     it('should return default feedback for incorrect answer', function(){
       var fb = server.defaultFeedback(createModel(), 'mc_1');
-      fb.should.eql("Good try, but carrot is the correct answer.");
+      fb.should.eql('Good try, but carrot is the correct answer.');
     });
   });
 
@@ -174,7 +174,7 @@ describe('inline-choice server logic', function() {
             correct: false
           }
         };
-        response.feedback.feedback.should.match(/Good try, but (carrot|banana) is the correct answer./);
+        response.feedback.feedback.should.match(/Good try, but <div class="correct-response-placeholder">(carrot|banana)<\/div> is the correct answer./);
         delete response.feedback.feedback;
 
         response.should.eql(expected);

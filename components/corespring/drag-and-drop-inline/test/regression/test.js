@@ -4,7 +4,7 @@ var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe('drag and drop inline', function() {
+describe.only('drag and drop inline', function() {
 
   "use strict";
 
@@ -37,8 +37,11 @@ describe('drag and drop inline', function() {
 
   beforeEach(function() {
     browser
-      .timeouts("implicit", browser.options.defaultTimeout)
       .url(browser.options.getUrl(componentName, itemJsonFilename))
+      .waitFor(choice('c_1'))
+      .waitFor(choice('c_2'))
+      .waitFor(choice('c_3'))
+      .waitFor(choice('c_4'))
       .waitFor(landingPlace('aa_1'));
   });
 
@@ -46,7 +49,6 @@ describe('drag and drop inline', function() {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .pause(1000)
       .waitFor('.feedback.correct')
       .call(done);
   });
@@ -116,11 +118,11 @@ describe('drag and drop inline', function() {
   it('shows warning when no item is selected', function(done) {
     browser
       .submitItem()
-      .waitFor('.feedback.warning')
+      .waitFor('.empty-answer-area-warning')
+      .waitForText('.feedback.warning')
       .getText('.feedback.warning', function(err,res){
         expect(res).toEqual('You did not enter a response.');
       })
-      .waitFor('.empty-answer-area-warning')
       .call(done);
   });
 

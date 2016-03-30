@@ -4,215 +4,137 @@ var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 var keys = feedbackUtils.keys;
 
 exports.keys = keys;
+exports.createOutcome = createOutcome;
 
-exports.wrapTokensWithHtml = function(choices) {
-  var idx = 0;
-  return _(choices).map(function(choice) {
-    var attributes = choice.selectable === false ? '' : " class='token' id='" + idx + "'";
-    idx++;
-    return "<span" + attributes + ">" + choice.data + "</span>";
-  }).value().join(' ');
-};
-
-function correctIndexes(question) {
-  var indexes = [];
-  var choicesWithCorrectnessInformation = question.correctResponse || question.model.choices;
-  for (var i in question.model.choices) {
-    if (choicesWithCorrectnessInformation[i].correct) {
-      indexes.push(i);
-    }
+function createOutcome(question, answer, settings) {
+  if (_.isEmpty(question)) {
+    throw new Error('question should never be empty');
   }
-  return indexes;
-}
 
-var buildFeedback = function(question, answer) {
+  if (_.isEmpty(answer)) {
+    return {
+      correctness: 'incorrect',
+      correctClass: 'warning',
+      warningClass: 'answer-expected',
+      score: 0,
+      feedback: settings.showFeedback ? {
+        emptyAnswer: true,
+        message: keys.DEFAULT_WARNING_FEEDBACK
+      } : null
+    };
+  }
 
-  var feedback = {
-    choices: {}
+  var res = {
+    correctness: correctness(question, answer),
+    score: score(question, answer)
   };
 
-  var fbSelector;
-  if (!checkIfCorrect(question)) {
-    fbSelector = "feedback";
-  } else {
-    fbSelector = isCorrect(question, answer) ? "correctFeedback" : (isPartiallyCorrect(question, answer) ?
-      "partialFeedback" : "incorrectFeedback");
+  var selectionCount = answer.length;
+
+  if (settings.showFeedback) {
+    res.feedback = buildFeedback(res.correctness, question, answer);
+    res.outcome = [];
+    res.comments = question.comments;
+
+    if (res.correctness === 'correct') {
+      res.outcome.push("responsesCorrect");
+    } else if (res.correctness === 'partial') {
+      res.outcome.push("responsesPartiallyIncorrect");
+    } else {
+      res.outcome.push("responsesIncorrect");
+    }
+
+    res.correctResponse = question.correctResponse.value;
+    res.correctClass = res.correctness;
   }
 
-  var fbTypeSelector = fbSelector + "Type";
+  return res;
+}
 
-  var feedbackType = question.feedback && question.feedback[fbTypeSelector] ? question.feedback[fbTypeSelector] : "default";
 
-  if (feedbackType === "custom") {
-    feedback.message = question.feedback[fbSelector];
-  } else if (feedbackType === "default") {
-    feedback.message = checkIfCorrect(question) ? (isCorrect(question, answer) ? keys.DEFAULT_CORRECT_FEEDBACK :
-      (isPartiallyCorrect(question, answer) ? keys.DEFAULT_PARTIAL_FEEDBACK : keys.DEFAULT_INCORRECT_FEEDBACK)) : keys.DEFAULT_SUBMITTED_FEEDBACK;
-  }
-
-  if (checkIfCorrect(question)) {
-    _.each(correctIndexes(question), function(correctIndex) {
-      feedback.choices[correctIndex] = {
-        wouldBeCorrect: true
-      };
-    });
-  }
+function buildFeedback(correctness, question, answer) {
+  var feedback = {
+    choices: [],
+    message: feedbackUtils.makeFeedback(question.feedback, correctness)
+  };
 
   _.each(answer, function(answerIndex) {
-    feedback.choices[answerIndex] = {
-      correct: (!checkIfCorrect(question) && selectionCountIsFine(question, answer)) ||
-        (checkIfCorrect(question) && _.contains(correctIndexes(question), answerIndex))
-    };
+    feedback.choices.push({
+      index: answerIndex,
+      correct: _.contains(question.correctResponse.value, answerIndex)
+    });
   });
 
   return feedback;
-};
-
-exports.preprocess = function(json) {
-  json.wrappedText = exports.wrapTokensWithHtml(json.model.choices);
-  json.correctResponse = _.cloneDeep(json.model.choices);
-  _.each(json.model.choices, function(c) {
-    delete c.correct;
-  });
-  return json;
-};
-
-function checkIfCorrect(question) {
-  return question.model.config.checkIfCorrect === undefined ?
-    false : question.model.config.checkIfCorrect;
 }
 
 function selectionCountIsFine(question, answer) {
-
-  if(!answer){
+  if (!answer) {
     return false;
   }
-  
+
   var selectionCount = answer.length;
-  var minSelection = question.model.config.minSelections || 0;
-  var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
-  return (minSelection <= selectionCount && maxSelection >= selectionCount);
+  var maxSelections = question.model.config.maxSelections;
+  var correctSelectionCount = question.correctResponse.value.length;
+
+  return (maxSelections === 0 && selectionCount === correctSelectionCount) ||
+    (selectionCount === correctSelectionCount && selectionCount === maxSelections);
 }
 
 function areAllCorrectSelected(question, answer) {
-  return numberOfCorrectAnswers(question, answer) === correctIndexes(question).length;
+  return numberOfCorrectAnswers(question, answer) === question.correctResponse.value.length;
 }
 
 function areSomeSelectedCorrect(question, answer) {
-  return numberOfCorrectAnswers(question, answer) !== 0;
+  return numberOfCorrectAnswers(question, answer) > 0;
 }
 
 function numberOfCorrectAnswers(question, answers) {
   var correctCount = _(answers)
     .filter(function(answer) {
-      return _.contains(correctIndexes(question), answer);
-    }).value().length;
+      return _.contains(question.correctResponse.value, answer);
+    })
+    .value()
+    .length;
   return correctCount;
 }
 
 function isCorrect(question, answer) {
-  var correct;
-
-  if (correctIndexes(question).length === 0) {
-    return false;
-  } else {
-    correct = selectionCountIsFine(question, answer);
-
-    if (checkIfCorrect(question)) {
-      correct &= areAllCorrectSelected(question, answer);
-    }
-
-    return correct;
-  }
+  var correct = selectionCountIsFine(question, answer) &&
+    areAllCorrectSelected(question, answer);
+  return correct;
 }
 
 function isPartiallyCorrect(question, answer) {
-  var partiallyCorrect;
-
-  if (correctIndexes(question).length === 0) {
+  if (!answer) {
     return false;
-  } else {
-    partiallyCorrect = selectionCountIsFine(question, answer);
-
-    if (checkIfCorrect(question)) {
-      partiallyCorrect &= areSomeSelectedCorrect(question, answer);
-    }
-    return partiallyCorrect;
   }
+  var partiallyCorrect = areSomeSelectedCorrect(question, answer);
+  return partiallyCorrect;
+}
+
+function correctness(question, answer) {
+  if (isCorrect(question, answer)) {
+    return "correct";
+  }
+  if (isPartiallyCorrect(question, answer)) {
+    return "partial";
+  }
+  return "incorrect";
 }
 
 function score(question, answer) {
   var scoreValue = 0;
-
-  if (!checkIfCorrect(question)) {
-    return 1;
-  }
-
+  var partialScore = null;
   if (isCorrect(question, answer)) {
     scoreValue = 1;
   } else if (question.allowPartialScoring) {
-    var partialScore = _.find(question.partialScoring, function(ps) {
+    partialScore = _.find(question.partialScoring, function(ps) {
       return ps.numberOfCorrect === numberOfCorrectAnswers(question, answer);
     });
-
     if (partialScore) {
       scoreValue = partialScore.scorePercentage / 100;
     }
   }
   return scoreValue;
 }
-
-exports.createOutcome = function(question, answer, settings) {
-
-  if(!question || _.isEmpty(question)){
-    throw new Error('question should never be empty or null');
-  }
-
-  if(!answer){
-    return {
-      correctness: 'incorrect', 
-      score: 0,
-      feedback: settings.showFeedback ? buildFeedback(question, answer) : null,
-      outcome: [],
-      correctClass: settings.showFeedback ? 'incorrect' : null
-    };
-  }
-
-  var res = {
-    correctness: isCorrect(question, answer) ? "correct" : "incorrect",
-    score: score(question, answer)
-  };
-
-  var selectionCount = answer.length;
-  var minSelection = question.model.config.minSelections || 0;
-  var maxSelection = question.model.config.maxSelections || Number.MAX_VALUE;
-
-  if (settings.showFeedback) {
-    res.feedback = buildFeedback(question, answer);
-
-    res.outcome = [];
-
-    res.comments = question.comments;
-
-    if (selectionCount < minSelection) {
-      res.outcome.push("responsesBelowMin");
-    } else if (selectionCount > maxSelection) {
-      res.outcome.push("responsesExceedMax");
-    } else {
-      res.outcome.push("responsesNumberCorrect");
-    }
-
-    if (isCorrect(question, answer)) {
-      res.outcome.push("responsesCorrect");
-    }
-    if (checkIfCorrect && !areAllCorrectSelected(question, answer)) {
-      res.outcome.push("responsesIncorrect");
-    }
-
-    res.correctClass = checkIfCorrect(question) ? (isCorrect(question, answer) ? 'correct' :
-      (isPartiallyCorrect(question, answer) ? 'partial' : 'incorrect')) : 'submitted';
-
-  }
-
-  return res;
-};

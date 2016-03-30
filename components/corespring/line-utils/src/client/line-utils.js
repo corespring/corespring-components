@@ -8,7 +8,12 @@ exports.factory = [
              * Ex for input y=-5x+2
              * returns [[0,2],[1,-3]]
              */
-            this.pointsFromEquation = function(equation) {
+            this.pointsFromEquation = function(equation, stepValue) {
+
+              stepValue = (typeof stepValue !== 'undefined') ? stepValue : 1;
+
+              equation = prefixWithYEquals(equation);
+              equation = fixSigns(equation);
 
                 if (!equation || !_.isString(equation)) {
                     return undefined;
@@ -57,6 +62,18 @@ exports.factory = [
                     return getDecimalRepresentation(captures[index] ? captures[index] : 0);
                 }
 
+                function fixSigns(expression) {
+                  return expression.replace(/\+-/g,'-').replace(/-\+/g,'-');
+                }
+
+                function prefixWithYEquals(expression) {
+                  if(expression) {
+                    return (expression.replace(/ /g, '').indexOf('y=') === 0) ? expression : ("y=" + expression);
+                  } else {
+                    return '';
+                  }
+                }
+
                 if (captures[4] === "x") {
                     m = getSign(2) * getSlope(3);
                     b = getSign(6) * getConstant(7);
@@ -66,10 +83,9 @@ exports.factory = [
                 } else {
                     b = getSign(2) * getConstant(3);
                 }
-
                 return [
                     [0, b],
-                    [1, m + b]
+                    [stepValue, m * stepValue + b]
                 ];
             };
 

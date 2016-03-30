@@ -1,0 +1,123 @@
+{
+  "mode":"instructor",
+  "item": {
+    "xhtml": "<div><div>Do you know your fruits? </div><div><br /></div>​<div id=\"0\" corespring-dnd-categorize=\"\"></div>​<div></div></div>",
+    "components": {
+      "0": {
+        "weight": 1,
+        "componentType": "corespring-dnd-categorize",
+        "title": "Drag and Drop Categorize",
+        "minimumWidth": 600,
+        "correctResponse": {
+          "cat_1": [
+            "choice_2"
+          ],
+          "cat_2": [],
+          "cat_3": [
+            "choice_1",
+            "choice_3"
+          ],
+          "cat_4": [
+            "choice_2",
+            "choice_4"
+          ]
+        },
+        "feedback": {
+          "correctFeedbackType": "default",
+          "partialFeedbackType": "default",
+          "incorrectFeedbackType": "default"
+        },
+        "allowPartialScoring": false,
+        "partialScoring": {
+          "sections": [
+            {
+              "catId": "cat_1",
+              "partialScoring": [
+                {
+                  "numberOfCorrect": 1,
+                  "scorePercentage": 0
+                }
+              ]
+            },
+            {
+              "catId": "cat_2",
+              "partialScoring": [
+                {
+                  "numberOfCorrect": 1,
+                  "scorePercentage": 0
+                }
+              ]
+            },
+            {
+              "catId": "cat_3",
+              "partialScoring": [
+                {
+                  "numberOfCorrect": 1,
+                  "scorePercentage": 0
+                }
+              ]
+            },
+            {
+              "catId": "cat_4",
+              "partialScoring": [
+                {
+                  "numberOfCorrect": 1,
+                  "scorePercentage": 0
+                }
+              ]
+            }
+          ]
+        },
+        "model": {
+          "categories": [
+            {
+              "id": "cat_1",
+              "label": "red"
+            },
+            {
+              "id": "cat_2",
+              "label": "blue"
+            },
+            {
+              "id": "cat_3",
+              "label": "yellow"
+            },
+            {
+              "id": "cat_4",
+              "label": "green"
+            }
+          ],
+          "choices": [
+            {
+              "id": "choice_1",
+              "label": "lemon",
+              "moveOnDrag": false
+            },
+            {
+              "id": "choice_2",
+              "label": "apple",
+              "moveOnDrag": false
+            },
+            {
+              "id": "choice_3",
+              "label": "banana",
+              "moveOnDrag": false
+            },
+            {
+              "id": "choice_4",
+              "label": "pear",
+              "moveOnDrag": false
+            }
+          ],
+          "config": {
+            "shuffle": false,
+            "answerAreaPosition": "below",
+            "categoriesPerRow": 2,
+            "choicesPerRow": 2,
+            "choicesLabel": "Which color does the fruit have?"
+          }
+        }
+      }
+    }
+  }
+}

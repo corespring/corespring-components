@@ -13,9 +13,18 @@ describe('corespring:focus-task', function() {
     data: {
       model: {
         "choices": [
-          {"label": "Banana", "value": "banana"},
-          {"label": "Carrot", "value": "carrot"},
-          {"label": "Apple", "value": "apple"}
+          {
+            "label": "Banana",
+            "value": "banana"
+          },
+          {
+            "label": "Carrot",
+            "value": "carrot"
+          },
+          {
+            "label": "Apple",
+            "value": "apple"
+          }
         ],
         config: {
           itemShape: ""

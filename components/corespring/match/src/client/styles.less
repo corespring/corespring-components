@@ -48,9 +48,7 @@
 
 .config-corespring-match {
 
-  .intro {
-    margin: 0 30px 15px 20px;
-  }
+  @row-padding: 20px;
 
   .help {
     font-style: italic;
@@ -64,13 +62,19 @@
 
   .row {
     &.option {
-      margin-top: 10px;
+      margin-top: @row-padding;
+      margin-bottom: @row-padding;
 
       &.input-type {
         .help {
           margin-top: 5px;
         }
       }
+    }
+
+    &.table-intro {
+      margin-top: @row-padding + 10px;
+      margin-bottom: @row-padding;
     }
   }
 
@@ -127,9 +131,14 @@
   }
 
   .feedback-panel-col {
-    margin: 0 0 0 12px;
-    width: 680px;
+    margin-top: @row-padding;
+    margin-bottom: @row-padding;
   }
+
+  .radio-inline + .radio-inline {
+    margin-left: 0;
+  }
+
 }
 
 .render-corespring-match {
@@ -143,7 +152,7 @@
 
   .corespring-match-table {
     margin: 0;
-    border-collapse: collapse;
+    border-collapse: collapse !important;
     border: none;
     width: 100%;
     margin-bottom: 20px;
@@ -154,8 +163,8 @@
 
     td {
       border: none;
-      vertical-align: middle;
-      padding: 10px 5px;
+      vertical-align: middle !important;
+      padding: 10px 5px !important;
       max-width: 322px;
       word-wrap: break-word;
     }
@@ -165,9 +174,9 @@
       border: none;
       background: white;
       color: black;
-      vertical-align: middle;
+      vertical-align: middle !important;
       word-wrap: break-word;
-      padding: 10px 5px;
+      padding: 10px 5px !important;
     }
 
     .answer-expected-warning {
@@ -175,7 +184,7 @@
       font-size: 22px;
       width: 28px;
       min-width: 28px;
-      vertical-align: middle;
+      vertical-align: middle !important;
     }
 
     .answer-cell {
@@ -286,7 +295,7 @@
     }
     .answer-header,
     .answer-cell {
-      max-width: 60px;
+      max-width: 130px;
     }
   }
 }

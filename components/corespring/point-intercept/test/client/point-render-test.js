@@ -1,13 +1,20 @@
-describe('corespring', function() {
+describe('point-intercept', function() {
 
   var testModel, scope, rootScope, container, element;
+
+  function Point (){
+    this.on = jasmine.createSpy('on'); 
+    this.X = jasmine.createSpy('x').and.returnValue(1);
+    this.Y = jasmine.createSpy('y').and.returnValue(1);
+    this.setAttribute = jasmine.createSpy('setAttribute');
+  }
 
   window.JXG = {
     JSXGraph: {
       initBoard: function() {
         return {
-          create: function() {},
-          on: function() {}
+          create: jasmine.createSpy('create').and.returnValue(new Point()),
+          on: jasmine.createSpy('on').and.returnValue({})
         };
       }
     },
@@ -23,29 +30,29 @@ describe('corespring', function() {
 
   var testModelTemplate = {
     data: {
-      "componentType": "corespring-point-intercept",
-      "title": "Point interaction sample",
-      "weight": 1,
-      "correctResponse": [
+      componentType: "corespring-point-intercept",
+      title: "Point interaction sample",
+      weight: 1,
+      correctResponse: [
         "0,6",
         "-3,0"
       ],
-      "feedback": {
-        "correctFeedbackType": "default",
-        "incorrectFeedbackType": "default",
-        "partialFeedbackType": "default"
+      feedback: {
+        correctFeedbackType: "default",
+        incorrectFeedbackType: "default",
+        partialFeedbackType: "default"
       },
-      "model": {
-        "config": {
-          "graphWidth": "300px",
-          "graphHeight": "300px",
-          "maxPoints": 2,
-          "pointLabels": [
+      model: {
+        config: {
+          graphWidth: "300px",
+          graphHeight: "300px",
+          maxPoints: 2,
+          pointLabels: [
             "label1",
             "label2"
           ],
-          "domainLabel": "domain",
-          "rangeLabel": "range"
+          domainLabel: "domain",
+          rangeLabel: "range"
         }
       }
     }
@@ -76,6 +83,20 @@ describe('corespring', function() {
     expect(element).not.toBe(null);
   });
 
+
+  describe('setDataAndSession', function(){
+
+    it('sets pointResponse', function(){
+      var m = _.cloneDeep(testModel);
+      m.session = {
+        answers: ['1,0', '2,0']
+      };
+      container.elements[1].setDataAndSession(m);
+      scope.$digest();
+      expect(container.elements[1].getSession()).toEqual({answers: ['1,0', '2,0']});
+    }); 
+  });
+
   describe('feedback', function() {
     it('shows feedback by default', function() {
       container.elements[1].setDataAndSession(testModel);
@@ -102,7 +123,7 @@ describe('corespring', function() {
       spyOn(scope, 'graphCallback');
       container.elements[1].setResponse({correctness: 'incorrect', feedback: 'not good'});
       scope.$digest();
-      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#EC971F', borderWidth : '2px' }, pointsStyle : '#EC971F' });
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#EC971F', borderWidth : '2px' }, pointsStyle : [] });
     });
 
     it('graph outline has correct color if correct answer is submitted', function() {
@@ -120,8 +141,59 @@ describe('corespring', function() {
       spyOn(scope, 'graphCallback');
       container.elements[1].setResponse({correctness: 'warning', feedback: 'good'});
       scope.$digest();
-      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : '#999' });
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [] });
     });
+  });
+
+  describe('pointsStyle', function() {
+    it('graphs incorrect colors for incorrect response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1'], correctResponse: ['1,2']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#EC971F' ] });
+    });
+
+    it('graphs correct colors for correct response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1'], correctResponse: ['1,1']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#3c763d' ] });
+    });
+
+    it('graphs some correct/incorrect colors for mixed response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1', '2,2'], correctResponse: ['0,0', '1,1']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#3c763d', '#EC971F' ] });
+    });
+
+    it('graphs correct colors for order-independent correct response', function() {
+      container.elements[1].setDataAndSession(testModel);
+      scope.$digest();
+      spyOn(scope, 'graphCallback');
+      container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1', '0,0'], correctResponse: ['0,0', '1,1']});
+      scope.$digest();
+      expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#3c763d', '#3c763d' ] });
+    });
+
+    describe('config.orderMatters = true', function() {
+      it('graphs incorrect colors for order-independent correct response', function() {
+        container.elements[1].setDataAndSession(testModel);
+        scope.config.orderMatters = true;
+        scope.$digest();
+        spyOn(scope, 'graphCallback');
+        container.elements[1].setResponse({correctness: 'warning', feedback: 'good', studentResponse: ['1,1', '0,0'], correctResponse: ['0,0', '1,1']});
+        scope.$digest();
+        expect(scope.graphCallback).toHaveBeenCalledWith({ graphStyle : { borderColor : '#999', borderWidth : '2px' }, pointsStyle : [ '#EC971F', '#EC971F' ] });
+      });
+    });
+    
   });
 
   describe('isAnswerEmpty', function() {
@@ -165,25 +237,29 @@ describe('corespring', function() {
   });
 
   describe('answer change callback', function() {
-    var changeHandlerCalled = false;
+    var handler;
 
     beforeEach(function() {
-      changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
-        changeHandlerCalled = true;
-      });
-      container.elements['1'].setDataAndSession(testModel);
+      var model = _.cloneDeep(testModel);
+
+      model.session = {
+        answers: ['0,1', '0.2']
+      };
+
+      handler = jasmine.createSpy('handler');
+      container.elements['1'].answerChangedHandler(handler);
+      container.elements['1'].setDataAndSession(model);
       scope.$digest();
     });
 
     it('does not get called initially', function() {
-      expect(changeHandlerCalled).toBe(false);
+      expect(handler).not.toHaveBeenCalled();
     });
 
     it('does get called when the answer is changed', function() {
       scope.pointResponse = ["0.1,0.6"];
       rootScope.$digest();
-      expect(changeHandlerCalled).toBe(true);
+      expect(handler).toHaveBeenCalled();
     });
 
   });

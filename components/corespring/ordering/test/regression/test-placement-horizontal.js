@@ -112,7 +112,7 @@ describe('placement ordering', function() {
     describe('MathJax', function() {
       it('renders', function(done) {
         browser
-          .waitFor('.choice')
+          .waitFor('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })
@@ -122,6 +122,7 @@ describe('placement ordering', function() {
         browser
           .submitItem()
           .resetItem()
+          .waitFor('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })

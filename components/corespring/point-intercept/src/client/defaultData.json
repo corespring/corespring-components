@@ -13,15 +13,15 @@
     {}
   ],
   "feedback" :  {
-    "correctFeedbackType": "default",
-    "partialFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "model": {
     "config": {
+      "graphTitle": "",
       "graphWidth": 500,
       "graphHeight": 500,
-      "graphPadding": 50,
       "maxPoints": "",
       "labelsType": "present",
       "pointLabels": [
@@ -30,20 +30,25 @@
         "C",
         "D"
       ],
-      "domainLabel": "x",
+      "domainLabel": "",
       "domainMin": -10,
       "domainMax": 10,
       "domainStepValue": 1,
+      "domainSnapValue": 1,
       "domainLabelFrequency": 1,
-      "rangeLabel": "y",
+      "domainGraphPadding": 50,
+      "rangeLabel": "",
       "rangeMin": -10,
       "rangeMax": 10,
       "rangeStepValue": 1,
+      "rangeSnapValue": 1,
       "rangeLabelFrequency": 1,
-      "scale": 1,
+      "rangeGraphPadding": 50,
       "sigfigs": -1,
       "showCoordinates": false,
+      "showPointLabels": true,
       "showInputs": true,
+      "showAxisLabels": true,
       "showFeedback": true
     }
   }

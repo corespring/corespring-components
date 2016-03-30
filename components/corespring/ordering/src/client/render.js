@@ -6,6 +6,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     function link (scope, element, attrs) {
 
+      var PlacementType = {
+        inPlace: 'inPlace',
+        placement: 'placement'
+      };
+
       function clearLandingPlaceChoices() {
         _.each(scope.landingPlaceChoices, function (v, k) {
           scope.landingPlaceChoices[k] = {};
@@ -98,13 +103,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       function restoreChoicesFromAnswer(answers) {
-        if (scope.model.config.placementType === 'placement') {
+        if (scope.model.config.placementType === PlacementType.placement) {
           _.each(answers, function (k, idx) {
             scope.landingPlaceChoices[idx] = scope.choiceForId(k) || {};
           });
         } else {
           var choices = [];
-          _.each(answers, function (a) {
+          _.each(answers.choices || answers, function (a) {
             var choice = _.find(scope.local.choices, function (c) {
               return c.id === a;
             });
@@ -143,7 +148,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         getSession: function () {
-          if (scope.model.config.placementType === 'placement') {
+          if (scope.model.config.placementType === PlacementType.placement) {
             var choices = [];
             for (var i = 0; i < scope.originalChoices.length; i++) {
               if (scope.landingPlaceChoices[i] && scope.landingPlaceChoices[i].id) {
@@ -155,10 +160,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
             };
           } else {
             return {
-              answers: {
-                choices: _.pluck(scope.local.choices, 'id'),
-                didInteract: scope.userHasInteracted
-              }
+              answers: scope.userHasInteracted ? _.pluck(scope.local.choices, 'id') : []
             };
           }
         },
@@ -175,6 +177,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.top = {};
           scope.userHasInteracted = false;
           scope.initUndo();
+        },
+
+        isAnswerEmpty: function() {
+          if(scope.model.config.placementType === PlacementType.placement) {
+            return _.isEmpty(this.getSession().answers);
+          } else {
+            return false;
+          }
         },
 
         setInstructorData: function (data) {

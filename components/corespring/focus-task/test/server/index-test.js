@@ -52,46 +52,100 @@ settings = function(feedback, userResponse, correctResponse) {
 
 describe('focus-task server logic', function() {
 
+  describe("with empty answer", function() {
+    var answer, expectedOutcome, question, settings;
 
-  it('returns an incorrect outcome for an empty answer', function(){
-    var outcome = server.createOutcome({correctResponse: {value: ['a']}}, null, {showFeedback: true, highlightCorrectResponse: true, highlightUserResponse: true});
-    outcome.should.eql({
-      score: 0,
-      correctness: 'incorrect',
-      feedback: {
-        a: 'shouldHaveBeenSelected'
-      }
+    beforeEach(function() {
+      question = {
+        correctResponse: {
+          value: ['a']
+        },
+        model: {
+          config:{}
+        }
+      };
+      settings = {
+        showFeedback: true,
+        highlightCorrectResponse: true,
+        highlightUserResponse: true
+      };
+      expectedOutcome = {
+        score: 0,
+        correctness: 'incorrect',
+        feedback: {
+          a: 'shouldHaveBeenSelected'
+        },
+        "outcome": [
+          "responsesBelowMin"
+        ]
+      };
+    });
+
+    it('returns an incorrect outcome for a null answer', function() {
+      var answer = null;
+      var outcome = server.createOutcome(question, answer, settings);
+      outcome.should.eql(expectedOutcome);
+    });
+
+    it('returns an incorrect outcome for an empty answer', function() {
+      var answer = [];
+      var outcome = server.createOutcome(question, answer, settings);
+      outcome.should.eql(expectedOutcome);
     });
   });
-  
-  describe('build feedback', function(){
-    it('returns an empty object', function(){
-      server.buildFeedback({correctResponse: {value: ['a']}}, {}, {}, true).should.eql({});
+
+  describe('build feedback', function() {
+    it('returns an empty object', function() {
+      server.buildFeedback({
+        correctResponse: {
+          value: ['a']
+        }
+      }, {}, {}, true).should.eql({});
     });
 
-    it('returns only the correct response', function(){
-      server.buildFeedback({correctResponse: {value: ['a']}}, {}, {highlightCorrectResponse: true}, true).should.eql({
+    it('returns only the correct response', function() {
+      server.buildFeedback({
+        correctResponse: {
+          value: ['a']
+        }
+      }, {}, {
+        highlightCorrectResponse: true
+      }, true).should.eql({
         a: 'shouldHaveBeenSelected'
       });
     });
 
-    it('returns correct and user response', function(){
-      server.buildFeedback({correctResponse: {value: ['a']}}, ['b', 'c'], {highlightCorrectResponse: true, highlightUserResponse: true}, true).should.eql({
+    it('returns correct and user response', function() {
+      server.buildFeedback({
+        correctResponse: {
+          value: ['a']
+        }
+      }, ['b', 'c'], {
+        highlightCorrectResponse: true,
+        highlightUserResponse: true
+      }, true).should.eql({
         a: 'shouldHaveBeenSelected',
         b: 'shouldNotHaveBeenSelected',
         c: 'shouldNotHaveBeenSelected'
       });
     });
 
-    it('returns user response', function(){
-      server.buildFeedback({correctResponse: {value: ['a']}}, ['b', 'c'], {highlightCorrectResponse: false, highlightUserResponse: true}, true).should.eql({
+    it('returns user response', function() {
+      server.buildFeedback({
+        correctResponse: {
+          value: ['a']
+        }
+      }, ['b', 'c'], {
+        highlightCorrectResponse: false,
+        highlightUserResponse: true
+      }, true).should.eql({
         b: 'shouldNotHaveBeenSelected',
         c: 'shouldNotHaveBeenSelected'
       });
     });
 
   });
-  
+
   describe('is correct', function() {
     server.isCorrect(["1"], ["1"]).should.eql(true);
     server.isCorrect(["1", "2"], ["1"]).should.eql(false);
@@ -109,7 +163,6 @@ describe('focus-task server logic', function() {
       response.correctness.should.eql(expected.correctness);
       response.score.should.eql(expected.score);
     });
-
 
     it('should respond to a correct answer', function() {
       var expected, response;
@@ -159,8 +212,6 @@ describe('focus-task server logic', function() {
       response.feedback.should.eql(expected.feedback);
       response.score.should.eql(expected.score);
     });
-
-
 
     it('should respond to an incorrect response and show feedback for 1 incorrect and 1 correct', function() {
       var expected, response;

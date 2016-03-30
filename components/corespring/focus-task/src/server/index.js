@@ -1,14 +1,18 @@
 var _ = require('lodash');
 
-exports.isCorrect = function(answer, correctAnswer) {
+exports.isCorrect = isCorrect;
+exports.buildFeedback = buildFeedback;
+exports.createOutcome = createOutcome;
+
+function isCorrect(answer, correctAnswer) {
   var diff, diff2;
   diff = _.difference(answer, correctAnswer);
   diff2 = _.difference(correctAnswer, answer);
   return diff.length === 0 && diff2.length === 0;
-};
+}
 
 
-var buildFeedback = function(question, answer, settings, isCorrect) {
+function buildFeedback(question, answer, settings, isCorrect) {
   var out = {};
   var correctResponse = question.correctResponse.value;
   var arr = [];
@@ -27,25 +31,24 @@ var buildFeedback = function(question, answer, settings, isCorrect) {
   }
 
   return out;
-};
-
-exports.buildFeedback = buildFeedback;
-
+}
 
 /*
  Create a response to the answer based on the question, the answer and the respond settings
  */
-exports.createOutcome = function(question, answer, settings) {
+function createOutcome(question, answer, settings) {
 
   if(!question || _.isEmpty(question)){
     throw new Error('question should never be undefined or empty');
   }
 
-  if(!answer){
+  if(!answer || answer.length === 0){
     return {
       correctness: 'incorrect', 
       score: 0,
-      feedback: settings.showFeedback ? buildFeedback(question, answer, settings, answerIsCorrect) : null
+      feedback: settings.showFeedback ?
+        buildFeedback(question, answer, settings, answerIsCorrect) : null,
+      outcome: settings.showFeedback ? ["responsesBelowMin"] : null
     };
   }
 
@@ -56,7 +59,7 @@ exports.createOutcome = function(question, answer, settings) {
   var config = question.model.config || {};
   var minSelections = config.minSelections || 0;
   var maxSelections = config.maxSelections || Number.MAX_VALUE;
-  var checkIfCorrect = config.checkIfCorrect === "yes" || config.checkIfCorrect === "true";
+  var checkIfCorrect = config.checkIfCorrect === "yes" || config.checkIfCorrect === "true" || config.checkIfCorrect === true;
   var selectionNumberIsCorrect = answer.length >= minSelections && answer.length <= maxSelections;
   var isAnswerPartOfCorrectAnswer = _.every(answer, function(a) {
     return _.contains(question.correctResponse.value, a);
@@ -94,4 +97,4 @@ exports.createOutcome = function(question, answer, settings) {
   }
 
   return response;
-};
+}

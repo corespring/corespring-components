@@ -93,6 +93,7 @@ describe('corespring:dnd-categorize:configure', function() {
         parseDomForMath: function() {}
       });
       $provide.value('ServerLogic', MockServerLogic);
+      $provide.value('Msgr', {send:function(){}});
     });
   });
 
@@ -330,10 +331,21 @@ describe('corespring:dnd-categorize:configure', function() {
 
   describe('addChoice', function() {
     beforeEach(setModel);
+
     it('should work', function() {
       expect(scope.editorModel.choices.length).toBe(4);
       scope.addChoice();
       expect(scope.editorModel.choices.length).toBe(5);
+    });
+    it('should set moveOnDrag to true if removeAllAfterPlacing is true', function(){
+      scope.editorModel.removeAllAfterPlacing.value = true;
+      scope.addChoice();
+      expect(scope.editorModel.choices.pop().moveOnDrag).toBe(true);
+    });
+    it('should set moveOnDrag to false if removeAllAfterPlacing is false', function(){
+      scope.editorModel.removeAllAfterPlacing.value = false;
+      scope.addChoice();
+      expect(scope.editorModel.choices.pop().moveOnDrag).toBe(false);
     });
   });
 

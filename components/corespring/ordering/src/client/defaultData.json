@@ -2,9 +2,9 @@
   "componentType": "corespring-ordering",
   "title": "Ordering",
   "feedback": {
-    "correctFeedbackType": "default",
-    "partialFeedbackType": "default",
-    "incorrectFeedbackType": "default"
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
   },
   "allowPartialScoring": true,
   "partialScoring" : [
@@ -15,36 +15,37 @@
       {
         "label": "",
         "labelType": "text",
-        "id": "c1",
+        "id": "id_1",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c2",
+        "id": "id_2",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c3",
+        "id": "id_3",
         "moveOnDrag": true
       },
       {
         "label": "",
         "labelType": "text",
-        "id": "c4",
+        "id": "id_4",
         "moveOnDrag": true
       }
     ],
     "config": {
-      "shuffle": true,
-      "showOrdering": false,
-      "choiceAreaLayout": "vertical",
-      "choiceAreaLabel": "",
       "answerAreaLabel": "",
+      "choiceAreaLabel": "",
+      "choiceAreaLayout": "vertical",
       "choiceAreaPosition": "above",
-      "placementType": "inPlace"
+      "placementType": "inPlace",
+      "removeAllAfterPlacing": true,
+      "showOrdering": false,
+      "shuffle": true
     }
   },
   "weight": 1,

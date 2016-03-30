@@ -1,0 +1,124 @@
+@import '../../../../../less/common';
+
+.focus-container {
+  background-color: #000;
+  background: url("../../images/header-dark-grey-br-1.png") repeat scroll center top transparent;
+  border-radius: 4px;
+  box-shadow: inset -1px 1px 10px #000000;
+  -moz-box-shadow: inset -1px 1px 10px #000000;
+  -webkit-box-shadow: inset -1px 1px 10px #000000;
+  height: auto;
+  padding: 10px 0px;
+  user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  width: 560px;
+
+  .focus-row {
+    padding: 10px 0;
+
+    .inner {
+      display: table;
+      margin: 0 auto;
+      height: auto;
+      min-height: 94px;
+
+      .focus-element {
+        background: #808080;
+        border: 2px solid #BFBFBF;
+        color: #fff;
+        float: left;
+        font-family: "Ubuntu", Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        height: auto;
+        line-height: 15px;
+        margin: 0px 7px 0px 7px;
+        max-width: 94px;
+        padding: 4px;
+        text-align: center;
+        text-shadow: 1px 1px 0px #000;
+        vertical-align: middle;
+        width: 82px;
+
+        &.square {
+          -moz-border-radius: 10px;
+          -webkit-border-radius: 10px;
+          border-radius: 10px;
+          height: auto;
+          min-height: 94px;
+        }
+
+        &.circle {
+          -moz-border-radius: 94px;
+          -webkit-border-radius: 94px;
+          border-radius: 94px;
+          height: auto;
+          margin: 8px;
+        }
+
+        span {
+          display: table-cell;
+          vertical-align: middle;
+          height: 72px;
+          width: 82px;
+        }
+
+        &[enabled="true"]:hover {
+          background: #CCC;
+          border: 6px solid #00ACCE;
+          color: #000;
+          cursor: hand;
+          cursor: pointer;
+          padding: 0px;
+          text-shadow: none;
+        }
+
+        &[enabled="true"]:active {
+          background: #FFF;
+        }
+
+        &.selected {
+          box-shadow: 0px 0px 21px #f7ff00;
+          -moz-box-shadow: 0px 0px 21px #f7ff00;
+          -webkit-box-shadow: 0px 0px 21px #f7ff00;
+          background: #fff;
+          border: 6px solid #00ACCE;
+          color: #000;
+          font-weight: 500;
+          padding: 0px;
+          text-shadow: none;
+
+          &.unknown {
+            background-color: #4055f8;
+          }
+        }
+
+        &.shouldHaveBeenSelected {
+          background-color: #80b312;
+          border: 6px solid #FFF;
+          color: #FFF;
+          padding: 0px;
+          text-shadow: 0px 2px 1px rgba(0, 0, 0, 1);
+        }
+
+        &.shouldNotHaveBeenSelected {
+          background-color: #F8A31A;
+          border: 6px solid #FFF;
+          color: #FFF;
+          text-shadow: 1px 1px 0px #000;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+

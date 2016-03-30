@@ -39,6 +39,8 @@ var main = [
           });
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
+          scope.fixedWidth =
+            scope.model.config.backgroundImage.fixedWidth === undefined ? true : scope.model.config.backgroundImage.fixedWidth;
 
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.droppedChoices = _.map(dataAndSession.session.answers, function(answer) {
@@ -131,6 +133,19 @@ var main = [
           });
           return _.merge(c, choice);
         }).value();
+      };
+
+      scope.incorrectChoices = function() {
+        var correctIds = (scope.response && scope.response.correctResponse) ?
+          _.pluck(scope.response.correctResponse, 'id') : [];
+
+        return _.filter(scope.model.choices, function(choice) {
+          if (!_.isEmpty(correctIds)) {
+            return !_.contains(correctIds, choice.id);
+          } else {
+            return false;
+          }
+        });
       };
 
       scope.getPlaceholderChoices = function() {
@@ -304,33 +319,44 @@ var main = [
 
     };
 
-    var choices = function(positons) {
+    var choices = function(positons, correctness) {
+      correctness = correctness || 'all';
+      var choices = (correctness === 'incorrect' ?
+        [
+          '<div class="choice-wrapper" ng-repeat="choice in incorrectChoices()">',
+          '  <div class="choice" ng-bind-html-unsafe="choice.label">',
+          '  </div>',
+          '</div>'
+        ] : [
+          '<div class="choice-wrapper" ng-repeat="choice in choices">',
+          '  <div class="choice"',
+          '       data-drag="editable"',
+          '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
+          '       data-jqyoui-options="draggableJquiOptions"',
+          '       ng-bind-html-unsafe="choice.label">',
+          '  </div>',
+          '</div>',
+          '<div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
+          '  <div class="choice placeholder"',
+          '       ng-bind-html-unsafe="choice.label">',
+          '  </div>',
+          '</div>'
+        ]).join('');
+
       return [
         '<div ng-if="model.config.choiceAreaPosition == \'' + positons[0] + '\' || model.config.choiceAreaPosition == \'' + positons[1] + '\'"',
         '       class="choices {{model.config.choiceAreaPosition}}"',
         '       data-drop="true"',
         '       jqyoui-droppable="{onDrop: \'onChoiceAreaDrop()\'}"',
         '       data-jqyoui-options="droppableJquiOptions">',
-        '  <div class="choice-wrapper" ng-repeat="choice in choices">',
-        '    <div class="choice"',
-        '         data-drag="editable"',
-        '         jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
-        '         data-jqyoui-options="draggableJquiOptions"',
-        '         ng-bind-html-unsafe="choice.label">',
-        '    </div>',
-        '  </div>',
-        '  <div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
-        '    <div class="choice placeholder"',
-        '         ng-bind-html-unsafe="choice.label">',
-        '    </div>',
-        '  </div>',
+        choices,
         '  <div class="clearfix"></div>',
         '</div>'
       ].join('');
     };
 
     var correctAnswer = [
-      '    <div class="background-image">',
+      '    <div class="background-image" ng-class="{\'fixed-width\': fixedWidth}">',
       '      <svg class="hotspots">',
       '        <g ng-repeat="hotspot in model.hotspots">',
       '          <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
@@ -365,7 +391,7 @@ var main = [
         '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="response && response.correctness === \'instructor\'">',
         choices(['left', 'top']),
         '    <div class="answers">',
-        '      <div class="background-image {{response.correctClass}}"',
+        '      <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
         '           data-drop="true"',
         '           jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
         '        <svg ng-if="model.config.showHotspots" class="hotspots">',
@@ -392,7 +418,9 @@ var main = [
         correctAnswer,
         '  </div>',
         '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
+        choices(['left', 'top'], 'incorrect'),
         correctAnswer,
+        choices(['bottom', 'right'], 'incorrect'),
         '  </div>',
         '</div>'
       ].join("\n")

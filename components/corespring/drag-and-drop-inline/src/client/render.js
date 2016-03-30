@@ -25,8 +25,8 @@ var main = [
 
       function throttle(fn) {
         return _.throttle(fn, 500, {
-          trailing: true,
-          leading: false
+          trailing: false,
+          leading: true
         });
       }
 

@@ -29,7 +29,6 @@ describe('blueprint', function() {
     };
 
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('match', itemJsonFilename))
       .call(done);
   });

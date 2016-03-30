@@ -65,7 +65,6 @@ var main = [
           scope.response = response;
           scope.feedback = response.feedback;
           scope.correctClass = response.feedback && response.correctness;
-
         },
 
         setMode: function(newMode) {},
@@ -100,7 +99,7 @@ var main = [
 
     function template() {
       return [
-        '<div class="cs-text-entry" ng-class="{popupFeedback: feedback}">',
+        '<div class="cs-text-entry" ng-class="{popupFeedback: feedback.message}">',
         '  <div class="cs-text-entry__text-input-holder" ',
         '     ng-class="feedback.correctness" ',
         '     feedback-popover="response">',

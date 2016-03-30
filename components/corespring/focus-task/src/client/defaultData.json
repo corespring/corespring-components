@@ -1,11 +1,19 @@
 {
-  "componentType": "",
-  "correctResponse": "",
+  "componentType": "corespring-focus-task",
+  "correctResponse": {
+    "value": []
+  },
   "title": "",
   "feedback" :  {
   },
   "model": {
     "config": {
-    }
+      "checkIfCorrect": "no",
+      "itemShape": "square",
+      "maxSelections": 0,
+      "minSelections": 0,
+      "shuffle": false
+    },
+    "choices": []
   }
 }

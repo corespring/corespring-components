@@ -5,115 +5,154 @@ var def = ['Canvas',
       restrict: 'A',
       scope: {
         interactionCallback: '=',
-        graphCallback: '='
+        graphCallback: '=',
+        hoveredLine: '='
       },
       link: function(scope, elem, attr) {
-        //global vars
-        var canvasAttrs = {
-          graphPadding: parseInt(attr.graphpadding ? attr.graphpadding : 25, 10),
-          domain: {
-            label: attr.domainlabel,
-            min: parseFloat(attr.domainmin ? attr.domainmin : -10, 10),
-            max: parseFloat(attr.domainmax ? attr.domainmax : 10, 10),
-            stepValue: parseFloat(attr.domainstepvalue ? attr.domainstepvalue : 1),
-            labelFrequency: attr.domainlabelfrequency
-          },
-          range: {
-            label: attr.rangelabel,
-            min: parseFloat(attr.rangemin ? attr.rangemin : -10, 10),
-            max: parseFloat(attr.rangemax ? attr.rangemax : 10, 10),
-            stepValue: parseFloat(attr.rangestepvalue ? attr.rangestepvalue : 1),
-            labelFrequency: attr.rangelabelfrequency
-          },
-          scale: parseFloat(attr.scale ? attr.scale : 1, 10),
-          maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
-          tickLabelFrequency: parseFloat(attr.ticklabelfrequency ? attr.ticklabelfrequency : 1, 10),
-          pointLabels: attr.pointlabels,
-          width: elem.width(),
-          height: elem.height(),
-          showLabels: attr.showlabels,
-          showCoordinates: attr.showcoordinates,
-          showPoints: attr.showpoints
+
+        var getCanvasAttributes = function() {
+          return {
+            domain: {
+              label: attr.domainlabel,
+              min: parseFloat(attr.domainmin ? attr.domainmin : -10, 10),
+              max: parseFloat(attr.domainmax ? attr.domainmax : 10, 10),
+              stepValue: parseFloat(attr.domainstepvalue ? attr.domainstepvalue : 1),
+              snapValue: parseFloat(attr.domainsnapvalue ? attr.domainsnapvalue : 1),
+              labelFrequency: attr.domainlabelfrequency,
+              graphPadding: parseInt(attr.domaingraphpadding ? attr.domaingraphpadding : 50, 10)
+            },
+            range: {
+              label: attr.rangelabel,
+              min: parseFloat(attr.rangemin ? attr.rangemin : -10, 10),
+              max: parseFloat(attr.rangemax ? attr.rangemax : 10, 10),
+              stepValue: parseFloat(attr.rangestepvalue ? attr.rangestepvalue : 1),
+              snapValue: parseFloat(attr.rangesnapvalue ? attr.rangesnapvalue : 1),
+              labelFrequency: attr.rangelabelfrequency,
+              graphPadding: parseInt(attr.rangegraphpadding ? attr.rangegraphpadding : 50, 10)
+            },
+            maxPoints: parseInt(attr.maxpoints ? attr.maxpoints : null, 10),
+            pointLabels: attr.pointlabels,
+            graphTitle: attr.graphtitle,
+            width: elem.width(),
+            height: elem.height(),
+            showLabels: parseBool(attr.showlabels, true),
+            showCoordinates: parseBool(attr.showcoordinates, true),
+            showPointLabels: parseBool(attr.showpointlabels, true),
+            showPoints: parseBool(attr.showpoints, true),
+            showAxisLabels: parseBool(attr.showaxislabels, true)
+          };
         };
 
-        function generateCanvasId() {
+        var parseBool = function(value, defaultValue) {
+          return _.isUndefined(value) || _.isEmpty(value) ? defaultValue : String(value).toLowerCase() === 'true';
+        };
+
+        var generateCanvasId = function() {
           var canvasId = Math.random().toString(36).substring(7);
           elem.find(".jxgbox").attr("id", canvasId);
           return canvasId;
-        }
+        };
 
-        function setGraphLabels(canvas) {
+        // add x and y axis outside the graph
+        var setGraphLabels = function(canvas, canvasAttrs) {
           var jxgbox = elem.find(".jxgbox");
           var coords = canvas.getPointCoords(0, 0);
-          var offset;
-          jxgbox.before('<div class="axis range-axis">'+canvasAttrs.range.label+'</div>');
-          jxgbox.after('<div class="axis domain-axis">'+canvasAttrs.domain.label+'</div>');
-
-          // domain
           var graphVCenter = elem.height() / 2;
-
-          var domainAxis = elem.find('.domain-axis');
-          var domainAxisWidth = domainAxis.width();
-          domainAxis.css("left", elem.width() - (domainAxisWidth / 2) + (domainAxis.height() / 2));
-
-          if (coords.y <= graphVCenter) {
-            offset = coords.y - domainAxis.height() / 4;
-            domainAxis.css("top", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
-          } else {
-            offset = elem.height() - coords.y - domainAxis.height() / 2;
-            domainAxis.css("bottom", offset < domainAxis.width() / 2 ? domainAxis.width() / 2 : offset);
-          }
-
-          // range
           var graphHCenter = elem.width() / 2;
-          var rangeAxis = elem.find('.range-axis');
-          var rangeAxisWidth = rangeAxis.width();
+          var offset = 0;
 
-          if (coords.x <= graphHCenter) {
-            offset = coords.x - (rangeAxisWidth / 2);
-            rangeAxis.css("left", offset < 0 ? 0 : offset);
-          } else {
-            offset = (canvasAttrs.width - coords.x) - (rangeAxisWidth / 2);
-            rangeAxis.css("right", offset < 0 ? 0 : offset);
+          if(!_.isUndefined(canvasAttrs.graphTitle) && !_.isEmpty(canvasAttrs.graphTitle)) {
+            jxgbox.before('<div class="graph-label graph-title">'+canvasAttrs.graphTitle+'</div>');
+            var graphTitle = elem.find('.graph-title');
+            graphTitle.css("left", graphHCenter - (graphTitle.width() / 2));
           }
-        }
 
-        var canvas = new Canvas(generateCanvasId(), canvasAttrs);
-        setGraphLabels(canvas);
+          jxgbox.before('<div class="graph-label domain-label">'+canvasAttrs.domain.label+'</div>');
+          jxgbox.after('<div class="graph-label range-label">'+canvasAttrs.range.label+'</div>');
 
-        //define callbacks
-        canvas.on('up', function(e) {
-          if (lockGraph) {
-            return;
+
+          // domain label
+          var domainLabel = elem.find('.domain-label');
+          domainLabel.css("left", graphHCenter - (domainLabel.width() / 2));
+
+          // range label
+          var rangeLabel = elem.find('.range-label');
+          rangeLabel.css("left",  - (rangeLabel.width() / 2) - rangeLabel.height() / 2);
+          rangeLabel.css("top",  graphVCenter - rangeLabel.height() / 2);
+
+          if(canvasAttrs.showAxisLabels === true || canvasAttrs.showAxisLabels === 'true') {
+
+            // domain axis label
+            jxgbox.after('<div class="graph-label domain-axis-label">x</div>');
+            var domainAxisLabel = elem.find('.domain-axis-label');
+            var domainAxisLabelHeight = domainAxisLabel.height();
+            domainAxisLabel.css("right", 0 - domainAxisLabel.width());
+
+            if (coords.y <= graphVCenter) {
+              offset = coords.y - domainAxisLabelHeight / 2;
+              domainAxisLabel.css("top", offset < domainAxisLabelHeight / 2 ? domainAxisLabelHeight / 2 : offset);
+            } else {
+              offset = elem.height() - coords.y - domainAxisLabel.height() / 2;
+              domainAxisLabel.css("bottom", offset < domainAxisLabelHeight / 2 ? domainAxisLabelHeight / 2 : offset);
+            }
+
+            // range axis label
+            jxgbox.before('<div class="graph-label range-axis-label">y</div>');
+            var rangeAxisLabel = elem.find('.range-axis-label');
+            var rangeAxisLabelWidth = rangeAxisLabel.width();
+
+            if (coords.x <= graphHCenter) {
+              offset = coords.x - (rangeAxisLabelWidth / 2);
+              rangeAxisLabel.css("left", offset < 0 ? 0 : offset);
+            } else {
+              offset = (canvasAttrs.width - coords.x) - (rangeAxisLabelWidth / 2);
+              rangeAxisLabel.css("right", offset < 0 ? 0 : offset);
+            }
           }
-          var coords = canvas.getMouseCoords(e);
-          if ((!canvasAttrs.maxPoints || canvas.points.length < canvasAttrs.maxPoints) && !canvas.pointCollision(coords)) {
-            addPoint(coords);
-          }
-        });
-        var lockGraph = false;
-        var points = {};
+        };
+
+        var addCanvasPoint = function(coords, ptName, ptOptions) {
+          var point = canvas.addPoint(coords, ptName, ptOptions);
+          point.on('up', function(e) {
+            onPointMove(point);
+            return false;
+          });
+          return point;
+        };
+
+        var addPoint = function(coords, ptName, ptOptions) {
+          var point = addCanvasPoint(coords, ptName, ptOptions);
+          points[point.name] = getPointData(point);
+          return getPointData(point);
+        };
+
+        var addUserPoint = function(coords, ptName, ptOptions) {
+          var point = addCanvasPoint(coords, ptName, ptOptions);
+          onPointMove(point);
+          return point;
+        };
+
         var onPointMove = function(point, coords) {
           if (coords) {
             point.moveTo([coords.x, coords.y]);
           }
-          points[point.name] = {
-            x: (Math.round(point.X() * 100) / 100),
-            y: (Math.round(point.Y() * 100) / 100),
-            index: point.canvasIndex
-          };
+
+          var movedPoint = getPointData(point);
+          points[point.name] = movedPoint;
+
           scope.interactionCallback({
-            points: points
+            points: points,
+            point: movedPoint
           });
         };
 
-        var addPoint = function(coords, ptName, ptOptions) {
-          var point = canvas.addPoint(coords, ptName, ptOptions);
-          point.on('up', function(e) {
-            onPointMove(point);
-          });
-          onPointMove(point);
-          return point;
+        var getPointData = function(point) {
+          return {
+            index: point.canvasIndex,
+            name: point.name,
+            x: (Math.round(point.X() * 100) / 100),
+            y: (Math.round(point.Y() * 100) / 100)
+          };
         };
 
         var clearBoard = function() {
@@ -126,6 +165,190 @@ var def = ['Canvas',
           points = {};
         };
 
+        var drawShapeCallback = function(drawShape) {
+          var shape;
+
+          if (drawShape.line) {
+            var pt1 = canvas.getPoint(drawShape.line[0]);
+            var pt2 = canvas.getPoint(drawShape.line[1]);
+            if (pt1 && pt2) {
+              shape = canvas.makeLine([pt1, pt2], {
+                id: drawShape.id,
+                label: drawShape.label,
+                color: drawShape.color
+              });
+            }
+          } else if (drawShape.curve) {
+            shape = canvas.makeCurve(drawShape.curve, {
+                id: drawShape.id,
+                label: drawShape.label,
+                color: drawShape.color
+              });
+          }
+
+          if(!_.isUndefined(scope.hoveredLine)) {
+            shape.on('over', function(){
+              scope.hoveredLine = this.customId;
+            });
+            shape.on('out', function(){
+              scope.hoveredLine = -1;
+            });
+          }
+        };
+
+        var addCallback = function(add) {
+          if (add.point) {
+            var options = {};
+            if(add.color) {
+              options.strokeColor = add.color;
+              options.fillColor = add.color;
+            }
+            if(add.name) {
+              options.name = add.name;
+            }
+
+            if(add.triggerCallback) {
+              return getPointData(addUserPoint(add.point, undefined, options));
+            } else {
+              return addPoint(add.point, undefined, options);
+            }
+          }
+        };
+
+        var updateCallback = function(update) {
+          if (update.point) {
+            canvas.getPoint(update.point.name).moveTo([update.point.x, update.point.y]);
+          }
+        };
+
+        var removeCallback = function(remove) {
+          if (remove.line) {
+            canvas.removeShapeByCustomId(remove.line);
+          }
+          if (remove.points) {
+            _.each(remove.points, function(point) {
+              canvas.removePointByName(point.name);
+            });
+          } else if (remove.point) {
+            canvas.removePointByName(remove.point.name);
+          }
+        };
+
+        var pointColorCallback = function(pointColor) {
+          if (pointColor.points) {
+            _.each(pointColor.points, function(point) {
+              canvas.changePointColor(canvas.getPoint(point), pointColor.color, pointColor.symbol);
+            });
+          } else if (pointColor.point) {
+            canvas.changePointColor(canvas.getPoint(pointColor.point), pointColor.color, pointColor.symbol);
+          }
+        };
+
+        var shapeColorCallback = function(shapeColor) {
+          if (shapeColor.shape) {
+            var shape = canvas.getShape(shapeColor.shape);
+            if(shape) {
+              canvas.changeShapeColor(shape, shapeColor.color);
+              if(shape.point1) { canvas.changePointColor(shape.point1, shapeColor.color); }
+              if(shape.point2) { canvas.changePointColor(shape.point2, shapeColor.color); }
+            }
+          }
+        };
+
+        var canvasAttrs = getCanvasAttributes();
+        var lockGraph = false;
+        var points = {};
+
+        // initialize canvas
+        var canvas = new Canvas(generateCanvasId(), canvasAttrs);
+        setGraphLabels(canvas, canvasAttrs);
+
+        // define canvas callbacks
+        canvas.on('up', function(e) {
+          if (lockGraph) {
+            return;
+          }
+          var coords = canvas.getMouseCoords(e);
+          if ((!canvasAttrs.maxPoints || canvas.points.length < canvasAttrs.maxPoints) && !canvas.pointCollision(coords)) {
+            addUserPoint(coords);
+          }
+        });
+
+        scope.graphCallback = function(params) {
+          if (params.add && canvas) {
+            return addCallback(params.add);
+          }
+          if (params.update && canvas) {
+            updateCallback(params.update);
+          }
+          if (params.remove && canvas) {
+            removeCallback(params.remove);
+          }
+
+          if (params.points && canvas) {
+            processPointsCallback(params.points);
+          }
+          if (params.drawShape && canvas) {
+            drawShapeCallback(params.drawShape);
+          }
+          if (params.pointColor && canvas) {
+            pointColorCallback(params.pointColor);
+          }
+          if (params.shapeColor && canvas) {
+            shapeColorCallback(params.shapeColor);
+          }
+
+          if (params.clearBoard && canvas) {
+            clearBoard();
+            scope.boxStyle = {
+              width: "100%",
+              height: "100%"
+            };
+            lockGraph = false;
+          }
+          if (params.pointsStyle && canvas) {
+            if (Array.isArray(params.pointsStyle)) {
+              _.each(_.zip(canvas.points, params.pointsStyle), function(pair) {
+                var point = pair[0];
+                var style = pair[1];
+                canvas.changePointColor(point, style);
+              });
+            } else {
+              _.each(canvas.points, function(p) {
+                canvas.changePointColor(p, params.pointsStyle);
+              });
+            }
+          }
+          if (params.graphStyle) {
+            scope.boxStyle = _.extend({
+              width: "100%",
+              height: "100%"
+            }, params.graphStyle);
+          }
+          if (params.shapesStyle && canvas) {
+            _.each(canvas.shapes, function(shape) {
+              canvas.changeShapeColor(shape, params.shapesStyle);
+            });
+          }
+          if (params.lockGraph && canvas) {
+            _.each(canvas.points, function(p) {
+              p.setAttribute({
+                fixed: true
+              });
+            });
+            lockGraph = true;
+          }
+          if (params.unlockGraph && canvas) {
+            _.each(canvas.points, function(p) {
+              p.setAttribute({
+                fixed: false
+              });
+            });
+            lockGraph = false;
+          }
+        };
+
+        // still used on single line, plot point components
         function processPointsCallback(paramPoints) {
           var i, coordx, coordy, coords, canvasPoint;
           if (!lockGraph) {
@@ -181,67 +404,6 @@ var def = ['Canvas',
             }
           }
         }
-
-        function drawShapeCallback(drawShape) {
-          if (drawShape.line) {
-            var pt1 = canvas.getPoint(drawShape.line[0]);
-            var pt2 = canvas.getPoint(drawShape.line[1]);
-            if (pt1 && pt2) {
-              canvas.makeLine([pt1, pt2], drawShape.name);
-            }
-          } else if (drawShape.curve) {
-            canvas.makeCurve(drawShape.curve);
-          }
-        }
-
-        scope.graphCallback = function(params) {
-          if (params.points && canvas) {
-            processPointsCallback(params.points);
-          }
-          if (params.drawShape && canvas) {
-            drawShapeCallback(params.drawShape);
-          }
-          if (params.clearBoard && canvas) {
-            clearBoard();
-            scope.boxStyle = {
-              width: "100%",
-              height: "100%"
-            };
-            lockGraph = false;
-          }
-          if (params.pointsStyle && canvas) {
-            _.each(canvas.points, function(p) {
-              canvas.changePointColor(p, params.pointsStyle);
-            });
-          }
-          if (params.graphStyle) {
-            scope.boxStyle = _.extend({
-              width: "100%",
-              height: "100%"
-            }, params.graphStyle);
-          }
-          if (params.shapesStyle && canvas) {
-            _.each(canvas.shapes, function(shape) {
-              canvas.changeShapeColor(shape, params.shapesStyle);
-            });
-          }
-          if (params.lockGraph && canvas) {
-            _.each(canvas.points, function(p) {
-              p.setAttribute({
-                fixed: true
-              });
-            });
-            lockGraph = true;
-          }
-          if (params.unlockGraph && canvas) {
-            _.each(canvas.points, function(p) {
-              p.setAttribute({
-                fixed: false
-              });
-            });
-            lockGraph = false;
-          }
-        };
       }
     };
   }];

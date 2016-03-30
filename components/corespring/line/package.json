@@ -38,11 +38,15 @@
         {
           "name": "feedback-templates",
           "organization": "corespring"
+        },
+        {
+          "name": "navigator",
+          "organization": "corespring"
         }
     ],
     "name": "line",
     "organization": "corespring",
     "released": true,
-    "title": "Graph Lines",
+    "title": "Graph Lines (Single)",
     "titleGroup": "Mathematics"
 }
