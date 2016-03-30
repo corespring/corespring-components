@@ -39,7 +39,7 @@ describe('placement ordering', function() {
         browser
           .url(browser.options.getUrl('ordering', itemJsonFilename))
           .waitForVisible('.player-rendered')
-          .call(done)
+          .call(done);
       });
 
       it('correct answer results in correct feedback', function(done) {
