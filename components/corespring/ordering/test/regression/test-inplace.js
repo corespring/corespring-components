@@ -13,6 +13,13 @@ describe('inplace ordering', function() {
 
   beforeEach(function(done) {
 
+    browser.waitingDragAndDrop = function(fromSelector, toSelector) {
+      return this
+        .waitForExist(fromSelector)
+        .waitForExist(toSelector)
+        .dragAndDrop(fromSelector, toSelector);
+    };
+
     browser.submitItem = function() {
       this.execute('window.submit()');
       return this;

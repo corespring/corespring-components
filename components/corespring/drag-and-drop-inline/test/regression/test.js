@@ -25,10 +25,16 @@ describe('drag and drop inline', function() {
 
   beforeEach(function(done) {
     browser.dragAndDropWithOffset = function(fromSelector, toSelector) {
-      return this.moveToObject(fromSelector, 20, 4)
+      return this
+        .waitForExist(fromSelector)
+        .waitForExist(toSelector)
+        .moveToObject(fromSelector, 20, 4)
         .buttonDown(0)
+        .pause(500)
         .moveToObject(toSelector, 20, 10)
-        .buttonUp();
+        .pause(500)
+        .buttonUp()
+        .pause(500);
     };
 
     browser.submitItem = function() {

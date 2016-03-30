@@ -16,6 +16,13 @@ describe('placement ordering', function() {
   };
 
   beforeEach(function(done) {
+    browser.waitingDragAndDrop = function(fromSelector, toSelector) {
+      return this
+        .waitForExist(fromSelector)
+        .waitForExist(toSelector)
+        .dragAndDrop(fromSelector, toSelector);
+    };
+    
     browser.submitItem = function() {
       this.execute('window.submit()');
       return this;
@@ -41,8 +48,8 @@ describe('placement ordering', function() {
 
       it('correct answer results in correct feedback', function(done) {
         browser
-          .dragAndDrop(divContaining('Apple'), landingPlace(1))
-          .dragAndDrop(divContaining('Pear'), landingPlace(2))
+          .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
+          .waitingDragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
           .waitFor('.feedback.correct')
           .call(done);
@@ -50,8 +57,8 @@ describe('placement ordering', function() {
 
       it('incorrect answer results in incorrect feedback', function(done) {
         browser
-          .dragAndDrop(divContaining('Banana'), landingPlace(1))
-          .dragAndDrop(divContaining('Apple'), landingPlace(2))
+          .waitingDragAndDrop(divContaining('Banana'), landingPlace(1))
+          .waitingDragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
           .waitFor('.feedback.incorrect')
           .call(done);
@@ -59,8 +66,8 @@ describe('placement ordering', function() {
 
       it('one correct answer results in partially correct item', function(done) {
         browser
-          .dragAndDrop(divContaining('Apple'), landingPlace(1))
-          .dragAndDrop(divContaining('Banana'), landingPlace(2))
+          .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
+          .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .waitFor('.feedback.partial')
           .call(done);
@@ -68,8 +75,8 @@ describe('placement ordering', function() {
 
       it('correct answer is not visible after reset', function(done) {
         browser
-          .dragAndDrop(divContaining('Apple'), landingPlace(1))
-          .dragAndDrop(divContaining('Banana'), landingPlace(2))
+          .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
+          .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .click('.show-correct-button')
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
@@ -84,8 +91,8 @@ describe('placement ordering', function() {
 
       it('correct answer is not visible after reset and submit', function(done) {
         browser
-          .dragAndDrop(divContaining('Apple'), landingPlace(1))
-          .dragAndDrop(divContaining('Banana'), landingPlace(2))
+          .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
+          .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .click('.show-correct-button')
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
@@ -101,12 +108,12 @@ describe('placement ordering', function() {
 
       it('choices dont have correctness indication after reset', function(done) {
         browser
-          .dragAndDrop(divContaining('Apple'), landingPlace(1))
-          .dragAndDrop(divContaining('Banana'), landingPlace(2))
+          .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
+          .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .waitFor('.feedback.partial')
           .resetItem()
-          .dragAndDrop(divContaining('Apple'), landingPlace(1))
+          .waitingDragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {
             if (_.isArray(attr)) {
               _.each(attr, function(a) {
@@ -117,7 +124,7 @@ describe('placement ordering', function() {
             }
           })
           .resetItem()
-          .dragAndDrop(divContaining('Banana'), landingPlace(2))
+          .waitingDragAndDrop(divContaining('Banana'), landingPlace(2))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {
             if (_.isArray(attr)) {
               _.each(attr, function(a) {
