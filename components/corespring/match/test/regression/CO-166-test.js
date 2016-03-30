@@ -40,7 +40,7 @@ describe('match', function() {
 
     browser
       .url(browser.options.getUrl('match', itemJsonFilename))
-      .waitForVisible('.player-rendered')
+      .waitForExist('.player-rendered')
       .call(done);
   });
 

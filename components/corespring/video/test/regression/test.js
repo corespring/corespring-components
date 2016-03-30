@@ -13,7 +13,7 @@ describe('video component', function() {
     beforeEach(function(done) {
       browser
         .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitForVisible('.player-rendered')
+        .waitForExist('.player-rendered')
         .call(done);
     });
 

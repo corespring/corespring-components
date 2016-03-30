@@ -38,7 +38,7 @@ describe('dnd-categorize moveOnDrag true', function() {
 
     browser
       .url(browser.options.getUrl('dnd-categorize', itemJsonFilename))
-      .waitForVisible('.player-rendered')
+      .waitForExist('.player-rendered')
       .call(done);
   });
 

@@ -44,7 +44,7 @@ describe('drag and drop inline', function() {
 
     browser
       .url(browser.options.getUrl(componentName, itemJsonFilename))
-      .waitForVisible('.player-rendered')
+      .waitForExist('.player-rendered')
       .call(done);
   });
 

@@ -19,7 +19,7 @@ describe('feedback-block', function() {
     
     browser
       .url(browser.options.getUrl('feedback-block', itemJsonFilename))
-      .waitForVisible('.player-rendered')
+      .waitForExist('.player-rendered')
       .call(done);
   });
 

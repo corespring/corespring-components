@@ -45,7 +45,7 @@ describe('inline-choice', function() {
 
     browser
       .url(browser.options.getUrl('inline-choice', itemJsonFilename))
-      .waitForVisible('.player-rendered')
+      .waitForExist('.player-rendered')
       .call(done);
   });
 
