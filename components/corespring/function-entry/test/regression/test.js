@@ -8,36 +8,28 @@ describe('evaluate expression', function() {
 
   "use strict";
 
+  var componentName = 'function-entry';
   var itemJsonFilename = 'one.json';
 
   var withId = function(id) {
     return '//div[@id="' + id + '" and @class[contains(., "view-function-entry")]]';
   };
 
-  beforeEach(function(done) {
-    browser.enterExpression = function(id, expression) {
-      this.pause(500);
-      this.waitForExist(withId(id));
-      this.waitForExist(withId(id) + "//input");
-      this.setValue(withId(id) + "//input", expression);
-      this.pause(500);
-      return this;
-    };
 
-    browser.submitItem = function() {
-      console.log("submitting");
-      this.pause(500);
-      this.execute('window.submit()');
-      this.pause(500);
+  beforeEach(function(done) {
+    for(var f in browser.options.ext){
+      browser[f] = browser.options.ext[f];
+    }
+
+    browser.enterExpression = function(id, expression) {
+      browser.setValue(withId(id) + "//input", expression);
       return this;
     };
 
     browser
-      .url(browser.options.getUrl('function-entry', itemJsonFilename))
-      .waitForExist('.player-rendered')
+      .loadTest(componentName, itemJsonFilename)
       .call(done);
   });
-
 
   it('correct feedback when correct answer is given', function(done) {
     browser

@@ -8,6 +8,7 @@ describe('multiple-choice', function() {
 
   "use strict";
 
+  var componentName = 'multiple-choice';
   var itemJsonFilename = 'one.json';
   var itemJson = browser.options.getItemJson('multiple-choice', itemJsonFilename);
 
@@ -36,6 +37,7 @@ describe('multiple-choice', function() {
 
 
   beforeEach(function(done) {
+    browser.options.extendBrowser(browser);
 
     browser.selectAnswer = function(answer) {
 
@@ -47,13 +49,12 @@ describe('multiple-choice', function() {
         });
       }
 
-      this.elements('.choice-input .radio-choice', function(err, results) {
+      browser.elements('.choice-input .radio-choice', function(err, results) {
         for (var i = 0; i < results.value.length; i++) {
           clickIfAnswer(results.value[i].ELEMENT);
         }
       });
-
-      return this;
+      return browser;
     };
 
     browser.showAnswer = function() {
@@ -62,24 +63,13 @@ describe('multiple-choice', function() {
           browser.elementIdClick(results.value[i].ELEMENT);
         }
       });
-      return this;
-
-    };
-
-    browser.submitItem = function() {
-      console.log("submitting");
-      this.pause(500);
-      this.execute('window.submit()');
-      this.pause(500);
-      return this;
+      return browser;
     };
 
     browser
-      .url(browser.options.getUrl('multiple-choice', itemJsonFilename))
-      .waitForExist('.player-rendered')
+      .loadTest(componentName, itemJsonFilename)
       .call(done);
   });
-
 
   it('does not display incorrect feedback when correct answer selected', function(done) {
     browser

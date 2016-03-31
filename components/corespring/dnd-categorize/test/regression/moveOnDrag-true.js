@@ -8,44 +8,14 @@ describe('dnd-categorize moveOnDrag true', function() {
 
   "use strict";
 
+  var componentName = 'dnd-categorize';
   var itemJsonFilename = 'moveOnDrag-true.json';
-  var itemJson = browser.options.getItemJson('dnd-categorize', itemJsonFilename);
-
-  console.log("dnd-categorize moveOnDrag.true");
 
   beforeEach(function(done) {
-    browser.dragAndDropWithOffset = function(fromSelector, toSelector){
-      return this
-        .waitForExist(fromSelector)
-        .waitForExist(toSelector)
-        .moveToObject(fromSelector, 20, 4)
-        .buttonDown(0)
-        .pause(500)
-        .moveToObject(toSelector, 20, 10)
-        .pause(500)
-        .buttonUp()
-        .pause(500);
-    };
-
-    browser.submitItem = function() {
-      console.log("submitting");
-      this.pause(500);
-      this.execute('window.submit()');
-      this.pause(500);
-      return this;
-    };
-
-    browser.setInstructorMode = function() {
-      console.log("setInstructorMode");
-      this.pause(500);
-      this.execute('window.setMode("instructor")');
-      this.pause(500);
-      return this;
-    };
+    browser.options.extendBrowser(browser);
 
     browser
-      .url(browser.options.getUrl('dnd-categorize', itemJsonFilename))
-      .waitForExist('.player-rendered')
+      .loadTest(componentName, itemJsonFilename)
       .call(done);
   });
 
@@ -54,17 +24,13 @@ describe('dnd-categorize moveOnDrag true', function() {
       browser
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
-        .click('.btn-undo')
-        .pause(500)
+        .waitAndClick('.btn-undo')
         .call(done);
     });
 
     it('should render the choice_2 as visible in the choices container', function(done){
       browser
-        .waitForExist('.choices-container .choice_2')
-        .isVisible('.choices-container .choice_2', function(err,res){
-          expect(res).toBe(true);
-        })
+        .waitForVisible('.choices-container .choice_2')
         .call(done);
     });
 
@@ -81,8 +47,7 @@ describe('dnd-categorize moveOnDrag true', function() {
       browser
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
-        .click('.btn-start-over')
-        .pause(500)
+        .waitAndClick('.btn-start-over')
         .call(done);
     });
 
@@ -168,9 +133,7 @@ describe('dnd-categorize moveOnDrag true', function() {
 
     it('displays correct answers inside the panel', function(done) {
       browser
-        .waitForVisible('.see-answer-panel .panel-heading')
-        .click('.see-answer-panel .panel-heading')
-        .pause(500)
+        .waitAndClick('.see-answer-panel .panel-heading')
         .waitForExist('.see-answer-panel .cat_1 .choice_2.correct')
         .waitForExist('.see-answer-panel .cat_3 .choice_1.correct')
         .waitForExist('.see-answer-panel .cat_3 .choice_3.correct')
@@ -225,13 +188,13 @@ describe('dnd-categorize moveOnDrag true', function() {
 
       it('displays partial feedback', function(done) {
         browser
-          .waitForExist('.feedback.incorrect')
+          .waitForVisible('.feedback.incorrect')
           .call(done);
       });
 
       it('displays "show correct answer"', function(done) {
         browser
-          .waitForExist('.see-answer-panel')
+          .waitForVisible('.see-answer-panel')
           .call(done);
       });
     });

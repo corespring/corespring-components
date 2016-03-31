@@ -12,22 +12,20 @@ describe('inline-choice', function() {
 
   "use strict";
 
+  var componentName = 'inline-choice';
   var itemJsonFilename = 'one.json';
 
   beforeEach(function(done) {
+    browser.options.extendBrowser(browser);
 
     browser.selectInlineChoice = function(id, choice) {
       var toggle = inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]';
       var option = inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]';
 
+      browser.waitForVisible(toggle);
       browser.click(toggle);
       browser.waitForVisible(option);
       browser.click(option);
-      return this;
-    };
-
-    browser.submitItem = function() {
-      this.execute('window.submit()');
       return this;
     };
 
@@ -37,23 +35,19 @@ describe('inline-choice', function() {
 
         if(!e){
           throw new Error('not found: ' + selector);
-        } 
+        }
         var s = window.getComputedStyle(e, pseudo);
         var out = s.getPropertyValue(prop);
         done(out);
       }, selector, pseudo, prop).then(function(o){
-          done(null,  { selector: selector, pseudo: pseudo, prop: prop, value: o.value});
+        done(null,  { selector: selector, pseudo: pseudo, prop: prop, value: o.value});
       });
     });
 
-
     browser
-      .url(browser.options.getUrl('inline-choice', itemJsonFilename))
-      .waitForExist('.player-rendered')
+      .loadTest(componentName, itemJsonFilename)
       .call(done);
   });
-
- 
 
   it('shows a result icon to the right of the comboboxes', function(done){
 
@@ -75,8 +69,8 @@ describe('inline-choice', function() {
       .selectInlineChoice("1", "Banana")
       .selectInlineChoice("2", "Apple")
       .submitItem()
-      .click(inlineChoiceWithId("1") + '//span')
-      .click(inlineChoiceWithId("2") + '//span')
+      .waitAndClick(inlineChoiceWithId("1") + '//span')
+      .waitAndClick(inlineChoiceWithId("2") + '//span')
       .getLocation(".player-body", function(err, playerPos) {
         this.getLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
           this.getLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {

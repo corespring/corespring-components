@@ -25,7 +25,7 @@ describe('blueprint', function() {
     };
 
     browser.waitForWithTimeout = function(selector){
-      return browser.waitFor(selector, regressionTestRunnerGlobals.defaultTimeout);
+      return browser.waitForExist(selector, regressionTestRunnerGlobals.defaultTimeout);
     };
 
     browser

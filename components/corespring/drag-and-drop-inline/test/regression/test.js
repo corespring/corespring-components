@@ -24,38 +24,10 @@ describe('drag and drop inline', function() {
   }
 
   beforeEach(function(done) {
-    browser.dragAndDropWithOffset = function(fromSelector, toSelector) {
-      return this
-        .waitForExist(fromSelector)
-        .waitForExist(toSelector)
-        .moveToObject(fromSelector, 20, 4)
-        .buttonDown(0)
-        .pause(500)
-        .moveToObject(toSelector, 20, 10)
-        .pause(500)
-        .buttonUp()
-        .pause(500);
-    };
-
-    browser.submitItem = function() {
-      console.log("submitItem");
-      this.pause(500);
-      this.execute('window.submit()');
-      this.pause(500);
-      return this;
-    };
-
-    browser.setInstructorMode = function() {
-      console.log("setInstructorMode");
-      this.pause(500);
-      this.execute('window.setMode("instructor")');
-      this.pause(500);
-      return this;
-    };
+    browser.options.extendBrowser(browser);
 
     browser
-      .url(browser.options.getUrl(componentName, itemJsonFilename))
-      .waitForExist('.player-rendered')
+      .loadTest(componentName, itemJsonFilename)
       .call(done);
   });
 
@@ -210,11 +182,11 @@ describe('drag and drop inline', function() {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .waitForExist('.see-solution')
-        .click('.see-solution .panel-heading')
+        .waitAndClick('.see-solution .panel-heading')
         .waitForExist('.correct-answer-area-holder .answer-area-inline')
-        .waitForExist(selectedChoice('c_2'), function(err) {
-          expect(err).toBe(undefined, "Expected correct choice c_2 to exist, timeout: " + browser.options.waitforTimeout + " err:" + err);
+        .waitForExist(selectedChoice('c_2'))
+        .isVisible(selectedChoice('c_2'), function(err, res) {
+          expect(res).toBe(true, "Expected correct choice c_2 to be visible. Err:" + err);
         })
         .call(done);
     });
@@ -223,26 +195,26 @@ describe('drag and drop inline', function() {
   describe("math", function() {
     it("renders math in choice", function(done) {
       browser
-        .isExisting(choice('c_4') + ' .MathJax_Preview')
+        .waitForExist(choice('c_4') + ' .MathJax_Preview')
         .call(done);
     });
     it("renders math in answer area text", function(done) {
       browser
-        .isExisting('.answer-area-holder .MathJax_Preview')
+        .waitForExist('.answer-area-holder .MathJax_Preview')
         .call(done);
     });
     it("renders math in selected choice", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-        .isExisting('.answer-area-holder .selected-choice .MathJax_Preview')
+        .waitForExist('.answer-area-holder .selected-choice .MathJax_Preview')
         .call(done);
     });
     it("renders math in correct answer area", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .click('h4.panel-title')
-        .isExisting('.correct-answer-area-holder .MathJax_Preview')
+        .waitAndClick('h4.panel-title')
+        .waitForExist('.correct-answer-area-holder .MathJax_Preview')
         .call(done);
     });
 
@@ -273,6 +245,7 @@ describe('drag and drop inline', function() {
       .buttonDown()
       .moveTo(null, 0, 200)
       .buttonUp()
+      .waitForExist(selectedChoice('c_2'), 2000, true)
       .isExisting(selectedChoice('c_2'), function(err, res) {
         expect(res).toBe(false, "expected selected choice to be removed");
       })

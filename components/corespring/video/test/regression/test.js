@@ -6,14 +6,17 @@ var fs = require('fs');
 var _ = require('lodash');
 
 describe('video component', function() {
+  var componentName = 'video';
 
   describe('youtube', function() {
+
     var itemJsonFilename = 'youtube.json';
 
     beforeEach(function(done) {
+      browser.options.extendBrowser(browser);
+
       browser
-        .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitForExist('.player-rendered')
+        .loadTest(componentName, itemJsonFilename)
         .call(done);
     });
 
@@ -39,9 +42,10 @@ describe('video component', function() {
     var itemJsonFilename = 'vimeo.json';
 
     beforeEach(function(done) {
+      browser.options.extendBrowser(browser);
+
       browser
-        .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitForExist('.cs-video')
+        .loadTest(componentName, itemJsonFilename)
         .call(done);
     });
 

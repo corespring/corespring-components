@@ -8,42 +8,14 @@ describe('dnd-categorize moveOnDrag false', function() {
 
   "use strict";
 
+  var componentName = 'dnd-categorize';
   var itemJsonFilename = 'moveOnDrag-false.json';
-  var itemJson = browser.options.getItemJson('dnd-categorize', itemJsonFilename);
 
   beforeEach(function(done) {
-    browser.dragAndDropWithOffset = function(fromSelector, toSelector) {
-      return this
-        .waitForExist(fromSelector)
-        .waitForExist(toSelector)
-        .moveToObject(fromSelector, 20, 4)
-        .buttonDown(0)
-        .pause(500)
-        .moveToObject(toSelector, 20, 10)
-        .pause(500)
-        .buttonUp()
-        .pause(500);
-    };
-
-    browser.submitItem = function() {
-      console.log("submitting");
-      this.pause(500);
-      this.execute('window.submit()');
-      this.pause(500);
-      return this;
-    };
-
-    browser.setInstructorMode = function() {
-      console.log("setInstructorMode");
-      this.pause(500);
-      this.execute('window.setMode("instructor")');
-      this.pause(500);
-      return this;
-    };
+    browser.options.extendBrowser(browser);
 
     browser
-      .url(browser.options.getUrl('dnd-categorize', itemJsonFilename))
-      .waitForExist('.player-rendered')
+      .loadTest( componentName, itemJsonFilename)
       .call(done);
   });
 
@@ -84,9 +56,7 @@ describe('dnd-categorize moveOnDrag false', function() {
 
     it('displays correct answers inside the panel', function(done) {
       browser
-        .waitForVisible('.see-answer-panel .panel-heading')
-        .click('.see-answer-panel .panel-heading')
-        .pause(500)
+        .waitAndClick('.see-answer-panel .panel-heading')
         .waitForExist('.see-answer-panel .cat_1 .choice_2.correct')
         .waitForExist('.see-answer-panel .cat_3 .choice_1.correct')
         .waitForExist('.see-answer-panel .cat_3 .choice_3.correct')

@@ -5,6 +5,7 @@ var should = require('should');
 
 describe('inplace ordering', function() {
 
+  var componentName = 'ordering';
   var itemJsonFilename = 'inplace.json';
 
   var divContaining = function(s) {
@@ -12,33 +13,13 @@ describe('inplace ordering', function() {
   };
 
   beforeEach(function(done) {
-
-    browser.waitingDragAndDrop = function(fromSelector, toSelector) {
-      return this
-        .waitForExist(fromSelector)
-        .waitForExist(toSelector)
-        .dragAndDrop(fromSelector, toSelector);
-    };
-
-    browser.submitItem = function() {
-      this.pause(500);
-      this.execute('window.submit()');
-      this.pause(500);
-      return this;
-    };
-
-    browser.resetItem = function() {
-      this.pause(500);
-      this.execute('window.reset()');
-      this.pause(500);
-      return this;
-    };
+    browser.options.extendBrowser(browser);
 
     browser
-      .url(browser.options.getUrl('ordering', itemJsonFilename))
-      .waitForExist('.player-rendered')
+      .loadTest(componentName, itemJsonFilename)
       .call(done);
   });
+  
 
   it('submitting without interaction results in warning feedback', function(done) {
     browser
