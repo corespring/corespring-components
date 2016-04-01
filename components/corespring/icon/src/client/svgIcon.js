@@ -36,6 +36,7 @@ var svgIcon = [function() {
       $scope.$watch('iconSet', $scope.updateTemplate);
       $scope.$watch('shape', $scope.updateTemplate);
       $scope.$watch('text', $scope.updateTemplate);
+      $scope.$watch('open', $scope.updateTemplate);
     }
   }
 }];

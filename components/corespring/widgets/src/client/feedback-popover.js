@@ -3,11 +3,13 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
     restrict: "A",
     scope: {
       response: "=feedbackPopover",
-      viewport: '@'
+      viewport: '@',
+      state: '=feedbackPopoverState'
     },
     link: function(scope, element, attrs) {
       scope.firstShow = true;
       scope.originalContent = undefined;
+      scope.state = 'closed';
       $(element).append('<div class="math-prerender" style="display: none"></div>');
       scope.$watch('response', function(response) {
         if (_.isUndefined(response)) {
@@ -63,35 +65,41 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
               html: true
             }
           ).on('show.bs.popover', function(event) {
-              $timeout(function() {
-                scope.viewport = scope.viewport || $(element).parents('.player-body');
-                if (scope.viewport && $(scope.viewport).length > 0) {
-                  var $popover = $(event.target).siblings('.popover');
-                  var $viewport = $(scope.viewport);
+            $timeout(function() {
+              scope.viewport = scope.viewport || $(element).parents('.player-body');
+              if (scope.viewport && $(scope.viewport).length > 0) {
+                var $popover = $(event.target).siblings('.popover');
+                var $viewport = $(scope.viewport);
 
-                  if ($popover.offset().left < $viewport.offset().left) {
-                    var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left);
-                    $popover.css('left', '+=' + deltaLeft + 'px');
-                    if (scope.firstShow) {
-                      $('.arrow', $popover).css('left', "-=" + deltaLeft + 'px');
-                    }
+                if ($popover.offset().left < $viewport.offset().left) {
+                  var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left);
+                  $popover.css('left', '+=' + deltaLeft + 'px');
+                  if (scope.firstShow) {
+                    $('.arrow', $popover).css('left', "-=" + deltaLeft + 'px');
                   }
-                  if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width()) {
-                    var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width());
-                    $popover.css('left', '-=' + deltaRight + 'px');
-                    if (scope.firstShow) {
-                      $('.arrow', $popover).css('left', "+=" + deltaRight + 'px');
-                    }
-                  }
-                  scope.firstShow = false;
                 }
+                if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width()) {
+                  var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width());
+                  $popover.css('left', '-=' + deltaRight + 'px');
+                  if (scope.firstShow) {
+                    $('.arrow', $popover).css('left', "+=" + deltaRight + 'px');
+                  }
+                }
+                scope.firstShow = false;
+              }
+              scope.$apply(function() {
+                scope.state = 'open';
               });
-            }).on('shown.bs.popover', function() {
-              scope.originalContent = $(element).find('.math-prerender').html();
-              $(element).find('.math-prerender').html('');
-            }).on('hidden.bs.popover', function() {
-              $(element).find('.math-prerender').html(scope.originalContent);
             });
+          }).on('shown.bs.popover', function() {
+            scope.originalContent = $(element).find('.math-prerender').html();
+            $(element).find('.math-prerender').html('');
+          }).on('hidden.bs.popover', function() {
+            $(element).find('.math-prerender').html(scope.originalContent);
+            scope.$apply(function() {
+              scope.state = 'closed';
+            });
+          });
 
           $('html').click(function(e) {
             if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {
