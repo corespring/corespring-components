@@ -292,6 +292,34 @@ var main = [
         }
       });
 
+      scope.isSelected = function(o) {
+        var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+        if (isSelected) {
+          return true;
+        }
+        if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode === 'instructor')) {
+          return true;
+        }
+        return false;
+      };
+
+      scope.choiceKey = function(o) {
+        var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+        var res = isSelected ? "selected " : "";
+
+        if (_.isUndefined(o.correct)) {
+          return isSelected ? 'selected' : 'ready';
+        }
+
+        if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode === 'instructor')) {
+          res = "selected ";
+        }
+
+        // return res + (o.correct ? 'correct' : 'incorrect');
+        return (o.correct) ? 'correct' : 'incorrect';
+      };
+
+
       scope.choiceClass = function(o) {
         var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
         var res = isSelected ? "selected " : "";
@@ -354,7 +382,7 @@ var main = [
       '    <div class="choice-holder" >',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div class="checkbox-button" />',
+      '          <choice-icon shape="box" key="{{ choiceKey(o) }}"></choice-icon>',
       '        </div>',
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
       '          <div class="radio-button"  />',
@@ -446,7 +474,46 @@ var main = [
       link: link,
       template: [
         '<div class="view-multiple-choice" ng-class="response.correctness">',
-        '  Icon: <icon key="correct"></icon>',
+        '  Correct: <choice-icon key="correct" shape="box"></choice-icon>',
+        '  InCorrect: <choice-icon key="incorrect" shape="box"></choice-icon>',
+        '  Ready: <choice-icon key="ready" shape="box"></choice-icon>',
+        '  Selected: <choice-icon key="selected" shape="box"></choice-icon>',
+        '  <br>',
+        '  EMOJI SQUARE Correct: <feedback-icon key="correct" shape="square" icon-set="emoji"></feedback-icon>',
+        '  InCorrect: <feedback-icon key="incorrect" shape="square" icon-set="emoji"></feedback-icon>',
+        '  Partial: <feedback-icon key="partially-correct" shape="square" icon-set="emoji"></feedback-icon>',
+        '  Nothing: <feedback-icon key="nothing-submitted" icon-set="emoji"></feedback-icon>',
+        '  <br>',
+        '  EMOJI SQUARE FEEDBACK Correct: <feedback-icon text="apple" key="correct" shape="square" icon-set="emoji"></feedback-icon>',
+        '  InCorrect: <feedback-icon text="apple" key="incorrect" shape="square" icon-set="emoji"></feedback-icon>',
+        '  Partial: <feedback-icon text="apple" key="partially-correct" shape="square" icon-set="emoji"></feedback-icon>',
+        '  Nothing: <feedback-icon text="apple" key="nothing-submitted" icon-set="emoji"></feedback-icon>',
+        '  <br>',
+        '  EMOJI ROUND Correct: <feedback-icon key="correct" shape="round" icon-set="emoji"></feedback-icon>',
+        '  InCorrect: <feedback-icon key="incorrect" shape="round" icon-set="emoji"></feedback-icon>',
+        '  Partial: <feedback-icon key="partially-correct" shape="round" icon-set="emoji"></feedback-icon>',
+        '  <br>',
+        '  EMOJI ROUND FEEDBACK Correct: <feedback-icon text="apple" key="correct" shape="round" icon-set="emoji"></feedback-icon>',
+        '  InCorrect: <feedback-icon text="apple" key="incorrect" shape="round" icon-set="emoji"></feedback-icon>',
+        '  Partial: <feedback-icon text="apple" key="partially-correct" shape="round" icon-set="emoji"></feedback-icon>',
+        '  <br>',
+        '  CHECK SQUARE Correct: <feedback-icon key="correct" shape="square" icon-set="check"></feedback-icon>',
+        '  InCorrect: <feedback-icon key="incorrect" shape="square" icon-set="check"></feedback-icon>',
+        '  Partial: <feedback-icon key="partially-correct" shape="square" icon-set="check"></feedback-icon>',
+        '  Nothing: <feedback-icon key="nothing-submitted" icon-set="check"></feedback-icon>',
+        '  <br>',
+        '  CHECK SQUARE FEEDBACK Correct: <feedback-icon text="apple" key="correct" shape="square" icon-set="check"></feedback-icon>',
+        '  InCorrect: <feedback-icon text="apple" key="incorrect" shape="square" icon-set="check"></feedback-icon>',
+        '  Partial: <feedback-icon text="apple" key="partially-correct" shape="square" icon-set="check"></feedback-icon>',
+        '  Nothing: <feedback-icon text="apple" key="nothing-submitted" icon-set="check"></feedback-icon>',
+        '  <br>',
+        '  CHECK ROUND Correct: <feedback-icon key="correct" shape="round" icon-set="check"></feedback-icon>',
+        '  InCorrect: <feedback-icon key="incorrect" shape="round" icon-set="check"></feedback-icon>',
+        '  Partial: <feedback-icon key="partially-correct" shape="round" icon-set="check"></feedback-icon>',
+        '  <br>',
+        '  CHECK ROUND FEEDBACK Correct: <feedback-icon text="apple" key="correct" shape="round" icon-set="check"></feedback-icon>',
+        '  InCorrect: <feedback-icon text="apple" key="incorrect" shape="round" icon-set="check"></feedback-icon>',
+        '  Partial: <feedback-icon text="apple" key="partially-correct" shape="round" icon-set="check"></feedback-icon>',
           '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
           '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
           '  <div ng-if="isTile()">' + tileTemplate + '</div>',
