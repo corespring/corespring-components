@@ -16,7 +16,6 @@ var choiceIcon = [function() {
     ].join('\n'),
     link: function($scope, $element, $attrs) {
       $scope.template = '../../../images/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
-      console.log('$scope.template', $scope.template);
       $scope.$watch('key+shape', function() {
         $scope.template = '../../../images/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       });

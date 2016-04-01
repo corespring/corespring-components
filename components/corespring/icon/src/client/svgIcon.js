@@ -1,14 +1,16 @@
-var feedbackIcon = [function() {
+var svgIcon = [function() {
   return {
     restrict: 'E',
     scope: {
       'iconSet': '@',
-      'shape': '@'
+      'shape': '@',
+      'text': '@',
+      'open': '@'
     },
     template: [
-      '<span class="{{key}}" ng-click="toggle()" turo="{{template}}">',
-      '  <span popover="{{text}}" popover-position="top" popover-trigger="{{text ? \'mouseover\' : \'\'}}">',
-      '    <div style="width: 30px;" class="cs-icon">',
+      '<span class="{{key}}" ng-click="toggle()" turo="{{template}}"> ',
+      '  <span class="po">',
+      '    <div style="width: 22px;" class="cs-icon">',
       '      <ng-include src="template"/>',
       '    </div>',
       '  </span>',
@@ -16,11 +18,12 @@ var feedbackIcon = [function() {
     ].join('\n'),
     link: function($scope, $element, $attrs) {
 
-      console.log('$scope.template', $scope.template);
 
       $scope.updateTemplate = function() {
-        $scope.text = $attrs.text;
         $scope.key = $attrs.key + ($scope.text ? '-feedback' : '');
+        if (!$scope.iconSet || !$scope.key || !$scope.shape) {
+          return undefined;
+        }
 
         $scope.template = '../../../images/feedback/'
           + [$scope.iconSet, $scope.key].join('-')
@@ -28,23 +31,17 @@ var feedbackIcon = [function() {
           + ($scope.open ? '-open' : '')
           + '.svg';
 
-        console.log("tempi", $scope.template);
       };
-
-      $scope.toggle = function() {
-        if ($scope.text) {
-          $scope.open = !$scope.open;
-        }
-        $scope.updateTemplate();
-      };
-
-      $scope.updateTemplate();
+      $attrs.$observe('key', $scope.updateTemplate);
+      $scope.$watch('iconSet', $scope.updateTemplate);
+      $scope.$watch('shape', $scope.updateTemplate);
+      $scope.$watch('text', $scope.updateTemplate);
     }
   }
 }];
 
 exports.framework = 'angular';
 exports.directive = {
-  name: 'feedbackIcon',
-  directive: feedbackIcon
+  name: 'svgIcon',
+  directive: svgIcon
 };
