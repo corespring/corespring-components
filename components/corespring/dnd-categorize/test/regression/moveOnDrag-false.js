@@ -1,10 +1,10 @@
 /* global browser, regressionTestRunnerGlobals, require, describe, console, beforeEach, it */
 
-var should = require('should');
+var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe('dnd-categorize moveOnDrag false', function() {
+describe('dnd-categorize', function() {
 
   "use strict";
 
@@ -19,7 +19,7 @@ describe('dnd-categorize moveOnDrag false', function() {
       .call(done);
   });
 
-  describe('instructor mode', function() {
+  describe('in instructor mode', function() {
 
     beforeEach(function(done) {
       browser
@@ -40,7 +40,7 @@ describe('dnd-categorize moveOnDrag false', function() {
 
   });
 
-  describe('see solution', function() {
+  describe('when wrong answer is submitted', function() {
     beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
@@ -48,13 +48,19 @@ describe('dnd-categorize moveOnDrag false', function() {
         .call(done);
     });
 
-    it('displays "show correct answer"', function(done) {
+    it('displays incorrect feedback', function(done) {
+      browser
+        .waitForVisible('.feedback.incorrect')
+        .call(done);
+    });
+
+    it('displays "solution panel"', function(done) {
       browser
         .waitForVisible('.see-answer-panel')
         .call(done);
     });
 
-    it('displays correct answers inside the panel', function(done) {
+    it('and clicked on solution-panel, correct answers are displayed', function(done) {
       browser
         .waitAndClick('.see-answer-panel .panel-heading')
         .waitForExist('.see-answer-panel .cat_1 .choice_2.correct')
@@ -66,7 +72,7 @@ describe('dnd-categorize moveOnDrag false', function() {
     });
   });
 
-  describe('fully correct', function() {
+  describe('when correct answer is submitted', function() {
     beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_1')
@@ -96,85 +102,41 @@ describe('dnd-categorize moveOnDrag false', function() {
 
   });
 
-  describe('partially correct', function() {
+  describe('when partially correct answer is submitted', function() {
 
-    describe('categorize choice_2 incorrectly as cat_2', function() {
-      beforeEach(function(done) {
-        browser
-          .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
-          .submitItem()
-          .call(done);
-      });
-
-      it('displays choice as categorized and correct', function(done) {
-        browser
-          .waitForExist('.cat_2 .choice_2.incorrect')
-          .call(done);
-      });
-
-      it('displays partial feedback', function(done) {
-        browser
-          .waitForVisible('.feedback.incorrect')
-          .call(done);
-      });
-
-      it('displays "show correct answer"', function(done) {
-        browser
-          .waitForVisible('.see-answer-panel')
-          .call(done);
-      });
-    });
-
-    describe('categorize choice_2 correctly as cat_1', function() {
-      beforeEach(function(done) {
-        browser
-          .dragAndDropWithOffset('.choices-container .choice_2', '.cat_1')
-          .submitItem()
-          .call(done);
-      });
-
-      it('displays choice as categorized and correct', function(done) {
-        browser
-          .waitForExist('.cat_1 .choice_2.correct')
-          .call(done);
-      });
-
-      it('displays partial feedback', function(done) {
-        browser
-          .waitForVisible('.feedback.partial')
-          .call(done);
-      });
-
-      it('displays "show correct answer"', function(done) {
-        browser
-          .waitForVisible('.see-answer-panel')
-          .call(done);
-      });
-    });
-
-  });
-
-  describe('categorize choice_1 as cat_2', function() {
     beforeEach(function(done) {
       browser
-        .dragAndDropWithOffset('.choices-container .choice_1', '.cat_2')
+        .dragAndDropWithOffset('.choices-container .choice_2', '.cat_1')
+        .submitItem()
         .call(done);
     });
 
-    it('displays choice as categorized', function(done) {
+    it('displays choice as categorized and correct', function(done) {
       browser
-        .waitForVisible('.cat_2 .choice_1')
+        .waitForExist('.cat_1 .choice_2.correct')
         .call(done);
     });
+
+    it('displays partial feedback', function(done) {
+      browser
+        .waitForVisible('.feedback.partial')
+        .call(done);
+    });
+
+    it('displays "solution panel"', function(done) {
+      browser
+        .waitForVisible('.see-answer-panel')
+        .call(done);
+    });
+
   });
 
-  describe('categorize multiple choices as cat_2', function() {
+  describe('when multiple choices are dropped on category', function() {
     beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_2')
         .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
         .dragAndDropWithOffset('.choices-container .choice_3', '.cat_2')
-        .dragAndDropWithOffset('.choices-container .choice_4', '.cat_2')
         .call(done);
     });
 
@@ -183,12 +145,11 @@ describe('dnd-categorize moveOnDrag false', function() {
         .waitForVisible('.cat_2 .choice_1')
         .waitForVisible('.cat_2 .choice_2')
         .waitForVisible('.cat_2 .choice_3')
-        .waitForVisible('.cat_2 .choice_4')
         .call(done);
     });
   });
 
-  describe('categorize choice_1 as cat_2 firstly and then change to cat_1', function() {
+  describe('when choice is dragged from category and dropped on other category', function() {
     beforeEach(function(done) {
       browser
         .dragAndDropWithOffset('.choices-container .choice_1', '.cat_2')
@@ -203,12 +164,11 @@ describe('dnd-categorize moveOnDrag false', function() {
     });
   });
 
-  describe('no answer', function() {
+  describe('when submitted without answer', function() {
     beforeEach(function(done) {
       browser
         .submitItem()
         .call(done);
-
     });
 
     it('displays warning', function(done) {
@@ -216,6 +176,118 @@ describe('dnd-categorize moveOnDrag false', function() {
         .waitForVisible('.feedback.warning.answer-expected')
         .call(done);
     });
+  });
+
+  describe('when choices are set to moveOnDrag=false', function(){
+
+    it('allows to drop the same choice multiple times on the same category', function(done){
+      browser
+        .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
+        .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
+        .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
+        .waitForExist('.cat_1 .choice_1')
+        .elements('.cat_1 .choice_1', function(err,res){
+          expect(res.value.length).toBe(3);
+        })
+        .call(done);
+    });
+    it('allows to drop the same choice multiple times on different categories', function(done){
+      browser
+        .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
+        .dragAndDropWithOffset('.choices-container .choice_1', '.cat_2')
+        .dragAndDropWithOffset('.choices-container .choice_1', '.cat_3')
+        .waitForExist('.cat_1 .choice_1')
+        .waitForExist('.cat_2 .choice_1')
+        .waitForExist('.cat_3 .choice_1')
+        .call(done);
+    });
+  });
+
+  describe('clicking undo', function(){
+    describe("when two choices have been placed", function(){
+
+      beforeEach(function(done){
+        browser
+          .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
+          .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
+          .waitAndClick('.btn-undo')
+          .call(done);
+      });
+
+      it('should remove the second choice and leave the first one', function(done){
+        var invertWait;
+        browser
+          .waitForExist('.cat_2 .choice_2', 2000, invertWait=true)
+          .waitForExist('.cat_1 .choice_1')
+          .call(done);
+      });
+
+      it('should show the undo/startOver buttons as enabled', function(done){
+        var invertWait;
+        browser
+          .waitForExist('.btn-undo.disabled', 2000, invertWait=true)
+          .waitForExist('.btn-start-over.disabled', 2000, invertWait=true)
+          .call(done);
+      });
+
+    });
+
+    describe("when one choice has been placed", function(){
+
+      beforeEach(function(done){
+        browser
+          .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
+          .waitAndClick('.btn-undo')
+          .call(done);
+      });
+
+      it('should remove the choice', function(done){
+        var invertWait;
+        browser
+          .waitForExist('.cat_1 .choice_1', 2000, invertWait=true)
+          .call(done);
+      });
+
+      it('should show the undo/startOver buttons as disabled', function(done){
+        var invertWait;
+        browser
+          .waitForExist('.btn-undo.disabled')
+          .waitForExist('.btn-start-over.disabled')
+          .call(done);
+      });
+
+    });
+
+  });
+
+  describe('clicking startOver', function(){
+
+    describe('when two choices have been placed', function(){
+      beforeEach(function(done){
+        browser
+          .dragAndDropWithOffset('.choices-container .choice_1', '.cat_1')
+          .dragAndDropWithOffset('.choices-container .choice_2', '.cat_2')
+          .waitAndClick('.btn-start-over')
+          .call(done);
+      });
+
+      it('should remove both choices from the categories', function(done){
+        var invertWait;
+        browser
+          .waitForExist('.cat_1 .choice_1', 2000, invertWait=true)
+          .waitForExist('.cat_2 .choice_2', 2000, invertWait=true)
+          .call(done);
+      });
+
+      it('should show the undo/startOver buttons as disabled', function(done){
+        var invertWait;
+        browser
+          .waitForExist('.btn-undo.disabled')
+          .waitForExist('.btn-start-over.disabled')
+          .call(done);
+      });
+    });
+
   });
 
 
