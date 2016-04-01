@@ -35,7 +35,7 @@ var main = [
       '           <div help-popover="" help-popover-visible="fullModel.model.config.showFormattingHelp"></div>',
       '         </div>',
       '         <div class="row">',
-      '           <div class="col-md-7">',
+      '           <div class="col-xs-12">',
       '             <div feedback-panel>',
       '               <div feedback-selector',
       '                   fb-sel-label="If correct, show"',
