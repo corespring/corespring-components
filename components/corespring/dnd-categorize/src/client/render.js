@@ -267,17 +267,20 @@ function renderCorespringDndCategorize(
       }
       var correctAnswerRowId = 0;
       var categoriesPerRow = scope.categoriesPerRow;
-      scope.correctAnswerRows = [makeRow()];
+      var rows = [makeRow()];
 
       _.forEach(scope.renderModel.categories, function(category) {
-        var lastRow = _.last(scope.correctAnswerRows);
+        var lastRow = _.last(rows);
         if (lastRow.categories.length === categoriesPerRow) {
-          scope.correctAnswerRows.push(lastRow = makeRow());
+          rows.push(lastRow = makeRow());
         }
         var correctChoices = response.correctResponse[category.model.id];
         var categoryModel = createCategoryModelForSolution(category, correctChoices);
         lastRow.categories.push(categoryModel);
       });
+
+      fillUpWithPlaceholders(rows, categoriesPerRow);
+      scope.correctAnswerRows = rows;
 
       function makeRow() {
         return {
@@ -404,28 +407,36 @@ function renderCorespringDndCategorize(
 
       var rowIdCounter = 0;
 
-      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function(row) {
-        //fill rows with empty categories
-        //so that they are lined up in proper columns
-        while (row.length < categoriesPerRow) {
-          row.push({
-            model: {
-              id: 0
-            },
-            isPlaceHolder: true
-          });
-        }
+      var rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function(row) {
         return {
           id: rowIdCounter++,
           categories: row
         };
       });
 
+      fillUpWithPlaceholders(rows, categoriesPerRow);
+      scope.rows = rows;
+
       scope.categoryStyle = {
         width: 100 / categoriesPerRow + '%'
       };
 
       $timeout(updateChoices, 100);
+    }
+
+    function fillUpWithPlaceholders(rows, categoriesPerRow){
+      //fill rows with empty placeholder categories
+      //so that they are lined up in proper columns
+      var counter = 1;
+      var categories = rows[rows.length-1].categories;
+      while (categories.length < categoriesPerRow) {
+        categories.push({
+          model: {
+            id: "placeholder-" + (counter++)
+          },
+          isPlaceHolder: true
+        });
+      }
     }
 
     function updateChoices() {

@@ -112,6 +112,10 @@ function CategoryChoicesCorespringDndCategorize(
       if (isNaN(choiceWidth) || choiceWidth <= 0) {
         return;
       }
+      var container = elem.find(".choice-container");
+      if(container.length === 0){
+        return;
+      }
 
       if (!layout) {
         layout = new CompactLayout(

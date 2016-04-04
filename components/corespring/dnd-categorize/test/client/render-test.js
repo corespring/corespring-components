@@ -182,12 +182,14 @@ describe('corespring:dnd-categorize:render', function() {
         }]
       );
     });
+
     it('should split categories into rows of size categoriesPerRow', function() {
       expect(testModel.data.model.config.categoriesPerRow).toBe(2);
       testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
       setModelAndDigest();
       expect(scope.rows.length).toBe(3);
     });
+
     it('should fill rows with placeholders up to categoriesPerRow', function() {
       expect(testModel.data.model.config.categoriesPerRow).toBe(2);
       testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
@@ -241,11 +243,13 @@ describe('corespring:dnd-categorize:render', function() {
 
   describe('setResponse', function() {
     beforeEach(setModelAndDigest);
+
     it('should set the response on the scope', function() {
       expect(scope.response).toBeFalsy();
       container.elements['1'].setResponse({});
       expect(scope.response).toBeTruthy();
     });
+
     it('should set the detailed feedback', function() {
       scope.renderModel.categories[1].choices = [{}, {}];
       container.elements['1'].setResponse({
@@ -265,6 +269,7 @@ describe('corespring:dnd-categorize:render', function() {
         correctness: 'incorrect'
       }]);
     });
+
     it('should create seeSolutionModel from correctResponse', function() {
       container.elements['1'].setResponse({
         correctResponse: {
@@ -302,6 +307,33 @@ describe('corespring:dnd-categorize:render', function() {
         }]
       }]
     }]);
+    });
+
+    it('should split categories into rows of size categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      container.elements['1'].setResponse({
+        correctResponse: {
+          cat_1: ['choice_1'],
+          cat_2: ['choice_2']
+        }
+      });
+      expect(scope.correctAnswerRows.length).toBe(3);
+    });
+
+    it('should fill rows with placeholders up to categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      container.elements['1'].setResponse({
+        correctResponse: {
+          cat_1: ['choice_1'],
+          cat_2: ['choice_2']
+        }
+      });
+      expect(scope.correctAnswerRows[2].categories.length).toBe(testModel.data.model.config.categoriesPerRow);
+      expect(scope.correctAnswerRows[2].categories.pop().isPlaceHolder).toBe(true);
     });
 
   });
