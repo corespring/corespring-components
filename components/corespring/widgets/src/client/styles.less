@@ -4,16 +4,16 @@
     padding: 0px;
     min-width: 200px;
     &.popover-incorrect > .arrow:after {
-      border-bottom-color: @incorrect-color;
+      border-bottom-color: @incorrect-background;
     }
 
     &.popover-correct .popover-title {
-      background-color: @correct-color;
+      background-color: @correct-background;
       color: #ffffff;
     }
 
     &.popover-correct > .arrow:after {
-      border-bottom-color: @correct-color;
+      border-bottom-color: @correct-background;
     }
 
     &.popover-warning .popover-title {
@@ -26,15 +26,15 @@
     }
 
     &.popover-incorrect .popover-title {
-      background-color: @incorrect-color;
+      background-color: @incorrect-background;
       color: #ffffff;
     }
     &.popover-partial .popover-title {
-      background-color: @partial-color;
+      background-color: @partially-correct-background;
       color: #ffffff;
     }
     &.popover.popover-partial > .arrow:after {
-      border-bottom-color: @partial-color;
+      border-bottom-color: @partially-correct-background;
     }
   }
 }

@@ -422,6 +422,47 @@
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+
+.panel.feedback-panel {
+  border-width: 3px;
+  .panel-heading {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    height: 30px;
+  }
+  .panel-body {
+    padding: 15px 20px;
+  }
+  &.incorrect {
+    border-color: @incorrect-background;
+    .panel-heading {
+      background-color: @incorrect-background;
+    }
+  }
+  &.correct {
+    border-color: @correct-background;
+    .panel-heading {
+      background-color: @correct-background;
+    }
+  }
+
+}
+
+.summaryFeedbackPanel {
+  .panel-group {
+    .panel-heading + .panel-collapse {
+      & > .panel-body {
+        border: 4px solid #008BC9;
+      }
+    }
+  }
+}
+
+>>>>>>> Stashed changes
 .config-multiple-choice table, .config-multiple-choice tr, .config-multiple-choice td {
   padding: 0 10px 10px 0;
   vertical-align: bottom;

@@ -17,19 +17,19 @@
     fill: @choice-muted-foreground;
   }
   .correct-background {
-    fill: @choice-correct-border;
+    fill: @correct-background;
   }
 
   .correct-foreground {
-    fill: @choice-correct-inner;
+    fill: @correct-foreground;
   }
 
   .incorrect-background {
-    fill: @choice-incorrect-border;
+    fill: @incorrect-background;
   }
 
   .incorrect-foreground {
-    fill: @choice-incorrect-inner;
+    fill: @incorrect-foreground;
   }
 }
 
@@ -37,39 +37,39 @@
   display: inline-block;
 
   .correct-background {
-    fill: @feedback-correct-background;
+    fill: @correct-background;
   }
 
   .correct-foreground {
-    fill: @feedback-correct-foreground;
+    fill: @correct-foreground;
   }
 
   .incorrect-background {
-    fill: @feedback-incorrect-background;
+    fill: @incorrect-background;
   }
 
   .incorrect-foreground {
-    fill: @feedback-incorrect-foreground;
+    fill: @incorrect-foreground;
   }
 
   .nothing-submitted-background {
-    fill: @feedback-nothing-submitted-background;
+    fill: @warning-background;
   }
 
   .nothing-submitted-foreground {
-    fill: @feedback-nothing-submitted-foreground;
+    fill: @warning-foreground;
   }
 
   .nothing-submitted-accent {
-    fill: @feedback-nothing-submitted-accent;
+    fill: @warning-block-background;
   }
 
   .partially-correct-background {
-    fill: @feedback-partially-correct-background;
+    fill: @correct-background;
   }
 
   .partially-correct-foreground {
-    fill: @feedback-partially-correct-foreground;
+    fill: @correct-background;
   }
 
   .feedback {
@@ -80,29 +80,29 @@
 }
 
 .correct-feedback .popover {
-  background: @feedback-correct-background;
+  background: @correct-background;
   .arrow:after {
-    border-top-color: @feedback-correct-background;
+    border-top-color: @correct-background;
   }
 }
 
 .incorrect-feedback .popover {
-  background: @feedback-incorrect-background;
+  background: @incorrect-background;
   .arrow:after {
-    border-top-color: @feedback-incorrect-background;
+    border-top-color: @incorrect-background;
   }
 }
 
 .nothing-submitted-feedback .popover {
-  background: @feedback-nothing-submitted-accent;
+  background: @warning-block-background;
   .arrow:after {
-    border-top-color: @feedback-nothing-submitted-accent;
+    border-top-color: @warning-block-background;
   }
 }
 
 .partially-correct-feedback .popover {
-  background: @feedback-partially-correct-background;
+  background: @partially-correct-background;
   .arrow:after {
-    border-top-color: @feedback-partially-correct-background;
+    border-top-color: @partially-correct-background;
   }
 }
