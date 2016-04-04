@@ -288,9 +288,13 @@ var main = [
       });
 
       scope.choiceClass = function(o) {
+        if (scope.bridge.viewMode === 'correct') {
+          return "";
+        }
+
         var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
         var isCorrect = !_.isUndefined(o.correct) && o.correct;
-        var res = (isSelected) ? "selected " : "";
+        var res = isSelected ? "selected " : "";
 
         if (isCorrect && scope.mode == 'instructor') {
           return "correct";
@@ -304,7 +308,11 @@ var main = [
           return "";
         }
 
-        return res + (o.correct ? 'correct' : 'incorrect');
+        if (o.correct) {
+          return res + 'correct'
+        } else {
+          return res + (scope.bridge.viewMode !== 'correct' ? 'incorrect' : '');
+        }
       };
 
       scope.radioState = function(o) {
@@ -316,9 +324,10 @@ var main = [
         if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
           return scope.response ? "muted" : "";
         }
-        if (!_.isUndefined(o.correct) && o.correct == false) return "incorrect";
-        if (isSelected) return isCorrect ? "correct" : "selected";
-        if (!_.isUndefined(o.correct) && o.correct == true) return isSelected ? "correct" : "correctUnselected";
+        if (!_.isUndefined(o.correct) && o.correct == false && scope.bridge.viewMode !== 'correct') return "incorrect";
+        if (!_.isUndefined(o.correct) && o.correct == true && scope.bridge.viewMode === 'correct') return "correct";
+        if (isSelected && scope.bridge.viewMode !== 'correct') return isCorrect ? "correct" : "selected";
+        if (!_.isUndefined(o.correct) && o.correct == true) return  "correct";
         if (scope.response) return "muted";
       };
 
@@ -362,8 +371,7 @@ var main = [
 
     var choicesTemplate = [
       '<div class="choices-container">',
-      //'  <div><input type="radio" ng-model="iconset" value="emoji"/>Emoji     &nbsp;&nbsp;&nbsp;<input type="radio" ng-model="iconset" value="check"/>Check </div>',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct Answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct Answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.answerorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
@@ -526,7 +534,7 @@ var feedbackIcon = [
 
         $scope.iconShape = function() {
           var iconType = $attrs.feedbackIconType;
-          return 'square';
+          return iconType === 'checkbox' ? 'square' : 'round';
         };
 
         $scope.iconSet = function() {
@@ -545,14 +553,14 @@ var feedbackIcon = [
           var selected = $scope.feedbackIconClass.match(/selected/);
           var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
           var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
-          $scope.isEmpty = false;
           console.log(iconSet, $scope.feedbackIconType, feedbackSelector, correctnessSelector);
 
-          $scope.feedback = ($scope.isEmpty || !$scope.feedbackIconChoice.feedback || correctnessSelector == 'correct' ) ? undefined : {
+          $scope.feedback = (!$scope.feedbackIconChoice.feedback || correctnessSelector == 'correct' ) ? undefined : {
             correctness: correctness,
             feedback: $scope.feedbackIconChoice.feedback
           };
 
+          console.log("FB",$scope.feedback, $scope.feedbackIconChoice.feedback);
         }
       }
     }

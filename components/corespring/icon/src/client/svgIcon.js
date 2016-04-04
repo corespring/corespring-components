@@ -8,7 +8,7 @@ var svgIcon = [function() {
       'open': '@'
     },
     template: [
-      '<span class="{{key}}" ng-click="toggle()" turo="{{template}}"> ',
+      '<span class="{{key}}" ng-click="toggle()" ng-if="template" turo="{{template}}"> ',
       '  <span class="po">',
       '    <div style="width: 22px;" class="cs-icon">',
       '      <ng-include src="template"/>',
@@ -22,7 +22,8 @@ var svgIcon = [function() {
       $scope.updateTemplate = function() {
         $scope.key = $attrs.key + ($scope.text ? '-feedback' : '');
         if (!$scope.iconSet || !$scope.key || !$scope.shape) {
-          return undefined;
+          $scope.template = undefined;
+          return;
         }
 
         $scope.template = '../../../images/feedback/'

@@ -87,18 +87,15 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
                 }
                 scope.firstShow = false;
               }
-              scope.$apply(function() {
-                scope.state = 'open';
-              });
+              scope.state = 'open';
             });
           }).on('shown.bs.popover', function() {
             scope.originalContent = $(element).find('.math-prerender').html();
             $(element).find('.math-prerender').html('');
+          }).on('hide.bs.popover', function() {
+            scope.state = 'closed';
           }).on('hidden.bs.popover', function() {
             $(element).find('.math-prerender').html(scope.originalContent);
-            scope.$apply(function() {
-              scope.state = 'closed';
-            });
           });
 
           $('html').click(function(e) {
