@@ -52,7 +52,7 @@ function CategoryLabelCorespringDndCategorize(
     scope.onLabelEditClicked = onLabelEditClicked;
 
     scope.$on('activate', function(event, id) {
-      if(!scope.miniWiggiScopeExtension){
+      if (!scope.miniWiggiScopeExtension) {
         throw "Expected miniWiggiScopeExtension to be available";
       }
       scope.active = id === getCategoryId();
@@ -73,7 +73,7 @@ function CategoryLabelCorespringDndCategorize(
     }
 
     function onLabelEditClicked($event) {
-      if($event) {
+      if ($event) {
         $event.stopPropagation();
       }
       scope.notifyEditClicked({
@@ -85,7 +85,7 @@ function CategoryLabelCorespringDndCategorize(
   function template() {
     return [
         '<div class="category category-label">',
-        '  <div class="border">',
+        '  <div class="border" ng-if="!category.isPlaceHolder">',
         '    <div ng-click="onLabelEditClicked($event)" ng-if="isEditMode">',
         '      <div class="editor" ',
         '         active="active"',

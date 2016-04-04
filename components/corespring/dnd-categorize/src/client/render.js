@@ -54,6 +54,7 @@ function renderCorespringDndCategorize(
     var layout;
 
     scope.correctAnswerRows = [{}];
+    scope.dragAndDropScope = 'dnd-scope-' + Math.floor(Math.random() * 10000);
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
     scope.rows = [{}];
@@ -132,10 +133,8 @@ function renderCorespringDndCategorize(
     }
 
     function prepareRenderModel(model, session) {
-      var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
-
       var choices = _.clone(model.choices);
-      if( model.config.shuffle ) {
+      if (model.config.shuffle) {
         choices = _.shuffle(choices);
       }
       var allChoices = _.clone(choices);
@@ -146,7 +145,6 @@ function renderCorespringDndCategorize(
         placeAnswersInCategories(session.answers, categories);
       }
       return {
-        dragAndDropScope: dragAndDropScope,
         choices: choices,
         choicesLabel: choicesLabel,
         allChoices: allChoices,
@@ -407,6 +405,16 @@ function renderCorespringDndCategorize(
       var rowIdCounter = 0;
 
       scope.rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function(row) {
+        //fill rows with empty categories
+        //so that they are lined up in proper columns
+        while (row.length < categoriesPerRow) {
+          row.push({
+            model: {
+              id: 0
+            },
+            isPlaceHolder: true
+          });
+        }
         return {
           id: rowIdCounter++,
           categories: row
@@ -572,7 +580,6 @@ function renderCorespringDndCategorize(
       }
 
       var renderModel = {
-        dragAndDropScope: 'scope-' + Math.floor(Math.random() * 10000),
         choices: scope.attrChoices,
         choicesLabel: scope.attrChoicesLabel,
         allChoices: _.clone(scope.attrChoices),
@@ -731,7 +738,7 @@ function renderCorespringDndCategorize(
         '      correctness="{{choice.correctness}}"',
         '      choice-id="{{choice.id}}" ',
         '      delete-after-placing="choice.moveOnDrag" ',
-        '      drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '      drag-and-drop-scope="dragAndDropScope"',
         '      drag-enabled="isDragEnabled(choice)"',
         '      edit-mode="getEditMode(choice)" ',
         '      model="choice" ',
@@ -749,8 +756,8 @@ function renderCorespringDndCategorize(
   function categoriesTemplate(flip, rowsModel) {
     return [
         '<div class="categories-holder" ng-if="#flip#">',
-        '  <div class="categories">',
-        '    <div class="row" ng-repeat-start="row in #rowsModel# track by row.id">',
+        '  <div class="categories" ng-repeat="row in #rowsModel# track by row.id">',
+        '    <div class="row">',
         '      <div category-label-corespring-dnd-categorize="true" ',
         '        category="category" ',
         '        edit-mode="isEditMode" ',
@@ -760,11 +767,11 @@ function renderCorespringDndCategorize(
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
         '       ></div>',
         '     </div>',
-        '    <div class="row" ng-repeat-end>',
+        '    <div class="row">',
         '      <div category-choices-corespring-dnd-categorize="true" ',
         '        category="category" ',
         '        choice-width="{{choiceWidth}}"',
-        '        drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '        drag-and-drop-scope="dragAndDropScope"',
         '        drag-enabled="isDragEnabledFromCategory()"',
         '        edit-mode="isEditMode" ',
         '        ng-class="[response.warningClass, category.model.id]"',

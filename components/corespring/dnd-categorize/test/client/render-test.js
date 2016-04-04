@@ -121,6 +121,12 @@ describe('corespring:dnd-categorize:render', function() {
     rootScope.$digest();
   }
 
+  function mkCat(id) {
+    return {
+      id: id
+    };
+  }
+
   it('constructs', function() {
     expect(element).toBeDefined();
     expect(element).not.toBe(null);
@@ -130,7 +136,7 @@ describe('corespring:dnd-categorize:render', function() {
     it('should set renderModel', function() {
       expect(scope.renderModel).toEqual({});
       setModelAndDigest();
-      expect(scope.renderModel.dragAndDropScope).toMatch(/scope-\d+/);
+      expect(scope.dragAndDropScope).toMatch(/scope-\d+/);
       expect(scope.renderModel.choices.length).toBe(3);
       expect(scope.renderModel.allChoices).toEqual(scope.renderModel.choices);
       expect(scope.renderModel.categories.length).toBe(2);
@@ -152,6 +158,9 @@ describe('corespring:dnd-categorize:render', function() {
       });
       expect(scope.renderModel.choices.length).toEqual(3);
     });
+  });
+
+  describe('rows', function() {
     it('should put the categories into rows', function() {
       setModelAndDigest();
       expect(ignoreAngularIds(scope.rows)).toEqual(
@@ -172,6 +181,19 @@ describe('corespring:dnd-categorize:render', function() {
           }]
         }]
       );
+    });
+    it('should split categories into rows of size categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      expect(scope.rows.length).toBe(3);
+    });
+    it('should fill rows with placeholders up to categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      expect(scope.rows[2].categories.length).toBe(testModel.data.model.config.categoriesPerRow);
+      expect(scope.rows[2].categories.pop().isPlaceHolder).toBe(true);
     });
   });
 
