@@ -8,31 +8,32 @@ var svgIcon = [function() {
       'open': '@'
     },
     template: [
-      '<span class="{{key}}" ng-click="toggle()" ng-if="template" turo="{{template}}"> ',
-      '  <span class="po">',
-      '    <div style="width: 22px;" class="cs-icon">',
-      '      <ng-include src="template"/>',
-      '    </div>',
-      '  </span>',
+      '<span class="{{key}}" ng-click="toggle()" ng-if="template" todo="{{template}}"> ',
+      '  <div class="cs-icon">',
+      '    <ng-include src="template"/>',
+      '  </div>',
       '</span>'
     ].join('\n'),
     link: function($scope, $element, $attrs) {
 
-
       $scope.updateTemplate = function() {
         $scope.key = $attrs.key + ($scope.text ? '-feedback' : '');
-        if (!$scope.iconSet || !$scope.key || !$scope.shape) {
+        if (_.isEmpty($attrs.key)) {
           $scope.template = undefined;
           return;
         }
 
-        $scope.template = '../../../images/feedback/'
-          + [$scope.iconSet, $scope.key].join('-')
+        var category = $attrs.category || 'feedback';
+
+        $scope.template = '/client/images/components-assets/'+category+'/'
+          + ($scope.iconSet ? $scope.iconSet + '-' : '')
+          + $scope.key
           + ($scope.shape ? '-' + $scope.shape : '')
           + ($scope.open ? '-open' : '')
           + '.svg';
 
       };
+
       $attrs.$observe('key', $scope.updateTemplate);
       $scope.$watch('iconSet', $scope.updateTemplate);
       $scope.$watch('shape', $scope.updateTemplate);

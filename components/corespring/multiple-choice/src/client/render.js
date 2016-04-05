@@ -132,6 +132,10 @@ var main = [
 
       scope.containerBridge = {
 
+        setPlayerSkin: function(skin) {
+          console.log("Skin is ",skin);
+          scope.iconset = skin.iconSet;
+        },
         setDataAndSession: function(dataAndSession) {
           scope.question = dataAndSession.data.model;
           scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
@@ -140,7 +144,7 @@ var main = [
             choices: {},
             choice: ""
           };
-          scope.iconset = scope.question.config.choiceType == 'checkbox' ? 'emoji' : 'check';
+
           updateUi();
         },
 
@@ -340,12 +344,7 @@ var main = [
       '<div class="empty-response-holder" ng-show="response && response.correctness === \'warning\'">',
       '  <div class="empty-response">',
       '    <span class="empty-response-icon">',
-      '      <svg viewBox="-125 129 36 32">',
-      '      <polygon fill="#384599" points="-115.9,130 -124,138.1 -124,149.7 -115.9,158 -104.3,158 -96,149.7 -96,138.1 -104.3,130 				"/>',
-      '      <path fill="#ffffff" d="M-107.6,150.2h-4.8c-0.8,0-1.4-0.6-1.4-1.4v0c0-0.8,0.6-1.4,1.4-1.4h4.8c0.8,0,1.4,0.6,1.4,1.4v0C-106.2,149.6-106.8,150.2-107.6,150.2z"/>',
-      '      <rect x="-107.8" y="138.5" fill="#ffffff" width="3.5" height="4.4"/>',
-      '      <rect x="-115.7" y="138.5" fill="#ffffff" width="3.5" height="4.4"/>',
-      '      </svg>',
+      '      <svg-icon category="feedback" key="nothing-submitted" icon-set="{{iconset}}"></svg-icon>',
       '    </span>',
       '    <span class="empty-response-label">{{feedback && feedback.message ? feedback.message : \'Error\'}}</span>',
       '  </div>',
@@ -371,11 +370,11 @@ var main = [
 
     var choicesTemplate = [
       '<div class="choices-container">',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct Answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.answerorrectAnswer !== \'inline\' && question.config.choiceType == \'checkbox\'"></div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct Answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.answerorrectAnswer !== \'inline\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
-      '      <div class="choice-feedback" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" feedback-icon-set="{{iconset}}"/>',
+      '      <div class="choice-feedback" ng-if="mode !== \'instructor\'" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" feedback-icon-set="{{iconset}}"/>',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
       '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
@@ -389,7 +388,6 @@ var main = [
       '      <div class="choice-label" ng-bind-html-unsafe="o.label"></div>',
       '    </div>',
       '  </div>',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct-two" closed-label="Show correct answer" open-label="Hide correct answer" ng-model="bridge.answerVisible" ng-show="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\' && question.config.choiceType == \'radio\'"></div>',
       '</div>'
     ].join("");
 
@@ -420,11 +418,11 @@ var radioButton = ['$sce',
         radioButtonChoice: "="
       },
       template: [
-        '<div class="radio-button" ng-class="{hasFeedback: feedback}" feedback-popover="feedback">',
+        '<div class="radio-button" ng-class="{hasFeedback: feedback}">',
         '  <div class="choice-icon-holder" >',
         '    <choice-icon class="icon" ng-class="active" shape="radio" key="selected" ng-if="active == \'ready\' || active == \'selected\'"></choice-icon>',
         '    <choice-icon class="icon" shape="radio" key="muted" ng-if="active == \'muted\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="radio" key="correct" ng-if="active == \'correct\'"></choice-icon>',
+        '    <choice-icon class="icon" shape="radio" key="correct" ng-if="active == \'correct\' || active == \'correctUnselected\'"></choice-icon>',
         '    <choice-icon class="icon" shape="radio" key="incorrect" ng-if="active == \'incorrect\'"></choice-icon>',
         '  </div>',
         '</div>'
@@ -433,7 +431,6 @@ var radioButton = ['$sce',
         $scope.active = 'ready';
 
         $attrs.$observe('radioButtonState', function(val) {
-          console.log("qqqq", val, val == 'selected');
           if (_(["selected", 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
             if (val == 'correctUnselected') {
@@ -461,11 +458,12 @@ var mcCheckbox = ['$sce',
         checkboxButtonChoice: "="
       },
       template: [
-        '<div class="mc-checkbox" ng-class="{hasFeedback: feedback}" feedback-popover="feedback">',
+        '<div class="mc-checkbox" ng-class="{hasFeedback: feedback}">',
         '  <div class="choice-icon-holder" >',
         '    <choice-icon class="icon" ng-class="active" shape="box" key="selected" ng-if="active == \'ready\' || active == \'selected\'"></choice-icon>',
         '    <choice-icon class="icon" shape="box" key="muted" ng-if="active == \'muted\'"></choice-icon>',
         '    <choice-icon class="icon" shape="box" key="correct" ng-if="active == \'correct\'"></choice-icon>',
+        '    <choice-icon class="icon" shape="box" key="correct" ng-if="active == \'correctUnselected\'"></choice-icon>',
         '    <choice-icon class="icon" shape="box" key="incorrect" ng-if="active == \'incorrect\'"></choice-icon>',
         '  </div>',
         '</div>'
@@ -544,7 +542,6 @@ var feedbackIcon = [
 
 
         function updateView() {
-          console.log($scope.feedbackIconChoice, " ", $scope.feedbackIconClass);
           if (_.isUndefined($scope.feedbackIconChoice) || _.isUndefined($scope.feedbackIconClass) || _.isUndefined($scope.feedbackIconType)) {
             return;
           }
@@ -553,14 +550,12 @@ var feedbackIcon = [
           var selected = $scope.feedbackIconClass.match(/selected/);
           var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
           var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
-          console.log(iconSet, $scope.feedbackIconType, feedbackSelector, correctnessSelector);
 
           $scope.feedback = (!$scope.feedbackIconChoice.feedback || correctnessSelector == 'correct' ) ? undefined : {
             correctness: correctness,
             feedback: $scope.feedbackIconChoice.feedback
           };
 
-          console.log("FB",$scope.feedback, $scope.feedbackIconChoice.feedback);
         }
       }
     }
@@ -584,8 +579,8 @@ var iconToggle = ['$sce',
         '  <a ng-click="toggleCorrect()" class="icon-toggle">',
         '    <div class="icon-holder">',
         '      <div class="icon-inner-holder">',
-        '        <span class="show-state" ng-if="!ngModel" ng-bind-html="glyphs[\'show-\'+iconName]"></span>',
-        '        <span class="hide-state" ng-if="ngModel" ng-bind-html="glyphs[\'hide-\'+iconName]"></span>',
+        '        <svg-icon class="toggle-icon show-state" ng-if="!ngModel" category="showHide" key="show-{{iconName}}"></svg-icon>',
+        '        <svg-icon class="toggle-icon hide-state" ng-if="ngModel" category="showHide" key="hide-{{iconName}}"></svg-icon>',
         '      </div>',
         '    </div>',
         '    <span class="toggle-label" ng-bind-html-unsafe="currentLabel"></span>',
@@ -594,62 +589,6 @@ var iconToggle = ['$sce',
         '</div>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
-        $scope.glyphs = _.mapValues({
-          "show-correct": [
-            '<svg viewBox="-129.5 127 34 35">',
-            '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-112.9,160.4c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-97.4,153.5-104.3,160.4-112.9,160.4z"/>',
-            '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-113.2,159c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105.2,159-113.2,159z"/>',
-            '<circle style="fill:#FFFFFF;" cx="-114.2" cy="143.5" r="14"/>',
-            '<path style="fill:#BCE2FF;" d="M-114.2,158c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-106.2,158-114.2,158zM-114.2,130c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-106.8,130-114.2,130z"/>',
-            '<polygon style="fill:#1A9CFF;" points="-114.8,150.7 -121.6,144.8 -119,141.8 -115.9,144.5 -111.3,136.3 -107.8,138.2 			"/>',
-            '</svg>'
-          ].join(''),
-          "hide-correct": [
-            '<svg viewBox="-283 359 34 35">',
-            '<circle class="st0" fill="#BCE2FF" cx="-266" cy="375.9" r="14"/>',
-            '<path class="st0" fill="#BCE2FF" d="M-280.5,375.9c0-8,6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5s-6.5,14.5-14.5,14.5S-280.5,383.9-280.5,375.9zM-279.5,375.9c0,7.4,6.1,13.5,13.5,13.5c7.4,0,13.5-6.1,13.5-13.5s-6.1-13.5-13.5-13.5C-273.4,362.4-279.5,368.5-279.5,375.9z" />',
-            '<polygon class="st1" fill="#FFFFFF" points="-265.4,383.1 -258.6,377.2 -261.2,374.2 -264.3,376.9 -268.9,368.7 -272.4,370.6 				"/>',
-            '</svg>'
-          ].join(''),
-          "show-learnMore": [
-            '<svg viewBox="-135 129 16 31">',
-            '<path fill="#D0CAC5" stroke="#E6E3E0" class="st0" d="M-120.7,142.4c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-121.6,146-120.7,144.3-120.7,142.4z"/>',
-            '<path fill="#D0CAC5" stroke="#E6E3E0" class="st0" d="M-124.4,154.3h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-123.6,153.9-123.9,154.3-124.4,154.3z"/>',
-            '<path fill="#B3ABA4" stroke="#CDC7C2" class="st1" d="M-121.3,141.8c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-122.2,145.3-121.3,143.7-121.3,141.8z"/>',
-            '<path fill="#B3ABA4" stroke="#CDC7C2" class="st1" d="M-125,153.7h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-124.2,153.3-124.6,153.7-125,153.7z"/>',
-            '<path fill="#1A9CFF" class="st2" d="M-122,141.1c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-122.8,144.7-122,143-122,141.1z"/>',
-            '<path fill="#1A9CFF" class="st2" d="M-125.7,153h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-124.9,152.7-125.2,153-125.7,153z"/>',
-            '<path fill="#BCE2FF" class="st3" d="M-130.4,142.1c0-2.1,1.7-3.9,3.9-3.9c0.3,0,0.5,0,0.8,0.1c-0.6-0.8-1.5-1.3-2.6-1.3c-1.8,0-3.3,1.5-3.3,3.3c0,1.1,0.5,2,1.3,2.6C-130.4,142.6-130.4,142.4-130.4,142.1z"/>',
-            '</svg>'
-          ].join(''),
-          "hide-learnMore": [
-            '<svg viewBox="-135 129 16 32">',
-            '<path fill="#6696AF" class="st0" d="M-122,141.1c0-3.7-3.3-6.6-7.1-5.8c-2.4,0.5-4.3,2.4-4.7,4.8c-0.4,2.3,0.6,4.4,2.2,5.7c0.4,0.3,0.6,0.8,0.6,1.3v1.9h6.1v-1.9c0-0.5,0.2-1,0.6-1.3C-122.8,144.7-122,143-122,141.1z"/>',
-            '<path fill="#6696AF" class="st0" d="M-125.7,153h-4.5c-0.4,0-0.8-0.4-0.8-0.8v-1.6h6.1v1.6C-124.9,152.7-125.2,153-125.7,153z"/>',
-            '<path fill="#C8D4DE" class="st1" d="M-130.4,142.1c0-2.1,1.7-3.9,3.9-3.9c0.3,0,0.5,0,0.8,0.1c-0.6-0.8-1.5-1.3-2.6-1.3c-1.8,0-3.3,1.5-3.3,3.3c0,1.1,0.5,2,1.3,2.6C-130.4,142.6-130.4,142.4-130.4,142.1z"/>',
-            '</svg>'
-          ].join(''),
-          "show-rationale": [
-            '<svg viewBox="-129 128 34 34">',
-            '<path style="fill:#D0CAC5;stroke:#E6E3E0;stroke-width:0.75;stroke-miterlimit:10;" d="M-111.7,160.9c-8.5,0-15.5-6.9-15.5-15.5c0-8.5,6.9-15.5,15.5-15.5s15.5,6.9,15.5,15.5C-96.2,154-103.1,160.9-111.7,160.9z"/>',
-            '<path style="fill:#B3ABA4;stroke:#CDC7C2;stroke-width:0.5;stroke-miterlimit:10;" d="M-112,159.5c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-104,159.5-112,159.5z"/>',
-            '<circle style="fill:#FFFFFF;" cx="-113" cy="144" r="14"/>',
-            '<rect x="-115" y="136.7" style="fill:#1A9CFF;" width="3" height="3"/>',
-            '<polygon style="fill:#1A9CFF;" points="-112,147.7 -112,141.7 -115.8,141.7 -115.8,143.7 -114,143.7 -114,147.7 -116.2,147.7-116.2,149.7 -109.8,149.7 -109.8,147.7 					"/>',
-            '<path style="fill:#BCE2FF;" d="M-113,158.5c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105,158.5-113,158.5zM-113,130.5c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-105.6,130.5-113,130.5z"/>',
-            '</svg>'
-          ].join(''),
-          "hide-rationale": [
-            '<svg viewBox="-129 128 34 34">',
-            '<circle style="fill:#BCE2FF;" cx="-113" cy="144" r="14"/>',
-            '<rect x="-115" y="136.7" style="fill:#1A9CFF;" width="3" height="3"/>',
-            '<polygon style="fill:#1A9CFF;" points="-112,147.7 -112,141.7 -115.8,141.7 -115.8,143.7 -114,143.7 -114,147.7 -116.2,147.7-116.2,149.7 -109.8,149.7 -109.8,147.7 					"/>',
-            '<path style="fill:#BCE2FF;" d="M-113,158.5c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5s14.5,6.5,14.5,14.5S-105,158.5-113,158.5zM-113,130.5c-7.4,0-13.5,6.1-13.5,13.5s6.1,13.5,13.5,13.5s13.5-6.1,13.5-13.5S-105.6,130.5-113,130.5z"/>',
-            '</svg>'
-          ].join('')
-        }, function(o) {
-          return $sce.trustAsHtml(o);
-        });
 
         $scope.ngModel = _.isUndefined($scope.ngModel) ? false : $scope.ngModel;
         $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);

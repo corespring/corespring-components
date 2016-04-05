@@ -1,3 +1,5 @@
+@icon-width: 22px;
+
 .choice-icon {
   display: inline-block;
 
@@ -35,6 +37,7 @@
 
 .cs-icon {
   display: inline-block;
+  width: @icon-width;
 
   .correct-background {
     fill: @feedback-correct-background;
@@ -72,37 +75,65 @@
     fill: @feedback-partially-correct-foreground;
   }
 
+  .hide-icon-background {
+    fill: @hide-icon-background;
+  }
+
+  .hide-icon-foreground {
+    fill: @hide-icon-foreground;
+  }
+
+  .show-icon-background {
+    fill: @show-icon-background;
+  }
+
+  .show-icon-foreground {
+    fill: @show-icon-foreground;
+  }
+
+  .show-icon-border {
+    fill: @show-icon-border;
+  }
+  
+  .hide-learn-background {
+    fill: @hide-learn-background;
+  }
+
+  .hide-learn-foreground {
+    fill: @hide-learn-foreground;
+  }
+
+  .show-learn-background {
+    fill: @show-learn-background;
+  }
+
+  .show-learn-foreground {
+    fill: @show-learn-foreground;
+  }
+
+  .hide-rationale-background {
+    fill: @hide-rationale-background;
+  }
+
+  .hide-rationale-foreground {
+    fill: @hide-rationale-foreground;
+  }
+
+  .show-rationale-background {
+    fill: @show-rationale-background;
+  }
+
+  .show-rationale-foreground {
+    fill: @show-rationale-foreground;
+  }
+
+  .hide-show-foreground {
+    fill: @warning-foreground;
+  }
+
   .feedback {
     -webkit-filter: drop-shadow(2px 2px 1px #b3aca4);
     filter: drop-shadow(2px 2px 1px #b3aca4);
   }
 
-}
-
-.correct-feedback .popover {
-  background: @feedback-correct-background;
-  .arrow:after {
-    border-top-color: @feedback-correct-background;
-  }
-}
-
-.incorrect-feedback .popover {
-  background: @feedback-incorrect-background;
-  .arrow:after {
-    border-top-color: @feedback-incorrect-background;
-  }
-}
-
-.nothing-submitted-feedback .popover {
-  background: @feedback-nothing-submitted-accent;
-  .arrow:after {
-    border-top-color: @feedback-nothing-submitted-accent;
-  }
-}
-
-.partially-correct-feedback .popover {
-  background: @feedback-partially-correct-background;
-  .arrow:after {
-    border-top-color: @feedback-partially-correct-background;
-  }
 }

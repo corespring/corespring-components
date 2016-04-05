@@ -15,9 +15,9 @@ var choiceIcon = [function() {
       '</span>'
     ].join('\n'),
     link: function($scope, $element, $attrs) {
-      $scope.template = '../../../images/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
+      $scope.template = '/client/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       $scope.$watch('key+shape', function() {
-        $scope.template = '../../../images/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
+        $scope.template = '/client/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       });
     }
   }
