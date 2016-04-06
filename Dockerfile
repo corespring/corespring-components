@@ -7,6 +7,7 @@ FROM phusion/baseimage:0.9.16
 # Settings for the regression tests
 ENV SLUG "https://s3-external-1.amazonaws.com/herokuslugs/heroku.com/v1/74f625e6-13af-4126-b83a-48521b6992fa?AWSAccessKeyId=AKIAJWLOWWHPBWQOPJZQ&Signature=HEiABr2jSEu%2BIuWyHo58DoPsAJ4%3D&Expires=1459941371"
 ENV TIMEOUT 60000
+ENV WAIT_BEFORE_TEST 30
 ENV GREP ""
 
 # Default to UTF-8 file.encoding

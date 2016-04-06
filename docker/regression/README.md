@@ -19,6 +19,7 @@ Only if you have changes in the Dockerfile or in the docker directory, you would
      -e SLUG="http://my-slug.tgz"  ## mandatory, see 'get slug url' below  
      -e GREP="some text"           ## optional, no default, use it to select tests 
      -e TIMEOUT=milliseconds       ## optional, default 60000
+     -e WAIT_BEFORE_TEST=seconds   ## optional, default 30, increase if you tests fail to connect to localhost
         
 ## Getting the slug url 
 
