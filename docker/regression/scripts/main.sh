@@ -29,8 +29,8 @@ echo "-- boot play app..."
 cd /opt/corespring-container
 ./bin/root > play.out 2> play.err < /dev/null &
 
-echo "-- waiting WAIT_BEFORE_TEST seconds on the servers too boot"
-for i in {WAIT_BEFORE_TEST..0}; do echo -ne .; sleep 1; done
+echo "-- waiting $WAIT_BEFORE_TEST seconds on the servers too boot"
+for i in {$WAIT_BEFORE_TEST..0}; do echo -ne .; sleep 1; done
 echo ""
 
 echo "-- run regression tests ..."
