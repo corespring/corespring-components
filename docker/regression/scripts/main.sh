@@ -14,6 +14,10 @@ mv app/corespring-components/components /data/regression/components
 export CONTAINER_COMPONENTS_PATH=/data/regression/components
 
 mv app /opt/corespring-container
+if [ ! -f "/opt/corespring-container/bin/root" ]; then
+  echo "Missing bin/root in container";
+  exit 1;
+fi
 
 echo "-- starting xvfb"
 service xvfb start
