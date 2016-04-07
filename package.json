@@ -26,7 +26,7 @@
     "grunt-http-verify": "~0.1.2",
     "grunt-jsbeautifier": "~0.2.6",
     "grunt-mocha-test": "~0.7.0",
-    "grunt-webdriver": "~0.5.2",
+    "grunt-webdriver": "https://github.com/corespring/grunt-webdriver.git#with-angular-support",
     "http-verify": "~0.1.0",
     "lodash": "~2.4.1",
     "mathjs": "~0.25.0",

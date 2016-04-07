@@ -16,9 +16,10 @@
     "grunt": "~0.4.2",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-http-verify": "~0.1.2",
-    "grunt-webdriver": "~0.5.2",
+    "grunt-webdriver": "https://github.com/corespring/grunt-webdriver.git#with-angular-support",
     "http-verify": "~0.1.0",
     "lodash": "~2.4.1",
-    "should": "~4.0.4"
+    "should": "~4.0.4",
+    "webdriverjs-angular" : "~0.1.3"
   }
 }

@@ -37,7 +37,6 @@ module.exports = (grunt) ->
       name: grunt.option('sauceJob') || 'components-regression-test'
       recordVideo: grunt.option('sauceRecordVideo') || false
       recordScreenshots: grunt.option('sauceRecordScreenshots') || false
-      screenResolution: viewportSize.width + "x" + viewportSize.height;
 
     capabilities.version = browserVersion if browserVersion
     capabilities.platform = platform if platform
