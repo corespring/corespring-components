@@ -2,13 +2,17 @@
 # It boots a corespring-container and a mongo
 # and runs the component regression tests against it
 
+
 FROM phusion/baseimage:0.9.16
 
 # Settings for the regression tests
-ENV SLUG "https://s3-external-1.amazonaws.com/herokuslugs/heroku.com/v1/74f625e6-13af-4126-b83a-48521b6992fa?AWSAccessKeyId=AKIAJWLOWWHPBWQOPJZQ&Signature=HEiABr2jSEu%2BIuWyHo58DoPsAJ4%3D&Expires=1459941371"
+ENV BROWSER_NAME "firefox"
+ENV GREP ""
+ENV GRUNT_DEBUG "false"
+ENV SLUG ""
 ENV TIMEOUT 60000
 ENV WAIT_BEFORE_TEST 30
-ENV GREP ""
+ENV WEB_DRIVER_LOG_LEVEL "silent"
 
 # Default to UTF-8 file.encoding
 ENV LANG C.UTF-8
@@ -21,8 +25,32 @@ RUN apt-get update && \
   nodejs \
   npm \
   openjdk-7-jdk \
+  unzip \
   wget \
   xvfb
+
+#===============
+# Google Chrome
+#===============
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+  && apt-get update -qqy \
+  && apt-get -qqy install \
+    google-chrome-stable \
+  && rm /etc/apt/sources.list.d/google-chrome.list \
+  && rm -rf /var/lib/apt/lists/*
+
+#==================
+# Chrome webdriver
+#==================
+ENV CHROME_DRIVER_VERSION 2.20
+RUN wget --no-verbose -O /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
+  && rm -rf /opt/selenium/chromedriver \
+  && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
+  && rm /tmp/chromedriver_linux64.zip \
+  && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && chmod 755 /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
 
 # link nodejs -> node
 RUN ln -s /usr/bin/nodejs /usr/bin/node

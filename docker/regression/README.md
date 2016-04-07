@@ -9,17 +9,23 @@ It downloads/runs the target sources of the components and the container as a sl
 Only if you have changes in the Dockerfile or in the docker directory, you would have to build it.    
 
      docker build -t my-runner .
+     
+### Problems
++ Sometimes npm install doesn't work. If possible, try running npm install in the regression directory of your source files before running the docker build.      
        
 ## Running the regression tests 
      
      docker run -e SLUG="http://myslug.tgz" my-runner
         
 ### Options 
-
-     -e SLUG="http://my-slug.tgz"  ## mandatory, see 'get slug url' below  
-     -e GREP="some text"           ## optional, no default, use it to select tests 
-     -e TIMEOUT=milliseconds       ## optional, default 60000
-     -e WAIT_BEFORE_TEST=seconds   ## optional, default 30, increase if you tests fail to connect to localhost
+     -e SLUG="http://my-slug.tgz"      ## mandatory, see 'get slug url' below
+   
+     -e BROWSER_NAME="firefox"         ## optional, default firefox, chrome is the only other possible value
+     -e GREP="some text"               ## optional, no default, use it to select tests
+     -e GRUNT_DEBUG "false"            ## optional, default is false
+     -e TIMEOUT=milliseconds           ## optional, default 60000
+     -e WAIT_BEFORE_TEST=seconds       ## optional, default 30, increase if you tests fail to connect to localhost
+     -e WEB_DRIVER_LOG_LEVEL "silent"  ## optional, default silent, other values: verbose|command|data|result, see: [webdriver docs](http://webdriver.io/guide/getstarted/configuration.html)
         
 ## Getting the slug url 
 

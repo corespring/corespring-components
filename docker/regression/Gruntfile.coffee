@@ -36,7 +36,7 @@ module.exports = (grunt) ->
   extendBrowser = (browser) ->
     browser.loadTest = (componentType, jsonFile) ->
         url = "#{baseUrl}/client/rig/corespring-#{componentType}/index.html?data=regression_#{jsonFile}"
-        console.log("Load Test:", url)
+        console.info("Load Test:", url)
         viewportSize = {width: 1280, height: 1024}
         browser
         .setViewportSize(viewportSize)
@@ -47,6 +47,11 @@ module.exports = (grunt) ->
             console.error("getViewportSize err:", err)
           else if(res.width != viewportSize.width || res.height != viewportSize.height)
             console.warn("getViewportSize different from setting: actual:", res, " expected:", viewportSize)
+        )
+        .execute(() ->
+          return navigator.userAgent;
+        , (err,res) ->
+            console.info("UserAgent:", res);
         )
         browser
 
@@ -125,6 +130,13 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
 
+    copy:
+      dev:
+        files: [
+          {expand: true, src: ['../../components/**/regression/**'], dest: 'regression/components/', filter: 'isFile'}
+          {expand: true, src: ['../../components/**/regression-data/**'], dest: 'regression/components/', filter: 'isFile'}
+        ]
+
     http_verify:
       regressionRigWarmup:
         url: baseUrl + "/client/rig/corespring-inline-choice/index.html?data=regression_one.json",
@@ -148,9 +160,11 @@ module.exports = (grunt) ->
   grunt.initConfig(config)
 
   npmTasks = [
+    'grunt-contrib-copy'
     'grunt-http-verify'
     'grunt-webdriver'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
-  grunt.registerTask('regression', ['http_verify:regressionRigWarmup', 'webdriver:dev'])
+  grunt.registerTask('regression', ['copy:dev', 'http_verify:regressionRigWarmup', 'webdriver:dev'])
+  grunt.registerTask('regression-from-docker', ['http_verify:regressionRigWarmup', 'webdriver:dev'])
