@@ -20,7 +20,7 @@ Only if you have changes in the Dockerfile or in the docker directory, you would
 ### Options 
      -e SLUG="http://my-slug.tgz"      ## mandatory, see 'get slug url' below
    
-     -e BROWSER_NAME="firefox"         ## optional, default firefox, chrome is the only other possible value
+     -e BROWSER_NAME="chrome"         ## optional, default chrome, firefox is the only other possible value
      -e GREP="some text"               ## optional, no default, use it to select tests
      -e GRUNT_DEBUG "false"            ## optional, default is false
      -e TIMEOUT=milliseconds           ## optional, default 60000
