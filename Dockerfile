@@ -6,7 +6,7 @@
 FROM phusion/baseimage:0.9.16
 
 # Settings for the regression tests
-ENV BROWSER_NAME "firefox"
+ENV BROWSER_NAME "chrome"
 ENV GREP ""
 ENV GRUNT_DEBUG "false"
 ENV SLUG ""
