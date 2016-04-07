@@ -167,6 +167,10 @@
         &>.arrow {
           border-bottom-color: @feedback-correct-background;
           border-top-color: @feedback-correct-background;
+          &:after {
+            border-bottom-color: @warning-foreground;
+            border-top-color: @warning-foreground;
+          }
         }
       }
       &.popover-incorrect {
@@ -179,6 +183,10 @@
         & > .arrow {
           border-bottom-color: @feedback-incorrect-background;
           border-top-color: @feedback-incorrect-background;
+          &:after {
+            border-bottom-color: @warning-foreground;
+            border-top-color: @warning-foreground;
+          }
         }
       }
     }
