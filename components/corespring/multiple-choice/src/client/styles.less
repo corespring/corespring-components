@@ -1,42 +1,9 @@
-/* latin */
-@font-face {
-  font-family: 'Kameron';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Kameron'), url(https://fonts.gstatic.com/s/kameron/v7/Teu2HdJ0U7BWBhN9GzN8SALUuEpTyoUstqEm5AMlJo4.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Kameron';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Kameron Bold'), local('Kameron-Bold'), url(https://fonts.gstatic.com/s/kameron/v7/0Mk_Cjlc84dzSw97PDic4AzyDMXhdD8sAj6OAJTFsBI.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-
-/* latin-ext */
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/8qcEw_nrk_5HEcCpYdJu8BTbgVql8nDJpwnrE27mub0.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/MDadn8DQ_3oT6kvnUq_2r_esZW2xOQ-xsNqO47m55DA.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-
 @icon-size: 22px;
 
 .view-multiple-choice {
 
   font-family: 'Kameron' !important;
+  font-size: 14px;
   font-style: normal;
 
   .icon-toggle {
@@ -61,6 +28,7 @@
       display: table-cell;
       vertical-align: middle;
       padding-left: 10px;
+      color: @hide-show-foreground;
     }
     .show-state, .hide-state {
       width: 20px;
@@ -190,23 +158,25 @@
         line-height: normal;
       }
       &.popover-correct {
-        color: @feedback-correct-foreground;
-        background-color: @feedback-correct-background;
+        color: #000000;
+        border: 1px solid @feedback-correct-background;
+        background-color: @warning-foreground;
         .popover-title {
-          background-color: @feedback-correct-background;
+          background-color: @warning-foreground;
         }
-        &>.arrow:after {
+        &>.arrow {
           border-bottom-color: @feedback-correct-background;
           border-top-color: @feedback-correct-background;
         }
       }
       &.popover-incorrect {
-        color: @feedback-incorrect-foreground;
-        background-color: @feedback-incorrect-background;
+        color: #000000;
+        border: 1px solid @feedback-incorrect-background;
+        background-color: @warning-foreground;
         .popover-title {
-          background-color: @feedback-incorrect-background;
+          background-color: @warning-foreground;
         }
-        &>.arrow:after {
+        & > .arrow {
           border-bottom-color: @feedback-incorrect-background;
           border-top-color: @feedback-incorrect-background;
         }
@@ -367,8 +337,8 @@
 
   .empty-response-holder {
     margin: 20px;
-    background-color: @warning-block-background;
     .empty-response {
+      background-color: @warning-block-background;
       color: @warning-background;
       padding: 20px;
       display: table;

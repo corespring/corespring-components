@@ -4,7 +4,7 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
     scope: {
       response: "=feedbackPopover",
       viewport: '@',
-      state: '=feedbackPopoverState'
+      state: '=?feedbackPopoverState'
     },
     link: function(scope, element, attrs) {
       scope.firstShow = true;
@@ -66,26 +66,31 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
             }
           ).on('show.bs.popover', function(event) {
             $timeout(function() {
+              $('[feedback-popover]').each(function () {
+                if (element[0] !== this) {
+                  $(this).popover('hide');
+                }
+              });
               scope.viewport = scope.viewport || $(element).parents('.player-body');
               if (scope.viewport && $(scope.viewport).length > 0) {
                 var $popover = $(event.target).siblings('.popover');
                 var $viewport = $(scope.viewport);
 
+                if (scope.firstShow) {
+                  scope.arrowPosition = parseFloat($('.arrow', $popover).css('left'));
+                  scope.firstShow = false;
+                }
+
                 if ($popover.offset().left < $viewport.offset().left) {
                   var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left);
                   $popover.css('left', '+=' + deltaLeft + 'px');
-                  if (scope.firstShow) {
-                    $('.arrow', $popover).css('left', "-=" + deltaLeft + 'px');
-                  }
+                  $('.arrow', $popover).css('left', scope.arrowPosition - deltaLeft);
                 }
                 if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width()) {
                   var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width());
                   $popover.css('left', '-=' + deltaRight + 'px');
-                  if (scope.firstShow) {
-                    $('.arrow', $popover).css('left', "+=" + deltaRight + 'px');
-                  }
+                  $('.arrow', $popover).css('left', scope.arrowPosition + deltaRight);
                 }
-                scope.firstShow = false;
               }
               scope.state = 'open';
             });

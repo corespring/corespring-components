@@ -353,7 +353,7 @@ var main = [
 
     var learnMoreTemplate = [
       '<div ng-if="response.comments">',
-      '  <div icon-toggle icon-name="learnMore" class="icon-toggle-learnMore" ng-model="bridge.learnMoreOpen" label="Learn more">',
+      '  <div icon-toggle icon-name="learn-more" class="icon-toggle-learnMore" ng-model="bridge.learnMoreOpen" label="Learn More">',
       '    <div class="learn-more-body" ng-bind-html-unsafe="response.comments"></div>',
       '  </div>',
       '</div>'
@@ -370,7 +370,7 @@ var main = [
 
     var choicesTemplate = [
       '<div class="choices-container">',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show correct Answer" open-label="Hide correct answer" ng-show="response && response.correctness == \'incorrect\' && question.config.answerorrectAnswer !== \'inline\'"></div>',
+      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer" ng-show="response && response.correctness == \'incorrect\' && question.config.answerorrectAnswer !== \'inline\'"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
