@@ -68,31 +68,35 @@ describe('inline-choice', function() {
       .call(done);
   });
 
-  it('feedbacks are positioned correctly', function(done) {
+  it('feedbacks are positioned correctly XX', function(done) {
+    var playerPos, arrowPos1, arrowPos2;
+
     browser
       .selectInlineChoice("1", "Banana")
       .selectInlineChoice("2", "Apple")
       .submitItem()
+
       .waitAndClick(inlineChoiceWithId("1") + '//span')
       .waitAndClick(inlineChoiceWithId("2") + '//span')
 
-      .waitAndGetLocation(".player-body", function(err, playerPos) {
-        this.waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
-          this.waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
-            arrowPos.x.should.be.above(popupPos.x);
-            arrowPos.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
-
+      .waitAndGetLocation(".player-body", function(err, pos) {
+        playerPos = pos;
+      })
+      .waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, pos) {
+        arrowPos1 = pos
+      })
+      .waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
+        arrowPos1.x.should.be.above(popupPos.x);
+        arrowPos1.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
             popupPos.x.should.be.above(playerPos.x);
-          });
-        });
-        this.waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='arrow']", function(err, arrowPos) {
-          this.waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='popover-content']", function(err, popupPos) {
-            arrowPos.x.should.be.above(popupPos.x);
-            arrowPos.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
-
+      })
+      .waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='arrow']", function(err, pos) {
+        arrowPos2 = pos
+      })
+      .waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='popover-content']", function(err, popupPos) {
+        arrowPos2.x.should.be.above(popupPos.x);
+        arrowPos2.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
             popupPos.x.should.be.above(playerPos.x);
-          });
-        });
       })
       .call(done);
   });
