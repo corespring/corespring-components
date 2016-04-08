@@ -44,6 +44,10 @@ describe('inline-choice', function() {
       });
     });
 
+    browser.waitAndGetLocation = function(selector, cb){
+      return this.waitForExist(selector).getLocation(selector, cb);
+    }
+
     browser
       .loadTest(componentName, itemJsonFilename)
       .call(done);
@@ -71,17 +75,18 @@ describe('inline-choice', function() {
       .submitItem()
       .waitAndClick(inlineChoiceWithId("1") + '//span')
       .waitAndClick(inlineChoiceWithId("2") + '//span')
-      .getLocation(".player-body", function(err, playerPos) {
-        this.getLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
-          this.getLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
+
+      .waitAndGetLocation(".player-body", function(err, playerPos) {
+        this.waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
+          this.waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
             arrowPos.x.should.be.above(popupPos.x);
             arrowPos.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
 
             popupPos.x.should.be.above(playerPos.x);
           });
         });
-        this.getLocation(inlineChoiceWithId("2") + "//div[@class='arrow']", function(err, arrowPos) {
-          this.getLocation(inlineChoiceWithId("2") + "//div[@class='popover-content']", function(err, popupPos) {
+        this.waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='arrow']", function(err, arrowPos) {
+          this.waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='popover-content']", function(err, popupPos) {
             arrowPos.x.should.be.above(popupPos.x);
             arrowPos.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
 
