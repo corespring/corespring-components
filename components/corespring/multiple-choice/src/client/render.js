@@ -505,7 +505,7 @@ var feedbackIcon = [
       },
       template: [
         '<div class="feedback-icon" feedback-popover="feedback" feedback-popover-state="state" viewport="#{{playerId}}">',
-        '  <svg-icon key="{{iconKey()}}" shape="{{iconShape()}}" icon-set="{{iconSet()}}" text="{{feedback.feedback}}" open="{{state == \'open\' ? \'true\' : undefined}}"></svg-icon>',
+        '  <svg-icon ng-class="{hasFeedback: feedback.feedback}" key="{{iconKey()}}" shape="{{iconShape()}}" icon-set="{{iconSet()}}" text="{{feedback.feedback}}" open="{{state == \'open\' ? \'true\' : undefined}}"></svg-icon>',
         '</div>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
