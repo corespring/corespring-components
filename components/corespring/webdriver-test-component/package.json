@@ -1,0 +1,18 @@
+{
+  "name": "webdriver-test-component",
+  "title": "Webdriver Test Component",
+  "titleGroup": "Test",
+  "organization": "corespring",
+  "version": "0.0.1",
+  "released": false,
+  "libraries": [
+    {
+      "name": "navigator",
+      "organization": "corespring"
+    },
+    {
+      "name" : "server-shared",
+      "organization" : "corespring"
+    }
+  ]
+}
