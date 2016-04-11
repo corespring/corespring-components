@@ -35,25 +35,21 @@ module.exports = (grunt) ->
 
   extendBrowser = (browser) ->
     browser.loadTest = (componentType, jsonFile) ->
-        url = "#{baseUrl}/client/rig/corespring-#{componentType}/index.html?data=regression_#{jsonFile}"
-        console.info("Load Test:", url)
-        viewportSize = {width: 1280, height: 1024}
-        browser
-        .setViewportSize(viewportSize)
+      url = "#{baseUrl}/client/rig/corespring-#{componentType}/index.html?data=regression_#{jsonFile}"
+      console.info("Load Test:", url)
+
+      getUserAgent = ->
+        navigator.userAgent
+
+      logUserAgent = (err,res) ->
+        console.info("UserAgent:", res)
+
+      browser
         .url(url)
-        .waitForExist('.player-rendered')
-        .getViewportSize((err, res) ->
-          if(err)
-            console.error("getViewportSize err:", err)
-          else if(res.width != viewportSize.width || res.height != viewportSize.height)
-            console.warn("getViewportSize different from setting: actual:", res, " expected:", viewportSize)
-        )
-        .execute(() ->
-          return navigator.userAgent;
-        , (err,res) ->
-            console.info("UserAgent:", res);
-        )
-        browser
+        .waitFor('.player-rendered')
+        .execute(getUserAgent, logUserAgent)
+
+      browser
 
     browser.waitAndClick = (selector) ->
         console.log("click", selector)
@@ -101,7 +97,7 @@ module.exports = (grunt) ->
       getItemJson: (componentType, jsonFile) ->
         require "./components/corespring/#{componentType}/regression-data/#{jsonFile}"
 
-      bail: grunt.option('bail') || true
+      bail: grunt.option('bail')
       baseUrl: baseUrl
       defaultTimeout: getTimeout()
       desiredCapabilities: getDesiredCapabilities()
@@ -129,6 +125,9 @@ module.exports = (grunt) ->
   config =
     pkg: grunt.file.readJSON('package.json')
     common: commonConfig
+
+    clean:
+      regression: ['components/*']
 
     copy:
       dev:
@@ -160,11 +159,12 @@ module.exports = (grunt) ->
   grunt.initConfig(config)
 
   npmTasks = [
+    'grunt-contrib-clean'
     'grunt-contrib-copy'
     'grunt-http-verify'
     'grunt-webdriver'
   ]
 
   grunt.loadNpmTasks(t) for t in npmTasks
-  grunt.registerTask('regression', ['copy:dev', 'http_verify:regressionRigWarmup', 'webdriver:dev'])
+  grunt.registerTask('regression', ['copy:dev', 'http_verify:regressionRigWarmup', 'webdriver:dev', 'clean:regression'])
   grunt.registerTask('regression-from-docker', ['http_verify:regressionRigWarmup', 'webdriver:dev'])
