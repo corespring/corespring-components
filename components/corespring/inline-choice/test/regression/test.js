@@ -46,7 +46,7 @@ describe('inline-choice', function() {
 
     browser.waitAndGetLocation = function(selector, cb){
       return this.waitForExist(selector).getLocation(selector, cb);
-    }
+    };
 
     browser
       .loadTest(componentName, itemJsonFilename)
@@ -68,7 +68,7 @@ describe('inline-choice', function() {
       .call(done);
   });
 
-  it('feedbacks are positioned correctly XX', function(done) {
+  it('feedbacks are positioned correctly', function(done) {
     var playerPos, arrowPos1, arrowPos2;
 
     browser
@@ -83,7 +83,7 @@ describe('inline-choice', function() {
         playerPos = pos;
       })
       .waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, pos) {
-        arrowPos1 = pos
+        arrowPos1 = pos;
       })
       .waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
         arrowPos1.x.should.be.above(popupPos.x);
@@ -91,7 +91,7 @@ describe('inline-choice', function() {
             popupPos.x.should.be.above(playerPos.x);
       })
       .waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='arrow']", function(err, pos) {
-        arrowPos2 = pos
+        arrowPos2 = pos;
       })
       .waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='popover-content']", function(err, popupPos) {
         arrowPos2.x.should.be.above(popupPos.x);
