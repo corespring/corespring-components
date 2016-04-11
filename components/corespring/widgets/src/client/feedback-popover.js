@@ -74,20 +74,21 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
               scope.viewport = scope.viewport || $(element).parents('.player-body');
               if (scope.viewport && $(scope.viewport).length > 0) {
                 var $popover = $(event.target).siblings('.popover');
-                var $viewport = $(scope.viewport);
+                var $viewport = $(scope.viewport).parent();
+                var padding = 5;
 
                 if (scope.firstShow) {
                   scope.arrowPosition = parseFloat($('.arrow', $popover).css('left'));
                   scope.firstShow = false;
                 }
 
-                if ($popover.offset().left < $viewport.offset().left) {
-                  var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left);
+                if ($popover.offset().left < $viewport.offset().left + padding) {
+                  var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left) + padding;
                   $popover.css('left', '+=' + deltaLeft + 'px');
                   $('.arrow', $popover).css('left', scope.arrowPosition - deltaLeft);
                 }
-                if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width()) {
-                  var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width());
+                if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width() - padding) {
+                  var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width()) + padding;
                   $popover.css('left', '-=' + deltaRight + 'px');
                   $('.arrow', $popover).css('left', scope.arrowPosition + deltaRight);
                 }
