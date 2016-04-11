@@ -24,8 +24,10 @@ var svgIcon = [function() {
         }
 
         var category = $attrs.category || 'feedback';
+        var pn = window.location.pathname;
+        var firstPathSegment = pn.substring(0, pn.indexOf('/',1));
 
-        $scope.template = '/client/images/components-assets/'+category+'/'
+        $scope.template = firstPathSegment+'/images/components-assets/'+category+'/'
           + ($scope.iconSet ? $scope.iconSet + '-' : '')
           + $scope.key
           + ($scope.shape ? '-' + $scope.shape : '')

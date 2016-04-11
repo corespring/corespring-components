@@ -7,7 +7,7 @@ var choiceIcon = [function() {
     },
     template: [
       '<span class="{{key}}">',
-      '  <span popover="{{text}}" popover-position="top" popover-trigger="{{text ? \'mouseover\' : \'\'}}">',
+      '  <span>',
       '    <div style="width: 30px;" class="choice-icon">',
       '      <ng-include src="template"/>',
       '    </div>',
@@ -15,9 +15,11 @@ var choiceIcon = [function() {
       '</span>'
     ].join('\n'),
     link: function($scope, $element, $attrs) {
-      $scope.template = '/client/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
+      var pn = window.location.pathname;
+      var firstPathSegment = pn.substring(0, pn.indexOf('/',1));
+      $scope.template = firstPathSegment+'/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       $scope.$watch('key+shape', function() {
-        $scope.template = '/client/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
+        $scope.template = firstPathSegment+'/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       });
     }
   }
