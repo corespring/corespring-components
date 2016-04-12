@@ -8,6 +8,8 @@ exports.isPartiallyCorrect = isPartiallyCorrect;
 exports.keys = keys;
 exports.preprocess = preprocess;
 
+//-------------------------------------------------------------
+
 /*
  Create a response to the answer based on the question, the answer and the respond settings
  */
@@ -66,7 +68,7 @@ function calculateScore(question, answer, isSingleChoice) {
     return 1;
   }
 
-  if(question.allowPartialScoring){
+  if (question.allowPartialScoring) {
     return calculatePartialScore(answeredCorrectly) / 100
   }
 
@@ -209,5 +211,3 @@ function buildFeedback(question, answer, settings, isCorrect) {
   }
   return out;
 }
-
-

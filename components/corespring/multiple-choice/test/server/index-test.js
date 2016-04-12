@@ -384,7 +384,7 @@ describe('multiple-choice server logic', function() {
 
     describe('choiceType checkbox', function() {
 
-      beforeEach(function(){
+      beforeEach(function() {
         comp.model.config.choiceType = "checkbox";
       });
 
@@ -440,7 +440,7 @@ describe('multiple-choice server logic', function() {
 
     describe('choiceType radio', function() {
 
-      beforeEach(function(){
+      beforeEach(function() {
         comp.model.config.choiceType = "radio";
       });
 
