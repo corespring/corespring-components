@@ -70,6 +70,8 @@ var main = [
             scope.fullModel = model;
             model.model = model.model || {};
             model.model.config = model.model.config || {};
+            model.model.config.expectedLines = parseInt(model.model.config.expectedLines, 10) || 5;
+            model.model.config.expectedLength = parseInt(model.model.config.expectedLength, 10) || 40;
           },
 
           getModel: function() {
