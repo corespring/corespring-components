@@ -65,11 +65,20 @@ var main = ['$compile',
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
+
+          var config = dataAndSession.data ? dataAndSession.data.model.config || {} : {};
+          
+          function getValue(key, lower, upper, defaultValue){
+            var v = config[key] || defaultValue;
+            return Math.max(lower, Math.min(upper, v));
+          }
+
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {answers: ''};
           scope.answer = scope.session.answers;
-          scope.rows = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLines) || 4;
-          scope.cols = (dataAndSession.data.model.config && dataAndSession.data.model.config.expectedLength) || 60;
+
+          scope.rows = getValue('expectedLines', 5, 20, 5);
+          scope.cols = getValue('expectedLength', 40, 100, 60);
 
           var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
           var height = scope.rows * PIXELS_PER_ROW + 'px';
@@ -83,12 +92,13 @@ var main = ['$compile',
           } : {};
 
           var compiledWiggi = $compile(wiggiTemplate())(scope);
-          element.find('.textarea-holder').html(compiledWiggi);
-          element.find('.wiggi-wiz').css({width: width});
-          editable().css({
-            height: height
-          });
-
+          element.find('.textarea-holder')
+            .html(compiledWiggi)
+            .css({
+              'overflow' : 'hidden',
+              display: 'inline-block',
+              width: width, 
+              height: height});
         },
 
         getSession: function() {
