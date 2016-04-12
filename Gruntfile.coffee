@@ -20,6 +20,8 @@ module.exports = (grunt) ->
     grunt.fail.fatal('saucelabs error - you must define both user and key') if( (sauceUser and !sauceKey) or (!sauceUser and sauceKey))
     grunt.fail.fatal('saucelabs error - you must use a remote url as the base url') if(sauceUser and baseUrl == 'http://localhost:9000')
 
+  viewportSize = {width: 1280, height: 1024}
+
   getTimeout = ->
     grunt.option('timeout') or 10000
 
@@ -44,7 +46,6 @@ module.exports = (grunt) ->
     browser.loadTest = (componentType, jsonFile) ->
         url = "#{baseUrl}/client/rig/corespring-#{componentType}/index.html?data=regression_#{jsonFile}"
         console.log("Load Test:", url)
-        viewportSize = {width: 1280, height: 1024}
         browser
         .setViewportSize(viewportSize)
         .url(url)

@@ -456,13 +456,13 @@ var main = [
           '  <tr class="question-row"',
           '      ng-repeat="row in matchModel.rows"',
           '      question-id="{{row.id}}">',
-          '    <td class="question-cell" ng-bind-html-unsafe="row.labelHtml"></td>',
-          '    <td class="answer-expected-warning">',
+          '    <td class="question-cell match-td-padded" ng-bind-html-unsafe="row.labelHtml"></td>',
+          '    <td class="answer-expected-warning match-td-padded">',
           '      <div class="warning-holder" ng-if="row.answerExpected">',
           '        <i class="fa fa-exclamation-triangle"></i>',
           '      </div>',
           '    </td>',
-          '    <td class="answer-cell"',
+          '    <td class="answer-cell match-td-padded"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
           '      <div class="corespring-match-choice"',
@@ -500,9 +500,9 @@ var main = [
           '    <tr class="match-tr question-row"',
           '        ng-repeat="row in matchModel.rows"' +
           '        question-id="{{row.id}}">',
-          '      <td class="match-td question-cell"',
+          '      <td class="match-td question-cell match-td-padded"',
           '          ng-bind-html-unsafe="row.labelHtml"></td>',
-          '      <td class="match-td answer-cell"' +
+          '      <td class="match-td answer-cell match-td-padded"' +
           '          ng-repeat="match in row.matchSet track by $index">',
           '        <div class="corespring-match-choice"',
           '             ng-class="classForSolution(row,$index)">' +

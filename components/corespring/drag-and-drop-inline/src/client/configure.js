@@ -153,7 +153,9 @@ function main(
     }
 
     function hasChoice($index) {
-      var choice = $(scope.model.choices[$index].label).text();
+      var node = $('<div>');
+      node.html(scope.model.choices[$index].label);
+      var choice = node.text();
       return !_.isEmpty(choice.trim());
     }
 
@@ -506,7 +508,7 @@ function main(
           '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
           '        <div class="blocker" ng-click="activate($event, $index)" ng-hide="active[$index]">',
           '          <div class="bg">',
-          '            <span class="placeholder" ng-show="!hasChoice($index)">Enter a choice</span>',
+          '            <span class="placeholder" ng-hide="hasChoice($index)">Enter a choice</span>',
           '          </div>',
           '          <div class="content">',
           '            <ul class="edit-controls">',

@@ -1,0 +1,20 @@
+{
+  "item": {
+    "xhtml": "<div corespring-webdriver-test-component=true id=\"0\"></div>",
+    "components": {
+      "0": {
+        "componentType": "corespring-webdriver-test-component",
+        "correctResponse": {
+
+        },
+        "model": {
+          "config": {
+          }
+        }
+      }
+    }
+  },
+  "session": {
+
+  }
+}
