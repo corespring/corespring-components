@@ -69,7 +69,7 @@ function calculateScore(question, answer, isSingleChoice) {
   }
 
   if (question.allowPartialScoring) {
-    return calculatePartialScore(answeredCorrectly) / 100
+    return calculatePartialScore(answeredCorrectly) / 100;
   }
 
   return 0;
@@ -83,7 +83,7 @@ function calculateScore(question, answer, isSingleChoice) {
       return newsum;
     }, 0);
     return sum;
-  };
+  }
 
   function calculatePartialScore(correctCount) {
     var partialScore = _.find(question.partialScoring, function(ps) {
@@ -91,7 +91,7 @@ function calculateScore(question, answer, isSingleChoice) {
     });
 
     return _.isUndefined(partialScore) ? 0 : partialScore.scorePercentage;
-  };
+  }
 
 }
 
