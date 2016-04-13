@@ -28,6 +28,13 @@ var main = [
      * To give these components access to various properties of the main
      * component, we are passing the scope of the main component to them.
      * I wonder, if there is a more ng-conform solution to that.
+     *
+     * Things that are currently shared by answerAreas are
+     * scope.canEdit()
+     * scope.classForChoice()
+     * scope.cleanLabel()
+     * scope.dragAndDropScopeId
+     * scope.landingPlaceChoices
      */
 
     function link(scope, element, attrs) {
