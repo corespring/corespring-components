@@ -28,6 +28,10 @@
   .icon-toggle {
     display: table;
     cursor: pointer;
+    .cs-icon {
+      width: @icon-size;
+      height: @icon-size;
+    }
     .icon-holder {
       display: table-cell;
       vertical-align: middle;
@@ -36,8 +40,6 @@
         position: relative;
         width: 20px;
         height: 20px;
-
-
         .toggle-icon  {
           position: absolute;
         }
@@ -111,6 +113,9 @@
     margin-bottom: 10px;
     .icon-toggle .icon-holder .icon-inner-holder {
       height: 40px;
+      .cs-icon {
+        height: 40px;
+      }
     }
   }
 
@@ -247,6 +252,7 @@
         .choice-icon-holder {
           position: relative;
           width: @icon-size;
+          height: @icon-size;
           .icon {
             position: absolute;
 
@@ -269,6 +275,7 @@
 
         svg {
           width: @icon-size;
+          height: @icon-size;
           .feedback {
             visibility: hidden;
           }
