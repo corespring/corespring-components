@@ -295,7 +295,7 @@ var main = [
         if (scope.bridge.viewMode === 'correct') {
           return "";
         }
-        return scope.response.correctness;
+        return scope.response && scope.response.correctness;
       };
 
       scope.choiceClass = function(o) {
