@@ -27,12 +27,16 @@ var svgIcon = [function() {
         var pn = window.location.pathname;
         var firstPathSegment = pn.substring(0, pn.indexOf('/',1));
 
-        $scope.template = firstPathSegment+'/images/components-assets/'+category+'/'
-          + ($scope.iconSet ? $scope.iconSet + '-' : '')
-          + $scope.key
-          + ($scope.shape ? '-' + $scope.shape : '')
-          + ($scope.open ? '-open' : '')
-          + '.svg';
+        if ($scope.key === 'empty') {
+          $scope.template = firstPathSegment + '/images/components-assets/' + category + '/empty.svg'
+        } else {
+          $scope.template = firstPathSegment + '/images/components-assets/' + category + '/'
+            + ($scope.iconSet ? $scope.iconSet + '-' : '')
+            + $scope.key
+            + ($scope.shape ? '-' + $scope.shape : '')
+            + ($scope.open ? '-open' : '')
+            + '.svg';
+        }
 
       };
 

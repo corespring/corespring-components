@@ -1,11 +1,29 @@
 @icon-size: 22px;
 @feedback-icon-size: 26px;
 
+
 .view-multiple-choice {
+
 
   font-family: 'Kameron' !important;
   font-size: 15px;
   font-style: normal;
+
+  .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+    transition: all linear 0.5s;
+  }
+
+  .animate-show.ng-hide {
+    opacity: 0;
+  }
+
+  .animate-hide.ng-hide-add {
+    transition: all linear 0.5s;
+  }
+
+  .animate-hide.ng-hide {
+    opacity: 0;
+  }
 
   .icon-toggle {
     display: table;
@@ -76,6 +94,11 @@
   .icon-toggle-correct {
     padding-left: 36px;
     margin-bottom: 10px;
+    opacity: 0;
+    transition: opacity linear 0.5s;
+    &.showToggle {
+      opacity: 1;
+    }
   }
   .icon-toggle-correct-two {
     float: right;
@@ -328,7 +351,7 @@
   &.correct, &.incorrect {
     .feedback-icon {
       opacity: 1;
-      width: 20px;
+      transform: translateX(0);
       -webkit-transform: translateX(0);
     }
   }

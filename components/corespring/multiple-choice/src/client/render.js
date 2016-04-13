@@ -133,7 +133,7 @@ var main = [
       scope.containerBridge = {
 
         setPlayerSkin: function(skin) {
-          console.log("Skin is ",skin);
+          console.log("Skin is ", skin);
           scope.iconset = skin.iconSet;
         },
         setDataAndSession: function(dataAndSession) {
@@ -291,11 +291,14 @@ var main = [
         scope.bridge.viewMode = n ? 'correct' : 'normal';
       });
 
-      scope.choiceClass = function(o) {
+      scope.interactionCorrectnessClass = function() {
         if (scope.bridge.viewMode === 'correct') {
           return "";
         }
+        return scope.response.correctness;
+      };
 
+      scope.choiceClass = function(o) {
         var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
         var isCorrect = !_.isUndefined(o.correct) && o.correct;
         var res = isSelected ? "selected " : "";
@@ -303,20 +306,16 @@ var main = [
         if (isCorrect && scope.mode == 'instructor') {
           return "correct";
         }
-
         if (_.isUndefined(o.correct)) {
           return res + "default";
         }
-
         if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
           return "";
         }
-
-        if (o.correct) {
-          return res + 'correct'
-        } else {
-          return res + (scope.bridge.viewMode !== 'correct' ? 'incorrect' : '');
+        if (scope.bridge.viewMode === 'correct' && !isSelected) {
+          return "";
         }
+        return res + ((o.correct) ? 'correct' : 'incorrect');
       };
 
       scope.radioState = function(o) {
@@ -331,7 +330,7 @@ var main = [
         if (!_.isUndefined(o.correct) && o.correct == false && scope.bridge.viewMode !== 'correct') return "incorrect";
         if (!_.isUndefined(o.correct) && o.correct == true && scope.bridge.viewMode === 'correct') return "correct";
         if (isSelected && scope.bridge.viewMode !== 'correct') return isCorrect ? "correct" : "selected";
-        if (!_.isUndefined(o.correct) && o.correct == true) return  "correct";
+        if (!_.isUndefined(o.correct) && o.correct == true) return "correct";
         if (scope.response) return "muted";
       };
 
@@ -370,7 +369,7 @@ var main = [
 
     var choicesTemplate = [
       '<div class="choices-container">',
-      '  <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer" ng-show="response && response.correctness == \'incorrect\' && question.config.answerorrectAnswer !== \'inline\'"></div>',
+      '  <div ng-class="{showToggle: response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'}" icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer"></div>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
@@ -397,7 +396,7 @@ var main = [
       replace: true,
       link: link,
       template: [
-        '<div class="view-multiple-choice" ng-class="response.correctness">',
+        '<div class="view-multiple-choice" ng-class="interactionCorrectnessClass()">',
         choicesTemplate,
         rationalesTemplate,
         noResponseTemplate,
@@ -420,10 +419,10 @@ var radioButton = ['$sce',
       template: [
         '<div class="radio-button" ng-class="{hasFeedback: feedback}">',
         '  <div class="choice-icon-holder" >',
-        '    <choice-icon class="icon" ng-class="active" shape="radio" key="selected" ng-if="active == \'ready\' || active == \'selected\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="radio" key="muted" ng-if="active == \'muted\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="radio" key="correct" ng-if="active == \'correct\' || active == \'correctUnselected\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="radio" key="incorrect" ng-if="active == \'incorrect\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" ng-class="active" shape="radio" key="selected" ng-show="active == \'ready\' || active == \'selected\'"></choice-icon>',
+        '    <choice-icon class="animate-hide icon" shape="radio" key="muted" ng-show="active == \'muted\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="radio" key="correct" ng-show="active == \'correct\' || active == \'correctUnselected\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="radio" key="incorrect" ng-show="active == \'incorrect\'"></choice-icon>',
         '  </div>',
         '</div>'
       ].join("\n"),
@@ -460,11 +459,11 @@ var mcCheckbox = ['$sce',
       template: [
         '<div class="mc-checkbox" ng-class="{hasFeedback: feedback}">',
         '  <div class="choice-icon-holder" >',
-        '    <choice-icon class="icon" ng-class="active" shape="box" key="selected" ng-if="active == \'ready\' || active == \'selected\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="box" key="muted" ng-if="active == \'muted\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="box" key="correct" ng-if="active == \'correct\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="box" key="correct" ng-if="active == \'correctUnselected\'"></choice-icon>',
-        '    <choice-icon class="icon" shape="box" key="incorrect" ng-if="active == \'incorrect\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" ng-class="active" shape="box" key="selected" ng-show="active == \'ready\' || active == \'selected\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="box" key="muted" ng-show="active == \'muted\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correct\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correctUnselected\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="box" key="incorrect" ng-show="active == \'incorrect\'"></choice-icon>',
         '  </div>',
         '</div>'
       ].join("\n"),
@@ -527,7 +526,7 @@ var feedbackIcon = [
           if (/correct/gi.test(iconClass)) {
             return 'correct';
           }
-          return "";
+          return "empty";
         };
 
         $scope.iconShape = function() {
