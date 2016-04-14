@@ -1,9 +1,10 @@
 /* global browser, regressionTestRunnerGlobals */
 
 var _ = require('lodash');
+var expect = require('expect');
 var should = require('should');
 
-describe('placement ordering', function() {
+describe('placement ordering (porv)', function() {
 
   var componentName = 'ordering';
   var itemJsonFilename = 'placement-vertical.json';
@@ -28,72 +29,72 @@ describe('placement ordering', function() {
 
     describe('correctness', function() {
 
-      it('correct answer results in correct feedback', function(done) {
+      it('correct answer results in correct feedback (porv-01)', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitForExist('.feedback.correct')
+          .waitFor('.feedback.correct')
           .call(done);
       });
 
-      it('incorrect answer results in incorrect feedback', function(done) {
+      it('incorrect answer results in incorrect feedback (porv-02)', function(done) {
         browser
           .dragAndDrop(divContaining('Banana'), landingPlace(1))
           .dragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitForExist('.feedback.incorrect')
+          .waitFor('.feedback.incorrect')
           .call(done);
       });
 
-      it('one correct answer results in partially correct item', function(done) {
+      it('one correct answer results in partially correct item (porv-03)', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitForExist('.feedback.partial')
+          .waitFor('.feedback.partial')
           .call(done);
       });
 
-      it('correct answer is not visible after reset', function(done) {
+      it('correct answer is not visible after reset (porv-04)', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .waitAndClick('.show-correct-button')
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
-            attr.should.not.match(/ng-hide/);
+            expect(attr).toNotContain('ng-hide');
           })
           .resetItem()
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
-            attr.should.match(/ng-hide/);
+            expect(attr).toContain('ng-hide');
           })
           .call(done);
       });
 
-      it('correct answer is not visible after reset and submit', function(done) {
+      it('correct answer is not visible after reset and submit (porv-05)', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
           .click('.show-correct-button')
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
-            attr.should.not.match(/ng-hide/);
+            expect(attr).toNotContain('ng-hide');
           })
           .resetItem()
           .submitItem()
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
-            attr.should.match(/ng-hide/);
+            expect(attr).toContain('ng-hide');
           })
           .call(done);
       });
 
-      it('choices dont have correctness indication after reset', function(done) {
+      it('choices dont have correctness indication after reset (porv-06)', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitForExist('.feedback.partial')
+          .waitFor('.feedback.partial')
           .resetItem()
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {
@@ -121,7 +122,7 @@ describe('placement ordering', function() {
     });
 
     describe('MathJax', function() {
-      it('renders', function(done) {
+      it('renders (porv-07)', function(done) {
         browser
           .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
@@ -129,7 +130,7 @@ describe('placement ordering', function() {
           })
           .call(done);
       });
-      it('renders after Reset', function(done) {
+      it('renders after Reset (porv-08)', function(done) {
         browser
           .submitItem()
           .resetItem()
@@ -144,3 +145,4 @@ describe('placement ordering', function() {
     });
   });
 });
+

@@ -106,7 +106,7 @@ describe('multiple-choice', function() {
 
   it('MathJax renders', function(done) {
     browser
-      .waitForExist('.choice-label .MathJax_Preview')
+      .waitFor('.choice-label .MathJax_Preview')
       .call(done);
   });
 
