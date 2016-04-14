@@ -4,7 +4,7 @@ var expect = require('expect');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe('drag and drop inline', function() {
+describe('drag-and-drop-inline (dndi)', function() {
 
   "use strict";
 
@@ -40,20 +40,20 @@ describe('drag and drop inline', function() {
 
     });
 
-    it('displays correct answer', function(done) {
+    it('displays correct answer [] (dndi-01)', function(done) {
       browser
-        .waitForExist(selectedChoice("c_2"))
+        .waitForVisible(selectedChoice("c_2"))
         .call(done);
     });
 
-    it('does not display see-solution', function(done) {
-      var invertCallAndWaitForHidden;
+    it('does not display see-solution (dndi-02)', function(done) {
+      var waitForHidden;
       browser
-        .waitForVisible('.see-solution', 2000, invertCallAndWaitForHidden = true)
+        .waitForVisible('.see-solution', 2000, waitForHidden = true)
         .call(done);
     });
 
-    it('displays all choices as disabled', function(done) {
+    it('displays all choices as disabled (dndi-03)', function(done) {
       browser
         .waitForVisible(choice('c_1') + '.ui-draggable-disabled')
         .waitForVisible(choice('c_2') + '.ui-draggable-disabled')
@@ -64,80 +64,83 @@ describe('drag and drop inline', function() {
 
   });
 
-  it('correct answer results in correct feedback', function(done) {
+  it('correct answer results in correct feedback (dndi-04)', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitForExist('.feedback.correct')
+      .waitForVisible('.feedback.correct')
       .call(done);
   });
 
-  it('superfluous answer results in partial feedback', function(done) {
+  it('superfluous answer results in partial feedback (dndi-05)', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitForExist('.feedback.partial')
+      .waitForVisible('.feedback')
+      .getAttribute('.feedback', 'class', function(err,res){
+        expect(res).toContain('partial');
+      })
       .call(done);
   });
 
-  it('incorrect answer results in incorrect feedback', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .submitItem()
-      .waitForExist('.feedback.incorrect')
-      .call(done);
-  });
-
-  it('incorrect answer is marked as incorrect', function(done) {
+  it('incorrect answer results in incorrect feedback (dndi-06)', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitForExist('.selected-choice.incorrect')
+      .waitForVisible('.feedback.incorrect')
       .call(done);
   });
 
-  it('correct answer is marked as correct', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .submitItem()
-      .waitForExist('.selected-choice.correct')
-      .call(done);
-  });
-
-  it('correct answer in wrong position is marked as incorrect', function(done) {
+  it('incorrect answer is marked as incorrect (dndi-07)', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitForExist('.selected-choice.incorrect')
+      .waitForVisible('.selected-choice.incorrect')
       .call(done);
   });
 
-  it('superfluous answer is marked as incorrect', function(done) {
-    browser
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
-      .submitItem()
-      .waitForExist('.selected-choice.incorrect')
-      .call(done);
-  });
-
-  it('selected choices are marked correctly', function(done) {
+  it('correct answer is marked as correct (dndi-08)', function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
       .submitItem()
-      .waitForExist('.selected-choice.correct .fa-check-circle')
-      .waitForExist('.selected-choice.incorrect .fa-times-circle')
+      .waitForVisible('.selected-choice.correct')
       .call(done);
   });
 
-  it('shows warning when no item is selected', function(done) {
+  it('correct answer in wrong position is marked as incorrect (dndi-09)', function(done) {
+    browser
+      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .submitItem()
+      .waitForVisible('.selected-choice.incorrect')
+      .call(done);
+  });
+
+  it('superfluous answer is marked as incorrect (dndi-10)', function(done) {
+    browser
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .submitItem()
+      .waitForVisible('.selected-choice.incorrect')
+      .call(done);
+  });
+
+  it('selected choices are marked correctly (dndi-11)', function(done) {
+    browser
+      .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
+      .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'))
+      .submitItem()
+      .waitForVisible('.selected-choice.correct .fa-check-circle')
+      .waitForVisible('.selected-choice.incorrect .fa-times-circle')
+      .call(done);
+  });
+
+  it('shows warning when no item is selected (dndi-12)', function(done) {
     browser
       .submitItem()
-      .waitForExist('.empty-answer-area-warning')
+      .waitForVisible('.empty-answer-area-warning')
       .waitForText('.feedback.warning')
       .getText('.feedback.warning', function(err, res) {
         expect(res).toEqual('You did not enter a response.');
@@ -145,111 +148,114 @@ describe('drag and drop inline', function() {
       .call(done);
   });
 
-  it("removes choice when moveOnDrag is true and choice has been placed", function(done) {
+  it("removes choice when moveOnDrag is true and choice has been placed (dndi-13)", function(done) {
     browser
-      .isExisting(choice('c_4'), function(err, res) {
-        expect(res).toBe(true, "Expected choice to exist before moving");
-      })
+      .waitForVisible(choice('c_4'))
       .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-      .isExisting(choice('c_4'), function(err, res) {
-        expect(res).toBe(false, "expected choice to be removed");
-      })
+      .waitFor(choice('c_4') + ".placed")
       .call(done);
   });
 
-  describe('correct answer area', function() {
+  describe('correct answer area (dndi-14)', function() {
     it("is shown, if answer is incorrect", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
-        .waitForExist('.see-solution')
-        .isVisible('.see-solution')
+        .waitForVisible('.see-solution')
         .call(done);
     });
 
-    it("is hidden, if answer is correct", function(done) {
+    it("is hidden, if answer is correct (dndi-15)", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
         .submitItem()
-        .waitForExist('.see-solution')
+        .waitFor('.see-solution')
         .isVisible('.see-solution', function(err, res) {
           expect(res).toBe(false);
         })
         .call(done);
     });
 
-    it("renders correct answer if answer is incorrect", function(done) {
+    it("renders correct answer if answer is incorrect (dndi-16)", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
         .waitAndClick('.see-solution .panel-heading')
-        .waitForExist('.correct-answer-area-holder .answer-area-inline')
-        .waitForExist(selectedChoice('c_2'))
-        .isVisible(selectedChoice('c_2'), function(err, res) {
-          expect(res).toBe(true, "Expected correct choice c_2 to be visible. Err:" + err);
-        })
+        .waitFor('.correct-answer-area-holder .answer-area-inline')
+        .waitForVisible(selectedChoice('c_2'))
         .call(done);
     });
   });
 
   describe("math", function() {
-    it("renders math in choice", function(done) {
+    it("renders math in choice (dndi-17)", function(done) {
       browser
-        .waitForExist(choice('c_4') + ' .MathJax_Preview')
+        .waitForVisible(choice('c_4') + ' .MathJax_Preview')
         .call(done);
     });
-    it("renders math in answer area text", function(done) {
+    it("renders math in answer area text (dndi-18)", function(done) {
       browser
-        .waitForExist('.answer-area-holder .MathJax_Preview')
+        .waitForVisible('.answer-area-holder .MathJax_Preview')
         .call(done);
     });
-    it("renders math in selected choice", function(done) {
+    it("renders math in selected choice (dndi-19)", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
-        .waitForExist('.answer-area-holder .selected-choice .MathJax_Preview')
+        .waitForVisible('.answer-area-holder .selected-choice .MathJax_Preview')
         .call(done);
     });
-    it("renders math in correct answer area", function(done) {
+    it("renders math in correct answer area (dndi-20)", function(done) {
       browser
         .dragAndDropWithOffset(choice('c_4'), landingPlace('aa_1'))
         .submitItem()
         .waitAndClick('h4.panel-title')
-        .waitForExist('.correct-answer-area-holder .MathJax_Preview')
+        .waitForVisible('.correct-answer-area-holder .MathJax_Preview')
         .call(done);
     });
 
   });
 
-  it("allows drag and drop inside one answer area", function(done) {
+  it("allows drag and drop inside one answer area (dndi-21)", function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitForExist('.feedback.correct')
+      .waitForVisible('.feedback.correct')
       .call(done);
   });
 
-  it("allows drag and drop between answer areas", function(done) {
+  it("allows drag and drop between answer areas (dndi-22)", function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'))
       .dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'))
       .submitItem()
-      .waitForExist('.feedback.correct')
+      .waitForVisible('.feedback.correct')
       .call(done);
   });
 
-  it("allows removing a choice by dragging it out of answer area", function(done) {
+  it("allows removing a choice by dragging it out of answer area (dndi-23)", function(done) {
     browser
       .dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'))
       .moveToObject(selectedChoice('c_2'), 2, 2)
       .buttonDown()
       .moveTo(null, 0, 200)
       .buttonUp()
-      .waitForExist(selectedChoice('c_2'), 2000, true)
-      .isExisting(selectedChoice('c_2'), function(err, res) {
-        expect(res).toBe(false, "expected selected choice to be removed");
-      })
+      .waitForRemoval(selectedChoice('c_2'))
       .call(done);
+  });
+
+  it('should keep the position of choices, when one is dragged away (dndi-24)', function(done){
+      var location = {x:-1, y:-1};
+      browser
+        .waitFor(choice('c_2'))
+        .getLocation(choice('c_2'), function(err,res){
+          location = res;
+        })
+        .dragAndDropWithOffset(choice('c_1'), landingPlace('aa_2'))
+        .getLocation(choice('c_2'), function(err,res){
+          expect(res).toEqual(location);
+        })
+        .call(done);
   });
 
 });

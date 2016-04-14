@@ -35,7 +35,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "2x+4")
       .submitItem()
-      .waitForExist("span.correct")
+      .waitFor("span.correct")
       .call(done);
   });
 
@@ -43,7 +43,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "y-4=2x")
       .submitItem()
-      .waitForExist("span.correct")
+      .waitFor("span.correct")
       .call(done);
   });
 
@@ -51,7 +51,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "2x+7")
       .submitItem()
-      .waitForExist("span.incorrect")
+      .waitFor("span.incorrect")
       .call(done);
 
   });

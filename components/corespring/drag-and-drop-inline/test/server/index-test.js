@@ -117,7 +117,7 @@ describe('drag-and-drop-inline', function() {
       assertIncorrect({
         aa_1: ['c_1']
       }, {
-        aa_1: ['c_1', 'c_2']
+        aa_1: ['c_1', 'c_1']
       }, "partial", {
         aa_1: ['correct', 'incorrect']
       });

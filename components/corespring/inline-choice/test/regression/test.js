@@ -45,7 +45,7 @@ describe('inline-choice', function() {
     });
 
     browser.waitAndGetLocation = function(selector, cb){
-      return this.waitForExist(selector).getLocation(selector, cb);
+      return this.waitFor(selector).getLocation(selector, cb);
     };
 
     browser
@@ -58,7 +58,7 @@ describe('inline-choice', function() {
     browser
       .selectInlineChoice("1", "Banana")
       .submitItem()
-      .waitForExist('.result-icon')
+      .waitFor('.result-icon')
       .getPseudoElementCss('.warning .result-icon', ':after', 'color', function(err, result){
         result.value.should.eql('rgb(153, 153, 153)');
       })
