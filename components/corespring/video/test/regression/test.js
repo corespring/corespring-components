@@ -6,14 +6,18 @@ var fs = require('fs');
 var _ = require('lodash');
 
 describe('video component', function() {
+  var componentName = 'video';
 
   describe('youtube', function() {
+
     var itemJsonFilename = 'youtube.json';
 
-    beforeEach(function() {
+    beforeEach(function(done) {
+      browser.options.extendBrowser(browser);
+
       browser
-        .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video');
+        .loadTest(componentName, itemJsonFilename)
+        .call(done);
     });
 
     it('video is visible', function(done) {
@@ -37,10 +41,12 @@ describe('video component', function() {
   describe('vimeo', function() {
     var itemJsonFilename = 'vimeo.json';
 
-    beforeEach(function() {
+    beforeEach(function(done) {
+      browser.options.extendBrowser(browser);
+
       browser
-        .url(browser.options.getUrl('video', itemJsonFilename))
-        .waitFor('.cs-video');
+        .loadTest(componentName, itemJsonFilename)
+        .call(done);
     });
 
     it('video is visible', function(done) {

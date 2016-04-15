@@ -380,6 +380,56 @@ describe('corespring:graphic-gap-match:render', function() {
 
   });
 
+  describe('fixedWidth', function() {
+
+    describe('undefined', function() {
+
+      beforeEach(function() {
+        testModel.data.model.config.backgroundImage = {};
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+      });
+
+      it("set 'fixed-width' class on .background-image", function() {
+        expect(element.find('.background-image').hasClass('fixed-width')).toBe(true);
+      });
+
+    });
+
+    describe('set to false', function() {
+
+      beforeEach(function() {
+        testModel.data.model.config.backgroundImage = {
+          fixedWidth: false
+        };
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+      });
+
+      it("not set 'fixed-width' class on .background-image", function() {
+        expect(element.find('.background-image').hasClass('fixed-width')).toBe(false);
+      });
+
+    });
+
+    describe('set to true', function() {
+
+      beforeEach(function() {
+        testModel.data.model.config.backgroundImage = {
+          fixedWidth: true
+        };
+        container.elements['1'].setDataAndSession(testModel);
+        scope.$digest();
+      });
+
+      it("set 'fixed-width' class on .background-image", function() {
+        expect(element.find('.background-image').hasClass('fixed-width')).toBe(true);
+      });
+
+    });
+
+  });
+
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });

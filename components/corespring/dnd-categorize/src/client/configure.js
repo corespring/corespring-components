@@ -60,7 +60,7 @@ function configureCorespringDndCategorize(
       scope.model.config = scope.model.config || {};
       scope.model.config.categoriesPerRow = scope.model.config.categoriesPerRow || 1;
       scope.model.config.choicesPerRow = scope.model.config.choicesPerRow || 1;
-      scope.model.config.removeAllAfterPlacing = scope.model.config.removeAllAfterPlacing || false;
+      scope.model.config.removeAllAfterPlacing = scope.model.config.removeAllAfterPlacing || true;
 
       scope.editorModel = prepareEditorModel();
       //log('setModel out', _.cloneDeep(fullModel), _.cloneDeep(scope.editorModel));
@@ -404,7 +404,7 @@ function configureCorespringDndCategorize(
         '    </div>',
         '  </div>',
         '  <div class="row">',
-        '    <div class="col-md-7">',
+        '    <div class="col-xs-12">',
         '      <corespring-feedback-config full-model="fullModel" component-type="corespring-dnd-categorize">',
         '      </corespring-feedback-config>',
         '    </div>',

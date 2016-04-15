@@ -89,6 +89,9 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
     scope.$watch('model.label', triggerResize);
 
     scope.$on('activate', onChangeActive);
+    scope.$on('placed', onPlaced);
+    scope.$on('unplaced', onUnplaced);
+
 
     updateClasses();
 
@@ -100,6 +103,20 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       }
       scope.active = id === attrs.choiceId;
       updateClasses();
+    }
+
+    function onPlaced(event, id){
+      if(id === attrs.choiceId && !isCategorized()) {
+        scope.placed = true;
+        updateClasses();
+      }
+    }
+
+    function onUnplaced(event, id){
+      if(id === attrs.choiceId) {
+        scope.placed = false;
+        updateClasses();
+      }
     }
 
     function onChangeMoveOnDrag(){
@@ -235,6 +252,9 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       if (scope.active) {
         classes.push('active');
       }
+      if(scope.placed){
+        classes.push('placed');
+      }
 
       scope.classes = classes;
     }
@@ -266,11 +286,11 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       '        <i class="fa fa-trash-o"></i>',
       '      </li>',
       '    </ul>',
-      '    <div class="shell" ng-if="canEdit()" ng-show="active" ng-click="$event.stopPropagation()">',
+      '    <div class="shell" ng-if="canEdit()" cs-absolute-visible="active" ng-click="$event.stopPropagation()">',
       choiceEditorTemplate(),
       '    </div>',
-      '    <div class="shell" ng-hide="active" ng-click="onChoiceEditClicked($event)">',
-      '      <span ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</span>',
+      '    <div class="shell" cs-absolute-visible="!active" ng-click="onChoiceEditClicked($event)">',
+      '      <div ng-if="showPlaceholder(model.label)" class="placeholder">Enter a choice</div>',
       '      <div class="html-wrapper" ng-bind-html-unsafe="model.label"></div>',
       '      <div class="remove-choice" ng-hide="dragEnabled"><i ng-click="onDeleteClicked()" class="fa fa-close"></i></div>',
       '    </div>',

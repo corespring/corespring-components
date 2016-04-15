@@ -8,35 +8,34 @@ describe('evaluate expression', function() {
 
   "use strict";
 
+  var componentName = 'function-entry';
   var itemJsonFilename = 'one.json';
 
   var withId = function(id) {
     return '//div[@id="' + id + '" and @class[contains(., "view-function-entry")]]';
   };
 
-  browser.enterExpression = function(id, expression) {
-    browser.setValue(withId(id) + "//input", expression);
-    return this;
-  };
 
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
+  beforeEach(function(done) {
+    for(var f in browser.options.ext){
+      browser[f] = browser.options.ext[f];
+    }
 
-  beforeEach(function() {
+    browser.enterExpression = function(id, expression) {
+      browser.setValue(withId(id) + "//input", expression);
+      return this;
+    };
+
     browser
-      .url(browser.options.getUrl('function-entry', itemJsonFilename))
-      .waitFor('.view-function-entry');
+      .loadTest(componentName, itemJsonFilename)
+      .call(done);
   });
-
 
   it('correct feedback when correct answer is given', function(done) {
     browser
       .enterExpression("1", "2x+4")
       .submitItem()
-      .waitFor("span.correct")
+      .waitForExist("span.correct")
       .call(done);
   });
 
@@ -44,7 +43,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "y-4=2x")
       .submitItem()
-      .waitFor("span.correct")
+      .waitForExist("span.correct")
       .call(done);
   });
 
@@ -52,7 +51,7 @@ describe('evaluate expression', function() {
     browser
       .enterExpression("1", "2x+7")
       .submitItem()
-      .waitFor("span.incorrect")
+      .waitForExist("span.incorrect")
       .call(done);
 
   });

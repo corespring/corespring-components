@@ -5,6 +5,7 @@ var should = require('should');
 
 describe('placement ordering', function() {
 
+  var componentName = 'ordering';
   var itemJsonFilename = 'placement-horizontal.json';
 
   var divContaining = function(s) {
@@ -16,34 +17,29 @@ describe('placement ordering', function() {
   };
 
   var landingPlace = function(index) {
-    return divWithClass('answer-area-table')+divWithClass('choice-wrapper')+'['+index+']';
+    return divWithClass('answer-area-table') + divWithClass('choice-wrapper') + '[' + index + ']';
   };
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
 
-  browser.resetItem = function() {
-    this.execute('window.reset()');
-    return this;
-  };
+  beforeEach(function(done) {
+    browser.options.extendBrowser(browser);
+
+    browser
+      .loadTest(componentName, itemJsonFilename)
+      .call(done);
+  });
+
 
   describe('horizontal', function() {
 
     describe('correctness', function() {
-      beforeEach(function() {
-        browser
-          .url(browser.options.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering');
-      });
 
       it('correct answer results in correct feedback', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.correct')
+          .waitForExist('.feedback.correct')
           .call(done);
       });
 
@@ -52,7 +48,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Banana'), landingPlace(1))
           .dragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.incorrect')
+          .waitForExist('.feedback.incorrect')
           .call(done);
       });
 
@@ -61,7 +57,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .call(done);
       });
 
@@ -70,10 +66,9 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.see-answer-panel')
-          .click('.see-answer-panel .panel-heading')
-          .waitFor(divWithClass('see-answer-panel')+divContaining('Apple'))
-          .waitFor(divWithClass('see-answer-panel')+divContaining('Pear'))
+          .waitAndClick('.see-answer-panel .panel-heading')
+          .waitForExist(divWithClass('see-answer-panel') + divContaining('Apple'))
+          .waitForExist(divWithClass('see-answer-panel') + divContaining('Pear'))
           .call(done);
       });
 
@@ -82,7 +77,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .resetItem()
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {
@@ -112,7 +107,7 @@ describe('placement ordering', function() {
     describe('MathJax', function() {
       it('renders', function(done) {
         browser
-          .waitFor('.choice')
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })
@@ -122,6 +117,8 @@ describe('placement ordering', function() {
         browser
           .submitItem()
           .resetItem()
+          .pause(500)
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })

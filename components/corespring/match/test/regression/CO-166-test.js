@@ -8,8 +8,8 @@ describe('match', function() {
 
   "use strict";
 
+  var componentName = 'match';
   var itemJsonFilename = 'CO-166.json';
-  var itemJson = browser.options.getItemJson('match', itemJsonFilename);
 
   function answerInput(questionId){
     return '.question-row[question-id="' + questionId + '"] .corespring-match-choice.input';
@@ -28,27 +28,22 @@ describe('match', function() {
   }
 
   beforeEach(function(done) {
-
-    browser.submitItem = function() {
-      this.execute('window.submit()');
-      return this;
-    };
+    browser.options.extendBrowser(browser);
 
     browser.isExistingWithWait = function(selector,callback){
-      return this.waitFor(selector).isExisting(selector,callback);
+      return this.waitForExist(selector).isExisting(selector,callback);
     };
 
     browser
-      .url(browser.options.getUrl('match', itemJsonFilename))
-      .waitFor(answerInput('Row3'))
+      .loadTest(componentName, itemJsonFilename)
       .call(done);
   });
 
   it('does evaluate answers correctly', function(done) {
     browser
-      .click(answerInput('Row1'))
-      .click(answerInput('Row2'))
-      .click(answerInput('Row3'))
+      .waitAndClick(answerInput('Row1'))
+      .waitAndClick(answerInput('Row2'))
+      .waitAndClick(answerInput('Row3'))
       .submitItem()
       .isExistingWithWait(answerEvaluated('Row1', 'correct'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
@@ -64,10 +59,10 @@ describe('match', function() {
 
   it('does show solution correctly', function(done) {
     browser
-      .click(answerInput('Row1'))
+      .waitAndClick(answerInput('Row1'))
       .submitItem()
-      .waitFor(solutionPanelHeader())
-      .click(solutionPanelHeader())
+      .waitForExist(solutionPanelHeader())
+      .waitAndClick(solutionPanelHeader())
       .isExistingWithWait(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");
       })

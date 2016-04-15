@@ -8,6 +8,7 @@ describe('multiple-choice', function() {
 
   "use strict";
 
+  var componentName = 'multiple-choice';
   var itemJsonFilename = 'one.json';
   var itemJson = browser.options.getItemJson('multiple-choice', itemJsonFilename);
 
@@ -34,48 +35,41 @@ describe('multiple-choice', function() {
   var incorrectAnswer = findOtherChoice(correctAnswer).value;
   var notChosenFeedback = findFeedback(correctAnswer).notChosenFeedback;
 
-  browser.selectAnswer = function(answer) {
 
-    function clickIfAnswer(element) {
-      browser.elementIdAttribute(element, 'value', function(err, res) {
-        if (res.value === answer) {
-          browser.elementIdClick(element);
+  beforeEach(function(done) {
+    browser.options.extendBrowser(browser);
+
+    browser.selectAnswer = function(answer) {
+
+      function clickIfAnswer(element) {
+        browser.elementIdAttribute(element, 'value', function(err, res) {
+          if (res.value === answer) {
+            browser.elementIdClick(element);
+          }
+        });
+      }
+
+      browser.elements('.choice-input .radio-choice', function(err, results) {
+        for (var i = 0; i < results.value.length; i++) {
+          clickIfAnswer(results.value[i].ELEMENT);
         }
       });
-    }
+      return browser;
+    };
 
-    this.elements('.choice-input .radio-choice', function(err, results) {
-      for (var i = 0; i < results.value.length; i++) {
-        clickIfAnswer(results.value[i].ELEMENT);
-      }
-    });
+    browser.showAnswer = function() {
+      browser.elements('.answer-holder .panel-title', function(err, results) {
+        for (var i = 0; i < results.value.length; i++) {
+          browser.elementIdClick(results.value[i].ELEMENT);
+        }
+      });
+      return browser;
+    };
 
-    return this;
-  };
-
-  browser.showAnswer = function() {
-    browser.elements('.answer-holder .panel-title', function(err, results) {
-      for (var i = 0; i < results.value.length; i++) {
-        browser.elementIdClick(results.value[i].ELEMENT);
-      }
-    });
-    return this;
-
-  };
-
-  browser.submitItem = function() {
-    console.log("submitting");
-    this.execute('window.submit()');
-    return this;
-  };
-
-  beforeEach(function() {
     browser
-      .timeouts('implicit', browser.options.defaultTimeout)
-      .url(browser.options.getUrl('multiple-choice', itemJsonFilename))
-      .waitFor('.choice-input .radio-choice');
+      .loadTest(componentName, itemJsonFilename)
+      .call(done);
   });
-
 
   it('does not display incorrect feedback when correct answer selected', function(done) {
     browser
@@ -103,7 +97,7 @@ describe('multiple-choice', function() {
       .selectAnswer(incorrectAnswer)
       .submitItem()
       .showAnswer()
-      .pause(500)
+      .waitForText('.answer-holder .choice-holder.correct .choice-label')
       .getText('.answer-holder .choice-holder.correct .choice-label', function(err, message) {
         message.should.eql(correctAnswerLabel);
       })
@@ -112,11 +106,7 @@ describe('multiple-choice', function() {
 
   it('MathJax renders', function(done) {
     browser
-      .getHTML('.choice-label', function(err, message) {
-        message[0].should.match(/MathJax_Preview/);
-        message[2].should.match(/MathJax_Preview/);
-        message[3].should.match(/MathJax_Preview/);
-      })
+      .waitForExist('.choice-label .MathJax_Preview')
       .call(done);
   });
 

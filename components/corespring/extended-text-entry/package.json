@@ -20,8 +20,20 @@
   ],
   "dependencies" : {
     "client": {
+      "corespring-checkbox": {
+        "bower_target": "git@github.com:corespring/checkbox.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.checkbox"
+      },
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
+      },
       "wiggi-wiz": {
-        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.81",
+        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.87",
         "js": "dist/wiggi-wiz.js",
         "css": "dist/wiggi-wiz.css",
         "angular-module": "corespring.wiggi-wiz"
@@ -30,6 +42,17 @@
         "angular-module": "ui.bootstrap",
         "file": "ui-bootstrap-tpls.min.js",
         "version": "~0.10.0"
+      },
+      "mathquill": {
+        "bower_target": "git@github.com:corespring/mathquill.git#master",
+        "js": "build/mathquill.js",
+        "css": "build/mathquill.css"
+      },
+      "corespring-math-input": {
+        "bower_target": "git@github.com:corespring/corespring-math-input.git#0.0.6",
+        "js": "dist/corespring-math-input.js",
+        "css": "dist/corespring-math-input.css",
+        "angular-module": "corespring.math-input"
       },
       "undo.js": {
         "bower_target": "git@github.com:jzaefferer/undo.git",

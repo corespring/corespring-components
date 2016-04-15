@@ -7,7 +7,6 @@ exports.directives = [{
     "$timeout",
     "Msgr",
     "ChoiceTemplates",
-    "ComponentImageService",
     "WiggiLinkFeatureDef",
     "WiggiMathJaxFeatureDef",
     main
@@ -26,7 +25,6 @@ function main(
   $timeout,
   Msgr,
   ChoiceTemplates,
-  ComponentImageService,
   WiggiLinkFeatureDef,
   WiggiMathJaxFeatureDef
 ) {
@@ -155,7 +153,9 @@ function main(
     }
 
     function hasChoice($index) {
-      var choice = $(scope.model.choices[$index].label).text();
+      var node = $('<div>');
+      node.html(scope.model.choices[$index].label);
+      var choice = node.text();
       return !_.isEmpty(choice.trim());
     }
 
@@ -508,7 +508,7 @@ function main(
           '          data-jqyoui-options="choiceDraggableJqueryOptions(choice)">',
           '        <div class="blocker" ng-click="activate($event, $index)" ng-hide="active[$index]">',
           '          <div class="bg">',
-          '            <span class="placeholder" ng-show="!hasChoice($index)">Enter a choice</span>',
+          '            <span class="placeholder" ng-hide="hasChoice($index)">Enter a choice</span>',
           '          </div>',
           '          <div class="content">',
           '            <ul class="edit-controls">',
@@ -532,9 +532,9 @@ function main(
           '          </checkbox>',
           '        </div>',
           '        <span class="content-holder" ',
-          '           ng-hide="active[$index]" ',
+          '           cs-absolute-visible="!active[$index]" ',
           '           ng-bind-html-unsafe="cleanLabel(choice)"></span>',
-          '        <div ng-show="active[$index]"',
+          '        <div cs-absolute-visible="active[$index]"',
           '            active="active[$index]"',
           '            mini-wiggi-wiz=""',
           '            ng-model="choice.label"',
@@ -570,7 +570,7 @@ function main(
     function feedback() {
       return [
         '<div class="row">',
-        '  <div class="col-md-7">',
+        '  <div class="col-xs-12">',
         '    <corespring-feedback-config ',
         '       full-model="fullModel"',
         '       component-type="corespring-drag-and-drop-inline"',

@@ -120,7 +120,7 @@ var main = [
         '         <li class="scoring-item" ng-repeat="scenario in fullModel.partialScoring">',
         '           If',
         '           <input class="form-control" type="number" min="1" max="{{maxNumberOfScoringScenarios}}" ng-model="scenario.numberOfCorrect"/>',
-        '           of correct answers is selected, award',
+        '           of correct answers is/are selected, award',
         '           <input class="form-control" type="number" min="1" max="99" ng-model="scenario.scorePercentage"/>',
         '           % of full credit.',
         '           <i class="fa fa-trash-o remove-item" ng-show="canRemoveScoringScenario" ng-click="removeScoringScenario(scenario)"></i>',

@@ -34,30 +34,31 @@
       {
         "id": "choice_1",
         "label": "",
-        "moveOnDrag": false
+        "moveOnDrag": true
       },
       {
         "id": "choice_2",
         "label": "",
-        "moveOnDrag": false
+        "moveOnDrag": true
       },
       {
         "id": "choice_3",
         "label": "",
-        "moveOnDrag": false
+        "moveOnDrag": true
       },
       {
         "id": "choice_4",
         "label": "",
-        "moveOnDrag": false
+        "moveOnDrag": true
       }
     ],
     "config": {
-      "shuffle": false,
       "answerAreaPosition": "below",
       "categoriesPerRow" : 2,
+      "choicesLabel" : "",
       "choicesPerRow" : 2,
-      "choicesLabel" : ""
+      "removeAllAfterPlacing": true,
+      "shuffle": false
     }
   }
 }

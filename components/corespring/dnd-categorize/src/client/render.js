@@ -24,8 +24,6 @@ function renderCorespringDndCategorize(
   MathJaxService
 ) {
 
-  var defaultWidth;
-
   return {
     controller: ['$scope', controller],
     link: link,
@@ -55,10 +53,11 @@ function renderCorespringDndCategorize(
     var log = console.log.bind(console, '[dnd-categorize]');
     var layout;
 
-    scope.correctAnswerRows = [[]];
+    scope.correctAnswerRows = [{}];
+    scope.dragAndDropScope = 'dnd-scope-' + Math.floor(Math.random() * 10000);
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
-    scope.rows = [[]];
+    scope.rows = [{}];
     scope.shouldFlip = false;
 
     scope.undoModel = new CsUndoModel();
@@ -134,19 +133,18 @@ function renderCorespringDndCategorize(
     }
 
     function prepareRenderModel(model, session) {
-      var dragAndDropScope = 'scope-' + Math.floor(Math.random() * 10000);
-
-      var choices = model.config.shuffle ? _.shuffle(model.choices) : _.clone(model.choices);
+      var choices = _.clone(model.choices);
+      if (model.config.shuffle) {
+        choices = _.shuffle(choices);
+      }
       var allChoices = _.clone(choices);
       var choicesLabel = model.config.choicesLabel;
       var categories = _.map(model.categories, wrapCategoryModel);
 
       if (session.answers) {
         placeAnswersInCategories(session.answers, categories);
-        choices = removePlacedAnswersFromChoices(choices, categories);
       }
       return {
-        dragAndDropScope: dragAndDropScope,
         choices: choices,
         choicesLabel: choicesLabel,
         allChoices: allChoices,
@@ -162,12 +160,6 @@ function renderCorespringDndCategorize(
         });
       }
 
-      function removePlacedAnswersFromChoices(choices, categories) {
-        return _.filter(choices, function(choice) {
-          return !findInAllCategories(choice.id, categories);
-        });
-      }
-
       function getChoiceForId(choiceId) {
         return _.find(choices, {
           id: choiceId
@@ -179,7 +171,7 @@ function renderCorespringDndCategorize(
       return collectAnswers(scope.renderModel);
     }
 
-    function collectAnswers(renderModel){
+    function collectAnswers(renderModel) {
       var numberOfAnswers = 0;
       var answers = _.reduce(renderModel.categories, function(result, category) {
         var catId = category.model.id;
@@ -202,11 +194,13 @@ function renderCorespringDndCategorize(
 
     function setInstructorData(data) {
       log('setInstructorData', data);
-      scope.renderModel = prepareRenderModel(scope.data.model, {
+
+      scope.renderModel = prepareRenderModel(_.cloneDeep(scope.data.model), {
         answers: data.correctResponse
       });
 
-      showAllChoicesRegardlessOfMoveOnDrag(scope.renderModel);
+      updateView();
+
       disableAllChoices(scope.renderModel);
 
       scope.containerBridge.setResponse({
@@ -220,10 +214,6 @@ function renderCorespringDndCategorize(
       scope.editable = false;
 
       //-----------------------------------
-
-      function showAllChoicesRegardlessOfMoveOnDrag(renderModel) {
-        renderModel.choices = _.cloneDeep(renderModel.allChoices);
-      }
 
       function disableAllChoices(renderModel) {
         _.forEach(renderModel.choices, function(choice) {
@@ -275,18 +265,29 @@ function renderCorespringDndCategorize(
       if (!response.correctResponse) {
         return;
       }
+      var correctAnswerRowId = 0;
       var categoriesPerRow = scope.categoriesPerRow;
-      scope.correctAnswerRows = [[]];
+      var rows = [makeRow()];
 
       _.forEach(scope.renderModel.categories, function(category) {
-        var lastRow = _.last(scope.correctAnswerRows);
-        if (lastRow.length === categoriesPerRow) {
-          scope.correctAnswerRows.push(lastRow = []);
+        var lastRow = _.last(rows);
+        if (lastRow.categories.length === categoriesPerRow) {
+          rows.push(lastRow = makeRow());
         }
         var correctChoices = response.correctResponse[category.model.id];
         var categoryModel = createCategoryModelForSolution(category, correctChoices);
-        lastRow.push(categoryModel);
+        lastRow.categories.push(categoryModel);
       });
+
+      fillUpWithPlaceholders(rows, categoriesPerRow);
+      scope.correctAnswerRows = rows;
+
+      function makeRow() {
+        return {
+          id: "correct-answer-row-" + correctAnswerRowId++,
+          categories: []
+        };
+      }
     }
 
     function createCategoryModelForSolution(category, correctChoices) {
@@ -306,6 +307,7 @@ function renderCorespringDndCategorize(
 
       scope.renderModel = _.cloneDeep(scope.saveRenderModel);
       scope.undoModel.init();
+      updatePlacedChoices();
       updateView();
     }
 
@@ -323,7 +325,22 @@ function renderCorespringDndCategorize(
 
     function revertState(state) {
       scope.renderModel = state;
+      updatePlacedChoices();
       updateView();
+    }
+
+    function updatePlacedChoices() {
+      if (!scope.isEditMode) {
+        _.forEach(scope.renderModel.allChoices, function(choice) {
+          if (choice.moveOnDrag) {
+            if (isChoicePlaced(choice.id)) {
+              scope.$broadcast('placed', choice.id);
+            } else {
+              scope.$broadcast('unplaced', choice.id);
+            }
+          }
+        });
+      }
     }
 
     function onRenderModelChange(newValue, oldValue) {
@@ -388,34 +405,48 @@ function renderCorespringDndCategorize(
         return;
       }
 
-      scope.rows = chunk(scope.renderModel.categories, categoriesPerRow);
+      var rowIdCounter = 0;
+
+      var rows = chunk(scope.renderModel.categories, categoriesPerRow).map(function(row) {
+        return {
+          id: rowIdCounter++,
+          categories: row
+        };
+      });
+
+      fillUpWithPlaceholders(rows, categoriesPerRow);
+      scope.rows = rows;
+
       scope.categoryStyle = {
         width: 100 / categoriesPerRow + '%'
       };
 
+      $timeout(updateChoices, 100);
+    }
+
+    function fillUpWithPlaceholders(rows, categoriesPerRow){
+      //fill rows with empty placeholder categories
+      //so that they are lined up in proper columns
+      var counter = 1;
+      var categories = rows[rows.length-1].categories;
+      while (categories.length < categoriesPerRow) {
+        categories.push({
+          model: {
+            id: "placeholder-" + (counter++)
+          },
+          isPlaceHolder: true
+        });
+      }
+    }
+
+    function updateChoices() {
+      if (elem.width() === 0) {
+        $timeout(updateChoices, 100);
+        return;
+      }
+
       scope.choiceWidth = calcChoiceWidth();
 
-      // setting defaultWidth for the first time
-      if (!defaultWidth) {
-        defaultWidth = 239;
-      }
-
-      if (scope.choiceWidth === 0) {
-        $timeout(updateView, 500);
-        // uses the last set width
-        scope.choiceWidth = defaultWidth;
-
-        var onMathjaxRendered = function() {
-          MathJaxService.off(onMathjaxRendered, elem);
-          updateView();
-        };
-        MathJaxService.onEndProcess(onMathjaxRendered, elem);
-      }
-
-      defaultWidth = scope.choiceWidth;
-
-      //in editor we need some space to show all the tools
-      //so we limit the number of choices per row to 4
       scope.choiceStyle = {
         width: scope.choiceWidth + 'px'
       };
@@ -424,15 +455,6 @@ function renderCorespringDndCategorize(
       renderMath();
     }
 
-    /**
-     * We start with a total width for the categories
-     * which holds numberOfCategories plus some paddings
-     * The choices should fit into the categories without
-     * resizing. They have to take paddings inside of
-     * the categories into account.
-     *
-     * @returns {number}
-     */
     function calcChoiceWidth() {
       var maxChoiceWidth = elem.find('.choice-container').width();
       maxChoiceWidth -= 2 * 3; //margin of choice.border
@@ -463,13 +485,11 @@ function renderCorespringDndCategorize(
 
     function onCategoryDrop(categoryId, choiceId) {
       var category = _.find(scope.renderModel.categories, byModelId(categoryId));
-      var choice = _.find(scope.renderModel.allChoices || scope.renderModel.choices, byId(choiceId));
+      var choice = _.find(scope.renderModel.allChoices, byId(choiceId));
 
       scope.$apply(function() {
         category.choices.push(wrapChoiceModel(choice));
-        if (choice.moveOnDrag && !scope.isEditMode) {
-          _.remove(scope.renderModel.choices, byId(choiceId));
-        }
+        updatePlacedChoices();
       });
 
       updateView();
@@ -493,13 +513,7 @@ function renderCorespringDndCategorize(
       var category = _.find(scope.renderModel.categories, byModelId(categoryId));
       if (category) {
         category.choices.splice(index, 1);
-
-        if (!scope.isEditMode) {
-          var choice = _.find(scope.renderModel.allChoices, byId(choiceId));
-          if (choice && choice.moveOnDrag && !isChoicePlaced(choiceId)) {
-            addChoiceBackIn(choice);
-          }
-        }
+        updatePlacedChoices();
       }
     }
 
@@ -577,7 +591,6 @@ function renderCorespringDndCategorize(
       }
 
       var renderModel = {
-        dragAndDropScope: 'scope-' + Math.floor(Math.random() * 10000),
         choices: scope.attrChoices,
         choicesLabel: scope.attrChoicesLabel,
         allChoices: _.clone(scope.attrChoices),
@@ -632,14 +645,14 @@ function renderCorespringDndCategorize(
       return true;
     }
 
-    function onToggleMoveOnDrag(choice){
-      if(!choice.moveOnDrag){
+    function onToggleMoveOnDrag(choice) {
+      if (!choice.moveOnDrag) {
         scope.renderModel.removeAllAfterPlacing.value = false;
       }
     }
 
-    function onToggleRemoveAllAfterPlacing(newValue){
-      _.forEach(scope.renderModel.choices, function(choice){
+    function onToggleRemoveAllAfterPlacing(newValue) {
+      _.forEach(scope.renderModel.choices, function(choice) {
         choice.moveOnDrag = scope.renderModel.removeAllAfterPlacing.value;
       });
     }
@@ -736,7 +749,7 @@ function renderCorespringDndCategorize(
         '      correctness="{{choice.correctness}}"',
         '      choice-id="{{choice.id}}" ',
         '      delete-after-placing="choice.moveOnDrag" ',
-        '      drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '      drag-and-drop-scope="dragAndDropScope"',
         '      drag-enabled="isDragEnabled(choice)"',
         '      edit-mode="getEditMode(choice)" ',
         '      model="choice" ',
@@ -754,26 +767,26 @@ function renderCorespringDndCategorize(
   function categoriesTemplate(flip, rowsModel) {
     return [
         '<div class="categories-holder" ng-if="#flip#">',
-        '  <div class="categories">',
-        '    <div class="row" ng-repeat-start="row in #rowsModel#">',
+        '  <div class="categories" ng-repeat="row in #rowsModel# track by row.id">',
+        '    <div class="row">',
         '      <div category-label-corespring-dnd-categorize="true" ',
         '        category="category" ',
         '        edit-mode="isEditMode" ',
-        '        ng-repeat="category in row"',
+        '        ng-repeat="category in row.categories track by category.model.id"',
         '        ng-style="categoryStyle"',
         '        on-edit-clicked="activate(categoryId)" ',
         '        on-delete-clicked="onCategoryDeleteClicked(categoryId)" ',
         '       ></div>',
         '     </div>',
-        '    <div class="row" ng-repeat-end>',
+        '    <div class="row">',
         '      <div category-choices-corespring-dnd-categorize="true" ',
         '        category="category" ',
         '        choice-width="{{choiceWidth}}"',
-        '        drag-and-drop-scope="renderModel.dragAndDropScope"',
+        '        drag-and-drop-scope="dragAndDropScope"',
         '        drag-enabled="isDragEnabledFromCategory()"',
         '        edit-mode="isEditMode" ',
-        '        ng-class="response.warningClass"',
-        '        ng-repeat="category in row"',
+        '        ng-class="[response.warningClass, category.model.id]"',
+        '        ng-repeat="category in row.categories track by category.model.id"',
         '        ng-style="categoryStyle"',
         '        on-choice-dragged-away="onChoiceRemovedFromCategory(fromCategoryId,choiceId,index)" ',
         '        on-edit-clicked="activate(categoryId)" ',

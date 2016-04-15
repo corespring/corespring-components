@@ -12,11 +12,6 @@
       "scope": "editor"
     },
     {
-      "name": "image-service",
-      "organization": "corespring",
-      "scope": "editor"
-    },
-    {
       "name": "navigator",
       "organization": "corespring"
     },

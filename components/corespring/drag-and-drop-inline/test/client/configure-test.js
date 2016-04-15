@@ -322,4 +322,48 @@ describe('corespring:drag-and-drop-inline:configure', function() {
     });
   });
 
+  describe('hasChoice', function(){
+    var testModel;
+
+    beforeEach(function(){
+      testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+    });
+
+    it("should return true, when choice is plain text", function(){
+      scope.model.choices[0].label = "text";
+      expect(scope.hasChoice(0)).toBe(true);
+    });
+
+    it("should return true, when choice is a number", function(){
+      scope.model.choices[0].label = "123";
+      expect(scope.hasChoice(0)).toBe(true);
+    });
+
+    it("should return true, when choice is xhtml with text", function(){
+      scope.model.choices[0].label = "<div>test</div>";
+      expect(scope.hasChoice(0)).toBe(true);
+    });
+
+    it("should return true, when choice is invalid html", function(){
+      scope.model.choices[0].label = "<div>test";
+      expect(scope.hasChoice(0)).toBe(true);
+    });
+
+    it("should return false, when choice is empty", function(){
+      scope.model.choices[0].label = "";
+      expect(scope.hasChoice(0)).toBe(false);
+    });
+
+    it("should return false, when choice is empty xhtml", function(){
+      scope.model.choices[0].label = "<div></div>";
+      expect(scope.hasChoice(0)).toBe(false);
+    });
+
+    it("should return false, when choice is empty invalid html", function(){
+      scope.model.choices[0].label = "<div>";
+      expect(scope.hasChoice(0)).toBe(false);
+    });
+  });
+
 });

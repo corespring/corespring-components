@@ -5,14 +5,12 @@ var main = [
   '$timeout',
   '$http',
   'ChoiceTemplates',
-  'ComponentImageService',
   'WiggiMathJaxFeatureDef',
   function(
     $log,
     $timeout,
     $http,
     ChoiceTemplates,
-    ComponentImageService,
     WiggiMathJaxFeatureDef
   ) {
 

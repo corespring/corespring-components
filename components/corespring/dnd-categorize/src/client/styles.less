@@ -183,6 +183,10 @@
 
   }
 
+  &.placed {
+    visibility: hidden;
+  }
+
 }
 
 .render-corespring-dnd-categorize {
@@ -449,11 +453,22 @@
     margin-top: 20px;
   }
 
-  .placeholder {
-    display: inline-block;
-    padding: 6px;
-    font-weight: bold;
-    color: #7a7a7a;
+  .choice-corespring-dnd-categorize {
+    .placeholder {
+      display: inline-block;
+      padding: 6px;
+      font-weight: bold;
+      color: #7a7a7a;
+    }
+  }
+
+  .category {
+    .placeholder {
+      font-style: italic;
+      color: #7a7a7a;
+      width: 100%;
+      text-align: center;
+    }
   }
 
   .radio-inline + .radio-inline {

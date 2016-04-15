@@ -5,6 +5,7 @@ var should = require('should');
 
 describe('placement ordering', function() {
 
+  var componentName = 'ordering';
   var itemJsonFilename = 'placement-vertical.json';
 
   var divContaining = function(s) {
@@ -15,31 +16,24 @@ describe('placement ordering', function() {
     return '//div[@class[contains(., "answer-area-table")]]//div[@class[contains(., "choice-wrapper")]][' + index + ']';
   };
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
+  beforeEach(function(done) {
+    browser.options.extendBrowser(browser);
 
-  browser.resetItem = function() {
-    this.execute('window.reset()');
-    return this;
-  };
+    browser
+      .loadTest(componentName, itemJsonFilename)
+      .call(done);
+  });
 
   describe('vertical', function() {
 
     describe('correctness', function() {
-      beforeEach(function() {
-        browser
-          .url(browser.options.getUrl('ordering', itemJsonFilename))
-          .waitFor('.view-placement-ordering');
-      });
 
       it('correct answer results in correct feedback', function(done) {
         browser
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Pear'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.correct')
+          .waitForExist('.feedback.correct')
           .call(done);
       });
 
@@ -48,7 +42,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Banana'), landingPlace(1))
           .dragAndDrop(divContaining('Apple'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.incorrect')
+          .waitForExist('.feedback.incorrect')
           .call(done);
       });
 
@@ -57,7 +51,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .call(done);
       });
 
@@ -66,7 +60,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .click('.show-correct-button')
+          .waitAndClick('.show-correct-button')
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
             attr.should.not.match(/ng-hide/);
           })
@@ -99,7 +93,7 @@ describe('placement ordering', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitFor('.feedback.partial')
+          .waitForExist('.feedback.partial')
           .resetItem()
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .getAttribute('.answer-area .choice', 'class', function(err, attr) {
@@ -129,7 +123,7 @@ describe('placement ordering', function() {
     describe('MathJax', function() {
       it('renders', function(done) {
         browser
-          .waitFor('.choice')
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })
@@ -139,6 +133,8 @@ describe('placement ordering', function() {
         browser
           .submitItem()
           .resetItem()
+          .pause(500)
+          .waitForVisible('.choice .MathJax_Preview')
           .getHTML(divContaining('Apple'), function(err, html) {
             html.should.match(/MathJax_Preview/);
           })

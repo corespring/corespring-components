@@ -121,6 +121,12 @@ describe('corespring:dnd-categorize:render', function() {
     rootScope.$digest();
   }
 
+  function mkCat(id) {
+    return {
+      id: id
+    };
+  }
+
   it('constructs', function() {
     expect(element).toBeDefined();
     expect(element).not.toBe(null);
@@ -130,7 +136,7 @@ describe('corespring:dnd-categorize:render', function() {
     it('should set renderModel', function() {
       expect(scope.renderModel).toEqual({});
       setModelAndDigest();
-      expect(scope.renderModel.dragAndDropScope).toMatch(/scope-\d+/);
+      expect(scope.dragAndDropScope).toMatch(/scope-\d+/);
       expect(scope.renderModel.choices.length).toBe(3);
       expect(scope.renderModel.allChoices).toEqual(scope.renderModel.choices);
       expect(scope.renderModel.categories.length).toBe(2);
@@ -143,14 +149,53 @@ describe('corespring:dnd-categorize:render', function() {
       });
       expect(scope.renderModel.categories[0].choices[0].model.id).toEqual('choice_1');
     });
-    it('should remove answers with moveOnDrag = true from the choices', function() {
+    it('should not remove answers with moveOnDrag = true from the choices', function() {
       testModel.data.model.choices[0].moveOnDrag = true;
       setModelAndDigestWithSession({
         answers: {
           cat_1: ['choice_1']
         }
       });
-      expect(scope.renderModel.choices.length).toEqual(2);
+      expect(scope.renderModel.choices.length).toEqual(3);
+    });
+  });
+
+  describe('rows', function() {
+    it('should put the categories into rows', function() {
+      setModelAndDigest();
+      expect(ignoreAngularIds(scope.rows)).toEqual(
+      [{
+          id: 0,
+          categories: [{
+            model: {
+              id: 'cat_1',
+              label: 'Category 1'
+            },
+            choices: []
+          }, {
+            model: {
+              id: 'cat_2',
+              label: 'Category 2'
+            },
+            choices: []
+          }]
+        }]
+      );
+    });
+
+    it('should split categories into rows of size categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      expect(scope.rows.length).toBe(3);
+    });
+
+    it('should fill rows with placeholders up to categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      expect(scope.rows[2].categories.length).toBe(testModel.data.model.config.categoriesPerRow);
+      expect(scope.rows[2].categories.pop().isPlaceHolder).toBe(true);
     });
   });
 
@@ -198,11 +243,13 @@ describe('corespring:dnd-categorize:render', function() {
 
   describe('setResponse', function() {
     beforeEach(setModelAndDigest);
+
     it('should set the response on the scope', function() {
       expect(scope.response).toBeFalsy();
       container.elements['1'].setResponse({});
       expect(scope.response).toBeTruthy();
     });
+
     it('should set the detailed feedback', function() {
       scope.renderModel.categories[1].choices = [{}, {}];
       container.elements['1'].setResponse({
@@ -222,6 +269,7 @@ describe('corespring:dnd-categorize:render', function() {
         correctness: 'incorrect'
       }]);
     });
+
     it('should create seeSolutionModel from correctResponse', function() {
       container.elements['1'].setResponse({
         correctResponse: {
@@ -229,33 +277,63 @@ describe('corespring:dnd-categorize:render', function() {
           cat_2: ['choice_2']
         }
       });
-      expect(ignoreAngularIds(scope.correctAnswerRows)).toEqual([[{
-        model: {
-          id: 'cat_1',
-          label: 'Category 1'
-        },
-        choices: [{
+      expect(ignoreAngularIds(scope.correctAnswerRows)).toEqual([{
+        id: "correct-answer-row-0",
+        categories: [{
           model: {
-            id: 'choice_1',
-            label: 'a',
-            moveOnDrag: false
+            id: 'cat_1',
+            label: 'Category 1'
           },
-          correctness: 'correct'
+          choices: [{
+            model: {
+              id: 'choice_1',
+              label: 'a',
+              moveOnDrag: false
+            },
+            correctness: 'correct'
         }]
       }, {
-        model: {
-          id: 'cat_2',
-          label: 'Category 2'
-        },
-        choices: [{
           model: {
-            id: 'choice_2',
-            label: 'b',
-            moveOnDrag: false
+            id: 'cat_2',
+            label: 'Category 2'
           },
-          correctness: 'correct'
+          choices: [{
+            model: {
+              id: 'choice_2',
+              label: 'b',
+              moveOnDrag: false
+            },
+            correctness: 'correct'
         }]
-      }]]);
+      }]
+    }]);
+    });
+
+    it('should split categories into rows of size categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      container.elements['1'].setResponse({
+        correctResponse: {
+          cat_1: ['choice_1'],
+          cat_2: ['choice_2']
+        }
+      });
+      expect(scope.correctAnswerRows.length).toBe(3);
+    });
+
+    it('should fill rows with placeholders up to categoriesPerRow', function() {
+      expect(testModel.data.model.config.categoriesPerRow).toBe(2);
+      testModel.data.model.categories = [mkCat(1), mkCat(2), mkCat(3), mkCat(4), mkCat(5)];
+      setModelAndDigest();
+      container.elements['1'].setResponse({
+        correctResponse: {
+          cat_1: ['choice_1'],
+          cat_2: ['choice_2']
+        }
+      });
+      expect(scope.correctAnswerRows[2].categories.length).toBe(testModel.data.model.config.categoriesPerRow);
+      expect(scope.correctAnswerRows[2].categories.pop().isPlaceHolder).toBe(true);
     });
 
   });
@@ -406,26 +484,32 @@ describe('corespring:dnd-categorize:render', function() {
       expect(scope.renderModel.categories[0].choices[1].model.id).toBe('choice_1');
     });
     describe('available choices', function() {
-      it('should remove the choice, if moveOnDrag is true and editMode is false', function() {
+      var placedId;
+
+      beforeEach(function() {
+        placedId = "not placed";
+        scope.$on('placed', function(ev, id) {
+          placedId = id;
+        });
+      });
+
+      it('should "place" the choice, if moveOnDrag is true and editMode is false', function() {
         scope.renderModel.choices[0].moveOnDrag = true;
         scope.isEditMode = false;
-        expect(scope.renderModel.choices.length).toBe(3);
-        expect(scope.renderModel.choices[0].id).toBe('choice_1');
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(2);
-        expect(scope.renderModel.choices[0].id).toBe('choice_2');
+        expect(placedId).toBe('choice_1');
       });
       it('should not remove the choice, if moveOnDrag is false', function() {
         scope.renderModel.choices[0].moveOnDrag = false;
         scope.isEditMode = false;
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(3);
+        expect(placedId).toBe('not placed');
       });
       it('should not remove the choice, if editMode is true', function() {
         scope.renderModel.choices[0].moveOnDrag = true;
         scope.isEditMode = true;
         scope.onCategoryDrop('cat_1', 'choice_1');
-        expect(scope.renderModel.choices.length).toBe(3);
+        expect(placedId).toBe('not placed');
       });
     });
   });
@@ -463,15 +547,39 @@ describe('corespring:dnd-categorize:render', function() {
       scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
       expect(scope.renderModel.categories[0].choices.length).toBe(1);
     });
-    it('should add the choice back in to available choices at the same position', function() {
-      scope.isEditMode = false;
-      scope.renderModel.choices[0].moveOnDrag = true;
-      scope.onCategoryDrop('cat_1', 'choice_1');
-      expect(scope.renderModel.choices.length).toBe(2);
-      expect(scope.renderModel.choices[0].id).toBe('choice_2');
-      scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
-      expect(scope.renderModel.choices.length).toBe(3);
-      expect(scope.renderModel.choices[0].id).toBe('choice_1');
+    describe('unplace', function() {
+      var unplacedId;
+
+      beforeEach(function() {
+        unplacedId = "still placed";
+        scope.$on('unplaced', function(ev, id) {
+          unplacedId = id;
+        });
+      });
+
+      it('should "unplace" the choice', function() {
+        scope.isEditMode = false;
+        scope.renderModel.choices[0].moveOnDrag = true;
+        scope.onCategoryDrop('cat_1', 'choice_1');
+        scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
+        expect(unplacedId).toBe('choice_1');
+      });
+
+      it('should not "unplace" the choice when isEditMode is true', function() {
+        scope.isEditMode = true;
+        scope.renderModel.choices[0].moveOnDrag = true;
+        scope.onCategoryDrop('cat_1', 'choice_1');
+        scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
+        expect(unplacedId).toBe('still placed');
+      });
+
+      it('should not "unplace" the choice when moveOnDrag is false', function() {
+        scope.isEditMode = false;
+        scope.renderModel.choices[0].moveOnDrag = false;
+        scope.onCategoryDrop('cat_1', 'choice_1');
+        scope.onChoiceRemovedFromCategory('cat_1', 'choice_1', 0);
+        expect(unplacedId).toBe('still placed');
+      });
     });
   });
 
@@ -607,14 +715,16 @@ describe('corespring:dnd-categorize:render', function() {
 
   });
 
-  describe('removeAllAfterPlacing', function(){
+  describe('removeAllAfterPlacing', function() {
     beforeEach(function() {
       setModelAndDigest();
     });
 
-    function setRemoveAllAfterPlacing(value){
+    function setRemoveAllAfterPlacing(value) {
       //set the value like the checkbox would do
-      scope.renderModel.removeAllAfterPlacing = {value: value};
+      scope.renderModel.removeAllAfterPlacing = {
+        value: value
+      };
 
       //set one choice to have the opposite value to be able to verify the action
       scope.renderModel.choices[0].moveOnDrag = !value;
@@ -624,21 +734,21 @@ describe('corespring:dnd-categorize:render', function() {
       scope.$digest();
     }
 
-    it('should set moveOnDrag to true for all choices if it is set to true', function(){
+    it('should set moveOnDrag to true for all choices if it is set to true', function() {
       setRemoveAllAfterPlacing(true);
-      _.forEach(scope.renderModel.choices, function(choice){
+      _.forEach(scope.renderModel.choices, function(choice) {
         expect(choice.moveOnDrag).toBe(true);
       });
     });
 
-    it('should set moveOnDrag to false for all choices if it is set to false', function(){
+    it('should set moveOnDrag to false for all choices if it is set to false', function() {
       setRemoveAllAfterPlacing(false);
-      _.forEach(scope.renderModel.choices, function(choice){
+      _.forEach(scope.renderModel.choices, function(choice) {
         expect(choice.moveOnDrag).toBe(false);
       });
     });
 
-    it('should be set to false if a choice toggles its moveOnDrag to false', function(){
+    it('should be set to false if a choice toggles its moveOnDrag to false', function() {
       setRemoveAllAfterPlacing(true);
       var choice = scope.renderModel.choices[0];
       choice.moveOnDrag = false;

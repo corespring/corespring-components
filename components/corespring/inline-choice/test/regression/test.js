@@ -12,20 +12,22 @@ describe('inline-choice', function() {
 
   "use strict";
 
+  var componentName = 'inline-choice';
   var itemJsonFilename = 'one.json';
 
-  browser.selectInlineChoice = function(id, choice) {
-    browser.click(inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]');
-    browser.click(inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]');
-    return this;
-  };
+  beforeEach(function(done) {
+    browser.options.extendBrowser(browser);
 
-  browser.submitItem = function() {
-    this.execute('window.submit()');
-    return this;
-  };
+    browser.selectInlineChoice = function(id, choice) {
+      var toggle = inlineChoiceWithId(id) + '//span[@class[contains(., "dropdown-toggle")]]';
+      var option = inlineChoiceWithId(id) + '//ul[@class[contains(., "dropdown-menu")]]//div[text()="' + choice + '"]';
 
-  beforeEach(function() {
+      browser.waitForVisible(toggle);
+      browser.click(toggle);
+      browser.waitForVisible(option);
+      browser.click(option);
+      return this;
+    };
 
     browser.addCommand("getPseudoElementCss", function(selector, pseudo, prop, done) {
       return this.executeAsync(function(selector, pseudo, prop, done){
@@ -33,29 +35,26 @@ describe('inline-choice', function() {
 
         if(!e){
           throw new Error('not found: ' + selector);
-        } 
+        }
         var s = window.getComputedStyle(e, pseudo);
         var out = s.getPropertyValue(prop);
         done(out);
       }, selector, pseudo, prop).then(function(o){
-          done(null,  { selector: selector, pseudo: pseudo, prop: prop, value: o.value});
+        done(null,  { selector: selector, pseudo: pseudo, prop: prop, value: o.value});
       });
     });
 
-
     browser
-      .url(browser.options.getUrl('inline-choice', itemJsonFilename))
-      .waitFor('.dropdown-menu li');
+      .loadTest(componentName, itemJsonFilename)
+      .call(done);
   });
-
- 
 
   it('shows a result icon to the right of the comboboxes', function(done){
 
     browser
       .selectInlineChoice("1", "Banana")
       .submitItem()
-      .waitFor('.result-icon')
+      .waitForExist('.result-icon')
       .getPseudoElementCss('.warning .result-icon', ':after', 'color', function(err, result){
         result.value.should.eql('rgb(153, 153, 153)');
       })
@@ -70,8 +69,8 @@ describe('inline-choice', function() {
       .selectInlineChoice("1", "Banana")
       .selectInlineChoice("2", "Apple")
       .submitItem()
-      .click(inlineChoiceWithId("1") + '//span')
-      .click(inlineChoiceWithId("2") + '//span')
+      .waitAndClick(inlineChoiceWithId("1") + '//span')
+      .waitAndClick(inlineChoiceWithId("2") + '//span')
       .getLocation(".player-body", function(err, playerPos) {
         this.getLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
           this.getLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {

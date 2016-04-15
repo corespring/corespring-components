@@ -25,11 +25,10 @@ describe('blueprint', function() {
     };
 
     browser.waitForWithTimeout = function(selector){
-      return browser.waitFor(selector, regressionTestRunnerGlobals.defaultTimeout);
+      return browser.waitForExist(selector, regressionTestRunnerGlobals.defaultTimeout);
     };
 
     browser
-      .timeouts('implicit', regressionTestRunnerGlobals.defaultTimeout)
       .url(RegressionHelper.getUrl('match', itemJsonFilename))
       .call(done);
   });

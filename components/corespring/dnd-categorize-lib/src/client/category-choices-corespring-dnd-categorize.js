@@ -38,8 +38,6 @@ function CategoryChoicesCorespringDndCategorize(
 
   function link(scope, elem, attrs) {
 
-    var log = console.log.bind(console, '[category-choices]');
-
     var layout;
 
     scope.active = false;
@@ -51,7 +49,14 @@ function CategoryChoicesCorespringDndCategorize(
       onDrop: 'onDropCallback'
     };
 
-    scope.droppableJqueryOptions = droppableJqueryOptions;
+    scope.droppableJqueryOptions = {
+      activeClass: 'category-active',
+      distance: 5,
+      hoverClass: 'category-hover',
+      tolerance: 'pointer',
+      scope: scope.dragAndDropScope
+    };
+
     scope.onChoiceDeleteClicked = onChoiceDeleteClicked;
     scope.onDropCallback = onDropCallback;
     scope.onLocalChoiceDragStart = onLocalChoiceDragStart;
@@ -66,16 +71,6 @@ function CategoryChoicesCorespringDndCategorize(
 
     function getCategoryId() {
       return scope.category.model.id;
-    }
-
-    function droppableJqueryOptions() {
-      return {
-        activeClass: 'category-active',
-        distance: 5,
-        hoverClass: 'category-hover',
-        tolerance: 'pointer',
-        scope: scope.dragAndDropScope
-      };
     }
 
     function onChoiceDeleteClicked(choiceId, index) {
@@ -114,7 +109,11 @@ function CategoryChoicesCorespringDndCategorize(
 
     function initLayout(choiceWidth) {
       choiceWidth = parseFloat(choiceWidth);
-      if(isNaN(choiceWidth) || choiceWidth <= 0){
+      if (isNaN(choiceWidth) || choiceWidth <= 0) {
+        return;
+      }
+      var container = elem.find(".choice-container");
+      if(container.length === 0){
         return;
       }
 
@@ -135,7 +134,7 @@ function CategoryChoicesCorespringDndCategorize(
           .value());
       }
 
-      function numColumns(){
+      function numColumns() {
         //using a function allows the layout to wait until choice-container has a width
         return Math.floor(elem.find(".choice-container").width() / choiceWidth);
       }
@@ -153,10 +152,11 @@ function CategoryChoicesCorespringDndCategorize(
         '<div class="category category-choices"',
         '  data-drop="true" ',
         '  jqyoui-droppable="droppableOptions"',
-        '  data-jqyoui-options="droppableJqueryOptions()"',
+        '  data-jqyoui-options="droppableJqueryOptions"',
         '  >',
-        '  <div class="border">',
+        '  <div class="border" ng-if="!category.isPlaceHolder">',
         '    <div class="categorized choices">',
+        '      <div class="placeholder" ng-if="choiceEditMode" ng-hide="category.choices.length">Drag correct answer(s) here.</div>',
         '      <div class="choice-container">',
         '        <div choice-corespring-dnd-categorize="true" ',
         '           choice-id="{{choice.model.id}}" ',
