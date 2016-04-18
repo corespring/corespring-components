@@ -16,10 +16,9 @@ var choiceIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
     ].join('\n'),
     link: function($scope, $element, $attrs) {
       var pn = window.location.pathname;
-      var firstPathSegment = pn.substring(0, pn.indexOf('/',1));
-      $scope.template = firstPathSegment+'/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
+      $scope.template = ASSETS_PATH + '/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       $scope.$watch('key+shape', function() {
-        $scope.template = firstPathSegment+'/images/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
+        $scope.template = ASSETS_PATH + '/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       });
     }
   }
