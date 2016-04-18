@@ -1,6 +1,7 @@
-var assert, component, correctResponse, server, settings, should, _, helper;
+var component, correctResponse;
+var highlightUserResponse, highlightCorrectResponse, showFeedback;
 
-helper = require('../../../../../test-lib/test-helper');
+var helper = require('../../../../../test-lib/test-helper');
 
 //Note: because we are using non conventional requires
 //You need to load the component with proxyquire
@@ -8,16 +9,15 @@ helper = require('../../../../../test-lib/test-helper');
 var proxyquire = require('proxyquire').noCallThru();
 var fbu = require('../../../server-shared/src/server/feedback-utils');
 
-server = proxyquire('../../src/server', {
+var server = proxyquire('../../src/server', {
   'corespring.server-shared.server.feedback-utils': fbu,
   'corespring.scoring-utils.server': {}
 });
 
-assert = require('assert');
+var assert = require('assert');
+var _ = require('lodash');
 
-var expect = require('chai').expect;
 
-_ = require('lodash');
 
 var componentTemplate = {
   componentType: "corespring-match",
@@ -184,21 +184,30 @@ function correctIncorrect(id){
   };
 }
 
+
 function shouldEql(actual, expected){
   _.forEach(actual, function(value, key){
     value.should.eql(expected[key], 'key ' + key);
   });
 }
 
+function createOutcome(component, answers){
+  return server.createOutcome(component, answers,
+    helper.settings(highlightUserResponse, highlightCorrectResponse, showFeedback));
+}
+
 beforeEach(function() {
   component = _.cloneDeep(componentTemplate);
   correctResponse = _.cloneDeep(componentTemplate.correctResponse);
+  highlightCorrectResponse = true;
+  highlightUserResponse = true;
+  showFeedback = true;
 });
 
 describe('match server logic', function() {
 
   it('should return warning if the answer is null', function() {
-    var outcome = server.createOutcome(component, null, helper.settings(true, true, true));
+    var outcome = createOutcome(component, null);
     outcome.should.eql({
       correctness:'incorrect',
       correctClass: 'warning',
@@ -215,7 +224,7 @@ describe('match server logic', function() {
   });
 
   it('should return warning if the answer is undefined', function() {
-    var outcome = server.createOutcome(component, undefined, helper.settings(true, true, true));
+    var outcome = createOutcome(component, undefined);
     outcome.should.eql({
       correctness:'incorrect',
       correctClass: 'warning',
@@ -242,14 +251,15 @@ describe('match server logic', function() {
         incorrectAnswer("row-3"),
         noAnswer("row-4")];
 
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(false, true, true));
+      highlightUserResponse = false;
+      var response = createOutcome(component, answers);
       response.correctness.should.eql("incorrect");
       response.score.should.eql(0);
     });
 
     it('should respond to a correct answer (feedback + user + correct)', function() {
       var answers = _.cloneDeep(component.correctResponse);
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
+      var response = createOutcome(component, answers);
       var expected = {
         correctness: "correct",
         correctClass: "correct",
@@ -268,7 +278,11 @@ describe('match server logic', function() {
 
     it('should respond to a correct answer (feedback - user - correct)', function() {
       var answers = _.cloneDeep(component.correctResponse);
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, false, false));
+
+
+      highlightCorrectResponse = false;
+      showFeedback = false;
+      var response = createOutcome(component, answers);
       var expected = {
         correctness: "correct",
         correctClass: "correct",
@@ -285,7 +299,6 @@ describe('match server logic', function() {
       response.should.eql(expected);
     });
 
-
     it('should respond to incorrect result (feedback + user + correct) and user did not choose anything', function() {
       var answers = [
         noAnswer("row-1"),
@@ -294,7 +307,7 @@ describe('match server logic', function() {
         noAnswer("row-4")
       ];
 
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
+      var response = createOutcome(component, answers);
 
       var expected = {
         correctness: "incorrect",
@@ -320,7 +333,7 @@ describe('match server logic', function() {
         incorrectAnswer("row-4")
       ];
 
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, true));
+      var response = createOutcome(component, answers);
 
       var expected = {
         correctness: "incorrect",
@@ -346,7 +359,8 @@ describe('match server logic', function() {
         incorrectAnswer("row-4")
       ];
 
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, false, true));
+      highlightCorrectResponse = false;
+      var response = createOutcome(component, answers);
 
       var expected = {
         correctness: "incorrect",
@@ -373,7 +387,7 @@ describe('match server logic', function() {
       ];
 
       var radioComponent = _.cloneDeep(component);
-      var response = server.createOutcome(radioComponent, answers, helper.settings(true, true, true));
+      var response = createOutcome(radioComponent, answers);
 
       var expected = {
         correctness: "incorrect",
@@ -425,7 +439,7 @@ describe('match server logic', function() {
         },
         model: {config: {inputType: 'checkbox'}}
       });
-      var response = server.createOutcome(checkboxComponent, answers, helper.settings(true, true, true));
+      var response = createOutcome(checkboxComponent, answers);
       var expected = {
         correctness: "incorrect",
         correctClass: "partial",
@@ -450,24 +464,45 @@ describe('match server logic', function() {
         incorrectAnswer("row-4")
       ];
 
-      var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(true, true, false));
+      showFeedback = false;
+      var response = createOutcome(component, answers);
 
-      var expected = {
-        correctness: "incorrect",
-        correctClass: "partial",
-        score: 0.2,
-        correctnessMatrix: [
-          correctUnknown("row-1"),
-          unknownIncorrect("row-2"),
-          correctUnknown("row-3"),
-          unknownIncorrect("row-4")
-        ],
-        correctResponse: correctResponse,
-        feedback:"Almost!"
-      };
-      response.should.eql(expected);
+      response.correctness.should.eql("incorrect");
+      response.correctClass.should.eql("partial");
+      response.score.should.eql(0.2);
+      response.feedback.should.eql("Almost!");
+      response.correctnessMatrix.should.eql([
+        correctUnknown("row-1"),
+        unknownIncorrect("row-2"),
+        correctUnknown("row-3"),
+        unknownIncorrect("row-4")
+      ]);
+
     });
 
+    it('should not fail, when a correctResponse is missing', function(){
+      component.correctResponse.pop();
+
+      var answers = [
+        correctAnswer("row-1"),
+        incorrectAnswer("row-2"),
+        correctAnswer("row-3"),
+        incorrectAnswer("row-4")
+      ];
+
+      showFeedback = false;
+      var response = createOutcome(component, answers);
+
+      response.correctness.should.eql("incorrect");
+      response.correctClass.should.eql("partial");
+      response.score.should.eql(0.2);
+      response.feedback.should.eql("Almost!");
+      response.correctnessMatrix.should.eql([
+        correctUnknown("row-1"),
+        unknownIncorrect("row-2"),
+        correctUnknown("row-3")
+      ]);
+    });
   });
 
 });

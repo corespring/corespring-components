@@ -125,18 +125,22 @@ function whereIdIsEqual(id) {
 }
 
 function countCorrectAnswers(answer, correctAnswer) {
-  return _.reduce(answer, function(acc1, answerRow) {
-    var correctMatchSet = _.find(correctAnswer, function(correctRow) {
+  return _.reduce(answer, function(sum, answerRow) {
+    var correct = _.find(correctAnswer, function(correctRow) {
       return correctRow.id === answerRow.id;
-    }).matchSet;
+    });
+    if(correct && correct.matchSet) {
+      var zippedMatchSet = _.zip(correct.matchSet, answerRow.matchSet);
+      var numIncorrect = _.reduce(zippedMatchSet, countIncorrect, 0);
 
-    var zippedMatchSet = _.zip(correctMatchSet, answerRow.matchSet);
-    var numIncorrect = _.reduce(zippedMatchSet, countIncorrect, 0);
-    //A row is counted only if there are no incorrect answers
-    //otherwise the user could simply select every answer to get the
-    //max partial scoring
-    return acc1 + ((0 === numIncorrect) ?
-        _.reduce(zippedMatchSet, countWhenTrueAndCorrect, 0) : 0);
+      //A row is counted only if there are no incorrect answers
+      //otherwise the user could simply select every answer to get the
+      //max partial scoring
+      return sum + ((0 === numIncorrect) ?
+          _.reduce(zippedMatchSet, countWhenTrueAndCorrect, 0) : 0);
+    } else {
+      return sum; //row is ignored bc. no correct answer could be found
+    }
   }, 0);
 }
 
