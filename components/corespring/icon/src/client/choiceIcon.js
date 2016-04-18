@@ -1,4 +1,4 @@
-var choiceIcon = [function() {
+var choiceIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
   return {
     restrict: 'E',
     scope: {
@@ -8,7 +8,7 @@ var choiceIcon = [function() {
     template: [
       '<span class="{{key}}">',
       '  <span>',
-      '    <div style="width: 30px;" class="choice-icon">',
+      '    <div class="choice-icon">',
       '      <ng-include src="template"/>',
       '    </div>',
       '  </span>',

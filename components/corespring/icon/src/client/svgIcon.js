@@ -1,4 +1,4 @@
-var svgIcon = [function() {
+var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
   return {
     restrict: 'E',
     scope: {
@@ -24,13 +24,11 @@ var svgIcon = [function() {
         }
 
         var category = $attrs.category || 'feedback';
-        var pn = window.location.pathname;
-        var firstPathSegment = pn.substring(0, pn.indexOf('/',1));
 
         if ($scope.key === 'empty') {
-          $scope.template = firstPathSegment + '/images/components-assets/' + category + '/empty.svg'
+          $scope.template = ASSETS_PATH + '/components-assets/' + category + '/empty.svg'
         } else {
-          $scope.template = firstPathSegment + '/images/components-assets/' + category + '/'
+          $scope.template = ASSETS_PATH + '/components-assets/' + category + '/'
             + ($scope.iconSet ? $scope.iconSet + '-' : '')
             + $scope.key
             + ($scope.shape ? '-' + $scope.shape : '')
