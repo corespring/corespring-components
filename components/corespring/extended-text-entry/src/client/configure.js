@@ -30,14 +30,14 @@ var main = [
       '     <div>',
       '       <h3>Display</h3>',
       '     </div>',
-      '     <div>Adjust the width and height of student response area below.</div>',
+      '     <div>Adjust the width and height of student response area below. Box width must be a minimum of 35 columns and box height must be a minimum of 3 rows.</div>',
       '     <form name="sizeForm" class="form-horizontal" role="form" style="margin-top: 10px">',
       '       <div class="form-group" ng-class="{\'has-error\': !sizeForm.expectedLength.$valid}" style="max-width: 80%">',
       '         <label class="col-sm-4 control-label narrow-form-label">Box width:</label>',
       '         <div class="col-sm-3">',
       '           <input type="number" ',
       '             name="expectedLength"',
-      '             min="40" max="100" ',
+      '             min="35" max="100" ',
       '             id="expected-length" ',
       '             class="form-control"  ',
       '             ng-model="fullModel.model.config.expectedLength" />',
@@ -48,7 +48,7 @@ var main = [
       '         <label class="col-sm-4 control-label narrow-form-label">Box height:</label>',
       '         <div class="col-sm-3">',
       '           <input name="expectedLines" ',
-      '             type="number" min="5" max="20" ',
+      '             type="number" min="3" max="20" ',
       '             id="expected-lines" ',
       '             class="form-control"  ',
       '             ng-model="fullModel.model.config.expectedLines" />',
@@ -70,8 +70,8 @@ var main = [
             scope.fullModel = model;
             model.model = model.model || {};
             model.model.config = model.model.config || {};
-            model.model.config.expectedLines = parseInt(model.model.config.expectedLines, 10) || 5;
-            model.model.config.expectedLength = parseInt(model.model.config.expectedLength, 10) || 40;
+            model.model.config.expectedLines = parseInt(model.model.config.expectedLines, 10) || 3;
+            model.model.config.expectedLength = parseInt(model.model.config.expectedLength, 10) || 35;
           },
 
           getModel: function() {
