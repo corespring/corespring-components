@@ -57,19 +57,19 @@ describe('find-feedback', function(){
 
   it('should find a string', function(){
     var out = server.findFeedback([{input: 'a', feedback: 'a-fb'}], 'a');
-    out.should.eql('a-fb');
+    out.should.equal('a-fb');
   });
 
   it('should find a string in an array', function(){
     var out = server.findFeedback([{input: 'a', feedback: 'a-fb'}], ['a', 'b']);
 
     console.log('-------- > ', out);
-    out.should.eql('a-fb');
+    out.should.equal('a-fb');
   });
   
   it('should find a string in an array', function(){
     var out = server.findFeedback([{input: 'b', feedback: 'b-fb'}], ['a', 'b']);
-    out.should.eql('b-fb');
+    out.should.equal('b-fb');
   });
 
   //TODO: How do we accomodate multiple feedbacks for an array of student responses

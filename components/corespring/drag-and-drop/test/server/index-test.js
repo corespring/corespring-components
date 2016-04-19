@@ -77,7 +77,7 @@ describe('drag and drop server logic', function() {
     var response = server.createOutcome(_.cloneDeep(component), {
       1: ['larva']
     }, settings(false, true, true));
-    response.correctness.should.eql('incorrect');
+    response.correctness.should.equal('incorrect');
     response.score.should.equal(0);
   });
 
@@ -89,7 +89,7 @@ describe('drag and drop server logic', function() {
       "4": []
     };
     var response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
-    response.correctness.should.eql('correct');
+    response.correctness.should.equal('correct');
     response.score.should.equal(1);
   });
 
@@ -101,7 +101,7 @@ describe('drag and drop server logic', function() {
       "4": []
     };
     var response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
-    response.correctness.should.eql('correct');
+    response.correctness.should.equal('correct');
 
     answer = {
       "1": ["pupa", "egg"], // ordered, so incorrect
@@ -110,7 +110,7 @@ describe('drag and drop server logic', function() {
       "4": []
     };
     response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
-    response.correctness.should.eql('incorrect');
+    response.correctness.should.equal('incorrect');
 
     answer = {
       "1": ["egg", "pupa"],
@@ -119,7 +119,7 @@ describe('drag and drop server logic', function() {
       "4": []
     };
     response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
-    response.correctness.should.eql('correct');
+    response.correctness.should.equal('correct');
   });
 
 

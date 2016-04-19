@@ -82,6 +82,7 @@ describe('text entry server logic', function() {
       }
     };
     outcome.should.eql(expected);
+    outcome.score.should.eql(expected.score);
   });
 
   it('should respond with correct and score 1 if the answer is correct', function() {

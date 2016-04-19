@@ -102,6 +102,7 @@ describe('inline-choice server logic', function() {
         score: 0
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to a correct answer', function() {
@@ -117,6 +118,7 @@ describe('inline-choice server logic', function() {
         }
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to a second correct answer', function() {
@@ -132,6 +134,7 @@ describe('inline-choice server logic', function() {
         }
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
@@ -145,6 +148,7 @@ describe('inline-choice server logic', function() {
         }
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -160,6 +164,7 @@ describe('inline-choice server logic', function() {
         }
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to an incorrect response with random correct answer in default feedback if feedbackType is default',
@@ -178,6 +183,7 @@ describe('inline-choice server logic', function() {
         delete response.feedback.feedback;
 
         response.should.eql(expected);
+        response.score.should.equal(expected.score);
       }
     );
   });

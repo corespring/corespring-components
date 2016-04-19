@@ -30,6 +30,7 @@ describe('drag-and-drop-inline', function() {
         correctClass: "correct",
         feedbackPerChoice: feedbackPerChoice
       });
+      outcome.score.should.equal(1);
     }
 
     it("with one correct answer", function() {
@@ -97,6 +98,7 @@ describe('drag-and-drop-inline', function() {
       }        
 
       outcome.should.eql(expectedOutcome);
+      outcome.score.should.equal(expectedOutcome.score);
     }
 
     it("without answer", function() {
@@ -228,6 +230,7 @@ describe('drag-and-drop-inline', function() {
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
       feedbackPerChoice: {}
     });
+    outcome.score.should.equal(0);
   });
 
 
@@ -248,6 +251,7 @@ describe('drag-and-drop-inline', function() {
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
       feedbackPerChoice: {}
     });
+    outcome.score.should.equal(0);
   });
 
 });

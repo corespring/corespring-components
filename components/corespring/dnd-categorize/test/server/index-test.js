@@ -99,6 +99,7 @@ describe('dnd-categorize', function() {
         score: 1,
         detailedFeedback: detailedFeedback
       });
+      outcome.score.should.equal(1);
     }
 
     it("with one correct answer", function() {
@@ -194,6 +195,7 @@ describe('dnd-categorize', function() {
       }
 
       outcome.should.eql(expectedOutcome);
+      outcome.score.should.equal(expectedOutcome.score);
     }
 
     it("without answer", function() {
@@ -353,6 +355,7 @@ describe('dnd-categorize', function() {
       question.partialScoring = partialScoring;
       var outcome = server.createOutcome(question, answer, settings);
       outcome.should.eql(expectedOutcome);
+      outcome.score.should.equal(expectedOutcome.score);
     }
 
 
@@ -499,6 +502,7 @@ describe('dnd-categorize', function() {
       detailedFeedback: {},
       warningClass: "answer-expected"
     });
+    outcome.score.should.equal(0);
   });
 
 
@@ -525,6 +529,7 @@ describe('dnd-categorize', function() {
       detailedFeedback: {},
       warningClass: "answer-expected"
     });
+    outcome.score.should.equal(0);
   });
 
   describe('weighting', function() {

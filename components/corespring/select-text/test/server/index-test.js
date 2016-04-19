@@ -46,11 +46,13 @@ describe('select text server logic', function () {
     it('should return an incorrect outcome if answer is null', function () {
       var outcome = server.createOutcome(comp, null, helper.settings(true, true, true));
       outcome.should.eql(expected);
+      outcome.score.should.equal(expected.score);
     });
 
     it('should return an incorrect outcome if answer is empty array', function () {
       var outcome = server.createOutcome(comp, [], helper.settings(true, true, true));
       outcome.should.eql(expected);
+      outcome.score.should.equal(expected.score);
     });
 
   });

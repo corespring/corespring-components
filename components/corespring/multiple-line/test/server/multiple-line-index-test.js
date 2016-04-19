@@ -197,6 +197,7 @@ describe('corespring:multiple-line:server', function() {
         score: 0,
         feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
       });
+      outcome.score.should.equal(0);
     });
 
     it('should process a partially empty answer, but empty lines are marked as incorrect', function() {
@@ -223,6 +224,7 @@ describe('corespring:multiple-line:server', function() {
         ],
         feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK
       });
+      outcome.score.should.equal(0);
     });
 
     it('should respond with correct and score 1 if the answer is correct', function() {
@@ -417,7 +419,7 @@ describe('corespring:multiple-line:server', function() {
       );
     });
 
-    it('should respond with corerct for every correct line no matter if partial scoring is disabled or enabled', function() {
+    it('should respond with correct for every correct line no matter if partial scoring is disabled or enabled', function() {
       var clone = _.cloneDeep(component);
       var outcome = server.createOutcome(clone, partiallyCorrectAnswer, helper.settings(true, true, true));
       outcome.correctResponse.should.eql(
