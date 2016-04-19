@@ -67,7 +67,7 @@ describe('select text server logic', function () {
     });
 
     it('should return a score of 1', function () {
-      response.score.should.eql(1);
+      response.score.should.equal(1);
     });
 
   });
@@ -84,7 +84,7 @@ describe('select text server logic', function () {
     });
 
     it('should respond with score 0 ', function () {
-      response.score.should.eql(0);
+      response.score.should.equal(0);
     });
   });
 
@@ -100,7 +100,7 @@ describe('select text server logic', function () {
     });
 
     it('should respond with score 0', function () {
-      response.score.should.eql(0);
+      response.score.should.equal(0);
     });
 
     it('should calculate partial score when allowPartialScoring is true', function () {
@@ -113,7 +113,7 @@ describe('select text server logic', function () {
 
       var response = server.createOutcome(comp, [0], helper.settings(false, true, true));
       response.correctness.should.eql('partial');
-      response.score.should.eql(0.3);
+      response.score.should.equal(0.3);
     });
 
   });

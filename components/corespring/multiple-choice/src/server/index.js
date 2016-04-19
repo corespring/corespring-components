@@ -57,7 +57,7 @@ function calculateScore(question, answer, isSingleChoice) {
   var answeredIncorrectly = answer.length - answeredCorrectly;
 
   if (isSingleChoice) {
-    return answeredCorrectly > 0;
+    return answeredCorrectly > 0 ? 1 : 0;
   }
 
   if (answeredIncorrectly > 0) {

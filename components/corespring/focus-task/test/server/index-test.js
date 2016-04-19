@@ -161,7 +161,7 @@ describe('focus-task server logic', function() {
         score: 0
       };
       response.correctness.should.eql(expected.correctness);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to a correct answer', function() {
@@ -177,7 +177,7 @@ describe('focus-task server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
@@ -194,7 +194,7 @@ describe('focus-task server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -210,7 +210,7 @@ describe('focus-task server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to an incorrect response and show feedback for 1 incorrect and 1 correct', function() {
@@ -226,7 +226,7 @@ describe('focus-task server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
   });
