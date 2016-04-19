@@ -243,7 +243,7 @@ describe('match server logic', function() {
         noAnswer("row-4")];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(false, true, true));
-      response.correctness.should.eql("incorrect");
+      response.correctness.should.equal("incorrect");
       response.score.should.equal(0);
     });
 

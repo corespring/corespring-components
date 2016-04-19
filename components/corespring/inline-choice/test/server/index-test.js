@@ -73,9 +73,9 @@ describe('inline-choice server logic', function() {
     function questionWithCorrectResponse(correctResponse){
       return {correctResponse:correctResponse};
     }
-    server.isCorrect(questionWithCorrectResponse(["1"]), "1").should.eql(true);
-    server.isCorrect(questionWithCorrectResponse(["1","2"]), "2").should.eql(true);
-    server.isCorrect(questionWithCorrectResponse(["1","2"]), "3").should.eql(false);
+    server.isCorrect(questionWithCorrectResponse(["1"]), "1").should.equal(true);
+    server.isCorrect(questionWithCorrectResponse(["1","2"]), "2").should.equal(true);
+    server.isCorrect(questionWithCorrectResponse(["1","2"]), "3").should.equal(false);
   });
 
   describe('defaultFeedback', function(){
@@ -84,11 +84,11 @@ describe('inline-choice server logic', function() {
       model.feedback[1].feedbackType = "some feedback type";
       model.feedback[1].feedback = "some feedback";
       var fb = server.defaultFeedback( model, 'mc_2');
-      fb.should.eql("Correct!");
+      fb.should.equal("Correct!");
     });
     it('should return default feedback for incorrect answer', function(){
       var fb = server.defaultFeedback(createModel(), 'mc_1');
-      fb.should.eql('Good try, but carrot is the correct answer.');
+      fb.should.equal('Good try, but carrot is the correct answer.');
     });
   });
 

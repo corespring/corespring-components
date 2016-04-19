@@ -63,7 +63,7 @@ describe('select text server logic', function () {
     });
 
     it('should respond with correct', function () {
-      response.correctness.should.eql('correct');
+      response.correctness.should.equal('correct');
     });
 
     it('should return a score of 1', function () {
@@ -80,7 +80,7 @@ describe('select text server logic', function () {
     });
 
     it('should respond with incorrect ', function () {
-      response.correctness.should.eql('incorrect');
+      response.correctness.should.equal('incorrect');
     });
 
     it('should respond with score 0 ', function () {
@@ -96,7 +96,7 @@ describe('select text server logic', function () {
     });
 
     it('should respond with partial', function () {
-      response.correctness.should.eql('partial');
+      response.correctness.should.equal('partial');
     });
 
     it('should respond with score 0', function () {
@@ -112,7 +112,7 @@ describe('select text server logic', function () {
       }];
 
       var response = server.createOutcome(comp, [0], helper.settings(false, true, true));
-      response.correctness.should.eql('partial');
+      response.correctness.should.equal('partial');
       response.score.should.equal(0.3);
     });
 

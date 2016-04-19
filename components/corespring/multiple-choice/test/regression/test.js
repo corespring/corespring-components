@@ -99,7 +99,7 @@ describe('multiple-choice', function() {
       .showAnswer()
       .waitForText('.answer-holder .choice-holder.correct .choice-label')
       .getText('.answer-holder .choice-holder.correct .choice-label', function(err, message) {
-        message.should.eql(correctAnswerLabel);
+        message.should.equal(correctAnswerLabel);
       })
       .call(done);
   });
