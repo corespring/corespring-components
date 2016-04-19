@@ -91,7 +91,7 @@ describe('text entry server logic', function() {
       score: 1
     };
     response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
+    response.score.should.equal(expected.score);
   });
 
   it('should respond with correct and score 1 if the answer is correct and whitespace/case are ignored', function() {
@@ -104,7 +104,7 @@ describe('text entry server logic', function() {
       score: 1
     };
     response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
+    response.score.should.equal(expected.score);
   });
 
   it('should respond with partial and score 0.25 if the answer is among partially correct ones', function() {
@@ -114,7 +114,7 @@ describe('text entry server logic', function() {
       score: 0.25
     };
     response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
+    response.score.should.equal(expected.score);
   });
 
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
@@ -124,7 +124,7 @@ describe('text entry server logic', function() {
         score: 0
     };
     response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
+    response.score.should.equal(expected.score);
   });
 
   describe('with only one correct value', function() {
@@ -169,7 +169,7 @@ describe('text entry server logic', function() {
     });
 
     it('should return score 1 if the answer is correct', function() {
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should return correct for feedback correctness', function(){

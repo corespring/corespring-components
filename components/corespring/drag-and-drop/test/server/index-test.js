@@ -78,7 +78,7 @@ describe('drag and drop server logic', function() {
       1: ['larva']
     }, settings(false, true, true));
     response.correctness.should.eql('incorrect');
-    response.score.should.eql(0);
+    response.score.should.equal(0);
   });
 
   describe('respond correct', function() {
@@ -90,7 +90,7 @@ describe('drag and drop server logic', function() {
     };
     var response = server.createOutcome(_.cloneDeep(component), answer, settings(false, true, true));
     response.correctness.should.eql('correct');
-    response.score.should.eql(1);
+    response.score.should.equal(1);
   });
 
   describe('cardinality is considered', function() {

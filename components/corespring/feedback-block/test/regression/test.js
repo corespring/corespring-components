@@ -17,6 +17,7 @@ describe('feedback-block', function() {
 
   beforeEach(function(done) {
     browser.loadTest(componentName, itemJsonFilename);
+    expect(browser.getTitle()).toBe('rig');
     browser.call(done);
   });
 

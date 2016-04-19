@@ -61,19 +61,19 @@ describe('server logic', function() {
   it('should respond with correct and score 1 if the answer is correct', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
-    response.score.should.eql(1);
+    response.score.should.equal(1);
   });
 
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["1,2", "3,1"], defaultSettings);
     response.correctness.should.eql("incorrect");
-    response.score.should.eql(0);
+    response.score.should.equal(0);
   });
 
   it('should respond with partial and score 0 if the answer is partially correct, but partial scoring is disabled', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "3,1"], defaultSettings);
     response.correctness.should.eql("partial");
-    response.score.should.eql(0);
+    response.score.should.equal(0);
   });
 
   it('should respond with partial and score 0.5 if the answer is partially correct and partial scoring is enabled', function() {
@@ -85,7 +85,7 @@ describe('server logic', function() {
     }];
     var response = server.createOutcome(_.cloneDeep(partialAllowedComponent), ["0,0", "3,1"], defaultSettings);
     response.correctness.should.eql("partial");
-    response.score.should.eql(0.5);
+    response.score.should.equal(0.5);
   });
 
   it('if partial scoring is allowed score should be calculated using it', function() {
@@ -97,30 +97,30 @@ describe('server logic', function() {
 
     var response = server.createOutcome(clone, ["1,2", "3,1"], defaultSettings);
     response.correctness.should.eql("incorrect");
-    response.score.should.eql(0);
+    response.score.should.equal(0);
     
     response = server.createOutcome(clone, ["0,0", "3,1"], defaultSettings);
     response.correctness.should.eql("partial");
-    response.score.should.eql(0.5);
+    response.score.should.equal(0.5);
 
     response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
-    response.score.should.eql(1);
+    response.score.should.equal(1);
 
     // score will be given, even when the user marks extra points
     response = server.createOutcome(clone, ["0,0", "1,1", "2,2"], defaultSettings);
     response.correctness.should.eql("correct");
-    response.score.should.eql(1);
+    response.score.should.equal(1);
   });
 
   it('respects order matters', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
-    response.score.should.eql(1);
+    response.score.should.equal(1);
 
     response = server.createOutcome(_.cloneDeep(component), ["1,1", "0,0"], defaultSettings);
     response.correctness.should.eql("incorrect");
-    response.score.should.eql(0);
+    response.score.should.equal(0);
   });
 
   it('respects order doesnt matter', function() {
@@ -130,11 +130,11 @@ describe('server logic', function() {
 
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
     response.correctness.should.eql("correct");
-    response.score.should.eql(1);
+    response.score.should.equal(1);
 
     response = server.createOutcome(clone, ["1,1", "0,0"], defaultSettings);
     response.correctness.should.eql("correct");
-    response.score.should.eql(1);
+    response.score.should.equal(1);
   });
 
   it('gives default feedback if feedback type is default', function() {

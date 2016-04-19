@@ -21,6 +21,14 @@ function renderWebdriverTestComponent($log) {
     scope.removableRemoved = false;
     scope.showableShown = false;
 
+    scope.draggableModel = {
+      title: "draggable model"
+    };
+
+    scope.droppableModel = {
+      title: "droppable model"
+    };
+
     scope.addAddable = addAddable;
     scope.hideHideable = hideHideable;
     scope.removeRemovable = removeRemovable;
@@ -126,6 +134,22 @@ function renderWebdriverTestComponent($log) {
         '  <div class="showable" ng-show="showableShown">showable</div>',
         '  <div class="removable" ng-if="!removableRemoved">removable</div>',
         '  <div class="addable" ng-if="addableAdded">addable</div>',
+        '',
+        '  <div class="btn draggable" ',
+        '      data-drag="true"',
+        '      data-jqyoui-options="{revert: \'invalid\'}"',
+        '      jqyoui-draggable="{animate:true, placeholder: true}"',
+        '      ng-model="draggableModel"',
+        '   >{{draggableModel.title}}</div>',
+        '',
+        '  <div class="droppable" ',
+        '      data-drop="true"',
+        '      data-jqyoui-options="{tolerance:\'touch\'}"',
+        '      jqyoui-droppable ',
+        '      ng-model="droppableModel"',
+        '   >{{droppableModel.title}}</div>',
+        '',
+        '  <div id="mouse-follower" class="mouse-follower"></div>',
         '</div>'
       ].join('\n');
   }
