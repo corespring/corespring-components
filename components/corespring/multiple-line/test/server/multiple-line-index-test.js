@@ -228,28 +228,28 @@ describe('corespring:multiple-line:server', function() {
     it('should respond with correct and score 1 if the answer is correct', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), correctAnswer, defaultSettings);
       outcome.correctness.should.eql("correct");
-      outcome.score.should.eql(1);
+      outcome.score.should.equal(1);
       outcome.correctClass.should.eql("correct");
     });
 
     it('should respond with incorrect and score 0 if the answer is incorrect', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(true, true, true));
       outcome.correctness.should.eql("incorrect");
-      outcome.score.should.eql(0);
+      outcome.score.should.equal(0);
       outcome.correctClass.should.eql("incorrect");
     });
 
     it('should respond with incorrect and score 0 if the answer is in incorrect order', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), unorderedAnswer, helper.settings(true, true, true));
       outcome.correctness.should.eql("incorrect");
-      outcome.score.should.eql(0);
+      outcome.score.should.equal(0);
       outcome.correctClass.should.eql("incorrect");
     });
 
     it('should respond with partial and score 0 if the answer is partially correct, but partial scoring is disabled', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
       outcome.correctness.should.eql("partial");
-      outcome.score.should.eql(0);
+      outcome.score.should.equal(0);
       outcome.correctClass.should.eql("partial");
     });
 
@@ -262,7 +262,7 @@ describe('corespring:multiple-line:server', function() {
       }];
       var outcome = server.createOutcome(_.cloneDeep(partialAllowedComponent), partiallyCorrectAnswer, helper.settings(true, true, true));
       outcome.correctness.should.eql("partial");
-      outcome.score.should.eql(0.5);
+      outcome.score.should.equal(0.5);
       outcome.correctClass.should.eql("partial");
     });
 

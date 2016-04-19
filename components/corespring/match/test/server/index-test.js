@@ -244,7 +244,7 @@ describe('match server logic', function() {
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(false, true, true));
       response.correctness.should.eql("incorrect");
-      response.score.should.eql(0);
+      response.score.should.equal(0);
     });
 
     it('should respond to a correct answer (feedback + user + correct)', function() {

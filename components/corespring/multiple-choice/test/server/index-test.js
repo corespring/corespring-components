@@ -119,7 +119,7 @@ describe('multiple-choice server logic', function() {
         score: 0
       };
       response.correctness.should.eql(expected.correctness);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to a correct answer', function() {
@@ -148,7 +148,7 @@ describe('multiple-choice server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
@@ -182,7 +182,7 @@ describe('multiple-choice server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -202,7 +202,7 @@ describe('multiple-choice server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -227,7 +227,7 @@ describe('multiple-choice server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should show empty feedback if no feedback is defined', function() {
@@ -279,7 +279,7 @@ describe('multiple-choice server logic', function() {
       };
       response.correctness.should.eql(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
   });
@@ -392,22 +392,22 @@ describe('multiple-choice server logic', function() {
         it('should return score 1, when answer is complete', function() {
           createOutcome(["mc_1", "mc_2"]);
           response.correctness.should.eql('correct');
-          response.score.should.eql(1);
+          response.score.should.equal(1);
         });
         it('should return score 0, when answer is incomplete', function() {
           createOutcome(["mc_2"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0);
+          response.score.should.equal(0);
         });
         it('should return score 0, when answer is wrong', function() {
           createOutcome(["mc_3"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0);
+          response.score.should.equal(0);
         });
         it('should return score 0, when answer is complete but contains incorrect answer', function() {
           createOutcome(["mc_1", "mc_2", "mc_3"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0);
+          response.score.should.equal(0);
         });
       });
 
@@ -418,22 +418,22 @@ describe('multiple-choice server logic', function() {
         it('should return score 1, when answer is complete', function() {
           createOutcome(["mc_1", "mc_2"]);
           response.correctness.should.eql('correct');
-          response.score.should.eql(1);
+          response.score.should.equal(1);
         });
         it('should return partial score 0.25, when answer is incomplete', function() {
           createOutcome(["mc_2"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0.25);
+          response.score.should.equal(0.25);
         });
         it('should return score 0, when answer is wrong', function() {
           createOutcome(["mc_3"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0);
+          response.score.should.equal(0);
         });
         it('should return score 0, when answer is complete but contains incorrect answer', function() {
           createOutcome(["mc_1", "mc_2", "mc_3"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0);
+          response.score.should.equal(0);
         });
       });
     });
@@ -448,17 +448,17 @@ describe('multiple-choice server logic', function() {
         it('should return score 1, when answer is correct', function() {
           createOutcome(["mc_1"]);
           response.correctness.should.eql('correct');
-          response.score.should.eql(1);
+          response.score.should.equal(1);
         });
         it('should return score 1, when other answer is correct', function() {
           createOutcome(["mc_2"]);
           response.correctness.should.eql('correct');
-          response.score.should.eql(1);
+          response.score.should.equal(1);
         });
         it('should return score 0, when answer is wrong', function() {
           createOutcome(["mc_3"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0);
+          response.score.should.equal(0);
         });
       });
 
@@ -469,17 +469,17 @@ describe('multiple-choice server logic', function() {
         it('should return score 1, when answer is correct', function() {
           createOutcome(["mc_1"]);
           response.correctness.should.eql('correct');
-          response.score.should.eql(1);
+          response.score.should.equal(1);
         });
         it('should return score 1, when other answer is correct', function() {
           createOutcome(["mc_2"]);
           response.correctness.should.eql('correct');
-          response.score.should.eql(1);
+          response.score.should.equal(1);
         });
         it('should return score 0, when answer is wrong', function() {
           createOutcome(["mc_3"]);
           response.correctness.should.eql('incorrect');
-          response.score.should.eql(0);
+          response.score.should.equal(0);
         });
       });
     });

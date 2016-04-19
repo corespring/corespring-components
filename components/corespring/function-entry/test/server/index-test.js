@@ -59,7 +59,7 @@ describe('function entry server logic', function() {
       feedback: "Correct!"
     };
     response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
+    response.score.should.equal(expected.score);
     response.feedback.should.eql(expected.feedback);
   });
 
@@ -72,7 +72,7 @@ describe('function entry server logic', function() {
       feedback: "Good try but the correct answer is y=2x+4"
     };
     response.correctness.should.eql(expected.correctness);
-    response.score.should.eql(expected.score);
+    response.score.should.equal(expected.score);
     response.feedback.should.eql(expected.feedback);
   });
 });
