@@ -116,7 +116,7 @@ describe('line interaction server logic', function() {
     it('respond incorrect', function() {
       var spy = sinon.spy(serverObj, 'isFunctionEqual');
       var response = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
-      response.correctness.should.eql('incorrect');
+      response.correctness.should.equal('incorrect');
       response.score.should.equal(0);
       // check if it was called with the right options
       spy.getCall(0).args[2].should.eql({
@@ -127,7 +127,7 @@ describe('line interaction server logic', function() {
 
     it('respond correct', function() {
       var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(false, true, true));
-      response.correctness.should.eql('correct');
+      response.correctness.should.equal('correct');
       response.score.should.equal(1);
     });
 

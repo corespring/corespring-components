@@ -12,35 +12,35 @@ describe('text equality logic', function() {
     var s1 = "The little cow";
     var s2 = "The little cow";
 
-    server.isEqual(s1, s2, false, false).should.eql(true);
+    server.isEqual(s1, s2, false, false).should.equal(true);
   });
 
   it('strict comparison should be false if they differ in case', function() {
     var s1 = "The little cow";
     var s2 = "the little COW";
 
-    server.isEqual(s1, s2, false, false).should.eql(false);
+    server.isEqual(s1, s2, false, false).should.equal(false);
   });
 
   it('strict comparison should be false if they differ in whitespace', function() {
     var s1 = "The little cow";
     var s2 = "The    little   cow";
 
-    server.isEqual(s1, s2, false, false).should.eql(false);
+    server.isEqual(s1, s2, false, false).should.equal(false);
   });
 
   it('comparison should be true if they differ in case and ignoreCase is true', function() {
     var s1 = "The little cow";
     var s2 = "the little COW";
 
-    server.isEqual(s1, s2, true, false).should.eql(true);
+    server.isEqual(s1, s2, true, false).should.equal(true);
   });
 
   it('comparison should be true if they differ in whitespace and ignoreWhitespace is true', function() {
     var s1 = "The little cow";
     var s2 = "The    little   cow";
 
-    server.isEqual(s1, s2, false, true).should.eql(true);
+    server.isEqual(s1, s2, false, true).should.equal(true);
   });
 
 });
@@ -90,7 +90,7 @@ describe('text entry server logic', function() {
       correctness: "correct",
       score: 1
     };
-    response.correctness.should.eql(expected.correctness);
+    response.correctness.should.equal(expected.correctness);
     response.score.should.equal(expected.score);
   });
 
@@ -103,7 +103,7 @@ describe('text entry server logic', function() {
       correctness: "correct",
       score: 1
     };
-    response.correctness.should.eql(expected.correctness);
+    response.correctness.should.equal(expected.correctness);
     response.score.should.equal(expected.score);
   });
 
@@ -113,7 +113,7 @@ describe('text entry server logic', function() {
       correctness: "partial",
       score: 0.25
     };
-    response.correctness.should.eql(expected.correctness);
+    response.correctness.should.equal(expected.correctness);
     response.score.should.equal(expected.score);
   });
 
@@ -123,7 +123,7 @@ describe('text entry server logic', function() {
         correctness: "incorrect",
         score: 0
     };
-    response.correctness.should.eql(expected.correctness);
+    response.correctness.should.equal(expected.correctness);
     response.score.should.equal(expected.score);
   });
 
@@ -165,7 +165,7 @@ describe('text entry server logic', function() {
     });
 
     it('should return correct', function() {
-      response.correctness.should.eql(expected.correctness);
+      response.correctness.should.equal(expected.correctness);
     });
 
     it('should return score 1 if the answer is correct', function() {
@@ -173,7 +173,7 @@ describe('text entry server logic', function() {
     });
 
     it('should return correct for feedback correctness', function(){
-      response.feedback.correctness.should.eql('correct');
+      response.feedback.correctness.should.equal('correct');
     });
   });
 
@@ -223,7 +223,7 @@ describe('text entry server logic', function() {
     });
 
     it('should return partial for feedback correctness', function(){
-        response.feedback.correctness.should.eql('partial');
+        response.feedback.correctness.should.equal('partial');
     });
   });
 });
