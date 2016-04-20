@@ -1,5 +1,3 @@
-@import '../../../../../less/common';
-
 @component-width-in-placeholder: 600px;
 @categories-holder-padding: 15px; //make sure the category fits into the see solution panel
 
@@ -128,7 +126,7 @@
           content: '\f111';
         }
         .foreground:after {
-          color: @correct-color;
+          color: @correct-foreground;
           content: @correct-character;
         }
       }
@@ -151,7 +149,7 @@
           content: '\f111';
         }
         .foreground:after {
-          color: @incorrect-color;
+          color: @incorrect-foreground;
           content: @incorrect-character;
         }
       }

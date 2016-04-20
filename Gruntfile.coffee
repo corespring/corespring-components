@@ -207,9 +207,6 @@ module.exports = (grunt) ->
         flatten: false
 
     watch:
-      less:
-        files: ['<%= common.componentPath %>/**/*.less']
-        tasks: ['less:development']
       js:
         files: ['<%= common.componentPath %>/**/*.js']
         tasks: ['jshint:main']
@@ -264,4 +261,4 @@ module.exports = (grunt) ->
   grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
   grunt.registerTask('version-info', writeVersionInfo('components/version-info.json', grunt))
-  grunt.registerTask('build', ['less', 'clean:test', 'version-info', 'clean:production'])
+  grunt.registerTask('build', ['clean:test', 'version-info', 'clean:production'])

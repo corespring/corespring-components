@@ -16,6 +16,14 @@
     {
       "name" : "server-shared",
       "organization" : "corespring"
+    },
+    {
+      "name" : "icon",
+      "organization" : "corespring"
+    },
+    {
+      "name" : "widgets",
+      "organization" : "corespring"
     }
   ],
   "dependencies": {

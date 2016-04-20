@@ -1,4 +1,3 @@
-@import '../../../../../less/common';
 
 @max-width-height-image: 100px;
 
@@ -75,7 +74,7 @@
         &.incorrect:after {
           font-family: 'FontAwesome';
           content: @incorrect-character;
-          color: @incorrect-color;
+          color: @incorrect-background;
           position: absolute;
           right: 2px;
           top: -2px;
@@ -85,7 +84,7 @@
         &.correct:after {
           font-family: 'FontAwesome';
           content: @correct-character;
-          color: @correct-color;
+          color: @correct-background;
           position: absolute;
           right: 2px;
           top: -2px;
@@ -362,7 +361,7 @@
   .button-row {
     margin-bottom: 10px;
     .btn-success {
-      background: @correct-color;
+      background: @correct-background;
     }
   }
 }
@@ -491,7 +490,7 @@
       float: right;
 
       ul {
-        border-color: @correct-color;
+        border-color: @correct-background;
       }
     }
 
@@ -525,7 +524,7 @@
   }
 
   .see-correct-answer .choice.correct {
-      border: 1px solid @correct-color;
+      border: 1px solid @correct-background;
       -moz-box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
       box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
       position: relative;
@@ -533,7 +532,7 @@
       &:after {
         font-family: 'FontAwesome';
         content: '';
-        color: @correct-color;
+        color: @correct-background;
         position: absolute;
         right: 2px;
         top: -2px;
@@ -555,15 +554,15 @@
     }
 
     &.correct {
-      border: 1px solid @correct-color;
-      -moz-box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
-      box-shadow: 0px 0px 6px 0px #3C763D, inset 0px 1px 0px 0px #ECECEC;
+      border: 1px solid @correct-background;
+      -moz-box-shadow: 0px 0px 6px 0px @correct-background, inset 0px 1px 0px 0px #ECECEC;
+      box-shadow: 0px 0px 6px 0px @correct-background, inset 0px 1px 0px 0px #ECECEC;
       position: relative;
 
       &:after {
         font-family: 'FontAwesome';
         content: @correct-character;
-        color: @correct-color;
+        color: @correct-background;
         position: absolute;
         right: 2px;
         top: -2px;
@@ -572,7 +571,7 @@
     }
 
     &.incorrect {
-      border: 1px solid @incorrect-color;
+      border: 1px solid @incorrect-background;
       -moz-box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ECECEC;
       box-shadow: 0px 0px 6px 0px #979797, inset 0px 1px 0px 0px #ECECEC;
       position: relative;
@@ -580,7 +579,7 @@
       &:after {
         font-family: 'FontAwesome';
         content: @incorrect-character;
-        color: @incorrect-color;
+        color: @incorrect-background;
         position: absolute;
         right: 2px;
         top: -2px;
@@ -637,7 +636,7 @@
   .button-row {
     margin-bottom: 10px;
     .btn-success {
-      background: @correct-color;
+      background: @correct-background;
     }
   }
 

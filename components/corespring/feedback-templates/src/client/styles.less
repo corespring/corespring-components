@@ -1,5 +1,3 @@
-@import '../../../../../less/common';
-
 
 .feedback {
   &.panel {
@@ -20,15 +18,15 @@
 
 
     &.correct {
-      .color-panel(@correct-color);
+      .color-panel(@correct-background);
     }
 
     &.incorrect {
-      .color-panel(@incorrect-color);
+      .color-panel(@incorrect-background);
     }
 
     &.partial {
-      .color-panel(@partial-color);
+      .color-panel(@partially-correct-background);
     }
 
     &.warning {
@@ -93,15 +91,15 @@
 
 
     &.correct {
-      .color-panel(@correct-color);
+      .color-panel(@correct-background);
     }
 
     &.incorrect {
-      .color-panel(@incorrect-color);
+      .color-panel(@incorrect-background);
     }
 
     &.partial {
-      .color-panel(@partial-color);
+      .color-panel(@partially-correct-background);
     }
   }
 }

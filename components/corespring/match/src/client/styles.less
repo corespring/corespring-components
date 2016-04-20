@@ -1,4 +1,3 @@
-@import '../../../../../less/common';
 
 .scale(@size) {
   -webkit-transform: scale(@size, @size);
@@ -222,13 +221,13 @@
 
   .feedback {
     &.all_correct {
-      .color-panel(@correct-color);
+      .color-panel(@correct-background);
     }
     &.all_incorrect {
-      .color-panel(@incorrect-color);
+      .color-panel(@incorrect-background);
     }
     &.some_correct {
-      .color-panel(@partial-color);
+      .color-panel(@partially-correct-background);
     }
     &.warning {
       .panel-heading {
@@ -322,7 +321,7 @@
   &.correct {
 
     .background {
-      color: @correct-color;
+      color: @correct-background;
     }
 
     .foreground {
@@ -332,7 +331,7 @@
 
   &.incorrect {
     .background {
-      color: @incorrect-color;
+      color: @incorrect-background;
     }
 
     .foreground {
