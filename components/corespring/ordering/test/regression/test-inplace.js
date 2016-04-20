@@ -13,43 +13,29 @@ describe('inplace ordering (inpor)', function() {
   };
 
   beforeEach(function(done) {
-    browser.options.extendBrowser(browser);
-
-    browser
-      .loadTest(componentName, itemJsonFilename)
-      .call(done);
+    browser.loadTest(componentName, itemJsonFilename);
+    browser.call(done);
   });
-  
+
 
   it('submitting without interaction results in warning feedback (inpor-01)', function(done) {
-    browser
-      .submitItem()
-      .waitFor('.feedback.warning')
-      .call(done);
+    browser.submitItem();
+    browser.waitForVisible('.feedback.warning');
+    browser.call(done);
   });
 
   it('MathJax Renders (inpor-02)', function(done) {
-    browser
-      .waitForVisible('.choice .MathJax_Preview')
-      .getHTML(divContaining('Third'), function(err, html) {
-        html.should.match(/MathJax_Preview/);
-      })
-      .call(done);
+    browser.waitForExist('.choice .MathJax_Preview');
+    browser.getHTML(divContaining('Third')).should.match(/MathJax_Preview/);
+    browser.call(done);
   });
 
   it('MathJax Renders after Reset (inpor-03)', function(done) {
-    browser
-      .submitItem()
-      .resetItem()
-      .pause(500)
-      .waitForVisible('.choice .MathJax_Preview')
-      .getHTML(divContaining('Third'), function(err, html) {
-        html.should.match(/MathJax_Preview/);
-      })
-      .call(done);
+    browser.submitItem();
+    browser.resetItem();
+    browser.pause(500);
+    browser.waitForExist('.choice .MathJax_Preview');
+    browser.getHTML(divContaining('Third')).should.match(/MathJax_Preview/);
+    browser.call(done);
   });
-
-
-
-
 });

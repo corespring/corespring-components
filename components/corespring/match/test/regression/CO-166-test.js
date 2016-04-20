@@ -28,51 +28,30 @@ describe('match', function() {
   }
 
   beforeEach(function(done) {
-    browser.options.extendBrowser(browser);
-
-    browser.isExistingWithWait = function(selector,callback){
-      return this.waitForExist(selector).isExisting(selector,callback);
-    };
-
-    browser
-      .loadTest(componentName, itemJsonFilename)
-      .call(done);
+    browser.loadTest(componentName, itemJsonFilename);
+    browser.call(done);
   });
 
   it('does evaluate answers correctly', function(done) {
-    browser
-      .waitAndClick(answerInput('Row1'))
-      .waitAndClick(answerInput('Row2'))
-      .waitAndClick(answerInput('Row3'))
-      .submitItem()
-      .isExistingWithWait(answerEvaluated('Row1', 'correct'), function(err,res){
-        [err,res].should.eql([undefined,true], "Row1");
-      })
-      .isExistingWithWait(answerEvaluated('Row2', 'incorrect'), function(err,res){
-        [err,res].should.eql([undefined,true], "Row2");
-      })
-      .isExistingWithWait(answerEvaluated('Row3', 'correct'), function(err,res){
-        [err,res].should.eql([undefined,true], "Row3");
-      })
-      .call(done);
+    browser.waitAndClick(answerInput('Row1'));
+    browser.waitAndClick(answerInput('Row2'));
+    browser.waitAndClick(answerInput('Row3')),
+    browser.submitItem();
+    browser.waitForVisible(answerEvaluated('Row1', 'correct'));
+    browser.waitForVisible(answerEvaluated('Row2', 'incorrect'));
+    browser.waitForVisible(answerEvaluated('Row3', 'correct'));
+    browser.call(done);
   });
 
   it('does show solution correctly', function(done) {
-    browser
-      .waitAndClick(answerInput('Row1'))
-      .submitItem()
-      .waitFor(solutionPanelHeader())
-      .waitAndClick(solutionPanelHeader())
-      .isExistingWithWait(correctAnswer('Row1'), function(err,res){
-        [err,res].should.eql([undefined,true], "Row1");
-      })
-      .isExistingWithWait(correctAnswer('Row2'), function(err,res){
-        [err,res].should.eql([undefined,true], "Row2");
-      })
-      .isExistingWithWait(correctAnswer('Row3'), function(err,res){
-        [err,res].should.eql([undefined,true], "Row3");
-      })
-      .call(done);
+    browser.waitAndClick(answerInput('Row1'));
+    browser.submitItem();
+    browser.waitForVisible(solutionPanelHeader());
+    browser.waitAndClick(solutionPanelHeader());
+    browser.waitForVisible(correctAnswer('Row1'));
+    browser.waitForVisible(correctAnswer('Row2'));
+    browser.waitForVisible(correctAnswer('Row3'));
+    browser.call(done);
   });
 
 });

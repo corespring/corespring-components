@@ -10,7 +10,7 @@ describe('multiple-choice', function() {
 
   var componentName = 'multiple-choice';
   var itemJsonFilename = 'one.json';
-  var itemJson = browser.options.getItemJson('multiple-choice', itemJsonFilename);
+  var itemJson = browser.getItemJson('multiple-choice', itemJsonFilename);
 
   function findChoice(id){
     return _.find(itemJson.item.components['1'].model.choices, function(choice) {
@@ -68,21 +68,21 @@ describe('multiple-choice', function() {
   it('does not display incorrect feedback when correct answer selected', function(done) {
     browser.selectAnswer(correctAnswer);
     browser.submitItem();
-    browser.isVisible('.selected.incorrect .choice-holder', browser.options.defaultTimeout, true);
+    browser.waitForVisible('.selected.incorrect .choice-holder', browser.options.defaultTimeout, true);
     browser.call(done);
   });
 
   it('does display correct feedback when correct answer selected', function(done) {
     browser.selectAnswer(correctAnswer);
     browser.submitItem();
-    browser.isVisible('.selected.correct .choice-holder', browser.options.defaultTimeout, true);
+    browser.waitForVisible('.selected.correct .choice-holder', browser.options.defaultTimeout, true);
     browser.call(done);
   });
 
   it('displays incorrect feedback when incorrect answer selected', function(done) {
     browser.selectAnswer(incorrectAnswer);
     browser.submitItem();
-    browser.isVisible('.selected.incorrect .choice-holder');
+    browser.waitForVisible('.selected.incorrect .choice-holder');
     browser.call(done);
   });
 
@@ -90,7 +90,7 @@ describe('multiple-choice', function() {
     browser.submitItem();
     browser.waitForVisible('.answer-holder .alert-danger');
     var message = browser.getText('.answer-holder .alert-danger');
-    message.should.eql('You did not enter a response.');
+    message.should.equal('You did not enter a response.');
     browser.call(done);
   });
 

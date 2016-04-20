@@ -13,28 +13,20 @@ describe('video component', function() {
     var itemJsonFilename = 'youtube.json';
 
     beforeEach(function(done) {
-      browser.options.extendBrowser(browser);
-
-      browser
-        .loadTest(componentName, itemJsonFilename)
-        .call(done);
+      browser.loadTest(componentName, itemJsonFilename);
+      browser.call(done);
     });
 
     it('video is visible', function(done) {
-      browser
-        .isVisible('.cs-video', function(err, result) {
-          expect(result).to.equal(true);
-        })
-        .call(done);
+      browser.waitForVisible('.cs-video');
+      browser.call(done);
     });
 
     it('video is the proper size', function(done) {
-      browser
-        .getElementSize('.cs-video-player-frame', function(err, result) {
-          expect(result.width).to.equal(320);
-          expect(result.height).to.equal(240);
-        })
-        .call(done);
+      var size = browser.getElementSize('.cs-video-player-frame');
+      expect(size.width).to.equal(320);
+      expect(size.height).to.equal(240);
+      browser.call(done);
     });
   });
 
@@ -42,28 +34,20 @@ describe('video component', function() {
     var itemJsonFilename = 'vimeo.json';
 
     beforeEach(function(done) {
-      browser.options.extendBrowser(browser);
-
-      browser
-        .loadTest(componentName, itemJsonFilename)
-        .call(done);
+      browser.loadTest(componentName, itemJsonFilename);
+      browser.call(done);
     });
 
     it('video is visible', function(done) {
-      browser
-        .isVisible('.cs-video', function(err, result) {
-          expect(result).to.equal(true);
-        })
-        .call(done);
+      browser.waitForVisible('.cs-video');
+      browser.call(done);
     });
 
     it('video is the proper size', function(done) {
-      browser
-        .getElementSize('.cs-video-player-frame', function(err, result) {
-          expect(result.width).to.equal(480);
-          expect(result.height).to.equal(270);
-        })
-        .call(done);
+      var size = browser.getElementSize('.cs-video-player-frame');
+      expect(size.width).to.equal(480);
+      expect(size.height).to.equal(270);
+      browser.call(done);
     });
   });
 });
