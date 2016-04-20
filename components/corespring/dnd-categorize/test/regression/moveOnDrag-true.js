@@ -49,18 +49,37 @@ describe('dnd-categorize when moveOnDrag = true (dndct)', function() {
   });
 
   describe('move choice to category', function() {
+    var locations;
+
+    function getLocations(){
+      browser.waitForVisible('.choices-container');
+      var containerLocation = browser.getLocation('.choices-container');
+      var locations = {};
+      for(var i = 1; i <= 4; i++){
+        var id = ".choices-container .choice_" + i;
+        browser.waitForExist(id); //choice_2 is not visible, but still there after the drag
+        locations[id] = browser.getLocation(id);
+        locations[id].id = id;
+        locations[id].x -= containerLocation.x;
+        locations[id].y -= containerLocation.y;
+      }
+      return locations;
+    }
+
     beforeEach(function(done) {
+      locations = getLocations();
       browser.dragAndDropWithOffset('.choices-container .choice_2', '.cat_2');
       browser.call(done);
     });
 
-    it('should render the empty space as placed (dndct-03)', function(done) {
-      browser.waitForVisible('.choices-container .choice_2.placed');
+    it('should render the choice as categorized (dndct-03)', function(done) {
+      browser.waitForVisible('.cat_2 .choice_2');
       browser.call(done);
     });
 
-    it('should render the choice as categorized (dndct-04)', function(done) {
-      browser.waitForVisible('.cat_2 .choice_2');
+    it('should not move the choices in the choices container (dndct-04)', function(done) {
+      var newLocations = getLocations();
+      expect(newLocations).toEqual(locations);
       browser.call(done);
     });
 
