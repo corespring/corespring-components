@@ -35,13 +35,13 @@ var defaultSettings = helper.settings(true, true, false);
 
 describe('correctness logic', function() {
   it('when order matters', function() {
-    server.isCorrect(['0,1', '12,4'], ['12,4', '0,1'], true).should.eql(false);
-    server.isCorrect(['0,1', '12,4'], ['0,1', '12,4'], true).should.eql(true);
+    server.isCorrect(['0,1', '12,4'], ['12,4', '0,1'], true).should.equal(false);
+    server.isCorrect(['0,1', '12,4'], ['0,1', '12,4'], true).should.equal(true);
   });
 
   it('when order doesnt matter', function() {
-    server.isCorrect(['0,1', '12,4'], ['12,4', '0,1'], false).should.eql(true);
-    server.isCorrect(['0,9', '12,4'], ['0,1', '12,4'], true).should.eql(false);
+    server.isCorrect(['0,1', '12,4'], ['12,4', '0,1'], false).should.equal(true);
+    server.isCorrect(['0,9', '12,4'], ['0,1', '12,4'], true).should.equal(false);
   });
 });
 
@@ -60,19 +60,19 @@ describe('server logic', function() {
 
   it('should respond with correct and score 1 if the answer is correct', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
-    response.correctness.should.eql("correct");
+    response.correctness.should.equal("correct");
     response.score.should.equal(1);
   });
 
   it('should respond with incorrect and score 0 if the answer is incorrect', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["1,2", "3,1"], defaultSettings);
-    response.correctness.should.eql("incorrect");
+    response.correctness.should.equal("incorrect");
     response.score.should.equal(0);
   });
 
   it('should respond with partial and score 0 if the answer is partially correct, but partial scoring is disabled', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "3,1"], defaultSettings);
-    response.correctness.should.eql("partial");
+    response.correctness.should.equal("partial");
     response.score.should.equal(0);
   });
 
@@ -84,7 +84,7 @@ describe('server logic', function() {
       scorePercentage: 50
     }];
     var response = server.createOutcome(_.cloneDeep(partialAllowedComponent), ["0,0", "3,1"], defaultSettings);
-    response.correctness.should.eql("partial");
+    response.correctness.should.equal("partial");
     response.score.should.equal(0.5);
   });
 
@@ -96,30 +96,30 @@ describe('server logic', function() {
     ];
 
     var response = server.createOutcome(clone, ["1,2", "3,1"], defaultSettings);
-    response.correctness.should.eql("incorrect");
+    response.correctness.should.equal("incorrect");
     response.score.should.equal(0);
     
     response = server.createOutcome(clone, ["0,0", "3,1"], defaultSettings);
-    response.correctness.should.eql("partial");
+    response.correctness.should.equal("partial");
     response.score.should.equal(0.5);
 
     response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
-    response.correctness.should.eql("correct");
+    response.correctness.should.equal("correct");
     response.score.should.equal(1);
 
     // score will be given, even when the user marks extra points
     response = server.createOutcome(clone, ["0,0", "1,1", "2,2"], defaultSettings);
-    response.correctness.should.eql("correct");
+    response.correctness.should.equal("correct");
     response.score.should.equal(1);
   });
 
   it('respects order matters', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["0,0", "1,1"], defaultSettings);
-    response.correctness.should.eql("correct");
+    response.correctness.should.equal("correct");
     response.score.should.equal(1);
 
     response = server.createOutcome(_.cloneDeep(component), ["1,1", "0,0"], defaultSettings);
-    response.correctness.should.eql("incorrect");
+    response.correctness.should.equal("incorrect");
     response.score.should.equal(0);
   });
 
@@ -129,29 +129,29 @@ describe('server logic', function() {
     clone.model.config.orderMatters = false;
 
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
-    response.correctness.should.eql("correct");
+    response.correctness.should.equal("correct");
     response.score.should.equal(1);
 
     response = server.createOutcome(clone, ["1,1", "0,0"], defaultSettings);
-    response.correctness.should.eql("correct");
+    response.correctness.should.equal("correct");
     response.score.should.equal(1);
   });
 
   it('gives default feedback if feedback type is default', function() {
     var clone = _.cloneDeep(component);
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
-    response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
+    response.feedback.should.equal(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
 
     response = server.createOutcome(clone, ["2,2", "2,1"], defaultSettings);
-    response.feedback.should.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
+    response.feedback.should.equal(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
 
     response = server.createOutcome(clone, ["0,0", "2,2"], defaultSettings);
-    response.feedback.should.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
+    response.feedback.should.equal(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
 
     clone.allowPartialScoring = true;
 
     response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
-    response.feedback.should.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
+    response.feedback.should.equal(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
   });
 
   it('gives no feedback if feedback type is none', function() {
@@ -184,18 +184,18 @@ describe('server logic', function() {
     clone.feedback.partialFeedback = "CustomPartial";
 
     var response = server.createOutcome(clone, ["0,0", "1,1"], defaultSettings);
-    response.feedback.should.eql("CustomCorrect");
+    response.feedback.should.equal("CustomCorrect");
 
     response = server.createOutcome(clone, ["2,2", "2,1"], defaultSettings);
-    response.feedback.should.eql("CustomIncorrect");
+    response.feedback.should.equal("CustomIncorrect");
 
     response = server.createOutcome(clone, ["2,2", "1,1"], defaultSettings);
-    response.feedback.should.eql("CustomPartial");
+    response.feedback.should.equal("CustomPartial");
 
     clone.allowPartialScoring = true;
 
     response = server.createOutcome(clone, ["0,0", "2,2"], defaultSettings);
-    response.feedback.should.eql("CustomPartial");
+    response.feedback.should.equal("CustomPartial");
   });
 
 });

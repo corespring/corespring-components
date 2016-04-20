@@ -197,6 +197,7 @@ describe('corespring:multiple-line:server', function() {
         score: 0,
         feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK
       });
+      outcome.score.should.equal(0);
     });
 
     it('should process a partially empty answer, but empty lines are marked as incorrect', function() {
@@ -223,34 +224,35 @@ describe('corespring:multiple-line:server', function() {
         ],
         feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK
       });
+      outcome.score.should.equal(0);
     });
 
     it('should respond with correct and score 1 if the answer is correct', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), correctAnswer, defaultSettings);
-      outcome.correctness.should.eql("correct");
+      outcome.correctness.should.equal("correct");
       outcome.score.should.equal(1);
-      outcome.correctClass.should.eql("correct");
+      outcome.correctClass.should.equal("correct");
     });
 
     it('should respond with incorrect and score 0 if the answer is incorrect', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(true, true, true));
-      outcome.correctness.should.eql("incorrect");
+      outcome.correctness.should.equal("incorrect");
       outcome.score.should.equal(0);
-      outcome.correctClass.should.eql("incorrect");
+      outcome.correctClass.should.equal("incorrect");
     });
 
     it('should respond with incorrect and score 0 if the answer is in incorrect order', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), unorderedAnswer, helper.settings(true, true, true));
-      outcome.correctness.should.eql("incorrect");
+      outcome.correctness.should.equal("incorrect");
       outcome.score.should.equal(0);
-      outcome.correctClass.should.eql("incorrect");
+      outcome.correctClass.should.equal("incorrect");
     });
 
     it('should respond with partial and score 0 if the answer is partially correct, but partial scoring is disabled', function() {
       var outcome = server.createOutcome(_.cloneDeep(component), partiallyCorrectAnswer, helper.settings(true, true, true));
-      outcome.correctness.should.eql("partial");
+      outcome.correctness.should.equal("partial");
       outcome.score.should.equal(0);
-      outcome.correctClass.should.eql("partial");
+      outcome.correctClass.should.equal("partial");
     });
 
     it('should respond with partial and score 0.5 if the answer is partially correct and partial scoring is enabled', function() {
@@ -261,9 +263,9 @@ describe('corespring:multiple-line:server', function() {
         scorePercentage: 50
       }];
       var outcome = server.createOutcome(_.cloneDeep(partialAllowedComponent), partiallyCorrectAnswer, helper.settings(true, true, true));
-      outcome.correctness.should.eql("partial");
+      outcome.correctness.should.equal("partial");
       outcome.score.should.equal(0.5);
-      outcome.correctClass.should.eql("partial");
+      outcome.correctClass.should.equal("partial");
     });
 
     it('should call isFunctionEqual with the right parameters when creating an outcome', function() {
@@ -281,18 +283,18 @@ describe('corespring:multiple-line:server', function() {
     it('gives default feedback if feedback type is default', function() {
       var clone = _.cloneDeep(component);
       var outcome = server.createOutcome(clone, correctAnswer, defaultSettings);
-      outcome.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
+      outcome.feedback.should.equal(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
 
       outcome = server.createOutcome(clone, incorrectAnswer, defaultSettings);
-      outcome.feedback.should.eql(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
+      outcome.feedback.should.equal(fbu.keys.DEFAULT_INCORRECT_FEEDBACK);
 
       outcome = server.createOutcome(clone, partiallyCorrectAnswer, defaultSettings);
-      outcome.feedback.should.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
+      outcome.feedback.should.equal(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
 
       clone.allowPartialScoring = true;
 
       outcome = server.createOutcome(clone, partiallyCorrectAnswer, defaultSettings);
-      outcome.feedback.should.eql(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
+      outcome.feedback.should.equal(fbu.keys.DEFAULT_PARTIAL_FEEDBACK);
     });
 
     it('gives no feedback if feedback type is none', function() {
@@ -328,18 +330,18 @@ describe('corespring:multiple-line:server', function() {
       clone.feedback.partialFeedback = "CustomPartial";
 
       var outcome = server.createOutcome(clone, correctAnswer, defaultSettings);
-      outcome.feedback.should.eql("CustomCorrect");
+      outcome.feedback.should.equal("CustomCorrect");
 
       outcome = server.createOutcome(clone, incorrectAnswer, defaultSettings);
-      outcome.feedback.should.eql("CustomIncorrect");
+      outcome.feedback.should.equal("CustomIncorrect");
 
       outcome = server.createOutcome(clone, partiallyCorrectAnswer, defaultSettings);
-      outcome.feedback.should.eql("CustomPartial");
+      outcome.feedback.should.equal("CustomPartial");
 
       clone.allowPartialScoring = true;
 
       outcome = server.createOutcome(clone, partiallyCorrectAnswer, defaultSettings);
-      outcome.feedback.should.eql("CustomPartial");
+      outcome.feedback.should.equal("CustomPartial");
     });
 
   });
@@ -417,7 +419,7 @@ describe('corespring:multiple-line:server', function() {
       );
     });
 
-    it('should respond with corerct for every correct line no matter if partial scoring is disabled or enabled', function() {
+    it('should respond with correct for every correct line no matter if partial scoring is disabled or enabled', function() {
       var clone = _.cloneDeep(component);
       var outcome = server.createOutcome(clone, partiallyCorrectAnswer, helper.settings(true, true, true));
       outcome.correctResponse.should.eql(

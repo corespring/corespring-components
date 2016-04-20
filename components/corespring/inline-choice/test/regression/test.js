@@ -60,10 +60,10 @@ describe('inline-choice', function() {
       .submitItem()
       .waitFor('.result-icon')
       .getPseudoElementCss('.warning .result-icon', ':after', 'color', function(err, result){
-        result.value.should.eql('rgb(153, 153, 153)');
+        result.value.should.equal('rgb(153, 153, 153)');
       })
       .getPseudoElementCss('.incorrect .result-icon', ':after', 'color', function(err, result){
-        result.value.should.eql('rgb(236, 151, 31)');
+        result.value.should.equal('rgb(236, 151, 31)');
       })
       .call(done);
   });

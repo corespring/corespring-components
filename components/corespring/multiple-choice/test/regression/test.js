@@ -10,9 +10,9 @@ describe('multiple-choice', function() {
 
   var componentName = 'multiple-choice';
   var itemJsonFilename = 'one.json';
-  var itemJson = browser.getItemJson('multiple-choice', itemJsonFilename);
+  var itemJson = browser.options.getItemJson('multiple-choice', itemJsonFilename);
 
-  function findChoice(id) {
+  function findChoice(id){
     return _.find(itemJson.item.components['1'].model.choices, function(choice) {
       return choice.value === id;
     });

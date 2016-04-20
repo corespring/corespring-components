@@ -31,9 +31,9 @@ describe('random point generator', function() {
         return !_.contains(domain.exclude, number);
       });
 
-      result.length.should.eql(50);
-      allNumbersAreInRanges.should.eql(true);
-      noNumbersIsFromExcluded.should.eql(true);
+      result.length.should.equal(50);
+      allNumbersAreInRanges.should.equal(true);
+      noNumbersIsFromExcluded.should.equal(true);
     }
   });
 
@@ -42,60 +42,60 @@ describe('random point generator', function() {
 describe('expressionize', function() {
   it('accepts null', function(){
     var result = server.expressionize(null, 'x');
-    result.should.eql('');
+    result.should.equal('');
   });
 
   it('accepts undefined', function(){
     var result = server.expressionize(undefined, 'x');
-    result.should.eql('');
+    result.should.equal('');
   });
 
   it('trims spaces', function() {
     var eq = "  12x +   3   ";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("12*(x)+3");
+    result.should.equal("12*(x)+3");
   });
 
   it('inserts * after 12', function() {
     var eq = "12x+3";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("12*(x)+3");
+    result.should.equal("12*(x)+3");
   });
 
   it('inserts * before 12', function() {
     var eq = "x12+3";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("(x)*12+3");
+    result.should.equal("(x)*12+3");
   });
 
   it('inserts * after 5 and before 12', function() {
     var eq = "5x12+3";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("5*(x)*12+3");
+    result.should.equal("5*(x)*12+3");
   });
 
   it('inserts * after (10-5)', function() {
     var eq = "(10-5)x+(32/4)";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("(10-5)*(x)+(32/4)");
+    result.should.equal("(10-5)*(x)+(32/4)");
   });
 
   it('inserts * after (x-5)', function() {
     var eq = "(x-5)(x+5)";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("((x)-5)*((x)+5)");
+    result.should.equal("((x)-5)*((x)+5)");
   });
 
   it('inserts * after 3', function() {
     var eq = "3(2+1)";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("3*(2+1)");
+    result.should.equal("3*(2+1)");
   });
 
   it('inserts * before 3', function() {
     var eq = "(2+1)3";
     var result = server.expressionize(eq, 'x');
-    result.should.eql("(2+1)*3");
+    result.should.equal("(2+1)*3");
   });
 });
 
@@ -104,49 +104,49 @@ describe('linear function equal logic', function() {
   it('identical functions are equal', function() {
     var eq1 = "3x+5";
     var eq2 = "3x+5";
-    server.isFunctionEqual(eq1, eq2).should.eql(true);
+    server.isFunctionEqual(eq1, eq2).should.equal(true);
   });
 
   it('different functions are not equal', function() {
     var eq1 = "3x+5";
     var eq2 = "3x+6";
-    server.isFunctionEqual(eq1, eq2).should.eql(false);
+    server.isFunctionEqual(eq1, eq2).should.equal(false);
   });
 
   it('same slope (fraction)', function() {
     var eq1 = "3x+5";
     var eq2 = "(6/2)x+5";
-    server.isFunctionEqual(eq1, eq2).should.eql(true);
+    server.isFunctionEqual(eq1, eq2).should.equal(true);
   });
 
   it('same slope (multiplication)', function() {
     var eq1 = "3x+5";
     var eq2 = "1.5*2x+5";
-    server.isFunctionEqual(eq1, eq2).should.eql(true);
+    server.isFunctionEqual(eq1, eq2).should.equal(true);
   });
 
   it('same slope (complex expression)', function() {
     var eq1 = "3x+5";
     var eq2 = "(15-5-7)x+5";
-    server.isFunctionEqual(eq1, eq2).should.eql(true);
+    server.isFunctionEqual(eq1, eq2).should.equal(true);
   });
 
   it('same y-intercept (fraction)', function() {
     var eq1 = "3x+5";
     var eq2 = "3x+(10/2)";
-    server.isFunctionEqual(eq1, eq2).should.eql(true);
+    server.isFunctionEqual(eq1, eq2).should.equal(true);
   });
 
   it('same y-intercept (multiplication)', function() {
     var eq1 = "3x+5";
     var eq2 = "3x+2.5*2";
-    server.isFunctionEqual(eq1, eq2).should.eql(true);
+    server.isFunctionEqual(eq1, eq2).should.equal(true);
   });
 
   it('same y-intercept (complex expression)', function() {
     var eq1 = "3x+5";
     var eq2 = "3x+(2+12/4)";
-    server.isFunctionEqual(eq1, eq2).should.eql(true);
+    server.isFunctionEqual(eq1, eq2).should.equal(true);
   });
 
   it('different variable name than x', function() {
@@ -154,7 +154,7 @@ describe('linear function equal logic', function() {
     var eq2 = "3g+(2+12/4)";
     server.isFunctionEqual(eq1, eq2, {
       variable: 'g'
-    }).should.eql(true);
+    }).should.equal(true);
   });
 
   it('precision is up to 10^-sigfigs', function() {
@@ -162,16 +162,16 @@ describe('linear function equal logic', function() {
     var eq2 = "3x+5.0005";
     server.isFunctionEqual(eq1, eq2, {
       sigfigs: 3
-    }).should.eql(true);
+    }).should.equal(true);
     server.isFunctionEqual(eq1, eq2, {
       sigfigs: 4
-    }).should.eql(false);
+    }).should.equal(false);
   });
 
   it('invalid equation should evaluate to incorrect', function() {
     var eq1 = "3x+5";
     var eq2 = "something";
-    server.isFunctionEqual(eq1, eq2).should.eql(false);
+    server.isFunctionEqual(eq1, eq2).should.equal(false);
   });
 });
 
@@ -180,85 +180,85 @@ describe('equation correctness logic', function() {
   it('identical equation is correct', function() {
     var correctEq = "y=3x+5";
     var testEq = "y=3x+5";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('omitted left side is correct', function() {
     var correctEq = "3x+5";
     var testEq = "3x+5";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('omitted left side of test eq is correct', function() {
     var correctEq = "y=3x+5";
     var testEq = "3x+5";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('reshuffled equation is correct', function() {
     var correctEq = "y=3x+5";
     var testEq = "y-5=3x";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('reshuffled equation is correct, case 2', function() {
     var correctEq = "y=3x+5";
     var testEq = "3x=y-5";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('decimal slope in fraction form is correct', function() {
     var correctEq = "y=0.5x+5";
     var testEq = "y=(1/2)x+5";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('fraction slope in decimal form is correct', function() {
     var correctEq = "y=(1/2)x+5";
     var testEq = "y=0.5x+5";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('equal equation in different form is correct', function() {
     var correctEq = "y=3x+5";
     var testEq = "y=(1+2)x+2+3";
-    server.isEquationCorrect(correctEq, testEq).should.eql(true);
+    server.isEquationCorrect(correctEq, testEq).should.equal(true);
   });
 
   it('different coefficient is incorrect', function() {
     var correctEq = "y=3x+5";
     var testEq = "y=2x+5";
-    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+    server.isEquationCorrect(correctEq, testEq).should.equal(false);
   });
 
   it('different addition is incorrect', function() {
     var correctEq = "y=3x+5";
     var testEq = "y=3x+4";
-    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+    server.isEquationCorrect(correctEq, testEq).should.equal(false);
   });
 
   it('inverse equation is incorrect', function() {
     var correctEq = "y=3x+5";
     var testEq = "y=-(3x+5)";
-    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+    server.isEquationCorrect(correctEq, testEq).should.equal(false);
   });
 
   it('simple letter equation is incorrect (CO-124)', function() {
     var correctEq = "y=3x+5";
     var testEq = "y";
-    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+    server.isEquationCorrect(correctEq, testEq).should.equal(false);
   });
 
   it('simple identity equation is incorrect (CO-124)', function() {
     var correctEq = "y=3x+5";
     var testEq = "y=y";
-    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+    server.isEquationCorrect(correctEq, testEq).should.equal(false);
   });
 
   it('simple identity equation with x is incorrect (CO-124)', function() {
     var correctEq = "y=3x+5";
     var testEq = "y-x=y-x";
-    server.isEquationCorrect(correctEq, testEq).should.eql(false);
+    server.isEquationCorrect(correctEq, testEq).should.equal(false);
   });
 
 });

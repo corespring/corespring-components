@@ -212,6 +212,7 @@ describe('match server logic', function() {
       feedback: fbu.defaults.warning,
       warningClass: 'answer-expected'
     });
+    outcome.score.should.equal(0);
   });
 
   it('should return warning if the answer is undefined', function() {
@@ -229,6 +230,7 @@ describe('match server logic', function() {
       feedback: fbu.defaults.warning,
       warningClass: 'answer-expected'
     });
+    outcome.score.should.equal(0);
 
   });
 
@@ -243,7 +245,7 @@ describe('match server logic', function() {
         noAnswer("row-4")];
 
       var response = server.createOutcome(_.cloneDeep(component), answers, helper.settings(false, true, true));
-      response.correctness.should.eql("incorrect");
+      response.correctness.should.equal("incorrect");
       response.score.should.equal(0);
     });
 
@@ -264,6 +266,7 @@ describe('match server logic', function() {
       };
 
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to a correct answer (feedback - user - correct)', function() {
@@ -283,6 +286,7 @@ describe('match server logic', function() {
       };
 
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -310,6 +314,7 @@ describe('match server logic', function() {
         warningClass: 'answer-expected'
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to incorrect result (feedback + user + correct) and user chose incorrectly', function() {
@@ -336,6 +341,7 @@ describe('match server logic', function() {
         feedback: componentTemplate.feedback.incorrectFeedback
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to incorrect result (feedback - user + correct) and user chose incorrectly', function() {
@@ -362,6 +368,7 @@ describe('match server logic', function() {
         feedback:componentTemplate.feedback.incorrectFeedback
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to partially correct result (feedback + user + correct)', function() {
@@ -389,6 +396,7 @@ describe('match server logic', function() {
         feedback:"Almost!"
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -466,6 +474,7 @@ describe('match server logic', function() {
         feedback:"Almost!"
       };
       response.should.eql(expected);
+      response.score.should.equal(expected.score);
     });
 
   });

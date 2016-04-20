@@ -48,6 +48,7 @@ describe('function entry server logic', function() {
       outcome: ['incorrectEquation'],
       comments: undefined 
     });
+    outcome.score.should.equal(0);
   });
 
   it('should respond with correct and score 1 if the answer is correct', function() {
@@ -58,7 +59,7 @@ describe('function entry server logic', function() {
       score: 1,
       feedback: "Correct!"
     };
-    response.correctness.should.eql(expected.correctness);
+    response.correctness.should.equal(expected.correctness);
     response.score.should.equal(expected.score);
     response.feedback.should.eql(expected.feedback);
   });
@@ -71,7 +72,7 @@ describe('function entry server logic', function() {
       score: 0,
       feedback: "Good try but the correct answer is y=2x+4"
     };
-    response.correctness.should.eql(expected.correctness);
+    response.correctness.should.equal(expected.correctness);
     response.score.should.equal(expected.score);
     response.feedback.should.eql(expected.feedback);
   });

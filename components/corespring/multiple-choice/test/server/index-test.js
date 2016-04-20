@@ -98,6 +98,7 @@ describe('multiple-choice server logic', function() {
         message: fbu.keys.DEFAULT_WARNING_FEEDBACK
       }
     });
+    outcome.score.should.equal(0);
   });
 
 

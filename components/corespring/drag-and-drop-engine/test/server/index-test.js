@@ -24,6 +24,7 @@ describe('drag-and-drop-engine', function() {
         correctResponse: null, 
         answer: null, 
         feedback: fbu.keys.DEFAULT_INCORRECT_FEEDBACK});
+    outcome.score.should.equal(0);
   });
 
 
@@ -37,6 +38,7 @@ describe('drag-and-drop-engine', function() {
         }
       }, null, {showFeedback: true}, {});
     outcome.should.eql({correctness: 'incorrect', score: 0, correctResponse: null, answer: null, feedback: 'custom no'});
+    outcome.score.should.equal(0);
   });
 
 });

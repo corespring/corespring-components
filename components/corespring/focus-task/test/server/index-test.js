@@ -147,9 +147,9 @@ describe('focus-task server logic', function() {
   });
 
   describe('is correct', function() {
-    server.isCorrect(["1"], ["1"]).should.eql(true);
-    server.isCorrect(["1", "2"], ["1"]).should.eql(false);
-    server.isCorrect(["1"], ["1", "2"]).should.eql(false);
+    server.isCorrect(["1"], ["1"]).should.equal(true);
+    server.isCorrect(["1", "2"], ["1"]).should.equal(false);
+    server.isCorrect(["1"], ["1", "2"]).should.equal(false);
   });
 
   describe('createOutcome', function() {

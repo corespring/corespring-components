@@ -76,6 +76,7 @@ describe('number line', function() {
           "message": "You did not enter a response."
         }
       });
+      outcome.score.should.equal(0);
     });
   });
 
@@ -102,7 +103,7 @@ describe('number line', function() {
 
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
 
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should return incorrect outcome if domainPosition of line element is incorrect', function() {
@@ -119,7 +120,7 @@ describe('number line', function() {
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should return incorrect outcome if size of line element is incorrect', function() {
@@ -136,7 +137,7 @@ describe('number line', function() {
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should return incorrect outcome if point types of line element is incorrect', function() {
@@ -154,7 +155,7 @@ describe('number line', function() {
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
 
       //Right Point
       answer = [
@@ -163,7 +164,7 @@ describe('number line', function() {
         {"type": "ray", "pointType": "full", "domainPosition": 4, "direction": "negative"}
       ];
       outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should return incorrect outcome if element type is missing', function() {
@@ -180,7 +181,7 @@ describe('number line', function() {
         {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should return incorrect outcome if element is missing', function() {
@@ -189,13 +190,13 @@ describe('number line', function() {
         {"type": "line", "domainPosition": 2, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should return correct outcome if answer is correct', function() {
       var answer = correctAnswer;
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("correct");
+      expect(outcome).to.have.property("correctness").equal("correct");
     });
 
   });
@@ -236,7 +237,7 @@ describe('number line', function() {
       var predicate = _.every(outcome.feedback.elements, function(fb) {
         return fb.isCorrect;
       });
-      expect(predicate).to.eql(true);
+      expect(predicate).to.equal(true);
 
     });
 
@@ -302,13 +303,13 @@ describe('number line', function() {
         {"type": "line", "domainPosition": 1, "rangePosition": 2, "size": 2, "leftPoint": "full", "rightPoint": "empty"}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("score").eql(0);
+      expect(outcome).to.have.property("score").equal(0);
     });
 
     it('score should be 1 if answer is correct', function() {
       var answer = correctAnswer;
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("score").eql(1);
+      expect(outcome).to.have.property("score").equal(1);
     });
   });
 
@@ -330,7 +331,7 @@ describe('number line', function() {
       ];
 
       var outcome = server.createOutcome(pComponent, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("score").eql(0.2);
+      expect(outcome).to.have.property("score").equal(0.2);
     });
 
     it('score should be 0 if answer is incorrect', function() {
@@ -340,12 +341,12 @@ describe('number line', function() {
       ];
 
       var outcome = server.createOutcome(pComponent, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("score").eql(0);
+      expect(outcome).to.have.property("score").equal(0);
     });
 
     it('score should be 1 if answer is incorrect', function() {
       var outcome = server.createOutcome(pComponent, correctAnswer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("score").eql(1);
+      expect(outcome).to.have.property("score").equal(1);
     });
   });
 });

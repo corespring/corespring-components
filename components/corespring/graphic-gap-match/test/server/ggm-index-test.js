@@ -171,6 +171,7 @@ describe('hotspot', function() {
           "message": "You did not enter a response."
         }
       });
+
     });
   });
 
@@ -181,7 +182,7 @@ describe('hotspot', function() {
         {id: "c2", left: 25, top: 145}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("correct");
+      expect(outcome).to.have.property("correctness").equal("correct");
     });
 
     it('should return incorrect outcome if answer is incorrect', function() {
@@ -190,7 +191,7 @@ describe('hotspot', function() {
         {id: "c2", left: 155, top: 145}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should return incorrect outcome if answer is not fully correct', function() {
@@ -200,7 +201,7 @@ describe('hotspot', function() {
         {id: "c3", left: 25, top: 145}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome).to.have.property("correctness").eql("incorrect");
+      expect(outcome).to.have.property("correctness").equal("incorrect");
     });
 
     it('should set correctNum to the number of correct answers', function() {
@@ -209,21 +210,21 @@ describe('hotspot', function() {
         {id: "c2", left: 25, top: 145}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome.correctNum).to.eql(2);
+      expect(outcome.correctNum).to.equal(2);
 
       answer = [
         {id: "c1", left: 25, top: 25},
         {id: "c2", left: 5, top: 145}
       ];
       outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome.correctNum).to.eql(1);
+      expect(outcome.correctNum).to.equal(1);
 
       answer = [
         {id: "c1", left: 5, top: 25},
         {id: "c2", left: 5, top: 145}
       ];
       outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome.correctNum).to.eql(0);
+      expect(outcome.correctNum).to.equal(0);
     });
   });
 
@@ -234,7 +235,7 @@ describe('hotspot', function() {
         {id: "c2", left: 25, top: 145}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome.correctness).to.eql('correct');
+      expect(outcome.correctness).to.equal('correct');
     });
 
     it('incorrect answer should give incorrect feedback', function() {
@@ -243,7 +244,7 @@ describe('hotspot', function() {
         {id: "c2", left: 175, top: 145}
       ];
       var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-      expect(outcome.correctness).to.eql('incorrect');
+      expect(outcome.correctness).to.equal('incorrect');
     });
 
     it('should return feedback for choices', function() {
