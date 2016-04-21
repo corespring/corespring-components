@@ -35,52 +35,49 @@ describe('multiple-choice', function() {
   var incorrectAnswer = findOtherChoice(correctAnswer).value;
   var notChosenFeedback = findFeedback(correctAnswer).notChosenFeedback;
 
+  function selectAnswer(answer) {
+
+    function clickIfAnswer(element) {
+      var res = browser.elementIdAttribute(element, 'value');
+      if (res.value === answer) {
+        browser.elementIdClick(element);
+      }
+    }
+
+    var results = browser.elements('.choice-input .radio-choice');
+    for (var i = 0; i < results.value.length; i++) {
+      clickIfAnswer(results.value[i].ELEMENT);
+    }
+  }
+
+  function showAnswer() {
+    var selector = '.answer-holder .panel-title';
+    browser.waitForVisible(selector);
+    browser.click(selector);
+    browser.waitForVisible('.answer-holder .panel-body');
+  }
 
   beforeEach(function(done) {
-    browser.selectAnswer = function(answer) {
-
-      function clickIfAnswer(element) {
-        var res = browser.elementIdAttribute(element, 'value');
-        if (res.value === answer) {
-           browser.elementIdClick(element);
-        }
-      }
-
-      var results = browser.elements('.choice-input .radio-choice');
-      for (var i = 0; i < results.value.length; i++) {
-        clickIfAnswer(results.value[i].ELEMENT);
-      }
-      return browser;
-    };
-
-    browser.showAnswer = function() {
-      var selector = '.answer-holder .panel-title';
-      browser.waitForVisible(selector);
-      browser.click(selector);
-      browser.waitForVisible('.answer-holder .panel-body');
-      return browser;
-    };
-
     browser.loadTest(componentName, itemJsonFilename);
     browser.call(done);
   });
 
   it('does not display incorrect feedback when correct answer selected', function(done) {
-    browser.selectAnswer(correctAnswer);
+    selectAnswer(correctAnswer);
     browser.submitItem();
     browser.waitForVisible('.selected.incorrect .choice-holder', browser.options.defaultTimeout, true);
     browser.call(done);
   });
 
   it('does display correct feedback when correct answer selected', function(done) {
-    browser.selectAnswer(correctAnswer);
+    selectAnswer(correctAnswer);
     browser.submitItem();
     browser.waitForVisible('.selected.correct .choice-holder', browser.options.defaultTimeout, true);
     browser.call(done);
   });
 
   it('displays incorrect feedback when incorrect answer selected', function(done) {
-    browser.selectAnswer(incorrectAnswer);
+    selectAnswer(incorrectAnswer);
     browser.submitItem();
     browser.waitForVisible('.selected.incorrect .choice-holder');
     browser.call(done);
@@ -96,9 +93,9 @@ describe('multiple-choice', function() {
 
 
   it('displays correct answer in answer area when incorrect answer selected', function(done) {
-    browser.selectAnswer(incorrectAnswer);
+    selectAnswer(incorrectAnswer);
     browser.submitItem();
-    browser.showAnswer();
+    showAnswer();
     browser.waitForVisible('.answer-holder .choice-holder.correct .choice-label');
     var message = browser.getText('.answer-holder .choice-holder.correct .choice-label');
     message.should.eql(correctAnswerLabel);

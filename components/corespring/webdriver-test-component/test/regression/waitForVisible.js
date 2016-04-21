@@ -17,22 +17,6 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
 
   describe('waitForVisible', function() {
 
-    describe('no content', function() {
-      var selector = '.no-content';
-
-      /* expected to fail
-       it('fails bc the thing has no content (wdtc-wfv-11)', function(done) {
-        browser.waitForVisible(selector);
-        browser.call(done);
-      });
-      */
-
-      it('return true bc, the thing has no content (wdtc-wfv-11)', function(done) {
-        expect(browser.isVisible(selector)).toBe(false);
-        browser.call(done);
-      });
-    });
-
     describe('visible from the start', function() {
       var selector = '.visible-from-the-start';
 
@@ -126,6 +110,44 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
         browser.waitForVisible(selector, browser.options.defaultTimeout, true);
       });
 
+    });
+
+    describe('no content with text', function() {
+      var selector = '.no-content-2';
+
+      it('succeeds (wdtc-wfv-11)', function(done) {
+        browser.execute(function(){
+          setTimeout(function() {
+            broadcast('callMethod', {method: 'addDivWithText'});
+          }, 3000);
+        });
+        browser.waitForVisible(selector);
+        browser.call(done);
+      });
+
+      it('return false bc the thing has no content initially (wdtc-wfv-12)', function(done) {
+        expect(browser.isVisible(selector)).toBe(false);
+        browser.call(done);
+      });
+    });
+
+    describe('no content with empty div', function() {
+      var selector = '.no-content-1';
+
+      it('fails bc the thing still has no content after adding the empty div (wdtc-wfv-13)', function(done) {
+        browser.execute(function(){
+          setTimeout(function() {
+            broadcast('callMethod', {method: 'addEmptyDiv'});
+          }, 3000);
+        });
+        browser.waitForVisible(selector);
+        browser.call(done);
+      });
+
+      it('return false bc the thing has no content initially (wdtc-wfv-11)', function(done) {
+        expect(browser.isVisible(selector)).toBe(false);
+        browser.call(done);
+      });
     });
 
   });
