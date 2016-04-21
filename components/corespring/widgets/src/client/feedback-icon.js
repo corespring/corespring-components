@@ -1,7 +1,5 @@
 var feedbackIcon = [
-  '$sce', '$log',
-  function($sce) {
-
+  function() {
     return {
       scope: {
         feedbackIconChoice: "=",
@@ -42,8 +40,7 @@ var feedbackIcon = [
         };
 
         $scope.iconSet = function() {
-          var iconSet = $attrs.feedbackIconSet;
-          return iconSet;
+          return $attrs.feedbackIconSet;
         };
 
 
