@@ -491,129 +491,10 @@ var mcCheckbox = ['$sce',
   }
 ];
 
-var feedbackIcon = [
-  '$sce', '$log',
-  function($sce) {
-
-    return {
-      scope: {
-        feedbackIconChoice: "=",
-        feedbackIconClass: "@",
-        feedbackIconType: "@",
-        feedbackIconSet: "@"
-      },
-      template: [
-        '<div class="feedback-icon" feedback-popover="feedback" feedback-popover-state="state" viewport="#{{playerId}}">',
-        '  <svg-icon ng-class="{hasFeedback: feedback.feedback}" key="{{iconKey()}}" shape="{{iconShape()}}" icon-set="{{iconSet()}}" text="{{feedback.feedback}}" open="{{state == \'open\' ? \'true\' : undefined}}"></svg-icon>',
-        '</div>'
-      ].join("\n"),
-      link: function($scope, $element, $attrs) {
-
-        $scope.$watch('feedbackIconChoice', updateView, true);
-        $attrs.$observe('feedbackIconClass', updateView);
-        $attrs.$observe('feedbackIconType', updateView);
-        $attrs.$observe('feedbackIconSet', updateView);
-
-        $scope.playerId = (function() {
-          return $element.closest('.player-body').attr('id');
-        })();
-
-        $scope.iconKey = function() {
-          var iconClass = $attrs.feedbackIconClass;
-          if (/incorrect/gi.test(iconClass)) {
-            return 'incorrect';
-          }
-          if (/correct/gi.test(iconClass)) {
-            return 'correct';
-          }
-          return "empty";
-        };
-
-        $scope.iconShape = function() {
-          var iconType = $attrs.feedbackIconType;
-          return iconType === 'checkbox' ? 'square' : 'round';
-        };
-
-        $scope.iconSet = function() {
-          var iconSet = $attrs.feedbackIconSet;
-          return iconSet;
-        };
-
-
-        function updateView() {
-          if (_.isUndefined($scope.feedbackIconChoice) || _.isUndefined($scope.feedbackIconClass) || _.isUndefined($scope.feedbackIconType)) {
-            return;
-          }
-          var iconSet = $scope.feedbackIconSet || 'emoji';
-          var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
-          var selected = $scope.feedbackIconClass.match(/selected/);
-          var feedbackSelector = $scope.feedbackIconChoice.feedback ? 'feedback' : 'nofeedback';
-          var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
-
-          $scope.feedback = (!$scope.feedbackIconChoice.feedback || correctnessSelector == 'correct' ) ? undefined : {
-            correctness: correctness,
-            feedback: $scope.feedbackIconChoice.feedback
-          };
-
-        }
-      }
-    }
-
-  }
-];
-
-var iconToggle = ['$sce',
-  function($sce) {
-    return {
-      scope: {
-        ngModel: "=",
-        iconName: "@",
-        label: "@",
-        closedLabel: "@",
-        openLabel: "@"
-      },
-      transclude: true,
-      template: [
-        '<div>',
-        '  <a ng-click="toggleCorrect()" class="icon-toggle">',
-        '    <div class="icon-holder">',
-        '      <div class="icon-inner-holder">',
-        '        <svg-icon class="toggle-icon show-state" ng-if="!ngModel" category="showHide" key="show-{{iconName}}"></svg-icon>',
-        '        <svg-icon class="toggle-icon hide-state" ng-if="ngModel" category="showHide" key="hide-{{iconName}}"></svg-icon>',
-        '      </div>',
-        '    </div>',
-        '    <span class="toggle-label" ng-bind-html-unsafe="currentLabel"></span>',
-        '  </a>',
-        '  <div ng-show="ngModel" ng-transclude></div>',
-        '</div>'
-      ].join("\n"),
-      link: function($scope, $element, $attrs) {
-
-        $scope.ngModel = _.isUndefined($scope.ngModel) ? false : $scope.ngModel;
-        $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
-
-        $scope.$watch('ngModel', function() {
-          $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
-        });
-
-        $scope.toggleCorrect = function() {
-          $scope.ngModel = !$scope.ngModel;
-        };
-
-      }
-    }
-  }
-];
-
-
 exports.framework = 'angular';
 exports.directives = [
   {
     directive: main
-  },
-  {
-    name: 'feedbackIcon',
-    directive: feedbackIcon
   },
   {
     name: 'radioButton',
@@ -622,10 +503,5 @@ exports.directives = [
   {
     name: 'mcCheckbox',
     directive: mcCheckbox
-  },
-  {
-    name: 'iconToggle',
-    directive: iconToggle
   }
-
 ];
