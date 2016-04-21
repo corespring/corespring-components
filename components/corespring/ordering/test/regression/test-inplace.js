@@ -20,7 +20,7 @@ describe('inplace ordering (inpor)', function() {
 
   it('submitting without interaction results in warning feedback (inpor-01)', function(done) {
     browser.submitItem();
-    browser.waitForVisible('.feedback.warning');
+    browser.waitForExist('.feedback.warning');
     browser.call(done);
   });
 

@@ -35,7 +35,7 @@ describe('placement ordering (porh)', function() {
         browser.dragAndDrop(divContaining('Apple'), landingPlace(1));
         browser.dragAndDrop(divContaining('Pear'), landingPlace(2));
         browser.submitItem();
-        browser.waitForVisible('.feedback.correct');
+        browser.waitForExist('.feedback.correct');
         browser.call(done);
       });
 
@@ -43,7 +43,7 @@ describe('placement ordering (porh)', function() {
         browser.dragAndDrop(divContaining('Banana'), landingPlace(1));
         browser.dragAndDrop(divContaining('Apple'), landingPlace(2));
         browser.submitItem();
-        browser.waitForVisible('.feedback.incorrect');
+        browser.waitForExist('.feedback.incorrect');
         browser.call(done);
       });
 
@@ -51,7 +51,7 @@ describe('placement ordering (porh)', function() {
         browser.dragAndDrop(divContaining('Apple'), landingPlace(1));
         browser.dragAndDrop(divContaining('Banana'), landingPlace(2));
         browser.submitItem();
-        browser.waitForVisible('.feedback.partial');
+        browser.waitForExist('.feedback.partial');
         browser.call(done);
       });
 
