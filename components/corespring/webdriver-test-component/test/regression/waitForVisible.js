@@ -17,11 +17,27 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
 
   describe('waitForVisible', function() {
 
+    describe('no content', function() {
+      var selector = '.no-content';
+
+      /* expected to fail
+       it('fails bc the thing has no content (wdtc-wfv-11)', function(done) {
+        browser.waitForVisible(selector);
+        browser.call(done);
+      });
+      */
+
+      it('return true bc, the thing has no content (wdtc-wfv-11)', function(done) {
+        expect(browser.isVisible(selector)).toBe(false);
+        browser.call(done);
+      });
+    });
+
     describe('visible from the start', function() {
       var selector = '.visible-from-the-start';
 
       it('should not fail (wdtc-wfv-01)', function(done) {
-        browser.waitForVisible(selector)
+        browser.waitForVisible(selector);
         browser.call(done);
       });
 
@@ -46,7 +62,7 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
       */
 
       it('should not fail, when inverted (wdtc-wfv-04)', function(done) {
-        browser.waitForVisible(selector, browser.options.defaultTimeout, true)
+        browser.waitForVisible(selector, browser.options.defaultTimeout, true);
         browser.call(done);
       });
 
@@ -66,7 +82,7 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
 
       /* expected failure */
       it('should fail even when inverted (wdtc-wfv-06)', function(done) {
-        browser.waitForVisible(selector, browser.options.defaultTimeout, true)
+        browser.waitForVisible(selector, browser.options.defaultTimeout, true);
         browser.call(function() {
           throw "This test was expected to fail";
         });

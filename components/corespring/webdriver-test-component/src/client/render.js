@@ -129,6 +129,7 @@ function renderWebdriverTestComponent($log) {
     return [
         '<div class="render-corespring-webdriver-test-component">',
         '  <div class="visible-from-the-start">visible from the start</div>',
+        '  <div class="no-content"></div>',
         '  <div class="hidden-from-the-start">hidden from the start</div>',
         '  <div class="hideable" ng-hide="hideableHidden">hideable</div>',
         '  <div class="showable" ng-show="showableShown">showable</div>',

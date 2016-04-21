@@ -35,7 +35,7 @@ describe('match', function() {
   it('does evaluate answers correctly', function(done) {
     browser.waitAndClick(answerInput('Row1'));
     browser.waitAndClick(answerInput('Row2'));
-    browser.waitAndClick(answerInput('Row3')),
+    browser.waitAndClick(answerInput('Row3'));
     browser.submitItem();
     browser.waitForVisible(answerEvaluated('Row1', 'correct'));
     browser.waitForVisible(answerEvaluated('Row2', 'incorrect'));

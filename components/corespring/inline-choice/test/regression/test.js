@@ -6,7 +6,7 @@ var _ = require('lodash');
 
 function inlineChoiceWithId(id) {
   return '//div[@id="' + id + '" and @class[contains(., "view-inline-choice")]]';
-};
+}
 
 describe('inline-choice', function() {
 

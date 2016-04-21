@@ -44,7 +44,7 @@ describe('dnd-categorize (dndc)', function() {
     });
 
     it('displays incorrect feedback (dndcf-03)', function(done) {
-      browser.waitForVisible('.feedback.incorrect');
+      browser.waitForExist('.feedback.incorrect');
       browser.call(done);
     });
 
@@ -85,7 +85,7 @@ describe('dnd-categorize (dndc)', function() {
     });
 
     it('displays correct feedback (dndcf-08)', function(done) {
-      browser.waitForVisible('.feedback.correct');
+      browser.waitForExist('.feedback.correct');
       browser.call(done);
     });
 
@@ -105,7 +105,7 @@ describe('dnd-categorize (dndc)', function() {
     });
 
     it('displays partial feedback (dndcf-10)', function(done) {
-      browser.waitForVisible('.feedback.partial');
+      browser.waitForExist('.feedback.partial');
       browser.call(done);
     });
 
@@ -152,7 +152,7 @@ describe('dnd-categorize (dndc)', function() {
     });
 
     it('displays warning (dndcf-14)', function(done) {
-      browser.waitForVisible('.feedback.warning.answer-expected');
+      browser.waitForExist('.feedback.warning.answer-expected');
       browser.call(done);
     });
   });

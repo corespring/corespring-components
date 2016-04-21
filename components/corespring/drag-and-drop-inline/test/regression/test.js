@@ -60,7 +60,7 @@ describe('drag-and-drop-inline (dndi)', function() {
   it('correct answer results in correct feedback (dndi-04)', function(done) {
     browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
     browser.submitItem();
-    browser.waitForVisible('.feedback.correct');
+    browser.waitForExist('.feedback.correct');
     browser.call(done);
   });
 
@@ -78,7 +78,7 @@ describe('drag-and-drop-inline (dndi)', function() {
   it('incorrect answer results in incorrect feedback (dndi-06)', function(done) {
     browser.dragAndDropWithOffset(choice('c_1'), landingPlace('aa_1'));
     browser.submitItem();
-    browser.waitForVisible('.feedback.incorrect');
+    browser.waitForExist('.feedback.incorrect');
     browser.call(done);
   });
 
@@ -195,7 +195,7 @@ describe('drag-and-drop-inline (dndi)', function() {
     browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_1'));
     browser.dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'));
     browser.submitItem();
-    browser.waitForVisible('.feedback.correct');
+    browser.waitForExist('.feedback.correct');
     browser.call(done);
   });
 
@@ -203,7 +203,7 @@ describe('drag-and-drop-inline (dndi)', function() {
     browser.dragAndDropWithOffset(choice('c_2'), landingPlace('aa_2'));
     browser.dragAndDropWithOffset(selectedChoice('c_2'), landingPlace('aa_1'));
     browser.submitItem();
-    browser.waitForVisible('.feedback.correct');
+    browser.waitForExist('.feedback.correct');
     browser.call(done);
   });
 
