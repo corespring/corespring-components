@@ -4,30 +4,23 @@
     -moz-box-shadow: none;
     box-shadow: none;
     border: none;
+    background: @warning-block-foreground;
+    position: relative;
+    padding: 0;
+    font-family: 'Kameron';
 
-    .panel-heading {
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
+    .cs-icon {
+      position: absolute;
+      top: -3px;
+      left: -5px;
+      width: 40px;
     }
 
     .panel-body {
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-      padding: 15px;
+      padding: 15px 15px 15px 50px;
+      color: @warning-background;
     }
 
-
-    &.correct {
-      .color-panel(@correct-background);
-    }
-
-    &.incorrect {
-      .color-panel(@incorrect-background);
-    }
-
-    &.partial {
-      .color-panel(@partially-correct-background);
-    }
 
     &.warning {
       .warning-panel();
@@ -77,11 +70,6 @@
     -moz-box-shadow: none;
     box-shadow: none;
     border: none;
-
-    .panel-heading {
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-    }
 
     .panel-body {
       border-bottom-left-radius: 4px;

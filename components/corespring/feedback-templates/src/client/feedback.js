@@ -11,17 +11,20 @@ exports.directive = {
           $scope.toggle = function() {
             $scope.isOpen = !$scope.isOpen;
           };
+          $scope.$watch('correctClass', function() {
+            $scope.iconKey = $scope.correctClass == 'partial' ? 'partially-correct' : $scope.correctClass;
+          });
         },
         scope: {
           "feedback": "=",
+          "iconset": "=",
           "correctClass": "@"
         },
         replace: true,
         template: [
           '<div class="panel panel-default feedback {{correctClass}}" ng-if="feedback">',
-          '  <div class="panel-heading">',
-          '  </div>',
           '  <div>',
+          '    <svg-icon key="{{iconKey}}" shape="square" icon-set="emoji"></svg-icon>',
           '    <div class="panel-body" ng-bind-html-unsafe="feedback">',
           '    </div>',
           '  </div>',
