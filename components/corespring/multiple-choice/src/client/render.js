@@ -133,7 +133,6 @@ var main = [
       scope.containerBridge = {
 
         setPlayerSkin: function(skin) {
-          console.log("Skin is ", skin);
           scope.iconset = skin.iconSet;
         },
         setDataAndSession: function(dataAndSession) {
@@ -221,6 +220,7 @@ var main = [
           scope.bridge.viewMode = 'normal';
           scope.bridge.answerVisible = false;
         },
+
         resetStash: function() {
           scope.session.stash = {};
         },
@@ -320,6 +320,9 @@ var main = [
 
       scope.radioState = function(o) {
         var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+        if (isSelected && scope.mode === 'view') {
+          return "selectedDisabled";
+        }
         var isCorrect = !_.isUndefined(o.correct) && o.correct == true;
         if (isCorrect && scope.mode == 'instructor') {
           return "correctUnselected";
@@ -331,7 +334,8 @@ var main = [
         if (!_.isUndefined(o.correct) && o.correct == true && scope.bridge.viewMode === 'correct') return "correct";
         if (isSelected && scope.bridge.viewMode !== 'correct') return isCorrect ? "correct" : "selected";
         if (!_.isUndefined(o.correct) && o.correct == true) return "correct";
-        if (scope.response) return "muted";
+        if (scope.response || scope.mode === 'view') return "muted";
+        return "ready";
       };
 
 
@@ -421,6 +425,7 @@ var radioButton = ['$sce',
         '  <div class="choice-icon-holder" >',
         '    <choice-icon class="animate-show icon" ng-class="active" shape="radio" key="selected" ng-show="active == \'ready\' || active == \'selected\'"></choice-icon>',
         '    <choice-icon class="animate-hide icon" shape="radio" key="muted" ng-show="active == \'muted\'"></choice-icon>',
+        '    <choice-icon class="animate-hide icon" shape="radio" key="selected-disabled" ng-show="active == \'selectedDisabled\'"></choice-icon>',
         '    <choice-icon class="animate-show icon" shape="radio" key="correct" ng-show="active == \'correct\' || active == \'correctUnselected\'"></choice-icon>',
         '    <choice-icon class="animate-show icon" shape="radio" key="incorrect" ng-show="active == \'incorrect\'"></choice-icon>',
         '  </div>',
@@ -430,7 +435,7 @@ var radioButton = ['$sce',
         $scope.active = 'ready';
 
         $attrs.$observe('radioButtonState', function(val) {
-          if (_(["selected", 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
+          if (_(['selected', 'selectedDisabled', 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
             if (val == 'correctUnselected') {
               $scope.feedback = {
@@ -449,18 +454,19 @@ var radioButton = ['$sce',
   }
 ];
 
-var mcCheckbox = ['$sce',
-  function($sce) {
+var mcCheckbox = [
+  function() {
     return {
       scope: {
         checkboxButtonState: "@",
         checkboxButtonChoice: "="
       },
       template: [
-        '<div class="mc-checkbox" ng-class="{hasFeedback: feedback}">',
+        '<div class="mc-checkbox" ng-class="{hasFeedback: feedback}" turo="{{active}}">',
         '  <div class="choice-icon-holder" >',
         '    <choice-icon class="animate-show icon" ng-class="active" shape="box" key="selected" ng-show="active == \'ready\' || active == \'selected\'"></choice-icon>',
         '    <choice-icon class="animate-show icon" shape="box" key="muted" ng-show="active == \'muted\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="box" key="selected-disabled" ng-show="active == \'selectedDisabled\'"></choice-icon>',
         '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correct\'"></choice-icon>',
         '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correctUnselected\'"></choice-icon>',
         '    <choice-icon class="animate-show icon" shape="box" key="incorrect" ng-show="active == \'incorrect\'"></choice-icon>',
@@ -472,7 +478,7 @@ var mcCheckbox = ['$sce',
         $scope.active = 'ready';
 
         $attrs.$observe('checkboxButtonState', function(val) {
-          if (_(["selected", 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
+          if (_(['selected', 'selectedDisabled', 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
             if (val == 'correctUnselected') {
               $scope.feedback = {
