@@ -4,10 +4,21 @@
     -moz-box-shadow: none;
     box-shadow: none;
     border: none;
-    background: @warning-block-foreground;
-    position: relative;
     padding: 0;
     font-family: 'Kameron';
+
+    &.answer-expected {
+      text-align: center;
+
+      .panel-body {
+        display: inline-block;
+      }
+
+      .cs-icon {
+        top: 6px;
+        left: 6px;
+      }
+    }
 
     .cs-icon {
       position: absolute;
@@ -19,23 +30,13 @@
     .panel-body {
       padding: 15px 15px 15px 50px;
       color: @warning-background;
+      background: @warning-block-foreground;
+      position: relative;
     }
 
 
     &.warning {
       .warning-panel();
-
-      &.answer-expected {
-        .panel-heading {
-          display: none;
-        }
-        .panel-body {
-          color: @warning-color;
-          background-color: @warning-color-background;
-          border: 1px solid @warning-color-border;
-          border-radius: 4px;
-        }
-      }
     }
   }
 }
