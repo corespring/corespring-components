@@ -37,7 +37,7 @@ var iconToggle = [
         };
 
       }
-    }
+    };
   }
 ];
 

@@ -78,6 +78,7 @@ describe('corespring:multiple-choice-render', function() {
 
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
+      $provide.value('ASSETS_PATH', '');
       $provide.value('MathJaxService', {
         parseDomForMath: jasmine.createSpy('parseDomForMath')
       });

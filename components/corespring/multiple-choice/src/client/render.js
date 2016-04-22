@@ -203,9 +203,7 @@ var main = [
 
         setMode: function(newMode) {
           scope.mode = newMode;
-          if (newMode == 'instructor') {
-            //scope.bridge.viewMode = 'correct';
-          } else {
+          if (newMode !== 'instructor') {
             scope.rationales = undefined;
           }
         },
@@ -303,7 +301,7 @@ var main = [
         var isCorrect = !_.isUndefined(o.correct) && o.correct;
         var res = isSelected ? "selected " : "";
 
-        if (isCorrect && scope.mode == 'instructor') {
+        if (isCorrect && scope.mode === 'instructor') {
           return "correct";
         }
         if (_.isUndefined(o.correct)) {
@@ -323,18 +321,28 @@ var main = [
         if (isSelected && scope.mode === 'view') {
           return "selectedDisabled";
         }
-        var isCorrect = !_.isUndefined(o.correct) && o.correct == true;
-        if (isCorrect && scope.mode == 'instructor') {
+        var isCorrect = !_.isUndefined(o.correct) && o.correct === true;
+        if (isCorrect && scope.mode === 'instructor') {
           return "correctUnselected";
         }
         if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
           return scope.response ? "muted" : "";
         }
-        if (!_.isUndefined(o.correct) && o.correct == false && scope.bridge.viewMode !== 'correct') return "incorrect";
-        if (!_.isUndefined(o.correct) && o.correct == true && scope.bridge.viewMode === 'correct') return "correct";
-        if (isSelected && scope.bridge.viewMode !== 'correct') return isCorrect ? "correct" : "selected";
-        if (!_.isUndefined(o.correct) && o.correct == true) return "correct";
-        if (scope.response || scope.mode === 'view') return "muted";
+        if (!_.isUndefined(o.correct) && o.correct === false && scope.bridge.viewMode !== 'correct') {
+          return "incorrect";
+        }
+        if (!_.isUndefined(o.correct) && o.correct === true && scope.bridge.viewMode === 'correct') {
+          return "correct";
+        }
+        if (isSelected && scope.bridge.viewMode !== 'correct') {
+          return isCorrect ? "correct" : "selected";
+        }
+        if (!_.isUndefined(o.correct) && o.correct === true) {
+          return "correct";
+        }
+        if (scope.response || scope.mode === 'view') {
+          return "muted";
+        }
         return "ready";
       };
 
@@ -437,11 +445,11 @@ var radioButton = ['$sce',
         $attrs.$observe('radioButtonState', function(val) {
           if (_(['selected', 'selectedDisabled', 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
-            if (val == 'correctUnselected') {
+            if (val === 'correctUnselected') {
               $scope.feedback = {
                 correctness: 'correct',
                 feedback: $scope.radioButtonChoice.feedback
-              }
+              };
             } else {
               $scope.feedback = undefined;
             }
@@ -450,7 +458,7 @@ var radioButton = ['$sce',
           }
         });
       }
-    }
+    };
   }
 ];
 
@@ -480,11 +488,11 @@ var mcCheckbox = [
         $attrs.$observe('checkboxButtonState', function(val) {
           if (_(['selected', 'selectedDisabled', 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
-            if (val == 'correctUnselected') {
+            if (val === 'correctUnselected') {
               $scope.feedback = {
                 correctness: 'correct',
                 feedback: $scope.checkboxButtonChoice.feedback
-              }
+              };
             } else {
               $scope.feedback = undefined;
             }
@@ -493,7 +501,7 @@ var mcCheckbox = [
           }
         });
       }
-    }
+    };
   }
 ];
 

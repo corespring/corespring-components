@@ -26,14 +26,14 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
         var category = $attrs.category || 'feedback';
 
         if ($scope.key === 'empty') {
-          $scope.template = ASSETS_PATH + '/components-assets/' + category + '/empty.svg'
+          $scope.template = ASSETS_PATH + '/components-assets/' + category + '/empty.svg';
         } else {
-          $scope.template = ASSETS_PATH + '/components-assets/' + category + '/'
-            + ($scope.iconSet ? $scope.iconSet + '-' : '')
-            + $scope.key
-            + ($scope.shape ? '-' + $scope.shape : '')
-            + ($scope.open ? '-open' : '')
-            + '.svg';
+          $scope.template = [ASSETS_PATH + '/components-assets/' + category + '/',
+            ($scope.iconSet ? $scope.iconSet + '-' : ''),
+            $scope.key,
+            ($scope.shape ? '-' + $scope.shape : ''),
+            ($scope.open ? '-open' : ''),
+            '.svg'].join('');
         }
 
       };
@@ -44,7 +44,7 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
       $scope.$watch('text', $scope.updateTemplate);
       $scope.$watch('open', $scope.updateTemplate);
     }
-  }
+  };
 }];
 
 exports.framework = 'angular';

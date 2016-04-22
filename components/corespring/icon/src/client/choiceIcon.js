@@ -21,7 +21,7 @@ var choiceIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
         $scope.template = ASSETS_PATH + '/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
       });
     }
-  }
+  };
 }];
 
 exports.framework = 'angular';

@@ -50,17 +50,16 @@ var feedbackIcon = [
           }
           var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
           var selected = $scope.feedbackIconClass.match(/selected/);
-          var correctnessSelector = (correctness == 'correct' && selected) ? 'correctSelected' : correctness;
+          var correctnessSelector = (correctness === 'correct' && selected) ? 'correctSelected' : correctness;
 
-          $scope.feedback = (!$scope.feedbackIconChoice.feedback || correctnessSelector == 'correct' ) ? undefined : {
+          $scope.feedback = (!$scope.feedbackIconChoice.feedback || correctnessSelector === 'correct' ) ? undefined : {
             correctness: correctness,
             feedback: $scope.feedbackIconChoice.feedback
           };
 
         }
       }
-    }
-
+    };
   }
 ];
 
