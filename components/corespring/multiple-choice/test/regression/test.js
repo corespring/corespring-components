@@ -92,17 +92,6 @@ describe('multiple-choice', function() {
       .call(done);
   });
 
-  it('displays correct answer in answer area when incorrect answer selected', function(done) {
-    browser
-      .selectAnswer(incorrectAnswer)
-      .submitItem()
-      .showAnswer()
-      .waitForText('.answer-holder .choice-holder.correct .choice-label')
-      .getText('.answer-holder .choice-holder.correct .choice-label', function(err, message) {
-        message.should.equal(correctAnswerLabel);
-      })
-      .call(done);
-  });
 
   it('MathJax renders', function(done) {
     browser
