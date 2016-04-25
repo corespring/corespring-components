@@ -12,7 +12,9 @@ exports.directive = {
             $scope.isOpen = !$scope.isOpen;
           };
           $scope.$watch('correctClass', function() {
-            $scope.iconKey = $scope.correctClass === 'partial' ? 'partially-correct' : $scope.correctClass;
+            $scope.iconKey = $scope.correctClass === 'partial' ? 'partially-correct' :
+              ($scope.correctClass.indexOf('answer-expected') >= 0 ? 'nothing-submitted' : $scope.correctClass.trim());
+            $scope.iconShape = ($scope.iconKey !== 'nothing-submitted' ? 'square' : '');
           });
         },
         scope: {
@@ -24,8 +26,10 @@ exports.directive = {
         template: [
           '<div class="panel panel-default feedback {{correctClass}}" ng-if="feedback">',
           '  <div>',
-          '    <svg-icon key="{{iconKey}}" shape="square" icon-set="emoji"></svg-icon>',
-          '    <div class="panel-body" ng-bind-html-unsafe="feedback">',
+          '    <div class="panel-body">',
+          '      <svg-icon key="{{iconKey}}" shape="{{iconShape}}" icon-set="emoji"></svg-icon>',
+          '      <div ng-bind-html-unsafe="feedback">',
+          '      </div>',
           '    </div>',
           '  </div>',
           '</div>'
