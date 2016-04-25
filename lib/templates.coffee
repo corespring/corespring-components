@@ -13,9 +13,16 @@ exports.wrapAngular = (moduleName, name, contents) ->
 exports.preroll = ->
   """
   console.log('init');
-  angular.module('test-app', ['ngSanitize', 'ui.select']);
+
+  //Mock assets and their requests
+  angular.module('test-app').constant('ASSETS_PATH', 'mock-assets');
+
+  angular.module('test-app', ['ngSanitize', 'ui.select']).run(['$httpBackend',function($httpBackend) {
+    $httpBackend.whenGET(/mock-assets\\/.*/).respond('');
+  }]);
 
   //Mock dependencies
+
   angular.module('test-app').factory('ImageFeature', [function(){
     return function(){
       return {};

@@ -12,7 +12,7 @@ exports.directive = {
             $scope.isOpen = !$scope.isOpen;
           };
           $scope.$watch('correctClass', function() {
-            $scope.iconKey = $scope.correctClass == 'partial' ? 'partially-correct' : $scope.correctClass;
+            $scope.iconKey = $scope.correctClass === 'partial' ? 'partially-correct' : $scope.correctClass;
           });
         },
         scope: {

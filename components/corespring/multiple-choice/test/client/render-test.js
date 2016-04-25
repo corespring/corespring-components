@@ -86,7 +86,6 @@ describe('corespring:multiple-choice-render', function() {
   });
 
   beforeEach(inject(function($compile, $rootScope, $httpBackend) {
-    $httpBackend.whenGET(/.*/).respond('');
     container = new MockComponentRegister();
 
     $rootScope.$on('registerComponent', function(event, id, obj) {
