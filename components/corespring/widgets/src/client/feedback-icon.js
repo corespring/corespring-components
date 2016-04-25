@@ -5,11 +5,12 @@ var feedbackIcon = [
         feedbackIconChoice: "=",
         feedbackIconClass: "@",
         feedbackIconType: "@",
-        feedbackIconSet: "@"
+        feedbackIconSet: "@",
+        feedbackIconUseBlockFeedback: "@"
       },
       template: [
         '<div class="feedback-icon" feedback-popover="feedback" feedback-popover-state="state" viewport="#{{playerId}}">',
-        '  <svg-icon ng-class="{hasFeedback: feedback.feedback}" key="{{iconKey()}}" shape="{{iconShape()}}" icon-set="{{iconSet()}}" text="{{feedback.feedback}}" open="{{state == \'open\' ? \'true\' : undefined}}"></svg-icon>',
+        '  <svg-icon ng-class="{hasFeedback: feedback.feedback}" key="{{iconKey()}}" shape="{{iconShape()}}" icon-set="{{iconSet()}}" text="{{feedback.feedback}}" open="{{isOpen()}}"></svg-icon>',
         '</div>'
       ].join("\n"),
       link: function($scope, $element, $attrs) {
@@ -18,10 +19,16 @@ var feedbackIcon = [
         $attrs.$observe('feedbackIconClass', updateView);
         $attrs.$observe('feedbackIconType', updateView);
         $attrs.$observe('feedbackIconSet', updateView);
+        $attrs.$observe('feedbackIconUseBlockFeedback', updateView);
 
         $scope.playerId = (function() {
           return $element.closest('.player-body').attr('id');
         })();
+
+        $scope.isOpen = function() {
+          var isBlockLevel = $scope.feedbackIconUseBlockFeedback === 'true';
+          return (isBlockLevel || $scope.state == 'open') ? 'true' : undefined;
+        };
 
         $scope.iconKey = function() {
           var iconClass = $attrs.feedbackIconClass;
@@ -51,11 +58,13 @@ var feedbackIcon = [
           var correctness = _.result($scope.feedbackIconClass.match(/correct|incorrect|partial/), "0");
           var selected = $scope.feedbackIconClass.match(/selected/);
           var correctnessSelector = (correctness === 'correct' && selected) ? 'correctSelected' : correctness;
-
-          $scope.feedback = (!$scope.feedbackIconChoice.feedback || correctnessSelector === 'correct' ) ? undefined : {
-            correctness: correctness,
-            feedback: $scope.feedbackIconChoice.feedback
-          };
+          var isBlockLevel = $scope.feedbackIconUseBlockFeedback === 'true';
+          if (!isBlockLevel) {
+            $scope.feedback = (!$scope.feedbackIconChoice.feedback || correctnessSelector === 'correct' ) ? undefined : {
+              correctness: correctness,
+              feedback: $scope.feedbackIconChoice.feedback
+            };
+          }
 
         }
       }

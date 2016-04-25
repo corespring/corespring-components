@@ -102,6 +102,17 @@
       margin-bottom: 10px;
       border: 1px solid #fff;
       border-bottom: 1px solid #E0DEE0;
+
+      &.correct {
+        .block-feedback {
+          color: darken(@correct-background, 30%);
+        }
+      }
+      &.incorrect {
+        .block-feedback {
+          color: darken(@incorrect-background, 30%);
+        }
+      }
     }
     .popover {
       font-family: 'Kameron' !important;
@@ -211,9 +222,25 @@
         }
       }
     }
+    .block-feedback {
+      font-family: 'Kameron' !important;
+      margin-left: 93px;
+      padding: 10px;
+      background: @warning-block-foreground;
+      transform: scaleY(1);
+      transform-origin: top;
+      -webkit-transition:all ease 0.5s;
+      transition:all ease 0.5s;
+      &.ng-hide {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        transform: scaleY(0);
+      }
+    }
     &:hover {
       cursor: pointer;
     }
+
   }
 
   .choice-feedback, .choice-input, .choice-letter, .choice-currency-symbol, .choice-label {
@@ -356,33 +383,6 @@
   }
 }
 
-
-
-
-.panel.feedback-panel {
-  border-width: 3px;
-  .panel-heading {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    height: 30px;
-  }
-  .panel-body {
-    padding: 15px 20px;
-  }
-  &.incorrect {
-    border-color: @incorrect-background;
-    .panel-heading {
-      background-color: @incorrect-background;
-    }
-  }
-  &.correct {
-    border-color: @correct-background;
-    .panel-heading {
-      background-color: @correct-background;
-    }
-  }
-
-}
 
 .summaryFeedbackPanel {
   .panel-group {

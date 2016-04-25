@@ -346,6 +346,11 @@ var main = [
         return "ready";
       };
 
+      scope.hasBlockFeedback = function(o) {
+        var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+        return o.feedback && isSelected;
+      };
+
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
     };
@@ -385,7 +390,13 @@ var main = [
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
-      '      <div class="choice-feedback" ng-if="mode !== \'instructor\'" feedback-icon feedback-icon-choice="o" feedback-icon-class="{{choiceClass(o)}}" feedback-icon-type="{{question.config.choiceType}}" feedback-icon-set="{{iconset}}"/>',
+      '      <div class="choice-feedback" ng-if="mode !== \'instructor\'"',
+      '           feedback-icon',
+      '           feedback-icon-choice="o"',
+      '           feedback-icon-class="{{choiceClass(o)}}"',
+      '           feedback-icon-type="{{question.config.choiceType}}"',
+      '           feedback-icon-set="{{iconset}}"',
+      '           feedback-icon-use-block-feedback="{{question.config.useBlockFeedback}}" />',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
       '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
@@ -397,6 +408,7 @@ var main = [
       '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
       '      <div class="choice-label" ng-bind-html-unsafe="o.label"></div>',
+      '      <div ng-if="question.config.useBlockFeedback" class="block-feedback" ng-show="!bridge.answerVisible && hasBlockFeedback(o)" ng-bind-html-unsafe="o.feedback"></div>',
       '    </div>',
       '  </div>',
       '</div>'
