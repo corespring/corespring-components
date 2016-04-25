@@ -137,7 +137,10 @@ var main = [
         },
         setDataAndSession: function(dataAndSession) {
           scope.question = dataAndSession.data.model;
-          scope.question.config = _.defaults(scope.question.config || {}, {"showCorrectAnswer": "separately"});
+          scope.question.config = _.defaults(scope.question.config || {}, {
+            'showCorrectAnswer': 'separately',
+            'useBlockFeedback': true
+          });
           scope.session = dataAndSession.session || {};
           scope.answer = {
             choices: {},
