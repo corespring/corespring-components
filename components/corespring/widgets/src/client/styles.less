@@ -3,45 +3,18 @@
   &.popover {
     padding: 0px;
     min-width: 200px;
-    &.popover-incorrect > .arrow:after {
-      border-bottom-color: @incorrect-background;
-    }
+    text-align: center;
+    box-shadow: none;
 
-    &.popover-correct .popover-title {
-      background-color: @correct-background;
-      color: #ffffff;
-    }
-
-    &.popover-correct > .arrow:after {
-      border-bottom-color: @correct-background;
-    }
-
-    &.popover-warning .popover-title {
-      background-color: @warning-color-border;
-      color: @warning-color;
-    }
-
-    &.popover.popover-warning > .arrow:after {
-      border-bottom-color: @warning-color-border;
-    }
-
-    &.popover-incorrect .popover-title {
-      background-color: @incorrect-background;
-      color: #ffffff;
-    }
-    &.popover-partial .popover-title {
-      background-color: @partially-correct-background;
-      color: #ffffff;
-    }
-    &.popover.popover-partial > .arrow:after {
-      border-bottom-color: @partially-correct-background;
+    .popover-title {
+      display: none;
     }
   }
 }
 
 .learn-more-panel {
+
   &.panel {
-    .color-panel(@learn-more-color);
     box-shadow: none;
     border: none;
 
@@ -68,6 +41,7 @@
 }
 
 .see-answer-panel {
+
   &.answer-holder {
     background: #fff;
     overflow: hidden;
@@ -84,15 +58,14 @@
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-weight: normal;
     }
+
     .panel-default {
       & > .panel-heading {
-        color: #fff;
-        background-color: #3C763D;
-        border-color: #3C763D;
         border-radius: 0px;
         cursor: pointer;
       }
     }
+
     .answerIcon {
       font-size: 30px;
       margin-right: 2%;
@@ -105,16 +78,17 @@
   font-size: 9pt;
   color: #939393;
   border: none;
-  background-color: #FFF;
+  background-color: #ffffff;
   text-transform: lowercase;
+
   .fa {
     color: #1a9cff;
     border: 1px solid #bce2ff;
-    background-color: #fff;
-    width:32px;
-    height:32px;
-    border-radius:50px;
-    text-align:center;
+    background-color: #ffffff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50px;
+    text-align: center;
     padding: 5px 0 0 0;
     margin: 0 5px 0 0;
     font-size: 14pt;

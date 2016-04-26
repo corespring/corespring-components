@@ -4,6 +4,7 @@ link = function($sce, $timeout) {
   return function(scope, element, attrs) {
 
     scope.editable = true;
+    scope.feedbackVisible = false;
 
     function layoutChoices(choices, order) {
       if (!order) {
@@ -149,6 +150,7 @@ link = function($sce, $timeout) {
           r.correctness = 'warning';
         }
         scope.response = r;
+        scope.iconKey = r.correctness === 'warning' ? 'nothing-submitted' : r.correctness;
       },
 
       setMode: function(newMode) {},
@@ -192,11 +194,26 @@ link = function($sce, $timeout) {
       renderMath(1);
     };
 
+
+    element.on('show.bs.popover', function() {
+      scope.triggerIcon(true);
+    });
+
+    element.on('hide.bs.popover', function() {
+      scope.triggerIcon(false);
+    });
+
+    scope.triggerIcon = function(popoverToggled) {
+      scope.feedbackVisible = popoverToggled;
+    };
+
     scope.playerId = (function() {
       return element.closest('.player-body').attr('id');
     })();
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
+    scope.placeholder = 'Choose...';
   };
 };
 
@@ -212,18 +229,23 @@ main = [
       link: link($sce, $timeout),
       template: [
         '<div class="view-inline-choice" ng-class="response.correctness">',
-        '  <span feedback-popover="response" viewport="#{{playerId}}">',
+        '  <span viewport="#{{playerId}}">',
         '    <span class="dropdown" dropdown>',
         '      <span class="btn dropdown-toggle" ng-class="{initial: !selected}" dropdown-toggle ng-disabled="!editable">',
         '        <div style="height: 0px; overflow: hidden">',
         '          <li ng-repeat="choice in choices">',
-        '            <a  ng-bind-html-unsafe="choice.label"></a>',
+        '            <a ng-bind-html-unsafe="choice.label"></a>',
         '          </li>',
         '        </div>',
-        '        <span class="selected-label" ng-bind-html-unsafe="selected.label" style="display: inline-block"></span>',
-        '        <div class="caret-holder"><span class="caret"></span></div>',
+        '        <span class="selected-label" ng-bind-html-unsafe="selected.label" ng-show="selected !== undefined" style="display: inline-block"></span>',
+        '        <span class="placeholder" ng-show="selected === undefined">{{placeholder}}</span>',
+        '        <div class="caret-holder">',
+        '          <svg-icon category="inline-choice" key="caret"></svg-icon>',
+        '        </div>',
         '      </span>',
-        '      <i class="fa result-icon"></i>',
+        '      <span ng-if="response" class="feedback-icon" feedback-popover="response">',
+        '        <svg-icon open="{{feedbackVisible}}" category="feedback" key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '      </span>',
         '      <ul class="dropdown-menu">',
         '        <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
         '          <a ng-click="select(choice)" ng-bind-html-unsafe="choice.label"></a>',

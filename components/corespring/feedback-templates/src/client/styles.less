@@ -34,7 +34,6 @@
       position: relative;
     }
 
-
     &.warning {
       .warning-panel();
     }
@@ -78,18 +77,18 @@
       padding: 0px;
     }
 
-
     &.correct {
-      .color-panel(@correct-background);
+      .color-panel(@correct-color);
     }
 
     &.incorrect {
-      .color-panel(@incorrect-background);
+      .color-panel(@incorrect-color);
     }
 
     &.partial {
-      .color-panel(@partially-correct-background);
+      .color-panel(@partial-color);
     }
+
   }
 }
 
