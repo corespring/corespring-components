@@ -30,14 +30,11 @@
       .choices-holder {
         .choices-inner-holder {
           margin-top: 5px;
-          border-radius: 4px;
-          border: 1px solid #9B9B9B;
           background-color: #ffffff;
         }
         .choice {
-          border: 1px solid #979797;
-          background-color: #d8d8d8;
-          border-radius: 4px;
+          background-color: #ffffff;
+
           &.ui-draggable-dragging {
             cursor: move;
             opacity: 0.75;
@@ -49,25 +46,27 @@
 
   .answer-area {
     .choiceHolder {
-      border-radius: 4px;
-      border: 1px solid #979797;
-      background-color: #d8d8d8 !important;
-      font-size: 38px;
-      line-height: 38px;
+      background: #f8f6f6;
+      box-shadow: inset 3px 4px 2px 0px rgba(0,0,0,0.08);
+      border-width: 1px;
+      border-style: solid;
+      border-top-color: #c2c2c2;
+      border-right-color: #e9e9e9;
+      border-bottom-color: #e9e9e9;
+      border-left-color: #c2c2c2;
       color: #999;
-
     }
 
     .answer-area-table {
-      border-radius: 4px;
-      border: 1px solid #9B9B9B;
       margin-top: 5px;
+      cursor: auto;
 
-      .ui-draggable-dragging{
-        &:hover{
+      .ui-draggable-dragging {
+        &:hover {
           cursor: pointer;
         }
       }
+
       .choice {
         position: relative;
 
@@ -97,12 +96,10 @@
           top: 3px;
           color: #ccc;
 
-          &:hover{
+          &:hover {
             cursor: pointer;
           }
         }
-
-        cursor: auto;
       }
 
       &.warning {
@@ -112,15 +109,14 @@
   }
 
   .drop-hover .choice {
-    background-color: #ffffff !important;
-    border: 2px dashed #9b9b9b !important;
+    background-color: #d4d2d3 !important;
   }
 
   .choice {
-    border: 1px solid;
-    border-radius: 4px;
-    background-color: #efefef;
+    border: 1px solid #f1f1f4;
+    box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.18);
     height: 100%;
+    background: #ffffff;
     margin: 3px 3px 1px 1px;
     padding: 8px;
     min-width: 150px;
@@ -237,7 +233,6 @@
       .answer-area-holder {
         display: inline-block;
         .answer-area-table {
-          border-radius: 4px;
           display: table;
           margin-top: 5px;
 
@@ -400,14 +395,12 @@
       .choices-holder {
         .choices-inner-holder {
           margin-top: 5px;
-          border-radius: 4px;
           border: 1px solid #9b9b9b;
           background-color: #efefef;
         }
         .choice {
           border: 1px solid #979797;
           background-color: #efefef;
-          border-radius: 4px;
           float: left;
           &.ui-draggable-dragging {
             cursor: move;
@@ -443,7 +436,6 @@
       text-align: center;
     }
     .container-border {
-      border-radius: 4px;
       margin-bottom: 10px;
       max-width: 595px;
       &.warning {
@@ -502,7 +494,6 @@
     ul {
       border: 1px solid #9B9B9B;
       background: #fff;
-      border-radius: 4px;
       display: inline-block;
       padding-bottom: 0px;
 
@@ -542,7 +533,6 @@
   .choice {
     border: 1px #9b9b9b solid;
     background: #efefef;
-    border-radius: 4px;
     display: inline-block;
     padding: 8px;
     margin: 0;
@@ -683,7 +673,6 @@
     position: relative;
     display: block;
     border: 1px solid #ccc;
-    border-radius: 4px;
     margin: 5px 0 45px 0;
     min-height: 47px;
     padding: 1.13em;
@@ -705,7 +694,6 @@
       left: 0;
       top: 0;
       z-index: 10;
-      border-radius: 4px;
       user-select: none;
 
       .bg {
