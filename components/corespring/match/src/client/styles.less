@@ -302,13 +302,22 @@
 
 .corespring-match-choice {
 
-  .background {
+  .background, .foreground {
     position: absolute;
   }
 
-  .foreground {
-    position: absolute;
+  .inner-circle, .inner-rect {
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
   }
+
+  &.selected {
+    .inner-circle, .inner-rect {
+      opacity: 1;
+      transition: opacity .15s ease-in-out;
+    }
+  }
+
 
   &.correct {
 
@@ -448,7 +457,7 @@
   &.match-checkbox {
     display: inline-block;
     position: relative;
-    width: 30px;
+    width: 17px;
     height: 30px;
     font-family: FontAwesome;
     font-size: 22px;
@@ -463,7 +472,7 @@
         border-radius: 4px;
         left: 3px;
         top: 3px;
-      }
+    }
 
       .foreground {
         .scale(0);
@@ -481,64 +490,8 @@
       }
     }
 
-    &.correct {
-      .background {
-        left: 5px;
-        top: 3.5px;
-        &:after {
-          content: '\f0c8';
-        }
-      }
 
-      &.checked {
-        .foreground {
-          left: 6px;
-          top: 2px;
-          &:after {
-            font-size: 16px;
-            content: '\f00c';
-          }
-        }
-      }
-    }
 
-    &.incorrect {
-      .background {
-        left: 5px;
-        top: 3.5px;
-        &:after {
-          content: '\f0c8';
-        }
-      }
-
-      .foreground {
-        left: 8px;
-        top: 2px;
-        &:after {
-          font-size: 16px;
-          content: '\f00d';
-        }
-      }
-    }
-
-    &.unknown {
-      .background {
-        left: 5.5px;
-        top: 3.5px;
-        &:after {
-          content: '\f0c8';
-        }
-      }
-
-      .foreground {
-        left: 5.5px;
-        top: 3.5px;
-        &:after {
-          font-size: 23px;
-          content: '\f096';
-        }
-      }
-    }
   }
 }
 

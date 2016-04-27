@@ -9,9 +9,10 @@ var iconToggle = [
         openLabel: "@"
       },
       transclude: true,
+      replace:true,
       template: [
-        '<div>',
-        '  <a ng-click="toggleCorrect()" class="icon-toggle">',
+        '<div class="icon-toggle">',
+        '  <a ng-click="toggleCorrect()">',
         '    <div class="icon-holder">',
         '      <div class="icon-inner-holder">',
         '        <svg-icon class="toggle-icon show-state" ng-if="!ngModel" category="showHide" key="show-{{iconName}}"></svg-icon>',

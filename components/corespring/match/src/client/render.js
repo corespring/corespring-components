@@ -35,6 +35,7 @@ var main = [
       scope.undoModel.setRevertState(revertState);
 
       scope.classForChoice = classForChoice;
+      scope.stateForChoice = stateForChoice;
       scope.classForSolution = classForSolution;
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
@@ -171,6 +172,7 @@ var main = [
       }
 
       function reset() {
+        scope.bridge = {answerVisible: false};
         scope.editable = true;
         scope.session = {};
         scope.isSeeAnswerOpen = false;
@@ -308,6 +310,9 @@ var main = [
       }
 
       function classForChoice(row, index) {
+        if (scope.bridge.answerVisible) {
+          return classForSolution(row, index);
+        }
         var classes = [getInputTypeClass(scope.inputType)];
         if (scope.editable) {
           classes.push('input');
@@ -337,6 +342,17 @@ var main = [
               return UNKNOWN;
           }
         }
+      }
+      
+      function stateForChoice(row, index) {
+        var c = classForChoice(row, index);
+        if (/incorrect/gi.test(c)) {
+          return 'incorrect';
+        }
+        if (/correct/gi.test(c)) {
+          return 'correct';
+        }
+        return 'ready';
       }
 
       function classForSolution(row, $index) {
@@ -430,7 +446,6 @@ var main = [
         undoStartOver(),
         matchInteraction(),
         itemFeedbackPanel(),
-        seeSolutionPanel(),
         '</div>'
       ].join('\n');
 
@@ -446,6 +461,7 @@ var main = [
 
       function matchInteraction() {
         return [
+          '  <div ng-class="{showToggle: response && response.correctness == \'incorrect\'}" icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer"></div>',
           '<table class="corespring-match-table" ng-class="layout">',
           '  <tr class="header-row">',
           '    <th ng-repeat="column in matchModel.columns"',
@@ -465,10 +481,12 @@ var main = [
           '    <td class="answer-cell match-td-padded"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
-          '      <div class="corespring-match-choice"',
-          '         ng-class="classForChoice(row, $index)"',
-          '         ng-click="onClickMatch(row, $index)"',
-          '        >',
+
+
+          '      <div ng-if="inputType == \'checkbox\'" choice-checkbox-button checkbox-button-state="{{stateForChoice(row, $index)}}" class="corespring-match-choice" ng-class="classForChoice(row, $index)" ng-click="onClickMatch(row, $index)" />',
+          '      <div ng-if="inputType != \'checkbox\'" choice-radio-button radio-button-state="{{stateForChoice(row, $index)}}" class="corespring-match-choice" ng-class="classForChoice(row, $index)" ng-click="onClickMatch(row, $index)" />',
+
+
           '        <div class="background fa"></div>',
           '        <div class="foreground fa"></div>',
           '      </div>',
@@ -485,36 +503,6 @@ var main = [
         ].join('');
       }
 
-      function seeSolutionPanel() {
-        return [
-          '<div see-answer-panel="true"',
-          '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
-          '    ng-if="response.correctResponse">',
-          '  <table class="corespring-match-table" ng-class="layout">',
-          '    <tr class="match-tr">',
-          '      <th class="match-th"',
-          '          ng-class="column.cssClass"',
-          '          ng-repeat="column in matchModel.columns"',
-          '          ng-bind-html-unsafe="column.labelHtml"/>',
-          '    </tr>',
-          '    <tr class="match-tr question-row"',
-          '        ng-repeat="row in matchModel.rows"' +
-          '        question-id="{{row.id}}">',
-          '      <td class="match-td question-cell match-td-padded"',
-          '          ng-bind-html-unsafe="row.labelHtml"></td>',
-          '      <td class="match-td answer-cell match-td-padded"' +
-          '          ng-repeat="match in row.matchSet track by $index">',
-          '        <div class="corespring-match-choice"',
-          '             ng-class="classForSolution(row,$index)">' +
-          '            <div class="background fa"></div>',
-          '            <div class="foreground fa"></div>',
-          '        </div>',
-          '      </td>',
-          '    </tr>',
-          '  </table>',
-          '</div>'
-        ].join('');
-      }
     }
   }
 ];
