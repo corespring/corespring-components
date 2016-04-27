@@ -402,10 +402,10 @@ var main = [
       '           feedback-icon-use-block-feedback="{{question.config.useBlockFeedback}}" />',
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
-      '          <div mc-checkbox checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
+      '          <div choice-checkbox-button checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
       '        </div>',
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
-      '          <div radio-button radio-button-state="{{radioState(o)}}" radio-button-choice="o" />',
+      '          <div choice-radio-button radio-button-state="{{radioState(o)}}" radio-button-choice="o" />',
       '        </div>',
       '      </span>',
       '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
@@ -436,101 +436,9 @@ var main = [
   }
 ];
 
-var radioButton = ['$sce',
-  function($sce) {
-    return {
-      scope: {
-        radioButtonState: "@",
-        radioButtonChoice: "="
-      },
-      template: [
-        '<div class="radio-button" ng-class="{hasFeedback: feedback}">',
-        '  <div class="choice-icon-holder" >',
-        '    <choice-icon class="animate-show icon" ng-class="active" shape="radio" key="selected" ng-show="active == \'ready\' || active == \'selected\'"></choice-icon>',
-        '    <choice-icon class="animate-hide icon" shape="radio" key="muted" ng-show="active == \'muted\'"></choice-icon>',
-        '    <choice-icon class="animate-hide icon" shape="radio" key="selected-disabled" ng-show="active == \'selectedDisabled\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="radio" key="correct" ng-show="active == \'correct\' || active == \'correctUnselected\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="radio" key="incorrect" ng-show="active == \'incorrect\'"></choice-icon>',
-        '  </div>',
-        '</div>'
-      ].join("\n"),
-      link: function($scope, $element, $attrs) {
-        $scope.active = 'ready';
-
-        $attrs.$observe('radioButtonState', function(val) {
-          if (_(['selected', 'selectedDisabled', 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
-            $scope.active = val;
-            if (val === 'correctUnselected') {
-              $scope.feedback = {
-                correctness: 'correct',
-                feedback: $scope.radioButtonChoice.feedback
-              };
-            } else {
-              $scope.feedback = undefined;
-            }
-          } else {
-            $scope.active = 'ready';
-          }
-        });
-      }
-    };
-  }
-];
-
-var mcCheckbox = [
-  function() {
-    return {
-      scope: {
-        checkboxButtonState: "@",
-        checkboxButtonChoice: "="
-      },
-      template: [
-        '<div class="mc-checkbox" ng-class="{hasFeedback: feedback}" turo="{{active}}">',
-        '  <div class="choice-icon-holder" >',
-        '    <choice-icon class="animate-show icon" ng-class="active" shape="box" key="selected" ng-show="active == \'ready\' || active == \'selected\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="box" key="muted" ng-show="active == \'muted\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="box" key="selected-disabled" ng-show="active == \'selectedDisabled\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correct\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correctUnselected\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="box" key="incorrect" ng-show="active == \'incorrect\'"></choice-icon>',
-        '  </div>',
-        '</div>'
-      ].join("\n"),
-      link: function($scope, $element, $attrs) {
-
-        $scope.active = 'ready';
-
-        $attrs.$observe('checkboxButtonState', function(val) {
-          if (_(['selected', 'selectedDisabled', 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
-            $scope.active = val;
-            if (val === 'correctUnselected') {
-              $scope.feedback = {
-                correctness: 'correct',
-                feedback: $scope.checkboxButtonChoice.feedback
-              };
-            } else {
-              $scope.feedback = undefined;
-            }
-          } else {
-            $scope.active = 'ready';
-          }
-        });
-      }
-    };
-  }
-];
-
 exports.framework = 'angular';
 exports.directives = [
   {
     directive: main
-  },
-  {
-    name: 'radioButton',
-    directive: radioButton
-  },
-  {
-    name: 'mcCheckbox',
-    directive: mcCheckbox
   }
 ];
