@@ -7,7 +7,7 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
       'open': '@'
     },
     template: [
-      '<span class="{{key}}" ng-if="template" todo="{{template}}"> ',
+      '<span class="{{key}}" ng-if="template"> ',
       '  <div class="cs-icon">',
       '    <ng-include src="template"/>',
       '  </div>',
@@ -34,6 +34,7 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
             ($scope.shape ? '-' + $scope.shape : ''),
             ($scope.open === 'true' ? '-open' : ''),
             '.svg'].join('');
+          console.log('$scope.template', $scope.template);
         }
 
       };

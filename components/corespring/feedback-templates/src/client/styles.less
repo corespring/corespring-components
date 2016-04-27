@@ -40,6 +40,50 @@
   }
 }
 
+.feedback-popover {
+
+  &.popover {
+    padding: 0px;
+    min-width: 200px;
+    text-align: center;
+    box-shadow: none;
+    margin-left: -5px;
+    font-family: 'Kameron';
+
+    .popover-border(@color) {
+      border-color: @color;
+      & > .arrow {
+        border-bottom-color: @color;
+        border-top-color: @color;
+      }
+    }
+
+    &.popover-incorrect {
+      .popover-border(@incorrect-background);
+    }
+
+    &.popover-correct {
+      .popover-border(@correct-background);
+    }
+
+    &.popover-instructor {
+      .popover-border(@show-rationale-background);
+    }
+
+    &.bottom {
+      margin-top: 19px;
+    }
+
+    &.top {
+      margin-top: -18px;
+    }
+
+    .popover-title {
+      display: none;
+    }
+  }
+}
+
 .feedback-selector-view {
   margin-bottom: 10px;
 
