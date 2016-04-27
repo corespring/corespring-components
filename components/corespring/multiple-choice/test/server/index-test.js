@@ -77,13 +77,16 @@ component = {
 describe('multiple-choice server logic', function() {
 
   it('should return warning if the answer is null or undefined', function() {
-    var outcome = server.createOutcome(
-      {
+    var outcome = server.createOutcome({
         correctResponse: {
           value: ['a']
         },
         feedback: [
-          {value: 'a', feedback: 'yes', notChosenFeedback: 'no'}
+          {
+            value: 'a',
+            feedback: 'yes',
+            notChosenFeedback: 'no'
+          }
         ]
       },
       null,
@@ -101,9 +104,10 @@ describe('multiple-choice server logic', function() {
 
 
   describe('is correct', function() {
-    server.isCorrect(["1"], ["1"], true).should.eql(true);
-    server.isCorrect(["1", "2"], ["1"], true).should.eql(false);
-    server.isCorrect(["1"], ["1", "2"], false).should.eql(false);
+    server.isCorrect(["1"], ["1"], true).should.equal(true);
+    server.isCorrect(["1", "2"], ["1"], true).should.equal(false);
+    server.isCorrect(["1"], ["1", "2"], false).should.equal(false);
+    server.isCorrect(["1", "2"], ["1"], false).should.equal(false);
   });
 
   describe('createOutcome', function() {
@@ -114,8 +118,8 @@ describe('multiple-choice server logic', function() {
         correctness: "incorrect",
         score: 0
       };
-      response.correctness.should.eql(expected.correctness);
-      response.score.should.eql(expected.score);
+      response.correctness.should.equal(expected.correctness);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to a correct answer', function() {
@@ -142,9 +146,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.correctness.should.eql(expected.correctness);
+      response.correctness.should.equal(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should respond to an incorrect response (show correct too)', function() {
@@ -176,9 +180,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.correctness.should.eql(expected.correctness);
+      response.correctness.should.equal(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -196,9 +200,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.correctness.should.eql(expected.correctness);
+      response.correctness.should.equal(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
 
@@ -221,9 +225,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.correctness.should.eql(expected.correctness);
+      response.correctness.should.equal(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
     it('should show empty feedback if no feedback is defined', function() {
@@ -273,9 +277,9 @@ describe('multiple-choice server logic', function() {
           }
         ]
       };
-      response.correctness.should.eql(expected.correctness);
+      response.correctness.should.equal(expected.correctness);
       response.feedback.should.eql(expected.feedback);
-      response.score.should.eql(expected.score);
+      response.score.should.equal(expected.score);
     });
 
   });
@@ -288,7 +292,7 @@ describe('multiple-choice server logic', function() {
       },
       model: {
         config: {},
-        choices : [
+        choices: [
           {
             label: 'a',
             value: '1'
@@ -309,163 +313,175 @@ describe('multiple-choice server logic', function() {
 
   });
 
-  describe('Scoring', function() {
-    describe('if no partial scoring is allowed', function() {
+  describe('scoring', function() {
+    var comp, response;
 
-      it('For any incorrect answer the score should be 0', function() {
-        var response = server.createOutcome(component, ["carrot"], helper.settings(true, true, false));
-        response.score.should.eql(0);
-
-        response = server.createOutcome(component, ["turnip", "pear"], helper.settings(true, true, false));
-        response.score.should.eql(0);
-
-        response = server.createOutcome(component, ["apple"], helper.settings(true, true, false));
-        response.score.should.eql(0);
-      });
-
-      it('If all correct answers were checked the score should be 1 ', function() {
-        var response = server.createOutcome(component, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
-        response.score.should.eql(1);
-      });
-
-      it('If all correct answers were checked and some incorrect ones the score should be 1', function() {
-        var response = server.createOutcome(component, ["carrot", "turnip", "pear", "apple"], helper.settings(true, true, false));
-        response.score.should.eql(1);
-      });
-
-    });
-
-
-    it('PE_141', function() {
-      var comp = {
-            "weight" : 1,
-            "componentType" : "corespring-multiple-choice",
-            "title" : "Multiple Choice",
-            "correctResponse" : {
-              "value" : [
-                "mc_1",
-                "mc_2",
-                "mc_4"
-              ]
+    beforeEach(function() {
+      comp = {
+        "weight": 1,
+        "correctResponse": {
+          "value": [
+            "mc_1", "mc_2"
+          ]
+        },
+        "allowPartialScoring": false,
+        "partialScoring": [
+          {
+            "numberOfCorrect": 1,
+            "scorePercentage": 25
+          }
+        ],
+        "feedback": [
+          {
+            "value": "mc_1",
+            "feedbackType": "none",
+            "notChosenFeedbackType": "none"
+          },
+          {
+            "value": "mc_2",
+            "feedbackType": "none",
+            "notChosenFeedbackType": "none"
+          },
+          {
+            "value": "mc_3",
+            "feedbackType": "none",
+            "notChosenFeedbackType": "none"
+          }
+        ],
+        "model": {
+          "choices": [
+            {
+              "label": "one",
+              "value": "mc_1",
+              "labelType": "text"
             },
-            "allowPartialScoring" : false,
-            "partialScoring" : [
-              {
-                "numberOfCorrect" : 1,
-                "scorePercentage" : 25
-              }
-            ],
-            "feedback" : [
-              {
-                "value" : "mc_1",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_2",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_3",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_4",
-                "feedbackType" : "none",
-                "notChosenFeedbackType" : "none"
-              },
-              {
-                "value" : "mc_0",
-                "feedbackType" : "default",
-                "notChosenFeedbackType" : "default"
-              }
-            ],
-            "model" : {
-              "choices" : [
-                {
-                  "label" : "one&nbsp;",
-                  "value" : "mc_1",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "two",
-                  "value" : "mc_2",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "three",
-                  "value" : "mc_3",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "four",
-                  "value" : "mc_4",
-                  "labelType" : "text"
-                },
-                {
-                  "label" : "five",
-                  "value" : "mc_0",
-                  "labelType" : "text"
-                }
-              ],
-              "config" : {
-                "orientation" : "vertical",
-                "shuffle" : false,
-                "choiceType" : "checkbox",
-                "choiceLabels" : "letters",
-                "showCorrectAnswer" : "separately"
-              },
-              "scoringType" : "standard"
-            }};
-
-      var response = server.createOutcome(comp, ["mc_0","mc_1","mc_3"], helper.settings(true, true, false));
-      response.score.should.eql(0);
+            {
+              "label": "two",
+              "value": "mc_2",
+              "labelType": "text"
+            },
+            {
+              "label": "three",
+              "value": "mc_3",
+              "labelType": "text"
+            }
+          ],
+          "config": {
+            "orientation": "vertical",
+            "shuffle": false,
+            "choiceType": "checkbox",
+            "choiceLabels": "letters",
+            "showCorrectAnswer": "separately"
+          },
+          "scoringType": "standard"
+        }
+      };
     });
 
-    it('if partial scoring is allowed score should be calculated using it', function() {
-      var comp = _.cloneDeep(component);
-      comp.allowPartialScoring = true;
-      comp.partialScoring = [
-        {numberOfCorrect: 1, scorePercentage: 25},
-        {numberOfCorrect: 2, scorePercentage: 40}
-      ];
-      var response = server.createOutcome(comp, ["carrot"], helper.settings(true, true, false));
-      response.score.should.eql(0.25);
+    function createOutcome(answer) {
+      response = server.createOutcome(comp, answer, helper.settings(true, true, false));
+    }
 
-      response = server.createOutcome(comp, ["turnip", "pear"], helper.settings(true, true, false));
-      response.score.should.eql(0.4);
+    describe('choiceType checkbox', function() {
 
-      response = server.createOutcome(comp, ["carrot", "turnip", "pear"], helper.settings(true, true, false));
-      response.score.should.eql(1);
+      beforeEach(function() {
+        comp.model.config.choiceType = "checkbox";
+      });
+
+      describe('without partial scoring', function() {
+        it('should return score 1, when answer is complete', function() {
+          createOutcome(["mc_1", "mc_2"]);
+          response.correctness.should.equal('correct');
+          response.score.should.equal(1);
+        });
+        it('should return score 0, when answer is incomplete', function() {
+          createOutcome(["mc_2"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0);
+        });
+        it('should return score 0, when answer is wrong', function() {
+          createOutcome(["mc_3"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0);
+        });
+        it('should return score 0, when answer is complete but contains incorrect answer', function() {
+          createOutcome(["mc_1", "mc_2", "mc_3"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0);
+        });
+      });
+
+      describe('with partial scoring', function() {
+        beforeEach(function() {
+          comp.allowPartialScoring = true;
+        });
+        it('should return score 1, when answer is complete', function() {
+          createOutcome(["mc_1", "mc_2"]);
+          response.correctness.should.equal('correct');
+          response.score.should.equal(1);
+        });
+        it('should return partial score 0.25, when answer is incomplete', function() {
+          createOutcome(["mc_2"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0.25);
+        });
+        it('should return score 0, when answer is wrong', function() {
+          createOutcome(["mc_3"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0);
+        });
+        it('should return score 0, when answer is complete but contains incorrect answer', function() {
+          createOutcome(["mc_1", "mc_2", "mc_3"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0);
+        });
+      });
     });
 
-    it('for single choice with multiple correct answer', function() {
-      var comp = _.cloneDeep(component);
-      comp.model.config.choiceType = "radio";
-      var response = server.createOutcome(comp, ["carrot"], helper.settings(true, true, false));
-      response.score.should.eql(1);
+    describe('choiceType radio', function() {
 
-      response = server.createOutcome(comp, ["turnip"], helper.settings(true, true, false));
-      response.score.should.eql(1);
+      beforeEach(function() {
+        comp.model.config.choiceType = "radio";
+      });
 
-      response = server.createOutcome(comp, ["pear"], helper.settings(true, true, false));
-      response.score.should.eql(1);
+      describe('without partial scoring', function() {
+        it('should return score 1, when answer is correct', function() {
+          createOutcome(["mc_1"]);
+          response.correctness.should.equal('correct');
+          response.score.should.equal(1);
+        });
+        it('should return score 1, when other answer is correct', function() {
+          createOutcome(["mc_2"]);
+          response.correctness.should.equal('correct');
+          response.score.should.equal(1);
+        });
+        it('should return score 0, when answer is wrong', function() {
+          createOutcome(["mc_3"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0);
+        });
+      });
+
+      describe('with partial scoring', function() {
+        beforeEach(function() {
+          comp.allowPartialScoring = true;
+        });
+        it('should return score 1, when answer is correct', function() {
+          createOutcome(["mc_1"]);
+          response.correctness.should.equal('correct');
+          response.score.should.equal(1);
+        });
+        it('should return score 1, when other answer is correct', function() {
+          createOutcome(["mc_2"]);
+          response.correctness.should.equal('correct');
+          response.score.should.equal(1);
+        });
+        it('should return score 0, when answer is wrong', function() {
+          createOutcome(["mc_3"]);
+          response.correctness.should.equal('incorrect');
+          response.score.should.equal(0);
+        });
+      });
     });
-
-    it('partial scoring is ignored for single choice', function() {
-      var comp = _.cloneDeep(component);
-      comp.allowPartialScoring = true;
-      comp.model.config.choiceType = "radio";
-      comp.partialScoring = [
-        {numberOfCorrect: 1, scorePercentage: 25},
-        {numberOfCorrect: 2, scorePercentage: 40}
-      ];
-      var response = server.createOutcome(comp, ["carrot"], helper.settings(true, true, false));
-      response.score.should.eql(1);
-    });
-
-
   });
 });

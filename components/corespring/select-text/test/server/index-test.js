@@ -63,11 +63,11 @@ describe('select text server logic', function () {
     });
 
     it('should respond with correct', function () {
-      response.correctness.should.eql('correct');
+      response.correctness.should.equal('correct');
     });
 
     it('should return a score of 1', function () {
-      response.score.should.eql(1);
+      response.score.should.equal(1);
     });
 
   });
@@ -80,11 +80,11 @@ describe('select text server logic', function () {
     });
 
     it('should respond with incorrect ', function () {
-      response.correctness.should.eql('incorrect');
+      response.correctness.should.equal('incorrect');
     });
 
     it('should respond with score 0 ', function () {
-      response.score.should.eql(0);
+      response.score.should.equal(0);
     });
   });
 
@@ -96,11 +96,11 @@ describe('select text server logic', function () {
     });
 
     it('should respond with partial', function () {
-      response.correctness.should.eql('partial');
+      response.correctness.should.equal('partial');
     });
 
     it('should respond with score 0', function () {
-      response.score.should.eql(0);
+      response.score.should.equal(0);
     });
 
     it('should calculate partial score when allowPartialScoring is true', function () {
@@ -112,8 +112,8 @@ describe('select text server logic', function () {
       }];
 
       var response = server.createOutcome(comp, [0], helper.settings(false, true, true));
-      response.correctness.should.eql('partial');
-      response.score.should.eql(0.3);
+      response.correctness.should.equal('partial');
+      response.score.should.equal(0.3);
     });
 
   });

@@ -40,15 +40,18 @@
           "choices": [
             {
               "label": "first",
-              "id": "c_1"
+              "id": "c_1",
+              "moveOnDrag": true
             },
             {
               "label": "second is correct",
-              "id": "c_2"
+              "id": "c_2",
+              "moveOnDrag": false
             },
             {
               "label": "third",
-              "id": "c_3"
+              "id": "c_3",
+              "moveOnDrag": false
             },
             {
               "label": "<span mathjax=''>\\(y=mx+5\\)</span>",

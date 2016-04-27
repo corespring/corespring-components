@@ -14,7 +14,7 @@ describe('corespring', function() {
   var testModelTemplate = {
     data: {
       model: {
-        "config": {
+        config: {
         }
       }
     },
@@ -62,6 +62,22 @@ describe('corespring', function() {
       expect(el.attr('ng-model')).toBe('answer');
     });
 
+
+    function assertMinMax(key, input, expected){
+      it('sets ' + key + ' to: ' + expected + ' from input: ' + input, function(){
+        var m = {data: {model: {config: {}}}};
+        m.data.model.config[key] = input;
+        container.elements['1'].setDataAndSession(m);
+        scope.$digest();
+        var scopeKey = key === 'expectedLength' ? 'cols' : 'rows';
+        expect(scope[scopeKey]).toEqual(expected);
+      });
+    }
+
+    assertMinMax('expectedLines', 1, 5);
+    assertMinMax('expectedLines', 21, 20);
+    assertMinMax('expectedLength', 1, 40);
+    assertMinMax('expectedLength', 101, 100);
   });
 
   describe('isAnswerEmpty', function() {

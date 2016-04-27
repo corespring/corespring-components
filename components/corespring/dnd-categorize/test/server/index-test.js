@@ -574,25 +574,25 @@ describe('dnd-categorize', function() {
       });
 
       it('should return 1, if weighting is not allowed', function() {
-        weightedScore(correctAnswer, false, {}).should.eql(1);
+        weightedScore(correctAnswer, false, {}).should.equal(1);
       });
 
       it('should return 1, if weighting is allowed but not configured', function() {
-        weightedScore(correctAnswer, true, {}).should.eql(1);
+        weightedScore(correctAnswer, true, {}).should.equal(1);
       });
 
       it('should return 1, if weighting is allowed and configured to equal weights', function() {
         weightedScore(correctAnswer, true, {
           aa_1: 5,
           aa_2: 5
-        }).should.eql(1);
+        }).should.equal(1);
       });
 
       it('should return 1, if weighting is allowed and configured to different weights', function() {
         weightedScore(correctAnswer, true, {
           aa_1: 3,
           aa_2: 7
-        }).should.eql(1);
+        }).should.equal(1);
       });
     });
     describe('partially correct answer', function() {
@@ -606,25 +606,25 @@ describe('dnd-categorize', function() {
       });
 
       it('should return .75, if weighting is not allowed', function() {
-        weightedScore(answer, false, {}).should.eql(0.75);
+        weightedScore(answer, false, {}).should.equal(0.75);
       });
 
       it('should return .75, if weighting is allowed but not configured', function() {
-        weightedScore(answer, true, {}).should.eql(0.75);
+        weightedScore(answer, true, {}).should.equal(0.75);
       });
 
       it('should return .75, if weighting is allowed and configured to equal weights', function() {
         weightedScore(answer, true, {
           aa_1: 10,
           aa_2: 10
-        }).should.eql(0.75);
+        }).should.equal(0.75);
       });
 
       it('should return 1, if weighting is allowed and configured to different weights', function() {
         weightedScore(answer, true, {
           aa_1: 9,
           aa_2: 1
-        }).should.eql(0.95);
+        }).should.equal(0.95);
       });
     });
   });

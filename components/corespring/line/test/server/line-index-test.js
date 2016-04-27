@@ -62,8 +62,8 @@ describe('line interaction server logic', function() {
   it('respond incorrect', function() {
     var spy = sinon.spy(serverObj, 'isFunctionEqual');
     var response = server.createOutcome(_.cloneDeep(component), incorrectAnswer, helper.settings(false, true, true));
-    response.correctness.should.eql('incorrect');
-    response.score.should.eql(0);
+    response.correctness.should.equal('incorrect');
+    response.score.should.equal(0);
     // check if it was called with the right options
     spy.getCall(0).args[2].should.eql({
       variable: 'x',
@@ -73,8 +73,8 @@ describe('line interaction server logic', function() {
 
   it('respond correct', function() {
     var response = server.createOutcome(_.cloneDeep(component), correctAnswer, helper.settings(false, true, true));
-    response.correctness.should.eql('correct');
-    response.score.should.eql(1);
+    response.correctness.should.equal('correct');
+    response.score.should.equal(1);
   });
 
   describe('with empty answer', function() {
@@ -85,15 +85,15 @@ describe('line interaction server logic', function() {
     });
 
     it('should return warning', function() {
-      response.correctness.should.eql('warning');
+      response.correctness.should.equal('warning');
     });
 
     it('should return a score of 0', function() {
-      response.score.should.eql(0);
+      response.score.should.equal(0);
     });
 
     it('should return null feedback', function() {
-      (response.feedback === null).should.eql(true);
+      (response.feedback === null).should.equal(true);
     });
 
   });
@@ -109,7 +109,7 @@ describe('line interaction server logic', function() {
     it('should be default feedback if feedback obj is null', function() {
       var feedback = null;
       var response = evaluateCorrectAnswerWithFeedback(feedback);
-      response.feedback.should.eql('Correct!');
+      response.feedback.should.equal('Correct!');
     });
 
     it('should be custom feedback if feedbackType is "custom"', function() {
@@ -118,7 +118,7 @@ describe('line interaction server logic', function() {
         correctFeedback: 'Custom Correct!'
       };
       var response = evaluateCorrectAnswerWithFeedback(feedback);
-      response.feedback.should.eql('Custom Correct!');
+      response.feedback.should.equal('Custom Correct!');
     });
 
     it('should be default feedback if feedbackType is not "custom"', function() {
@@ -127,7 +127,7 @@ describe('line interaction server logic', function() {
         correctFeedback: 'Custom Correct!'
       };
       var response = evaluateCorrectAnswerWithFeedback(feedback);
-      response.feedback.should.eql(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
+      response.feedback.should.equal(fbu.keys.DEFAULT_CORRECT_FEEDBACK);
     });
 
   });
@@ -145,15 +145,15 @@ describe('line interaction server logic', function() {
 
   describe('isScoreable', function() {
     it('should be true for an incomplete model', function() {
-      server.isScoreable(null, {}, {}).should.eql(true);
-      server.isScoreable({}, {}, {}).should.eql(true);
-      server.isScoreable({ model: {}}, {}, {}).should.eql(true);
-      server.isScoreable({ model: { config: {}}}, {}, {}).should.eql(true);
+      server.isScoreable(null, {}, {}).should.equal(true);
+      server.isScoreable({}, {}, {}).should.equal(true);
+      server.isScoreable({ model: {}}, {}, {}).should.equal(true);
+      server.isScoreable({ model: { config: {}}}, {}, {}).should.equal(true);
     });
 
     it('should be the opposite of exhibitOnly', function() {
-      server.isScoreable({ model: { config: { exhibitOnly: false}}}, {}, {}).should.eql(true);
-      server.isScoreable({ model: { config: { exhibitOnly: true}}}, {}, {}).should.eql(false);
+      server.isScoreable({ model: { config: { exhibitOnly: false}}}, {}, {}).should.equal(true);
+      server.isScoreable({ model: { config: { exhibitOnly: true}}}, {}, {}).should.equal(false);
     });
   });
 

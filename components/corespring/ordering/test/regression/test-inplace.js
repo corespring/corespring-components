@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var should = require('should');
 
-describe('inplace ordering', function() {
+describe('inplace ordering (inpor)', function() {
 
   var componentName = 'ordering';
   var itemJsonFilename = 'inplace.json';
@@ -21,14 +21,14 @@ describe('inplace ordering', function() {
   });
   
 
-  it('submitting without interaction results in warning feedback', function(done) {
+  it('submitting without interaction results in warning feedback (inpor-01)', function(done) {
     browser
       .submitItem()
-      .waitForExist('.feedback.warning')
+      .waitFor('.feedback.warning')
       .call(done);
   });
 
-  it('MathJax Renders', function(done) {
+  it('MathJax Renders (inpor-02)', function(done) {
     browser
       .waitForVisible('.choice .MathJax_Preview')
       .getHTML(divContaining('Third'), function(err, html) {
@@ -37,7 +37,7 @@ describe('inplace ordering', function() {
       .call(done);
   });
 
-  it('MathJax Renders after Reset', function(done) {
+  it('MathJax Renders after Reset (inpor-03)', function(done) {
     browser
       .submitItem()
       .resetItem()

@@ -92,14 +92,14 @@ describe('placement ordering', function() {
 
   it('respond correct', function() {
     var response = server.createOutcome(_.cloneDeep(placementComponent), ["4", "3"], helper.settings(false, true, true));
-    response.correctness.should.eql('correct');
-    response.score.should.eql(1);
+    response.correctness.should.equal('correct');
+    response.score.should.equal(1);
   });
 
   it('respond incorrect', function() {
     var response = server.createOutcome(_.cloneDeep(placementComponent), ["1", "2"], helper.settings(false, true, true));
-    response.correctness.should.eql('incorrect');
-    response.score.should.eql(0);
+    response.correctness.should.equal('incorrect');
+    response.score.should.equal(0);
   });
 });
 
@@ -107,30 +107,30 @@ describe('ordering', function() {
 
   it('respond correct', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["1", "2", "3", "4"], helper.settings(false, true, true));
-    response.correctness.should.eql('correct');
-    response.score.should.eql(1);
+    response.correctness.should.equal('correct');
+    response.score.should.equal(1);
   });
 
   it('respond incorrect', function() {
     var response = server.createOutcome(_.cloneDeep(component), ["2", "1", "4", "3"], helper.settings(false, true, true));
-    response.correctness.should.eql('incorrect');
-    response.score.should.eql(0);
+    response.correctness.should.equal('incorrect');
+    response.score.should.equal(0);
   });
 
   it('respond correct when correctResponse is defined', function() {
     var mutatedComponent = _.cloneDeep(component);
     mutatedComponent.correctResponse = ["4","3","2","1"];
     var response = server.createOutcome(_.cloneDeep(mutatedComponent), ["4", "3", "2", "1"], helper.settings(false, true, true));
-    response.correctness.should.eql('correct');
-    response.score.should.eql(1);
+    response.correctness.should.equal('correct');
+    response.score.should.equal(1);
   });
 
   it('respond incorrect when correctResponse is defined', function() {
     var mutatedComponent = _.cloneDeep(component);
     mutatedComponent.correctResponse = ["4","3","2","1"];
     var response = server.createOutcome(_.cloneDeep(mutatedComponent), ["1", "2", "3", "4"], helper.settings(false, true, true));
-    response.correctness.should.eql('incorrect');
-    response.score.should.eql(0);
+    response.correctness.should.equal('incorrect');
+    response.score.should.equal(0);
   });
 
 

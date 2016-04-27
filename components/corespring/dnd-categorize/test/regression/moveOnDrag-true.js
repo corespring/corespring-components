@@ -4,7 +4,7 @@ var should = require('should');
 var fs = require('fs');
 var _ = require('lodash');
 
-describe('dnd-categorize when moveOnDrag = true', function() {
+describe('dnd-categorize when moveOnDrag = true (dndct)', function() {
 
   "use strict";
 
@@ -27,10 +27,9 @@ describe('dnd-categorize when moveOnDrag = true', function() {
         .call(done);
     });
 
-    it('remove the choice from the category and makes it available again', function(done){
-      var invertWait;
+    it('remove the choice from the category and makes it available again (dndct-01)', function(done){
       browser
-        .waitForExist('.cat_1 .choice_1', 2000, invertWait=true)
+        .waitForRemoval('.cat_1 .choice_1')
         .waitForVisible('.choices-container .choice_1')
         .call(done);
     });
@@ -45,11 +44,11 @@ describe('dnd-categorize when moveOnDrag = true', function() {
         .call(done);
     });
 
-    it('remove the choices from the category and makes them available again', function(done){
+    it('remove the choices from the category and makes them available again (dndct-02)', function(done){
       var invertWait;
       browser
-        .waitForExist('.cat_1 .choice_1', 2000, invertWait=true)
-        .waitForExist('.cat_1 .choice_2', 2000, invertWait=true)
+        .waitForRemoval('.cat_1 .choice_1')
+        .waitForRemoval('.cat_1 .choice_2')
         .waitForVisible('.choices-container .choice_1')
         .waitForVisible('.choices-container .choice_2')
         .call(done);
@@ -63,13 +62,13 @@ describe('dnd-categorize when moveOnDrag = true', function() {
         .call(done);
     });
 
-    it('should render the empty space as placed', function(done){
+    it('should render the empty space as placed (dndct-03)', function(done){
       browser
-        .waitForExist('.choices-container .choice_2.placed')
+        .waitFor('.choices-container .choice_2.placed')
         .call(done);
     });
 
-    it('should render the choice as categorized', function(done){
+    it('should render the choice as categorized (dndct-04)', function(done){
       browser
         .waitForVisible('.cat_2 .choice_2')
         .call(done);
@@ -85,7 +84,7 @@ describe('dnd-categorize when moveOnDrag = true', function() {
         .call(done);
     });
 
-    it('should render the choice as visible', function(done){
+    it('should render the choice as visible (dndct-04)', function(done){
       browser
         .waitForVisible('.choices-container .choice_2')
         .call(done);

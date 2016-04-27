@@ -1,0 +1,21 @@
+{
+  "componentType": "corespring-webdriver-test-component",
+  "title": "Webdriver Test Component",
+  "correctResponse": {
+
+  },
+  "feedback": {
+    "correctFeedbackType": "none",
+    "partialFeedbackType": "none",
+    "incorrectFeedbackType": "none"
+  },
+  "allowPartialScoring": false,
+  "partialScoring": [],
+  "model": {
+
+    "config": {
+
+    }
+  },
+  "weight": 1
+}

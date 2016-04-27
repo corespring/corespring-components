@@ -61,7 +61,7 @@ describe('match', function() {
     browser
       .waitAndClick(answerInput('Row1'))
       .submitItem()
-      .waitForExist(solutionPanelHeader())
+      .waitFor(solutionPanelHeader())
       .waitAndClick(solutionPanelHeader())
       .isExistingWithWait(correctAnswer('Row1'), function(err,res){
         [err,res].should.eql([undefined,true], "Row1");

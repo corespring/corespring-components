@@ -44,6 +44,10 @@ describe('inline-choice', function() {
       });
     });
 
+    browser.waitAndGetLocation = function(selector, cb){
+      return this.waitFor(selector).getLocation(selector, cb);
+    };
+
     browser
       .loadTest(componentName, itemJsonFilename)
       .call(done);
@@ -54,40 +58,45 @@ describe('inline-choice', function() {
     browser
       .selectInlineChoice("1", "Banana")
       .submitItem()
-      .waitForExist('.result-icon')
+      .waitFor('.result-icon')
       .getPseudoElementCss('.warning .result-icon', ':after', 'color', function(err, result){
-        result.value.should.eql('rgb(153, 153, 153)');
+        result.value.should.equal('rgb(153, 153, 153)');
       })
       .getPseudoElementCss('.incorrect .result-icon', ':after', 'color', function(err, result){
-        result.value.should.eql('rgb(236, 151, 31)');
+        result.value.should.equal('rgb(236, 151, 31)');
       })
       .call(done);
   });
 
   it('feedbacks are positioned correctly', function(done) {
+    var playerPos, arrowPos1, arrowPos2;
+
     browser
       .selectInlineChoice("1", "Banana")
       .selectInlineChoice("2", "Apple")
       .submitItem()
+
       .waitAndClick(inlineChoiceWithId("1") + '//span')
       .waitAndClick(inlineChoiceWithId("2") + '//span')
-      .getLocation(".player-body", function(err, playerPos) {
-        this.getLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, arrowPos) {
-          this.getLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
-            arrowPos.x.should.be.above(popupPos.x);
-            arrowPos.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
 
+      .waitAndGetLocation(".player-body", function(err, pos) {
+        playerPos = pos;
+      })
+      .waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='arrow']", function(err, pos) {
+        arrowPos1 = pos;
+      })
+      .waitAndGetLocation(inlineChoiceWithId("1") + "//div[@class='popover-content']", function(err, popupPos) {
+        arrowPos1.x.should.be.above(popupPos.x);
+        arrowPos1.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
             popupPos.x.should.be.above(playerPos.x);
-          });
-        });
-        this.getLocation(inlineChoiceWithId("2") + "//div[@class='arrow']", function(err, arrowPos) {
-          this.getLocation(inlineChoiceWithId("2") + "//div[@class='popover-content']", function(err, popupPos) {
-            arrowPos.x.should.be.above(popupPos.x);
-            arrowPos.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
-
+      })
+      .waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='arrow']", function(err, pos) {
+        arrowPos2 = pos;
+      })
+      .waitAndGetLocation(inlineChoiceWithId("2") + "//div[@class='popover-content']", function(err, popupPos) {
+        arrowPos2.x.should.be.above(popupPos.x);
+        arrowPos2.x.should.be.below(popupPos.x + 200); // popover has a fixed width of 200px
             popupPos.x.should.be.above(playerPos.x);
-          });
-        });
       })
       .call(done);
   });
