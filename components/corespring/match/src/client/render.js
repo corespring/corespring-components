@@ -352,7 +352,7 @@ var main = [
         if (/correct/gi.test(c)) {
           return 'correct';
         }
-        return 'ready';
+        return scope.response ? 'muted' : 'ready';
       }
 
       function classForSolution(row, $index) {
@@ -451,7 +451,7 @@ var main = [
 
       function undoStartOver() {
         return [
-          '<div ng-show="editable" class="undo-start-over pull-right">',
+          '<div ng-show="editable" class="undo-start-over">',
           '  <span cs-undo-button-with-model></span>',
           '  <span cs-start-over-button-with-model></span>',
           '</div>',
@@ -461,7 +461,7 @@ var main = [
 
       function matchInteraction() {
         return [
-          '  <div ng-class="{showToggle: response && response.correctness == \'incorrect\'}" icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer"></div>',
+          '<div ng-class="{showToggle: response && response.correctness == \'incorrect\'}" icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer"></div>',
           '<table class="corespring-match-table" ng-class="layout">',
           '  <tr class="header-row">',
           '    <th ng-repeat="column in matchModel.columns"',
@@ -474,19 +474,15 @@ var main = [
           '      question-id="{{row.id}}">',
           '    <td class="question-cell match-td-padded" ng-bind-html-unsafe="row.labelHtml"></td>',
           '    <td class="answer-expected-warning match-td-padded">',
-          '      <div class="warning-holder" ng-if="row.answerExpected">',
+          '      <div class="warning-holder" ng-if="row.answerExpected && !bridge.answerVisible">',
           '        <i class="fa fa-exclamation-triangle"></i>',
           '      </div>',
           '    </td>',
           '    <td class="answer-cell match-td-padded"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
-
-
           '      <div ng-if="inputType == \'checkbox\'" choice-checkbox-button checkbox-button-state="{{stateForChoice(row, $index)}}" class="corespring-match-choice" ng-class="classForChoice(row, $index)" ng-click="onClickMatch(row, $index)" />',
           '      <div ng-if="inputType != \'checkbox\'" choice-radio-button radio-button-state="{{stateForChoice(row, $index)}}" class="corespring-match-choice" ng-class="classForChoice(row, $index)" ng-click="onClickMatch(row, $index)" />',
-
-
           '        <div class="background fa"></div>',
           '        <div class="foreground fa"></div>',
           '      </div>',
