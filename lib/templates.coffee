@@ -15,11 +15,13 @@ exports.preroll = ->
   console.log('init');
 
   //Mock assets and their requests
-  angular.module('test-app').constant('ASSETS_PATH', 'mock-assets');
 
   angular.module('test-app', ['ngSanitize', 'ui.select']).run(['$httpBackend',function($httpBackend) {
     $httpBackend.whenGET(/mock-assets\\/.*/).respond('');
   }]);
+
+  angular.module('test-app').constant('ASSETS_PATH', 'mock-assets');
+
 
   //Mock dependencies
 

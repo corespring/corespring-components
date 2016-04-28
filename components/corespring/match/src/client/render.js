@@ -28,11 +28,13 @@ var main = [
       var YES_NO = 'YES_NO';
 
       scope.editable = false;
-      scope.isSeeAnswerOpen = false;
+      scope.bridge = {answerVisibe: false};
+
 
       scope.undoModel = new CsUndoModel();
       scope.undoModel.setGetState(getState);
       scope.undoModel.setRevertState(revertState);
+
 
       scope.classForChoice = classForChoice;
       scope.stateForChoice = stateForChoice;
