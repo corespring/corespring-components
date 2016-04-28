@@ -11,8 +11,7 @@ var checkboxButton = [
         '    <choice-icon class="animate-show icon" ng-class="active" shape="box" key="selected" ng-show="active == \'ready\' || active == \'selected\'"></choice-icon>',
         '    <choice-icon class="animate-hide icon" shape="box" key="muted" ng-show="active == \'muted\'"></choice-icon>',
         '    <choice-icon class="animate-hide icon" shape="box" key="selected-disabled" ng-show="active == \'selectedDisabled\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correct\'"></choice-icon>',
-        '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correctUnselected\'"></choice-icon>',
+        '    <choice-icon class="animate-show icon" shape="box" key="correct" ng-show="active == \'correct\' || active == \'correctUnselected\'"></choice-icon>',
         '    <choice-icon class="animate-show icon" shape="box" key="incorrect" ng-show="active == \'incorrect\'"></choice-icon>',
         '  </div>',
         '</div>'
