@@ -22,8 +22,6 @@ var checkboxButton = [
         $scope.active = 'ready';
 
         $attrs.$observe('checkboxButtonState', function(val) {
-          if ($scope.active === val)  return;
-          console.log("REREING", val);
           if (_(['selected', 'selectedDisabled', 'correct', 'incorrect', 'muted', 'correctUnselected']).contains(val)) {
             $scope.active = val;
             if (val === 'correctUnselected') {

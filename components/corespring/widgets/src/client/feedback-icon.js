@@ -27,7 +27,7 @@ var feedbackIcon = [
 
         $scope.isOpen = function() {
           var isBlockLevel = $scope.feedbackIconUseBlockFeedback === 'true';
-          return (isBlockLevel || $scope.state == 'open') ? 'true' : undefined;
+          return (isBlockLevel || $scope.state === 'open') ? 'true' : undefined;
         };
 
         $scope.iconKey = function() {
