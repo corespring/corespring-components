@@ -138,7 +138,7 @@ describe('corespring:ordering-in-place', function() {
 
       it('correct answer and show correct answer button are not visible before submitting', function() {
         setModelAndDigest(verticalModel);
-        expect($(element).find('.show-correct-button').hasClass('ng-hide')).toBe(true);
+        expect($(element).find('.show-correct').hasClass('ng-hide')).toBe(true);
         expect($(element).find('.correct-answer').hasClass('ng-hide')).toBe(true);
       });
 
@@ -150,7 +150,7 @@ describe('corespring:ordering-in-place', function() {
           correctResponse: ['a', 'b', 'c', 'd']
         });
         scope.$digest();
-        expect($(element).find('.show-correct-button').hasClass('ng-hide')).toBe(false);
+        expect($(element).find('.show-correct').hasClass('ng-hide')).toBe(false);
       });
 
       it('correct answer is visible after submitting an incorrect answer', function() {
