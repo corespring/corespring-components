@@ -929,42 +929,4 @@ describe('corespring:number-line:interactive-graph-render', function() {
 
   });
 
-  describe('removal element', function() {
-
-    beforeEach(function() {
-      scope.model = {
-        config: {
-          availableTypes: {
-            "PF": false,
-            "LEE": false,
-            "LEF": false,
-            "LFE": false,
-            "LFF": false,
-            "REP": false,
-            "REN": false,
-            "RFP": false,
-            "RFN": false
-          }
-        }
-      };
-      nodeScope.graphModel = testModel.data.model;
-      nodeScope.responseModel = {};
-      scope.$digest();
-    });
-
-    describe('selecting a point', function() {
-      beforeEach(function() {
-        //scope.selected = [1];
-        scope.$digest();
-      });
-
-      it('should display remove button', function() {
-        console.log(element.html());
-        expect(element.find('.remove-element').hasClass("ng-hide")).toBe(false);
-      });
-    });
-
-  });
-
-
 });

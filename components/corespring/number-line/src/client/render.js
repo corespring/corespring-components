@@ -159,7 +159,7 @@ var main = [
 
 var interactiveGraph = [
   '$log', 'ScaleUtils', 'GraphHelper','CsUndoModel',
-  function($log, ScaleUtils, GraphHelper, CsUndoModel) {
+  function($log, ScaleUtils, GraphHelper,CsUndoModel) {
 
     "use strict";
 
@@ -209,8 +209,8 @@ var interactiveGraph = [
         '    <span role="presentation"  class="element-rfp" ng-show="isGroupActive(\'Ray\') && isTypeEnabled(\'RFP\')" ng-mousedown="select(\'RFP\')"><a ng-class="{active: isActive(\'RFP\')}" >&nbsp;</a></span>',
         '    <span role="presentation"  class="element-ren" ng-show="isGroupActive(\'Ray\') && isTypeEnabled(\'REN\')"  ng-mousedown="select(\'REN\')"><a ng-class="{active: isActive(\'REN\')}">&nbsp;</a></span>',
         '    <span role="presentation"  class="element-rep" ng-show="isGroupActive(\'Ray\') && isTypeEnabled(\'REP\')"  ng-mousedown="select(\'REP\')"><a ng-class="{active: isActive(\'REP\')}">&nbsp;</a></span>',
+        '    <span role="presentation"><a ng-click="removeSelectedElements()" ng-show="selected.length > 0"><i class="bin-icon fa fa-trash-o fa-lg"></i></a></span>',
         '  </div>',
-        '  <div class="remove-element"><a ng-click="removeSelectedElements()" ng-show="selected.length > 0"><i class="bin-icon fa fa-trash-o fa-lg"></i></a></div>',
         "  <div class='paper'></div>",
         "</div>"
       ].join(''),
