@@ -22,6 +22,10 @@
 
 .element-selector-template() {
   white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px;
+
   span.element-pf a {
     .style-element(0);
   }
@@ -74,15 +78,24 @@
   }
 }
 
+.remove-element-template {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 10px;
+}
+
 .view-number-line {
 
   .undo-button-row {
     float: right;
   }
 
-  div.element-selector {
+  .element-selector {
     .element-selector-template();
-    margin-left: 10px;
+  }
+
+  .remove-element {
+    .remove-element-template();
   }
 
   .no-response {
@@ -191,8 +204,12 @@
     margin-top: 20px;
   }
 
-  div.element-selector {
+  .element-selector {
     .element-selector-template();
+  }
+
+  .remove-element {
+    .remove-element-template();
   }
 
   .display-panel .element-selector {
