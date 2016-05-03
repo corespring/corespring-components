@@ -135,6 +135,7 @@ var main = [
 
       function removeChoice(index) {
         scope.model.choices.splice(index, 1);
+        updateCorrectResponse();
       }
 
       function hasChoice($index) {
