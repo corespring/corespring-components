@@ -6,6 +6,15 @@ var main = ['$compile',
     var PIXELS_PER_COL = 7;
     var BASE_COL_PIXELS = 16;
 
+    return {
+      scope: {},
+      restrict: 'AE',
+      link: link,
+      controller: function($scope) {},
+      template: template()
+    };
+
+
     function MathInputWiggiFeatureDef() {
       this.name = 'mathinput';
       this.attributeName = 'mathinput';
@@ -44,16 +53,6 @@ var main = ['$compile',
       };
     }
 
-    return {
-      scope: {},
-      restrict: 'AE',
-      link: link,
-      controller: function($scope) {
-      },
-      template: template()
-    };
-
-
     function link(scope, element, attrs) {
 
       function editable() {
@@ -67,14 +66,16 @@ var main = ['$compile',
         setDataAndSession: function(dataAndSession) {
 
           var config = dataAndSession.data ? dataAndSession.data.model.config || {} : {};
-          
-          function getValue(key, lower, upper, defaultValue){
+
+          function getValue(key, lower, upper, defaultValue) {
             var v = config[key] || defaultValue;
             return Math.max(lower, Math.min(upper, v));
           }
 
           scope.question = dataAndSession.data.model;
-          scope.session = dataAndSession.session || {answers: ''};
+          scope.session = dataAndSession.session || {
+            answers: ''
+          };
           scope.answer = scope.session.answers;
 
           scope.rows = getValue('expectedLines', 5, 20, 5);
@@ -95,10 +96,9 @@ var main = ['$compile',
           element.find('.textarea-holder')
             .html(compiledWiggi)
             .css({
-              'overflow' : 'hidden',
-              display: 'inline-block',
-              width: width, 
-              height: height});
+              'width': width,
+              'min-height': height
+            });
         },
 
         getSession: function() {
@@ -123,8 +123,7 @@ var main = ['$compile',
           scope.received = true;
         },
 
-        setMode: function(newMode) {
-        },
+        setMode: function(newMode) {},
 
         reset: function() {
           scope.answer = undefined;
@@ -161,6 +160,7 @@ var main = ['$compile',
 
       ].join('\n');
     }
+
     function template() {
       return [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
@@ -193,4 +193,3 @@ exports.directives = [
     directive: mathinputHolder
   }
 ];
-
