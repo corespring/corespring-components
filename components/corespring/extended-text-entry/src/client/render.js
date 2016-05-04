@@ -154,6 +154,9 @@ function mainDirective($compile) {
     ].join("\n");
   }
 
+  /**
+   * A math input feature for the wiggi tool bar
+   */
   function MathInputWiggiFeatureDef() {
     this.name = 'mathinput';
     this.attributeName = 'mathinput';
