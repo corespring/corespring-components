@@ -67,10 +67,10 @@ function mainDirective($compile) {
         }]
       } : {};
 
-      addWiggiToView();
+      renderWiggi();
     }
 
-    function addWiggiToView(){
+    function renderWiggi(){
       var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
       var height = scope.rows * PIXELS_PER_ROW + 'px';
       var compiledWiggi = $compile(wiggiTemplate())(scope);
