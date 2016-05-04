@@ -2,11 +2,5 @@
   "name": "widgets",
   "title": "General Player Widgets",
   "purpose": "library",
-  "organization": "corespring",
-  "libraries" : [
-    {
-      "name": "widgets",
-      "organization": "corespring"
-    }
-  ]
+  "organization": "corespring"
 }
