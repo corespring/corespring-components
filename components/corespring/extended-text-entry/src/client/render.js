@@ -1,178 +1,201 @@
-var main = ['$compile',
-  function($compile) {
+exports.framework = 'angular';
+exports.directives = [
+  {
+    directive: ['$compile', mainDirective]
+  },
+  {
+    name: 'mathinputHolder',
+    directive: ['$log', mathinputHolderDirective]
+  }
+];
 
-    var MAX_WIDTH = 555;
-    var PIXELS_PER_ROW = 20;
-    var PIXELS_PER_COL = 7;
-    var BASE_COL_PIXELS = 16;
+function mainDirective($compile) {
 
-    return {
-      scope: {},
-      restrict: 'AE',
-      link: link,
-      controller: function($scope) {},
-      template: template()
+  var MAX_WIDTH = 555;
+  var PIXELS_PER_ROW = 20;
+  var PIXELS_PER_COL = 7;
+  var BASE_COL_PIXELS = 16;
+
+  return {
+    scope: {},
+    restrict: 'AE',
+    link: link,
+    controller: function($scope) {},
+    template: template()
+  };
+
+  function link(scope, element, attrs) {
+
+    scope.editable = true;
+
+    scope.containerBridge = {
+      answerChangedHandler: answerChangedHandler,
+      editable: setEditable,
+      getSession: getSession,
+      isAnswerEmpty: isAnswerEmpty,
+      reset: reset,
+      setDataAndSession: setDataAndSession,
+      setInstructorData: setInstructorData,
+      setMode: setMode,
+      setResponse: setResponse
     };
 
+    scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
-    function MathInputWiggiFeatureDef() {
-      this.name = 'mathinput';
-      this.attributeName = 'mathinput';
-      this.iconclass = 'fa math-sum';
-      this.insertInline = true;
-      this.addToEditor = '<div mathinput-holder-init></div>';
-      this.compile = true;
-      this.draggable = true;
-      this.initialise = function($node, replaceWith) {
-        var content = $node.html() || '';
-        var isNew = $node[0].outerHTML.indexOf('mathinput-holder-init') >= 0;
-        var newNode = $('<div mathinput-holder><math-input editable="true" keypad-auto-open="' + isNew + '" keypad-type="\'basic\'" ng-model="expr" expression="\'' + content + '\'"></math-input></div>');
-        return replaceWith(newNode);
-      };
+    //-------------------------------------------------
+    // only functions below this line
+    //-------------------------------------------------
 
-      this.registerChangeNotifier = function(notifyEditorOfChange, node) {
-        var scope = node.scope() && node.scope().$$childHead;
-        if (scope) {
-          scope.$watch('ngModel', function(a, b) {
-            if (a && b && a !== b) {
-              notifyEditorOfChange();
-            }
-          });
-        }
-      };
+    function setDataAndSession(dataAndSession) {
 
-      this.onClick = function($node, $nodeScope, editor) {
-        $node.find('.mq').find('textarea').blur();
-        setTimeout(function() {
-          $node.find('.mq').find('textarea').focus();
-        }, 1);
-      };
+      var config = dataAndSession.data && dataAndSession.data.model ? dataAndSession.data.model.config || {} : {};
 
-      this.getMarkUp = function($node, $scope) {
-        return '<span mathinput>' + ($scope.expr || '') + '</span>';
+      scope.question = dataAndSession.data.model;
+      scope.session = dataAndSession.session || {
+          answers: ''
+        };
+      scope.answer = scope.session.answers;
+
+      scope.rows = getValue(config, 'expectedLines', 3, 20, 5);
+      scope.cols = getValue(config, 'expectedLength', 35, 100, 60);
+
+      scope.extraFeatures = config.showMathInput ? {
+        definitions: [{
+          type: 'group',
+          name: 'math',
+          buttons: [new MathInputWiggiFeatureDef()]
+        }]
+      } : {};
+
+      addWiggiToView();
+    }
+
+    function addWiggiToView(){
+      var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
+      var height = scope.rows * PIXELS_PER_ROW + 'px';
+      var compiledWiggi = $compile(wiggiTemplate())(scope);
+      element.find('.textarea-holder')
+        .html(compiledWiggi)
+        .css({
+          'width': width,
+          'min-height': height
+        });
+    }
+
+    function getSession() {
+      return {
+        answers: scope.answer
       };
     }
 
-    function link(scope, element, attrs) {
-
-      function editable() {
-        return element.find('.wiggi-wiz-editable');
-      }
-
-      scope.editable = true;
-
-      scope.containerBridge = {
-
-        setDataAndSession: function(dataAndSession) {
-
-          var config = dataAndSession.data ? dataAndSession.data.model.config || {} : {};
-
-          function getValue(key, lower, upper, defaultValue) {
-            var v = config[key] || defaultValue;
-            return Math.max(lower, Math.min(upper, v));
-          }
-
-          scope.question = dataAndSession.data.model;
-          scope.session = dataAndSession.session || {
-            answers: ''
-          };
-          scope.answer = scope.session.answers;
-
-          scope.rows = getValue('expectedLines', 5, 20, 5);
-          scope.cols = getValue('expectedLength', 40, 100, 60);
-
-          var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
-          var height = scope.rows * PIXELS_PER_ROW + 'px';
-
-          scope.extraFeatures = scope.question.config.showMathInput ? {
-            definitions: [{
-              type: 'group',
-              name: 'math',
-              buttons: [new MathInputWiggiFeatureDef()]
-            }]
-          } : {};
-
-          var compiledWiggi = $compile(wiggiTemplate())(scope);
-          element.find('.textarea-holder')
-            .html(compiledWiggi)
-            .css({
-              'width': width,
-              'min-height': height
-            });
-        },
-
-        getSession: function() {
-          return {
-            answers: scope.answer
-          };
-        },
-
-        setInstructorData: function(data) {
-          scope.answer = "Open Ended Answers are not automatically scored. No correct answer is defined.";
-          scope.received = true;
-        },
-
-        // sets the server's response
-        setResponse: function(response) {
-          console.log("Setting Response for extended text entry:");
-          console.log(response);
-
-          scope.answer = response.studentResponse;
-          scope.response = response;
-
-          scope.received = true;
-        },
-
-        setMode: function(newMode) {},
-
-        reset: function() {
-          scope.answer = undefined;
-          scope.response = undefined;
-          scope.received = false;
-        },
-
-        isAnswerEmpty: function() {
-          return _.isEmpty(this.getSession().answers);
-        },
-
-        answerChangedHandler: function(callback) {
-          scope.$watch("answer", function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              callback();
-            }
-          }, true);
-        },
-
-        editable: function(e) {
-          scope.editable = e;
-        }
-      };
-
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-
+    function setInstructorData(data) {
+      scope.answer = "Open Ended Answers are not automatically scored. No correct answer is defined.";
+      scope.received = true;
     }
 
-    function wiggiTemplate() {
-      return [
-        '    <wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
-        '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
-        '    </wiggi-wiz>'
+    // sets the server's response
+    function setResponse(response) {
+      console.log("Setting Response for extended text entry:");
+      console.log(response);
 
+      scope.answer = response.studentResponse;
+      scope.response = response;
+
+      scope.received = true;
+    }
+
+    function setMode(newMode) {}
+
+    function reset() {
+      scope.answer = undefined;
+      scope.response = undefined;
+      scope.received = false;
+    }
+
+    function isAnswerEmpty() {
+      return _.isEmpty(this.getSession().answers);
+    }
+
+    function answerChangedHandler(callback) {
+      scope.$watch("answer", function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          callback();
+        }
+      }, true);
+    }
+
+    function setEditable(e) {
+      scope.editable = e;
+    }
+
+    function getValue(config, key, lower, upper, defaultValue) {
+      var v = config[key] || defaultValue;
+      return Math.max(lower, Math.min(upper, v));
+    }
+
+  }
+
+  function wiggiTemplate() {
+    return [
+        '<wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
+        '  <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
+        '</wiggi-wiz>'
       ].join('\n');
-    }
+  }
 
-    function template() {
-      return [
-        '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
+  function template() {
+    return [
+        '<div class="corespring-extended-text-entry view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder">',
         '  </div>',
         '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
         '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
-        '</div>'].join("\n");
-    }
-  }];
+        '</div>'
+    ].join("\n");
+  }
 
-var mathinputHolder = ['$log', function($log) {
+  function MathInputWiggiFeatureDef() {
+    this.name = 'mathinput';
+    this.attributeName = 'mathinput';
+    this.iconclass = 'fa math-sum';
+    this.insertInline = true;
+    this.addToEditor = '<div mathinput-holder-init></div>';
+    this.compile = true;
+    this.draggable = true;
+
+    this.initialise = function($node, replaceWith) {
+      var content = $node.html() || '';
+      var isNew = $node[0].outerHTML.indexOf('mathinput-holder-init') >= 0;
+      var newNode = $('<div mathinput-holder><math-input editable="true" keypad-auto-open="' + isNew + '" keypad-type="\'basic\'" ng-model="expr" expression="\'' + content + '\'"></math-input></div>');
+      return replaceWith(newNode);
+    };
+
+    this.registerChangeNotifier = function(notifyEditorOfChange, node) {
+      var scope = node.scope() && node.scope().$$childHead;
+      if (scope) {
+        scope.$watch('ngModel', function(a, b) {
+          if (a && b && a !== b) {
+            notifyEditorOfChange();
+          }
+        });
+      }
+    };
+
+    this.onClick = function($node, $nodeScope, editor) {
+      $node.find('.mq').find('textarea').blur();
+      setTimeout(function() {
+        $node.find('.mq').find('textarea').focus();
+      }, 1);
+    };
+
+    this.getMarkUp = function($node, $scope) {
+      return '<span mathinput>' + ($scope.expr || '') + '</span>';
+    };
+  }
+
+}
+
+function mathinputHolderDirective($log) {
   function link($scope, $element) {
     $element.addClass('mathinput-holder');
   }
@@ -181,15 +204,4 @@ var mathinputHolder = ['$log', function($log) {
     restrict: 'A',
     link: link
   };
-}];
-
-exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  },
-  {
-    name: 'mathinputHolder',
-    directive: mathinputHolder
-  }
-];
+}
