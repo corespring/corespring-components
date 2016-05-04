@@ -52,8 +52,8 @@ function mainDirective($compile) {
 
       scope.question = dataAndSession.data.model;
       scope.session = dataAndSession.session || {
-          answers: ''
-        };
+        answers: ''
+      };
       scope.answer = scope.session.answers;
 
       scope.rows = getValue(config, 'expectedLines', 3, 20, 5);
@@ -70,15 +70,21 @@ function mainDirective($compile) {
       renderWiggi();
     }
 
-    function renderWiggi(){
-      var width = (Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH) + 'px');
-      var height = scope.rows * PIXELS_PER_ROW + 'px';
+    function renderWiggi() {
+      var width = Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH);
+      var height = scope.rows * PIXELS_PER_ROW;
       var compiledWiggi = $compile(wiggiTemplate())(scope);
+
       element.find('.textarea-holder')
         .html(compiledWiggi)
         .css({
-          'width': width,
-          'min-height': height
+          width: width,
+          minHeight: height
+        });
+
+      element.find('.textarea-holder .wiggi-wiz')
+        .css({
+          minHeight: height
         });
     }
 
