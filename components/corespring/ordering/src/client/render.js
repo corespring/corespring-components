@@ -249,6 +249,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
     }
 
     var buttonRow = function (attrs) {
@@ -257,11 +258,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         '    <span cs-undo-button-with-model ng-hide="response"></span>',
         '    <span cs-start-over-button-with-model ng-hide="response"></span>',
         '  </div>',
-        '  <div class="button-row btn-group-md text-center {{model.config.choiceAreaLayout}}" ' + (attrs || "") + '>',
-        '    <div class="show-correct" ng-show="correctResponse" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
-        '      <svg-icon category="showHide" key="correct-response" open="{{top.correctAnswerVisible}}"></svg-icon>',
-        '      <span>{{top.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer</span>',
-        '    </div>',
+        '  <div class="{{model.config.choiceAreaLayout}}" ' + (attrs || "") + '>',
+        '    <correct-answer-toggle visible="correctResponse" toggle="top.correctAnswerVisible"></correct-answer-toggle>',
         '  </div>'
       ].join('\n');
     };
@@ -363,13 +361,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      </div>',
       '    </div>',
       '    <div class="clearfix" />',
-      '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-      // benburton
-      '    <div class="button-row btn-group-md text-center {{model.config.choiceAreaLayout}}">',
-      '      <div class="show-correct" ng-show="correctResponse" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
-      '        <svg-icon category="showHide" key="correct-response" open="{{top.correctAnswerVisible}}"></svg-icon>',
-      '        <span>{{top.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer</span>',
-      '      </div>',
+      '    <div ng-show="feedback && top.correctAnswerVisible" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '    <div ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="correctResponse && top.correctAnswerVisible">',
+      '      <ul class="clearfix">',
+      '        <li ng-repeat="choice in correctChoices">',
+      '          <div class="choice correct" ng-bind-html-unsafe="choice.label"></div>',
+      '        </li>',
+      '      </ul>',
       '    </div>',
       '  </div>'
     ].join('\n');
@@ -389,12 +387,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  </div>',
       '  <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
       '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
-      '  </div>',
-      '  <div class="button-row btn-group-md text-center {{model.config.choiceAreaLayout}}">',
-      '    <div class="show-correct" ng-show="correctResponse" ng-click="top.correctAnswerVisible = !top.correctAnswerVisible">',
-      '      <svg-icon category="showHide" key="correct-response" open="{{top.correctAnswerVisible}}"></svg-icon>',
-      '      <span>{{top.correctAnswerVisible ? \'Hide\' : \'Show\'}} Correct Answer</span>',
-      '    </div>',
       '  </div>',
       '</div>'
     ].join('\n');

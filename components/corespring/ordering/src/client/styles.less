@@ -1,5 +1,20 @@
-
 @max-width-height-image: 100px;
+
+.choice-template() {
+  border: 1px solid #f1f1f4;
+  box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.18);
+  background: #ffffff;
+
+  &.correct {
+    .correct-input();
+    box-shadow: none;
+  }
+
+  &.incorrect {
+    .incorrect-input();
+    box-shadow: none;
+  }
+}
 
 .limit-image-size() {
   img {
@@ -95,24 +110,14 @@
   }
 
   .choice {
-    border: 1px solid #f1f1f4;
-    box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.18);
+    .choice-template();
     height: 100%;
-    background: #ffffff;
     margin: 3px 3px 1px 1px;
     padding: 8px;
     min-width: 150px;
     max-width: 500px;
     overflow: hidden;
     min-height: 55px;
-
-    &.correct {
-      .correct-input();
-    }
-
-    &.incorrect {
-      .incorrect-input();
-    }
 
     &.hiddenChoice {
       visibility: hidden;
@@ -153,7 +158,7 @@
   &.main-table.vertical {
     width: 100%;
 
-    .button-row{
+    .button-row {
       margin-bottom: 10px;
     }
     
@@ -425,6 +430,7 @@
       display: inline-block;
     }
     .choice {
+      .choice-template();
       max-width: 150px;
       min-width: 50px;
       display: inline-block;
@@ -432,7 +438,6 @@
     }
     .button-row {
       margin-bottom: 10px;
-      float: right;
     }
     .answer-area-container{
       max-width: 595px;
