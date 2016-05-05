@@ -39,9 +39,7 @@
   }
 
   .border {
-    background-color: #e7e7e7;
-    border-radius: 4px;
-    border: solid 1px #979797;
+    .choice-template();
     margin: 3px;
     min-height: 40px;
     padding: 3px 15px 3px 3px;
@@ -272,8 +270,7 @@
         &.category-hover {
           .border {
             .categorized.choices {
-              background-color: white;
-              border: dashed 2px #979797;
+              background-color: #d4d2d3;
             }
           }
         }
@@ -322,8 +319,7 @@
           }
 
           .categorized.choices {
-            border: solid 2px #979797;
-            border-radius: 4px;
+            .choice-area-template();
             min-height: 40px;
             padding: 8px;
 

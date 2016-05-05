@@ -12,9 +12,11 @@ exports.directive = {
             $scope.isOpen = !$scope.isOpen;
           };
           $scope.$watch('correctClass', function() {
-            $scope.iconKey = $scope.correctClass === 'partial' ? 'partially-correct' :
+            console.log('correctClass', "\"" + $scope.correctClass + "\"");
+            $scope.iconKey = $scope.correctClass.trim() === 'partial' ? 'partially-correct' :
               (($scope.correctClass.indexOf('answer-expected') >= 0 || $scope.correctClass.indexOf('warning') >= 0) ? 'nothing-submitted' : $scope.correctClass.trim());
             $scope.iconShape = ($scope.iconKey !== 'nothing-submitted' ? 'square' : '');
+            console.log('iconKey', "\"" + $scope.iconKey + "\"");
           });
         },
         scope: {

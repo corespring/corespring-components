@@ -692,12 +692,11 @@ function renderCorespringDndCategorize(
 
   function seeSolutionPanel() {
     return [
-        '<div see-answer-panel="true"',
-        '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
-        '    ng-if="response.correctResponse">',
-        seeSolutionContent(),
-        '</div>'
-      ].join('');
+      '<correct-answer-toggle visible="response.correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+      '<div ng-if="isSeeAnswerPanelExpanded && response.correctResponse">',
+      categoriesTemplate('true', 'correctAnswerRows'),
+      '</div>'
+    ].join('');
   }
 
   function interaction() {
@@ -800,9 +799,4 @@ function renderCorespringDndCategorize(
       ].join('').replace('#flip#', flip).replace('#rowsModel#', rowsModel);
   }
 
-  function seeSolutionContent() {
-    return [
-        categoriesTemplate('true', 'correctAnswerRows')
-      ].join('');
-  }
 }
