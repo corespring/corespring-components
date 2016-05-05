@@ -34,9 +34,12 @@
       position: relative;
     }
 
-    &.warning {
-      .warning-panel();
+    .nothing-submitted {
+      .cs-icon {
+        margin: 8px 11px;
+      }
     }
+
   }
 }
 
@@ -131,6 +134,10 @@
 
     &.partial {
       .color-panel(@partial-color);
+    }
+
+    &.warning {
+      .color-panel(#c0ffc0);
     }
 
   }

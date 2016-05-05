@@ -26,39 +26,6 @@
   }
 }
 
-.see-answer-panel {
-
-  &.answer-holder {
-    background: #fff;
-    overflow: hidden;
-    .answer-collapse {
-      display: none;
-
-      &.answerExpanded {
-        display: block;
-      }
-    }
-
-    .panel {
-      border: 4px solid #3C763D;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-weight: normal;
-    }
-
-    .panel-default {
-      & > .panel-heading {
-        border-radius: 0px;
-        cursor: pointer;
-      }
-    }
-
-    .answerIcon {
-      font-size: 30px;
-      margin-right: 2%;
-    }
-  }
-}
-
 .btn-player {
   width: 105px;
   font-size: 9pt;
@@ -167,4 +134,20 @@
     opacity: 1;
     -webkit-transform: translateX(0);
   }
+}
+
+.show-correct {
+  font-family: "Kameron";
+  color: @hide-show-foreground;
+  cursor: pointer;
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .correct-response {
+    margin-top: 5px;
+  }
+
 }

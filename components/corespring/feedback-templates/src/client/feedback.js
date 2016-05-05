@@ -13,7 +13,7 @@ exports.directive = {
           };
           $scope.$watch('correctClass', function() {
             $scope.iconKey = $scope.correctClass === 'partial' ? 'partially-correct' :
-              ($scope.correctClass.indexOf('answer-expected') >= 0 ? 'nothing-submitted' : $scope.correctClass.trim());
+              (($scope.correctClass.indexOf('answer-expected') >= 0 || $scope.correctClass.indexOf('warning') >= 0) ? 'nothing-submitted' : $scope.correctClass.trim());
             $scope.iconShape = ($scope.iconKey !== 'nothing-submitted' ? 'square' : '');
           });
         },

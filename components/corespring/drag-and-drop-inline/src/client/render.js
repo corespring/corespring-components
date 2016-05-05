@@ -39,6 +39,10 @@ var main = [
 
     function link(scope, element, attrs) {
 
+      scope.$watch('seeSolutionExpanded', function() {
+        console.log(scope.seeSolutionExpanded);
+      });
+
       //we throttle bc. when multiple calls to renderAnswerArea are
       //made rapidly, the rendering breaks, eg. in the regression test rig
       var renderAnswerArea = throttle(doRenderAnswerArea);
@@ -145,6 +149,7 @@ var main = [
       function setResponse(response) {
         $log.debug("[DnD-inline] setResponse: ", response);
         scope.response = response;
+        console.log('response', response);
         scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
         // Populate solutionScope with the correct response
@@ -314,10 +319,10 @@ var main = [
              choiceArea(),
         '  </div>',
         '  <div class="clearfix"></div>',
+        '  <correct-answer-toggle visible="response.correctResponse && response.correctness !== \'correct\'"',
+        '      toggle="seeSolutionExpanded"></correct-answer-toggle>',
+        '  <div class="correct-answer-area-holder" ng-show="seeSolutionExpanded"></div>',
         '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-        '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="seeSolutionExpanded" ng-show="correctResponse">',
-        '    <div class="correct-answer-area-holder"></div>',
-        '  </div>',
         '</div>'
       ].join('');
     }
@@ -386,7 +391,6 @@ var answerAreaInline = [
         };
 
         scope.classForChoice = classForChoice;
-        scope.classForCorrectness = classForCorrectness;
         scope.removeChoice = removeChoice;
         scope.removeHashKeyFromDroppedItem = removeHashKeyFromDroppedItem;
         scope.shouldShowNoAnswersWarning = shouldShowNoAnswersWarning;
@@ -499,15 +503,6 @@ var answerAreaInline = [
           return renderScope.classForChoice(scope.answerAreaId, index);
         }
 
-        function classForCorrectness(index) {
-          var choiceClass = classForChoice(index);
-          if (choiceClass === "correct") {
-            return 'fa-check-circle';
-          } else if (choiceClass === "incorrect") {
-            return 'fa-times-circle';
-          }
-        }
-
         function removeChoice(index) {
           renderScope.landingPlaceChoices[scope.answerAreaId].splice(index, 1);
         }
@@ -539,12 +534,8 @@ var answerAreaInline = [
         '      <div class="selected-choice-content">',
         '        <div class="html-wrapper" ng-bind-html-unsafe="renderScope.cleanLabel(choice)"></div>',
         '      </div>',
-        '      <div class="circle">',
-        '        <i class="fa" ng-class="classForCorrectness($index)"></i>',
-        '      </div>',
         '    </div>',
         '  </div>',
-        '  <div class="empty-answer-area-warning" ng-switch-when="true"><i class="fa fa-exclamation-triangle"></i></div>',
         '</div>'
       ].join("\n");
     }

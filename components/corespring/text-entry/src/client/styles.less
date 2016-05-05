@@ -59,60 +59,73 @@
 
 .cs-text-entry__text-input-holder {
   position: relative;
+
   &.warning, &.correct, &.incorrect, &.partial {
     margin-right: 30px;
   }
+
   .popover {
     visibility: hidden;
     width: 200px;
   }
+
   .result-icon {
     position: absolute;
     right: -25px;
     top: 0px;
   }
+
   .result-icon.warning {
     right: -30px;
   }
+
   input {
     padding: 4px 6px;
   }
+
   input.partial {
     .partial-input();
   }
+
   input.correct {
     .correct-input();
   }
+
   input.incorrect {
     .incorrect-input();
   }
-  input.warning {
-    .warning-input();
-  }
-  i.fa {
+
+  .fa {
     margin: 0;
     font-size: 25px;
     line-height: 31px !important;
     color: @incorrect-background;
+
+    &.correct {
+      color: @correct-background;
+
+      &:before {
+        content: @correct-character;
+      }
+    }
+
+    &.partial {
+      color: @partially-correct-background;
+
+      &:before {
+        content: @partial-character;
+      }
+    }
+
+    &.incorrect {
+
+      &:before {
+        content: @incorrect-character;
+      }
+    }
+
   }
-  i.fa.correct {
-    color: @correct-background;
-  }
-  i.fa.partial {
-    color: @partially-correct-background;
-  }
-  i.fa.warning {
-    color: @warning-color;
-  }
-  i.fa.incorrect:before {
-    content: @incorrect-character;
-  }
-  i.fa.correct:before {
-    content: @correct-character;
-  }
-  i.fa.partial:before {
-    content: @partial-character;
-  }
+
 }
 
 .cs-text-entry__text-input-holder.incorrect .popover,

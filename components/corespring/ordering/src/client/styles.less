@@ -1,21 +1,5 @@
 @max-width-height-image: 100px;
 
-.choice-template() {
-  border: 1px solid #f1f1f4;
-  box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.18);
-  background: #ffffff;
-
-  &.correct {
-    .correct-input();
-    box-shadow: none;
-  }
-
-  &.incorrect {
-    .incorrect-input();
-    box-shadow: none;
-  }
-}
-
 .limit-image-size() {
   img {
     max-width: @max-width-height-image;
@@ -62,14 +46,7 @@
   .answer-area {
     .drop-wrapper {
       padding: 10px 8px 8px 10px;
-      background: #f8f6f6;
-      box-shadow: inset 3px 4px 2px 0px rgba(0,0,0,0.08);
-      border-width: 1px;
-      border-style: solid;
-      border-top-color: #c2c2c2;
-      border-right-color: #e9e9e9;
-      border-bottom-color: #e9e9e9;
-      border-left-color: #c2c2c2;
+      .choice-area-template();
 
       .choice {
         box-shadow: none;
@@ -91,7 +68,7 @@
           position: absolute;
           right: 3px;
           top: 3px;
-          color: #ccc;
+          color: #cccccc;
 
           &:hover {
             cursor: pointer;
@@ -100,7 +77,6 @@
       }
 
       &.warning {
-        .warning-input();
       }
     }
   }
@@ -172,24 +148,27 @@
       clear: both;
       text-align: center;
     }
-    .label-row{
+
+    .label-row {
       display: block;
       clear: both;
       overflow: hidden;
 
-      .choice-area-label,.answer-area-label{
+      .choice-area-label, .answer-area-label {
         display: inline-block;
         margin: 0 2px;
         text-align: center;
         overflow: hidden;
       }
     }
-    .placement-areas  {
+
+    .placement-areas {
       display: table;
       margin: 0 auto;
       clear:both;
       overflow:hidden;
     }
+
     .choice-area {
       float: left;
       display: table-cell;
@@ -216,6 +195,7 @@
 
       .answer-area-holder {
         display: inline-block;
+
         .answer-area-table {
           display: table;
           margin-top: 5px;
@@ -231,6 +211,7 @@
       display: table-cell;
       float: left;
       margin: 0 0 0 10px;
+
       .choice {
         .correct-input();
       }
@@ -253,11 +234,14 @@
 
     .choice-area {
       display: table-row;
+
       .choices {
         display: table-cell;
+
         .choices-holder {
           display: inline-block;
           max-width: 585px;
+
           .choice-area-label {
             text-align: center;
             height: auto;
@@ -305,61 +289,23 @@
       display: table;
       text-align: center;
       margin: 0 auto;
+
       .choice {
         .correct-input();
       }
+
       .answer-area-label {
         display: none;
       }
+
       .choices-inner-holder {
         border: none;
-        background: #fff;
+        background-color: #ffffff;
         margin-top: 5px;
       }
     }
   }
 
-  .warning-icon {
-    text-align: center;
-    font-size: 25px;
-    line-height: 31px !important;
-    color: @warning-color;
-  }
-
-  .feedback {
-    display: block;
-    clear: both;
-    &.warning {
-      .panel-heading {
-        display: none;
-      }
-      .panel-body {
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        background-color: @warning-color-background;
-        color: @warning-color;
-      }
-    }
-  }
-
-}
-
-.view-placement-ordering, .view-ordering {
-  .show-correct {
-    font-family: "Kameron";
-    color: @hide-show-foreground;
-    cursor: pointer;
-
-    span {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .correct-response {
-      margin-top: 5px;
-    }
-
-  }
 }
 
 .view-ordering {
@@ -373,6 +319,7 @@
     margin-left: 0px;
     margin-bottom: 0px;
     text-align: center;
+
     .choice {
       background: #ffffff;
     }
@@ -391,17 +338,22 @@
   }
 
   .choice-area {
+
     .choices {
+
       .choices-holder {
+
         .choices-inner-holder {
           margin-top: 5px;
           border: 1px solid #9b9b9b;
           background-color: #ffffff;
         }
+
         .choice {
           border: 1px solid #979797;
           background-color: #ffffff;
           float: left;
+
           &.ui-draggable-dragging {
             cursor: move;
             opacity: 0.75;
@@ -429,6 +381,7 @@
     li {
       display: inline-block;
     }
+
     .choice {
       .choice-template();
       max-width: 150px;
@@ -436,18 +389,23 @@
       display: inline-block;
       float: left;
     }
+
     .button-row {
       margin-bottom: 10px;
     }
+
     .answer-area-container{
       max-width: 595px;
       text-align: center;
     }
+
     .container-border {
       margin-bottom: 10px;
       max-width: 595px;
+
       &.warning {
         border-color: @warning-color-border;
+
         ul {
           border-color: @warning-color-border;
         }
@@ -516,6 +474,7 @@
           box-shadow: none;
           border: 1px solid @correct-background;
         }
+
         &.incorrect {
           box-shadow: none;
           border: 1px solid @incorrect-background;

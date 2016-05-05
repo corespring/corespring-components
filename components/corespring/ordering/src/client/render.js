@@ -1,6 +1,6 @@
 /* global console,exports */
 var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
-  function ($compile, $log, $modal, $rootScope, $timeout) {
+  function($compile, $log, $modal, $rootScope, $timeout) {
 
     "use strict";
 
@@ -12,20 +12,20 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       function clearLandingPlaceChoices() {
-        _.each(scope.landingPlaceChoices, function (v, k) {
+        _.each(scope.landingPlaceChoices, function(v, k) {
           scope.landingPlaceChoices[k] = {};
         });
       }
 
       scope.top = {};
 
-      scope.choiceHidden = function (choice) {
-        return choice.moveOnDrag && !_.isUndefined(_.find(scope.landingPlaceChoices, function (lc) {
+      scope.choiceHidden = function(choice) {
+        return choice.moveOnDrag && !_.isUndefined(_.find(scope.landingPlaceChoices, function(lc) {
           return lc && lc.id === choice.id;
         }));
       };
 
-      scope.dragOptions = function (choice) {
+      scope.dragOptions = function(choice) {
         return {
           revert: 'invalid',
           placeholder: 'keep',
@@ -36,11 +36,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         };
       };
 
-      scope.answerDragOptions = function (index) {
+      scope.answerDragOptions = function(index) {
         return {
-          revert: function (isValid) {
+          revert: function(isValid) {
             if (!isValid) {
-              scope.$apply(function () {
+              scope.$apply(function() {
                 scope.landingPlaceChoices[index] = {};
               });
               return true;
@@ -55,7 +55,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
 
-      scope.onDrop = function () {
+      scope.onDrop = function() {
         scope.dragging.isOut = false;
         for (var i = 0; i < scope.local.choices.length; i++) {
           scope.local.choices[i] = scope.local.choices[i] || {};
@@ -69,7 +69,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
 
-      scope.classForChoice = function (id, idx) {
+      scope.classForChoice = function(id, idx) {
         if (_.isEmpty(id)) {
           return "";
         }
@@ -98,19 +98,19 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       };
 
-      scope.putBackChoice = function (idx) {
+      scope.putBackChoice = function(idx) {
         scope.landingPlaceChoices[idx] = {};
       };
 
       function restoreChoicesFromAnswer(answers) {
         if (scope.model.config.placementType === PlacementType.placement) {
-          _.each(answers, function (k, idx) {
+          _.each(answers, function(k, idx) {
             scope.landingPlaceChoices[idx] = scope.choiceForId(k) || {};
           });
         } else {
           var choices = [];
-          _.each(answers.choices || answers, function (a) {
-            var choice = _.find(scope.local.choices, function (c) {
+          _.each(answers.choices || answers, function(a) {
+            var choice = _.find(scope.local.choices, function(c) {
               return c.id === a;
             });
             if (choice) {
@@ -122,7 +122,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       }
 
       _.extend(scope.containerBridge, {
-        setDataAndSession: function (dataAndSession) {
+        setDataAndSession: function(dataAndSession) {
           $log.debug("Placement Ordering setting session: ", dataAndSession);
 
           scope.session = dataAndSession.session || {};
@@ -147,7 +147,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.initUndo();
         },
 
-        getSession: function () {
+        getSession: function() {
           if (scope.model.config.placementType === PlacementType.placement) {
             var choices = [];
             for (var i = 0; i < scope.originalChoices.length; i++) {
@@ -165,7 +165,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           }
         },
 
-        reset: function () {
+        reset: function() {
           scope.resetChoices(scope.rawModel);
           clearLandingPlaceChoices();
           scope.correctResponse = undefined;
@@ -187,18 +187,18 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           }
         },
 
-        setInstructorData: function (data) {
+        setInstructorData: function(data) {
           restoreChoicesFromAnswer(data.correctResponse);
           this.setResponse({correctness: 'correct', correctResponse: data.correctResponse});
         },
 
-        setResponse: function (response) {
+        setResponse: function(response) {
           scope.response = response;
           if (response.correctness === 'incorrect') {
             scope.correctResponse = response.correctResponse;
           }
-          scope.correctChoices = _.map(response.correctResponse, function (c) {
-            return _.find(scope.local.choices, function (lc) {
+          scope.correctChoices = _.map(response.correctResponse, function(c) {
+            return _.find(scope.local.choices, function(lc) {
               return lc.id === c;
             });
           });
@@ -207,21 +207,21 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.comments = response.comments;
         },
 
-        answerChangedHandler: function (callback) {
-          scope.$watch("landingPlaceChoices", function (newValue, oldValue) {
+        answerChangedHandler: function(callback) {
+          scope.$watch("landingPlaceChoices", function(newValue, oldValue) {
             if (newValue !== oldValue) {
               callback();
             }
           }, true);
 
-          scope.$watch("local.choices", function (newValue, oldValue) {
+          scope.$watch("local.choices", function(newValue, oldValue) {
             if (newValue !== oldValue) {
               callback();
             }
           }, true);
         },
 
-        editable: function (e) {
+        editable: function(e) {
           scope.editable = e;
           scope.sortableOptions.disabled = !e;
         }
@@ -229,18 +229,18 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.sortableOptions = {
         disabled: false,
-        start: function (e, ui) {
+        start: function(e, ui) {
           ui.placeholder.html(ui.item.html());
           if (scope.model.config.choiceAreaLayout === "horizontal") {
             $(e.target).data("ui-sortable").floating = true;
           }
         },
-        update: function (e, ui) {
+        update: function(e, ui) {
           scope.userHasInteracted = true;
         }
       };
 
-      scope.$watch(function () {
+      scope.$watch(function() {
         var h = element.find('.vertical .choices-inner-holder').outerHeight();
         if (h && scope.lastChoiceAreaHeight !== h) {
           element.find('.vertical .answer-area-table').outerHeight(h);
@@ -252,7 +252,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     }
 
-    var buttonRow = function (attrs) {
+    var buttonRow = function(attrs) {
       return [
         '  <div class="button-row btn-group-md pull-right {{model.config.choiceAreaLayout}}" ' + (attrs || "") + '>',
         '    <span cs-undo-button-with-model ng-hide="response"></span>',
@@ -283,7 +283,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '</div>'
     ].join('');
 
-    var correctAnswerArea = function (attrs) {
+    var correctAnswerArea = function(attrs) {
       return [
         '<div class="choices" ' + attrs + '>',
         '  <div class="choices-holder">',
