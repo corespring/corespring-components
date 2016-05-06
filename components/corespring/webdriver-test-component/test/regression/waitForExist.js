@@ -26,7 +26,7 @@ describe('webdriver-test-component (wdtc-wfe)', function() {
       });
 
       /* expected to fail
-      it('Should fail, when inverted (wdtc-wfe-02)', function(done) {
+      it('should fail, when inverted (wdtc-wfe-02)', function(done) {
         browser.waitForExist(selector, 2000, true)
         browser.call(done);
       });

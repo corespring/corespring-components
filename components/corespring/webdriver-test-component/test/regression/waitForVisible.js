@@ -64,13 +64,14 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
       });
       */
 
-      /* expected failure */
+      /* expected failure
       it('should fail even when inverted (wdtc-wfv-06)', function(done) {
         browser.waitForVisible(selector, browser.options.defaultTimeout, true);
         browser.call(function() {
           throw "This test was expected to fail";
         });
       });
+      */
     });
 
     describe('adding an item', function() {
@@ -134,6 +135,7 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
     describe('no content with empty div', function() {
       var selector = '.no-content-1';
 
+      /* expected to fail
       it('fails bc the thing still has no content after adding the empty div (wdtc-wfv-13)', function(done) {
         browser.execute(function(){
           setTimeout(function() {
@@ -143,6 +145,7 @@ describe('webdriver-test-component (wdtc-wfv)', function() {
         browser.waitForVisible(selector);
         browser.call(done);
       });
+      */
 
       it('return false bc the thing has no content initially (wdtc-wfv-11)', function(done) {
         expect(browser.isVisible(selector)).toBe(false);
