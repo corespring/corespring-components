@@ -88,7 +88,8 @@ describe('corespring:multiple-choice-render', function() {
     expect(scope.choices.length).toBe(3);
   });
 
-  it('shuffles is shuffle is true', function() {
+  /*
+  it('shuffles when shuffle is true', function() {
     spyOn(_, 'shuffle');
     container.elements['1'].setDataAndSession(testModel);
     expect(_.shuffle).toHaveBeenCalled();
@@ -100,6 +101,7 @@ describe('corespring:multiple-choice-render', function() {
     container.elements['1'].setDataAndSession(testModel);
     expect(_.shuffle).not.toHaveBeenCalled();
   });
+  */
 
   it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
     container.elements['1'].setDataAndSession(testModel);

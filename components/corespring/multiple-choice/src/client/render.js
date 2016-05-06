@@ -213,12 +213,15 @@ function mainDirective($sce, $log) {
 
     function shuffle(choices) {
       var allChoices = _.cloneDeep(choices);
-      var shuffledChoices = _.shuffle(_.filter(allChoices, choiceShouldBeShuffled));
-      _.forEach(allChoices, function(choice, index) {
-        if (choiceShouldBeShuffled(choice)) {
-          allChoices[index] = shuffledChoices.pop();
-        }
-      });
+      var choicesToShuffle = _.filter(allChoices, choiceShouldBeShuffled);
+      if(choicesToShuffle.length > 0) {
+        var shuffledChoices = _.shuffle(choicesToShuffle);
+        _.forEach(allChoices, function (choice, index) {
+          if (choiceShouldBeShuffled(choice)) {
+            allChoices[index] = shuffledChoices.pop();
+          }
+        });
+      }
 
       return allChoices;
     }
