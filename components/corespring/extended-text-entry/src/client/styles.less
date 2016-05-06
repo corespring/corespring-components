@@ -1,104 +1,118 @@
 @import '../../../../../less/common';
+
 @component-width: 600px;
 
-.view-extended-text-entry {
-  width: 100%;
-  max-width: @component-width;
+.corespring-extended-text-entry {
 
-  .textarea-holder {
-    position: relative;
+  &.view-extended-text-entry {
     width: 100%;
+    max-width: @component-width;
+
+    .textarea-holder {
+      display: 'inline-block';
+      position: relative;
+      width: 100%;
+    }
+
+    .wiggi-wiz {
+      margin-bottom: 20px;
+      min-height: 100px;
+    }
+
+    &.received.incorrect .wiggi-wiz {
+      border: 2px solid @warning-color-border;
+      box-shadow: none;
+    }
+
+    .warning-icon {
+      display: none;
+    }
+
+    &.received.incorrect .warning-icon {
+      color: @warning-color;
+      display: block;
+      font-size: 28px;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+
+    .feedback {
+      background-color: #d9edf7;
+      border-radius: 4px;
+      border: 1px solid #bce8f1;
+      color: #31708f;
+      padding: 15px;
+      position: relative;
+      width: 100%;
+    }
+
+    .no-feedback {
+      background-color: @warning-color-background;
+      border-radius: 4px;
+      border: 1px solid @warning-color-border;
+      color: @warning-color;
+      padding: 15px;
+      position: relative;
+      width: 100%;
+    }
+
   }
 
+  /* Config Panel */
+
+  &.config-extended-text-entry {
+    padding: 0 15px 15px 15px;
+
+    .narrow-form-label {
+      text-align: left;
+      width: 110px;
+    }
+
+    span.help {
+      font-style: italic;
+      font-size: 90%;
+    }
+
+    p.adjust {
+      margin-bottom: 0px;
+    }
+  }
+
+  /* Wiggi style */
   .wiggi-wiz {
-    margin-bottom: 20px;
-    min-height: 100px;
-  }
-
-  &.received.incorrect .wiggi-wiz {
-    border: 2px solid @warning-color-border;
-    box-shadow: none;
-  }
-
-  .warning-icon {
-    display: none;
-  }
-
-  &.received.incorrect .warning-icon {
-    display: block;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 28px;
-    color: @warning-color;
-  }
-
-  .feedback {
-    color: #31708f;
-    background-color: #d9edf7;
-    border-radius: 4px;
-    padding: 15px;
-    border: 1px solid #bce8f1;
-    position: relative;
-    width: 100%;
-  }
-
-  .no-feedback {
-    background-color: @warning-color-background;
-    border: 1px solid @warning-color-border;
-    color: @warning-color;
-    border-radius: 4px;
-    padding: 15px;
-    position: relative;
-    width: 100%;
-  }
-
-}
-
-/* Config Panel */
-
-.extended-text-entry-configuration {
-  padding: 0 15px 15px 15px;
-
-  .narrow-form-label {
-    text-align: left;
-    width: 110px;
-  }
-}
-
-/* Wiggi style */
-.wiggi-wiz {
-  .mathinput-holder {
-    display: inline-block;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    transition: background-color 200ms;
-    border-radius: 3px;
-  }
-  &.disabled {
-    .math-input .input .mq {
-      border: none;
-    }
     .mathinput-holder {
-      &:hover {
-        background-color: inherit;
-      }
-      pointer-events: none;
+      display: inline-block;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      transition: background-color 200ms;
+      border-radius: 3px;
     }
-  }
-  .mathquill-rendered-math {
-    font-family: inherit;
-  }
-  .math-sum {
-    font-family: serif;
-    font-weight: bold;
+    &.disabled {
+      .math-input .input .mq {
+        border: none;
+      }
+      .mathinput-holder {
+        &:hover {
+          background-color: inherit;
+        }
+        pointer-events: none;
+      }
+    }
+    .mathquill-rendered-math {
+      font-family: inherit;
+    }
+    .math-sum {
+      font-family: serif;
+      font-weight: bold;
 
-    &:before {
-      content: "\2211";
+      &:before {
+        content: "\2211";
+      }
     }
   }
 }
