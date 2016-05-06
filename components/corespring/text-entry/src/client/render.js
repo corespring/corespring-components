@@ -94,27 +94,34 @@ var main = [
 
       };
 
+      scope.inputClasses = function() {
+        return [
+          scope.answer && scope.answer.length > 0 ? 'filled-in' : '',
+          scope.feedback ? 'submitted' : ''
+        ].join(' ');
+      };
+
+      scope.$watch('response', function() {
+        console.log('response', scope.response);
+        scope.iconKey = scope.response ? ((scope.response.correctness === 'warning') ? 'nothing-submitted' : scope.response.correctness) : '';
+      });
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     }
 
     function template() {
       return [
-        '<div class="cs-text-entry" ng-class="{popupFeedback: feedback.message}">',
+        '<div class="cs-text-entry">',
         '  <div class="cs-text-entry__text-input-holder" ',
-        '     ng-class="feedback.correctness" ',
-        '     feedback-popover="response">',
+        '     ng-class="feedback.correctness">',
         '    <input type="text" ',
         '       ng-model="answer" ',
         '       ng-readonly="!editable" ',
         '       ng-class="feedback.correctness"',
-        '       class="input-sm form-control" ',
+        '       class="input-sm form-control {{inputClasses()}}" ',
         '       size="{{question.answerBlankSize}}"',
         '       style="text-align: {{question.answerAlignment}}"/>',
-        '    <i ng-show="feedback" ',
-        '       class="fa result-icon" ',
-        '       ng-class="feedback.correctness" ',
-        '       style="display: inline;"',
-        '      ></i>',
+        '    <svg-icon category="feedback" key="{{iconKey}}" shape="square" icon-set="emoji" />',
         '  </div>',
         '</div>'
       ].join("\n");
