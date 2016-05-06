@@ -31,6 +31,7 @@ function mainDirective($sce, $log) {
     scope.isVertical = isVertical;
     scope.letter = letter;
     scope.onClickChoice = onClickChoice;
+    scope.shuffle = shuffle;
 
     scope.containerBridge = {
       answerChangedHandler: answerChangedHandler,
@@ -55,17 +56,25 @@ function mainDirective($sce, $log) {
     //------------------------------------------------
 
     function setDataAndSession(dataAndSession) {
-      scope.question = dataAndSession.data.model;
-      scope.question.config = _.defaults(scope.question.config || {}, {
-        "showCorrectAnswer": "separately"
-      });
+      scope.question = dataAndSession.data.model || {};
+      scope.question.config = getConfigWithDefaults(scope.question.config);
       scope.session = dataAndSession.session || {};
       scope.answer = {
         choices: {},
         choice: ""
       };
-      resetShuffledOrder();
       updateUi();
+    }
+
+    function getConfigWithDefaults(input){
+      var config = _.defaults(input || {}, {
+        "orientation": "vertical",
+        "shuffle": false,
+        "choiceType": "radio",
+        "choiceLabels": "letters",
+        "showCorrectAnswer": "separately"});
+      config.shuffle = config.shuffle === true || config.shuffle === 'true';
+      return config;
     }
 
     function getSession() {
@@ -213,17 +222,14 @@ function mainDirective($sce, $log) {
 
     function shuffle(choices) {
       var allChoices = _.cloneDeep(choices);
-      var choicesToShuffle = _.filter(allChoices, choiceShouldBeShuffled);
-      if(choicesToShuffle.length > 0) {
-        var shuffledChoices = _.shuffle(choicesToShuffle);
-        _.forEach(allChoices, function (choice, index) {
-          if (choiceShouldBeShuffled(choice)) {
-            allChoices[index] = shuffledChoices.pop();
-          }
-        });
-      }
-
-      return allChoices;
+      var shuffledChoices = _(allChoices).filter(choiceShouldBeShuffled).shuffle().value();
+      return _.map(allChoices, function(choice){
+        if (choiceShouldBeShuffled(choice)) {
+          return shuffledChoices.pop();
+        } else {
+          return choice;
+        }
+      });
     }
 
     function choiceShouldBeShuffled(choice){
@@ -232,7 +238,7 @@ function mainDirective($sce, $log) {
 
     function layoutChoices(choices, order) {
       if (!order) {
-        return shuffle(choices);
+        return scope.shuffle(choices);
       }
       var ordered = _(order).map(function(v) {
         return _.find(choices, function(c) {
@@ -267,7 +273,7 @@ function mainDirective($sce, $log) {
       var stash = scope.session.stash = scope.session.stash || {};
       var answers = scope.session.answers = scope.session.answers || {};
 
-      var shuffle = (model.config.shuffle === true || model.config.shuffle === "true") && scope.mode !== 'instructor';
+      var shuffle = model.config.shuffle && scope.mode !== 'instructor';
 
       scope.inputType = model.config.choiceType;
 
@@ -287,7 +293,7 @@ function mainDirective($sce, $log) {
     }
 
     function letter(idx) {
-      var type = scope.question && scope.question.config ? scope.question.config.choiceLabels : "none";
+      var type = scope.question ? scope.question.config.choiceLabels : "letters";
       switch (type) {
         case "none":
           return "";
@@ -295,7 +301,7 @@ function mainDirective($sce, $log) {
           return (idx + 1) + "";
       }
 
-      // default to a...z
+      // default to letters: a...z
       return String.fromCharCode(65 + idx);
     }
 
@@ -312,7 +318,7 @@ function mainDirective($sce, $log) {
     }
 
     function orientation() {
-      return scope.question && scope.question.config ? scope.question.config.orientation : '';
+      return scope.question ? scope.question.config.orientation : 'vertical';
     }
 
     function onClickChoice(choice) {
