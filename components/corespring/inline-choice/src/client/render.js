@@ -140,7 +140,6 @@ link = function($sce, $timeout) {
           }).join("\n");
           scope.instructorResponse = {correctness: 'instructor', feedback: rationaleHtml};
         }
-        scope.instructorResponse = {correctness: 'instructor', feedback: "Hey Joe, sorry I hurt you but they say love is a virtue, don't they?"}; // remove me
         scope.instructorClass = 'instructor';
       },
 
