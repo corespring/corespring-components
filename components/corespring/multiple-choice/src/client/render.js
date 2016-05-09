@@ -1,8 +1,8 @@
 exports.framework = 'angular';
-exports.directive = ['$sce', '$log', mainDirective];
+exports.directive = ['$sce', '$log', multipleChoiceDirective];
 
 
-function mainDirective($sce, $log) {
+function multipleChoiceDirective($sce, $log) {
 
   return {
     scope: {},
@@ -39,7 +39,6 @@ function mainDirective($sce, $log) {
       getSession: getSession,
       isAnswerEmpty: isAnswerEmpty,
       reset: reset,
-      resetStash: resetStash,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
       setMode: setMode,
@@ -78,10 +77,8 @@ function mainDirective($sce, $log) {
     }
 
     function getSession() {
-      var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
       return {
-        answers: getAnswers(),
-        stash: stash
+        answers: getAnswers()
       };
     }
 
@@ -149,12 +146,7 @@ function mainDirective($sce, $log) {
       resetChoices();
       resetFeedback(scope.choices);
       scope.response = undefined;
-      resetShuffledOrder();
       updateUi();
-    }
-
-    function resetStash() {
-      scope.session.stash = {};
     }
 
     function isAnswerEmpty() {
@@ -162,11 +154,13 @@ function mainDirective($sce, $log) {
     }
 
     function answerChangedHandler(callback) {
-      scope.$watch("answer", function(newValue, oldValue) {
+      scope.$watch("answer", callBackWhenAnswerHasChanged, true);
+
+      function callBackWhenAnswerHasChanged(newValue, oldValue) {
         if (newValue !== oldValue) {
           callback();
         }
-      }, true);
+      }
     }
 
     function setEditable(e) {
@@ -187,13 +181,11 @@ function mainDirective($sce, $log) {
     }
 
     function applyChoices() {
-
       if (!scope.question || !scope.session.answers) {
         return;
       }
 
       var answers = scope.session.answers;
-
       if (scope.inputType === "radio") {
         if ( _.isArray(answers) && answers.length > 0) {
           scope.answer.choice = answers[0];
@@ -236,57 +228,21 @@ function mainDirective($sce, $log) {
       return _.isUndefined(choice.shuffle) || choice.shuffle === true;
     }
 
-    function layoutChoices(choices, order) {
-      if (!order) {
-        return scope.shuffle(choices);
-      }
-      var ordered = _(order).map(function(v) {
-        return _.find(choices, function(c) {
-          return c.value === v;
-        });
-      }).filter(function(v) {
-        return v;
-      }).value();
-
-      var missing = _.difference(choices, ordered);
-      return _.union(ordered, missing);
-    }
-
-    function stashOrder(choices) {
-      return _.map(choices, function(c) {
-        return c.value;
-      });
-    }
-
-    function resetShuffledOrder() {
-      if (scope.session && scope.session.stash) {
-        delete scope.session.stash.shuffledOrder;
-      }
-    }
-
     function updateUi() {
       if (!scope.question || !scope.session) {
         return;
       }
 
       var model = scope.question;
-      var stash = scope.session.stash = scope.session.stash || {};
       var answers = scope.session.answers = scope.session.answers || {};
 
-      var shuffle = model.config.shuffle && scope.mode !== 'instructor';
-
+      var shouldShuffle = model.config.shuffle && scope.mode !== 'instructor';
       scope.inputType = model.config.choiceType;
 
-      if (shuffle) {
-        if (stash.shuffledOrder) {
-          scope.choices = layoutChoices(_.cloneDeep(model.choices), stash.shuffledOrder);
-        } else {
-          scope.choices = layoutChoices(_.cloneDeep(model.choices));
-          stash.shuffledOrder = stashOrder(scope.choices);
-          scope.$emit('saveStash', attrs.id, stash);
-        }
+      if (shouldShuffle) {
+        scope.choices = scope.shuffle(_.cloneDeep(model.choices));
       } else {
-        scope.choices = _.cloneDeep(scope.question.choices);
+        scope.choices = _.cloneDeep(model.choices);
       }
 
       applyChoices();
@@ -332,18 +288,18 @@ function mainDirective($sce, $log) {
     }
 
     function watchPanelOpen(n) {
-      if (n) {
-        $(element).find('.panel-collapse').slideDown(400);
-      } else {
-        $(element).find('.panel-collapse').slideUp(400);
-      }
+      slide(n, $(element).find('.panel-collapse'));
     }
 
     function watchAnswerVisible(n) {
-      if (n) {
-        $(element).find('.answer-collapse').slideDown(400);
+      slide(n, $(element).find('.answer-collapse'));
+    }
+
+    function slide(down, $elm){
+      if (down) {
+        $elm.slideDown(400);
       } else {
-        $(element).find('.answer-collapse').slideUp(400);
+        $elm.slideUp(400);
       }
     }
 

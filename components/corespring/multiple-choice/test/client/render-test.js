@@ -105,42 +105,7 @@ describe('corespring:multiple-choice-render', function() {
     expect(scope.shuffle).toHaveBeenCalledTimes(3);
   });
 
-  it('stashes shuffledOrder', function() {
-    var saveStashCallElementId;
-    var saveStashCallData;
-    scope.$on('saveStash', function(evt, id, data) {
-      saveStashCallElementId = id;
-      saveStashCallData = data;
-    })
-    container.elements['1'].setDataAndSession(testModel);
-    expect(saveStashCallElementId).toEqual('1');
-    expect(saveStashCallData.shuffledOrder).toContain('1');
-    expect(saveStashCallData.shuffledOrder).toContain('2');
-    expect(saveStashCallData.shuffledOrder).toContain('3');
-  });
-
-  it('does not shuffle when session contains stashOrder', function() {
-    spyOn(scope, 'shuffle');
-    testModel.session = {
-      stash: {
-        shuffledOrder: ["1", "2", "3"]
-      }
-    };
-    container.elements['1'].setDataAndSession(testModel);
-    expect(scope.shuffle).not.toHaveBeenCalled();
-  });
-
-  it('does apply stashOrder to choices', function() {
-    testModel.session = {
-      stash: {
-        shuffledOrder: ["3", "1", "2"]
-      }
-    };
-    container.elements['1'].setDataAndSession(testModel);
-    expect(_.map(scope.choices, _.property('value'))).toEqual(["3", "1", "2"]);
-  });
-
-  it('does not shuffle if shuffle is false', function() {
+  it('does not shuffle when shuffle is false', function() {
     spyOn(scope, 'shuffle');
     testModel.data.model.config.shuffle = false;
     container.elements['1'].setDataAndSession(testModel);
