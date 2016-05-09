@@ -22,6 +22,7 @@ var main = [
       scope.response = undefined;
 
       scope.popupVisible = false;
+      scope.instructorResponse = false;
 
       scope.containerBridge = {
 
@@ -41,6 +42,7 @@ var main = [
 
         setInstructorData: function(data) {
           scope.answer = data.correctResponses.values[0];
+          scope.instructorResponse = true;
 
           var hasMoreCorrectResponses = data.correctResponses.values.length > 1;
           var hasPartialResponses = data.partialResponses && data.partialResponses.values.length > 0;
@@ -50,10 +52,10 @@ var main = [
           }
 
           var message = (hasMoreCorrectResponses || hasPartialResponses) ? [
-            (hasMoreCorrectResponses) ? "Additional correct answers:<br/>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('') + "<br/><br/>" : "",
-            (hasPartialResponses) ? "Partially correct answers:<br/>" + _.map(data.partialResponses.values, wrapAnswer).join('') : ""
+            (hasMoreCorrectResponses) ? "<span class=\'answers-header\'>Additional correct answers:</span><br/>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('') + "<br/><br/>" : "",
+            (hasPartialResponses) ? "<span class=\'answers-header\'>Partially correct answers:</span><br/>" + _.map(data.partialResponses.values, wrapAnswer).join('') : ""
           ].join("") : undefined;
-          this.setResponse({feedback: {correctness: 'correct', message: message}});
+          this.setResponse({feedback: {correctness: 'instructor', message: message}});
         },
 
         // sets the server's response
@@ -104,8 +106,12 @@ var main = [
       };
 
       scope.$watch('response', function() {
-        console.log('response', scope.response);
-        scope.iconKey = scope.response ? ((scope.response.correctness === 'warning') ? 'nothing-submitted' : scope.response.correctness) : '';
+        var correctnessMap = {
+          'warning' : 'nothing-submitted',
+          'partial' : 'partially-correct'
+        };
+        scope.iconKey = scope.response ?
+          (_.has(correctnessMap, scope.response.correctness) ? corectnesMap[scope.response.correctness] : scope.response.correctness) : '';
       });
 
       element.on('show.bs.popover', function(e) {
@@ -141,6 +147,10 @@ var main = [
         '  <span class="feedback-icon" feedback-popover="response">',
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
         '        key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '  </span>',
+        '  <span class="feedback-icon" feedback-popover="response" ng-if="instructorResponse && response.feedback.message">',
+        '    <svg-icon open="{{popupVisible}}"',
+        '        key="show-rationale" shape="round" icon-set="emoji" />',
         '  </span>',
         '</span>'
       ].join("\n");

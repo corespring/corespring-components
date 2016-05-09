@@ -29,6 +29,40 @@
     margin-left: 6px;
   }
 
+  .popover-content {
+    background: #e7e7e7;
+    text-align: left;
+    min-width: 270px;
+    border: none;
+
+    .answers-header {
+      text-transform: uppercase;
+      color: #51819e;
+    }
+
+    .cs-text-entry__response {
+      @padding-size: 10px;
+      display: block;
+      border: none;
+      color: #464146;
+      margin-bottom: 0;
+      padding-left: @padding-size;
+
+      &:after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 100%;
+        margin-left: @padding-size*-1;
+        background: #c7c6c7;
+      }
+
+      &:last-child:after {
+        background: none;
+      }
+    }
+  }
+
   .cs-text-entry {
     display: inline-block;
     position: relative;
@@ -54,6 +88,7 @@
     .feedback {
       position: absolute;
     }
+
     .tooltip {
       opacity: 1;
       display: inline-block;
