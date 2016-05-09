@@ -28,8 +28,10 @@
     .choices {
       .choices-holder {
         .choices-inner-holder {
-          margin-top: 5px;
           background-color: #ffffff;
+        }
+        .choice-wrapper {
+          padding: 14px 10px 8px 10px;
         }
         .choice {
           background-color: #ffffff;
@@ -45,12 +47,27 @@
 
   .answer-area {
     .drop-wrapper {
-      padding: 10px 8px 8px 10px;
       .choice-area-template();
+      padding: 0;
+      position: relative;
 
       .choice {
         box-shadow: none;
       }
+
+      .ordering-number {
+        margin: auto;
+        position: absolute;
+        height: 39px;
+        font-size: 38px;
+        line-height: 38px;
+        color: #999999;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
     }
 
     .answer-area-table {
@@ -445,7 +462,6 @@
     .correct-answer {
       display: inline-block;
       vertical-align: top;
-      float: right;
 
       ul {
         border-color: @correct-background;

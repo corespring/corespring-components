@@ -67,7 +67,10 @@ var main = [
         setDataAndSession: setDataAndSession,
         setInstructorData: setInstructorData,
         setMode: setMode,
-        setResponse: setResponse
+        setResponse: setResponse,
+        setPlayerSkin: function(skin) {
+          scope.iconSet = skin.iconSet;
+        }
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
@@ -306,7 +309,7 @@ var main = [
 
       return [
         '<div class="render-csdndi {{mode}}" drag-and-drop-controller>',
-        '  <div class="undo-start-over pull-right" ng-show="canEdit()" >',
+        '  <div class="undo-start-over text-center" ng-show="canEdit()" >',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
@@ -322,7 +325,7 @@ var main = [
         '  <correct-answer-toggle visible="response.correctResponse && response.correctness !== \'correct\'"',
         '      toggle="seeSolutionExpanded"></correct-answer-toggle>',
         '  <div class="correct-answer-area-holder" ng-show="seeSolutionExpanded"></div>',
-        '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
+        '  <div ng-show="feedback" icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
         '</div>'
       ].join('');
     }

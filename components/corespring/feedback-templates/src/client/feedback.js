@@ -11,17 +11,20 @@ exports.directive = {
           $scope.toggle = function() {
             $scope.isOpen = !$scope.isOpen;
           };
-          $scope.$watch('correctClass', function() {
-            console.log('correctClass', "\"" + $scope.correctClass + "\"");
+
+          function update() {
             $scope.iconKey = $scope.correctClass.trim() === 'partial' ? 'partially-correct' :
               (($scope.correctClass.indexOf('answer-expected') >= 0 || $scope.correctClass.indexOf('warning') >= 0) ? 'nothing-submitted' : $scope.correctClass.trim());
             $scope.iconShape = ($scope.iconKey !== 'nothing-submitted' ? 'square' : '');
-            console.log('iconKey', "\"" + $scope.iconKey + "\"");
-          });
+            $scope.iconSet =  _.isEmpty($scope.iconSet) ? 'emoji' : $scope.iconSet;
+          }
+
+          $scope.$watch('correctClass', update);
+          update();
         },
         scope: {
           "feedback": "=",
-          "iconset": "=",
+          "iconSet": "@",
           "correctClass": "@"
         },
         replace: true,
@@ -29,7 +32,7 @@ exports.directive = {
           '<div class="panel panel-default feedback {{correctClass}}" ng-if="feedback">',
           '  <div>',
           '    <div class="panel-body">',
-          '      <svg-icon key="{{iconKey}}" shape="{{iconShape}}" icon-set="emoji"></svg-icon>',
+          '      <svg-icon key="{{iconKey}}" shape="{{iconShape}}" icon-set="{{iconSet}}"></svg-icon>',
           '      <div ng-bind-html-unsafe="feedback">',
           '      </div>',
           '    </div>',
