@@ -21,6 +21,8 @@ var main = [
       scope.correctClass = undefined;
       scope.response = undefined;
 
+      scope.popupVisible = false;
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -106,24 +108,41 @@ var main = [
         scope.iconKey = scope.response ? ((scope.response.correctness === 'warning') ? 'nothing-submitted' : scope.response.correctness) : '';
       });
 
+      element.on('show.bs.popover', function(e) {
+        scope.triggerIcon(e, true);
+      });
+
+      element.on('hide.bs.popover', function(e) {
+        scope.triggerIcon(e, false);
+      });
+
+      scope.triggerIcon = function(e, popoverToggled) {
+        scope.popupVisible = popoverToggled;
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     }
 
     function template() {
       return [
-        '<div class="cs-text-entry">',
-        '  <div class="cs-text-entry__text-input-holder" ',
-        '     ng-class="feedback.correctness">',
-        '    <input type="text" ',
-        '       ng-model="answer" ',
-        '       ng-readonly="!editable" ',
-        '       ng-class="feedback.correctness"',
-        '       class="input-sm form-control {{inputClasses()}}" ',
-        '       size="{{question.answerBlankSize}}"',
-        '       style="text-align: {{question.answerAlignment}}"/>',
-        '    <svg-icon category="feedback" key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '<span class="cs-text-entry-wrapper">',
+        '  <div class="cs-text-entry">',
+        '    <div class="cs-text-entry__text-input-holder" ',
+        '       ng-class="feedback.correctness">',
+        '      <input type="text" ',
+        '         ng-model="answer" ',
+        '         ng-readonly="!editable" ',
+        '         ng-class="feedback.correctness"',
+        '         class="input-sm form-control {{inputClasses()}}" ',
+        '         size="{{question.answerBlankSize}}"',
+        '         style="text-align: {{question.answerAlignment}}"/>',
+        '    </div>',
         '  </div>',
-        '</div>'
+        '  <span class="feedback-icon" feedback-popover="response">',
+        '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
+        '        key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '  </span>',
+        '</span>'
       ].join("\n");
     }
   }];

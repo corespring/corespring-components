@@ -155,6 +155,7 @@ link = function($sce, $timeout) {
           r.correctness = 'warning';
         }
         scope.response = r;
+        console.log('scope.response', scope.response);
         scope.iconKey = r.correctness === 'warning' ? 'nothing-submitted' : r.correctness;
       },
 
