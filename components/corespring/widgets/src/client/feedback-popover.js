@@ -20,6 +20,9 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
         } else {
           var title, popoverClass;
           var content = typeof response.feedback === "object" ? response.feedback.message : response.feedback;
+          var cls = _.map(attrs.class.split(' '), function(cls) {
+            return cls.trim() + '-popover';
+          }).join(' ');
 
           if (_.isEmpty(content) && response.correctness !== "warning") {
             return;
@@ -40,6 +43,8 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
           } else if (response.correctness === 'instructor') {
             popoverClass = 'instructor';
           }
+
+          popoverClass = popoverClass + ' ' + cls;
 
           $(element).find('.math-prerender').html(content);
           MathJaxService.parseDomForMath(0, $(element).find('.math-prerender')[0]);
