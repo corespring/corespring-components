@@ -34,7 +34,6 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
             ($scope.shape ? '-' + $scope.shape : ''),
             ($scope.open === 'true' ? '-open' : ''),
             '.svg'].join('');
-          console.log('$scope.template', $scope.template);
         }
 
       };

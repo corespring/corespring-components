@@ -114,6 +114,10 @@ var main = [
           (_.has(correctnessMap, scope.response.correctness) ? corectnesMap[scope.response.correctness] : scope.response.correctness) : '';
       });
 
+      scope.isInstructorResponse = function() {
+        return scope.instructorResponse && scope.response.feedback.message;
+      }
+
       element.on('show.bs.popover', function(e) {
         scope.triggerIcon(e, true);
       });
@@ -144,11 +148,11 @@ var main = [
         '         style="text-align: {{question.answerAlignment}}"/>',
         '    </div>',
         '  </div>',
-        '  <span class="feedback-icon" feedback-popover="response">',
+        '  <span class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse()">',
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
         '        key="{{iconKey}}" shape="square" icon-set="emoji" />',
         '  </span>',
-        '  <span class="feedback-icon" feedback-popover="response" ng-if="instructorResponse && response.feedback.message">',
+        '  <span class="feedback-icon instructor-response" feedback-popover="response" ng-if="isInstructorResponse()">',
         '    <svg-icon open="{{popupVisible}}"',
         '        key="show-rationale" shape="round" icon-set="emoji" />',
         '  </span>',
