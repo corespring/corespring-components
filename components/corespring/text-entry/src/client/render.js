@@ -111,12 +111,14 @@ var main = [
           'partial' : 'partially-correct'
         };
         scope.iconKey = scope.response ?
-          (_.has(correctnessMap, scope.response.correctness) ? corectnesMap[scope.response.correctness] : scope.response.correctness) : '';
+          (_.has(correctnessMap, scope.response.correctness) ? correctnessMap[scope.response.correctness] : scope.response.correctness) : '';
       });
 
       scope.isInstructorResponse = function() {
         return scope.instructorResponse && scope.response.feedback.message;
-      }
+      };
+
+      scope.hasFeedback = function() { return scope.instructorResponse || scope.response; }
 
       element.on('show.bs.popover', function(e) {
         scope.triggerIcon(e, true);
@@ -135,7 +137,7 @@ var main = [
 
     function template() {
       return [
-        '<span class="cs-text-entry-wrapper">',
+        '<span class="cs-text-entry-wrapper" ng-class="{\'with-feedback\': hasFeedback()}">',
         '  <div class="cs-text-entry">',
         '    <div class="cs-text-entry__text-input-holder" ',
         '       ng-class="feedback.correctness">',
