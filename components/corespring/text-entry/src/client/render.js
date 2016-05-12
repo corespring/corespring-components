@@ -118,7 +118,7 @@ var main = [
         return scope.instructorResponse && scope.response.feedback.message;
       };
 
-      scope.hasFeedback = function() { return scope.instructorResponse || scope.response; }
+      scope.hasFeedback = function() { return scope.instructorResponse || scope.response; };
 
       element.on('show.bs.popover', function(e) {
         scope.triggerIcon(e, true);

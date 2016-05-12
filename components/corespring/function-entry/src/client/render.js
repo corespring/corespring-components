@@ -15,6 +15,8 @@ var main = [
 
       var rawHintHtml, clickBound;
 
+      scope.popupVisible = false;
+
       function shouldShowFormattingHelp() {
         var defaultValue = true;
         if (scope.correctClass) {
@@ -110,10 +112,22 @@ var main = [
         }
       };
 
-      $('html').click(function(e) {
-        if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {
-          $(element).find('.text-input').popover('hide');
-        }
+      scope.hasFeedback = function() {
+        return scope.instructorResponse || scope.response;
+      };
+
+      scope.$watch('answer', function() {
+        scope.inputClass = (scope.answer && scope.answer.trim().length > 0) ? 'filled-in' : '';
+      });
+
+      scope.$watch('response', function() {
+        var correctnessMap = {
+          'warning' : 'nothing-submitted',
+          'partial' : 'partially-correct'
+        };
+        console.log('scope.response', scope.response);
+        scope.iconKey = scope.response ?
+          (_.has(correctnessMap, scope.response.correctness) ? correctnessMap[scope.response.correctness] : scope.response.correctness) : '';
       });
 
       MathJaxService.parseDomForMath(0, element[0]);
@@ -123,11 +137,15 @@ var main = [
 
     function template() {
       return [
-        '<div class="view-function-entry" ng-class="{popupFeedback: response.feedback}">',
+        '<div class="view-function-entry" ng-class="{\'with-feedback\': hasFeedback()}">',
         '  <div feedback-popover="response">',
-        '    <span class="text-input {{correctClass}}">',
-        '      <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
+        '    <span class="text-input">',
+        '      <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control {{inputClass}} {{correctClass}}" />',
         '    </span>',
+        '      <span class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse()">',
+        '        <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
+        '            key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '      </span>',
         '  </div>',
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '  <div class="hidden-math">',
