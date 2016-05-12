@@ -23,6 +23,7 @@ exports.createOutcome = function(question, answer, settings) {
   if (!answer) {
     return {
       correctness: 'incorrect',
+      correctClass: 'nothing-submitted',
       score: 0,
       feedback: settings.showFeedback ? exports.feedback.NO_ANSWER : null
     };

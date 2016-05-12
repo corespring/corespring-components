@@ -13,6 +13,7 @@ exports.directive = {
           };
 
           function update() {
+            console.log('$scope.correctClass', $scope.correctClass.trim());
             $scope.iconKey = $scope.correctClass.trim() === 'partial' ? 'partially-correct' :
               (($scope.correctClass.indexOf('answer-expected') >= 0 || $scope.correctClass.indexOf('warning') >= 0) ? 'nothing-submitted' : $scope.correctClass.trim());
             $scope.iconShape = ($scope.iconKey !== 'nothing-submitted' ? 'square' : '');
