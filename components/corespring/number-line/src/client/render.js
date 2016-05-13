@@ -12,6 +12,7 @@ var main = [
 
       scope.editable = true;
       scope.response = {};
+      scope.answerExpanded = false;
 
       scope.changeHandler = function() {
         if (_.isFunction(scope.answerChangeCallback)) {
@@ -120,17 +121,23 @@ var main = [
       link: link,
       template: [
         '<div class="view-number-line">',
-        '  <div interactive-graph',
-        '       ngModel="model"',
-        '       ng-hide="serverResponse && serverResponse.correctness == \'warning\'"',
-        '       responseModel="response"',
-        '       serverResponse="serverResponse"',
-        '       changeHandler="changeHandler()"',
-        '       editable="editable"',
-        '       colors="colors"></div>',
-
+        '  <correct-answer-toggle visible="serverResponse && serverResponse.correctness === \'incorrect\'" toggle="answerExpanded"></correct-answer-toggle>',
+        '  <div interactive-graph ng-show="!answerExpanded"',
+        '      ngModel="model"',
+        '      ng-hide="serverResponse && serverResponse.correctness == \'warning\'"',
+        '      responseModel="response"',
+        '      serverResponse="serverResponse"',
+        '      changeHandler="changeHandler()"',
+        '      editable="editable"',
+        '      colors="colors">',
+        '  </div>',
+        '  <div class="solution" interactive-graph ng-if="answerExpanded"',
+        '      ngModel="correctModel"',
+        '      serverResponse="correctModelDummyResponse"',
+        '      responseModel="dummyResponse"',
+        '      colors="colors">',
+        '  </div>',
         '  <div ng-if="serverResponse && serverResponse.correctness == \'warning\'" class="no-response">',
-        '    <i class="fa fa-exclamation-triangle"></i>',
         '    <div interactive-graph',
         '         ngModel="correctModel"',
         '         responseModel="dummyResponse"',
@@ -138,13 +145,6 @@ var main = [
         '  </div>',
 
         '  <div feedback="serverResponse.feedback.message" correct-class="{{serverResponse.correctClass}}"></div>',
-        '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness === \'incorrect\'">',
-        '    <div interactive-graph',
-        '         ngModel="correctModel"',
-        '         serverResponse="correctModelDummyResponse"',
-        '         responseModel="dummyResponse"',
-        '         colors="colors"></div>',
-        '  </div>',
         '  <div style="display: none">',
         '    <span class="correct-element"></span>',
         '    <span class="incorrect-element"></span>',
@@ -550,6 +550,7 @@ var interactiveGraph = [
         };
 
         scope.resetGraph = function(model) {
+          scope.answerExpanded = false;
           scope.graph.updateOptions(_.merge(_.cloneDeep(model.config), scope.options));
           scope.graph.addHorizontalAxis("bottom", {
             ticks: model.config.ticks,
