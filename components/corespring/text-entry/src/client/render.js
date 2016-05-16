@@ -65,6 +65,7 @@ var main = [
           if (!response) {
             return;
           }
+          console.log('response', response);
 
           scope.response = response;
           scope.feedback = response.feedback;

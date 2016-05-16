@@ -74,18 +74,38 @@
 
   .popover {
     padding: 0px;
+
+    .popover-title {
+      padding: 8px 14px;
+    }
+
+    & > .arrow:after {
+      border-bottom-color: #f7f7f7;
+    }
+
+    &.feedback-popover {
+      & > .arrow:after {
+        border-bottom-color: #ffffff;
+      }
+    }
   }
 
-  .popover > .arrow:after {
-    border-bottom-color: #f7f7f7;
+  .feedback-popover {
+
+    &.bottom {
+      margin-top: 0;
+    }
   }
 
-  .cs-icon {
+  .feedback-icon {
     position: absolute;
     top: -3px;
     right: -1 * @feedback-size;
-    width: @feedback-size;
-    height: @feedback-size;
+
+    .cs-icon {
+      width: @feedback-size;
+      height: @feedback-size;
+    }
   }
 
 }
