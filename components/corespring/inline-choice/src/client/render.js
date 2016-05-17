@@ -247,7 +247,7 @@ main = [
         '        </div>',
         '      </span>',
         '      <span ng-if="!instructorResponse && response" class="feedback-icon" feedback-popover="response">',
-        '        <svg-icon open="{{popupVisible}}" category="feedback" key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
+        '        <svg-icon open="{{popupVisible}}" category="{{response.feedback ? \'feedback\' : \'\'}}" key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '      </span>',
         '      <ul class="dropdown-menu">',
         '        <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
