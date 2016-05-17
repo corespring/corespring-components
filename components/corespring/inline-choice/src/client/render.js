@@ -218,8 +218,6 @@ link = function($sce, $timeout) {
     })();
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-
-    scope.placeholder = 'Choose...';
   };
 };
 
@@ -244,7 +242,6 @@ main = [
         '          </li>',
         '        </div>',
         '        <span class="selected-label" ng-bind-html-unsafe="selected.label" ng-show="selected !== undefined" style="display: inline-block"></span>',
-        '        <span class="placeholder" ng-show="selected === undefined">{{placeholder}}</span>',
         '        <div class="caret-holder">',
         '          <svg-icon category="inline-choice" key="caret"></svg-icon>',
         '        </div>',
