@@ -9,6 +9,9 @@
 @incorrect-answer-bg-color: rgba(255, 255, 204, 0.6);
 @incorrect-answer-border-color: rgb(238, 162, 54);
 
+@hover-background-color: #bde2fe;
+@selected-background-color: #91acb8;
+
 .corespring-select-text {
 
   .component-placeholder {
@@ -21,6 +24,7 @@
       }
     }
   }
+
   .action-buttons-holder {
     text-align: right;
     .action-buttons {
@@ -36,10 +40,17 @@
     }
   }
 
+  .feedback.panel {
+    &.incorrect, &.correct {
+      .cs-icon {
+        top: -3px;
+        left: -5px;
+      }
+    }
+  }
+
   .select-text-content {
     background-clip: padding-box;
-    border-radius: 5px 0 5px 5px;
-    border: 1px dashed #ccc;
     clear: both;
     margin: 0 0 15px 0;
     padding: 10px;
@@ -52,17 +63,13 @@
         transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
 
         &.selected {
-          background-color: #CCCCCC;
+          background-color: @selected-background-color;
         }
 
         &:hover {
-          background-color: #eee;
+          background-color: @hover-background-color;
         }
       }
-    }
-
-    &.no-more-selections {
-
     }
 
     &.blocked {
@@ -77,6 +84,7 @@
         }
       }
     }
+
     &.show-answers {
       .cst {
         &.correct {

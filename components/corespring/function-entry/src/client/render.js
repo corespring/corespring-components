@@ -15,6 +15,8 @@ var main = [
 
       var rawHintHtml, clickBound;
 
+      scope.popupVisible = false;
+
       function shouldShowFormattingHelp() {
         var defaultValue = true;
         if (scope.correctClass) {
@@ -75,12 +77,16 @@ var main = [
         // sets the server's response
         setResponse: function(response) {
           $(element).find('.text-input').popover('destroy');
-
+          response.feedback = {
+            correctness: response.correctness,
+            message: response.feedback
+          };
           scope.correctClass = response.correctness;
           if (_.isEmpty(scope.answer)) {
             scope.correctClass = 'warning';
             response.correctness = 'warning';
           }
+          scope.feedback = response.feedback;
           scope.response = response;
         },
 
@@ -111,23 +117,55 @@ var main = [
       };
 
       $('html').click(function(e) {
-        if ($(e.target).parents('[feedback-popover]').length === 0 && _.isEmpty($(e.target).attr('feedback-popover'))) {
-          $(element).find('.text-input').popover('hide');
+        if (!($(element).has(e.target).length > 0)) {
+          $(element).find('.popover').popover('hide');
         }
+      });
+
+      scope.hasFeedback = function() {
+        return scope.instructorResponse || scope.response;
+      };
+
+      scope.$watch('answer', function() {
+        scope.inputClass = (scope.answer && scope.answer.trim().length > 0) ? 'filled-in' : '';
+      });
+
+      scope.$watch('response', function() {
+        var correctnessMap = {
+          'warning' : 'nothing-submitted',
+          'partial' : 'partially-correct'
+        };
+        scope.iconKey = scope.response ?
+          (_.has(correctnessMap, scope.response.correctness) ? correctnessMap[scope.response.correctness] : scope.response.correctness) : '';
       });
 
       MathJaxService.parseDomForMath(0, element[0]);
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
+
+
+      element.on('show.bs.popover', function(e) {
+        scope.triggerIcon(e, true);
+      });
+
+      element.on('hide.bs.popover', function(e) {
+        scope.triggerIcon(e, false);
+      });
+
+      scope.triggerIcon = function(e, popoverToggled) {
+        scope.popupVisible = popoverToggled;
+      };
     }
 
     function template() {
       return [
-        '<div class="view-function-entry" ng-class="{popupFeedback: response.feedback}">',
-        '  <div feedback-popover="response">',
-        '    <span class="text-input {{correctClass}}">',
-        '      <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control" />',
-        '    </span>',
+        '<div class="view-function-entry" ng-class="{\'with-feedback\': hasFeedback()}">',
+        '  <span class="text-input">',
+        '    <input type="text" ng-disabled="!editable" ng-model="answer" class="form-control {{inputClass}} {{correctClass}}" />',
+        '  </span>',
+        '  <div class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse()">',
+        '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
+        '        key="{{iconKey}}" shape="square" icon-set="emoji" />',
         '  </div>',
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '  <div class="hidden-math">',

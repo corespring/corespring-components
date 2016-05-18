@@ -76,25 +76,12 @@
 .view-number-line {
 
   .undo-button-row {
-    float: right;
+    text-align: center;
   }
 
-  div.element-selector {
+  .element-selector {
     .element-selector-template();
     margin-left: 10px;
-  }
-
-  .no-response {
-    text-align: center;
-    margin-bottom: 20px;
-    width: 90%;
-    padding-left: 10px;
-
-    i {
-      margin-top: 30px;
-      color: @warning-color;
-      font-size: 30px;
-    }
   }
 
   .correct-element {
@@ -106,23 +93,17 @@
   }
 
   .feedback {
-    &.panel {
-      &.warning {
-        .panel-heading {
-          display: none;
-        }
-
-        .panel-body {
-          border-radius: 4px;
-          padding: 15px;
-          background-color: @warning-color-background;
-          border-color: @warning-color-border;
-          color: @warning-color;
-        }
+    &.correct, &.incorrect, &.partial {
+      .cs-icon {
+        top: -3px;
+        left: -4px;
       }
     }
   }
 
+  .solution {
+    margin-left: 10px;
+  }
 
 }
 

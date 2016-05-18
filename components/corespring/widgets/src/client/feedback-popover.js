@@ -20,6 +20,9 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
         } else {
           var title, popoverClass;
           var content = typeof response.feedback === "object" ? response.feedback.message : response.feedback;
+          var cls = attrs.class ? (_.map(attrs.class.split(' '), function(cls) {
+            return cls.trim() + '-popover';
+          }).join(' ')) : '';
 
           if (_.isEmpty(content) && response.correctness !== "warning") {
             return;
@@ -41,13 +44,15 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
             popoverClass = 'instructor';
           }
 
+          popoverClass = popoverClass + ' ' + cls;
+
           $(element).find('.math-prerender').html(content);
           MathJaxService.parseDomForMath(0, $(element).find('.math-prerender')[0]);
           $(element).popover('destroy');
           $(element).popover({
               title: title,
               template: [
-                '<div class="popover feedback-popover popover-' + popoverClass + '" role="tooltip">',
+                '<div class="popover tip-popover feedback-popover popover-' + popoverClass + '" role="tooltip">',
                 '  <div class="arrow"></div>',
                 '  <h3 class="popover-title"></h3>',
                 '  <div class="popover-content"></div>',

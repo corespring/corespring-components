@@ -114,8 +114,9 @@ var main = ['$compile',
 
         // sets the server's response
         setResponse: function(response) {
-          console.log("Setting Response for extended text entry:");
-          console.log(response);
+          if (!response.correctClass) {
+            response.correctClass = 'submitted';
+          }
 
           scope.answer = response.studentResponse;
           scope.response = response;
@@ -151,11 +152,16 @@ var main = ['$compile',
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
+      scope.$watch('answer', function() {
+        scope.inputClass = (scope.answer && $(scope.answer.trim()).text().length > 0) ? 'filled-in' : '';
+      });
+
     }
 
     function wiggiTemplate() {
       return [
-        '    <wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
+        '    <wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable"',
+        '        toolbar-on-focus="true" placeholder="Write your answer here.">',
         '      <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
         '    </wiggi-wiz>'
 
@@ -164,9 +170,10 @@ var main = ['$compile',
     function template() {
       return [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
-        '  <div class="textarea-holder">',
+        '  <div class="textarea-holder {{inputClass}}">',
         '  </div>',
-        '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
+        //'  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
+        '  <div ng-show="feedback" feedback="response.feedback" icon-set="emoji" correct-class="{{response.correctClass}}"></div>',
         '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
         '</div>'].join("\n");
     }

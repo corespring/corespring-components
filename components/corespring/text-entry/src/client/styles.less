@@ -15,104 +15,210 @@
   display: inline-block;
 }
 
-.cs-text-entry {
-  display: inline-block;
+.cs-text-entry-wrapper {
   position: relative;
-  margin: 0 8px 0 3px;
-  vertical-align: middle;
 
-  .feedback {
-    position: absolute;
+  &.with-feedback {
+    margin-right: 30px;
   }
-  .tooltip {
-    opacity: 1;
-    display: inline-block;
+
+  .instructor-response {
+    .cs-icon {
+      width: 32px;
+      height: 32px;
+      right: -26px;
+    }
+  }
+
+  .instructor-response-popover {
+    @popover-color: #e7e7e7;
+    margin-left: 6px;
+    border-color: @popover-color;
+
+    .arrow {
+      border-bottom-color: @popover-color;
+      border-top-color: @popover-color;
+
+      &:after {
+        border-bottom-color: @popover-color !important;
+        border-top-color: @popover-color !important;
+      }
+    }
+
+    .popover-content {
+      background: @popover-color;
+    }
+  }
+
+  .cs-icon {
     position: absolute;
-    top: -72px;
-    left: 5px;
-    max-width: 400px;
-    .caret {
-      top: 17px;
+    right: -30px;
+    top: -6px;
+    width: 38px;
+  }
+
+  .feedback-popover {
+
+    .popover-content {
+      text-align: left;
+      min-width: 270px;
+      border: none;
+
+      .answers-header {
+        text-transform: uppercase;
+        color: #51819e;
+      }
+
+      .cs-text-entry__response {
+        @padding-size: 10px;
+        display: block;
+        border: none;
+        color: #464146;
+        margin-bottom: 0;
+        padding-left: @padding-size;
+
+        &:after {
+          content: "";
+          display: block;
+          height: 1px;
+          width: 100%;
+          margin-left: @padding-size*-1;
+          background: #c7c6c7;
+        }
+
+        &:last-child:after {
+          background: none;
+        }
+      }
+    }
+  }
+
+  .cs-text-entry {
+    display: inline-block;
+    position: relative;
+    margin: 0 8px 0 3px;
+    vertical-align: middle;
+
+    input[type=text] {
+      border: 1px solid #cbcbcb;
+      box-shadow: none;
+
+      &.filled-in {
+        background-color: #eef8fc;
+        color: #544d98;
+      }
+
+      &.submitted {
+        border-color: #cccbcb;
+        background-color: #f8f6f6;
+        color: #93939e;
+      }
+    }
+
+    .feedback {
       position: absolute;
     }
-  }
-  .tooltip-inner {
-    background-color: black;
-    height: 17px;
-    padding-top: 0px;
-    border-radius: 2px;
-    max-width: 400px;
-    white-space: nowrap;
-  }
 
-  &.popupFeedback {
-    .cs-text-entry__text-input-holder {
-      &.warning, &.correct, &.incorrect, &.partial {
-        cursor: pointer;
+    .tooltip {
+      opacity: 1;
+      display: inline-block;
+      position: absolute;
+      top: -72px;
+      left: 5px;
+      max-width: 400px;
+      .caret {
+        top: 17px;
+        position: absolute;
       }
-      .form-control[disabled], .form-control[readonly] {
-        cursor: pointer;
+    }
+
+    .tooltip-inner {
+      background-color: black;
+      height: 17px;
+      padding-top: 0px;
+      border-radius: 2px;
+      max-width: 400px;
+      white-space: nowrap;
+    }
+
+    &.popupFeedback {
+      .cs-text-entry__text-input-holder {
+        &.warning, &.correct, &.incorrect, &.partial {
+          cursor: pointer;
+        }
+        .form-control[disabled], .form-control[readonly] {
+          cursor: pointer;
+        }
       }
     }
   }
+
 }
 
 .cs-text-entry__text-input-holder {
   position: relative;
-  &.warning, &.correct, &.incorrect, &.partial {
-    margin-right: 30px;
-  }
+
   .popover {
     visibility: hidden;
     width: 200px;
   }
-  .result-icon {
-    position: absolute;
-    right: -25px;
-    top: 0px;
-  }
-  .result-icon.warning {
-    right: -30px;
-  }
+
   input {
     padding: 4px 6px;
   }
+
   input.partial {
     .partial-input();
   }
+
   input.correct {
     .correct-input();
   }
+
   input.incorrect {
     .incorrect-input();
   }
-  input.warning {
-    .warning-input();
-  }
-  i.fa {
+
+  .fa {
     margin: 0;
     font-size: 25px;
     line-height: 31px !important;
     color: @incorrect-background;
+
+    &.correct {
+      color: @correct-background;
+
+      &:before {
+        content: @correct-character;
+      }
+    }
+
+    &.partial {
+      color: @partially-correct-background;
+
+      &:before {
+        content: @partial-character;
+      }
+    }
+
+    &.incorrect {
+
+      &:before {
+        content: @incorrect-character;
+      }
+    }
+
   }
-  i.fa.correct {
-    color: @correct-background;
+
+  .cs-icon {
+    height: 38px;
+    width: 38px;
+    display: inline-block;
+    position: absolute;
+    top: -6px;
+    right: -30px;
   }
-  i.fa.partial {
-    color: @partially-correct-background;
-  }
-  i.fa.warning {
-    color: @warning-color;
-  }
-  i.fa.incorrect:before {
-    content: @incorrect-character;
-  }
-  i.fa.correct:before {
-    content: @correct-character;
-  }
-  i.fa.partial:before {
-    content: @partial-character;
-  }
+
 }
 
 .cs-text-entry__text-input-holder.incorrect .popover,
@@ -277,7 +383,7 @@
   .answer-options {
     .checkbox-input {
       display: inline-block;
-      margin-right: 20px;
+      margin-right: 40px;
     }
   }
 

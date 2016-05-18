@@ -7,23 +7,21 @@
     padding: 0;
     font-family: 'Kameron';
 
+    .cs-icon {
+      top: 6px;
+      left: 6px;
+    }
+
     &.answer-expected {
       text-align: center;
 
       .panel-body {
         display: inline-block;
       }
-
-      .cs-icon {
-        top: 6px;
-        left: 6px;
-      }
     }
 
     .cs-icon {
       position: absolute;
-      top: -3px;
-      left: -5px;
       width: 40px;
     }
 
@@ -34,8 +32,56 @@
       position: relative;
     }
 
-    &.warning {
-      .warning-panel();
+    &.submitted {
+      display: inline-block;
+      .panel-body {
+        background-color: @choice-muted-background;
+      }
+    }
+
+  }
+}
+
+.feedback-popover {
+
+  &.popover {
+    padding: 0px;
+    min-width: 200px;
+    text-align: center;
+    box-shadow: none;
+    margin-left: -5px;
+    font-family: 'Kameron';
+
+    .popover-border(@color) {
+      border-color: @color;
+      & > .arrow {
+        border-bottom-color: @color;
+        border-top-color: @color;
+      }
+    }
+
+    &.popover-incorrect {
+      .popover-border(@incorrect-background);
+    }
+
+    &.popover-correct {
+      .popover-border(@correct-background);
+    }
+
+    &.popover-instructor {
+      .popover-border(@show-rationale-background);
+    }
+
+    &.bottom {
+      margin-top: 19px;
+    }
+
+    &.top {
+      margin-top: -18px;
+    }
+
+    .popover-title {
+      display: none;
     }
   }
 }
@@ -87,6 +133,10 @@
 
     &.partial {
       .color-panel(@partial-color);
+    }
+
+    &.warning {
+      .color-panel(#c0ffc0);
     }
 
   }

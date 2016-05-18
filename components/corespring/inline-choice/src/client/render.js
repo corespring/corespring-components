@@ -4,7 +4,7 @@ link = function($sce, $timeout) {
   return function(scope, element, attrs) {
 
     scope.editable = true;
-    scope.feedbackVisible = false;
+    scope.popupVisible = false;
 
     function layoutChoices(choices, order) {
       if (!order) {
@@ -97,6 +97,10 @@ link = function($sce, $timeout) {
 
     scope.containerBridge = {
 
+      setPlayerSkin: function(skin) {
+        scope.iconset = skin.iconSet;
+      },
+
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
@@ -136,6 +140,7 @@ link = function($sce, $timeout) {
           }).join("\n");
           scope.instructorResponse = {correctness: 'instructor', feedback: rationaleHtml};
         }
+        scope.instructorClass = 'instructor';
       },
 
       // sets the server's response
@@ -150,6 +155,7 @@ link = function($sce, $timeout) {
           r.correctness = 'warning';
         }
         scope.response = r;
+        console.log('scope.response', scope.response);
         scope.iconKey = r.correctness === 'warning' ? 'nothing-submitted' : r.correctness;
       },
 
@@ -195,16 +201,16 @@ link = function($sce, $timeout) {
     };
 
 
-    element.on('show.bs.popover', function() {
-      scope.triggerIcon(true);
+    element.on('show.bs.popover', function(e) {
+      scope.triggerIcon(e, true);
     });
 
-    element.on('hide.bs.popover', function() {
-      scope.triggerIcon(false);
+    element.on('hide.bs.popover', function(e) {
+      scope.triggerIcon(e, false);
     });
 
-    scope.triggerIcon = function(popoverToggled) {
-      scope.feedbackVisible = popoverToggled;
+    scope.triggerIcon = function(e, popoverToggled) {
+      scope.popupVisible = popoverToggled;
     };
 
     scope.playerId = (function() {
@@ -212,8 +218,6 @@ link = function($sce, $timeout) {
     })();
 
     scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-
-    scope.placeholder = 'Choose...';
   };
 };
 
@@ -228,7 +232,7 @@ main = [
       replace: true,
       link: link($sce, $timeout),
       template: [
-        '<div class="view-inline-choice" ng-class="response.correctness">',
+        '<div class="view-inline-choice {{instructorClass}}" ng-class="response.correctness">',
         '  <span viewport="#{{playerId}}">',
         '    <span class="dropdown" dropdown>',
         '      <span class="btn dropdown-toggle" ng-class="{initial: !selected}" dropdown-toggle ng-disabled="!editable">',
@@ -238,13 +242,12 @@ main = [
         '          </li>',
         '        </div>',
         '        <span class="selected-label" ng-bind-html-unsafe="selected.label" ng-show="selected !== undefined" style="display: inline-block"></span>',
-        '        <span class="placeholder" ng-show="selected === undefined">{{placeholder}}</span>',
         '        <div class="caret-holder">',
         '          <svg-icon category="inline-choice" key="caret"></svg-icon>',
         '        </div>',
         '      </span>',
-        '      <span ng-if="response" class="feedback-icon" feedback-popover="response">',
-        '        <svg-icon open="{{feedbackVisible}}" category="feedback" key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '      <span ng-if="!instructorResponse && response" class="feedback-icon" feedback-popover="response">',
+        '        <svg-icon open="{{popupVisible}}" category="{{response.feedback ? \'feedback\' : \'\'}}" key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '      </span>',
         '      <ul class="dropdown-menu">',
         '        <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
@@ -253,7 +256,9 @@ main = [
         '      </ul>',
         '    </span>',
         '  </span>',
-        '  <span ng-if="instructorResponse" feedback-popover="instructorResponse" class="rationale-icon"></span>',
+        '  <span ng-if="instructorResponse" class="rationale" feedback-popover="instructorResponse">',
+        '    <svg-icon open="{{popupVisible}}" class="toggle-icon" category="showHide" key="show-rationale"></svg-icon>',
+        '  </span>',
         '</div>'
       ].join("\n")
     };

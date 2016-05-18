@@ -21,6 +21,9 @@ var main = [
       scope.correctClass = undefined;
       scope.response = undefined;
 
+      scope.popupVisible = false;
+      scope.instructorResponse = false;
+
       scope.containerBridge = {
 
         setDataAndSession: function(dataAndSession) {
@@ -39,6 +42,7 @@ var main = [
 
         setInstructorData: function(data) {
           scope.answer = data.correctResponses.values[0];
+          scope.instructorResponse = true;
 
           var hasMoreCorrectResponses = data.correctResponses.values.length > 1;
           var hasPartialResponses = data.partialResponses && data.partialResponses.values.length > 0;
@@ -48,10 +52,10 @@ var main = [
           }
 
           var message = (hasMoreCorrectResponses || hasPartialResponses) ? [
-            (hasMoreCorrectResponses) ? "Additional correct answers:<br/>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('') + "<br/><br/>" : "",
-            (hasPartialResponses) ? "Partially correct answers:<br/>" + _.map(data.partialResponses.values, wrapAnswer).join('') : ""
+            (hasMoreCorrectResponses) ? "<span class=\'answers-header\'>Additional correct answers:</span><br/>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('') + "<br/><br/>" : "",
+            (hasPartialResponses) ? "<span class=\'answers-header\'>Partially correct answers:</span><br/>" + _.map(data.partialResponses.values, wrapAnswer).join('') : ""
           ].join("") : undefined;
-          this.setResponse({feedback: {correctness: 'correct', message: message}});
+          this.setResponse({feedback: {correctness: 'instructor', message: message}});
         },
 
         // sets the server's response
@@ -61,6 +65,7 @@ var main = [
           if (!response) {
             return;
           }
+          console.log('response', response);
 
           scope.response = response;
           scope.feedback = response.feedback;
@@ -94,29 +99,67 @@ var main = [
 
       };
 
+      scope.inputClasses = function() {
+        return [
+          scope.answer && scope.answer.length > 0 ? 'filled-in' : '',
+          scope.feedback ? 'submitted' : ''
+        ].join(' ');
+      };
+
+      scope.$watch('response', function() {
+        var correctnessMap = {
+          'warning' : 'nothing-submitted',
+          'partial' : 'partially-correct'
+        };
+        scope.iconKey = scope.response ?
+          (_.has(correctnessMap, scope.response.correctness) ? correctnessMap[scope.response.correctness] : scope.response.correctness) : '';
+      });
+
+      scope.isInstructorResponse = function() {
+        return scope.instructorResponse && scope.response.feedback.message;
+      };
+
+      scope.hasFeedback = function() { return scope.instructorResponse || scope.response; };
+
+      element.on('show.bs.popover', function(e) {
+        scope.triggerIcon(e, true);
+      });
+
+      element.on('hide.bs.popover', function(e) {
+        scope.triggerIcon(e, false);
+      });
+
+      scope.triggerIcon = function(e, popoverToggled) {
+        scope.popupVisible = popoverToggled;
+      };
+
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     }
 
     function template() {
       return [
-        '<div class="cs-text-entry" ng-class="{popupFeedback: feedback.message}">',
-        '  <div class="cs-text-entry__text-input-holder" ',
-        '     ng-class="feedback.correctness" ',
-        '     feedback-popover="response">',
-        '    <input type="text" ',
-        '       ng-model="answer" ',
-        '       ng-readonly="!editable" ',
-        '       ng-class="feedback.correctness"',
-        '       class="input-sm form-control" ',
-        '       size="{{question.answerBlankSize}}"',
-        '       style="text-align: {{question.answerAlignment}}"/>',
-        '    <i ng-show="feedback" ',
-        '       class="fa result-icon" ',
-        '       ng-class="feedback.correctness" ',
-        '       style="display: inline;"',
-        '      ></i>',
+        '<span class="cs-text-entry-wrapper" ng-class="{\'with-feedback\': hasFeedback()}">',
+        '  <div class="cs-text-entry">',
+        '    <div class="cs-text-entry__text-input-holder" ',
+        '       ng-class="feedback.correctness">',
+        '      <input type="text" ',
+        '         ng-model="answer" ',
+        '         ng-readonly="!editable" ',
+        '         ng-class="feedback.correctness"',
+        '         class="input-sm form-control {{inputClasses()}}" ',
+        '         size="{{question.answerBlankSize}}"',
+        '         style="text-align: {{question.answerAlignment}}"/>',
+        '    </div>',
         '  </div>',
-        '</div>'
+        '  <span class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse()">',
+        '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
+        '        key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '  </span>',
+        '  <span class="feedback-icon instructor-response" feedback-popover="response" ng-if="isInstructorResponse()">',
+        '    <svg-icon open="{{popupVisible}}"',
+        '        key="show-rationale" shape="round" icon-set="emoji" />',
+        '  </span>',
+        '</span>'
       ].join("\n");
     }
   }];

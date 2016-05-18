@@ -7,7 +7,7 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
       'open': '@'
     },
     template: [
-      '<span class="{{key}}" ng-if="template" todo="{{template}}"> ',
+      '<span class="{{key}}" ng-if="template"> ',
       '  <div class="cs-icon">',
       '    <ng-include src="template"/>',
       '  </div>',

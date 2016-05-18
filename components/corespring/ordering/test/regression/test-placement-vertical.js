@@ -61,7 +61,7 @@ describe('placement ordering (porv)', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .waitAndClick('.show-correct-button')
+          .waitAndClick('.show-correct')
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
             expect(attr).toNotContain('ng-hide');
           })
@@ -77,7 +77,7 @@ describe('placement ordering (porv)', function() {
           .dragAndDrop(divContaining('Apple'), landingPlace(1))
           .dragAndDrop(divContaining('Banana'), landingPlace(2))
           .submitItem()
-          .click('.show-correct-button')
+          .click('.show-correct')
           .getAttribute('.see-answer-area .choices', 'class', function(err, attr) {
             expect(attr).toNotContain('ng-hide');
           })
