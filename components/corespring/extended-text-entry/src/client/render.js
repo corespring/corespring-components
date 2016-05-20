@@ -93,12 +93,13 @@ var main = ['$compile',
 
           var compiledWiggi = $compile(wiggiTemplate())(scope);
           element.find('.textarea-holder')
-            .html(compiledWiggi)
             .css({
               'overflow' : 'hidden',
               display: 'inline-block',
-              width: width, 
-              height: height});
+              width: width
+            });
+          element.find('.textarea-holder .wiggi').html(compiledWiggi).css({
+            height: height});
         },
 
         getSession: function() {
@@ -171,9 +172,9 @@ var main = ['$compile',
       return [
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder {{inputClass}}">',
+        '    <div class="wiggi"></div>',
+        '    <div ng-show="feedback" feedback="response.feedback" icon-set="emoji" correct-class="{{response.correctClass}}"></div>',
         '  </div>',
-        //'  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
-        '  <div ng-show="feedback" feedback="response.feedback" icon-set="emoji" correct-class="{{response.correctClass}}"></div>',
         '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
         '</div>'].join("\n");
     }
