@@ -94,12 +94,13 @@ var main = ['$compile',
           var compiledWiggi = $compile(wiggiTemplate())(scope);
           element.find('.textarea-holder')
             .css({
-              'overflow' : 'hidden',
               display: 'inline-block',
-              width: width
+              width: width,
+              'min-height': height
             });
           element.find('.textarea-holder .wiggi').html(compiledWiggi).css({
-            height: height});
+            'min-height': height});
+          element.find('.textarea-holder .wiggi-wiz').css({'min-height' : height});
         },
 
         getSession: function() {
