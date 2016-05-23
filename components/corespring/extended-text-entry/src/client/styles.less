@@ -18,7 +18,7 @@
   .wiggi-wiz {
     margin-bottom: 20px;
     min-height: 100px;
-    border-color: #bebebe;
+    border: 1px solid #bebebe;
 
     &.disabled {
       background-color: #f8f6f6;
@@ -28,6 +28,7 @@
 
     .placeholder {
       color: #bebebe;
+      padding: 10px;
     }
 
   }
@@ -37,6 +38,11 @@
 
     .btn {
       padding: 0px 7px;
+
+      &:not(.active) {
+        border: none;
+        background: none;
+      }
     }
 
     .btn-group {
@@ -46,6 +52,7 @@
 
   .wiggi-wiz-editable {
     padding: 12px;
+    overflow: hidden;
   }
 
   &.received.incorrect .wiggi-wiz {
