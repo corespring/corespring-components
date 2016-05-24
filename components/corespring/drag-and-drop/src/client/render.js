@@ -184,9 +184,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           $timeout(function() {
             $compile($answerArea)(scope.$new());
           });
-
-          scope.undoModel.init();
         },
+
         getSession: function() {
           var answer = {};
           _.each(scope.landingPlaceChoices, function(v, k) {
