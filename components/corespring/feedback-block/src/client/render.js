@@ -55,12 +55,7 @@ var main = [
       link: link,
       template: [
         '<div class="view-feedback-container" ng-show="isVisible" >',
-        '  <div class="panel panel-default feedback-panel {{correctClass}}">',
-        '    <div class="panel-heading">&nbsp;</div>',
-        '    <div class="panel-body">',
-        '      <span type="success" ng-bind-html-unsafe="feedback"></span>',
-        '    </div>',
-        '  </div>',
+        '  <div feedback="feedback" correct-class="{{correctClass}}"></div>',
         '</div>'
       ].join("")
     };
