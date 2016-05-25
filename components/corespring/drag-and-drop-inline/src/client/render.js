@@ -322,10 +322,10 @@ var main = [
              choiceArea(),
         '  </div>',
         '  <div class="clearfix"></div>',
+        '  <div ng-show="feedback" icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
         '  <correct-answer-toggle visible="response.correctResponse && response.correctness !== \'correct\'"',
         '      toggle="seeSolutionExpanded"></correct-answer-toggle>',
         '  <div class="correct-answer-area-holder" ng-show="seeSolutionExpanded"></div>',
-        '  <div ng-show="feedback" icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
         '</div>'
       ].join('');
     }
