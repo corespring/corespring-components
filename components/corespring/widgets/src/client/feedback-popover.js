@@ -58,6 +58,7 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
                 '  <div class="popover-content"></div>',
                 '</div>'
               ].join('\n'),
+              container: element.parents('.corespring-player'),
               content: function() {
                 return scope.originalContent || $(element).find('.math-prerender').html();
               },
