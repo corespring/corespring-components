@@ -14,6 +14,9 @@
 
 .corespring-select-text {
 
+  @correct-foreground: #f8ffe4;
+  @correct-background: #46b04f;
+
   .component-placeholder {
     .holder {
       padding: 10px;
@@ -26,12 +29,9 @@
   }
 
   .action-buttons-holder {
-    text-align: right;
+    text-align: center;
     .action-buttons {
-      border: 1px dashed #ccc;
-      border-radius: 5px 5px 0 0;
-      border-bottom-color: white;
-      border-bottom-style: solid;
+      border: none;
       display: inline-block;
       padding: 4px;
       .answers-toggle {
@@ -41,7 +41,7 @@
   }
 
   .feedback.panel {
-    &.incorrect, &.correct {
+    &.incorrect, &.correct, &.partial {
       .cs-icon {
         top: -3px;
         left: -5px;
@@ -75,29 +75,30 @@
     &.blocked {
       .cst {
         &.correct {
-          color: white;
-          background-color: #3C763D;
+          color: @correct-foreground;
+          background-color: @correct-background;
         }
         &.incorrect {
-          color: white;
-          background-color: #EEA236;
+          color: #464146;
+          background-color: #fdbe55;
         }
       }
     }
 
     &.show-answers {
+
       .cst {
         &.correct {
-          color: white;
-          background-color: #3C763D;
+          color: @correct-foreground;
+          background-color: @correct-background;
         }
         &.incorrect {
           color: black;
           background-color: white;
         }
         &.correct-not-selected {
-          color: white;
-          background-color: #3C763D;
+          color: @correct-foreground;
+          background-color: @correct-background;
         }
       }
     }
