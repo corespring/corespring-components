@@ -155,7 +155,7 @@ var main = ['$compile',
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
       scope.$watch('answer', function() {
-        scope.inputClass = (scope.answer && $(scope.answer.trim()).text().length > 0) ? 'filled-in' : '';
+        scope.inputClass = (scope.answer && $('<span>'+scope.answer.trim()+'</span>').text().length > 0) ? 'filled-in' : '';
       });
 
     }
