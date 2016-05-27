@@ -273,7 +273,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     };
     var answerArea = [
       '<div class="answer-area-holder">',
-      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"'),
+      buttonRow('ng-if="model.config.choiceAreaPosition == \'below\'"'),
       '<div class="clearfix" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'"></div>',
       '  <div class="answer-area-label" ng-show="answerLabelVisible()" ng-if="!showCorrectResponse() && model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.answerAreaLabel"></div>',
       '  <div class="answer-area-table {{correctClass}}" ng-if="!showCorrectResponse()">',
@@ -312,7 +312,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var choices = [
       '<div class="choices" >',
       '  <div class="choices-holder">',
-      buttonRow('ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'above\'"'),
+      buttonRow('ng-if="model.config.choiceAreaPosition == \'above\'"'),
       '<div class="clearfix"></div>',
       '<div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="!hasResponse() && model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
       '    <div class="choices-inner-holder clearfix" ng-if="!hasResponse()">',
@@ -384,7 +384,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var dragAndDropTemplate = [
       '<div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
-      buttonRow('ng-if="model.config.choiceAreaLayout == \'vertical\'"'),
+      buttonRow(),
       '  <div class="main-row">',
       '    <div ng-show="choiceLabelVisible()" class="label-row" ng-if="model.config.choiceAreaLayout == \'vertical\'">',
       '      <div class="choice-area-label" ng-show="choiceLabelVisible()" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
