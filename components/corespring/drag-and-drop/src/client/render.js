@@ -10,6 +10,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       scope.maxWidth = 50;
       scope.maxHeight = 20;
       scope.expandHorizontal = true;
+      scope.solutionVisible = false;
 
       scope.undoModel = new CsUndoModel();
       scope.undoModel.setGetState(getState);
@@ -247,6 +248,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         }
       };
 
+      scope.$watch('solutionVisible', function() {
+        if (scope.solutionVisible) {
+          scope.seeSolution();
+          scope.solutionVisible = false;
+        }
+      });
+
       scope.helperForChoice = function(choice) {
         return ( !!choice.copyOnDrag ? "'clone'" : "''");
       };
@@ -264,16 +272,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-
-    };
-
-
-    var answerArea = function() {
-      return [
-        '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-        '        <div id="answer-area">',
-        '        </div>'
-      ].join('');
 
     };
 
@@ -301,17 +299,19 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
     };
     var tmpl = [
       '<div class="view-drag-and-drop-legacy" ng-class="{editable: editable}">',
+      '  <correct-answer-toggle toggle="solutionVisible" visible="showSolution"></correct-answer-toggle>',
       '  <div ng-show="!correctResponse && editable" class="pull-right">',
       '    <span cs-undo-button-with-model></span>',
       '    <span cs-start-over-button-with-model></span>',
-      '  </div> <div class="clearfix" />',
+      '  </div>',
+      '  <div ng-if="isSeeAnswerPanelExpanded">',
+      '  </div>',
+      '  <div class="clearfix" />',
       '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
-      answerArea(),
+      '  <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+      '  <div id="answer-area"></div>',
       '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="showSolution"><a ng-click="seeSolution()">See solution</a></div>',
-      '  <div class="clearfix"></div>',
       '</div>'
-
     ].join('');
 
     return {
@@ -406,6 +406,7 @@ var landingPlace = [
           onDrop: 'onDrop',
           onOver: 'overCallback',
           onOut: 'outCallback',
+          hoverClass: 'drop-hover',
           multiple: isMultiple
         };
 

@@ -9,6 +9,8 @@ var def = function() {
     link: function($scope) {
       $scope.changeToggle = function() {
         $scope.toggle = !$scope.toggle;
+        $scope.$emit('correctAnswerToggle', {open: $scope.toggle});
+        $scope.$broadcast('correctAnswerToggle', {open: $scope.toggle});
       };
     },
     template: [

@@ -75,6 +75,10 @@ function renderCorespringDndCategorize(
     scope.onToggleMoveOnDrag = onToggleMoveOnDrag;
     scope.onToggleRemoveAllAfterPlacing = onToggleRemoveAllAfterPlacing;
 
+    scope.feedback = {
+      isSeeAnswerPanelExpanded: false
+    };
+
     scope.containerBridge = {
       answerChangedHandler: saveAnswerChangedCallback,
       editable: setEditable,
@@ -104,6 +108,10 @@ function renderCorespringDndCategorize(
     }
 
     scope.$on('$destroy', onDestroy);
+
+    scope.$on('correctAnswerToggle', function(value) {
+      window.alert(value);
+    }, true);
 
     if (!scope.isEditMode) {
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
@@ -302,7 +310,9 @@ function renderCorespringDndCategorize(
     }
 
     function reset() {
-      scope.isSeeAnswerPanelExpanded = false;
+      scope.feedback = {
+        isSeeAnswerPanelExpanded: false
+      };
       scope.response = undefined;
 
       scope.renderModel = _.cloneDeep(scope.saveRenderModel);
@@ -692,9 +702,9 @@ function renderCorespringDndCategorize(
 
   function seeSolutionPanel() {
     return [
-      '<correct-answer-toggle visible="response.correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
-      '<div ng-if="isSeeAnswerPanelExpanded && response.correctResponse">',
-      categoriesTemplate('true', 'correctAnswerRows'),
+      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+      '<div ng-if="feedback.isSeeAnswerPanelExpanded">',
+      '  test',
       '</div>'
     ].join('');
   }
