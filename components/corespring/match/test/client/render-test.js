@@ -384,18 +384,18 @@ describe('corespring:match:render', function() {
     describe('if editable is false', function() {
       it('should return evaluated inputs', function() {
         assert(false, 'radiobutton', false, 'correct', 'match-radiobutton correct checked');
-        assert(false, 'radiobutton', true, 'correct', 'match-radiobutton correct checked');
+        assert(false, 'radiobutton', true, 'correct', 'match-radiobutton selected correct checked');
         assert(false, 'radiobutton', false, 'incorrect', 'match-radiobutton incorrect');
-        assert(false, 'radiobutton', true, 'incorrect', 'match-radiobutton incorrect');
+        assert(false, 'radiobutton', true, 'incorrect', 'match-radiobutton selected incorrect');
         assert(false, 'radiobutton', false, 'something', 'match-radiobutton unknown');
-        assert(false, 'radiobutton', true, 'unknown', 'match-radiobutton unknown');
+        assert(false, 'radiobutton', true, 'unknown', 'match-radiobutton selected unknown');
 
         assert(false, 'checkbox', false, 'correct', 'match-checkbox correct checked');
-        assert(false, 'checkbox', true, 'correct', 'match-checkbox correct checked');
+        assert(false, 'checkbox', true, 'correct', 'match-checkbox selected correct checked');
         assert(false, 'checkbox', false, 'incorrect', 'match-checkbox incorrect');
-        assert(false, 'checkbox', true, 'incorrect', 'match-checkbox incorrect');
+        assert(false, 'checkbox', true, 'incorrect', 'match-checkbox selected incorrect');
         assert(false, 'checkbox', false, 'something', 'match-checkbox unknown');
-        assert(false, 'checkbox', true, 'unknown', 'match-checkbox unknown');
+        assert(false, 'checkbox', true, 'unknown', 'match-checkbox selected unknown');
       });
     });
   });

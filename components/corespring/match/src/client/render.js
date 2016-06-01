@@ -46,6 +46,7 @@ var main = [
       scope.containerBridge = {
         answerChangedHandler: saveAnswerChangedCallback,
         setInstructorData: setInstructorData,
+        setPlayerSkin: setPlayerSkin,
         editable: setEditable,
         getSession: getSession,
         isAnswerEmpty: isAnswerEmpty,
@@ -152,6 +153,10 @@ var main = [
         if (response.correctnessMatrix) {
           setCorrectnessOnAnswers(response.correctnessMatrix);
         }
+      }
+
+      function setPlayerSkin(skin) {
+        scope.iconset = skin.iconSet;
       }
 
       function setInstructorData(data) {
@@ -322,6 +327,10 @@ var main = [
             classes.push('selected');
           }
         } else {
+          if (row.matchSet[index].value) {
+            classes.push('selected');
+          }
+
           classes.push(getCorrectClass(row, row.matchSet[index].correct));
         }
         return classes.join(' ');
@@ -354,7 +363,10 @@ var main = [
         if (/correct/gi.test(c)) {
           return 'correct';
         }
-        return scope.response ? 'muted' : 'ready';
+        if (/selected/gi.test(c)) {
+          return scope.editable ? 'selected' : 'selectedDisabled';
+        }
+        return !scope.editable ? 'muted' : 'ready';
       }
 
       function classForSolution(row, $index) {
@@ -496,7 +508,7 @@ var main = [
 
       function itemFeedbackPanel() {
         return [
-          '<div feedback="response.feedback"',
+          '<div feedback="response.feedback" icon-set="{{iconset}}" ',
           '   correct-class="{{response.correctClass}}"></div>'
         ].join('');
       }
