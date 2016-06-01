@@ -254,6 +254,10 @@
     border-radius: 10px;
     margin-left: 6px;
 
+    .popover-content {
+      padding: 19px 19px 0 19px;
+    }
+
     .arrow {
       border-bottom-color: @popover-color;
       border-top-color: @popover-color;
@@ -261,6 +265,20 @@
       &:after {
         border-bottom-color: @popover-color !important;
         border-top-color: @popover-color !important;
+      }
+    }
+
+    .additional-correct-answers, .partially-correct-answers {
+      padding-left: 10px;
+      margin-left: 20px;
+      list-style-type: none;
+      li {
+        color: #464146;
+        border-bottom: 1px solid #c7c6c7;
+
+        &:last-child {
+          border-bottom: none;
+        }
       }
     }
 
