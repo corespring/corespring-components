@@ -81,6 +81,7 @@ function renderCorespringDndCategorize(
 
     scope.containerBridge = {
       answerChangedHandler: saveAnswerChangedCallback,
+      setPlayerSkin: setPlayerSkin,
       editable: setEditable,
       getSession: getSession,
       isAnswerEmpty: isAnswerEmpty,
@@ -118,6 +119,10 @@ function renderCorespringDndCategorize(
     }
 
     //-----------------------------------------------------------
+
+    function setPlayerSkin(skin) {
+      scope.iconset = skin.iconSet;
+    }
 
     function setDataAndSession(dataAndSession) {
       log('setDataAndSession mode:', attrs.mode, dataAndSession);
@@ -694,7 +699,7 @@ function renderCorespringDndCategorize(
 
   function itemFeedbackPanel() {
     return [
-        '<div feedback="response.feedback"',
+        '<div feedback="response.feedback" icon-set="{{iconset}}"',
         '   correct-class="{{response.correctClass}} {{response.warningClass}}">',
         '</div>'
       ].join('');

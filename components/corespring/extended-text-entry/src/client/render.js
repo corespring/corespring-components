@@ -64,6 +64,10 @@ var main = ['$compile',
 
       scope.containerBridge = {
 
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
+
         setDataAndSession: function(dataAndSession) {
 
           var config = dataAndSession.data ? dataAndSession.data.model.config || {} : {};
@@ -174,7 +178,7 @@ var main = ['$compile',
         '<div class="view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
         '  <div class="textarea-holder {{inputClass}}">',
         '    <div class="wiggi"></div>',
-        '    <div ng-show="feedback" feedback="response.feedback" icon-set="emoji" correct-class="{{response.correctClass}}"></div>',
+        '    <div ng-show="feedback" feedback="response.feedback" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
         '  </div>',
         '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
         '</div>'].join("\n");
