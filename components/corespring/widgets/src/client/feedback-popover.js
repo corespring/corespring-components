@@ -49,10 +49,11 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
           $(element).find('.math-prerender').html(content);
           MathJaxService.parseDomForMath(0, $(element).find('.math-prerender')[0]);
           $(element).popover('destroy');
-          $(element).popover({
+          var popoverId = 'corespring-popover-' + _.uniqueId();
+          var popover = $(element).popover({
               title: title,
               template: [
-                '<div class="popover tip-popover feedback-popover popover-' + popoverClass + '" role="tooltip">',
+                '<div class="popover tip-popover feedback-popover popover-' + popoverClass + ' ' + popoverId + '" role="tooltip">',
                 '  <div class="arrow"></div>',
                 '  <h3 class="popover-title"></h3>',
                 '  <div class="popover-content"></div>',
@@ -72,14 +73,14 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
             }
           ).on('show.bs.popover', function(event) {
             $timeout(function() {
-              $('[feedback-popover]').each(function () {
+              $('[feedback-popover]').each(function() {
                 if (element[0] !== this) {
                   $(this).popover('hide');
                 }
               });
               scope.viewport = scope.viewport || $(element).parents('.player-body');
               if (scope.viewport && $(scope.viewport).length > 0) {
-                var $popover = $(event.target).siblings('.popover');
+                var $popover = $(element).parents('.corespring-player').find('.popover.' + popoverId);
                 var $viewport = $(scope.viewport).parent();
                 var padding = 5;
 
@@ -115,7 +116,6 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
               $(element).popover('hide');
             }
           });
-
         }
       });
     }

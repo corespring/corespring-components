@@ -17,6 +17,7 @@
 
 .cs-text-entry-wrapper {
   position: relative;
+  display: inline-block;
 
   .submitted() {
     border-color: #cccbcb;
@@ -24,8 +25,14 @@
     color: #93939e;
   }
 
+  .feedback-icon {
+    width: 37px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   &.with-feedback {
-    margin-right: 30px;
   }
 
   .instructor-response {
@@ -39,8 +46,8 @@
 
   .cs-icon {
     position: absolute;
-    right: -30px;
-    top: -6px;
+    right: 0px;
+    top: -1px;
     width: 38px;
   }
 
