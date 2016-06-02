@@ -18,6 +18,12 @@
 .cs-text-entry-wrapper {
   position: relative;
 
+  .submitted() {
+    border-color: #cccbcb;
+    background-color: #f8f6f6;
+    color: #93939e;
+  }
+
   &.with-feedback {
     margin-right: 30px;
   }
@@ -54,9 +60,7 @@
       }
 
       &.submitted {
-        border-color: #cccbcb;
-        background-color: #f8f6f6;
-        color: #93939e;
+        .submitted();
 
         &.warning {
           border-color: @warning-background;
@@ -100,6 +104,12 @@
           cursor: pointer;
         }
       }
+    }
+  }
+
+  &.view-mode {
+    .cs-text-entry input[type=text].filled-in {
+      .submitted();
     }
   }
 

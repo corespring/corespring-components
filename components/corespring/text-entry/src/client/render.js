@@ -76,7 +76,9 @@ var main = [
           scope.correctClass = response.feedback && response.correctness;
         },
 
-        setMode: function(newMode) {},
+        setMode: function(mode) {
+          scope.mode = mode;
+        },
 
         reset: function() {
           scope.answer = undefined;
@@ -142,7 +144,7 @@ var main = [
 
     function template() {
       return [
-        '<span class="cs-text-entry-wrapper" ng-class="{\'with-feedback\': hasFeedback()}">',
+        '<span class="cs-text-entry-wrapper {{mode}}-mode" ng-class="{\'with-feedback\': hasFeedback()}">',
         '  <div class="cs-text-entry">',
         '    <div class="cs-text-entry__text-input-holder" ',
         '       ng-class="feedback.correctness">',
