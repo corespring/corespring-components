@@ -14,6 +14,8 @@ var main = [
       };
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+        },
         setDataAndSession: function(dataAndSession) {
           scope.session = dataAndSession.session || {};
           scope.isVisible = false;

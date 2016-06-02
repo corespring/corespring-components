@@ -31,6 +31,7 @@ exports.directive = [
 
       scope.containerBridge = {
         answerChangedHandler: answerChangedHandler,
+        setPlayerSkin: setPlayerSkin,
         editable: editable,
         getSession: getSession,
         isAnswerEmpty: isAnswerEmpty,
@@ -45,6 +46,10 @@ exports.directive = [
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
       //------------------------------------------------------------------------
+
+      function setPlayerSkin(skin) {
+        scope.iconset = skin.iconSet;
+      }
 
       function setDataAndSession(dataAndSession) {
         // log("Setting data for Select Text: ", dataAndSession);
@@ -239,7 +244,7 @@ exports.directive = [
         '     ng-class="{editable: editable, blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': editable && model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
         '     ng-bind-html-unsafe="model.passage"',
         '  ></div>',
-        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}} {{warningClass}}"></div>',
+        '  <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}} {{warningClass}}"></div>',
         '</div>'
       ].join("\n");
     }

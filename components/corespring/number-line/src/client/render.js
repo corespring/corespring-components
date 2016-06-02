@@ -31,6 +31,9 @@ var main = [
       };
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
 
         setDataAndSession: function(dataAndSession) {
           $log.debug("number line", dataAndSession);
@@ -144,7 +147,7 @@ var main = [
         '         options="noResponseOptions"></div>',
         '  </div>',
 
-        '  <div feedback="serverResponse.feedback.message" correct-class="{{serverResponse.correctClass}}"></div>',
+        '  <div feedback="serverResponse.feedback.message" icon-set="{{iconset}}" correct-class="{{serverResponse.correctClass}}"></div>',
         '  <div style="display: none">',
         '    <span class="correct-element"></span>',
         '    <span class="incorrect-element"></span>',

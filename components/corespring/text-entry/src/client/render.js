@@ -26,6 +26,10 @@ var main = [
 
       scope.containerBridge = {
 
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
+
         setDataAndSession: function(dataAndSession) {
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {
@@ -153,11 +157,11 @@ var main = [
         '  </div>',
         '  <span class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse()">',
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
-        '        key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '        key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '  </span>',
         '  <span class="feedback-icon instructor-response" feedback-popover="response" ng-if="isInstructorResponse()">',
         '    <svg-icon open="{{popupVisible}}"',
-        '        key="show-rationale" shape="round" icon-set="emoji" />',
+        '        key="show-rationale" shape="round" icon-set="{{iconset}}" />',
         '  </span>',
         '</span>'
       ].join("\n");

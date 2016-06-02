@@ -130,6 +130,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       }
 
       _.extend(scope.containerBridge, {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
+
         setDataAndSession: function(dataAndSession) {
           $log.debug("Placement Ordering setting session: ", dataAndSession);
 
@@ -369,7 +373,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      </div>',
       '    </div>',
       '    <div class="clearfix" />',
-      '    <div ng-show="feedback && top.correctAnswerVisible" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '    <div ng-show="feedback && top.correctAnswerVisible" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
       '    <div ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="showCorrectResponse()">',
       '      <ul class="clearfix">',
       '        <li ng-repeat="choice in correctChoices">',
@@ -390,11 +394,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '    </div>',
       placementOrder,
       '    <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
-      '      <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '      <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
       '    </div>',
       '  </div>',
       '  <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
-      '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+      '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
       '  </div>',
       '</div>'
     ].join('\n');
