@@ -29,6 +29,10 @@ var main = [
       scope.undoModel.setRevertState(revertState);
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
+
         setDataAndSession: function(dataAndSession) {
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
           scope.model = dataAndSession.data.model;
@@ -413,7 +417,7 @@ var main = [
         '    </div>',
         choices(['bottom', 'right']),
         '  </div>',
-        '  <div feedback="response.feedback.message" correct-class="{{response.correctClass}}"></div>',
+        '  <div feedback="response.feedback.message" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
         '  <div see-answer-panel ng-if="response && response.correctness === \'incorrect\'">',
         correctAnswer,
         '  </div>',

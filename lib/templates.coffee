@@ -72,6 +72,7 @@ exports.preroll = ->
     assertFunction('setInstructorData');
     assertFunction('setMode');
     assertFunction('setResponse');
+    assertFunction('setPlayerSkin');
 
     if(errors.length){
        return 'Missing methods: ' + errors.join(',')

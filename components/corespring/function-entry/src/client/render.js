@@ -55,6 +55,10 @@ var main = [
       scope.editable = true;
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
+
         setDataAndSession: function(dataAndSession) {
           scope.question = dataAndSession.data.model;
           scope.session = dataAndSession.session || {};
@@ -165,7 +169,7 @@ var main = [
         '  </span>',
         '  <div class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse()">',
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
-        '        key="{{iconKey}}" shape="square" icon-set="emoji" />',
+        '        key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '  </div>',
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         '  <div class="hidden-math">',

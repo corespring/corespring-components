@@ -246,4 +246,74 @@
       display: none;
     }
   }
+
+  &.instructor-response-popover {
+    @popover-color: #e7e7e7;
+    background-color: @popover-color;
+    border-color: @popover-color;
+    border-radius: 10px;
+    margin-left: 6px;
+
+    .popover-content {
+      padding: 19px 19px 0 19px;
+    }
+
+    .arrow {
+      border-bottom-color: @popover-color;
+      border-top-color: @popover-color;
+
+      &:after {
+        border-bottom-color: @popover-color !important;
+        border-top-color: @popover-color !important;
+      }
+    }
+
+    .additional-correct-answers, .partially-correct-answers {
+      padding-left: 10px;
+      margin-left: 20px;
+      list-style-type: none;
+      li {
+        color: #464146;
+        border-bottom: 1px solid #c7c6c7;
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+
+  }
+
+  .popover-content {
+    text-align: left;
+    min-width: 270px;
+    border: none;
+
+    .answers-header {
+      text-transform: uppercase;
+      color: #51819e;
+    }
+
+    .cs-text-entry__response {
+      @padding-size: 10px;
+      display: block;
+      border: none;
+      color: #464146;
+      margin-bottom: 0;
+      padding-left: @padding-size;
+
+      &:after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 100%;
+        margin-left: @padding-size*-1;
+        background: #c7c6c7;
+      }
+
+      &:last-child:after {
+        background: none;
+      }
+    }
+  }
 }

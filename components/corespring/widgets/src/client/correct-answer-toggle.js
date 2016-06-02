@@ -21,7 +21,7 @@ var def = function() {
         $scope.toggle = !$scope.toggle;
         $scope.message = ($scope.toggle ? hideMessage : showMessage);
       };
-      
+
       $scope.message = showMessage;
     },
     template: [

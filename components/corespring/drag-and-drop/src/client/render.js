@@ -153,6 +153,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       };
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
         setDataAndSession: function(dataAndSession) {
           $log.debug("DnD setting session: ", dataAndSession);
 

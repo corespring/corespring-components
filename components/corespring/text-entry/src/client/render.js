@@ -52,8 +52,8 @@ var main = [
           }
 
           var message = (hasMoreCorrectResponses || hasPartialResponses) ? [
-            (hasMoreCorrectResponses) ? "<span class=\'answers-header\'>Additional correct answers:</span><br/>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('') + "<br/><br/>" : "",
-            (hasPartialResponses) ? "<span class=\'answers-header\'>Partially correct answers:</span><br/>" + _.map(data.partialResponses.values, wrapAnswer).join('') : ""
+            (hasMoreCorrectResponses) ? "<span class=\'answers-header\'>Additional correct answers</span><ul class='additional-correct-answers'><li>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('</li><li>') + "</li></ul>" : "",
+            (hasPartialResponses) ? "<span class=\'answers-header\'>Partially correct answers</span><ul class='partially-correct-answers'><li>" + _.map(data.partialResponses.values, wrapAnswer).join('</li><li>') + "</li></ul>" : ""
           ].join("") : undefined;
           this.setResponse({feedback: {correctness: 'instructor', message: message}});
         },
