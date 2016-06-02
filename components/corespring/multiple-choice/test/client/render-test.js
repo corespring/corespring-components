@@ -51,7 +51,9 @@ describe('corespring:multiple-choice-render', function() {
   };
 
   var instructorData = {
-    "correctResponse" : { "value" : "1" },
+    "correctResponse": {
+      "value": "1"
+    },
     rationales: [
       {
         choice: "1",
@@ -109,17 +111,26 @@ describe('corespring:multiple-choice-render', function() {
     expect(scope.choices.length).toBe(3);
   });
 
-  it('shuffles is shuffle is true', function() {
-    spyOn(_, 'shuffle');
+  it('shuffles when shuffle is true', function() {
+    spyOn(scope, 'shuffle');
     container.elements['1'].setDataAndSession(testModel);
-    expect(_.shuffle).toHaveBeenCalled();
+    expect(scope.shuffle).toHaveBeenCalled();
   });
 
-  it('does not shuffle if shuffle is false', function() {
-    spyOn(_, 'shuffle');
+  it('shuffles every time when reset is called', function() {
+    container.elements['1'].setDataAndSession(testModel);
+    spyOn(scope, 'shuffle');
+    container.elements['1'].reset();
+    container.elements['1'].reset();
+    container.elements['1'].reset();
+    expect(scope.shuffle).toHaveBeenCalledTimes(3);
+  });
+
+  it('does not shuffle when shuffle is false', function() {
+    spyOn(scope, 'shuffle');
     testModel.data.model.config.shuffle = false;
     container.elements['1'].setDataAndSession(testModel);
-    expect(_.shuffle).not.toHaveBeenCalled();
+    expect(scope.shuffle).not.toHaveBeenCalled();
   });
 
   it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
@@ -213,10 +224,12 @@ describe('corespring:multiple-choice-render', function() {
     it('setting instructor data marks correct answers as correct in the model', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);
-      var correctChoice = _.find(scope.choices, function(c) { return c.value === '1';});
+      var correctChoice = _.find(scope.choices, function(c) {
+        return c.value === '1';
+      });
       expect(correctChoice.correct).toEqual(true);
       _(scope.choices).without(correctChoice).each(function(c) {
-         expect(c.correct).not.toEqual(true);
+        expect(c.correct).not.toEqual(true);
       });
     });
 
@@ -251,7 +264,7 @@ describe('corespring:multiple-choice-render', function() {
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 

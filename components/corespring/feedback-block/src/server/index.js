@@ -1,3 +1,5 @@
+/* globals JSON */
+
 var _ = require('lodash');
 
 exports.render = function(element) {

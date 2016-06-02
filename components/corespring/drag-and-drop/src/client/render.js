@@ -191,6 +191,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
 
           scope.undoModel.init();
         },
+
         getSession: function() {
           var answer = {};
           _.each(scope.landingPlaceChoices, function(v, k) {

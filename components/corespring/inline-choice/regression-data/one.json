@@ -46,6 +46,6 @@
         }
       }
     },
-    "xhtml": "<corespring-inline-choice id=\"1\"></corespring-inline-choice> Some Text Here Some Text Here <corespring-inline-choice id=\"2\"></corespring-inline-choice>"
+    "xhtml": "<corespring-inline-choice id=\"1\"></corespring-inline-choice> Some Text Here Some Text Here <corespring-inline-choice id=\"2\"></corespring-inline-choice><div><br/><br/><br/><br/><br/><br/><br/><br/><br/></div>"
   }
 }

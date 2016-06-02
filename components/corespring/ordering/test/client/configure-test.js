@@ -124,22 +124,22 @@ describe('corespring:ordering:configure', function () {
   describe('partialScoring', function () {
     var testModel;
 
-    beforeEach(function(){
+    beforeEach(function() {
       testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       rootScope.$digest();
     });
 
-    describe('numberOfCorrectResponses', function(){
-      it('should be initialised to the number of choices', function(){
+    describe('numberOfCorrectResponses', function() {
+      it('should be initialised to the number of choices', function() {
         expect(scope.numberOfCorrectResponses).toBe(3);
       });
-      it('should be increased when a choice is added', function(){
+      it('should be increased when a choice is added', function() {
         scope.addChoice();
         scope.$digest();
         expect(scope.numberOfCorrectResponses).toBe(4);
       });
-      it('should be decreased when a choice is removed', function(){
+      it('should be decreased when a choice is removed', function() {
         scope.removeChoice(testModel.model.choices[0]);
         scope.$digest();
         expect(scope.numberOfCorrectResponses).toBe(2);
@@ -198,38 +198,56 @@ describe('corespring:ordering:configure', function () {
     });
   });
 
-  describe('addChoice', function(){
+  describe('addChoice', function() {
     var testModel;
 
-    beforeEach(function(){
+    beforeEach(function() {
       testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       scope.$digest();
     });
 
-    it('should add a choice', function(){
+    it('should add a choice', function() {
       var numberBefore = testModel.model.choices.length;
       scope.addChoice();
       expect(testModel.model.choices.length).toBe(numberBefore + 1);
     });
 
-    it('should set moveOnDrag to true when removeAllAfterPlacing is true', function(){
+    it('should set moveOnDrag to true when removeAllAfterPlacing is true', function() {
       scope.model.config.removeAllAfterPlacing = true;
       scope.addChoice();
       expect(testModel.model.choices.pop().moveOnDrag).toBe(true);
     });
 
-    it('should set moveOnDrag to false when removeAllAfterPlacing is false', function(){
+    it('should set moveOnDrag to false when removeAllAfterPlacing is false', function() {
       scope.model.config.removeAllAfterPlacing = false;
       scope.addChoice();
       expect(testModel.model.choices.pop().moveOnDrag).toBe(false);
     });
   });
+  
+  describe('removeChoice', function() {
+    var testModel;
+    var removalIndex = 0;
 
-  describe('removeAllAfterPlacing', function(){
+    beforeEach(function() {
+      testModel = createTestModel();
+      container.elements['1'].setModel(testModel);
+      scope.$digest();
+    });
+
+    it('should remove id from correctResponse', function() {
+      var choiceIdToRemove = scope.model.choices[removalIndex].id;
+      scope.removeChoice(removalIndex);
+      expect(scope.fullModel.correctResponse).not.toContain(choiceIdToRemove);
+    });
+
+  });
+
+  describe('removeAllAfterPlacing', function() {
     var testModel;
 
-    beforeEach(function(){
+    beforeEach(function() {
       testModel = createTestModel();
       container.elements['1'].setModel(testModel);
       scope.$digest();
@@ -247,7 +265,7 @@ describe('corespring:ordering:configure', function () {
       scope.$digest();
     }
 
-    it('should set moveOnDrag=true for all choices when set to true', function(){
+    it('should set moveOnDrag=true for all choices when set to true', function() {
       setRemoveAllAfterPlacing(true);
 
       var resultModel = container.elements['1'].getModel();
@@ -256,7 +274,7 @@ describe('corespring:ordering:configure', function () {
       });
     });
 
-    it('should set moveOnDrag=false for all choices when set to false', function(){
+    it('should set moveOnDrag=false for all choices when set to false', function() {
       setRemoveAllAfterPlacing(false);
 
       var resultModel = container.elements['1'].getModel();
@@ -265,7 +283,7 @@ describe('corespring:ordering:configure', function () {
       });
     });
 
-    it('should be set to false, when one choice toggles moveOnDrag to false', function(){
+    it('should be set to false, when one choice toggles moveOnDrag to false', function() {
       setRemoveAllAfterPlacing(true);
       var choice = testModel.model.choices[0];
       choice.moveOnDrag = false;
@@ -275,7 +293,7 @@ describe('corespring:ordering:configure', function () {
       expect(testModel.model.config.removeAllAfterPlacing).toBe(false);
     });
 
-    it('should not change, when one choice toggles moveOnDrag to true', function(){
+    it('should not change, when one choice toggles moveOnDrag to true', function() {
       setRemoveAllAfterPlacing(false);
       var choice = testModel.model.choices[0];
       choice.moveOnDrag = true;

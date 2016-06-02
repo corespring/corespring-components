@@ -17,11 +17,23 @@ function renderWebdriverTestComponent($log) {
   function link(scope, element, attrs) {
 
     scope.addableAdded = false;
+    scope.divWithTextAdded = false;
+    scope.emptyDivAdded = false;
     scope.hideableHidden = false;
     scope.removableRemoved = false;
     scope.showableShown = false;
 
+    scope.draggableModel = {
+      title: "draggable model"
+    };
+
+    scope.droppableModel = {
+      title: "droppable model"
+    };
+
     scope.addAddable = addAddable;
+    scope.addDivWithText = addDivWithText;
+    scope.addEmptyDiv = addEmptyDiv;
     scope.hideHideable = hideHideable;
     scope.removeRemovable = removeRemovable;
     scope.showShowable = showShowable;
@@ -72,6 +84,8 @@ function renderWebdriverTestComponent($log) {
 
     function reset() {
       scope.addableAdded = false;
+      scope.divWithTextAdded = false;
+      scope.emptyDivAdded = false;
       scope.hideableHidden = false;
       scope.removeableRemoved = false;
       scope.showableShown = false;
@@ -115,17 +129,43 @@ function renderWebdriverTestComponent($log) {
       scope.showableShown = true;
     }
 
+    function addEmptyDiv(){
+      scope.emptyDivAdded = true;
+    }
+
+    function addDivWithText(){
+      scope.divWithTextAdded = true;
+    }
+
   }
 
   function template() {
     return [
         '<div class="render-corespring-webdriver-test-component">',
         '  <div class="visible-from-the-start">visible from the start</div>',
+        '  <div class="no-content-1"><div ng-if="emptyDivAdded"></div></div>',
+        '  <div class="no-content-2"><div ng-if="divWithTextAdded">text</div></div>',
         '  <div class="hidden-from-the-start">hidden from the start</div>',
         '  <div class="hideable" ng-hide="hideableHidden">hideable</div>',
         '  <div class="showable" ng-show="showableShown">showable</div>',
         '  <div class="removable" ng-if="!removableRemoved">removable</div>',
         '  <div class="addable" ng-if="addableAdded">addable</div>',
+        '',
+        '  <div class="btn draggable" ',
+        '      data-drag="true"',
+        '      data-jqyoui-options="{revert: \'invalid\'}"',
+        '      jqyoui-draggable="{animate:true, placeholder: true}"',
+        '      ng-model="draggableModel"',
+        '   >{{draggableModel.title}}</div>',
+        '',
+        '  <div class="droppable" ',
+        '      data-drop="true"',
+        '      data-jqyoui-options="{tolerance:\'touch\'}"',
+        '      jqyoui-droppable ',
+        '      ng-model="droppableModel"',
+        '   >{{droppableModel.title}}</div>',
+        '',
+        '  <div id="mouse-follower" class="mouse-follower"></div>',
         '</div>'
       ].join('\n');
   }

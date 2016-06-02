@@ -20,7 +20,7 @@ var def = ['MathJaxService', '$timeout', function(MathJaxService, $timeout) {
         } else {
           var title, popoverClass;
           var content = typeof response.feedback === "object" ? response.feedback.message : response.feedback;
-          var cls = attrs.class ? (_.map(attrs.class.split(' '), function(cls) {
+          var cls = attrs['class'] ? (_.map(attrs['class'].split(' '), function(cls) {
             return cls.trim() + '-popover';
           }).join(' ')) : '';
 

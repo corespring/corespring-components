@@ -88,7 +88,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.hasResponse = function() {
         return scope.response !== undefined;
-      }
+      };
 
       scope.choiceLabelVisible = function() {
         if (scope.model.config.choiceAreaLayout === 'vertical') {

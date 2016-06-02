@@ -1,3 +1,5 @@
 describe('corespring', function() {
-  describe('extended text entry configure', function() {});
+  describe('extended text entry configure', function() {
+    
+  });
 });
