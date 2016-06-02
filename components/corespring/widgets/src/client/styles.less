@@ -207,31 +207,49 @@
 .feedback-popover {
 
   &.popover {
+    @popover-font-color: #464146;
     padding: 0px;
     min-width: 200px;
     text-align: center;
     box-shadow: none;
     margin-left: -5px;
-    font-family: 'Kameron';
+    font-family: 'Kameron' !important;
 
-    .popover-border(@color) {
-      border-color: @color;
+    .popover-color(@foreground-color, @background-color) {
+      color: @foreground-color;
+      border-color: @background-color;
       & > .arrow {
-        border-bottom-color: @color;
-        border-top-color: @color;
+        color: @background-color;
+        border-bottom-color: @background-color;
+        border-top-color: @background-color;
+
+        &:after {
+          border-bottom-color: @background-color;
+          border-top-color: @background-color;
+        }
+      }
+      .popover-content {
+        background-color: @background-color;
       }
     }
 
     &.popover-incorrect {
-      .popover-border(@incorrect-background);
+      .popover-color(@popover-font-color, @incorrect-background);
     }
 
     &.popover-correct {
-      .popover-border(@correct-background);
+      .popover-color(@popover-font-color, @correct-background);
+    }
+
+    &.popover-warning {
+      .popover-color(@popover-font-color, @warning-block-background);
+      .popover-content {
+        text-align: center;
+      }
     }
 
     &.popover-instructor {
-      .popover-border(@show-rationale-background);
+      .popover-color(@popover-font-color, @show-rationale-background);
     }
 
     &.bottom {
