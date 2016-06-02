@@ -157,7 +157,7 @@ var main = [
         '         style="text-align: {{question.answerAlignment}}"/>',
         '    </div>',
         '  </div>',
-        '  <span class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse()">',
+        '  <span class="feedback-icon" feedback-popover="response" ng-if="!isInstructorResponse() && feedback">',
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
         '        key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '  </span>',
