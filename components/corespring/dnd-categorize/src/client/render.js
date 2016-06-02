@@ -687,7 +687,7 @@ function renderCorespringDndCategorize(
   function undoStartOver() {
     return [
         '<div>',
-        '  <div class="undo-start-over pull-right" ng-show="canEdit()">',
+        '  <div class="undo-start-over text-centered" ng-show="canEdit()">',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
@@ -708,7 +708,6 @@ function renderCorespringDndCategorize(
     return [
       '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
       '<div ng-if="feedback.isSeeAnswerPanelExpanded">',
-      '  test',
       '</div>'
     ].join('');
   }
