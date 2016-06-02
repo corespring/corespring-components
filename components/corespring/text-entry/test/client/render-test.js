@@ -93,7 +93,7 @@ describe('corespring:text-entry:render', function() {
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         feedback: {
           correctness: 'instructor',
-          message: "<span class='answers-header'>Additional correct answers:</span><br/> <div class='cs-text-entry__response'>pear</div> <br/><br/>"
+          message: "<span class='answers-header'>Additional correct answers</span><ul class='additional-correct-answers'><li> <div class='cs-text-entry__response'>pear</div> </li></ul>"
         }
       });
     });
@@ -109,7 +109,7 @@ describe('corespring:text-entry:render', function() {
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         feedback: {
           correctness: 'instructor',
-          message: "<span class='answers-header'>Partially correct answers:</span><br/> <div class='cs-text-entry__response'>pear</div> "
+          message: "<span class='answers-header'>Partially correct answers</span><ul class='partially-correct-answers'><li> <div class='cs-text-entry__response'>pear</div> </li></ul>"
         }
       });
     });
