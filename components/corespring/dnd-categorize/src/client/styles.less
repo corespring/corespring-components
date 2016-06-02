@@ -111,7 +111,7 @@
   &.correct {
 
     .border {
-
+      border-color: @correct-background;
       .remove-choice {
         display: none;
       }
@@ -133,7 +133,7 @@
   &.incorrect {
 
     .border {
-      .incorrect-input();
+      border-color: @incorrect-background;
 
       .remove-choice {
         display: none;
@@ -453,6 +453,7 @@
       font-weight: bold;
       color: #7a7a7a;
     }
+
   }
 
   .category {
