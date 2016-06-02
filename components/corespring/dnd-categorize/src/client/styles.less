@@ -112,6 +112,8 @@
 
     .border {
       border-color: @correct-background;
+      box-shadow: none;
+
       .remove-choice {
         display: none;
       }
@@ -122,6 +124,7 @@
           color: white;
           content: '\f111';
         }
+
         .foreground:after {
           color: @correct-foreground;
           content: @correct-character;
@@ -134,6 +137,7 @@
 
     .border {
       border-color: @incorrect-background;
+      box-shadow: none;
 
       .remove-choice {
         display: none;
@@ -145,6 +149,7 @@
           color: white;
           content: '\f111';
         }
+
         .foreground:after {
           color: @incorrect-foreground;
           content: @incorrect-character;
@@ -275,15 +280,6 @@
           }
         }
 
-        &.answer-expected {
-          .border {
-            .categorized.choices {
-              border-color: @warning-color-border;
-            }
-          }
-        }
-
-
         .border {
           margin: 3px;
           text-align: center;
@@ -330,6 +326,12 @@
           }
         }
       }
+    }
+  }
+
+  &.view-mode, &.evaluate-mode {
+    .choice-corespring-dnd-categorize .border {
+      box-shadow: none;
     }
   }
 }

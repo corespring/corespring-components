@@ -87,7 +87,9 @@ function renderCorespringDndCategorize(
       reset: reset,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
-      setMode: function(mode) {},
+      setMode: function(mode) {
+        scope.mode = mode;
+      },
       setResponse: setResponse
     };
 
@@ -675,7 +677,7 @@ function renderCorespringDndCategorize(
 
   function template() {
     return [
-        '<div class="render-corespring-dnd-categorize">',
+        '<div class="render-corespring-dnd-categorize {{mode}}-mode">',
         undoStartOver(),
         interaction(),
         itemFeedbackPanel(),
@@ -708,6 +710,7 @@ function renderCorespringDndCategorize(
     return [
       '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
       '<div ng-if="feedback.isSeeAnswerPanelExpanded">',
+      seeSolutionContent(),
       '</div>'
     ].join('');
   }
@@ -810,6 +813,12 @@ function renderCorespringDndCategorize(
         '  </div>',
         '</div>'
       ].join('').replace('#flip#', flip).replace('#rowsModel#', rowsModel);
+  }
+
+  function seeSolutionContent() {
+    return [
+      categoriesTemplate('true', 'correctAnswerRows')
+    ].join('');
   }
 
 }
