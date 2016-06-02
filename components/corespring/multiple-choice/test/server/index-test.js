@@ -14,9 +14,7 @@ server = proxyquire('../../src/server', {
 });
 
 assert = require('assert');
-
 should = require('should');
-
 _ = require('lodash');
 
 component = {

@@ -117,7 +117,7 @@ var main = [
       };
 
       $('html').click(function(e) {
-        if (!($(element).has(e.target).length > 0)) {
+        if (!($(element).has(e.target).length)) {
           $(element).find('.popover').popover('hide');
         }
       });

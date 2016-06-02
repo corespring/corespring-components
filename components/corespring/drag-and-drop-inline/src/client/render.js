@@ -254,7 +254,7 @@ var main = [
       }
 
       function isPlaceable(choice) {
-        return choice.moveOnDrag === false || !isPlaced(choice);
+        return choice.moveOnDrag === false || choice.moveOnDrag === undefined || !isPlaced(choice);
       }
 
       function isPlaced(choice) {

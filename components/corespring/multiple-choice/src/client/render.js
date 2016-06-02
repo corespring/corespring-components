@@ -1,364 +1,384 @@
-var main = [
-  '$sce', '$log',
-
-  function($sce, $log) {
-    var def;
-
-    var link = function(scope, element, attrs) {
-
-      scope.inputType = 'checkbox';
-      scope.editable = true;
-      scope.bridge = {answerVisible: false, viewMode: 'normal'};
-      scope.showHide = {'false': 'show', 'true': 'hide'};
-      scope.rationaleOpen = false;
-
-      var getAnswers = function() {
-        if (scope.answer.choice) {
-          return [scope.answer.choice];
-        } else {
-          var isTrue = function(k) {
-            return scope.answer.choices[k] === true;
-          };
-          var allKeys = _.keys(scope.answer.choices);
-          var keys = _.filter(allKeys, isTrue);
-          return keys;
-        }
-      };
-
-      var applyChoices = function() {
-
-        if (!scope.question || !scope.session.answers) {
-          return;
-        }
-
-        var answers = scope.session.answers;
-
-        if (scope.inputType === "radio" && _.isArray(answers) && answers.length > 0) {
-          scope.answer.choice = answers[0];
-        }
-        if (scope.inputType === "checkbox") {
-          for (var i = 0; i < answers.length; i++) {
-            var key = answers[i];
-            scope.answer.choices[key] = true;
-          }
-        }
-      };
-
-      var resetFeedback = function(choices) {
-        _.each(choices, function(c) {
-          if (c) {
-            delete c.feedback;
-            delete c.correct;
-          }
-        });
-      };
-
-      var resetChoices = function() {
-        scope.answer.choices = {};
-        scope.answer.choice = "";
-      };
-
-      function shuffle(choices) {
-        function newIndex(item, array) {
-          var t = _.find(array, function(el) {
-            return el.value === item.value;
-          });
-          return t ? array.indexOf(t) : -1;
-        }
-
-        var shuffled = _.shuffle(_.cloneDeep(choices));
-        _.each(choices, function(choice, index) {
-          var temp;
-          var remain = !_.isUndefined(choice.shuffle) && choice.shuffle === false;
-          if (remain) {
-            temp = shuffled[newIndex(choice, shuffled)];
-            shuffled[newIndex(choice, shuffled)] = shuffled[index];
-            shuffled[index] = temp;
-          }
-        });
-
-        return shuffled;
-      }
-
-      var layoutChoices = function(choices, order) {
-        if (!order) {
-          return shuffle(choices);
-        } else {
-          var ordered = _(order).map(function(v) {
-            return _.find(choices, function(c) {
-              return c.value === v;
-            });
-          }).filter(function(v) {
-            return v;
-          }).value();
-
-          var missing = _.difference(choices, ordered);
-          return _.union(ordered, missing);
-        }
-      };
-
-      var stashOrder = function(choices) {
-        return _.map(choices, function(c) {
-          return c.value;
-        });
-      };
-
-      var updateUi = function() {
-
-        if (!scope.question || !scope.session) {
-          return;
-        }
-
-        var model = scope.question;
-        var stash = scope.session.stash = scope.session.stash || {};
-        var answers = scope.session.answers = scope.session.answers || {};
-
-        var shuffle = (model.config.shuffle === true || model.config.shuffle === "true") && scope.mode !== 'instructor';
-
-        scope.inputType = model.config.choiceType;
-
-        if (stash.shuffledOrder && shuffle) {
-          scope.choices = layoutChoices(_.cloneDeep(model.choices), stash.shuffledOrder);
-        } else if (shuffle) {
-          scope.choices = layoutChoices(_.cloneDeep(model.choices));
-          stash.shuffledOrder = stashOrder(scope.choices);
-          scope.$emit('saveStash', attrs.id, stash);
-        } else {
-          scope.choices = _.cloneDeep(scope.question.choices);
-        }
-
-        applyChoices();
-      };
-
-      scope.containerBridge = {
-
-        setPlayerSkin: function(skin) {
-          scope.iconset = skin.iconSet;
-        },
-        setDataAndSession: function(dataAndSession) {
-          scope.question = dataAndSession.data.model;
-          scope.question.config = _.defaults(scope.question.config || {}, {
-            'showCorrectAnswer': 'separately',
-            'useBlockFeedback': true
-          });
-          scope.session = dataAndSession.session || {};
-          scope.answer = {
-            choices: {},
-            choice: ""
-          };
-
-          updateUi();
-        },
-
-        getSession: function() {
-          var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
-          return {
-            answers: getAnswers(),
-            stash: stash
-          };
-        },
-
-        setInstructorData: function(data) {
-          _.each(scope.choices, function(c) {
-            if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
-              c.correct = true;
-            }
-          });
-          scope.response = {correctness: 'correct'};
-          if (!_.isEmpty(data.rationales)) {
-            var rationales = _.map(scope.choices, function(c) {
-              return {
-                choice: c.value,
-                rationale: (_.find(data.rationales, function(r) {
-                  return r.choice === c.value;
-                }) || {}).rationale
-              };
-            });
-            scope.rationales = rationales;
-          }
-        },
-
-        // sets the server's response
-        setResponse: function(response) {
-          $(element).find(".feedback-panel").hide();
-
-          resetFeedback(scope.choices);
-
-          scope.response = response;
-
-          if (response.feedback) {
-            if (response.feedback.emptyAnswer) {
-              scope.feedback = response.feedback;
-            } else {
-              _.each(response.feedback, function(fb) {
-                var choice = _.find(scope.choices, function(c) {
-                  return c.value === fb.value;
-                });
-
-                if (choice !== null) {
-                  choice.feedback = fb.feedback;
-                  choice.correct = fb.correct;
-                }
-              });
-            }
-          }
-        },
-
-        setMode: function(newMode) {
-          scope.mode = newMode;
-          if (newMode !== 'instructor') {
-            scope.rationales = undefined;
-          }
-        },
-        /**
-         * Reset the ui back to an unanswered state
-         */
-        reset: function() {
-          $(element).find(".feedback-panel").hide();
-          resetChoices();
-          resetFeedback(scope.choices);
-          scope.response = undefined;
-          scope.bridge.viewMode = 'normal';
-          scope.bridge.answerVisible = false;
-        },
-
-        resetStash: function() {
-          scope.session.stash = {};
-        },
-        isAnswerEmpty: function() {
-          return _.isEmpty(this.getSession().answers);
-        },
-        answerChangedHandler: function(callback) {
-          scope.$watch("answer", function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              callback();
-            }
-          }, true);
-        },
-        editable: function(e) {
-          scope.editable = e;
-        }
-      };
-
-      scope.letter = function(idx) {
-        var type = scope.question && scope.question.config ? scope.question.config.choiceLabels : "none";
-        switch (type) {
-          case "none":
-            return "";
-          case "numbers":
-            return (idx + 1) + "";
-        }
-
-        // default to a...z
-        return String.fromCharCode(65 + idx);
-      };
+exports.framework = 'angular';
+exports.directive = ['$sce', '$log', '$timeout', multipleChoiceDirective];
 
 
-      scope.isVertical = function() {
-        return orientation() === 'vertical';
-      };
+function multipleChoiceDirective($sce, $log, $timeout) {
 
-      scope.isHorizontal = function() {
-        return orientation() === 'horizontal';
-      };
+  return {
+    scope: {},
+    restrict: 'EA',
+    replace: true,
+    link: link,
+    template: template()
+  };
 
-      scope.isTile = function() {
-        return orientation() === 'tile';
-      };
+  function link(scope, element, attrs) {
 
-      function orientation() {
-        return scope.question && scope.question.config ? scope.question.config.orientation : '';
-      }
+    scope.inputType = 'checkbox';
+    scope.editable = true;
+    scope.bridge = {
+      viewMode: 'normal',
+      answerVisible: false
+    };
+    scope.showHide = {
+      'false': 'show',
+      'true': 'hide'
+    };
+    scope.rationaleOpen = false;
 
-      scope.onClickChoice = function(choice) {
-        if (scope.editable) {
-          if (scope.inputType === 'radio') {
-            scope.answer.choice = choice.value;
-          } else {
-            scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
-          }
-        }
-      };
+    scope.choiceClass = choiceClass;
+    scope.hasBlockFeedback = hasBlockFeedback;
+    scope.interactionCorrectnessClass = interactionCorrectnessClass;
+    scope.isHorizontal = isHorizontal;
+    scope.isTile = isTile;
+    scope.isVertical = isVertical;
+    scope.letter = letter;
+    scope.onClickChoice = onClickChoice;
+    scope.radioState = radioState;
+    scope.shuffle = shuffle;
 
-      scope.$watch('panelOpen', function(n) {
-        if (n) {
-          $(element).find('.panel-collapse').slideDown(400);
-        } else {
-          $(element).find('.panel-collapse').slideUp(400);
-        }
-      });
-
-      scope.$watch('bridge.answerVisible', function(n) {
-        scope.bridge.viewMode = n ? 'correct' : 'normal';
-      });
-
-      scope.interactionCorrectnessClass = function() {
-        if (scope.bridge.viewMode === 'correct') {
-          return "";
-        }
-        return scope.response && scope.response.correctness;
-      };
-
-      scope.choiceClass = function(o) {
-        var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
-        var isCorrect = !_.isUndefined(o.correct) && o.correct;
-        var res = isSelected ? "selected " : "";
-
-        if (isCorrect && scope.mode === 'instructor') {
-          return "correct";
-        }
-        if (_.isUndefined(o.correct)) {
-          return res + "default";
-        }
-        if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
-          return "";
-        }
-        if (scope.bridge.viewMode === 'correct' && !isSelected) {
-          return "";
-        }
-        return res + ((o.correct) ? 'correct' : 'incorrect');
-      };
-
-      scope.radioState = function(o) {
-        var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
-        if (isSelected && scope.mode === 'view') {
-          return "selectedDisabled";
-        }
-        var isCorrect = !_.isUndefined(o.correct) && o.correct === true;
-        if (isCorrect && scope.mode === 'instructor') {
-          return "correctUnselected";
-        }
-        if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
-          return scope.response ? "muted" : "";
-        }
-        if (!_.isUndefined(o.correct) && o.correct === false && scope.bridge.viewMode !== 'correct') {
-          return "incorrect";
-        }
-        if (!_.isUndefined(o.correct) && o.correct === true && scope.bridge.viewMode === 'correct') {
-          return "correct";
-        }
-        if (isSelected && scope.bridge.viewMode !== 'correct') {
-          return isCorrect ? "correct" : "selected";
-        }
-        if (!_.isUndefined(o.correct) && o.correct === true) {
-          return "correct";
-        }
-        if (scope.response || scope.mode === 'view') {
-          return "muted";
-        }
-        return "ready";
-      };
-
-      scope.hasBlockFeedback = function(o) {
-        var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
-        return o.feedback && isSelected;
-      };
-
-
-      scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+    scope.containerBridge = {
+      answerChangedHandler: answerChangedHandler,
+      editable: setEditable,
+      getSession: getSession,
+      isAnswerEmpty: isAnswerEmpty,
+      reset: reset,
+      setDataAndSession: setDataAndSession,
+      setInstructorData: setInstructorData,
+      setPlayerSkin: setPlayerSkin,
+      setMode: setMode,
+      setResponse: setResponse
     };
 
+    scope.$watch('bridge.answerVisible', watchAnswerVisible);
+    scope.$watch('panelOpen', watchPanelOpen);
 
+    scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
+    //------------------------------------------------
+    // only functions below
+    //------------------------------------------------
+
+    function setDataAndSession(dataAndSession) {
+      scope.question = dataAndSession.data.model || {};
+      scope.question.config = getConfigWithDefaults(scope.question.config);
+      scope.session = dataAndSession.session || {};
+      scope.answer = {
+        choices: {},
+        choice: ""
+      };
+      updateUi();
+    }
+
+    function getConfigWithDefaults(input) {
+      var config = _.defaults(input || {}, {
+        "orientation": "vertical",
+        "shuffle": false,
+        "choiceType": "radio",
+        "choiceLabels": "letters",
+        "showCorrectAnswer": "separately",
+        "useBlockFeedback": true
+      });
+      config.shuffle = config.shuffle === true || config.shuffle === 'true';
+      return config;
+    }
+
+    function getSession() {
+      return {
+        answers: getAnswers()
+      };
+    }
+
+    function setPlayerSkin(skin) {
+      scope.iconset = skin.iconSet;
+    }
+
+    function setInstructorData(data) {
+      _.each(scope.choices, function(c) {
+        if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
+          c.correct = true;
+        }
+      });
+      if (!_.isEmpty(data.rationales)) {
+        var rationales = _.map(scope.choices, function(c) {
+          return {
+            choice: c.value,
+            rationale: (_.find(data.rationales, function(r) {
+              return r.choice === c.value;
+            }) || {}).rationale
+          };
+        });
+        scope.rationales = rationales;
+      }
+    }
+
+    // sets the server's response
+    function setResponse(response) {
+      $(element).find(".feedback-panel").hide();
+
+      resetFeedback(scope.choices);
+
+      scope.response = response;
+
+      if (response.feedback) {
+        if (response.feedback.emptyAnswer) {
+          scope.feedback = response.feedback;
+        } else {
+          _.each(response.feedback, function(fb) {
+            var choice = _.find(scope.choices, function(c) {
+              return c.value === fb.value;
+            });
+
+            if (choice !== null) {
+              choice.feedback = fb.feedback;
+              choice.correct = fb.correct;
+            }
+          });
+        }
+      }
+
+      $timeout(function() {
+        $(element).find(".feedback-panel.visible").slideDown(400);
+      }, 10);
+    }
+
+    function setMode(newMode) {
+      scope.mode = newMode;
+      if (newMode !== 'instructor') {
+        scope.rationales = undefined;
+      }
+    }
+
+    /**
+     * Reset the ui back to an unanswered state
+     */
+    function reset() {
+      $(element).find(".feedback-panel").hide();
+      resetChoices();
+      resetFeedback(scope.choices);
+      scope.response = undefined;
+      scope.bridge.viewMode = 'normal';
+      scope.bridge.answerVisible = false;
+      updateUi();
+    }
+
+    function isAnswerEmpty() {
+      return _.isEmpty(this.getSession().answers);
+    }
+
+    function answerChangedHandler(callback) {
+      scope.$watch("answer", callBackWhenAnswerHasChanged, true);
+
+      function callBackWhenAnswerHasChanged(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          callback();
+        }
+      }
+    }
+
+    function setEditable(e) {
+      scope.editable = e;
+    }
+
+    function getAnswers() {
+      if (scope.answer.choice) {
+        return [scope.answer.choice];
+      } else {
+        var isSelected = function(k) {
+          return scope.answer.choices[k] === true;
+        };
+        var allKeys = _.keys(scope.answer.choices);
+        var keys = _.filter(allKeys, isSelected);
+        return keys;
+      }
+    }
+
+    function applyChoices() {
+      if (!scope.question || !scope.session.answers) {
+        return;
+      }
+
+      var answers = scope.session.answers;
+      if (scope.inputType === "radio") {
+        if (_.isArray(answers) && answers.length > 0) {
+          scope.answer.choice = answers[0];
+        }
+      } else if (scope.inputType === "checkbox") {
+        _.forEach(answers, function(key) {
+          scope.answer.choices[key] = true;
+        });
+      }
+    }
+
+    function resetFeedback(choices) {
+      _.each(choices, function(c) {
+        if (c) {
+          delete c.feedback;
+          delete c.correct;
+        }
+      });
+    }
+
+    function resetChoices() {
+      scope.answer.choices = {};
+      scope.answer.choice = "";
+    }
+
+    function shuffle(choices) {
+      var allChoices = _.cloneDeep(choices);
+      var shuffledChoices = _(allChoices).filter(choiceShouldBeShuffled).shuffle().value();
+      return _.map(allChoices, function(choice) {
+        if (choiceShouldBeShuffled(choice)) {
+          return shuffledChoices.pop();
+        } else {
+          return choice;
+        }
+      });
+    }
+
+    function choiceShouldBeShuffled(choice) {
+      return _.isUndefined(choice.shuffle) || choice.shuffle === true;
+    }
+
+    function updateUi() {
+      if (!scope.question || !scope.session) {
+        return;
+      }
+
+      var model = scope.question;
+      var answers = scope.session.answers = scope.session.answers || {};
+
+      var shouldShuffle = model.config.shuffle && scope.mode !== 'instructor';
+      scope.inputType = model.config.choiceType;
+
+      if (shouldShuffle) {
+        scope.choices = scope.shuffle(_.cloneDeep(model.choices));
+      } else {
+        scope.choices = _.cloneDeep(model.choices);
+      }
+
+      applyChoices();
+    }
+
+    function letter(idx) {
+      var type = scope.question ? scope.question.config.choiceLabels : "letters";
+      switch (type) {
+        case "none":
+          return "";
+        case "numbers":
+          return (idx + 1) + "";
+      }
+
+      // default to letters: a...z
+      return String.fromCharCode(65 + idx);
+    }
+
+    function isVertical() {
+      return orientation() === 'vertical';
+    }
+
+    function isHorizontal() {
+      return orientation() === 'horizontal';
+    }
+
+    function isTile() {
+      return orientation() === 'tile';
+    }
+
+    function orientation() {
+      return scope.question ? scope.question.config.orientation : 'vertical';
+    }
+
+    function onClickChoice(choice) {
+      if (scope.editable) {
+        if (scope.inputType === 'radio') {
+          scope.answer.choice = choice.value;
+        } else {
+          scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
+        }
+      }
+    }
+
+    function watchPanelOpen(n) {
+      slide(n, $(element).find('.panel-collapse'));
+    }
+
+    function slide(down, $elm) {
+      if (down) {
+        $elm.slideDown(400);
+      } else {
+        $elm.slideUp(400);
+      }
+    }
+
+    function watchAnswerVisible(n) {
+      scope.bridge.viewMode = n ? 'correct' : 'normal';
+    }
+
+    function interactionCorrectnessClass() {
+      if (scope.bridge.viewMode === 'correct') {
+        return "";
+      }
+      return scope.response && scope.response.correctness;
+    }
+
+    function choiceClass(o) {
+      var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+      var isCorrect = !_.isUndefined(o.correct) && o.correct;
+      var res = isSelected ? "selected " : "";
+
+      if (isCorrect && scope.mode === 'instructor') {
+        return "correct";
+      }
+      if (_.isUndefined(o.correct)) {
+        return res + "default";
+      }
+      if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
+        return "";
+      }
+      if (scope.bridge.viewMode === 'correct' && !isSelected) {
+        return "";
+      }
+      return res + ((o.correct) ? 'correct' : 'incorrect');
+    }
+
+    function radioState(o) {
+      var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+      if (isSelected && scope.mode === 'view') {
+        return "selectedDisabled";
+      }
+      var isCorrect = !_.isUndefined(o.correct) && o.correct === true;
+      if (isCorrect && scope.mode === 'instructor') {
+        return "correctUnselected";
+      }
+      if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
+        return scope.response ? "muted" : "";
+      }
+      if (!_.isUndefined(o.correct) && o.correct === false && scope.bridge.viewMode !== 'correct') {
+        return "incorrect";
+      }
+      if (!_.isUndefined(o.correct) && o.correct === true && scope.bridge.viewMode === 'correct') {
+        return "correct";
+      }
+      if (isSelected && scope.bridge.viewMode !== 'correct') {
+        return isCorrect ? "correct" : "selected";
+      }
+      if (!_.isUndefined(o.correct) && o.correct === true) {
+        return "correct";
+      }
+      if (scope.response || scope.mode === 'view') {
+        return "muted";
+      }
+      return "ready";
+    }
+
+    function hasBlockFeedback(o) {
+      var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+      return o.feedback && isSelected;
+    }
+  }
+
+  function template() {
     var noResponseTemplate = [
       '<div class="empty-response-holder" ng-show="response && response.correctness === \'warning\'">',
       '  <div class="empty-response">',
@@ -415,30 +435,15 @@ var main = [
       '    </div>',
       '  </div>',
       '</div>'
-    ].join("");
+    ].join('');
 
-    def = {
-      scope: {},
-      restrict: 'EA',
-      replace: true,
-      link: link,
-      template: [
+    return [
         '<div class="view-multiple-choice" ng-class="interactionCorrectnessClass()">',
         choicesTemplate,
         rationalesTemplate,
         noResponseTemplate,
         learnMoreTemplate
-      ].join("\n")
-
-    };
-
-    return def;
+      ].join('\n');
   }
-];
 
-exports.framework = 'angular';
-exports.directives = [
-  {
-    directive: main
-  }
-];
+}

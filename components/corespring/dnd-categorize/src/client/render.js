@@ -55,6 +55,9 @@ function renderCorespringDndCategorize(
 
     scope.correctAnswerRows = [{}];
     scope.dragAndDropScope = 'dnd-scope-' + Math.floor(Math.random() * 10000);
+    scope.feedback = {
+      isSeeAnswerPanelExpanded: false
+    };
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
     scope.rows = [{}];
@@ -74,10 +77,6 @@ function renderCorespringDndCategorize(
     scope.onChoiceRemovedFromCategory = onChoiceRemovedFromCategory;
     scope.onToggleMoveOnDrag = onToggleMoveOnDrag;
     scope.onToggleRemoveAllAfterPlacing = onToggleRemoveAllAfterPlacing;
-
-    scope.feedback = {
-      isSeeAnswerPanelExpanded: false
-    };
 
     scope.containerBridge = {
       answerChangedHandler: saveAnswerChangedCallback,
