@@ -156,7 +156,7 @@ link = function($sce, $timeout) {
         }
         scope.response = r;
         console.log('scope.response', scope.response);
-        scope.iconKey = r.correctness === 'warning' ? 'nothing-submitted' : r.correctness;
+        scope.iconKey = r.correctness === 'warning' ? 'nothing-submitted-feedback' : r.correctness;
       },
 
       setMode: function(newMode) {},
