@@ -76,14 +76,8 @@ function mainDirective($compile) {
       var height = scope.rows * PIXELS_PER_ROW;
       var compiledWiggi = $compile(wiggiTemplate())(scope);
 
-      element.find('.textarea-holder')
+      element.find('.textarea-holder .wiggi')
         .html(compiledWiggi)
-        .css({
-          width: width,
-          minHeight: height
-        });
-
-      element.find('.textarea-holder .wiggi-wiz')
         .css({
           minHeight: height
         });
@@ -131,6 +125,10 @@ function mainDirective($compile) {
       return _.isEmpty(this.getSession().answers);
     }
 
+    scope.$watch('answer', function() {
+      scope.inputClass = (scope.answer && $('<span>'+scope.answer.trim()+'</span>').text().length > 0) ? 'filled-in' : '';
+    });
+
     function answerChangedHandler(callback) {
       scope.$watch("answer", function(newValue, oldValue) {
         if (newValue !== oldValue) {
@@ -152,7 +150,8 @@ function mainDirective($compile) {
 
   function wiggiTemplate() {
     return [
-        '<wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
+        '<wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}"',
+        '   placeholder="Write your answer here." toolbar-on-focus="true">',
         '  <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
         '</wiggi-wiz>'
       ].join('\n');
@@ -165,7 +164,6 @@ function mainDirective($compile) {
       '    <div class="wiggi"></div>',
       '    <div ng-show="feedback" feedback="response.feedback" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
       '  </div>',
-      '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
       '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
       '</div>'
     ].join("\n");

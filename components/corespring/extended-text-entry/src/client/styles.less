@@ -6,11 +6,6 @@
     width: 100%;
     max-width: @component-width;
 
-    .textarea-holder {
-      display: 'inline-block';
-      position: relative;
-      width: 100%;
-    }
   .textarea-holder {
     position: relative;
     width: 100%;
@@ -20,28 +15,23 @@
         border-color: #a4d4f1;
       }
     }
-  }
 
     .wiggi-wiz {
       margin-bottom: 20px;
       min-height: 100px;
-    }
-  .wiggi-wiz {
-    margin-bottom: 20px;
-    min-height: 100px;
-    border: 1px solid #bebebe;
+      border: 1px solid #bebebe;
 
-    &.disabled {
-      background-color: #f8f6f6;
-      color: #939393;
-      border: none;
-    }
+      &.disabled {
+        background-color: #f8f6f6;
+        color: #939393;
+        border-color: #bebebe;
+      }
 
-    .placeholder {
-      color: #bebebe;
-      padding: 10px;
-    }
+      .inner-container .placeholder {
+        color: #bebebe;
+      }
 
+    }
   }
 
   .wiggi-wiz-toolbar {
@@ -61,13 +51,12 @@
     }
   }
 
-  .wiggi-wiz-editable {
-    padding: 12px;
-    overflow: hidden;
-  }
+    .wiggi-wiz-editable {
+      padding: 12px;
+      overflow: hidden;
+    }
 
     &.received.incorrect .wiggi-wiz {
-      border: 2px solid @warning-color-border;
       box-shadow: none;
     }
 
@@ -78,35 +67,6 @@
     .panel.submitted {
       width: 100%;
       margin-top: 20px;
-    }
-
-    &.received.incorrect .warning-icon {
-      color: @warning-color;
-      display: block;
-      font-size: 28px;
-      position: absolute;
-      right: 10px;
-      top: 10px;
-    }
-
-    .feedback {
-      background-color: #d9edf7;
-      border-radius: 4px;
-      border: 1px solid #bce8f1;
-      color: #31708f;
-      padding: 15px;
-      position: relative;
-      width: 100%;
-    }
-
-    .no-feedback {
-      background-color: @warning-color-background;
-      border-radius: 4px;
-      border: 1px solid @warning-color-border;
-      color: @warning-color;
-      padding: 15px;
-      position: relative;
-      width: 100%;
     }
 
   }
