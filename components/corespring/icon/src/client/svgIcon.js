@@ -8,16 +8,20 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
     },
     template: [
       '<span class="{{key}}" ng-if="template"> ',
-      '  <div class="cs-icon">',
+      '  <div class="cs-icon {{hasFeedback() ? \'clickable\' : \'\'}}">',
       '    <ng-include src="template"/>',
       '  </div>',
       '</span>'
     ].join('\n'),
     link: function($scope, $element, $attrs) {
 
+      $scope.hasFeedback = function() {
+        return $attrs.category === 'feedback';
+      };
+
       $scope.updateTemplate = function() {
         $scope.feedback = $attrs.feedback;
-        $scope.key = $attrs.key + ($attrs.category === 'feedback' ? '-feedback' : '');
+        $scope.key = $attrs.key + ($scope.hasFeedback() ? '-feedback' : '');
         if (_.isEmpty($attrs.key)) {
           $scope.template = undefined;
           return;
