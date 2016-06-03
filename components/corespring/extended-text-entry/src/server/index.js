@@ -6,7 +6,7 @@ function getFeedback(question) {
   if (feedbackType === "custom") {
     return question.feedback.feedback;
   } else if (feedbackType === "default") {
-    return "Your answer was submitted.";
+    return "Your answer was successfully submitted.";
   }
 }
 
