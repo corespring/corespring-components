@@ -6,50 +6,50 @@
     width: 100%;
     max-width: @component-width;
 
-  .textarea-holder {
-    position: relative;
-    width: 100%;
+    .textarea-holder {
+      position: relative;
+      width: 100%;
 
-    &.filled-in {
+      &.filled-in {
+        .wiggi-wiz {
+          border-color: #a4d4f1;
+        }
+      }
+
       .wiggi-wiz {
-        border-color: #a4d4f1;
+        margin-bottom: 20px;
+        min-height: 100px;
+        border: 1px solid #bebebe;
+
+        &.disabled {
+          background-color: #f8f6f6;
+          color: #939393;
+          border-color: #bebebe;
+        }
+
+        .inner-container .placeholder {
+          color: #bebebe;
+        }
+
       }
     }
 
-    .wiggi-wiz {
-      margin-bottom: 20px;
-      min-height: 100px;
-      border: 1px solid #bebebe;
+    .wiggi-wiz-toolbar {
+      background-color: #e0dee0;
 
-      &.disabled {
-        background-color: #f8f6f6;
-        color: #939393;
-        border-color: #bebebe;
+      .btn {
+        padding: 0px 7px;
+
+        &:not(.active) {
+          border: none;
+          background: none;
+        }
       }
 
-      .inner-container .placeholder {
-        color: #bebebe;
-      }
-
-    }
-  }
-
-  .wiggi-wiz-toolbar {
-    background-color: #e0dee0;
-
-    .btn {
-      padding: 0px 7px;
-
-      &:not(.active) {
-        border: none;
-        background: none;
+      .btn-group {
+        margin-right: 0;
       }
     }
-
-    .btn-group {
-      margin-right: 0;
-    }
-  }
 
     .wiggi-wiz-editable {
       padding: 12px;
@@ -66,7 +66,6 @@
 
     .panel.submitted {
       width: 100%;
-      margin-top: 20px;
     }
 
   }
