@@ -489,7 +489,7 @@ var main = [
           '    <td class="question-cell match-td-padded" ng-bind-html-unsafe="row.labelHtml"></td>',
           '    <td class="answer-expected-warning match-td-padded">',
           '      <div class="warning-holder" ng-if="row.answerExpected && !bridge.answerVisible">',
-          '        <i class="fa fa-exclamation-triangle"></i>',
+          '        <svg-icon category="feedback" key="nothing-submitted" shape="square" icon-set="{{iconset}}" />',
           '      </div>',
           '    </td>',
           '    <td class="answer-cell match-td-padded"',
