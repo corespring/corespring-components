@@ -79,6 +79,12 @@ function mainDirective($compile) {
       element.find('.textarea-holder .wiggi')
         .html(compiledWiggi)
         .css({
+          width: width,
+          minHeight: height
+        });
+
+      element.find('.textarea-holder .wiggi-wiz')
+        .css({
           minHeight: height
         });
     }
@@ -102,7 +108,7 @@ function mainDirective($compile) {
     function setResponse(response) {
       console.log("Setting Response for extended text entry:");
       console.log(response);
-      
+
       if (!response.correctClass) {
         response.correctClass = 'submitted';
       }
@@ -126,7 +132,7 @@ function mainDirective($compile) {
     }
 
     scope.$watch('answer', function() {
-      scope.inputClass = (scope.answer && $('<span>'+scope.answer.trim()+'</span>').text().length > 0) ? 'filled-in' : '';
+      scope.inputClass = (scope.answer && $('<span>' + scope.answer.trim() + '</span>').text().length > 0) ? 'filled-in' : '';
     });
 
     function answerChangedHandler(callback) {
@@ -150,21 +156,41 @@ function mainDirective($compile) {
 
   function wiggiTemplate() {
     return [
-        '<wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}"',
-        '   placeholder="Write your answer here." toolbar-on-focus="true">',
-        '  <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
-        '</wiggi-wiz>'
-      ].join('\n');
+      '<wiggi-wiz',
+      '    enabled="editable"',
+      '    features="extraFeatures"',
+      '    ng-model="answer"',
+      '    placeholder="Write your answer here."',
+      '    style="{{style}}"',
+      '    toolbar-on-focus="true"',
+      '>',
+      '  <toolbar',
+      '      basic="bold italic underline"',
+      '      formatting=""',
+      '      line-height=""',
+      '      markup=""',
+      '      media=""',
+      '      order="basic,lists,math"',
+      '      positioning=""',
+      '  />',
+      '</wiggi-wiz>'].join('\n');
   }
 
   function template() {
     return [
-      '<div class="corespring-extended-text-entry view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
+      '<div class="corespring-extended-text-entry view-extended-text-entry {{response.correctness}}"',
+      '    ng-class="{received: received}">',
       '  <div class="textarea-holder {{inputClass}}">',
       '    <div class="wiggi"></div>',
-      '    <div ng-show="feedback" feedback="response.feedback" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
+      '    <div correct-class="{{response.correctClass}}"',
+      '        feedback="response.feedback"',
+      '        icon-set="{{iconset}}"',
+      '        ng-show="feedback"',
+      '    ></div>',
       '  </div>',
-      '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
+      '  <div learn-more-panel="" ng-show="response.comments">',
+      '    <div ng-bind-html-unsafe="response.comments"></div>',
+      '  </div>',
       '</div>'
     ].join("\n");
   }
