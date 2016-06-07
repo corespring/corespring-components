@@ -10,17 +10,6 @@
     .cs-icon {
       top: -3px;
       left: -5px;
-    }
-
-    &.answer-expected {
-      text-align: center;
-
-      .panel-body {
-        display: inline-block;
-      }
-    }
-
-    .cs-icon {
       position: absolute;
       width: 40px;
     }
@@ -32,16 +21,22 @@
       position: relative;
     }
 
-    &.submitted {
-      display: inline-block;
+    &.answer-expected {
+      text-align: center;
+
       .panel-body {
-        background-color: @choice-muted-background;
+        display: inline-block;
       }
     }
 
+    &.submitted {
+      display: inline-block;
+    }
+
     &.nothing-submitted {
-      .panel-body {
-        background-color: @feedback-nothing-submitted-accent;
+      .cs-icon {
+        top: 6px;
+        left: 6px;
       }
     }
   }

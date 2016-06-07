@@ -76,6 +76,11 @@ function mainDirective($compile) {
       var height = scope.rows * PIXELS_PER_ROW;
       var compiledWiggi = $compile(wiggiTemplate())(scope);
 
+      element.find('.textarea-holder')
+        .css({
+          width: width
+        });
+
       element.find('.textarea-holder .wiggi')
         .html(compiledWiggi)
         .css({
@@ -87,6 +92,8 @@ function mainDirective($compile) {
         .css({
           minHeight: height
         });
+
+
     }
 
     function getSession() {
@@ -185,7 +192,6 @@ function mainDirective($compile) {
       '    <div correct-class="{{response.correctClass}}"',
       '        feedback="response.feedback"',
       '        icon-set="{{iconset}}"',
-      '        ng-show="feedback"',
       '    ></div>',
       '  </div>',
       '  <div learn-more-panel="" ng-show="response.comments">',
