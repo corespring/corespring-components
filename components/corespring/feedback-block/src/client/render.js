@@ -59,7 +59,7 @@ var main = [
       link: link,
       template: [
         '<div class="view-feedback-container" ng-show="isVisible" >',
-        '  <div feedback="feedback" correct-class="{{correctClass}}" icon-set="iconset"></div>',
+        '  <div feedback="feedback" correct-class="{{correctClass}}" icon-set="{{iconset}}"></div>',
         '</div>'
       ].join("")
     };
