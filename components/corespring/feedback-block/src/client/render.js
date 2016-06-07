@@ -29,6 +29,10 @@ var main = [
 
         answerChangedHandler: function(callback) {},
 
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
+
         editable: function(e) {
           scope.isEditable = e;
           this.updateVisibility();
@@ -55,7 +59,7 @@ var main = [
       link: link,
       template: [
         '<div class="view-feedback-container" ng-show="isVisible" >',
-        '  <div feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '  <div feedback="feedback" correct-class="{{correctClass}}" icon-set="iconset"></div>',
         '</div>'
       ].join("")
     };
