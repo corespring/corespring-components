@@ -33,7 +33,7 @@
         "angular-module": "corespring.input.radio"
       },
       "wiggi-wiz": {
-        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.93",
+        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.95",
         "js": "dist/wiggi-wiz.js",
         "css": "dist/wiggi-wiz.css",
         "angular-module": "corespring.wiggi-wiz"
