@@ -23,6 +23,7 @@ var main = [
 
       scope.popupVisible = false;
       scope.instructorResponse = false;
+      scope.hasAdditionalAnswers = false;
 
       scope.containerBridge = {
 
@@ -51,6 +52,8 @@ var main = [
           var hasMoreCorrectResponses = data.correctResponses.values.length > 1;
           var hasPartialResponses = data.partialResponses && data.partialResponses.values.length > 0;
 
+          scope.hasAdditionalAnswers = hasMoreCorrectResponses || hasPartialResponses;
+
           function wrapAnswer(c){
             return " <div class='cs-text-entry__response'>" + c + "</div> ";
           }
@@ -69,7 +72,6 @@ var main = [
           if (!response) {
             return;
           }
-          console.log('response', response);
 
           scope.response = response;
           scope.feedback = response.feedback;
@@ -122,10 +124,12 @@ var main = [
       });
 
       scope.isInstructorResponse = function() {
-        return scope.instructorResponse && scope.response.feedback.message;
+        return scope.instructorResponse && !_.isEmpty(scope.response.feedback.message.trim());
       };
 
-      scope.hasFeedback = function() { return scope.instructorResponse || scope.response; };
+      scope.hasFeedback = function() {
+        return scope.instructorResponse || scope.response;
+      };
 
       element.on('show.bs.popover', function(e) {
         scope.triggerIcon(e, true);
@@ -161,7 +165,7 @@ var main = [
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
         '        key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '  </span>',
-        '  <span class="feedback-icon instructor-response" feedback-popover="response" ng-if="isInstructorResponse()">',
+        '  <span class="feedback-icon instructor-response" feedback-popover="response" ng-if="isInstructorResponse() && hasAdditionalAnswers">',
         '    <svg-icon open="{{popupVisible}}"',
         '        key="show-rationale" shape="round" icon-set="{{iconset}}" />',
         '  </span>',
