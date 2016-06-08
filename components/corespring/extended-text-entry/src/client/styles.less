@@ -1,36 +1,59 @@
-@component-width: 600px;
-
 .corespring-extended-text-entry {
+
+  @max-component-width: 600px;
 
   &.view-extended-text-entry {
     width: 100%;
-    max-width: @component-width;
+    max-width: @max-component-width;
 
-    .textarea-holder {
-      position: relative;
-      width: 100%;
+    &.received.incorrect {
+      .wiggi-wiz {
+        box-shadow: none;
+      }
+    }
 
-      &.filled-in {
+    &.evaluate {
+      .textarea-holder {
+        .wiggi-wiz {
+          background-color: #f8f6f6;
+          border-color: #f8f6f6;
+          color: #939393;
+        }
+      }
+    }
+
+    &.gather.filled-in {
+      .textarea-holder {
         .wiggi-wiz {
           border-color: #a4d4f1;
         }
       }
+    }
+
+    &.instructor {
+      .wiggi-wiz {
+        background-color: white;
+      }
+    }
+
+    &.view {
+      .wiggi-wiz {
+
+      }
+    }
+
+    .textarea-holder {
+      position: relative;
+      width: 100%;
 
       .wiggi-wiz {
         margin-bottom: 10px;
         min-height: 100px;
         border: 1px solid #bebebe;
 
-        &.disabled {
-          background-color: #f8f6f6;
-          color: #939393;
-          border-color: #bebebe;
-        }
-
         .inner-container .placeholder {
           color: #bebebe;
         }
-
       }
     }
 
@@ -56,15 +79,11 @@
       overflow: hidden;
     }
 
-    &.received.incorrect .wiggi-wiz {
-      box-shadow: none;
-    }
-
     .warning-icon {
       display: none;
     }
 
-    .panel.submitted {
+    .panel.feedback {
       width: 100%;
     }
 

@@ -126,7 +126,9 @@ function mainDirective($compile) {
       scope.received = true;
     }
 
-    function setMode(newMode) {}
+    function setMode(value) {
+      scope.mode = value;
+    }
 
     function reset() {
       scope.answer = undefined;
@@ -185,9 +187,9 @@ function mainDirective($compile) {
 
   function template() {
     return [
-      '<div class="corespring-extended-text-entry view-extended-text-entry {{response.correctness}}"',
+      '<div class="corespring-extended-text-entry view-extended-text-entry {{response.correctness}} {{mode}} {{inputClass}}"',
       '    ng-class="{received: received}">',
-      '  <div class="textarea-holder {{inputClass}}">',
+      '  <div class="textarea-holder">',
       '    <div class="wiggi"></div>',
       '    <div correct-class="{{response.correctClass}}"',
       '        feedback="response.feedback"',
