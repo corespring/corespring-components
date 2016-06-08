@@ -159,6 +159,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.initUndo();
         },
 
+        setMode: function(mode) {
+          scope.mode = mode;
+        },
+
         getSession: function() {
           if (scope.model.config.placementType === PlacementType.placement) {
             var choices = [];
@@ -205,6 +209,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         setResponse: function(response) {
+          console.log('response', response);
           scope.response = response;
           if (response.correctness === 'incorrect') {
             scope.correctResponse = response.correctResponse;
@@ -252,6 +257,12 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       };
 
+      scope.showPlacementArea = function() {
+        var horizontal = scope.model.config.choiceAreaLayout === 'horizontal';
+        var below = scope.model.config.choiceAreaPosition === 'below';
+        return !horizontal || !below;
+      };
+
       scope.$watch(function() {
         var h = element.find('.vertical .choices-inner-holder').outerHeight();
         if (h && scope.lastChoiceAreaHeight !== h) {
@@ -266,7 +277,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var buttonRow = function(attrs) {
       return [
-        '  <div class="button-row btn-group-md text-center {{model.config.choiceAreaLayout}}" ' + (attrs || "") + '>',
+        '  <div ng-if="mode != \'view\'" class="button-row btn-group-md text-center {{model.config.choiceAreaLayout}}" ' + (attrs || "") + '>',
         '    <span cs-undo-button-with-model ng-hide="response"></span>',
         '    <span cs-start-over-button-with-model ng-hide="response"></span>',
         '  </div>',
@@ -335,14 +346,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     ].join('');
 
     var placementOrder = [
-      '     <div class="placement-areas" ng-if="model.config.choiceAreaLayout != \'horizontal\' || model.config.choiceAreaPosition != \'below\'">',
-      '       <div class="choice-area">', choices, '</div>',
+      '     <div class="placement-areas" ng-if="showPlacementArea()">',
+      '       <div class="choice-area" ng-if="mode !== \'view\'">', choices, '</div>',
       '       <div class="answer-area">' + answerArea + '</div>',
       '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="showCorrectResponse()"') + '</div>',
       '     </div>',
       '     <div class="placement-areas" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
       '       <div class="answer-area">' + answerArea + '</div>',
-      '       <div class="choice-area">', choices, '</div>',
+      '       <div class="choice-area" ng-if="mode !== \'view\'">', choices, '</div>',
       '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="showCorrectResponse()"') + '</div>',
       '     </div>'
     ].join('\n');
@@ -404,7 +415,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     ].join('\n');
 
     var tmpl = [
-      '<div drag-and-drop-controller>',
+      '<div drag-and-drop-controller class="{{mode}}-mode">',
 
       dragAndDropTemplate,
       inplaceTemplate,
