@@ -169,7 +169,6 @@ function mainDirective($compile) {
       '    enabled="editable"',
       '    features="extraFeatures"',
       '    ng-model="answer"',
-      '    placeholder="Write your answer here."',
       '    style="{{style}}"',
       '    toolbar-on-focus="true"',
       '>',
