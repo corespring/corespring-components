@@ -20,13 +20,13 @@ function mainDirective($compile) {
     scope: {},
     restrict: 'AE',
     link: link,
-    controller: function($scope) {},
     template: template()
   };
 
   function link(scope, element, attrs) {
 
     scope.editable = true;
+    scope.mode = 'gather';
 
     scope.containerBridge = {
       answerChangedHandler: answerChangedHandler,
@@ -92,8 +92,6 @@ function mainDirective($compile) {
         .css({
           minHeight: height
         });
-
-
     }
 
     function getSession() {
