@@ -213,13 +213,19 @@
     margin-left: -5px;
     font-family: 'Kameron' !important;
 
-    .popover-color(@foreground-color, @background-color) {
+    .popover-color(@foreground-color, @border-color, @background-color: auto) {
       color: @foreground-color;
-      border-color: @background-color;
+      border-color: @border-color;
+      background-color: @background-color;
       & > .arrow {
-        color: @background-color;
-        border-bottom-color: @background-color;
-        border-top-color: @background-color;
+        color: @border-color;
+        border-bottom-color: @border-color;
+        border-top-color: @border-color;
+
+        &:after {
+          border-top-color: @background-color;
+          border-bottom-color: @background-color;
+        }
       }
     }
 
@@ -227,12 +233,16 @@
       .popover-color(@popover-font-color, @incorrect-background);
     }
 
+    &.popover-partial {
+      .popover-color(@popover-font-color, @partially-correct-background);
+    }
+
     &.popover-correct {
       .popover-color(@popover-font-color, @correct-background);
     }
 
     &.popover-warning {
-      .popover-color(@popover-font-color, @warning-block-background);
+      .popover-color(@popover-font-color, @warning-block-background, @warning-block-background);
       .popover-content {
         text-align: center;
       }
