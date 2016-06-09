@@ -21,8 +21,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
       scope.choiceHidden = function(choice) {
         return choice.moveOnDrag && !_.isUndefined(_.find(scope.landingPlaceChoices, function(lc) {
-          return lc && lc.id === choice.id;
-        }));
+            return lc && lc.id === choice.id;
+          }));
       };
 
       scope.dragOptions = function(choice) {
@@ -136,6 +136,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
         setDataAndSession: function(dataAndSession) {
           $log.debug("Placement Ordering setting session: ", dataAndSession);
+          console.log('dataAndSession', dataAndSession);
 
           scope.session = dataAndSession.session || {};
           scope.rawModel = dataAndSession.data.model;
@@ -384,7 +385,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      </div>',
       '    </div>',
       '    <div class="clearfix" />',
-      '    <div ng-show="feedback && top.correctAnswerVisible" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
+      '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
       '    <div ng-if="model.config.choiceAreaLayout == \'horizontal\'" ng-show="showCorrectResponse()">',
       '      <ul class="clearfix">',
       '        <li ng-repeat="choice in correctChoices">',
