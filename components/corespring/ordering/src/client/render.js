@@ -416,7 +416,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     ].join('\n');
 
     var tmpl = [
-      '<div drag-and-drop-controller class="{{mode}}-mode">',
+      '<div drag-and-drop-controller class="{{mode}}-mode corespring-ordering">',
 
       dragAndDropTemplate,
       inplaceTemplate,
