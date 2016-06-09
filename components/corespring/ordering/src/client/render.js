@@ -329,7 +329,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  <div class="choices-holder">',
       '<div class="clearfix"></div>',
       '<div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="!hasResponse() && model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
-      '    <div class="choices-inner-holder clearfix" ng-if="!hasResponse()">',
+      '    <div class="choices-inner-holder clearfix">',
       '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
       '        <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
       '             data-drag="editable"',
@@ -348,13 +348,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
     var placementOrder = [
       '     <div class="placement-areas" ng-if="showPlacementArea()">',
-      '       <div class="choice-area" ng-if="mode !== \'view\'">', choices, '</div>',
-      '       <div class="answer-area">' + answerArea + '</div>',
+      '       <div class="choice-area">', choices, '</div>',
+      '       <div class="answer-area">', answerArea, '</div>',
       '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="showCorrectResponse()"') + '</div>',
       '     </div>',
       '     <div class="placement-areas" ng-if="model.config.choiceAreaLayout == \'horizontal\' && model.config.choiceAreaPosition == \'below\'">',
-      '       <div class="answer-area">' + answerArea + '</div>',
-      '       <div class="choice-area" ng-if="mode !== \'view\'">', choices, '</div>',
+      '       <div class="answer-area">', answerArea, '</div>',
+      '       <div class="choice-area">', choices, '</div>',
       '       <div class="see-answer-area choice-area pull-right">' + correctAnswerArea('ng-show="showCorrectResponse()"') + '</div>',
       '     </div>'
     ].join('\n');
@@ -396,7 +396,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '  </div>'
     ].join('\n');
 
-    var dragAndDropTemplate = [
+    var placementTemplate = [
       '<div ng-if="model.config.placementType == \'placement\'" class="view-placement-ordering main-table {{model.config.choiceAreaLayout}}">',
       buttonRow(),
       '  <div class="main-row">',
@@ -418,7 +418,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     var tmpl = [
       '<div drag-and-drop-controller class="{{mode}}-mode corespring-ordering">',
 
-      dragAndDropTemplate,
+      placementTemplate,
       inplaceTemplate,
 
       '  <div ng-show="comments" class="well" ng-bind-html-unsafe="comments"></div>',
