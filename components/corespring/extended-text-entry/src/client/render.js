@@ -173,9 +173,10 @@ function mainDirective($compile) {
     this.draggable = true;
 
     this.initialise = function($node, replaceWith) {
-      var content = $node.html() || '';
+      var content = ($node.text() || '').replace(/\\\\/gi,'\\');
+      var encodedContent = btoa(content);
       var isNew = $node[0].outerHTML.indexOf('mathinput-holder-init') >= 0;
-      var newNode = $('<div mathinput-holder><math-input editable="true" keypad-auto-open="' + isNew + '" keypad-type="\'basic\'" ng-model="expr" expression="\'' + content + '\'"></math-input></div>');
+      var newNode = $('<div mathinput-holder><math-input editable="true" keypad-auto-open="' + isNew + '" keypad-type="\'basic\'" ng-model="expr" expression-encoded="' + encodedContent + '"></math-input></div>');
       return replaceWith(newNode);
     };
 
@@ -198,7 +199,9 @@ function mainDirective($compile) {
     };
 
     this.getMarkUp = function($node, $scope) {
-      return '<span mathinput>' + ($scope.expr || '') + '</span>';
+      var expr = $scope.expr || '';
+      expr = expr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return '<span mathinput>' + expr + '</span>';
     };
   }
 
