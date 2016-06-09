@@ -475,7 +475,7 @@ var main = [
 
       function matchInteraction() {
         return [
-          '<div ng-class="{showToggle: response && response.correctness == \'incorrect\'}" icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer"></div>',
+          '<correct-answer-toggle visible="response && response.correctness == \'incorrect\'" toggle="bridge.answerVisible"></correct-answer-toggle>',
           '<table class="corespring-match-table" ng-class="layout">',
           '  <tr class="header-row">',
           '    <th ng-repeat="column in matchModel.columns"',

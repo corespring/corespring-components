@@ -14,21 +14,14 @@ var def = function() {
       'hideMessage': '@'
     },
     link: function($scope) {
-      var showMessage = $scope.showMessage ? $scope.showMessage : defaults.showMessage;
-      var hideMessage = $scope.hideMessage ? $scope.hideMessage : defaults.hideMessage;
+      $scope.showMessageCalculated = $scope.showMessage ? $scope.showMessage : defaults.showMessage;
+      $scope.hideMessageCalculated = $scope.hideMessage ? $scope.hideMessage : defaults.hideMessage;
 
-      $scope.changeToggle = function() {
-        $scope.toggle = !$scope.toggle;
-        $scope.message = ($scope.toggle ? hideMessage : showMessage);
-      };
-
-      $scope.message = showMessage;
     },
     template: [
       '<div class="button-row btn-group-md text-center {{class}}">',
-      '  <div class="show-correct" ng-if="visible" ng-click="changeToggle()">',
-      '    <svg-icon category="showHide" key="correct-response" open="{{toggle}}"></svg-icon>',
-      '    <span>{{message}}</span>',
+      '  <div class="show-correct-answer" ng-class="{showCorrectVisible: visible}">',
+      '    <div icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="toggle" closed-label="{{showMessageCalculated}}" open-label="{{hideMessageCalculated}}"></div>',
       '  </div>',
       '</div>'
     ].join('')

@@ -409,7 +409,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
 
     var choicesTemplate = [
       '<div class="choices-container">',
-      '  <div ng-class="{showToggle: response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'}" icon-toggle icon-name="correct" class="icon-toggle-correct" ng-model="bridge.answerVisible" closed-label="Show Correct Answer" open-label="Show My Answer"></div>',
+      '  <correct-answer-toggle visible="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'" toggle="bridge.answerVisible"></correct-answer-toggle>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
