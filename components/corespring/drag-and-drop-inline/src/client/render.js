@@ -313,6 +313,8 @@ var main = [
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
+        '  <correct-answer-toggle visible="response.correctResponse && response.correctness !== \'correct\'"',
+        '      toggle="seeSolutionExpanded"></correct-answer-toggle>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">',
              choiceArea(),
@@ -323,8 +325,6 @@ var main = [
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-show="feedback" icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-        '  <correct-answer-toggle visible="response.correctResponse && response.correctness !== \'correct\'"',
-        '      toggle="seeSolutionExpanded"></correct-answer-toggle>',
         '  <div class="correct-answer-area-holder" ng-show="seeSolutionExpanded"></div>',
         '</div>'
       ].join('');
