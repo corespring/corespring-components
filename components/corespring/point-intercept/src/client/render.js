@@ -239,6 +239,9 @@ var main = [
       }
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
 
         setDataAndSession: function(dataAndSession) {
 
@@ -388,7 +391,7 @@ var main = [
         "     <div id='initialParams' ng-transclude></div>",
         "  </div>",
         '  <div class="feedback-holder" ng-show="model.config.showFeedback">',
-        '    <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}}"></div>',
+        '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
         '  </div>',
         '  <div see-answer-panel see-answer-panel-expanded="trueValue" class="solution-panel" ng-class="{panelVisible: correctResponse}">',
         "    <div class='solution-container'></div>",

@@ -4,6 +4,7 @@ link = function($sce, $timeout) {
   return function(scope, element, attrs) {
 
     scope.editable = true;
+    scope.popupVisible = false;
 
     function layoutChoices(choices, order) {
       if (!order) {
@@ -96,6 +97,10 @@ link = function($sce, $timeout) {
 
     scope.containerBridge = {
 
+      setPlayerSkin: function(skin) {
+        scope.iconset = skin.iconSet;
+      },
+
       setDataAndSession: function(dataAndSession) {
         scope.question = dataAndSession.data.model;
         scope.session = dataAndSession.session || {};
@@ -135,6 +140,7 @@ link = function($sce, $timeout) {
           }).join("\n");
           scope.instructorResponse = {correctness: 'instructor', feedback: rationaleHtml};
         }
+        scope.instructorClass = 'instructor';
       },
 
       // sets the server's response
@@ -149,6 +155,8 @@ link = function($sce, $timeout) {
           r.correctness = 'warning';
         }
         scope.response = r;
+        console.log('scope.response', scope.response);
+        scope.iconKey = r.correctness === 'warning' ? 'nothing-submitted-feedback' : r.correctness;
       },
 
       setMode: function(newMode) {},
@@ -192,6 +200,19 @@ link = function($sce, $timeout) {
       renderMath(1);
     };
 
+
+    element.on('show.bs.popover', function(e) {
+      scope.triggerIcon(e, true);
+    });
+
+    element.on('hide.bs.popover', function(e) {
+      scope.triggerIcon(e, false);
+    });
+
+    scope.triggerIcon = function(e, popoverToggled) {
+      scope.popupVisible = popoverToggled;
+    };
+
     scope.playerId = (function() {
       return element.closest('.player-body').attr('id');
     })();
@@ -211,19 +232,23 @@ main = [
       replace: true,
       link: link($sce, $timeout),
       template: [
-        '<div class="view-inline-choice" ng-class="response.correctness">',
-        '  <span feedback-popover="response" viewport="#{{playerId}}">',
+        '<div class="view-inline-choice {{instructorClass}}" ng-class="response.correctness">',
+        '  <span viewport="#{{playerId}}">',
         '    <span class="dropdown" dropdown>',
         '      <span class="btn dropdown-toggle" ng-class="{initial: !selected}" dropdown-toggle ng-disabled="!editable">',
         '        <div style="height: 0px; overflow: hidden">',
         '          <li ng-repeat="choice in choices">',
-        '            <a  ng-bind-html-unsafe="choice.label"></a>',
+        '            <a ng-bind-html-unsafe="choice.label"></a>',
         '          </li>',
         '        </div>',
-        '        <span class="selected-label" ng-bind-html-unsafe="selected.label" style="display: inline-block"></span>',
-        '        <div class="caret-holder"><span class="caret"></span></div>',
+        '        <span class="selected-label" ng-bind-html-unsafe="selected.label" ng-show="selected !== undefined" style="display: inline-block"></span>',
+        '        <div class="caret-holder">',
+        '          <svg-icon category="inline-choice" key="caret"></svg-icon>',
+        '        </div>',
         '      </span>',
-        '      <i class="fa result-icon"></i>',
+        '      <span ng-if="!instructorResponse && response" class="feedback-icon" feedback-popover="response">',
+        '        <svg-icon open="{{popupVisible}}" category="{{response.feedback ? \'feedback\' : \'\'}}" key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
+        '      </span>',
         '      <ul class="dropdown-menu">',
         '        <li ng-switch="choice.labelType" ng-repeat="choice in choices">',
         '          <a ng-click="select(choice)" ng-bind-html-unsafe="choice.label"></a>',
@@ -231,7 +256,9 @@ main = [
         '      </ul>',
         '    </span>',
         '  </span>',
-        '  <span ng-if="instructorResponse" feedback-popover="instructorResponse" class="rationale-icon"></span>',
+        '  <span ng-if="instructorResponse" class="rationale" feedback-popover="instructorResponse">',
+        '    <svg-icon open="{{popupVisible}}" class="toggle-icon" category="showHide" key="show-rationale"></svg-icon>',
+        '  </span>',
         '</div>'
       ].join("\n")
     };

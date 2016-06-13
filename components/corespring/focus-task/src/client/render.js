@@ -24,6 +24,7 @@ exports.directive = [
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
+        setPlayerSkin: setPlayerSkin,
         getSession: getSession,
         setResponse: setResponse,
         setInstructorData: setInstructorData,
@@ -172,6 +173,10 @@ exports.directive = [
       }
 
       function setMode(newMode) {}
+
+      function setPlayerSkin(skin) {
+        scope.iconset = skin.iconSet;
+      }
 
       /**
        * Reset the ui back to an unanswered state

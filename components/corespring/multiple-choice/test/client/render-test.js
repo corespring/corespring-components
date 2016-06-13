@@ -11,6 +11,19 @@ describe('corespring:multiple-choice-render', function() {
 
   var testModel;
 
+  var haveBeenCalledWith = [];
+
+  var MockPopover = {
+    fn: function(arg) {
+      haveBeenCalledWith.push(arg);
+      return MockPopover;
+    },
+    on: function(arg, callback) {
+      callback();
+      return MockPopover;
+    }
+  };
+
   var testModelTemplate = {
     data: {
       model: {
@@ -61,12 +74,20 @@ describe('corespring:multiple-choice-render', function() {
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
+    $.fn.extend({
+      popover: MockPopover.fn
+    });
+
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
+      $provide.value('ASSETS_PATH', '');
+      $provide.value('MathJaxService', {
+        parseDomForMath: jasmine.createSpy('parseDomForMath')
+      });
     });
   });
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, $httpBackend) {
     container = new MockComponentRegister();
 
     $rootScope.$on('registerComponent', function(event, id, obj) {
@@ -115,11 +136,11 @@ describe('corespring:multiple-choice-render', function() {
   it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
-    expect($(element).find('div.radio-choice').length).toBe(6);
+    expect($(element).find('div.radio-choice').length).toBe(3);
     testModel.data.model.config.choiceType = "checkbox";
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
-    expect($(element).find('div.checkbox-choice').length).toBe(6);
+    expect($(element).find('div.checkbox-choice').length).toBe(3);
   });
 
   it('get answer returns selected answers', function() {
@@ -139,7 +160,7 @@ describe('corespring:multiple-choice-render', function() {
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
 
-    expect($(element).find('div.radio-choice').length).toBe(6);
+    expect($(element).find('div.radio-choice').length).toBe(3);
     expect($(element).find('.selected div.radio-choice').length).toBe(1);
   });
 
@@ -152,7 +173,7 @@ describe('corespring:multiple-choice-render', function() {
 
     container.elements['1'].setDataAndSession(testModel);
     rootScope.$digest();
-    expect($(element).find('div.checkbox-choice').length).toBe(6);
+    expect($(element).find('div.checkbox-choice').length).toBe(3);
     expect($(element).find('.selected div.checkbox-choice').length).toBe(2);
   });
 
@@ -179,7 +200,8 @@ describe('corespring:multiple-choice-render', function() {
     };
     container.elements['1'].setResponse(response);
     rootScope.$digest();
-    expect($(element).find(".choice-holder.correct").length).toBe(2);
+    expect($(element).find(".choice-holder-background").length).toBe(3);
+    expect($(element).find(".choice-holder-background.incorrect").length).toBe(1);
     expect($(element).find(".incorrect .choice-holder").length).toBe(1);
   });
 
@@ -216,7 +238,8 @@ describe('corespring:multiple-choice-render', function() {
       container.elements['1'].setInstructorData(instructorData);
       container.elements['1'].setMode('instructor');
       rootScope.$digest();
-      expect($(element).find(".correct .choice-holder").length).toBe(2);
+      expect($(element).find("[key='correct']").length).toBe(3);
+      expect($(element).find("[key='correct'].ng-hide").length).toBe(2);
     });
 
   });

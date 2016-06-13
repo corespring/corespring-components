@@ -1,4 +1,3 @@
-@import '../../../../../less/common';
 
 .view-feedback-container {
   max-width: 595px;
@@ -6,28 +5,41 @@
   .panel.feedback-panel {
     margin-top: 15px;
     border-width: 3px;
+
     .panel-heading {
       cursor: default;
       border-top-left-radius: 0px;
       border-top-right-radius: 0px;
       height: 30px;
     }
+
     .panel-body {
       padding: 10px 20px;
     }
+
     &.incorrect {
-      border-color: @incorrect-color;
+      border-color: @incorrect-background;
       .panel-heading {
-        background-color: @incorrect-color;
-      }
-    }
-    &.correct {
-      border-color: @correct-color;
-      .panel-heading {
-        background-color: @correct-color;
+        background-color: @incorrect-background;
       }
     }
 
+  }
+
+  .panel.feedback {
+    &.correct {
+      border-color: @correct-background;
+      .panel-heading {
+        background-color: @correct-background;
+      }
+    }
+
+    &.incorrect, &.correct, &.partial {
+      .cs-icon {
+        top: -3px;
+        left: -5px;
+      }
+    }
   }
 
 }

@@ -14,6 +14,10 @@
       "organization": "corespring"
     },
     {
+      "name": "icon",
+      "organization": "corespring"
+    },
+    {
       "name": "widgets",
       "organization": "corespring"
     }
@@ -33,7 +37,7 @@
         "angular-module": "corespring.input.radio"
       },
       "wiggi-wiz": {
-        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.95",
+        "bower_target": "git@github.com:corespring/wiggi-wiz.git#0.1.97",
         "js": "dist/wiggi-wiz.js",
         "css": "dist/wiggi-wiz.css",
         "angular-module": "corespring.wiggi-wiz"

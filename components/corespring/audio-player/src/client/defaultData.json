@@ -1,0 +1,9 @@
+{
+  "componentType": "corespring-audio-player",
+  "title": "Audio Player",
+  "model": {
+    "config": {
+    }
+  },
+  "minimumWidth": 100
+}

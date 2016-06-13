@@ -18,6 +18,10 @@
       "organization": "corespring"
     },
     {
+      "name": "icon",
+      "organization": "corespring"
+    },
+    {
       "name" : "server-shared",
       "organization" : "corespring"
     },

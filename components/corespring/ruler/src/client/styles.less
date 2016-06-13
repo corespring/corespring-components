@@ -1,4 +1,3 @@
-@import '../../../../../less/common';
 .cs-ruler-config {
     .make-inline {
         font-weight: bold;
@@ -6,12 +5,13 @@
     }
 }
 
+
 .cs-ruler {
     display: inline-block;
     vertical-align: middle;
     .cs-ruler-toggle {
         cursor: pointer;
-        background: data-uri('../../public/icon-ruler-black.png') no-repeat center transparent;
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAABdUlEQVR4AdXQM4DdWRTA4W+4tmLbXdTFVhfbtlPHttnEtu1sbNte797V699/ppuv/5177pEhJOkrX3rT6YILskuzRDMFs9x3RZ60prMEw1DSE1fkSmvaFUkSlfLAj/JG/etMQRdQ0lnZNREsjv5qZ5AilwlueuBYlMVTzYulH8nlMztNjnrxz6yP/ZUC7ipjkOBHOaOkmwQdQZIiOnjgJ8dkFdcXtsYW/l5FyfZb7nfbZRHX57b7QyNQ0HNN9RFs8bm4PrVZUB98rqM2nvndxijp57YK6iG3Lj6xyyG/2eyzKH/d7i/1QVZ3jdY16sJZ7PS7BuAjvVTzVLDRF1HSU7G/fm22bKa67Heboiyc07nYX/nCMuv1EayLkmZ3wRt1QZIl6jssmCFZXHmd8FB5ZLJGIZ298IeZEkUwSDACfGOe84YKZkoSySfm+FMHLNHPLsFUiSJLMl/QXA3vBTOip0CyeYJV6Ukh2SLBdEnS5UvtJcsA/gYs1HvMPdnDQAAAAABJRU5ErkJggg==) no-repeat center transparent;
         height: 34px;
         width: 34px;
         border: 1px solid #333;
@@ -22,7 +22,7 @@
         position: relative;
         &.visible {
             background-color: #ccc;
-            background-image: data-uri('../../public/icon-ruler-white.png');
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAABf0lEQVR4AdXQM9RcCxSG4bl2bNvqoi62uti2nTq2zSa2bd7Ytm0+mXXW9HMm3f9VW+9WJCnIL3rL86PoVJyTNXH0Z9Mxw12X5EoUnYEhUau4R1E8R6Jo52D1n5Vwzwm5w946HZ0Cu7jTsmqEheGndgzs3+QwznX3HAmxuN/NEaD+ksN/tpsY8uP+sxadAzuf20oZgBOyh0E3oH3s7kLaueedIzLHR5PbHFs4nfJ+tddSn22VKT6azFZfNAjs/J5qrBc2SRYf/ddG1I21aa+VJz5bHwZNZjPqRK2cOvnHDgd8stF/YW7d6ltsama3jdQ57MKZbPdZvcD+Sw9VPMZ6ycOgxwW3SmWmLCa76LMNYRbO7gzqxJZfYq1eWBMGzeqcV2oH9i8Wqesgpvk1PprbMfeVjVoZrFJAR898Md3PkfgyAMMCK7U5zhqM6X6JhJF/zPJVu6i1SB87MDmYGk5+MRdNVfMW08KjgfxqDlYkjsZwCzA1uDVxSaGtXyNJQN8BjmBw5RMYN4gAAAAASUVORK5CYII=);
             border-color: #888;
         }
     }

@@ -107,9 +107,6 @@ describe('corespring:inline-choice', function() {
     expect(element).not.toBe(null);
   });
 
-  it('has a result-icon', function () {
-    expect(element.find('.result-icon').size()).toBe(1);
-  });
 
   describe('inline-choice render', function () {
     it('sets the session choice correctly', function () {
@@ -148,7 +145,7 @@ describe('corespring:inline-choice', function() {
 
       var wrapper = $("<div/>");
       wrapper.append($(element));
-      expect(wrapper.find(".incorrect").length).toBe(1);
+      expect(wrapper.find(".feedback-icon .incorrect").length).toBe(1);
     });
 
 
@@ -226,6 +223,8 @@ describe('corespring:inline-choice', function() {
       });
       rootScope.$digest();
       expect(element.attr('class').indexOf('correct') !== -1).toBe(true);
+      expect(element.find('.feedback-icon').size()).toBe(1);
+
     });
 
     describe('answer change callback', function () {

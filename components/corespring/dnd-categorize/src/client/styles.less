@@ -1,5 +1,3 @@
-@import '../../../../../less/common';
-
 @component-width-in-placeholder: 600px;
 @categories-holder-padding: 15px; //make sure the category fits into the see solution panel
 
@@ -41,9 +39,7 @@
   }
 
   .border {
-    background-color: #e7e7e7;
-    border-radius: 4px;
-    border: solid 1px #979797;
+    .choice-template();
     margin: 3px;
     min-height: 40px;
     padding: 3px 15px 3px 3px;
@@ -115,7 +111,8 @@
   &.correct {
 
     .border {
-      .correct-input();
+      border-color: @correct-background;
+      box-shadow: none;
 
       .remove-choice {
         display: none;
@@ -127,8 +124,9 @@
           color: white;
           content: '\f111';
         }
+
         .foreground:after {
-          color: @correct-color;
+          color: @correct-foreground;
           content: @correct-character;
         }
       }
@@ -138,7 +136,8 @@
   &.incorrect {
 
     .border {
-      .incorrect-input();
+      border-color: @incorrect-background;
+      box-shadow: none;
 
       .remove-choice {
         display: none;
@@ -150,8 +149,9 @@
           color: white;
           content: '\f111';
         }
+
         .foreground:after {
-          color: @incorrect-color;
+          color: @incorrect-foreground;
           content: @incorrect-character;
         }
       }
@@ -275,20 +275,10 @@
         &.category-hover {
           .border {
             .categorized.choices {
-              background-color: white;
-              border: dashed 2px #979797;
+              background-color: #d4d2d3;
             }
           }
         }
-
-        &.answer-expected {
-          .border {
-            .categorized.choices {
-              border-color: @warning-color-border;
-            }
-          }
-        }
-
 
         .border {
           margin: 3px;
@@ -325,8 +315,7 @@
           }
 
           .categorized.choices {
-            border: solid 2px #979797;
-            border-radius: 4px;
+            .choice-area-template();
             min-height: 40px;
             padding: 8px;
 
@@ -337,6 +326,12 @@
           }
         }
       }
+    }
+  }
+
+  &.view-mode, &.evaluate-mode {
+    .choice-corespring-dnd-categorize .border {
+      box-shadow: none;
     }
   }
 }
@@ -460,6 +455,7 @@
       font-weight: bold;
       color: #7a7a7a;
     }
+
   }
 
   .category {

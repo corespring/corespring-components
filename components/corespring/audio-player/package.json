@@ -1,0 +1,12 @@
+{
+  "name": "audio-player",
+  "title": "Audio Player",
+  "organization": "corespring",
+  "released": false,
+  "libraries": [
+  ],
+  "dependencies" : {
+    "client": {
+    }
+  }
+}

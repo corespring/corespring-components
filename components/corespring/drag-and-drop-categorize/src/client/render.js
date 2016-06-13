@@ -19,6 +19,9 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       };
 
       _.extend(scope.containerBridge, {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
         setInstructorData: function(data){
           $log.warn("setInstructorData not implemented");
         },
@@ -103,7 +106,7 @@ var main = ['DragAndDropTemplates','$compile', '$log', '$modal', '$rootScope', '
       '    <a ng-click="_seeSolution()">See solution</a>',
       '  </div>',
       '  <div class="clearfix"></div>',
-      '  <div ng-show="feedback" feedback="feedback" correct-class="{{response.correctClass}}"></div>',
+      '  <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
       '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
       '</div>'
 

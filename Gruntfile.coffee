@@ -20,6 +20,18 @@ module.exports = (grunt) ->
     grunt.fail.fatal('saucelabs error - you must define both user and key') if( (sauceUser and !sauceKey) or (!sauceUser and sauceKey))
     grunt.fail.fatal('saucelabs error - you must use a remote url as the base url') if(sauceUser and baseUrl == 'http://localhost:9000')
 
+  ###
+   Clean up the summary output of jasmine
+   by removing grunt-contrib-jasmine paths from stacktrace output
+   This is a hack of course, but helpful.
+   Unfortunately grunt-contrib-jasmine doesn't allow us to replace
+   the reporter
+   ###
+  gruntLogWriteln = grunt.log.writeln
+  grunt.log.writeln = (s) ->
+    if(!(s && s.indexOf('  at ') >= 0 && s.indexOf('grunt-contrib-jasmine') >= 0))
+      gruntLogWriteln(s || '')
+
   viewportSize = {width: 1280, height: 1024}
 
   getTimeout = ->
@@ -161,6 +173,7 @@ module.exports = (grunt) ->
       unit:
         src: '<%= grunt.config("testClient.wrapped") %>'
         options:
+          summary: true
           keepRunner: true
           vendor: [
             '<%= common.app %>/bower_components/lodash/dist/lodash.js'
@@ -207,9 +220,6 @@ module.exports = (grunt) ->
         flatten: false
 
     watch:
-      less:
-        files: ['<%= common.componentPath %>/**/*.less']
-        tasks: ['less:development']
       js:
         files: ['<%= common.componentPath %>/**/*.js']
         tasks: ['jshint:main']
@@ -264,4 +274,4 @@ module.exports = (grunt) ->
   grunt.registerTask('testserver', 'test server side js', 'mochaTest')
   grunt.registerTask('default', ['jshint', 'test'])
   grunt.registerTask('version-info', writeVersionInfo('components/version-info.json', grunt))
-  grunt.registerTask('build', ['less', 'clean:test', 'version-info', 'clean:production'])
+  grunt.registerTask('build', ['clean:test', 'version-info', 'clean:production'])

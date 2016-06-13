@@ -55,6 +55,9 @@ function renderCorespringDndCategorize(
 
     scope.correctAnswerRows = [{}];
     scope.dragAndDropScope = 'dnd-scope-' + Math.floor(Math.random() * 10000);
+    scope.feedback = {
+      isSeeAnswerPanelExpanded: false
+    };
     scope.isEditMode = attrs.mode === 'edit';
     scope.renderModel = {};
     scope.rows = [{}];
@@ -77,13 +80,16 @@ function renderCorespringDndCategorize(
 
     scope.containerBridge = {
       answerChangedHandler: saveAnswerChangedCallback,
+      setPlayerSkin: setPlayerSkin,
       editable: setEditable,
       getSession: getSession,
       isAnswerEmpty: isAnswerEmpty,
       reset: reset,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
-      setMode: function(mode) {},
+      setMode: function(mode) {
+        scope.mode = mode;
+      },
       setResponse: setResponse
     };
 
@@ -105,11 +111,19 @@ function renderCorespringDndCategorize(
 
     scope.$on('$destroy', onDestroy);
 
+    scope.$on('correctAnswerToggle', function(value) {
+      window.alert(value);
+    }, true);
+
     if (!scope.isEditMode) {
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
     }
 
     //-----------------------------------------------------------
+
+    function setPlayerSkin(skin) {
+      scope.iconset = skin.iconSet;
+    }
 
     function setDataAndSession(dataAndSession) {
       log('setDataAndSession mode:', attrs.mode, dataAndSession);
@@ -302,7 +316,9 @@ function renderCorespringDndCategorize(
     }
 
     function reset() {
-      scope.isSeeAnswerPanelExpanded = false;
+      scope.feedback = {
+        isSeeAnswerPanelExpanded: false
+      };
       scope.response = undefined;
 
       scope.renderModel = _.cloneDeep(scope.saveRenderModel);
@@ -661,7 +677,7 @@ function renderCorespringDndCategorize(
 
   function template() {
     return [
-        '<div class="render-corespring-dnd-categorize">',
+        '<div class="render-corespring-dnd-categorize {{mode}}-mode">',
         undoStartOver(),
         interaction(),
         itemFeedbackPanel(),
@@ -673,7 +689,7 @@ function renderCorespringDndCategorize(
   function undoStartOver() {
     return [
         '<div>',
-        '  <div class="undo-start-over pull-right" ng-show="canEdit()">',
+        '  <div class="undo-start-over text-centered" ng-show="canEdit()">',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
@@ -684,7 +700,7 @@ function renderCorespringDndCategorize(
 
   function itemFeedbackPanel() {
     return [
-        '<div feedback="response.feedback"',
+        '<div feedback="response.feedback" icon-set="{{iconset}}"',
         '   correct-class="{{response.correctClass}} {{response.warningClass}}">',
         '</div>'
       ].join('');
@@ -692,12 +708,11 @@ function renderCorespringDndCategorize(
 
   function seeSolutionPanel() {
     return [
-        '<div see-answer-panel="true"',
-        '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
-        '    ng-if="response.correctResponse">',
-        seeSolutionContent(),
-        '</div>'
-      ].join('');
+      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+      '<div ng-if="feedback.isSeeAnswerPanelExpanded">',
+      seeSolutionContent(),
+      '</div>'
+    ].join('');
   }
 
   function interaction() {
@@ -802,7 +817,8 @@ function renderCorespringDndCategorize(
 
   function seeSolutionContent() {
     return [
-        categoriesTemplate('true', 'correctAnswerRows')
-      ].join('');
+      categoriesTemplate('true', 'correctAnswerRows')
+    ].join('');
   }
+
 }
