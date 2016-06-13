@@ -60,6 +60,7 @@ function renderCorespringDndCategorize(
       isSeeAnswerPanelExpanded: false
     };
     scope.isEditMode = attrs.mode === 'edit';
+    scope.playerMode = 'gather';
     scope.renderModel = {};
     scope.rows = [{}];
     scope.shouldFlip = false;

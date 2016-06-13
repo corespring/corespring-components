@@ -194,7 +194,7 @@ describe('corespring:drag-and-drop-inline', function() {
       it('should hide the button if answer is correct', function() {
         setCorrectness('correct');
 
-        expect($(wrapper.find('.show-correct')).length).toEqual(0);
+        expect($(wrapper.find('.showCorrectVisible')).length).toEqual(0);
       });
 
       it('should hide the button if answer is invalid', function() {

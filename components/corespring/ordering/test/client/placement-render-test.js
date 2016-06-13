@@ -145,7 +145,7 @@ describe('corespring:placement ordering', function() {
 
     it('correct answer and show correct answer button are not visible before submitting', function() {
       setModelAndDigest(verticalModel);
-      expect($(element).find('.show-correct').length).toBe(0);
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
     });
 
     it('show correct answer button are visible after submitting', function() {
@@ -190,7 +190,7 @@ describe('corespring:placement ordering', function() {
     it('correct answer and show correct answer button are not visible before submitting', function() {
       container.elements['1'].setDataAndSession(horizontalModel);
       scope.$digest();
-      expect($(element).find('.show-correct').length).toBe(0);
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
     });
 
     it('show correct answer button are visible after submitting', function() {
@@ -201,7 +201,7 @@ describe('corespring:placement ordering', function() {
         answer: ['c3', 'c4'],
         correctResponse: ['c1', 'c2']
       });
-      expect($(element).find('.show-correct').length).not.toBe(0);
+      expect($(element).find('.showCorrectVisible').length).not.toBe(0);
     });
 
     it('correct answer is visible after submitting an incorrect answer', function() {
@@ -212,7 +212,7 @@ describe('corespring:placement ordering', function() {
         answer: ['c3', 'c4'],
         correctResponse: ['c1', 'c2']
       });
-      expect($(element).find('.show-correct').length).not.toBe(0);
+      expect($(element).find('.showCorrectVisible').length).not.toBe(0);
     });
 
     it('correct answer is not visible after submitting a correct answer', function() {
@@ -223,7 +223,7 @@ describe('corespring:placement ordering', function() {
         answer: ['c1', 'c2'],
         correctResponse: ['c1', 'c2']
       });
-      expect($(element).find('.show-correct').length).toBe(0);
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
     });
 
     it('ordering numbers are hidden', function() {
