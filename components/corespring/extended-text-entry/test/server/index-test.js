@@ -56,7 +56,7 @@ describe('extended text entry server logic', function() {
 
   it('should show default feedback', function() {
     var response = server.createOutcome(_.cloneDeep(component), "Some text", settings(true, true, false));
-    response.feedback.should.equal("Your answer was submitted.");
+    response.feedback.should.equal("Your answer was successfully submitted.");
   });
 
   it('should show custom feedback', function() {
