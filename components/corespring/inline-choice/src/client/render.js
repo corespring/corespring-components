@@ -169,9 +169,11 @@ function RenderInlineChoiceDirective($sce, $timeout) {
         return _([data.correctResponse]).flatten().contains(c.value);
       });
       scope.select(selectedChoice);
+
       scope.response = {
         correctness: 'correct'
       };
+
       if (!_.isEmpty(data.rationales)) {
         var rationaleHtml = _.map(scope.choices, function(c) {
           var rationale = _.find(data.rationales, function(r) {
@@ -179,6 +181,7 @@ function RenderInlineChoiceDirective($sce, $timeout) {
           }) || {};
           return "<div class='rationale-row'><span class='rationale-bold'>" + c.label + "</span> - " + rationale.rationale + "</div>";
         }).join("\n");
+
         scope.instructorResponse = {
           correctness: 'instructor',
           feedback: rationaleHtml
