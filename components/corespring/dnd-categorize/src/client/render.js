@@ -51,7 +51,8 @@ function renderCorespringDndCategorize(
   function link(scope, elem, attrs) {
 
     var log = console.log.bind(console, '[dnd-categorize]');
-    var layout;
+
+    var lastChoiceWidth, layout;
 
     scope.correctAnswerRows = [{}];
     scope.dragAndDropScope = 'dnd-scope-' + Math.floor(Math.random() * 10000);
@@ -80,16 +81,14 @@ function renderCorespringDndCategorize(
 
     scope.containerBridge = {
       answerChangedHandler: saveAnswerChangedCallback,
-      setPlayerSkin: setPlayerSkin,
       editable: setEditable,
       getSession: getSession,
       isAnswerEmpty: isAnswerEmpty,
       reset: reset,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
-      setMode: function(mode) {
-        scope.mode = mode;
-      },
+      setMode: setPlayerMode,
+      setPlayerSkin: setPlayerSkin,
       setResponse: setResponse
     };
 
@@ -110,10 +109,6 @@ function renderCorespringDndCategorize(
     }
 
     scope.$on('$destroy', onDestroy);
-
-    scope.$on('correctAnswerToggle', function(value) {
-      window.alert(value);
-    }, true);
 
     if (!scope.isEditMode) {
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, elem[0]);
@@ -204,6 +199,10 @@ function renderCorespringDndCategorize(
 
     function isAnswerEmpty() {
       return 0 === getSession().numberOfAnswers;
+    }
+
+    function setPlayerMode(value) {
+      scope.playerMode = value;
     }
 
     function setInstructorData(data) {
@@ -381,10 +380,20 @@ function renderCorespringDndCategorize(
         .withContainer(elem.find('.choices-container'))
         .withItemSelector('.choice-corespring-dnd-categorize')
         .withNumColumns(scope.choicesPerRow)
-        .withCellWidth(calcChoiceWidth())
+        .withCellWidth(calcChoiceWidth)
         .withPaddingBottom(7)
         .value(),
         new LayoutRunner($timeout));
+
+      layout.onBeforeRender(function(choiceWidth){
+        scope.choiceWidth = choiceWidth;
+        scope.choiceStyle = {
+          width: choiceWidth + 'px'
+        };
+      });
+      layout.onAfterRender(function(){
+        renderMath();
+      });
     }
 
     function destroyLayouts() {
@@ -393,11 +402,10 @@ function renderCorespringDndCategorize(
       }
     }
 
-    function updateLayoutConfig(cellWidth) {
+    function updateLayoutConfig() {
       if (layout) {
         layout.updateConfig({
-          container: elem.find('.choices-container'),
-          cellWidth: cellWidth
+          container: elem.find('.choices-container')
         });
       }
     }
@@ -437,14 +445,18 @@ function renderCorespringDndCategorize(
         width: 100 / categoriesPerRow + '%'
       };
 
-      $timeout(updateChoices, 100);
+      if (layout) {
+        layout.updateConfig({
+          container: elem.find('.choices-container')
+        });
+      }
     }
 
-    function fillUpWithPlaceholders(rows, categoriesPerRow){
+    function fillUpWithPlaceholders(rows, categoriesPerRow) {
       //fill rows with empty placeholder categories
       //so that they are lined up in proper columns
       var counter = 1;
-      var categories = rows[rows.length-1].categories;
+      var categories = rows[rows.length - 1].categories;
       while (categories.length < categoriesPerRow) {
         categories.push({
           model: {
@@ -453,22 +465,6 @@ function renderCorespringDndCategorize(
           isPlaceHolder: true
         });
       }
-    }
-
-    function updateChoices() {
-      if (elem.width() === 0) {
-        $timeout(updateChoices, 100);
-        return;
-      }
-
-      scope.choiceWidth = calcChoiceWidth();
-
-      scope.choiceStyle = {
-        width: scope.choiceWidth + 'px'
-      };
-
-      updateLayoutConfig(scope.choiceWidth);
-      renderMath();
     }
 
     function calcChoiceWidth() {
@@ -622,7 +618,7 @@ function renderCorespringDndCategorize(
     }
 
     function isDragEnabled(choice) {
-      return !scope.response &&
+      return !scope.response && (scope.isEditMode || scope.playerMode === 'gather') &&
         (choiceCanBePlacedMultipleTimes(choice) || !isChoicePlaced(choice.id));
 
       function choiceCanBePlacedMultipleTimes(choice) {
@@ -631,7 +627,7 @@ function renderCorespringDndCategorize(
     }
 
     function isDragEnabledFromCategory() {
-      return !scope.response && !scope.isEditMode;
+      return !scope.response && !scope.isEditMode && scope.playerMode === 'gather';
     }
 
     function getEditMode(choice) {
@@ -677,11 +673,11 @@ function renderCorespringDndCategorize(
 
   function template() {
     return [
-        '<div class="render-corespring-dnd-categorize {{mode}}-mode">',
+        '<div class="render-corespring-dnd-categorize {{playerMode}}-mode">',
         undoStartOver(),
+        seeSolutionToggle(),
         interaction(),
         itemFeedbackPanel(),
-        seeSolutionPanel(),
         '</div>'
       ].join('\n');
   }
@@ -706,20 +702,18 @@ function renderCorespringDndCategorize(
       ].join('');
   }
 
-  function seeSolutionPanel() {
+  function seeSolutionToggle() {
     return [
-      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
-      '<div ng-if="feedback.isSeeAnswerPanelExpanded">',
-      seeSolutionContent(),
-      '</div>'
+      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>'
     ].join('');
   }
 
   function interaction() {
     return [
         '<div class="interaction-corespring-dnd-categorize">',
-        choicesTemplate("shouldFlip"),
-        categoriesTemplate("!shouldFlip", "rows"),
+        choicesTemplate('shouldFlip'),
+        categoriesTemplate('!shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
+        categoriesTemplate('!shouldFlip', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded'),
         // Nasty hack: transclude configuration for categories.
         '  <div ng-transclude ng-if="isEditMode"></div>',
         '  <h3 ng-if="isEditMode">Choices</h3>',
@@ -727,7 +721,8 @@ function renderCorespringDndCategorize(
         '    Enter choices below and drag to correct categories above.',
         '  </span>',
         choicesTemplate('!shouldFlip'),
-        categoriesTemplate('shouldFlip', 'rows'),
+        categoriesTemplate('shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
+        categoriesTemplate('shouldFlip', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded'),
         '</div>'
       ].join('');
   }
@@ -779,9 +774,9 @@ function renderCorespringDndCategorize(
       ].join('').replace('#flip#', flip);
   }
 
-  function categoriesTemplate(flip, rowsModel) {
+  function categoriesTemplate(flip, rowsModel, visible) {
     return [
-        '<div class="categories-holder" ng-if="#flip#">',
+        '<div class="categories-holder" ng-if="#flip#" ng-show="#visible#">',
         '  <div class="categories" ng-repeat="row in #rowsModel# track by row.id">',
         '    <div class="row">',
         '      <div category-label-corespring-dnd-categorize="true" ',
@@ -812,7 +807,10 @@ function renderCorespringDndCategorize(
         '     </div>',
         '  </div>',
         '</div>'
-      ].join('').replace('#flip#', flip).replace('#rowsModel#', rowsModel);
+      ].join('')
+      .replace('#flip#', flip)
+      .replace('#rowsModel#', rowsModel)
+      .replace('#visible#', visible);
   }
 
   function seeSolutionContent() {
