@@ -3,6 +3,17 @@
   "title": "Audio Player",
   "model": {
     "config": {
+      "showControls": true,
+      "sources": [
+        {
+          "url": "https://s3.amazonaws.com/corespring-audio-tests/outputs/mp3/guns.mp3",
+          "type": "audio/mpeg"
+        },
+        {
+          "url": "https://s3.amazonaws.com/corespring-audio-tests/outputs/ogg/guns.ogg",
+          "type": "audio/ogg"
+        }
+      ]
     }
   },
   "minimumWidth": 100
