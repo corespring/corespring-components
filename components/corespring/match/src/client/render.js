@@ -29,6 +29,7 @@ var main = [
 
       scope.editable = false;
       scope.bridge = {answerVisibe: false};
+      scope.showCorrectAnswerButton = false;
 
 
       scope.undoModel = new CsUndoModel();
@@ -153,6 +154,10 @@ var main = [
         if (response.correctnessMatrix) {
           setCorrectnessOnAnswers(response.correctnessMatrix);
         }
+
+        scope.showCorrectAnswerButton = response &&
+          response.correctness === 'incorrect' &&
+          response.warningClass !== 'answer-expected';
       }
 
       function setPlayerSkin(skin) {
@@ -180,9 +185,9 @@ var main = [
 
       function reset() {
         scope.bridge = {answerVisible: false};
+        scope.showCorrectAnswerButton = false;
         scope.editable = true;
         scope.session = {};
-        scope.isSeeAnswerOpen = false;
         delete scope.response;
         scope.matchModel = _.cloneDeep(scope.saveMatchModel);
         scope.undoModel.init();
@@ -475,7 +480,7 @@ var main = [
 
       function matchInteraction() {
         return [
-          '<correct-answer-toggle visible="response && response.correctness == \'incorrect\'" toggle="bridge.answerVisible"></correct-answer-toggle>',
+          '<correct-answer-toggle visible="showCorrectAnswerButton" toggle="bridge.answerVisible"></correct-answer-toggle>',
           '<table class="corespring-match-table" ng-class="layout">',
           '  <tr class="header-row">',
           '    <th ng-repeat="column in matchModel.columns"',

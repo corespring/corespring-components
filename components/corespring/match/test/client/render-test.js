@@ -135,7 +135,7 @@ describe('corespring:match:render', function() {
   });
 
   it('should not show the default headers', function() {
-    function runTest(header){
+    function runTest(header) {
       testModel.data.model.columns[0].labelHtml = header;
       container.elements['1'].setDataAndSession(testModel);
       expect(scope.matchModel.columns[0].labelHtml).toEqual('');
@@ -481,7 +481,7 @@ describe('corespring:match:render', function() {
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
@@ -507,6 +507,36 @@ describe('corespring:match:render', function() {
       expect(changeHandlerCalled).toBe(true);
     });
 
+  });
+
+  describe('showCorrectAnswerButton', function() {
+    it('should be false initially', function() {
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+    it('should be true when correctness is incorrect"', function() {
+      container.elements['1'].setResponse({
+        correctness: 'incorrect'
+      });
+      expect(scope.showCorrectAnswerButton).toBe(true);
+    });
+    it('should be false when correctness is correct"', function() {
+      container.elements['1'].setResponse({
+        correctness: 'correct'
+      });
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+    it('should be false when response has warningClass "answer-expected"', function() {
+      container.elements['1'].setResponse({
+        correctness: 'incorrect',
+        warningClass: 'answer-expected'
+      });
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+    it('should be false after reset"', function() {
+      scope.showCorrectAnswerButton = true;
+      container.elements['1'].reset();
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    })
   });
 
 });
