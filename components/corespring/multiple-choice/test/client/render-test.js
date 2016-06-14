@@ -291,4 +291,42 @@ describe('corespring:multiple-choice-render', function() {
     });
 
   });
+
+  describe('showCorrectAnswerButton', function() {
+    beforeEach(function() {
+      scope.answer = "anything";
+      scope.question = {
+        config: {}
+      };
+    });
+
+    it('should be false initially', function() {
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+    it('should be true when is correctness is incorrect"', function() {
+      container.elements['1'].setResponse({
+        correctness: 'incorrect',
+        feedback: {}
+      });
+      expect(scope.showCorrectAnswerButton).toBe(true);
+    });
+    it('should be false when correctness is correct"', function() {
+      container.elements['1'].setResponse({
+        correctness: 'correct'
+      });
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+    it('should be false when response has warningClass "answer-expected"', function() {
+      container.elements['1'].setResponse({
+        correctness: 'incorrect',
+        warningClass: 'answer-expected'
+      });
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+    it('should be false after reset"', function() {
+      scope.showCorrectAnswerButton = true;
+      container.elements['1'].reset();
+      expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+  });
 });

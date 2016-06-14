@@ -16,6 +16,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
 
     scope.inputType = 'checkbox';
     scope.editable = true;
+    scope.showCorrectAnswerButton = false;
     scope.bridge = {
       viewMode: 'normal',
       answerVisible: false
@@ -134,6 +135,9 @@ function multipleChoiceDirective($sce, $log, $timeout) {
               choice.correct = fb.correct;
             }
           });
+          scope.showCorrectAnswerButton = response &&
+            response.correctness === 'incorrect' &&
+            scope.question.config.showCorrectAnswer !== 'inline';
         }
       }
 
@@ -157,6 +161,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       resetChoices();
       resetFeedback(scope.choices);
       scope.response = undefined;
+      scope.showCorrectAnswerButton = false;
       scope.bridge.viewMode = 'normal';
       scope.bridge.answerVisible = false;
       updateUi();
@@ -211,6 +216,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
     }
 
     function resetFeedback(choices) {
+      scope.feedback = null;
       _.each(choices, function(c) {
         if (c) {
           delete c.feedback;
@@ -380,14 +386,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
 
   function template() {
     var noResponseTemplate = [
-      '<div class="empty-response-holder" ng-show="response && response.correctness === \'warning\'">',
-      '  <div class="empty-response">',
-      '    <span class="empty-response-icon">',
-      '      <svg-icon category="feedback" key="nothing-submitted" icon-set="{{iconset}}"></svg-icon>',
-      '    </span>',
-      '    <span class="empty-response-label">{{feedback && feedback.message ? feedback.message : \'Error\'}}</span>',
-      '  </div>',
-      '</div>'
+      '<div feedback="feedback.message" icon-set="{{iconset}}" correct-class="{{feedback.emptyAnswer && \'nothing-submitted\'}}"></div>'
     ].join('');
 
     var learnMoreTemplate = [
@@ -409,7 +408,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
 
     var choicesTemplate = [
       '<div class="choices-container">',
-      '  <correct-answer-toggle visible="response && response.correctness == \'incorrect\' && question.config.showCorrectAnswer !== \'inline\'" toggle="bridge.answerVisible"></correct-answer-toggle>',
+      '  <correct-answer-toggle visible="showCorrectAnswerButton" toggle="bridge.answerVisible"></correct-answer-toggle>',
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
