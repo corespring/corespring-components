@@ -58,13 +58,15 @@ exports.directive = [
         $theContent = element.find('.select-text-content');
         bindTokenEvents();
 
-        if (dataAndSession.session && dataAndSession.session.answers) {
-          scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
-            return parseInt(answer, 10);
-          });
-        }
 
-        $timeout(initUi, 100);
+        $timeout(function() {
+          initUi();
+          if (dataAndSession.session && dataAndSession.session.answers) {
+            scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
+              return parseInt(answer, 10);
+            });
+          }
+        }, 100);
       }
 
       function ensureModelStructure(model){

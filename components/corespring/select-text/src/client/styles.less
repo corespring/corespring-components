@@ -56,15 +56,18 @@
     padding: 10px;
     line-height: 1.5;
 
+    .cst {
+      &.selected {
+        background-color: @selected-background-color;
+      }
+    }
+
     &.editable {
       .cst {
         cursor: pointer;
         -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
         transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
 
-        &.selected {
-          background-color: @selected-background-color;
-        }
 
         &:hover {
           background-color: @hover-background-color;
