@@ -536,7 +536,7 @@ describe('corespring:match:render', function() {
       scope.showCorrectAnswerButton = true;
       container.elements['1'].reset();
       expect(scope.showCorrectAnswerButton).toBe(false);
-    })
+    });
   });
 
 });
