@@ -118,20 +118,6 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
 
-    it('does not shuffle when playerMode is view', function() {
-      spyOn(scope, 'shuffle');
-      container.elements['1'].setMode('view');
-      container.elements['1'].setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
-    });
-
-    it('does not shuffle when playerMode is evaluate', function() {
-      spyOn(scope, 'shuffle');
-      container.elements['1'].setMode('evaluate');
-      container.elements['1'].setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
-    });
-
     describe('stashing', function() {
 
       it('stashes shuffledOrder', function() {
@@ -269,10 +255,18 @@ describe('corespring:multiple-choice-render', function() {
       });
     });
 
-    it('setting instructor data marks correct answers as correct in the view in instructor mdoe', function() {
+    it('setting instructor data marks correct answers as correct in the view in instructor mode', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setMode('instructor');
       container.elements['1'].setInstructorData(instructorData);
+      rootScope.$digest();
+      expect($(element).find(".correct .choice-holder").length).toBe(2);
+    });
+
+    it('setting instructor data marks correct answers as correct in the view in instructor mode', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setInstructorData(instructorData);
+      container.elements['1'].setMode('instructor');
       rootScope.$digest();
       expect($(element).find(".correct .choice-holder").length).toBe(2);
     });
