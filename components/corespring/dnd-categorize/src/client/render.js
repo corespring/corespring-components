@@ -705,7 +705,9 @@ function renderCorespringDndCategorize(
 
   function seeSolutionToggle() {
     return [
-      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>'
+      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+      categoriesTemplate('true', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded'),
+      '<hr ng-show="feedback.isSeeAnswerPanelExpanded"></hr>'
     ].join('');
   }
 
@@ -713,8 +715,7 @@ function renderCorespringDndCategorize(
     return [
         '<div class="interaction-corespring-dnd-categorize">',
         choicesTemplate('shouldFlip'),
-        categoriesTemplate('!shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
-        categoriesTemplate('!shouldFlip', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded'),
+        categoriesTemplate('!shouldFlip', 'rows', 'true'),
         // Nasty hack: transclude configuration for categories.
         '  <div ng-transclude ng-if="isEditMode"></div>',
         '  <h3 ng-if="isEditMode">Choices</h3>',
@@ -722,8 +723,7 @@ function renderCorespringDndCategorize(
         '    Enter choices below and drag to correct categories above.',
         '  </span>',
         choicesTemplate('!shouldFlip'),
-        categoriesTemplate('shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
-        categoriesTemplate('shouldFlip', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded'),
+        categoriesTemplate('shouldFlip', 'rows', 'true'),
         '</div>'
       ].join('');
   }
