@@ -66,6 +66,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         return {
           onStart: 'onStart',
           revert: 'invalid',
+          opacity: 0.35,
           placeholder: (!choice || choice.moveOnDrag) ? false : 'keep'
         };
       };
@@ -189,7 +190,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
             $compile($answerArea)(scope.$new());
           });
 
-          scope.undoModel.init();
         },
 
         getSession: function() {
@@ -208,6 +208,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
           scope.showSolution = response.correctness !== 'correct';
+          if (response.emptyAnswer) {
+            scope.feedback = {message: response.message, emptyAnswer: true};
+          }
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
@@ -233,6 +236,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         },
 
         reset: function() {
+          scope.feedback = undefined;
           scope.showSolution = false;
           scope.correctResponse = undefined;
           scope.resetChoices(scope.rawModel);
@@ -304,7 +308,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
     var tmpl = [
       '<div class="view-drag-and-drop-legacy" ng-class="{editable: editable}">',
       '  <correct-answer-toggle toggle="solutionVisible" visible="showSolution"></correct-answer-toggle>',
-      '  <div ng-show="!correctResponse && editable" class="pull-right">',
+      '  <div ng-show="!correctResponse && editable" style="text-align: center">',
       '    <span cs-undo-button-with-model></span>',
       '    <span cs-start-over-button-with-model></span>',
       '  </div>',
@@ -315,6 +319,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       '  <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
       '  <div id="answer-area"></div>',
       '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
+      '  <div feedback="feedback.message" icon-set="{{iconset}}" correct-class="{{feedback.emptyAnswer && \'nothing-submitted\'}}"></div>',
+
       '</div>'
     ].join('');
 
