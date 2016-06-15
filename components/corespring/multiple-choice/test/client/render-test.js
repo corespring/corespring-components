@@ -140,41 +140,6 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
 
-    it('does shuffle, when playerMode is gather', function() {
-      containerBridge.setMode('gather');
-      scope.shuffle.calls.reset();
-      containerBridge.setDataAndSession(testModel);
-      expect(scope.shuffle).toHaveBeenCalled();
-    });
-
-    it('does not shuffle, when playerMode is view', function() {
-      containerBridge.setMode('view');
-      scope.shuffle.calls.reset();
-      containerBridge.setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
-    });
-
-    it('does not shuffle, when playerMode is view', function() {
-      containerBridge.setDataAndSession(testModel);
-      scope.shuffle.calls.reset();
-      containerBridge.setMode('view');
-      expect(scope.shuffle).not.toHaveBeenCalled();
-    });
-
-    it('does not shuffle, when playerMode is evaluate', function() {
-      containerBridge.setMode('evaluate');
-      scope.shuffle.calls.reset();
-      containerBridge.setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
-    });
-
-    it('does not shuffle, when playerMode is evaluate', function() {
-      containerBridge.setDataAndSession(testModel);
-      scope.shuffle.calls.reset();
-      containerBridge.setMode('evaluate');
-      expect(scope.shuffle).not.toHaveBeenCalled();
-    });
-
     describe('stash', function(){
 
       it('does save order in session.stash', function() {
@@ -302,10 +267,19 @@ describe('corespring:multiple-choice-render', function() {
       });
     });
 
-    it('setting instructor data marks correct answers as correct in the view in instructor mdoe', function() {
+    it('setting instructor data marks correct answers as correct in the view in instructor mode', function() {
       containerBridge.setDataAndSession(testModel);
       containerBridge.setMode('instructor');
       containerBridge.setInstructorData(instructorData);
+      rootScope.$digest();
+      expect($(element).find("[key='correct']").length).toBe(3);
+      expect($(element).find("[key='correct'].ng-hide").length).toBe(2);
+    });
+
+    it('setting instructor data marks correct answers as correct in the view in instructor mode (other order)', function() {
+      containerBridge.setDataAndSession(testModel);
+      containerBridge.setInstructorData(instructorData);
+      containerBridge.setMode('instructor');
       rootScope.$digest();
       expect($(element).find("[key='correct']").length).toBe(3);
       expect($(element).find("[key='correct'].ng-hide").length).toBe(2);

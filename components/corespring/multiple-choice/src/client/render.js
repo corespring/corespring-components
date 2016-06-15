@@ -311,11 +311,6 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       if (shouldShuffle) {
         if (stash.shuffledOrder) {
           scope.choices = layoutChoices(clonedChoices, stash.shuffledOrder);
-        } else if (scope.playerMode === 'view' || scope.playerMode === 'evaluate') {
-          //CO-696 Some sessions don't have a shuffledOrder in the stash bc. the code
-          //had been erroneously removed for about 1.5 months. For these we are using
-          //the default order, because updating the db is too complicated
-          scope.choices = clonedChoices;
         } else {
           scope.choices = layoutChoices(clonedChoices);
           stash.shuffledOrder = stashOrder(scope.choices);
