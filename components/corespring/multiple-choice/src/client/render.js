@@ -95,6 +95,16 @@ function MultipleChoiceDirective(
     }
 
     function setInstructorData(data) {
+      scope.instructorData = data;
+      updateUi();
+    }
+
+    function applyInstructorData(){
+      var data = scope.instructorData;
+      if(!data){
+        return;
+      }
+
       _.each(scope.choices, function(c) {
         if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
           c.correct = true;
@@ -145,9 +155,12 @@ function MultipleChoiceDirective(
 
     function setMode(value) {
       scope.playerMode = value;
+      
       if (value !== 'instructor') {
+        scope.instructorData = undefined;
         scope.rationales = undefined;
       }
+      
       updateUi();
     }
 
@@ -291,11 +304,6 @@ function MultipleChoiceDirective(
       if (shouldShuffle) {
         if (stash.shuffledOrder) {
           scope.choices = layoutChoices(clonedChoices, stash.shuffledOrder);
-        } else if (scope.playerMode === 'view' || scope.playerMode === 'evaluate') {
-          //CO-696 Some sessions don't have a shuffledOrder in the stash bc. the code
-          //had been erroneously removed for about 1.5 months. For these we are using
-          //the default order, because updating the db is too complicated
-          scope.choices = clonedChoices;
         } else {
           scope.choices = layoutChoices(clonedChoices);
           stash.shuffledOrder = stashOrder(scope.choices);
@@ -306,6 +314,7 @@ function MultipleChoiceDirective(
       }
 
       applyChoices();
+      applyInstructorData();
     }
 
     function letter(idx) {
