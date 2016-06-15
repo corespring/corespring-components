@@ -200,7 +200,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
     function triggerIcon(popupVisible) {
       return function() {
         scope.popupVisible = popupVisible;
-      }
+      };
     }
   }
 
@@ -216,7 +216,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
       '  <li>For \\( x^{2} \\), enter \\(( x \\) ^ \\( 2 )\\)</li>',
       '  <li>For \\( 1 \\frac{x}{y} \\), enter \\(1 \\) \\( x/y \\)</li>',
       '  <li>For \\( \\sqrt{x} \\), enter \\sqrt(x)</li>',
-      '</ul>',
+      '</ul>'
     ].join('');
   }
 
