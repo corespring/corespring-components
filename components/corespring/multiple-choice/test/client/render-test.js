@@ -92,6 +92,10 @@ describe('corespring:multiple-choice-render', function() {
 
   describe('shuffling', function(){
 
+    beforeEach(function(){
+      expect(testModel.data.model.config.shuffle).toBe(true);
+    });
+
     it('shuffles when shuffle is true', function() {
       spyOn(scope, 'shuffle');
       container.elements['1'].setDataAndSession(testModel);
@@ -110,6 +114,20 @@ describe('corespring:multiple-choice-render', function() {
     it('does not shuffle if shuffle is false', function() {
       spyOn(scope, 'shuffle');
       testModel.data.model.config.shuffle = false;
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does not shuffle when playerMode is view', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('view');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does not shuffle when playerMode is evaluate', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('evaluate');
       container.elements['1'].setDataAndSession(testModel);
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
@@ -253,8 +271,8 @@ describe('corespring:multiple-choice-render', function() {
 
     it('setting instructor data marks correct answers as correct in the view in instructor mdoe', function() {
       container.elements['1'].setDataAndSession(testModel);
-      container.elements['1'].setInstructorData(instructorData);
       container.elements['1'].setMode('instructor');
+      container.elements['1'].setInstructorData(instructorData);
       rootScope.$digest();
       expect($(element).find(".correct .choice-holder").length).toBe(2);
     });
@@ -317,15 +335,15 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.letter(1)).toBe('B');
     });
     it('should return a letter when choiceLabels is letters', function(){
-      scope.question.config.choiceLabels = 'letters'
+      scope.question.config.choiceLabels = 'letters';
       expect(scope.letter(1)).toBe('B');
     });
     it('should return empty string when choiceLabels is none', function(){
-      scope.question.config.choiceLabels = 'none'
+      scope.question.config.choiceLabels = 'none';
       expect(scope.letter(1)).toBe('');
     });
     it('should return a number when choiceLabels is numbers', function(){
-      scope.question.config.choiceLabels = 'numbers'
+      scope.question.config.choiceLabels = 'numbers';
       expect(scope.letter(1)).toBe('2');
     });
   });
