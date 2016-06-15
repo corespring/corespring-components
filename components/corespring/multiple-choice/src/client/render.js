@@ -1,8 +1,8 @@
 exports.framework = 'angular';
-exports.directive = ['$sce', '$log', '$timeout', multipleChoiceDirective];
+exports.directive = ['$sce', '$log', '$timeout', MultipleChoiceDirective];
 
 
-function multipleChoiceDirective($sce, $log, $timeout) {
+function MultipleChoiceDirective($sce, $log, $timeout) {
 
   return {
     scope: {},
@@ -44,6 +44,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       getSession: getSession,
       isAnswerEmpty: isAnswerEmpty,
       reset: reset,
+      resetStash: resetStash,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
       setPlayerSkin: setPlayerSkin,
@@ -71,7 +72,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       updateUi();
     }
 
-    function getConfigWithDefaults(input) {
+    function getConfigWithDefaults(input){
       var config = _.defaults(input || {}, {
         "orientation": "vertical",
         "shuffle": false,
@@ -85,8 +86,10 @@ function multipleChoiceDirective($sce, $log, $timeout) {
     }
 
     function getSession() {
+      var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
       return {
-        answers: getAnswers()
+        answers: getAnswers(),
+        stash: stash
       };
     }
 
@@ -164,7 +167,12 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       scope.showCorrectAnswerButton = false;
       scope.bridge.viewMode = 'normal';
       scope.bridge.answerVisible = false;
+      resetShuffledOrder();
       updateUi();
+    }
+
+    function resetStash() {
+      scope.session.stash = {};
     }
 
     function isAnswerEmpty() {
@@ -172,13 +180,11 @@ function multipleChoiceDirective($sce, $log, $timeout) {
     }
 
     function answerChangedHandler(callback) {
-      scope.$watch("answer", callBackWhenAnswerHasChanged, true);
-
-      function callBackWhenAnswerHasChanged(newValue, oldValue) {
+      scope.$watch("answer", function(newValue, oldValue) {
         if (newValue !== oldValue) {
           callback();
         }
-      }
+      }, true);
     }
 
     function setEditable(e) {
@@ -204,12 +210,13 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       }
 
       var answers = scope.session.answers;
+
       if (scope.inputType === "radio") {
-        if (_.isArray(answers) && answers.length > 0) {
+        if ( _.isArray(answers) && answers.length > 0) {
           scope.answer.choice = answers[0];
         }
       } else if (scope.inputType === "checkbox") {
-        _.forEach(answers, function(key) {
+        _.forEach(answers, function(key){
           scope.answer.choices[key] = true;
         });
       }
@@ -217,6 +224,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
 
     function resetFeedback(choices) {
       scope.feedback = null;
+
       _.each(choices, function(c) {
         if (c) {
           delete c.feedback;
@@ -233,7 +241,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
     function shuffle(choices) {
       var allChoices = _.cloneDeep(choices);
       var shuffledChoices = _(allChoices).filter(choiceShouldBeShuffled).shuffle().value();
-      return _.map(allChoices, function(choice) {
+      return _.map(allChoices, function(choice){
         if (choiceShouldBeShuffled(choice)) {
           return shuffledChoices.pop();
         } else {
@@ -242,8 +250,36 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       });
     }
 
-    function choiceShouldBeShuffled(choice) {
+    function choiceShouldBeShuffled(choice){
       return _.isUndefined(choice.shuffle) || choice.shuffle === true;
+    }
+
+    function layoutChoices(choices, order) {
+      if (!order) {
+        return scope.shuffle(choices);
+      }
+      var ordered = _(order).map(function(v) {
+        return _.find(choices, function(c) {
+          return c.value === v;
+        });
+      }).filter(function(v) {
+        return v;
+      }).value();
+
+      var missing = _.difference(choices, ordered);
+      return _.union(ordered, missing);
+    }
+
+    function stashOrder(choices) {
+      return _.map(choices, function(c) {
+        return c.value;
+      });
+    }
+
+    function resetShuffledOrder() {
+      if (scope.session && scope.session.stash) {
+        delete scope.session.stash.shuffledOrder;
+      }
     }
 
     function updateUi() {
@@ -252,13 +288,20 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       }
 
       var model = scope.question;
+      var stash = scope.session.stash = scope.session.stash || {};
       var answers = scope.session.answers = scope.session.answers || {};
 
       var shouldShuffle = model.config.shuffle && scope.mode !== 'instructor';
       scope.inputType = model.config.choiceType;
 
       if (shouldShuffle) {
-        scope.choices = scope.shuffle(_.cloneDeep(model.choices));
+        if (stash.shuffledOrder) {
+          scope.choices = layoutChoices(_.cloneDeep(model.choices), stash.shuffledOrder);
+        } else {
+          scope.choices = layoutChoices(_.cloneDeep(model.choices));
+          stash.shuffledOrder = stashOrder(scope.choices);
+          scope.$emit('saveStash', attrs.id, stash);
+        }
       } else {
         scope.choices = _.cloneDeep(model.choices);
       }
@@ -376,7 +419,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
         return "muted";
       }
       return "ready";
-    }
+      }
 
     function hasBlockFeedback(o) {
       var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
@@ -399,7 +442,7 @@ function multipleChoiceDirective($sce, $log, $timeout) {
 
     var rationalesTemplate = [
       '<div ng-if="rationales" icon-toggle icon-name="rationale" class="icon-toggle-rationales" ng-model="bridge.rationaleOpen" label="Rationales">',
-      '  <div ng-repeat="r in rationales">',
+      '      <div ng-repeat="r in rationales">',
       '    <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '    <span class="choice-label" ng-bind-html-unsafe="r.rationale"></span>',
       '  </div>',
@@ -422,10 +465,10 @@ function multipleChoiceDirective($sce, $log, $timeout) {
       '      <span class="choice-input" ng-switch="inputType">',
       '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
       '          <div choice-checkbox-button checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
-      '        </div>',
+      '      </div>',
       '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
       '          <div choice-radio-button radio-button-state="{{radioState(o)}}" radio-button-choice="o" />',
-      '        </div>',
+      '      </div>',
       '      </span>',
       '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
       '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
