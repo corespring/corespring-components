@@ -149,11 +149,12 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       }, 10);
     }
 
-    function setMode(newMode) {
-      scope.mode = newMode;
-      if (newMode !== 'instructor') {
+    function setMode(value) {
+      scope.playerMode = value;
+      if (value !== 'instructor') {
         scope.rationales = undefined;
       }
+      updateUi();
     }
 
     /**
@@ -291,19 +292,25 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       var stash = scope.session.stash = scope.session.stash || {};
       var answers = scope.session.answers = scope.session.answers || {};
 
-      var shouldShuffle = model.config.shuffle && scope.mode !== 'instructor';
       scope.inputType = model.config.choiceType;
+      var clonedChoices = _.cloneDeep(model.choices);
+      var shouldShuffle = model.config.shuffle && scope.playerMode !== 'instructor';
 
       if (shouldShuffle) {
         if (stash.shuffledOrder) {
-          scope.choices = layoutChoices(_.cloneDeep(model.choices), stash.shuffledOrder);
+          scope.choices = layoutChoices(clonedChoices, stash.shuffledOrder);
+        } else if (scope.playerMode === 'view' || scope.playerMode === 'evaluate') {
+          //CO-696 Some sessions don't have a shuffledOrder in the stash bc. the code
+          //had been erroneously removed for about 1.5 months. For these we are using
+          //the default order, because updating the db is too complicated
+          scope.choices = clonedChoices;
         } else {
-          scope.choices = layoutChoices(_.cloneDeep(model.choices));
+          scope.choices = layoutChoices(clonedChoices);
           stash.shuffledOrder = stashOrder(scope.choices);
           scope.$emit('saveStash', attrs.id, stash);
         }
       } else {
-        scope.choices = _.cloneDeep(model.choices);
+        scope.choices = clonedChoices;
       }
 
       applyChoices();
@@ -318,8 +325,8 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
           return (idx + 1) + "";
       }
 
-      // default to letters: a...z
-      return String.fromCharCode(65 + idx);
+      // default to letters: A...Z
+      return String.fromCharCode(('A').charCodeAt(0) + idx);
     }
 
     function isVertical() {
@@ -376,7 +383,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       var isCorrect = !_.isUndefined(o.correct) && o.correct;
       var res = isSelected ? "selected " : "";
 
-      if (isCorrect && scope.mode === 'instructor') {
+      if (isCorrect && scope.playerMode === 'instructor') {
         return "correct";
       }
       if (_.isUndefined(o.correct)) {
@@ -393,11 +400,11 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
 
     function radioState(o) {
       var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
-      if (isSelected && scope.mode === 'view') {
+      if (isSelected && scope.playerMode === 'view') {
         return "selectedDisabled";
       }
       var isCorrect = !_.isUndefined(o.correct) && o.correct === true;
-      if (isCorrect && scope.mode === 'instructor') {
+      if (isCorrect && scope.playerMode === 'instructor') {
         return "correctUnselected";
       }
       if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
@@ -415,7 +422,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       if (!_.isUndefined(o.correct) && o.correct === true) {
         return "correct";
       }
-      if (scope.response || scope.mode === 'view') {
+      if (scope.response || scope.playerMode === 'view') {
         return "muted";
       }
       return "ready";
@@ -455,7 +462,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
-      '      <div class="choice-feedback" ng-if="mode !== \'instructor\'"',
+      '      <div class="choice-feedback" ng-if="playerMode !== \'instructor\'"',
       '           feedback-icon',
       '           feedback-icon-choice="o"',
       '           feedback-icon-class="{{choiceClass(o)}}"',

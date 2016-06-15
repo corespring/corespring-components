@@ -140,6 +140,27 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
 
+    it('does shuffle, when playerMode is gather', function() {
+      containerBridge.setMode('gather');
+      scope.shuffle.calls.reset();
+      containerBridge.setDataAndSession(testModel);
+      expect(scope.shuffle).toHaveBeenCalled();
+    });
+
+    it('does not shuffle, when playerMode is view', function() {
+      containerBridge.setMode('view');
+      scope.shuffle.calls.reset();
+      containerBridge.setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does not shuffle, when playerMode is evaluate', function() {
+      containerBridge.setMode('evaluate');
+      scope.shuffle.calls.reset();
+      containerBridge.setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
     describe('stash', function(){
 
       it('does save order in session.stash', function() {
@@ -269,8 +290,8 @@ describe('corespring:multiple-choice-render', function() {
 
     it('setting instructor data marks correct answers as correct in the view in instructor mdoe', function() {
       containerBridge.setDataAndSession(testModel);
-      containerBridge.setInstructorData(instructorData);
       containerBridge.setMode('instructor');
+      containerBridge.setInstructorData(instructorData);
       rootScope.$digest();
       expect($(element).find("[key='correct']").length).toBe(3);
       expect($(element).find("[key='correct'].ng-hide").length).toBe(2);
@@ -361,6 +382,28 @@ describe('corespring:multiple-choice-render', function() {
       scope.showCorrectAnswerButton = true;
       containerBridge.reset();
       expect(scope.showCorrectAnswerButton).toBe(false);
+    });
+  });
+
+
+  describe('letter', function() {
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+    });
+    it('should return a letter by default', function() {
+      expect(scope.letter(1)).toBe('B');
+    });
+    it('should return a letter when choiceLabels is letters', function() {
+      scope.question.config.choiceLabels = 'letters';
+      expect(scope.letter(1)).toBe('B');
+    });
+    it('should return empty string when choiceLabels is none', function() {
+      scope.question.config.choiceLabels = 'none';
+      expect(scope.letter(1)).toBe('');
+    });
+    it('should return a number when choiceLabels is numbers', function() {
+      scope.question.config.choiceLabels = 'numbers';
+      expect(scope.letter(1)).toBe('2');
     });
   });
 });
