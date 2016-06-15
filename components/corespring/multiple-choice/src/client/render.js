@@ -1,29 +1,37 @@
 exports.framework = 'angular';
-exports.directive = ['$sce', '$log', multipleChoiceDirective];
+exports.directive = [
+  '$log',
+  '$sce',
+  '$timeout',
+  MultipleChoiceDirective];
 
 
-function multipleChoiceDirective($sce, $log) {
+function MultipleChoiceDirective(
+  $log,
+  $sce,
+  $timeout
+) {
 
   return {
-    scope: {},
-    restrict: 'EA',
-    replace: true,
     link: link,
+    replace: true,
+    restrict: 'EA',
+    scope: {},
     template: template()
   };
 
   function link(scope, element, attrs) {
 
-    scope.inputType = 'checkbox';
-    scope.editable = true;
     scope.bridge = {
       answerVisible: false
     };
+    scope.editable = true;
+    scope.inputType = 'checkbox';
+    scope.rationaleOpen = false;
     scope.showHide = {
       'false': 'show',
       'true': 'hide'
     };
-    scope.rationaleOpen = false;
 
     scope.choiceClass = choiceClass;
     scope.isHorizontal = isHorizontal;
@@ -39,6 +47,7 @@ function multipleChoiceDirective($sce, $log) {
       getSession: getSession,
       isAnswerEmpty: isAnswerEmpty,
       reset: reset,
+      resetStash: resetStash,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
       setMode: setMode,
@@ -65,20 +74,23 @@ function multipleChoiceDirective($sce, $log) {
       updateUi();
     }
 
-    function getConfigWithDefaults(input){
+    function getConfigWithDefaults(input) {
       var config = _.defaults(input || {}, {
         "orientation": "vertical",
         "shuffle": false,
         "choiceType": "radio",
         "choiceLabels": "letters",
-        "showCorrectAnswer": "separately"});
+        "showCorrectAnswer": "separately"
+      });
       config.shuffle = config.shuffle === true || config.shuffle === 'true';
       return config;
     }
 
     function getSession() {
+      var stash = (scope.session && scope.session.stash) ? scope.session.stash : {};
       return {
-        answers: getAnswers()
+        answers: getAnswers(),
+        stash: stash
       };
     }
 
@@ -131,11 +143,12 @@ function multipleChoiceDirective($sce, $log) {
       }, 10);
     }
 
-    function setMode(newMode) {
-      scope.mode = newMode;
-      if (newMode !== 'instructor') {
+    function setMode(value) {
+      scope.playerMode = value;
+      if (value !== 'instructor') {
         scope.rationales = undefined;
       }
+      updateUi();
     }
 
     /**
@@ -146,7 +159,12 @@ function multipleChoiceDirective($sce, $log) {
       resetChoices();
       resetFeedback(scope.choices);
       scope.response = undefined;
+      resetShuffledOrder();
       updateUi();
+    }
+
+    function resetStash() {
+      scope.session.stash = {};
     }
 
     function isAnswerEmpty() {
@@ -154,13 +172,11 @@ function multipleChoiceDirective($sce, $log) {
     }
 
     function answerChangedHandler(callback) {
-      scope.$watch("answer", callBackWhenAnswerHasChanged, true);
-
-      function callBackWhenAnswerHasChanged(newValue, oldValue) {
+      scope.$watch("answer", function(newValue, oldValue) {
         if (newValue !== oldValue) {
           callback();
         }
-      }
+      }, true);
     }
 
     function setEditable(e) {
@@ -181,18 +197,20 @@ function multipleChoiceDirective($sce, $log) {
     }
 
     function applyChoices() {
+
       if (!scope.question || !scope.session.answers) {
         return;
       }
 
       var answers = scope.session.answers;
+
       if (scope.inputType === "radio") {
-        if ( _.isArray(answers) && answers.length > 0) {
+        if (_.isArray(answers) && answers.length > 0) {
           scope.answer.choice = answers[0];
         }
       }
       if (scope.inputType === "checkbox") {
-        _.forEach(answers, function(key){
+        _.forEach(answers, function(key) {
           scope.answer.choices[key] = true;
         });
       }
@@ -215,7 +233,7 @@ function multipleChoiceDirective($sce, $log) {
     function shuffle(choices) {
       var allChoices = _.cloneDeep(choices);
       var shuffledChoices = _(allChoices).filter(choiceShouldBeShuffled).shuffle().value();
-      return _.map(allChoices, function(choice){
+      return _.map(allChoices, function(choice) {
         if (choiceShouldBeShuffled(choice)) {
           return shuffledChoices.pop();
         } else {
@@ -224,8 +242,36 @@ function multipleChoiceDirective($sce, $log) {
       });
     }
 
-    function choiceShouldBeShuffled(choice){
+    function choiceShouldBeShuffled(choice) {
       return _.isUndefined(choice.shuffle) || choice.shuffle === true;
+    }
+
+    function layoutChoices(choices, order) {
+      if (!order) {
+        return scope.shuffle(choices);
+      }
+      var ordered = _(order).map(function(v) {
+        return _.find(choices, function(c) {
+          return c.value === v;
+        });
+      }).filter(function(v) {
+        return v;
+      }).value();
+
+      var missing = _.difference(choices, ordered);
+      return _.union(ordered, missing);
+    }
+
+    function stashOrder(choices) {
+      return _.map(choices, function(c) {
+        return c.value;
+      });
+    }
+
+    function resetShuffledOrder() {
+      if (scope.session && scope.session.stash) {
+        delete scope.session.stash.shuffledOrder;
+      }
     }
 
     function updateUi() {
@@ -234,15 +280,29 @@ function multipleChoiceDirective($sce, $log) {
       }
 
       var model = scope.question;
+      var stash = scope.session.stash = scope.session.stash || {};
       var answers = scope.session.answers = scope.session.answers || {};
 
-      var shouldShuffle = model.config.shuffle && scope.mode !== 'instructor';
       scope.inputType = model.config.choiceType;
 
+      var shouldShuffle = model.config.shuffle && scope.playerMode !== 'instructor';
+      var clonedChoices = _.cloneDeep(model.choices);
+
       if (shouldShuffle) {
-        scope.choices = scope.shuffle(_.cloneDeep(model.choices));
+        if (stash.shuffledOrder) {
+          scope.choices = layoutChoices(clonedChoices, stash.shuffledOrder);
+        } else if (scope.playerMode === 'view' || scope.playerMode === 'evaluate') {
+          //CO-696 Some sessions don't have a shuffledOrder in the stash bc. the code
+          //had been erroneously removed for about 1.5 months. For these we are using
+          //the default order, because updating the db is too complicated
+          scope.choices = clonedChoices;
+        } else {
+          scope.choices = layoutChoices(clonedChoices);
+          stash.shuffledOrder = stashOrder(scope.choices);
+          scope.$emit('saveStash', attrs.id, stash);
+        }
       } else {
-        scope.choices = _.cloneDeep(model.choices);
+        scope.choices = clonedChoices;
       }
 
       applyChoices();
@@ -257,8 +317,8 @@ function multipleChoiceDirective($sce, $log) {
           return (idx + 1) + "";
       }
 
-      // default to letters: a...z
-      return String.fromCharCode(65 + idx);
+      // default to letters: A...Z
+      return String.fromCharCode(('A').charCodeAt(0) + idx);
     }
 
     function isVertical() {
@@ -288,18 +348,18 @@ function multipleChoiceDirective($sce, $log) {
     }
 
     function watchPanelOpen(n) {
-      slide(n, $(element).find('.panel-collapse'));
+      if (n) {
+        $(element).find('.panel-collapse').slideDown(400);
+      } else {
+        $(element).find('.panel-collapse').slideUp(400);
+      }
     }
 
     function watchAnswerVisible(n) {
-      slide(n, $(element).find('.answer-collapse'));
-    }
-
-    function slide(down, $elm){
-      if (down) {
-        $elm.slideDown(400);
+      if (n) {
+        $(element).find('.answer-collapse').slideDown(400);
       } else {
-        $elm.slideUp(400);
+        $(element).find('.answer-collapse').slideUp(400);
       }
     }
 
@@ -311,7 +371,7 @@ function multipleChoiceDirective($sce, $log) {
         return res + "default";
       }
 
-      if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.mode === 'instructor')) {
+      if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.playerMode === 'instructor')) {
         res = "selected ";
       }
 
@@ -377,7 +437,7 @@ function multipleChoiceDirective($sce, $log) {
       '      role="alert">{{feedback && feedback.message ? feedback.message : \'Error\'}}',
       '  </div>',
       '</div>'
-  ].join('');
+    ].join('');
 
     var verticalTemplate = [
       '<div class="choices-container"',
@@ -447,7 +507,7 @@ function multipleChoiceDirective($sce, $log) {
       '    </div>',
       '  </div>',
       '</div>'
-  ].join("");
+    ].join("");
 
     var horizontalTemplate = [
       '<div class="choices-container"',
@@ -493,7 +553,7 @@ function multipleChoiceDirective($sce, $log) {
       '    </div>',
       '  </div>',
       '</div>'
-  ].join('');
+    ].join('');
 
     var tileTemplate = [
       '<div class="choices-container"',
@@ -537,7 +597,7 @@ function multipleChoiceDirective($sce, $log) {
       '    </div>',
       '  </div>',
       '</div>'
-  ].join('');
+    ].join('');
 
     return [
       '<div class="view-multiple-choice"',
@@ -567,7 +627,7 @@ function multipleChoiceDirective($sce, $log) {
       '    </div>',
       '  </div>',
       '</div>'
-      ].join('');
+    ].join('');
   }
 
 }
