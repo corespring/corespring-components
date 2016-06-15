@@ -90,9 +90,9 @@ describe('corespring:multiple-choice-render', function() {
     expect(scope.choices.length).toBe(3);
   });
 
-  describe('shuffling', function(){
+  describe('shuffling', function() {
 
-    beforeEach(function(){
+    beforeEach(function() {
       expect(testModel.data.model.config.shuffle).toBe(true);
     });
 
@@ -132,7 +132,7 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
 
-    describe('stashing', function(){
+    describe('stashing', function() {
 
       it('stashes shuffledOrder', function() {
         var saveStashCallElementId;
@@ -327,22 +327,22 @@ describe('corespring:multiple-choice-render', function() {
 
   });
 
-  describe('letter', function(){
-    beforeEach(function(){
+  describe('letter', function() {
+    beforeEach(function() {
       container.elements['1'].setDataAndSession(testModel);
     });
-    it('should return a letter by default', function(){
+    it('should return a letter by default', function() {
       expect(scope.letter(1)).toBe('B');
     });
-    it('should return a letter when choiceLabels is letters', function(){
+    it('should return a letter when choiceLabels is letters', function() {
       scope.question.config.choiceLabels = 'letters';
       expect(scope.letter(1)).toBe('B');
     });
-    it('should return empty string when choiceLabels is none', function(){
+    it('should return empty string when choiceLabels is none', function() {
       scope.question.config.choiceLabels = 'none';
       expect(scope.letter(1)).toBe('');
     });
-    it('should return a number when choiceLabels is numbers', function(){
+    it('should return a number when choiceLabels is numbers', function() {
       scope.question.config.choiceLabels = 'numbers';
       expect(scope.letter(1)).toBe('2');
     });
