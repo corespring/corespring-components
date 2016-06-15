@@ -154,10 +154,24 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
 
+    it('does not shuffle, when playerMode is view', function() {
+      containerBridge.setDataAndSession(testModel);
+      scope.shuffle.calls.reset();
+      containerBridge.setMode('view');
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
     it('does not shuffle, when playerMode is evaluate', function() {
       containerBridge.setMode('evaluate');
       scope.shuffle.calls.reset();
       containerBridge.setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does not shuffle, when playerMode is evaluate', function() {
+      containerBridge.setDataAndSession(testModel);
+      scope.shuffle.calls.reset();
+      containerBridge.setMode('evaluate');
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
 

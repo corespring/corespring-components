@@ -98,6 +98,16 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
     }
 
     function setInstructorData(data) {
+      scope.instructorData = data;
+      updateUi();
+    }
+
+    function applyInstructorData(){
+      var data = scope.instructorData;
+      if(!data) {
+        return;
+      }
+
       _.each(scope.choices, function(c) {
         if (_.contains(_.flatten([data.correctResponse.value]), c.value)) {
           c.correct = true;
@@ -115,6 +125,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
         scope.rationales = rationales;
       }
     }
+
 
     // sets the server's response
     function setResponse(response) {
@@ -153,6 +164,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       scope.playerMode = value;
       if (value !== 'instructor') {
         scope.rationales = undefined;
+        scope.instructorData = undefined;
       }
       updateUi();
     }
@@ -314,6 +326,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       }
 
       applyChoices();
+      applyInstructorData();
     }
 
     function letter(idx) {
