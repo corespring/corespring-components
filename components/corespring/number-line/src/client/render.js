@@ -23,7 +23,8 @@ var main = [
       scope.colors = {
         correct: $(element).find('.correct-element').css('color'),
         incorrect: $(element).find('.incorrect-element').css('color'),
-        axis: 'rgb(0, 0, 0)'
+        axis: 'rgb(0, 0, 0)',
+        disabled: 'rgb(150, 150, 150)'
       };
 
       scope.noResponseOptions = {
@@ -96,6 +97,7 @@ var main = [
 
         reset: function() {
           scope.serverResponse = undefined;
+          scope.answerExpanded = false;
         },
 
         isAnswerEmpty: function() {
@@ -134,7 +136,7 @@ var main = [
         '      editable="editable"',
         '      colors="colors">',
         '  </div>',
-        '  <div class="solution" interactive-graph ng-if="answerExpanded"',
+        '  <div class="solution" interactive-graph ng-if="serverResponse && answerExpanded"',
         '      ngModel="correctModel"',
         '      serverResponse="correctModelDummyResponse"',
         '      responseModel="dummyResponse"',
@@ -448,6 +450,8 @@ var interactiveGraph = [
             var options = _.cloneDeep(o);
             if (!_.isUndefined(o.isCorrect)) {
               options.fillColor = options.strokeColor = o.isCorrect ? scope.colors.correct : scope.colors.incorrect;
+            } else if (scope.editable === false) {
+              options.fillColor = options.strokeColor = scope.colors.disabled;
             }
             options.onMoveFinished = function(element) {
               var lastMovedElement = _.find(scope.responsemodel, function(e) {
@@ -606,6 +610,7 @@ var interactiveGraph = [
             scope.graph.updateOptions({
               exhibitOnly: true
             });
+            rebuildGraph();
           }
         }, true);
 
