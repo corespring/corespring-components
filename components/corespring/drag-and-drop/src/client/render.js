@@ -66,7 +66,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         return {
           onStart: 'onStart',
           revert: 'invalid',
-          opacity: 0.35,
+          opacity: 0.75,
           placeholder: (!choice || choice.moveOnDrag) ? false : 'keep'
         };
       };
@@ -447,7 +447,8 @@ var landingPlace = [
 
           out: scope.outCallback,
           over: scope.overCallback,
-          revert: false
+          revert: false,
+          opacity: 0.75
         };
 
         scope.$watch("maxWidth + maxHeight", function(n) {
