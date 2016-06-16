@@ -121,7 +121,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           template: [
             '<div class="view-drag-and-drop-legacy see-solution" style="display: block;">',
             '   <div class="modal-header">',
-            '     <h3>Answer</h3>',
+            '     <h4 class="modal-title">Answer</h4>',
             '   </div>',
             '   <div class="modal-body">',
             scope.model.answerArea,
@@ -453,7 +453,7 @@ var landingPlace = [
 
         scope.$watch("maxWidth + maxHeight", function(n) {
           var isMultiple = scope.cardinality !== 'single';
-          var mw = scope.maxWidth + 25;
+          var mw = scope.maxWidth + 14;
           var maxWidth = isMultiple ? (mw * scope.columnsPerRow) : mw;
           if (scope.expandHorizontal) {
             scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";
