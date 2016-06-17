@@ -3,19 +3,16 @@
 @choice-color-opaque: rgb(187, 187, 187);
 @choice-color: rgba(187, 187, 187, 0.5);
 @correct-answer-bg-color-opaque: rgb(204, 255, 204);
-@correct-answer-bg-color: rgba(204, 255, 204, 0.6);
+@correct-answer-bg-color: @correct-background;
 @correct-answer-border-color: rgb(46, 102, 44);
 @incorrect-answer-bg-color-opaque: rgb(255, 255, 204);
-@incorrect-answer-bg-color: rgba(255, 255, 204, 0.6);
-@incorrect-answer-border-color: rgb(238, 162, 54);
+@incorrect-answer-bg-color: @incorrect-background;
+@incorrect-answer-border-color: @incorrect-background;
 
 @hover-background-color: #bde2fe;
 @selected-background-color: #91acb8;
 
 .corespring-select-text {
-
-  @correct-foreground: #f8ffe4;
-  @correct-background: #46b04f;
 
   .component-placeholder {
     .holder {
@@ -82,8 +79,8 @@
           background-color: @correct-background;
         }
         &.incorrect {
-          color: #464146;
-          background-color: #fdbe55;
+          color: @incorrect-foreground;
+          background-color: @incorrect-background;
         }
       }
     }
