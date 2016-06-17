@@ -679,6 +679,7 @@ function renderCorespringDndCategorize(
         seeSolutionToggle(),
         interaction(),
         itemFeedbackPanel(),
+        seeSolutionContent(),
         '</div>'
       ].join('\n');
   }
@@ -705,9 +706,14 @@ function renderCorespringDndCategorize(
 
   function seeSolutionToggle() {
     return [
-      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
-      categoriesTemplate('true', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded'),
-      '<hr ng-show="feedback.isSeeAnswerPanelExpanded"></hr>'
+      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>'
+    ].join('');
+  }
+
+  function seeSolutionContent() {
+    return [
+      '<hr ng-show="feedback.isSeeAnswerPanelExpanded"></hr>',
+      categoriesTemplate('true', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded')
     ].join('');
   }
 
@@ -812,12 +818,6 @@ function renderCorespringDndCategorize(
       .replace('#flip#', flip)
       .replace('#rowsModel#', rowsModel)
       .replace('#visible#', visible);
-  }
-
-  function seeSolutionContent() {
-    return [
-      categoriesTemplate('true', 'correctAnswerRows')
-    ].join('');
   }
 
 }
