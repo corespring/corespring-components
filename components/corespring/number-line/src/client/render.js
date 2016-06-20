@@ -98,7 +98,6 @@ var main = [
         },
 
         setMode: function(newMode) {
-          console.log('sm', newMode)
           if (newMode === 'gather' || newMode === 'view') {
             _.each(scope.response, function(o, level) {
                o.isCorrect = undefined;
@@ -123,7 +122,6 @@ var main = [
         },
 
         editable: function(e) {
-          console.log('ed', e)
           scope.editable = e;
         }
       };
