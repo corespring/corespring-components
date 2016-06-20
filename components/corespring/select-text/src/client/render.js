@@ -178,7 +178,9 @@ exports.directive = [
         }
       }
 
-      function setMode(newMode) {}
+      function setMode(newMode) {
+        scope.mode = newMode;
+      }
 
       function reset() {
         scope.feedback = undefined;
@@ -242,7 +244,7 @@ exports.directive = [
         '          toggle="answersVisible"></correct-answer-toggle>',
         '    </div>',
         '  </div>',
-        '  <div class="select-text-content" ',
+        '  <div class="select-text-content {{mode}}" ',
         '     ng-class="{editable: editable, blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': editable && model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
         '     ng-bind-html-unsafe="model.passage"',
         '  ></div>',
