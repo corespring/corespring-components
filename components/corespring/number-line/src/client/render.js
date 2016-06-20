@@ -43,6 +43,7 @@ var main = [
           scope.correctModel = dataAndSession.data.model;
           scope.editable = !scope.model.config.exhibitOnly;
           scope.configuredInitialElements = _.cloneDeep(scope.model.config.initialElements) || [];
+          scope.options = {exhibitOnly: scope.model.config.exhibitOnly};
 
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.response = dataAndSession.session.answers;
@@ -142,6 +143,7 @@ var main = [
         '  <div interactive-graph ng-show="!answerExpanded"',
         '      ngModel="model"',
         '      ng-hide="serverResponse && serverResponse.correctness == \'warning\'"',
+        '      options="options"',
         '      responseModel="response"',
         '      serverResponse="serverResponse"',
         '      changeHandler="changeHandler()"',
@@ -464,7 +466,7 @@ var interactiveGraph = [
             var options = _.cloneDeep(o);
             if (!_.isUndefined(o.isCorrect)) {
               options.fillColor = options.strokeColor = o.isCorrect ? scope.colors.correct : scope.colors.incorrect;
-            } else if (scope.editable === false) {
+            } else if (scope.editable === false && scope.options.exhibitOnly === false) {
               options.fillColor = options.strokeColor = scope.colors.disabled;
             }
             options.onMoveFinished = function(element) {
