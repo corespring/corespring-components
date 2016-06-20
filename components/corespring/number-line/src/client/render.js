@@ -68,35 +68,47 @@ var main = [
 
         setResponse: function(response) {
           $log.debug('number line response ', response);
-          scope.serverResponse = response;
+          if (!_.isEmpty(response)) {
+            scope.serverResponse = response;
 
-          scope.correctModel = _.cloneDeep(scope.model);
-          scope.correctModel.config.exhibitOnly = true;
-          scope.correctModel.config.margin = {
-            top: 30,
-            right: 10,
-            bottom: 30,
-            left: 20
-          };
+            scope.correctModel = _.cloneDeep(scope.model);
+            scope.correctModel.config.exhibitOnly = true;
+            scope.correctModel.config.margin = {
+              top: 30,
+              right: 10,
+              bottom: 30,
+              left: 20
+            };
 
-          var i = 0;
-          scope.correctModelDummyResponse = {
-            feedback: {
-              elements: _.map(response.correctResponse, function(cr) {
-                i++;
-                return _.extend(cr, {
-                  rangePosition: i,
-                  isCorrect: true
-                });
-              })
-            }
-          };
+            var i = 0;
+            scope.correctModelDummyResponse = {
+              feedback: {
+                elements: _.map(response.correctResponse, function(cr) {
+                  i++;
+                  return _.extend(cr, {
+                    rangePosition: i,
+                    isCorrect: true
+                  });
+                })
+              }
+            };
+          } else {
+            scope.serverResponse = scope.correctModel = scope.correctModelDummyResponse = undefined;
+          }
         },
 
-        setMode: function(newMode) {},
+        setMode: function(newMode) {
+          if (newMode === 'gather' || newMode === 'view') {
+            _.each(scope.response, function(o, level) {
+               o.isCorrect = undefined;
+            });
+            scope.rebuildHook();
+          }
+        },
 
         reset: function() {
-          scope.serverResponse = undefined;
+          scope.responsemodel = [];
+          scope.serverResponse = 'reset';
           scope.answerExpanded = false;
         },
 
@@ -133,6 +145,7 @@ var main = [
         '      responseModel="response"',
         '      serverResponse="serverResponse"',
         '      changeHandler="changeHandler()"',
+        '      rebuildHook="rebuildHook"',
         '      editable="editable"',
         '      colors="colors">',
         '  </div>',
@@ -228,7 +241,8 @@ var interactiveGraph = [
         editable: "=",
         options: "=",
         changehandler: "&changehandler",
-        ticklabelclick: "="
+        ticklabelclick: "=",
+        rebuildhook: "=?"
       },
       controller: function($scope) {
         //set default config to avoid npe
@@ -556,6 +570,8 @@ var interactiveGraph = [
           return scope.config.availableTypes[type] === true;
         };
 
+        scope.rebuildhook = rebuildGraph;
+
         scope.resetGraph = function(model) {
           scope.answerExpanded = false;
           scope.graph.updateOptions(_.merge(_.cloneDeep(model.config), scope.options));
@@ -610,8 +626,8 @@ var interactiveGraph = [
             scope.graph.updateOptions({
               exhibitOnly: true
             });
-            rebuildGraph();
           }
+          rebuildGraph();
         }, true);
 
         scope.$watch('responsemodel', function(n, prev) {
@@ -621,14 +637,19 @@ var interactiveGraph = [
         }, true);
 
         scope.$watch('serverresponse', function(n, prev) {
-          if (!_.isEmpty(n) && !_.isEmpty(n.feedback)) {
+          if (n === 'reset') {
+            scope.resetGraph(scope.model);
+          } else if (!_.isEmpty(n) && !_.isEmpty(n.feedback)) {
             scope.responsemodel = _.cloneDeep(n.feedback.elements) || [];
             rebuildGraph();
             scope.graph.updateOptions({
               exhibitOnly: true
             });
           } else if (prev) {
+            var rm = _.cloneDeep(scope.responsemodel);
             scope.resetGraph(scope.model);
+            scope.responsemodel = rm;
+            rebuildGraph();
           }
         }, true);
 
