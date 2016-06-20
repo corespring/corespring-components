@@ -54,7 +54,13 @@ var main = [
         reset: reset,
         resetStash: function() {},
         setDataAndSession: setDataAndSession,
-        setMode: function(newMode) {},
+        setMode: function(newMode) {
+          if (newMode === 'gather') {
+            _.each(scope.matchModel.rows, function(row) {
+               row.answerExpected = undefined;
+            });
+          }
+        },
         setResponse: setResponse
       };
 
