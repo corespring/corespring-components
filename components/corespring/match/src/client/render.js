@@ -55,7 +55,7 @@ var main = [
         resetStash: function() {},
         setDataAndSession: setDataAndSession,
         setMode: function(newMode) {
-          if (newMode === 'gather') {
+          if (newMode === 'gather' || newMode === 'view') {
             _.each(scope.matchModel.rows, function(row) {
                row.answerExpected = undefined;
             });
