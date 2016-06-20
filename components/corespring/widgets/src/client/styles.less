@@ -183,6 +183,7 @@
   color: @hide-show-foreground;
   cursor: pointer;
   opacity: 0;
+  pointer-events: none;
 
   .cs-icon {
     width: 32px;
@@ -191,6 +192,7 @@
 
   &.showCorrectVisible {
     opacity: 1;
+    pointer-events: auto;
   }
 
   a:hover {
