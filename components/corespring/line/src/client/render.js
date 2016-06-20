@@ -9,6 +9,13 @@ var main = [
 
     var lineUtils = new LineUtils();
 
+    var colors = {
+      correct: "#3c763d",
+      incorrect: "#eea236",
+      warning: "#999999",
+      none: ''
+    };
+
     return {
       template: template(),
       restrict: 'AE',
@@ -215,7 +222,7 @@ var main = [
                 curve: function(x) {
                   return eval(response.correctResponse.expression) || 0;
                 },
-                color: "#3C763D"
+                color: colors.correct
               },
               lockGraph: true
             });
@@ -247,6 +254,19 @@ var main = [
       scope.containerBridge = {
         setPlayerSkin: function(skin) {
           scope.iconset = skin.iconSet;
+        },
+
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+          function setColor(source, target) {
+            if (skin.colors && skin.colors[source]) {
+              colors[target] = skin.colors[source];
+            }
+          }
+
+          setColor('correct-background', 'correct');
+          setColor('incorrect-background', 'incorrect');
+          setColor('warning-background', 'warning');
         },
 
         setDataAndSession: function(dataAndSession) {
@@ -324,12 +344,7 @@ var main = [
             return;
           }
 
-          var color = {
-            correct: "#3c763d",
-            incorrect: "#eea236",
-            warning: "#999999",
-            none: ""
-          }[(response && response.correctness) || "none"];
+          var color = colors[(response && response.correctness) || "none"];
 
           scope.feedback = response && response.feedback;
           scope.response = response;
@@ -407,9 +422,9 @@ var main = [
         "  <div class='graph-interaction'>",
         "    <div class='undo-start-over-controls container-fluid'>",
         "      <div class='row' ng-hide='config.exhibitOnly'>",
-        "        <div class='col-md-12' ng-hide='response'>",
-        "          <span cs-start-over-button class='btn-player pull-right' ng-class='{disabled: history.length < 1}' ng-disabled='history.length < 1'></span>",
-        "          <span cs-undo-button class='pull-right' ng-class='{disabled: history.length < 1}' ng-disabled='history.length < 1'></span>",
+        "        <div class='col-md-12 text-center' ng-hide='response'>",
+        "          <span cs-start-over-button class='btn-player' ng-class='{disabled: history.length < 1}' ng-disabled='history.length < 1'></span>",
+        "          <span cs-undo-button ng-class='{disabled: history.length < 1}' ng-disabled='history.length < 1'></span>",
         "          <div class='clearfix'> </div>",
         "          <div class='clearfix'> </div>",
         "        </div>",
@@ -459,7 +474,8 @@ var main = [
         "  <div class='feedback-holder' ng-show='config.showFeedback'>",
         "    <div ng-show='feedback' feedback='feedback' icon-set='{{iconset}}' correct-class='{{correctClass}}'></div>",
         "  </div>",
-        "  <div see-answer-panel see-answer-panel-expanded='true' class='solution-panel' ng-class='{panelVisible: correctResponse}'>",
+        '  <correct-answer-toggle visible="correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+        "  <div class='solution-panel' ng-class='{panelVisible: isSeeAnswerPanelExpanded}'>",
         "    <div class='solution-container'>",
         "      <div>{{correctResponse.equation}}</div>",
         "      <div class='solution-graph'></div>",
