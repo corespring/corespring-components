@@ -111,9 +111,37 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).toHaveBeenCalledTimes(3);
     });
 
-    it('does not shuffle if shuffle is false', function() {
+    it('does not shuffle when shuffle is false', function() {
       spyOn(scope, 'shuffle');
       testModel.data.model.config.shuffle = false;
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does shuffle when mode is gather', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('gather');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).toHaveBeenCalled();
+    });
+
+    it('does not shuffle when mode is view', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('view');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does not shuffle when mode is evaluate', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does not shuffle when mode is instructor', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('instructor');
       container.elements['1'].setDataAndSession(testModel);
       expect(scope.shuffle).not.toHaveBeenCalled();
     });
@@ -134,7 +162,7 @@ describe('corespring:multiple-choice-render', function() {
         expect(saveStashCallData.shuffledOrder).toContain('3');
       });
 
-      it('does not shuffle when session contains stashOrder', function() {
+      it('does not shuffle when session contains shuffledOrder', function() {
         spyOn(scope, 'shuffle');
         testModel.session = {
           stash: {
@@ -145,14 +173,37 @@ describe('corespring:multiple-choice-render', function() {
         expect(scope.shuffle).not.toHaveBeenCalled();
       });
 
-      it('does apply stashOrder to choices', function() {
-        testModel.session = {
-          stash: {
-            shuffledOrder: ["3", "1", "2"]
-          }
-        };
-        container.elements['1'].setDataAndSession(testModel);
-        expect(_.map(scope.choices, _.property('value'))).toEqual(["3", "1", "2"]);
+      it('does apply shuffledOrder in modes gather, view and evaluate', function() {
+
+        function assertShuffledOrder(mode) {
+          testModel.session = {
+            stash: {
+              shuffledOrder: ["3", "1", "2"]
+            }
+          };
+          container.elements['1'].setMode(mode);
+          container.elements['1'].setDataAndSession(testModel);
+          expect(_.map(scope.choices, _.property('value'))).toEqual(["3", "1", "2"]);
+        }
+
+        assertShuffledOrder('gather');
+        assertShuffledOrder('view');
+        assertShuffledOrder('evaluate');
+      });
+
+      it('does not apply shuffledOrder in mode instructor ', function() {
+
+        function assertDefaultOrder(mode) {
+          testModel.session = {
+            stash: {
+              shuffledOrder: ["3", "1", "2"]
+            }
+          };
+          container.elements['1'].setMode(mode);
+          container.elements['1'].setDataAndSession(testModel);
+          expect(_.map(scope.choices, _.property('value'))).toEqual(["1", "2", "3"]);
+        }
+        assertDefaultOrder('instructor');
       });
     });
   });

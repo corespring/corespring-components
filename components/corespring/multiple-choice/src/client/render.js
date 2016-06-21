@@ -259,10 +259,7 @@ function MultipleChoiceDirective(
       return _.isUndefined(choice.shuffle) || choice.shuffle === true;
     }
 
-    function layoutChoices(choices, order) {
-      if (!order) {
-        return scope.shuffle(choices);
-      }
+    function restoreChoiceOrder(choices, order) {
       var ordered = _(order).map(function(v) {
         return _.find(choices, function(c) {
           return c.value === v;
@@ -273,6 +270,10 @@ function MultipleChoiceDirective(
 
       var missing = _.difference(choices, ordered);
       return _.union(ordered, missing);
+    }
+
+    function shuffleChoiceOrder(choices) {
+      return scope.shuffle(choices);
     }
 
     function stashOrder(choices) {
@@ -287,6 +288,10 @@ function MultipleChoiceDirective(
       }
     }
 
+    function isGatherMode(){
+      return scope.playerMode === 'gather' || !scope.playerMode;
+    }
+
     function updateUi() {
       if (!scope.question || !scope.session) {
         return;
@@ -296,22 +301,27 @@ function MultipleChoiceDirective(
       var stash = scope.session.stash = scope.session.stash || {};
       var answers = scope.session.answers = scope.session.answers || {};
 
-      scope.inputType = model.config.choiceType;
-
-      var shouldShuffle = model.config.shuffle && scope.playerMode !== 'instructor';
       var clonedChoices = _.cloneDeep(model.choices);
+      var resultingChoices = clonedChoices;
 
-      if (shouldShuffle) {
-        if (stash.shuffledOrder) {
-          scope.choices = layoutChoices(clonedChoices, stash.shuffledOrder);
-        } else {
-          scope.choices = layoutChoices(clonedChoices);
-          stash.shuffledOrder = stashOrder(scope.choices);
-          scope.$emit('saveStash', attrs.id, stash);
+      if(isGatherMode()){
+        if( model.config.shuffle){
+          if (stash.shuffledOrder) {
+            resultingChoices = restoreChoiceOrder(clonedChoices, stash.shuffledOrder);
+          } else {
+            resultingChoices = shuffleChoiceOrder(clonedChoices);
+            stash.shuffledOrder = stashOrder(resultingChoices);
+            scope.$emit('saveStash', attrs.id, stash);
+          }
         }
-      } else {
-        scope.choices = clonedChoices;
+      } else if(scope.playerMode === 'evaluate' || scope.playerMode === 'view'){
+        if( model.config.shuffle && stash.shuffledOrder) {
+          resultingChoices = restoreChoiceOrder(clonedChoices, stash.shuffledOrder);
+        }
       }
+
+      scope.inputType = model.config.choiceType;
+      scope.choices = resultingChoices;
 
       applyChoices();
       applyInstructorData();
