@@ -20,13 +20,6 @@ var main = [
         }
       };
 
-      scope.colors = {
-        correct: $(element).find('.correct-element').css('color'),
-        incorrect: $(element).find('.incorrect-element').css('color'),
-        axis: 'rgb(0, 0, 0)',
-        disabled: 'rgb(150, 150, 150)'
-      };
-
       scope.noResponseOptions = {
         explicitHeight: 10
       };
@@ -34,6 +27,12 @@ var main = [
       scope.containerBridge = {
         setPlayerSkin: function(skin) {
           scope.iconset = skin.iconSet;
+          scope.colors = {
+            correct: skin.colors['correct-background'],
+            incorrect: skin.colors['incorrect-background'],
+            axis: 'rgb(0, 0, 0)',
+            disabled: 'rgb(150, 150, 150)'
+          };
         },
 
         setDataAndSession: function(dataAndSession) {
@@ -165,10 +164,6 @@ var main = [
         '  </div>',
 
         '  <div feedback="serverResponse.feedback.message" icon-set="{{iconset}}" correct-class="{{serverResponse.correctClass}}"></div>',
-        '  <div style="display: none">',
-        '    <span class="correct-element"></span>',
-        '    <span class="incorrect-element"></span>',
-        '  </div>',
         '</div>'
       ].join("\n")
     };
