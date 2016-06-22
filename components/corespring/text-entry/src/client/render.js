@@ -131,17 +131,10 @@ var main = [
         return scope.instructorResponse || scope.response;
       };
 
-      element.on('show.bs.popover', function(e) {
-        scope.triggerIcon(e, true);
+      scope.$watch('popoverState', function(v) {
+        scope.popupVisible = v === 'open';
       });
 
-      element.on('hide.bs.popover', function(e) {
-        scope.triggerIcon(e, false);
-      });
-
-      scope.triggerIcon = function(e, popoverToggled) {
-        scope.popupVisible = popoverToggled;
-      };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     }
@@ -161,7 +154,7 @@ var main = [
         '         style="text-align: {{question.answerAlignment}}"/>',
         '    </div>',
         '  </div>',
-        '  <span class="feedback-icon" feedback-popover="response" ng-show="!isInstructorResponse() && feedback">',
+        '  <span class="feedback-icon" feedback-popover="response" feedback-popover-state="popoverState" ng-show="!isInstructorResponse() && feedback">',
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
         '        key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '  </span>',
