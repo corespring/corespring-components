@@ -125,18 +125,18 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).toHaveBeenCalled();
     });
 
-    it('does not shuffle when mode is view', function() {
+    it('does shuffle when mode is view', function() {
       spyOn(scope, 'shuffle');
       container.elements['1'].setMode('view');
       container.elements['1'].setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
+      expect(scope.shuffle).toHaveBeenCalled();
     });
 
-    it('does not shuffle when mode is evaluate', function() {
+    it('does shuffle when mode is evaluate', function() {
       spyOn(scope, 'shuffle');
       container.elements['1'].setMode('evaluate');
       container.elements['1'].setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
+      expect(scope.shuffle).toHaveBeenCalled();
     });
 
     it('does not shuffle when mode is instructor', function() {

@@ -272,7 +272,7 @@ function MultipleChoiceDirective(
       return _.union(ordered, missing);
     }
 
-    function shuffleChoiceOrder(choices) {
+    function shuffleChoices(choices) {
       return scope.shuffle(choices);
     }
 
@@ -304,19 +304,15 @@ function MultipleChoiceDirective(
       var clonedChoices = _.cloneDeep(model.choices);
       var resultingChoices = clonedChoices;
 
-      if(isGatherMode()){
-        if( model.config.shuffle){
+      if(scope.playerMode !== 'instructor') {
+        if (model.config.shuffle) {
           if (stash.shuffledOrder) {
             resultingChoices = restoreChoiceOrder(clonedChoices, stash.shuffledOrder);
           } else {
-            resultingChoices = shuffleChoiceOrder(clonedChoices);
+            resultingChoices = shuffleChoices(clonedChoices);
             stash.shuffledOrder = stashOrder(resultingChoices);
             scope.$emit('saveStash', attrs.id, stash);
           }
-        }
-      } else if(scope.playerMode === 'evaluate' || scope.playerMode === 'view'){
-        if( model.config.shuffle && stash.shuffledOrder) {
-          resultingChoices = restoreChoiceOrder(clonedChoices, stash.shuffledOrder);
         }
       }
 
