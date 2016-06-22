@@ -68,15 +68,17 @@ var main = [
         },
 
         setInstructorData: function(data) {
-          this.setResponse({correctness: 'instructor', correctResponse: data.correctResponse});
+            this.setResponse({correctness: 'instructor', correctResponse: data.correctResponse});
         },
 
         setResponse: function(response) {
           $log.debug('[graphic gap match] setResponse: ', response);
           scope.response = response;
+          scope.showCorrectAnswerButton = true;
         },
 
         setMode: function(newMode) {
+          scope.mode = newMode;
         },
 
         reset: function() {
@@ -84,6 +86,8 @@ var main = [
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.response = undefined;
           scope.undoModel.init();
+          scope.showCorrectAnswerButton = false;
+          scope.bridge.answerVisible = false;
         },
 
         isAnswerEmpty: function() {
@@ -129,6 +133,9 @@ var main = [
       };
 
       scope.correctAnswerForHotspot = function(hotspot) {
+        if (!scope.response) {
+          return;
+        }
         return _(scope.response.correctResponse).filter(function(c) {
           return c.hotspot === hotspot.id;
         }).map(function(c) {
@@ -386,13 +393,15 @@ var main = [
       restrict: 'EA',
       link: link,
       template: [
-        '<div class="view-graphic-gap-match">',
-        '  <div class="button-row" ng-hide="response && response.correctness === \'instructor\'"">',
+        '<div class="view-graphic-gap-match {{mode}} editable-{{editable}}">',
+        '  <correct-answer-toggle visible="showCorrectAnswerButton && response.correctness !== \'instructor\' " toggle="bridge.answerVisible"></correct-answer-toggle>',
+        '  <div class="clearfix"></div>',
+        '  <div class="undo-startover button-row" ng-hide="response || response.correctness === \'instructor\'"">',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
-        '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="response && response.correctness === \'instructor\'">',
+        '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="(response && response.correctness === \'instructor\')">',
         choices(['left', 'top']),
         '    <div class="answers">',
         '      <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
@@ -418,13 +427,11 @@ var main = [
         choices(['bottom', 'right']),
         '  </div>',
         '  <div feedback="response.feedback.message" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
-        '  <div see-answer-panel ng-if="response && response.correctness === \'incorrect\'">',
-        correctAnswer,
-        '  </div>',
+        '  <div ng-if="bridge.answerVisible">' + correctAnswer + '</div>',
         '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
-        choices(['left', 'top'], 'incorrect'),
-        correctAnswer,
-        choices(['bottom', 'right'], 'incorrect'),
+            choices(['left', 'top'], 'incorrect'),
+            correctAnswer,
+            choices(['bottom', 'right'], 'incorrect'),
         '  </div>',
         '</div>'
       ].join("\n")
