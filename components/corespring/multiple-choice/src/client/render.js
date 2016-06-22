@@ -39,7 +39,6 @@ function MultipleChoiceDirective(
     scope.isVertical = isVertical;
     scope.letter = letter;
     scope.onClickChoice = onClickChoice;
-    scope.shuffle = shuffle;
 
     scope.containerBridge = {
       answerChangedHandler: answerChangedHandler,
@@ -64,6 +63,7 @@ function MultipleChoiceDirective(
     //------------------------------------------------
 
     function setDataAndSession(dataAndSession) {
+      console.log("setDataAndSession", dataAndSession);
       scope.question = dataAndSession.data.model || {};
       scope.question.config = getConfigWithDefaults(scope.question.config);
       scope.session = dataAndSession.session || {};
@@ -243,23 +243,7 @@ function MultipleChoiceDirective(
       scope.answer.choice = "";
     }
 
-    function shuffle(choices) {
-      var allChoices = _.cloneDeep(choices);
-      var shuffledChoices = _(allChoices).filter(choiceShouldBeShuffled).shuffle().value();
-      return _.map(allChoices, function(choice) {
-        if (choiceShouldBeShuffled(choice)) {
-          return shuffledChoices.pop();
-        } else {
-          return choice;
-        }
-      });
-    }
-
-    function choiceShouldBeShuffled(choice) {
-      return _.isUndefined(choice.shuffle) || choice.shuffle === true;
-    }
-
-    function restoreChoiceOrder(choices, order) {
+    function applyOrder(choices, order) {
       var ordered = _(order).map(function(v) {
         return _.find(choices, function(c) {
           return c.value === v;
@@ -272,24 +256,11 @@ function MultipleChoiceDirective(
       return _.union(ordered, missing);
     }
 
-    function shuffleChoiceOrder(choices) {
-      return scope.shuffle(choices);
-    }
-
-    function stashOrder(choices) {
-      return _.map(choices, function(c) {
-        return c.value;
-      });
-    }
-
+    //TODO create new shuffling instead of deleting -> call to server? 
     function resetShuffledOrder() {
       if (scope.session && scope.session.stash) {
         delete scope.session.stash.shuffledOrder;
       }
-    }
-
-    function isGatherMode(){
-      return scope.playerMode === 'gather' || !scope.playerMode;
     }
 
     function updateUi() {
@@ -304,19 +275,12 @@ function MultipleChoiceDirective(
       var clonedChoices = _.cloneDeep(model.choices);
       var resultingChoices = clonedChoices;
 
-      if(isGatherMode()){
-        if( model.config.shuffle){
-          if (stash.shuffledOrder) {
-            resultingChoices = restoreChoiceOrder(clonedChoices, stash.shuffledOrder);
-          } else {
-            resultingChoices = shuffleChoiceOrder(clonedChoices);
-            stash.shuffledOrder = stashOrder(resultingChoices);
-            scope.$emit('saveStash', attrs.id, stash);
+      if( model.config.shuffle){
+        //the shuffledOrder is created by the server
+        if (stash.shuffledOrder) {
+          if(scope.playerMode !== 'instructor') {
+            resultingChoices = applyOrder(clonedChoices, stash.shuffledOrder);
           }
-        }
-      } else if(scope.playerMode === 'evaluate' || scope.playerMode === 'view'){
-        if( model.config.shuffle && stash.shuffledOrder) {
-          resultingChoices = restoreChoiceOrder(clonedChoices, stash.shuffledOrder);
         }
       }
 
@@ -328,12 +292,12 @@ function MultipleChoiceDirective(
     }
 
     function letter(idx) {
-      var type = scope.question ? scope.question.config.choiceLabels : "letters";
+      var type = scope.question ? scope.question.config.choiceLabels : 'letters';
       switch (type) {
-        case "none":
-          return "";
-        case "numbers":
-          return (idx + 1) + "";
+        case 'none':
+          return '';
+        case 'numbers':
+          return (idx + 1) + '';
       }
 
       // default to letters: A...Z
