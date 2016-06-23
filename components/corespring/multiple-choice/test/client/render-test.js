@@ -125,18 +125,18 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.shuffle).toHaveBeenCalled();
     });
 
-    it('does not shuffle when mode is view', function() {
+    it('does shuffle when mode is view', function() {
       spyOn(scope, 'shuffle');
       container.elements['1'].setMode('view');
       container.elements['1'].setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
+      expect(scope.shuffle).toHaveBeenCalled();
     });
 
-    it('does not shuffle when mode is evaluate', function() {
+    it('does shuffle when mode is evaluate', function() {
       spyOn(scope, 'shuffle');
       container.elements['1'].setMode('evaluate');
       container.elements['1'].setDataAndSession(testModel);
-      expect(scope.shuffle).not.toHaveBeenCalled();
+      expect(scope.shuffle).toHaveBeenCalled();
     });
 
     it('does not shuffle when mode is instructor', function() {
@@ -251,31 +251,46 @@ describe('corespring:multiple-choice-render', function() {
     expect($(element).find('.selected div.checkbox-choice').length).toBe(2);
   });
 
-  it('setting response shows correctness and feedback', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    var response = {
-      "correctness": "correct",
-      "score": 1,
-      "feedback": [
-        {
-          "value": "1",
-          "feedback": "yup",
-          "correct": true
-        },
-        {
-          "value": "2",
-          "correct": true
-        },
-        {
-          "value": "3",
-          "correct": false
-        }
-      ]
-    };
-    container.elements['1'].setResponse(response);
-    rootScope.$digest();
-    expect($(element).find(".choice-holder.correct").length).toBe(2);
-    expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+  describe('setting response shows correctness and feedback', function() {
+    var response;
+
+    beforeEach(function(){
+      response = {
+        "correctness": "correct",
+        "score": 1,
+        "feedback": [
+          {
+            "value": "1",
+            "feedback": "yup",
+            "correct": true
+          },
+          {
+            "value": "2",
+            "correct": true
+          },
+          {
+            "value": "3",
+            "correct": false
+          }
+        ]
+      };
+    });
+
+    it('when model is set first', function(){
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setResponse(response);
+      rootScope.$digest();
+      expect($(element).find(".choice-holder.correct").length).toBe(2);
+      expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+    });
+
+    it('when response is set first', function(){
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect($(element).find(".choice-holder.correct").length).toBe(2);
+      expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+    });
   });
 
   describe('instructor mode', function() {

@@ -99,9 +99,9 @@ function MultipleChoiceDirective(
       updateUi();
     }
 
-    function applyInstructorData(){
+    function applyInstructorData() {
       var data = scope.instructorData;
-      if(!data){
+      if (!data) {
         return;
       }
 
@@ -110,6 +110,7 @@ function MultipleChoiceDirective(
           c.correct = true;
         }
       });
+
       if (!_.isEmpty(data.rationales)) {
         var rationales = _.map(scope.choices, function(c) {
           return {
@@ -125,42 +126,48 @@ function MultipleChoiceDirective(
 
     // sets the server's response
     function setResponse(response) {
-      $(element).find(".feedback-panel").hide();
-
-      resetFeedback(scope.choices);
-
       scope.response = response;
 
-      if (response.feedback) {
-        if (response.feedback.emptyAnswer) {
-          scope.feedback = response.feedback;
-        } else {
-          _.each(response.feedback, function(fb) {
-            var choice = _.find(scope.choices, function(c) {
-              return c.value === fb.value;
+      applyResponse();
+    }
+
+    function applyResponse() {
+      if (scope.response) {
+
+        $(element).find(".feedback-panel").hide();
+        resetFeedback(scope.choices);
+
+        if (scope.response.feedback) {
+          if (scope.response.feedback.emptyAnswer) {
+            scope.feedback = scope.response.feedback;
+          } else {
+            _.each(scope.response.feedback, function(fb) {
+              var choice = _.find(scope.choices, function(c) {
+                return c.value === fb.value;
+              });
+
+              if (choice) {
+                choice.feedback = fb.feedback;
+                choice.correct = fb.correct;
+              }
             });
-
-            if (choice !== null) {
-              choice.feedback = fb.feedback;
-              choice.correct = fb.correct;
-            }
-          });
+          }
         }
-      }
 
-      setTimeout(function() {
-        $(element).find(".feedback-panel.visible").slideDown(400);
-      }, 10);
+        $timeout(function() {
+          $(element).find(".feedback-panel.visible").slideDown(400);
+        }, 10);
+      }
     }
 
     function setMode(value) {
       scope.playerMode = value;
-      
+
       if (value !== 'instructor') {
         scope.instructorData = undefined;
         scope.rationales = undefined;
       }
-      
+
       updateUi();
     }
 
@@ -210,7 +217,6 @@ function MultipleChoiceDirective(
     }
 
     function applyChoices() {
-
       if (!scope.question || !scope.session.answers) {
         return;
       }
@@ -289,6 +295,7 @@ function MultipleChoiceDirective(
 
       applyChoices();
       applyInstructorData();
+      applyResponse();
     }
 
     function letter(idx) {
