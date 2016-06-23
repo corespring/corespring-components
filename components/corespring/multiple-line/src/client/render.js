@@ -9,6 +9,14 @@ var main = [
 
     var lineUtils = new LineUtils();
 
+    var colors = {
+      correct: "#3c763d",
+      partial: "#3a87ad",
+      incorrect: "#eea236",
+      warning: "#999999",
+      none: ""
+    };
+
     return {
       template: template(),
       restrict: 'AE',
@@ -379,7 +387,7 @@ var main = [
                     return eval(line.expression) || 0;
                   },
                   label: line.label,
-                  color: "#3C763D"
+                  color: colors.correct
                 },
                 lockGraph: true
               });
@@ -409,7 +417,7 @@ var main = [
               curve: function(x) {
                 return eval(cr);
               },
-              color: "#3c763d",
+              color: colors.correct,
               label: line.label
             }
           });
@@ -417,8 +425,19 @@ var main = [
       }
 
       scope.containerBridge = {
+
         setPlayerSkin: function(skin) {
           scope.iconset = skin.iconSet;
+          console.log('skin', skin);
+          function setColor(source, target) {
+            if (skin.colors && skin.colors[source]) {
+              colors[target] = skin.colors[source];
+            }
+          }
+
+          setColor('correct-background', 'correct');
+          setColor('incorrect-background', 'incorrect');
+          setColor('warning-background', 'warning');
         },
 
         setDataAndSession: function(dataAndSession) {
@@ -501,21 +520,13 @@ var main = [
             return;
           }
 
-          var color = {
-            correct: "#3c763d",
-            partial: "#3a87ad",
-            incorrect: "#eea236",
-            warning: "#999999",
-            none: ""
-          };
-
           scope.feedback = response && response.feedback;
           scope.response = response;
           scope.correctClass = response.correctness;
 
           if (response && response.correctness !== 'warning') {
             scope.inputStyle = _.extend(scope.inputStyle, {
-              border: 'thin solid ' + color[(response && response.correctness) || "none"]
+              border: 'thin solid ' + colors[(response && response.correctness) || "none"]
             });
 
             if (response.correctness === "partial" || response.correctness === "incorrect") {
@@ -534,7 +545,7 @@ var main = [
             scope.graphCallback({
               shapeColor: {
                 shape: line.id,
-                color: isCorrect ? color.correct : color.incorrect
+                color: isCorrect ? colors.correct : colors.incorrect
               }
             });
           });
