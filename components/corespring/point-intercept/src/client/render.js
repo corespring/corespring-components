@@ -5,7 +5,7 @@ var main = [
   'CanvasTemplates',
   function($compile, $modal, $rootScope, CanvasTemplates) {
 
-    var correctnessColors = {
+    var colors = {
       correct: "#3c763d",
       incorrect: "#EC971F",
       warning: "#999",
@@ -50,7 +50,7 @@ var main = [
           }
         }
       });
-        
+
       function round(coord) {
         var px = coord.x;
         var py = coord.y;
@@ -212,7 +212,7 @@ var main = [
             solutionGraphCallback({
               points: points,
               lockGraph: true,
-              pointsStyle: "#3C763D"
+              pointsStyle: colors.correct
             });
           }
         });
@@ -222,7 +222,7 @@ var main = [
 
       function pointsColors(response) {
         if (response.correctness === 'correct') {
-          return correctnessColors.correct;
+          return colors.correct;
         } else {
           return _(response.studentResponse)
             .map(function (point, index) {
@@ -233,14 +233,25 @@ var main = [
               }
             })
             .map(function (correctness) {
-              return correctnessColors[correctness];
+              return colors[correctness];
             }).value();
         }
       }
 
       scope.containerBridge = {
+
         setPlayerSkin: function(skin) {
           scope.iconset = skin.iconSet;
+          console.log('skin', skin);
+          function setColor(source, target) {
+            if (skin.colors && skin.colors[source]) {
+              colors[target] = skin.colors[source];
+            }
+          }
+
+          setColor('correct-background', 'correct');
+          setColor('incorrect-background', 'incorrect');
+          setColor('warning-background', 'warning');
         },
 
         setDataAndSession: function(dataAndSession) {
@@ -309,7 +320,7 @@ var main = [
           scope.response = response;
           scope.correctClass = response.correctness;
 
-          var borderColor = correctnessColors[(response && response.correctness) || "none"];
+          var borderColor = colors[(response && response.correctness) || "none"];
 
           scope.graphCallback({
             graphStyle: {
@@ -382,7 +393,7 @@ var main = [
         "         <p ng-bind-html-unsafe='additionalText'></p>",
         "     </div>",
         "     <div class='graph-controls' ng-show='showInputs' ng-hide='response'>",
-        "        <div class='scale-display'>",
+        "        <div class='scale-display text-center'>",
         "           <span cs-undo-button-with-model></span>",
         "           <span cs-start-over-button-with-model></span>",
         "        </div>",
@@ -393,7 +404,8 @@ var main = [
         '  <div class="feedback-holder" ng-show="model.config.showFeedback">',
         '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
         '  </div>',
-        '  <div see-answer-panel see-answer-panel-expanded="trueValue" class="solution-panel" ng-class="{panelVisible: correctResponse}">',
+        '  <correct-answer-toggle visible="correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+        "  <div class='solution-panel' ng-class='{panelVisible: isSeeAnswerPanelExpanded}'>",
         "    <div class='solution-container'></div>",
         "  </div>",
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
