@@ -31,6 +31,7 @@ var iconToggle = [
 
         $scope.$watch('ngModel', function() {
           $scope.currentLabel = $scope.ngModel ? ($scope.openLabel || $scope.label) : ($scope.closedLabel || $scope.label);
+          console.log('$scope.currentLabel', $scope.currentLabel);
         });
 
         $scope.toggleCorrect = function() {
