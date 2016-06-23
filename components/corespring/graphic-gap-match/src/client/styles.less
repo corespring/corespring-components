@@ -4,18 +4,17 @@
   border: 2px solid @hotspot-border-color;
 }
 
-
 .view-graphic-gap-match {
 
   .main-container {
     margin-bottom: 5px;
 
     &.top .answers {
-        padding-top: 5px;
+      padding-top: 5px;
     }
 
     &.bottom .answers {
-        padding-bottom: 5px;
+      padding-bottom: 5px;
     }
 
     &.left, &.right {
@@ -156,9 +155,18 @@
     }
   }
 
-  &.editable-false:not(.evaluate) .choice {
+  .correct-answer-holder {
+    .choice {
+      position: relative;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+  }
+
+  &.editable-false:not(.evaluate):not(.instructor) .choice {
     border: 1px solid #f1f1f4;
   }
+
   &.editable-false {
     .choice {
       box-shadow: none;

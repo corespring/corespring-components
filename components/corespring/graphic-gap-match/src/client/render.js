@@ -68,7 +68,7 @@ var main = [
         },
 
         setInstructorData: function(data) {
-            this.setResponse({correctness: 'instructor', correctResponse: data.correctResponse});
+          this.setResponse({correctness: 'instructor', correctResponse: data.correctResponse});
         },
 
         setResponse: function(response) {
@@ -170,7 +170,8 @@ var main = [
       };
 
       scope.draggableJquiOptions = {
-        revert: 'invalid'
+        revert: 'invalid',
+        opacity: 0.75
       };
 
       scope.droppableJquiOptions = {
@@ -339,20 +340,20 @@ var main = [
           '  </div>',
           '</div>'
         ] : [
-          '<div class="choice-wrapper" ng-repeat="choice in choices">',
-          '  <div class="choice"',
-          '       data-drag="editable"',
-          '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
-          '       data-jqyoui-options="draggableJquiOptions"',
-          '       ng-bind-html-unsafe="choice.label">',
-          '  </div>',
-          '</div>',
-          '<div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
-          '  <div class="choice placeholder"',
-          '       ng-bind-html-unsafe="choice.label">',
-          '  </div>',
-          '</div>'
-        ]).join('');
+        '<div class="choice-wrapper" ng-repeat="choice in choices">',
+        '  <div class="choice"',
+        '       data-drag="editable"',
+        '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
+        '       data-jqyoui-options="draggableJquiOptions"',
+        '       ng-bind-html-unsafe="choice.label">',
+        '  </div>',
+        '</div>',
+        '<div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
+        '  <div class="choice placeholder"',
+        '       ng-bind-html-unsafe="choice.label">',
+        '  </div>',
+        '</div>'
+      ]).join('');
 
       return [
         '<div ng-if="model.config.choiceAreaPosition == \'' + positons[0] + '\' || model.config.choiceAreaPosition == \'' + positons[1] + '\'"',
@@ -427,11 +428,11 @@ var main = [
         choices(['bottom', 'right']),
         '  </div>',
         '  <div feedback="response.feedback.message" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
-        '  <div ng-if="bridge.answerVisible">' + correctAnswer + '</div>',
+        '  <div ng-if="bridge.answerVisible" class="correct-answer-holder">' + correctAnswer + '</div>',
         '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
-            choices(['left', 'top'], 'incorrect'),
-            correctAnswer,
-            choices(['bottom', 'right'], 'incorrect'),
+        choices(['left', 'top'], 'incorrect'),
+        correctAnswer,
+        choices(['bottom', 'right'], 'incorrect'),
         '  </div>',
         '</div>'
       ].join("\n")
