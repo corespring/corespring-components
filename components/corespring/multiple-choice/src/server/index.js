@@ -54,7 +54,7 @@ function prepareStash(data, session) {
   }
 
   function choiceShouldBeShuffled(choice) {
-    return choice.shuffle === true || _.isUndefined(choice.shuffle)
+    return choice.shuffle === true || _.isUndefined(choice.shuffle);
   }
 
   function getChoiceIds(choices) {
