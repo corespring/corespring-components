@@ -252,9 +252,6 @@ var main = [
       }
 
       scope.containerBridge = {
-        setPlayerSkin: function(skin) {
-          scope.iconset = skin.iconSet;
-        },
 
         setPlayerSkin: function(skin) {
           scope.iconset = skin.iconSet;
