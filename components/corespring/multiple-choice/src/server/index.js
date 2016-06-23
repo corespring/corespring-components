@@ -7,8 +7,62 @@ exports.isCorrect = isCorrect;
 exports.isPartiallyCorrect = isPartiallyCorrect;
 exports.keys = keys;
 exports.preprocess = preprocess;
+exports.prepareStash = prepareStash;
 
 //-------------------------------------------------------------
+
+/**
+ * Called by the backend just before the session is rendered.
+ * The changes made here are temporary
+ */
+function preprocess(json) {
+  if (_.isUndefined(json.model.config.choiceType)) {
+    json.model.config.choiceType = (json.correctResponse.value.length === 1) ? "radio" : "checkbox";
+  }
+  return json;
+}
+
+/**
+ * Called by the backend when the session is created
+ * The object returned is saved to session.stash
+ * When null is returned, nothing is saved
+ */
+function prepareStash(data, session) {
+  if (!data.model.config.shuffle) {
+    return null;
+  }
+  if (session.stash && session.stash.shuffledOrder && session.stash.shuffledOrder.length === data.model.choices.length) {
+    return null;
+  }
+  var choiceIds = getChoiceIds(shuffle(data.model.choices));
+  return {
+    shuffledOrder: choiceIds
+  };
+
+  //--------------------------------------
+
+  function shuffle(choices) {
+    var allChoices = _.cloneDeep(choices);
+    var shuffledChoices = _(allChoices).filter(choiceShouldBeShuffled).shuffle().value();
+    return _.map(allChoices, function(choice) {
+      if (choiceShouldBeShuffled(choice)) {
+        return shuffledChoices.pop();
+      } else {
+        return choice;
+      }
+    });
+  }
+
+  function choiceShouldBeShuffled(choice) {
+    return choice.shuffle === true || _.isUndefined(choice.shuffle);
+  }
+
+  function getChoiceIds(choices) {
+    return _.map(choices, function(c) {
+      return c.value;
+    });
+  }
+}
 
 /*
  Create a response to the answer based on the question, the answer and the respond settings
@@ -153,13 +207,6 @@ function correctResponseFeedback(fbArray, q, userGotItRight, answer) {
     fb.correct = true;
     fbArray.push(fb);
   }
-}
-
-function preprocess(json) {
-  if (_.isUndefined(json.model.config.choiceType)) {
-    json.model.config.choiceType = (json.correctResponse.value.length === 1) ? "radio" : "checkbox";
-  }
-  return json;
 }
 
 function isPartiallyCorrect(answers, correctAnswers) {
