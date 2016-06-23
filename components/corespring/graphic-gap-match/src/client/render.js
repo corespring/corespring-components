@@ -74,7 +74,7 @@ var main = [
         setResponse: function(response) {
           $log.debug('[graphic gap match] setResponse: ', response);
           scope.response = response;
-          scope.showCorrectAnswerButton = true;
+          scope.showCorrectAnswerButton = response.correctness !== 'correct';
         },
 
         setMode: function(newMode) {
