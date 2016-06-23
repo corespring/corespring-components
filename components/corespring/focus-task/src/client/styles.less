@@ -28,7 +28,6 @@
         border: 2px solid #BFBFBF;
         color: #fff;
         float: left;
-        font-family: "Ubuntu", Arial, Helvetica, sans-serif;
         font-size: 14px;
         height: auto;
         line-height: 15px;
@@ -94,7 +93,7 @@
         }
 
         &.shouldHaveBeenSelected {
-          background-color: #80b312;
+          background-color: @correct-background;
           border: 6px solid #FFF;
           color: #FFF;
           padding: 0px;
@@ -102,7 +101,7 @@
         }
 
         &.shouldNotHaveBeenSelected {
-          background-color: #F8A31A;
+          background-color: @incorrect-background;
           border: 6px solid #FFF;
           color: #FFF;
           text-shadow: 1px 1px 0px #000;
