@@ -19,7 +19,7 @@ var def = function() {
     },
     template: [
       '<div class="button-row btn-group-md {{class}}">',
-      '  <div class="show-instructions" ng-class="{showCorrectVisible: visible}">',
+      '  <div class="show-instructions" ng-class="{showCorrectVisible: visible, hideInstructions: toggle}">',
       '    <div icon-toggle icon-name="instructions" class="icon-toggle-correct" ng-model="toggle" closed-label="{{showMessageCalculated}}" open-label="{{hideMessageCalculated}}"></div>',
       '  </div>',
       '</div>'
