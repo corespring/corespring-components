@@ -253,7 +253,7 @@ var main = [
 
       scope.updateMode = function() {
         if (scope.mode === 'view') {
-          scope.lockGraph(scope.lineColor);
+          scope.lockGraph('#bebebe');
         }
       };
 
