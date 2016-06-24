@@ -251,6 +251,12 @@ var main = [
         scope.containerBridge.setResponse({correctness: 'correct'});
       }
 
+      scope.updateMode = function() {
+        if (scope.mode === 'view') {
+          scope.lockGraph(scope.lineColor);
+        }
+      };
+
       scope.containerBridge = {
 
         setPlayerSkin: function(skin) {
@@ -321,6 +327,7 @@ var main = [
               } else {
                 scope.unlockGraph();
               }
+              scope.updateMode();
             }
           }, 100);
         },
@@ -364,7 +371,10 @@ var main = [
           scope.lockGraph(color);
         },
 
-        setMode: function(newMode) {},
+        setMode: function(mode) {
+          scope.mode = mode;
+          scope.updateMode();
+        },
 
         reset: function() {
           scope.feedback = undefined;
