@@ -1,7 +1,7 @@
 var def = function() {
   var defaults = {
-    showMessage: 'Show Correct Answer',
-    hideMessage: 'Show My Answer'
+    showMessage: 'Show correct answer',
+    hideMessage: 'Show my answer'
   };
 
   return {
