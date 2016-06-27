@@ -1,4 +1,4 @@
-fdescribe('corespring:text-entry:render', function() {
+describe('corespring:text-entry:render', function() {
 
   var testModel, scope, element, container, rootScope;
 
