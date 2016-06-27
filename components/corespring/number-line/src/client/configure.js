@@ -274,7 +274,7 @@ var main = [
         '    <checkbox ng-model="fullModel.model.config.showMinorTicks">Display minor tick marks</checkbox>',
         '  </div>',
         '</div>',
-        '<div class="row">',
+        '<div class="row" ng-show="fullModel.model.config.showMinorTicks">',
         '  <div class="col-xs-12">',
         '    Minor tick frequency: <input type="number" class="form-control" ng-model="fullModel.model.config.snapPerTick"/>',
         '  </div>',

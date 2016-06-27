@@ -90,26 +90,122 @@ describe('corespring:multiple-choice-render', function() {
     expect(scope.choices.length).toBe(3);
   });
 
-  it('shuffles when shuffle is true', function() {
-    spyOn(scope, 'shuffle');
-    container.elements['1'].setDataAndSession(testModel);
-    expect(scope.shuffle).toHaveBeenCalled();
-  });
+  describe('shuffling', function() {
 
-  it('shuffles every time when reset is called', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    spyOn(scope, 'shuffle');
-    container.elements['1'].reset();
-    container.elements['1'].reset();
-    container.elements['1'].reset();
-    expect(scope.shuffle).toHaveBeenCalledTimes(3);
-  });
+    beforeEach(function() {
+      expect(testModel.data.model.config.shuffle).toBe(true);
+    });
 
-  it('does not shuffle when shuffle is false', function() {
-    spyOn(scope, 'shuffle');
-    testModel.data.model.config.shuffle = false;
-    container.elements['1'].setDataAndSession(testModel);
-    expect(scope.shuffle).not.toHaveBeenCalled();
+    it('shuffles when shuffle is true', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).toHaveBeenCalled();
+    });
+
+    it('shuffles every time when reset is called', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(scope, 'shuffle');
+      container.elements['1'].reset();
+      container.elements['1'].reset();
+      container.elements['1'].reset();
+      expect(scope.shuffle).toHaveBeenCalledTimes(3);
+    });
+
+    it('does not shuffle when shuffle is false', function() {
+      spyOn(scope, 'shuffle');
+      testModel.data.model.config.shuffle = false;
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    it('does shuffle when mode is gather', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('gather');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).toHaveBeenCalled();
+    });
+
+    it('does shuffle when mode is view', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('view');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).toHaveBeenCalled();
+    });
+
+    it('does shuffle when mode is evaluate', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).toHaveBeenCalled();
+    });
+
+    it('does not shuffle when mode is instructor', function() {
+      spyOn(scope, 'shuffle');
+      container.elements['1'].setMode('instructor');
+      container.elements['1'].setDataAndSession(testModel);
+      expect(scope.shuffle).not.toHaveBeenCalled();
+    });
+
+    describe('stashing', function() {
+
+      it('stashes shuffledOrder', function() {
+        var saveStashCallElementId;
+        var saveStashCallData;
+        scope.$on('saveStash', function(evt, id, data) {
+          saveStashCallElementId = id;
+          saveStashCallData = data;
+        });
+        container.elements['1'].setDataAndSession(testModel);
+        expect(saveStashCallElementId).toEqual('1');
+        expect(saveStashCallData.shuffledOrder).toContain('1');
+        expect(saveStashCallData.shuffledOrder).toContain('2');
+        expect(saveStashCallData.shuffledOrder).toContain('3');
+      });
+
+      it('does not shuffle when session contains shuffledOrder', function() {
+        spyOn(scope, 'shuffle');
+        testModel.session = {
+          stash: {
+            shuffledOrder: ["1", "2", "3"]
+          }
+        };
+        container.elements['1'].setDataAndSession(testModel);
+        expect(scope.shuffle).not.toHaveBeenCalled();
+      });
+
+      it('does apply shuffledOrder in modes gather, view and evaluate', function() {
+
+        function assertShuffledOrder(mode) {
+          testModel.session = {
+            stash: {
+              shuffledOrder: ["3", "1", "2"]
+            }
+          };
+          container.elements['1'].setMode(mode);
+          container.elements['1'].setDataAndSession(testModel);
+          expect(_.map(scope.choices, _.property('value'))).toEqual(["3", "1", "2"]);
+        }
+
+        assertShuffledOrder('gather');
+        assertShuffledOrder('view');
+        assertShuffledOrder('evaluate');
+      });
+
+      it('does not apply shuffledOrder in mode instructor ', function() {
+
+        function assertDefaultOrder(mode) {
+          testModel.session = {
+            stash: {
+              shuffledOrder: ["3", "1", "2"]
+            }
+          };
+          container.elements['1'].setMode(mode);
+          container.elements['1'].setDataAndSession(testModel);
+          expect(_.map(scope.choices, _.property('value'))).toEqual(["1", "2", "3"]);
+        }
+        assertDefaultOrder('instructor');
+      });
+    });
   });
 
   it('button is radio if choiceType is radio, checkbox if it is checkbox', function() {
@@ -126,7 +222,6 @@ describe('corespring:multiple-choice-render', function() {
     container.elements['1'].setDataAndSession(testModel);
     scope.answer.choices['1'] = true;
     var answer = container.elements['1'].getSession();
-
     expect(answer.answers).toEqual(['1']);
   });
 
@@ -156,31 +251,46 @@ describe('corespring:multiple-choice-render', function() {
     expect($(element).find('.selected div.checkbox-choice').length).toBe(2);
   });
 
-  it('setting response shows correctness and feedback', function() {
-    container.elements['1'].setDataAndSession(testModel);
-    var response = {
-      "correctness": "correct",
-      "score": 1,
-      "feedback": [
-        {
-          "value": "1",
-          "feedback": "yup",
-          "correct": true
-        },
-        {
-          "value": "2",
-          "correct": true
-        },
-        {
-          "value": "3",
-          "correct": false
-        }
-      ]
-    };
-    container.elements['1'].setResponse(response);
-    rootScope.$digest();
-    expect($(element).find(".choice-holder.correct").length).toBe(2);
-    expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+  describe('setting response shows correctness and feedback', function() {
+    var response;
+
+    beforeEach(function(){
+      response = {
+        "correctness": "correct",
+        "score": 1,
+        "feedback": [
+          {
+            "value": "1",
+            "feedback": "yup",
+            "correct": true
+          },
+          {
+            "value": "2",
+            "correct": true
+          },
+          {
+            "value": "3",
+            "correct": false
+          }
+        ]
+      };
+    });
+
+    it('when model is set first', function(){
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setResponse(response);
+      rootScope.$digest();
+      expect($(element).find(".choice-holder.correct").length).toBe(2);
+      expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+    });
+
+    it('when response is set first', function(){
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      expect($(element).find(".choice-holder.correct").length).toBe(2);
+      expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+    });
   });
 
   describe('instructor mode', function() {
@@ -211,7 +321,15 @@ describe('corespring:multiple-choice-render', function() {
       });
     });
 
-    it('setting instructor data marks correct answers as correct in the view in instructor mdoe', function() {
+    it('setting instructor data marks correct answers as correct in the view in instructor mode', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      container.elements['1'].setMode('instructor');
+      container.elements['1'].setInstructorData(instructorData);
+      rootScope.$digest();
+      expect($(element).find(".correct .choice-holder").length).toBe(2);
+    });
+
+    it('setting instructor data marks correct answers as correct in the view in instructor mode', function() {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);
       container.elements['1'].setMode('instructor');
@@ -267,5 +385,26 @@ describe('corespring:multiple-choice-render', function() {
       expect(changeHandlerCalled).toBe(true);
     });
 
+  });
+
+  describe('letter', function() {
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+    });
+    it('should return a letter by default', function() {
+      expect(scope.letter(1)).toBe('B');
+    });
+    it('should return a letter when choiceLabels is letters', function() {
+      scope.question.config.choiceLabels = 'letters';
+      expect(scope.letter(1)).toBe('B');
+    });
+    it('should return empty string when choiceLabels is none', function() {
+      scope.question.config.choiceLabels = 'none';
+      expect(scope.letter(1)).toBe('');
+    });
+    it('should return a number when choiceLabels is numbers', function() {
+      scope.question.config.choiceLabels = 'numbers';
+      expect(scope.letter(1)).toBe('2');
+    });
   });
 });
