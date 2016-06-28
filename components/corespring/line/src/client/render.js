@@ -209,8 +209,8 @@ var main = [
 
         solutionContainer.attr(solutionGraphAttrs);
         solutionContainer.css({
-          width: Math.min(scope.containerWidth, 500),
-          height: Math.min(scope.containerHeight, 500)
+          width: scope.containerWidth,
+          height: scope.containerHeight
         });
         solutionScope.interactionCallback = function() {};
 
@@ -283,23 +283,29 @@ var main = [
 
           var containerWidth, containerHeight;
           var graphContainer = element.find('.graph-container');
-          if (config.graphWidth && config.graphHeight) {
-            containerWidth = parseInt(config.graphWidth, 10);
-            containerHeight = parseInt(config.graphHeight, 10);
-          } else {
-            containerHeight = containerWidth = graphContainer.width();
-          }
+
+          containerWidth = parseInt(config.graphWidth, 10) || 500;
+          containerHeight = parseInt(config.graphHeight, 10) || 500;
+
+          console.log('cw', containerWidth, config.graphWidth);
+
 
           scope.graphAttrs = scope.createGraphAttributes(config, 2);
           scope.showInputs = config.showInputs;
+          scope.containerWidth = containerWidth || 500;
+          scope.containerHeight = containerHeight || 500;
 
           graphContainer.attr(scope.graphAttrs);
-          graphContainer.css({
-            width: containerWidth,
-            height: containerHeight
+          element.find('.graph-container, .solution-graph').css({
+            width: scope.containerWidth,
+            height: scope.containerHeight
           });
-          scope.containerWidth = containerWidth;
-          scope.containerHeight = containerHeight;
+          graphContainer.parents('.graph-group').css({
+            width: scope.containerWidth,
+            height: scope.containerHeight
+          });
+
+          console.log('cicia', scope.containerWidth, scope.containerHeight);
           $compile(graphContainer)(scope);
 
           // The model changed in 67d8ab7 so we have to accomodate for both
@@ -382,6 +388,7 @@ var main = [
           scope.instructorData = undefined;
           scope.correctClass = undefined;
           scope.unlockGraph();
+          scope.isSeeAnswerPanelExpanded = false;
 
           scope.inputStyle = {
             width: "55px"
@@ -426,6 +433,8 @@ var main = [
     function template() {
       return [
         "<div class='line-interaction-view'>",
+        '  <correct-answer-toggle visible="correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+
         "  <div class='graph-interaction'>",
         "    <div class='undo-start-over-controls container-fluid'>",
         "      <div class='row' ng-hide='config.exhibitOnly'>",
@@ -474,17 +483,18 @@ var main = [
         "        </div>",
         "      </div>",
         "    </div>",
-        "    <div id='graph-container' class='row-fluid graph-container'></div>",
-        "  </div>",
-        "  <div class='feedback-holder' ng-show='config.showFeedback'>",
-        "    <div ng-show='feedback' feedback='feedback' icon-set='{{iconset}}' correct-class='{{correctClass}}'></div>",
-        "  </div>",
-        '  <correct-answer-toggle visible="correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
-        "  <div class='solution-panel' ng-class='{panelVisible: isSeeAnswerPanelExpanded}'>",
-        "    <div class='solution-container'>",
-        "      <div>{{correctResponse.equation}}</div>",
-        "      <div class='solution-graph'></div>",
+        "    <div class='graph-group'>",
+        "      <div class='graph-group-element' ng-class='{graphShown: !isSeeAnswerPanelExpanded}'>",
+        "        <div id='graph-container' class='graph-container'></div>",
+        "      </div>",
+        "      <div class='graph-group-element' ng-class='{graphShown: isSeeAnswerPanelExpanded}'>",
+        "        <div class='solution-graph'></div>",
+        "      </div>",
         "    </div>",
+        "    <div class='correct-legend' ng-if='isSeeAnswerPanelExpanded'>{{correctResponse.equation}}</div>",
+        "  </div>",
+        "  <div class='feedback-holder' ng-show='config.showFeedback' >",
+        "  <div ng-show='feedback' feedback='feedback' icon-set='{{iconset}}' correct-class='{{correctClass}}'></div>",
         "  </div>",
         "</div>"
       ].join("");
