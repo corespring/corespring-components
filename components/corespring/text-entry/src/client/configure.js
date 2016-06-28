@@ -59,7 +59,7 @@ function configureTextEntry(
     }, {
       size: 7 + 1,
       demoLabel: 'ABCDEFG',
-      defaultLabel: '(Default)'
+      defaultLabel: ''
     }, {
       size: 10 + 1,
       demoLabel: 'ABCDEFGHIJ',
@@ -252,9 +252,9 @@ function configureTextEntry(
       '        <p>When a response is composed:</p>',
       '        <div><checkbox ng-model="editorModel.model.allowIntegersOnly">Restrict the responses to integers only</checkbox></div>',
       '        <div class="restrictions" ng-show="editorModel.model.allowIntegersOnly">',
-      '          <checkbox ng-model="editorModel.model.allowDecimal">Allow Decimals</checkbox>',
-      '          <checkbox ng-model="editorModel.model.allowSeparator">Allow Thousands Separators</checkbox>',
-      '          <checkbox ng-model="editorModel.model.allowNegative">Allow Negative Numbers</checkbox>',
+      '          <checkbox class="allow-checkbox" ng-model="editorModel.model.allowDecimal">Allow Decimals</checkbox>',
+      '          <checkbox class="allow-checkbox" ng-model="editorModel.model.allowSeparator">Allow Thousands Separators</checkbox>',
+      '          <checkbox class="allow-checkbox" ng-model="editorModel.model.allowNegative">Allow Negative Numbers</checkbox>',
       '        </div>',
       '      </div>',
       '    </div>',
