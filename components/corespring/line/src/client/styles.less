@@ -96,6 +96,13 @@
 
   .graph-controls {
     position: relative;
+    margin-bottom: 30px;
+    opacity: 1;
+    transition: opacity linear 0.5s;
+
+    &.graphControlsHidden {
+      opacity: 0;
+    }
 
     .points-input {
       padding: 3px 0px;

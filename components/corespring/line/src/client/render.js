@@ -445,7 +445,7 @@ var main = [
         "      </div>",
         "    </div><br/>",
         "    <div ng-if='instructorData'>{{instructorData.correctResponse}}</div>",
-        "    <div class='graph-controls container-fluid' ng-show='showInputs'>",
+        "    <div class='graph-controls container-fluid' ng-show='showInputs' ng-class='{graphControlsHidden: isSeeAnswerPanelExpanded}'>",
         "      <div class='row points-input'>",
         "        <div class='col-sm-12'>",
         "          <div class='point-input pull-left'>",
