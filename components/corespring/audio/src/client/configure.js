@@ -45,7 +45,16 @@ function ConfigAudioPlayerDirective(EditingAudioService, WIGGI_EVENTS) {
     }
 
     function setModel(fullModel) {
-      scope.fullModel = fullModel;
+      scope.fullModel = addDefaults(fullModel);
+    }
+
+    function addDefaults(fullModel) {
+      return _.defaults( fullModel, {
+        showControls: "playPause",
+        playButtonLabel: "Listen",
+        pauseButtonLabel: "Stop",
+        formats: {}
+      });
     }
 
     function removeSrc(src) {
@@ -112,22 +121,29 @@ function ConfigAudioPlayerDirective(EditingAudioService, WIGGI_EVENTS) {
           omitFooter: true
         }
       );
-    };
-
+    }
   }
 
   function template() {
     return [
-      '<div class="config-corespring-audio">',
+      '<div class="corespring-audio-config">',
       '  <p>Upload/remove your audio files below</p>',
       '  <ul>',
       '    <li ng-repeat="src in fullModel.formats"><a ng-click="removeSrc(src)">(remove)</a> &nbsp; {{src}}</li>',
       '    <a ng-click="showUploadDialog()">Upload audio file</a>',
       '  </ul>',
       '  <p>Toggle controls</p>',
-      '  <radio ng-model="fullModel.showControls" value="playPause" class="control-label">Show play/pause button</radio>',
       '  <radio ng-model="fullModel.showControls" value="fullControls" class="control-label">Show full controls</radio>',
-      '</div>',
+      '  <radio ng-model="fullModel.showControls" value="playPause" class="control-label">Show play/pause button</radio>',
+      '  <div class="play-pause-labels-form" ng-show="fullModel.showControls == \'playPause\'">',
+      '    <label>Play Button Label:',
+      '      <input type="text" class="form-control" ng-model="fullModel.playButtonLabel"/>',
+      '    </label>',
+      '    <label>Pause Button Label',
+      '      <input type="text" class="form-control" ng-model="fullModel.pauseButtonLabel"/>',
+      '    </label>',
+      '  </div>',
+      '</div>'
     ].join('');
   }
 
