@@ -287,8 +287,6 @@ var main = [
           containerWidth = parseInt(config.graphWidth, 10) || 500;
           containerHeight = parseInt(config.graphHeight, 10) || 500;
 
-          console.log('cw', containerWidth, config.graphWidth);
-
 
           scope.graphAttrs = scope.createGraphAttributes(config, 2);
           scope.showInputs = config.showInputs;
@@ -305,7 +303,6 @@ var main = [
             height: scope.containerHeight
           });
 
-          console.log('cicia', scope.containerWidth, scope.containerHeight);
           $compile(graphContainer)(scope);
 
           // The model changed in 67d8ab7 so we have to accomodate for both
