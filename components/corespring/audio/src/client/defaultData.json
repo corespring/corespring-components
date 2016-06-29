@@ -1,0 +1,8 @@
+{
+  "componentType": "corespring-audio",
+  "title": "Audio Player",
+  "showControls": "playPause",
+  "formats": {
+  },
+  "minimumWidth": 100
+}

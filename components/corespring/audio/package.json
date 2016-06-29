@@ -1,0 +1,19 @@
+{
+  "name": "audio-player",
+  "title": "Audio Player",
+  "organization": "corespring",
+  "purpose" : "widget",
+  "released" : false,
+  "libraries": [
+  ],
+  "dependencies" : {
+    "client": {
+      "corespring-radio": {
+        "bower_target": "git@github.com:corespring/radio.git",
+        "version": "0.0.6",
+        "file": "src/directive.js",
+        "angular-module": "corespring.input.radio"
+      }
+    }
+  }
+}
