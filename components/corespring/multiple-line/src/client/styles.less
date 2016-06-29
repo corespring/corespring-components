@@ -28,46 +28,27 @@
     opacity: 0.6;
   }
 
-  .feedback-holder {
+  .graph-group {
+    position: relative;
+    margin: 0 auto;
 
-    .fa-warning {
-      font-size: 22px;
-      line-height: 31px;
-      color: @warning-color;
-    }
+    .graph-group-element {
+      position: absolute;
+      opacity: 0;
+      transition: opacity linear 0.5s;
+      pointer-events: none;
 
-    .feedback {
-      &.warning {
-        .panel-heading {
-          display: none;
-        }
-        .panel-body {
-          background-color: @warning-color-background;
-          border-color: @warning-color-border;
-          color: @warning-color;
-          border-top-left-radius: 4px;
-          border-top-right-radius: 4px;
-        }
+      &.graphShown {
+        opacity: 1;
+        pointer-events: auto;
       }
+
     }
   }
 
-  .solution-panel {
-    visibility: hidden;
-    height: 0;
-
-    .solution-graph {
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-      margin-top: 50px;
-      margin-bottom: 10px;
-    }
-  }
-
-  .solution-panel.panelVisible {
-    visibility: visible;
-    height: auto;
+  .solution-graph {
+    position: relative;
+    margin: 50px auto 10px;
   }
 
   .graph-container {
@@ -214,7 +195,7 @@
   h3 {
     margin: 0;
     margin-bottom: 10px;
-    padding:0;
+    padding: 0;
   }
 
   .radio-inline + .radio-inline {

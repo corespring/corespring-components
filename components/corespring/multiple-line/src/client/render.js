@@ -451,12 +451,11 @@ var main = [
 
           var containerWidth, containerHeight;
           var graphContainer = element.find('.graph-container');
-          if (config.graphWidth && config.graphHeight) {
-            containerWidth = parseInt(config.graphWidth, 10);
-            containerHeight = parseInt(config.graphHeight, 10);
-          } else {
-            containerHeight = containerWidth = graphContainer.width();
-          }
+
+          containerWidth = parseInt(config.graphWidth, 10) || 500;
+          containerHeight = parseInt(config.graphHeight, 10) || 500;
+          scope.containerWidth = containerWidth || 500;
+          scope.containerHeight = containerHeight || 500;
 
           scope.graphAttrs = scope.createGraphAttributes(config, scope.config.lines.length * 2);
           scope.showInputs = config.showInputs;
@@ -466,8 +465,11 @@ var main = [
             width: containerWidth,
             height: containerHeight
           });
-          scope.containerWidth = containerWidth;
-          scope.containerHeight = containerHeight;
+          graphContainer.parents('.graph-group').css({
+            width: scope.containerWidth,
+            height: scope.containerHeight + 100
+          });
+
           $compile(graphContainer)(scope);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
@@ -570,6 +572,7 @@ var main = [
 
           scope.correctResponse = undefined;
           scope.lines = [];
+          scope.isSeeAnswerPanelExpanded = false;
 
           scope.startOver();
         },
@@ -612,6 +615,7 @@ var main = [
         "      </div>",
         "    </div><br/>",
         "    <div ng-if='instructorData' ng-repeat='response in instructorData.correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
+        '    <correct-answer-toggle ng-if="correctResponse" visible="correctResponse" toggle="$parent.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
         "    <div class='graph-controls container-fluid' ng-show='showInputs' ng-hide='config.exhibitOnly'>",
         "      <div class='row line-input' ng-repeat='line in lines' ng-if='!locked && line.points.A.x !== undefined && line.points.B.x !== undefined'>",
         "        <div class='col-sm-3'>",
@@ -657,17 +661,21 @@ var main = [
         "        </div>",
         "      </div>",
         "    </div>",
-        "    <div id='graph-container' class='row-fluid graph-container'></div>",
+
+        "    <div class='graph-group'>",
+        "      <div class='graph-group-element' ng-class='{graphShown: !isSeeAnswerPanelExpanded}'>",
+        "        <div id='graph-container' class='graph-container'></div>",
+        "      </div>",
+        "      <div class='graph-group-element' ng-class='{graphShown: isSeeAnswerPanelExpanded}'>",
+        "        <div class='solution-graph'></div>",
+        "      </div>",
+        "    </div>",
+        "    <div class='correct-legend' ng-if='isSeeAnswerPanelExpanded'>",
+        "      <div ng-repeat='response in correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
+        "    </div>",
         "  </div>",
         "  <div class='feedback-holder' ng-show='config.showFeedback'>",
         "    <div ng-show='feedback' feedback='feedback' icon-set='{{iconset}}' correct-class='{{correctClass}}'></div>",
-        "  </div>",
-        '  <correct-answer-toggle visible="correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
-        "  <div class='solution-panel' ng-class='{panelVisible: isSeeAnswerPanelExpanded}'>",
-        "    <div class='solution-container'>",
-        "      <div ng-repeat='response in correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
-        "      <div class='solution-graph'></div>",
-        "    </div>",
         "  </div>",
         "</div>"
       ].join("");
