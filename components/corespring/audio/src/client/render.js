@@ -25,7 +25,7 @@ function RenderAudioPlayerDirective($sce) {
       'editable',
       'reset',
       'setMode',
-      'setResponse',
+      'setResponse'
     ];
 
     scope.containerBridge = addEmptyFunctions(
@@ -51,6 +51,8 @@ function RenderAudioPlayerDirective($sce) {
     function getConfig(dataAndSession) {
       var config = _.assign({
         showControls: "playPause",
+        playButtonLabel: "Listen",
+        pauseButtonLabel: "Stop",
         formats: {}
       }, dataAndSession.data);
       return config;
@@ -119,16 +121,16 @@ function RenderAudioPlayerDirective($sce) {
 
   function template() {
     return [
-      '<div class="view-corespring-audio">',
+      '<div class="corespring-audio-view">',
       '  <div ng-if="config.showControls == \'playPause\'">',
-      '    <button ng-click="play()" ng-hide="status == \'playing\'">Play</button>',
-      '    <button ng-click="pause()" ng-show="status == \'playing\'">Pause</button>',
+      '    <button ng-click="play()" ng-hide="status == \'playing\'">{{config.playButtonLabel}}</button>',
+      '    <button ng-click="pause()" ng-show="status == \'playing\'">{{config.pauseButtonLabel}}</button>',
       '  </div>',
       '  <audio>',
       '    <source ng-repeat="src in sources" ng-src="{{src.trustedUrl}}" type="{{src.type}}">',
       '    Your browser does not support the audio element.',
       '  </audio>',
-      '</div>',
+      '</div>'
     ].join('');
   }
 }
