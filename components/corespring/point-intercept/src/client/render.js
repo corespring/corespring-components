@@ -175,7 +175,7 @@ var main = [
       if (attrs.solutionView) {
         var containerWidth, containerHeight;
         var graphContainer = element.find('.graph-container');
-        containerHeight = containerWidth = graphContainer.width();
+        containerHeight = containerWidth = 500;
 
         var graphAttrs = scope.createGraphAttributes(scope.config, scope.config.maxPoints);
         graphContainer.attr(graphAttrs);
@@ -193,8 +193,8 @@ var main = [
         var solutionGraphAttrs = scope.createGraphAttributes(scope.config, scope.config.maxPoints, "graphCallbackSolution");
         solutionContainer.attr(solutionGraphAttrs);
         solutionContainer.css({
-          width: Math.min(scope.containerWidth, 500),
-          height: Math.min(scope.containerHeight, 500)
+          width: scope.containerWidth,
+          height: scope.containerHeight
         });
         solutionScope.interactionCallback = function() {
         };
@@ -277,12 +277,10 @@ var main = [
 
           var containerWidth, containerHeight;
           var graphContainer = element.find('.graph-container');
-          if (config.graphWidth && config.graphHeight) {
-            containerWidth = parseInt(config.graphWidth, 10);
-            containerHeight = parseInt(config.graphHeight, 10);
-          } else {
-            containerHeight = containerWidth = graphContainer.width();
-          }
+
+          containerWidth = parseInt(config.graphWidth, 10) || 500;
+          containerHeight = parseInt(config.graphHeight, 10) || 500;
+
           scope.containerWidth = containerWidth;
           scope.containerHeight = containerHeight;
 
@@ -292,6 +290,12 @@ var main = [
             width: containerWidth,
             height: containerHeight
           });
+          graphContainer.parents('.graph-group').css({
+            width: containerWidth,
+            height: containerHeight
+          });
+
+
           $compile(graphContainer)(scope);
 
           if (dataAndSession.session) {
@@ -354,6 +358,7 @@ var main = [
           scope.feedback = undefined;
           scope.correctResponse = undefined;
           scope.isFeedbackVisible = false;
+          scope.isSeeAnswerPanelExpanded = false;
         },
 
         isAnswerEmpty: function() {
@@ -389,25 +394,30 @@ var main = [
       return [
         "<div class='point-interaction-view'>",
         "  <div class='graph-interaction'>",
-        "     <div class='additional-text' ng-show='additionalText'>",
-        "         <p ng-bind-html-unsafe='additionalText'></p>",
-        "     </div>",
-        "     <div class='graph-controls' ng-show='showInputs' ng-hide='response'>",
-        "        <div class='scale-display text-center'>",
-        "           <span cs-undo-button-with-model></span>",
-        "           <span cs-start-over-button-with-model></span>",
-        "        </div>",
-        "     </div>",
-        "     <div class='graph-container'></div>",
-        "     <div id='initialParams' ng-transclude></div>",
+        "    <div class='additional-text' ng-show='additionalText'>",
+        "        <p ng-bind-html-unsafe='additionalText'></p>",
+        "    </div>",
+        '    <correct-answer-toggle visible="correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
+        "    <div class='graph-controls' ng-show='showInputs' ng-hide='response'>",
+        "       <div class='scale-display text-center'>",
+        "          <span cs-undo-button-with-model></span>",
+        "          <span cs-start-over-button-with-model></span>",
+        "       </div>",
+        "    </div>",
+        "    <div class='graph-group'>",
+        "      <div class='graph-group-element' ng-class='{graphShown: !isSeeAnswerPanelExpanded}'>",
+        "        <div class='graph-container'></div>",
+        "      </div>",
+        "      <div class='graph-group-element' ng-class='{graphShown: isSeeAnswerPanelExpanded}'>",
+        "        <div class='solution-container'></div>",
+        "      </div>",
+        "    </div>",
+        "    <div class='correct-legend' ng-if='isSeeAnswerPanelExpanded'>{{correctResponse.equation}}</div>",
         "  </div>",
+        "  <div id='initialParams' ng-transclude></div>",
         '  <div class="feedback-holder" ng-show="model.config.showFeedback">',
         '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
         '  </div>',
-        '  <correct-answer-toggle visible="correctResponse" toggle="isSeeAnswerPanelExpanded"></correct-answer-toggle>',
-        "  <div class='solution-panel' ng-class='{panelVisible: isSeeAnswerPanelExpanded}'>",
-        "    <div class='solution-container'></div>",
-        "  </div>",
         '  <div ng-show="response.comments" class="well" ng-bind-html-unsafe="response.comments"></div>',
         "</div>"
       ].join("\n");

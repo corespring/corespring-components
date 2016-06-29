@@ -61,6 +61,7 @@
 
   .graph-controls {
     padding: 5px;
+    margin-bottom: 40px;
   }
 
   .scale-display {
@@ -80,10 +81,29 @@
     max-width: 600px;
   }
 
-  .graph-container {
-    margin: 30px auto 10px auto;
+  .graph-group {
     position: relative;
+    margin: 0 auto;
+    margin-top: 20px;
+
+    .graph-group-element {
+      position: absolute;
+      opacity: 0;
+      transition: opacity linear 0.5s;
+      pointer-events: none;
+
+      &.graphShown {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+    }
   }
+
+  //.graph-container {
+  //  margin: 30px auto 10px auto;
+  //  position: relative;
+  //}
 
   .point-display p, input {
     display: inline;
@@ -99,24 +119,6 @@
     font-size: 25px;
     line-height: 31px !important;
     color: @warning-color;
-  }
-  .feedback {
-
-    &.warning {
-
-      .panel-heading {
-        display: none;
-      }
-
-      .panel-body {
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        background-color: @warning-color-background;
-        color: @warning-color;
-      }
-
-    }
-
   }
 
 }
