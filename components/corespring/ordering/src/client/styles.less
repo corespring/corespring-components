@@ -212,6 +212,7 @@
       }
     }
 
+
     .answer-area {
       float: left;
       display: table-cell;
@@ -231,6 +232,7 @@
             display: table;
           }
         }
+
       }
     }
 
@@ -348,6 +350,7 @@
 }
 
 .view-ordering {
+
   .choice-area-label {
     text-align: center;
   }
@@ -405,6 +408,7 @@
   .btn-default {
     border-radius: 4px;
   }
+
 
   &.horizontal {
     margin: 0 10px;
@@ -529,6 +533,20 @@
     }
   }
 
+}
+
+.view-ordering, .view-placement-ordering {
+  .user-choices, .correct-choices {
+    transition: opacity linear 0.25s;
+
+    &.shown {
+      opacity: 1;
+    }
+
+    &.not-shown {
+      opacity: 0;
+    }
+  }
 }
 
 .ordering-config {
