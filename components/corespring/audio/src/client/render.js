@@ -51,6 +51,8 @@ function RenderAudioPlayerDirective($sce) {
         isAnswerEmpty: isAnswerEmpty
       });
 
+    scope.$on('$destroy', onDestroy);
+
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
     //--------------------------------------------------
@@ -95,11 +97,16 @@ function RenderAudioPlayerDirective($sce) {
       return false;
     }
 
+    function getAudioElement(){
+      return element.find('audio');
+    }
+
     function updateAudioElement() {
-      var audioElement = element.find('audio');
+      var audioElement = getAudioElement();
       audioElement.attr('controls', scope.config.ui === UI.FULL_CONTROLS);
       audioElement.off('loadeddata', enablePlayButton);
       audioElement.on('loadeddata', enablePlayButton);
+      scope.playButtonDisabled = true;
       audioElement.load();
     }
 
@@ -118,7 +125,7 @@ function RenderAudioPlayerDirective($sce) {
     }
 
     function play(){
-      var audioElement = element.find('audio');
+      var audioElement = getAudioElement();
       audioElement.off('ended', resetStatus);
       audioElement.on('ended', resetStatus);
       audioElement[0].play();
@@ -130,10 +137,16 @@ function RenderAudioPlayerDirective($sce) {
     }
 
     function pause(){
-      var audioElement = element.find('audio');
+      var audioElement = getAudioElement();
       audioElement[0].pause();
       audioElement[0].currentTime = 0;
       scope.status = PLAYER_STATUS.PAUSED;
+    }
+
+    function onDestroy(){
+      var audioElement = getAudioElement();
+      audioElement.off('ended', resetStatus);
+      audioElement.off('loadeddata', enablePlayButton);
     }
 
   }
