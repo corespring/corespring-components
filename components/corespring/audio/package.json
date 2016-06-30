@@ -4,6 +4,7 @@
   "organization": "corespring",
   "purpose" : "widget",
   "released" : false,
+  "insertInline" : true,
   "libraries": [
   ],
   "dependencies" : {

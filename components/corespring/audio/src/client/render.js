@@ -17,6 +17,21 @@ function RenderAudioPlayerDirective($sce) {
 
   function link(scope, element, attrs) {
 
+    var UI = {
+      PLAY_PAUSE: 'playPause',
+      FULL_CONTROLS: 'fullControls'
+    };
+
+    var PLAYER_STATUS = {
+      PLAYING: 'playing',
+      PAUSED: 'paused'
+    };
+
+    scope.UI = UI;
+    scope.PLAYER_STATUS = PLAYER_STATUS;
+
+    scope.playButtonDisabled = true;
+
     scope.pause = pause;
     scope.play = play;
 
@@ -24,6 +39,7 @@ function RenderAudioPlayerDirective($sce) {
       'answerChangedHandler',
       'editable',
       'reset',
+      'setInstructorData',
       'setMode',
       'setResponse'
     ];
@@ -50,9 +66,9 @@ function RenderAudioPlayerDirective($sce) {
 
     function getConfig(dataAndSession) {
       var config = _.assign({
-        showControls: "playPause",
-        playButtonLabel: "Listen",
-        pauseButtonLabel: "Stop",
+        ui: UI.PLAY_PAUSE,
+        playButtonLabel: 'Listen',
+        pauseButtonLabel: 'Stop',
         formats: {}
       }, dataAndSession.data);
       return config;
@@ -71,7 +87,7 @@ function RenderAudioPlayerDirective($sce) {
 
     function getSession() {
       return {
-        answers: ""
+        answers: ''
       };
     }
 
@@ -80,12 +96,16 @@ function RenderAudioPlayerDirective($sce) {
     }
 
     function updateAudioElement() {
-      console.log("updateAudioElement", scope.config);
       var audioElement = element.find('audio');
-      audioElement.attr('controls', scope.config.showControls === 'fullControls');
+      audioElement.attr('controls', scope.config.ui === UI.FULL_CONTROLS);
+      audioElement.off('loadeddata', enablePlayButton);
+      audioElement.on('loadeddata', enablePlayButton);
       audioElement.load();
     }
 
+    function enablePlayButton() {
+      scope.playButtonDisabled = false;
+    }
     function trustUrl(url) {
       return $sce.trustAsResourceUrl(url);
     }
@@ -99,32 +119,31 @@ function RenderAudioPlayerDirective($sce) {
 
     function play(){
       var audioElement = element.find('audio');
-      console.log(audioElement);
       audioElement.off('ended', resetStatus);
       audioElement.on('ended', resetStatus);
       audioElement[0].play();
-      scope.status = 'playing';
+      scope.status = PLAYER_STATUS.PLAYING;
     }
 
     function resetStatus(){
-      scope.status = 'paused';
+      scope.status = PLAYER_STATUS.PAUSED;
     }
 
     function pause(){
       var audioElement = element.find('audio');
       audioElement[0].pause();
       audioElement[0].currentTime = 0;
-      scope.status = 'paused';
+      scope.status = PLAYER_STATUS.PAUSED;
     }
 
   }
 
   function template() {
     return [
-      '<div class="corespring-audio-view">',
-      '  <div ng-if="config.showControls == \'playPause\'">',
-      '    <button ng-click="play()" ng-hide="status == \'playing\'">{{config.playButtonLabel}}</button>',
-      '    <button ng-click="pause()" ng-show="status == \'playing\'">{{config.pauseButtonLabel}}</button>',
+      '<div class="corespring-audio-view" ng-class="config.ui">',
+      '  <div ng-if="config.ui == UI.PLAY_PAUSE">',
+      '    <button ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="status == PLAYER_STATUS.PLAYING">{{config.playButtonLabel}}</button>',
+      '    <button ng-click="pause()" ng-show="status == PLAYER_STATUS.PLAYING">{{config.pauseButtonLabel}}</button>',
       '  </div>',
       '  <audio>',
       '    <source ng-repeat="src in sources" ng-src="{{src.trustedUrl}}" type="{{src.type}}">',

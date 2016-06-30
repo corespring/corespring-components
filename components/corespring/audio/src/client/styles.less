@@ -1,5 +1,16 @@
-.corespring-audio-view {
+.corespring-audio {
+  .component-placeholder {
+    display: inline-block;
+  }
+}
 
+.corespring-audio-view {
+  &.playPause {
+    display: inline-block;
+  }
+  button:disabled {
+    opacity: 0.5;
+  }
 }
 
 .corespring-audio-config {
