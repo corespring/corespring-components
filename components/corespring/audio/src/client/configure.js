@@ -22,12 +22,21 @@ function ConfigAudioPlayerDirective(EditingAudioService, WIGGI_EVENTS) {
   function link(scope, element, attrs) {
 
     var AUDIO_FORMATS = {
-      MP3: "audio/mp3",
-      OGG: "audio/ogg"
+      MP3: {mime: "audio/mp3", suffix: 'mp3'},
+      OGG: {mime: "audio/ogg", suffix: 'ogg'}
     };
 
-    scope.showUploadDialog = showUploadDialog;
+    var UI = {
+      PLAY_PAUSE: 'playPause',
+      FULL_CONTROLS: 'fullControls'
+    };
+
+    scope.UI = UI;
+
+    scope.addSrc = addSrc;
+    scope.onCloseFileUploadDialog = onCloseFileUploadDialog;
     scope.removeSrc = removeSrc;
+    scope.showUploadDialog = showUploadDialog;
 
     scope.containerBridge = {
       getModel: getModel,
@@ -50,7 +59,7 @@ function ConfigAudioPlayerDirective(EditingAudioService, WIGGI_EVENTS) {
 
     function addDefaults(fullModel) {
       return _.defaults( fullModel, {
-        showControls: "playPause",
+        ui: UI.PLAY_PAUSE,
         playButtonLabel: "Listen",
         pauseButtonLabel: "Stop",
         formats: {}
@@ -59,11 +68,10 @@ function ConfigAudioPlayerDirective(EditingAudioService, WIGGI_EVENTS) {
 
     function removeSrc(src) {
       var suffix = getSuffix(src);
-      console.log("removeSrc", src, suffix, scope.fullModel.formats);
-      if (suffix === 'mp3') {
-        delete scope.fullModel.formats[AUDIO_FORMATS.MP3];
-      } else if (suffix === 'ogg') {
-        delete scope.fullModel.formats[AUDIO_FORMATS.OGG];
+      if (suffix === AUDIO_FORMATS.MP3.suffix) {
+        delete scope.fullModel.formats[AUDIO_FORMATS.MP3.mime];
+      } else if (suffix === AUDIO_FORMATS.OGG.suffix) {
+        delete scope.fullModel.formats[AUDIO_FORMATS.OGG.mime];
       }
     }
 
@@ -73,10 +81,10 @@ function ConfigAudioPlayerDirective(EditingAudioService, WIGGI_EVENTS) {
 
     function addSrc(src) {
       var suffix = getSuffix(src);
-      if (suffix === 'mp3') {
-        scope.fullModel.formats[AUDIO_FORMATS.MP3] = src;
-      } else if (suffix === 'ogg') {
-        scope.fullModel.formats[AUDIO_FORMATS.OGG] = src;
+      if (suffix === AUDIO_FORMATS.MP3.suffix) {
+        scope.fullModel.formats[AUDIO_FORMATS.MP3.mime] = src;
+      } else if (suffix === AUDIO_FORMATS.OGG.suffix) {
+        scope.fullModel.formats[AUDIO_FORMATS.OGG.mime] = src;
       }
     }
 
@@ -88,54 +96,54 @@ function ConfigAudioPlayerDirective(EditingAudioService, WIGGI_EVENTS) {
      */
     function showUploadDialog() {
       var data = {
-        imageUrl: null //TODO Can we use a different name here, eg. just url maybe?
+        imageUrl: null //TODO rename to url, requires a change in wiggi
       };
 
       var scopeExtension = {
         editable: $('<div>'), //TODO Fix the cancel button in wiggi, this is a tmp fix only
-        imageService: EditingAudioService
+        imageService: EditingAudioService //TODO rename to fileUploadService, requires change in wiggi
       };
-
-      function onUpdate(update) {
-
-        if (update.cancelled) {
-          if (update.imageUrl) {
-            EditingAudioService.deleteFile(update.imageUrl);
-          }
-          return;
-        }
-
-        if (update.imageUrl) {
-          addSrc(update.imageUrl);
-        }
-      }
 
       scope.$emit(
         WIGGI_EVENTS.LAUNCH_DIALOG,
         data,
         '',
         uploadAudioTemplate(),
-        onUpdate,
+        onCloseFileUploadDialog,
         scopeExtension, {
           omitHeader: true,
           omitFooter: true
         }
       );
     }
+
+    function onCloseFileUploadDialog(update) {
+      if (update.cancelled) {
+        if (update.imageUrl) {
+          EditingAudioService.deleteFile(update.imageUrl);
+        }
+        return;
+      }
+
+      if (update.imageUrl) {
+        addSrc(update.imageUrl);
+      }
+    }
+
   }
 
   function template() {
     return [
-      '<div class="corespring-audio-config">',
+      '<div class="corespring-audio-config" ng-class="fullModel.ui">',
       '  <p>Upload/remove your audio files below</p>',
       '  <ul>',
       '    <li ng-repeat="src in fullModel.formats"><a ng-click="removeSrc(src)">(remove)</a> &nbsp; {{src}}</li>',
       '    <a ng-click="showUploadDialog()">Upload audio file</a>',
       '  </ul>',
       '  <p>Toggle controls</p>',
-      '  <radio ng-model="fullModel.showControls" value="fullControls" class="control-label">Show full controls</radio>',
-      '  <radio ng-model="fullModel.showControls" value="playPause" class="control-label">Show play/pause button</radio>',
-      '  <div class="play-pause-labels-form" ng-show="fullModel.showControls == \'playPause\'">',
+      '  <radio ng-model="fullModel.ui" value="{{UI.FULL_CONTROLS}}" class="control-label">Show full controls</radio>',
+      '  <radio ng-model="fullModel.ui" value="{{UI.PLAY_PAUSE}}" class="control-label">Show play/pause button</radio>',
+      '  <div class="play-pause-labels-form" ng-show="fullModel.ui == UI.PLAY_PAUSE">',
       '    <label>Play Button Label:',
       '      <input type="text" class="form-control" ng-model="fullModel.playButtonLabel"/>',
       '    </label>',
