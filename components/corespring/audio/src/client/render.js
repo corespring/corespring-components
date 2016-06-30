@@ -97,7 +97,7 @@ function RenderAudioPlayerDirective($sce) {
       return false;
     }
 
-    function getAudioElement(){
+    function getAudioElement() {
       return element.find('audio');
     }
 
@@ -113,6 +113,7 @@ function RenderAudioPlayerDirective($sce) {
     function enablePlayButton() {
       scope.playButtonDisabled = false;
     }
+
     function trustUrl(url) {
       return $sce.trustAsResourceUrl(url);
     }
@@ -124,7 +125,7 @@ function RenderAudioPlayerDirective($sce) {
       return obj;
     }
 
-    function play(){
+    function play() {
       var audioElement = getAudioElement();
       audioElement.off('ended', resetStatus);
       audioElement.on('ended', resetStatus);
@@ -132,18 +133,18 @@ function RenderAudioPlayerDirective($sce) {
       scope.status = PLAYER_STATUS.PLAYING;
     }
 
-    function resetStatus(){
+    function resetStatus() {
       scope.status = PLAYER_STATUS.PAUSED;
     }
 
-    function pause(){
+    function pause() {
       var audioElement = getAudioElement();
       audioElement[0].pause();
       audioElement[0].currentTime = 0;
       scope.status = PLAYER_STATUS.PAUSED;
     }
 
-    function onDestroy(){
+    function onDestroy() {
       var audioElement = getAudioElement();
       audioElement.off('ended', resetStatus);
       audioElement.off('loadeddata', enablePlayButton);
