@@ -265,6 +265,22 @@
     }
   }
 
+  .correct-answer-area-holder, .answer-area-holder {
+    transition: opacity linear 0.25s;
+
+    &.shown {
+      opacity: 1;
+    }
+
+    &.not-shown {
+      opacity: 0;
+      
+      &.shown {
+        opacity: 1;
+      }
+    }
+  }
+
 }
 
 .config-csdndi {

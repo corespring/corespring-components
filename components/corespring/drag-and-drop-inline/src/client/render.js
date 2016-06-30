@@ -319,13 +319,13 @@ var main = [
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">',
              choiceArea(),
         '  </div>',
-        '  <div class="answer-area-holder" ng-class="response.correctClass"></div>',
+        '  <div class="answer-area-holder" class="{{response.correctClass}} pork" ng-class="seeSolutionExpanded ? \'not-shown\' : \'shown\'"></div>',
         '  <div ng-if="model.config.choiceAreaPosition == \'below\'">',
              choiceArea(),
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-show="feedback" icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-        '  <div class="correct-answer-area-holder" ng-show="seeSolutionExpanded"></div>',
+        '  <div class="correct-answer-area-holder" ng-class="seeSolutionExpanded ? \'shown\' : \'not-shown\'"></div>',
         '</div>'
       ].join('');
     }
