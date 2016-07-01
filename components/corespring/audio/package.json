@@ -3,7 +3,7 @@
   "title": "Audio Player",
   "organization": "corespring",
   "purpose" : "widget",
-  "released" : false,
+  "released" : true,
   "insertInline" : true,
   "libraries": [
   ],
