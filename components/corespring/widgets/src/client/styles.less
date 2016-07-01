@@ -384,3 +384,21 @@
   }
 }
 
+.response-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.response-wrapper > * {
+  opacity: 0;
+  position: absolute;
+  transition: opacity linear 0.25s;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.response-wrapper .active-element {
+  opacity: 1;
+  z-index: 1;
+}
