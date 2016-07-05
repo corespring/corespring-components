@@ -1,11 +1,12 @@
 exports.framework = 'angular';
 exports.directives = [
   {
-    directive: ['$sce', RenderAudioPlayerDirective]
+    directive: ['$sce', 'AudioTagController', RenderAudioPlayerDirective]
   }
 ];
 
-function RenderAudioPlayerDirective($sce) {
+
+function RenderAudioPlayerDirective($sce, AudioTagController) {
 
   return {
     link: link,
@@ -18,14 +19,17 @@ function RenderAudioPlayerDirective($sce) {
   function link(scope, element, attrs) {
 
     var UI = {
-      PLAY_PAUSE: 'playPause',
-      FULL_CONTROLS: 'fullControls'
+      LOUDSPEAKER: 'loudspeaker',
+      FULL_CONTROLS: 'fullControls',
+      PLAY_PAUSE: 'playPause'
     };
 
     var PLAYER_STATUS = {
       PLAYING: 'playing',
       PAUSED: 'paused'
     };
+
+    var audioElement = new AudioTagController(element, 'audio', enablePlayButton, resetStatus);
 
     scope.UI = UI;
     scope.PLAYER_STATUS = PLAYER_STATUS;
@@ -52,7 +56,6 @@ function RenderAudioPlayerDirective($sce) {
       });
 
     scope.$on('$destroy', onDestroy);
-
     scope.$emit('registerComponent', attrs.id, scope.containerBridge);
 
     //--------------------------------------------------
@@ -97,17 +100,10 @@ function RenderAudioPlayerDirective($sce) {
       return false;
     }
 
-    function getAudioElement() {
-      return element.find('audio');
-    }
-
     function updateAudioElement() {
-      var audioElement = getAudioElement();
-      audioElement.attr('controls', scope.config.ui === UI.FULL_CONTROLS);
-      audioElement.off('loadeddata', enablePlayButton);
-      audioElement.on('loadeddata', enablePlayButton);
       scope.playButtonDisabled = true;
-      audioElement.load();
+      scope.playerStatus = PLAYER_STATUS.PAUSED;
+      audioElement.update(scope.config.ui === UI.FULL_CONTROLS);
     }
 
     function enablePlayButton() {
@@ -126,28 +122,21 @@ function RenderAudioPlayerDirective($sce) {
     }
 
     function play() {
-      var audioElement = getAudioElement();
-      audioElement.off('ended', resetStatus);
-      audioElement.on('ended', resetStatus);
-      audioElement[0].play();
-      scope.status = PLAYER_STATUS.PLAYING;
+      audioElement.play();
+      scope.playerStatus = PLAYER_STATUS.PLAYING;
     }
 
     function resetStatus() {
-      scope.status = PLAYER_STATUS.PAUSED;
+      scope.playerStatus = PLAYER_STATUS.PAUSED;
     }
 
     function pause() {
-      var audioElement = getAudioElement();
-      audioElement[0].pause();
-      audioElement[0].currentTime = 0;
-      scope.status = PLAYER_STATUS.PAUSED;
+      audioElement.pause();
+      scope.playerStatus = PLAYER_STATUS.PAUSED;
     }
 
     function onDestroy() {
-      var audioElement = getAudioElement();
-      audioElement.off('ended', resetStatus);
-      audioElement.off('loadeddata', enablePlayButton);
+      audioElement.destroy();
     }
 
   }
@@ -155,9 +144,13 @@ function RenderAudioPlayerDirective($sce) {
   function template() {
     return [
       '<div class="corespring-audio-view" ng-class="config.ui">',
+      '  <div ng-if="config.ui == UI.LOUDSPEAKER">',
+      '    <button class="volume-play-button" ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
+      '    <button class="volume-stop-button" ng-click="pause()" ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-off"></i></button>',
+      '  </div>',
       '  <div ng-if="config.ui == UI.PLAY_PAUSE">',
-      '    <button ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="status == PLAYER_STATUS.PLAYING">{{config.playButtonLabel}}</button>',
-      '    <button ng-click="pause()" ng-show="status == PLAYER_STATUS.PLAYING">{{config.pauseButtonLabel}}</button>',
+      '    <button ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING">{{config.playButtonLabel}}</button>',
+      '    <button ng-click="pause()" ng-show="playerStatus == PLAYER_STATUS.PLAYING">{{config.pauseButtonLabel}}</button>',
       '  </div>',
       '  <audio>',
       '    <source ng-repeat="src in sources" ng-src="{{src.trustedUrl}}" type="{{src.type}}">',

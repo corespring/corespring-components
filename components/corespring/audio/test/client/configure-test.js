@@ -73,8 +73,8 @@ describe('corespring-audio-configure', function() {
     });
 
     it("adds the src", function(){
-      scope.addSrc('test.ogg');
-      expect(scope.fullModel.formats['audio/ogg']).toEqual('test.ogg');
+      scope.addSrc('test.mp3');
+      expect(scope.fullModel.formats['audio/mp3']).toEqual('test.mp3');
     });
 
     it("replaces source", function(){
@@ -100,30 +100,19 @@ describe('corespring-audio-configure', function() {
     });
   });
 
-  describe('showUploadDialog', function(){
-    it('emits a launchDialog event', function(){
-      var mockLaunchDialog = jasmine.createSpy('launchDialog');
-      scope.$on('launchDialog', mockLaunchDialog);
-      scope.showUploadDialog();
-      expect(mockLaunchDialog).toHaveBeenCalled();
-    });
-  });
-
-  describe('onCloseFileUploadDialog', function(){
+  describe('fileName', function(){
 
     beforeEach(function(){
       container.elements['1'].setModel(testModel);
     });
 
-    it('should add the file', function(){
-      scope.onCloseFileUploadDialog({imageUrl: 'test.ogg'});
-      expect(scope.fullModel.formats['audio/ogg']).toBe('test.ogg');
+    it('when changed to string, the imageUrl should be added as a format', function(){
+      scope.data = {imageUrl: '1234-abc.mp3'};
+      scope.fileName = 'abc.mp3';
+      scope.$digest();
+      expect(scope.fullModel.formats['audio/mp3']).toBe('1234-abc.mp3');
     });
 
-    it('should delete file, when update has been canceled', function(){
-      scope.onCloseFileUploadDialog({cancelled: true, imageUrl: 'test.mp3'});
-      expect(mockEditingAudioService.deleteFile).toHaveBeenCalledWith('test.mp3');
-    });
   });
 
 });
