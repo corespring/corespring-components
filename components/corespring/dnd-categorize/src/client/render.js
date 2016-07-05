@@ -1,5 +1,6 @@
 exports.framework = 'angular';
-exports.directives = [{
+exports.directives = [
+  {
   directive: [
     '$log',
     '$timeout',
@@ -11,7 +12,38 @@ exports.directives = [{
     'MathJaxService',
     renderCorespringDndCategorize
   ]
-}];
+  },
+  {
+    name: 'answerSwitcher',
+    directive: function() {
+      return {
+        link: function($scope, $element) {
+          $element.addClass('answer-switcher');
+
+          function resizeContainer() {
+            var elements = $element.children();
+            var dimensions = _.map(elements, function(element) {
+              var dimensions = element.getBoundingClientRect();
+              return [dimensions.width, dimensions.height];
+            });
+
+            var height = Math.ceil(_.chain(dimensions).map(function(dimension) {
+                return dimension[1];
+              }).max().value()) + 'px';
+
+            $element.css({
+              height: height
+            });
+          }
+
+          $scope.$watch(resizeContainer);
+        },
+        restrict: 'EA'
+      };
+    }
+  }
+
+];
 
 function renderCorespringDndCategorize(
   $log,
@@ -316,11 +348,11 @@ function renderCorespringDndCategorize(
     }
 
     function reset() {
+
       scope.feedback = {
         isSeeAnswerPanelExpanded: false
       };
       scope.response = undefined;
-
       scope.renderModel = _.cloneDeep(scope.saveRenderModel);
       scope.undoModel.init();
       updatePlacedChoices();
@@ -679,7 +711,6 @@ function renderCorespringDndCategorize(
         seeSolutionToggle(),
         interaction(),
         itemFeedbackPanel(),
-        seeSolutionContent(),
         '</div>'
       ].join('\n');
   }
@@ -710,10 +741,9 @@ function renderCorespringDndCategorize(
     ].join('');
   }
 
-  function seeSolutionContent() {
+  function seeSolutionContent(flip) {
     return [
-      '<hr ng-show="feedback.isSeeAnswerPanelExpanded"></hr>',
-      categoriesTemplate('true', 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded')
+      categoriesTemplate(flip + "&&response", 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded')
     ].join('');
   }
 
@@ -721,7 +751,10 @@ function renderCorespringDndCategorize(
     return [
         '<div class="interaction-corespring-dnd-categorize">',
         choicesTemplate('shouldFlip'),
-        categoriesTemplate('!shouldFlip', 'rows', 'true'),
+        '<div answer-switcher="" class="answer-group" ng-if="!shouldFlip">',
+        categoriesTemplate('!shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
+        seeSolutionContent('!shouldFlip', 'response'),
+        '</div>',
         // Nasty hack: transclude configuration for categories.
         '  <div ng-transclude ng-if="isEditMode"></div>',
         '  <h3 ng-if="isEditMode">Choices</h3>',
@@ -729,7 +762,10 @@ function renderCorespringDndCategorize(
         '    Enter choices below and drag to correct categories above.',
         '  </span>',
         choicesTemplate('!shouldFlip'),
-        categoriesTemplate('shouldFlip', 'rows', 'true'),
+        '<div answer-switcher="" class="answer-group" ng-if="shouldFlip">',
+        categoriesTemplate('shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
+        seeSolutionContent('shouldFlip', 'response'),
+        '</div>',
         '</div>'
       ].join('');
   }
@@ -783,7 +819,7 @@ function renderCorespringDndCategorize(
 
   function categoriesTemplate(flip, rowsModel, visible) {
     return [
-        '<div class="categories-holder" ng-if="#flip#" ng-show="#visible#">',
+        '<div class="categories-holder" ng-if="#flip#" ng-class="{isCategoriesHolderVisible: #visible#}">',
         '  <div class="categories" ng-repeat="row in #rowsModel# track by row.id">',
         '    <div class="row">',
         '      <div category-label-corespring-dnd-categorize="true" ',

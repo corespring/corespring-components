@@ -246,6 +246,31 @@
     }
   }
 
+  .answer-switcher {
+    position: relative;
+    & > * {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      opacity: 0;
+      transition: opacity linear 0.25s;
+      &.isCategoriesHolderVisible {
+        opacity: 1;
+      }
+    }
+  }
+
+  .answer-group {
+    position: relative;
+
+    .categories-holder {
+      position: absolute;
+      left: 0;
+      right: 0;
+    }
+
+  }
   .categories-holder {
     padding: 0 0;
   }
