@@ -16,7 +16,6 @@ var def = function() {
     link: function($scope) {
       $scope.showMessageCalculated = $scope.showMessage ? $scope.showMessage : defaults.showMessage;
       $scope.hideMessageCalculated = $scope.hideMessage ? $scope.hideMessage : defaults.hideMessage;
-
     },
     template: [
       '<div class="button-row btn-group-md text-center {{class}}">',

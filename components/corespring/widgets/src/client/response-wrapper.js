@@ -1,9 +1,11 @@
 /* global exports */
-var main = function() {
+var main = function($rootScope, $timeout) {
   return {
     link: function($scope, $element) {
       var activeElement = 0;
       $element.addClass('response-wrapper');
+
+      var delay = 250;
 
       function resizeContainer() {
         var elements = $element.children();
@@ -30,17 +32,21 @@ var main = function() {
 
       $scope.setVisible = function(i) {
         var active = _.isNumber(i) ? $element.children().eq(i) : (_.isString(i) ? $(i, $element)[0] : undefined);
-        console.log(active);
         $element.children().addClass('response-element');
 
         if (active) {
           activeElement = i;
           _.each($element.children(), function(child) {
-            if (child !== active) {
+            if (child !== active[0]) {
               $(child).removeClass('active-element');
             }
           });
-          $(active).addClass('active-element');
+
+          if (!($(active).hasClass('active-element'))) {
+            $timeout(function() {
+              $(active).addClass('active-element');
+            }, delay);
+          }
         }
       };
 
@@ -55,7 +61,7 @@ var main = function() {
 };
 
 exports.framework = 'angular';
-exports.directives = [{
+exports.directive = {
   name: "responseWrapper",
   directive: main
-}];
+};

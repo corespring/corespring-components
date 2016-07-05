@@ -286,24 +286,27 @@ var main = [
     function template() {
       function choiceArea() {
         return [
-          '<div class="choices-holder">',
-          '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
-          '    <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+          '<response-wrapper>',
+          '  <div class="choices-holder">',
+          '    <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
+          '      <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+          '    </div>',
+          '    <div class="choice" ',
+          '       data-choice-id="{{choice.id}}"',
+          '       data-drag="canEdit() && isPlaceable(choice)"',
+          '       data-jqyoui-options="draggableJqueryOptions"',
+          '       jqyoui-draggable="draggableOptionsWithKeep(choice)"',
+          '       ng-class="{editable:canEdit(), placed:!isPlaceable(choice)}"',
+          '       ng-model="local.choices"',
+          '       ng-repeat="choice in local.choices"',
+          '      >',
+          '      <span class="choice-content" ',
+          '         ng-bind-html-unsafe="cleanLabel(choice)"',
+          '       ></span>',
+          '    </div>',
           '  </div>',
-          '  <div class="choice" ',
-          '     data-choice-id="{{choice.id}}"',
-          '     data-drag="canEdit() && isPlaceable(choice)"',
-          '     data-jqyoui-options="draggableJqueryOptions"',
-          '     jqyoui-draggable="draggableOptionsWithKeep(choice)"',
-          '     ng-class="{editable:canEdit(), placed:!isPlaceable(choice)}"',
-          '     ng-model="local.choices"',
-          '     ng-repeat="choice in local.choices"',
-          '    >',
-          '    <span class="choice-content" ',
-          '       ng-bind-html-unsafe="cleanLabel(choice)"',
-          '     ></span>',
-          '  </div>',
-          '</div>'
+          '  <div class="correct-answer-area-holder"></div>',
+          '</response-wrapper>'
         ].join('');
       }
 
@@ -325,7 +328,6 @@ var main = [
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-show="feedback" icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-        '  <div class="correct-answer-area-holder" ng-class="seeSolutionExpanded ? \'shown\' : \'not-shown\'"></div>',
         '</div>'
       ].join('');
     }
