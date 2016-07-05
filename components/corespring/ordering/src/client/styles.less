@@ -23,6 +23,8 @@
 
 .view-placement-ordering {
 
+  @width: 567px;
+
   .choice-area {
     margin-right: 5px;
     .choices {
@@ -273,7 +275,7 @@
 
         .choices-holder {
           display: inline-block;
-          max-width: 585px;
+          max-width: @width;
 
           .choice-area-label {
             text-align: center;
@@ -307,7 +309,7 @@
 
       .answer-area-table {
         height: 100% !important;
-        width: 585px;
+        width: @width;
         margin-top: 5px;
       }
     }
@@ -349,6 +351,8 @@
 }
 
 .view-ordering {
+
+  @width: 567px;
 
   .choice-area-label {
     text-align: center;
@@ -437,13 +441,13 @@
     }
 
     .answer-area-container {
-      width: 595px;
+      width: @width;
       text-align: center;
     }
 
     .container-border {
       margin-bottom: 10px;
-      width: 595px;
+      width: @width;
     }
 
     li {
@@ -466,7 +470,7 @@
 
     .container-border {
       margin-bottom: 10px;
-      max-width: 595px;
+      max-width: @width;
       width: 100%;
       display: inline-block;
     }

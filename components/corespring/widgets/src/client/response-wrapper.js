@@ -1,7 +1,7 @@
 /* global exports */
 var main = function($rootScope, $timeout) {
   return {
-    link: function($scope, $element) {
+    link: function($scope, $element, $attrs) {
       var activeElement = 0;
       $element.addClass('response-wrapper');
 
@@ -16,9 +16,9 @@ var main = function($rootScope, $timeout) {
           return [dimensions.width, dimensions.height];
         });
 
-        var width = Math.ceil(_.chain(dimensions).map(function(dimension) {
+        var width = $attrs.width === undefined ? (Math.ceil(_.chain(dimensions).map(function(dimension) {
             return dimension[0];
-          }).max().value()) + 'px';
+          }).max().value()) + 'px') : $attrs.width;
 
         var height = Math.ceil(_.chain(dimensions).map(function(dimension) {
             return dimension[1];
