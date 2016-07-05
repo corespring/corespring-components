@@ -40,7 +40,7 @@ var main = [
     function link(scope, element, attrs) {
 
       scope.$watch('seeSolutionExpanded', function() {
-        console.log(scope.seeSolutionExpanded);
+        scope.$broadcast('setVisible', scope.seeSolutionExpanded ? 1 : 0);
       });
 
       //we throttle bc. when multiple calls to renderAnswerArea are
@@ -286,27 +286,22 @@ var main = [
     function template() {
       function choiceArea() {
         return [
-          '<response-wrapper>',
-          '  <div class="choices-holder">',
-          '    <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
-          '      <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
-          '    </div>',
-          '    <div class="choice" ',
-          '       data-choice-id="{{choice.id}}"',
-          '       data-drag="canEdit() && isPlaceable(choice)"',
-          '       data-jqyoui-options="draggableJqueryOptions"',
-          '       jqyoui-draggable="draggableOptionsWithKeep(choice)"',
-          '       ng-class="{editable:canEdit(), placed:!isPlaceable(choice)}"',
-          '       ng-model="local.choices"',
-          '       ng-repeat="choice in local.choices"',
-          '      >',
-          '      <span class="choice-content" ',
-          '         ng-bind-html-unsafe="cleanLabel(choice)"',
-          '       ></span>',
-          '    </div>',
+          '<div class="choices-holder">',
+          '  <div class="label-holder" ng-show="model.config.choiceAreaLabel">',
+          '    <div class="choiceAreaLabel" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
           '  </div>',
-          '  <div class="correct-answer-area-holder"></div>',
-          '</response-wrapper>'
+          '  <div class="choice" ',
+          '     data-choice-id="{{choice.id}}"',
+          '     data-drag="canEdit() && isPlaceable(choice)"',
+          '     data-jqyoui-options="draggableJqueryOptions"',
+          '     jqyoui-draggable="draggableOptionsWithKeep(choice)"',
+          '     ng-class="{editable:canEdit(), placed:!isPlaceable(choice)}"',
+          '     ng-model="local.choices"',
+          '     ng-repeat="choice in local.choices">',
+          '    <span class="choice-content" ',
+          '       ng-bind-html-unsafe="cleanLabel(choice)"></span>',
+          '  </div>',
+          '</div>',
         ].join('');
       }
 
@@ -322,7 +317,10 @@ var main = [
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">',
              choiceArea(),
         '  </div>',
-        '  <div class="answer-area-holder" class="{{response.correctClass}} pork" ng-class="seeSolutionExpanded ? \'not-shown\' : \'shown\'"></div>',
+        '  <response-wrapper width="100%">',
+        '    <div class="answer-area-holder" class="{{response.correctClass}}"></div>',
+        '    <div class="correct-answer-area-holder"></div>',
+        '  </response-wrapper>',
         '  <div ng-if="model.config.choiceAreaPosition == \'below\'">',
              choiceArea(),
         '  </div>',
