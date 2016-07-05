@@ -8,6 +8,13 @@ exports.directives = [
   }
 ];
 
+/**
+ * The difference between fileName and the formats
+ * is that the fileName is the name of the uploaded file
+ * while the formats are the files that are fed into the audio
+ * player. Potentially a conversion takes place on the server,
+ * eg. from one format to another or to a lower quality
+ */
 function ConfigAudioPlayerDirective(EditingAudioService) {
 
   return {
@@ -45,6 +52,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
 
     scope.addSrc = addSrc;
     scope.removeSrc = removeSrc;
+    scope.removeFile = removeFile;
 
     scope.containerBridge = {
       getModel: getModel,
@@ -105,12 +113,11 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       return ('' + src).split('.').pop();
     }
 
+    /**
+     * scope.fileName is set by the fileChooser/Uploader
+     * Also it sets scope.data.imageUrl to the download url of the file
+     */
     function watchFileName(newValue, oldValue) {
-      if (oldValue) {
-        if (scope.data.imageUrl) {
-          EditingAudioService.deleteFile(scope.data.imageUrl);
-        }
-      }
       if (newValue) {
         if (scope.data.imageUrl) {
           scope.fullModel.fileName = newValue;
@@ -131,23 +138,19 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
         session: {}
       });
     }
+
+    function removeFile(){
+      _.forEach(scope.fullModel.formats, function(src){
+        EditingAudioService.deleteFile(src);
+      });
+      scope.fullModel.formats = {};
+      scope.fullModel.fileName = '';
+    }
   }
 
   function template() {
     return [
-      '<div class="corespring-audio-config" ng-class="fullModel.ui">',
-      '  <p>Upload a .mp3 audio file (maximum size is {{imageService.maxSizeKb}}kb).</p>',
-      '  <button ng-show="status == \'initial\' || status == \'failed\'"',
-      '     class="btn btn-primary upload-button"',
-      '     file-chooser="">',
-      '     <span class="upload-icon"><i class="fa fa-upload"></i></span> Upload Audio File',
-      '  </button>',
-      '  <div class="prelisten-container" ng-show="fullModel.fileName">',
-      '    <div class="filename-label">',
-      '      Uploaded File: <label>{{fullModel.fileName}}</label>',
-      '    </div>',
-      '    <div id="prelisten" corespring-audio=""/>',
-      '  </div>',
+      '<div class="corespring-audio-configure" ng-class="fullModel.ui">',
       '  <div class="alert alert-danger wiggi-wiz-alert ng-hide"',
       '      ng-show="error"',
       '      ng-bind="error"></div>',
@@ -158,6 +161,23 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       '    <div class="uploading-label">Uploading audio file {{percentProgress}}%</div>',
       '    <progressbar value="percentProgress"',
       '        class="progress-striped"></progressbar>',
+      '  </div>',
+      '  <div ng-hide="fullModel.fileName">',
+      '    <p>Upload a .mp3 audio file (maximum size is {{imageService.maxSizeKb}}kb).</p>',
+      '    <button ng-show="status == \'initial\' || status == \'failed\'"',
+      '       class="btn btn-primary upload-button"',
+      '       file-chooser="">',
+      '       <span class="upload-icon"><i class="fa fa-upload"></i></span> Upload Audio File',
+      '    </button>',
+      '  </div>',
+      '  <div ng-show="fullModel.fileName">',
+      '    <button class="btn btn-primary upload-button" ng-click="removeFile()">Remove Audio</button>',
+      '  </div>',
+      '  <div class="prelisten-container" ng-show="fullModel.fileName">',
+      '    <div class="filename-label">',
+      '      Uploaded File: <label>{{fullModel.fileName}}</label>',
+      '    </div>',
+      '    <div id="prelisten" corespring-audio=""/>',
       '  </div>',
       '  <div class="select-ui">',
       '    <p>Select ui</p>',
