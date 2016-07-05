@@ -143,7 +143,7 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
 
   function template() {
     return [
-      '<div class="corespring-audio-view" ng-class="config.ui">',
+      '<div class="corespring-audio-render" ng-class="config.ui">',
       '  <div ng-if="config.ui == UI.LOUDSPEAKER">',
       '    <button class="volume-play-button" ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
       '    <button class="volume-stop-button" ng-click="pause()" ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-off"></i></button>',
