@@ -22,7 +22,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
 
     var AUDIO_FORMATS = [
       {
-        mime: "audio/mp3",
+        mime: 'audio/mp3',
         suffix: 'mp3'
       }
     ];
@@ -71,8 +71,8 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       return _.defaults(fullModel, {
         fileName: '',
         formats: {},
-        pauseButtonLabel: "Stop",
-        playButtonLabel: "Listen",
+        pauseButtonLabel: 'Stop',
+        playButtonLabel: 'Listen',
         ui: UI.PLAY_PAUSE
       });
     }
@@ -84,6 +84,8 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       });
       if (audioFormat) {
         delete scope.fullModel.formats[audioFormat.mime];
+      } else {
+        console.error('Unexpected audio format: ' + src);
       }
     }
 
@@ -94,6 +96,8 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       });
       if (audioFormat) {
         scope.fullModel.formats[audioFormat.mime] = src;
+      } else {
+        console.error('Unexpected audio format: ' + src);
       }
     }
 
