@@ -5,16 +5,58 @@
 }
 
 .corespring-audio-view {
+
+  &.loudspeaker {
+    display: inline-block;
+  }
+
   &.playPause {
     display: inline-block;
   }
+
+  &.fullControls {
+    display: block;
+  }
+
   button:disabled {
     opacity: 0.5;
+  }
+
+  @volume-button-size: 28px;
+
+  .volume-play-button {
+    width: @volume-button-size;
+    height: @volume-button-size;
+  }
+  .volume-stop-button {
+    width: @volume-button-size;
+    height: @volume-button-size;
   }
 }
 
 .corespring-audio-config {
+
   .play-pause-labels-form {
     margin-top: 6px;
   }
+
+  .prelisten-container {
+    display: flex;
+
+    #prelisten {
+      flex: 1;
+      margin-left: 20px;
+      text-align: center;
+    }
+
+    .filename-label {
+      flex: 1;
+      margin-top: 10px;
+    }
+  }
+
+  .select-ui {
+    margin-top: 25px;
+  }
+
 }

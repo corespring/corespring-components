@@ -6,6 +6,10 @@
   "released" : true,
   "insertInline" : true,
   "libraries": [
+    {
+      "name": "widgets",
+      "organization": "corespring"
+    }
   ],
   "dependencies" : {
     "client": {
