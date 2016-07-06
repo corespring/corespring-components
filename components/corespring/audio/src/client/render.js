@@ -36,8 +36,8 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
 
     scope.playButtonDisabled = true;
 
-    scope.pause = pause;
     scope.play = play;
+    scope.stop = stop;
 
     var unusedFunctions = [
       'answerChangedHandler',
@@ -130,8 +130,9 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
       scope.playerStatus = PLAYER_STATUS.PAUSED;
     }
 
-    function pause() {
+    function stop() {
       audioElement.pause();
+      audioElement.reset();
       scope.playerStatus = PLAYER_STATUS.PAUSED;
     }
 
@@ -146,11 +147,11 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
       '<div class="corespring-audio-render" ng-class="config.ui">',
       '  <div ng-if="config.ui == UI.LOUDSPEAKER">',
       '    <button class="volume-play-button" ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
-      '    <button class="volume-stop-button" ng-click="pause()" ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-off"></i></button>',
+      '    <button class="volume-stop-button" ng-click="stop()" ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-off"></i></button>',
       '  </div>',
       '  <div ng-if="config.ui == UI.PLAY_PAUSE">',
       '    <button ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING">{{config.playButtonLabel}}</button>',
-      '    <button ng-click="pause()" ng-show="playerStatus == PLAYER_STATUS.PLAYING">{{config.pauseButtonLabel}}</button>',
+      '    <button ng-click="stop()" ng-show="playerStatus == PLAYER_STATUS.PLAYING">{{config.pauseButtonLabel}}</button>',
       '  </div>',
       '  <audio>',
       '    <source ng-repeat="src in sources" ng-src="{{src.trustedUrl}}" type="{{src.type}}">',

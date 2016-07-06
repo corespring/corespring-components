@@ -8,6 +8,7 @@ function AudioTagController(element, audioElementQuery, onLoaded, onEnded) {
   this.destroy = destroy;
   this.pause = pause;
   this.play = play;
+  this.reset = reset;
   this.update = update;
 
   function getAudioElement() {
@@ -32,6 +33,10 @@ function AudioTagController(element, audioElementQuery, onLoaded, onEnded) {
   function pause() {
     var audioElement = getAudioElement();
     audioElement[0].pause();
+  }
+
+  function reset() {
+    var audioElement = getAudioElement();
     audioElement[0].currentTime = 0;
   }
 
