@@ -8,13 +8,6 @@ exports.directives = [
   }
 ];
 
-/**
- * The difference between fileName and the formats
- * is that the fileName is the name of the uploaded file
- * while the formats are the files that are fed into the audio
- * player. Potentially a conversion takes place on the server,
- * eg. from one format to another or to a lower quality
- */
 function ConfigAudioPlayerDirective(EditingAudioService) {
 
   return {
@@ -26,13 +19,6 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
   };
 
   function link(scope, element, attrs) {
-
-    var AUDIO_FORMATS = [
-      {
-        mime: 'audio/mp3',
-        suffix: 'mp3'
-      }
-    ];
 
     var UI = {
       LOUDSPEAKER: 'loudspeaker',
@@ -50,9 +36,8 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     scope.status = 'initial';
     scope.UI = UI;
 
-    scope.addSrc = addSrc;
-    scope.removeSrc = removeSrc;
     scope.removeFile = removeFile;
+    scope.withoutUniqueId = withoutUniqueId;
 
     scope.containerBridge = {
       getModel: getModel,
@@ -78,50 +63,21 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     function addDefaults(fullModel) {
       return _.defaults(fullModel, {
         fileName: '',
-        formats: {},
         pauseButtonLabel: 'Stop',
         playButtonLabel: 'Listen',
         ui: UI.PLAY_PAUSE
       });
     }
 
-    function removeSrc(src) {
-      var suffix = getSuffix(src);
-      var audioFormat = _.find(AUDIO_FORMATS, function(format) {
-        return format.suffix === suffix;
-      });
-      if (audioFormat) {
-        delete scope.fullModel.formats[audioFormat.mime];
-      } else {
-        console.error('Unexpected audio format: ' + src);
-      }
-    }
-
-    function addSrc(src) {
-      var suffix = getSuffix(src);
-      var audioFormat = _.find(AUDIO_FORMATS, function(format) {
-        return format.suffix === suffix;
-      });
-      if (audioFormat) {
-        scope.fullModel.formats[audioFormat.mime] = src;
-      } else {
-        console.error('Unexpected audio format: ' + src);
-      }
-    }
-
-    function getSuffix(src) {
-      return ('' + src).split('.').pop();
-    }
-
     /**
      * scope.fileName is set by the fileChooser/Uploader
-     * Also it sets scope.data.imageUrl to the download url of the file
+     * This also sets scope.data.imageUrl to the download-url
+     * of the file, which might be different
      */
     function watchFileName(newValue, oldValue) {
       if (newValue) {
         if (scope.data.imageUrl) {
-          scope.fullModel.fileName = newValue;
-          addSrc(scope.data.imageUrl);
+          scope.fullModel.fileName = scope.data.imageUrl;
         }
       }
     }
@@ -140,11 +96,18 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     }
 
     function removeFile(){
-      _.forEach(scope.fullModel.formats, function(src){
-        EditingAudioService.deleteFile(src);
-      });
-      scope.fullModel.formats = {};
+      if(scope.fullModel.fileName) {
+        EditingAudioService.deleteFile(scope.fullModel.fileName);
+      }
       scope.fullModel.fileName = '';
+    }
+
+    function withoutUniqueId(s){
+      var parts = (s + '').split('-');
+      if(parts.length > 1){
+        parts.shift();
+      }
+      return parts.join('-');
     }
   }
 
@@ -175,7 +138,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       '  </div>',
       '  <div class="prelisten-container" ng-show="fullModel.fileName">',
       '    <div class="filename-label">',
-      '      Uploaded File: <label>{{fullModel.fileName}}</label>',
+      '      Uploaded File: <label>{{withoutUniqueId(fullModel.fileName)}}</label>',
       '    </div>',
       '    <div id="prelisten" corespring-audio=""/>',
       '  </div>',

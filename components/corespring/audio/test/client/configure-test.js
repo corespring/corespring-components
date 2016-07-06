@@ -12,12 +12,10 @@ describe('corespring-audio-configure', function() {
   var testModel;
 
   var testModelTemplate = {
-    ui: 'fullControls',
-    playButtonLabel: '>',
+    fileName: 'test.mp3',
     pauseButtonLabel: '||',
-    formats: {
-      'audio/mp3': 'test.mp3'
-    }
+    playButtonLabel: '>',
+    ui: 'fullControls'
   };
 
   var mockEditingAudioService = {
@@ -29,7 +27,7 @@ describe('corespring-audio-configure', function() {
   beforeEach(function() {
     module(function($provide) {
       $provide.value('EditingAudioService', mockEditingAudioService);
-      $provide.value('WIGGI_EVENTS', {'LAUNCH_DIALOG' : 'launchDialog'});
+      $provide.value('EditingAudioService', mockEditingAudioService);
       testModel = _.cloneDeep(testModelTemplate);
     });
   });
@@ -64,40 +62,7 @@ describe('corespring-audio-configure', function() {
     expect(scope.fullModel.ui).toBe('fullControls');
     expect(scope.fullModel.playButtonLabel).toBe('>');
     expect(scope.fullModel.pauseButtonLabel).toBe('||');
-    expect(scope.fullModel.formats).toEqual({'audio/mp3': 'test.mp3'});
-  });
-
-  describe('addSrc', function(){
-    beforeEach(function(){
-      container.elements['1'].setModel(testModel);
-    });
-
-    it("adds the src", function(){
-      scope.addSrc('test.mp3');
-      expect(scope.fullModel.formats['audio/mp3']).toEqual('test.mp3');
-    });
-
-    it("replaces source", function(){
-      scope.addSrc('test2.mp3');
-      expect(scope.fullModel.formats['audio/mp3']).toEqual('test2.mp3');
-    });
-  });
-
-  describe('removeSrc', function(){
-    beforeEach(function(){
-      container.elements['1'].setModel(testModel);
-    });
-
-    it("removes the src", function(){
-      scope.removeSrc('test.mp3');
-      expect(scope.fullModel.formats).toEqual({});
-    });
-
-    it("does not remove other sources", function(){
-      scope.fullModel.formats['audio/ogg'] = "test.ogg";
-      scope.removeSrc('test.mp3');
-      expect(scope.fullModel.formats).toEqual({'audio/ogg' : 'test.ogg'});
-    });
+    expect(scope.fullModel.fileName).toEqual('test.mp3');
   });
 
   describe('fileName', function(){
@@ -106,13 +71,38 @@ describe('corespring-audio-configure', function() {
       container.elements['1'].setModel(testModel);
     });
 
-    it('when changed to string, the imageUrl should be added as a format', function(){
+    it('when changed to string, the fullModel.fileName should be set', function(){
       scope.data = {imageUrl: '1234-abc.mp3'};
       scope.fileName = 'abc.mp3';
       scope.$digest();
-      expect(scope.fullModel.formats['audio/mp3']).toBe('1234-abc.mp3');
+      expect(scope.fullModel.fileName).toBe('1234-abc.mp3');
     });
 
+  });
+
+  describe('removeFile', function(){
+    beforeEach(function(){
+      container.elements['1'].setModel(testModel);
+    });
+
+    it('calls EditingAudioService.deleteFile', function(){
+      scope.removeFile();
+      expect(mockEditingAudioService.deleteFile).toHaveBeenCalledWith('test.mp3');
+    });
+
+    it('clears the model', function(){
+      scope.removeFile();
+      expect(scope.fullModel.fileName).toBeFalsy();
+    });
+  });
+
+  describe('withoutUniqueId', function(){
+    it('removes unique id', function(){
+      expect(scope.withoutUniqueId('12345-test.mp3')).toBe('test.mp3');
+    });
+    it('retains other parts separated by -', function(){
+      expect(scope.withoutUniqueId('12345-test-one.mp3')).toBe('test-one.mp3');
+    });
   });
 
 });
