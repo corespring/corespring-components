@@ -74,7 +74,9 @@ var main = [
         setResponse: function(response) {
           $log.debug('[graphic gap match] setResponse: ', response);
           scope.response = response;
-          scope.showCorrectAnswerButton = response.correctness !== 'correct';
+          scope.showCorrectAnswerButton = response.correctness !== 'correct'
+            && response.correctness !== 'warning'
+            && response.correctness !== 'instructor';
         },
 
         setMode: function(newMode) {
@@ -395,7 +397,7 @@ var main = [
       link: link,
       template: [
         '<div class="view-graphic-gap-match {{mode}} editable-{{editable}}">',
-        '  <correct-answer-toggle visible="showCorrectAnswerButton && response.correctness !== \'instructor\' " toggle="bridge.answerVisible"></correct-answer-toggle>',
+        '  <correct-answer-toggle visible="showCorrectAnswerButton" toggle="bridge.answerVisible"></correct-answer-toggle>',
         '  <div class="clearfix"></div>',
         '  <div class="undo-startover button-row" ng-hide="response || response.correctness === \'instructor\'"">',
         '    <span cs-undo-button-with-model></span>',
@@ -405,30 +407,33 @@ var main = [
         '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="(response && response.correctness === \'instructor\')">',
         choices(['left', 'top']),
         '    <div class="answers">',
-        '      <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
-        '           data-drop="true"',
-        '           jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
-        '        <svg ng-if="model.config.showHotspots" class="hotspots">',
-        '          <g ng-repeat="hotspot in model.hotspots">',
-        '            <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
-        '            <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
-        '          </g>',
-        '        </svg>',
-        '        <div class="dropped choice {{correctClass(choice)}}"',
-        '             ng-repeat="choice in droppedChoices"',
-        '             ng-style="{left: choice.left, top: choice.top}"',
-        '             data-drag="editable"',
-        '             jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
-        '             data-jqyoui-options="draggableJquiOptions"',
-        '             ng-bind-html-unsafe="choice.label">',
+        '      <div class="students-response" ng-class="{studentsResponseHidden: bridge.answerVisible}">',
+        '        <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
+        '             data-drop="true"',
+        '             jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
+        '          <svg ng-if="model.config.showHotspots" class="hotspots">',
+        '            <g ng-repeat="hotspot in model.hotspots">',
+        '              <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '              <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '            </g>',
+        '          </svg>',
+        '          <div class="dropped choice {{correctClass(choice)}}"',
+        '               ng-repeat="choice in droppedChoices"',
+        '               ng-style="{left: choice.left, top: choice.top}"',
+        '               data-drag="editable"',
+        '               jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
+        '               data-jqyoui-options="draggableJquiOptions"',
+        '               ng-bind-html-unsafe="choice.label">',
+        '          </div>',
+        '          <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}"/>',
         '        </div>',
-        '        <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}"/>',
         '      </div>',
+        '      <div ng-class="{correctAnswerVisible: bridge.answerVisible}" class="correct-answer-holder">' + correctAnswer + '</div>',
         '    </div>',
+
         choices(['bottom', 'right']),
         '  </div>',
         '  <div feedback="response.feedback.message" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
-        '  <div ng-if="bridge.answerVisible" class="correct-answer-holder">' + correctAnswer + '</div>',
         '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
         choices(['left', 'top'], 'incorrect'),
         correctAnswer,

@@ -9,8 +9,20 @@
   .main-container {
     margin-bottom: 5px;
 
+    .answers {
+      position: relative;
+
+      .students-response {
+        opacity: 1;
+        transition: opacity linear 0.25s;
+
+        &.studentsResponseHidden {
+          opacity: 0;
+        }
+      }
+    }
+
     &.top .answers {
-      padding-top: 5px;
     }
 
     &.bottom .answers {
@@ -50,10 +62,6 @@
 
     &.warning {
       border: 2px solid @warning-color-border;
-    }
-
-    .fixed-width img {
-      max-width: 430px;
     }
 
     .hotspots {
@@ -138,6 +146,17 @@
   }
 
   .correct-answer-holder {
+    position: absolute;
+    left: 0px;
+    top: -1px;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity linear 0.25s;
+
+    &.correctAnswerVisible {
+      opacity: 1;
+    }
     .choice {
       position: relative;
       margin-right: 6px;
