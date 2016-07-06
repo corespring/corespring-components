@@ -1,5 +1,7 @@
 describe('corespring-audio-render', function() {
 
+  var element, scope, rootScope, container, testModel;
+
   var MockComponentRegister = function() {
     this.elements = {};
     this.registerComponent = function(id, bridge) {
@@ -7,18 +9,12 @@ describe('corespring-audio-render', function() {
     };
   };
 
-  var element, scope, rootScope, container;
-
-  var testModel;
-
   var testModelTemplate = {
     data: {
-      ui: 'fullControls',
-      playButtonLabel: '>',
+      fileName: 'test.mp3',
       pauseButtonLabel: '||',
-      formats: {
-        'audio/mp3': 'test.mp3'
-      }
+      playButtonLabel: '>',
+      ui: 'fullControls'
     }
   };
 
@@ -64,7 +60,7 @@ describe('corespring-audio-render', function() {
     expect(scope.config.ui).toBe('fullControls');
     expect(scope.config.playButtonLabel).toBe('>');
     expect(scope.config.pauseButtonLabel).toBe('||');
-    expect(scope.config.formats).toEqual({'audio/mp3': 'test.mp3'});
+    expect(scope.config.fileName).toEqual('test.mp3');
     expect(scope.sources.length).toEqual(1);
     expect(scope.sources[0].type).toEqual('audio/mp3');
     expect(scope.sources[0].url).toEqual('test.mp3');

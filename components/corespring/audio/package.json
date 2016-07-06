@@ -1,8 +1,9 @@
 {
-  "name": "audio-player",
-  "title": "Audio Player",
+  "name": "audio",
+  "title": "Audio",
   "organization": "corespring",
   "purpose" : "widget",
+  "titleGroup": "toolbar",
   "released" : true,
   "insertInline" : true,
   "libraries": [

@@ -1,10 +1,8 @@
 {
   "componentType": "corespring-audio",
-  "title": "Audio Player",
-  "ui": "playPause",
-  "playButtonLabel" : "Listen",
+  "fileName" : "",
   "pauseButtonLabel" : "Stop",
-  "formats": {
-  },
-  "minimumWidth": 100
+  "playButtonLabel" : "Listen",
+  "title": "Audio",
+  "ui": "playPause"
 }
