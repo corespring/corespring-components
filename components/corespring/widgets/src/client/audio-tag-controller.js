@@ -17,7 +17,11 @@ function AudioTagController(element, audioElementQuery) {
   this.onEnded = setOnEnded;
 
   function getAudioElement() {
-    return element.find(audioElementQuery);
+    var result = element.find(audioElementQuery);
+    if(result.length === 0){
+      console.warn('[AudioTagController.getAudioElement] Element not found for query: ' + audioElementQuery);
+    }
+    return result;
   }
 
   function update(showControls) {

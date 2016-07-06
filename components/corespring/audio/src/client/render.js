@@ -29,7 +29,8 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
       PAUSED: 'paused'
     };
 
-    var audioElement = new AudioTagController(element, 'audio').onLoaded(enablePlayButton).onEnded(resetStatus);
+    var audioElement = new AudioTagController(element, 'audio')
+      .onLoaded(enablePlayButton).onEnded(resetStatus);
 
     scope.UI = UI;
     scope.PLAYER_STATUS = PLAYER_STATUS;
@@ -80,9 +81,11 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
     }
 
     function prepareSources() {
-      var formats = {'audio/mp3' : scope.config.fileName};
+      var formats = {
+        'audio/mp3': scope.config.fileName
+      };
 
-      return _.map(formats, function (src, type) {
+      return _.map(formats, function(src, type) {
         var newSrc = {
           type: type,
           url: src,
