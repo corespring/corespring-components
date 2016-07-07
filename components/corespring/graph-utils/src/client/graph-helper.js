@@ -93,7 +93,9 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
           element.detach();
         }
       });
-      that.paper.clear();
+      if (that.paper) {
+        that.paper.clear();
+      }
       this.elements = [];
       this.redraw();
     };
@@ -104,29 +106,31 @@ exports.factory = [ '$log', 'ScaleUtils', 'GraphElementFactory', 'RaphaelDecorat
           element.detach();
         }
       });
-      that.paper.clear();
-      var clickArea = that.paper.rect(options.margin.left - 10, 0, options.margin.left + options.horizontalAxisLength, options.height - options.margin.bottom - 10);
-      clickArea.attr('fill','black').attr('opacity',0);
-      clickArea.mousedown(function(ev) {
-        var offX = ev.offsetX || ((ev.pageX - $(ev.target).offset().left) + options.margin.left - 10);
-        var offY = ev.offsetY || ((ev.pageY - $(ev.target).offset().top));
-        options.clickAreaMouseDown({offX: offX, offY: offY});
-        if (typeof Touch !== "undefined" && ev instanceof Touch) {
-          // Cancel the subsequent mousedown after touch
-          ev.stopPropagation();
-          ev.preventDefault();
-        }
-      });
+      if (that.paper) {
+        that.paper.clear();
+        var clickArea = that.paper.rect(options.margin.left - 10, 0, options.margin.left + options.horizontalAxisLength, options.height - options.margin.bottom - 10);
+        clickArea.attr('fill', 'black').attr('opacity', 0);
+        clickArea.mousedown(function(ev) {
+          var offX = ev.offsetX || ((ev.pageX - $(ev.target).offset().left) + options.margin.left - 10);
+          var offY = ev.offsetY || ((ev.pageY - $(ev.target).offset().top));
+          options.clickAreaMouseDown({offX: offX, offY: offY});
+          if (typeof Touch !== "undefined" && ev instanceof Touch) {
+            // Cancel the subsequent mousedown after touch
+            ev.stopPropagation();
+            ev.preventDefault();
+          }
+        });
 
-      if (that.horizontalAxis) {
-        that.horizontalAxis.draw(that.paper);
+        if (that.horizontalAxis) {
+          that.horizontalAxis.draw(that.paper);
+        }
+        if (that.verticalAxis) {
+          that.verticalAxis.draw(that.paper);
+        }
+        _.each(that.elements, function(element) {
+          element.draw(that.paper);
+        });
       }
-      if (that.verticalAxis) {
-        that.verticalAxis.draw(that.paper);
-      }
-      _.each(that.elements, function(element) {
-        element.draw(that.paper);
-      });
     };
 
     this.getUnitSize = function() {

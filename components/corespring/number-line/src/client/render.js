@@ -102,7 +102,9 @@ var main = [
             _.each(scope.response, function(o, level) {
                o.isCorrect = undefined;
             });
-            scope.rebuildHook();
+            if (scope.rebuildHook) {
+              scope.rebuildHook();
+            }
           }
         },
 
@@ -126,6 +128,10 @@ var main = [
         }
       };
 
+      scope.$watch('answerExpanded', function() {
+        scope.$broadcast('setVisible', scope.answerExpanded ? 1 : 0);
+      });
+
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
@@ -139,23 +145,24 @@ var main = [
       template: [
         '<div class="view-number-line">',
         '  <correct-answer-toggle visible="serverResponse && serverResponse.correctness === \'incorrect\'" toggle="answerExpanded"></correct-answer-toggle>',
-        '  <div interactive-graph ng-show="!answerExpanded"',
-        '      ngModel="model"',
-        '      ng-hide="serverResponse && serverResponse.correctness == \'warning\'"',
-        '      options="options"',
-        '      responseModel="response"',
-        '      serverResponse="serverResponse"',
-        '      changeHandler="changeHandler()"',
-        '      rebuildHook="rebuildHook"',
-        '      editable="editable"',
-        '      colors="colors">',
-        '  </div>',
-        '  <div class="solution" interactive-graph ng-if="serverResponse && answerExpanded"',
-        '      ngModel="correctModel"',
-        '      serverResponse="correctModelDummyResponse"',
-        '      responseModel="dummyResponse"',
-        '      colors="colors">',
-        '  </div>',
+        '  <response-wrapper ng-show="serverResponse.correctness !== \'warning\'">',
+        '    <div interactive-graph',
+        '        ngModel="model"',
+        '        options="options"',
+        '        responseModel="response"',
+        '        serverResponse="serverResponse"',
+        '        changeHandler="changeHandler()"',
+        '        rebuildHook="rebuildHook"',
+        '        editable="editable"',
+        '        colors="colors">',
+        '    </div>',
+        '    <div class="solution" interactive-graph ng-if="serverResponse"',
+        '        ngModel="correctModel"',
+        '        serverResponse="correctModelDummyResponse"',
+        '        responseModel="dummyResponse"',
+        '        colors="colors">',
+        '    </div>',
+        '  </response-wrapper>',
         '  <div ng-if="serverResponse && serverResponse.correctness == \'warning\'" class="no-response">',
         '    <div interactive-graph',
         '         ngModel="correctModel"',
