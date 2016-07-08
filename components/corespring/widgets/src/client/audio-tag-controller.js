@@ -27,6 +27,9 @@ function AudioTagController(element, audioElementQuery) {
   function update(showControls) {
     var audioElement = getAudioElement();
     audioElement.attr('controls', showControls);
+    if(!showControls){
+      audioElement[0].volume = 1.0;
+    }
     audioElement.off('loadeddata', onLoaded);
     audioElement.on('loadeddata', onLoaded);
     audioElement.load();
@@ -48,7 +51,7 @@ function AudioTagController(element, audioElementQuery) {
 
   function reset() {
     var audioElement = getAudioElement();
-    audioElement[0].currentTime = 0;
+    audioElement[0].currentTime = 0.0;
     return this;
   }
 

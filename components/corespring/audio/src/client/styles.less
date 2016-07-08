@@ -22,15 +22,18 @@
     opacity: 0.5;
   }
 
-  @volume-button-size: 28px;
+  .volume-button {
+    font-size: 28px;
+    line-height: 1;
+    padding: 0 2px 0 3px;
 
-  .volume-play-button {
-    width: @volume-button-size;
-    height: @volume-button-size;
-  }
-  .volume-stop-button {
-    width: @volume-button-size;
-    height: @volume-button-size;
+    &.play {
+
+    }
+
+    &.stop {
+      opacity: .5;
+    }
   }
 }
 
