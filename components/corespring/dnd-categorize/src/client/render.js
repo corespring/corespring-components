@@ -729,8 +729,10 @@ function renderCorespringDndCategorize(
 
   function itemFeedbackPanel() {
     return [
-        '<div feedback="response.feedback" icon-set="{{iconset}}"',
-        '   correct-class="{{response.correctClass}} {{response.warningClass}}">',
+        '<div ng-show="!feedback.isSeeAnswerPanelExpanded">',
+        '  <div feedback="response.feedback" icon-set="{{iconset}}"',
+        '     correct-class="{{response.correctClass}} {{response.warningClass}}">',
+        '  </div>',
         '</div>'
       ].join('');
   }
