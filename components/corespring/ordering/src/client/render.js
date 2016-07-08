@@ -168,6 +168,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
         setMode: function(mode) {
           scope.mode = mode;
+          console.log(mode);
         },
 
         getSession: function() {

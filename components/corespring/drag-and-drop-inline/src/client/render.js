@@ -40,6 +40,7 @@ var main = [
     function link(scope, element, attrs) {
 
       scope.$watch('seeSolutionExpanded', function() {
+        console.log('scope.seeSolutionExpanded', scope.seeSolutionExpanded);
         scope.$broadcast('setVisible', scope.seeSolutionExpanded ? 1 : 0);
       });
 
@@ -126,6 +127,9 @@ var main = [
 
       function setMode(mode) {
         scope.mode = mode;
+        if (mode.trim() === 'gather') {
+          resetSolution();
+        }
       }
 
       function isAnswerEmpty() {
@@ -180,13 +184,17 @@ var main = [
 
       function reset() {
         scope.resetChoices(scope.rawModel);
+        resetSolution();
+        scope.initUndo();
+      }
 
+      function resetSolution() {
+        console.log('called resetSolution');
+        scope.response = undefined;
         scope.correctResponse = undefined;
         scope.instructorData = undefined;
-        scope.response = undefined;
         scope.seeSolutionExpanded = false;
-
-        scope.initUndo();
+        scope.$broadcast('setVisible', 0);
       }
 
       function doRenderAnswerArea(targetSelector, scope) {
@@ -241,7 +249,7 @@ var main = [
 
         function getFeedbackForChoice(answerAreaId, index) {
           var result;
-          if (scope.response.feedbackPerChoice &&
+          if (scope.response && scope.response.feedbackPerChoice &&
             _.isArray(scope.response.feedbackPerChoice[answerAreaId])) {
             result = scope.response.feedbackPerChoice[answerAreaId][index];
           }
@@ -325,7 +333,9 @@ var main = [
              choiceArea(),
         '  </div>',
         '  <div class="clearfix"></div>',
-        '  <div ng-show="feedback" icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
+        '  <div ng-if="response.feedback && !seeSolutionExpanded">',
+        '    <div icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
+        '  </div>',
         '</div>'
       ].join('');
     }
