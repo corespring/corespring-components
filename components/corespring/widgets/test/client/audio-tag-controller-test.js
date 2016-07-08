@@ -1,13 +1,13 @@
 describe('audio-tag-controller', function() {
 
-  var scope, audioTagController, showControls, mockElement;
+  var scope, audioTagController, showControls;
 
   var mockAudioElement = {
     pause: jasmine.createSpy('pause'),
     play: jasmine.createSpy('play'),
     currentTime: 1.0,
     volume: 1.0
-  }
+  };
 
   var mockElement = {
     find: function(query){
@@ -18,9 +18,9 @@ describe('audio-tag-controller', function() {
         load: jasmine.createSpy('load'),
         off: jasmine.createSpy('off'),
         on: jasmine.createSpy('on')
-      }
+      };
     }
-  }
+  };
 
   beforeEach(angular.mock.module('test-app'));
 
