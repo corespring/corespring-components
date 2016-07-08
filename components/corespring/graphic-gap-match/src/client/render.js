@@ -433,7 +433,9 @@ var main = [
 
         choices(['bottom', 'right']),
         '  </div>',
-        '  <div feedback="response.feedback.message" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
+        '  <div ng-if="!bridge.answerVisible">',
+        '    <div feedback="response.feedback.message" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
+        '  </div>',
         '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
         choices(['left', 'top'], 'incorrect'),
         correctAnswer,
