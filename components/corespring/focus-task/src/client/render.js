@@ -18,6 +18,7 @@ exports.directive = [
 
       scope.inputType = 'checkbox';
       scope.editable = true;
+      scope.locked = false;
       scope.answer = {
         choices: {}
       };
@@ -40,6 +41,18 @@ exports.directive = [
       scope.getChoiceClass = getChoiceClass;
       scope.toggleChoice = toggleChoice;
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
+      scope.$watch('answer', function(newValue) {
+        function canSelectMoreChoices() {
+          var selectedCount = (scope.answer && scope.answer.choices) ? (_.countBy(scope.answer.choices, function(choice) {
+            return choice === true;
+          }).true || 0) : 0;
+          var allowedChoiceCount = (scope.question && scope.question.config && scope.question.config.maxSelections) ?
+            scope.question.config.maxSelections : selectedCount + 1;
+          return selectedCount >= allowedChoiceCount;
+        }
+        setLocked(canSelectMoreChoices());
+      }, true);
 
       //------------------------------------------------------------------------
 
@@ -198,6 +211,10 @@ exports.directive = [
         }, true);
       }
 
+      function setLocked(e) {
+        scope.locked = e;
+      }
+
       function setEditable(e) {
         scope.editable = e;
       }
@@ -225,8 +242,10 @@ exports.directive = [
       }
 
       function toggleChoice(choice) {
-        if (scope.editable) {
+        if (scope.editable && !scope.locked) {
           scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
+        } else if (scope.locked && scope.answer.choices[choice.value]) {
+          scope.answer.choices[choice.value] = false;
         }
       }
     }
@@ -238,7 +257,7 @@ exports.directive = [
         '    <div ng-repeat="row in getRows()">',
         '      <div class="focus-row" ng-class="question.config.orientation">',
         '        <div class="inner">',
-        '          <div ng-repeat="o in getChoicesForRow(row)" ng-click="toggleChoice(o)" enabled="{{editable}}" class="focus-element {{getChoiceClass(o)}}">',
+        '          <div ng-repeat="o in getChoicesForRow(row)" ng-click="toggleChoice(o)" enabled="{{editable && !locked}}" class="focus-element {{getChoiceClass(o)}}">',
         '            <span>{{o.label}}</span>',
         '           </div>',
         '         </div>',
