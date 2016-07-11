@@ -20,11 +20,13 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
   };
 
   function controller(scope){
-    scope.$on('registerComponent', function(event, id, bridge){
+    scope.$on('registerComponent', savePrelistenContainerBridge);
+
+    function savePrelistenContainerBridge(event, id, bridge){
       if(id === 'prelisten'){
         scope.prelisten = bridge;
       }
-    });
+    }
   }
 
   function link(scope, element, attrs) {
@@ -46,7 +48,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     scope.UI = UI;
 
     scope.removeFile = removeFile;
-    scope.formatFilename = formatFilename;
+    scope.formatFileName = formatFileName;
 
     scope.containerBridge = {
       getModel: getModel,
@@ -94,6 +96,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
 
     function watchFullModel() {
       debouncedUpdatePrelisten();
+      updateFormattedFileName();
     }
 
     function updatePrelisten() {
@@ -101,6 +104,10 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
         data: getModel(),
         session: {}
       });
+    }
+
+    function updateFormattedFileName(){
+      scope.formattedFileName = formatFileName(scope.fullModel.fileName || '');
     }
 
     function removeFile(){
@@ -119,8 +126,13 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       return parts.join('-');
     }
 
-    function formatFilename(s){
-      return decodeURIComponent(withoutUniqueId(s));
+    function decodeURIMultiple(s){
+      var decoded = decodeURI(s);
+      return decoded === s ? decoded : decodeURIMultiple(decoded);
+    }
+
+    function formatFileName(s){
+      return decodeURIMultiple(withoutUniqueId(s));
     }
   }
 
@@ -156,7 +168,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       '  <div class="prelisten-container"',
       '      ng-show="fullModel.fileName">',
       '    <div class="filename-label">',
-      '      Uploaded File: <label>{{formatFilename(fullModel.fileName)}}</label>',
+      '      Uploaded File: <label>{{formattedFileName}}</label>',
       '    </div>',
       '    <div id="prelisten"',
       '        corespring-audio=""/>',
