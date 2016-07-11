@@ -236,7 +236,7 @@ var main = [
       }
 
       function classForChoice(answerAreaId, index) {
-        if (scope.response) {
+        if (!_.isEmpty(scope.response)) {
           var feedback = getFeedbackForChoice(answerAreaId, index);
           return feedback === 'correct' ? 'correct' : 'incorrect';
         }
