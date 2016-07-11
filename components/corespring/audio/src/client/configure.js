@@ -11,12 +11,21 @@ exports.directives = [
 function ConfigAudioPlayerDirective(EditingAudioService) {
 
   return {
+    controller: ['$scope', controller],
     link: link,
     replace: true,
     restrict: 'AE',
     scope: {},
     template: template()
   };
+
+  function controller(scope){
+    scope.$on('registerComponent', function(event, id, bridge){
+      if(id === 'prelisten'){
+        scope.prelisten = bridge;
+      }
+    });
+  }
 
   function link(scope, element, attrs) {
 
@@ -37,7 +46,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     scope.UI = UI;
 
     scope.removeFile = removeFile;
-    scope.withoutUniqueId = withoutUniqueId;
+    scope.formatFilename = formatFilename;
 
     scope.containerBridge = {
       getModel: getModel,
@@ -46,6 +55,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
 
     scope.$watch('fullModel', watchFullModel, true);
     scope.$watch('fileName', watchFileName);
+
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
     //--------------------------------------------
@@ -87,9 +97,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     }
 
     function updatePrelisten() {
-      var prelisten = element.find('#prelisten');
-      var containerBridge = prelisten.scope().$$childHead.containerBridge;
-      containerBridge.setDataAndSession({
+      scope.prelisten.setDataAndSession({
         data: getModel(),
         session: {}
       });
@@ -100,6 +108,7 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
         EditingAudioService.deleteFile(scope.fullModel.fileName);
       }
       scope.fullModel.fileName = '';
+      scope.status = 'initial';
     }
 
     function withoutUniqueId(s){
@@ -109,14 +118,20 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       }
       return parts.join('-');
     }
+
+    function formatFilename(s){
+      return decodeURIComponent(withoutUniqueId(s));
+    }
   }
 
   function template() {
     return [
-      '<div class="corespring-audio-configure" ng-class="fullModel.ui">',
+      '<div class="corespring-audio-configure"',
+      '    ng-class="fullModel.ui">',
       '  <div class="alert alert-danger wiggi-wiz-alert ng-hide"',
-      '      ng-show="error"',
-      '      ng-bind="error"></div>',
+      '      ng-show="error">',
+      '    <span ng-bind-html-unsafe="error"/>',
+      '  </div>',
       '  <div class="alert alert-success wiggi-wiz-alert ng-hide"',
       '      ng-show="fileName"><strong>Upload successful.</strong><br/>You have successfully uploaded: {{fileName}}',
       '  </div>',
@@ -128,33 +143,50 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       '  <div ng-hide="fullModel.fileName">',
       '    <p>Upload .mp3 audio file (maximum size {{imageService.maxSizeKb}}kb).</p>',
       '    <button ng-show="status == \'initial\' || status == \'failed\'"',
-      '       class="btn btn-primary upload-button"',
-      '       file-chooser="">',
-      '       <span class="upload-icon"><i class="fa fa-upload"></i></span> Upload Audio File',
+      '        class="btn btn-primary upload-button"',
+      '        file-chooser="">',
+      '      <span class="upload-icon"><i class="fa fa-upload"></i></span> Upload Audio File',
       '    </button>',
       '  </div>',
       '  <div ng-show="fullModel.fileName">',
-      '    <button class="btn btn-primary upload-button" ng-click="removeFile()">Remove Audio</button>',
+      '    <button class="btn btn-primary upload-button"',
+      '        ng-click="removeFile()">Remove Audio',
+      '    </button>',
       '  </div>',
-      '  <div class="prelisten-container" ng-show="fullModel.fileName">',
+      '  <div class="prelisten-container"',
+      '      ng-show="fullModel.fileName">',
       '    <div class="filename-label">',
-      '      Uploaded File: <label>{{withoutUniqueId(fullModel.fileName)}}</label>',
+      '      Uploaded File: <label>{{formatFilename(fullModel.fileName)}}</label>',
       '    </div>',
-      '    <div id="prelisten" corespring-audio=""/>',
+      '    <div id="prelisten"',
+      '        corespring-audio=""/>',
       '  </div>',
       '  <div class="select-ui">',
       '    <p>Audio Display Options</p>',
-      '      <radio ng-model="fullModel.ui" value="{{UI.FULL_CONTROLS}}" class="control-label">Full Control Panel</radio>',
-      '      <radio ng-model="fullModel.ui" value="{{UI.LOUDSPEAKER}}" class="control-label">Speaker Icon</radio>',
-      '      <radio ng-model="fullModel.ui" value="{{UI.PLAY_PAUSE}}" class="control-label">Customized Play/Stop Button</radio>',
-      '      <div class="play-pause-labels-form" ng-show="fullModel.ui == UI.PLAY_PAUSE">',
-      '        <label>Play Button Label:',
-      '          <input type="text" class="form-control" ng-model="fullModel.playButtonLabel"/>',
-      '        </label>',
-      '        <label>Pause Button Label',
-      '          <input type="text" class="form-control" ng-model="fullModel.pauseButtonLabel"/>',
-      '        </label>',
-      '      </div>',
+      '    <radio ng-model="fullModel.ui"',
+      '        value="{{UI.FULL_CONTROLS}}"',
+      '        class="control-label">Full Control Panel',
+      '    </radio>',
+      '    <radio ng-model="fullModel.ui"',
+      '        value="{{UI.LOUDSPEAKER}}"',
+      '        class="control-label">Speaker Icon',
+      '    </radio>',
+      '    <radio ng-model="fullModel.ui"',
+      '        value="{{UI.PLAY_PAUSE}}"',
+      '        class="control-label">Customized Play/Stop Button',
+      '    </radio>',
+      '    <div class="play-pause-labels-form"',
+      '        ng-show="fullModel.ui == UI.PLAY_PAUSE">',
+      '      <label>Play Button Label:',
+      '        <input type="text"',
+      '            class="form-control"',
+      '            ng-model="fullModel.playButtonLabel"/>',
+      '      </label>',
+      '      <label>Pause Button Label',
+      '        <input type="text"',
+      '            class="form-control"',
+      '            ng-model="fullModel.pauseButtonLabel"/>',
+      '      </label>',
       '    </div>',
       '  </div>',
       '</div>'

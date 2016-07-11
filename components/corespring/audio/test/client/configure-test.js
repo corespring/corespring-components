@@ -96,12 +96,15 @@ describe('corespring-audio-configure', function() {
     });
   });
 
-  describe('withoutUniqueId', function(){
+  describe('formatFilename', function(){
     it('removes unique id', function(){
-      expect(scope.withoutUniqueId('12345-test.mp3')).toBe('test.mp3');
+      expect(scope.formatFilename('12345-test.mp3')).toBe('test.mp3');
     });
     it('retains other parts separated by -', function(){
-      expect(scope.withoutUniqueId('12345-test-one.mp3')).toBe('test-one.mp3');
+      expect(scope.formatFilename('12345-test-one.mp3')).toBe('test-one.mp3');
+    });
+    it('decodes html encoded parts', function(){
+      expect(scope.formatFilename('test%20one.mp3')).toBe('test one.mp3');
     });
   });
 
