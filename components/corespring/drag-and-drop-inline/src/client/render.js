@@ -155,7 +155,7 @@ var main = [
 
       function setResponse(response) {
         $log.debug("[DnD-inline] setResponse: ", response);
-        scope.response = response;
+        scope.response = _.isEmpty(response) ? undefined : response;
         console.log('response', response);
         scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
