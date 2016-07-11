@@ -168,7 +168,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
         setMode: function(mode) {
           scope.mode = mode;
-          console.log(mode);
         },
 
         getSession: function() {
@@ -385,7 +384,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      </response-wrapper>',
       '    </div>',
       '    <div class="clearfix" />',
-      '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
+      '    <div ng-if="!display.showCorrectAnswer">',
+      '      <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
+      '    </div>',
       '    <div ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
       '      <ul class="clearfix correct-choices" ng-class="showCorrectResponse() ? \'shown\' : \'not-shown\'">',
       '        <li ng-repeat="choice in correctChoices">',
@@ -416,11 +417,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       '      <div class="choice-area">', choices, '</div>',
       '      <div class="see-answer-area choice-area pull-right">' + correctAnswerArea() + '</div>',
       '    </div>',
-      '    <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\'">',
+      '    <div class="feedback-holder" ng-if="model.config.choiceAreaLayout == \'horizontal\' && !display.showCorrectAnswer">',
       '      <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
       '    </div>',
       '  </div>',
-      '  <div ng-if="model.config.choiceAreaLayout == \'vertical\'">',
+      '  <div ng-if="model.config.choiceAreaLayout == \'vertical\' && !display.showCorrectAnswer">',
       '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
       '  </div>',
       '</div>'
