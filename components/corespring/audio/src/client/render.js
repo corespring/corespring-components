@@ -18,22 +18,19 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
 
   function link(scope, element, attrs) {
 
-    var UI = {
-      LOUDSPEAKER: 'loudspeaker',
+    var UI = scope.UI = {
       FULL_CONTROLS: 'fullControls',
-      PLAY_PAUSE: 'playPause'
+      PLAY_PAUSE: 'playPause',
+      SPEAKER: 'speaker'
     };
 
-    var PLAYER_STATUS = {
-      PLAYING: 'playing',
-      PAUSED: 'paused'
+    var PLAYER_STATUS = scope.PLAYER_STATUS = {
+      PAUSED: 'paused',
+      PLAYING: 'playing'
     };
 
     var audioElement = new AudioTagController(element, 'audio')
       .onLoaded(enablePlayButton).onEnded(resetStatus);
-
-    scope.UI = UI;
-    scope.PLAYER_STATUS = PLAYER_STATUS;
 
     scope.playButtonDisabled = true;
 
@@ -75,7 +72,7 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
         fileName: '',
         pauseButtonLabel: 'Stop',
         playButtonLabel: 'Listen',
-        ui: UI.PLAY_PAUSE
+        ui: UI.FULL_CONTROLS
       }, dataAndSession.data);
       return config;
     }
@@ -89,7 +86,7 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
         var newSrc = {
           type: type,
           url: src,
-          trustedUrl: trustUrl(src)
+          trustedUrl: $sce.trustAsResourceUrl(src)
         };
         return newSrc;
       });
@@ -113,10 +110,6 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
 
     function enablePlayButton() {
       scope.playButtonDisabled = false;
-    }
-
-    function trustUrl(url) {
-      return $sce.trustAsResourceUrl(url);
     }
 
     function addEmptyFunctions(fns, obj) {
@@ -149,17 +142,32 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
 
   function template() {
     return [
-      '<div class="corespring-audio-render" ng-class="config.ui">',
-      '  <div ng-if="config.ui == UI.LOUDSPEAKER">',
-      '    <button class="volume-button play" ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
-      '    <button class="volume-button stop" ng-click="stop()" ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
+      '<div class="corespring-audio-render"',
+      '    ng-class="config.ui">',
+      '  <div ng-if="config.ui == UI.SPEAKER">',
+      '    <button class="btn speaker-button play"',
+      '        ng-disabled="playButtonDisabled"',
+      '        ng-click="play()"',
+      '        ng-hide="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
+      '    <button class="btn speaker-button stop"',
+      '        ng-click="stop()"',
+      '        ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
       '  </div>',
       '  <div ng-if="config.ui == UI.PLAY_PAUSE">',
-      '    <button ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING">{{config.playButtonLabel}}</button>',
-      '    <button ng-click="stop()" ng-show="playerStatus == PLAYER_STATUS.PLAYING">{{config.pauseButtonLabel}}</button>',
+      '    <button class="btn"',
+      '        ng-disabled="playButtonDisabled"',
+      '        ng-click="play()"',
+      '        ng-hide="playerStatus == PLAYER_STATUS.PLAYING">{{config.playButtonLabel}}',
+      '    </button>',
+      '    <button class="btn"',
+      '        ng-click="stop()"',
+      '        ng-show="playerStatus == PLAYER_STATUS.PLAYING">{{config.pauseButtonLabel}}',
+      '    </button>',
       '  </div>',
       '  <audio>',
-      '    <source ng-repeat="src in sources" ng-src="{{src.trustedUrl}}" type="{{src.type}}">',
+      '    <source ng-repeat="src in sources"',
+      '        ng-src="{{src.trustedUrl}}"',
+      '        type="{{src.type}}">',
       '    Your browser does not support the audio element.',
       '  </audio>',
       '</div>'

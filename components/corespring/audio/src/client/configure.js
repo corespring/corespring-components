@@ -20,11 +20,11 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
     template: template()
   };
 
-  function controller(scope){
+  function controller(scope) {
     scope.$on('registerComponent', savePrelistenContainerBridge);
 
-    function savePrelistenContainerBridge(event, id, bridge){
-      if(id === 'prelisten'){
+    function savePrelistenContainerBridge(event, id, bridge) {
+      if (id === 'prelisten') {
         scope.prelisten = bridge;
       }
     }
@@ -32,10 +32,10 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
 
   function link(scope, element, attrs) {
 
-    var UI = {
-      LOUDSPEAKER: 'loudspeaker',
+    var UI = scope.UI = {
       FULL_CONTROLS: 'fullControls',
-      PLAY_PAUSE: 'playPause'
+      PLAY_PAUSE: 'playPause',
+      SPEAKER: 'speaker'
     };
 
     var debouncedUpdatePrelisten = _.debounce(updatePrelisten, 300);
@@ -48,7 +48,6 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
     scope.imageService = EditingAudioService;
     scope.percentProgress = 0;
     scope.status = 'initial';
-    scope.UI = UI;
 
     scope.removeFile = removeFile;
     scope.formatFileName = formatFileName;
@@ -68,7 +67,7 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
     // only functions below
     //--------------------------------------------
 
-    function watchError(newValue, oldValue){
+    function watchError(newValue, oldValue) {
       scope.errorMessage = newValue ? $sce.getTrustedHtml(newValue) : '';
     }
 
@@ -105,7 +104,7 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
         fileName: '',
         pauseButtonLabel: 'Stop',
         playButtonLabel: 'Listen',
-        ui: UI.PLAY_PAUSE
+        ui: UI.FULL_CONTROLS
       });
     }
 
@@ -116,32 +115,32 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
       });
     }
 
-    function updateFormattedFileName(){
+    function updateFormattedFileName() {
       scope.formattedFileName = formatFileName(scope.fullModel.fileName || '');
     }
 
-    function removeFile(){
-      if(scope.fullModel.fileName) {
+    function removeFile() {
+      if (scope.fullModel.fileName) {
         EditingAudioService.deleteFile(scope.fullModel.fileName);
       }
       scope.fullModel.fileName = '';
       scope.status = 'initial';
     }
 
-    function withoutUniqueId(s){
+    function withoutUniqueId(s) {
       var parts = (s + '').split('-');
-      if(parts.length > 1){
+      if (parts.length > 1) {
         parts.shift();
       }
       return parts.join('-');
     }
 
-    function decodeURIMultiple(s){
+    function decodeURIMultiple(s) {
       var decoded = decodeURI(s);
       return decoded === s ? decoded : decodeURIMultiple(decoded);
     }
 
-    function formatFileName(s){
+    function formatFileName(s) {
       return decodeURIMultiple(withoutUniqueId(s));
     }
 
@@ -192,7 +191,7 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
       '        class="control-label">Full Control Panel',
       '    </radio>',
       '    <radio ng-model="fullModel.ui"',
-      '        value="{{UI.LOUDSPEAKER}}"',
+      '        value="{{UI.SPEAKER}}"',
       '        class="control-label">Speaker Icon',
       '    </radio>',
       '    <radio ng-model="fullModel.ui"',
