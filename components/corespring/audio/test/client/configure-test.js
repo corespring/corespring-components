@@ -65,6 +65,34 @@ describe('corespring-audio-configure', function() {
     expect(scope.fullModel.fileName).toEqual('test.mp3');
   });
 
+  describe('error', function(){
+
+    beforeEach(function(){
+      container.elements['1'].setModel(testModel);
+    });
+
+    it('should set the errorMessage', function(){
+      scope.error = 'Some Error';
+      scope.$digest();
+      expect(scope.errorMessage).toBe('Some Error');
+    });
+
+    it('should get the value of the error', function(){
+      scope.error = {valueOf: function(){ return 'Some Error'; }};
+      scope.$digest();
+      expect(scope.errorMessage).toBe('Some Error');
+    });
+
+    it('should clear the errorMessage when error is null', function(){
+      scope.error = 'Some Error';
+      scope.$digest();
+      scope.error = null;
+      scope.$digest();
+      expect(scope.errorMessage).toBe('');
+    });
+
+  });
+
   describe('fileName', function(){
 
     beforeEach(function(){
@@ -77,7 +105,6 @@ describe('corespring-audio-configure', function() {
       scope.$digest();
       expect(scope.fullModel.fileName).toBe('1234-abc.mp3');
     });
-
   });
 
   describe('removeFile', function(){
