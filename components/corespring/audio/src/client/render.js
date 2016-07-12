@@ -79,7 +79,8 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
 
     function prepareSources() {
       var formats = {
-        'audio/mp3': scope.config.fileName
+        'audio/mp3': scope.config.fileName,
+        'audio/mpeg': scope.config.fileName //firefox doesn't like the audio/mp3 mime type
       };
 
       return _.map(formats, function(src, type) {
