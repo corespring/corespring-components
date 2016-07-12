@@ -29,6 +29,7 @@ function AudioTagController(element, audioElementQuery) {
     audioElement.attr('controls', showControls);
     if(!showControls){
       audioElement[0].volume = 1.0;
+      audioElement[0].muted = false;
     }
     audioElement.off('loadeddata', onLoaded);
     audioElement.on('loadeddata', onLoaded);

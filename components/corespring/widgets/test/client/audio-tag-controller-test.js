@@ -41,6 +41,12 @@ describe('audio-tag-controller', function() {
       audioTagController.update(showControls=false);
       expect(mockAudioElement.volume).toBe(1.0);
     });
+
+    it('sets muted to false when showControls is false', function(){
+      mockAudioElement.muted = true;
+      audioTagController.update(showControls=false);
+      expect(mockAudioElement.muted).toBe(false);
+    });
   });
 
 
