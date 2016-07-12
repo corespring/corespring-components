@@ -2,13 +2,14 @@ exports.framework = 'angular';
 exports.directives = [
   {
     directive: [
+      '$sce',
       'EditingAudioService',
       ConfigAudioPlayerDirective
     ]
   }
 ];
 
-function ConfigAudioPlayerDirective(EditingAudioService) {
+function ConfigAudioPlayerDirective($sce, EditingAudioService) {
 
   return {
     controller: ['$scope', controller],
@@ -40,8 +41,10 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     var debouncedUpdatePrelisten = _.debounce(updatePrelisten, 300);
 
     scope.data = {};
-    scope.error = '';
+    scope.error = null;
+    scope.errorMessage = '';
     scope.fileName = '';
+    scope.formattedFileName = '';
     scope.imageService = EditingAudioService;
     scope.percentProgress = 0;
     scope.status = 'initial';
@@ -55,8 +58,9 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       setModel: setModel
     };
 
-    scope.$watch('fullModel', watchFullModel, true);
+    scope.$watch('error', watchError);
     scope.$watch('fileName', watchFileName);
+    scope.$watch('fullModel', watchFullModel, true);
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
 
@@ -64,21 +68,8 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     // only functions below
     //--------------------------------------------
 
-    function getModel() {
-      return _.cloneDeep(scope.fullModel);
-    }
-
-    function setModel(fullModel) {
-      scope.fullModel = addDefaults(fullModel);
-    }
-
-    function addDefaults(fullModel) {
-      return _.defaults(fullModel, {
-        fileName: '',
-        pauseButtonLabel: 'Stop',
-        playButtonLabel: 'Listen',
-        ui: UI.PLAY_PAUSE
-      });
+    function watchError(newValue, oldValue){
+      scope.errorMessage = newValue ? $sce.getTrustedHtml(newValue) : '';
     }
 
     /**
@@ -97,6 +88,25 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     function watchFullModel() {
       debouncedUpdatePrelisten();
       updateFormattedFileName();
+    }
+
+
+
+    function getModel() {
+      return _.cloneDeep(scope.fullModel);
+    }
+
+    function setModel(fullModel) {
+      scope.fullModel = addDefaults(fullModel);
+    }
+
+    function addDefaults(fullModel) {
+      return _.defaults(fullModel, {
+        fileName: '',
+        pauseButtonLabel: 'Stop',
+        playButtonLabel: 'Listen',
+        ui: UI.PLAY_PAUSE
+      });
     }
 
     function updatePrelisten() {
@@ -134,6 +144,8 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
     function formatFileName(s){
       return decodeURIMultiple(withoutUniqueId(s));
     }
+
+
   }
 
   function template() {
@@ -141,8 +153,8 @@ function ConfigAudioPlayerDirective(EditingAudioService) {
       '<div class="corespring-audio-configure"',
       '    ng-class="fullModel.ui">',
       '  <div class="alert alert-danger wiggi-wiz-alert ng-hide"',
-      '      ng-show="error">',
-      '    <span ng-bind-html-unsafe="error"/>',
+      '      ng-show="errorMessage">',
+      '    <span ng-bind-html-unsafe="errorMessage"/>',
       '  </div>',
       '  <div class="alert alert-success wiggi-wiz-alert ng-hide"',
       '      ng-show="fileName"><strong>Upload successful.</strong><br/>You have successfully uploaded: {{fileName}}',
