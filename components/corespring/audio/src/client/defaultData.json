@@ -4,5 +4,5 @@
   "pauseButtonLabel" : "Stop",
   "playButtonLabel" : "Listen",
   "title": "Audio",
-  "ui": "playPause"
+  "ui": "fullControls"
 }
