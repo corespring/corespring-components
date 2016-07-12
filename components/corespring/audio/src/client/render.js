@@ -89,7 +89,7 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
         var newSrc = {
           type: type,
           url: src,
-          trustedUrl: trustUrl(src)
+          trustedUrl: $sce.trustAsResourceUrl(src)
         };
         return newSrc;
       });
@@ -113,10 +113,6 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
 
     function enablePlayButton() {
       scope.playButtonDisabled = false;
-    }
-
-    function trustUrl(url) {
-      return $sce.trustAsResourceUrl(url);
     }
 
     function addEmptyFunctions(fns, obj) {
@@ -151,8 +147,8 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
     return [
       '<div class="corespring-audio-render" ng-class="config.ui">',
       '  <div ng-if="config.ui == UI.LOUDSPEAKER">',
-      '    <button class="volume-button play" ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
-      '    <button class="volume-button stop" ng-click="stop()" ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
+      '    <button class="btn speaker-button play" ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
+      '    <button class="btn speaker-button stop" ng-click="stop()" ng-show="playerStatus == PLAYER_STATUS.PLAYING"><i class="fa fa-volume-up"></i></button>',
       '  </div>',
       '  <div ng-if="config.ui == UI.PLAY_PAUSE">',
       '    <button ng-disabled="playButtonDisabled" ng-click="play()" ng-hide="playerStatus == PLAYER_STATUS.PLAYING">{{config.playButtonLabel}}</button>',
