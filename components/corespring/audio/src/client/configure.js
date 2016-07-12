@@ -27,7 +27,7 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
       if (id === 'prelisten') {
         //prelisten should not register with the real ComponentRegister
         //because that confuses the client side preview
-        event.stopImmediatePropagation();
+        event.stopPropagation();
         scope.prelisten = bridge;
       }
     }
