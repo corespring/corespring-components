@@ -7,7 +7,7 @@ describe('corespring-audio-configure', function() {
     };
   };
 
-  var element, scope, rootScope, container;
+  var element, scope, rootScope, container, sce;
 
   var testModel;
 
@@ -32,7 +32,7 @@ describe('corespring-audio-configure', function() {
     });
   });
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, $sce) {
     container = new MockComponentRegister();
 
     $rootScope.$on('registerConfigPanel', function(event, id, obj) {
@@ -43,6 +43,7 @@ describe('corespring-audio-configure', function() {
     element = $compile("<corespring-audio-configure id='1'></corespring-audio-configure>")($rootScope.$new());
     scope = element.scope().$$childHead;
     rootScope = $rootScope;
+    sce = $sce;
   }));
 
   it('constructs', function() {
@@ -78,7 +79,7 @@ describe('corespring-audio-configure', function() {
     });
 
     it('should get the value of the error', function(){
-      scope.error = {valueOf: function(){ return 'Some Error'; }};
+      scope.error = sce.trustAsHtml('Some Error');
       scope.$digest();
       expect(scope.errorMessage).toBe('Some Error');
     });
