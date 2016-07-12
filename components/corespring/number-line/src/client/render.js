@@ -169,8 +169,9 @@ var main = [
         '         responseModel="dummyResponse"',
         '         options="noResponseOptions"></div>',
         '  </div>',
-
-        '  <div feedback="serverResponse.feedback.message" icon-set="{{iconset}}" correct-class="{{serverResponse.correctClass}}"></div>',
+        '  <div ng-if="!answerExpanded">',
+        '    <div feedback="serverResponse.feedback.message" icon-set="{{iconset}}" correct-class="{{serverResponse.correctClass}}"></div>',
+        '  </div>',
         '</div>'
       ].join("\n")
     };
