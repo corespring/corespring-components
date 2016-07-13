@@ -81,23 +81,21 @@ describe('corespring-audio-render', function() {
     });
 
     describe('sources', function(){
-      it('adds two sources', function () {
-        expect(scope.sources.length).toEqual(2);
+      it('adds one sources', function () {
+        expect(scope.sources.length).toEqual(1);
       });
 
       it('sets fileName as source with mime audio/mp3', function () {
         expect(scope.sources[0].type).toEqual('audio/mp3');
-        expect(scope.sources[0].url).toEqual('test.mp3');
-        expect(typeof scope.sources[0].trustedUrl).toEqual('object');
-        expect(sce.getTrustedUrl(scope.sources[0].trustedUrl)).toEqual('test.mp3');
+        expect(sce.getTrustedUrl(scope.sources[0].src)).toEqual('test.mp3');
       });
 
-      it('sets fileName as source with mime audio/mpeg', function () {
-        expect(scope.sources[1].type).toEqual('audio/mpeg');
-        expect(scope.sources[1].url).toEqual('test.mp3');
-        expect(typeof scope.sources[1].trustedUrl).toEqual('object');
-        expect(sce.getTrustedUrl(scope.sources[1].trustedUrl)).toEqual('test.mp3');
-      });
+      it('should leave sources empty, when fileName is empty', function(){
+        testModel.data.fileName = '';
+        container.elements['1'].setDataAndSession(testModel);
+        expect(scope.sources.length).toEqual(0);
+      })
+
     });
   });
 

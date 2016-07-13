@@ -78,19 +78,13 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
     }
 
     function prepareSources() {
-      var formats = {
-        'audio/mp3': scope.config.fileName,
-        'audio/mpeg': scope.config.fileName //firefox doesn't like the audio/mp3 mime type
-      };
+      var sources = [];
 
-      return _.map(formats, function(src, type) {
-        var newSrc = {
-          type: type,
-          url: src,
-          trustedUrl: $sce.trustAsResourceUrl(src)
-        };
-        return newSrc;
-      });
+      if(scope.config.fileName){
+        sources.push({ type:'audio/mp3', src: $sce.trustAsResourceUrl(scope.config.fileName)});
+      }
+
+      return sources;
     }
 
     function getSession() {
@@ -167,8 +161,8 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
       '  </div>',
       '  <audio>',
       '    <source ng-repeat="src in sources"',
-      '        ng-src="{{src.trustedUrl}}"',
-      '        type="{{src.type}}">',
+      '        src="{{src.src}}"',
+      '        type="{{src.type}}"/>',
       '    Your browser does not support the audio element.',
       '  </audio>',
       '</div>'
