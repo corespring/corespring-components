@@ -91,7 +91,6 @@ describe('corespring-audio-configure', function() {
       scope.$digest();
       expect(scope.errorMessage).toBe('');
     });
-
   });
 
   describe('fileName', function(){
@@ -108,19 +107,37 @@ describe('corespring-audio-configure', function() {
     });
   });
 
-  describe('removeFile', function(){
+  describe('onClickRemove', function(){
     beforeEach(function(){
       container.elements['1'].setModel(testModel);
     });
 
     it('calls EditingAudioService.deleteFile', function(){
-      scope.removeFile();
+      scope.onClickRemove();
       expect(mockEditingAudioService.deleteFile).toHaveBeenCalledWith('test.mp3');
     });
 
     it('clears the model', function(){
-      scope.removeFile();
+      scope.onClickRemove();
       expect(scope.fullModel.fileName).toBeFalsy();
+    });
+
+    it('sets status to initial', function(){
+      scope.status = 'something';
+      scope.onClickRemove();
+      expect(scope.status).toBe('initial');
+    });
+  });
+
+  describe('onClickUpload', function(){
+    beforeEach(function(){
+      container.elements['1'].setModel(testModel);
+    });
+
+    it('sets status to initial', function(){
+      scope.status = 'something';
+      scope.onClickUpload();
+      expect(scope.status).toBe('initial');
     });
   });
 

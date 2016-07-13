@@ -52,8 +52,9 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
     scope.percentProgress = 0;
     scope.status = 'initial';
 
-    scope.removeFile = removeFile;
     scope.formatFileName = formatFileName;
+    scope.onClickRemove = onClickRemove;
+    scope.onClickUpload = onClickUpload;
 
     scope.containerBridge = {
       getModel: getModel,
@@ -62,6 +63,9 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
 
     scope.$watch('error', watchError);
     scope.$watch('fileName', watchFileName);
+    scope.$watch('status', function(newValue, oldValue){
+      console.log('status', newValue);
+    });
     scope.$watch('fullModel', watchFullModel, true);
 
     scope.$emit('registerConfigPanel', attrs.id, scope.containerBridge);
@@ -127,7 +131,6 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
         EditingAudioService.deleteFile(scope.fullModel.fileName);
       }
       scope.fullModel.fileName = '';
-      scope.status = 'initial';
     }
 
     function withoutUniqueId(s) {
@@ -147,6 +150,16 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
       return decodeURIMultiple(withoutUniqueId(s));
     }
 
+    function onClickUpload(){
+      console.log('onClickUpload');
+      scope.status = 'initial';
+    }
+
+    function onClickRemove(){
+      console.log('onClickRemove');
+      removeFile();
+      scope.status = 'initial';
+    }
 
   }
 
@@ -155,11 +168,11 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
       '<div class="corespring-audio-configure"',
       '    ng-class="fullModel.ui">',
       '  <div class="alert alert-danger wiggi-wiz-alert ng-hide"',
-      '      ng-show="errorMessage">',
+      '      ng-show="status == \'failed\'">',
       '    <span ng-bind-html-unsafe="errorMessage"/>',
       '  </div>',
       '  <div class="alert alert-success wiggi-wiz-alert ng-hide"',
-      '      ng-show="fileName"><strong>Upload successful.</strong><br/>You have successfully uploaded: {{fileName}}',
+      '      ng-show="status == \'completed\'"><strong>Upload successful.</strong><br/>You have successfully uploaded: {{fileName}}',
       '  </div>',
       '  <div ng-if="status == \'started\'">',
       '    <div class="uploading-label">Uploading audio file {{percentProgress}}%</div>',
@@ -169,6 +182,7 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
       '  <div ng-hide="fullModel.fileName">',
       '    <p>Upload .mp3 audio file (maximum size {{imageService.maxSizeKb}}kb).</p>',
       '    <button ng-show="status == \'initial\' || status == \'failed\'"',
+      '        ng-click="onClickUpload()"',
       '        class="btn btn-primary upload-button"',
       '        file-chooser="">',
       '      <span class="upload-icon"><i class="fa fa-upload"></i></span> Upload Audio File',
@@ -176,7 +190,7 @@ function ConfigAudioPlayerDirective($sce, EditingAudioService) {
       '  </div>',
       '  <div ng-show="fullModel.fileName">',
       '    <button class="btn btn-primary upload-button"',
-      '        ng-click="removeFile()">Remove Audio',
+      '        ng-click="onClickRemove()">Remove Audio',
       '    </button>',
       '  </div>',
       '  <div class="prelisten-container"',
