@@ -181,7 +181,6 @@ describe('corespring:multiple-choice-render', function() {
     containerBridge.setDataAndSession(testModel);
     scope.answer.choices['1'] = true;
     var answer = containerBridge.getSession();
-
     expect(answer.answers).toEqual(['1']);
   });
 
@@ -372,7 +371,6 @@ describe('corespring:multiple-choice-render', function() {
       expect(scope.showCorrectAnswerButton).toBe(false);
     });
   });
-
 
   describe('letter', function() {
     beforeEach(function() {

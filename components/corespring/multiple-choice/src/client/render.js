@@ -434,7 +434,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
         return "muted";
       }
       return "ready";
-      }
+    }
 
     function hasBlockFeedback(o) {
       var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
@@ -495,12 +495,12 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
     ].join('');
 
     return [
-        '<div class="view-multiple-choice" ng-class="interactionCorrectnessClass()">',
-        choicesTemplate,
-        rationalesTemplate,
-        noResponseTemplate,
-        learnMoreTemplate
-      ].join('\n');
+      '<div class="view-multiple-choice" ng-class="interactionCorrectnessClass()">',
+      choicesTemplate,
+      rationalesTemplate,
+      noResponseTemplate,
+      learnMoreTemplate
+    ].join('\n');
   }
 
 }

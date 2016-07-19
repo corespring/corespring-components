@@ -46,6 +46,7 @@ var main = [
         },
 
         setInstructorData: function(data) {
+          scope.hideInputWarning();
           scope.answer = data.correctResponses.values[0];
           scope.instructorResponse = true;
 
@@ -67,6 +68,7 @@ var main = [
 
         // sets the server's response
         setResponse: function(response) {
+          scope.hideInputWarning();
           var inputElement = $(element).find('input');
           inputElement.popover('destroy');
           if (!response) {

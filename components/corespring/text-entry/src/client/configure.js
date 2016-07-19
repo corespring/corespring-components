@@ -59,7 +59,7 @@ function configureTextEntry(
     }, {
       size: 7 + 1,
       demoLabel: 'ABCDEFG',
-      defaultLabel: '(Default)'
+      defaultLabel: ''
     }, {
       size: 10 + 1,
       demoLabel: 'ABCDEFGHIJ',
@@ -248,6 +248,19 @@ function configureTextEntry(
       '    <hr/>',
       '    <div class="row text-field-size-row">',
       '      <div class="col-xs-12">',
+      '        <label class="control-label">Response options</label>',
+      '        <p>When a response is composed:</p>',
+      '        <div><checkbox ng-model="editorModel.model.allowIntegersOnly">Restrict the responses to integers only</checkbox></div>',
+      '        <div class="restrictions" ng-show="editorModel.model.allowIntegersOnly">',
+      '          <checkbox class="allow-checkbox" ng-model="editorModel.model.allowDecimal">Allow Decimals</checkbox>',
+      '          <checkbox class="allow-checkbox" ng-model="editorModel.model.allowSeparator">Allow Thousands Separators</checkbox>',
+      '          <checkbox class="allow-checkbox" ng-model="editorModel.model.allowNegative">Allow Negative Numbers</checkbox>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '    <br>',
+      '    <div class="row text-field-size-row">',
+      '      <div class="col-xs-12">',
       '        <label class="control-label">Answer blank size</label>',
       '        <div ng-repeat="o in answerBlankSizeDataProvider">',
       '          <radio value="{{o.size}}" ng-model="editorModel.model.answerBlankSize">',
@@ -256,7 +269,8 @@ function configureTextEntry(
       '        </div>',
       '      </div>',
       '    </div>',
-      '    <div class="row align-row">',
+      '    <br>',
+      '    <div class="row align-row text-field-size-row">',
       '      <div class="col-xs-12">',
       '        <label class="control-label">Align text in answer blank:</label>',
       '        <select class="form-control" ng-model="editorModel.model.answerAlignment">',

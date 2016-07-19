@@ -24,6 +24,9 @@
   },
   "model": {
     "answerBlankSize": 8,
-    "answerAlignment": "left"
+    "answerAlignment": "left",
+    "allowDecimal": true,
+    "allowSeparator": true,
+    "allowNegative": true
   }
 }

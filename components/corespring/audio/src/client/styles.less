@@ -1,0 +1,72 @@
+.corespring-audio {
+  .component-placeholder {
+    display: inline-block;
+  }
+}
+
+.corespring-audio-render {
+
+  &.speaker {
+    display: inline-block;
+  }
+
+  &.playPause {
+    display: inline-block;
+  }
+
+  &.fullControls {
+    display: block;
+
+    audio {
+      //limit the size bc. ie10 uses the full space
+      width: 310px;
+      height: 40px;
+    }
+  }
+
+  button[disabled] {
+    opacity: 0.5;
+  }
+
+  .speaker-button {
+    font-size: 28px;
+    line-height: 1;
+    padding: 0 2px 0 3px;
+    corner-radius: 4px;
+
+    &.play {
+
+    }
+
+    &.stop {
+      opacity: .5;
+    }
+  }
+}
+
+.corespring-audio-configure {
+
+  .play-pause-labels-form {
+    margin-top: 6px;
+  }
+
+  .prelisten-container {
+    display: flex;
+
+    #prelisten {
+      flex: 1;
+      margin-left: 20px;
+      text-align: center;
+    }
+
+    .filename-label {
+      flex: 1;
+      margin-top: 10px;
+    }
+  }
+
+  .select-ui {
+    margin-top: 25px;
+  }
+
+}
