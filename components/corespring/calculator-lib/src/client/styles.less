@@ -1,25 +1,27 @@
-@import url(http://fonts.googleapis.com/css?family=Montserrat);
-
 .calculator {
-  padding: 5px 5px 0px 5px;
-  border: 2px solid #666666;
+  @button-bg-fill: #ffffff;
+  @button-bg-fill-active: #b6e2ef;
+  @button-bg-stroke: #bebebe;
+  @button-bg-stroke-active: #60564b;
+  @symbol-fill: #1a9cff;
+  @symbol-fill-active: #464146;
+
+  background-color: #f8f6f6;
+  border: 1px solid #bebebe;
   border-radius: 5px;
+  padding: 5px 5px 0px 5px;
   cursor: move;
-  background-color: #A8A8A8;
-  color: #FFFFFF;
   font-family: 'Montserrat', sans-serif;
   z-index: 100;
   position: absolute;
-  top:0;
-  right:0;
+  top: 0;
+  right: 0;
 
   /* Results */
   .results {  
     margin-bottom: 5px;
     height: 40px;
-    border: 3px solid #9C9C9C;
     border-radius: 5px;
-    color: #131F85;
     input {
       width: 100%;
       height: 100%;
@@ -39,12 +41,50 @@
       border: none;
       height: 30px;
       width: 30px;
-      background-color: #131F85;
       padding: 0;
+      background: none;
+
+      .cs-icon {
+        width: 30px;
+      }
+
+      .button-bg {
+        fill: @button-bg-fill;
+        stroke: @button-bg-stroke;
+        stroke-miterlimit: 10;
+      }
+
+      .symbol {
+        fill: @symbol-fill;
+        stroke: @symbol-fill;
+        stroke-width: 0.5;
+        stroke-miterlimit: 10;
+      }
+
+      .sqrt-symbol {
+        fill: none;
+        stroke: @symbol-fill;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+      }
 
       &.active {
-        background-color: #cc9900;
+
+        .button-bg {
+          fill: @button-bg-fill-active;
+          stroke: @button-bg-stroke-active;
+        }
+
+        .symbol {
+          fill: @symbol-fill-active;
+          stroke: @symbol-fill-active;
+        }
+
+        .sqrt-symbol {
+          stroke: @symbol-fill-active;
+        }
       }
+
     }
 
     /* Clear pad */
@@ -72,21 +112,12 @@
       float: left;
 
       .number {
-        background-color: #424C9D;
         margin-bottom: 5px;
         margin-right: 5px;
 
         &:nth-child(3n) {
           margin-right: 0px;
         }
-      }
-
-      .active {
-        background-color: #cc9900;
-      }
-
-      .decimal, .equals {
-        background-color: #131F85;
       }
     }
   }
