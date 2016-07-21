@@ -235,7 +235,7 @@ describe('corespring:placement ordering', function() {
       setModelAndDigest(horizontalModel);
       
       var answerAreaPrev = $(element).find('.placement-areas .answer-area').prev();
-      expect(answerAreaPrev.hasClass('choice-area') && !answerAreaPrev.hasClass('see-answer-area')).toBeTruthy();
+      expect(!answerAreaPrev.hasClass('see-answer-area')).toBeTruthy();
     });
 
     it('should display choices area below answer area when below is selected as choices area position', function() {
