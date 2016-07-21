@@ -298,10 +298,10 @@ describe('corespring:drag-and-drop-inline', function() {
         expect(scope.classForChoice('aa_1', 0)).toEqual('correct');
         expect(scope.classForChoice('aa_1', 1)).toEqual('incorrect');
       });
-      it('should return incorrect if server did not return feedbackPerChoice', function() {
+      it('should return undefined if server did not return feedbackPerChoice', function() {
         scope.response = {};
-        expect(scope.classForChoice('aa_1', 0)).toEqual('incorrect');
-        expect(scope.classForChoice('aa_1', 1)).toEqual('incorrect');
+        expect(scope.classForChoice('aa_1', 0)).toEqual(undefined);
+        expect(scope.classForChoice('aa_1', 1)).toEqual(undefined);
       });
       it('should return incorrect if server did not return feedback for all choices', function() {
         scope.response = {
@@ -358,7 +358,7 @@ describe('corespring:drag-and-drop-inline', function() {
             }
           }
         });
-        scope.containerBridge.setResponse({});
+        scope.containerBridge.setResponse({something: 3});
         expect(scope.canEdit()).toBeFalsy();
       });
     });
