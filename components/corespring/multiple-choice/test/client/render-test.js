@@ -131,7 +131,7 @@ describe('corespring:multiple-choice-render', function() {
       containerBridge.reset();
       containerBridge.reset();
       containerBridge.reset();
-      expect(scope.shuffle).toHaveBeenCalledTimes(3);
+      expect(scope.shuffle.calls.count()).toEqual(3);
     });
 
     it('does not shuffle, when shuffle is false', function() {
