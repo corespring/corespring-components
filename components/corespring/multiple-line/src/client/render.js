@@ -9,6 +9,14 @@ var main = [
 
     var lineUtils = new LineUtils();
 
+    var colors = {
+      correct: "#3c763d",
+      partial: "#3a87ad",
+      incorrect: "#eea236",
+      warning: "#999999",
+      none: ""
+    };
+
     return {
       template: template(),
       restrict: 'AE',
@@ -379,7 +387,7 @@ var main = [
                     return eval(line.expression) || 0;
                   },
                   label: line.label,
-                  color: "#3C763D"
+                  color: colors.correct
                 },
                 lockGraph: true
               });
@@ -409,7 +417,7 @@ var main = [
               curve: function(x) {
                 return eval(cr);
               },
-              color: "#3c763d",
+              color: colors.correct,
               label: line.label
             }
           });
@@ -417,6 +425,20 @@ var main = [
       }
 
       scope.containerBridge = {
+
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+          console.log('skin', skin);
+          function setColor(source, target) {
+            if (skin.colors && skin.colors[source]) {
+              colors[target] = skin.colors[source];
+            }
+          }
+
+          setColor('correct-background', 'correct');
+          setColor('incorrect-background', 'incorrect');
+          setColor('warning-background', 'warning');
+        },
 
         setDataAndSession: function(dataAndSession) {
 
@@ -429,12 +451,11 @@ var main = [
 
           var containerWidth, containerHeight;
           var graphContainer = element.find('.graph-container');
-          if (config.graphWidth && config.graphHeight) {
-            containerWidth = parseInt(config.graphWidth, 10);
-            containerHeight = parseInt(config.graphHeight, 10);
-          } else {
-            containerHeight = containerWidth = graphContainer.width();
-          }
+
+          containerWidth = parseInt(config.graphWidth, 10) || 500;
+          containerHeight = parseInt(config.graphHeight, 10) || 500;
+          scope.containerWidth = containerWidth || 500;
+          scope.containerHeight = containerHeight || 500;
 
           scope.graphAttrs = scope.createGraphAttributes(config, scope.config.lines.length * 2);
           scope.showInputs = config.showInputs;
@@ -444,8 +465,11 @@ var main = [
             width: containerWidth,
             height: containerHeight
           });
-          scope.containerWidth = containerWidth;
-          scope.containerHeight = containerHeight;
+          graphContainer.parents('.graph-group').css({
+            width: scope.containerWidth,
+            height: scope.containerHeight + 100
+          });
+
           $compile(graphContainer)(scope);
 
           if (dataAndSession.session && dataAndSession.session.answers) {
@@ -498,21 +522,13 @@ var main = [
             return;
           }
 
-          var color = {
-            correct: "#3c763d",
-            partial: "#3a87ad",
-            incorrect: "#eea236",
-            warning: "#999999",
-            none: ""
-          };
-
           scope.feedback = response && response.feedback;
           scope.response = response;
           scope.correctClass = response.correctness;
 
           if (response && response.correctness !== 'warning') {
             scope.inputStyle = _.extend(scope.inputStyle, {
-              border: 'thin solid ' + color[(response && response.correctness) || "none"]
+              border: 'thin solid ' + colors[(response && response.correctness) || "none"]
             });
 
             if (response.correctness === "partial" || response.correctness === "incorrect") {
@@ -531,7 +547,7 @@ var main = [
             scope.graphCallback({
               shapeColor: {
                 shape: line.id,
-                color: isCorrect ? color.correct : color.incorrect
+                color: isCorrect ? colors.correct : colors.incorrect
               }
             });
           });
@@ -556,6 +572,7 @@ var main = [
 
           scope.correctResponse = undefined;
           scope.lines = [];
+          scope.isSeeAnswerPanelExpanded = false;
 
           scope.startOver();
         },
@@ -590,14 +607,15 @@ var main = [
         "  <div class='graph-interaction'>",
         "    <div class='undo-start-over-controls container-fluid' ng-hide='config.exhibitOnly'>",
         "      <div class='row'>",
-        "        <div class='col-md-12' ng-hide='response'>",
-        "          <span cs-start-over-button class='btn-player pull-right' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
-        "          <span cs-undo-button class='pull-right' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
+        "        <div class='col-md-12 text-center' ng-hide='response'>",
+        "          <span cs-start-over-button class='btn-player' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
+        "          <span cs-undo-button ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
         "          <div class='clearfix'> </div>",
         "        </div>",
         "      </div>",
         "    </div><br/>",
         "    <div ng-if='instructorData' ng-repeat='response in instructorData.correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
+        '    <correct-answer-toggle ng-if="correctResponse" visible="correctResponse" toggle="$parent.isSeeAnswerPanelExpanded"></correct-answer-toggle>',
         "    <div class='graph-controls container-fluid' ng-show='showInputs' ng-hide='config.exhibitOnly'>",
         "      <div class='row line-input' ng-repeat='line in lines' ng-if='!locked && line.points.A.x !== undefined && line.points.B.x !== undefined'>",
         "        <div class='col-sm-3'>",
@@ -643,16 +661,21 @@ var main = [
         "        </div>",
         "      </div>",
         "    </div>",
-        "    <div id='graph-container' class='row-fluid graph-container'></div>",
+
+        "    <div class='graph-group'>",
+        "      <div class='graph-group-element' ng-class='{graphShown: !isSeeAnswerPanelExpanded}'>",
+        "        <div id='graph-container' class='graph-container'></div>",
+        "      </div>",
+        "      <div class='graph-group-element' ng-class='{graphShown: isSeeAnswerPanelExpanded}'>",
+        "        <div class='solution-graph'></div>",
+        "      </div>",
+        "    </div>",
+        "    <div class='correct-legend' ng-if='isSeeAnswerPanelExpanded'>",
+        "      <div ng-repeat='response in correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
+        "    </div>",
         "  </div>",
         "  <div class='feedback-holder' ng-show='config.showFeedback'>",
-        "    <div ng-show='feedback' feedback='feedback' correct-class='{{correctClass}}'></div>",
-        "  </div>",
-        "  <div see-answer-panel see-answer-panel-expanded='true' class='solution-panel' ng-class='{panelVisible: correctResponse}'>",
-        "    <div class='solution-container'>",
-        "      <div ng-repeat='response in correctResponse'><span ng-show='response.label'>{{ response.label }}: </span>y={{response.equation}}</div>",
-        "      <div class='solution-graph'></div>",
-        "    </div>",
+        "    <div ng-show='feedback' feedback='feedback' icon-set='{{iconset}}' correct-class='{{correctClass}}'></div>",
         "  </div>",
         "</div>"
       ].join("");

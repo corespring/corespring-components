@@ -60,11 +60,8 @@ var main = [
 
       },
       template: [
-        '<div class="view-teacher-instructions" ng-click="toggle()" ng-show="visible">',
-        '  <div class="toggle-row {{showHide[open.toString()]}}-state">',
-        '    <span class="{{showHide[open]}}-icon"></span>',
-        '    <span class="instructions">Instructions</span>',
-        '  </div>',
+        '<div class="view-teacher-instructions" ng-show="visible">',
+        '  <instructions-toggle toggle="open"></instructions-toggle>',
         '  <div class="text" ng-show="open" ng-bind-html-unsafe="instructions">',
         '  </div>',
         '</div>'

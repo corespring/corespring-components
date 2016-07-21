@@ -1,44 +1,41 @@
 exports.framework = 'angular';
-exports.directive = [
-  '$log',
-  '$sce',
-  '$timeout',
-  MultipleChoiceDirective];
+exports.directive = ['$sce', '$log', '$timeout', MultipleChoiceDirective];
 
 
-function MultipleChoiceDirective(
-  $log,
-  $sce,
-  $timeout
-) {
+function MultipleChoiceDirective($sce, $log, $timeout) {
 
   return {
-    link: link,
-    replace: true,
-    restrict: 'EA',
     scope: {},
+    restrict: 'EA',
+    replace: true,
+    link: link,
     template: template()
   };
 
   function link(scope, element, attrs) {
 
+    scope.inputType = 'checkbox';
+    scope.editable = true;
+    scope.showCorrectAnswerButton = false;
     scope.bridge = {
+      viewMode: 'normal',
       answerVisible: false
     };
-    scope.editable = true;
-    scope.inputType = 'checkbox';
-    scope.rationaleOpen = false;
     scope.showHide = {
       'false': 'show',
       'true': 'hide'
     };
+    scope.rationaleOpen = false;
 
     scope.choiceClass = choiceClass;
+    scope.hasBlockFeedback = hasBlockFeedback;
+    scope.interactionCorrectnessClass = interactionCorrectnessClass;
     scope.isHorizontal = isHorizontal;
     scope.isTile = isTile;
     scope.isVertical = isVertical;
     scope.letter = letter;
     scope.onClickChoice = onClickChoice;
+    scope.radioState = radioState;
     scope.shuffle = shuffle;
 
     scope.containerBridge = {
@@ -50,6 +47,7 @@ function MultipleChoiceDirective(
       resetStash: resetStash,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
+      setPlayerSkin: setPlayerSkin,
       setMode: setMode,
       setResponse: setResponse
     };
@@ -74,13 +72,14 @@ function MultipleChoiceDirective(
       updateUi();
     }
 
-    function getConfigWithDefaults(input) {
+    function getConfigWithDefaults(input){
       var config = _.defaults(input || {}, {
         "orientation": "vertical",
         "shuffle": false,
         "choiceType": "radio",
         "choiceLabels": "letters",
-        "showCorrectAnswer": "separately"
+        "showCorrectAnswer": "separately",
+        "useBlockFeedback": true
       });
       config.shuffle = config.shuffle === true || config.shuffle === 'true';
       return config;
@@ -94,14 +93,18 @@ function MultipleChoiceDirective(
       };
     }
 
+    function setPlayerSkin(skin) {
+      scope.iconset = skin.iconSet;
+    }
+
     function setInstructorData(data) {
       scope.instructorData = data;
       updateUi();
     }
 
-    function applyInstructorData() {
+    function applyInstructorData(){
       var data = scope.instructorData;
-      if (!data) {
+      if(!data) {
         return;
       }
 
@@ -110,7 +113,6 @@ function MultipleChoiceDirective(
           c.correct = true;
         }
       });
-
       if (!_.isEmpty(data.rationales)) {
         var rationales = _.map(scope.choices, function(c) {
           return {
@@ -124,50 +126,46 @@ function MultipleChoiceDirective(
       }
     }
 
+
     // sets the server's response
     function setResponse(response) {
+      $(element).find(".feedback-panel").hide();
+
+      resetFeedback(scope.choices);
+
       scope.response = response;
 
-      applyResponse();
-    }
-
-    function applyResponse() {
-      if (scope.response) {
-
-        $(element).find(".feedback-panel").hide();
-        resetFeedback(scope.choices);
-
-        if (scope.response.feedback) {
-          if (scope.response.feedback.emptyAnswer) {
-            scope.feedback = scope.response.feedback;
-          } else {
-            _.each(scope.response.feedback, function(fb) {
-              var choice = _.find(scope.choices, function(c) {
-                return c.value === fb.value;
-              });
-
-              if (choice) {
-                choice.feedback = fb.feedback;
-                choice.correct = fb.correct;
-              }
+      if (response.feedback) {
+        if (response.feedback.emptyAnswer) {
+          scope.feedback = response.feedback;
+        } else {
+          _.each(response.feedback, function(fb) {
+            var choice = _.find(scope.choices, function(c) {
+              return c.value === fb.value;
             });
-          }
-        }
 
-        $timeout(function() {
-          $(element).find(".feedback-panel.visible").slideDown(400);
-        }, 10);
+            if (choice !== null) {
+              choice.feedback = fb.feedback;
+              choice.correct = fb.correct;
+            }
+          });
+          scope.showCorrectAnswerButton = response &&
+            response.correctness === 'incorrect' &&
+            scope.question.config.showCorrectAnswer !== 'inline';
+        }
       }
+
+      $timeout(function() {
+        $(element).find(".feedback-panel.visible").slideDown(400);
+      }, 10);
     }
 
     function setMode(value) {
       scope.playerMode = value;
-
       if (value !== 'instructor') {
-        scope.instructorData = undefined;
         scope.rationales = undefined;
+        scope.instructorData = undefined;
       }
-
       updateUi();
     }
 
@@ -179,6 +177,9 @@ function MultipleChoiceDirective(
       resetChoices();
       resetFeedback(scope.choices);
       scope.response = undefined;
+      scope.showCorrectAnswerButton = false;
+      scope.bridge.viewMode = 'normal';
+      scope.bridge.answerVisible = false;
       resetShuffledOrder();
       updateUi();
     }
@@ -224,18 +225,19 @@ function MultipleChoiceDirective(
       var answers = scope.session.answers;
 
       if (scope.inputType === "radio") {
-        if (_.isArray(answers) && answers.length > 0) {
+        if ( _.isArray(answers) && answers.length > 0) {
           scope.answer.choice = answers[0];
         }
-      }
-      if (scope.inputType === "checkbox") {
-        _.forEach(answers, function(key) {
+      } else if (scope.inputType === "checkbox") {
+        _.forEach(answers, function(key){
           scope.answer.choices[key] = true;
         });
       }
     }
 
     function resetFeedback(choices) {
+      scope.feedback = null;
+
       _.each(choices, function(c) {
         if (c) {
           delete c.feedback;
@@ -252,7 +254,7 @@ function MultipleChoiceDirective(
     function shuffle(choices) {
       var allChoices = _.cloneDeep(choices);
       var shuffledChoices = _(allChoices).filter(choiceShouldBeShuffled).shuffle().value();
-      return _.map(allChoices, function(choice) {
+      return _.map(allChoices, function(choice){
         if (choiceShouldBeShuffled(choice)) {
           return shuffledChoices.pop();
         } else {
@@ -261,11 +263,14 @@ function MultipleChoiceDirective(
       });
     }
 
-    function choiceShouldBeShuffled(choice) {
+    function choiceShouldBeShuffled(choice){
       return _.isUndefined(choice.shuffle) || choice.shuffle === true;
     }
 
-    function restoreChoiceOrder(choices, order) {
+    function layoutChoices(choices, order) {
+      if (!order) {
+        return scope.shuffle(choices);
+      }
       var ordered = _(order).map(function(v) {
         return _.find(choices, function(c) {
           return c.value === v;
@@ -276,10 +281,6 @@ function MultipleChoiceDirective(
 
       var missing = _.difference(choices, ordered);
       return _.union(ordered, missing);
-    }
-
-    function shuffleChoices(choices) {
-      return scope.shuffle(choices);
     }
 
     function stashOrder(choices) {
@@ -294,10 +295,6 @@ function MultipleChoiceDirective(
       }
     }
 
-    function isGatherMode() {
-      return scope.playerMode === 'gather' || !scope.playerMode;
-    }
-
     function updateUi() {
       if (!scope.question || !scope.session) {
         return;
@@ -307,27 +304,24 @@ function MultipleChoiceDirective(
       var stash = scope.session.stash = scope.session.stash || {};
       var answers = scope.session.answers = scope.session.answers || {};
 
-      var clonedChoices = _.cloneDeep(model.choices);
-      var resultingChoices = clonedChoices;
-
-      if (scope.playerMode !== 'instructor') {
-        if (model.config.shuffle) {
-          if (stash.shuffledOrder) {
-            resultingChoices = restoreChoiceOrder(clonedChoices, stash.shuffledOrder);
-          } else {
-            resultingChoices = shuffleChoices(clonedChoices);
-            stash.shuffledOrder = stashOrder(resultingChoices);
-            scope.$emit('saveStash', attrs.id, stash);
-          }
-        }
-      }
-
       scope.inputType = model.config.choiceType;
-      scope.choices = resultingChoices;
+      var clonedChoices = _.cloneDeep(model.choices);
+      var shouldShuffle = model.config.shuffle && scope.playerMode !== 'instructor';
+
+      if (shouldShuffle) {
+        if (stash.shuffledOrder) {
+          scope.choices = layoutChoices(clonedChoices, stash.shuffledOrder);
+        } else {
+          scope.choices = layoutChoices(clonedChoices);
+          stash.shuffledOrder = stashOrder(scope.choices);
+          scope.$emit('saveStash', attrs.id, stash);
+        }
+      } else {
+        scope.choices = clonedChoices;
+      }
 
       applyChoices();
       applyInstructorData();
-      applyResponse();
     }
 
     function letter(idx) {
@@ -370,286 +364,143 @@ function MultipleChoiceDirective(
     }
 
     function watchPanelOpen(n) {
-      if (n) {
-        $(element).find('.panel-collapse').slideDown(400);
+      slide(n, $(element).find('.panel-collapse'));
+    }
+
+    function slide(down, $elm) {
+      if (down) {
+        $elm.slideDown(400);
       } else {
-        $(element).find('.panel-collapse').slideUp(400);
+        $elm.slideUp(400);
       }
     }
 
     function watchAnswerVisible(n) {
-      if (n) {
-        $(element).find('.answer-collapse').slideDown(400);
-      } else {
-        $(element).find('.answer-collapse').slideUp(400);
+      scope.bridge.viewMode = n ? 'correct' : 'normal';
+    }
+
+    function interactionCorrectnessClass() {
+      if (scope.bridge.viewMode === 'correct') {
+        return "";
       }
+      return scope.response && scope.response.correctness;
     }
 
     function choiceClass(o) {
       var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+      var isCorrect = !_.isUndefined(o.correct) && o.correct;
       var res = isSelected ? "selected " : "";
 
+      if (isCorrect && scope.playerMode === 'instructor') {
+        return "correct";
+      }
       if (_.isUndefined(o.correct)) {
         return res + "default";
       }
-
-      if (o.correct && (scope.question.config.showCorrectAnswer === "inline" || scope.playerMode === 'instructor')) {
-        res = "selected ";
+      if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
+        return "";
       }
+      if (scope.bridge.viewMode === 'correct' && !isSelected) {
+        return "";
+      }
+      return res + ((o.correct) ? 'correct' : 'incorrect');
+    }
 
-      return res + (o.correct ? 'correct' : 'incorrect');
+    function radioState(o) {
+      var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+      if (isSelected && scope.playerMode === 'view') {
+        return "selectedDisabled";
+      }
+      var isCorrect = !_.isUndefined(o.correct) && o.correct === true;
+      if (isCorrect && scope.playerMode === 'instructor') {
+        return "correctUnselected";
+      }
+      if (scope.bridge.viewMode !== 'correct' && o.correct && !isSelected && scope.question.config.showCorrectAnswer !== "inline") {
+        return scope.response ? "muted" : "";
+      }
+      if (!_.isUndefined(o.correct) && o.correct === false && scope.bridge.viewMode !== 'correct') {
+        return "incorrect";
+      }
+      if (!_.isUndefined(o.correct) && o.correct === true && scope.bridge.viewMode === 'correct') {
+        return "correct";
+      }
+      if (isSelected && scope.bridge.viewMode !== 'correct') {
+        return isCorrect ? "correct" : "selected";
+      }
+      if (!_.isUndefined(o.correct) && o.correct === true) {
+        return "correct";
+      }
+      if (scope.response || scope.playerMode === 'view') {
+        return "muted";
+      }
+      return "ready";
+    }
+
+    function hasBlockFeedback(o) {
+      var isSelected = (scope.answer.choice === o.value || scope.answer.choices[o.value]);
+      return o.feedback && isSelected;
     }
   }
 
   function template() {
-    var seeAnswer = [
-      '<div class="answer-holder"',
-      '    ng-show="response && response.correctness != \'correct\' && response.correctness != \'warning\' && question.config.showCorrectAnswer === \'separately\'">',
-      '  <div class="panel panel-default">',
-      '    <div class="panel-heading">',
-      '      <h4 class="panel-title"',
-      '          ng-click="bridge.answerVisible = !bridge.answerVisible">',
-      '        <i class="answerIcon fa fa-eye{{bridge.answerVisible ? \'-slash\' : \'\'}}"></i>',
-      '        {{bridge.answerVisible ? \'Hide Answer\' : \'Show Correct Answer\'}}',
-      '      </h4>',
-      '    </div>',
-      '    <div class="answer-collapse">',
-      '      <div class="panel-body">',
-      '        <div ng-repeat="o in choices"',
-      '            class="choice-holder-background answer {{question.config.orientation}} {{question.config.choiceStyle}}"',
-      '            ng-click="onClickChoice(o)"',
-      '            ng-class="{correct: o.correct, selected: o.correct}">',
-      '          <div class="choice-holder"',
-      '              ng-class="{true:\'correct\'}[o.correct]">',
-      '            <span class="choice-input"',
-      '                ng-switch="inputType">',
-      '              <div class="checkbox-choice"',
-      '                  ng-switch-when="checkbox"',
-      '                  ng-disabled="!editable"',
-      '                  ng-value="o.value">',
-      '                <div class="checkbox-button"/>',
-      '              </div>',
-      '                <div class="radio-choice"',
-      '                    ng-switch-when="radio"',
-      '                    ng-disabled="!editable">',
-      '                  <div class="radio-button"/>',
-      '                </div>',
-      '              </span>',
-      '            <label class="choice-letter"',
-      '                ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '            <label class="choice-currency-symbol"',
-      '                ng-show="o.labelType == \'currency\'">$</label>',
-      '            <div class="choice-label"',
-      '                ng-switch="o.labelType">',
-      '              <img class="choice-image"',
-      '                  ng-switch-when="image"',
-      '                  ng-src="{{o.imageName}}"/>',
-      '              <span ng-switch-default',
-      '                  ng-bind-html-unsafe="o.label"></span>',
-      '            </div>',
-      '          </div>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>',
-      '<div class="answer-holder"',
-      '    ng-show="response && response.correctness === \'warning\'">',
-      '  <div class="alert alert-danger"',
-      '      role="alert">{{feedback && feedback.message ? feedback.message : \'Error\'}}',
+    var noResponseTemplate = [
+      '<div feedback="feedback.message" icon-set="{{iconset}}" correct-class="{{feedback.emptyAnswer && \'nothing-submitted\'}}"></div>'
+    ].join('');
+
+    var learnMoreTemplate = [
+      '<div ng-if="response.comments">',
+      '  <div icon-toggle icon-name="learn-more" class="icon-toggle-learnMore" ng-model="bridge.learnMoreOpen" label="Learn More">',
+      '    <div class="learn-more-body" ng-bind-html-unsafe="response.comments"></div>',
       '  </div>',
       '</div>'
     ].join('');
 
-    var verticalTemplate = [
-      '<div class="choices-container"',
-      '    ng-class="question.config.orientation">',
-      '  <div ng-repeat="o in choices"',
-      '      class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}"',
-      '      ng-click="onClickChoice(o)"',
-      '      ng-class="choiceClass(o)">',
-      '    <div class="choice-holder">',
-      '      <span class="choice-input"',
-      '          ng-switch="inputType">',
-      '        <div class="checkbox-choice"',
-      '            ng-switch-when="checkbox"',
-      '            ng-disabled="!editable"',
-      '            ng-value="o.value">',
-      '          <div class="checkbox-button"/>',
-      '        </div>',
-      '        <div class="radio-choice"',
-      '            ng-switch-when="radio"',
-      '            ng-disabled="!editable"',
-      '            ng-value="o.value">',
-      '          <div class="radio-button"/>',
-      '        </div>',
-      '      </span>',
-      '      <label class="choice-letter"',
-      '          ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '      <label class="choice-currency-symbol"',
-      '          ng-show="o.labelType == \'currency\'">$</label>',
-      '      <div class="choice-label"',
-      '          ng-switch="o.labelType">',
-      '        <img class="choice-image"',
-      '            ng-switch-when="image"',
-      '            ng-src="{{o.imageName}}"/>',
-      '        <span ng-switch-default',
-      '            ng-bind-html-unsafe="o.label"></span>',
-      '      </div>',
-      '    </div>',
-      '    <div class="choice-feedback-holder"',
-      '        ng-show="answer.choice == o.value || answer.choices[o.value] || (o.correct && question.config.showCorrectAnswer !== \'separately\')">',
-      '      <div class="panel panel-default feedback-panel {{o.correct ? \'correct\' : \'incorrect\'}}"',
-      '          ng-class="{visible: o.feedback}"',
-      '          style="display: none">',
-      '        <div class="panel-heading">&nbsp;</div>',
-      '        <div class="panel-body">',
-      '          <span type="success"',
-      '              ng-bind-html-unsafe="o.feedback"></span>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      seeAnswer,
-      '  <div class="rationale-expander"',
-      '      ng-show="rationales">',
-      '    <div class="rationale-expander-row {{showHide[rationaleOpen.toString()]}}-state"',
-      '        ng-click="rationaleOpen = !rationaleOpen">',
-      '      <span class="rationale-expander-{{showHide[rationaleOpen.toString()]}}"></span>',
-      '      <span class="rationale-expander-label">Rationale</span>',
-      '    </div>',
-      '    <div class="rationale-body"',
-      '        ng-show="rationaleOpen">',
+    var rationalesTemplate = [
+      '<div ng-if="rationales" icon-toggle icon-name="rationale" class="icon-toggle-rationales" ng-model="bridge.rationaleOpen" label="Rationales">',
       '      <div ng-repeat="r in rationales">',
-      '        <label class="choice-letter"',
-      '            ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '        <span class="choice-label"',
-      '            ng-bind-html-unsafe="r.rationale"></span>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join("");
-
-    var horizontalTemplate = [
-      '<div class="choices-container"',
-      '    ng-class="question.config.orientation">',
-      '  <div ng-repeat="o in choices"',
-      '      class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}"',
-      '      ng-click="onClickChoice(o)"',
-      '      ng-class="{true:\'correct\ false:\'incorrect\'}[o.correct]">',
-      '    <div class="choice-wrapper">',
-      '      <label class="choice-letter"',
-      '          ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '      <label class="choice-currency-symbol"',
-      '          ng-show="o.labelType == \'currency\'">$</label>',
-      '      <div class="choice-label"',
-      '          ng-switch="o.labelType">',
-      '        <img class="choice-image"',
-      '            ng-switch-when="image"',
-      '            ng-src="{{o.imageName}}"/>',
-      '        <span ng-switch-when="mathml"',
-      '            ng-bind-html-unsafe="o.mathml"></span>',
-      '        <span ng-switch-default',
-      '            ng-bind-html-unsafe="o.label"></span>',
-      '      </div>',
-      '      <div ng-switch="inputType">',
-      '        <input ng-switch-when="checkbox"',
-      '            type="checkbox"',
-      '            ng-disabled="!editable"',
-      '            ng-value="o.label"',
-      '            ng-checked="answer.choices[o.value]"/>',
-      '        <input ng-switch-when="radio"',
-      '            type="radio"',
-      '            ng-disabled="!editable"',
-      '            ng-value="o.value"',
-      '            ng-checked="answer.choice == o.value"/>',
-      '      </div>',
-      '      <div class="choice-feedback-holder"',
-      '          ng-show="o.feedback != null">',
-      '        <span class="cs-feedback"',
-      '            ng-class="{true:\'correct\ false:\'incorrect\'}[o.correct]"',
-      '            ng-show="o.feedback != null"',
-      '            ng-bind-html-unsafe="o.feedback"></span>',
-      '      </div>',
-      '    </div>',
+      '    <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '    <span class="choice-label" ng-bind-html-unsafe="r.rationale"></span>',
       '  </div>',
       '</div>'
     ].join('');
 
-    var tileTemplate = [
-      '<div class="choices-container"',
-      '    ng-class="question.config.orientation">',
-      '  <div ng-repeat="o in choices"',
-      '      class="choice-holder {{question.config.orientation}} {{question.config.choiceStyle}}"',
-      '      ng-class="{true:\'correct\ false:\'incorrect\'}[o.correct]">',
-      '    <div class="choice-wrapper">',
-      '      <label class="choice-letter"',
-      '          ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
-      '      <label class="choice-currency-symbol"',
-      '          ng-show="o.labelType == \'currency\'">$</label>',
-      '      <div class="choice-label"',
-      '          ng-switch="o.labelType">',
-      '        <img class="choice-image"',
-      '            ng-switch-when="image"',
-      '            ng-src="{{o.imageName}}"/>',
-      '        <span ng-switch-when="mathml"',
-      '            ng-bind-html-unsafe="o.mathml"></span>',
-      '        <span ng-switch-default',
-      '            ng-bind-html-unsafe="o.label"></span>',
+    var choicesTemplate = [
+      '<div class="choices-container">',
+      '  <correct-answer-toggle visible="showCorrectAnswerButton" toggle="bridge.answerVisible"></correct-answer-toggle>',
+      '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
+      '    <div class="choice-holder" >',
+      '      <div class="choice-feedback" ng-if="playerMode !== \'instructor\'"',
+      '           feedback-icon',
+      '           feedback-icon-choice="o"',
+      '           feedback-icon-class="{{choiceClass(o)}}"',
+      '           feedback-icon-type="{{question.config.choiceType}}"',
+      '           feedback-icon-set="{{iconset}}"',
+      '           feedback-icon-use-block-feedback="{{question.config.useBlockFeedback}}" />',
+      '      <span class="choice-input" ng-switch="inputType">',
+      '        <div class="checkbox-choice" ng-switch-when="checkbox" ng-disabled="!editable" ng-value="o.value">',
+      '          <div choice-checkbox-button checkbox-button-state="{{radioState(o)}}" checkbox-button-choice="o" />',
       '      </div>',
-      '      <div ng-switch="inputType">',
-      '        <input ng-switch-when="checkbox"',
-      '            type="checkbox"',
-      '            ng-disabled="!editable"',
-      '            ng-value="o.label"',
-      '            ng-model="answer.choices[o.value]"/>',
-      '        <input ng-switch-when="radio"',
-      '            type="radio"',
-      '            ng-disabled="!editable"',
-      '            ng-value="o.value"',
-      '            ng-model="answer.choice"/>',
+      '        <div class="radio-choice" ng-switch-when="radio" ng-disabled="!editable" ng-value="o.value">',
+      '          <div choice-radio-button radio-button-state="{{radioState(o)}}" radio-button-choice="o" />',
       '      </div>',
-      '      <div class="choice-feedback-holder"',
-      '          ng-show="o.feedback != null">',
-      '        <div class="cs-feedback"',
-      '            ng-class="{true:\'correct\ false:\'incorrect\'}[o.correct]"',
-      '            ng-show="o.feedback != null"></div>',
-      '      </div>',
+      '      </span>',
+      '      <label class="choice-letter" ng-class="question.config.choiceLabels">{{letter($index)}}.</label>',
+      '      <label class="choice-currency-symbol"  ng-show="o.labelType == \'currency\'">$</label>',
+      '      <div class="choice-label" ng-bind-html-unsafe="o.label"></div>',
+      '      <div ng-if="question.config.useBlockFeedback" class="block-feedback" ng-show="!bridge.answerVisible && hasBlockFeedback(o)" ng-bind-html-unsafe="o.feedback"></div>',
       '    </div>',
       '  </div>',
       '</div>'
     ].join('');
 
     return [
-      '<div class="view-multiple-choice"',
-      '    ng-class="response.correctness">',
-      '  <div ng-if="isVertical()">' + verticalTemplate + '</div>',
-      '  <div ng-if="isHorizontal()">' + horizontalTemplate + '</div>',
-      '  <div ng-if="isTile()">' + tileTemplate + '</div>',
-      '  <div class="summaryFeedbackPanel fade in ng-hide"',
-      '      ng-show="response.comments">',
-      '    <div class="">',
-      '      <div class="panel-group">',
-      '        <div class="panel panel-default">',
-      '          <div class="panel-heading">',
-      '            <h4 class="panel-title">',
-      '              <a class="learn-more-link"',
-      '                  ng-click="panelOpen = !panelOpen">',
-      '                <i class="learnMoreIcon fa fa-lightbulb-o"></i>Learn More',
-      '              </a>',
-      '            </h4>',
-      '          </div>',
-      '          <div class="panel-collapse collapse">',
-      '            <div class="panel-body"',
-      '                ng-bind-html-unsafe="response.comments"></div>',
-      '          </div>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('');
+      '<div class="view-multiple-choice" ng-class="interactionCorrectnessClass()">',
+      choicesTemplate,
+      rationalesTemplate,
+      noResponseTemplate,
+      learnMoreTemplate
+    ].join('\n');
   }
 
 }

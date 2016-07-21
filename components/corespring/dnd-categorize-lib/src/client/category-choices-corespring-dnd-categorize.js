@@ -123,14 +123,18 @@ function CategoryChoicesCorespringDndCategorize(
           .withContainer(elem.find(".choice-container"))
           .withItemSelector(".choice-corespring-dnd-categorize")
           .withNumColumns(numColumns)
-          .withCellWidth(choiceWidth)
+          .withCellWidth(function(){
+            return choiceWidth;
+          })
           .value(),
           new LayoutRunner($timeout),
           "Category " + getCategoryId());
       } else {
         layout.updateConfig(new LayoutConfig()
-          .withCellWidth(choiceWidth)
           .withNumColumns(numColumns)
+          .withCellWidth(function(){
+            return choiceWidth;
+          })
           .value());
       }
 

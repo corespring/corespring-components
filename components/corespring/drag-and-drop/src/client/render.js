@@ -10,6 +10,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       scope.maxWidth = 50;
       scope.maxHeight = 20;
       scope.expandHorizontal = true;
+      scope.solutionVisible = false;
 
       scope.undoModel = new CsUndoModel();
       scope.undoModel.setGetState(getState);
@@ -65,6 +66,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         return {
           onStart: 'onStart',
           revert: 'invalid',
+          opacity: 0.75,
           placeholder: (!choice || choice.moveOnDrag) ? false : 'keep'
         };
       };
@@ -119,7 +121,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           template: [
             '<div class="view-drag-and-drop-legacy see-solution" style="display: block;">',
             '   <div class="modal-header">',
-            '     <h3>Answer</h3>',
+            '     <h4 class="modal-title">Answer</h4>',
             '   </div>',
             '   <div class="modal-body">',
             scope.model.answerArea,
@@ -152,6 +154,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       };
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
         setDataAndSession: function(dataAndSession) {
           $log.debug("DnD setting session: ", dataAndSession);
 
@@ -184,6 +189,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           $timeout(function() {
             $compile($answerArea)(scope.$new());
           });
+
         },
 
         getSession: function() {
@@ -202,6 +208,9 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
           scope.showSolution = response.correctness !== 'correct';
+          if (response.emptyAnswer) {
+            scope.feedback = {message: response.message, emptyAnswer: true};
+          }
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
@@ -227,6 +236,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         },
 
         reset: function() {
+          scope.feedback = undefined;
           scope.showSolution = false;
           scope.correctResponse = undefined;
           scope.resetChoices(scope.rawModel);
@@ -246,6 +256,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         }
       };
 
+      scope.$watch('solutionVisible', function() {
+        if (scope.solutionVisible) {
+          scope.seeSolution();
+          scope.solutionVisible = false;
+        }
+      });
+
       scope.helperForChoice = function(choice) {
         return ( !!choice.copyOnDrag ? "'clone'" : "''");
       };
@@ -263,16 +280,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       };
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
-
-    };
-
-
-    var answerArea = function() {
-      return [
-        '        <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-        '        <div id="answer-area">',
-        '        </div>'
-      ].join('');
 
     };
 
@@ -300,17 +307,21 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
     };
     var tmpl = [
       '<div class="view-drag-and-drop-legacy" ng-class="{editable: editable}">',
-      '  <div ng-show="!correctResponse && editable" class="pull-right">',
+      '  <correct-answer-toggle toggle="solutionVisible" visible="showSolution"></correct-answer-toggle>',
+      '  <div ng-show="!correctResponse && editable" style="text-align: center">',
       '    <span cs-undo-button-with-model></span>',
       '    <span cs-start-over-button-with-model></span>',
-      '  </div> <div class="clearfix" />',
+      '  </div>',
+      '  <div ng-if="isSeeAnswerPanelExpanded">',
+      '  </div>',
+      '  <div class="clearfix" />',
       '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
-      answerArea(),
+      '  <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
+      '  <div id="answer-area"></div>',
       '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
-      '  <div class="pull-right" ng-show="showSolution"><a ng-click="seeSolution()">See solution</a></div>',
-      '  <div class="clearfix"></div>',
-      '</div>'
+      '  <div feedback="feedback.message" icon-set="{{iconset}}" correct-class="{{feedback.emptyAnswer && \'nothing-submitted\'}}"></div>',
 
+      '</div>'
     ].join('');
 
     return {
@@ -405,6 +416,7 @@ var landingPlace = [
           onDrop: 'onDrop',
           onOver: 'overCallback',
           onOut: 'outCallback',
+          hoverClass: 'drop-hover',
           multiple: isMultiple
         };
 
@@ -435,12 +447,13 @@ var landingPlace = [
 
           out: scope.outCallback,
           over: scope.overCallback,
-          revert: false
+          revert: false,
+          opacity: 0.75
         };
 
         scope.$watch("maxWidth + maxHeight", function(n) {
           var isMultiple = scope.cardinality !== 'single';
-          var mw = scope.maxWidth + 25;
+          var mw = scope.maxWidth + 14;
           var maxWidth = isMultiple ? (mw * scope.columnsPerRow) : mw;
           if (scope.expandHorizontal) {
             scope.style = "min-height: " + (scope.maxHeight + 20) + "px; min-width: " + maxWidth + "px";

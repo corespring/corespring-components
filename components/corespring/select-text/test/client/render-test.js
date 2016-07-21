@@ -1,6 +1,6 @@
 describe('corespring:select-text:render', function() {
 
-  var testModel, scope, rootScope, container, element;
+  var testModel, scope, rootScope, container, element, timeout;
 
   var MockComponentRegister = function() {
     this.elements = {};
@@ -34,7 +34,7 @@ describe('corespring:select-text:render', function() {
     });
   });
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, $timeout) {
     container = new MockComponentRegister();
 
     $rootScope.$on('registerComponent', function(event, id, obj) {
@@ -44,6 +44,7 @@ describe('corespring:select-text:render', function() {
     element = $compile("<corespring-select-text-render id='1'></corespring-select-text-render>")($rootScope.$new());
     scope = element.isolateScope();
     rootScope = $rootScope;
+    timeout = $timeout;
   }));
 
   it('constructs', function() {
@@ -63,6 +64,7 @@ describe('corespring:select-text:render', function() {
       };
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
+      timeout.flush();
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
     it('should return false if answer is selected', function() {

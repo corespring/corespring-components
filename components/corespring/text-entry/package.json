@@ -18,6 +18,10 @@
     {
       "name": "widgets",
       "organization": "corespring"
+    },
+    {
+      "name" : "icon",
+      "organization" : "corespring"
     }
   ],
   "dependencies": {

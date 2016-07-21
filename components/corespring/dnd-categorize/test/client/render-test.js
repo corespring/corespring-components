@@ -224,9 +224,9 @@ describe('corespring:dnd-categorize:render', function() {
   describe('reset', function() {
     beforeEach(setModelAndDigest);
     it('closes seeAnswerPanel', function() {
-      scope.isSeeAnswerPanelExpanded = true;
+      scope.feedback.isSeeAnswerPanelExpanded = true;
       container.elements['1'].reset();
-      expect(scope.isSeeAnswerPanelExpanded).toBe(false);
+      expect(scope.feedback.isSeeAnswerPanelExpanded).toBe(false);
     });
     it('removes response', function() {
       scope.response = {};

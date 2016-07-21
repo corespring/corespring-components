@@ -39,6 +39,11 @@ var main = [
 
     function link(scope, element, attrs) {
 
+      scope.$watch('seeSolutionExpanded', function() {
+        console.log('scope.seeSolutionExpanded', scope.seeSolutionExpanded);
+        scope.$broadcast('setVisible', scope.seeSolutionExpanded ? 1 : 0);
+      });
+
       //we throttle bc. when multiple calls to renderAnswerArea are
       //made rapidly, the rendering breaks, eg. in the regression test rig
       var renderAnswerArea = throttle(doRenderAnswerArea);
@@ -63,7 +68,10 @@ var main = [
         setDataAndSession: setDataAndSession,
         setInstructorData: setInstructorData,
         setMode: setMode,
-        setResponse: setResponse
+        setResponse: setResponse,
+        setPlayerSkin: function(skin) {
+          scope.iconSet = skin.iconSet;
+        }
       });
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
@@ -119,6 +127,9 @@ var main = [
 
       function setMode(mode) {
         scope.mode = mode;
+        if (mode.trim() === 'gather') {
+          resetSolution();
+        }
       }
 
       function isAnswerEmpty() {
@@ -144,7 +155,8 @@ var main = [
 
       function setResponse(response) {
         $log.debug("[DnD-inline] setResponse: ", response);
-        scope.response = response;
+        scope.response = _.isEmpty(response) ? undefined : response;
+        console.log('response', response);
         scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
 
         // Populate solutionScope with the correct response
@@ -172,13 +184,17 @@ var main = [
 
       function reset() {
         scope.resetChoices(scope.rawModel);
+        resetSolution();
+        scope.initUndo();
+      }
 
+      function resetSolution() {
+        console.log('called resetSolution');
+        scope.response = undefined;
         scope.correctResponse = undefined;
         scope.instructorData = undefined;
-        scope.response = undefined;
         scope.seeSolutionExpanded = false;
-
-        scope.initUndo();
+        scope.$broadcast('setVisible', 0);
       }
 
       function doRenderAnswerArea(targetSelector, scope) {
@@ -220,7 +236,7 @@ var main = [
       }
 
       function classForChoice(answerAreaId, index) {
-        if (scope.response) {
+        if (!_.isEmpty(scope.response)) {
           var feedback = getFeedbackForChoice(answerAreaId, index);
           return feedback === 'correct' ? 'correct' : 'incorrect';
         }
@@ -233,7 +249,7 @@ var main = [
 
         function getFeedbackForChoice(answerAreaId, index) {
           var result;
-          if (scope.response.feedbackPerChoice &&
+          if (scope.response && scope.response.feedbackPerChoice &&
             _.isArray(scope.response.feedbackPerChoice[answerAreaId])) {
             result = scope.response.feedbackPerChoice[answerAreaId][index];
           }
@@ -289,34 +305,36 @@ var main = [
           '     jqyoui-draggable="draggableOptionsWithKeep(choice)"',
           '     ng-class="{editable:canEdit(), placed:!isPlaceable(choice)}"',
           '     ng-model="local.choices"',
-          '     ng-repeat="choice in local.choices"',
-          '    >',
+          '     ng-repeat="choice in local.choices">',
           '    <span class="choice-content" ',
-          '       ng-bind-html-unsafe="cleanLabel(choice)"',
-          '     ></span>',
+          '       ng-bind-html-unsafe="cleanLabel(choice)"></span>',
           '  </div>',
-          '</div>'
+          '</div>',
         ].join('');
       }
 
       return [
         '<div class="render-csdndi {{mode}}" drag-and-drop-controller>',
-        '  <div class="undo-start-over pull-right" ng-show="canEdit()" >',
+        '  <div class="undo-start-over text-center" ng-show="canEdit()" >',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
+        '  <correct-answer-toggle visible="response.correctResponse && response.correctness !== \'correct\'"',
+        '      toggle="seeSolutionExpanded"></correct-answer-toggle>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">',
              choiceArea(),
         '  </div>',
-        '  <div class="answer-area-holder" ng-class="response.correctClass"></div>',
+        '  <response-wrapper width="100%">',
+        '    <div class="answer-area-holder" class="{{response.correctClass}}"></div>',
+        '    <div class="correct-answer-area-holder"></div>',
+        '  </response-wrapper>',
         '  <div ng-if="model.config.choiceAreaPosition == \'below\'">',
              choiceArea(),
         '  </div>',
         '  <div class="clearfix"></div>',
-        '  <div ng-show="feedback" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
-        '  <div class="see-solution" see-answer-panel="" see-answer-panel-expanded="seeSolutionExpanded" ng-show="correctResponse">',
-        '    <div class="correct-answer-area-holder"></div>',
+        '  <div ng-if="response.feedback && !seeSolutionExpanded">',
+        '    <div icon-set="{{iconSet}}" feedback="response.feedback" correct-class="{{response.correctClass}}"></div>',
         '  </div>',
         '</div>'
       ].join('');
@@ -386,7 +404,6 @@ var answerAreaInline = [
         };
 
         scope.classForChoice = classForChoice;
-        scope.classForCorrectness = classForCorrectness;
         scope.removeChoice = removeChoice;
         scope.removeHashKeyFromDroppedItem = removeHashKeyFromDroppedItem;
         scope.shouldShowNoAnswersWarning = shouldShowNoAnswersWarning;
@@ -499,15 +516,6 @@ var answerAreaInline = [
           return renderScope.classForChoice(scope.answerAreaId, index);
         }
 
-        function classForCorrectness(index) {
-          var choiceClass = classForChoice(index);
-          if (choiceClass === "correct") {
-            return 'fa-check-circle';
-          } else if (choiceClass === "incorrect") {
-            return 'fa-times-circle';
-          }
-        }
-
         function removeChoice(index) {
           renderScope.landingPlaceChoices[scope.answerAreaId].splice(index, 1);
         }
@@ -539,12 +547,8 @@ var answerAreaInline = [
         '      <div class="selected-choice-content">',
         '        <div class="html-wrapper" ng-bind-html-unsafe="renderScope.cleanLabel(choice)"></div>',
         '      </div>',
-        '      <div class="circle">',
-        '        <i class="fa" ng-class="classForCorrectness($index)"></i>',
-        '      </div>',
         '    </div>',
         '  </div>',
-        '  <div class="empty-answer-area-warning" ng-switch-when="true"><i class="fa fa-exclamation-triangle"></i></div>',
         '</div>'
       ].join("\n");
     }

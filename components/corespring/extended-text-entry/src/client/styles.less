@@ -1,59 +1,86 @@
-@import '../../../../../less/common';
-
-@component-width: 600px;
-
 .corespring-extended-text-entry {
+
+  @max-component-width: 600px;
 
   &.view-extended-text-entry {
     width: 100%;
-    max-width: @component-width;
+    max-width: @max-component-width;
+
+    &.received.incorrect {
+      .wiggi-wiz {
+        box-shadow: none;
+      }
+    }
+
+    &.evaluate {
+      .textarea-holder {
+        .wiggi-wiz {
+          background-color: #f8f6f6;
+          border-color: #f8f6f6;
+          color: #939393;
+        }
+      }
+    }
+
+    &.gather.filled-in {
+      .textarea-holder {
+        .wiggi-wiz {
+          border-color: #a4d4f1;
+        }
+      }
+    }
+
+    &.instructor {
+      .wiggi-wiz {
+        background-color: white;
+        color: #bebebe;
+      }
+    }
+
+    &.view {
+      .wiggi-wiz {
+
+      }
+    }
 
     .textarea-holder {
-      display: 'inline-block';
       position: relative;
       width: 100%;
+
+      .wiggi-wiz {
+        margin-bottom: 10px;
+        min-height: 100px;
+        border: 1px solid #bebebe;
+      }
     }
 
-    .wiggi-wiz {
-      margin-bottom: 20px;
-      min-height: 100px;
+    .wiggi-wiz-toolbar {
+      background-color: #e0dee0;
+
+      .btn {
+        padding: 0px 7px;
+
+        &:not(.active) {
+          border: none;
+          background: none;
+        }
+      }
+
+      .btn-group {
+        margin-right: 0;
+      }
     }
 
-    &.received.incorrect .wiggi-wiz {
-      border: 2px solid @warning-color-border;
-      box-shadow: none;
+    .wiggi-wiz-editable {
+      padding: 12px;
+      overflow: hidden;
     }
 
     .warning-icon {
       display: none;
     }
 
-    &.received.incorrect .warning-icon {
-      color: @warning-color;
-      display: block;
-      font-size: 28px;
-      position: absolute;
-      right: 10px;
-      top: 10px;
-    }
-
-    .feedback {
-      background-color: #d9edf7;
-      border-radius: 4px;
-      border: 1px solid #bce8f1;
-      color: #31708f;
-      padding: 15px;
-      position: relative;
-      width: 100%;
-    }
-
-    .no-feedback {
-      background-color: @warning-color-background;
-      border-radius: 4px;
-      border: 1px solid @warning-color-border;
-      color: @warning-color;
-      padding: 15px;
-      position: relative;
+    .panel.feedback {
       width: 100%;
     }
 
@@ -113,6 +140,14 @@
       &:before {
         content: "\2211";
       }
+    }
+  }
+}
+
+.teacher-view {
+  .view-extended-text-entry {
+    .wiggi-wiz.disabled {
+      background-color: transparent;
     }
   }
 }

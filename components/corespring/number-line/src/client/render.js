@@ -12,6 +12,7 @@ var main = [
 
       scope.editable = true;
       scope.response = {};
+      scope.answerExpanded = false;
 
       scope.changeHandler = function() {
         if (_.isFunction(scope.answerChangeCallback)) {
@@ -19,17 +20,20 @@ var main = [
         }
       };
 
-      scope.colors = {
-        correct: $(element).find('.correct-element').css('color'),
-        incorrect: $(element).find('.incorrect-element').css('color'),
-        axis: 'rgb(0, 0, 0)'
-      };
-
       scope.noResponseOptions = {
         explicitHeight: 10
       };
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+          scope.colors = {
+            correct: skin.colors['correct-background'],
+            incorrect: skin.colors['incorrect-background'],
+            axis: 'rgb(0, 0, 0)',
+            disabled: 'rgb(150, 150, 150)'
+          };
+        },
 
         setDataAndSession: function(dataAndSession) {
           $log.debug("number line", dataAndSession);
@@ -38,6 +42,7 @@ var main = [
           scope.correctModel = dataAndSession.data.model;
           scope.editable = !scope.model.config.exhibitOnly;
           scope.configuredInitialElements = _.cloneDeep(scope.model.config.initialElements) || [];
+          scope.options = {exhibitOnly: scope.model.config.exhibitOnly};
 
           if (dataAndSession.session && dataAndSession.session.answers) {
             scope.response = dataAndSession.session.answers;
@@ -63,35 +68,50 @@ var main = [
 
         setResponse: function(response) {
           $log.debug('number line response ', response);
-          scope.serverResponse = response;
+          if (!_.isEmpty(response)) {
+            scope.serverResponse = response;
 
-          scope.correctModel = _.cloneDeep(scope.model);
-          scope.correctModel.config.exhibitOnly = true;
-          scope.correctModel.config.margin = {
-            top: 30,
-            right: 10,
-            bottom: 30,
-            left: 20
-          };
+            scope.correctModel = _.cloneDeep(scope.model);
+            scope.correctModel.config.exhibitOnly = true;
+            scope.correctModel.config.margin = {
+              top: 30,
+              right: 10,
+              bottom: 30,
+              left: 20
+            };
 
-          var i = 0;
-          scope.correctModelDummyResponse = {
-            feedback: {
-              elements: _.map(response.correctResponse, function(cr) {
-                i++;
-                return _.extend(cr, {
-                  rangePosition: i,
-                  isCorrect: true
-                });
-              })
-            }
-          };
+            var i = 0;
+            scope.correctModelDummyResponse = {
+              feedback: {
+                elements: _.map(response.correctResponse, function(cr) {
+                  i++;
+                  return _.extend(cr, {
+                    rangePosition: i,
+                    isCorrect: true
+                  });
+                })
+              }
+            };
+          } else {
+            scope.serverResponse = scope.correctModel = scope.correctModelDummyResponse = undefined;
+          }
         },
 
-        setMode: function(newMode) {},
+        setMode: function(newMode) {
+          if (newMode === 'gather' || newMode === 'view') {
+            _.each(scope.response, function(o, level) {
+               o.isCorrect = undefined;
+            });
+            if (scope.rebuildHook) {
+              scope.rebuildHook();
+            }
+          }
+        },
 
         reset: function() {
-          scope.serverResponse = undefined;
+          scope.responsemodel = [];
+          scope.serverResponse = 'reset';
+          scope.answerExpanded = false;
         },
 
         isAnswerEmpty: function() {
@@ -108,6 +128,10 @@ var main = [
         }
       };
 
+      scope.$watch('answerExpanded', function() {
+        scope.$broadcast('setVisible', scope.answerExpanded ? 1 : 0);
+      });
+
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge);
     };
@@ -120,34 +144,33 @@ var main = [
       link: link,
       template: [
         '<div class="view-number-line">',
-        '  <div interactive-graph',
-        '       ngModel="model"',
-        '       ng-hide="serverResponse && serverResponse.correctness == \'warning\'"',
-        '       responseModel="response"',
-        '       serverResponse="serverResponse"',
-        '       changeHandler="changeHandler()"',
-        '       editable="editable"',
-        '       colors="colors"></div>',
-
+        '  <correct-answer-toggle visible="serverResponse && serverResponse.correctness === \'incorrect\'" toggle="answerExpanded"></correct-answer-toggle>',
+        '  <response-wrapper ng-show="serverResponse.correctness !== \'warning\'">',
+        '    <div interactive-graph',
+        '        ngModel="model"',
+        '        options="options"',
+        '        responseModel="response"',
+        '        serverResponse="serverResponse"',
+        '        changeHandler="changeHandler()"',
+        '        rebuildHook="rebuildHook"',
+        '        editable="editable"',
+        '        colors="colors">',
+        '    </div>',
+        '    <div class="solution" interactive-graph ng-if="serverResponse"',
+        '        ngModel="correctModel"',
+        '        serverResponse="correctModelDummyResponse"',
+        '        responseModel="dummyResponse"',
+        '        colors="colors">',
+        '    </div>',
+        '  </response-wrapper>',
         '  <div ng-if="serverResponse && serverResponse.correctness == \'warning\'" class="no-response">',
-        '    <i class="fa fa-exclamation-triangle"></i>',
         '    <div interactive-graph',
         '         ngModel="correctModel"',
         '         responseModel="dummyResponse"',
         '         options="noResponseOptions"></div>',
         '  </div>',
-
-        '  <div feedback="serverResponse.feedback.message" correct-class="{{serverResponse.correctClass}}"></div>',
-        '  <div see-answer-panel ng-if="serverResponse && serverResponse.correctness === \'incorrect\'">',
-        '    <div interactive-graph',
-        '         ngModel="correctModel"',
-        '         serverResponse="correctModelDummyResponse"',
-        '         responseModel="dummyResponse"',
-        '         colors="colors"></div>',
-        '  </div>',
-        '  <div style="display: none">',
-        '    <span class="correct-element"></span>',
-        '    <span class="incorrect-element"></span>',
+        '  <div ng-if="!answerExpanded">',
+        '    <div feedback="serverResponse.feedback.message" icon-set="{{iconset}}" correct-class="{{serverResponse.correctClass}}"></div>',
         '  </div>',
         '</div>'
       ].join("\n")
@@ -223,7 +246,8 @@ var interactiveGraph = [
         editable: "=",
         options: "=",
         changehandler: "&changehandler",
-        ticklabelclick: "="
+        ticklabelclick: "=",
+        rebuildhook: "=?"
       },
       controller: function($scope) {
         //set default config to avoid npe
@@ -445,6 +469,8 @@ var interactiveGraph = [
             var options = _.cloneDeep(o);
             if (!_.isUndefined(o.isCorrect)) {
               options.fillColor = options.strokeColor = o.isCorrect ? scope.colors.correct : scope.colors.incorrect;
+            } else if (scope.editable === false && scope.options.exhibitOnly === false) {
+              options.fillColor = options.strokeColor = scope.colors.disabled;
             }
             options.onMoveFinished = function(element) {
               var lastMovedElement = _.find(scope.responsemodel, function(e) {
@@ -549,7 +575,10 @@ var interactiveGraph = [
           return scope.config.availableTypes[type] === true;
         };
 
+        scope.rebuildhook = rebuildGraph;
+
         scope.resetGraph = function(model) {
+          scope.answerExpanded = false;
           scope.graph.updateOptions(_.merge(_.cloneDeep(model.config), scope.options));
           scope.graph.addHorizontalAxis("bottom", {
             ticks: model.config.ticks,
@@ -598,11 +627,12 @@ var interactiveGraph = [
         }, true);
 
         scope.$watch('editable', function(n) {
-          if (!_.isUndefined(n) && !n) {
+          if (!_.isUndefined(n)) {
             scope.graph.updateOptions({
-              exhibitOnly: true
+              exhibitOnly: !n
             });
           }
+          rebuildGraph();
         }, true);
 
         scope.$watch('responsemodel', function(n, prev) {
@@ -612,14 +642,19 @@ var interactiveGraph = [
         }, true);
 
         scope.$watch('serverresponse', function(n, prev) {
-          if (!_.isEmpty(n) && !_.isEmpty(n.feedback)) {
+          if (n === 'reset') {
+            scope.resetGraph(scope.model);
+          } else if (!_.isEmpty(n) && !_.isEmpty(n.feedback)) {
             scope.responsemodel = _.cloneDeep(n.feedback.elements) || [];
             rebuildGraph();
             scope.graph.updateOptions({
               exhibitOnly: true
             });
           } else if (prev) {
+            var rm = _.cloneDeep(scope.responsemodel);
             scope.resetGraph(scope.model);
+            scope.responsemodel = rm;
+            rebuildGraph();
           }
         }, true);
 

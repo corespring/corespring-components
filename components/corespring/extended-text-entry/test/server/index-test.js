@@ -51,12 +51,12 @@ describe('extended text entry server logic', function() {
 
   it('should return an incorrect response for a null answer', function(){
     var outcome = server.createOutcome({}, null, settings(true));
-    outcome.should.eql({correctness: 'incorrect', score: 0, feedback: server.feedback.NO_ANSWER});
+    outcome.should.eql({correctness: 'incorrect', correctClass: "nothing-submitted", score: 0, feedback: server.feedback.NO_ANSWER});
   });
 
   it('should show default feedback', function() {
     var response = server.createOutcome(_.cloneDeep(component), "Some text", settings(true, true, false));
-    response.feedback.should.equal("Your answer was submitted.");
+    response.feedback.should.equal("Your answer was successfully submitted.");
   });
 
   it('should show custom feedback', function() {

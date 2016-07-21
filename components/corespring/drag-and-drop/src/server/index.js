@@ -1,12 +1,19 @@
 var _ = require('lodash');
 var sax = require('sax');
 
+exports.feedback = {
+  NO_ANSWER: 'You did not enter a response'
+};
+
 exports.createOutcome = function(question, answer, settings) {
 
-
-  if(!answer){
+  console.log("CO", answer);
+  var answerLength = _.reduce(answer, function(mem, a) { return mem + a.length; }, 0);
+  if(!answerLength){
     return {
       correctness: 'incorrect',
+      emptyAnswer: true,
+      message: exports.feedback.NO_ANSWER,
       correctResponse: question.correctResponse,
       answer: answer,
       score: 0

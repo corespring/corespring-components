@@ -1,0 +1,10 @@
+{
+  "componentType": "corespring-test-controller",
+  "title": "TestController",
+  "weight" : 1,
+  "minimumWidth": 100,
+  "model": {
+    "config": {
+    }
+  }
+}

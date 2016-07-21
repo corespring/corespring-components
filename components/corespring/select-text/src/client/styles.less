@@ -3,11 +3,15 @@
 @choice-color-opaque: rgb(187, 187, 187);
 @choice-color: rgba(187, 187, 187, 0.5);
 @correct-answer-bg-color-opaque: rgb(204, 255, 204);
-@correct-answer-bg-color: rgba(204, 255, 204, 0.6);
+@correct-answer-bg-color: @correct-background;
 @correct-answer-border-color: rgb(46, 102, 44);
 @incorrect-answer-bg-color-opaque: rgb(255, 255, 204);
-@incorrect-answer-bg-color: rgba(255, 255, 204, 0.6);
-@incorrect-answer-border-color: rgb(238, 162, 54);
+@incorrect-answer-bg-color: @incorrect-background;
+@incorrect-answer-border-color: @incorrect-background;
+
+@hover-background-color: #bde2fe;
+@selected-background-color: #91acb8;
+@disabled-selected-background-color: #E0DEE0;
 
 .corespring-select-text {
 
@@ -21,13 +25,11 @@
       }
     }
   }
+
   .action-buttons-holder {
-    text-align: right;
+    text-align: center;
     .action-buttons {
-      border: 1px dashed #ccc;
-      border-radius: 5px 5px 0 0;
-      border-bottom-color: white;
-      border-bottom-style: solid;
+      border: none;
       display: inline-block;
       padding: 4px;
       .answers-toggle {
@@ -36,14 +38,28 @@
     }
   }
 
+  .feedback.panel {
+    &.incorrect, &.correct, &.partial {
+      .cs-icon {
+        top: -3px !important;
+        left: -5px !important;
+      }
+    }
+  }
+
   .select-text-content {
     background-clip: padding-box;
-    border-radius: 5px 0 5px 5px;
-    border: 1px dashed #ccc;
     clear: both;
     margin: 0 0 15px 0;
     padding: 10px;
     line-height: 1.5;
+
+    .cst {
+      transition: background 0.25s linear;
+      &.selected {
+        background-color: @selected-background-color;
+      }
+    }
 
     &.editable {
       .cst {
@@ -51,45 +67,49 @@
         -webkit-transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
         transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
 
-        &.selected {
-          background-color: #CCCCCC;
-        }
 
         &:hover {
-          background-color: #eee;
+          background-color: @hover-background-color;
         }
       }
     }
 
-    &.no-more-selections {
-
+    &.view {
+      .cst {
+        &.selected {
+          background-color: @disabled-selected-background-color;
+        }
+      }
     }
 
     &.blocked {
       .cst {
         &.correct {
-          color: white;
-          background-color: #3C763D;
+          color: @correct-foreground;
+          background-color: @correct-background;
         }
         &.incorrect {
-          color: white;
-          background-color: #EEA236;
+          color: @incorrect-foreground;
+          background-color: @incorrect-background;
         }
       }
     }
+
     &.show-answers {
+
       .cst {
+
         &.correct {
-          color: white;
-          background-color: #3C763D;
+          color: @correct-foreground;
+          background-color: @correct-background;
         }
         &.incorrect {
           color: black;
           background-color: white;
         }
         &.correct-not-selected {
-          color: white;
-          background-color: #3C763D;
+          color: @correct-foreground;
+          background-color: @correct-background;
         }
       }
     }

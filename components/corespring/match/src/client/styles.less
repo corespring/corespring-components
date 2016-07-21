@@ -1,4 +1,3 @@
-@import '../../../../../less/common';
 
 .scale(@size) {
   -webkit-transform: scale(@size, @size);
@@ -146,8 +145,18 @@
   padding-top: 14px;
   margin-bottom: 20px;
 
+  .choice-radio-button .choice-icon-holder .choice-icon {
+    left: 7px;
+  }
+
+  .icon-toggle.icon-toggle-correct {
+    text-align: center;
+    width: 100%;
+  }
+
   .undo-start-over {
     margin-bottom: 5px;
+    text-align: center;
   }
 
   .corespring-match-table {
@@ -194,6 +203,11 @@
       width: 28px;
       min-width: 28px;
       vertical-align: middle !important;
+
+      .cs-icon  {
+        width: 30px;
+        margin-top: -3px;
+      }
     }
 
     .answer-cell {
@@ -217,30 +231,6 @@
   .feedback.panel {
     .panel-heading {
       cursor: default;
-    }
-  }
-
-  .feedback {
-    &.all_correct {
-      .color-panel(@correct-color);
-    }
-    &.all_incorrect {
-      .color-panel(@incorrect-color);
-    }
-    &.some_correct {
-      .color-panel(@partial-color);
-    }
-    &.warning {
-      .panel-heading {
-        display: none;
-      }
-      .panel-body {
-        color: @warning-color;
-        background-color: @warning-color-border;
-        border: 1px solid @warning-color-border;
-        border-radius: 4px;
-        padding: 15px;
-      }
     }
   }
 }
@@ -311,18 +301,27 @@
 
 .corespring-match-choice {
 
-  .background {
+  .background, .foreground {
     position: absolute;
   }
 
-  .foreground {
-    position: absolute;
+  .inner-circle, .inner-rect {
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
   }
+
+  &.selected {
+    .inner-circle, .inner-rect {
+      opacity: 1;
+      transition: opacity .15s ease-in-out;
+    }
+  }
+
 
   &.correct {
 
     .background {
-      color: @correct-color;
+      color: @correct-background;
     }
 
     .foreground {
@@ -332,7 +331,7 @@
 
   &.incorrect {
     .background {
-      color: @incorrect-color;
+      color: @incorrect-background;
     }
 
     .foreground {
@@ -457,8 +456,8 @@
   &.match-checkbox {
     display: inline-block;
     position: relative;
-    width: 30px;
-    height: 30px;
+    width: 17px;
+    height: 24px;
     font-family: FontAwesome;
     font-size: 22px;
 
@@ -472,7 +471,7 @@
         border-radius: 4px;
         left: 3px;
         top: 3px;
-      }
+    }
 
       .foreground {
         .scale(0);
@@ -490,64 +489,8 @@
       }
     }
 
-    &.correct {
-      .background {
-        left: 5px;
-        top: 3.5px;
-        &:after {
-          content: '\f0c8';
-        }
-      }
 
-      &.checked {
-        .foreground {
-          left: 6px;
-          top: 2px;
-          &:after {
-            font-size: 16px;
-            content: '\f00c';
-          }
-        }
-      }
-    }
 
-    &.incorrect {
-      .background {
-        left: 5px;
-        top: 3.5px;
-        &:after {
-          content: '\f0c8';
-        }
-      }
-
-      .foreground {
-        left: 8px;
-        top: 2px;
-        &:after {
-          font-size: 16px;
-          content: '\f00d';
-        }
-      }
-    }
-
-    &.unknown {
-      .background {
-        left: 5.5px;
-        top: 3.5px;
-        &:after {
-          content: '\f0c8';
-        }
-      }
-
-      .foreground {
-        left: 5.5px;
-        top: 3.5px;
-        &:after {
-          font-size: 23px;
-          content: '\f096';
-        }
-      }
-    }
   }
 }
 

@@ -1,5 +1,6 @@
 exports.framework = 'angular';
-exports.directives = [{
+exports.directives = [
+  {
   directive: [
     '$log',
     '$timeout',
@@ -11,7 +12,38 @@ exports.directives = [{
     'MathJaxService',
     renderCorespringDndCategorize
   ]
-}];
+  },
+  {
+    name: 'answerSwitcher',
+    directive: function() {
+      return {
+        link: function($scope, $element) {
+          $element.addClass('answer-switcher');
+
+          function resizeContainer() {
+            var elements = $element.children();
+            var dimensions = _.map(elements, function(element) {
+              var dimensions = element.getBoundingClientRect();
+              return [dimensions.width, dimensions.height];
+            });
+
+            var height = Math.ceil(_.chain(dimensions).map(function(dimension) {
+                return dimension[1];
+              }).max().value()) + 'px';
+
+            $element.css({
+              height: height
+            });
+          }
+
+          $scope.$watch(resizeContainer);
+        },
+        restrict: 'EA'
+      };
+    }
+  }
+
+];
 
 function renderCorespringDndCategorize(
   $log,
@@ -51,11 +83,16 @@ function renderCorespringDndCategorize(
   function link(scope, elem, attrs) {
 
     var log = console.log.bind(console, '[dnd-categorize]');
-    var layout;
+
+    var lastChoiceWidth, layout;
 
     scope.correctAnswerRows = [{}];
     scope.dragAndDropScope = 'dnd-scope-' + Math.floor(Math.random() * 10000);
+    scope.feedback = {
+      isSeeAnswerPanelExpanded: false
+    };
     scope.isEditMode = attrs.mode === 'edit';
+    scope.playerMode = 'gather';
     scope.renderModel = {};
     scope.rows = [{}];
     scope.shouldFlip = false;
@@ -83,7 +120,8 @@ function renderCorespringDndCategorize(
       reset: reset,
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
-      setMode: function(mode) {},
+      setMode: setPlayerMode,
+      setPlayerSkin: setPlayerSkin,
       setResponse: setResponse
     };
 
@@ -110,6 +148,10 @@ function renderCorespringDndCategorize(
     }
 
     //-----------------------------------------------------------
+
+    function setPlayerSkin(skin) {
+      scope.iconset = skin.iconSet;
+    }
 
     function setDataAndSession(dataAndSession) {
       log('setDataAndSession mode:', attrs.mode, dataAndSession);
@@ -190,6 +232,10 @@ function renderCorespringDndCategorize(
 
     function isAnswerEmpty() {
       return 0 === getSession().numberOfAnswers;
+    }
+
+    function setPlayerMode(value) {
+      scope.playerMode = value;
     }
 
     function setInstructorData(data) {
@@ -302,9 +348,11 @@ function renderCorespringDndCategorize(
     }
 
     function reset() {
-      scope.isSeeAnswerPanelExpanded = false;
-      scope.response = undefined;
 
+      scope.feedback = {
+        isSeeAnswerPanelExpanded: false
+      };
+      scope.response = undefined;
       scope.renderModel = _.cloneDeep(scope.saveRenderModel);
       scope.undoModel.init();
       updatePlacedChoices();
@@ -365,10 +413,20 @@ function renderCorespringDndCategorize(
         .withContainer(elem.find('.choices-container'))
         .withItemSelector('.choice-corespring-dnd-categorize')
         .withNumColumns(scope.choicesPerRow)
-        .withCellWidth(calcChoiceWidth())
+        .withCellWidth(calcChoiceWidth)
         .withPaddingBottom(7)
         .value(),
         new LayoutRunner($timeout));
+
+      layout.onBeforeRender(function(choiceWidth){
+        scope.choiceWidth = choiceWidth;
+        scope.choiceStyle = {
+          width: choiceWidth + 'px'
+        };
+      });
+      layout.onAfterRender(function(){
+        renderMath();
+      });
     }
 
     function destroyLayouts() {
@@ -377,11 +435,10 @@ function renderCorespringDndCategorize(
       }
     }
 
-    function updateLayoutConfig(cellWidth) {
+    function updateLayoutConfig() {
       if (layout) {
         layout.updateConfig({
-          container: elem.find('.choices-container'),
-          cellWidth: cellWidth
+          container: elem.find('.choices-container')
         });
       }
     }
@@ -421,14 +478,18 @@ function renderCorespringDndCategorize(
         width: 100 / categoriesPerRow + '%'
       };
 
-      $timeout(updateChoices, 100);
+      if (layout) {
+        layout.updateConfig({
+          container: elem.find('.choices-container')
+        });
+      }
     }
 
-    function fillUpWithPlaceholders(rows, categoriesPerRow){
+    function fillUpWithPlaceholders(rows, categoriesPerRow) {
       //fill rows with empty placeholder categories
       //so that they are lined up in proper columns
       var counter = 1;
-      var categories = rows[rows.length-1].categories;
+      var categories = rows[rows.length - 1].categories;
       while (categories.length < categoriesPerRow) {
         categories.push({
           model: {
@@ -437,22 +498,6 @@ function renderCorespringDndCategorize(
           isPlaceHolder: true
         });
       }
-    }
-
-    function updateChoices() {
-      if (elem.width() === 0) {
-        $timeout(updateChoices, 100);
-        return;
-      }
-
-      scope.choiceWidth = calcChoiceWidth();
-
-      scope.choiceStyle = {
-        width: scope.choiceWidth + 'px'
-      };
-
-      updateLayoutConfig(scope.choiceWidth);
-      renderMath();
     }
 
     function calcChoiceWidth() {
@@ -606,7 +651,7 @@ function renderCorespringDndCategorize(
     }
 
     function isDragEnabled(choice) {
-      return !scope.response &&
+      return !scope.response && (scope.isEditMode || scope.playerMode === 'gather') &&
         (choiceCanBePlacedMultipleTimes(choice) || !isChoicePlaced(choice.id));
 
       function choiceCanBePlacedMultipleTimes(choice) {
@@ -615,7 +660,7 @@ function renderCorespringDndCategorize(
     }
 
     function isDragEnabledFromCategory() {
-      return !scope.response && !scope.isEditMode;
+      return !scope.response && !scope.isEditMode && scope.playerMode === 'gather';
     }
 
     function getEditMode(choice) {
@@ -661,11 +706,11 @@ function renderCorespringDndCategorize(
 
   function template() {
     return [
-        '<div class="render-corespring-dnd-categorize">',
+        '<div class="render-corespring-dnd-categorize {{playerMode}}-mode">',
         undoStartOver(),
+        seeSolutionToggle(),
         interaction(),
         itemFeedbackPanel(),
-        seeSolutionPanel(),
         '</div>'
       ].join('\n');
   }
@@ -673,7 +718,7 @@ function renderCorespringDndCategorize(
   function undoStartOver() {
     return [
         '<div>',
-        '  <div class="undo-start-over pull-right" ng-show="canEdit()">',
+        '  <div class="undo-start-over text-centered" ng-show="canEdit()">',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
@@ -684,27 +729,34 @@ function renderCorespringDndCategorize(
 
   function itemFeedbackPanel() {
     return [
-        '<div feedback="response.feedback"',
-        '   correct-class="{{response.correctClass}} {{response.warningClass}}">',
+        '<div ng-show="!feedback.isSeeAnswerPanelExpanded">',
+        '  <div feedback="response.feedback" icon-set="{{iconset}}"',
+        '     correct-class="{{response.correctClass}} {{response.warningClass}}">',
+        '  </div>',
         '</div>'
       ].join('');
   }
 
-  function seeSolutionPanel() {
+  function seeSolutionToggle() {
     return [
-        '<div see-answer-panel="true"',
-        '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
-        '    ng-if="response.correctResponse">',
-        seeSolutionContent(),
-        '</div>'
-      ].join('');
+      '<correct-answer-toggle visible="response.correctResponse" toggle="feedback.isSeeAnswerPanelExpanded"></correct-answer-toggle>'
+    ].join('');
+  }
+
+  function seeSolutionContent(flip) {
+    return [
+      categoriesTemplate(flip + "&&response", 'correctAnswerRows', 'feedback.isSeeAnswerPanelExpanded')
+    ].join('');
   }
 
   function interaction() {
     return [
         '<div class="interaction-corespring-dnd-categorize">',
-        choicesTemplate("shouldFlip"),
-        categoriesTemplate("!shouldFlip", "rows"),
+        choicesTemplate('shouldFlip'),
+        '<div answer-switcher="" class="answer-group" ng-if="!shouldFlip">',
+        categoriesTemplate('!shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
+        seeSolutionContent('!shouldFlip', 'response'),
+        '</div>',
         // Nasty hack: transclude configuration for categories.
         '  <div ng-transclude ng-if="isEditMode"></div>',
         '  <h3 ng-if="isEditMode">Choices</h3>',
@@ -712,7 +764,10 @@ function renderCorespringDndCategorize(
         '    Enter choices below and drag to correct categories above.',
         '  </span>',
         choicesTemplate('!shouldFlip'),
-        categoriesTemplate('shouldFlip', 'rows'),
+        '<div answer-switcher="" class="answer-group" ng-if="shouldFlip">',
+        categoriesTemplate('shouldFlip', 'rows', '!feedback.isSeeAnswerPanelExpanded'),
+        seeSolutionContent('shouldFlip', 'response'),
+        '</div>',
         '</div>'
       ].join('');
   }
@@ -764,9 +819,9 @@ function renderCorespringDndCategorize(
       ].join('').replace('#flip#', flip);
   }
 
-  function categoriesTemplate(flip, rowsModel) {
+  function categoriesTemplate(flip, rowsModel, visible) {
     return [
-        '<div class="categories-holder" ng-if="#flip#">',
+        '<div class="categories-holder" ng-if="#flip#" ng-class="{isCategoriesHolderVisible: #visible#}">',
         '  <div class="categories" ng-repeat="row in #rowsModel# track by row.id">',
         '    <div class="row">',
         '      <div category-label-corespring-dnd-categorize="true" ',
@@ -797,12 +852,10 @@ function renderCorespringDndCategorize(
         '     </div>',
         '  </div>',
         '</div>'
-      ].join('').replace('#flip#', flip).replace('#rowsModel#', rowsModel);
+      ].join('')
+      .replace('#flip#', flip)
+      .replace('#rowsModel#', rowsModel)
+      .replace('#visible#', visible);
   }
 
-  function seeSolutionContent() {
-    return [
-        categoriesTemplate('true', 'correctAnswerRows')
-      ].join('');
-  }
 }
