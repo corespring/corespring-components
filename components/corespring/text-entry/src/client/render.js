@@ -25,6 +25,64 @@ var main = [
       scope.instructorResponse = false;
       scope.hasAdditionalAnswers = false;
 
+      scope.showInputWarning = function() {
+        $(element).popover({
+          template: [
+            '<div class="popover feedback-popover popover-input-warning role="tooltip">',
+            '  <div class="arrow"></div>',
+            '  <h3 class="popover-title"></h3>',
+            '  <div class="popover-content"></div>',
+            '</div>'
+          ].join('\n'),
+          container: element,
+          content: "Please enter numbers only",
+          placement: function(popover, sender) {
+            var playerElement = $(element).parents('.corespring-player');
+            var playerTop = playerElement.offset().top;
+            var elementTop = $(element).offset().top;
+            return (elementTop - playerTop > 100) ? "top" : "bottom";
+          },
+          html: true
+        }).popover('show');
+        $(window).click(function() {
+          scope.hideInputWarning();
+        });
+      };
+
+      scope.hideInputWarning = function() {
+        $(element).popover('destroy');
+      };
+
+      scope.validate = function() {
+        if (scope.question.allowIntegersOnly) {
+          var s = "";
+          var allowedChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+          if (scope.question.allowNegative) {
+            allowedChars.push('-');
+          }
+          if (scope.question.allowDecimal) {
+            allowedChars.push('.');
+          }
+          if (scope.question.allowSeparator) {
+            allowedChars.push(',');
+          }
+          var isWarning = false;
+          _.each(scope.answer, function(chr) {
+            if (_.contains(allowedChars, chr)) {
+              s += chr;
+            } else {
+              isWarning = true;
+            }
+          });
+          scope.answer = s;
+          if (isWarning) {
+            scope.showInputWarning();
+          } else {
+            scope.hideInputWarning();
+          }
+        }
+      };
+
       scope.containerBridge = {
 
         setPlayerSkin: function(skin) {
@@ -148,6 +206,7 @@ var main = [
         '    <div class="cs-text-entry__text-input-holder" ',
         '       ng-class="feedback.correctness">',
         '      <input type="text" ',
+        '         ng-change="validate()" ',
         '         ng-model="answer" ',
         '         ng-readonly="!editable" ',
         '         ng-class="feedback.correctness"',
