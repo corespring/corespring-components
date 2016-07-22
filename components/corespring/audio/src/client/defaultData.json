@@ -1,0 +1,9 @@
+{
+  "componentType": "corespring-audio",
+  "fileName" : "",
+  "pauseButtonLabel" : "Stop",
+  "playButtonLabel" : "Listen",
+  "title": "Audio",
+  "ui": "fullControls",
+  "weight": 0
+}

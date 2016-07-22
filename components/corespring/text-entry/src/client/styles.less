@@ -46,6 +46,17 @@
     white-space: nowrap;
   }
 
+  .popover.popover-input-warning {
+    background: #000000;
+    color: #eeeeff;
+    min-width: initial;
+    width: 120px;
+    .arrow::after {
+      border-bottom-color: #000000;
+      border-top-color: #000000;
+    }
+  }
+
   &.popupFeedback {
     .cs-text-entry__text-input-holder {
       &.warning, &.correct, &.incorrect, &.partial {
@@ -250,6 +261,10 @@
     margin-bottom: @vertical-margin;
   }
 
+  .restrictions {
+    margin-left: 25px;
+  }
+
   .text-field-size-row {
     .label-text {
       width: 90%;
@@ -280,6 +295,12 @@
       display: inline-block;
       margin-right: 20px;
     }
+  }
+
+  .allow-checkbox {
+    display: inline-block;
+    white-space: nowrap;
+    margin-right: 10px;
   }
 
 }
