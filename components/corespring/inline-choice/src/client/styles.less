@@ -97,7 +97,8 @@
       position: absolute;
       top: -2px;
       bottom: 0;
-      border-left: 1px solid @dropdown-border;
+      //CO-791
+      //border-left: 1px solid @dropdown-border;
       right: 4px;
       height: 27px;
       width: @caret-width;
@@ -129,6 +130,7 @@
   }
 
   .feedback-icon {
+    cursor: pointer;
     .cs-icon {
       width: 34px;
       height: 34px;
@@ -167,6 +169,16 @@
   &.incorrect, &.correct, &.warning {
     .dropdown-toggle {
       background-color: #eeeeee;
+
+      .inline-choice-caret {
+        fill: #bebebe;
+      }
+    }
+  }
+
+  &.instructor.correct {
+    .dropdown-toggle {
+      background-color: #ffffff;
 
       .inline-choice-caret {
         fill: #bebebe;
