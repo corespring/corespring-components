@@ -10,7 +10,6 @@ var main = [
     };
 
     function link(scope, element, attrs) {
-
       scope.editable = true;
 
       scope.question = {};
