@@ -45,8 +45,9 @@ exports.directive = [
       scope.$watch('answer', function(newValue) {
         function canSelectMoreChoices() {
           var selectedCount = (scope.answer && scope.answer.choices) ? (_.countBy(scope.answer.choices, function(choice) {
-            return choice === true;
-          }).true || 0) : 0;
+            return choice === true ? 'selected' : 'not selected';
+          }).selected || 0) : 0;
+
           var allowedChoiceCount = (scope.question && scope.question.config && scope.question.config.maxSelections) ?
             scope.question.config.maxSelections : selectedCount + 1;
           return selectedCount >= allowedChoiceCount;

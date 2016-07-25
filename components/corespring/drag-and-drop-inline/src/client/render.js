@@ -309,7 +309,7 @@ var main = [
           '    <span class="choice-content" ',
           '       ng-bind-html-unsafe="cleanLabel(choice)"></span>',
           '  </div>',
-          '</div>',
+          '</div>'
         ].join('');
       }
 
