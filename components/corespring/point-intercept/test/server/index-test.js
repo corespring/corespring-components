@@ -6,10 +6,10 @@ var fbu = require('../../../server-shared/src/server/feedback-utils');
 var server = proxyquire('../../src/server', {
   'corespring.server-shared.server.feedback-utils': fbu
 });
-var assert = require('assert');
-var should = require('should');
 var _ = require('lodash');
+var assert = require('assert');
 var helper = require('../../../../../test-lib/test-helper');
+var should = require('should');
 
 var component = {
   componentType: "corespring-point-interaction",
@@ -47,14 +47,28 @@ describe('correctness logic', function() {
 
 describe('server logic', function() {
 
-  it('should return a warning outcome if the answer is empty', function() {
+  describe('when no answer is given', function(){
 
-    var outcome = server.createOutcome({}, null, helper.settings(true, true, true));
-    outcome.should.eql({
-      correctness: "warning",
-      score: 0,
-      feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
-      outcome: "warning"
+    function assertNoAnswerWarning(answers) {
+      var outcome = server.createOutcome({}, answers, helper.settings(true, true, true));
+      outcome.should.eql({
+        correctness: "warning",
+        score: 0,
+        feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
+        outcome: "warning"
+      });
+    }
+
+    it('warns when the answer is null', function() {
+      assertNoAnswerWarning(null);
+    });
+
+    it('warns when the answer is undefined', function() {
+      assertNoAnswerWarning(undefined);
+    });
+
+    it('warns when the answer is empty array', function() {
+      assertNoAnswerWarning([]);
     });
   });
 

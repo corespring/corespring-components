@@ -6,6 +6,7 @@ exports.directives = [
       '$modal',
       '$rootScope',
       'CanvasTemplates',
+      'CsUndoModel',
       PlotPointsDirective
     ]
   }
@@ -15,7 +16,8 @@ function PlotPointsDirective(
   $compile,
   $modal,
   $rootScope,
-  CanvasTemplates
+  CanvasTemplates,
+  CsUndoModel
 ) {
 
   var colors = {
@@ -44,9 +46,14 @@ function PlotPointsDirective(
     scope.lockGraph = lockGraph;
     scope.pointsToCoordinateString = pointsToCoordinateString;
     scope.renewResponse = renewResponse;
-    scope.startOver = startOver;
-    scope.undo = undo;
+
+    scope.undoModel = new CsUndoModel();
+    scope.undoModel.setGetState(getUndoState);
+    scope.undoModel.setRevertState(revertToUndoState);
+    scope.undoModel.init();
+
     scope.unlockGraph = unlockGraph;
+
     this.getInitialParams = getInitialParams;
     this.setInitialParams = setInitialParams;
 
@@ -115,6 +122,7 @@ function PlotPointsDirective(
     function interactionCallback(params) {
       if (params.points) {
         scope.points = params.points;
+        scope.undoModel.remember();
         scope.pointResponse = scope.pointsToCoordinateString(params.points);
         scope.graphCallback({
           graphStyle: {}
@@ -165,33 +173,17 @@ function PlotPointsDirective(
       return response;
     }
 
-    function undo() {
-      if (!scope.locked) {
-        var pointsArray = _.map(scope.points, function(point, ptName) {
-          return {
-            name: ptName,
-            index: point.index
-          };
-        });
-        var removeName = _.max(pointsArray, function(point) {
-          return point.index;
-        }).name;
-        delete scope.points[removeName];
-        if (scope.graphCallback) {
-          scope.graphCallback({
-            points: scope.points
-          });
-        }
-      }
+    function getUndoState(){
+      return scope.points;
     }
 
-    function startOver() {
-      if (!scope.locked) {
-        if (scope.graphCallback) {
-          scope.graphCallback({
-            points: {}
-          });
-        }
+    function revertToUndoState(state){
+      scope.points = state;
+      scope.pointResponse = scope.pointsToCoordinateString(state);
+      if (scope.graphCallback) {
+        scope.graphCallback({
+          points: scope.points
+        });
       }
     }
   }
@@ -352,7 +344,9 @@ function PlotPointsDirective(
 
 
     /**
-     * @returns {answers: ['x:123,y:456', ...]}
+     * Returns an array of points
+     * Each point is a comma separated string
+     * of x and y, eg. for x=12 and y=45 the point is "12,45"
      */
     function getSession() {
       return {
@@ -369,9 +363,10 @@ function PlotPointsDirective(
     }
 
     function setResponse(response) {
+      console.log("setResponse", response);
+      scope.correctClass = response.correctness;
       scope.feedback = response && response.feedback;
       scope.response = response;
-      scope.correctClass = response.correctness;
 
       var borderColor = colors[(response && response.correctness) || 'none'];
 
@@ -397,10 +392,6 @@ function PlotPointsDirective(
     function reset() {
       scope.unlockGraph();
 
-      scope.graphCallback({
-        points: {}
-      });
-
       var solutionContainer = element.find('.solution-container');
       solutionContainer.empty();
 
@@ -409,6 +400,8 @@ function PlotPointsDirective(
       scope.correctResponse = undefined;
       scope.isFeedbackVisible = false;
       scope.isSeeAnswerPanelExpanded = false;
+
+      scope.undoModel.startOver();
     }
 
     function isAnswerEmpty() {
