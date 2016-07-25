@@ -94,7 +94,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
       };
 
       scope.isAnswersExpectedResponse = function() {
-        console.log("isAnswersExpectedResponse", scope.response);
         return scope.response && _.isEmpty(scope.response.answer);
       };
 
@@ -206,6 +205,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.userHasInteracted = false;
           scope.initUndo();
           showCorrectAnswers(false);
+          scope.display.showCorrectAnswer = false;
         },
 
         isAnswerEmpty: function() {
@@ -222,7 +222,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         setResponse: function(response) {
-          console.log('response', response);
           scope.response = response;
           if (response.correctness === 'incorrect') {
             scope.correctResponse = response.correctResponse;
