@@ -93,6 +93,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         return scope.response !== undefined;
       };
 
+      scope.isAnswersExpectedResponse = function() {
+        console.log("isAnswersExpectedResponse", scope.response);
+        return scope.response && _.isEmpty(scope.response.answer);
+      };
+
       scope.choiceLabelVisible = function() {
         if (scope.model.config.choiceAreaLayout === 'vertical') {
           return !_.isEmpty(scope.model.config.choiceAreaLabel) || !_.isEmpty(scope.model.config.answerAreaLabel);
@@ -340,20 +345,26 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     };
 
     var choices = [
-      '<div class="choices user-choices" >',
-      '  <div class="choices-holder" ng-if="!hasResponse()">',
-      '<div class="clearfix"></div>',
-      '<div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="!hasResponse() && model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+      '<div class="choices user-choices">',
+      '  <div class="choices-holder"',
+      '      ng-if="!hasResponse() || isAnswersExpectedResponse()">',
+      '    <div class="clearfix"></div>',
+      '    <div class="choice-area-label"',
+      '        ng-show="choiceLabelVisible()"',
+      '        ng-if="model.config.choiceAreaLayout == \'horizontal\'"',
+      '        ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
       '    <div class="choices-inner-holder clearfix">',
-      '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
-      '        <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
-      '             data-drag="editable"',
-      '             ng-disabled="!editable"',
-      '             data-jqyoui-options="dragOptions(o)"',
-      '             ng-model="local.choices"',
-      '             jqyoui-draggable="dragOptions(o)"',
-      '             ng-bind-html-unsafe="o.label"',
-      '             data-id="{{o.id}}">',
+      '      <div ng-repeat="o in local.choices"',
+      '          class="choice-wrapper">',
+      '        <div class="choice"',
+      '            ng-class="{hiddenChoice: choiceHidden(o)}"',
+      '            data-drag="editable"',
+      '            ng-disabled="!editable"',
+      '            data-jqyoui-options="dragOptions(o)"',
+      '            ng-model="local.choices"',
+      '            jqyoui-draggable="dragOptions(o)"',
+      '            ng-bind-html-unsafe="o.label"',
+      '            data-id="{{o.id}}">',
       '        </div>',
       '      </div>',
       '    </div>',

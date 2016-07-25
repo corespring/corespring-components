@@ -281,6 +281,24 @@ describe('corespring:placement ordering', function() {
     });
   });
 
+  describe('when the response is answer expected', function(){
+    beforeEach(function(){
+      setModelAndDigest(verticalModel);
+      setResponseAndDigest({
+        correctness: 'warning',
+        correctClass: 'warning',
+        answer: [],
+        correctResponse: ['c1', 'c2']
+      });
+    })
+    it('should not show the solution', function(){
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
+    });
+    it('should show the choices', function(){
+      expect($(element).find('.user-choices .choices-holder').length).toBe(1);
+    });
+  });
+
   describe('evaluate', function() {
     it('incorrect choices are marked as incorrect', function() {
       setModelAndDigest(verticalModel);
