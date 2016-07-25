@@ -290,7 +290,7 @@ describe('corespring:placement ordering', function() {
         answer: [],
         correctResponse: ['c1', 'c2']
       });
-    })
+    });
     it('should not show the solution', function(){
       expect($(element).find('.showCorrectVisible').length).toBe(0);
     });
