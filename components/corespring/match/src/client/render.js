@@ -519,8 +519,10 @@ var main = [
 
       function itemFeedbackPanel() {
         return [
-          '<div feedback="response.feedback" icon-set="{{iconset}}" ',
-          '   correct-class="{{response.correctClass}}"></div>'
+          '<div ng-if="!bridge.answerVisible">',
+          '  <div feedback="response.feedback" icon-set="{{iconset}}" ',
+          '     correct-class="{{response.correctClass}}"></div>',
+          '</div>'
         ].join('');
       }
 
