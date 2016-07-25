@@ -133,12 +133,13 @@ var main = [
 
         setLineEquation(line);
 
+        var color = scope.editable ? scope.colorPalette[line.colorIndex] : '#333333';
         // create line on graph
         if (!line.isSet) {
           scope.graphCallback({
             pointColor: {
               points: [scope.plottedPoint.name, point.name],
-              color: scope.colorPalette[line.colorIndex],
+              color: color,
               symbol: scope.symbols[line.colorIndex]
             }
           });
@@ -148,7 +149,7 @@ var main = [
               id: line.id,
               line: [scope.plottedPoint.name, point.name],
               label: line.name,
-              color: scope.colorPalette[line.colorIndex]
+              color: color
             }
           });
 
@@ -325,6 +326,16 @@ var main = [
         if (scope.graphCallback) {
           scope.graphCallback(options);
         }
+
+        _.each(scope.lines, function(line) {
+          scope.graphCallback({
+            shapeColor: {
+              shape: line.id,
+              color: '#bebebe'
+            }
+          });
+        });
+
       };
 
       scope.unlockGraph = function() {
@@ -334,6 +345,15 @@ var main = [
             graphStyle: {},
             unlockGraph: true
           });
+          _.each(scope.lines, function(line) {
+            scope.graphCallback({
+              shapeColor: {
+                shape: line.id,
+                color: scope.colorPalette[line.colorIndex]
+              }
+            });
+          });
+
         }
       };
 
@@ -494,7 +514,7 @@ var main = [
               }
 
               // lock/unlock the graph
-              if (config.exhibitOnly) {
+              if (config.exhibitOnly || scope.editable === false) {
                 scope.lockGraph();
               } else {
                 scope.unlockGraph();
@@ -594,6 +614,7 @@ var main = [
 
         editable: function(e) {
           scope.editable = e;
+          e ? scope.unlockGraph() : scope.lockGraph();
         }
 
       };
@@ -605,7 +626,7 @@ var main = [
       return [
         "<div class='multiple-line-interaction-view'>",
         "  <div class='graph-interaction'>",
-        "    <div class='undo-start-over-controls container-fluid' ng-hide='config.exhibitOnly'>",
+        "    <div class='undo-start-over-controls container-fluid' ng-hide='config.exhibitOnly || locked'>",
         "      <div class='row'>",
         "        <div class='col-md-12 text-center' ng-hide='response'>",
         "          <span cs-start-over-button class='btn-player' ng-class='{disabled: locked || history.length < 1}' ng-disabled='locked || history.length < 1'></span>",
