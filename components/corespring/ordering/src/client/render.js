@@ -93,6 +93,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         return scope.response !== undefined;
       };
 
+      scope.isAnswersExpectedResponse = function() {
+        return scope.response && _.isEmpty(scope.response.answer);
+      };
+
       scope.choiceLabelVisible = function() {
         if (scope.model.config.choiceAreaLayout === 'vertical') {
           return !_.isEmpty(scope.model.config.choiceAreaLabel) || !_.isEmpty(scope.model.config.answerAreaLabel);
@@ -200,6 +204,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.top = {};
           scope.userHasInteracted = false;
           scope.initUndo();
+          showCorrectAnswers(false);
+          scope.display.showCorrectAnswer = false;
         },
 
         isAnswerEmpty: function() {
@@ -216,7 +222,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         },
 
         setResponse: function(response) {
-          console.log('response', response);
           scope.response = response;
           if (response.correctness === 'incorrect') {
             scope.correctResponse = response.correctResponse;
@@ -278,9 +283,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       });
 
-      scope.$watch('display.showCorrectAnswer', function() {
-        scope.$broadcast('setVisible', scope.display.showCorrectAnswer ? 1 : 0);
+      scope.$watch('display.showCorrectAnswer', function( value ) {
+        showCorrectAnswers(value);
       });
+
+      function showCorrectAnswers(value){
+        scope.$broadcast('setVisible', value ? 1 : 0);
+      }
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 
@@ -335,20 +344,26 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
     };
 
     var choices = [
-      '<div class="choices user-choices" >',
-      '  <div class="choices-holder" ng-if="!hasResponse()">',
-      '<div class="clearfix"></div>',
-      '<div class="choice-area-label" ng-show="choiceLabelVisible()" ng-if="!hasResponse() && model.config.choiceAreaLayout == \'horizontal\'" ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
+      '<div class="choices user-choices">',
+      '  <div class="choices-holder"',
+      '      ng-if="!hasResponse() || isAnswersExpectedResponse()">',
+      '    <div class="clearfix"></div>',
+      '    <div class="choice-area-label"',
+      '        ng-show="choiceLabelVisible()"',
+      '        ng-if="model.config.choiceAreaLayout == \'horizontal\'"',
+      '        ng-bind-html-unsafe="model.config.choiceAreaLabel"></div>',
       '    <div class="choices-inner-holder clearfix">',
-      '      <div ng-repeat="o in local.choices" class="choice-wrapper">',
-      '        <div class="choice" ng-class="{hiddenChoice: choiceHidden(o)}"',
-      '             data-drag="editable"',
-      '             ng-disabled="!editable"',
-      '             data-jqyoui-options="dragOptions(o)"',
-      '             ng-model="local.choices"',
-      '             jqyoui-draggable="dragOptions(o)"',
-      '             ng-bind-html-unsafe="o.label"',
-      '             data-id="{{o.id}}">',
+      '      <div ng-repeat="o in local.choices"',
+      '          class="choice-wrapper">',
+      '        <div class="choice"',
+      '            ng-class="{hiddenChoice: choiceHidden(o)}"',
+      '            data-drag="editable"',
+      '            ng-disabled="!editable"',
+      '            data-jqyoui-options="dragOptions(o)"',
+      '            ng-model="local.choices"',
+      '            jqyoui-draggable="dragOptions(o)"',
+      '            ng-bind-html-unsafe="o.label"',
+      '            data-id="{{o.id}}">',
       '        </div>',
       '      </div>',
       '    </div>',

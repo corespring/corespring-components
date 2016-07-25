@@ -85,12 +85,6 @@
       margin-top: 5px;
       cursor: auto;
 
-      .ui-draggable-dragging {
-        &:hover {
-          cursor: pointer;
-        }
-      }
-
       .choice {
         .remove-choice-button {
           position: absolute;
@@ -120,6 +114,14 @@
     overflow: hidden;
     min-height: 55px;
 
+    &.ui-draggable {
+      cursor: pointer;
+    }
+
+    &.ui-draggable.ui-draggable-disabled {
+      cursor: default;
+    }
+
     &.hiddenChoice {
       visibility: hidden;
 
@@ -132,11 +134,6 @@
       max-width: 100px;
       max-height: 100px;
     }
-
-    &:hover {
-      cursor: pointer;
-    }
-
   }
 
   .choiceHolder {
@@ -269,9 +266,9 @@
 
     .choice-area {
       display: table-row;
+      width: 100%;
 
       .choices {
-        display: table-cell;
 
         .choices-holder {
           display: inline-block;
@@ -532,9 +529,6 @@
 
     .limit-image-size();
 
-    &:hover {
-      cursor: pointer;
-    }
   }
 
 }
@@ -615,10 +609,6 @@
     min-height: 47px;
     padding: 1.13em;
     background: #efefef;
-
-    &:hover {
-      cursor: pointer;
-    }
 
     &.ui-sortable-helper {
       cursor: move;
