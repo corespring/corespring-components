@@ -200,6 +200,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.top = {};
           scope.userHasInteracted = false;
           scope.initUndo();
+          showCorrectAnswers(false);
         },
 
         isAnswerEmpty: function() {
@@ -278,9 +279,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
         }
       });
 
-      scope.$watch('display.showCorrectAnswer', function() {
-        scope.$broadcast('setVisible', scope.display.showCorrectAnswer ? 1 : 0);
+      scope.$watch('display.showCorrectAnswer', function( value ) {
+        showCorrectAnswers(value);
       });
+
+      function showCorrectAnswers(value){
+        scope.$broadcast('setVisible', value ? 1 : 0);
+      }
 
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
 

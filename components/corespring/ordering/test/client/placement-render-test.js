@@ -503,4 +503,16 @@ describe('corespring:placement ordering', function() {
     });
 
   });
+
+  describe('reset', function(){
+    beforeEach(function() {
+      setModelAndDigest(verticalModel);
+    });
+    it('should broadcast setVisible(0) to show placing targets', function(){
+      spyOn(scope, '$broadcast');
+      container.elements['1'].reset();
+      expect(scope.$broadcast).toHaveBeenCalledWith('setVisible', 0);
+    });
+  });
+
 });
