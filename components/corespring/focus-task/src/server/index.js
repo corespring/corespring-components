@@ -4,6 +4,10 @@ exports.isCorrect = isCorrect;
 exports.buildFeedback = buildFeedback;
 exports.createOutcome = createOutcome;
 
+exports.feedback = {
+  NO_ANSWER: 'You did not enter a response'
+};
+
 function isCorrect(answer, correctAnswer) {
   var diff, diff2;
   diff = _.difference(answer, correctAnswer);
@@ -28,6 +32,11 @@ function buildFeedback(question, answer, settings, isCorrect) {
   for (var i = 0; i < arr.length; i++) {
     var key = arr[i];
     out[key] =  (_.contains(correctResponse, key)) ? 'shouldHaveBeenSelected' : 'shouldNotHaveBeenSelected';
+  }
+
+  if (!answer || _.isEmpty(answer)) {
+    out.emptyAnswer = true;
+    out.message = exports.feedback.NO_ANSWER;
   }
 
   return out;

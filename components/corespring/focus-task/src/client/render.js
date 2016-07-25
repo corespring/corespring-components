@@ -172,11 +172,12 @@ exports.directive = [
             return c.value === k;
           });
 
-          if (choice !== null) {
+          if (choice !== undefined) {
             choice.correct = v;
           }
           console.log("choice: ", choice);
         });
+        console.log("scope.response.feedback", scope.response.feedback);
       }
 
       function setInstructorData(data) {
@@ -264,6 +265,10 @@ exports.directive = [
         '         </div>',
         '       </div>',
         '     </div>',
+        '  </div>',
+        '  <div correct-class="{{response.correctClass}}"',
+        '      feedback="response.feedback.message"',
+        '      icon-set="{{iconset}}">',
         '  </div>',
         '</div>'
       ].join("\n");
