@@ -490,7 +490,7 @@ var main = [
         "    </div>",
         "    <div class='correct-legend' ng-if='isSeeAnswerPanelExpanded'>{{correctResponse.equation}}</div>",
         "  </div>",
-        "  <div class='feedback-holder' ng-show='config.showFeedback' >",
+        "  <div class='feedback-holder' ng-show='config.showFeedback && !isSeeAnswerPanelExpanded' >",
         "  <div ng-show='feedback' feedback='feedback' icon-set='{{iconset}}' correct-class='{{correctClass}}'></div>",
         "  </div>",
         "</div>"
