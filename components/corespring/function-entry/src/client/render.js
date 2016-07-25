@@ -19,9 +19,10 @@ function FunctionEntryDirective($timeout, MathJaxService) {
 
     var renderedHelpContent;
 
-    scope.popupVisible = false;
-    scope.helpOn = false;
     scope.editable = true;
+    scope.helpOn = false;
+    scope.playerMode = 'gather';
+    scope.popupVisible = false;
 
     scope.containerBridge = {
       answerChangedHandler: answerChangedHandler,
@@ -36,6 +37,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
       setResponse: setResponse
     };
 
+    scope.getCssClasses = getCssClasses;
     scope.hasFeedback = hasFeedback;
 
     scope.$watch('answer', watchAnswer);
@@ -202,6 +204,14 @@ function FunctionEntryDirective($timeout, MathJaxService) {
         scope.popupVisible = popupVisible;
       };
     }
+
+    function getCssClasses(){
+      var result = [scope.playerMode];
+      if(hasFeedback()){
+        result.push('with-feedback');
+      }
+      return result;
+    }
   }
 
   function helpContent() {
@@ -223,7 +233,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
   function template() {
     return [
       '<div class="view-function-entry"',
-      '    ng-class="{\'with-feedback\': hasFeedback()}">',
+      '    ng-class="getCssClasses()">',
       '  <span class="text-input">',
       '    <input type="text"',
       '        ng-disabled="!editable"',
@@ -231,8 +241,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
       '        class="form-control {{inputClass}} {{correctClass}}"/>',
       '  </span>',
       '  <div class="feedback-icon"',
-      '      feedback-popover="response"',
-      '      ng-if="!isInstructorResponse()">',
+      '      feedback-popover="response">',
       '    <svg-icon open="{{popupVisible}}"',
       '        category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
       '        key="{{iconKey}}"',
