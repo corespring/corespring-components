@@ -133,13 +133,12 @@ var main = [
 
         setLineEquation(line);
 
-        var color = scope.editable ? scope.colorPalette[line.colorIndex] : '#333333';
         // create line on graph
         if (!line.isSet) {
           scope.graphCallback({
             pointColor: {
               points: [scope.plottedPoint.name, point.name],
-              color: color,
+              color: scope.colorPalette[line.colorIndex],
               symbol: scope.symbols[line.colorIndex]
             }
           });
@@ -149,7 +148,7 @@ var main = [
               id: line.id,
               line: [scope.plottedPoint.name, point.name],
               label: line.name,
-              color: color
+              color: scope.colorPalette[line.colorIndex]
             }
           });
 
