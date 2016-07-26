@@ -11,6 +11,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       scope.maxHeight = 20;
       scope.expandHorizontal = true;
       scope.solutionVisible = false;
+      scope.showSolution = false;
 
       scope.undoModel = new CsUndoModel();
       scope.undoModel.setGetState(getState);
@@ -207,7 +208,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         setResponse: function(response) {
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
-          scope.showSolution = response.correctness !== 'correct';
+          scope.showSolution = response.correctness !== 'correct' && !response.emptyAnswer;
           if (response.emptyAnswer) {
             scope.feedback = {message: response.message, emptyAnswer: true};
           }
