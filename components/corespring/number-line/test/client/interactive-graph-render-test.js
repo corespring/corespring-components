@@ -981,7 +981,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
       scope.updatedServerResponse = {
         newValue: 'reset',
         oldValue: ''
-      }
+      };
       scope.updateGraph();
       expect(scope.resetServerResponse).toHaveBeenCalled();
     });
@@ -992,7 +992,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
           feedback: 'some feedback'
         },
         oldValue: ''
-      }
+      };
       scope.updateGraph();
       expect(scope.renderFeedback).toHaveBeenCalled();
     });
@@ -1001,7 +1001,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
       scope.updatedServerResponse = {
         newValue: '',
         oldValue: {}
-      }
+      };
       scope.updateGraph();
       expect(scope.renderPreviousResponseModel).toHaveBeenCalled();
     });
@@ -1016,10 +1016,10 @@ describe('corespring:number-line:interactive-graph-render', function() {
         calls = [];
         scope.renderModel = function() {
           calls.push('renderModel');
-        }
+        };
         scope.renderFeedback = function() {
           calls.push('renderFeedback');
-        }
+        };
       });
 
       it('when model is updated firstly', function() {
@@ -1030,7 +1030,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
             feedback: 'some feedback'
           },
           oldValue: ''
-        }
+        };
         scope.updateGraph();
         expect(_.last(calls, 2)).toEqual(['renderModel', 'renderFeedback']);
       });
@@ -1041,7 +1041,7 @@ describe('corespring:number-line:interactive-graph-render', function() {
             feedback: 'some feedback'
           },
           oldValue: ''
-        }
+        };
         scope.updateGraph();
         scope.updatedModel = testModel.data.model;
         scope.updateGraph();

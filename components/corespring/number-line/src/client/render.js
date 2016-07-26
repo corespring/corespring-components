@@ -647,7 +647,7 @@ var interactiveGraph = [
             });
           };
           return render;
-        }
+        };
 
         scope.renderPreviousResponseModel = function(){
           var render = function() {
@@ -655,9 +655,9 @@ var interactiveGraph = [
             scope.resetGraph(scope.model);
             scope.responsemodel = rm;
             rebuildGraph();
-          }
+          };
           return render;
-        }
+        };
 
         scope.updateGraph = function updateGraph(){
           var render;
