@@ -47,13 +47,14 @@ function buildFeedback(question, answer, settings, isCorrect) {
  */
 function createOutcome(question, answer, settings) {
 
-  if(!question || _.isEmpty(question)){
+  if(!question || _.isEmpty(question)) {
     throw new Error('question should never be undefined or empty');
   }
 
-  if(!answer || answer.length === 0){
+  if (!answer || answer.length === 0) {
     return {
-      correctness: 'incorrect', 
+      correctness: 'incorrect',
+      correctClass: 'nothing-submitted',
       score: 0,
       feedback: settings.showFeedback ?
         buildFeedback(question, answer, settings, answerIsCorrect) : null,
