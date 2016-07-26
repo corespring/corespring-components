@@ -465,7 +465,7 @@ function PlotPointsDirective(
         '  <div id="initialParams"',
         '      ng-transclude></div>',
         '  <div class="feedback-holder"',
-        '      ng-show="model.config.showFeedback">',
+        '      ng-show="model.config.showFeedback && !isSeeAnswerPanelExpanded">',
         '    <div ng-show="feedback"',
         '        feedback="feedback"',
         '        icon-set="{{iconset}}"',
