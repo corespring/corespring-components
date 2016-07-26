@@ -613,7 +613,11 @@ var main = [
 
         editable: function(e) {
           scope.editable = e;
-          e ? scope.unlockGraph() : scope.lockGraph();
+          if(e) {
+            scope.unlockGraph();
+          } else {
+            scope.lockGraph();
+          }
         }
 
       };
