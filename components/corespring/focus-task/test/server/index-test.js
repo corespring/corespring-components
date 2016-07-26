@@ -73,7 +73,9 @@ describe('focus-task server logic', function() {
         score: 0,
         correctness: 'incorrect',
         feedback: {
-          a: 'shouldHaveBeenSelected'
+          a: 'shouldHaveBeenSelected',
+          emptyAnswer: true,
+          message: server.feedback.NO_ANSWER
         },
         "outcome": [
           "responsesBelowMin"
@@ -100,7 +102,7 @@ describe('focus-task server logic', function() {
         correctResponse: {
           value: ['a']
         }
-      }, {}, {}, true).should.eql({});
+      }, {}, {}, true).should.eql({emptyAnswer:true, message: server.feedback.NO_ANSWER});
     });
 
     it('returns only the correct response', function() {
@@ -111,7 +113,9 @@ describe('focus-task server logic', function() {
       }, {}, {
         highlightCorrectResponse: true
       }, true).should.eql({
-        a: 'shouldHaveBeenSelected'
+        a: 'shouldHaveBeenSelected',
+        emptyAnswer: true,
+        message: server.feedback.NO_ANSWER
       });
     });
 
