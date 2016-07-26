@@ -966,5 +966,90 @@ describe('corespring:number-line:interactive-graph-render', function() {
 
   });
 
+  describe('updateGraph', function() {
+    beforeEach(function() {
+      spyOn(scope, 'resetGraph'); //to avoid npe in test
+    });
+    it('should call renderModel, when model is updated', function() {
+      spyOn(scope, 'renderModel').and.callThrough();
+      scope.updatedModel = testModel.data.model;
+      scope.updateGraph();
+      expect(scope.renderModel).toHaveBeenCalled();
+    });
+    it('should call resetServerResponse, when serverresponse is "reset"', function() {
+      spyOn(scope, 'resetServerResponse').and.callThrough();
+      scope.updatedServerResponse = {
+        newValue: 'reset',
+        oldValue: ''
+      }
+      scope.updateGraph();
+      expect(scope.resetServerResponse).toHaveBeenCalled();
+    });
+    it('should call renderFeedback, when serverresponse contains feedback', function() {
+      spyOn(scope, 'renderFeedback').and.callThrough();
+      scope.updatedServerResponse = {
+        newValue: {
+          feedback: 'some feedback'
+        },
+        oldValue: ''
+      }
+      scope.updateGraph();
+      expect(scope.renderFeedback).toHaveBeenCalled();
+    });
+    it('should call renderPreviousResponseModel as default, when old serverresponse is not null', function() {
+      spyOn(scope, 'renderPreviousResponseModel').and.callThrough();
+      scope.updatedServerResponse = {
+        newValue: '',
+        oldValue: {}
+      }
+      scope.updateGraph();
+      expect(scope.renderPreviousResponseModel).toHaveBeenCalled();
+    });
+  });
+
+  describe('CO-780 solution not rendering sometimes', function() {
+
+    describe('feedback should be rendered after model', function() {
+      var calls;
+
+      beforeEach(function() {
+        calls = [];
+        scope.renderModel = function() {
+          calls.push('renderModel');
+        }
+        scope.renderFeedback = function() {
+          calls.push('renderFeedback');
+        }
+      });
+
+      it('when model is updated firstly', function() {
+        scope.updatedModel = testModel.data.model;
+        scope.updateGraph();
+        scope.updatedServerResponse = {
+          newValue: {
+            feedback: 'some feedback'
+          },
+          oldValue: ''
+        }
+        scope.updateGraph();
+        expect(_.last(calls, 2)).toEqual(['renderModel', 'renderFeedback']);
+      });
+
+      it('when serverresponse is updated firstly', function() {
+        scope.updatedServerResponse = {
+          newValue: {
+            feedback: 'some feedback'
+          },
+          oldValue: ''
+        }
+        scope.updateGraph();
+        scope.updatedModel = testModel.data.model;
+        scope.updateGraph();
+        expect(_.last(calls, 2)).toEqual(['renderModel', 'renderFeedback']);
+      });
+    });
+
+  });
+
 
 });

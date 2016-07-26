@@ -14,6 +14,7 @@ var main = [
       scope.response = {};
       scope.answerExpanded = false;
 
+
       scope.changeHandler = function() {
         if (_.isFunction(scope.answerChangeCallback)) {
           scope.answerChangeCallback();
@@ -68,7 +69,9 @@ var main = [
 
         setResponse: function(response) {
           $log.debug('number line response ', response);
-          if (!_.isEmpty(response)) {
+          if (_.isEmpty(response)) {
+            scope.serverResponse = scope.correctModel = scope.correctModelDummyResponse = undefined;
+          } else {
             scope.serverResponse = response;
 
             scope.correctModel = _.cloneDeep(scope.model);
@@ -92,8 +95,6 @@ var main = [
                 })
               }
             };
-          } else {
-            scope.serverResponse = scope.correctModel = scope.correctModelDummyResponse = undefined;
           }
         },
 
@@ -616,15 +617,85 @@ var interactiveGraph = [
           });
         };
 
+        scope.updatedModel = null;
+        scope.updatedServerResponse = null;
+
+        scope.renderModel = function(newModel){
+          //overwrite default config with real config
+          if (newModel.config) {
+            scope.config = newModel.config;
+          }
+          var render = function() {
+            scope.resetGraph(newModel);
+          };
+          return render;
+        };
+
+        scope.resetServerResponse = function(){
+          var render = function() {
+            scope.resetGraph(scope.model);
+          };
+          return render;
+        };
+
+        scope.renderFeedback = function(newServerResponse){
+          var render = function() {
+            scope.responsemodel = _.cloneDeep(newServerResponse.feedback.elements) || [];
+            rebuildGraph();
+            scope.graph.updateOptions({
+              exhibitOnly: true
+            });
+          };
+          return render;
+        }
+
+        scope.renderPreviousResponseModel = function(){
+          var render = function() {
+            var rm = _.cloneDeep(scope.responsemodel);
+            scope.resetGraph(scope.model);
+            scope.responsemodel = rm;
+            rebuildGraph();
+          }
+          return render;
+        }
+
+        scope.updateGraph = function updateGraph(){
+          var render;
+
+          if(scope.updatedModel) {
+            render = scope.renderModel(scope.updatedModel);
+            scope.updatedModel = null;
+          }
+
+          if(scope.updatedServerResponse){
+            var newServerResponse = scope.updatedServerResponse.newValue;
+            var oldServerResponse = scope.updatedServerResponse.oldValue;
+            if (newServerResponse === 'reset') {
+              render = scope.resetServerResponse();
+              scope.updatedServerResponse = null;
+            } else if (!_.isEmpty(newServerResponse) && !_.isEmpty(newServerResponse.feedback)) {
+              render = scope.renderFeedback(newServerResponse);
+            } else if (oldServerResponse) {
+              render = scope.renderPreviousResponseModel();
+            }
+          }
+          if(render) {
+            render();
+          }
+        };
+
         scope.$watch('model', function(n) {
           if (n) {
-            //overwrite default config with real config
-            if (n.config) {
-              scope.config = n.config;
-            }
-            scope.resetGraph(n);
+            scope.updatedModel = n;
+            scope.updateGraph();
           }
         }, true);
+
+        scope.$watch('serverresponse', function(n, prev) {
+          scope.updatedServerResponse = {newValue: n, oldValue: prev};
+          scope.updateGraph();
+        }, true);
+
 
         scope.$watch('editable', function(n) {
           if (!_.isUndefined(n)) {
@@ -638,23 +709,6 @@ var interactiveGraph = [
         scope.$watch('responsemodel', function(n, prev) {
           if (!_.isEqual(n, prev)) {
             scope.changehandler();
-          }
-        }, true);
-
-        scope.$watch('serverresponse', function(n, prev) {
-          if (n === 'reset') {
-            scope.resetGraph(scope.model);
-          } else if (!_.isEmpty(n) && !_.isEmpty(n.feedback)) {
-            scope.responsemodel = _.cloneDeep(n.feedback.elements) || [];
-            rebuildGraph();
-            scope.graph.updateOptions({
-              exhibitOnly: true
-            });
-          } else if (prev) {
-            var rm = _.cloneDeep(scope.responsemodel);
-            scope.resetGraph(scope.model);
-            scope.responsemodel = rm;
-            rebuildGraph();
           }
         }, true);
 
