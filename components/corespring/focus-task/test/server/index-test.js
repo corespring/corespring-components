@@ -70,8 +70,9 @@ describe('focus-task server logic', function() {
         highlightUserResponse: true
       };
       expectedOutcome = {
-        score: 0,
         correctness: 'incorrect',
+        correctClass: 'nothing-submitted',
+        score: 0,
         feedback: {
           a: 'shouldHaveBeenSelected',
           emptyAnswer: true,
@@ -89,7 +90,7 @@ describe('focus-task server logic', function() {
       outcome.should.eql(expectedOutcome);
     });
 
-    it('returns an incorrect outcome for an empty answer', function() {
+    it('returns an incorrect outcome, "nothing-submitted" class for an empty answer', function() {
       var answer = [];
       var outcome = server.createOutcome(question, answer, settings);
       outcome.should.eql(expectedOutcome);
