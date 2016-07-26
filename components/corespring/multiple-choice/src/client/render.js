@@ -467,7 +467,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
     var choicesTemplate = [
       '<div class="choices-container">',
       '  <correct-answer-toggle visible="showCorrectAnswerButton" toggle="bridge.answerVisible"></correct-answer-toggle>',
-      '  <div ng-repeat="o in choices" class="choice-holder-background {{question.config.orientation}} {{question.config.choiceStyle}}" ',
+      '  <div ng-repeat="o in choices" class="choice-holder-background {{playerMode}} {{question.config.orientation}} {{question.config.choiceStyle}}" ',
       '       ng-click="onClickChoice(o)" ng-class="choiceClass(o)">',
       '    <div class="choice-holder" >',
       '      <div class="choice-feedback" ng-if="playerMode !== \'instructor\'"',
