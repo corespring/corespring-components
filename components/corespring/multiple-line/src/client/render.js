@@ -443,6 +443,23 @@ var main = [
         });
       }
 
+      scope.renderInitialGraph = function(){
+        if (scope.instructorData) {
+          showCorrectAnswer();
+        } else {
+          if (scope.graphCallback) {
+            scope.startOver();
+          }
+
+          // lock/unlock the graph
+          if (scope.config.exhibitOnly || scope.editable === false) {
+            scope.lockGraph();
+          } else {
+            scope.unlockGraph();
+          }
+        }
+      };
+
       scope.containerBridge = {
 
         setPlayerSkin: function(skin) {
@@ -501,25 +518,13 @@ var main = [
               };
             });
           }
-          // this timeout is needed to wait for the callback to be defined
-          $timeout(function() {
 
-
-            if (scope.instructorData) {
-              showCorrectAnswer();
-            } else {
-              if (scope.graphCallback) {
-                scope.startOver();
-              }
-
-              // lock/unlock the graph
-              if (config.exhibitOnly || scope.editable === false) {
-                scope.lockGraph();
-              } else {
-                scope.unlockGraph();
-              }
+          var removeGraphCallbackWatch = scope.$watch('graphCallback', function(n){
+            if(n){
+              removeGraphCallbackWatch();
+              scope.renderInitialGraph();
             }
-          }, 100);
+          });
         },
 
         getSession: function() {
