@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var sax = require('sax');
+var fbu = require('corespring.server-shared.server.feedback-utils');
 
 exports.feedback = {
   NO_ANSWER: 'You did not enter a response'
@@ -9,11 +10,11 @@ exports.createOutcome = function(question, answer, settings) {
 
   console.log("CO", answer);
   var answerLength = _.reduce(answer, function(mem, a) { return mem + a.length; }, 0);
-  if(!answerLength){
+  if(!answerLength) {
     return {
-      correctness: 'incorrect',
+      correctness: 'nothing-submitted',
       emptyAnswer: true,
-      message: exports.feedback.NO_ANSWER,
+      feedback: exports.feedback.NO_ANSWER,
       correctResponse: question.correctResponse,
       answer: answer,
       score: 0
@@ -56,7 +57,8 @@ exports.createOutcome = function(question, answer, settings) {
 
   if (settings.showFeedback) {
     res.outcome = [];
-    res.outcome.push( isCorrect ? "responseCorrect" : "responseIncorrect" );
+    res.outcome.push(isCorrect ? "responseCorrect" : "responseIncorrect" );
+    res.feedback = fbu.makeFeedback(question.feedback, fbu.correctness(isCorrect, false));
   }
 
   return res;
