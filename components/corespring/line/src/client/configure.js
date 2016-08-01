@@ -21,13 +21,13 @@ var main = [
       '<form class="form-horizontal" role="form">',
       '  <div class="config-form-row row">',
       '    <div class="col-md-6" ng-hide="fullModel.model.config.exhibitOnly">',
-      '      <div class="input-group">',
-      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="correctResponse" />',
+      '      <div class="input-group" ng-class="{ \'has-error\': !isValidFormula(correctResponse) }">',
+      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(correctResponse)" placeholder="mx+b" ng-model="correctResponse" />',
       '      </div>',
       '    </div>',
       '    <div class="col-md-6">',
       '      <div class="input-group">',
-      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="initialCurve" />',
+      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(initialCurve)" placeholder="mx+b" ng-model="initialCurve" />',
       '      </div>',
       '    </div>',
       '  </div>',
@@ -101,6 +101,10 @@ var main = [
             var model = _.cloneDeep(scope.fullModel);
             return model;
           }
+        };
+
+        scope.isValidFormula = function(s) {
+          return /^(y=)?([+-]?\d+(\.\d+)?x[+-]\d+(\.\d+)?|\d+)$/i.test(s);
         };
 
         scope.removeYEqualsPrefix = function(expression) {
