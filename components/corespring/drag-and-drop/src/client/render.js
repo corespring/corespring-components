@@ -127,6 +127,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         return choice;
       };
 
+      scope.$watch('solutionVisible', function() {
+        scope.$broadcast('setVisible', scope.solutionVisible ? 1 : 0);
+      });
+
       scope.containerBridge = {
         setPlayerSkin: function(skin) {
           scope.iconset = skin.iconSet;
@@ -159,11 +163,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
 
           var answerHtml = scope.model.answerArea;
 
+          console.log('scope.model.answerArea', scope.model.answerArea);
+
           var $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
+
           $timeout(function() {
             $compile($answerArea)(scope.$new());
           });
-
         },
 
         getSession: function() {
@@ -196,6 +202,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
               return choiceForId(r);
             });
           });
+          scope.solutionScope.correctResponse = scope.correctResponse;
+
+          var answerHtml = scope.model.answerArea;
+          var $correctAnswerArea = element.find("#correct-answer-area").html("<div>" + answerHtml + "</div>");
+          $compile($correctAnswerArea)(scope.solutionScope);
         },
 
         setInstructorData: function(data) {
@@ -217,6 +228,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           scope.correctResponse = undefined;
           scope.resetChoices(scope.rawModel);
           scope.undoModel.init();
+          scope.solutionVisible = false;
         },
 
         isAnswerEmpty: function() {
@@ -286,7 +298,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       '  <div class="clearfix" />',
       '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
       '  <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-      '  <div id="answer-area"></div>',
+      '  <response-wrapper width="100%">',
+      '    <div id="answer-area"></div>',
+      '    <div id="correct-answer-area"></div>',
+      '  </response-wrapper>',
       '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
       '  <div ng-if="!solutionVisible">',
       '    <div feedback="feedback.message" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
