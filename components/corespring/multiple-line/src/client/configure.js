@@ -32,7 +32,7 @@ var main = [
       '            </div>',
       '          </div>',
       '          <div class="col-md-4">',
-      '            <div class="input-group">',
+      '            <div class="input-group" ng-class="{ \'has-error\': !isValidFormula(line.intialLine) }">',
       '              <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(line.intialLine)" ng-model="line.intialLine" />',
       '            </div>',
       '          </div>',
@@ -119,7 +119,7 @@ var main = [
         };
 
         scope.isValidFormula = function(s) {
-          return /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
+          return _.isEmpty(s) || /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
         };
 
         scope.addNewLine = function() {

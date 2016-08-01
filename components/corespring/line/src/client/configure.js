@@ -26,7 +26,7 @@ var main = [
       '      </div>',
       '    </div>',
       '    <div class="col-md-6">',
-      '      <div class="input-group">',
+      '      <div class="input-group" ng-class="{ \'has-error\': !isValidFormula(initialCurve) }">',
       '        <span class="input-group-addon">y = </span><input type="text" class="form-control" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(initialCurve)" placeholder="mx+b" ng-model="initialCurve" />',
       '      </div>',
       '    </div>',
@@ -104,7 +104,7 @@ var main = [
         };
 
         scope.isValidFormula = function(s) {
-          return /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
+          return _.isEmpty(s) || /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
         };
 
         scope.removeYEqualsPrefix = function(expression) {
