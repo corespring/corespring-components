@@ -59,19 +59,8 @@ describe('corespring:dnd-categorize:render', function() {
 
 
   function ignoreAngularIds(obj) {
-
-    function removeIds(obj) {
-      for (var s in obj) {
-        if (s === '$$hashKey') {
-          delete obj[s];
-        } else if (typeof obj[s] === 'object') {
-          removeIds(obj[s]);
-        }
-      }
-      return obj;
-    }
-
-    return removeIds(_.cloneDeep(obj));
+    var json = angular.toJson(obj);
+    return _.isString(json) ? JSON.parse(json) : undefined;
   }
 
   beforeEach(angular.mock.module('test-app'));

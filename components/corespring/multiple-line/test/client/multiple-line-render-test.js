@@ -104,17 +104,10 @@ describe('corespring:multiple-line:render', function() {
     }
   };
 
-  var ignoreAngularIds = function(obj) {
-    var newObj = _.cloneDeep(obj);
-    for (var s in newObj) {
-      if (s === '$$hashKey') {
-        delete newObj[s];
-      } else if (_.isObject(newObj[s])) {
-        newObj[s] = ignoreAngularIds(newObj[s]);
-      }
-    }
-    return newObj;
-  };
+  function ignoreAngularIds(obj) {
+    var json = angular.toJson(obj);
+    return _.isString(json) ? JSON.parse(json) : undefined;
+  }
 
   beforeEach(angular.mock.module('test-app'));
 
@@ -122,7 +115,7 @@ describe('corespring:multiple-line:render', function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
       $provide.value('$modal', {});
-    })
+    });
   );
 
   beforeEach(inject(function($compile, $rootScope) {
