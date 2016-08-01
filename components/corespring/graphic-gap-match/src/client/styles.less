@@ -118,9 +118,15 @@
     box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.18);
     background: #ffffff;
     border: 1px solid #f1f1f4;
-
     display: inline-block;
-    cursor: pointer;
+
+    &.ui-draggable {
+      cursor: pointer;
+    }
+
+    &.ui-draggable.ui-draggable-disabled {
+      cursor: default;
+    }
 
     &.placeholder {
       visibility: hidden;
@@ -132,14 +138,12 @@
 
     &.correct {
       position: absolute;
-      cursor: auto;
       .correct-input();
       border-width: 2px;
     }
 
     &.incorrect {
       position: absolute;
-      cursor: auto;
       .incorrect-input();
       border-width: 2px;
     }
