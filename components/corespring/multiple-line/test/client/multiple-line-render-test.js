@@ -1,6 +1,13 @@
+/* globals JSON */
 describe('corespring:multiple-line:render', function() {
 
   var testModel, scope, rootScope, container, element, timeout;
+
+  function ignoreAngularIds(obj) {
+    var json = angular.toJson(obj);
+    return _.isString(json) ? JSON.parse(json) : undefined;
+  }
+
 
   var JXG = {
     JSXGraph: {
@@ -104,19 +111,12 @@ describe('corespring:multiple-line:render', function() {
     }
   };
 
-  function ignoreAngularIds(obj) {
-    var json = angular.toJson(obj);
-    return _.isString(json) ? JSON.parse(json) : undefined;
-  }
-
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(
-    module(function($provide) {
+  beforeEach(module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
       $provide.value('$modal', {});
-    });
-  );
+  }));
 
   beforeEach(inject(function($compile, $rootScope) {
     container = new MockComponentRegister();

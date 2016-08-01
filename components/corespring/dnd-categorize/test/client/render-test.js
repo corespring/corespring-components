@@ -1,6 +1,13 @@
+/* globals JSON */
+
 describe('corespring:dnd-categorize:render', function() {
 
   var testModel, scope, rootScope, container, element;
+
+  function ignoreAngularIds(obj) {
+    var json = angular.toJson(obj);
+    return _.isString(json) ? JSON.parse(json) : undefined;
+  }
 
   var MockComponentRegister = function() {
     this.elements = {};
@@ -43,6 +50,7 @@ describe('corespring:dnd-categorize:render', function() {
           "shuffle": false,
           "answerAreaPosition": "below",
           "categoriesPerRow": 2,
+          "choicesLabel": "some choices label",
           "choicesPerRow": 2
         }
       }
@@ -57,11 +65,6 @@ describe('corespring:dnd-categorize:render', function() {
     }
   };
 
-
-  function ignoreAngularIds(obj) {
-    var json = angular.toJson(obj);
-    return _.isString(json) ? JSON.parse(json) : undefined;
-  }
 
   beforeEach(angular.mock.module('test-app'));
 
