@@ -59,7 +59,7 @@ describe('corespring:multiple-line:render', function() {
 
   var testModelTemplate = {
     data: {
-      "title": "Graph Multiple Lines",
+      "title": "Graph Lines (Multiple)",
       "componentType": "corespring-multiple-line",
       "weight": 1,
       "minimumWidth": 500,

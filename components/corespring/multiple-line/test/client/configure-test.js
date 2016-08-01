@@ -13,7 +13,7 @@ describe('corespring:multiple-line:configure', function() {
 
   function createTestModel() {
     return {
-      "title": "Graph Multiple Lines",
+      "title": "Graph Lines (Multiple)",
       "componentType" : "corespring-multiple-line",
       "weight" : 1,
       "minimumWidth": 500,
