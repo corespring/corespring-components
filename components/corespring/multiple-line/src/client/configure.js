@@ -119,7 +119,7 @@ var main = [
         };
 
         scope.isValidFormula = function(s) {
-          return /^(y=)?([+-]?\d+(\.\d+)?x[+-]\d+(\.\d+)?|\d+)$/i.test(s);
+          return /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
         };
 
         scope.addNewLine = function() {
