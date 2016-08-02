@@ -18,12 +18,12 @@ var def = function() {
       });
       scope.$watch(function() {
         return scope.csTooltipIsOpen();
-      }, function(n) {
+      }, function(n, prev) {
         var elem = element[0];
         var hasFocus = elem === document.activeElement && ( elem.type || elem.href );
         if (n && hasFocus) {
           showTooltip();
-        } else {
+        } else if (prev) {
           element.tooltip('destroy');
         }
       });

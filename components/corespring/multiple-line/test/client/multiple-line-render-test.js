@@ -118,7 +118,8 @@ describe('corespring:multiple-line:render', function() {
       $provide.value('$modal', {});
   }));
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, $timeout) {
+    timeout = $timeout;
     container = new MockComponentRegister();
 
     $rootScope.$on('registerComponent', function(event, id, obj) {
@@ -370,6 +371,7 @@ describe('corespring:multiple-line:render', function() {
           triggerCallback: true
         }
       });
+      timeout.flush();
       expect(scope.graphCallback.calls.all().length).toEqual(8);
     });
   });
@@ -534,6 +536,7 @@ describe('corespring:multiple-line:render', function() {
     it('should call renderInitialGraph', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
+      timeout.flush();
       expect(scope.renderInitialGraph).toHaveBeenCalled();
     });
   });
