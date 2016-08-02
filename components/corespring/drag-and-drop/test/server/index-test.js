@@ -1,6 +1,12 @@
 var assert, component, server, settings, should, _, helper;
 
-server = require('../../src/server');
+var fbu = require('../../../server-shared/src/server/feedback-utils');
+var proxyquire = require('proxyquire').noCallThru();
+
+server = proxyquire('../../src/server', {
+  'corespring.server-shared.server.feedback-utils' : fbu
+});
+
 helper = require('../../../../../test-lib/test-helper');
 assert = require('assert');
 should = require('should');
@@ -73,7 +79,7 @@ describe('drag and drop server logic', function() {
 
   helper.assertNullOrUndefinedAnswersReturnsIncorrect(server);
   
-  describe('respond incorrect', function() {
+  it('responds incorrect', function() {
     var response = server.createOutcome(_.cloneDeep(component), {
       1: ['larva']
     }, settings(false, true, true));
@@ -81,7 +87,7 @@ describe('drag and drop server logic', function() {
     response.score.should.equal(0);
   });
 
-  describe('respond correct', function() {
+  it('respond correct', function() {
     var answer = {
       "1": ["egg", "pupa"],
       "2": [],
@@ -93,7 +99,7 @@ describe('drag and drop server logic', function() {
     response.score.should.equal(1);
   });
 
-  describe('cardinality is considered', function() {
+  it('cardinality is considered', function() {
     var answer = {
       "1": ["egg", "pupa"],
       "2": [],

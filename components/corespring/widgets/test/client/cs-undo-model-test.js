@@ -4,12 +4,16 @@ describe('cs undo model', function() {
 
   var counter = 1;
 
+
+  /**
+   * simulate random ng internal fields with random $$hashKey value.
+   */
   function getDifferentState(){
-    return {value: counter++};
+    return {value: counter++, $$hashkey: Math.random()};
   }
 
   function getSameState(){
-    return {value:1};
+    return {value:1, $$hashKey: Math.random()};
   }
 
   function getNullState(){

@@ -229,7 +229,7 @@ describe('corespring:dnd-categorize:render', function() {
       var saveRenderModel = scope.renderModel;
       scope.renderModel = {};
       container.elements['1'].reset();
-      expect(scope.renderModel).toEqual(ignoreAngularIds(saveRenderModel));
+      expect(ignoreAngularIds(scope.renderModel)).toEqual(ignoreAngularIds(saveRenderModel));
     });
   });
 

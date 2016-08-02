@@ -19,14 +19,15 @@ exports.settings = function(feedback, userResponse, correctResponse) {
 exports.assertNullOrUndefinedAnswersReturnsIncorrect = function(s, functionName, feedback){
   functionName = functionName || 'createOutcome';
 
-  it('should return incorrect if the answer is null or undefined', function(){
+  it('should return nothing-submitted if the answer is null or undefined', function(){
     var outcome = s[functionName]({}, null, {
       showFeedback: true,
       highlightUserResponse: true,
       highlightCorrectResponse: true
     });
+
     outcome.correctness.should.be.ok;
-    outcome.correctness.should.eql('incorrect');
+    outcome.correctness.should.eql('nothing-submitted');
     outcome.score.should.be.eql(0);
 
     if(feedback){
