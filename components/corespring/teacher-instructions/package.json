@@ -1,5 +1,11 @@
 {
   "released": true,
   "name": "teacher-instructions",
-  "organization": "corespring"
+  "organization": "corespring",
+  "libraries" : [
+    {
+      "name": "widgets",
+      "organization": "corespring"
+    }
+  ]
 }

@@ -27,10 +27,11 @@ exports.directive = [
       scope.undoModel.setRevertState(revertState);
 
       scope.answersVisible = false;
-      scope.toggleAnswersVisibility = toggleAnswersVisibility;
+      //scope.toggleAnswersVisibility = toggleAnswersVisibility;
 
       scope.containerBridge = {
         answerChangedHandler: answerChangedHandler,
+        setPlayerSkin: setPlayerSkin,
         editable: editable,
         getSession: getSession,
         isAnswerEmpty: isAnswerEmpty,
@@ -46,6 +47,10 @@ exports.directive = [
 
       //------------------------------------------------------------------------
 
+      function setPlayerSkin(skin) {
+        scope.iconset = skin.iconSet;
+      }
+
       function setDataAndSession(dataAndSession) {
         // log("Setting data for Select Text: ", dataAndSession);
         scope.model = ensureModelStructure(dataAndSession.data.model);
@@ -53,13 +58,15 @@ exports.directive = [
         $theContent = element.find('.select-text-content');
         bindTokenEvents();
 
-        if (dataAndSession.session && dataAndSession.session.answers) {
-          scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
-            return parseInt(answer, 10);
-          });
-        }
 
-        $timeout(initUi, 100);
+        $timeout(function() {
+          initUi();
+          if (dataAndSession.session && dataAndSession.session.answers) {
+            scope.userChoices = _.map(dataAndSession.session.answers, function(answer){
+              return parseInt(answer, 10);
+            });
+          }
+        }, 100);
       }
 
       function ensureModelStructure(model){
@@ -146,6 +153,7 @@ exports.directive = [
       function setResponse(response) {
         // log("Setting response", response);
         scope.feedback = getNestedProperty(response, 'feedback.message');
+        scope.response = response;
 
         if (response.correctClass) {
           scope.correctClass = response.correctClass;
@@ -170,7 +178,9 @@ exports.directive = [
         }
       }
 
-      function setMode(newMode) {}
+      function setMode(newMode) {
+        scope.mode = newMode;
+      }
 
       function reset() {
         scope.feedback = undefined;
@@ -198,9 +208,7 @@ exports.directive = [
         scope.editable = e;
       }
 
-      function toggleAnswersVisibility() {
-        scope.answersVisible = !scope.answersVisible;
-
+      scope.$watch('answersVisible', function() {
         if (scope.answersVisible) {
           $theContent.find('.choice').removeClass('choice');
           classifyTokens(scope.unselectedAnswers, 'correct-not-selected');
@@ -208,7 +216,13 @@ exports.directive = [
           $theContent.find('.correct-not-selected').removeClass('correct-not-selected');
           classifyTokens(scope.model.choices, 'choice');
         }
-      }
+      });
+
+
+      //function toggleAnswersVisibility() {
+      //  scope.answersVisible = !scope.answersVisible;
+      //
+      //}
 
       function watchUserChoices(newValue, oldValue) {
         if (newValue !== oldValue && (!_.isEmpty(newValue) || !_.isEmpty(oldValue))) {
@@ -224,21 +238,17 @@ exports.directive = [
         '    <div class="action-buttons" ng-hide="correctClass === \'correct\'">',
         '      <span cs-undo-button-with-model ng-show="editable"></span>',
         '      <span cs-start-over-button-with-model ng-show="editable"></span>',
-        '      <button ',
-        '         class="btn btn-success answers-toggle" ',
-        '         ng-show="correctClass === \'partial\' || correctClass === \'incorrect\'" ',
-        '         ng-click="toggleAnswersVisibility()">',
-        '        <i class="fa" ng-class="{\'fa-eye\': !answersVisible, \'fa-eye-slash\': answersVisible}"></i> ',
-        '        <span ng-show="!answersVisible">Show</span>',
-        '        <span ng-show="answersVisible">Hide</span> Correct Answer(s)',
-        '      </button>',
+        '    </div>',
+        '    <div class="text-center">',
+        '      <correct-answer-toggle visible="correctClass === \'partial\' || correctClass === \'incorrect\'"',
+        '          toggle="answersVisible"></correct-answer-toggle>',
         '    </div>',
         '  </div>',
-        '  <div class="select-text-content" ',
+        '  <div class="select-text-content {{mode}}" ',
         '     ng-class="{editable: editable, blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': editable && model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
         '     ng-bind-html-unsafe="model.passage"',
         '  ></div>',
-        '  <div ng-show="feedback" feedback="feedback" correct-class="{{correctClass}} {{warningClass}}"></div>',
+        '  <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}} {{warningClass}}"></div>',
         '</div>'
       ].join("\n");
     }

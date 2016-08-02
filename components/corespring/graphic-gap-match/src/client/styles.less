@@ -1,23 +1,32 @@
-@import '../../../../../less/common';
-
 @hotspot-border-color: #9B9B9B;
 
 .hotspot-border() {
   border: 2px solid @hotspot-border-color;
 }
 
-
 .view-graphic-gap-match {
 
   .main-container {
     margin-bottom: 5px;
 
+    .answers {
+      position: relative;
+
+      .students-response {
+        opacity: 1;
+        transition: opacity linear 0.25s;
+
+        &.studentsResponseHidden {
+          opacity: 0;
+        }
+      }
+    }
+
     &.top .answers {
-        padding-top: 5px;
     }
 
     &.bottom .answers {
-        padding-bottom: 5px;
+      padding-bottom: 5px;
     }
 
     &.left, &.right {
@@ -35,13 +44,11 @@
   }
 
   .button-row {
-    float: right;
     margin-bottom: 5px;
+    text-align: center;
   }
 
   .background-image {
-    border-radius: 4px;
-    border: 1px solid #cccccc;
     margin: 1px;
     position: relative;
     vertical-align: top;
@@ -55,10 +62,6 @@
 
     &.warning {
       border: 2px solid @warning-color-border;
-    }
-
-    .fixed-width img {
-      max-width: 430px;
     }
 
     .hotspots {
@@ -77,9 +80,6 @@
   }
 
   .choices {
-    border: 2px solid #9B9B9B;
-    background: #efefef;
-    border-radius: 4px;
     padding: 5px;
     min-height: 50px;
     vertical-align: top;
@@ -114,28 +114,11 @@
     }
   }
 
-  .feedback {
-    &.panel {
-      &.warning {
-        .panel-heading {
-          display: none;
-        }
-
-        .panel-body {
-          border-radius: 4px;
-          padding: 15px;
-          background-color: @warning-color-background;
-          border-color: @warning-color-border;
-          color: @warning-color;
-        }
-      }
-    }
-  }
-
   .choice {
-    background-color: #fff;
-    border: 1px solid #979797;
-    border-radius: 4px;
+    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.18);
+    background: #ffffff;
+    border: 1px solid #f1f1f4;
+
     display: inline-block;
     cursor: pointer;
 
@@ -151,52 +134,49 @@
       position: absolute;
       cursor: auto;
       .correct-input();
-
-      &:before {
-        font-family: FontAwesome;
-        content: '\f111';
-        color: white;
-        position: absolute;
-        right: -4px;
-        top: -8px;
-        font-size: 17px
-      }
-
-      &:after {
-        font-family: FontAwesome;
-        content: '\f058';
-        color: #3c763d;
-        position: absolute;
-        right: -4px;
-        top: -8px;
-        font-size: 17px
-      }
+      border-width: 2px;
     }
 
     &.incorrect {
       position: absolute;
       cursor: auto;
       .incorrect-input();
-      &:before {
-        font-family: FontAwesome;
-        content: '\f111';
-        color: white;
-        position: absolute;
-        right: -4px;
-        top: -8px;
-        font-size: 17px
-      }
-
-      &:after {
-        font-family: FontAwesome;
-        content: '\f057';
-        color: #ec971f;
-        position: absolute;
-        right: -4px;
-        top: -8px;
-        font-size: 17px;
-      }
+      border-width: 2px;
     }
   }
 
+  .correct-answer-holder {
+    position: absolute;
+    left: 0px;
+    top: -1px;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity linear 0.25s;
+    pointer-events: none;
+
+    &.correctAnswerVisible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .choice {
+      position: relative;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+  }
+
+  &.editable-false:not(.evaluate):not(.instructor) .choice {
+    border: 1px solid #f1f1f4;
+  }
+
+  &.editable-false {
+    .choice {
+      box-shadow: none;
+    }
+    .background-image {
+      border: none;
+      box-shadow: none;
+    }
+  }
 }

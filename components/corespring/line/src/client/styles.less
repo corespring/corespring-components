@@ -1,5 +1,3 @@
-@import '../../../../../less/common';
-
 .line-interaction-view {
 
   .jxgbox {
@@ -37,25 +35,6 @@
       color: @warning-color;
     }
 
-    .feedback {
-
-      &.warning {
-
-        .panel-heading {
-          display: none;
-        }
-
-        .panel-body {
-          background-color: @warning-color-background;
-          border-color: @warning-color-border;
-          color: @warning-color;
-          border-top-left-radius: 4px;
-          border-top-right-radius: 4px;
-        }
-
-      }
-
-    }
   }
 
   .solution-panel {
@@ -74,13 +53,37 @@
     height: auto;
   }
 
-  .graph-container {
-    margin: 50px auto 20px auto;
+  .graph-group {
     position: relative;
+    margin: 0 auto;
+
+    .graph-group-element {
+      position: absolute;
+      opacity: 0;
+      transition: opacity linear 0.5s;
+      pointer-events: none;
+
+      &.graphShown {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+    }
+  }
+
+  .correct-legend {
+    margin-top: 30px;
   }
 
   .graph-controls {
     position: relative;
+    margin-bottom: 30px;
+    opacity: 1;
+    transition: opacity linear 0.5s;
+
+    &.graphControlsHidden {
+      opacity: 0;
+    }
 
     .points-input {
       padding: 3px 0px;
@@ -112,7 +115,9 @@
           border-radius: 4px;
 
           &:disabled {
-            background-color: #dddddd;
+            border-color: #cccbcb;
+            background-color: #f8f6f6;
+            color: #93939e;
           }
         }
 

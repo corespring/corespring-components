@@ -18,10 +18,10 @@ function createOutcome(question, answer, settings) {
     return {
       correctness: 'warning',
       score: 0,
-      feedback: settings.showFeedback ? {
+      feedback: {
         emptyAnswer: true,
         message: keys.DEFAULT_WARNING_FEEDBACK
-      } : null
+      }
     };
   }
 

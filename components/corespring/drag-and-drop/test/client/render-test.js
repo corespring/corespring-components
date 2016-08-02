@@ -56,6 +56,33 @@ describe('corespring:drag-and-drop', function() {
     }
   };
 
+  var allCorrectLandingPlaceChoices = {
+    "1": [
+      {
+        "content": "Egg",
+        "id": "egg",
+        "copyOnDrag": true
+      },
+      {
+        "content": "<b>Pupa</b>",
+        "id": "pupa"
+      }
+    ],
+    "2": [],
+    "3": [
+      {
+        "content": "Larva In The Shell",
+        "id": "larva"
+      }
+    ],
+    "4": [
+      {
+        "content": "Adult",
+        "id": "adult"
+      }
+    ]
+  };
+
   beforeEach(angular.mock.module('test-app'));
 
   beforeEach(function() {
@@ -124,32 +151,7 @@ describe('corespring:drag-and-drop', function() {
         "4": ["adult"]
       };
       container.elements['1'].setInstructorData({correctResponse: correctResponse});
-      expect(scope.landingPlaceChoices).toEqual({
-        "1": [
-          {
-            "content": "Egg",
-            "id": "egg",
-            "copyOnDrag": true
-          },
-          {
-            "content": "<b>Pupa</b>",
-            "id": "pupa"
-          }
-        ],
-        "2": [],
-        "3": [
-          {
-            "content": "Larva In The Shell",
-            "id": "larva"
-          }
-        ],
-        "4": [
-          {
-            "content": "Adult",
-            "id": "adult"
-          }
-        ]
-      });
+      expect(scope.landingPlaceChoices).toEqual(allCorrectLandingPlaceChoices);
       expect(scope.correctResponse).toEqual(correctResponse);
     });
   });
@@ -176,6 +178,33 @@ describe('corespring:drag-and-drop', function() {
 
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
+  });
+
+  describe('showSolution', function(){
+    beforeEach(function(){
+      container.elements['1'].setDataAndSession(testModel);
+    });
+    describe('with answer', function(){
+      it('should be false, when answer is correct', function(){
+        container.elements['1'].setResponse({correctness: 'correct'});
+        expect(scope.showSolution).toBe(false);
+      });
+      it('should be true, when answer is incorrect', function(){
+        container.elements['1'].setResponse({correctness: 'incorrect'});
+        expect(scope.showSolution).toBe(true);
+      });
+    });
+    describe('without answer', function(){
+      it('should be false, when answer is correct', function(){
+        container.elements['1'].setResponse({correctness: 'correct', emptyAnswer: true});
+        expect(scope.showSolution).toBe(false);
+      });
+      it('should be false, when answer is incorrect', function(){
+        container.elements['1'].setResponse({correctness: 'incorrect', emptyAnswer: true});
+        expect(scope.showSolution).toBe(false);
+      });
+    });
+
   });
 
 });

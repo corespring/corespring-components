@@ -28,13 +28,17 @@ var main = [
       var YES_NO = 'YES_NO';
 
       scope.editable = false;
-      scope.isSeeAnswerOpen = false;
+      scope.bridge = {answerVisibe: false};
+      scope.showCorrectAnswerButton = false;
+
 
       scope.undoModel = new CsUndoModel();
       scope.undoModel.setGetState(getState);
       scope.undoModel.setRevertState(revertState);
 
+
       scope.classForChoice = classForChoice;
+      scope.stateForChoice = stateForChoice;
       scope.classForSolution = classForSolution;
       scope.isCheckBox = isCheckBox;
       scope.isRadioButton = isRadioButton;
@@ -43,13 +47,20 @@ var main = [
       scope.containerBridge = {
         answerChangedHandler: saveAnswerChangedCallback,
         setInstructorData: setInstructorData,
+        setPlayerSkin: setPlayerSkin,
         editable: setEditable,
         getSession: getSession,
         isAnswerEmpty: isAnswerEmpty,
         reset: reset,
         resetStash: function() {},
         setDataAndSession: setDataAndSession,
-        setMode: function(newMode) {},
+        setMode: function(newMode) {
+          if (newMode === 'gather' || newMode === 'view') {
+            _.each(scope.matchModel.rows, function(row) {
+               row.answerExpected = undefined;
+            });
+          }
+        },
         setResponse: setResponse
       };
 
@@ -149,6 +160,14 @@ var main = [
         if (response.correctnessMatrix) {
           setCorrectnessOnAnswers(response.correctnessMatrix);
         }
+
+        scope.showCorrectAnswerButton = response &&
+          response.correctness === 'incorrect' &&
+          response.warningClass !== 'answer-expected';
+      }
+
+      function setPlayerSkin(skin) {
+        scope.iconset = skin.iconSet;
       }
 
       function setInstructorData(data) {
@@ -171,9 +190,10 @@ var main = [
       }
 
       function reset() {
+        scope.bridge = {answerVisible: false};
+        scope.showCorrectAnswerButton = false;
         scope.editable = true;
         scope.session = {};
-        scope.isSeeAnswerOpen = false;
         delete scope.response;
         scope.matchModel = _.cloneDeep(scope.saveMatchModel);
         scope.undoModel.init();
@@ -308,6 +328,9 @@ var main = [
       }
 
       function classForChoice(row, index) {
+        if (scope.bridge.answerVisible) {
+          return classForSolution(row, index);
+        }
         var classes = [getInputTypeClass(scope.inputType)];
         if (scope.editable) {
           classes.push('input');
@@ -315,6 +338,10 @@ var main = [
             classes.push('selected');
           }
         } else {
+          if (row.matchSet[index].value) {
+            classes.push('selected');
+          }
+
           classes.push(getCorrectClass(row, row.matchSet[index].correct));
         }
         return classes.join(' ');
@@ -337,6 +364,20 @@ var main = [
               return UNKNOWN;
           }
         }
+      }
+      
+      function stateForChoice(row, index) {
+        var c = classForChoice(row, index);
+        if (/incorrect/gi.test(c)) {
+          return 'incorrect';
+        }
+        if (/correct/gi.test(c)) {
+          return 'correct';
+        }
+        if (/selected/gi.test(c)) {
+          return scope.editable ? 'selected' : 'selectedDisabled';
+        }
+        return !scope.editable ? 'muted' : 'ready';
       }
 
       function classForSolution(row, $index) {
@@ -430,13 +471,12 @@ var main = [
         undoStartOver(),
         matchInteraction(),
         itemFeedbackPanel(),
-        seeSolutionPanel(),
         '</div>'
       ].join('\n');
 
       function undoStartOver() {
         return [
-          '<div ng-show="editable" class="undo-start-over pull-right">',
+          '<div ng-show="editable" class="undo-start-over">',
           '  <span cs-undo-button-with-model></span>',
           '  <span cs-start-over-button-with-model></span>',
           '</div>',
@@ -446,6 +486,7 @@ var main = [
 
       function matchInteraction() {
         return [
+          '<correct-answer-toggle visible="showCorrectAnswerButton" toggle="bridge.answerVisible"></correct-answer-toggle>',
           '<table class="corespring-match-table" ng-class="layout">',
           '  <tr class="header-row">',
           '    <th ng-repeat="column in matchModel.columns"',
@@ -458,17 +499,15 @@ var main = [
           '      question-id="{{row.id}}">',
           '    <td class="question-cell match-td-padded" ng-bind-html-unsafe="row.labelHtml"></td>',
           '    <td class="answer-expected-warning match-td-padded">',
-          '      <div class="warning-holder" ng-if="row.answerExpected">',
-          '        <i class="fa fa-exclamation-triangle"></i>',
+          '      <div class="warning-holder" ng-if="row.answerExpected && !bridge.answerVisible">',
+          '        <svg-icon category="feedback" key="nothing-submitted" shape="square" icon-set="{{iconset}}" />',
           '      </div>',
           '    </td>',
           '    <td class="answer-cell match-td-padded"',
           '        ng-class="{editable:editable}"',
           '        ng-repeat="match in row.matchSet">',
-          '      <div class="corespring-match-choice"',
-          '         ng-class="classForChoice(row, $index)"',
-          '         ng-click="onClickMatch(row, $index)"',
-          '        >',
+          '      <div ng-if="inputType == \'checkbox\'" choice-checkbox-button checkbox-button-state="{{stateForChoice(row, $index)}}" class="corespring-match-choice" ng-class="classForChoice(row, $index)" ng-click="onClickMatch(row, $index)" />',
+          '      <div ng-if="inputType != \'checkbox\'" choice-radio-button radio-button-state="{{stateForChoice(row, $index)}}" class="corespring-match-choice" ng-class="classForChoice(row, $index)" ng-click="onClickMatch(row, $index)" />',
           '        <div class="background fa"></div>',
           '        <div class="foreground fa"></div>',
           '      </div>',
@@ -480,41 +519,13 @@ var main = [
 
       function itemFeedbackPanel() {
         return [
-          '<div feedback="response.feedback"',
-          '   correct-class="{{response.correctClass}}"></div>'
-        ].join('');
-      }
-
-      function seeSolutionPanel() {
-        return [
-          '<div see-answer-panel="true"',
-          '    see-answer-panel-expanded="isSeeAnswerPanelExpanded"',
-          '    ng-if="response.correctResponse">',
-          '  <table class="corespring-match-table" ng-class="layout">',
-          '    <tr class="match-tr">',
-          '      <th class="match-th"',
-          '          ng-class="column.cssClass"',
-          '          ng-repeat="column in matchModel.columns"',
-          '          ng-bind-html-unsafe="column.labelHtml"/>',
-          '    </tr>',
-          '    <tr class="match-tr question-row"',
-          '        ng-repeat="row in matchModel.rows"' +
-          '        question-id="{{row.id}}">',
-          '      <td class="match-td question-cell match-td-padded"',
-          '          ng-bind-html-unsafe="row.labelHtml"></td>',
-          '      <td class="match-td answer-cell match-td-padded"' +
-          '          ng-repeat="match in row.matchSet track by $index">',
-          '        <div class="corespring-match-choice"',
-          '             ng-class="classForSolution(row,$index)">' +
-          '            <div class="background fa"></div>',
-          '            <div class="foreground fa"></div>',
-          '        </div>',
-          '      </td>',
-          '    </tr>',
-          '  </table>',
+          '<div ng-if="!bridge.answerVisible">',
+          '  <div feedback="response.feedback" icon-set="{{iconset}}" ',
+          '     correct-class="{{response.correctClass}}"></div>',
           '</div>'
         ].join('');
       }
+
     }
   }
 ];

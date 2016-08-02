@@ -59,7 +59,8 @@
       "shuffle": false,
       "choiceType": "radio",
       "choiceLabels": "letters",
-      "showCorrectAnswer": "separately"
+      "showCorrectAnswer": "separately",
+      "useBlockFeedback": true
     }
   }
 }

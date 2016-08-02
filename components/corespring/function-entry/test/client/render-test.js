@@ -51,7 +51,9 @@ describe('corespring:function-entry:render', function () {
       var mockPopover = function () {
         return {
           on: function () {
-          }, popover: mockPopover
+            return this;
+          },
+          popover: mockPopover
         };
       };
       $.fn.extend({popover: mockPopover});

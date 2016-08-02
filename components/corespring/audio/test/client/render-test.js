@@ -94,7 +94,7 @@ describe('corespring-audio-render', function() {
         testModel.data.fileName = '';
         container.elements['1'].setDataAndSession(testModel);
         expect(scope.sources.length).toEqual(0);
-      })
+      });
 
     });
   });

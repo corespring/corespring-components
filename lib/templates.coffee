@@ -13,9 +13,18 @@ exports.wrapAngular = (moduleName, name, contents) ->
 exports.preroll = ->
   """
   console.log('init');
-  angular.module('test-app', ['ngSanitize', 'ui.select']);
+
+  //Mock assets and their requests
+
+  angular.module('test-app', ['ngSanitize', 'ui.select']).run(['$httpBackend',function($httpBackend) {
+    $httpBackend.whenGET(/mock-assets\\/.*/).respond('');
+  }]);
+
+  angular.module('test-app').constant('ASSETS_PATH', 'mock-assets');
+
 
   //Mock dependencies
+
   angular.module('test-app').factory('ImageFeature', [function(){
     return function(){
       return {};
@@ -63,6 +72,7 @@ exports.preroll = ->
     assertFunction('setInstructorData');
     assertFunction('setMode');
     assertFunction('setResponse');
+    assertFunction('setPlayerSkin');
 
     if(errors.length){
        return 'Missing methods: ' + errors.join(',')

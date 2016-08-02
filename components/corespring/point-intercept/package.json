@@ -1,4 +1,9 @@
 {
+  "name": "point-intercept",
+  "organization": "corespring",
+  "released": true,
+  "title": "Plot Points",
+  "titleGroup": "Mathematics",
   "dependencies": {
     "client": {
       "angular-bootstrap": {
@@ -35,6 +40,10 @@
       "organization": "corespring"
     },
     {
+      "name": "icon",
+      "organization": "corespring"
+    },
+    {
       "name": "widgets",
       "organization": "corespring"
     },
@@ -46,10 +55,5 @@
       "name": "navigator",
       "organization": "corespring"
     }
-  ],
-  "name": "point-intercept",
-  "organization": "corespring",
-  "released": true,
-  "title": "Plot Points",
-  "titleGroup": "Mathematics"
+  ]
 }

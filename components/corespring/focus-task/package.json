@@ -3,5 +3,11 @@
   "organization": "corespring",
   "titleGroup": "Fixed Choice",
   "title": "Visual Choice",
-  "released": false
+  "released": false,
+  "libraries": [
+    {
+      "name" : "icon",
+      "organization" : "corespring"
+    }
+  ]
 }

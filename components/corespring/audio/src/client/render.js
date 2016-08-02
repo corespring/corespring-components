@@ -43,7 +43,8 @@ function RenderAudioPlayerDirective($sce, AudioTagController) {
       'reset',
       'setInstructorData',
       'setMode',
-      'setResponse'
+      'setResponse',
+      'setPlayerSkin'
     ];
 
     scope.containerBridge = addEmptyFunctions(

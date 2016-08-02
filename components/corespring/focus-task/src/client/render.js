@@ -18,12 +18,14 @@ exports.directive = [
 
       scope.inputType = 'checkbox';
       scope.editable = true;
+      scope.locked = false;
       scope.answer = {
         choices: {}
       };
 
       scope.containerBridge = {
         setDataAndSession: setDataAndSession,
+        setPlayerSkin: setPlayerSkin,
         getSession: getSession,
         setResponse: setResponse,
         setInstructorData: setInstructorData,
@@ -39,6 +41,19 @@ exports.directive = [
       scope.getChoiceClass = getChoiceClass;
       scope.toggleChoice = toggleChoice;
       scope.$emit('registerComponent', attrs.id, scope.containerBridge, element[0]);
+
+      scope.$watch('answer', function(newValue) {
+        function canSelectMoreChoices() {
+          var selectedCount = (scope.answer && scope.answer.choices) ? (_.countBy(scope.answer.choices, function(choice) {
+            return choice === true ? 'selected' : 'not selected';
+          }).selected || 0) : 0;
+
+          var allowedChoiceCount = (scope.question && scope.question.config && scope.question.config.maxSelections) ?
+            scope.question.config.maxSelections : selectedCount + 1;
+          return selectedCount >= allowedChoiceCount;
+        }
+        setLocked(canSelectMoreChoices());
+      }, true);
 
       //------------------------------------------------------------------------
 
@@ -157,11 +172,12 @@ exports.directive = [
             return c.value === k;
           });
 
-          if (choice !== null) {
+          if (choice !== undefined) {
             choice.correct = v;
           }
           console.log("choice: ", choice);
         });
+        console.log("scope.response.feedback", scope.response.feedback);
       }
 
       function setInstructorData(data) {
@@ -172,6 +188,10 @@ exports.directive = [
       }
 
       function setMode(newMode) {}
+
+      function setPlayerSkin(skin) {
+        scope.iconset = skin.iconSet;
+      }
 
       /**
        * Reset the ui back to an unanswered state
@@ -191,6 +211,10 @@ exports.directive = [
             callback();
           }
         }, true);
+      }
+
+      function setLocked(e) {
+        scope.locked = e;
       }
 
       function setEditable(e) {
@@ -220,8 +244,10 @@ exports.directive = [
       }
 
       function toggleChoice(choice) {
-        if (scope.editable) {
+        if (scope.editable && !scope.locked) {
           scope.answer.choices[choice.value] = !scope.answer.choices[choice.value];
+        } else if (scope.locked && scope.answer.choices[choice.value]) {
+          scope.answer.choices[choice.value] = false;
         }
       }
     }
@@ -233,12 +259,16 @@ exports.directive = [
         '    <div ng-repeat="row in getRows()">',
         '      <div class="focus-row" ng-class="question.config.orientation">',
         '        <div class="inner">',
-        '          <div ng-repeat="o in getChoicesForRow(row)" ng-click="toggleChoice(o)" enabled="{{editable}}" class="focus-element {{getChoiceClass(o)}}">',
+        '          <div ng-repeat="o in getChoicesForRow(row)" ng-click="toggleChoice(o)" enabled="{{editable && !locked}}" class="focus-element {{getChoiceClass(o)}}">',
         '            <span>{{o.label}}</span>',
         '           </div>',
         '         </div>',
         '       </div>',
         '     </div>',
+        '  </div>',
+        '  <div correct-class="{{response.correctClass}}"',
+        '      feedback="response.feedback.message"',
+        '      icon-set="{{iconset}}">',
         '  </div>',
         '</div>'
       ].join("\n");

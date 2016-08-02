@@ -4,6 +4,10 @@ exports.isCorrect = isCorrect;
 exports.buildFeedback = buildFeedback;
 exports.createOutcome = createOutcome;
 
+exports.feedback = {
+  NO_ANSWER: 'You did not enter a response'
+};
+
 function isCorrect(answer, correctAnswer) {
   var diff, diff2;
   diff = _.difference(answer, correctAnswer);
@@ -30,6 +34,11 @@ function buildFeedback(question, answer, settings, isCorrect) {
     out[key] =  (_.contains(correctResponse, key)) ? 'shouldHaveBeenSelected' : 'shouldNotHaveBeenSelected';
   }
 
+  if (!answer || _.isEmpty(answer)) {
+    out.emptyAnswer = true;
+    out.message = exports.feedback.NO_ANSWER;
+  }
+
   return out;
 }
 
@@ -38,13 +47,14 @@ function buildFeedback(question, answer, settings, isCorrect) {
  */
 function createOutcome(question, answer, settings) {
 
-  if(!question || _.isEmpty(question)){
+  if(!question || _.isEmpty(question)) {
     throw new Error('question should never be undefined or empty');
   }
 
-  if(!answer || answer.length === 0){
+  if (!answer || answer.length === 0) {
     return {
-      correctness: 'incorrect', 
+      correctness: 'incorrect',
+      correctClass: 'nothing-submitted',
       score: 0,
       feedback: settings.showFeedback ?
         buildFeedback(question, answer, settings, answerIsCorrect) : null,

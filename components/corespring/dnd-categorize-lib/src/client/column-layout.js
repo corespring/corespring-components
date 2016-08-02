@@ -15,32 +15,49 @@ exports.factory = [function() {
  */
 function ColumnLayout(initialConfig, layoutRunner) {
 
-  var hasNewConfig = true;
+  var afterRenderFuncs = [];
+  var beforeRenderFuncs = [];
   var choiceSizeCache = [];
+  var hasNewConfig = true;
+  var lastWidth = -1;
+
   var config = _.assign({
     paddingBottom: 0
   }, initialConfig);
 
-  this.updateConfig = updateConfig;
+  this.cancel = cancelRunner;
+  this.onAfterRender = onAfterRender;
+  this.onBeforeRender = onBeforeRender;
   this.refresh = refresh;
   this.start = startRunner;
-  this.cancel = cancelRunner;
+  this.updateConfig = updateConfig;
 
   this.start();
 
   //-----------------------------------------
 
   function refresh() {
-    var choiceElements = config.container.find(config.itemSelector);
-
     var numColumns = _.isFunction(config.numColumns) ? config.numColumns() : config.numColumns;
     if (isNaN(numColumns) || numColumns <= 0) {
       return;
     }
 
-    if (!elementsShouldBeRendered(choiceElements)) {
+    if(!_.isFunction(config.cellWidth)){
       return;
     }
+    var cellWidth = config.cellWidth();
+    if( cellWidth === 0){
+      return;
+    }
+
+    var choiceElements = config.container.find(config.itemSelector);
+    if (!elementsShouldBeRendered(choiceElements)) {
+      if(!widthHasChanged(cellWidth)) {
+        return;
+      }
+    }
+
+    execBeforeRender(cellWidth);
 
     var columns = _.range(numColumns).map(function() {
       return [];
@@ -52,15 +69,16 @@ function ColumnLayout(initialConfig, layoutRunner) {
       columnIndex = (columnIndex + 1) % columns.length;
     });
 
-    var paddingLeft = Math.max(0, (config.container.width() - numColumns * config.cellWidth) / 2);
+
+    var paddingLeft = Math.max(0, (config.container.width() - numColumns * cellWidth) / 2);
 
     columns.forEach(function(colChoices, colIndex) {
       colChoices.forEach(function(choice, choiceIndex) {
         var choiceCss = {
           position: 'absolute',
-          left: (paddingLeft + config.cellWidth * colIndex),
+          left: (paddingLeft + cellWidth * colIndex),
           top: getChoiceTop(colChoices, choiceIndex),
-          width: config.cellWidth
+          width: cellWidth
         };
         $(choice).css(choiceCss);
       }, this);
@@ -74,6 +92,36 @@ function ColumnLayout(initialConfig, layoutRunner) {
     });
 
     hasNewConfig = false;
+    execAfterRender();
+  }
+
+  function widthHasChanged(cellWidth){
+    if(cellWidth !== lastWidth){
+      lastWidth = cellWidth;
+      return true;
+    }
+    return false;
+  }
+
+
+  function onBeforeRender(func){
+    beforeRenderFuncs.push(func);
+  }
+
+  function execBeforeRender(cellWidth){
+    _.forEach(beforeRenderFuncs, function(func){
+      func(cellWidth);
+    });
+  }
+
+  function onAfterRender(func){
+    afterRenderFuncs.push(func);
+  }
+
+  function execAfterRender(){
+    _.forEach(afterRenderFuncs, function(func){
+      func();
+    });
   }
 
   function smallestColumn(columns) {

@@ -145,8 +145,7 @@ describe('corespring:placement ordering', function() {
 
     it('correct answer and show correct answer button are not visible before submitting', function() {
       setModelAndDigest(verticalModel);
-      expect($(element).find('.show-correct-button').hasClass('ng-hide')).toBe(true);
-      expect($(element).find('.see-answer-area .choices').hasClass('ng-hide')).toBe(true);
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
     });
 
     it('show correct answer button are visible after submitting', function() {
@@ -158,7 +157,7 @@ describe('corespring:placement ordering', function() {
         correctResponse: ['c1', 'c2']
       });
       scope.$digest();
-      expect($(element).find('.show-correct-button').hasClass('ng-hide')).toBe(false);
+      expect($(element).find('.show-correct').length).not.toBe(0);
     });
 
     it('correct answer is visible after submitting an incorrect answer', function() {
@@ -191,7 +190,7 @@ describe('corespring:placement ordering', function() {
     it('correct answer and show correct answer button are not visible before submitting', function() {
       container.elements['1'].setDataAndSession(horizontalModel);
       scope.$digest();
-      expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(true);
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
     });
 
     it('show correct answer button are visible after submitting', function() {
@@ -202,7 +201,7 @@ describe('corespring:placement ordering', function() {
         answer: ['c3', 'c4'],
         correctResponse: ['c1', 'c2']
       });
-      expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(false);
+      expect($(element).find('.showCorrectVisible').length).not.toBe(0);
     });
 
     it('correct answer is visible after submitting an incorrect answer', function() {
@@ -213,7 +212,7 @@ describe('corespring:placement ordering', function() {
         answer: ['c3', 'c4'],
         correctResponse: ['c1', 'c2']
       });
-      expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(false);
+      expect($(element).find('.showCorrectVisible').length).not.toBe(0);
     });
 
     it('correct answer is not visible after submitting a correct answer', function() {
@@ -224,7 +223,7 @@ describe('corespring:placement ordering', function() {
         answer: ['c1', 'c2'],
         correctResponse: ['c1', 'c2']
       });
-      expect($(element).find('.see-answer-panel').hasClass('ng-hide')).toBe(true);
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
     });
 
     it('ordering numbers are hidden', function() {
@@ -236,7 +235,7 @@ describe('corespring:placement ordering', function() {
       setModelAndDigest(horizontalModel);
       
       var answerAreaPrev = $(element).find('.placement-areas .answer-area').prev();
-      expect(answerAreaPrev.hasClass('choice-area') && !answerAreaPrev.hasClass('see-answer-area')).toBeTruthy();
+      expect(!answerAreaPrev.hasClass('see-answer-area')).toBeTruthy();
     });
 
     it('should display choices area below answer area when below is selected as choices area position', function() {
@@ -279,6 +278,24 @@ describe('corespring:placement ordering', function() {
       });
       expect($(element).find('.panel.feedback.partial').length).toBe(1);
       expect(element.scope().feedback).toBe("Partial");
+    });
+  });
+
+  describe('when the response is answer expected', function(){
+    beforeEach(function(){
+      setModelAndDigest(verticalModel);
+      setResponseAndDigest({
+        correctness: 'warning',
+        correctClass: 'warning',
+        answer: [],
+        correctResponse: ['c1', 'c2']
+      });
+    });
+    it('should not show the solution', function(){
+      expect($(element).find('.showCorrectVisible').length).toBe(0);
+    });
+    it('should show the choices', function(){
+      expect($(element).find('.user-choices .choices-holder').length).toBe(1);
     });
   });
 
@@ -504,4 +521,16 @@ describe('corespring:placement ordering', function() {
     });
 
   });
+
+  describe('reset', function(){
+    beforeEach(function() {
+      setModelAndDigest(verticalModel);
+    });
+    it('should broadcast setVisible(0) to show placing targets', function(){
+      spyOn(scope, '$broadcast');
+      container.elements['1'].reset();
+      expect(scope.$broadcast).toHaveBeenCalledWith('setVisible', 0);
+    });
+  });
+
 });

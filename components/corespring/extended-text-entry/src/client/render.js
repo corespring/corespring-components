@@ -20,13 +20,13 @@ function mainDirective($compile) {
     scope: {},
     restrict: 'AE',
     link: link,
-    controller: function($scope) {},
     template: template()
   };
 
   function link(scope, element, attrs) {
 
     scope.editable = true;
+    scope.mode = 'gather';
 
     scope.containerBridge = {
       answerChangedHandler: answerChangedHandler,
@@ -37,6 +37,7 @@ function mainDirective($compile) {
       setDataAndSession: setDataAndSession,
       setInstructorData: setInstructorData,
       setMode: setMode,
+      setPlayerSkin: setPlayerSkin,
       setResponse: setResponse
     };
 
@@ -76,6 +77,11 @@ function mainDirective($compile) {
       var compiledWiggi = $compile(wiggiTemplate())(scope);
 
       element.find('.textarea-holder')
+        .css({
+          width: width
+        });
+
+      element.find('.textarea-holder .wiggi')
         .html(compiledWiggi)
         .css({
           width: width,
@@ -94,6 +100,10 @@ function mainDirective($compile) {
       };
     }
 
+    function setPlayerSkin(skin) {
+      scope.iconset = skin.iconSet;
+    }
+
     function setInstructorData(data) {
       scope.answer = "Open Ended Answers are not automatically scored. No correct answer is defined.";
       scope.received = true;
@@ -104,13 +114,19 @@ function mainDirective($compile) {
       console.log("Setting Response for extended text entry:");
       console.log(response);
 
+      if (!response.correctClass) {
+        response.correctClass = 'submitted';
+      }
+
       scope.answer = response.studentResponse;
       scope.response = response;
 
       scope.received = true;
     }
 
-    function setMode(newMode) {}
+    function setMode(value) {
+      scope.mode = value;
+    }
 
     function reset() {
       scope.answer = undefined;
@@ -121,6 +137,10 @@ function mainDirective($compile) {
     function isAnswerEmpty() {
       return _.isEmpty(this.getSession().answers);
     }
+
+    scope.$watch('answer', function() {
+      scope.inputClass = (scope.answer && $('<span>' + scope.answer.trim() + '</span>').text().length > 0) ? 'filled-in' : '';
+    });
 
     function answerChangedHandler(callback) {
       scope.$watch("answer", function(newValue, oldValue) {
@@ -143,20 +163,40 @@ function mainDirective($compile) {
 
   function wiggiTemplate() {
     return [
-        '<wiggi-wiz features="extraFeatures" ng-model="answer" enabled="editable" style="{{style}}" toolbar-on-focus="true">',
-        '  <toolbar basic="bold italic underline" formatting="" positioning="" markup="" media="" line-height="" order="basic,lists,math" />',
-        '</wiggi-wiz>'
-      ].join('\n');
+      '<wiggi-wiz',
+      '    enabled="editable"',
+      '    features="extraFeatures"',
+      '    ng-model="answer"',
+      '    style="{{style}}"',
+      '    toolbar-on-focus="true"',
+      '>',
+      '  <toolbar',
+      '      basic="bold italic underline"',
+      '      formatting=""',
+      '      line-height=""',
+      '      markup=""',
+      '      media=""',
+      '      order="basic,lists,math"',
+      '      positioning=""',
+      '  />',
+      '</wiggi-wiz>'].join('\n');
   }
 
   function template() {
     return [
-        '<div class="corespring-extended-text-entry view-extended-text-entry {{response.correctness}}" ng-class="{received: received}">',
-        '  <div class="textarea-holder">',
-        '  </div>',
-        '  <div class="alert {{response.correctness == \'incorrect\' ? \'no-\' : \'\'}}feedback" ng-show="response.feedback" ng-bind-html-unsafe="response.feedback"></div>',
-        '  <div learn-more-panel ng-show="response.comments"><div ng-bind-html-unsafe="response.comments"></div></div>',
-        '</div>'
+      '<div class="corespring-extended-text-entry view-extended-text-entry {{response.correctness}} {{mode}} {{inputClass}}"',
+      '    ng-class="{received: received}">',
+      '  <div class="textarea-holder">',
+      '    <div class="wiggi"></div>',
+      '    <div correct-class="{{response.correctClass}}"',
+      '        feedback="response.feedback"',
+      '        icon-set="{{iconset}}"',
+      '    ></div>',
+      '  </div>',
+      '  <div learn-more-panel="" ng-show="response.comments">',
+      '    <div ng-bind-html-unsafe="response.comments"></div>',
+      '  </div>',
+      '</div>'
     ].join("\n");
   }
 

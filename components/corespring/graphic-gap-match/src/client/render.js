@@ -29,6 +29,10 @@ var main = [
       scope.undoModel.setRevertState(revertState);
 
       scope.containerBridge = {
+        setPlayerSkin: function(skin) {
+          scope.iconset = skin.iconSet;
+        },
+
         setDataAndSession: function(dataAndSession) {
           $log.debug("[graphic gap match] setDataAndSession: ", dataAndSession);
           scope.model = dataAndSession.data.model;
@@ -70,9 +74,13 @@ var main = [
         setResponse: function(response) {
           $log.debug('[graphic gap match] setResponse: ', response);
           scope.response = response;
+          scope.showCorrectAnswerButton = response.correctness !== 'correct' &&
+            response.correctness !== 'warning' &&
+            response.correctness !== 'instructor';
         },
 
         setMode: function(newMode) {
+          scope.mode = newMode;
         },
 
         reset: function() {
@@ -80,6 +88,8 @@ var main = [
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.response = undefined;
           scope.undoModel.init();
+          scope.showCorrectAnswerButton = false;
+          scope.bridge.answerVisible = false;
         },
 
         isAnswerEmpty: function() {
@@ -125,6 +135,9 @@ var main = [
       };
 
       scope.correctAnswerForHotspot = function(hotspot) {
+        if (!scope.response) {
+          return;
+        }
         return _(scope.response.correctResponse).filter(function(c) {
           return c.hotspot === hotspot.id;
         }).map(function(c) {
@@ -159,7 +172,8 @@ var main = [
       };
 
       scope.draggableJquiOptions = {
-        revert: 'invalid'
+        revert: 'invalid',
+        opacity: 0.75
       };
 
       scope.droppableJquiOptions = {
@@ -328,20 +342,20 @@ var main = [
           '  </div>',
           '</div>'
         ] : [
-          '<div class="choice-wrapper" ng-repeat="choice in choices">',
-          '  <div class="choice"',
-          '       data-drag="editable"',
-          '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
-          '       data-jqyoui-options="draggableJquiOptions"',
-          '       ng-bind-html-unsafe="choice.label">',
-          '  </div>',
-          '</div>',
-          '<div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
-          '  <div class="choice placeholder"',
-          '       ng-bind-html-unsafe="choice.label">',
-          '  </div>',
-          '</div>'
-        ]).join('');
+        '<div class="choice-wrapper" ng-repeat="choice in choices">',
+        '  <div class="choice"',
+        '       data-drag="editable"',
+        '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
+        '       data-jqyoui-options="draggableJquiOptions"',
+        '       ng-bind-html-unsafe="choice.label">',
+        '  </div>',
+        '</div>',
+        '<div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
+        '  <div class="choice placeholder"',
+        '       ng-bind-html-unsafe="choice.label">',
+        '  </div>',
+        '</div>'
+      ]).join('');
 
       return [
         '<div ng-if="model.config.choiceAreaPosition == \'' + positons[0] + '\' || model.config.choiceAreaPosition == \'' + positons[1] + '\'"',
@@ -382,40 +396,45 @@ var main = [
       restrict: 'EA',
       link: link,
       template: [
-        '<div class="view-graphic-gap-match">',
-        '  <div class="button-row" ng-hide="response && response.correctness === \'instructor\'"">',
+        '<div class="view-graphic-gap-match {{mode}} editable-{{editable}}">',
+        '  <correct-answer-toggle visible="showCorrectAnswerButton" toggle="bridge.answerVisible"></correct-answer-toggle>',
+        '  <div class="clearfix"></div>',
+        '  <div class="undo-startover button-row" ng-hide="response || response.correctness === \'instructor\'"">',
         '    <span cs-undo-button-with-model></span>',
         '    <span cs-start-over-button-with-model></span>',
         '  </div>',
         '  <div class="clearfix"></div>',
-        '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="response && response.correctness === \'instructor\'">',
+        '  <div class="main-container {{model.config.choiceAreaPosition}}" ng-hide="(response && response.correctness === \'instructor\')">',
         choices(['left', 'top']),
         '    <div class="answers">',
-        '      <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
-        '           data-drop="true"',
-        '           jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
-        '        <svg ng-if="model.config.showHotspots" class="hotspots">',
-        '          <g ng-repeat="hotspot in model.hotspots">',
-        '            <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
-        '            <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
-        '          </g>',
-        '        </svg>',
-        '        <div class="dropped choice {{correctClass(choice)}}"',
-        '             ng-repeat="choice in droppedChoices"',
-        '             ng-style="{left: choice.left, top: choice.top}"',
-        '             data-drag="editable"',
-        '             jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
-        '             data-jqyoui-options="draggableJquiOptions"',
-        '             ng-bind-html-unsafe="choice.label">',
+        '      <div class="students-response" ng-class="{studentsResponseHidden: bridge.answerVisible}">',
+        '        <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
+        '             data-drop="true"',
+        '             jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
+        '          <svg ng-if="model.config.showHotspots" class="hotspots">',
+        '            <g ng-repeat="hotspot in model.hotspots">',
+        '              <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '              <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
+        '            </g>',
+        '          </svg>',
+        '          <div class="dropped choice {{correctClass(choice)}}"',
+        '               ng-repeat="choice in droppedChoices"',
+        '               ng-style="{left: choice.left, top: choice.top}"',
+        '               data-drag="editable"',
+        '               jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
+        '               data-jqyoui-options="draggableJquiOptions"',
+        '               ng-bind-html-unsafe="choice.label">',
+        '          </div>',
+        '          <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}"/>',
         '        </div>',
-        '        <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}"/>',
         '      </div>',
+        '      <div ng-class="{correctAnswerVisible: bridge.answerVisible}" class="correct-answer-holder">' + correctAnswer + '</div>',
         '    </div>',
+
         choices(['bottom', 'right']),
         '  </div>',
-        '  <div feedback="response.feedback.message" correct-class="{{response.correctClass}}"></div>',
-        '  <div see-answer-panel ng-if="response && response.correctness === \'incorrect\'">',
-        correctAnswer,
+        '  <div ng-if="!bridge.answerVisible">',
+        '    <div feedback="response.feedback.message" icon-set="{{iconset}}" correct-class="{{response.correctClass}}"></div>',
         '  </div>',
         '  <div class="instructor-response-holder" ng-if="response && response.correctness === \'instructor\'">',
         choices(['left', 'top'], 'incorrect'),
