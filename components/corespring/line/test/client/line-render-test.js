@@ -212,12 +212,16 @@ describe('corespring:line:render', function() {
   });
 
   describe('setDataAndSession', function(){
-    beforeEach(function(){
+
+    beforeEach(inject(function($timeout) {
       spyOn(scope, 'renderInitialGraph'); //to avoid npe
-    });
+      timeout = $timeout;
+
+    }));
     it('should call renderInitialGraph', function(){
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
+      timeout.flush();
       expect(scope.renderInitialGraph).toHaveBeenCalled();
     });
   });

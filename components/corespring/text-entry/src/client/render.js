@@ -218,7 +218,7 @@ var main = [
         '    <svg-icon open="{{popupVisible}}" category="{{feedback && feedback.message ? \'feedback\' : \'\'}}"',
         '        key="{{iconKey}}" shape="square" icon-set="{{iconset}}" />',
         '  </span>',
-        '  <span class="feedback-icon instructor-response" feedback-popover="response" ng-show="isInstructorResponse() && hasAdditionalAnswers">',
+        '  <span class="feedback-icon instructor-response" feedback-popover="response" placement="bottom" ng-show="isInstructorResponse() && hasAdditionalAnswers">',
         '    <svg-icon open="{{popupVisible}}"',
         '        key="show-rationale" shape="round" icon-set="{{iconset}}" />',
         '  </span>',

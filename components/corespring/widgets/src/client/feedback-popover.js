@@ -101,10 +101,12 @@ function FeedbackPopoverDirective(MathJaxService, $timeout) {
           return scope.originalContent || $(element).find('.math-prerender').html();
         },
         placement: function(popover, sender) {
-          var playerElement = $(element).parents('.corespring-player');
-          var playerTop = playerElement.offset().top;
-          var elementTop = $(element).offset().top;
-          return (elementTop - playerTop > 100) ? "top" : "bottom";
+          return attrs.placement !== undefined ? attrs.placement : (function() {
+            var playerElement = $(element).parents('.corespring-player');
+            var playerTop = playerElement.offset().top;
+            var elementTop = $(element).offset().top;
+            return (elementTop - playerTop > 100) ? "top" : "bottom";
+          })();
         },
         html: true
       }).on('show.bs.popover', function(event) {

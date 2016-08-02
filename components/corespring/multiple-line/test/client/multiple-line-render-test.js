@@ -1,6 +1,13 @@
+/* globals JSON */
 describe('corespring:multiple-line:render', function() {
 
   var testModel, scope, rootScope, container, element, timeout;
+
+  function ignoreAngularIds(obj) {
+    var json = angular.toJson(obj);
+    return _.isString(json) ? JSON.parse(json) : undefined;
+  }
+
 
   var JXG = {
     JSXGraph: {
@@ -52,7 +59,7 @@ describe('corespring:multiple-line:render', function() {
 
   var testModelTemplate = {
     data: {
-      "title": "Graph Multiple Lines",
+      "title": "Graph Lines (Multiple)",
       "componentType": "corespring-multiple-line",
       "weight": 1,
       "minimumWidth": 500,
@@ -104,28 +111,15 @@ describe('corespring:multiple-line:render', function() {
     }
   };
 
-  var ignoreAngularIds = function(obj) {
-    var newObj = _.cloneDeep(obj);
-    for (var s in newObj) {
-      if (s === '$$hashKey') {
-        delete newObj[s];
-      } else if (_.isObject(newObj[s])) {
-        newObj[s] = ignoreAngularIds(newObj[s]);
-      }
-    }
-    return newObj;
-  };
-
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(
-    module(function($provide) {
+  beforeEach(module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
       $provide.value('$modal', {});
-    })
-  );
+  }));
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, $timeout) {
+    timeout = $timeout;
     container = new MockComponentRegister();
 
     $rootScope.$on('registerComponent', function(event, id, obj) {
@@ -377,6 +371,7 @@ describe('corespring:multiple-line:render', function() {
           triggerCallback: true
         }
       });
+      timeout.flush();
       expect(scope.graphCallback.calls.all().length).toEqual(8);
     });
   });
@@ -541,6 +536,7 @@ describe('corespring:multiple-line:render', function() {
     it('should call renderInitialGraph', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
+      timeout.flush();
       expect(scope.renderInitialGraph).toHaveBeenCalled();
     });
   });

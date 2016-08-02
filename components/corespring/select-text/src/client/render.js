@@ -248,7 +248,9 @@ exports.directive = [
         '     ng-class="{editable: editable, blocked: !editable, \'show-answers\': answersVisible, \'no-more-selections\': editable && model.config.maxSelections > 0 && (userChoices.length >= model.config.maxSelections)}" ',
         '     ng-bind-html-unsafe="model.passage"',
         '  ></div>',
-        '  <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}} {{warningClass}}"></div>',
+        '  <div ng-if="!answersVisible">',
+        '    <div ng-show="feedback" feedback="feedback" icon-set="{{iconset}}" correct-class="{{correctClass}} {{warningClass}}"></div>',
+        '  </div>',
         '</div>'
       ].join("\n");
     }

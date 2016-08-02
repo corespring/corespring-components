@@ -27,13 +27,13 @@ var main = [
       '            <input type="text" class="form-control glowing-border" ng-model="line.label" ng-class="fullModel.model.config.exhibitOnly ? \'exhibit\' : \'line{{ line.colorIndex % 5 }}\'" />',
       '          </div>',
       '          <div class="col-md-4" ng-hide="fullModel.model.config.exhibitOnly">',
-      '            <div class="input-group">',
-      '              <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="line.equation" />',
+      '            <div class="input-group" ng-class="{ \'has-error\': !isValidFormula(line.equation) }">',
+      '              <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(line.equation)" ng-model="line.equation" />',
       '            </div>',
       '          </div>',
       '          <div class="col-md-4">',
-      '            <div class="input-group">',
-      '              <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="line.intialLine" />',
+      '            <div class="input-group" ng-class="{ \'has-error\': !isValidFormula(line.intialLine) }">',
+      '              <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(line.intialLine)" ng-model="line.intialLine" />',
       '            </div>',
       '          </div>',
       '          <div class="col-sm-1 remove-line">',
@@ -118,6 +118,10 @@ var main = [
           }
         };
 
+        scope.isValidFormula = function(s) {
+          return _.isEmpty(s) || /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
+        };
+
         scope.addNewLine = function() {
           var newLineNumber = scope.fullModel.model.config.lines.length + 1;
           scope.fullModel.model.config.lines.push({ "id": newLineNumber, "equation": "", "intialLine": "", "label": "", "colorIndex": scope.fullModel.model.config.lines.length % 5 });
@@ -137,10 +141,11 @@ var main = [
           scope.resetCanvasDisplayAttributes();
         };
 
+
         scope.$watch('fullModel.model.config.lines', function(n) {
           if (n) {
-            scope.fullModel.correctResponse = _.map(scope.fullModel.model.config.lines, function(line){
-              return { id: line.id, equation: line.equation, label: line.label };
+            scope.fullModel.correctResponse = _.map(scope.fullModel.model.config.lines, function(line) {
+              return {id: line.id, equation: line.equation, label: line.label};
             });
             scope.updateNumberOfCorrectResponses(scope.fullModel.correctResponse.length);
           }
@@ -157,22 +162,22 @@ var main = [
         '      line by clicking two points on the graph. Each line will be denoted by a different color and symbol,',
         '      as well as by optional labels.',
         '    </p>',
-               linesBlock,
+        linesBlock,
         '    <hr />',
-               CanvasTemplates.configGraph(),
+        CanvasTemplates.configGraph(),
         '    <hr />',
-               CanvasTemplates.configDisplay(false),
+        CanvasTemplates.configDisplay(false),
         '    <div class="row">',
         '      <div class="col-md-8">',
         '        <a class="reset-defaults btn btn-default" ng-click="resetDefaults()">Reset to default values</a>',
         '      </div>',
         '    </div>',
         '    <div class="row"><div class="col-xs-12" ng-hide="fullModel.model.config.exhibitOnly">',
-               feedback,
+        feedback,
         '    </div></div>',
         '  </div>',
         '  <div navigator-panel="Scoring">',
-             ChoiceTemplates.scoring(),
+        ChoiceTemplates.scoring(),
         '  </div>',
         '</div>'
       ].join('\n')
