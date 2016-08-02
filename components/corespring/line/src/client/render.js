@@ -332,7 +332,7 @@ var main = [
           var removeGraphCallbackWatch = scope.$watch('graphCallback', function(n){
             if(n){
               removeGraphCallbackWatch();
-              scope.renderInitialGraph();
+              $timeout(scope.renderInitialGraph, 50);
             }
           });
 
