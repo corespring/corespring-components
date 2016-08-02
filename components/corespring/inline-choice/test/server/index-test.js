@@ -67,8 +67,6 @@ function createModel() {
 
 describe('inline-choice server logic', function() {
 
-  helper.assertNullOrUndefinedAnswersReturnsIncorrect(server, 'createOutcome', server.DEFAULT_INCORRECT_FEEDBACK);
-
   describe('isCorrect', function() {
     function questionWithCorrectResponse(correctResponse){
       return {correctResponse:correctResponse};
