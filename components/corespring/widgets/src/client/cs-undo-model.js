@@ -117,7 +117,6 @@ exports.factory = ['$log', function($log) {
 
     function updateUndoState() {
       self.undoCount = undoStack.length;
-      console.log('[updateUndoState] undoCount? ', self.undoCount);
       self.undoDisabled = self.undoCount <= 1;
     }
 
