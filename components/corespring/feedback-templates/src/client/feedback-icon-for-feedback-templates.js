@@ -4,6 +4,7 @@ exports.directive = {
   directive: ['$log', FeedbackIconForFeedbackTemplatesDirective]
 };
 
+//This long name is because widgets are using a feedback-icon already
 function FeedbackIconForFeedbackTemplatesDirective($log) {
 
   return {
