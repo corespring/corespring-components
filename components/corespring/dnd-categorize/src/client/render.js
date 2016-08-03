@@ -291,7 +291,7 @@ function renderCorespringDndCategorize(
     }
 
     function setDetailedFeedback(response) {
-      if (!response.detailedFeedback) {
+      if (!(response && response.detailedFeedback)) {
         return;
       }
       _.forEach(scope.renderModel.categories, function(category) {
@@ -308,7 +308,7 @@ function renderCorespringDndCategorize(
     }
 
     function initSeeSolutionModel(response) {
-      if (!response.correctResponse) {
+      if (!(response && response.correctResponse)) {
         return;
       }
       var correctAnswerRowId = 0;
