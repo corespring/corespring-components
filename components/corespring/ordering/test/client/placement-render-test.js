@@ -533,4 +533,44 @@ describe('corespring:placement ordering', function() {
     });
   });
 
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(_.cloneDeep(verticalModel));
+      rootScope.$digest();
+
+      scope.landingPlaceChoices[0] = {
+        id: "c1"
+      };
+      scope.landingPlaceChoices[1] = {
+        id: "c2"
+      };
+
+      response = {
+        correctness: 'incorrect',
+        correctClass: 'incorrect',
+        answer: ['c3', 'c4'],
+        correctResponse: ['c1', 'c2']
+      };
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(element.find('.answer-area-table .correct').length).toBe(2);
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
+
 });
