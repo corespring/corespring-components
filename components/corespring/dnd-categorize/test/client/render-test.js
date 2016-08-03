@@ -761,7 +761,8 @@ describe('corespring:dnd-categorize:render', function() {
 
     beforeEach(function() {
       setModelAndDigest();
-      scope.renderModel.categories[1].choices = [{}, {}];
+      scope.renderModel.categories[1].choices = [{model:{id: '1'}}, {model:{id: '2'}}];
+      rootScope.$digest();
       response = {
         detailedFeedback: {
           cat_1: {
@@ -775,10 +776,13 @@ describe('corespring:dnd-categorize:render', function() {
     });
 
     function assertFeedback() {
+      rootScope.$digest();
       expect(scope.renderModel.categories[0].answersExpected).toBe(true);
       expect(scope.renderModel.categories[1].choices).toEqual([{
+        model:{id: '1'},
         correctness: 'correct'
       }, {
+        model:{id: '2'},
         correctness: 'incorrect'
       }]);
     }
