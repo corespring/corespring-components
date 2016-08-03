@@ -129,18 +129,15 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
 
     // sets the server's response
     function setResponse(response) {
-      $(element).find(".feedback-panel").hide();
-
-      resetFeedback(scope.choices);
       scope.response = response;
-      applyResponse();
-
-      $timeout(function () {
-        $(element).find(".feedback-panel.visible").slideDown(400);
-      }, 10);
+      updateUi();
     }
 
     function applyResponse(){
+      $(element).find(".feedback-panel").hide();
+
+      resetFeedback(scope.choices);
+
       var response = scope.response;
       if (response && response.feedback) {
         if (response.feedback.emptyAnswer) {
@@ -156,11 +153,19 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
               choice.correct = fb.correct;
             }
           });
-          scope.showCorrectAnswerButton = response &&
-            response.correctness === 'incorrect' &&
-            scope.question.config.showCorrectAnswer !== 'inline';
         }
+        $timeout(function () {
+          $(element).find(".feedback-panel.visible").slideDown(400);
+        }, 10);
       }
+    }
+
+    function updateShowCorrectAnswerButton(){
+      scope.showCorrectAnswerButton = !!scope.response &&
+        scope.response.correctness === 'incorrect' &&
+        scope.response.warningClass !== 'answer-expected' &&
+        scope.question.config.showCorrectAnswer !== 'inline' &&
+        scope.playerMode !== 'instructor';
     }
 
     function setMode(value) {
@@ -324,8 +329,9 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       }
 
       applyAnswers();
-      applyInstructorData();
       applyResponse();
+      applyInstructorData();
+      updateShowCorrectAnswerButton();
     }
 
     function letter(idx) {
