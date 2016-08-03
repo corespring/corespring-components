@@ -132,10 +132,17 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       $(element).find(".feedback-panel").hide();
 
       resetFeedback(scope.choices);
-
       scope.response = response;
+      applyResponse();
 
-      if (response.feedback) {
+      $timeout(function () {
+        $(element).find(".feedback-panel.visible").slideDown(400);
+      }, 10);
+    }
+
+    function applyResponse(){
+      var response = scope.response;
+      if (response && response.feedback) {
         if (response.feedback.emptyAnswer) {
           scope.feedback = response.feedback;
         } else {
@@ -154,10 +161,6 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
             scope.question.config.showCorrectAnswer !== 'inline';
         }
       }
-
-      $timeout(function() {
-        $(element).find(".feedback-panel.visible").slideDown(400);
-      }, 10);
     }
 
     function setMode(value) {
@@ -217,7 +220,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       }
     }
 
-    function applyChoices() {
+    function applyAnswers() {
       if (!scope.question || !scope.session.answers) {
         return;
       }
@@ -320,8 +323,9 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
         scope.choices = clonedChoices;
       }
 
-      applyChoices();
+      applyAnswers();
       applyInstructorData();
+      applyResponse();
     }
 
     function letter(idx) {
