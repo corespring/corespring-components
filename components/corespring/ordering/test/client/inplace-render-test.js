@@ -422,6 +422,38 @@ describe('corespring:ordering-in-place', function() {
       rootScope.$digest();
       expect(changeHandlerCalled).toBe(true);
     });
+  });
 
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(_.cloneDeep(verticalModel));
+      rootScope.$digest();
+
+      response = {
+        correctness: 'incorrect',
+        correctClass: 'partial',
+        feedback: "Partial",
+        correctResponse: ['a', 'c', 'b', 'd']
+      };
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(element.find('.container-border .correct').length).toBe(2);
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
   });
 });
