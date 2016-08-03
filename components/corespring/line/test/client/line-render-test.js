@@ -225,4 +225,33 @@ describe('corespring:line:render', function() {
       expect(scope.renderInitialGraph).toHaveBeenCalled();
     });
   });
+
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(_.cloneDeep(testModel));
+      rootScope.$digest();
+
+      response = {correctness: 'incorrect', feedback: 'not good'};
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(scope.feedback).toEqual('not good');
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
+
 });

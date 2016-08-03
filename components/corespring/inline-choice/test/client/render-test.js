@@ -253,4 +253,41 @@ describe('corespring:inline-choice', function() {
     });
 
   });
+
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(_.cloneDeep(testModel));
+      rootScope.$digest();
+
+      response = {
+        "correctness": "incorrect",
+        "score": 0,
+        "feedback": {
+          "mc_1": {
+            correct: false,
+            feedback: "cccc"
+          }
+        }
+      };
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(_.find(scope.choices, {value:'mc_1'}).feedback).toBe('cccc');
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
 });

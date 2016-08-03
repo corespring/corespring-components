@@ -17,11 +17,25 @@ describe('corespring:text-entry:render', function() {
 
 
   beforeEach(angular.mock.module('test-app'));
+  /*
+  function(){
+    var module = angular.mock.module('test-app');
+    module.config(['$provide', function($provide) {
+      $provide.decorator('feedbackPopover', ['$delegate', function($delegate) {
+        // drop the feedbackPopover directive all together
+        $delegate[0].compile = function(){return angular.noop};
+        return $delegate;
+      }]);
+    }]);
+    return module;
+  });
+  */
 
   beforeEach(function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
-      $provide.value('MathJaxService', function() {
+      $provide.value('MathJaxService', {
+        parseDomForMath: function(){}
       });
     });
   });
@@ -171,6 +185,34 @@ describe('corespring:text-entry:render', function() {
       expect(changeHandlerCalled).toBe(true);
     });
 
+  });
+
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+
+      response = {correctness: 'incorrect', feedback: 'not good'};
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(scope.feedback).toEqual('not good');
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
   });
 
 });
