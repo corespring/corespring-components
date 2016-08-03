@@ -210,32 +210,58 @@ describe('corespring:multiple-choice-render', function() {
     expect($(element).find('.selected div.checkbox-choice').length).toBe(2);
   });
 
-  it('setting response shows correctness and feedback', function() {
-    containerBridge.setDataAndSession(testModel);
-    var response = {
-      "correctness": "correct",
-      "score": 1,
-      "feedback": [
-        {
-          "value": "1",
-          "feedback": "yup",
-          "correct": true
-        },
-        {
-          "value": "2",
-          "correct": true
-        },
-        {
-          "value": "3",
-          "correct": false
-        }
-      ]
-    };
-    containerBridge.setResponse(response);
-    rootScope.$digest();
-    expect($(element).find(".choice-holder-background").length).toBe(3);
-    expect($(element).find(".choice-holder-background.incorrect").length).toBe(1);
-    expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+  describe('setResponse', function(){
+    var response;
+
+    function assertResponse(){
+      expect($(element).find(".choice-holder-background").length).toBe(3);
+      expect($(element).find(".choice-holder-background.incorrect").length).toBe(1);
+      expect($(element).find(".incorrect .choice-holder").length).toBe(1);
+    }
+
+    beforeEach(function(){
+      containerBridge.setDataAndSession(testModel);
+      rootScope.$digest();
+      response = {
+        "correctness": "correct",
+        "score": 1,
+        "feedback": [
+          {
+            "value": "1",
+            "feedback": "yup",
+            "correct": true
+          },
+          {
+            "value": "2",
+            "correct": true
+          },
+          {
+            "value": "3",
+            "correct": false
+          }
+        ]
+      };
+    });
+
+    it('setting response shows correctness and feedback', function() {
+      containerBridge.setResponse(response);
+      rootScope.$digest();
+      assertResponse();
+    });
+
+    it('works when mode is set firstly', function(){
+      containerBridge.setMode('evaluate');
+      containerBridge.setResponse(response);
+      rootScope.$digest();
+      assertResponse();
+    });
+
+    it('works when mode is set secondly', function(){
+      containerBridge.setResponse(response);
+      containerBridge.setMode('evaluate');
+      rootScope.$digest();
+      assertResponse();
+    });
   });
 
   describe('instructor mode', function() {
@@ -336,10 +362,8 @@ describe('corespring:multiple-choice-render', function() {
 
   describe('showCorrectAnswerButton', function() {
     beforeEach(function() {
-      scope.answer = "anything";
-      scope.question = {
-        config: {}
-      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
     });
 
     it('should be false initially', function() {
@@ -350,6 +374,10 @@ describe('corespring:multiple-choice-render', function() {
         correctness: 'incorrect',
         feedback: {}
       });
+      rootScope.$digest();
+      expect(scope.response.correctness).toBe('incorrect');
+      expect(scope.question.config.showCorrectAnswer).not.toBe('inline');
+      expect(scope.playerMode).not.toBe('instructor');
       expect(scope.showCorrectAnswerButton).toBe(true);
     });
     it('should be false when correctness is correct"', function() {
