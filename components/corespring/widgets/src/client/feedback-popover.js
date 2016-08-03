@@ -109,47 +109,54 @@ function FeedbackPopoverDirective(MathJaxService, $timeout) {
           })();
         },
         html: true
-      }).on('show.bs.popover', function(event) {
-        $timeout(function() {
-          $('[feedback-popover]').each(function() {
-            if (element[0] !== this) {
-              $(this).popover('hide');
-            }
-          });
-          scope.viewport = scope.viewport || $(element).parents('.player-body');
-          if (scope.viewport && $(scope.viewport).length > 0) {
-            var $popover = $(element).parents('.corespring-player').find('.popover.' + popoverId);
-            var $viewport = $(scope.viewport).parent();
-            var padding = 5;
-
-            if (scope.firstShow) {
-              scope.arrowPosition = parseFloat($('.arrow', $popover).css('left'));
-              scope.firstShow = false;
-            }
-
-            if ($popover.offset().left < $viewport.offset().left + padding) {
-              var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left) + padding;
-              $popover.css('left', '+=' + deltaLeft + 'px');
-              $('.arrow', $popover).css('left', scope.arrowPosition - deltaLeft);
-            }
-            if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width() - padding) {
-              var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width()) + padding;
-              $popover.css('left', '-=' + deltaRight + 'px');
-              $('.arrow', $popover).css('left', scope.arrowPosition + deltaRight);
-            }
-          }
-          scope.state = 'open';
-        });
-      }).on('shown.bs.popover', function() {
-        scope.originalContent = $(element).find('.math-prerender').html();
-        $(element).find('.math-prerender').html('');
-        $('html').click(onClickHtml);
-      }).on('hide.bs.popover', function() {
-        $('html').unbind('click', onClickHtml);
-        scope.state = 'closed';
-      }).on('hidden.bs.popover', function() {
-        $(element).find('.math-prerender').html(scope.originalContent);
       });
+
+      if (popover) {
+        popover.on('show.bs.popover', function(event) {
+          $timeout(function() {
+            $('[feedback-popover]').each(function() {
+              if (element[0] !== this) {
+                $(this).popover('hide');
+              }
+            });
+            scope.viewport = scope.viewport || $(element).parents('.player-body');
+            if (scope.viewport && $(scope.viewport).length > 0) {
+              var $popover = $(element).parents('.corespring-player').find('.popover.' + popoverId);
+              var $viewport = $(scope.viewport).parent();
+              var padding = 5;
+
+              if (scope.firstShow) {
+                scope.arrowPosition = parseFloat($('.arrow', $popover).css('left'));
+                scope.firstShow = false;
+              }
+
+              if ($popover.offset().left < $viewport.offset().left + padding) {
+                var deltaLeft = parseFloat($viewport.offset().left) - parseFloat($popover.offset().left) + padding;
+                $popover.css('left', '+=' + deltaLeft + 'px');
+                $('.arrow', $popover).css('left', scope.arrowPosition - deltaLeft);
+              }
+              if ($popover.offset().left + $popover.width() > $viewport.offset().left + $viewport.width() - padding) {
+                var deltaRight = parseFloat($popover.offset().left + $popover.width()) - parseFloat($viewport.offset().left + $viewport.width()) + padding;
+                $popover.css('left', '-=' + deltaRight + 'px');
+                $('.arrow', $popover).css('left', scope.arrowPosition + deltaRight);
+              }
+            }
+            scope.state = 'open';
+          });
+        });
+        popover.on('shown.bs.popover', function() {
+          scope.originalContent = $(element).find('.math-prerender').html();
+          $(element).find('.math-prerender').html('');
+          $('html').click(onClickHtml);
+        });
+        popover.on('hide.bs.popover', function() {
+          $('html').unbind('click', onClickHtml);
+          scope.state = 'closed';
+        });
+        popover.on('hidden.bs.popover', function() {
+          $(element).find('.math-prerender').html(scope.originalContent);
+        });
+      }
     }
   }
 }
