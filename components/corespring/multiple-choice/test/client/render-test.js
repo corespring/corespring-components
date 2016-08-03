@@ -362,10 +362,8 @@ describe('corespring:multiple-choice-render', function() {
 
   describe('showCorrectAnswerButton', function() {
     beforeEach(function() {
-      scope.answer = "anything";
-      scope.question = {
-        config: {}
-      };
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
     });
 
     it('should be false initially', function() {
@@ -376,6 +374,10 @@ describe('corespring:multiple-choice-render', function() {
         correctness: 'incorrect',
         feedback: {}
       });
+      rootScope.$digest();
+      expect(scope.response.correctness).toBe('incorrect');
+      expect(scope.question.config.showCorrectAnswer).not.toBe('inline');
+      expect(scope.playerMode).not.toBe('instructor');
       expect(scope.showCorrectAnswerButton).toBe(true);
     });
     it('should be false when correctness is correct"', function() {
