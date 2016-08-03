@@ -611,4 +611,39 @@ describe('corespring:drag-and-drop-inline', function() {
 
   });
 
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+      setAnswer('c_1');
+      rootScope.$digest();
+
+      response = {
+        correctness: 'incorrect',
+        correctClass: 'incorrectClass',
+        feedback: {}
+      };
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      wrapper = wrapElement();
+      expect(wrapper.find('.incorrectClass').length > 0).toBe(true);
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
+
+
 });
