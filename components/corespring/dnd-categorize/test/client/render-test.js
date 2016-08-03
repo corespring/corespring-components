@@ -283,8 +283,8 @@ describe('corespring:dnd-categorize:render', function() {
               moveOnDrag: false
             },
             correctness: 'correct'
-        }]
-      }, {
+          }]
+        }, {
           model: {
             id: 'cat_2',
             label: 'Category 2'
@@ -296,9 +296,9 @@ describe('corespring:dnd-categorize:render', function() {
               moveOnDrag: false
             },
             correctness: 'correct'
+          }]
         }]
-      }]
-    }]);
+      }]);
     });
 
     it('should split categories into rows of size categoriesPerRow', function() {
@@ -327,46 +327,6 @@ describe('corespring:dnd-categorize:render', function() {
       expect(scope.correctAnswerRows[2].categories.length).toBe(testModel.data.model.config.categoriesPerRow);
       expect(scope.correctAnswerRows[2].categories.pop().isPlaceHolder).toBe(true);
     });
-
-    describe('order of setMode/setResponse', function(){
-      var response;
-
-      beforeEach(function(){
-        scope.renderModel.categories[1].choices = [{}, {}];
-        response = {
-          detailedFeedback: {
-            cat_1: {
-              answersExpected: true
-            },
-            cat_2: {
-              correctness: ['correct', 'incorrect']
-            }
-          }
-        };
-      });
-
-      function assertFeedback() {
-        expect(scope.renderModel.categories[0].answersExpected).toBe(true);
-        expect(scope.renderModel.categories[1].choices).toEqual([{
-          correctness: 'correct'
-        }, {
-          correctness: 'incorrect'
-        }]);
-      }
-
-      it('should work when setMode is called before setResponse', function(){
-        container.elements['1'].setMode('evaluate');
-        container.elements['1'].setResponse(response);
-        assertFeedback();
-      });
-
-      it('should work when setMode is called after setResponse', function(){
-        container.elements['1'].setResponse(response);
-        container.elements['1'].setMode('evaluate');
-        assertFeedback();
-      });
-    });
-
   });
 
   describe('isAnswerEmpty', function() {
@@ -788,5 +748,44 @@ describe('corespring:dnd-categorize:render', function() {
     });
   });
 
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      setModelAndDigest();
+      scope.renderModel.categories[1].choices = [{}, {}];
+      response = {
+        detailedFeedback: {
+          cat_1: {
+            answersExpected: true
+          },
+          cat_2: {
+            correctness: ['correct', 'incorrect']
+          }
+        }
+      };
+    });
+
+    function assertFeedback() {
+      expect(scope.renderModel.categories[0].answersExpected).toBe(true);
+      expect(scope.renderModel.categories[1].choices).toEqual([{
+        correctness: 'correct'
+      }, {
+        correctness: 'incorrect'
+      }]);
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
 
 });
