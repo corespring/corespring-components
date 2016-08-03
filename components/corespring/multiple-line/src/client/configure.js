@@ -3,7 +3,8 @@ var main = [
   'ServerLogic',
   'ChoiceTemplates',
   'CanvasTemplates',
-  function(ComponentDefaultData, ServerLogic, ChoiceTemplates, CanvasTemplates) {
+  'LineUtils',
+  function(ComponentDefaultData, ServerLogic, ChoiceTemplates, CanvasTemplates, LineUtils) {
 
     var linesBlock = [
       '<div class="row">',
@@ -118,9 +119,7 @@ var main = [
           }
         };
 
-        scope.isValidFormula = function(s) {
-          return _.isEmpty(s) || /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
-        };
+        scope.isValidFormula = new LineUtils().isValidFormula;
 
         scope.addNewLine = function() {
           var newLineNumber = scope.fullModel.model.config.lines.length + 1;

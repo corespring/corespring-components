@@ -62,40 +62,6 @@ describe('corespring:line:configure', function() {
   });
 
 
-  describe('isValidFormula', function() {
-    it('linear equation is valid', function() {
-      expect(scope.isValidFormula('2x+3')).toEqual(true);
-    });
-    it('linear equation with - is valid', function() {
-      expect(scope.isValidFormula('2x-3')).toEqual(true);
-    });
-    it('linear equation with y= prefix is valid', function() {
-      expect(scope.isValidFormula('y=2x+3')).toEqual(true);
-    });
-    it('linear equation with decimals is valid', function() {
-      expect(scope.isValidFormula('y=2.123x+3333.12')).toEqual(true);
-    });
-    it('linear equation without b is valid', function() {
-      expect(scope.isValidFormula('y=2.123x')).toEqual(true);
-    });
-    it('linear equation without mx is valid', function() {
-      expect(scope.isValidFormula('y=2.123')).toEqual(true);
-    });
-    it('linear equation with capital X is valid', function() {
-      expect(scope.isValidFormula('y=2X+3')).toEqual(true);
-    });
-    it('linear equation with other letter than x is invalid', function() {
-      expect(scope.isValidFormula('y=2a+3')).toEqual(false);
-    });
-    it('linear equation with no x is invalid', function() {
-      expect(scope.isValidFormula('y=2+3')).toEqual(false);
-    });
-    it('linear equation with more than 2 parts is invalid', function() {
-      expect(scope.isValidFormula('y=2x+3+2')).toEqual(false);
-    });
-
-  });
-
   describe('removeYEqualsPrefix', function() {
 
     it('should strip y= from beginning of a string', function() {

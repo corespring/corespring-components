@@ -1,7 +1,8 @@
 var main = [
   'ComponentDefaultData',
   'CanvasTemplates',
-  function(ComponentDefaultData, CanvasTemplates) {
+  'LineUtils',
+  function(ComponentDefaultData, CanvasTemplates, LineUtils) {
 
     var linesBlock = [
       '<div class="row">',
@@ -103,9 +104,7 @@ var main = [
           }
         };
 
-        scope.isValidFormula = function(s) {
-          return _.isEmpty(s) || /^(y=)?([+-]?\d+(\.\d+)?x([+-]\d+(\.\d+)?)?|\d+(\.\d+)?)$/i.test(s);
-        };
+        scope.isValidFormula = new LineUtils().isValidFormula;
 
         scope.removeYEqualsPrefix = function(expression) {
           return expression.replace(/^y\s?=\s?/,'');
