@@ -35,7 +35,7 @@ describe('corespring:text-entry:render', function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
       $provide.value('MathJaxService', {
-        parseDomForMath: function(){}
+        parseDomForMath: function() {}
       });
     });
   });
@@ -48,8 +48,7 @@ describe('corespring:text-entry:render', function() {
     });
 
     element = $compile("<corespring-text-entry-render id='1'></corespring-text-entry-render>")($rootScope.$new());
-    $.fn.popover = function() {
-    };
+    $.fn.popover = function() {};
     scope = element.isolateScope();
     rootScope = $rootScope;
   }));
@@ -87,7 +86,13 @@ describe('corespring:text-entry:render', function() {
       scope.hideInputWarning = jasmine.createSpy('hideInputWarning');
     });
     it('doesnt insert anything apart from numbers when allowIntegersOnly is set and shows warning when non-number is inserted', function() {
-      var tm = _.merge(testModel, {data: {model: {allowIntegersOnly: true}}});
+      var tm = _.merge(testModel, {
+        data: {
+          model: {
+            allowIntegersOnly: true
+          }
+        }
+      });
       container.elements['1'].setDataAndSession(tm);
       rootScope.$digest();
       element.find('input').val('a!@#$%^&*(123');
@@ -97,7 +102,14 @@ describe('corespring:text-entry:render', function() {
       expect(scope.showInputWarning).toHaveBeenCalled();
     });
     it('allows - when allowNegative is true and allowIntegersOnly is set', function() {
-      var tm = _.merge(testModel, {data: {model: {allowIntegersOnly: true, allowNegative: true}}});
+      var tm = _.merge(testModel, {
+        data: {
+          model: {
+            allowIntegersOnly: true,
+            allowNegative: true
+          }
+        }
+      });
       container.elements['1'].setDataAndSession(tm);
       rootScope.$digest();
       element.find('input').val('-123');
@@ -107,7 +119,14 @@ describe('corespring:text-entry:render', function() {
       expect(scope.showInputWarning).not.toHaveBeenCalled();
     });
     it('allows . when allowDecimal is true and allowIntegersOnly is set', function() {
-      var tm = _.merge(testModel, {data: {model: {allowIntegersOnly: true, allowDecimal: true}}});
+      var tm = _.merge(testModel, {
+        data: {
+          model: {
+            allowIntegersOnly: true,
+            allowDecimal: true
+          }
+        }
+      });
       container.elements['1'].setDataAndSession(tm);
       rootScope.$digest();
       element.find('input').val('12.3');
@@ -117,7 +136,14 @@ describe('corespring:text-entry:render', function() {
       expect(scope.showInputWarning).not.toHaveBeenCalled();
     });
     it('allows , when allowSeparator is true and allowIntegersOnly is set', function() {
-      var tm = _.merge(testModel, {data: {model: {allowIntegersOnly: true, allowSeparator: true}}});
+      var tm = _.merge(testModel, {
+        data: {
+          model: {
+            allowIntegersOnly: true,
+            allowSeparator: true
+          }
+        }
+      });
       container.elements['1'].setDataAndSession(tm);
       rootScope.$digest();
       element.find('input').val('12,3');
@@ -133,7 +159,11 @@ describe('corespring:text-entry:render', function() {
     it('sets up popup with additional correct answer', function() {
       container.elements['1'].setDataAndSession(testModel);
       spyOn(container.elements['1'], 'setResponse');
-      container.elements['1'].setInstructorData({correctResponses: {values: ["apple", "pear"]}});
+      container.elements['1'].setInstructorData({
+        correctResponses: {
+          values: ["apple", "pear"]
+        }
+      });
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         feedback: {
           correctness: 'instructor',
@@ -148,7 +178,9 @@ describe('corespring:text-entry:render', function() {
         correctResponses: {
           values: ["apple"]
         },
-        partialResponses: {values: ["pear"]}
+        partialResponses: {
+          values: ["pear"]
+        }
       });
       expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
         feedback: {
@@ -194,7 +226,10 @@ describe('corespring:text-entry:render', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
 
-      response = {correctness: 'incorrect', feedback: 'not good'};
+      response = {
+        correctness: 'incorrect',
+        feedback: 'not good'
+      };
     });
 
     function assertFeedback() {
@@ -212,6 +247,32 @@ describe('corespring:text-entry:render', function() {
       container.elements['1'].setResponse(response);
       container.elements['1'].setMode('evaluate');
       assertFeedback();
+    });
+  });
+
+  describe('isInstructorResponse', function() {
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+    });
+    it('should return true when instructorResponse is set', function() {
+      container.elements['1'].setInstructorData({
+        correctResponses: {
+          values: ["apple", "pear"]
+        }
+      });
+      expect(scope.isInstructorResponse()).toBeTruthy();
+    });
+    it('should return false when instructorResponse is not set', function() {
+      expect(scope.isInstructorResponse()).toBeFalsy();
+    });
+    it('should return false when feedback is not set', function() {
+      container.elements['1'].setInstructorData({
+        correctResponses: {
+          values: ["apple", "pear"]
+        }
+      });
+      scope.response.feedback = null;
+      expect(scope.isInstructorResponse()).toBeFalsy();
     });
   });
 

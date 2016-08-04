@@ -183,7 +183,11 @@ var main = [
       });
 
       scope.isInstructorResponse = function() {
-        return scope.instructorResponse && !_.isEmpty(scope.response.feedback.message.trim());
+        return scope.instructorResponse &&
+          scope.response &&
+          scope.response.feedback &&
+          scope.response.feedback.message &&
+          !_.isEmpty(scope.response.feedback.message.trim());
       };
 
       scope.hasFeedback = function() {
