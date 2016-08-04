@@ -171,6 +171,22 @@ describe('corespring:text-entry:render', function() {
         }
       });
     });
+    it('should not crash when partialResponse.values is not an array', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      spyOn(container.elements['1'], 'setResponse');
+      container.elements['1'].setInstructorData({
+        correctResponses: {
+          values: ["apple", "pear"]
+        },
+        partialResponses: {}
+      });
+      expect(container.elements['1'].setResponse).toHaveBeenCalledWith({
+        feedback: {
+          correctness: 'instructor',
+          message: "<span class='answers-header'>Additional correct answers</span><ul class='additional-correct-answers'><li> <div class='cs-text-entry__response'>pear</div> </li></ul>"
+        }
+      });
+    });
     it('sets up popup with partially correct answers', function() {
       container.elements['1'].setDataAndSession(testModel);
       spyOn(container.elements['1'], 'setResponse');

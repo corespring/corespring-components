@@ -103,12 +103,16 @@ var main = [
         },
 
         setInstructorData: function(data) {
+
+          var correctResponses = data && data.correctResponses && _.isArray(data.correctResponses.values) ? data.correctResponses.values : [];
+          var partialResponses = data && data.partialResponses && _.isArray(data.partialResponses.values) ? data.partialResponses.values : [];
+
           scope.hideInputWarning();
-          scope.answer = data.correctResponses.values[0];
+          scope.answer = correctResponses[0];
           scope.instructorResponse = true;
 
-          var hasMoreCorrectResponses = data.correctResponses.values.length > 1;
-          var hasPartialResponses = data.partialResponses && data.partialResponses.values.length > 0;
+          var hasMoreCorrectResponses = correctResponses.length > 1;
+          var hasPartialResponses = partialResponses.length > 0;
 
           scope.hasAdditionalAnswers = hasMoreCorrectResponses || hasPartialResponses;
 
@@ -117,8 +121,8 @@ var main = [
           }
 
           var message = (hasMoreCorrectResponses || hasPartialResponses) ? [
-            (hasMoreCorrectResponses) ? "<span class=\'answers-header\'>Additional correct answers</span><ul class='additional-correct-answers'><li>" + _.map(_.drop(data.correctResponses.values), wrapAnswer).join('</li><li>') + "</li></ul>" : "",
-            (hasPartialResponses) ? "<span class=\'answers-header\'>Partially correct answers</span><ul class='partially-correct-answers'><li>" + _.map(data.partialResponses.values, wrapAnswer).join('</li><li>') + "</li></ul>" : ""
+            (hasMoreCorrectResponses) ? "<span class=\'answers-header\'>Additional correct answers</span><ul class='additional-correct-answers'><li>" + _.map(_.drop(correctResponses), wrapAnswer).join('</li><li>') + "</li></ul>" : "",
+            (hasPartialResponses) ? "<span class=\'answers-header\'>Partially correct answers</span><ul class='partially-correct-answers'><li>" + _.map(partialResponses, wrapAnswer).join('</li><li>') + "</li></ul>" : ""
           ].join("") : undefined;
           this.setResponse({feedback: {correctness: 'instructor', message: message}});
         },
