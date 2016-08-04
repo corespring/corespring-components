@@ -207,4 +207,35 @@ describe('corespring:drag-and-drop', function() {
 
   });
 
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+
+      response = {
+        correctness: 'incorrect',
+        correctResponse: {}
+      };
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(scope.correctResponse).toBeTruthy();
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
+
 });

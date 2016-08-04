@@ -129,13 +129,17 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
 
     // sets the server's response
     function setResponse(response) {
+      scope.response = response;
+      updateUi();
+    }
+
+    function applyResponse(){
       $(element).find(".feedback-panel").hide();
 
       resetFeedback(scope.choices);
 
-      scope.response = response;
-
-      if (response.feedback) {
+      var response = scope.response;
+      if (response && response.feedback) {
         if (response.feedback.emptyAnswer) {
           scope.feedback = response.feedback;
         } else {
@@ -149,15 +153,19 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
               choice.correct = fb.correct;
             }
           });
-          scope.showCorrectAnswerButton = response &&
-            response.correctness === 'incorrect' &&
-            scope.question.config.showCorrectAnswer !== 'inline';
         }
+        $timeout(function () {
+          $(element).find(".feedback-panel.visible").slideDown(400);
+        }, 10);
       }
+    }
 
-      $timeout(function() {
-        $(element).find(".feedback-panel.visible").slideDown(400);
-      }, 10);
+    function updateShowCorrectAnswerButton(){
+      scope.showCorrectAnswerButton = !!scope.response &&
+        scope.response.correctness === 'incorrect' &&
+        scope.response.warningClass !== 'answer-expected' &&
+        scope.question.config.showCorrectAnswer !== 'inline' &&
+        scope.playerMode !== 'instructor';
     }
 
     function setMode(value) {
@@ -217,7 +225,7 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
       }
     }
 
-    function applyChoices() {
+    function applyAnswers() {
       if (!scope.question || !scope.session.answers) {
         return;
       }
@@ -320,8 +328,10 @@ function MultipleChoiceDirective($sce, $log, $timeout) {
         scope.choices = clonedChoices;
       }
 
-      applyChoices();
+      applyAnswers();
+      applyResponse();
       applyInstructorData();
+      updateShowCorrectAnswerButton();
     }
 
     function letter(idx) {

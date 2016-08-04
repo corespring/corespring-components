@@ -140,4 +140,35 @@ describe('drag-and-drop-categorize', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(model());
+      rootScope.$digest();
+
+      response = {
+        correctness: 'incorrect',
+        feedback: {}
+      };
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(scope.feedback).toBeTruthy();
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
+
 });

@@ -191,4 +191,33 @@ describe('corespring:number-line:render', function() {
   it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
+
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(_.cloneDeep(testModel));
+      rootScope.$digest();
+
+      response = {correctness: 'correct', correctResponse: []};
+    });
+
+    function assertFeedback() {
+      rootScope.$digest();
+      expect(scope.serverResponse).toBeTruthy();
+      expect(scope.correctModelDummyResponse).toBeTruthy();
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
 });

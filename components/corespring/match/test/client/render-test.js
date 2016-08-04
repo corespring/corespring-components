@@ -539,4 +539,48 @@ describe('corespring:match:render', function() {
     });
   });
 
+  describe('order of setMode/setResponse', function() {
+    var response;
+
+    beforeEach(function() {
+      container.elements['1'].setDataAndSession(_.cloneDeep(testModel));
+      rootScope.$digest();
+
+      response = {
+        correctResponse: [{
+          id: 'row-1',
+          matchSet: [true, false]
+        }]
+      };
+    });
+
+    function assert(inputType, selected, expected) {
+      container.elements['1'].setDataAndSession(testModel);
+
+      scope.editable = false;
+      scope.inputType = inputType;
+      scope.matchModel.rows[0].matchSet[0].value = selected;
+
+      expect(scope.classForSolution(scope.matchModel.rows[0], 0)).toEqual(expected);
+    }
+
+    function assertFeedback() {
+      rootScope.$digest();
+      assert('radiobutton', true, 'match-radiobutton correct checked');
+      assert('checkbox', true, 'match-checkbox correct checked');
+    }
+
+    it('should work when setMode is called before setResponse', function() {
+      container.elements['1'].setMode('evaluate');
+      container.elements['1'].setResponse(response);
+      assertFeedback();
+    });
+
+    it('should work when setMode is called after setResponse', function() {
+      container.elements['1'].setResponse(response);
+      container.elements['1'].setMode('evaluate');
+      assertFeedback();
+    });
+  });
+
 });
