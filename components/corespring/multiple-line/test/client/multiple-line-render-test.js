@@ -403,7 +403,6 @@ describe('corespring:multiple-line:render', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
-});
 
   describe('order of setMode/setResponse', function() {
     var response;

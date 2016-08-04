@@ -216,13 +216,13 @@ describe('corespring:drag-and-drop', function() {
 
       response = {
         correctness: 'incorrect',
-        feedback: {}
+        correctResponse: {}
       };
     });
 
     function assertFeedback() {
       rootScope.$digest();
-      expect(scope.feedback).toBeTruthy();
+      expect(scope.correctResponse).toBeTruthy();
     }
 
     it('should work when setMode is called before setResponse', function() {
