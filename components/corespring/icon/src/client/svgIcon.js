@@ -1,4 +1,4 @@
-var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
+var svgIcon = ['ASSETS_PATH', 'ASSETS_PATH_VERSION', '$sce', function(ASSETS_PATH, ASSETS_PATH_VERSION, $sce) {
   return {
     restrict: 'E',
     scope: {
@@ -39,8 +39,9 @@ var svgIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
             ($scope.open === 'true' ? '-open' : ''),
             '.svg'].join('');
         }
-
+        $scope.template = $sce.trustAsResourceUrl($scope.template + "?version=" + ASSETS_PATH_VERSION);
       };
+
 
       $attrs.$observe('key', $scope.updateTemplate);
       $scope.$watch('iconSet', $scope.updateTemplate);

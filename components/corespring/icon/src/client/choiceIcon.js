@@ -1,4 +1,4 @@
-var choiceIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
+var choiceIcon = ['ASSETS_PATH', 'ASSETS_PATH_VERSION', '$sce', function(ASSETS_PATH, ASSETS_PATH_VERSION, $sce) {
   return {
     restrict: 'E',
     scope: {
@@ -12,7 +12,7 @@ var choiceIcon = ['ASSETS_PATH', function(ASSETS_PATH) {
     ].join('\n'),
     link: function($scope, $element, $attrs) {
       function updateTemplate() {
-        $scope.template = ASSETS_PATH + '/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg';
+        $scope.template = $sce.trustAsResourceUrl(ASSETS_PATH + '/components-assets/choice/' + [$scope.shape, $scope.key].join('-') + '.svg?version=' + ASSETS_PATH_VERSION);
       }
       updateTemplate();
       $scope.$watch('key+shape', function(n,p) {
