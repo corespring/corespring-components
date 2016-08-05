@@ -21,6 +21,7 @@ exports.preroll = ->
   }]);
 
   angular.module('test-app').constant('ASSETS_PATH', 'mock-assets');
+  angular.module('test-app').constant('ASSETS_PATH_VERSION', 'mock-assets-version');
 
 
   //Mock dependencies
