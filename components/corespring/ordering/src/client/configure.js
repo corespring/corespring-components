@@ -94,6 +94,16 @@ var main = [
       scope.$watch('config.placementToggle', watchPlacementToggle, true);
       scope.$watch('model.choices.length', scope.updateNumberOfCorrectResponses);
 
+      scope.$watch('shuffles', function() {
+        _.each(scope.shuffles, function(shuffle, id) {
+          _.each(scope.model.choices, function(choice) {
+            if (choice.id === id) {
+              choice.shuffle = !shuffle;
+            }
+          });
+        });
+      }, true);
+
       scope.containerBridge = {
         getModel: getModel,
         setModel: setModel
@@ -104,11 +114,20 @@ var main = [
 
       //-------------------------------------------------------
 
+      function updateShuffles() {
+        var t = {};
+        _.each(scope.model.choices, function(choice) {
+          t[choice.id] = (choice.shuffle !== true);
+        });
+        scope.shuffles = t;
+      }
+
       function setModel(model) {
         scope.fullModel = model;
         scope.model = scope.fullModel.model;
         scope.config = {};
         scope.config.placementToggle = scope.model.config.placementType === PlacementType.placement;
+        updateShuffles();
         updateCorrectResponse();
       }
 
@@ -131,11 +150,13 @@ var main = [
           id: "id_" + findFreeChoiceSlot(),
           moveOnDrag: !!scope.model.config.removeAllAfterPlacing
         });
+        updateShuffles();
         updateCorrectResponse();
       }
 
       function removeChoice(index) {
         scope.model.choices.splice(index, 1);
+        updateShuffles();
         updateCorrectResponse();
       }
 
@@ -300,7 +321,8 @@ var main = [
          '              ng-model="choice.moveOnDrag">',
          '              Remove tile after placing',
          '            </checkbox>',
-         '            <checkbox ng-style="{\'visibility\': model.config.shuffle ? \'visible\':\'hidden\'}">Do not Shuffle</checkbox>',
+         '            <checkbox ng-style="{\'visibility\': model.config.shuffle ? \'visible\':\'hidden\'}"',
+         '                ng-model="shuffles[choice.id]">Do not Shuffle</checkbox>',
          '          </div>',
          '          <span cs-absolute-visible="!active[$index]" ng-bind-html-unsafe="choice.label"></span>',
          '          <div cs-absolute-visible="active[$index]" ng-model="choice.label" mini-wiggi-wiz=""',
