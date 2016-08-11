@@ -205,20 +205,6 @@ module.exports = (grunt) ->
         jshintrc: '.jshintrc'
       main: ['<%= common.componentPath %>/**/*.js', '!**/*-wrapped.js', '!<%= common.componentPath %>/**/libs/**/*.js']
 
-    less:
-      development:
-        expand: true
-        src: 'components/**/*.less'
-        ext: '.less.css'
-        flatten: false
-      production:
-        options:
-          cleancss: true
-        expand: true
-        src: 'components/**/*.less'
-        ext: '.less.min.css'
-        flatten: false
-
     watch:
       js:
         files: ['<%= common.componentPath %>/**/*.js']
@@ -257,7 +243,6 @@ module.exports = (grunt) ->
     'grunt-contrib-jasmine'
     'grunt-contrib-clean'
     'grunt-contrib-jshint'
-    'grunt-contrib-less'
     'grunt-contrib-watch'
     'grunt-http-verify'
     'grunt-jsbeautifier',

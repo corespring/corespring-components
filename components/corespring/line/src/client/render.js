@@ -257,6 +257,24 @@ var main = [
         }
       };
 
+      scope.renderInitialGraph = function(){
+        if (scope.instructorData) {
+          showCorrectAnswer();
+        } else {
+          if (scope.graphCallback) {
+            scope.startOver();
+          }
+
+          // lock/unlock the graph
+          if (scope.config.exhibitOnly) {
+            scope.lockGraph();
+          } else {
+            scope.unlockGraph();
+          }
+          scope.updateMode();
+        }
+      };
+
       scope.containerBridge = {
 
         setPlayerSkin: function(skin) {
@@ -273,8 +291,7 @@ var main = [
         },
 
         setDataAndSession: function(dataAndSession) {
-
-          CanvasTemplates.extendScope(scope, 'corespring-multiple-line');
+          CanvasTemplates.extendScope(scope, 'corespring-line');
 
           var config = dataAndSession.data.model.config || {};
           scope.config = _.defaults(config, {
@@ -303,8 +320,6 @@ var main = [
             height: scope.containerHeight
           });
 
-          $compile(graphContainer)(scope);
-
           // The model changed in 67d8ab7 so we have to accomodate for both
           if (dataAndSession.session && dataAndSession.session.answers) {
             if (_.isString(dataAndSession.session.answers)) {
@@ -314,25 +329,14 @@ var main = [
             }
           }
 
-          // this timeout is needed to wait for the callback to be defined
-          $timeout(function() {
-
-            if (scope.instructorData) {
-              showCorrectAnswer();
-            } else {
-              if (scope.graphCallback) {
-                scope.startOver();
-              }
-
-              // lock/unlock the graph
-              if (config.exhibitOnly) {
-                scope.lockGraph();
-              } else {
-                scope.unlockGraph();
-              }
-              scope.updateMode();
+          var removeGraphCallbackWatch = scope.$watch('graphCallback', function(n){
+            if(n){
+              removeGraphCallbackWatch();
+              $timeout(scope.renderInitialGraph, 50);
             }
-          }, 100);
+          });
+
+          $compile(graphContainer)(scope);
         },
 
         getSession: function() {

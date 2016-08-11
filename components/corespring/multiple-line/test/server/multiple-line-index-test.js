@@ -25,7 +25,7 @@ describe('corespring:multiple-line:server', function() {
 
 
   var component = {
-    "title": "Graph Multiple Lines",
+    "title": "Graph Lines (Multiple)",
     "componentType": "corespring-multiple-line",
     "minimumWidth": 500,
     "correctResponse": [

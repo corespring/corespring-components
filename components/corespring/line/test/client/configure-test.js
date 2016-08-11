@@ -61,6 +61,7 @@ describe('corespring:line:configure', function() {
     expect(element).not.toBe(null);
   });
 
+
   describe('removeYEqualsPrefix', function() {
 
     it('should strip y= from beginning of a string', function() {

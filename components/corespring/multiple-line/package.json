@@ -1,4 +1,9 @@
 {
+  "name": "multiple-line",
+  "organization": "corespring",
+  "released": true,
+  "title": "Graph Lines (Multiple)",
+  "titleGroup": "Mathematics",
   "dependencies": {
     "client": {
       "angular-bootstrap": {
@@ -52,10 +57,5 @@
       "name": "navigator",
       "organization": "corespring"
     }
-  ],
-  "name": "multiple-line",
-  "organization": "corespring",
-  "released": true,
-  "title": "Graph Multiple Lines",
-  "titleGroup": "Mathematics"
+  ]
 }

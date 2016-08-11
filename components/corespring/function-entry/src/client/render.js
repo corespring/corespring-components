@@ -39,6 +39,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
 
     scope.getCssClasses = getCssClasses;
     scope.hasFeedback = hasFeedback;
+    scope.hideHelpPopover = hideHelpPopover;
 
     scope.$watch('answer', watchAnswer);
     scope.$watch('response', watchResponse);
@@ -86,6 +87,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
           placement: 'bottom'
         }).on('shown.bs.popover', function() {
           $(element).find('.popover').click(hideHelpPopover);
+
         }).on('hide.bs.popover', function() {
           $(element).find('.popover').unbind('click', hideHelpPopover);
         });
@@ -236,6 +238,7 @@ function FunctionEntryDirective($timeout, MathJaxService) {
       '    ng-class="getCssClasses()">',
       '  <span class="text-input">',
       '    <input type="text"',
+      '        ng-blur="hideHelpPopover()"',
       '        ng-disabled="!editable"',
       '        ng-model="answer"',
       '        class="form-control {{inputClass}} {{correctClass}}"/>',

@@ -1,6 +1,13 @@
+/* globals JSON */
 describe('corespring:multiple-line:render', function() {
 
   var testModel, scope, rootScope, container, element, timeout;
+
+  function ignoreAngularIds(obj) {
+    var json = angular.toJson(obj);
+    return _.isString(json) ? JSON.parse(json) : undefined;
+  }
+
 
   var JXG = {
     JSXGraph: {
@@ -8,7 +15,7 @@ describe('corespring:multiple-line:render', function() {
         return {
           currentId: 1,
           create: function(elementType, parents, attributes) {
-            if(elementType === 'point'){
+            if (elementType === 'point') {
               return {
                 id: this.currentId,
                 name: String.fromCharCode(64 + this.currentId++),
@@ -30,7 +37,12 @@ describe('corespring:multiple-line:render', function() {
         };
       }
     },
-    Coords: function() { return {scrCoords: [1,0,0], usrCoords: [1,0,0]}; }
+    Coords: function() {
+      return {
+        scrCoords: [1, 0, 0],
+        usrCoords: [1, 0, 0]
+      };
+    }
   };
 
   beforeEach(module(function($provide) {
@@ -47,21 +59,21 @@ describe('corespring:multiple-line:render', function() {
 
   var testModelTemplate = {
     data: {
-      "title": "Graph Multiple Lines",
-      "componentType" : "corespring-multiple-line",
-      "weight" : 1,
+      "title": "Graph Lines (Multiple)",
+      "componentType": "corespring-multiple-line",
+      "weight": 1,
       "minimumWidth": 500,
       "correctResponse": [],
       "allowPartialScoring": false,
-      "partialScoring" : [
+      "partialScoring": [
         {}
       ],
-      "feedback" :  {
+      "feedback": {
         "correctFeedbackType": "default",
         "partialFeedbackType": "default",
         "incorrectFeedbackType": "default"
       },
-      "model" : {
+      "model": {
         "config": {
           "graphTitle": "",
           "graphWidth": 500,
@@ -87,34 +99,27 @@ describe('corespring:multiple-line:render', function() {
           "rangeSnapValue": 1,
           "rangeLabelFrequency": 1,
           "rangeGraphPadding": 50,
-          "lines": [{ "id": 1, "equation": "", "intialLine": "", "label": "", "colorIndex": 0 }]
+          "lines": [{
+            "id": 1,
+            "equation": "",
+            "intialLine": "",
+            "label": "",
+            "colorIndex": 0
+          }]
         }
       }
     }
   };
 
-  var ignoreAngularIds = function(obj){
-    var newObj = _.cloneDeep(obj);
-    for( var s in newObj){
-      if(s === '$$hashKey'){
-        delete newObj[s];
-      } else if(_.isObject(newObj[s])) {
-        newObj[s] = ignoreAngularIds(newObj[s]);
-      }
-    }
-    return newObj;
-  };
-
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(
-    module(function($provide) {
+  beforeEach(module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
       $provide.value('$modal', {});
-    })
-  );
+  }));
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, $timeout) {
+    timeout = $timeout;
     container = new MockComponentRegister();
 
     $rootScope.$on('registerComponent', function(event, id, obj) {
@@ -142,7 +147,9 @@ describe('corespring:multiple-line:render', function() {
       scope.lockGraph();
       rootScope.$digest();
 
-      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({lockGraph: true});
+      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({
+        lockGraph: true
+      });
       expect(scope.locked).toBe(true);
     });
 
@@ -151,7 +158,11 @@ describe('corespring:multiple-line:render', function() {
       scope.lockGraph(color);
       rootScope.$digest();
 
-      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({lockGraph: true, pointsStyle: color, shapesStyle: color});
+      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({
+        lockGraph: true,
+        pointsStyle: color,
+        shapesStyle: color
+      });
       expect(scope.locked).toBe(true);
     });
 
@@ -159,7 +170,10 @@ describe('corespring:multiple-line:render', function() {
       scope.unlockGraph();
       rootScope.$digest();
 
-      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({graphStyle: {}, unlockGraph: true});
+      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({
+        graphStyle: {},
+        unlockGraph: true
+      });
       expect(scope.locked).toBe(false);
     });
   });
@@ -168,7 +182,11 @@ describe('corespring:multiple-line:render', function() {
 
     it('should not do anything if the graph is locked or there is no history', function() {
       scope.history = [
-        { action: 'move' }, { action: 'add_point' }
+        {
+          action: 'move'
+        }, {
+          action: 'add_point'
+        }
       ];
       scope.lockGraph();
       scope.undo();
@@ -185,7 +203,16 @@ describe('corespring:multiple-line:render', function() {
 
     it('should call pointUpdate when last action is move', function() {
       scope.history = [
-        { action: 'move', previousPoint: {index: 2, isSet: true, name: "C", x: 5, y: 4} }
+        {
+          action: 'move',
+          previousPoint: {
+            index: 2,
+            isSet: true,
+            name: "C",
+            x: 5,
+            y: 4
+          }
+        }
       ];
       scope.pointUpdate = jasmine.createSpy();
       rootScope.$digest();
@@ -196,7 +223,16 @@ describe('corespring:multiple-line:render', function() {
 
     it('should call undoAddPoint when last action is add_point', function() {
       scope.history = [
-        { action: 'add_point', previousPoint: {index: 2, isSet: true, name: "C", x: 5, y: 4} }
+        {
+          action: 'add_point',
+          previousPoint: {
+            index: 2,
+            isSet: true,
+            name: "C",
+            x: 5,
+            y: 4
+          }
+        }
       ];
       scope.undoAddPoint = jasmine.createSpy();
       rootScope.$digest();
@@ -207,7 +243,16 @@ describe('corespring:multiple-line:render', function() {
 
     it('should call undoAddLine when last action is add_line', function() {
       scope.history = [
-        { action: 'add_line', previousPoint: {index: 2, isSet: true, name: "C", x: 5, y: 4} }
+        {
+          action: 'add_line',
+          previousPoint: {
+            index: 2,
+            isSet: true,
+            name: "C",
+            x: 5,
+            y: 4
+          }
+        }
       ];
       scope.undoAddLine = jasmine.createSpy();
       rootScope.$digest();
@@ -218,7 +263,8 @@ describe('corespring:multiple-line:render', function() {
 
     it('should call undoRemoveLine when last action is remove_line', function() {
       scope.history = [
-        { action: 'remove_line',
+        {
+          action: 'remove_line',
           line: {
             colorIndex: 1,
             equation: "1x+2",
@@ -226,8 +272,20 @@ describe('corespring:multiple-line:render', function() {
             isSet: true,
             name: "Line 2",
             points: {
-              A: { index: 2, isSet: true, name: "C", x: 0, y: 2 },
-              B: { index: 3, isSet: true, name: "D", x: 1, y: 3 }
+              A: {
+                index: 2,
+                isSet: true,
+                name: "C",
+                x: 0,
+                y: 2
+              },
+              B: {
+                index: 3,
+                isSet: true,
+                name: "D",
+                x: 1,
+                y: 3
+              }
             }
           }
         }
@@ -249,7 +307,9 @@ describe('corespring:multiple-line:render', function() {
       rootScope.$digest();
 
       // graph
-      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({clearBoard: true});
+      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({
+        clearBoard: true
+      });
 
       // properties
       expect(scope.plottedPoint).toEqual({});
@@ -262,7 +322,14 @@ describe('corespring:multiple-line:render', function() {
         id: 1,
         name: "",
         colorIndex: 0,
-        points: { A: { isSet: false }, B: { isSet: false } },
+        points: {
+          A: {
+            isSet: false
+          },
+          B: {
+            isSet: false
+          }
+        },
         equation: "",
         isSet: false
       }]);
@@ -271,16 +338,41 @@ describe('corespring:multiple-line:render', function() {
 
     it('should reset initial lines when startOver is called', function() {
       var clone = _.cloneDeep(testModel);
-      clone.data.model.config.lines = [{ "id": 1, "equation": "x+1", "intialLine": "2x", "label": "X + 1", "colorIndex": 0 }];
+      clone.data.model.config.lines = [{
+        "id": 1,
+        "equation": "x+1",
+        "intialLine": "2x",
+        "label": "X + 1",
+        "colorIndex": 0
+      }];
       container.elements['1'].setDataAndSession(clone);
       scope.graphCallback = jasmine.createSpy();
       scope.startOver();
       rootScope.$digest();
 
-      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({clearBoard: true});
-      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({add: {point: {x: 0, y: 0}, triggerCallback: true}});
-      expect(scope.graphCallback.calls.all()[2].args[0]).toEqual({add: {point: {x: 1, y: 2}, triggerCallback: true}});
-      expect(scope.graphCallback.calls.all().length).toEqual(3);
+      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({
+        clearBoard: true
+      });
+      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({
+        add: {
+          point: {
+            x: 0,
+            y: 0
+          },
+          triggerCallback: true
+        }
+      });
+      expect(scope.graphCallback.calls.all()[2].args[0]).toEqual({
+        add: {
+          point: {
+            x: 1,
+            y: 2
+          },
+          triggerCallback: true
+        }
+      });
+      timeout.flush();
+      expect(scope.graphCallback.calls.all().length).toEqual(8);
     });
   });
 
@@ -288,7 +380,10 @@ describe('corespring:multiple-line:render', function() {
     it('shows feedback by default', function() {
       container.elements[1].setDataAndSession(testModel);
       scope.$digest();
-      container.elements[1].setResponse({correctness: 'incorrect', feedback: 'not good'});
+      container.elements[1].setResponse({
+        correctness: 'incorrect',
+        feedback: 'not good'
+      });
       scope.$digest();
 
       expect(scope.feedback).toEqual('not good');
@@ -299,7 +394,10 @@ describe('corespring:multiple-line:render', function() {
       testModel.data.model.config.showFeedback = false;
       container.elements[1].setDataAndSession(testModel);
       scope.$digest();
-      container.elements[1].setResponse({correctness: 'incorrect', feedback: 'not good'});
+      container.elements[1].setResponse({
+        correctness: 'incorrect',
+        feedback: 'not good'
+      });
       scope.$digest();
       expect(scope.feedback).toEqual('not good');
       expect(element.find('.feedback-holder').hasClass('ng-hide')).toBe(true);
@@ -313,18 +411,20 @@ describe('corespring:multiple-line:render', function() {
 
     it('restores state from session when present', function() {
       var model = _.cloneDeep(testModel);
-      model.session = {answers: [
-        {
-          equation: "3x+4",
-          id: 1,
-          name: 'a'
+      model.session = {
+        answers: [
+          {
+            equation: "3x+4",
+            id: 1,
+            name: 'a'
         },
-        {
-          equation: "2x+1",
-          id: 2,
-          name: 'b'
+          {
+            equation: "2x+1",
+            id: 2,
+            name: 'b'
         }
-      ]};
+      ]
+      };
       container.elements['1'].setDataAndSession(model);
       scope.graphCallback = function() {};
       timeout.flush();
@@ -358,7 +458,13 @@ describe('corespring:multiple-line:render', function() {
     });
 
     it('should return false if answer is set initially', function() {
-      testModel.data.model.config.lines = [{ "id": 1, "equation": "x", "intialLine": "2x", "label": "", "colorIndex": 0 }];
+      testModel.data.model.config.lines = [{
+        "id": 1,
+        "equation": "x",
+        "intialLine": "2x",
+        "label": "",
+        "colorIndex": 0
+      }];
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       timeout(function() {
@@ -369,7 +475,11 @@ describe('corespring:multiple-line:render', function() {
 
     it('should return false if answer is selected', function() {
       container.elements['1'].setDataAndSession(testModel);
-      scope.lines = [{ "id": 1, "equation": "x", "label": "" }];
+      scope.lines = [{
+        "id": 1,
+        "equation": "x",
+        "label": ""
+      }];
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
   });
@@ -379,30 +489,57 @@ describe('corespring:multiple-line:render', function() {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       scope.graphCallback = jasmine.createSpy();
-      spyOn(container.elements['1'],'setResponse');
-      container.elements['1'].setInstructorData({ correctResponse: [
-        {
-          "id": 1,
-          "equation": "4x",
-          "label": "Line 1"
+      spyOn(container.elements['1'], 'setResponse');
+      container.elements['1'].setInstructorData({
+        correctResponse: [
+          {
+            "id": 1,
+            "equation": "4x",
+            "label": "Line 1"
         },
-        {
-          "id": 2,
-          "equation": "x + 2",
-          "label": "Line 2"
+          {
+            "id": 2,
+            "equation": "x + 2",
+            "label": "Line 2"
         }
-      ]});
+      ]
+      });
       rootScope.$digest();
-      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({clearBoard: true});
-      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({drawShape: {label: 'Line 1', color: '#3c763d', curve: jasmine.any(Function)}});
-      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({drawShape: {color: '#3c763d', label: 'Line 1', curve: jasmine.any(Function)}});
+      expect(scope.graphCallback.calls.all()[0].args[0]).toEqual({
+        clearBoard: true
+      });
+      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({
+        drawShape: {
+          label: 'Line 1',
+          color: '#3c763d',
+          curve: jasmine.any(Function)
+        }
+      });
+      expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({
+        drawShape: {
+          color: '#3c763d',
+          label: 'Line 1',
+          curve: jasmine.any(Function)
+        }
+      });
     });
   });
 
-  it('should implement containerBridge',function(){
+  it('should implement containerBridge', function() {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
+  describe('setDataAndSession', function() {
+    beforeEach(function() {
+      spyOn(scope, 'renderInitialGraph');
+    });
+    it('should call renderInitialGraph', function() {
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      timeout.flush();
+      expect(scope.renderInitialGraph).toHaveBeenCalled();
+    });
+  });
 
   describe('order of setMode/setResponse', function() {
     var response;

@@ -1,5 +1,9 @@
+/* globals JSON */
+
 exports.framework = 'angular';
-exports.factory = ['$log', function($log) {
+exports.factory = ['$log', CsUndoModelFactory];
+
+function CsUndoModelFactory($log) {
   return CsUndoModel;
 
   /**
@@ -121,31 +125,26 @@ exports.factory = ['$log', function($log) {
     }
 
     function pushState(newState) {
-      if(newState){
-        if(_.isEqual(ignoreAngularIds(newState), ignoreAngularIds(_.last(undoStack)))){
-          undoStack.pop();
-          undoStack.push(_.cloneDeep(newState));
-        } else {
-          undoStack.push(_.cloneDeep(newState));
+      if (newState) {
+
+        var newCleaned = ignoreAngularIds(newState);
+        var last = _.last(undoStack);
+        var lastCleaned = ignoreAngularIds(last);
+        var equal = _.isEqual(newCleaned, lastCleaned);
+        if (!equal) {
+          undoStack.push(newCleaned);
         }
       }
       updateUndoState();
     }
 
     function nop(state) {
-      $log.warn("[CsUndoModel] undoCallback is not set.");
+      $log.warn("[CsUndoModel] callback is not set.");
     }
 
-    function ignoreAngularIds(obj){
-      var newObj = _.cloneDeep(obj);
-      for( var s in newObj){
-        if(s === '$$hashKey'){
-          delete newObj[s];
-        } else if(_.isObject(newObj[s])) {
-          newObj[s] = ignoreAngularIds(newObj[s]);
-        }
-      }
-      return newObj;
+    function ignoreAngularIds(obj) {
+      var json = angular.toJson(obj);
+      return _.isString(json) ? JSON.parse(json) : undefined;
     }
   }
-}];
+}

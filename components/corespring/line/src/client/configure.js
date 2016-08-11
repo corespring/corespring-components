@@ -1,7 +1,8 @@
 var main = [
   'ComponentDefaultData',
   'CanvasTemplates',
-  function(ComponentDefaultData, CanvasTemplates) {
+  'LineUtils',
+  function(ComponentDefaultData, CanvasTemplates, LineUtils) {
 
     var linesBlock = [
       '<div class="row">',
@@ -21,13 +22,13 @@ var main = [
       '<form class="form-horizontal" role="form">',
       '  <div class="config-form-row row">',
       '    <div class="col-md-6" ng-hide="fullModel.model.config.exhibitOnly">',
-      '      <div class="input-group">',
-      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="correctResponse" />',
+      '      <div class="input-group" ng-class="{ \'has-error\': !isValidFormula(correctResponse) }">',
+      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(correctResponse)" placeholder="mx+b" ng-model="correctResponse" />',
       '      </div>',
       '    </div>',
       '    <div class="col-md-6">',
-      '      <div class="input-group">',
-      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" placeholder="mx+b" ng-model="initialCurve" />',
+      '      <div class="input-group" ng-class="{ \'has-error\': !isValidFormula(initialCurve) }">',
+      '        <span class="input-group-addon">y = </span><input type="text" class="form-control" cs-tooltip-title="Please use the linear (y=mx+b) form" cs-tooltip-is-open="!isValidFormula(initialCurve)" placeholder="mx+b" ng-model="initialCurve" />',
       '      </div>',
       '    </div>',
       '  </div>',
@@ -102,6 +103,8 @@ var main = [
             return model;
           }
         };
+
+        scope.isValidFormula = new LineUtils().isValidFormula;
 
         scope.removeYEqualsPrefix = function(expression) {
           return expression.replace(/^y\s?=\s?/,'');

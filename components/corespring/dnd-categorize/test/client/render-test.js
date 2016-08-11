@@ -1,6 +1,13 @@
+/* globals JSON */
+
 describe('corespring:dnd-categorize:render', function() {
 
   var testModel, scope, rootScope, container, element;
+
+  function ignoreAngularIds(obj) {
+    var json = angular.toJson(obj);
+    return _.isString(json) ? JSON.parse(json) : undefined;
+  }
 
   var MockComponentRegister = function() {
     this.elements = {};
@@ -43,6 +50,7 @@ describe('corespring:dnd-categorize:render', function() {
           "shuffle": false,
           "answerAreaPosition": "below",
           "categoriesPerRow": 2,
+          "choicesLabel": "some choices label",
           "choicesPerRow": 2
         }
       }
@@ -57,22 +65,6 @@ describe('corespring:dnd-categorize:render', function() {
     }
   };
 
-
-  function ignoreAngularIds(obj) {
-
-    function removeIds(obj) {
-      for (var s in obj) {
-        if (s === '$$hashKey') {
-          delete obj[s];
-        } else if (typeof obj[s] === 'object') {
-          removeIds(obj[s]);
-        }
-      }
-      return obj;
-    }
-
-    return removeIds(_.cloneDeep(obj));
-  }
 
   beforeEach(angular.mock.module('test-app'));
 
@@ -237,7 +229,7 @@ describe('corespring:dnd-categorize:render', function() {
       var saveRenderModel = scope.renderModel;
       scope.renderModel = {};
       container.elements['1'].reset();
-      expect(scope.renderModel).toEqual(ignoreAngularIds(saveRenderModel));
+      expect(ignoreAngularIds(scope.renderModel)).toEqual(ignoreAngularIds(saveRenderModel));
     });
   });
 

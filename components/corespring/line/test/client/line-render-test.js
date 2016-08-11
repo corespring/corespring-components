@@ -147,6 +147,9 @@ describe('corespring:line:render', function() {
   });
 
   describe('restoring session', function() {
+    beforeEach(function(){
+      spyOn(scope, 'renderInitialGraph'); //to avoid npe
+    });
     it('restores state from curve based session when present', function() {
       var model = _.cloneDeep(testModel);
       model.session = {answers: "3x+4"};
@@ -206,6 +209,21 @@ describe('corespring:line:render', function() {
       expect(changeHandlerCalled).toBe(true);
     });
 
+  });
+
+  describe('setDataAndSession', function(){
+
+    beforeEach(inject(function($timeout) {
+      spyOn(scope, 'renderInitialGraph'); //to avoid npe
+      timeout = $timeout;
+
+    }));
+    it('should call renderInitialGraph', function(){
+      container.elements['1'].setDataAndSession(testModel);
+      rootScope.$digest();
+      timeout.flush();
+      expect(scope.renderInitialGraph).toHaveBeenCalled();
+    });
   });
 
   describe('order of setMode/setResponse', function() {

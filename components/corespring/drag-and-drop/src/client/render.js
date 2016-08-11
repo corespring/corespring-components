@@ -110,33 +110,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         scope.$emit('rerender-math', {delay: 20});
       }
 
-      scope.seeSolution = function() {
-        scope.solutionScope.choiceStyle = scope.choiceStyle;
-        $modal.open({
-          controller: function($scope, $modalInstance) {
-            scope.$emit('rerender-math', {delay: 1, element: $('.modal-content')[0]});
-            $scope.ok = function() {
-              $modalInstance.dismiss('cancel');
-            };
-          },
-          template: [
-            '<div class="view-drag-and-drop-legacy see-solution" style="display: block;">',
-            '   <div class="modal-header">',
-            '     <h4 class="modal-title">Answer</h4>',
-            '   </div>',
-            '   <div class="modal-body">',
-            scope.model.answerArea,
-            '   </div>',
-            '   <div class="modal-footer">',
-            '     <button class="btn btn-primary" ng-click="ok()">OK</button>',
-            '   </div>',
-            '</div>'
-          ].join(""),
-          backdrop: true,
-          scope: scope.solutionScope
-        });
-      };
-
       scope.$watch('landingPlaceChoices', function(n, old) {
         if (_.isEmpty(n)) {
           return;
@@ -153,6 +126,10 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
         });
         return choice;
       };
+
+      scope.$watch('solutionVisible', function() {
+        scope.$broadcast('setVisible', scope.solutionVisible ? 1 : 0);
+      });
 
       scope.containerBridge = {
         setPlayerSkin: function(skin) {
@@ -186,11 +163,13 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
 
           var answerHtml = scope.model.answerArea;
 
+          console.log('scope.model.answerArea', scope.model.answerArea);
+
           var $answerArea = element.find("#answer-area").html("<div> " + answerHtml + "</div>");
+
           $timeout(function() {
             $compile($answerArea)(scope.$new());
           });
-
         },
 
         getSession: function() {
@@ -209,9 +188,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           console.log("set response for DnD", response);
           scope.correctResponse = response.correctResponse;
           scope.showSolution = response.correctness !== 'correct' && !response.emptyAnswer;
-          if (response.emptyAnswer) {
-            scope.feedback = {message: response.message, emptyAnswer: true};
-          }
+          scope.feedback = {
+            message: response.feedback,
+            emptyAnswer: response.emptyAnswer
+          };
+          scope.correctClass = response.correctness;
 
           // Populate solutionScope with the correct response
           scope.solutionScope = $rootScope.$new();
@@ -221,6 +202,11 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
               return choiceForId(r);
             });
           });
+          scope.solutionScope.correctResponse = scope.correctResponse;
+
+          var answerHtml = scope.model.answerArea;
+          var $correctAnswerArea = element.find("#correct-answer-area").html("<div>" + answerHtml + "</div>");
+          $compile($correctAnswerArea)(scope.solutionScope);
         },
 
         setInstructorData: function(data) {
@@ -242,6 +228,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           scope.correctResponse = undefined;
           scope.resetChoices(scope.rawModel);
           scope.undoModel.init();
+          scope.solutionVisible = false;
         },
 
         isAnswerEmpty: function() {
@@ -256,13 +243,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
           scope.editable = e;
         }
       };
-
-      scope.$watch('solutionVisible', function() {
-        if (scope.solutionVisible) {
-          scope.seeSolution();
-          scope.solutionVisible = false;
-        }
-      });
 
       scope.helperForChoice = function(choice) {
         return ( !!choice.copyOnDrag ? "'clone'" : "''");
@@ -318,10 +298,14 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       '  <div class="clearfix" />',
       '  <div ng-if="model.config.choicesPosition != \'below\'">', choiceArea(), '</div>',
       '  <h5 ng-bind-html-unsafe="model.config.answerAreaLabel"></h5>',
-      '  <div id="answer-area"></div>',
+      '  <response-wrapper width="100%">',
+      '    <div id="answer-area"></div>',
+      '    <div id="correct-answer-area"></div>',
+      '  </response-wrapper>',
       '  <div ng-if="model.config.choicesPosition == \'below\'">', choiceArea(), '</div>',
-      '  <div feedback="feedback.message" icon-set="{{iconset}}" correct-class="{{feedback.emptyAnswer && \'nothing-submitted\'}}"></div>',
-
+      '  <div ng-if="!solutionVisible">',
+      '    <div feedback="feedback.message" icon-set="{{iconset}}" correct-class="{{correctClass}}"></div>',
+      '  </div>',
       '</div>'
     ].join('');
 
