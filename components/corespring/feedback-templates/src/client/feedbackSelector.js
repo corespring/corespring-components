@@ -76,7 +76,8 @@ function FeedbackSelectorDirective($log, MiniWiggiScopeExtension, WiggiMathJaxFe
       '      ng-class="fbSelClass"',
       '      ng-show="fbSelFeedbackType != \'none\'">',
       '    <div class="panel-body">',
-      '      <feedback-icon-for-feedback-templates icon-set="{{fbSelIconSet}}" correct-class="{{fbSelClass}}"></feedback-icon-for-feedback-templates>',
+      //       Removed the icon, see CO-837
+      //'      <feedback-icon-for-feedback-templates icon-set="{{fbSelIconSet}}" correct-class="{{fbSelClass}}"></feedback-icon-for-feedback-templates>',
       '      <div ng-show="fbSelFeedbackType == \'custom\'"',
       '          class="feedback-preview custom"',
       '          features="extraFeatures"',
