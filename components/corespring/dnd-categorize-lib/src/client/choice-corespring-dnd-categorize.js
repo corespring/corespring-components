@@ -186,6 +186,7 @@ function ChoiceCorespringDndCategorize($injector, $sce, $timeout, Msgr) {
       scope.onDragEnd({
         choiceId: attrs.choiceId
       });
+      Msgr.send("autoScrollStop");
       //small timeout to avoid activating
       //the wiggi when dragging a choice into
       //a category inside the config panel

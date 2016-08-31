@@ -6,13 +6,15 @@ var main = [
   '$rootScope',
   'DragAndDropTemplates',
   'MathJaxService',
+  'Msgr',
   function(
     $compile,
     $log,
     $modal,
     $rootScope,
     DragAndDropTemplates,
-    MathJaxService
+    MathJaxService,
+    Msgr
   ) {
 
     "use strict";
@@ -60,6 +62,9 @@ var main = [
       scope.cleanLabel = makeCleanLabelFunction();
       scope.draggableOptionsWithKeep = draggableOptionsWithKeep;
       scope.isPlaceable = isPlaceable;
+      scope.onDrag = onDrag;
+      scope.onStop = onStop;
+
 
       _.extend(scope.containerBridge, {
         getSession: getSession,
@@ -223,6 +228,7 @@ var main = [
           revert: 'invalid',
           placeholder: 'keep',
           index: _.indexOf(scope.local.choices, choice),
+          onDrag: 'onDrag',
           onStart: 'onStart',
           onStop: 'onStop'
         };
@@ -255,6 +261,15 @@ var main = [
           }
           return result;
         }
+      }
+
+      function onStop() {
+        scope.isDragging = false;
+        Msgr.send("autoScrollStop");
+      }
+
+      function onDrag(event, ui){
+        Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
       }
 
       function canEdit() {
