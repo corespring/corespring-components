@@ -47,7 +47,7 @@ exports.service = ['$log',
       var domainPadding = attrs.domain.stepValue ? attrs.domain.stepValue * attrs.domain.graphPadding / 100 : 0.5;
       var rangePadding = attrs.range.stepValue ? attrs.range.stepValue * attrs.range.graphPadding / 100 : 0.5;
 
-      this.board = JXG.JSXGraph.initBoard(id, {
+      var boardConfig = {
         boundingbox: [
           attrs.domain.min - domainPadding,
           attrs.range.max + rangePadding,
@@ -56,10 +56,15 @@ exports.service = ['$log',
         showNavigation: false,
         showCopyright: false,
         zoom: false
-      }, {
+      };
+      var boardSize = {
         width: attrs.width,
         height: attrs.height
-      });
+      };
+
+      console.debug('canvas: before init board', boardSize, boardConfig);
+      this.board = JXG.JSXGraph.initBoard(id, boardConfig, boardSize);
+      console.debug('canvas: after init board', this.board);
 
       var domainAxis = createAxis(attrs.domain, [0, 0], [1, 0], {
             offset: [0,0],
@@ -91,6 +96,7 @@ exports.service = ['$log',
 
     Canvas.prototype.getMouseCoords = function(e) {
       var cPos = this.board.getCoordsTopLeftCorner(e),
+
         absPos = JXG.getPosition(e),
         dx = absPos[0] - cPos[0],
         dy = absPos[1] - cPos[1];
