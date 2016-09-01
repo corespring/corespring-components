@@ -11,6 +11,7 @@ var def = ['Canvas',
       link: function(scope, elem, attr) {
 
         var getCanvasAttributes = function() {
+          console.debug('getCanvasAttributes');
           return {
             domain: {
               label: attr.domainlabel,
@@ -55,6 +56,7 @@ var def = ['Canvas',
 
         // add x and y axis outside the graph
         var setGraphLabels = function(canvas, canvasAttrs) {
+          console.debug('setGraphLabels', canvas, canvasAttrs);
           var jxgbox = elem.find(".jxgbox");
           var coords = canvas.getPointCoords(0, 0);
           var graphVCenter = elem.height() / 2;
@@ -112,6 +114,7 @@ var def = ['Canvas',
         };
 
         var addCanvasPoint = function(coords, ptName, ptOptions) {
+          console.debug('addCanvasPoint', coords, ptName, ptOptions);
           var point = canvas.addPoint(coords, ptName, ptOptions);
           point.on('up', function(e) {
             onPointMove(point);
@@ -121,18 +124,21 @@ var def = ['Canvas',
         };
 
         var addPoint = function(coords, ptName, ptOptions) {
+          console.debug('addPoint', coords, ptName, ptOptions);
           var point = addCanvasPoint(coords, ptName, ptOptions);
           points[point.name] = getPointData(point);
           return getPointData(point);
         };
 
         var addUserPoint = function(coords, ptName, ptOptions) {
+          console.debug('addUserPoint', coords, ptName, ptOptions);
           var point = addCanvasPoint(coords, ptName, ptOptions);
           onPointMove(point);
           return point;
         };
 
         var onPointMove = function(point, coords) {
+          console.debug('onPointMove', point, coords);
           if (coords) {
             point.moveTo([coords.x, coords.y]);
           }
@@ -147,6 +153,7 @@ var def = ['Canvas',
         };
 
         var getPointData = function(point) {
+          console.debug('getPointData', point);
           return {
             index: point.canvasIndex,
             name: point.name,
@@ -156,6 +163,7 @@ var def = ['Canvas',
         };
 
         var clearBoard = function() {
+          console.debug('clearBoard');
           while (canvas.points.length > 0) {
             canvas.popPoint();
           }
@@ -166,6 +174,7 @@ var def = ['Canvas',
         };
 
         var drawShapeCallback = function(drawShape) {
+          console.debug('drawShapeCallback', drawShape);
           var shape;
 
           if (drawShape.line) {
@@ -197,6 +206,7 @@ var def = ['Canvas',
         };
 
         var addCallback = function(add) {
+          console.debug('addCallback', add);
           if (add.point) {
             var options = {};
             if(add.color) {
@@ -216,12 +226,14 @@ var def = ['Canvas',
         };
 
         var updateCallback = function(update) {
+          console.debug('updateCallback', update);
           if (update.point) {
             canvas.getPoint(update.point.name).moveTo([update.point.x, update.point.y]);
           }
         };
 
         var removeCallback = function(remove) {
+          console.debug('removeCallback', remove);
           if (remove.line) {
             canvas.removeShapeByCustomId(remove.line);
           }
@@ -235,6 +247,7 @@ var def = ['Canvas',
         };
 
         var pointColorCallback = function(pointColor) {
+          console.debug('pointColorCallback', pointColor);
           if (pointColor.points) {
             _.each(pointColor.points, function(point) {
               canvas.changePointColor(canvas.getPoint(point), pointColor.color, pointColor.symbol);
@@ -245,6 +258,7 @@ var def = ['Canvas',
         };
 
         var shapeColorCallback = function(shapeColor) {
+          console.debug('shapeColorCallback', shapeColor);
           if (shapeColor.shape) {
             var shape = canvas.getShape(shapeColor.shape);
             if(shape) {
@@ -265,6 +279,7 @@ var def = ['Canvas',
 
         // define canvas callbacks
         canvas.on('up', function(e) {
+          console.debug('up');
           if (lockGraph) {
             return;
           }
@@ -275,6 +290,7 @@ var def = ['Canvas',
         });
 
         scope.graphCallback = function(params) {
+          console.debug('graphCallback', params);
           if (params.add && canvas) {
             return addCallback(params.add);
           }
@@ -346,10 +362,12 @@ var def = ['Canvas',
             });
             lockGraph = false;
           }
+          console.debug('graphCallback lockGraph:', lockGraph);
         };
 
         // still used on single line, plot point components
         function processPointsCallback(paramPoints) {
+          console.debug('processPointsCallback', paramPoints);
           var i, coordx, coordy, coords, canvasPoint;
           if (!lockGraph) {
             clearBoard();
