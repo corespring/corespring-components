@@ -157,7 +157,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
 
           scope.landingPlaceChoices = scope.landingPlaceChoices || {};
           scope.cardinality = 'ordered';
-          scope.userHasInteracted = false;
 
           for (var i = 0; i < scope.rawModel.choices.length; i++) {
             scope.landingPlaceChoices[i] = {};
@@ -187,7 +186,7 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
             };
           } else {
             return {
-              answers: scope.userHasInteracted ? _.pluck(scope.local.choices, 'id') : []
+              answers: _.pluck(scope.local.choices, 'id')
             };
           }
         },
@@ -202,7 +201,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           scope.comments = undefined;
           scope.feedback = undefined;
           scope.top = {};
-          scope.userHasInteracted = false;
           scope.initUndo();
           showCorrectAnswers(false);
           scope.display.showCorrectAnswer = false;
@@ -263,9 +261,6 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout',
           if (scope.model.config.choiceAreaLayout === "horizontal") {
             $(e.target).data("ui-sortable").floating = true;
           }
-        },
-        update: function(e, ui) {
-          scope.userHasInteracted = true;
         }
       };
 
