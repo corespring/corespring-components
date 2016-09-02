@@ -3,6 +3,7 @@
 exports.framework = "angular";
 exports.service = ['$log',
   function($log) {
+
     function Canvas(id, attrs) {
       var self = this;
 
@@ -304,6 +305,10 @@ exports.service = ['$log',
         y: coords.scrCoords[2]
       };
     };
+
+    Canvas.prototype.freeBoard = function(){
+      JXG.JSXGraph.freeBoard(self.board);
+    }
 
     return Canvas;
   }
