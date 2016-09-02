@@ -37,10 +37,12 @@ function jsxGraphDirective(Canvas) {
     //only functions below
     //-----------------------------------------------
 
-    function onDestroy(){
+    function onDestroy() {
       console.debug('onDestroy');
-      canvas && canvas.freeBoard();
-      canvas = undefined;
+      if (canvas) {
+        canvas.freeBoard();
+        canvas = undefined;
+      }
     }
 
     function getCanvasAttributes() {
@@ -395,7 +397,7 @@ function jsxGraphDirective(Canvas) {
     // still used on single line, plot point components
     function processPointsCallback(paramPoints) {
       console.debug('processPointsCallback', paramPoints);
-      var i, coordx, coordy, coords, canvasPoint;
+      var i, coordx, coordy, coords, canvasPoint, point;
 
       if (!lockGraph) {
         clearBoard();
@@ -403,7 +405,7 @@ function jsxGraphDirective(Canvas) {
 
       if (_.isArray(paramPoints)) {
         for (i = 0; i < paramPoints.length; i++) {
-          var point = paramPoints[i];
+          point = paramPoints[i];
           coordx = parseFloat(point.x);
           coordy = parseFloat(point.y);
           if (!isNaN(coordx) && !isNaN(coordy)) {
@@ -422,7 +424,7 @@ function jsxGraphDirective(Canvas) {
         }
       } else if (_.isObject(paramPoints)) {
         for (var ptName in paramPoints) {
-          var point = paramPoints[ptName];
+          point = paramPoints[ptName];
           coordx = parseFloat(point.x);
           coordy = parseFloat(point.y);
           if (!isNaN(coordx) && !isNaN(coordy)) {
