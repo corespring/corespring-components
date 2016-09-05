@@ -5,7 +5,7 @@
   "dependencies": {
     "client": {
       "jsxgraph": {
-        "bower_target": "https://github.com/jsxgraph/jsxgraph.git#0.99.1",
+        "bower_target": "https://github.com/jsxgraph/jsxgraph.git#0.99.5",
         "file": "distrib/jsxgraphcore.js"
 
       }

@@ -1,5 +1,5 @@
-var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel',
-  function($compile, $log, $modal, $rootScope, $timeout, CsUndoModel) {
+var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel', 'Msgr',
+  function($compile, $log, $modal, $rootScope, $timeout, CsUndoModel, Msgr) {
 
     var link = function(scope, element, attrs) {
 
@@ -66,6 +66,8 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       scope.draggableOptions = function(choice) {
         return {
           onStart: 'onStart',
+          onStop: 'onStop',
+          onDrag: 'onDrag',
           revert: 'invalid',
           opacity: 0.75,
           placeholder: (!choice || choice.moveOnDrag) ? false : 'keep'
@@ -247,6 +249,15 @@ var main = ['$compile', '$log', '$modal', '$rootScope', '$timeout', 'CsUndoModel
       scope.helperForChoice = function(choice) {
         return ( !!choice.copyOnDrag ? "'clone'" : "''");
       };
+
+      scope.onDrag = function(event, ui){
+        Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
+      };
+
+      scope.onStop = function(event, ui){
+        Msgr.send("autoScrollStop");
+      };
+
 
       scope.placeholderForChoice = function(choice) {
         return ( !!choice.copyOnDrag ? "'keep'" : "''");

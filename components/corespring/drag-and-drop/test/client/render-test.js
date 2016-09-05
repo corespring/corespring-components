@@ -91,6 +91,7 @@ describe('corespring:drag-and-drop', function() {
       $provide.value('MathJaxService', function() {
       });
       $provide.value('$modal', {});
+      $provide.value('Msgr', {});
     });
   });
 

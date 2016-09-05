@@ -263,7 +263,7 @@ function RenderInlineChoiceDirective($sce, $timeout) {
       '  <span viewport="#{{playerId}}">',
       '    <span class="dropdown" dropdown>',
       '      <span class="btn dropdown-toggle" ng-class="{initial: !selected}" dropdown-toggle ng-disabled="!editable">',
-      '        <div style="height: 0px; overflow: hidden">',
+      '        <div class="hidden-choice-padder">',
       '          <li ng-repeat="choice in choices">',
       '            <a ng-bind-html-unsafe="choice.label"></a>',
       '          </li>',

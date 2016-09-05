@@ -86,6 +86,7 @@ describe('corespring:drag-and-drop-inline', function() {
         parseDomForMath: function() {}
       });
       $provide.value('$modal', function() {});
+      $provide.value('Msgr', function() {});
       $provide.value('DragAndDropTemplates', {
         choiceArea: function() {}
       });
