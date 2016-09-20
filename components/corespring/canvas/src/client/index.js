@@ -64,9 +64,7 @@ function CanvasService($log) {
       height: attrs.height
     };
 
-    console.debug('canvas: before init board', boardSize, boardConfig);
     this.board = JXG.JSXGraph.initBoard(id, boardConfig, boardSize);
-    console.debug('canvas: after init board', this.board);
 
     var domainAxis = createAxis(attrs.domain, [0, 0], [1, 0], {
       offset: [0, 0],

@@ -63,6 +63,10 @@ exports.createOutcome = function(model, answer, settings, targetOutcome) {
     };
   }
 
+  if (targetOutcome.correctness === 'warning') {
+    return {};
+  }
+
   var isCorrect;
   var feedback;
 

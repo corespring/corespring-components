@@ -53,37 +53,37 @@ component = {
   }
 };
 
-describe('find-feedback', function(){
+describe('find-feedback', function() {
 
-  it('should find a string', function(){
+  it('should find a string', function() {
     var out = server.findFeedback([{input: 'a', feedback: 'a-fb'}], 'a');
     out.should.equal('a-fb');
   });
 
-  it('should find a string in an array', function(){
+  it('should find a string in an array', function() {
     var out = server.findFeedback([{input: 'a', feedback: 'a-fb'}], ['a', 'b']);
 
     console.log('-------- > ', out);
     out.should.equal('a-fb');
   });
-  
-  it('should find a string in an array', function(){
+
+  it('should find a string in an array', function() {
     var out = server.findFeedback([{input: 'b', feedback: 'b-fb'}], ['a', 'b']);
     out.should.equal('b-fb');
   });
 
   //TODO: How do we accomodate multiple feedbacks for an array of student responses
   /*it('failing test - should find a 2 feedbacks in an array', function(){
-    var out = server.findFeedback([{input: 'a', feedback: 'a-fb'},{input: 'b', feedback: 'b-fb'}], ['a', 'b']);
-    out.should.eql(['a-fb', 'b-fb']);
-  });*/
-  
+   var out = server.findFeedback([{input: 'a', feedback: 'a-fb'},{input: 'b', feedback: 'b-fb'}], ['a', 'b']);
+   out.should.eql(['a-fb', 'b-fb']);
+   });*/
+
 });
 
- describe('feedback-block server logic', function() {
+describe('feedback-block server logic', function() {
 
-  it('should handle an empty studentResponse', function(){
-    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {}); 
+  it('should handle an empty studentResponse', function() {
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {});
     var expected = {
       correctness: 'incorrect',
       feedback: {}
@@ -102,6 +102,14 @@ describe('find-feedback', function(){
       correctness: 'correct'
     };
     outcome.should.eql(expected);
+  });
+
+  it('should not show for empty response', function() {
+    var outcome = server.createOutcome(_.cloneDeep(component), [''], settings(), {
+      correctness: 'warning',
+      studentResponse: 'apple'
+    });
+    outcome.should.eql({});
   });
 
   it('matching correct response', function() {

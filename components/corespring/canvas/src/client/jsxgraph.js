@@ -29,24 +29,13 @@ function jsxGraphDirective(Canvas) {
 
     // define canvas callbacks
     canvas.on('up', onCanvasUp);
-    scope.$on('$destroy', onDestroy);
-
     scope.graphCallback = graphCallback;
 
     //-----------------------------------------------
     //only functions below
     //-----------------------------------------------
 
-    function onDestroy() {
-      console.debug('onDestroy');
-      if (canvas) {
-        canvas.freeBoard();
-        canvas = undefined;
-      }
-    }
-
     function getCanvasAttributes() {
-      console.debug('getCanvasAttributes');
       return {
         domain: {
           label: attr.domainlabel,
@@ -91,7 +80,6 @@ function jsxGraphDirective(Canvas) {
 
     // add x and y axis outside the graph
     function setGraphLabels(canvas, canvasAttrs) {
-      console.debug('setGraphLabels', canvas, canvasAttrs);
       var jxgbox = elem.find(".jxgbox");
       var coords = canvas.getPointCoords(0, 0);
       var graphVCenter = elem.height() / 2;
@@ -148,7 +136,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function addCanvasPoint(coords, ptName, ptOptions) {
-      console.debug('addCanvasPoint', coords, ptName, ptOptions);
       var point = canvas.addPoint(coords, ptName, ptOptions);
       point.on('up', function(e) {
         onPointMove(point);
@@ -158,21 +145,18 @@ function jsxGraphDirective(Canvas) {
     }
 
     function addPoint(coords, ptName, ptOptions) {
-      console.debug('addPoint', coords, ptName, ptOptions);
       var point = addCanvasPoint(coords, ptName, ptOptions);
       points[point.name] = getPointData(point);
       return getPointData(point);
     }
 
     function addUserPoint(coords, ptName, ptOptions) {
-      console.debug('addUserPoint', coords, ptName, ptOptions);
       var point = addCanvasPoint(coords, ptName, ptOptions);
       onPointMove(point);
       return point;
     }
 
     function onPointMove(point, coords) {
-      console.debug('onPointMove', point, coords);
       if (coords) {
         point.moveTo([coords.x, coords.y]);
       }
@@ -187,7 +171,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function getPointData(point) {
-      console.debug('getPointData', point);
       return {
         index: point.canvasIndex,
         name: point.name,
@@ -197,7 +180,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function clearBoard() {
-      console.debug('clearBoard');
       while (canvas.points.length > 0) {
         canvas.popPoint();
       }
@@ -208,7 +190,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function drawShapeCallback(drawShape) {
-      console.debug('drawShapeCallback', drawShape);
       var shape;
 
       if (drawShape.line) {
@@ -240,7 +221,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function addCallback(add) {
-      console.debug('addCallback', add);
       if (add.point) {
         var options = {};
         if (add.color) {
@@ -260,14 +240,12 @@ function jsxGraphDirective(Canvas) {
     }
 
     function updateCallback(update) {
-      console.debug('updateCallback', update);
       if (update.point) {
         canvas.getPoint(update.point.name).moveTo([update.point.x, update.point.y]);
       }
     }
 
     function removeCallback(remove) {
-      console.debug('removeCallback', remove);
       if (remove.line) {
         canvas.removeShapeByCustomId(remove.line);
       }
@@ -281,7 +259,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function pointColorCallback(pointColor) {
-      console.debug('pointColorCallback', pointColor);
       if (pointColor.points) {
         _.each(pointColor.points, function(point) {
           canvas.changePointColor(canvas.getPoint(point), pointColor.color, pointColor.symbol);
@@ -292,7 +269,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function shapeColorCallback(shapeColor) {
-      console.debug('shapeColorCallback', shapeColor);
       if (shapeColor.shape) {
         var shape = canvas.getShape(shapeColor.shape);
         if (shape) {
@@ -308,7 +284,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function onCanvasUp(e) {
-      console.debug('up');
       if (lockGraph) {
         return;
       }
@@ -319,7 +294,6 @@ function jsxGraphDirective(Canvas) {
     }
 
     function graphCallback(params) {
-      console.debug('graphCallback', params);
       if (params.add && canvas) {
         return addCallback(params.add);
       }
@@ -391,12 +365,10 @@ function jsxGraphDirective(Canvas) {
         });
         lockGraph = false;
       }
-      console.debug('graphCallback lockGraph:', lockGraph);
     }
 
     // still used on single line, plot point components
     function processPointsCallback(paramPoints) {
-      console.debug('processPointsCallback', paramPoints);
       var i, coordx, coordy, coords, canvasPoint, point;
 
       if (!lockGraph) {
