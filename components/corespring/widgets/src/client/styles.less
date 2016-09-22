@@ -212,7 +212,8 @@
   font-family: "Kameron";
   color: @hide-show-foreground;
   cursor: pointer;
-  opacity: 0;
+  display: none;
+  overflow: hidden;
   pointer-events: none;
 
   .cs-icon {
@@ -221,7 +222,6 @@
   }
 
   &.showCorrectVisible {
-    opacity: 1;
     pointer-events: auto;
   }
 
