@@ -23,7 +23,7 @@ var def = function() {
         } else {
           $toggle.slideUp('slow');
         }
-      })
+      });
     },
     template: [
       '<div class="button-row btn-group-md text-center {{class}}">',
