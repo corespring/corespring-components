@@ -115,10 +115,17 @@
   }
 
   .choice {
-    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.18);
-    background: #ffffff;
-    border: 1px solid #f1f1f4;
     display: inline-block;
+    box-shadow: none;
+    background: none;
+    border: none;
+
+    &.solid-background {
+      box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.18);
+      background: #ffffff;
+      border: 1px solid #f1f1f4;
+
+    }
 
     &.ui-draggable {
       cursor: pointer;

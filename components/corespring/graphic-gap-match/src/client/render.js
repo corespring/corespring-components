@@ -43,6 +43,7 @@ var main = [
           });
           scope.choices = _.cloneDeep(scope.model.choices);
           scope.droppedChoices = [];
+          scope.maybeSolidBackground = scope.model.config.solidChoiceBackground ? 'solid-background' : '';
           scope.fixedWidth =
             scope.model.config.backgroundImage.fixedWidth === undefined ? true : scope.model.config.backgroundImage.fixedWidth;
 
@@ -343,7 +344,7 @@ var main = [
           '</div>'
         ] : [
         '<div class="choice-wrapper" ng-repeat="choice in choices">',
-        '  <div class="choice"',
+        '  <div class="choice {{maybeSolidBackground}}"',
         '       data-drag="editable"',
         '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
         '       data-jqyoui-options="draggableJquiOptions"',
@@ -351,7 +352,7 @@ var main = [
         '  </div>',
         '</div>',
         '<div class="choice-wrapper" ng-repeat="choice in getPlaceholderChoices()">',
-        '  <div class="choice placeholder"',
+        '  <div class="choice {{maybeSolidBackground}} placeholder"',
         '       ng-bind-html-unsafe="choice.label">',
         '  </div>',
         '</div>'
@@ -381,7 +382,7 @@ var main = [
       '           coords-for-hotspot="hotspot"',
       '           populate="style"',
       '           class="hotspot">',
-      '        <div class="choice correct"',
+      '        <div class="choice correct {{maybeSolidBackground}}"',
       '             ng-repeat="choice in correctAnswerForHotspot(hotspot)"',
       '             ng-bind-html-unsafe="choice.label">',
       '        </div>',
@@ -417,7 +418,7 @@ var main = [
         '              <polygon ng-if="hotspot.shape == \'poly\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
         '            </g>',
         '          </svg>',
-        '          <div class="dropped choice {{correctClass(choice)}}"',
+        '          <div class="dropped choice {{maybeSolidBackground}} {{correctClass(choice)}}"',
         '               ng-repeat="choice in droppedChoices"',
         '               ng-style="{left: choice.left, top: choice.top}"',
         '               data-drag="editable"',
