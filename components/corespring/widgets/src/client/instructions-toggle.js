@@ -1,7 +1,7 @@
 var def = function() {
   var defaults = {
-    showMessage: 'Show Instructions',
-    hideMessage: 'Hide Instructions'
+    showMessage: 'Show Information',
+    hideMessage: 'Hide Information'
   };
 
   return {
