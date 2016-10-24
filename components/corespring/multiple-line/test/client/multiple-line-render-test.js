@@ -356,8 +356,8 @@ describe('corespring:multiple-line:render', function() {
       expect(scope.graphCallback.calls.all()[1].args[0]).toEqual({
         add: {
           point: {
-            x: 0,
-            y: 0
+            x: -5,
+            y: -10
           },
           triggerCallback: true
         }
@@ -365,8 +365,8 @@ describe('corespring:multiple-line:render', function() {
       expect(scope.graphCallback.calls.all()[2].args[0]).toEqual({
         add: {
           point: {
-            x: 1,
-            y: 2
+            x: -4,
+            y: -8
           },
           triggerCallback: true
         }

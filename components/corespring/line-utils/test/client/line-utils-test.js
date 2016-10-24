@@ -106,31 +106,31 @@ describe('corespring line component', function() {
       [1, -2]
     ]);
 
-    result = ob.pointsFromEquation("y=1/2");
+    result = ob.pointsFromEquation("y=1/2", {domainSnapValue: 1, rangeSnapValue: 0.5});
     expect(result).toEqual([
       [0, 0.5],
       [1, 0.5]
     ]);
 
-    result = ob.pointsFromEquation("y=1/2x");
+    result = ob.pointsFromEquation("y=1/2x", {domainSnapValue: 0.5, rangeSnapValue: 0.5});
     expect(result).toEqual([
       [0, 0],
       [1, 0.5]
     ]);
 
-    result = ob.pointsFromEquation("y=-1/2x");
+    result = ob.pointsFromEquation("y=-1/2x", {domainSnapValue: 0.5, rangeSnapValue: 0.5});
     expect(result).toEqual([
       [0, 0],
       [1, -0.5]
     ]);
 
-    result = ob.pointsFromEquation("y=-1/2x+1");
+    result = ob.pointsFromEquation("y=-1/2x+1", {domainSnapValue: 0.5, rangeSnapValue: 0.5});
     expect(result).toEqual([
       [0, 1],
       [1, 0.5]
     ]);
 
-    result = ob.pointsFromEquation("y=1-1/2x");
+    result = ob.pointsFromEquation("y=1-1/2x", {domainSnapValue: 0.5, rangeSnapValue: 0.5});
     expect(result).toEqual([
       [0, 1],
       [1, 0.5]

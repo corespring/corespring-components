@@ -2,6 +2,16 @@ exports.framework = 'angular';
 exports.factory = [
 
   function() {
+
+    var defaultConfig = {
+      domainMin: 0,
+      rangeMin: -10,
+      domainSnapValue: 1,
+      rangeSnapValue: 1,
+      domainMax: 10,
+      rangeMax: 10
+    };
+
     function LineUtils() {
 
       this.isValidFormula = function(s) {
@@ -14,6 +24,7 @@ exports.factory = [
        * returns [[0,2],[1,-3]]
        */
       this.pointsFromEquation = function(equation, config) {
+        config = _.assign(_.clone(defaultConfig), _.clone(config || {}));
         equation = prefixWithYEquals(equation);
         equation = fixSigns(equation);
         equation = equation.toLowerCase();
