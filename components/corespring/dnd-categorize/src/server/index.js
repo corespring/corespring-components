@@ -102,7 +102,7 @@ function createDetailedFeedback(question, answers) {
   return _.reduce(question.model.categories, function(result, category) {
     var categoryId = category.id;
     var expectedAnswers = question.correctResponse[categoryId] || [];
-    var actualAnswers = answers[categoryId] || [];
+    var actualAnswers = (answers && answers[categoryId]) ? answers[categoryId] : [];
     result[categoryId] = makeFeedback(expectedAnswers, actualAnswers);
     return result;
   }, {});
