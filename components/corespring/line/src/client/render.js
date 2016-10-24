@@ -110,7 +110,7 @@ var main = [
         }
 
         function createInitialPoints(initialLine) {
-          var initialValues = lineUtils.pointsFromEquation(initialLine, scope.graphAttrs.domainSnapValue);
+          var initialValues = lineUtils.pointsFromEquation(initialLine, scope.graphAttrs);
           if (typeof initialValues !== 'undefined') {
             addInitialPoints({A: getPoint(initialValues[0]), B: getPoint(initialValues[1])});
           }
