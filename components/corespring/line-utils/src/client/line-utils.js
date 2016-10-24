@@ -2,6 +2,16 @@ exports.framework = 'angular';
 exports.factory = [
 
   function() {
+
+    var defaultConfig = {
+      domainMin: 0,
+      rangeMin: -10,
+      domainSnapValue: 1,
+      rangeSnapValue: 1,
+      domainMax: 10,
+      rangeMax: 10
+    };
+
     function LineUtils() {
 
       this.isValidFormula = function(s) {
@@ -13,10 +23,8 @@ exports.factory = [
        * Ex for input y=-5x+2
        * returns [[0,2],[1,-3]]
        */
-      this.pointsFromEquation = function(equation, stepValue) {
-
-        stepValue = (typeof stepValue !== 'undefined') ? stepValue : 1;
-
+      this.pointsFromEquation = function(equation, config) {
+        config = _.assign(_.clone(defaultConfig), _.clone(config || {}));
         equation = prefixWithYEquals(equation);
         equation = fixSigns(equation);
         equation = equation.toLowerCase();
@@ -89,10 +97,23 @@ exports.factory = [
         } else {
           b = getSign(2) * getConstant(3);
         }
-        return [
-          [0, b],
-          [stepValue, m * stepValue + b]
-        ];
+
+        function points(m, b, config) {
+          var points = [];
+          for (var x = config.domainMin; x <= config.domainMax; x += config.domainSnapValue) {
+            for (var y = config.rangeMin; y <= config.rangeMax; y += config.rangeSnapValue) {
+              if ((m * x + b) === y) {
+                points.push([x, y]);
+                if (points.length === 2) {
+                  return points;
+                }
+              }
+            }
+          }
+          return points;
+        }
+
+        return points(m, b, config);
       };
 
       this.expressionize = function(eq, varname) {

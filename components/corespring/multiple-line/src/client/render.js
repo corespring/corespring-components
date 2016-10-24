@@ -179,7 +179,7 @@ var main = [
 
         function createInitialPoints(initialLine) {
 
-          var initialValues = lineUtils.pointsFromEquation(initialLine, scope.graphAttrs.domainSnapValue);
+          var initialValues = lineUtils.pointsFromEquation(initialLine, scope.graphAttrs);
 
           if (typeof initialValues !== 'undefined') {
             scope.graphCallback({add: {point: getPoint(initialValues[0]), triggerCallback: true}});
