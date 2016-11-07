@@ -27,6 +27,7 @@ function createOutcome(question, answer, settings) {
     amendResponseForCheckboxPartial(question, answer, response);
   }
   response.correctnessMatrix = buildCorrectnessMatrix(question, answer);
+  response.correctNum = numAnsweredCorrectly;
   return response;
 }
 
