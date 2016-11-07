@@ -209,6 +209,7 @@ describe('match server logic', function() {
         answerExpected("row-3"),
         answerExpected("row-4")
       ],
+      correctNum: 0,
       feedback: fbu.defaults.warning,
       warningClass: 'answer-expected'
     });
@@ -228,7 +229,8 @@ describe('match server logic', function() {
         answerExpected("row-4")
       ],
       feedback: fbu.defaults.warning,
-      warningClass: 'answer-expected'
+      warningClass: 'answer-expected',
+      correctNum: 0
     });
     outcome.score.should.equal(0);
 
@@ -262,7 +264,8 @@ describe('match server logic', function() {
           correctUnknown("row-3"),
           correctUnknown("row-4")
           ],
-        feedback: "Correct!"
+        feedback: "Correct!",
+        correctNum: 4
       };
 
       response.should.eql(expected);
@@ -282,7 +285,8 @@ describe('match server logic', function() {
           correctUnknown("row-3"),
           correctUnknown("row-4")
           ],
-        feedback: "Correct!"
+        feedback: "Correct!",
+        correctNum: 4
       };
 
       response.should.eql(expected);
@@ -311,7 +315,8 @@ describe('match server logic', function() {
           answerExpected("row-4")
         ],
         feedback:fbu.defaults.warning,
-        warningClass: 'answer-expected'
+        warningClass: 'answer-expected',
+        correctNum: 0
       };
       response.should.eql(expected);
       response.score.should.equal(expected.score);
@@ -331,14 +336,15 @@ describe('match server logic', function() {
         correctness: "incorrect",
         correctClass: "incorrect",
         score: 0,
+        correctResponse: correctResponse,
+        feedback: componentTemplate.feedback.incorrectFeedback,
         correctnessMatrix: [
           unknownIncorrect("row-1"),
           unknownIncorrect("row-2"),
           unknownIncorrect("row-3"),
           unknownIncorrect("row-4")
-          ],
-        correctResponse: correctResponse,
-        feedback: componentTemplate.feedback.incorrectFeedback
+        ],
+        correctNum: 0
       };
       response.should.eql(expected);
       response.score.should.equal(expected.score);
@@ -358,14 +364,15 @@ describe('match server logic', function() {
         correctness: "incorrect",
         correctClass: "incorrect",
         score: 0,
+        correctResponse: correctResponse,
         correctnessMatrix: [
           unknownIncorrect("row-1"),
           unknownIncorrect("row-2"),
           unknownIncorrect("row-3"),
           unknownIncorrect("row-4")
         ],
-        correctResponse: correctResponse,
-        feedback:componentTemplate.feedback.incorrectFeedback
+        feedback:componentTemplate.feedback.incorrectFeedback,
+        correctNum: 0
       };
       response.should.eql(expected);
       response.score.should.equal(expected.score);
@@ -386,14 +393,15 @@ describe('match server logic', function() {
         correctness: "incorrect",
         correctClass: "partial",
         score: 0.2,
+        correctResponse: correctResponse,
+        feedback:"Almost!",
         correctnessMatrix: [
           correctUnknown("row-1"),
           unknownIncorrect("row-2"),
           correctUnknown("row-3"),
           unknownIncorrect("row-4")
         ],
-        correctResponse: correctResponse,
-        feedback:"Almost!"
+        correctNum: 2
       };
       response.should.eql(expected);
       response.score.should.equal(expected.score);
@@ -444,13 +452,14 @@ describe('match server logic', function() {
           answerExpected("row-2"),
           answerExpected("row-3"),
           answerExpected("row-4")
-        ]
+        ],
+        correctNum: 0
       };
       expected.should.eql(_.omit(response, 'score'));
       response.score.should.be.approximately(1/4, 0.000001);
     });
 
-    it('should repond to partially correct result ( feedback - correct + user)', function() {
+    it('should respond to partially correct result (feedback - correct + user)', function() {
       var answers = [
         correctAnswer("row-1"),
         incorrectAnswer("row-2"),
@@ -464,14 +473,15 @@ describe('match server logic', function() {
         correctness: "incorrect",
         correctClass: "partial",
         score: 0.2,
+        correctResponse: correctResponse,
+        feedback:"Almost!",
         correctnessMatrix: [
           correctUnknown("row-1"),
           unknownIncorrect("row-2"),
           correctUnknown("row-3"),
           unknownIncorrect("row-4")
         ],
-        correctResponse: correctResponse,
-        feedback:"Almost!"
+        correctNum: 2
       };
       response.should.eql(expected);
       response.score.should.equal(expected.score);
