@@ -48,10 +48,10 @@
         "version": "~0.10.0"
       },
       "mathquill-build": {
-        "bower_target": "git@github.com:corespring/mathquill#v0.10.2",
+        "bower_target": "git@github.com:corespring/mathquill#mathquill-build-0.11.1-draccoz",
         "js": "build/mathquill.js",
         "css": "build/mathquill.css",
-        "version": "v0.10.2"
+        "version": "v0.11.1"
       },
       "corespring-math-input": {
         "bower_target": "git@github.com:corespring/corespring-math-input.git#0.0.10",
