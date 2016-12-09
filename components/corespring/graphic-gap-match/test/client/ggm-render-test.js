@@ -89,6 +89,7 @@ describe('corespring:graphic-gap-match:render', function() {
     module(function($provide) {
       testModel = _.cloneDeep(testModelTemplate);
       $provide.value('MathJaxService', function() {});
+      $provide.value('Msgr', {});
     });
   });
 
