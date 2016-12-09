@@ -1,8 +1,8 @@
 /* global console, exports */
 
 var main = [
-  '$sce', '$log', 'CsUndoModel',
-  function($sce, $log, CsUndoModel) {
+  '$sce', '$log', 'CsUndoModel', 'Msgr',
+  function($sce, $log, CsUndoModel, Msgr) {
     'use strict';
 
     $log = console;
@@ -172,9 +172,15 @@ var main = [
         scope.draggedChoice = choice;
       };
 
+      scope.onDrag = function(event, ui){
+        Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
+      };
+
+
       scope.draggableJquiOptions = {
         revert: 'invalid',
-        opacity: 0.75
+        opacity: 0.75,
+        onDrag: 'onDrag'
       };
 
       scope.droppableJquiOptions = {
@@ -346,7 +352,7 @@ var main = [
         '<div class="choice-wrapper" ng-repeat="choice in choices">',
         '  <div class="choice {{maybeSolidBackground}}"',
         '       data-drag="editable"',
-        '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', placeholder: true}"',
+        '       jqyoui-draggable="{onStart: \'onDragStart(choice)\', onDrag: \'onDrag\', placeholder: true}"',
         '       data-jqyoui-options="draggableJquiOptions"',
         '       ng-bind-html-unsafe="choice.label">',
         '  </div>',
@@ -422,7 +428,7 @@ var main = [
         '               ng-repeat="choice in droppedChoices"',
         '               ng-style="{left: choice.left, top: choice.top}"',
         '               data-drag="editable"',
-        '               jqyoui-draggable="{onStart: \'onDragStart(choice)\'}"',
+        '               jqyoui-draggable="{onStart: \'onDragStart(choice)\', onDrag: \'onDrag\'}"',
         '               data-jqyoui-options="draggableJquiOptions"',
         '               ng-bind-html-unsafe="choice.label">',
         '          </div>',
