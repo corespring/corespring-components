@@ -22,57 +22,60 @@ describe('drag-and-drop-inline', function() {
       var settings = {};
       var outcome = server.createOutcome(question, answer, settings);
 
-      outcome.should.eql({
-        correctness: "correct",
-        correctResponse: _.cloneDeep(correctResponse),
-        answer: _.cloneDeep(answers),
-        score: 1,
-        correctClass: "correct",
-        feedbackPerChoice: feedbackPerChoice
-      });
-      outcome.score.should.equal(1);
+      outcome.correctness.should.eql("correct");
+      outcome.correctResponse.should.eql(_.cloneDeep(correctResponse));
+      outcome.answer.should.eql(_.cloneDeep(answers));
+      outcome.score.should.eql(1);
+      outcome.correctClass.should.eql("correct");
+      outcome.feedbackPerChoice.should.eql(feedbackPerChoice);
+      return outcome;
     }
 
     it("with one correct answer", function() {
-      assertCorrect({
+      var outcome = assertCorrect({
         aa_1: ['c_1']
       }, {
         aa_1: ['c_1']
       }, {aa_1:['correct']});
+      outcome.correctNum.should.eql(1);
     });
 
     it("with two same correct answers", function() {
-      assertCorrect({
+      var outcome = assertCorrect({
         aa_1: ['c_1', 'c_1']
       }, {
         aa_1: ['c_1', 'c_1']
       }, {aa_1:['correct', 'correct']});
+      outcome.correctNum.should.eql(2);
     });
 
     it("with two different correct answers", function() {
-      assertCorrect({
+      var outcome = assertCorrect({
         aa_1: ['c_1', 'c_2']
       }, {
         aa_1: ['c_1', 'c_2']
       }, {aa_1:['correct','correct']});
+      outcome.correctNum.should.eql(2);
     });
 
     it("with two different correct answers in wrong order", function() {
-      assertCorrect({
+      var outcome = assertCorrect({
         aa_1: ['c_1', 'c_2']
       }, {
         aa_1: ['c_2', 'c_1']
       }, {aa_1:['correct','correct']});
+      outcome.correctNum.should.eql(2);
     });
 
     it("with two areas", function() {
-      assertCorrect({
+      var outcome = assertCorrect({
         aa_1: ['c_1'],
         aa_2: ['c_2']
       }, {
         aa_1: ['c_1'],
         aa_2: ['c_2']
       }, {aa_1:['correct'], aa_2:['correct']});
+      outcome.correctNum.should.eql(2);
     });
 
   });
@@ -89,16 +92,23 @@ describe('drag-and-drop-inline', function() {
       var expectedOutcome = {
         correctness: "incorrect",
         answer: _.cloneDeep(answers),
-        score: 0,
         correctClass: correctClass,
-        feedbackPerChoice: feedbackPerChoice
+        feedbackPerChoice: feedbackPerChoice,
+        score: 0
       };
-      if(correctResponse !== undefined){
+
+      if (correctResponse !== undefined) {
         expectedOutcome.correctResponse = _.cloneDeep(correctResponse);
       }        
 
-      outcome.should.eql(expectedOutcome);
+      outcome.correctness.should.eql(expectedOutcome.correctness);
+      if (answer !== null) {
+        outcome.answer.should.eql(expectedOutcome.answer);
+      }
+      outcome.correctClass.should.eql(expectedOutcome.correctClass);
+      outcome.feedbackPerChoice.should.eql(expectedOutcome.feedbackPerChoice);
       outcome.score.should.equal(expectedOutcome.score);
+      return outcome;
     }
 
     it("without answer", function() {
@@ -106,87 +116,95 @@ describe('drag-and-drop-inline', function() {
     });
 
     it("with one incorrect answer", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1']
       }, {
         aa_1: ['c_2']
       }, "incorrect", {
         aa_1: ['incorrect']
       });
+      outcome.correctNum.should.eql(0);
     });
 
     it("with one superfluous answer", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1']
       }, {
         aa_1: ['c_1', 'c_1']
       }, "partial", {
         aa_1: ['correct', 'incorrect']
       });
+      outcome.correctNum.should.eql(1);
     });
 
     it("with one of two expected answers", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1', 'c_2']
       }, {
         aa_1: ['c_1']
       }, "partial", {
         aa_1: ['correct']
       });
+      outcome.correctNum.should.eql(1);
     });
 
     it("with one of two expected answers", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1', 'c_2']
       }, {
         aa_1: ['c_2']
       }, "partial", {
         aa_1: ['correct']
       });
+      outcome.correctNum.should.eql(1);
     });
 
     it("with one of two expected answers", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1', 'c_1']
       }, {
         aa_1: ['c_1']
       }, "partial", {
         aa_1: ['correct']
       });
+      outcome.correctNum.should.eql(1);
     });
 
     it("with one correct and one incorrect", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1', 'c_1']
       }, {
         aa_1: ['c_1', 'c_2']
       }, "partial", {
         aa_1: ['correct', 'incorrect']
       });
+      outcome.correctNum.should.eql(1);
     });
 
     it("with one correct and one incorrect", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1', 'c_2']
       }, {
         aa_1: ['c_1', 'c_1']
       }, "partial", {
         aa_1: ['correct', 'incorrect']
       });
+      outcome.correctNum.should.eql(1);
     });
 
     it("with two incorrect answers", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1', 'c_2']
       }, {
         aa_1: ['c_3', 'c_4']
       }, "incorrect", {
         aa_1: ['incorrect', 'incorrect']
       });
+      outcome.correctNum.should.eql(0);
     });
 
     it("with two areas and one incorrect", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1'],
         aa_2: ['c_2']
       }, {
@@ -196,10 +214,11 @@ describe('drag-and-drop-inline', function() {
         aa_1: ['correct'],
         aa_2: ['incorrect']
       });
+      outcome.correctNum.should.eql(1);
     });
 
     it("with two areas and two incorrect", function() {
-      assertIncorrect({
+      var outcome = assertIncorrect({
         aa_1: ['c_1'],
         aa_2: ['c_2']
       }, {
@@ -209,6 +228,7 @@ describe('drag-and-drop-inline', function() {
         aa_1: ['incorrect'],
         aa_2: ['incorrect']
       });
+      outcome.correctNum.should.eql(0);
     });
 
   });
