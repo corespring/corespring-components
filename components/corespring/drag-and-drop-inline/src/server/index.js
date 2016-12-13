@@ -63,6 +63,7 @@ exports.createOutcome = function (question, answer, settings) {
   return addOptionalParts(fb.correctness(isCorrect, isPartiallyCorrect), {
     correctness: isCorrect ? "correct" : "incorrect",
     correctResponse: question.correctResponse,
+    correctNum: numberOfCorrectAnswers,
     answer: answer,
     feedbackPerChoice: feedbackPerChoice,
     score: score,
