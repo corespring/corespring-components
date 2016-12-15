@@ -178,6 +178,7 @@ var main = [
 
 
       scope.draggableJquiOptions = {
+        containment: element.parent(),
         revert: 'invalid',
         opacity: 0.75,
         onDrag: 'onDrag'
@@ -415,9 +416,7 @@ var main = [
         choices(['left', 'top']),
         '    <div class="answers">',
         '      <div class="students-response" ng-class="{studentsResponseHidden: bridge.answerVisible}">',
-        '        <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}"',
-        '             data-drop="true"',
-        '             jqyoui-droppable="{onDrop: \'onDrop()\'}" jqyoui-options="{activeClass: \'dropping\'}" >',
+        '        <div class="background-image {{response.correctClass}}" ng-class="{\'fixed-width\': fixedWidth}">',
         '          <svg ng-if="model.config.showHotspots" class="hotspots">',
         '            <g ng-repeat="hotspot in model.hotspots">',
         '              <rect ng-if="hotspot.shape == \'rect\'" coords-for-hotspot="hotspot" fill-opacity="0" class="hotspot" />',
@@ -432,7 +431,11 @@ var main = [
         '               data-jqyoui-options="draggableJquiOptions"',
         '               ng-bind-html-unsafe="choice.label">',
         '          </div>',
-        '          <img ng-src="{{model.config.backgroundImage.path}}" ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}"/>',
+        '          <img jqyoui-droppable="{onDrop: \'onDrop()\', beforeDrop: \'beforeDrop()\'}"',
+        '               jqyoui-options="{activeClass: \'dropping\'}"',
+        '               data-drop="true"',
+        '               ng-src="{{model.config.backgroundImage.path}}"',
+        '               ng-style="{width: model.config.backgroundImage.width, height: model.config.backgroundImage.height}"/>',
         '        </div>',
         '      </div>',
         '      <div ng-class="{correctAnswerVisible: bridge.answerVisible}" class="correct-answer-holder">' + correctAnswer + '</div>',
