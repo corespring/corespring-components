@@ -52,13 +52,7 @@
     margin: 1px;
     position: relative;
     vertical-align: top;
-    overflow: hidden;
-
-    &.dropping {
-      border: 2px dashed #CCCCCC;
-      margin: 0;
-      overflow: visible;
-    }
+    overflow: visible;
 
     &.warning {
       border: 2px solid @warning-color-border;
@@ -76,6 +70,13 @@
       position: absolute;
       stroke: @hotspot-border-color;
       stroke-width: 2px;
+    }
+
+    img.dropping {
+      margin: 0;
+      overflow: visible;
+      border: 2px dashed #CCCCCC;
+
     }
   }
 
