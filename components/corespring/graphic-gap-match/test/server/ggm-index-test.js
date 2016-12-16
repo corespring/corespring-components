@@ -166,6 +166,7 @@ describe('hotspot', function() {
         "correctness": "warning",
         "correctClass": "warning",
         "score": 0,
+        "correctNum": 0,
         "feedback": {
           "correctness": "warning",
           "message": "You did not enter a response."

@@ -145,6 +145,7 @@ exports.createOutcome = function (question, answer, settings) {
       correctness: 'warning',
       correctClass: 'warning',
       score: 0,
+      correctNum: 0,
       feedback: settings.showFeedback ? {
         correctness: 'warning',
         message: "You did not enter a response."

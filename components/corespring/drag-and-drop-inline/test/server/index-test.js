@@ -244,9 +244,10 @@ describe('drag-and-drop-inline', function() {
 
     outcome.should.eql({
       correctness: 'incorrect',
+      correctNum: 0,
+      answer: null,
       score: 0,
       correctClass: 'warning',
-      answer: null,
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
       feedbackPerChoice: {}
     });
@@ -265,9 +266,10 @@ describe('drag-and-drop-inline', function() {
     }, {});
     outcome.should.eql({
       correctness: 'incorrect',
+      correctNum: 0,
+      answer: null,
       score: 0,
       correctClass: 'warning',
-      answer: null,
       feedback: fbu.keys.DEFAULT_WARNING_FEEDBACK,
       feedbackPerChoice: {}
     });
