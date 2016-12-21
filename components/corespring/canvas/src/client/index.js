@@ -94,12 +94,17 @@ function CanvasService($log) {
     }
   }
 
+  Canvas.prototype.reset = function() {
+    this.touchEvents = false;
+  };
+
   Canvas.prototype.getMouseCoords = function(e) {
+    var self = this;
     function getAbsPos(e) {
       if (e.changedTouches && e.changedTouches[0]) {
-        this.touchEvents = true;
+        self.touchEvents = true;
         return [e.changedTouches[0].pageX, e.changedTouches[0].pageY];
-      } else if (!this.touchEvents) {
+      } else if (!self.touchEvents) {
         return JXG.getPosition(e);
       }
     }
