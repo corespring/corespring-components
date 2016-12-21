@@ -2,6 +2,7 @@ describe('corespring:canvas:index', function() {
 
   var scope, canvas, element;
 
+  var topLeftCorner = [0,0];
   var JXG = {
     JSXGraph: {
       initBoard: function() {
@@ -17,11 +18,19 @@ describe('corespring:canvas:index', function() {
             return {};
           },
           removeObject: function() {},
-          on: function() {}
+          on: function() {},
+          getCoordsTopLeftCorner: function(event) {
+            return topLeftCorner;
+          }
         };
       }
     },
-    Coords: function() { return {scrCoords: [1,0,0], usrCoords: [1,0,0]}; }
+    getPosition: function(event) {
+      return [event.x, event.y];
+    },
+    Coords: function(config, deltas) {
+      return {scrCoords: [1,deltas[0],deltas[1]], usrCoords: [1,deltas[0],deltas[1]]};
+    }
   };
 
   beforeEach(module(function($provide) {
@@ -67,6 +76,7 @@ describe('corespring:canvas:index', function() {
     element = $compile("<div id='canvas' class='jxgbox' ng-style='boxStyle' style='width: 500px; height: 500px'></div>");
     scope = $rootScope.$new();
     canvas = new Canvas('canvas', getCanvasAttributes());
+    canvas.reset();
     scope.$digest();
   }));
 
@@ -178,6 +188,41 @@ describe('corespring:canvas:index', function() {
       var coords = canvas.getPointCoords('', '');
       expect(coords.x).toBeDefined();
       expect(coords.y).toBeDefined();
+    });
+
+  });
+
+  describe('getMouseCoords', function() {
+    var x = 100;
+    var y = 200;
+
+    describe('touchEvent', function() {
+      var event = {
+        changedTouches: [{
+          pageX: x,
+          pageY: y
+        }]
+      };
+      var nonTouchEvent = {};
+
+      it('should return x and y coordinates and nothing for non-touch afterward', function() {
+        var result = canvas.getMouseCoords(event);
+        expect(result).toEqual({
+          x: x, y: y
+        });
+        var nontouchResult = canvas.getMouseCoords(nonTouchEvent);
+        expect(nontouchResult).toBe(undefined);
+      });
+
+    });
+
+
+    describe('non-touch event', function() {
+      var nonTouchEvent = {x: 123, y: 456};
+      it('should return result from getPosition', function() {
+        var result = canvas.getMouseCoords(nonTouchEvent);
+        expect(result).toEqual(nonTouchEvent);
+      });
     });
 
   });

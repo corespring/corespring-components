@@ -94,12 +94,31 @@ function CanvasService($log) {
     }
   }
 
-  Canvas.prototype.getMouseCoords = function(e) {
-    var cPos = this.board.getCoordsTopLeftCorner(e),
+  Canvas.prototype.reset = function() {
+    this.touchEvents = false;
+  };
 
-      absPos = JXG.getPosition(e),
-      dx = absPos[0] - cPos[0],
+  Canvas.prototype.getMouseCoords = function(e) {
+    var self = this;
+    function getAbsPos(e) {
+      if (e.changedTouches && e.changedTouches[0]) {
+        self.touchEvents = true;
+        return [e.changedTouches[0].pageX, e.changedTouches[0].pageY];
+      } else if (!self.touchEvents) {
+        return JXG.getPosition(e);
+      }
+    }
+
+    var cPos = this.board.getCoordsTopLeftCorner(e),
+      absPos = getAbsPos(e);
+
+    if (!absPos) {
+      return;
+    }
+
+    var dx = absPos[0] - cPos[0],
       dy = absPos[1] - cPos[1];
+
     var coords = new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], this.board);
     var simpleCoords = {
       x: coords.usrCoords[1],
