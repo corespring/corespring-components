@@ -288,7 +288,7 @@ function jsxGraphDirective(Canvas) {
         return;
       }
       var coords = canvas.getMouseCoords(e);
-      if ((!canvasAttrs.maxPoints || canvas.points.length < canvasAttrs.maxPoints) && !canvas.pointCollision(coords)) {
+      if (coords && (!canvasAttrs.maxPoints || canvas.points.length < canvasAttrs.maxPoints) && !canvas.pointCollision(coords)) {
         addUserPoint(coords);
       }
     }
