@@ -3,7 +3,6 @@ var calculator = [
   function(CalculatorConfig) {
 
     function Calculator(scope) {
-
       var self = this;
 
       this.pendingOperationIsBinary = false;
@@ -242,8 +241,20 @@ var calculator = [
       this.solveOperation = function(button) {
         var inputValue = parseFloat(scope.results);
 
+        function decimalPlaces(num) {
+          var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+          if (!match) {
+            return 0;
+          }
+          return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
+        }
+
+        function decimalCount(a, b) {
+          return Math.max(decimalPlaces(a), decimalPlaces(b));
+        }
+
         if(!self.lastPressedIsBinary) {
-          self.storedValue = scope.buttons[self.previousOperator].operation(self.storedValue, inputValue);
+          self.storedValue = scope.buttons[self.previousOperator].operation(self.storedValue, inputValue).toFixed(decimalCount(self.storedValue, inputValue));
         }
                 
         self.operandContinue = false;
