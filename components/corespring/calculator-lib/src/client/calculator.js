@@ -254,7 +254,7 @@ var calculator = [
         }
 
         if(!self.lastPressedIsBinary) {
-          self.storedValue = scope.buttons[self.previousOperator].operation(self.storedValue, inputValue).toFixed(decimalCount(self.storedValue, inputValue)).toString();
+          self.storedValue = parseFloat(scope.buttons[self.previousOperator].operation(self.storedValue, inputValue).toFixed(decimalCount(self.storedValue, inputValue)));
         }
                 
         self.operandContinue = false;
