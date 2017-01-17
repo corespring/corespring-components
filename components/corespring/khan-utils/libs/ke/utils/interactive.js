@@ -3619,7 +3619,7 @@
         var r = graph.unscaleVector(180.5)[0];
         var imgPos = graph.scalePoint([this.cx - r, this.cy + r - graph.unscaleVector(10.5)[1]]);
         this.set.push(graph.mouselayer.image(
-                "https://ka-perseus-graphie.s3.amazonaws.com/e9d032f2ab8b95979f674fbfa67056442ba1ff6a.png",
+                "/assets/images/e9d032f2ab8b95979f674fbfa67056442ba1ff6a.png",
                 imgPos[0], imgPos[1], 360, 180));
 
 
