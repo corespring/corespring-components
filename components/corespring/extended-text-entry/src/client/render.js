@@ -1,7 +1,7 @@
 exports.framework = 'angular';
 exports.directives = [
   {
-    directive: ['$compile', mainDirective]
+    directive: ['$compile', '$interval', mainDirective]
   },
   {
     name: 'mathinputHolder',
@@ -9,7 +9,7 @@ exports.directives = [
   }
 ];
 
-function mainDirective($compile) {
+function mainDirective($compile, $interval) {
 
   var MAX_WIDTH = 555;
   var PIXELS_PER_ROW = 20;
@@ -68,31 +68,55 @@ function mainDirective($compile) {
         }]
       } : {};
 
-      renderWiggi();
+    }
+
+    function playerWidth() {
+      function player() {
+        var $player = element.closest('.corespring-player');
+        $player = $player.length ? $player : element.closest('.player-body');
+        return $player.length ? $player[0] : undefined;
+      }
+
+      var style, paddingLeft, paddingRight;
+      if (player()) {
+        style = window.getComputedStyle(player(), null);
+        paddingLeft = parseFloat(style.getPropertyValue('padding-left'));
+        paddingRight = parseFloat(style.getPropertyValue('padding-right'));
+        return player().offsetWidth - paddingLeft - paddingRight;
+      }
     }
 
     function renderWiggi() {
-      var width = Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH);
+      var currentWidth = Math.min(scope.cols * PIXELS_PER_COL + BASE_COL_PIXELS, MAX_WIDTH);
       var height = scope.rows * PIXELS_PER_ROW;
       var compiledWiggi = $compile(wiggiTemplate())(scope);
+      currentWidth = (currentWidth > playerWidth()) ? playerWidth() : currentWidth;
 
-      element.find('.textarea-holder')
-        .css({
-          width: width
-        });
+      if (scope.width !== currentWidth) {
+        scope.width = currentWidth;
+        element.find('.textarea-holder')
+          .css({
+            width: currentWidth
+          });
 
-      element.find('.textarea-holder .wiggi')
-        .html(compiledWiggi)
-        .css({
-          width: width,
-          minHeight: height
-        });
+        element.find('.textarea-holder .wiggi')
+          .html(compiledWiggi)
+          .css({
+            width: currentWidth,
+            minHeight: height
+          });
 
-      element.find('.textarea-holder .wiggi-wiz')
-        .css({
-          minHeight: height
-        });
+        element.find('.textarea-holder .wiggi-wiz')
+          .css({
+            minHeight: height
+          });
+      }
     }
+
+    scope.cancel = $interval(renderWiggi, 200);
+    scope.$on('$destroy', function() {
+      $interval.cancel(scope.cancel);
+    });
 
     function getSession() {
       return {
