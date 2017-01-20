@@ -29,7 +29,7 @@ var calculatorConfig = [
     buttons.decimal = { id: 'decimal', name: 'Decimal', symbol: '.', logic: 'core', type: 'Number', cssClass: 'number decimal', operand: '.' };
     buttons.equals = { id: 'equals', name: 'Equals', symbol: '&#61;', logic: 'core', type: 'Operator', numOfOperands: '1', cssClass: 'number equals' };
     // Basic functions
-    buttons.sqrt = { id: 'sqrt', name: 'Square root', symbol: '&#8730;', logic: 'basic', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function', operation: function(a) { return Math.sqrt(a); } };
+    buttons.sqrt = { id: 'sqrt', name: 'Square root', symbol: '&#8730;', logic: 'basic', type: 'Operator', numOfOperands: '1', cssClass: 'basic-function', operation: function(a) { return coerce(new Decimal(a).sqrt()); } };
     buttons.plus = { id: 'plus', name: 'Plus', symbol: '&#43;', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function', operation: function(a, b) { return coerce(new Decimal(a).add(new Decimal(b))); } };
     buttons.minus = { id: 'minus', name: 'Minus', symbol: '&#45;', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function', operation: function(a, b) { return coerce(new Decimal(a).sub(new Decimal(b))); } };
     buttons.multiply = { id: 'multiply', name: 'Multiply', symbol: '&#120;', logic: 'basic', type: 'Operator', numOfOperands: '2', cssClass: 'basic-function', operation: function(a, b) { return coerce(new Decimal(a).mul(new Decimal(b))); } };
