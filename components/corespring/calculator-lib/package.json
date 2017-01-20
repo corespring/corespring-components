@@ -6,7 +6,10 @@
   ],
   "dependencies": {
     "client": {
-      
+      "decimaljs": {
+        "bower_target": "https://github.com/MikeMcl/decimal.js.git",
+        "file": "decimal.min.js"
+      }
     }
   }
 }
