@@ -121,6 +121,20 @@ describe('corespring:calculator-lib:calculator', function() {
       expect(scope.results).toEqual(2);
     });
 
+    it('should be able two subtract two floating point numbers', function() {
+      calculator.click(scope.buttons.nine);
+      calculator.click(scope.buttons.decimal);
+      calculator.click(scope.buttons.three);
+      calculator.click(scope.buttons.six);
+      calculator.click(scope.buttons.minus);
+      calculator.click(scope.buttons.seven);
+      calculator.click(scope.buttons.decimal);
+      calculator.click(scope.buttons.three);
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(2.04);
+    });
+
     it('should be able to multiply two numbers', function() {
       calculator.click(scope.buttons.five);
       calculator.click(scope.buttons.multiply);
@@ -136,6 +150,14 @@ describe('corespring:calculator-lib:calculator', function() {
       calculator.click(scope.buttons.five);
       calculator.click(scope.buttons.equals);
       expect(scope.results).toEqual(5);
+    });
+
+    it('should be able to divide two integers with precision', function() {
+      calculator.click(scope.buttons.one);
+      calculator.click(scope.buttons.divide);
+      calculator.click(scope.buttons.three);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(0.3333333333333333);
     });
 
     it('should show Error when trying to divide by zero', function() {
