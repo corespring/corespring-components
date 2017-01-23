@@ -113,6 +113,8 @@ function mainDirective($compile, $interval) {
       }
     }
 
+    renderWiggi();
+
     scope.cancel = $interval(renderWiggi, 200);
     scope.$on('$destroy', function() {
       $interval.cancel(scope.cancel);
