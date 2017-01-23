@@ -1,4 +1,4 @@
-/* globals Decmial */
+/* globals Decimal */
 
 /* jshint ignore:start */
 // TODO: Can't get this to be picked up from `package.json`?
