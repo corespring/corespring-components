@@ -49,6 +49,8 @@ var main = [
       //we throttle bc. when multiple calls to renderAnswerArea are
       //made rapidly, the rendering breaks, eg. in the regression test rig
       var renderAnswerArea = throttle(doRenderAnswerArea);
+      var renderRegularAnswerArea = throttle(doRenderAnswerArea.bind(this, '.answer-area-holder'));
+      var renderCorrectAnswerArea = throttle(doRenderAnswerArea.bind(this, '.correct-answer-area-holder'));
 
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
       scope.draggableJqueryOptions = {
@@ -112,7 +114,7 @@ var main = [
         }
 
         scope.initUndo();
-        renderAnswerArea(".answer-area-holder", scope.$new());
+        renderRegularAnswerArea(scope.$new());
       }
 
       function getSession() {
@@ -160,6 +162,7 @@ var main = [
 
       function setResponse(response) {
         $log.debug("[DnD-inline] setResponse: ", response);
+        console.log("[DnD-inline] setResponse: ", response);
         scope.response = _.isEmpty(response) ? undefined : response;
         console.log('response', response);
         scope.correctResponse = response.correctness === 'incorrect' ? response.correctResponse : null;
@@ -184,7 +187,7 @@ var main = [
           });
         });
 
-        renderAnswerArea(".correct-answer-area-holder", solutionScope);
+        renderCorrectAnswerArea(solutionScope);
       }
 
       function reset() {
@@ -203,6 +206,7 @@ var main = [
       }
 
       function doRenderAnswerArea(targetSelector, scope) {
+        console.log('doRenderAnswerArea', targetSelector, scope);
         var $holder = element.find(targetSelector);
 
         //if the answer area exists already
@@ -221,6 +225,10 @@ var main = [
         var $answerArea = $holder.html(answerArea);
         $compile($answerArea)(scope);
         renderMath();
+
+        setTimeout(function(){
+            console.log('>>', $answerArea[0]);
+        }, 2000);
       }
 
       function draggableOptionsWithKeep(choice) {
