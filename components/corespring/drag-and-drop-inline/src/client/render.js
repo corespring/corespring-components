@@ -7,7 +7,7 @@ var main = [
   'DragAndDropTemplates',
   'MathJaxService',
   'Msgr',
-  function(
+  function (
     $compile,
     $log,
     $modal,
@@ -41,14 +41,13 @@ var main = [
 
     function link(scope, element, attrs) {
 
-      scope.$watch('seeSolutionExpanded', function() {
+      scope.$watch('seeSolutionExpanded', function () {
         console.log('scope.seeSolutionExpanded', scope.seeSolutionExpanded);
         scope.$broadcast('setVisible', scope.seeSolutionExpanded ? 1 : 0);
       });
 
       //we throttle bc. when multiple calls to renderAnswerArea are
       //made rapidly, the rendering breaks, eg. in the regression test rig
-      var renderAnswerArea = throttle(doRenderAnswerArea);
       var renderRegularAnswerArea = throttle(doRenderAnswerArea.bind(this, '.answer-area-holder'));
       var renderCorrectAnswerArea = throttle(doRenderAnswerArea.bind(this, '.correct-answer-area-holder'));
 
@@ -76,7 +75,7 @@ var main = [
         setInstructorData: setInstructorData,
         setMode: setMode,
         setResponse: setResponse,
-        setPlayerSkin: function(skin) {
+        setPlayerSkin: function (skin) {
           scope.iconSet = skin.iconSet;
         }
       });
@@ -95,7 +94,7 @@ var main = [
         scope.local = {};
 
         scope.landingPlaceChoices = scope.landingPlaceChoices || {};
-        _.forEach(dataAndSession.data.model.answerAreas, function(area) {
+        _.forEach(dataAndSession.data.model.answerAreas, function (area) {
           if (!_.isArray(scope.landingPlaceChoices[area.id])) {
             scope.landingPlaceChoices[area.id] = [];
           }
@@ -108,7 +107,7 @@ var main = [
         if (dataAndSession.session && dataAndSession.session.answers) {
 
           // Build up the landing places with the selected choices
-          _.each(dataAndSession.session.answers, function(v, k) {
+          _.each(dataAndSession.session.answers, function (v, k) {
             scope.landingPlaceChoices[k] = _.map(v, scope.cleanChoiceForId);
           });
         }
@@ -120,7 +119,7 @@ var main = [
       function getSession() {
         var numberOfAnswers = 0;
         var answer = {};
-        _.each(scope.landingPlaceChoices, function(v, k) {
+        _.each(scope.landingPlaceChoices, function (v, k) {
           if (k) {
             answer[k] = _.pluck(v, 'id');
             numberOfAnswers += answer[k].length;
@@ -146,12 +145,12 @@ var main = [
       function setInstructorData(data) {
         $log.debug("[DnD-inline] setInstructorData: ", data);
         scope.instructorData = data;
-        _.each(data.correctResponse, function(v, k) {
+        _.each(data.correctResponse, function (v, k) {
           scope.landingPlaceChoices[k] = _.map(v, scope.cleanChoiceForId);
         });
         var feedback = _.cloneDeep(data.correctResponse);
         for (var f in feedback) {
-          feedback[f] = _.map(feedback[f], function() {
+          feedback[f] = _.map(feedback[f], function () {
             return "correct";
           });
         }
@@ -171,18 +170,18 @@ var main = [
         var solutionScope = $rootScope.$new();
         solutionScope.landingPlaceChoices = {};
         solutionScope.model = scope.model;
-        solutionScope.canEdit = function() {
+        solutionScope.canEdit = function () {
           return false;
         };
-        solutionScope.classForChoice = function() {
+        solutionScope.classForChoice = function () {
           return "";
         };
-        solutionScope.shouldShowNoAnswersWarning = function() {
+        solutionScope.shouldShowNoAnswersWarning = function () {
           return false;
         };
         solutionScope.cleanLabel = scope.cleanLabel;
-        _.each(scope.correctResponse, function(v, k) {
-          solutionScope.landingPlaceChoices[k] = _.map(v, function(r) {
+        _.each(scope.correctResponse, function (v, k) {
+          solutionScope.landingPlaceChoices[k] = _.map(v, function (r) {
             return scope.cleanChoiceForId(r);
           });
         });
@@ -225,10 +224,6 @@ var main = [
         var $answerArea = $holder.html(answerArea);
         $compile($answerArea)(scope);
         renderMath();
-
-        setTimeout(function(){
-            console.log('>>', $answerArea[0]);
-        }, 2000);
       }
 
       function draggableOptionsWithKeep(choice) {
@@ -276,8 +271,8 @@ var main = [
         Msgr.send("autoScrollStop");
       }
 
-      function onDrag(event, ui){
-        Msgr.send("autoScroll", {x: event.clientX, y: event.clientY});
+      function onDrag(event, ui) {
+        Msgr.send("autoScroll", { x: event.clientX, y: event.clientY });
       }
 
       function canEdit() {
@@ -289,14 +284,14 @@ var main = [
       }
 
       function isPlaced(choice) {
-        return _.some(scope.landingPlaceChoices, function(c) {
+        return _.some(scope.landingPlaceChoices, function (c) {
           return _.pluck(c, 'id').indexOf(choice.id) >= 0;
         });
       }
 
       function makeCleanLabelFunction() {
         var wiggiCleanerRe = new RegExp(String.fromCharCode(8203), 'g');
-        return function(choice) {
+        return function (choice) {
           return (choice.label || '').replace(wiggiCleanerRe, '');
         };
       }
@@ -346,14 +341,14 @@ var main = [
         '      toggle="seeSolutionExpanded"></correct-answer-toggle>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="model.config.choiceAreaPosition != \'below\'">',
-             choiceArea(),
+        choiceArea(),
         '  </div>',
         '  <response-wrapper width="100%">',
         '    <div class="answer-area-holder" class="{{response.correctClass}}"></div>',
         '    <div class="correct-answer-area-holder"></div>',
         '  </response-wrapper>',
         '  <div ng-if="model.config.choiceAreaPosition == \'below\'">',
-             choiceArea(),
+        choiceArea(),
         '  </div>',
         '  <div class="clearfix"></div>',
         '  <div ng-if="response.feedback && !seeSolutionExpanded">',
@@ -373,14 +368,14 @@ var main = [
   }];
 
 var scopeForwarder = [
-  function() {
+  function () {
     "use strict";
     return {
       scope: false,
       restrict: 'A',
       replace: true,
-      controller: ['$scope', function($scope) {
-        $scope.$on("get-scope", function(event, callback) {
+      controller: ['$scope', function ($scope) {
+        $scope.$on("get-scope", function (event, callback) {
           callback($scope);
         });
       }]
@@ -389,7 +384,7 @@ var scopeForwarder = [
 
 var answerAreaInline = [
   '$interval',
-  function($interval) {
+  function ($interval) {
     "use strict";
     return {
       scope: {},
@@ -445,7 +440,7 @@ var answerAreaInline = [
         function startPollingHoverState(placeholder) {
           var lastPlaceholderParent = placeholder.parents('.answer-area-inline');
           lastPlaceholderParent.addClass('answer-area-inline-hover');
-          pollingHandle = $interval(function() {
+          pollingHandle = $interval(function () {
             var newParent = placeholder.parents('.answer-area-inline');
             if (newParent !== lastPlaceholderParent) {
               lastPlaceholderParent.removeClass('answer-area-inline-hover');
@@ -482,20 +477,20 @@ var answerAreaInline = [
             connectWith: "." + renderScope.dragAndDropScopeId,
             disabled: !renderScope.canEdit(),
             tolerance: 'pointer',
-            helper: function(event, ui) {
+            helper: function (event, ui) {
               sortableSize = {
                 width: ui.width(),
                 height: ui.height()
               };
               return ui;
             },
-            start: function(event, ui) {
+            start: function (event, ui) {
               isOut = false;
               renderScope.targetDragging = true;
               initPlaceholder(ui.placeholder);
               startPollingHoverState(ui.placeholder);
             },
-            stop: function(event, ui) {
+            stop: function (event, ui) {
               renderScope.targetDragging = false;
               stopPollingHoverState();
 
@@ -503,19 +498,19 @@ var answerAreaInline = [
                 scope.removeChoice(ui.item.sortable.index);
               }
             },
-            receive: function(event, ui) {
+            receive: function (event, ui) {
               isOut = false;
             },
-            remove: function(event, ui) {
+            remove: function (event, ui) {
               isOut = false;
             },
-            beforeStop: function(event, ui) {
+            beforeStop: function (event, ui) {
               isOut = !mouseIsOverElement(event);
             },
-            activate: function(event, ui) {
+            activate: function (event, ui) {
               el.addClass('answer-area-inline-active');
             },
-            deactivate: function(event, ui) {
+            deactivate: function (event, ui) {
               el.removeClass('answer-area-inline-active');
               el.removeClass('answer-area-inline-hover');
             }
@@ -575,7 +570,7 @@ var answerAreaInline = [
         '</div>'
       ].join("\n");
     }
-}];
+  }];
 
 exports.framework = 'angular';
 exports.directives = [{

@@ -1,6 +1,6 @@
 /* global describe, beforeEach, module, inject, it, expect */
 
-describe('corespring:drag-and-drop-inline', function() {
+describe('corespring:drag-and-drop-inline', function () {
 
   'use strict';
 
@@ -8,7 +8,7 @@ describe('corespring:drag-and-drop-inline', function() {
 
   function MockComponentRegister() {
     this.elements = {};
-    this.registerComponent = function(id, bridge) {
+    this.registerComponent = function (id, bridge) {
       this.elements[id] = bridge;
     };
   }
@@ -68,11 +68,11 @@ describe('corespring:drag-and-drop-inline', function() {
 
   beforeEach(angular.mock.module('test-app'));
 
-  beforeEach(function() {
-    module(function($provide) {
-      var mockPopover = function() {
+  beforeEach(function () {
+    module(function ($provide) {
+      var mockPopover = function () {
         return {
-          on: function() {},
+          on: function () { },
           popover: mockPopover
         };
       };
@@ -83,22 +83,22 @@ describe('corespring:drag-and-drop-inline', function() {
       testModel = createTestModel();
 
       $provide.value('MathJaxService', {
-        parseDomForMath: function() {}
+        parseDomForMath: function () { }
       });
-      $provide.value('$modal', function() {});
-      $provide.value('Msgr', function() {});
+      $provide.value('$modal', function () { });
+      $provide.value('Msgr', function () { });
       $provide.value('DragAndDropTemplates', {
-        choiceArea: function() {}
+        choiceArea: function () { }
       });
-      $provide.value('WiggiLinkFeatureDef', function() {});
+      $provide.value('WiggiLinkFeatureDef', function () { });
     });
 
   });
 
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function ($compile, $rootScope) {
     container = new MockComponentRegister();
 
-    $rootScope.$on('registerComponent', function(event, id, obj) {
+    $rootScope.$on('registerComponent', function (event, id, obj) {
       container.registerComponent(id, obj);
     });
 
@@ -129,9 +129,9 @@ describe('corespring:drag-and-drop-inline', function() {
     return wrapper;
   }
 
-  describe('render', function() {
+  describe('render', function () {
 
-    it('sets the session choice correctly', function() {
+    it('sets the session choice correctly', function () {
       setAnswer('c_1');
 
       expect(_.pick(scope.landingPlaceChoices.aa_1[0], 'label', 'id')).toEqual({
@@ -140,7 +140,7 @@ describe('corespring:drag-and-drop-inline', function() {
       });
     });
 
-    it('does not remove selected choices from available choices', function() {
+    it('does not remove selected choices from available choices', function () {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect(_.find(scope.local.choices, {
@@ -152,7 +152,7 @@ describe('corespring:drag-and-drop-inline', function() {
       })).toBeDefined();
     });
 
-    it('setting response shows correctness', function() {
+    it('setting response shows correctness', function () {
       setAnswer('c_1');
       setResponse({
         correctness: 'incorrect',
@@ -163,7 +163,7 @@ describe('corespring:drag-and-drop-inline', function() {
       expect(wrapper.find('.incorrectClass').length > 0).toBe(true);
     });
 
-    describe('see-solution button', function() {
+    describe('see-solution button', function () {
 
       function setCorrectness(correctness) {
         setAnswer('c_1');
@@ -172,33 +172,38 @@ describe('corespring:drag-and-drop-inline', function() {
           correctResponse: correctness === 'warning' ? undefined : {}
         });
         wrapper = wrapElement();
+        return wrapper;
       }
 
-      it('should populate correctResponse when answer is incorrect', function() {
+      it('should populate correctResponse when answer is incorrect', function () {
         setCorrectness('incorrect');
-
         expect(scope.correctResponse).toBeTruthy();
       });
 
-      it('should not populate correctResponse if answer is correct', function() {
+      it('should render the solution html when answer is incorrect', function () {
+        var w = setCorrectness('incorrect');
+        expect(w.find('.correct-answer-area-holder').html()).not.toEqual('');
+      });
+
+      it('should not populate correctResponse if answer is correct', function () {
         setCorrectness('correct');
 
         expect(scope.correctResponse).toBeFalsy();
       });
 
-      it('should show the button when answer is incorrect', function() {
+      it('should show the button when answer is incorrect', function () {
         setCorrectness('incorrect');
 
         expect($(wrapper.find('.show-correct')).length).not.toEqual(0);
       });
 
-      it('should hide the button if answer is correct', function() {
+      it('should hide the button if answer is correct', function () {
         setCorrectness('correct');
 
         expect($(wrapper.find('.showCorrectVisible')).length).toEqual(0);
       });
 
-      it('should hide the button if answer is invalid', function() {
+      it('should hide the button if answer is invalid', function () {
         setCorrectness('warning');
 
         // expect($(wrapper.find('.see-solution')).attr('class')).toContain('ng-hide');
@@ -206,10 +211,10 @@ describe('corespring:drag-and-drop-inline', function() {
 
     });
 
-    describe('isPlaceable', function() {
+    describe('isPlaceable', function () {
       var choice;
 
-      beforeEach(function() {
+      beforeEach(function () {
         choice = {
           id: 'c_1',
           moveOnDrag: false
@@ -223,27 +228,27 @@ describe('corespring:drag-and-drop-inline', function() {
         scope.landingPlaceChoices.aa_1.push(c);
       }
 
-      describe('with moveOnDrag=false', function() {
-        beforeEach(function() {
+      describe('with moveOnDrag=false', function () {
+        beforeEach(function () {
           choice.moveOnDrag = false;
         });
-        it('should return true, when choice has not been placed', function() {
+        it('should return true, when choice has not been placed', function () {
           expect(scope.isPlaceable(choice)).toBe(true);
         });
-        it('should return true, when choice has been placed', function() {
+        it('should return true, when choice has been placed', function () {
           placeChoice(choice);
           expect(scope.isPlaceable(choice)).toBe(true);
         });
       });
 
-      describe('with moveOnDrag=true', function() {
-        beforeEach(function() {
+      describe('with moveOnDrag=true', function () {
+        beforeEach(function () {
           choice.moveOnDrag = true;
         });
-        it('should return true, when choice has not been placed', function() {
+        it('should return true, when choice has not been placed', function () {
           expect(scope.isPlaceable(choice)).toBe(true);
         });
-        it('should return false, when choice has been placed', function() {
+        it('should return false, when choice has been placed', function () {
           placeChoice(choice);
           expect(scope.isPlaceable(choice)).toBe(false);
         });
@@ -251,8 +256,8 @@ describe('corespring:drag-and-drop-inline', function() {
 
     });
 
-    describe('dragAndDropScopeId', function() {
-      it('should be initialised with a different value every time it is linked', function() {
+    describe('dragAndDropScopeId', function () {
+      it('should be initialised with a different value every time it is linked', function () {
         var link = compile('<corespring-drag-and-drop-inline-render id=\'1\'></corespring-drag-and-drop-inline-render>');
         element = link(rootScope.$new());
         scope = element.scope();
@@ -264,8 +269,8 @@ describe('corespring:drag-and-drop-inline', function() {
       });
     });
 
-    describe('cleanChoiceForId', function() {
-      it('should remove $$hashKey', function() {
+    describe('cleanChoiceForId', function () {
+      it('should remove $$hashKey', function () {
         var item = {
           id: 'c1',
           $$hashKey: 'h1'
@@ -276,7 +281,7 @@ describe('corespring:drag-and-drop-inline', function() {
           id: 'c1'
         });
       });
-      it('should return a clone', function() {
+      it('should return a clone', function () {
         var item = {
           id: 'c1'
         };
@@ -289,8 +294,8 @@ describe('corespring:drag-and-drop-inline', function() {
       });
     });
 
-    describe('classForChoice', function() {
-      it('should return the feedback per choice', function() {
+    describe('classForChoice', function () {
+      it('should return the feedback per choice', function () {
         scope.response = {
           feedbackPerChoice: {
             'aa_1': ['correct', 'incorrect']
@@ -299,12 +304,12 @@ describe('corespring:drag-and-drop-inline', function() {
         expect(scope.classForChoice('aa_1', 0)).toEqual('correct');
         expect(scope.classForChoice('aa_1', 1)).toEqual('incorrect');
       });
-      it('should return undefined if server did not return feedbackPerChoice', function() {
+      it('should return undefined if server did not return feedbackPerChoice', function () {
         scope.response = {};
         expect(scope.classForChoice('aa_1', 0)).toEqual(undefined);
         expect(scope.classForChoice('aa_1', 1)).toEqual(undefined);
       });
-      it('should return incorrect if server did not return feedback for all choices', function() {
+      it('should return incorrect if server did not return feedback for all choices', function () {
         scope.response = {
           feedbackPerChoice: {
             'aa_1': ['correct']
@@ -313,34 +318,34 @@ describe('corespring:drag-and-drop-inline', function() {
         expect(scope.classForChoice('aa_1', 0)).toEqual('correct');
         expect(scope.classForChoice('aa_1', 1)).toEqual('incorrect');
       });
-      it('should return editable as long as server did not return response', function() {
+      it('should return editable as long as server did not return response', function () {
         scope.editable = true;
         expect(scope.classForChoice('aa_1', 0)).toEqual('editable');
         expect(scope.classForChoice('aa_1', 1)).toEqual('editable');
       });
-      it('should return undefined as long as setDataAndSession has not been called', function() {
+      it('should return undefined as long as setDataAndSession has not been called', function () {
         expect(scope.classForChoice('aa_1', 0)).toBeUndefined();
         expect(scope.classForChoice('aa_1', 1)).toBeUndefined();
       });
     });
 
-    describe('draggableJqueryOptions', function() {
-      it('should set the scope to the dragAndDropScopeId', function() {
+    describe('draggableJqueryOptions', function () {
+      it('should set the scope to the dragAndDropScopeId', function () {
         var result = scope.draggableJqueryOptions;
         expect(result.scope).toEqual(scope.dragAndDropScopeId);
       });
-      it('should set revert to invalid', function() {
+      it('should set revert to invalid', function () {
         var result = scope.draggableJqueryOptions;
         expect(result.revert).toEqual('invalid');
       });
     });
 
-    describe('canEdit', function() {
-      it('should return false before setDataAndSession', function() {
+    describe('canEdit', function () {
+      it('should return false before setDataAndSession', function () {
         expect(scope.canEdit()).toBeFalsy();
       });
 
-      it('should return true after setDataAndSession', function() {
+      it('should return true after setDataAndSession', function () {
         scope.containerBridge.setDataAndSession({
           data: {
             model: {
@@ -351,7 +356,7 @@ describe('corespring:drag-and-drop-inline', function() {
         expect(scope.canEdit()).toBeTruthy();
       });
 
-      it('should return false after setResponse', function() {
+      it('should return false after setResponse', function () {
         scope.containerBridge.setDataAndSession({
           data: {
             model: {
@@ -359,13 +364,13 @@ describe('corespring:drag-and-drop-inline', function() {
             }
           }
         });
-        scope.containerBridge.setResponse({something: 3});
+        scope.containerBridge.setResponse({ something: 3 });
         expect(scope.canEdit()).toBeFalsy();
       });
     });
 
-    describe('cleanLabel', function() {
-      it('should remove zero-width-space (8203) character', function() {
+    describe('cleanLabel', function () {
+      it('should remove zero-width-space (8203) character', function () {
         var label = String.fromCharCode(8203) + 'A' + String.fromCharCode(8203) + 'B' + String.fromCharCode(8203);
         expect(scope.cleanLabel({
           label: label
@@ -375,10 +380,10 @@ describe('corespring:drag-and-drop-inline', function() {
 
   });
 
-  describe('answer-area-inline', function() {
+  describe('answer-area-inline', function () {
 
     function createAnswerArea(renderScope) {
-      rootScope.$on('get-scope', function(event, callback) {
+      rootScope.$on('get-scope', function (event, callback) {
         callback(renderScope);
       });
       var link = compile('<answer-area-inline-csdndi id=\'aa_1\'></answer-area-inline-csdndi>');
@@ -386,13 +391,13 @@ describe('corespring:drag-and-drop-inline', function() {
       scope = element.isolateScope();
     }
 
-    it('should init answerAreaId from the id attribute', function() {
+    it('should init answerAreaId from the id attribute', function () {
       createAnswerArea({});
       expect(scope.answerAreaId).toEqual('aa_1');
     });
 
-    describe('removeHashKeyFromDroppedItem', function() {
-      beforeEach(function() {
+    describe('removeHashKeyFromDroppedItem', function () {
+      beforeEach(function () {
         var renderScope = {
           landingPlaceChoices: {
             aa_1: [{
@@ -403,53 +408,53 @@ describe('corespring:drag-and-drop-inline', function() {
         };
         createAnswerArea(renderScope);
       });
-      it('should removeHashKey from last item in landingPlace', function() {
+      it('should removeHashKey from last item in landingPlace', function () {
         scope.removeHashKeyFromDroppedItem();
         expect(scope.renderScope.landingPlaceChoices.aa_1[0]).toEqual({
           id: 'c1'
         });
       });
 
-      it('should be configured as handler for onDrop', function() {
+      it('should be configured as handler for onDrop', function () {
         expect(scope.droppableOptions.onDrop).toEqual('removeHashKeyFromDroppedItem');
       });
     });
 
-    describe('droppableJqueryOptions', function() {
-      beforeEach(function() {
+    describe('droppableJqueryOptions', function () {
+      beforeEach(function () {
         createAnswerArea({
           dragAndDropScopeId: 'scope-123'
         });
       });
 
-      it('should set scope to dragAndDropScopeId of renderScope', function() {
+      it('should set scope to dragAndDropScopeId of renderScope', function () {
         expect(scope.droppableJqueryOptions.scope).toEqual('scope-123');
       });
 
-      it('should init activeClass', function() {
+      it('should init activeClass', function () {
         expect(scope.droppableJqueryOptions.activeClass).toEqual('answer-area-inline-active');
       });
 
-      it('should init hoverClass', function() {
+      it('should init hoverClass', function () {
         expect(scope.droppableJqueryOptions.hoverClass).toEqual('answer-area-inline-hover');
       });
 
-      it('should init tolerance', function() {
+      it('should init tolerance', function () {
         expect(scope.droppableJqueryOptions.tolerance).toEqual('pointer');
       });
 
-      it('should init distance', function() {
+      it('should init distance', function () {
         expect(scope.droppableJqueryOptions.distance).toEqual(5);
       });
 
     });
 
-    describe('classForChoice', function() {
+    describe('classForChoice', function () {
       var classForChoiceArgs;
-      beforeEach(function() {
+      beforeEach(function () {
         classForChoiceArgs = [];
         createAnswerArea({
-          classForChoice: function(answerAreaId, index) {
+          classForChoice: function (answerAreaId, index) {
             classForChoiceArgs.push({
               answerAreaId: answerAreaId,
               index: index
@@ -458,7 +463,7 @@ describe('corespring:drag-and-drop-inline', function() {
         });
       });
 
-      it('should delegate classForChoice to renderScope', function() {
+      it('should delegate classForChoice to renderScope', function () {
         scope.classForChoice(4);
         expect(classForChoiceArgs).toEqual([{
           answerAreaId: 'aa_1',
@@ -468,8 +473,8 @@ describe('corespring:drag-and-drop-inline', function() {
 
     });
 
-    describe('removeChoice', function() {
-      beforeEach(function() {
+    describe('removeChoice', function () {
+      beforeEach(function () {
         createAnswerArea({
           landingPlaceChoices: {
             aa_1: [{
@@ -486,14 +491,14 @@ describe('corespring:drag-and-drop-inline', function() {
         });
       });
 
-      it('should remove choice from its own landingPlace', function() {
+      it('should remove choice from its own landingPlace', function () {
         scope.removeChoice(1);
         expect(scope.renderScope.landingPlaceChoices.aa_1).toEqual([{
           id: 'c1'
         }]);
       });
 
-      it('should not remove choice from other landingPlace', function() {
+      it('should not remove choice from other landingPlace', function () {
         scope.removeChoice(1);
         expect(scope.renderScope.landingPlaceChoices.aa_2).toEqual([{
           id: 'c1'
@@ -503,9 +508,9 @@ describe('corespring:drag-and-drop-inline', function() {
       });
     });
 
-    describe('shouldShowNoAnswersWarning', function() {
+    describe('shouldShowNoAnswersWarning', function () {
       var renderScope;
-      beforeEach(function() {
+      beforeEach(function () {
         renderScope = {
           landingPlaceChoices: {
             aa_1: []
@@ -524,16 +529,16 @@ describe('corespring:drag-and-drop-inline', function() {
         });
       }
 
-      it('should return false before setResponse', function() {
+      it('should return false before setResponse', function () {
         expect(scope.shouldShowNoAnswersWarning()).toBeFalsy();
       });
 
-      it('should return true after setResponse and no answers', function() {
+      it('should return true after setResponse and no answers', function () {
         setResponse();
         expect(scope.shouldShowNoAnswersWarning()).toBeTruthy();
       });
 
-      it('should return false after setResponse and with answers', function() {
+      it('should return false after setResponse and with answers', function () {
         setResponse();
         addAnswer();
         expect(scope.shouldShowNoAnswersWarning()).toBeFalsy();
@@ -543,13 +548,13 @@ describe('corespring:drag-and-drop-inline', function() {
 
   });
 
-  describe('isAnswerEmpty', function() {
-    it('should return true initially', function() {
+  describe('isAnswerEmpty', function () {
+    it('should return true initially', function () {
       container.elements['1'].setDataAndSession(testModel);
       rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(true);
     });
-    it('should return false if answer is set initially', function() {
+    it('should return false if answer is set initially', function () {
       testModel.session = {
         answers: {
           aa_1: ['c_1']
@@ -559,7 +564,7 @@ describe('corespring:drag-and-drop-inline', function() {
       rootScope.$digest();
       expect(container.elements['1'].isAnswerEmpty()).toBe(false);
     });
-    it('should return false if answer is selected', function() {
+    it('should return false if answer is selected', function () {
       container.elements['1'].setDataAndSession(testModel);
       scope.landingPlaceChoices.aa_1 = [{
         id: 'c_1'
@@ -568,8 +573,8 @@ describe('corespring:drag-and-drop-inline', function() {
     });
   });
 
-  describe('instructor view', function() {
-    it('instructor data populates state with correct response', function() {
+  describe('instructor view', function () {
+    it('instructor data populates state with correct response', function () {
       container.elements['1'].setDataAndSession(testModel);
       container.elements['1'].setInstructorData(instructorData);
       expect(scope.instructorData).toEqual(instructorData);
@@ -582,27 +587,27 @@ describe('corespring:drag-and-drop-inline', function() {
     });
   });
 
-  it('should implement containerBridge', function() {
+  it('should implement containerBridge', function () {
     expect(corespringComponentsTestLib.verifyContainerBridge(container.elements['1'])).toBe('ok');
   });
 
-  describe('answer change callback', function() {
+  describe('answer change callback', function () {
     var changeHandlerCalled = false;
 
-    beforeEach(function() {
+    beforeEach(function () {
       changeHandlerCalled = false;
-      container.elements['1'].answerChangedHandler(function(c) {
+      container.elements['1'].answerChangedHandler(function (c) {
         changeHandlerCalled = true;
       });
       container.elements['1'].setDataAndSession(testModel);
       scope.$digest();
     });
 
-    it('does not get called initially', function() {
+    it('does not get called initially', function () {
       expect(changeHandlerCalled).toBe(false);
     });
 
-    it('does get called when a answer is selected', function() {
+    it('does get called when a answer is selected', function () {
       scope.landingPlaceChoices.aa_1 = [{
         id: 'c_1'
       }];
@@ -612,10 +617,10 @@ describe('corespring:drag-and-drop-inline', function() {
 
   });
 
-  describe('order of setMode/setResponse', function() {
+  describe('order of setMode/setResponse', function () {
     var response;
 
-    beforeEach(function() {
+    beforeEach(function () {
       container.elements['1'].setDataAndSession(testModel);
       setAnswer('c_1');
       rootScope.$digest();
@@ -633,13 +638,13 @@ describe('corespring:drag-and-drop-inline', function() {
       expect(wrapper.find('.incorrectClass').length > 0).toBe(true);
     }
 
-    it('should work when setMode is called before setResponse', function() {
+    it('should work when setMode is called before setResponse', function () {
       container.elements['1'].setMode('evaluate');
       container.elements['1'].setResponse(response);
       assertFeedback();
     });
 
-    it('should work when setMode is called after setResponse', function() {
+    it('should work when setMode is called after setResponse', function () {
       container.elements['1'].setResponse(response);
       container.elements['1'].setMode('evaluate');
       assertFeedback();
