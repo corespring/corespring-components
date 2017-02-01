@@ -28,7 +28,27 @@ function createOutcome(question, answer, settings) {
   }
   response.correctnessMatrix = buildCorrectnessMatrix(question, answer);
   response.correctNum = numAnsweredCorrectly;
+  response.legacyScore = legacyScore(question, answer);
   return response;
+}
+
+function legacyScore(question, answer) {
+  if (question.legacyScoring && question.legacyScoring.length != 0) {
+    return _(answer).map(function (studentResponse) {
+      var scoring = question.legacyScoring[studentResponse.id];
+      return _(scoring).map(function (weight, index) {
+        if (studentResponse.matchSet[parseInt(index, 10)] === true) {
+          return weight;
+        } else {
+          return 0;
+        }
+      }).reduce(function(a, b) {
+        return a + b;
+      }, 0);
+    }).reduce(function(a, b) {
+      return a + b;
+    }, 0);
+  }
 }
 
 function amendResponseForCheckboxPartial(question, answer, response) {
