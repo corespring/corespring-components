@@ -115,7 +115,9 @@ var main = [
         }
 
         scope.initUndo();
+        /* jshint ignore:start */
         renderRegularAnswerArea(scope.$new());
+        /* jshint ignore:end */
       }
 
       function getSession() {
@@ -187,8 +189,9 @@ var main = [
             return scope.cleanChoiceForId(r);
           });
         });
-
+        /* jshint ignore:start */
         renderCorrectAnswerArea(solutionScope);
+        /* jshint ignore:end */
       }
 
       function reset() {
