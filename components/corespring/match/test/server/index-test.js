@@ -269,7 +269,7 @@ describe('match server logic', function() {
 
       it('should be defined', function() {
         var outcome = server.createOutcome(component, answer, helper.settings(true, true, true));
-        outcome.legacyScore.should.be.defined;
+        outcome.legacyScore.should.not.eql(undefined);
       });
 
       it('should equal the sum of legacy scores for the indexes', function() {
