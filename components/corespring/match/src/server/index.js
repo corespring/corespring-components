@@ -33,10 +33,10 @@ function createOutcome(question, answer, settings) {
 }
 
 function legacyScore(question, answer) {
-  if (question.legacyScoring && question.legacyScoring.length != 0) {
-    return _(answer).map(function (studentResponse) {
+  if (question.legacyScoring && question.legacyScoring.length !== 0) {
+    return _(answer).map(function(studentResponse) {
       var scoring = question.legacyScoring[studentResponse.id];
-      return _(scoring).map(function (weight, index) {
+      return _(scoring).map(function(weight, index) {
         if (studentResponse.matchSet[parseInt(index, 10)] === true) {
           return weight;
         } else {
