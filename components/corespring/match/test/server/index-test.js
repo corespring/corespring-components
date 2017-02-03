@@ -43,17 +43,22 @@ var componentTemplate = {
   ],
   allowPartialScoring: true,
   "legacyScoring": {
-    "row-1": {
-      "0": 0.5
-    },
-    "row-2": {
-      "0": 0.5
-    },
-    "row-3": {
-      "0": 0.5
-    },
-    "row-4": {
-      "0": 0.5
+    "default": 0,
+    "lowerBound": 0,
+    "upperBound": 2,
+    "mapping": {
+      "row-1": {
+        "0": 0.5
+      },
+      "row-2": {
+        "0": 0.5
+      },
+      "row-3": {
+        "0": 0.5
+      },
+      "row-4": {
+        "0": 0.5
+      }
     }
   },
   "partialScoring": [
@@ -199,7 +204,7 @@ function correctIncorrect(id){
 }
 
 function legacyScoreFor(rowIdentifier) {
-  return componentTemplate.legacyScoring[rowIdentifier][0];
+  return componentTemplate.legacyScoring.mapping[rowIdentifier][0];
 }
 
 function shouldEql(actual, expected){
