@@ -7,6 +7,7 @@ var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 
 exports.keys = feedbackUtils.keys;
 exports.createOutcome = createOutcome;
+exports.legacyScore = legacyScore;
 
 //---------------------------------------------------------
 
@@ -55,8 +56,8 @@ function legacyScore(question, answer) {
       return a + b;
     }, 0);
 
-    min = question.legacyScoring.lowerBound || calculatedValue;
-    max = question.legacyScoring.upperBound || calculatedValue;
+    min = question.legacyScoring.lowerBound !== undefined ? question.legacyScoring.lowerBound : calculatedValue;
+    max = question.legacyScoring.upperBound !== undefined ? question.legacyScoring.upperBound : calculatedValue;
 
     return clamp(calculatedValue, min, max);
   }
