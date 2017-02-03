@@ -33,12 +33,18 @@ function createOutcome(question, answer, settings) {
 }
 
 function legacyScore(question, answer) {
-  if (question.legacyScoring && question.legacyScoring.length !== 0) {
-    return _(answer).map(function(studentResponse) {
-      var scoring = question.legacyScoring[studentResponse.id];
-      return _(scoring).map(function(weight, index) {
-        if (studentResponse.matchSet[parseInt(index, 10)] === true) {
-          return weight;
+  var calculatedValue, max, min;
+
+  function clamp(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  if (question.legacyScoring && question.legacyScoring.mapping && !_.isEmpty(question.legacyScoring.mapping)) {
+    calculatedValue = _(answer).map(function(studentResponse) {
+      var scoring = question.legacyScoring.mapping[studentResponse.id];
+      return _(studentResponse.matchSet).map(function(value, index) {
+        if (value === true) {
+          return scoring[index.toString()] || question.legacyScoring.default;
         } else {
           return 0;
         }
@@ -48,7 +54,13 @@ function legacyScore(question, answer) {
     }).reduce(function(a, b) {
       return a + b;
     }, 0);
+
+    min = question.legacyScoring.lowerBound || calculatedValue;
+    max = question.legacyScoring.upperBound || calculatedValue;
+
+    return clamp(calculatedValue, min, max);
   }
+  return undefined;
 }
 
 function amendResponseForCheckboxPartial(question, answer, response) {
