@@ -45,7 +45,7 @@ function legacyScore(question, answer) {
       var scoring = question.legacyScoring.mapping[studentResponse.id];
       return _(studentResponse.matchSet).map(function(value, index) {
         if (value === true) {
-          return scoring[index.toString()] || question.legacyScoring.default;
+          return scoring[index.toString()] || question.legacyScoring.defaultValue;
         } else {
           return 0;
         }

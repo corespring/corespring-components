@@ -43,7 +43,7 @@ var componentTemplate = {
   ],
   allowPartialScoring: true,
   "legacyScoring": {
-    "default": 0,
+    "defaultValue": 0,
     "lowerBound": 0,
     "upperBound": 2,
     "mapping": {
@@ -546,9 +546,9 @@ describe('match server logic', function() {
   });
 
   describe('legacyScore', function() {
-    function makeQuestion(defalt, lowerBound, upperBound, mapping) {
+    function makeQuestion(defaultValue, lowerBound, upperBound, mapping) {
       var legacyScoring = _.merge({
-        "default": defalt,
+        "defaultValue": defaultValue,
         "lowerBound": lowerBound,
         "upperBound": upperBound
       },
@@ -601,8 +601,8 @@ describe('match server logic', function() {
     });
 
     describe('mapping is missing value', function() {
-      var defalt = 10;
-      var question = makeQuestion(defalt, 0, 100, {
+      var defaultValue = 10;
+      var question = makeQuestion(defaultValue, 0, 100, {
         "row-1": {
           "0": 20
         }
@@ -615,7 +615,7 @@ describe('match server logic', function() {
             matchSet: [false, true]
           }
         ];
-        server.legacyScore(question, answer).should.equal(defalt);
+        server.legacyScore(question, answer).should.equal(defaultValue);
       });
 
     });
