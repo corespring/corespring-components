@@ -557,7 +557,7 @@ describe('match server logic', function() {
       });
       return {
         legacyScoring: legacyScoring
-      }
+      };
     }
 
     describe('overall score lower than lowerBound', function() {
