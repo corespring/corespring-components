@@ -43,17 +43,22 @@ var componentTemplate = {
   ],
   allowPartialScoring: true,
   "legacyScoring": {
-    "row-1": {
-      "0": 0.5
-    },
-    "row-2": {
-      "0": 0.5
-    },
-    "row-3": {
-      "0": 0.5
-    },
-    "row-4": {
-      "0": 0.5
+    "default": 0,
+    "lowerBound": 0,
+    "upperBound": 2,
+    "mapping": {
+      "row-1": {
+        "0": 0.5
+      },
+      "row-2": {
+        "0": 0.5
+      },
+      "row-3": {
+        "0": 0.5
+      },
+      "row-4": {
+        "0": 0.5
+      }
     }
   },
   "partialScoring": [
@@ -199,7 +204,7 @@ function correctIncorrect(id){
 }
 
 function legacyScoreFor(rowIdentifier) {
-  return componentTemplate.legacyScoring[rowIdentifier][0];
+  return componentTemplate.legacyScoring.mapping[rowIdentifier][0];
 }
 
 function shouldEql(actual, expected){
@@ -536,6 +541,83 @@ describe('match server logic', function() {
       };
       response.should.eql(expected);
       response.score.should.equal(expected.score);
+    });
+
+  });
+
+  describe('legacyScore', function() {
+    function makeQuestion(defalt, lowerBound, upperBound, mapping) {
+      var legacyScoring = _.merge({
+        "default": defalt,
+        "lowerBound": lowerBound,
+        "upperBound": upperBound
+      },
+      {
+        mapping: mapping
+      });
+      return {
+        legacyScoring: legacyScoring
+      }
+    }
+
+    describe('overall score lower than lowerBound', function() {
+      var lowerBound = 0;
+      var question = makeQuestion(0, lowerBound, 10, {
+        "row-1": {
+          "0": -1
+        }
+      });
+
+      it('should return lowerBound', function() {
+        var answer = [
+          {
+            id: "row-1",
+            matchSet: [true, false]
+          }
+        ];
+        server.legacyScore(question, answer).should.equal(lowerBound);
+      });
+
+    });
+
+    describe('overall score higher than upperBound', function() {
+      var upperBound = 10;
+      var question = makeQuestion(0, 0, upperBound, {
+        "row-1": {
+          "0": 100
+        }
+      });
+
+      it('should return upperBound', function() {
+        var answer = [
+          {
+            id: "row-1",
+            matchSet: [true, false]
+          }
+        ];
+        server.legacyScore(question, answer).should.equal(upperBound);
+      });
+
+    });
+
+    describe('mapping is missing value', function() {
+      var defalt = 10;
+      var question = makeQuestion(defalt, 0, 100, {
+        "row-1": {
+          "0": 20
+        }
+      });
+
+      it('should use default value', function() {
+        var answer = [
+          {
+            id: "row-1",
+            matchSet: [false, true]
+          }
+        ];
+        server.legacyScore(question, answer).should.equal(defalt);
+      });
+
     });
 
   });
