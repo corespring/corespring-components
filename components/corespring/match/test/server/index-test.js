@@ -620,6 +620,26 @@ describe('match server logic', function() {
 
     });
 
+    describe('value in mapping is zero, default is non-zero', function() {
+      var defaultValue = 0.5;
+      var mappedValue = 0;
+      var question = makeQuestion(defaultValue, 0, 100, {
+        "row-1": {
+          "0": mappedValue
+        }
+      });
+
+      it('should use value from mapping', function() {
+        var answer = [
+          {
+            id: "row-1",
+            matchSet: [true, false]
+          }
+        ];
+        server.legacyScore(question, answer).should.equal(mappedValue);
+      });
+    });
+
   });
 
 });
