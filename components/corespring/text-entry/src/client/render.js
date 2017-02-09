@@ -188,10 +188,8 @@ var main = [
 
       scope.isInstructorResponse = function() {
         return scope.instructorResponse &&
-          scope.response &&
-          scope.response.feedback &&
-          scope.response.feedback.message &&
-          !_.isEmpty(scope.response.feedback.message.trim());
+            scope.response &&
+            scope.response.feedback;
       };
 
       scope.hasFeedback = function() {
