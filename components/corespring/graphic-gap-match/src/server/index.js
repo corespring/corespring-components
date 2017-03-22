@@ -140,6 +140,34 @@ exports.createOutcome = function (question, answer, settings) {
     });
   };
 
+  var legacyScore = function() {
+    var calculatedValue, max, min;
+
+    function clamp(number, min, max) {
+      return Math.min(Math.max(number, min), max);
+    }
+
+    if (question.legacyScoring && question.legacyScoring.mapping && !_.isEmpty(question.legacyScoring.mapping)) {
+      calculatedValue = _(answer).map(function(selection) {
+        var hotspot = _.find(question.model.hotspots, function (hs) {
+          return isChoiceInHotspot(selection, hs);
+        }).id;
+        var choice = selection.id;
+        var score = question.legacyScoring.mapping[hotspot] ?
+        question.legacyScoring.mapping[hotspot][choice] || question.legacyScoring.defaultValue : 0;
+        return score;
+      }).reduce(function(a, b) {
+        return a + b;
+      });
+
+      min = question.legacyScoring.lowerBound !== undefined ? question.legacyScoring.lowerBound : calculatedValue;
+      max = question.legacyScoring.upperBound !== undefined ? question.legacyScoring.upperBound : calculatedValue;
+
+      return clamp(calculatedValue, min, max);
+    }
+    return undefined;
+  };
+
   if (!answer || _.isEmpty(answer)) {
     return {
       correctness: 'warning',
@@ -177,6 +205,7 @@ exports.createOutcome = function (question, answer, settings) {
     correctClass: fb.correctness(isCorrect, isPartiallyCorrect),
     correctResponse: question.correctResponse,
     score: isCorrect ? 1 : 0,
+    legacyScore: legacyScore(),
     correctNum: (correctlyAnswered || []).length
   };
 
