@@ -151,11 +151,17 @@ exports.createOutcome = function (question, answer, settings) {
       calculatedValue = _(answer).map(function(selection) {
         var hotspot = _.find(question.model.hotspots, function (hs) {
           return isChoiceInHotspot(selection, hs);
-        }).id;
-        var choice = selection.id;
-        var score = question.legacyScoring.mapping[hotspot] ?
-        question.legacyScoring.mapping[hotspot][choice] || question.legacyScoring.defaultValue : 0;
-        return score;
+        });
+        var hotspotId, choice, score;
+        if (hotspot !== undefined) {
+          hotspotId = hotspot.id;
+          choice = selection.id;
+          score = question.legacyScoring.mapping[hotspotId] ?
+          question.legacyScoring.mapping[hotspotId][choice] || question.legacyScoring.defaultValue : 0;
+          return score;
+        } else {
+          return 0;
+        }
       }).reduce(function(a, b) {
         return a + b;
       });
