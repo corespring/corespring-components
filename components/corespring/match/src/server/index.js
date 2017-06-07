@@ -7,6 +7,7 @@ var feedbackUtils = require('corespring.server-shared.server.feedback-utils');
 
 exports.keys = feedbackUtils.keys;
 exports.createOutcome = createOutcome;
+exports.legacyScore = legacyScore;
 
 //---------------------------------------------------------
 
@@ -28,7 +29,39 @@ function createOutcome(question, answer, settings) {
   }
   response.correctnessMatrix = buildCorrectnessMatrix(question, answer);
   response.correctNum = numAnsweredCorrectly;
+  response.legacyScore = legacyScore(question, answer);
   return response;
+}
+
+function legacyScore(question, answer) {
+  var calculatedValue, max, min;
+
+  function clamp(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  if (question.legacyScoring && question.legacyScoring.mapping && !_.isEmpty(question.legacyScoring.mapping)) {
+    calculatedValue = _(answer).map(function(studentResponse) {
+      var scoring = question.legacyScoring.mapping[studentResponse.id];
+      return _(studentResponse.matchSet).map(function(value, index) {
+        if (value === true) {
+          return scoring[index.toString()] !== undefined ? scoring[index.toString()] : question.legacyScoring.defaultValue;
+        } else {
+          return 0;
+        }
+      }).reduce(function(a, b) {
+        return a + b;
+      }, 0);
+    }).reduce(function(a, b) {
+      return a + b;
+    }, 0);
+
+    min = question.legacyScoring.lowerBound !== undefined ? question.legacyScoring.lowerBound : calculatedValue;
+    max = question.legacyScoring.upperBound !== undefined ? question.legacyScoring.upperBound : calculatedValue;
+
+    return clamp(calculatedValue, min, max);
+  }
+  return undefined;
 }
 
 function amendResponseForCheckboxPartial(question, answer, response) {

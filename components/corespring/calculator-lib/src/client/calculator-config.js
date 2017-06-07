@@ -51,8 +51,8 @@ var calculatorConfig = [
     buttons.radians = { id: angularUnits.RADIANS, name: 'Radians', symbol: 'rad', logic: 'scientific', type: 'Misc', cssClass: 'rad' };
 
     // Advanced function buttons
-    buttons.left_parenthesis = { id: 'left_parenthesis', name: 'Left parenthesis', symbol: '&#40;', logic: 'core', type: 'Misc', cssClass: 'advanced' };
-    buttons.right_parenthesis = { id: 'right_parenthesis', name: 'Right parenthesis', symbol: '&#41;', logic: 'core', type: 'Misc', cssClass: 'advanced' };
+    buttons.left_parenthesis = { id: 'left_parenthesis', name: 'Left parenthesis', symbol: '(', logic: 'core', type: 'Misc', cssClass: 'advanced' };
+    buttons.right_parenthesis = { id: 'right_parenthesis', name: 'Right parenthesis', symbol: ')', logic: 'core', type: 'Misc', cssClass: 'advanced' };
     buttons.sin = { id: 'sin', name: 'Sin', symbol: 'sin', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced', operation: function(a, angularMeasure) { return coerce(new Decimal(trigonometricValue(a, angularMeasure, angularUnits.RADIANS)).sin()); } };
     buttons.asin = { id: 'asin', name: 'Arcsin', symbol: 'sin<sup>-1</sup>', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced', operation: function(a, angularMeasure) { return coerce(new Decimal(trigonometricValue(new Decimal(a).asin(), angularUnits.RADIANS, angularMeasure))); } };
     buttons.cos = { id: 'cos', name: 'Cos', symbol: 'cos', logic: 'scientific', type: 'Operator', numOfOperands: '1', cssClass: 'advanced', operation: function(a, angularMeasure) { return coerce(new Decimal(trigonometricValue(a, angularMeasure, angularUnits.RADIANS)).cos()); } };

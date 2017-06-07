@@ -48,8 +48,10 @@ var main = [
 
       //we throttle bc. when multiple calls to renderAnswerArea are
       //made rapidly, the rendering breaks, eg. in the regression test rig
+      /* jshint ignore:start */
       var renderRegularAnswerArea = throttle(doRenderAnswerArea.bind(this, '.answer-area-holder'));
       var renderCorrectAnswerArea = throttle(doRenderAnswerArea.bind(this, '.correct-answer-area-holder'));
+      /* jshint ignore:end */
 
       scope.dragAndDropScopeId = "scope-" + Math.floor(Math.random() * 1000);
       scope.draggableJqueryOptions = {
@@ -113,7 +115,9 @@ var main = [
         }
 
         scope.initUndo();
+        /* jshint ignore:start */
         renderRegularAnswerArea(scope.$new());
+        /* jshint ignore:end */
       }
 
       function getSession() {
@@ -185,8 +189,9 @@ var main = [
             return scope.cleanChoiceForId(r);
           });
         });
-
+        /* jshint ignore:start */
         renderCorrectAnswerArea(solutionScope);
+        /* jshint ignore:end */
       }
 
       function reset() {
