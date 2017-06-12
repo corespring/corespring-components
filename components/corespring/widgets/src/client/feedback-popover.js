@@ -20,15 +20,11 @@ function FeedbackPopoverDirective(MathJaxService, $timeout) {
   function link(scope, element, attrs) {
 
     scope.firstShow = true;
-    scope.originalContent = undefined;
     scope.state = 'closed';
-    $(element).append('<div class="math-prerender" style="display: none"></div>');
 
     function destroy() {
-      scope.originalContent = undefined;
       scope.firstShow = true;
       $('html').unbind('click', onClickHtml);
-      $(element).find('.math-prerender').html('');
       $(element).popover('destroy');
     }
 
@@ -38,11 +34,11 @@ function FeedbackPopoverDirective(MathJaxService, $timeout) {
       }
     }
 
-    scope.$on('$destroy', function() {
+    scope.$on('$destroy', function () {
       destroy();
     });
 
-    scope.$watch('response', function(response) {
+    scope.$watch('response', function (response) {
       if (_.isUndefined(response)) {
         hidePopover();
       } else {
@@ -77,31 +73,27 @@ function FeedbackPopoverDirective(MathJaxService, $timeout) {
         popoverClass = 'instructor';
       }
 
-      var cls = attrs['class'] ? (_.map(attrs['class'].split(' '), function(cls) {
+      var cls = attrs['class'] ? (_.map(attrs['class'].split(' '), function (cls) {
         return cls.trim() + '-popover';
       }).join(' ')) : '';
       popoverClass = popoverClass + ' ' + cls;
 
-      $(element).find('.math-prerender').html(content);
-      MathJaxService.parseDomForMath(0, $(element).find('.math-prerender')[0]);
-
       $(element).popover('destroy');
+
       var popoverId = 'corespring-popover-' + _.uniqueId();
       var popover = $(element).popover({
         title: title,
         template: [
-                '<div class="popover tip-popover feedback-popover popover-' + popoverClass + ' ' + popoverId + '" role="tooltip">',
-                '  <div class="arrow"></div>',
-                '  <h3 class="popover-title"></h3>',
-                '  <div class="popover-content"></div>',
-                '</div>'
-              ].join('\n'),
+          '<div class="popover tip-popover feedback-popover popover-' + popoverClass + ' ' + popoverId + '" role="tooltip">',
+          '  <div class="arrow"></div>',
+          '  <h3 class="popover-title"></h3>',
+          '  <div class="popover-content"></div>',
+          '</div>'
+        ].join('\n'),
         container: element.parents('.corespring-player'),
-        content: function() {
-          return scope.originalContent || $(element).find('.math-prerender').html();
-        },
-        placement: function(popover, sender) {
-          return attrs.placement !== undefined ? attrs.placement : (function() {
+        content: content,
+        placement: function (popover, sender) {
+          return attrs.placement !== undefined ? attrs.placement : (function () {
             var playerElement = $(element).parents('.corespring-player');
             var playerTop = playerElement.offset().top;
             var elementTop = $(element).offset().top;
@@ -112,9 +104,14 @@ function FeedbackPopoverDirective(MathJaxService, $timeout) {
       });
 
       if (popover) {
-        popover.on('show.bs.popover', function(event) {
-          $timeout(function() {
-            $('[feedback-popover]').each(function() {
+        popover.on('show.bs.popover', function (event) {
+
+
+          $timeout(function () {
+
+            MathJaxService.parseDomForMath(0, $(element)[0]);
+
+            $('[feedback-popover]').each(function () {
               if (element[0] !== this) {
                 $(this).popover('hide');
               }
@@ -144,17 +141,12 @@ function FeedbackPopoverDirective(MathJaxService, $timeout) {
             scope.state = 'open';
           });
         });
-        popover.on('shown.bs.popover', function() {
-          scope.originalContent = $(element).find('.math-prerender').html();
-          $(element).find('.math-prerender').html('');
+        popover.on('shown.bs.popover', function () {
           $('html').click(onClickHtml);
         });
-        popover.on('hide.bs.popover', function() {
+        popover.on('hide.bs.popover', function () {
           $('html').unbind('click', onClickHtml);
           scope.state = 'closed';
-        });
-        popover.on('hidden.bs.popover', function() {
-          $(element).find('.math-prerender').html(scope.originalContent);
         });
       }
     }
