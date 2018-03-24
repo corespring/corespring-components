@@ -60,7 +60,9 @@ var calculator = [
 
         // make sure new input is treated as a new operand
         this.operandContinue = false;
-        self.previousOperator = 'multiply';
+        if(!self.previousOperator || self.previousOperator === ''){
+          self.previousOperator = 'multiply';
+        }
       };
 
       this.clickOperand = function(button) {
@@ -107,7 +109,7 @@ var calculator = [
 
         self.lastPressedIsBinary = false;
         self.operandContinue = false;
-        self.storedValue = value;
+        // self.storedValue = value;
 
         if(self.checkNaN()){
           scope.results = value;

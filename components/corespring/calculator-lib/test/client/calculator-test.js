@@ -66,6 +66,23 @@ describe('corespring:calculator-lib:calculator', function() {
       expect(scope.results).toEqual(3.141592653589793);
     });
 
+    it('multiply pi', function(){
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.pi);
+      expect(scope.results).toEqual(Math.PI);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(Math.PI * 2);
+    });
+
+    it('add pi', function() {
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.pi);
+      expect(scope.results).toEqual(Math.PI);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(Math.PI + 2);
+    });
+
     it('should assume multiply operation when constant is pressed after number', function() {
       calculator.click(scope.buttons.two);      
       calculator.click(scope.buttons.pi);
@@ -104,6 +121,39 @@ describe('corespring:calculator-lib:calculator', function() {
   });
 
   describe('basic functions', function(){
+
+
+    it("adds 2 square root numbers", function() {
+      calculator.click(scope.buttons.four);
+      calculator.click(scope.buttons.sqrt);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.nine);
+      calculator.click(scope.buttons.sqrt);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(5);
+    });
+
+    it("adds 2 abs numbers", function() {
+      calculator.click(scope.buttons.one);
+      calculator.click(scope.buttons.change_sign);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.change_sign);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(-3);
+    });
+    
+    it("adds 2 negative numbers", function() {
+      calculator.click(scope.buttons.one);
+      calculator.click(scope.buttons.change_sign);
+      calculator.click(scope.buttons.abs);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.change_sign);
+      calculator.click(scope.buttons.abs);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(3);
+    });
 
     it('should be able to sum two numbers', function() {
       calculator.click(scope.buttons.five);
@@ -226,6 +276,10 @@ describe('corespring:calculator-lib:calculator', function() {
       expect(scope.results).toEqual(1);
     });
 
+    function toRadians (angle) {
+      return angle * (Math.PI / 180);
+    }
+
     it('should use degrees by default', function() {
       scope.results = 90;
       calculator.click(scope.buttons.sin);
@@ -339,6 +393,16 @@ describe('corespring:calculator-lib:calculator', function() {
     });
 
     it('should allow to calculate e^x', function() {
+      calculator.click(scope.buttons.one);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.ex);
+      expect(scope.results).toBeCloseTo(7.38905609893065, decimalPrecision);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toBeCloseTo(1 + Math.pow(Math.E, 2), 5);
+    });
+
+    it('should allow to calculate e^x', function() {
       calculator.click(scope.buttons.two);
       calculator.click(scope.buttons.ex);
       expect(scope.results).toBeCloseTo(7.38905609893065, decimalPrecision);
@@ -356,11 +420,52 @@ describe('corespring:calculator-lib:calculator', function() {
       calculator.click(scope.buttons.log);
       expect(scope.results).toBeCloseTo(0.69897000433, 5);
     });
+    
+    Math.log10 = Math.log10 || function(x) {
+      return Math.log(x) * Math.LOG10E;
+    };
+
+    it('adds ln', function() {
+      calculator.click(scope.buttons.five);
+      calculator.click(scope.buttons.ln);
+      expect(scope.results).toBeCloseTo(Math.log(5), 5);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.ln);
+      expect(scope.results).toBeCloseTo(Math.log(2), 5);
+      var expected = Math.log(5) + Math.log(2);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toBeCloseTo(expected, 5);
+    });
+
+    it('adds logs', function() {
+      calculator.click(scope.buttons.five);
+      calculator.click(scope.buttons.log);
+      expect(scope.results).toBeCloseTo(Math.log10(5), 5);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.log);
+      expect(scope.results).toBeCloseTo(Math.log10(2), 5);
+      var expected = Math.log10(5) + Math.log10(2);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toBeCloseTo(expected, 5);
+    });
 
     it('should allow to calculate factorial', function() {
       calculator.click(scope.buttons.five);
       calculator.click(scope.buttons.factorial);
       expect(scope.results).toEqual(120);
+    });
+    
+    it('adds factorials', function() {
+      calculator.click(scope.buttons.two);
+      calculator.click(scope.buttons.factorial);
+      calculator.click(scope.buttons.plus);
+      calculator.click(scope.buttons.three);
+      calculator.click(scope.buttons.factorial);
+      expect(scope.results).toEqual(6);
+      calculator.click(scope.buttons.equals);
+      expect(scope.results).toEqual(8);
     });
 
     it('should allow to calculate 1/x', function() {
