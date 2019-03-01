@@ -115,11 +115,6 @@ function mainDirective($compile, $interval) {
 
     renderWiggi();
 
-    scope.cancel = $interval(renderWiggi, 200);
-    scope.$on('$destroy', function() {
-      $interval.cancel(scope.cancel);
-    });
-
     function getSession() {
       return {
         answers: scope.answer
@@ -137,8 +132,6 @@ function mainDirective($compile, $interval) {
 
     // sets the server's response
     function setResponse(response) {
-      console.log("Setting Response for extended text entry:");
-      console.log(response);
 
       if (!response.correctClass) {
         response.correctClass = 'submitted';
@@ -249,10 +242,14 @@ function mainDirective($compile, $interval) {
     this.registerChangeNotifier = function(notifyEditorOfChange, node) {
       var scope = node.scope() && node.scope().$$childHead;
       if (scope) {
-        scope.$watch('ngModel', function(a, b) {
+        var removeWatch = scope.$watch('ngModel', function(a, b) {
           if (a && b && a !== b) {
             notifyEditorOfChange();
           }
+        });
+
+        scope.$on('$destroy', function() {
+          removeWatch();
         });
       }
     };
